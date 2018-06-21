@@ -22,6 +22,8 @@ module Users
       before_action :check_create_team_permission,
                     only: %i(new create)
 
+      layout 'fluid'
+
       def index
         @user_teams =
           @user

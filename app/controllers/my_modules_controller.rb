@@ -4,35 +4,38 @@ class MyModulesController < ApplicationController
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
 
   before_action :load_vars,
-                only: %I[show update destroy description due_date protocols
+                only: %i(show update destroy description due_date protocols
                          results samples activities activities_tab
                          assign_samples unassign_samples delete_samples
                          toggle_task_state samples_index archive
                          complete_my_module repository repository_index
-                         assign_repository_records unassign_repository_records]
-  before_action :load_vars_nested, only: %I[new create]
-  before_action :load_repository, only: %I[assign_repository_records
-                                           unassign_repository_records]
-  before_action :check_edit_permissions,
-                only: %I[update description due_date]
-  before_action :check_destroy_permissions, only: :destroy
-  before_action :check_view_info_permissions, only: :show
-  before_action :check_view_activities_permissions,
-                only: %I[activities activities_tab]
-  before_action :check_view_protocols_permissions, only: :protocols
-  before_action :check_view_results_permissions, only: :results
-  before_action :check_view_samples_permissions,
-                only: %I[samples samples_index]
-  before_action :check_view_archive_permissions, only: :archive
-  before_action :check_assign_samples_permissions, only: :assign_samples
-  before_action :check_unassign_samples_permissions, only: :unassign_samples
-  before_action :check_complete_my_module_perimission, only: :complete_my_module
+                         assign_repository_records unassign_repository_records
+                         unassign_repository_records_modal
+                         assign_repository_records_modal)
+  before_action :load_vars_nested, only: %i(new create)
+  before_action :load_repository, only: %i(assign_repository_records
+                                           unassign_repository_records
+                                           unassign_repository_records_modal
+                                           assign_repository_records_modal
+                                           repository_index)
+  before_action :load_projects_tree, only: %i(protocols results activities
+                                              samples repository archive)
+  before_action :check_manage_permissions_archive, only: %i(update destroy)
+  before_action :check_manage_permissions, only: %i(description due_date)
+  before_action :check_view_permissions, only:
+    %i(show activities activities_tab protocols results samples samples_index
+       archive)
+  before_action :check_complete_module_permission, only: :complete_my_module
   before_action :check_assign_repository_records_permissions,
-                only: :assign_repository_records
-  before_action :check_unassign_repository_records_permissions,
-                only: :unassign_repository_records
+                only: %i(unassign_repository_records_modal
+                         assign_repository_records_modal
+                         assign_repository_records
+                         unassign_repository_records
+                         assign_samples
+                         unassign_samples)
 
   layout 'fluid'.freeze
 
@@ -75,7 +78,7 @@ class MyModulesController < ApplicationController
     @last_activity_id = params[:from].to_i || 0
     @per_page = 10
 
-    @activities = @my_module.last_activities(@last_activity_id, @per_page +1 )
+    @activities = @my_module.last_activities(@last_activity_id, @per_page + 1)
     @more_activities_url = ""
 
     @overflown = @activities.length > @per_page
@@ -83,15 +86,11 @@ class MyModulesController < ApplicationController
     @activities = @my_module.last_activities(@last_activity_id, @per_page)
 
     if @activities.count > 0
-      @more_activities_url = url_for(
-        controller: 'my_modules',
-        action: 'activities',
-        format: :json,
-        from: @activities.last.id)
+      @more_activities_url =
+        activities_my_module_path(@my_module, from: @activities.last.id)
     end
 
     respond_to do |format|
-      format.html
       format.json {
         # 'activites' partial includes header and form for adding older
         # activities. 'list' partial is used for showing more activities.
@@ -108,6 +107,7 @@ class MyModulesController < ApplicationController
           })
         }
       }
+      format.html
     end
   end
 
@@ -146,11 +146,10 @@ class MyModulesController < ApplicationController
   def update
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
-
     description_changed = @my_module.description_changed?
-    restored = false
 
     if @my_module.archived_changed?(from: false, to: true)
+
       saved = @my_module.archive(current_user)
       if saved
         # Currently not in use
@@ -168,6 +167,7 @@ class MyModulesController < ApplicationController
         )
       end
     elsif @my_module.archived_changed?(from: true, to: false)
+
       saved = @my_module.restore(current_user)
       if saved
         restored = true
@@ -185,8 +185,8 @@ class MyModulesController < ApplicationController
         )
       end
     else
-      saved = @my_module.save
 
+      saved = @my_module.save
       if saved and description_changed then
         Activity.create(
           type_of: :change_module_description,
@@ -374,57 +374,73 @@ class MyModulesController < ApplicationController
 
   # AJAX actions
   def repository_index
-    @repository = Repository.find_by_id(params[:repository_id])
-    if @repository.nil? || !can_read_team?(@repository.team)
-      render_403
-    else
-      respond_to do |format|
-        format.html
-        format.json do
-          render json: ::RepositoryDatatable.new(view_context,
-                                                 @repository,
-                                                 @my_module,
-                                                 current_user)
-        end
-      end
-    end
+    @draw = params[:draw].to_i
+    per_page = params[:length] == '-1' ? 100 : params[:length].to_i
+    page = (params[:start].to_i / per_page) + 1
+    records = RepositoryDatatableService.new(@repository,
+                                             params,
+                                             current_user,
+                                             @my_module)
+    @assigned_rows = records.assigned_rows
+    @repository_row_count = records.repository_rows.count
+    @columns_mappings = records.mappings
+    @repository_rows = records.repository_rows.page(page).per(per_page)
+    render 'repository_rows/index.json'
   end
 
   # Submit actions
   def assign_repository_records
     if params[:selected_rows].present? && params[:repository_id].present?
       records_names = []
+      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
 
-      params[:selected_rows].each do |id|
-        record = RepositoryRow.find_by_id(id)
-        next if !record || @my_module.repository_rows.include?(record)
-        record.last_modified_by = current_user
-        record.save
-        records_names << record.name
-        MyModuleRepositoryRow.create!(
-          my_module: @my_module,
-          repository_row: record,
-          assigned_by: current_user
-        )
+      RepositoryRow
+        .where(id: params[:selected_rows],
+               repository_id: params[:repository_id])
+        .find_each do |record|
+        unless @my_module.repository_rows.include?(record)
+          record.last_modified_by = current_user
+          record.save
+
+          MyModuleRepositoryRow.create!(
+            my_module: @my_module,
+            repository_row: record,
+            assigned_by: current_user
+          )
+          records_names << record.name
+        end
+
+        next unless downstream
+        @my_module.downstream_modules.each do |my_module|
+          next if my_module.repository_rows.include?(record)
+          MyModuleRepositoryRow.create!(
+            my_module: my_module,
+            repository_row: record,
+            assigned_by: current_user
+          )
+          records_names << record.name
+        end
       end
 
       if records_names.any?
+        records_names.uniq!
         Activity.create(
           type_of: :assign_repository_record,
           project: @project,
           experiment: @experiment,
           my_module: @my_module,
           user: current_user,
-          message: I18n.t(
-            'activities.assign_repository_records',
-            user: current_user.full_name,
-            task: @my_module.name,
-            repository: @repository.name,
-            records: records_names.join(', ')
-          )
+          message: I18n.t('activities.assign_repository_records',
+                          user: current_user.full_name,
+                          task: @my_module.name,
+                          repository: @repository.name,
+                          records: records_names.join(', ')
+                        )
         )
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
+        flash = I18n.t('repositories.assigned_records_downstream_flash',
+                       records: records_names.join(', ')) if downstream
         respond_to do |format|
           format.json { render json: { flash: flash }, status: :ok }
         end
@@ -442,17 +458,29 @@ class MyModulesController < ApplicationController
 
   def unassign_repository_records
     if params[:selected_rows].present? && params[:repository_id].present?
-      records = []
+      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
 
-      params[:selected_rows].each do |id|
-        record = RepositoryRow.find_by_id(id)
-        next unless record && @my_module.repository_rows.include?(record)
-        record.last_modified_by = current_user
-        record.save
-        records << record
-      end
+      records = RepositoryRow.assigned_on_my_module(params[:selected_rows],
+                                                    @my_module)
 
       @my_module.repository_rows.destroy(records & @my_module.repository_rows)
+
+      if downstream
+        @my_module.downstream_modules.each do |my_module|
+          assigned_records = RepositoryRow.assigned_on_my_module(
+            params[:selected_rows],
+            my_module
+          )
+          my_module.repository_rows.destroy(
+            assigned_records & my_module.repository_rows
+          )
+          assigned_records.update_all(last_modified_by_id: current_user.id)
+        end
+      end
+
+      # update last last_modified_by
+      records.update_all(last_modified_by_id: current_user.id)
+
       if records.any?
         Activity.create(
           type_of: :unassign_repository_record,
@@ -485,10 +513,32 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def unassign_repository_records_modal
+    selected_rows = params[:selected_rows]
+    modal = render_to_string(
+      partial: 'my_modules/modals/unassign_repository_records_modal.html.erb',
+      locals: { my_module: @my_module,
+                repository: @repository,
+                selected_rows: selected_rows }
+    )
+    render json: { html: modal }, status: :ok
+  end
+
+  def assign_repository_records_modal
+    selected_rows = params[:selected_rows]
+    modal = render_to_string(
+      partial: 'my_modules/modals/assign_repository_records_modal.html.erb',
+      locals: { my_module: @my_module,
+                repository: @repository,
+                selected_rows: selected_rows }
+    )
+    render json: { html: modal }, status: :ok
+  end
+
   # Complete/uncomplete task
   def toggle_task_state
     respond_to do |format|
-      if can_complete_module(@my_module)
+      if can_complete_module?(@my_module)
         @my_module.completed? ? @my_module.uncomplete : @my_module.complete
         completed = @my_module.completed?
         if @my_module.save
@@ -588,7 +638,7 @@ class MyModulesController < ApplicationController
       )
       # create notification for all users on the next modules in the workflow
       @my_module.my_modules.map(&:users).flatten.uniq.each do |target_user|
-        next if target_user == current_user
+        next if target_user == current_user || !target_user.recent_notification
         UserNotification.create(notification: notification, user: target_user)
       end
     end
@@ -606,79 +656,42 @@ class MyModulesController < ApplicationController
 
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_404 unless @repository && can_read_team?(@repository.team)
+    render_404 unless @repository
+    render_403 unless can_read_team?(@repository.team)
   end
 
-  def check_edit_permissions
-    unless can_edit_module(@my_module)
-      render_403
-    end
+  def load_projects_tree
+    @projects_tree = current_user.projects_tree(current_team, nil)
   end
 
-  def check_destroy_permissions
-    unless can_archive_module(@my_module)
-      render_403
-    end
+  def check_manage_permissions
+    render_403 && return unless can_manage_module?(@my_module)
   end
 
-  def check_view_info_permissions
-    unless can_view_module_info(@my_module)
-      render_403
-    end
+  def check_manage_permissions_archive
+    render_403 && return unless if my_module_params[:archived] == 'false'
+                                  can_restore_module?(@my_module)
+                                else
+                                  can_manage_module?(@my_module)
+                                end
   end
 
-  def check_view_activities_permissions
-    unless can_view_module_activities(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_protocols_permissions
-    unless can_view_module_protocols(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_results_permissions
-    unless can_view_results_in_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_samples_permissions
-    unless can_view_module_samples(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_archive_permissions
-    unless can_view_module_archive(@my_module)
-      render_403
-    end
-  end
-
-  def check_assign_samples_permissions
-    unless can_add_samples_to_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_unassign_samples_permissions
-    unless can_delete_samples_from_module(@my_module)
-      render_403
-    end
+  def check_view_permissions
+    render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
   def check_assign_repository_records_permissions
-    render_403 unless can_assign_repository_records(@my_module, @repository)
+    render_403 unless module_page? &&
+                      can_assign_repository_rows_to_module?(@my_module)
   end
 
-  def check_unassign_repository_records_permissions
-    render_403 unless can_unassign_repository_records(@my_module, @repository)
+  def check_assign_samples_permissions
+    render_403 unless module_page? &&
+                      can_assign_sample_to_module?(@my_module)
   end
 
-  def check_complete_my_module_perimission
-    render_403 unless can_complete_module(@my_module)
+  def check_complete_module_permission
+    render_403 unless can_complete_module?(@my_module)
   end
 
   def my_module_params

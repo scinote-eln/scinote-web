@@ -5,20 +5,22 @@ class ProjectsController < ApplicationController
   include InputSanitizeHelper
   include RapProgramLevelHelper
 
-  before_action :load_vars, only: [:show, :edit, :update,
-                                   :notifications, :reports,
-                                   :samples, :experiment_archive,
-                                   :delete_samples, :samples_index]
+  before_action :generate_intro_demo, only: :index
+  before_action :load_vars, only: %i(show edit update
+                                     notifications reports
+                                     samples experiment_archive
+                                     delete_samples samples_index)
+  before_action :load_projects_tree, only: %i(index show samples archive
+                                              experiment_archive)
+  before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
                                                   samples_index)
-  before_action :check_create_permissions, only: [ :new, :create ]
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
 
-  @filter_by_archived = false
-
   # except parameter could be used but it is not working.
-  layout :choose_layout
+  layout 'fluid'
 
   # Action defined in SampleActions
   DELETE_SAMPLES = 'Delete'.freeze
@@ -28,46 +30,26 @@ class ProjectsController < ApplicationController
       current_team_switch(Team.find_by_id(params[:team]))
     end
 
-    if current_user.teams.any?
-      @current_team_id = current_team.id if current_team
-
-      @current_team_id ||= current_user.teams.first.id
-      @current_sort = params[:sort].to_s
-      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
-                                                          @current_sort,
-                                                          @filter_by_archived)
-    else
-      @projects_by_teams = []
-    end
-
     @teams = current_user.teams
 
     # New project for create new project modal
     @project = Project.new
-	  # Get all RAP Program Level values for dropdown.
-    @programs = RapProgramLevel.all
   end
 
   def archive
-    @filter_by_archived = true
     index
   end
 
   def new
     @project = Project.new
+	# Get all RAP Program Level values for dropdown.
+    @programs = RapProgramLevel.all
   end
 
   def create
     @project = Project.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user
-
-    puts "Team ID: #{project_params[:team_id]}"
-    puts "New project: #{project_params[:name]}"
-    puts "Creating a new project with rap_task_level_id: #{project_params[:rap_task_level_id]}"
-    puts "Printing all values inside project_params..."
-    project_params.each { |x| puts x }
-
     if current_team.id == project_params[:team_id].to_i &&
        @project.save
       # Create user-project association
@@ -119,8 +101,7 @@ class ProjectsController < ApplicationController
     opt_rap_projects = RapProjectLevel.where(rap_topic_level_id: t_rap_topic_level_id)
     opt_rap_tasks = RapTaskLevel.where(rap_project_level_id: t_rap_project_level_id)
     puts "RAP IDs for this Project: #{t_rap_program_level_id} #{t_rap_topic_level_id} #{t_rap_project_level_id} #{t_rap_task_level_id}"
-
-
+	
     respond_to do |format|
       format.json {
         render json: {
@@ -332,6 +313,12 @@ class ProjectsController < ApplicationController
 
   private
 
+  def generate_intro_demo
+    return unless current_user.sign_in_count == 1
+    team = current_user.teams.where(created_by: current_user).first
+    seed_demo_data(current_user, team) if team && team.projects.blank?
+  end
+
   def project_params
     params.require(:project).permit(:name, :team_id, :visibility, :archived, :rap_task_level_id)
   end
@@ -341,6 +328,27 @@ class ProjectsController < ApplicationController
 
     unless @project
       render_404
+    end
+  end
+
+  def load_projects_tree
+    if current_user.teams.any?
+      @current_team = current_team if current_team
+
+      @current_team ||= current_user.teams.first
+      @current_sort = params[:sort].to_s
+      @projects_tree = current_user.projects_tree(@current_team, @current_sort)
+    else
+      @projects_tree = []
+    end
+  end
+
+  def load_archive_vars
+    if current_user.teams.any?
+      @archived_projects_by_teams =
+        current_user.projects_by_teams(@current_team.id, @current_sort, true)
+    else
+      @archived_projects_by_teams = []
     end
   end
 
@@ -354,9 +362,5 @@ class ProjectsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_project?(@project)
-  end
-
-  def choose_layout
-    action_name.in?(['index', 'archive']) ? 'main' : 'fluid'
   end
 end
