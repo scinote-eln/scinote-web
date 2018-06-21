@@ -62,7 +62,7 @@ class AppMailerPreview < ActionMailer::Preview
       fake_user,
       Notification.new(
         type_of: :system_message,
-        title: 'sciNote 9.1 released!',
+        title: 'SciNote 9.1 released!',
         message: '<a href="#" target="_blank">View release notes</a>',
         created_at: Time.now
       )
