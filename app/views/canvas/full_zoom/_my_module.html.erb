@@ -42,13 +42,8 @@
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
       <% if can_read_experiment?(my_module.experiment) %>
         <li role="presentation">
-          <a class="btn btn-link task-card-view-info" href="<%= my_module_url(id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_info" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-          </a>
-        </li>
-        <li role="presentation">
           <a class="btn btn-link task-card-view-users" href="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            <span class="fas fa-users" aria-hidden="true"></span>
             <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.users.count.positive? %>"
                   data-linked-id="<%= my_module.id %>">
               <%= my_module.users.count %>
@@ -57,24 +52,16 @@
         </li>
         <li role="presentation">
           <a class="btn btn-link task-card-view-activities" href="<%= activities_tab_my_module_url(id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_activities" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
+            <span class="fas fa-list" aria-hidden="true"></span>
           </a>
         </li>
         <li role="presentation">
           <a class="btn btn-link task-card-view-comments" href="<%= my_module_my_module_comments_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_comments" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+            <span class="fas fa-comment" aria-hidden="true"></span>
             <span class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments.count.positive? %>"
                   data-linked-id="<%= my_module.id %>">
               <%= my_module.task_comments.count %>
             </span>
-          </a>
-        </li>
-        <li role="presentation">
-          <a class="btn btn-link task-card-view-samples" href="<%= my_module_sample_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_samples" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
-            <% if my_module.samples.count.positive? %>
-              <span class="badge badge-indicator"><%= my_module.samples.count %></span>
-            <% end %>
           </a>
         </li>
       <% end %>
@@ -87,7 +74,6 @@
         <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_users" data-contents="users"></div>
         <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_activities" data-contents="activities"></div>
         <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_comments" data-contents="comments"></div>
-        <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_samples" data-contents="samples"></div>
       <% end %>
     </div>
   </div>

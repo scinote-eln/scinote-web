@@ -4,22 +4,20 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<%= render partial: "module_header" %>
+<div class="content-pane">
+  <%= render partial: "module_header" %>
 
-<div>
-  <div data-role="protocol-status-bar" style="display: inline;">
-    <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
+  <div>
+    <div data-role="protocol-status-bar" style="display: inline;">
+      <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
+    </div>
+    <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
+    <%= render partial: "my_modules/state_buttons.html.erb" %>
   </div>
-  <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
-  <%= render partial: "my_modules/state_buttons.html.erb" %>
-</div>
 
-<div data-role="steps-container">
-  <%= render partial: "protocols/steps.html.erb" %>
-</div>
-
-<!-- Tutorial data -->
-<div class="hidden" data-role="tutorial-data" data-module-id="<%= @my_module.id %>">
+  <div data-role="steps-container">
+    <%= render partial: "protocols/steps.html.erb" %>
+  </div>
 </div>
 
 <!-- URL for status bar refreshing -->
@@ -42,9 +40,6 @@
 
 <!-- Import protocol elements -->
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
-
-<!-- Image preview modal -->
-<%= render partial: "shared/image_preview_modal.html.erb" %>
 
 <!-- Complete task modal -->
 <%= render partial: 'my_modules/complete_task_modal.html.erb' %>

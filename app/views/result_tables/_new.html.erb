@@ -8,11 +8,13 @@
 				</div>
 			<% end %>
 		</div>
-		<%= f.submit t("result_tables.new.create"),
-								 class: 'btn btn-primary save-result',
-								 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE, false);" %>
-		<button type="button" class="btn btn-default cancel-new">
-			<%= t("general.cancel")%>
-		</button>
+		<div class="align-right">
+			<button type="button" class="btn btn-default cancel-new">
+				<%= t("general.cancel")%>
+			</button>
+			<%= f.submit t("result_tables.new.create"),
+									 class: 'btn btn-success save-result',
+									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE, false);" %>
+    </div>
 	<% end %>
 </div>

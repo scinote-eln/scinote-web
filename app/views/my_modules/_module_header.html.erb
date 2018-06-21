@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-6 col-sm-6 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-calendar"></span>
     </div>
     <div class="well well-sm">
@@ -10,7 +10,7 @@
   </div>
 
   <div class="col-xs-6 col-sm-6 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <% if can_manage_module?(@my_module) %>
         <%= link_to due_date_my_module_path(@my_module, format: :json), remote: true, class: "due-date-link", style: "color: inherit" do %>
           <span class="glyphicon glyphicon-calendar"></span>
@@ -38,7 +38,7 @@
   </div>
 
   <div class="col-xs-6 col-sm-6 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-ok"></span>
     </div>
     <div class="well well-sm">
@@ -51,13 +51,13 @@
 </div>
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12" id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <% if can_manage_module?(@my_module) %>
         <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_url(@my_module, format: :json) %>" style="color: inherit">
-          <span class="glyphicon glyphicon-tags"></span>
+          <span class="fas fa-tags"></span>
         </a>
       <% else %>
-        <span class="glyphicon glyphicon-tags"></span>
+        <span class="fas fa-tags"></span>
       <% end %>
     </div>
     <div class="well well-sm">
@@ -74,7 +74,7 @@
 </div>
 
 <div>
-  <div class="badge-icon bg-primary">
+  <div class="badge-icon">
      <% if can_manage_module?(@my_module) %>
       <%= link_to description_my_module_path(@my_module, format: :json), remote: true, class: "description-link", style: "color: inherit" do %>
         <span class="glyphicon glyphicon-info-sign"></span>

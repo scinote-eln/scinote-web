@@ -1,6 +1,6 @@
 <li class="activity-item">
   <span class="activity-item-date">
-    <%= l activity.created_at, format: '%H:%M' %>
+    <%= l activity.created_at, format: :full %>
   </span>
   <span class="activity-item-text">
     <%= activity_truncate(activity.message) %>

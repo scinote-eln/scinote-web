@@ -10,6 +10,7 @@
                 data: { id: experiment.id },
                 class: 'edit-experiment' %></li>
   <% end %>
+  <li data-hook="experiment-actions-second-child"></li>
   <% if can_clone_experiment?(experiment) %>
     <li><%= link_to t('experiments.clone.label_title'),
                   clone_modal_experiment_url(experiment),

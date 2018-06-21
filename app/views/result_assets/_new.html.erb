@@ -1,22 +1,28 @@
 <div class="well">
-  <div id="new-result-assets-select"
-       class="text-center new-asset-box">
-      <%=t 'assets.drag_n_drop.label_html' %> <label><span class="btn btn-primary"><%=t 'assets.drag_n_drop.browse_label' %></span>
-        <input type="file"
-               onchange="DragNDropResults.init(this.files, 'select')"
-               id="drag-n-drop-assets"
-               style="display: none" multiple>
-      </label>
+  <div id="new-result-assets-select" class="text-center new-asset-box">
+    <%=t 'assets.drag_n_drop.label_html' %>
+    <label>
+      <span class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus"></span>
+        <%=t 'assets.drag_n_drop.browse_label' %>
+      </span>
+      <input type="file"
+             onchange="DragNDropResults.init(this.files, 'select')"
+             id="drag-n-drop-assets"
+             style="display: none" multiple>
+    </label>
   </div>
   <br />
-    <button type="button"
-            class="btn btn-primary save-result"
-            disabled="true"
-            data-href="<%= my_module_result_assets_path(format: :json) %>"
-            onClick="DragNDropResults.processResult(this)"><%=t 'result_assets.new.create' %></button>
+  <div class="align-right">
     <button type="button"
             class="btn btn-default cancel-new"
             onClick="DragNDropResults.destroyAll()">
       <%= t("general.cancel")%>
     </button>
+    <button type="button"
+            class="btn btn-success save-result"
+            disabled="true"
+            data-href="<%= my_module_result_assets_path(format: :json) %>"
+            onClick="DragNDropResults.processResult(this)"><%=t 'result_assets.new.create' %></button>
+  </div>
 </div>
