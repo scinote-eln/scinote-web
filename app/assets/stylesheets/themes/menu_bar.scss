@@ -1,43 +1,38 @@
 @import "constants";
 @import "mixins";
 
-:root {
-  --menu-bar-width: 83px;
-}
-
 .menu-bar {
   background-color: $color-white;
-  box-shadow: $flyout-shadow;
+  box-shadow: 1px 3px 6px 0 $color-alto;
   height: 100%;
   left: 0;
-  padding-bottom: 50px;
+  overflow-x: hidden;
   position: fixed;
-  width: var(--menu-bar-width);
+  width: 83px;
   z-index: 1001;
+  padding-bottom: 50px;
 
   .scroll-wrapper {
     height: 100%;
     padding-top: 16px;
-    width: var(--menu-bar-width);
+    width: 83px;
     overflow-x: hidden;
   }
 
   ul.nav > li {
 
-    & > a,
-    & > span {
-      @include font-small;
-      color: $color-volcano;
+    & > a {
+      color: $color-silver-chalice;
       display: grid;
+      font-size: $font-size-h6;
       margin-left: auto;
       margin-right: auto;
-      padding: 10px 0;
+      padding: 10px;
       text-align: center;
       word-break: normal;
 
-      .fas {
-        font-size: 18px;
-        padding-bottom: 5px;
+      & > span {
+        padding-top: 4px;
       }
     }
 
@@ -50,12 +45,6 @@
         color: $color-emperor;
       }
     }
-
-    &.disabled {
-      box-shadow: none;
-      cursor: not-allowed;
-      opacity: .65;
-    }
   }
 
   ul.nav-bottom {
@@ -63,10 +52,6 @@
     padding-bottom: 16px;
     position: fixed;
     width: inherit;
-
-    .academy-color {
-      color: $brand-academy-dark;
-    }
   }
 
   .dropup {
@@ -74,37 +59,11 @@
       bottom: 0;
       left: 99%;
       margin-bottom: 0;
-
-      & > li > a {
-        padding: 8px 38px;
-      }
     }
 
     &.open > a {
       color: $color-emperor;
     }
-
-    .about-scinote {
-      font-size: 12px;
-
-      .core-version {
-        color: $color-silver-chalice;
-      }
-    }
-  }
-
-  #knowledge-center-link {
-    .fas {
-      margin-left: -26px;
-      padding: 3px;
-      position: absolute
-    }
-  }
-
-
-  #support-link,
-  #knowledge-center-link {
-    color: $brand-primary;
   }
 }
 
@@ -113,8 +72,4 @@
     position: relative;
     width: auto;
   }
-}
-
-.all-teams-navigation-link {
-  color: $brand-primary !important;
 }
