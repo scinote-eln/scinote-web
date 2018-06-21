@@ -4,7 +4,6 @@
  */
 
 var STORAGE_TREE_KEY = "scinote-sidebar-tree-collapsed-ids";
-var STORAGE_TOGGLE_KEY = "scinote-sidebar-toggled";
 
 /**
  * Get all collapsed sidebar elements.
@@ -84,33 +83,6 @@ function recalculateElementsPositions(ids, item, elements) {
     sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
   }
 }
-/**
- * Get the session stored toggled boolean or null value if
- * sidebar toggle state was not changed by user. It allow for
- * automatic toggling for small devices.
- *
- * @return True if sidebar is toggled; false otherwise.
- */
-function sessionIsSidebarToggled() {
-  var val = sessionStorage.getItem(STORAGE_TOGGLE_KEY);
-
-  if (val === null) {
-    return null;
-  }
-
-  return val === "toggled";
-}
-
-/**
- * Store the sidebar toggled boolean to session storage.
- */
-function sessionToggleSidebar() {
-  if (sessionIsSidebarToggled()) {
-    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "not_toggled");
-  } else {
-    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
-  }
-}
 
 /**
  * Setup the sidebar collapsing & expanding functionality.
@@ -128,7 +100,7 @@ function setupSidebarTree() {
       }
       el
       .find(" > span i")
-      .attr("title", "Expand this branch")
+      .attr("title", I18n.t('sidebar.branch_expand'))
       .removeClass("expanded");
     } else {
       if (animate) {
@@ -138,7 +110,7 @@ function setupSidebarTree() {
       }
       el
       .find(" > span i")
-      .attr("title", "Collapse this branch")
+      .attr("title", I18n.t('sidebar.branch_collapse'))
       .addClass("expanded");
     }
   }
@@ -147,9 +119,10 @@ function setupSidebarTree() {
   $(".tree li:has(ul)")
   .addClass("parent_li")
   .find(" > span i")
-  .attr("title", "Collapse this branch");
+  .attr("title", I18n.t('sidebar.branch_collapse'));
   $(".tree li.parent_li ")
   .find("> span i")
+  .removeClass("no-arrow")
   .addClass("glyphicon glyphicon-triangle-right expanded");
 
   // Add IDs to all parent <lis>
@@ -169,7 +142,7 @@ function setupSidebarTree() {
   // Get the session-stored elements
   var collapsedIds = sessionGetCollapsedSidebarElements();
 
-  // Get the current project stered elements
+  // Get the current project stored elements
   var currentProjectIds = _.findWhere(collapsedIds, { prid: project });
   if ( currentProjectIds ){
     currentProjectIds.ids = _.filter(currentProjectIds.ids,
@@ -241,62 +214,33 @@ function setupSidebarTree() {
     e.stopPropagation();
     return false;
   });
-}
 
-/**
- * Initialize the show/hide toggling of sidebar.
- */
-function initializeSidebarToggle() {
-  var wrapper = $("#wrapper");
-  var toggled = sessionIsSidebarToggled();
+  // Add bold style to all levels of selected element
+  $(".tree li.active ")
+  .parents('.parent_li[data-parent="candidate"]')
+  .find("> span a")
+  .css("font-weight", "bold");
 
-  if (toggled || toggled === null && $(window).width() <
-      <%= Constants::SCREEN_WIDTH_LARGE %>) {
-    wrapper.addClass("no-animation");
-    wrapper.addClass("toggled");
-    // Cause reflow of the wrapper element
-    wrapper[0].offsetHeight;
-    wrapper.removeClass("no-animation");
-    $(".navbar-secondary").addClass("navbar-without-sidebar");
-  }
-
-  $("#toggle-sidebar-link").on("click", function() {
-    $("#wrapper").toggleClass("toggled");
-    sessionToggleSidebar();
-    $(".navbar-secondary").toggleClass("navbar-without-sidebar", sessionIsSidebarToggled());
-    return false;
-  });
+  // Add custom borders to tree links
+  $(".tree li span.tree-link ").after("<div class='border-custom'></div>");
 }
 
 // Resize the sidebar to accomodate to the page size
 function resizeSidebarContents() {
-  var wrapper = $("#wrapper");
   var tree = $("#sidebar-wrapper .tree");
-  var toggled = sessionIsSidebarToggled();
-  var navbar = $(".navbar-secondary");
 
+  // Set vertical scrollbar on navigation tree
   if (tree.length && tree.length == 1) {
     tree.css(
       "height",
       ($(window).height() - tree.position().top - 50) + "px"
     );
   }
-  // Automatic toggling of sidebar for smaller devices
-  if (toggled === null) {
-    if ($(window).width() < <%= Constants::SCREEN_WIDTH_LARGE %>) {
-      wrapper.addClass("toggled");
-      navbar.addClass("navbar-without-sidebar");
-    } else {
-      wrapper.removeClass("toggled");
-      navbar.removeClass("navbar-without-sidebar");
-    }
-  }
 }
 
 (function () {
   // Initialize click listeners
   setupSidebarTree();
-  initializeSidebarToggle();
 
   // Actually display wrapper, which is, up to now,
   // hidden

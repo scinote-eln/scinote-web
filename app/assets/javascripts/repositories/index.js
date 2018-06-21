@@ -66,7 +66,7 @@
         type: "GET",
         dataType: "json",
         success: function (data) {
-        	var tabBody = $(pane.context.hash).find(".tab-content-body");
+          var tabBody = $(pane.context.hash).find(".tab-content-body");
           tabBody.html(data.html);
           pane.tab('show').promise().done(function(el) {
             initImportRecordsModal();
@@ -96,9 +96,8 @@
     })
   }
 
-  $('.create-repository').initializeModal('#create-repo-modal');
-
   $(document).ready(function() {
+    $('#create-new-repository').initializeModal('#create-repo-modal');
     loadRepositoryTab();
     initImportRecordsModal();
   });

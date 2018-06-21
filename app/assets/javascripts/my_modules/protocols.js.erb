@@ -17,7 +17,6 @@ function init() {
   initImport();
   Comments.bindNewElement();
   Comments.initialize();
-  initTutorial();
   setupAssetsLoading();
 }
 
@@ -111,31 +110,6 @@ function bindEditDueDateAjax() {
     editDueDateModalBody.find("form").off("ajax:success ajax:error");
     editDueDateModalBody.html("");
   });
-}
-
-/**
- * Initializes tutorial
- */
-function initTutorial() {
-  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (stepNum >= 12 && stepNum <= 14) {
-    var resultsTab = $('#results-nav-tab');
-
-    var nextPage = resultsTab.find('a').attr('href');
-    var steps = [{
-      intro: I18n.t('tutorial.module_protocols_html'),
-    }, {
-      element: $('#protocol-copy-to-repository')[0],
-      intro: I18n.t('tutorial.module_protocols_save_html'),
-      position: 'right'
-    }, {
-      element: resultsTab[0],
-      intro: I18n.t('tutorial.module_protocols_click_results_html'),
-      position: 'right'
-    }];
-    initPageTutorialSteps(12, 14, nextPage, function() {}, function() {},
-     steps);
-  }
 }
 
 function initCopyToRepository() {
@@ -320,6 +294,9 @@ function initLoadFromRepositoryTable(content) {
       { data: "5" },
       { data: "6" }
     ],
+    oLanguage: {
+      sSearch: I18n.t('general.filter')
+    },
     rowCallback: function(row, data, dataIndex) {
       // Get row ID
       var rowId = data["DT_RowId"];

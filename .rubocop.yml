@@ -288,7 +288,10 @@ Layout/TrailingBlankLines:
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: no_comma
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: no_comma
+
+Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: no_comma
 
 Naming/VariableName:
@@ -379,16 +382,16 @@ Metrics/PerceivedComplexity:
 Lint/AssignmentInCondition:
   AllowSafeAssignment: true
 
-Lint/BlockAlignment:
+Layout/BlockAlignment:
   EnforcedStyleAlignWith: either
 
-Lint/EndAlignment:
+Layout/EndAlignment:
   EnforcedStyleAlignWith: keyword
 
 Lint/DuplicateMethods:
   Enabled: false
 
-Lint/DefEndAlignment:
+Layout/DefEndAlignment:
   EnforcedStyleAlignWith: start_of_line
 
 Lint/UnusedBlockArgument:

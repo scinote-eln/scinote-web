@@ -15,7 +15,6 @@
     function init() {
       initHandsOnTables($(document));
       _expandAllResults();
-      _initTutorial();
       applyCollapseLinkCallBack();
 
       Comments.bindNewElement();
@@ -127,28 +126,6 @@
             parseInt($(table).css('max-height'), 10) - 30) {
         $(table).find('.ht_master .wtHolder').css({ 'height': '100%',
                                                      'width': '100%' });
-      }
-    }
-
-    /**
-     * Initializes tutorial
-     */
-    function _initTutorial() {
-      var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-      if (stepNum >= 15 && stepNum <= 16) {
-        var samplesTab = $('#module-samples-nav-tab');
-
-        var nextPage = samplesTab.find('a').attr('href');
-        var steps = [{
-          element: $('#results-toolbar')[0],
-          intro: I18n.t('tutorial.module_results_html')
-        }, {
-          element: samplesTab[0],
-          intro: I18n.t('tutorial.module_results_click_samples_html'),
-          position: 'left'
-        }];
-        initPageTutorialSteps(15, 16, nextPage, function() {}, function() {},
-         steps);
       }
     }
 
