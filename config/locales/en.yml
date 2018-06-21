@@ -213,14 +213,6 @@ en:
       delete: "Delete"
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occured while deleting comment."
-
-	
-	
-	
-	
-	
-	
-	
   projects:
     index:
       head_title: "Home"
