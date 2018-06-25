@@ -819,7 +819,6 @@ ActiveRecord::Schema.define(version: 20180524091143) do
     t.string "invited_by_type"
     t.integer "invited_by_id"
     t.integer "invitations_count", default: 0
-    t.integer "tutorial_status", default: 0, null: false
     t.integer "current_team_id"
     t.string "authentication_token", limit: 30
     t.jsonb "settings", default: {}, null: false

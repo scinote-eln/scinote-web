@@ -83,13 +83,14 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
+      about: "About SciNote"
     help:
       tutorials: "Tutorials"
       release_notes: "Release notes"
       support: "Customer support"
       premium: "Premium"
       contact: "Contact us"
-      about: "About sciNote"
+      about: "About SciNote"
       training: "Training"
     activities:
       none: "No activities!"

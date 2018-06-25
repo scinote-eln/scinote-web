@@ -34,6 +34,7 @@ class ProjectsController < ApplicationController
 
     # New project for create new project modal
     @project = Project.new
+    @programs = RapProgramLevel.all
   end
 
   def archive
@@ -42,8 +43,18 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-	# Get all RAP Program Level values for dropdown.
+  	# Get all RAP Program Level values for dropdown.
     @programs = RapProgramLevel.all
+    puts "**********************************"
+    puts "**********************************"
+    puts "**********************************"
+    puts "RAP programs: "
+    @programs.each do |p|
+      puts "#{p.id} #{p.name}"
+    end
+    puts "**********************************"
+    puts "**********************************"
+    puts "**********************************"
   end
 
   def create
