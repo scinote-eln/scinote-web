@@ -11,9 +11,9 @@ class TeamsController < ApplicationController
     unless import_params[:file]
       return parse_sheet_error(t('teams.parse_sheet.errors.no_file_selected'))
     end
-    if import_params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
+    if import_params[:file].size > Rails.configuration.x.file_max_size_mb.megabytes
       error = t('general.file.size_exceeded',
-                file_size: Constants::FILE_MAX_SIZE_MB)
+                file_size: Rails.configuration.x.file_max_size_mb)
       return parse_sheet_error(error)
     end
 

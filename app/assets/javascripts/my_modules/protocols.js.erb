@@ -470,7 +470,7 @@ function initImport() {
         } else {
           if (data.status === 'size_too_large') {
             alert('<%= I18n.t('my_modules.protocols.load_from_file_size_error',
-                             size: Constants::FILE_MAX_SIZE_MB ) %>');
+                             size: Rails.configuration.x.file_max_size_mb ) %>');
           } else {
             alert(I18n.t("my_modules.protocols.load_from_file_error"));
           }
