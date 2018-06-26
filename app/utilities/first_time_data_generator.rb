@@ -19,7 +19,7 @@ module FirstTimeDataGenerator
     repository_column_sample_types = RepositoryColumn.create(
       repository: repository,
       created_by: user,
-      data_type: :RepositoryListValue,
+      # data_type: :RepositoryListValue,
       name: 'Sample Types'
     )
 
@@ -27,7 +27,7 @@ module FirstTimeDataGenerator
     repository_column_sample_groups = RepositoryColumn.create(
       repository: repository,
       created_by: user,
-      data_type: :RepositoryListValue,
+      # data_type: :RepositoryListValue,
       name: 'Sample Groups'
     )
 
