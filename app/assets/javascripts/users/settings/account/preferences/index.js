@@ -64,34 +64,8 @@
     $(this).renderFormErrors("user", data.responseJSON);
   });
 
-  var repeatTutorialModal = $("#repeat-tutorial-modal");
-  var repeatTutorialModalBody = repeatTutorialModal.find(".modal-body");
-  initRepeatTutorialModal();
   notificationsSettings();
   initNotificationSettingsForm();
-
-  $("#reset-tutorial-btn")
-    .on("ajax:before", function () {
-      repeatTutorialModal.modal('show');
-    })
-
-    .on("ajax:success", function (e, data) {
-      initRepeatTutorialModalBody(data);
-    });
-
-  function initRepeatTutorialModal() {
-  // Remove modal content when modal window is closed.
-    repeatTutorialModal.on("hidden.bs.modal", function () {
-      repeatTutorialModalBody.html("");
-    });
-  }
-
-  // Initialize ajax listeners and elements style on modal body. This
-  // function must be called when modal body is changed.
-  function initRepeatTutorialModalBody(data) {
-    repeatTutorialModalBody.html(data.html);
-    repeatTutorialModalBody.find(".selectpicker").selectpicker();
-  }
 
   // Setup notification checkbox buttons
   function notificationsSettings() {
@@ -101,10 +75,10 @@
     for (var i = 0; i < notification_settings.length; i++ ) {
       var setting = $('[name="' + notification_settings[i] + '"]');
       var dependant = $('[name="' + notification_settings[i] + '_email"]');
-      dependant.checkboxpicker({ onActiveCls: 'btn-primary' });
+      dependant.checkboxpicker({ onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle' });
       setting
         .checkboxpicker({
-          onActiveCls: 'btn-primary'
+          onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
         }).change(function() {
           if ( $(this).prop('checked') ) {
             enableDependant($('[name="' + $(this).attr('name') + '_email"]'));
@@ -126,7 +100,7 @@
     function setEmailSwitch(setting) {
       setting
         .checkboxpicker({
-          onActiveCls: 'btn-primary'
+          onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
         });
       if ( setting.attr('value') === 'true' ) {
         setting.prop('checked', true);
@@ -149,7 +123,7 @@
     var system_message_notification = $('[name="system_message_notification"]');
     system_message_notification
       .checkboxpicker({
-        onActiveCls: 'btn-primary'
+        onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
       });
     system_message_notification.prop('checked', true);
     system_message_notification.prop('disabled', true);
@@ -158,7 +132,7 @@
     var system_message_notification_mail = $('[name="system_message_notification_email"]');
     system_message_notification_mail
       .checkboxpicker({
-        onActiveCls: 'btn-primary'
+        onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
       });
     system_message_notification_mail.prop(
       'checked',

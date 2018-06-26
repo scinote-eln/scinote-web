@@ -4,11 +4,11 @@
 <% if order.blank? and @order.present? then order = @order end %>
 <% timestamp = Time.current + 1.year - 1.days %>
 <% rows_json = my_module.repository_json_hot(repository.id, order) %>
-<div class="report-element report-module-repository-element" data-sort-hot="1" data-ts="<%= timestamp.to_i %>" data-type="my_module_repository" data-id='{ "my_module_id": <%= my_module.id %>, "repository_id": <%= repository.id %> }' data-scroll-id="<%= "#{my_module.id}_#{repository.id}" %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-name="<%= repository.name %>" data-icon-class="fa fa-cubes">
+<div class="report-element report-module-repository-element" data-sort-hot="1" data-ts="<%= timestamp.to_i %>" data-type="my_module_repository" data-id='{ "my_module_id": <%= my_module.id %>, "repository_id": <%= repository.id %> }' data-scroll-id="<%= "#{my_module.id}_#{repository.id}" %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-name="<%= repository.name %>" data-icon-class="fas fa-list-alt">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left repository-icon">
-        <span class="fa fa-cubes"></span>
+        <i class="fas fa-list-alt"></i>
       </div>
       <div class="pull-left repository-name">
         <%=t "projects.reports.elements.module_repository.name", repository: repository.name, my_module: my_module.name %>

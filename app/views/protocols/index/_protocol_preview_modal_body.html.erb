@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-6 col-sm-4 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-calendar"></span>
     </div>
     <div class="well well-sm">
@@ -10,7 +10,7 @@
   </div>
 
   <div class="col-xs-6 col-sm-4 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-calendar"></span>
     </div>
     <div class="well well-sm">
@@ -20,8 +20,8 @@
   </div>
 
   <div class="col-xs-12 col-sm-4 col-md-4">
-    <div class="badge-icon bg-primary">
-      <span class="glyphicon glyphicon-user"></span>
+    <div class="badge-icon">
+      <span class="fas fa-user fa-lg"></span>
     </div>
     <div class="well well-sm">
       <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.added_by" %>:</span>
@@ -30,7 +30,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-6 col-md-6">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-text-color"></span>
     </div>
     <div class="well well-sm">
@@ -40,7 +40,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-6 col-md-6">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-education"></span>
     </div>
     <div class="well well-sm">
@@ -50,7 +50,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-info-sign"></span>
     </div>
     <div class="well well-sm">
@@ -70,7 +70,7 @@
     <% protocol.steps.order(:position).each do |step| %>
       <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
         <div class="badge-num">
-          <span class="badge bg-primary size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+          <span class="badge size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
         </div>
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -112,46 +112,7 @@
                     <ul>
                       <% assets.each do |asset| %>
                         <li>
-                          <% if can_read_protocol_in_repository?(@protocol) %>
-                            <% if asset.file_present %>
-                              <% if asset.file.processing? %>
-                                <span data-status='asset-loading'
-                                      data-present-url='<%= file_present_asset_path(asset) %>'>
-                                  <%= image_tag 'medium/processing.gif' %>
-                                </span>
-                              <% else %>
-                                <% if asset.is_image? %>
-                                  <%= link_to download_asset_path(asset),
-                                    class: 'image-preview-link',
-                                    id: "modal_link#{asset.id}",
-                                    data: {no_turbolink: true, id: true, status: "asset-present",
-                                      description: "#{step.position + 1}. #{truncate(step.name, length: Constants::FILENAME_TRUNCATION_LENGTH)}"} do %>
-                                    <%= image_tag asset.url(:medium), data: {'preview-url': large_image_url_asset_path(asset)} %>
-                                    <p><%= truncate(asset.file_file_name,
-                                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
-                                  <% end %>
-                                <% else %>
-                                  <%= render partial: 'steps/wopi_controlls.html.erb', locals: { asset: asset, view_only: true } %>
-                                <% end %>
-                              <% end %>
-                            <% else %>
-                              <span data-status='asset-loading'
-                                    data-present-url='<%= file_present_asset_path(asset) %>'>
-                                <%= image_tag 'medium/processing.gif' %>
-                              </span>
-                            <% end %>
-                          <% else %>
-                            <% if asset.file.processing? %>
-                              <span data-status='asset-loading'
-                                    data-present-url='<%= file_present_asset_path(asset) %>'>
-                                <%= image_tag 'medium/processing.gif' %>
-                              </span>
-                            <% else %>
-                              <%= image_tag asset.url(:medium) if asset.is_image? %>
-                            <% end %>
-                            <p><%= truncate(asset.file_file_name,
-                                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
-                          <% end %>
+                          <%= render partial: "shared/asset_link", locals: { asset: asset, display_image_tag: true }, formats: :html %>
                         </li>
                       <% end %>
                     </ul>

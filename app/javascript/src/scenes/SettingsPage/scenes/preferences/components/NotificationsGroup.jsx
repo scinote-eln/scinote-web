@@ -113,7 +113,7 @@ class NotificationsGroup extends Component {
     }
   }
 
-  // check if the in sciNote notification is disabled
+  // check if the in SciNote notification is disabled
   buttonGroupStatus() {
     return (
       this.props.type !== SYSTEM_NOTIFICATION && !this.props.inAppNotification

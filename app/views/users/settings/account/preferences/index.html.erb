@@ -1,14 +1,12 @@
 <% provide(:head_title, t("users.settings.account.preferences.head_title")) %>
+<% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "users/settings/navigation.html.erb" %>
+<%= render partial: "users/settings/sidebar.html.erb" %>
 <div class="tab-content">
-  <div class="tab-pane tab-pane-settings active" role="tabpanel">
+  <div class="tab-pane content-pane active" role="tabpanel">
 
     <div class="row">
-      <div class="col-xs-12 col-sm-3">
-        <%= render partial: 'users/settings/account/navigation.html.erb' %>
-      </div>
-      <div class="col-xs-12 col-sm-9">
+      <div class="col-xs-12 col-sm-12">
         <%= form_for(@user,
                      url: update_preferences_path(format: :json),
                      remote: true,
@@ -46,19 +44,10 @@
               </div>
               <div>
                 <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                <%= f.submit t("general.update"), class: "btn btn-primary" %>
+                <%= f.submit t("general.save"), class: "btn btn-success" %>
               </div>
             </div>
           </div>
-        <% end %>
-        <% if Rails.configuration.x.enable_tutorial %>
-        <hr>
-        <strong><%= t('tutorial.title') %></strong> <br>
-          <%= link_to t('users.settings.account.preferences.tutorial.repeat_tutorial'),
-                      tutorial_path(format: :json),
-                      remote: true,
-                      class: 'btn btn-primary',
-                      id: 'reset-tutorial-btn' %>
         <% end %>
         <hr>
         <div class="notification-settings-container">
@@ -69,7 +58,9 @@
                        remote: true) do |f| %>
           <div class="row">
             <div class="col-sm-2">
-              <span class="assignment hidden-sm"><%= fa_icon 'newspaper-o' %></span>
+              <span class="assignment hidden-sm">
+                <i class="fas fa-newspaper"></i>
+              </span>
             </div>
             <div class="col-sm-10">
               <strong><%=t 'notifications.form.assignments' %></strong>
@@ -149,23 +140,5 @@
   </div>
   <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
 </div>
-
-<!-- Repeat tutorial modal -->
-<div class="modal" id="repeat-tutorial-modal" tabindex="-1" role="dialog" aria-labelledby="repeat-tutorial-modal-label">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" ><%= t("users.settings.account.preferences.tutorial.modal_title") %></h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 
 <%= javascript_include_tag "users/settings/account/preferences/index" %>

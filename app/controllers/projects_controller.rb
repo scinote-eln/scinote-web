@@ -34,7 +34,9 @@ class ProjectsController < ApplicationController
 
     # New project for create new project modal
     @project = Project.new
+    # Get all RAP Program Level values for dropdown.
     @programs = RapProgramLevel.all
+
   end
 
   def archive
@@ -43,18 +45,6 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-  	# Get all RAP Program Level values for dropdown.
-    @programs = RapProgramLevel.all
-    puts "**********************************"
-    puts "**********************************"
-    puts "**********************************"
-    puts "RAP programs: "
-    @programs.each do |p|
-      puts "#{p.id} #{p.name}"
-    end
-    puts "**********************************"
-    puts "**********************************"
-    puts "**********************************"
   end
 
   def create
@@ -112,13 +102,13 @@ class ProjectsController < ApplicationController
     opt_rap_projects = RapProjectLevel.where(rap_topic_level_id: t_rap_topic_level_id)
     opt_rap_tasks = RapTaskLevel.where(rap_project_level_id: t_rap_project_level_id)
     puts "RAP IDs for this Project: #{t_rap_program_level_id} #{t_rap_topic_level_id} #{t_rap_project_level_id} #{t_rap_task_level_id}"
-	
+
     respond_to do |format|
       format.json {
         render json: {
           html: render_to_string({
             partial: "edit.html.erb",
-            locals: { project: @project, sel_rap_ids: sel_rap_ids, opt_rap_programs: opt_rap_programs, 
+            locals: { project: @project, sel_rap_ids: sel_rap_ids, opt_rap_programs: opt_rap_programs,
               opt_rap_topics: opt_rap_topics, opt_rap_projects: opt_rap_projects, opt_rap_tasks: opt_rap_tasks }
           }),
           title: t('projects.index.modal_edit_project.modal_title',

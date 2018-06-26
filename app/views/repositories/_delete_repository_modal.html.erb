@@ -20,13 +20,13 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
         <%= link_to t('repositories.index.modal_delete.delete'),
                     team_repository_path(id: @repository),
                     id: "confirm-repo-delete",
                     method: :delete,
                     type: 'button',
-                    class: 'btn btn-primary' %>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
+                    class: 'btn btn-danger' %>
       </div>
     </div>
   </div>

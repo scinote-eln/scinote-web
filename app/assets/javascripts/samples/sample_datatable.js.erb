@@ -271,10 +271,6 @@ setTimeout(function () {
   table.columns.adjust();
 }, 10);
 
-
-// Enables noSearchHidden plugin
-$.fn.dataTable.defaults.noSearchHidden = true;
-
 // Updates "Select all" control in a data table
 function updateDataTableSelectAllCtrl(table) {
     var $table = table.table().node();
@@ -1081,7 +1077,7 @@ function changeToEditMode() {
         var editable = $(el).is('[data-editable]');
         var deletable = $(el).is('[data-deletable]');
 
-        var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
+        var visClass = (visible) ? 'fas fa-eye' : 'glyphicon-eye-close';
         var visLi = (visible) ? '' : 'col-invisible';
         var editClass = (editable) ? '' : 'disabled';
         var delClass = (deletable) ? '' : 'disabled';
@@ -1109,7 +1105,7 @@ function changeToEditMode() {
           '<span class="ok glyphicon glyphicon-ok" style="display: none;" title="<%= I18n.t("general.save") %>"></span>' +
           '<span class="cancel glyphicon glyphicon-remove" style="display: none;" title="<%= I18n.t("general.cancel") %>"></span>' +
           '<span class="vis glyphicon ' + visClass + '" title="<%= I18n.t("samples.columns_visibility") %>"></span> ' +
-          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '" title="<%= I18n.t("general.edit") %>"></span>' +
+          '<span class="edit fas fa-pencil-alt ' + editClass + '" title="<%= I18n.t("general.edit") %>"></span>' +
           '<span class="del glyphicon glyphicon-trash ' + delClass + '" title="<%= I18n.t("samples.columns_delete") %>"></span>' +
           '</span><br></span></li>';
         dropdownList.append(html);
@@ -1145,12 +1141,12 @@ function changeToEditMode() {
 
       if (column.visible()) {
         self.addClass('glyphicon-eye-close');
-        self.removeClass('glyphicon-eye-open');
+        self.removeClass('fas fa-eye');
         li.addClass('col-invisible');
         column.visible(false);
         table.setColumnSearchable(column.index(), false);
       } else {
-        self.addClass('glyphicon-eye-open');
+        self.addClass('fas fa-eye');
         self.removeClass('glyphicon-eye-close');
         li.removeClass('col-invisible');
         column.visible(true);

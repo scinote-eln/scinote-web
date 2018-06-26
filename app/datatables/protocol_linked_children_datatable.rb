@@ -55,13 +55,13 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
   def record_html(record)
     res = ''
     res += "<ol class='breadcrumb'>"
-    res += "<li><span class='glyphicon glyphicon-blackboard'></span>&nbsp;"
+    res += "<li><span class='fas fa-folder'></span>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/project_text.html.erb',
       locals: { project: record.my_module.experiment.project }
     )
     res += '</li>'
-    res += "<li><i class='fa fa-flask'></i>&nbsp;"
+    res += "<li><i class='fas fa-flask'></i>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/experiment_text.html.erb',
       locals: { experiment: record.my_module.experiment }

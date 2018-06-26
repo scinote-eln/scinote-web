@@ -4,7 +4,7 @@ class CustomFieldsController < ApplicationController
   before_action :load_vars, except: :create
   before_action :load_vars_nested, only: [:create, :destroy_html]
   before_action :check_create_permissions, only: :create
-  before_action :check_update_and_delete_permissions, except: :create
+  before_action :check_manage_permissions, except: :create
 
   def create
     @custom_field = CustomField.new(custom_field_params)
@@ -105,11 +105,11 @@ class CustomFieldsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_manage_sample_columns?(@team)
+    render_403 unless can_create_sample_columns?(@team)
   end
 
-  def check_update_and_delete_permissions
-    render_403 unless can_update_or_delete_custom_field?(@custom_field)
+  def check_manage_permissions
+    render_403 unless can_manage_sample_column?(@custom_field)
   end
 
   def custom_field_params

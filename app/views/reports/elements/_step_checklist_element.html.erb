@@ -1,11 +1,11 @@
 <% if checklist.blank? and @checklist.present? then checklist = @checklist end %>
 <% items = checklist.checklist_items %>
 <% timestamp = checklist.created_at %>
-<div class="report-element report-step-attachment-element report-step-checklist-element" data-ts="<%= timestamp.to_i %>" data-type="step_checklist" data-id='{ "checklist_id": <%= checklist.id %> }' data-scroll-id="<%= checklist.id %>" data-name="<%= checklist.name %>" data-icon-class="glyphicon glyphicon-list">
+<div class="report-element report-step-attachment-element report-step-checklist-element" data-ts="<%= timestamp.to_i %>" data-type="step_checklist" data-id='{ "checklist_id": <%= checklist.id %> }' data-scroll-id="<%= checklist.id %>" data-name="<%= checklist.name %>" data-icon-class="fas fa-tasks">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left attachment-icon">
-          <span class="glyphicon glyphicon-list"></span>
+          <span class="fas fa-tasks"></span>
       </div>
       <div class="pull-left checklist-name">
         <%= custom_auto_link(t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)) %>

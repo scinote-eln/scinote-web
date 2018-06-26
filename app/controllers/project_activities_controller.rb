@@ -26,9 +26,7 @@ class ProjectActivitiesController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_project_activities(@project)
-      render_403
-    end
+    render_403 unless can_read_project?(@project)
   end
 
 end
