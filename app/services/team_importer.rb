@@ -3,10 +3,7 @@ class TeamImporter
     @user_mappings = {}
     @notification_mappings = {}
     @repository_mappings = {}
-    @sample_group_mappings = {}
-    @sample_type_mappings = {}
     @custom_field_mappings = {}
-    @sample_mappings = {}
     @project_mappings = {}
     @repository_column_mappings = {}
     @experiment_mappings = {}
@@ -19,6 +16,7 @@ class TeamImporter
     @tag_mappings = {}
     @result_text_mappings = {}
     @repository_row_mappings = {}
+    @repository_list_item_mappings = {}
     @result_mappings = {}
     @checklist_mappings = {}
     @table_mappings = {}
@@ -28,7 +26,6 @@ class TeamImporter
     @repository_row_counter = 0
     @protocol_counter = 0
     @step_counter = 0
-    @sample_counter = 0
     @report_counter = 0
     @my_module_counter = 0
     @notification_counter = 0
@@ -70,10 +67,7 @@ class TeamImporter
         user_team.save!
       end
 
-      create_sample_groups(team_json['sample_groups'], team)
-      create_sample_types(team_json['sample_types'], team)
       create_custom_fields(team_json['custom_fields'], team)
-      create_samples(team_json['samples'], team)
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
       create_projects(team_json['projects'], team)
@@ -114,7 +108,7 @@ class TeamImporter
 
       team_json['repositories'].each do |repository_json|
         repository_json['repository_rows'].each do |repository_row_json|
-          create_repository_cells(repository_row_json['repository_cells'])
+          create_repository_cells(repository_row_json['repository_cells'], team)
         end
       end
 
@@ -132,7 +126,6 @@ class TeamImporter
       puts "Imported reports: #{@report_counter}"
       puts "Imported repositories: #{@repository_counter}"
       puts "Imported repository rows: #{@repository_row_counter}"
-      puts "Imported samples: #{@sample_counter}"
       puts "Imported tasks: #{@my_module_counter}"
       puts "Imported protocols: #{@protocol_counter}"
       puts "Imported steps: #{@step_counter}"
@@ -184,11 +177,6 @@ class TeamImporter
         step.save! if update_annotation(step.description)
       end
     end
-    team.samples.each do |sample|
-      sample.sample_custom_fields.find_each do |cf|
-        cf.save! if update_annotation(cf.value)
-      end
-    end
     team.repositories.each do |rep|
       rep.repository_rows.find_each do |row|
         row.repository_cells.each do |cell|
@@ -202,7 +190,7 @@ class TeamImporter
   def update_annotation(text)
     return false if text.nil?
     updated = false
-    %w(prj exp tsk sam).each do |name|
+    %w(prj exp tsk rep_item).each do |name|
       text.scan(/~#{name}~\w+\]/).each do |text_match|
         orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
         orig_id = orig_id_encoded.base62_decode
@@ -214,8 +202,8 @@ class TeamImporter
             @experiment_mappings[orig_id]
           when 'tsk'
             @my_module_mappings[orig_id]
-          when 'sam'
-            @sample_mappings[orig_id]
+          when 'rep_item'
+            @repository_row_mappings[orig_id]
           end
         next unless new_id
         new_id_encoded = new_id.base62_encode
@@ -317,13 +305,6 @@ class TeamImporter
         user_identity.user_id = user.id
         user_identity.save!
       end
-      user_json['samples_tables'].each do |samples_table_json|
-        samples_table = SamplesTable.new(samples_table_json)
-        samples_table.id = nil
-        samples_table.user_id = user.id
-        samples_table.team_id = team.id
-        samples_table.save!
-      end
     end
   end
 
@@ -353,7 +334,10 @@ class TeamImporter
       @repository_mappings[orig_repository_id] = repository.id
       @repository_counter += 1
       repository_json['repository_columns'].each do |repository_column_json|
-        repository_column = RepositoryColumn.new(repository_column_json)
+
+        repository_column = RepositoryColumn.new(
+          repository_column_json['repository_column']
+        )
         orig_rep_col_id = repository_column.id
         repository_column.id = nil
         repository_column.repository = repository
@@ -361,6 +345,18 @@ class TeamImporter
           find_user(repository_column.created_by_id)
         repository_column.save!
         @repository_column_mappings[orig_rep_col_id] = repository_column.id
+        next unless repository_column.data_type == 'RepositoryListValue'
+        repository_column_json['repository_list_items'].each do |list_item|
+          created_by_id = find_user(repository_column.created_by_id)
+          repository_list_item = RepositoryListItem.new(data: list_item['data'])
+          repository_list_item.repository_column = repository_column
+          repository_list_item.repository = repository
+          repository_list_item.created_by_id = created_by_id
+          repository_list_item.last_modified_by_id = created_by_id
+          repository_list_item.save!
+          @repository_list_item_mappings[list_item['id']] =
+            repository_list_item.id
+        end
       end
       create_repository_rows(repository_json['repository_rows'], repository)
     end
@@ -390,7 +386,7 @@ class TeamImporter
     end
   end
 
-  def create_repository_cells(repository_cells_json)
+  def create_repository_cells(repository_cells_json, team)
     repository_cells_json.each do |repository_cell_json|
       repository_cell =
         RepositoryCell.new(repository_cell_json['repository_cell'])
@@ -399,44 +395,9 @@ class TeamImporter
         @repository_column_mappings[repository_cell.repository_column_id]
       repository_cell.repository_row_id =
         @repository_row_mappings[repository_cell.repository_row_id]
-      repository_value =
-        RepositoryTextValue.new(repository_cell_json['repository_value'])
-      repository_value.id = nil
-      repository_value.created_by_id = find_user(repository_value.created_by_id)
-      repository_value.last_modified_by_id =
-        find_user(repository_value.last_modified_by_id)
-      repository_value.repository_cell = repository_cell
-      repository_value.save!
-    end
-  end
-
-  def create_sample_groups(sample_groups_json, team)
-    puts 'Creating sample groups...'
-    sample_groups_json.each do |sample_group_json|
-      sample_group = SampleGroup.new(sample_group_json)
-      orig_group_id = sample_group.id
-      sample_group.id = nil
-      sample_group.team = team
-      sample_group.created_by_id = find_user(sample_group.created_by_id)
-      sample_group.last_modified_by_id =
-        find_user(sample_group.last_modified_by_id)
-      sample_group.save!
-      @sample_group_mappings[orig_group_id] = sample_group.id
-    end
-  end
-
-  def create_sample_types(sample_types_json, team)
-    puts 'Creating sample types...'
-    sample_types_json.each do |sample_type_json|
-      sample_type = SampleType.new(sample_type_json)
-      orig_type_id = sample_type.id
-      sample_type.id = nil
-      sample_type.team = team
-      sample_type.created_by_id = find_user(sample_type.created_by_id)
-      sample_type.last_modified_by_id =
-        find_user(sample_type.last_modified_by_id)
-      sample_type.save!
-      @sample_type_mappings[orig_type_id] = sample_type.id
+      create_cell_value(repository_cell,
+                        repository_cell_json,
+                        team)
     end
   end
 
@@ -452,31 +413,6 @@ class TeamImporter
         find_user(custom_field.last_modified_by_id)
       custom_field.save!
       @custom_field_mappings[orig_custom_field_id] = custom_field.id
-    end
-  end
-
-  def create_samples(samples_json, team)
-    puts 'Creating samples...'
-    samples_json.each do |sample_json|
-      sample = Sample.new(sample_json['sample'])
-      orig_sample_id = sample.id
-      sample.id = nil
-      sample.team = team
-      sample.user_id = find_user(sample.user_id)
-      sample.sample_group_id = @sample_group_mappings[sample.sample_group_id]
-      sample.sample_type_id = @sample_type_mappings[sample.sample_type_id]
-      sample.last_modified_by_id = find_user(sample.last_modified_by_id)
-      sample.save!
-      @sample_mappings[orig_sample_id] = sample.id
-      @sample_counter += 1
-      sample_json['sample_custom_fields'].each do |s_custom_field_json|
-        s_custom_field = SampleCustomField.new(s_custom_field_json)
-        s_custom_field.id = nil
-        s_custom_field.sample = sample
-        s_custom_field.custom_field_id =
-          @custom_field_mappings[s_custom_field.custom_field_id]
-        s_custom_field.save!
-      end
     end
   end
 
@@ -605,17 +541,6 @@ class TeamImporter
           find_user(task_comment.last_modified_by_id)
         task_comment.my_module = my_module
         task_comment.save!
-      end
-
-      my_module_json['sample_my_modules'].each do |sample_module_json|
-        sample_module = SampleMyModule.new(sample_module_json)
-        sample_module.id = nil
-        sample_module.sample_id =
-          @sample_mappings[sample_module.sample_id]
-        sample_module.my_module = my_module
-        sample_module.assigned_by_id =
-          find_user(sample_module.assigned_by_id)
-        sample_module.save!
       end
 
       my_module_json['user_my_modules'].each do |user_module_json|
@@ -874,5 +799,31 @@ class TeamImporter
   def find_user(user_id)
     return nil if user_id.nil?
     @user_mappings[user_id] ? @user_mappings[user_id] : @admin_id
+  end
+
+  def find_list_item_id(list_item_id)
+    @repository_list_item_mappings[list_item_id]
+  end
+
+  def create_cell_value(repository_cell, value_json, team)
+    cell_json = value_json['repository_value']
+    case repository_cell.value_type
+    when 'RepositoryListValue'
+      list_item_id = find_list_item_id(cell_json['repository_list_item_id'])
+      repository_value = RepositoryListValue.new(
+        repository_list_item_id: list_item_id.to_i
+      )
+    when 'RepositoryTextValue'
+      repository_value = RepositoryTextValue.new(cell_json)
+    when 'RepositoryAssetValue'
+      asset = create_asset(value_json['repository_value_asset'], team)
+      repository_value = RepositoryAssetValue.new(asset: asset)
+    end
+    repository_value.id = nil
+    repository_value.created_by_id = find_user(cell_json['created_by_id'])
+    repository_value.last_modified_by_id =
+      find_user(cell_json['last_modified_by_id'])
+    repository_value.repository_cell = repository_cell
+    repository_value.save!
   end
 end

@@ -48,7 +48,7 @@ class TeamExporter
       end
       yield if block_given?
       dir = FileUtils.mkdir_p(File.join(dir_name, a.id.to_s)).first
-      if defined?(S3_BUCKET)
+      if ENV['S3_BUCKET']
         s3_asset =
           S3_BUCKET.object(a.public_send(attachment_name).path.remove(%r{^/}))
         file_name = a.public_send(attachment_name).original_filename
@@ -77,9 +77,6 @@ class TeamExporter
         .includes(:user_notifications)
         .where('user_notifications.user_id': team.users)
         .map { |n| notification(n) },
-      samples: team.samples.map { |s| sample(s) },
-      sample_groups: team.sample_groups,
-      sample_types: team.sample_types,
       custom_fields: team.custom_fields,
       repositories: team.repositories.map { |r| repository(r) },
       tiny_mce_assets: team.tiny_mce_assets,
@@ -110,7 +107,6 @@ class TeamExporter
       user: user_json,
       user_notifications: user.user_notifications,
       user_identities: user.user_identities,
-      samples_tables: user.samples_tables.where(team: @team),
       repository_table_states:
         user.repository_table_states.where(repository: @team.repositories)
     }
@@ -150,7 +146,6 @@ class TeamExporter
       my_module_tags: my_module.my_module_tags,
       task_comments: my_module.task_comments,
       my_module_repository_rows: my_module.my_module_repository_rows,
-      sample_my_modules: my_module.sample_my_modules,
       user_my_modules: my_module.user_my_modules,
       protocols: my_module.protocols.map { |pr| protocol(pr) },
       results: my_module.results.map { |res| result(res) }
@@ -204,17 +199,12 @@ class TeamExporter
     }
   end
 
-  def sample(sample)
-    {
-      sample: sample,
-      sample_custom_fields: sample.sample_custom_fields
-    }
-  end
-
   def repository(repository)
     {
       repository: repository,
-      repository_columns: repository.repository_columns,
+      repository_columns: repository.repository_columns.map do |c|
+        repository_column(c)
+      end,
       repository_rows: repository.repository_rows.map do |r|
         repository_row(r)
       end
@@ -234,7 +224,21 @@ class TeamExporter
   def repository_cell(cell)
     {
       repository_cell: cell,
-      repository_value: cell.value
+      repository_value: cell.value,
+      repository_value_asset: get_cell_value_asset(cell)
     }
+  end
+
+  def repository_column(column)
+    {
+      repository_column: column,
+      repository_list_items: column.repository_list_items
+    }
+  end
+
+  def get_cell_value_asset(cell)
+    return unless cell.value_type == 'RepositoryAssetValue'
+    @assets_to_copy.push(cell.value.asset)
+    cell.value.asset
   end
 end
