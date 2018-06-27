@@ -190,7 +190,7 @@ class TeamImporter
   def update_annotation(text)
     return false if text.nil?
     updated = false
-    %w(prj exp tsk).each do |name|
+    %w(prj exp tsk rep_item).each do |name|
       text.scan(/~#{name}~\w+\]/).each do |text_match|
         orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
         orig_id = orig_id_encoded.base62_decode
