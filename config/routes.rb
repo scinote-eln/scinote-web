@@ -14,7 +14,7 @@ Rails.application.routes.draw do
                               omniauth_callbacks: 'users/omniauth_callbacks' }
 
     root 'projects#index'
-	
+
     # EPA Help routes: about, contact, and training pages
     get 'help/about', to: 'help#about', as: 'about'
     get 'help/contact', to: 'help#contact', as: 'contact'
@@ -50,15 +50,15 @@ Rails.application.routes.draw do
     # end
 
     # Save sample table state
-    post '/state_save/:team_id/:user_id',
-         to: 'user_samples#save_samples_table_status',
-         as: 'save_samples_table_status',
-         defaults: { format: 'json' }
-    
-    post '/state_load/:team_id/:user_id',
-         to: 'user_samples#load_samples_table_status',
-         as: 'load_samples_table_status',
-         defaults: { format: 'json' }
+    # post '/state_save/:team_id/:user_id',
+    #      to: 'user_samples#save_samples_table_status',
+    #      as: 'save_samples_table_status',
+    #      defaults: { format: 'json' }
+    #
+    # post '/state_load/:team_id/:user_id',
+    #      to: 'user_samples#load_samples_table_status',
+    #      as: 'load_samples_table_status',
+    #      defaults: { format: 'json' }
 
     resources :activities, only: [:index]
 
@@ -79,12 +79,12 @@ Rails.application.routes.draw do
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
-    get 'users/settings/account/preferences/tutorial',
-        to: 'users/settings/account/preferences#tutorial',
-        as: 'tutorial'
-    post 'users/settings/account/preferences/reset_tutorial/',
-         to: 'users/settings/account/preferences#reset_tutorial',
-         as: 'reset_tutorial'
+#    get 'users/settings/account/preferences/tutorial',
+#        to: 'users/settings/account/preferences#tutorial',
+#        as: 'tutorial'
+#    post 'users/settings/account/preferences/reset_tutorial/',
+#         to: 'users/settings/account/preferences#reset_tutorial',
+#         as: 'reset_tutorial'
     post 'users/settings/account/preferences/notifications_settings',
          to: 'users/settings/account/preferences#notifications_settings',
          as: 'notifications_settings',
@@ -176,8 +176,8 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end
-        get 'show_tab', to: 'repositories#show_tab',
-            defaults: { format: 'json' }
+        #get 'show_tab', to: 'repositories#show_tab',
+        #    defaults: { format: 'json' }
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
         get 'rename_modal', to: 'repositories#rename_modal',
@@ -187,29 +187,27 @@ Rails.application.routes.draw do
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
       end
-      resources :samples, only: [:new, :create]
-      resources :sample_types, except: [:show, :new] do
-        get 'sample_type_element', to: 'sample_types#sample_type_element'
-        get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
-      end
-      resources :sample_groups, except: [:show, :new] do
-        get 'sample_group_element', to: 'sample_groups#sample_group_element'
-        get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
-      end
-      resources :custom_fields, only: [:create, :edit, :update, :destroy] do
-        get 'destroy_html'
-      end
+      #resources :samples, only: [:new, :create]
+      #resources :sample_types, except: [:show, :new] do
+      #  get 'sample_type_element', to: 'sample_types#sample_type_element'
+      #  get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
+      #end
+      #resources :sample_groups, except: [:show, :new] do
+      #  get 'sample_group_element', to: 'sample_groups#sample_group_element'
+      #  get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
+      #end
+      #resources :custom_fields, only: [:create, :edit, :update, :destroy] do
+      #  get 'destroy_html'
+      #end
       member do
         post 'parse_sheet', defaults: { format: 'json' }
-        post 'import_samples'
-        post 'export_samples'
+        # post 'import_samples'
+        # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_repositories', to: 'at_who#repositories'
         get 'atwho_rep_items', to: 'at_who#rep_items'
-		# is samples still necessary, or was it replaced with one of the above?
-        get 'atwho_samples', to: 'at_who#samples'
         get 'atwho_projects', to: 'at_who#projects'
         get 'atwho_experiments', to: 'at_who#experiments'
         get 'atwho_my_modules', to: 'at_who#my_modules'
@@ -235,7 +233,7 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
-
+	
     resources :projects, except: [:new, :destroy] do
       resources :user_projects, path: '/users',
                 only: [:create, :index, :update, :destroy]
@@ -287,7 +285,7 @@ Rails.application.routes.draw do
           post '_save',
                to: 'reports#save_modal',
                as: :save_modal
-          post 'destroy', as: :destroy # Destroy multiple entries at once
+          #post 'destroy', as: :destroy # Destroy multiple entries at once
         end
       end
       resources :experiments,
@@ -296,15 +294,15 @@ Rails.application.routes.draw do
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
-        get 'samples' # Samples for single project
+        # get 'samples' # Samples for single project
         # Renders sample datatable for single project (ajax action)
-        post 'samples_index'
+        # post 'samples_index'
         get 'experiment_archive' # Experiment archive for single project
-        post :delete_samples,
-             constraints: CommitParamRouting.new(
-               ProjectsController::DELETE_SAMPLES
-             ),
-             action: :delete_samples
+        # post :delete_samples,
+        #      constraints: CommitParamRouting.new(
+        #        ProjectsController::DELETE_SAMPLES
+        #      ),
+        #      action: :delete_samples
       end
 
       # This route is defined outside of member block
@@ -328,16 +326,16 @@ Rails.application.routes.draw do
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
-        get 'samples' # Samples for single project
+        #get 'samples' # Samples for single project
         get 'updated_img' # Checks if the workflow image is updated
         get 'fetch_workflow_img' # Get udated workflow img
         # Renders sample datatable for single project (ajax action)
-        post 'samples_index'
-        post :delete_samples,
-             constraints: CommitParamRouting.new(
-               ExperimentsController::DELETE_SAMPLES
-             ),
-             action: :delete_samples
+        #post 'samples_index'
+        #post :delete_samples,
+        #     constraints: CommitParamRouting.new(
+        #       ExperimentsController::DELETE_SAMPLES
+        #     ),
+        #     action: :delete_samples
       end
     end
 
@@ -350,7 +348,7 @@ Rails.application.routes.draw do
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
-      resources :sample_my_modules, path: '/samples_index', only: [:index]
+      #resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]
       resources :result_assets, only: [:new, :create]
       resources :result_tables, only: [:new, :create]
@@ -363,7 +361,7 @@ Rails.application.routes.draw do
         get 'due_date'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
-        get 'samples' # Samples view for single module
+        #get 'samples' # Samples view for single module
         # Repository view for single module
         get 'repository/:repository_id',
             to: 'my_modules#repository',
@@ -387,22 +385,22 @@ Rails.application.routes.draw do
         get 'complete_my_module'
         post 'toggle_task_state'
         # Renders sample datatable for single module (ajax action)
-        post 'samples_index'
-        post :assign_samples,
-             constraints: CommitParamRouting.new(
-               MyModulesController::ASSIGN_SAMPLES
-             ),
-             action: :assign_samples
-        post :assign_samples,
-             constraints: CommitParamRouting.new(
-               MyModulesController::UNASSIGN_SAMPLES
-             ),
-             action: :unassign_samples
-        post :assign_samples,
-             constraints: CommitParamRouting.new(
-               MyModulesController::DELETE_SAMPLES
-             ),
-             action: :delete_samples
+        #post 'samples_index'
+        #post :assign_samples,
+        #     constraints: CommitParamRouting.new(
+        #       MyModulesController::ASSIGN_SAMPLES
+        #     ),
+        #     action: :assign_samples
+        #post :assign_samples,
+        #     constraints: CommitParamRouting.new(
+        #       MyModulesController::UNASSIGN_SAMPLES
+        #     ),
+        #     action: :unassign_samples
+        #post :assign_samples,
+        #     constraints: CommitParamRouting.new(
+        #       MyModulesController::DELETE_SAMPLES
+        #     ),
+        #     action: :delete_samples
       end
 
       # Those routes are defined outside of member block
@@ -432,8 +430,8 @@ Rails.application.routes.draw do
                 only: [:create, :index, :edit, :update, :destroy]
     end
 
-    resources :samples, only: [:edit, :update, :destroy]
-    get 'samples/:id', to: 'samples#show'
+    # resources :samples, only: [:edit, :update, :destroy]
+    # get 'samples/:id', to: 'samples#show'
 
     resources :result_texts, only: [:edit, :update, :destroy]
     get 'result_texts/:id/download' => 'result_texts#download',
@@ -487,7 +485,8 @@ Rails.application.routes.draw do
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
-        post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
+        post 'protocolsio_import_create',
+             to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
       end
@@ -517,8 +516,9 @@ Rails.application.routes.draw do
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
-          to: 'repository_columns#destroy_html',
-          as: 'columns_destroy_html'
+           to: 'repository_columns#destroy_html',
+           as: 'columns_destroy_html'
+      #resources :repository_columns, only: %i(create edit update destroy)
       get 'create_html',
           to: 'repository_columns#create_html',
           as: 'columns_create_html',
@@ -552,9 +552,6 @@ Rails.application.routes.draw do
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior
     get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
-    get 'files/:id/large_url',
-        to: 'assets#large_image_url',
-        as: 'large_image_url_asset'
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
@@ -578,7 +575,7 @@ Rails.application.routes.draw do
       post 'auth/token', to: 'api#authenticate'
       scope '20170715', module: 'v20170715' do
         get 'tasks/tree', to: 'core_api#tasks_tree'
-        get 'tasks/:task_id/samples', to: 'core_api#task_samples'
+        # get 'tasks/:task_id/samples', to: 'core_api#task_samples'
       end
     end
   end
