@@ -64,8 +64,6 @@ class Constants
 
   # Max table JSON size in MB
   TABLE_JSON_MAX_SIZE_MB = 20
-  # Max uploaded file size in MB
-  FILE_MAX_SIZE_MB = 50
   # Max uploaded user picture avatar size in MB
   AVATAR_MAX_SIZE_MB = 0.2
 
@@ -114,7 +112,7 @@ class Constants
   # URL); it expires in exactly one day
   URL_LONG_EXPIRE_TIME = 86_400
 
-  DATE_FORMAT = '%d.%m.%Y %H:%M'.freeze
+  DATE_FORMAT = '%B %d, %Y %H:%M'.freeze
 
   #=============================================================================
   # Application colors
@@ -159,7 +157,7 @@ class Constants
   COLOR_EMPEROR = '#555555'.freeze # $color-emperor
   COLOR_BLACK = '#000000'.freeze # $color-black
 
-
+  
   #=============================================================================
   # External URLs
   #=============================================================================
@@ -883,7 +881,7 @@ class Constants
   TINY_MCE_ASSET_REGEX = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
 
   # Team name for default admin user
-  DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
+  DEFAULT_PRIVATE_TEAM_NAME = 'My Team'.freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
