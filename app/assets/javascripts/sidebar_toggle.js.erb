@@ -7,7 +7,8 @@
       $('#wrapper').removeClass('hidden2');
       $('#wrapper').css('paddingLeft', '280px');
       $('.navbar-secondary').css(
-        { 'margin-left': '-280px', 'padding-left': '294px' }
+        <%# @@@20180627JS Get rid of this padding, from 294px to 280px %>
+        { 'margin-left': '-280px', 'padding-left': '280px' }
       );
       $('#sidebar-arrow').attr('data-shown', '');
       sessionStorage.setItem(STORAGE_TOGGLE_KEY, "un-toggled");
@@ -18,7 +19,8 @@
       $('#wrapper').css('paddingLeft', '0');
       $('.navbar-secondary').css({
         'margin-left': '0',
-        'padding-left': '14px'
+        <%# @@@20180627JS Get rid of this padding, from 14px to 0px %>
+        'padding-left': '0'
       });
       $('#sidebar-arrow').removeAttr('data-shown');
       sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");

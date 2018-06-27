@@ -23,23 +23,46 @@
   }
 }
 
-.navbar-secondary {
-  padding-left: 15px !important;
-  padding-right: 15px !important;
-  background: #FFFFFF !important;
-  background-color: #FFFFFF !important;
+.shift-down-120{
+  margin-top: 120px;
 }
 
-/** Overwrite the default .navbar-secondary from scinote **/
-.navbar-secondary-custom{
-  @extend .navbar-secondary;
-  margin-left: 0;
-  margin-bottom: 0;
-  padding-left: 0;
-  padding-right: 0;
-  width: 100%;
-  display: inline-block;
+.white-text{
+  color: #FFF;
 }
+
+.custom-navbar-fixed-top{
+  // @extend .navbar-fixed-top;
+  border-width: 0 0 1px;
+  top: 0px;
+}
+
+
+.navbar-secondary {
+  padding-right: 80px !important;
+  padding-left: 280px;
+  #secondary-menu {
+    margin-top: 0 !important;
+  }
+}
+
+// .navbar-secondary {
+//   padding-left: 15px !important;
+//   padding-right: 15px !important;
+//   background: #FFFFFF !important;
+//   background-color: #FFFFFF !important;
+// }
+
+/** Overwrite the default .navbar-secondary from scinote **/
+// .navbar-secondary-custom{
+//   @extend .navbar-secondary;
+//   margin-left: 0;
+//   margin-bottom: 0;
+//   padding-left: 0;
+//   padding-right: 0;
+//   width: 100%;
+//   display: inline-block;
+// }
 
 #wrapper-custom{
   @extend #wrapper;

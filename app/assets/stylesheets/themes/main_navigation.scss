@@ -38,9 +38,10 @@
 
 .navbar-default .navbar-brand {
   & > img {
-    margin-top: -7px;
-    max-width: 55px;
-    max-height: 38px;
+    // @@@20180627JS Increase to mt-5 w162 h50
+    margin-top: -5px;
+    max-width: 162px;
+    max-height: 50px;
   }
 }
 

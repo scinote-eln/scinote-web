@@ -31,9 +31,9 @@
         <div data-val="description" class="ql-editor">
         <% step_info_string = '' %>
         <% step['components'].each do |key,value|  %>
-        <%#here i made an if to distinguish the first step from the
-          others, because the first step #sometimes has index values as keys instead of
-          hashes, you might see this elsewhere %>
+        <% #here i made an if to distinguish the first step from the others,
+           # because the first step #sometimes has index values as keys instead of
+           # hashes, you might see this elsewhere %>
           <% key = value if value.class == Hash %>
           <% if whitelist_simple.include?(key['component_type_id']) &&
             key['data'].present? %>
