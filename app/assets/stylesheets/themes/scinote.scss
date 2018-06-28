@@ -589,6 +589,11 @@ a.edit-name-link:hover small {
   }
 }
 
+.bootstrap-tagsinput {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 ul.no-style {
   list-style: none;
   margin: 0;
