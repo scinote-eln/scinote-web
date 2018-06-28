@@ -55,8 +55,13 @@
   .dropdown-menu.open {
     width: 174px;
 
-    .selected > a {
+    .selected {
       display: inline-block;
+
+      &[data-original-index="0"] {
+        display: table-caption;
+        width: 150%;
+      }
     }
   }
 }

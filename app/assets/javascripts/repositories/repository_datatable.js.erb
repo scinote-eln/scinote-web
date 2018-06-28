@@ -5,7 +5,7 @@ var RepositoryDatatable = (function(global) {
 
   var TABLE_ID = '';
   var TABLE = {};
-
+  var ITEM_PICKER_LI_WIDTH = 0;
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
   $.fn.dataTable.Api.register('isColumnSearchable()', function(colSelector) {
@@ -968,6 +968,9 @@ var RepositoryDatatable = (function(global) {
     html += 'data-container="body" column_id="' + column_id +'">';
     html += '<option value="-1"></option>';
     $.each(options, function(index, value) {
+      if (value[1].length > ITEM_PICKER_LI_WIDTH) {
+        ITEM_PICKER_LI_WIDTH = value[1].length
+      }
       var selected = (current_value === value[1]) ? 'selected' : '';
       html += '<option value="' + value[0] + '" ' + selected + '>';
       html += value[1] + '</option>';
@@ -1010,6 +1013,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function _initSelectPicker() {
+    var charWidthFactor = 4;
     $('.selectpicker')
       .selectpicker({liveSearch: true})
       .ajaxSelectPicker({
@@ -1038,6 +1042,9 @@ var RepositoryDatatable = (function(global) {
                 'disabled': false
               });
               $.each(data.list_items, function(index, el) {
+                if (el.data.length > ITEM_PICKER_LI_WIDTH) {
+                  ITEM_PICKER_LI_WIDTH = el.data.length
+                }
                 items.push(
                   {
                     'value': el.id,
@@ -1053,9 +1060,29 @@ var RepositoryDatatable = (function(global) {
         clearOnEmpty: false,
         preserveSelected: false
     }).on('change.bs.select', function(el) {
-      $(this).closest('td').attr('list_item_id', el.target.value);
-      $(this).closest('td').attr('column_id', $(this).attr('column_id'));
+      var $td = $(this).closest('td');
+      $td.attr('list_item_id', el.target.value);
+      $td.attr('column_id', $(this).attr('column_id'));
+      var elements = $td.parent().find('.repository-dropdown li');
+      calculateTextLenght(elements);
+      elements.css('min-width', ITEM_PICKER_LI_WIDTH * charWidthFactor + 'px');
+    }).on('show.bs.select',function() {
+      var $td = $(this).closest('td');
+      var elements = $td.parent().find('.repository-dropdown li');
+      calculateTextLenght(elements);
+      elements.css('min-width', ITEM_PICKER_LI_WIDTH * charWidthFactor + 'px');
+    }).on('hide.bs.select hideen.bs.select',function() {
+      ITEM_PICKER_LI_WIDTH = 1;
     }).trigger('change.bs.select');
+  }
+
+  function calculateTextLenght(elements) {
+    elements.each(function(el) {
+      var length = $(this).find('.text').text().length;
+      if (length > ITEM_PICKER_LI_WIDTH) {
+        ITEM_PICKER_LI_WIDTH = length;
+      }
+    });
   }
 
   function getColumnIndex(id) {
