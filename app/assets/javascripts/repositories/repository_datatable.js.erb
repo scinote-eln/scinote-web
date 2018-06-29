@@ -400,13 +400,7 @@ var RepositoryDatatable = (function(global) {
       dataType: 'json',
       success: function(data) {
         var columns_ids     = data.columns;
-        var present_columns = [];
-        $('table' + TABLE_ID + ' thead tr').children('th').each(function() {
-          var id = parseInt($(this).attr('id'));
-          if(id) {
-            present_columns.push(id);
-          }
-        });
+        var present_columns = $(TABLE_ID).data('repository-columns-ids');
         if( !_.isEqual(columns_ids.sort(), present_columns.sort()) ) {
           alert($(TABLE_ID).data('columns-changed'));
           animateSpinner();

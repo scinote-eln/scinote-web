@@ -8,6 +8,7 @@
     data-delete-record="<%= repository_delete_records_path(repository) %>"
     data-copy-records="<%= repository_copy_records_path(repository) %>"
     data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
+    data-repository-columns-ids="<%= repository.available_columns_ids %>"
     data-save-text="<%= I18n.t('general.save') %>"
     data-edit-text="<%= I18n.t('general.edit') %>"
     data-cancel-text="<%= I18n.t('general.cancel') %>"
