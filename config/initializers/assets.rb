@@ -17,6 +17,8 @@ Rails.application.config.assets.precompile += %w(underscore.js)
 Rails.application.config.assets.precompile += %w(jsPlumb-2.0.4-min.js)
 Rails.application.config.assets.precompile += %w(jsnetworkx.js)
 Rails.application.config.assets.precompile += %w(handsontable.full.min.js)
+Rails.application.config.assets.precompile += 
+  %w(sugar.min.js jquerymy-1.2.14.min.js)
 Rails.application.config.assets.precompile += %w(users/settings/list_toggle.js.erb)
 Rails.application.config.assets.precompile +=
   %w(users/settings/account/preferences/index.js)

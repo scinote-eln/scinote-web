@@ -1,10 +1,12 @@
 //= require jquery-ui/widgets/sortable
+//= require repositories/forms/repository_item_edit.js
 
 var RepositoryDatatable = (function(global) {
   'use strict';
 
-  var TABLE_ID = '';
-  var TABLE = {};
+  var TABLE_ID   = '';
+  var TABLE      = {};
+  var EDITED_ROW = []; // an array of edited rows
 
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
@@ -663,6 +665,9 @@ var RepositoryDatatable = (function(global) {
         $(node).children('td').eq(0).html($('#saveRecord').clone());
         $(node).children('td').eq(1).html($('#cancelSave').clone());
 
+        var editForm = new RepositoryItemEditForm(data, node);
+        editForm.renderForm(TABLE);
+        /**
         // Record name column
         var colIndex = getColumnIndex('#row-name');
         if (colIndex) {
@@ -670,7 +675,7 @@ var RepositoryDatatable = (function(global) {
                  .html(changeToInputField('repository_row', 'name',
                                           data.repository_row.name));
         }
-
+       
         // Take care of custom cells
         var cells = data.repository_row.repository_cells;
         var list_columns = data.repository_row.repository_column_items;
@@ -690,6 +695,7 @@ var RepositoryDatatable = (function(global) {
             _addSelectedFile(type, cell, $(this).find('input')[0]);
           }
         });
+        */
         _initSelectPicker();
 
         // initialize smart annotation
@@ -701,6 +707,8 @@ var RepositoryDatatable = (function(global) {
         // Adjust columns width in table header
         adjustTableHeader();
         updateButtons();
+
+        EDITED_ROW.push(editForm);
       },
       error: function(e) {
         if (e.status === 403) {
@@ -718,6 +726,7 @@ var RepositoryDatatable = (function(global) {
   global.onClickSave = function() {
     var node;
     var rowData;
+    debugger;
     if (saveAction === 'update') {
       var row = TABLE.row(selectedRecord);
       node = row.node();
