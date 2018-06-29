@@ -393,7 +393,7 @@ var RepositoryDatatable = (function(global) {
     }
   }
 
-  function checkAvailibleColumns() {
+  function checkAvailableColumns() {
     $.ajax({
       url: $(TABLE_ID).data('available-columns'),
       type: 'GET',
@@ -414,7 +414,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   global.onClickAddRecord = function() {
-    checkAvailibleColumns();
+    checkAvailableColumns();
     changeToEditMode();
     updateButtons();
 
@@ -628,7 +628,7 @@ var RepositoryDatatable = (function(global) {
 
   // Edit record
   global.onClickEdit = function() {
-    checkAvailibleColumns();
+    checkAvailableColumns();
     if (rowsSelected.length !== 1) {
       return;
     }
@@ -1264,7 +1264,7 @@ var RepositoryDatatable = (function(global) {
         loadColumnsNames();
       }
     });
-    $('.sorting').on('click', checkAvailibleColumns);
+    $('.sorting').on('click', checkAvailableColumns);
   }
 
   // calculate the max height of window and adjust dropdown max-height
@@ -1298,7 +1298,7 @@ var RepositoryDatatable = (function(global) {
     $('#repository-columns-dropdown').on('show.bs.dropdown', function() {
       loadColumnsNames();
       dropdownList.sortable('enable');
-      checkAvailibleColumns();
+      checkAvailableColumns();
     });
 
     $('#repository-columns-dropdown').on('shown.bs.dropdown', function() {
