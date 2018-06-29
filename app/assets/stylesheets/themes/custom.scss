@@ -23,10 +23,6 @@
   }
 }
 
-.shift-down-120{
-  margin-top: 120px;
-}
-
 .white-text{
   color: #FFF;
 }
@@ -44,6 +40,16 @@
   #secondary-menu {
     margin-top: 0 !important;
   }
+}
+
+#content-wrapper{
+  margin-top: 120px !important;
+}
+
+#alert-flash{
+  z-index: 5000;
+  margin-top: -40px !important;
+  height: 50px;
 }
 
 // .navbar-secondary {

@@ -45,9 +45,13 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
+    # Get all RAP Program Level values for dropdown.
+    @programs = RapProgramLevel.all
   end
 
   def create
+    # Get all RAP Program Level values for dropdown.
+    @programs = RapProgramLevel.all
     @project = Project.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user

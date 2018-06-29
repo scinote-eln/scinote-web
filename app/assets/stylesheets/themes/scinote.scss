@@ -268,7 +268,8 @@ a[data-toggle="tooltip"] {
 .navbar-secondary {
   background: $color-concrete !important;
   margin-left: -280px;
-  padding-left: 294px;
+  // padding-left: 294px;
+  padding-left: 280px;
   padding-right: 97px;
   margin-bottom: 0;
   border-color: transparent;
