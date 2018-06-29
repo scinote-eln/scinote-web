@@ -69,7 +69,7 @@
     $.each(itemData.repository_row.repository_cells, function(i, cell) {
       var tableCellId = 'cellId-' + cell.repository_cell_id;
       if(cell.type === 'RepositoryAssetValue') {
-        formBindingsData[tableCellId] = new Blob([cell.value], { type: cell.value.file_content_type });
+        formBindingsData[tableCellId] = new File(cell.asset_preview);
       } else {
         formBindingsData[tableCellId] = cell.value;
       }
@@ -77,11 +77,10 @@
     return formBindingsData;
   }
 
-  RepositoryItemEditForm.prototype.getRowNewData = function() {
-    return this.formData;
-  }
-  /**
-   * Private methods
+  /** 
+   *  |-----------------|
+   *  | Private methods |
+   *  |-----------------|
    */
 
   /**
@@ -100,7 +99,9 @@
   }
 
   /**
-   *  Takes object and creates an input file field
+   *  Takes object and creates an input file field, contains a hidden
+   *  input field which is triggered on button click and we get the uploaded
+   *  file from there.
    * 
    *  @param {Object} object
    *  @param {String} name
@@ -111,8 +112,9 @@
    */
   function changeToInputFileField(object, name, value, id) {
     return "<div class='repository-input-file-field'><div class='form-group'>" +
-        "<input type='file' class='form-control' data-object='" +
-        object + "' name='" + name + "' value='" + value + "' id='" + id + "'></div>" +
+        "<input type='file' name='" + name + "' data-id='" + id + "' style='display:none'>" +
+        "<button class='form-control' data-object='" +
+        object + "' name='" + name + "' value='" + value + "' id='" + id + "'>Choose File</button></div>" +
         "<a onClick='clearFileInput(this)'>" +
         "<i class='fas fa-times'></i>" +
         "</a></div>";
@@ -155,6 +157,7 @@
     html += '</select>';
     return html;
   }
+
   /**
    * Takes an object and creates custom html element
    * 
@@ -182,16 +185,38 @@
 
   /**
    * Append the change listener to file field
+   * 
    * @param {String} type
    * @param {Object} input
+   * @param {Object} formData
    * 
    * @returns {undefined}
    */
-  function _addSelectedFile(type, input) {
+  function _addSelectedFile(type, input, formData) {
     if (type === 'RepositoryAssetValue') {
+
       $(input).on('change', function(){
         this.dataset.changed = 'true';
+      }).on('click', function(ev) {
+        ev.prevetDefault();
+        ev.stopPropagation();
+        var input = $(this).closest('input[type="file"]');
+        input.trigger('click');
+        initFileHandler(input, formData);
       });
+    }
+  }
+
+  /**
+   * Handle extraction of file from the input field
+   * 
+   * @param {Object} formData
+   * 
+   * @returns {undefined}
+   */
+  function initFileHandler(inputField, formData) {
+    if (inputField.files[0]) {
+
     }
   }
 
@@ -201,6 +226,5 @@
       uiBindings['#' + element] = element;  
     })
     $(row_node).my({ui: uiBindings}, data);
-    debugger;
   }
 })(window);

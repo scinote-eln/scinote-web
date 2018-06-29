@@ -667,35 +667,6 @@ var RepositoryDatatable = (function(global) {
 
         var editForm = new RepositoryItemEditForm(data, node);
         editForm.renderForm(TABLE);
-        /**
-        // Record name column
-        var colIndex = getColumnIndex('#row-name');
-        if (colIndex) {
-          $(node).children('td').eq(colIndex)
-                 .html(changeToInputField('repository_row', 'name',
-                                          data.repository_row.name));
-        }
-       
-        // Take care of custom cells
-        var cells = data.repository_row.repository_cells;
-        var list_columns = data.repository_row.repository_column_items;
-        $(node).children('td').each(function(i) {
-          var td = $(this);
-          var rawIndex = TABLE.column.index('fromVisible', i);
-          var colHeader = TABLE.column(rawIndex).header();
-          if ($(colHeader).hasClass('repository-column')) {
-            var type = $(colHeader).attr('data-type');
-            // Check if cell on this record exists
-            var cell = cells[$(colHeader).attr('id')] || '';
-            td.html(changeToFormField('repository_cell',
-                                       $(colHeader).attr('id'),
-                                       type,
-                                       cell,
-                                       list_columns));
-            _addSelectedFile(type, cell, $(this).find('input')[0]);
-          }
-        });
-        */
         _initSelectPicker();
 
         // initialize smart annotation

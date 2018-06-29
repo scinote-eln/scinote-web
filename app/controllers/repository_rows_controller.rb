@@ -86,7 +86,8 @@ class RepositoryRowsController < ApplicationController
     # Add custom cells ids as key (easier lookup on js side)
     @record.repository_cells.each do |cell|
       if cell.value_type == 'RepositoryAssetValue'
-        cell_value = cell.value.asset if cell.value_type == 'RepositoryAssetValue'
+        cell_value = cell.value.asset
+        asset_url = cell.value.asset.url(:original)
       else
         cell_value = escape_input(cell.value.data)
       end
@@ -94,6 +95,7 @@ class RepositoryRowsController < ApplicationController
       json[:repository_row][:repository_cells][cell.repository_column_id] = {
         repository_cell_id: cell.id,
         value: cell_value,
+        asset_preview: (asset_url || ''),
         type: cell.value_type,
         list_items: fetch_list_items(cell)
       }
