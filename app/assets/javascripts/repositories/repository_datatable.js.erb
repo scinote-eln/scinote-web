@@ -667,7 +667,9 @@ var RepositoryDatatable = (function(global) {
 
         var editForm = new RepositoryItemEditForm(data, node);
         editForm.renderForm(TABLE);
-        _initSelectPicker();
+        editForm.initializeSelectpickerValues(_initSelectPicker);
+        // setTimeout(_initSelectPicker, 1000);
+        // _initSelectPicker();
 
         // initialize smart annotation
         _.each($('[data-object="repository_cell"]'), function(el) {

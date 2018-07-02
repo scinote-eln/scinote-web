@@ -27,6 +27,7 @@
     var colIndex     = getColumnIndex(table, '#row-name');
     var cells        = this.itemData.repository_row.repository_cells;
     var list_columns = this.itemData.repository_row.repository_column_items;
+    var formData     = this.formData;
 
     if (colIndex) {
       $(this.repositoryItemElement).children('td').eq(colIndex)
@@ -37,23 +38,23 @@
     }
 
     $(this.repositoryItemElement).children('td').each(function(i) {
-        var td        = $(this);
-        var rawIndex  = table.column.index('fromVisible', i);
-        var colHeader = table.column(rawIndex).header();
-
-        if ($(colHeader).hasClass('repository-column')) {
-          var type = $(colHeader).attr('data-type');
-          // Check if cell on this record exists
-          var cell = cells[$(colHeader).attr('id')] || '';
-          td.html(changeToFormField('repository_cell',
-                                     $(colHeader).attr('id'),
-                                     type,
-                                     cell,
-                                     list_columns));
-          _addSelectedFile(type, $(this).find('input')[0]);
-        }
+      var td        = $(this);
+      var rawIndex  = table.column.index('fromVisible', i);
+      var colHeader = table.column(rawIndex).header();
+    
+      if ($(colHeader).hasClass('repository-column')) {
+        var type        = $(colHeader).attr('data-type');
+        var colHeaderId = $(colHeader).attr('id');
+        var cell        = cells[colHeaderId] || '';
+        td.html(changeToFormField('repository_cell',
+                                  colHeaderId,
+                                  type,
+                                  cell,
+                                  list_columns));
+        appendNewElementToFormData(cell, colHeaderId, formData);
+      }
     });
-    initializeDataBinding(this.repositoryItemElement, this.formData);
+    initializeDataBinding(this.repositoryItemElement, formData);
   }
 
   /**
@@ -75,6 +76,28 @@
       }
     });
     return formBindingsData;
+  }
+
+  /**
+   * Handles select picker default value
+   * 
+   * @returns {undefinded}
+   */
+  RepositoryItemEditForm.prototype.initializeSelectpickerValues = function(selectpicker) {
+    $('.bootstrap-select').each(function(_, dropdown) {
+      var selectedValue = $($(dropdown).find('select')[0]).data('selected-value');
+      var value         = '-1'
+      $(dropdown).find('option').each(function(_, option) {
+        $(option).removeAttr('selected');  
+        if($(option).val() === selectedValue.toString()) {
+          $(option).attr('selected', true);
+          value = $(option).attr('value');
+        }
+      });
+      $(dropdown).parent().attr("list_item_id", value);
+      $(dropdown).val(value);
+    });
+    selectpicker();
   }
 
   /** 
@@ -145,17 +168,22 @@
    * @returns (String)
    */
   function _listItemDropdown(options, current_value, column_id, id) {
+    var val  = undefined; 
     var html = '<select id="' + id + '" class="form-control selectpicker repository-dropdown" ';
-    html    += 'data-abs-min-length="2" data-live-search="true" ';
-    html    += 'data-container="body" column_id="' + column_id +'">';
-    html    += '<option value="-1"></option>';
+    html     += 'data-selected-value="" data-abs-min-length="2" data-live-search="true" ';
+    html     += 'data-container="body" column_id="' + column_id +'">';
+    html     += '<option value="-1"></option>';
     $.each(options, function(index, value) {
-      var selected = (current_value === value[1]) ? 'selected' : '';
-      html         += '<option value="' + value[0] + '" ' + selected + '>';
-      html         += value[1] + '</option>';
+      var selected = '';
+      if (current_value === value[1]) {
+        selected = 'selected';
+        val      = value[0];     
+      }
+      html += '<option value="' + value[0] + '" ' + selected + '>';
+      html += value[1] + '</option>';
     });
     html += '</select>';
-    return html;
+    return (val) ? $(html).attr('data-selected-value', val)[0] : html;
   }
 
   /**
@@ -170,7 +198,7 @@
    * @returns (String)
    */
   function changeToFormField(object, name, column_type, cell, list_columns) {
-    var cell_id = 'cellId-' + cell.repository_cell_id;  
+    var cell_id = generateInputFieldReference(cell, name);
     var value   = cell.value || '';
     if (column_type === 'RepositoryListValue') {
       var column     = _.findWhere(list_columns, { column_id: parseInt(name) });
@@ -194,13 +222,13 @@
    */
   function _addSelectedFile(type, input, formData) {
     if (type === 'RepositoryAssetValue') {
-
-      $(input).on('change', function(){
+      $(input.find('input[type="file"]')[0]).on('change', function(){
         this.dataset.changed = 'true';
-      }).on('click', function(ev) {
-        ev.prevetDefault();
+      });
+      $(input.find('button')[0]).on('click', function(ev) {
+        ev.preventDefault();
         ev.stopPropagation();
-        var input = $(this).closest('input[type="file"]');
+        var input = $(this).parent().find('input[type="file"]')
         input.trigger('click');
         initFileHandler(input, formData);
       });
@@ -214,17 +242,57 @@
    * 
    * @returns {undefined}
    */
-  function initFileHandler(inputField, formData) {
-    if (inputField.files[0]) {
-
-    }
+  function initFileHandler($inputField, formData) {
+    $inputField.on('change', function() {
+      var inputElement = $inputField[0];
+      if (inputElement.files[0]) {
+        formData[inputField.data('id')] = inputElement.files[0];
+      }
+    })  
   }
 
+  /**
+   * Initializes the data binding for form object
+   * 
+   * @param {Object} row_node
+   * @param {Object} data
+   * 
+   * @returns {undefined}
+   */
   function initializeDataBinding(row_node, data) {
     var uiBindings = {};
     $.each(_.keys(data), function(i, element) {
       uiBindings['#' + element] = element;  
     })
     $(row_node).my({ui: uiBindings}, data);
+  }
+
+  /**
+   * Generates the input tag id that will be used in the formData object
+   * 
+   * @param {Object} cell 
+   * @param {String} column_id 
+   * 
+   * @returns {String}
+   */
+  function generateInputFieldReference(cell, column_id) {
+    if (cell.repository_cell_id) {
+      return 'cellId-' + cell.repository_cell_id;
+    } 
+    return 'new-element-col-id-' + column_id;  
+  }
+
+  /**
+   * Appends aditional fields to form data object
+   * @param {Object} cell 
+   * @param {String} column_id 
+   * @param {Object} formData 
+   * 
+   * @returns {undefined}
+   */
+  function appendNewElementToFormData(cell, column_id, formData) {
+    if (!cell.repository_cell_id) {
+      formData[generateInputFieldReference(cell, column_id)] = undefined;
+    }
   }
 })(window);
