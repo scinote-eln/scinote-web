@@ -93,6 +93,7 @@ class RepositoryRowsController < ApplicationController
 
       json[:repository_row][:repository_cells][cell.repository_column_id] = {
         repository_cell_id: cell.id,
+        cell_column_id: cell.repository_column.id, # needed for mappings
         value: cell_value,
         type: cell.value_type,
         list_items: fetch_list_items(cell)
@@ -198,7 +199,7 @@ class RepositoryRowsController < ApplicationController
     column = @repository.repository_columns.detect do |c|
       c.id == key.to_i
     end
-    
+
     save_successful = false
     if column.data_type == 'RepositoryListValue'
       return if value == '-1'

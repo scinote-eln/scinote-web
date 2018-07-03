@@ -40,7 +40,10 @@
 }
 
 .repository-input-file-field {
+  border: 1px solid $color-alto;
+  border-radius: 5px;
   display: inline-flex;
+  padding: 2px;
 
   a {
     color: $brand-danger;

@@ -69,7 +69,7 @@
     var formBindingsData = {};
     formBindingsData['rowName'] = itemData.repository_row.name;
     $.each(itemData.repository_row.repository_cells, function(i, cell) {
-      var tableCellId = 'colId-' + cell.repository_cell_id;
+      var tableCellId = 'colId-' + cell.cell_column_id;
       if(cell.type === 'RepositoryAssetValue') {
         formBindingsData[tableCellId] = new File([""], cell.value.file_file_name);
       } else {
@@ -102,19 +102,38 @@
     });
   }
 
+  /**
+   * Creates a FormData object with the repository row data ready to be
+   * sended on the server
+   *
+   * @param {Object} tableID
+   * @param {Object} selectedRecord
+   *
+   * @returns (Object)
+   */
   RepositoryItemEditForm.prototype.parseToFormObject = function(tableID, selectedRecord) {
     var formData = this.formData;
     var formDataObj = new FormData();
     formDataObj.append('request_url', $(tableID).data('current-uri'));
     formDataObj.append('repository_row_id', $(selectedRecord).attr('id'));
-    debugger;
+
     $(_.keys(this.formData)).each(function(_, element) {
       var value = formData[element];
       if (element === "rowName") {
         formDataObj.append('repository_row_name', value);
       } else {
         var colId = element.replace('colId-', '');
-        formDataObj.append('repository_cells[' +  colId + ']', value);
+        var $el   = $('#' + element);
+        if($el.attr('type') === 'file') {
+          // don't save anything if element is deleted
+          if($el.attr('remove') === "true") {
+            return true;
+          }
+          formDataObj.append('repository_cells[' +  colId + ']',
+                             getFileValue($el));
+        } else if(value.length > 0) {
+          formDataObj.append('repository_cells[' +  colId + ']', value);
+        }
       }
     });
     return formDataObj;
@@ -124,6 +143,18 @@
    *  | Private methods |
    *  |-----------------|
    */
+
+   /**
+    * Resolves the file cell on FormData creation
+    *
+    * @param {Object} elementId
+    *
+    * @returns (String | Object)
+    */
+  function getFileValue(element) {
+    var file = element[0].files[0];
+    return (file) ? file : '';
+  }
 
   /**
    * Takes object and surrounds it with input
@@ -154,15 +185,23 @@
    */
   function changeToInputFileField(object, name, value, id) {
     var fileName    = (value.file_file_name) ? value.file_file_name : "";
-    var buttonLabel = "Choose File:";
-    return "<div class='repository-input-file-field'><div class='form-group'>" +
-        "<input type='file' name='" + name + "' id='" + id + "' style='display:none' />" +
-        "<button class='btn btn-default' data-object='" + object + "' name='" +
-        name + "' value='" + value + "' data-id='" + id + "'>" + buttonLabel +
-        "</button><p class='file-name-label'>" + fileName + "</p></div>" +
-        "<a onClick='clearFileInput(this)'>" +
-        "<i class='fas fa-times'></i>" +
-        "</a></div>";
+    var buttonLabel = "Choose File";
+    var html        = "<div class='repository-input-file-field'>" +
+      "<div class='form-group'><input type='file' name='" + name + "' id='" +
+      id + "' style='display:none' /><button class='btn btn-default' " +
+      "data-object='" + object + "' name='" + name + "' value='" + value +
+      "' data-id='" + id + "'>" + buttonLabel +
+      "</button>&nbsp;<i class='file-name-label'>" + fileName + "</o></div>";
+    if(fileName.length > 0) {
+      html += "<a data-action='removeAsset' ";
+      html += "onClick='clearFileInput(this)'><i class='fas fa-times'></i></a>";
+    } else {
+      html += "<a data-action='removeAsset' onClick='clearFileInput(this)' ";
+      html += "style='display:none'><i class='fas fa-times'></i></a>";
+    }
+    html += "</div>";
+
+    return html;
   }
 
   /**
@@ -248,9 +287,6 @@
                     '"]');
     if (type === 'RepositoryAssetValue') {
       var fileInput = $(button.parent().find('input[type="file"]')[0]);
-      fileInput.on('change', function(){
-        this.dataset.changed = 'true';
-      });
       button.on('click', function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -269,11 +305,13 @@
    */
   function initFileHandler($inputField, formData) {
     $inputField.on('change', function() {
+      var input = $(this);
       var $label = $($(this).parent().find('.file-name-label')[0]);
       var file   = this.files[0];
       if (file) {
-        formData[$(this).attr('id')] = file;
         $label.text(file.name);
+        input.attr('remove', false);
+        $label.parent().find("[data-action='removeAsset']").show();
       }
     })
   }

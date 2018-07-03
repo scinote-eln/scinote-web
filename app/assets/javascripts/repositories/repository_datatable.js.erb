@@ -1076,7 +1076,16 @@ var RepositoryDatatable = (function(global) {
   }
 
   global.clearFileInput = function (el) {
-    $(el).prev('div').find('input:file')[0].value = '';
+    var parent = $(el).closest('div.repository-input-file-field');
+    var input  = parent.find('input:file')[0];
+    // hide clear button
+    $(parent.find('a[data-action="removeAsset"]')[0]).hide();
+    // reset value
+    input.value = '';
+    // add flag
+    $(input).attr('remove', true);
+    // clear fileName
+    $(parent.find('.file-name-label')[0]).text('');
   }
 
   // Takes an object and creates custom html element
