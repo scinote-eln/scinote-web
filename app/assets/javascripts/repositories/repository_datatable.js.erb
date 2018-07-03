@@ -6,7 +6,13 @@ var RepositoryDatatable = (function(global) {
 
   var TABLE_ID   = '';
   var TABLE      = {};
-  var EDITED_ROW = []; // an array of edited rows
+
+  /**
+   * This variable is declared on window object,
+   * it holds the objects of edited rows, probably we can use this also
+   * for multi row editing in the future.
+   */
+  global.SCINOTE_REPOSITORY_EDITED_ROWS = []; // an array of edited rows
 
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
@@ -667,9 +673,8 @@ var RepositoryDatatable = (function(global) {
 
         var editForm = new RepositoryItemEditForm(data, node);
         editForm.renderForm(TABLE);
-        editForm.initializeSelectpickerValues(_initSelectPicker);
-        // setTimeout(_initSelectPicker, 1000);
-        // _initSelectPicker();
+        _initSelectPicker();
+        editForm.initializeSelectpickerValues();
 
         // initialize smart annotation
         _.each($('[data-object="repository_cell"]'), function(el) {
@@ -681,7 +686,7 @@ var RepositoryDatatable = (function(global) {
         adjustTableHeader();
         updateButtons();
 
-        EDITED_ROW.push(editForm);
+        SCINOTE_REPOSITORY_EDITED_ROWS.push(editForm);
       },
       error: function(e) {
         if (e.status === 403) {
@@ -699,47 +704,52 @@ var RepositoryDatatable = (function(global) {
   global.onClickSave = function() {
     var node;
     var rowData;
-    debugger;
+    var formData;
     if (saveAction === 'update') {
       var row = TABLE.row(selectedRecord);
       node = row.node();
       rowData = row.data();
+      formData = SCINOTE_REPOSITORY_EDITED_ROWS[0].parseToFormObject(
+        TABLE_ID, selectedRecord
+      );
+
     } else if (saveAction === 'create') {
       node = selectedRecord;
-    }
-    // First fetch all the data in input fields
-    var formData = new FormData();
-    formData.append('request_url', $(TABLE_ID).data('current-uri'));
-    formData.append('repository_row_id', $(selectedRecord).attr('id'));
 
-    // Direct record attributes
-    // Record name
-    formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
+      // First fetch all the data in input fields
+      formData = new FormData();
+      formData.append('request_url', $(TABLE_ID).data('current-uri'));
+      formData.append('repository_row_id', $(selectedRecord).attr('id'));
 
-    // Custom cells text type
-    $(node).find('td input[data-object = repository_cell]').each(function() {
-      // Send data only and only if cell is not empty
-      if ($(this).val().trim()) {
-        formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
-      }
-    });
-    // Custom cells file type
-    $(node).find('td input[data-object = repository_cell_file]').each(function() {
-      // Send data only and only if cell is not empty
-      if ($(this).context.files.length == 1 ) {
-        if ($(this).data('changed')) {
-          formData.append('repository_cells[' + $(this).attr('name') + ']',
-                          $(this).context.files[0]);
-        } else {
-          formData.append('repository_cells[' + $(this).attr('name') + ']', '');
+      // Direct record attributes
+      // Record name
+      formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
+
+      // Custom cells text type
+      $(node).find('td input[data-object = repository_cell]').each(function() {
+        // Send data only and only if cell is not empty
+        if ($(this).val().trim()) {
+          formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
         }
-      }
-    });
-    // Custom cells list type
-    $(node).find('td[column_id]').each(function(index, el) {
-      var value = $(el).attr('list_item_id');
-      formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
-    });
+      });
+      // Custom cells file type
+      $(node).find('td input[data-object = repository_cell_file]').each(function() {
+        // Send data only and only if cell is not empty
+        if ($(this).context.files.length == 1 ) {
+          if ($(this).data('changed')) {
+            formData.append('repository_cells[' + $(this).attr('name') + ']',
+                            $(this).context.files[0]);
+          } else {
+            formData.append('repository_cells[' + $(this).attr('name') + ']', '');
+          }
+        }
+      });
+      // Custom cells list type
+      $(node).find('td[column_id]').each(function(index, el) {
+        var value = $(el).attr('list_item_id');
+        formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
+      });
+    }
 
     var url;
     var type;
@@ -760,6 +770,7 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         SmartAnnotation.closePopup();
+        SCINOTE_REPOSITORY_EDITED_ROWS = [];
         onClickCancel();
       },
       error: function(e) {
@@ -810,7 +821,7 @@ var RepositoryDatatable = (function(global) {
         }
       }
     });
-  }
+  };
 
   // Enable/disable edit button
   function updateButtons() {
@@ -931,6 +942,7 @@ var RepositoryDatatable = (function(global) {
     changeToViewMode();
     updateButtons();
     SmartAnnotation.closePopup();
+    SCINOTE_REPOSITORY_EDITED_ROWS = [];
     animateSpinner(null, false);
   }
 

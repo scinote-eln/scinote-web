@@ -3,12 +3,12 @@
 
 (function(global) {
   'use strict';
-  
+
   /**
    * RepositoryItemEditForm generates the html inputs for
    * repository item and returns the form data object
-   * 
-   * @param {Object} itemData - repository item data fetched from the API 
+   *
+   * @param {Object} itemData - repository item data fetched from the API
    * @param {Object} repositoryItemElement - row node in the table
    */
   global.RepositoryItemEditForm = function(itemData, repositoryItemElement) {
@@ -19,7 +19,7 @@
 
   /**
    * Generates the input fields
-   * 
+   *
    * @param {Object} table - datatable.js object
    * @returns {undefinded}
    */
@@ -41,7 +41,7 @@
       var td        = $(this);
       var rawIndex  = table.column.index('fromVisible', i);
       var colHeader = table.column(rawIndex).header();
-    
+
       if ($(colHeader).hasClass('repository-column')) {
         var type        = $(colHeader).attr('data-type');
         var colHeaderId = $(colHeader).attr('id');
@@ -51,6 +51,7 @@
                                   type,
                                   cell,
                                   list_columns));
+        _addSelectedFile(type, cell, colHeaderId, formData);
         appendNewElementToFormData(cell, colHeaderId, formData);
       }
     });
@@ -59,18 +60,18 @@
 
   /**
    * Parse received data in to a from object
-   * 
+   *
    * @param {Object} itemData - json representations of repository item
-   * 
+   *
    * @returns {Object}
    */
   RepositoryItemEditForm.prototype.composeFormData = function(itemData) {
     var formBindingsData = {};
     formBindingsData['rowName'] = itemData.repository_row.name;
     $.each(itemData.repository_row.repository_cells, function(i, cell) {
-      var tableCellId = 'cellId-' + cell.repository_cell_id;
+      var tableCellId = 'colId-' + cell.repository_cell_id;
       if(cell.type === 'RepositoryAssetValue') {
-        formBindingsData[tableCellId] = new File(cell.asset_preview);
+        formBindingsData[tableCellId] = new File([""], cell.value.file_file_name);
       } else {
         formBindingsData[tableCellId] = cell.value;
       }
@@ -80,27 +81,45 @@
 
   /**
    * Handles select picker default value
-   * 
+   *
    * @returns {undefinded}
    */
-  RepositoryItemEditForm.prototype.initializeSelectpickerValues = function(selectpicker) {
+  RepositoryItemEditForm.prototype.initializeSelectpickerValues = function() {
     $('.bootstrap-select').each(function(_, dropdown) {
       var selectedValue = $($(dropdown).find('select')[0]).data('selected-value');
+      var selectPicker  = $($(dropdown).find('select')[0]);
       var value         = '-1'
       $(dropdown).find('option').each(function(_, option) {
-        $(option).removeAttr('selected');  
+        $(option).removeAttr('selected');
         if($(option).val() === selectedValue.toString()) {
           $(option).attr('selected', true);
           value = $(option).attr('value');
         }
       });
       $(dropdown).parent().attr("list_item_id", value);
-      $(dropdown).val(value);
+      selectPicker.val(value);
+      selectPicker.selectpicker('refresh');
     });
-    selectpicker();
   }
 
-  /** 
+  RepositoryItemEditForm.prototype.parseToFormObject = function(tableID, selectedRecord) {
+    var formData = this.formData;
+    var formDataObj = new FormData();
+    formDataObj.append('request_url', $(tableID).data('current-uri'));
+    formDataObj.append('repository_row_id', $(selectedRecord).attr('id'));
+    debugger;
+    $(_.keys(this.formData)).each(function(_, element) {
+      var value = formData[element];
+      if (element === "rowName") {
+        formDataObj.append('repository_row_name', value);
+      } else {
+        var colId = element.replace('colId-', '');
+        formDataObj.append('repository_cells[' +  colId + ']', value);
+      }
+    });
+    return formDataObj;
+  }
+  /**
    *  |-----------------|
    *  | Private methods |
    *  |-----------------|
@@ -108,12 +127,12 @@
 
   /**
    * Takes object and surrounds it with input
-   * 
+   *
    *  @param {Object} object
    *  @param {String} name
    *  @param {String} value
    *  @param {String} id
-   * 
+   *
    *  @returns (String)
    */
   function changeToInputField(object, name, value, id) {
@@ -125,19 +144,22 @@
    *  Takes object and creates an input file field, contains a hidden
    *  input field which is triggered on button click and we get the uploaded
    *  file from there.
-   * 
+   *
    *  @param {Object} object
    *  @param {String} name
    *  @param {String} value
    *  @param {String} id
-   * 
+   *
    *  @returns (String)
    */
   function changeToInputFileField(object, name, value, id) {
+    var fileName    = (value.file_file_name) ? value.file_file_name : "";
+    var buttonLabel = "Choose File:";
     return "<div class='repository-input-file-field'><div class='form-group'>" +
-        "<input type='file' name='" + name + "' data-id='" + id + "' style='display:none'>" +
-        "<button class='form-control' data-object='" +
-        object + "' name='" + name + "' value='" + value + "' id='" + id + "'>Choose File</button></div>" +
+        "<input type='file' name='" + name + "' id='" + id + "' style='display:none' />" +
+        "<button class='btn btn-default' data-object='" + object + "' name='" +
+        name + "' value='" + value + "' data-id='" + id + "'>" + buttonLabel +
+        "</button><p class='file-name-label'>" + fileName + "</p></div>" +
         "<a onClick='clearFileInput(this)'>" +
         "<i class='fas fa-times'></i>" +
         "</a></div>";
@@ -145,30 +167,30 @@
 
   /**
    * Returns the colum index
-   * 
-   * @param {Object} table 
-   * @param {String} id 
-   * 
+   *
+   * @param {Object} table
+   * @param {String} id
+   *
    * @returns (Boolean | Number)
    */
   function getColumnIndex(table, id) {
     if(id < 0)
-      return false;  
+      return false;
     return table.column(id).index('visible');
   }
 
   /**
    * Genrates list items dropdown element
-   * 
-   * @param {Array} options 
-   * @param {String} current_value 
+   *
+   * @param {Array} options
+   * @param {String} current_value
    * @param {Number} column_id
    * @param {String} id
-   * 
+   *
    * @returns (String)
    */
   function _listItemDropdown(options, current_value, column_id, id) {
-    var val  = undefined; 
+    var val  = undefined;
     var html = '<select id="' + id + '" class="form-control selectpicker repository-dropdown" ';
     html     += 'data-selected-value="" data-abs-min-length="2" data-live-search="true" ';
     html     += 'data-container="body" column_id="' + column_id +'">';
@@ -177,7 +199,7 @@
       var selected = '';
       if (current_value === value[1]) {
         selected = 'selected';
-        val      = value[0];     
+        val      = value[0];
       }
       html += '<option value="' + value[0] + '" ' + selected + '>';
       html += value[1] + '</option>';
@@ -188,17 +210,17 @@
 
   /**
    * Takes an object and creates custom html element
-   * 
+   *
    * @param {String} object
    * @param {String} name
    * @param {String} column_type
    * @param {Object} cell
    * @param {Object} list_columns
-   * 
+   *
    * @returns (String)
    */
   function changeToFormField(object, name, column_type, cell, list_columns) {
-    var cell_id = generateInputFieldReference(cell, name);
+    var cell_id = generateInputFieldReference(name);
     var value   = cell.value || '';
     if (column_type === 'RepositoryListValue') {
       var column     = _.findWhere(list_columns, { column_id: parseInt(name) });
@@ -213,86 +235,87 @@
 
   /**
    * Append the change listener to file field
-   * 
+   *
    * @param {String} type
    * @param {Object} input
    * @param {Object} formData
-   * 
+   *
    * @returns {undefined}
    */
-  function _addSelectedFile(type, input, formData) {
+  function _addSelectedFile(type, cell, name, formData) {
+    var button  = $('button[data-id="' +
+                    generateInputFieldReference(name) +
+                    '"]');
     if (type === 'RepositoryAssetValue') {
-      $(input.find('input[type="file"]')[0]).on('change', function(){
+      var fileInput = $(button.parent().find('input[type="file"]')[0]);
+      fileInput.on('change', function(){
         this.dataset.changed = 'true';
       });
-      $(input.find('button')[0]).on('click', function(ev) {
+      button.on('click', function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        var input = $(this).parent().find('input[type="file"]')
-        input.trigger('click');
-        initFileHandler(input, formData);
+        fileInput.trigger('click');
+        initFileHandler(fileInput, formData);
       });
     }
   }
 
   /**
    * Handle extraction of file from the input field
-   * 
+   *
    * @param {Object} formData
-   * 
+   *
    * @returns {undefined}
    */
   function initFileHandler($inputField, formData) {
     $inputField.on('change', function() {
-      var inputElement = $inputField[0];
-      if (inputElement.files[0]) {
-        formData[inputField.data('id')] = inputElement.files[0];
+      var $label = $($(this).parent().find('.file-name-label')[0]);
+      var file   = this.files[0];
+      if (file) {
+        formData[$(this).attr('id')] = file;
+        $label.text(file.name);
       }
-    })  
+    })
   }
 
   /**
    * Initializes the data binding for form object
-   * 
+   *
    * @param {Object} row_node
    * @param {Object} data
-   * 
+   *
    * @returns {undefined}
    */
   function initializeDataBinding(row_node, data) {
     var uiBindings = {};
     $.each(_.keys(data), function(i, element) {
-      uiBindings['#' + element] = element;  
+      uiBindings['#' + element] = element;
     })
     $(row_node).my({ui: uiBindings}, data);
   }
 
   /**
    * Generates the input tag id that will be used in the formData object
-   * 
-   * @param {Object} cell 
-   * @param {String} column_id 
-   * 
+   *
+   * @param {String} column_id
+   *
    * @returns {String}
    */
-  function generateInputFieldReference(cell, column_id) {
-    if (cell.repository_cell_id) {
-      return 'cellId-' + cell.repository_cell_id;
-    } 
-    return 'new-element-col-id-' + column_id;  
+  function generateInputFieldReference(column_id) {
+    return 'colId-' + column_id;
   }
 
   /**
    * Appends aditional fields to form data object
-   * @param {Object} cell 
-   * @param {String} column_id 
-   * @param {Object} formData 
-   * 
+   * @param {Object} cell
+   * @param {String} column_id
+   * @param {Object} formData
+   *
    * @returns {undefined}
    */
   function appendNewElementToFormData(cell, column_id, formData) {
     if (!cell.repository_cell_id) {
-      formData[generateInputFieldReference(cell, column_id)] = undefined;
+      formData[generateInputFieldReference(column_id)] = undefined;
     }
   }
 })(window);
