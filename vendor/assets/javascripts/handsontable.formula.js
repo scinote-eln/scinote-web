@@ -1,7 +1,7 @@
 (function(Handsontable) {
   'use strict';
 
-  // [MODIFICATION]
+  // [MODIFICATION] (sci 2588)
   var formulasResults = {};
   // _!_MODIFICATION
   function HandsontableFormula() {
@@ -16,7 +16,7 @@
       return false;
     };
 
-    // [MODIFICATION]
+    // [MODIFICATION] (sci 2588)
     var beforeRender = function (isForced) {
           formulasResults = {};
           var data = this.getData();
@@ -68,7 +68,7 @@
         // check if typed formula or cell value should be recalculated
         if ((value && value[0] === '=') || needUpdate) {
 
-          // [MODIFICATION]
+          // [MODIFICATION] (sci 2588)
           if (formulasResults[cellId] === undefined) {
           // _!_MODIFICATION
 
@@ -114,7 +114,7 @@
               // update cell value in hot
               value = error || result;
             }
-        // [MODIFICATION]
+        // [MODIFICATION] (sci 2588)
         } else {
           var newValue = formulasResults[cellId];
 
@@ -412,7 +412,7 @@
 
         var custom = {
           //
-          // [MODIFICATION]
+          // [MODIFICATION] (sci 2588)
           // Previously: "cellValue: instance.getDataAtCell"
           //
           cellValue: function(row, col){
@@ -450,7 +450,7 @@
         Handsontable.TextCell.renderer = formulaRenderer;
         Handsontable.NumericCell.renderer = formulaRenderer;
 
-        // [MODIFICATION]
+        // [MODIFICATION] (sci 2588)
         // This hook is new
         instance.addHook('beforeRender', beforeRender);
         // _!_MODIFICATION
@@ -461,7 +461,7 @@
         instance.addHook('afterCreateCol', afterCreateCol);
 
       } else {
-        // [MODIFICATION]
+        // [MODIFICATION] (sci 2588)
         // This hook is new
         instance.removeHook('beforeRender', beforeRender);
         // _!_MODIFICATION
