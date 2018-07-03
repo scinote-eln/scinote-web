@@ -291,7 +291,7 @@
         ev.preventDefault();
         ev.stopPropagation();
         fileInput.trigger('click');
-        initFileHandler(fileInput, formData);
+        initFileHandler(fileInput);
       });
     }
   }
@@ -299,11 +299,11 @@
   /**
    * Handle extraction of file from the input field
    *
-   * @param {Object} formData
+   * @param {Object} $inputField
    *
    * @returns {undefined}
    */
-  function initFileHandler($inputField, formData) {
+  function initFileHandler($inputField) {
     $inputField.on('change', function() {
       var input = $(this);
       var $label = $($(this).parent().find('.file-name-label')[0]);
@@ -319,41 +319,41 @@
   /**
    * Initializes the data binding for form object
    *
-   * @param {Object} row_node
+   * @param {Object} rowNode
    * @param {Object} data
    *
    * @returns {undefined}
    */
-  function initializeDataBinding(row_node, data) {
+  function initializeDataBinding(rowNode, data) {
     var uiBindings = {};
     $.each(_.keys(data), function(i, element) {
       uiBindings['#' + element] = element;
     })
-    $(row_node).my({ui: uiBindings}, data);
+    $(rowNode).my({ui: uiBindings}, data);
   }
 
   /**
    * Generates the input tag id that will be used in the formData object
    *
-   * @param {String} column_id
+   * @param {String} columnId
    *
    * @returns {String}
    */
-  function generateInputFieldReference(column_id) {
-    return 'colId-' + column_id;
+  function generateInputFieldReference(columnId) {
+    return 'colId-' + columnId;
   }
 
   /**
    * Appends aditional fields to form data object
    * @param {Object} cell
-   * @param {String} column_id
+   * @param {String} columnId
    * @param {Object} formData
    *
    * @returns {undefined}
    */
-  function appendNewElementToFormData(cell, column_id, formData) {
+  function appendNewElementToFormData(cell, columnId, formData) {
     if (!cell.repository_cell_id) {
-      formData[generateInputFieldReference(column_id)] = undefined;
+      formData[generateInputFieldReference(columnId)] = undefined;
     }
   }
 })(window);
