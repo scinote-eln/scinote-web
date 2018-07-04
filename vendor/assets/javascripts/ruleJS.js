@@ -1,4 +1,4 @@
-let ruleJS = (function (root) {
+var ruleJS = (function (root) {
   'use strict';
 
   /**
@@ -1096,11 +1096,9 @@ let ruleJS = (function (root) {
           break;
         case '^':
           result = Math.pow(number1, number2);
-
           break;
         case 'e':
           result = number1 * Math.pow(10, number2);
-
           break;
       }
 
