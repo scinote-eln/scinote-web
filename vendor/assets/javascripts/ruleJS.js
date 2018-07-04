@@ -1,4 +1,4 @@
-var ruleJS = (function (root) {
+let ruleJS = (function (root) {
   'use strict';
 
   /**
@@ -1035,13 +1035,44 @@ var ruleJS = (function (root) {
 
       switch (type) {
         case '+':
-          result = number1 + number2;
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          var number1_big = new Big(number1);
+          var result_big = number1_big.plus(number2)
+          result = parseFloat(result_big)
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 + number2;
+          console.log("plus")
+          console.log("new: "+result)
+          console.log("old: "+(number1 + number2))
+
           break;
         case '-':
-          result = number1 - number2;
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          var number1_big = new Big(number1);
+          var result_big = number1_big.minus(number2)
+          result = parseFloat(result_big)
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 - number2;
+
+          console.log("minus")
+          console.log("new: "+result)
+          console.log("old: "+(number1 - number2))
           break;
         case '/':
-          result = number1 / number2;
+
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          var number1_big = new Big(number1);
+          var result_big = number1_big.div(number2)
+          result = parseFloat(result_big)
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 / number2;
+
+          console.log("div")
+          console.log("new: "+result)
+          console.log("old: "+(number1 / number2))
           if (result == Infinity) {
             throw Error('DIV_ZERO');
           } else if (isNaN(result)) {
@@ -1049,13 +1080,44 @@ var ruleJS = (function (root) {
           }
           break;
         case '*':
-          result = number1 * number2;
+
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          var number1_big = new Big(number1);
+          var result_big = number1_big.times(number2)
+          result = parseFloat(result_big)
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 * number2;
+          console.log("mult")
+          console.log("new: "+result)
+          console.log("old: "+(number1 * number2))
           break;
         case '^':
-          result = Math.pow(number1, number2);
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          var number1_big = new Big(number1);
+          var result_big = number1_big.pow(number2)
+          result = parseFloat(result_big)
+          //MODIFICATION END
+
+          //ORIGINAL: result = Math.pow(number1, number2);
+          var old_res = Math.pow(number1, number2)
+          console.log("power")
+          console.log("new: "+result)
+          console.log("old: "+old_res)
           break;
         case 'e':
-          result = number1 * Math.pow(10, number2);
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          var number1_big = new Big(number1);
+          var second_part = new Big(10).pow(number2);
+          var result_big = number1_big.times(ParseFloat(second_part))
+          result = parseFloat(result_big)
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 * Math.pow(10, number2);
+          var old_res = number1 * Math.pow(10, number2)
+          console.log("e")
+          console.log("new: "+result)
+          console.log("old: "+old_res)
           break;
       }
 
