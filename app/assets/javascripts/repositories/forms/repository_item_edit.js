@@ -82,10 +82,11 @@
   /**
    * Handles select picker default value
    *
+   * @param {Object} node
    * @returns {undefinded}
    */
-  RepositoryItemEditForm.prototype.initializeSelectpickerValues = function() {
-    $('.bootstrap-select').each(function(_, dropdown) {
+  RepositoryItemEditForm.prototype.initializeSelectpickerValues = function(node) {
+    $($(node).find('.bootstrap-select')).each(function(_, dropdown) {
       var selectedValue = $($(dropdown).find('select')[0]).data('selected-value');
       var selectPicker  = $($(dropdown).find('select')[0]);
       var value         = '-1'
