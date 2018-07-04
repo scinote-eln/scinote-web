@@ -1094,7 +1094,8 @@ var RepositoryDatatable = (function(global) {
     // add flag
     $(input).attr('remove', true);
     // clear fileName
-    $(parent.find('.file-name-label')[0]).text('');
+    $(parent.find('.file-name-label')[0])
+            .text(I18n.t('general.file.no_file_chosen'));
     $(parent.find('.form-group')[0]).removeClass('has-error');
     parent.removeClass('has-error');
     $(parent.find('.help-block')[0]).remove();

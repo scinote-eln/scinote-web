@@ -184,7 +184,7 @@
    *  @returns (String)
    */
   function changeToInputFileField(object, name, value, id) {
-    var fileName    = (value.file_file_name) ? value.file_file_name : "";
+    var fileName    = (value.file_file_name) ? value.file_file_name : I18n.t('general.file.no_file_chosen');
     var buttonLabel = I18n.t('general.file.choose');
     var html        = "<div class='repository-input-file-field'>" +
       "<div class='form-group'><div><input type='file' name='" + name + "' id='" +
