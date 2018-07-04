@@ -1914,6 +1914,7 @@ en:
     private: "private"
     search: "Search"
     file:
+      choose: "Choose File"
       processing: "File is still being processed and cannot be downloaded yet."
       total_size: "You can upload max %{size} MB of files at one time. Please remove one or more files and try to submit again."
       size_exceeded: "File size must be less than %{file_size} MB."

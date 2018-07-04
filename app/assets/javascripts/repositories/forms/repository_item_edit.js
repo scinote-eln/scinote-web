@@ -185,21 +185,22 @@
    */
   function changeToInputFileField(object, name, value, id) {
     var fileName    = (value.file_file_name) ? value.file_file_name : "";
-    var buttonLabel = "Choose File";
+    var buttonLabel = I18n.t('general.file.choose');
     var html        = "<div class='repository-input-file-field'>" +
-      "<div class='form-group'><input type='file' name='" + name + "' id='" +
+      "<div class='form-group'><div><input type='file' name='" + name + "' id='" +
       id + "' style='display:none' /><button class='btn btn-default' " +
       "data-object='" + object + "' name='" + name + "' value='" + value +
       "' data-id='" + id + "'>" + buttonLabel +
-      "</button>&nbsp;<i class='file-name-label'>" + fileName + "</o></div>";
+      "</button></div><div><p class='file-name-label'>" + fileName +
+      "</p></div>";
     if(fileName.length > 0) {
-      html += "<a data-action='removeAsset' ";
+      html += "<div><a data-action='removeAsset' ";
       html += "onClick='clearFileInput(this)'><i class='fas fa-times'></i></a>";
     } else {
-      html += "<a data-action='removeAsset' onClick='clearFileInput(this)' ";
+      html += "<div><a data-action='removeAsset' onClick='clearFileInput(this)' ";
       html += "style='display:none'><i class='fas fa-times'></i></a>";
     }
-    html += "</div>";
+    html += "</div></div></div>";
 
     return html;
   }
@@ -306,7 +307,8 @@
   function initFileHandler($inputField) {
     $inputField.on('change', function() {
       var input = $(this);
-      var $label = $($(this).parent().find('.file-name-label')[0]);
+      var $label = $($(this).closest('.repository-input-file-field')
+                            .find('.file-name-label')[0]);
       var file   = this.files[0];
       if (file) {
         $label.text(file.name);

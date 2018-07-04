@@ -812,9 +812,18 @@ var RepositoryDatatable = (function(global) {
               var input = $(selectedRecord).find('input[name=' + key + ']');
               if (input) {
                 var message = Array.isArray(val.data) ? val.data[0] : val.data;
-                input.closest('.form-group').addClass('has-error');
-                input.parent().append("<span class='help-block'>" +
-                                      message + '<br /></span>');
+                // handle custom input field
+                if(input.attr('type') === 'file') {
+                  var container = input.closest('.repository-input-file-field');
+                  $(container.find('.form-group')[0]).addClass('has-error');
+                  container.addClass('has-error');
+                  container.append("<span class='help-block'>" +
+                                   message + '<br /></span>');
+                } else {
+                  input.closest('.form-group').addClass('has-error');
+                  input.parent().append("<span class='help-block'>" +
+                                        message + '<br /></span>');
+                }
               }
             });
           });
@@ -1086,6 +1095,9 @@ var RepositoryDatatable = (function(global) {
     $(input).attr('remove', true);
     // clear fileName
     $(parent.find('.file-name-label')[0]).text('');
+    $(parent.find('.form-group')[0]).removeClass('has-error');
+    parent.removeClass('has-error');
+    $(parent.find('.help-block')[0]).remove();
   }
 
   // Takes an object and creates custom html element
