@@ -1101,12 +1101,14 @@ let ruleJS = (function (root) {
 
           //ORIGINAL: result = Math.pow(number1, number2);
           var old_res = Math.pow(number1, number2)
-          console.log("power")
+          console.log("----------------problem------------")
+          console.log("--power")
           console.log("new: "+result)
           console.log("old: "+old_res)
           break;
         case 'e':
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+
           var number1_big = new Big(number1);
           var second_part = new Big(10).pow(number2);
           var result_big = number1_big.times(ParseFloat(second_part))
@@ -1115,7 +1117,8 @@ let ruleJS = (function (root) {
 
           //ORIGINAL: result = number1 * Math.pow(10, number2);
           var old_res = number1 * Math.pow(10, number2)
-          console.log("e")
+          console.log("----------------problem------------")
+          console.log("--e")
           console.log("new: "+result)
           console.log("old: "+old_res)
           break;
