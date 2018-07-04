@@ -13,8 +13,8 @@
    */
   global.RepositoryItemEditForm = function(itemData, repositoryItemElement) {
     this.itemData              = itemData;
-    this.repositoryItemElement = repositoryItemElement
-    this.formData              = this.composeFormData(itemData)
+    this.repositoryItemElement = repositoryItemElement;
+    this.formData              = this.composeFormData(itemData);
   }
 
   /**
@@ -26,7 +26,7 @@
   RepositoryItemEditForm.prototype.renderForm = function(table) {
     var colIndex     = getColumnIndex(table, '#row-name');
     var cells        = this.itemData.repository_row.repository_cells;
-    var list_columns = this.itemData.repository_row.repository_column_items;
+    var listColumns = this.itemData.repository_row.repository_column_items;
     var formData     = this.formData;
 
     if (colIndex) {
@@ -50,8 +50,8 @@
                                   colHeaderId,
                                   type,
                                   cell,
-                                  list_columns));
-        _addSelectedFile(type, cell, colHeaderId, formData);
+                                  listColumns));
+        addSelectedFile(type, colHeaderId);
         appendNewElementToFormData(cell, colHeaderId, formData);
       }
     });
@@ -223,16 +223,16 @@
    *
    * @param {Array} options
    * @param {String} current_value
-   * @param {Number} column_id
+   * @param {Number} columnId
    * @param {String} id
    *
    * @returns (String)
    */
-  function _listItemDropdown(options, current_value, column_id, id) {
+  function _listItemDropdown(options, current_value, columnId, id) {
     var val  = undefined;
     var html = '<select id="' + id + '" class="form-control selectpicker repository-dropdown" ';
     html     += 'data-selected-value="" data-abs-min-length="2" data-live-search="true" ';
-    html     += 'data-container="body" column_id="' + column_id +'">';
+    html     += 'data-container="body" column_id="' + columnId +'">';
     html     += '<option value="-1"></option>';
     $.each(options, function(index, value) {
       var selected = '';
@@ -254,21 +254,22 @@
    * @param {String} name
    * @param {String} column_type
    * @param {Object} cell
-   * @param {Object} list_columns
+   * @param {Object} listColumns
    *
    * @returns (String)
    */
-  function changeToFormField(object, name, column_type, cell, list_columns) {
-    var cell_id = generateInputFieldReference(name);
+  function changeToFormField(object, name, column_type, cell, listColumns) {
+    var cellId = generateInputFieldReference(name);
     var value   = cell.value || '';
     if (column_type === 'RepositoryListValue') {
-      var column     = _.findWhere(list_columns, { column_id: parseInt(name) });
+      var column     = _.findWhere(listColumns,
+                                  { column_id: parseInt(name, 10) });
       var list_items = column.list_items || cell.list_items;
-      return _listItemDropdown(list_items, value, parseInt(name), cell_id);
+      return _listItemDropdown(list_items, value, parseInt(name, 10), cellId);
     } else if (column_type === 'RepositoryAssetValue') {
-      return changeToInputFileField('repository_cell_file', name, value, cell_id);
+      return changeToInputFileField('repository_cell_file', name, value, cellId);
     } else {
-      return changeToInputField(object, name, value, cell_id);
+      return changeToInputField(object, name, value, cellId);
     }
   }
 
@@ -276,12 +277,11 @@
    * Append the change listener to file field
    *
    * @param {String} type
-   * @param {Object} input
-   * @param {Object} formData
+   * @param {String} name
    *
    * @returns {undefined}
    */
-  function _addSelectedFile(type, cell, name, formData) {
+  function addSelectedFile(type, name) {
     var button  = $('button[data-id="' +
                     generateInputFieldReference(name) +
                     '"]');
@@ -311,7 +311,8 @@
       if (file) {
         $label.text(file.name);
         input.attr('remove', false);
-        $label.parent().find("[data-action='removeAsset']").show();
+        $($label.closest('.repository-input-file-field')
+                .find('[data-action="removeAsset"]')[0]).show();
       }
     })
   }
