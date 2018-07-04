@@ -1,10 +1,18 @@
 //= require jquery-ui/widgets/sortable
+//= require repositories/forms/repository_item_edit.js
 
 var RepositoryDatatable = (function(global) {
   'use strict';
 
-  var TABLE_ID = '';
-  var TABLE = {};
+  var TABLE_ID   = '';
+  var TABLE      = {};
+
+  /**
+   * This variable is declared on window object,
+   * it holds the objects of edited rows, probably we can use this also
+   * for multi row editing in the future.
+   */
+  global.SCINOTE_REPOSITORY_EDITED_ROWS = []; // an array of edited rows
 
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
@@ -657,34 +665,10 @@ var RepositoryDatatable = (function(global) {
         $(node).children('td').eq(0).html($('#saveRecord').clone());
         $(node).children('td').eq(1).html($('#cancelSave').clone());
 
-        // Record name column
-        var colIndex = getColumnIndex('#row-name');
-        if (colIndex) {
-          $(node).children('td').eq(colIndex)
-                 .html(changeToInputField('repository_row', 'name',
-                                          data.repository_row.name));
-        }
-
-        // Take care of custom cells
-        var cells = data.repository_row.repository_cells;
-        var list_columns = data.repository_row.repository_column_items;
-        $(node).children('td').each(function(i) {
-          var td = $(this);
-          var rawIndex = TABLE.column.index('fromVisible', i);
-          var colHeader = TABLE.column(rawIndex).header();
-          if ($(colHeader).hasClass('repository-column')) {
-            var type = $(colHeader).attr('data-type');
-            // Check if cell on this record exists
-            var cell = cells[$(colHeader).attr('id')] || '';
-            td.html(changeToFormField('repository_cell',
-                                       $(colHeader).attr('id'),
-                                       type,
-                                       cell,
-                                       list_columns));
-            _addSelectedFile(type, cell, $(this).find('input')[0]);
-          }
-        });
+        var editForm = new RepositoryItemEditForm(data, node);
+        editForm.renderForm(TABLE);
         _initSelectPicker();
+        editForm.initializeSelectpickerValues();
 
         // initialize smart annotation
         _.each($('[data-object="repository_cell"]'), function(el) {
@@ -695,6 +679,8 @@ var RepositoryDatatable = (function(global) {
         // Adjust columns width in table header
         adjustTableHeader();
         updateButtons();
+
+        SCINOTE_REPOSITORY_EDITED_ROWS.push(editForm);
       },
       error: function(e) {
         if (e.status === 403) {
@@ -712,46 +698,52 @@ var RepositoryDatatable = (function(global) {
   global.onClickSave = function() {
     var node;
     var rowData;
+    var formData;
     if (saveAction === 'update') {
       var row = TABLE.row(selectedRecord);
       node = row.node();
       rowData = row.data();
+      formData = SCINOTE_REPOSITORY_EDITED_ROWS[0].parseToFormObject(
+        TABLE_ID, selectedRecord
+      );
+
     } else if (saveAction === 'create') {
       node = selectedRecord;
-    }
-    // First fetch all the data in input fields
-    var formData = new FormData();
-    formData.append('request_url', $(TABLE_ID).data('current-uri'));
-    formData.append('repository_row_id', $(selectedRecord).attr('id'));
 
-    // Direct record attributes
-    // Record name
-    formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
+      // First fetch all the data in input fields
+      formData = new FormData();
+      formData.append('request_url', $(TABLE_ID).data('current-uri'));
+      formData.append('repository_row_id', $(selectedRecord).attr('id'));
 
-    // Custom cells text type
-    $(node).find('td input[data-object = repository_cell]').each(function() {
-      // Send data only and only if cell is not empty
-      if ($(this).val().trim()) {
-        formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
-      }
-    });
-    // Custom cells file type
-    $(node).find('td input[data-object = repository_cell_file]').each(function() {
-      // Send data only and only if cell is not empty
-      if ($(this).context.files.length == 1 ) {
-        if ($(this).data('changed')) {
-          formData.append('repository_cells[' + $(this).attr('name') + ']',
-                          $(this).context.files[0]);
-        } else {
-          formData.append('repository_cells[' + $(this).attr('name') + ']', '');
+      // Direct record attributes
+      // Record name
+      formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
+
+      // Custom cells text type
+      $(node).find('td input[data-object = repository_cell]').each(function() {
+        // Send data only and only if cell is not empty
+        if ($(this).val().trim()) {
+          formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
         }
-      }
-    });
-    // Custom cells list type
-    $(node).find('td[column_id]').each(function(index, el) {
-      var value = $(el).attr('list_item_id');
-      formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
-    });
+      });
+      // Custom cells file type
+      $(node).find('td input[data-object = repository_cell_file]').each(function() {
+        // Send data only and only if cell is not empty
+        if ($(this).context.files.length == 1 ) {
+          if ($(this).data('changed')) {
+            formData.append('repository_cells[' + $(this).attr('name') + ']',
+                            $(this).context.files[0]);
+          } else {
+            formData.append('repository_cells[' + $(this).attr('name') + ']', '');
+          }
+        }
+      });
+      // Custom cells list type
+      $(node).find('td[column_id]').each(function(index, el) {
+        var value = $(el).attr('list_item_id');
+        formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
+      });
+    }
 
     var url;
     var type;
@@ -772,6 +764,7 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         SmartAnnotation.closePopup();
+        SCINOTE_REPOSITORY_EDITED_ROWS = [];
         onClickCancel();
       },
       error: function(e) {
@@ -813,16 +806,25 @@ var RepositoryDatatable = (function(global) {
               var input = $(selectedRecord).find('input[name=' + key + ']');
               if (input) {
                 var message = Array.isArray(val.data) ? val.data[0] : val.data;
-                input.closest('.form-group').addClass('has-error');
-                input.parent().append("<span class='help-block'>" +
-                                      message + '<br /></span>');
+                // handle custom input field
+                if(input.attr('type') === 'file') {
+                  var container = input.closest('.repository-input-file-field');
+                  $(container.find('.form-group')[0]).addClass('has-error');
+                  container.addClass('has-error');
+                  container.append("<span class='help-block'>" +
+                                   message + '<br /></span>');
+                } else {
+                  input.closest('.form-group').addClass('has-error');
+                  input.parent().append("<span class='help-block'>" +
+                                        message + '<br /></span>');
+                }
               }
             });
           });
         }
       }
     });
-  }
+  };
 
   // Enable/disable edit button
   function updateButtons() {
@@ -943,6 +945,7 @@ var RepositoryDatatable = (function(global) {
     changeToViewMode();
     updateButtons();
     SmartAnnotation.closePopup();
+    SCINOTE_REPOSITORY_EDITED_ROWS = [];
     animateSpinner(null, false);
   }
 
@@ -1076,7 +1079,20 @@ var RepositoryDatatable = (function(global) {
   }
 
   global.clearFileInput = function (el) {
-    $(el).prev('div').find('input:file')[0].value = '';
+    var parent = $(el).closest('div.repository-input-file-field');
+    var input  = parent.find('input:file')[0];
+    // hide clear button
+    $(parent.find('a[data-action="removeAsset"]')[0]).hide();
+    // reset value
+    input.value = '';
+    // add flag
+    $(input).attr('remove', true);
+    // clear fileName
+    $(parent.find('.file-name-label')[0])
+            .text(I18n.t('general.file.no_file_chosen'));
+    $(parent.find('.form-group')[0]).removeClass('has-error');
+    parent.removeClass('has-error');
+    $(parent.find('.help-block')[0]).remove();
   }
 
   // Takes an object and creates custom html element
