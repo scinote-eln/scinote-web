@@ -1036,43 +1036,44 @@ let ruleJS = (function (root) {
       switch (type) {
         case '+':
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          var number1_big = new Big(number1);
-          var result_big = number1_big.plus(number2)
-          result = parseFloat(result_big)
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.plus(number2)
+            result = parseFloat(result_big)
+          } catch(e) {
+            result = number1 + number2
+          }
           //MODIFICATION END
 
           //ORIGINAL: result = number1 + number2;
-          console.log("plus")
-          console.log("new: "+result)
-          console.log("old: "+(number1 + number2))
-
           break;
         case '-':
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          var number1_big = new Big(number1);
-          var result_big = number1_big.minus(number2)
-          result = parseFloat(result_big)
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.minus(number2)
+            result = parseFloat(result_big)
+          } catch(e) {
+            result = number1 - number2
+          }
           //MODIFICATION END
 
           //ORIGINAL: result = number1 - number2;
-
-          console.log("minus")
-          console.log("new: "+result)
-          console.log("old: "+(number1 - number2))
           break;
         case '/':
 
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          var number1_big = new Big(number1);
-          var result_big = number1_big.div(number2)
-          result = parseFloat(result_big)
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.div(number2)
+            result = parseFloat(result_big)
+          } catch(e){
+            result = number1 / number2
+          }
           //MODIFICATION END
 
           //ORIGINAL: result = number1 / number2;
 
-          console.log("div")
-          console.log("new: "+result)
-          console.log("old: "+(number1 / number2))
           if (result == Infinity) {
             throw Error('DIV_ZERO');
           } else if (isNaN(result)) {
@@ -1082,45 +1083,24 @@ let ruleJS = (function (root) {
         case '*':
 
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          var number1_big = new Big(number1);
-          var result_big = number1_big.times(number2)
-          result = parseFloat(result_big)
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.times(number2)
+            result = parseFloat(result_big)
+          } catch(e) {
+            result = number1 * number2
+          }
           //MODIFICATION END
 
           //ORIGINAL: result = number1 * number2;
-          console.log("mult")
-          console.log("new: "+result)
-          console.log("old: "+(number1 * number2))
           break;
         case '^':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          var number1_big = new Big(number1);
-          var result_big = number1_big.pow(number2)
-          result = parseFloat(result_big)
-          //MODIFICATION END
+          result = Math.pow(number1, number2);
 
-          //ORIGINAL: result = Math.pow(number1, number2);
-          var old_res = Math.pow(number1, number2)
-          console.log("----------------problem------------")
-          console.log("--power")
-          console.log("new: "+result)
-          console.log("old: "+old_res)
           break;
         case 'e':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          result = number1 * Math.pow(10, number2);
 
-          var number1_big = new Big(number1);
-          var second_part = new Big(10).pow(number2);
-          var result_big = number1_big.times(ParseFloat(second_part))
-          result = parseFloat(result_big)
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 * Math.pow(10, number2);
-          var old_res = number1 * Math.pow(10, number2)
-          console.log("----------------problem------------")
-          console.log("--e")
-          console.log("new: "+result)
-          console.log("old: "+old_res)
           break;
       }
 
