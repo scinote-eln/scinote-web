@@ -557,7 +557,7 @@ function importProtocolFromFile(
     $.extend(data_json, params);
 
     var rough_size = roughSizeOfObject(data_json);
-    if (rough_size > <%= Rails.configuration.x.file_max_size_mb.megabytes %>) {
+    if (rough_size > ($(document.body).data('file-max-size-mb') * 1024 * 1024)) {
       // Call the callback function
       resultCallback({ name: protocolJson["name"], new_name: null, status: "size_too_large" });
       return;

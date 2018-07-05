@@ -469,8 +469,8 @@ function initImport() {
           alert(I18n.t("my_modules.protocols.load_from_file_error_locked"));
         } else {
           if (data.status === 'size_too_large') {
-            alert('<%= I18n.t('my_modules.protocols.load_from_file_size_error',
-                             size: Rails.configuration.x.file_max_size_mb ) %>');
+            alert(I18n.t('my_modules.protocols.load_from_file_size_error',
+                         { size: $(document.body).data('file-max-size-mb') } ));
           } else {
             alert(I18n.t("my_modules.protocols.load_from_file_error"));
           }

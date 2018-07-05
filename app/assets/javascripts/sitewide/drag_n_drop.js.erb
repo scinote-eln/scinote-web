@@ -161,8 +161,12 @@
     var droppedFiles = [];
     var filesValid = true;
     var totalSize = 0;
+    var fileMaxSizeMb;
+    var fileMaxSize;
 
     function init(files) {
+      fileMaxSizeMb = $(document.body).data('file-max-size-mb');
+      fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for(var i = 0; i < files.length; i++) {
         droppedFiles.push(files[i]);
       }
@@ -235,23 +239,23 @@
     function _validateFilesSize(file) {
       var fileSize = file.size;
       totalSize += parseInt(fileSize);
-      if(fileSize > <%= Rails.configuration.x.file_max_size_mb.megabyte %>) {
+      if(fileSize > fileMaxSize) {
         file.isValid = false;
         _disableSubmitButton();
-        return "<p class='dnd-error'><%= I18n.t 'general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb %></p>";
+        return "<p class='dnd-error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
       }
       return '';
     }
 
     function _validateTotalSize() {
-      if(totalSize > <%= Rails.configuration.x.file_max_size_mb.megabyte %>) {
+      if(totalSize > fileMaxSize) {
         filesValid = false;
         _disableSubmitButton();
         $.each($('.panel-step-attachment-new'), function() {
           if(!$(this).find('p').hasClass('dnd-total-error')) {
             $(this)
               .find('.panel-body')
-              .append("<p class='dnd-total-error'><%= I18n.t('general.file.total_size', size: Rails.configuration.x.file_max_size_mb) %></p>");
+              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
           }
         });
       } else {
@@ -315,8 +319,12 @@
     var droppedFiles = [];
     var isValid = true;
     var totalSize = 0;
+    var fileMaxSizeMb;
+    var fileMaxSize;
 
     function init(files) {
+      fileMaxSizeMb = $(document.body).data('file-max-size-mb');
+      fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for(var i = 0; i < files.length; i++) {
         droppedFiles.push(files[i]);
       }
@@ -392,23 +400,23 @@
     function _validateFilesSize(file) {
       var fileSize = file.size;
       totalSize += parseInt(fileSize);
-      if(fileSize > <%= Rails.configuration.x.file_max_size_mb.megabyte %>) {
+      if(fileSize > fileMaxSize) {
         file.isValid = false;
         _disableSubmitButton();
-        return "<p class='dnd-error'><%= I18n.t 'general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb %></p>";
+        return "<p class='dnd-error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
       }
       return '';
     }
 
     function _validateTotalSize() {
-      if(totalSize > <%= Rails.configuration.x.file_max_size_mb.megabyte %>) {
+      if(totalSize > fileMaxSize) {
         isValid = false;
         _disableSubmitButton();
         $.each($('.panel-result-attachment-new'), function() {
           if(!$(this).find('p').hasClass('dnd-total-error')) {
             $(this)
               .find('.panel-body')
-              .append("<p class='dnd-total-error'><%= I18n.t('general.file.total_size', size: Rails.configuration.x.file_max_size_mb) %></p>");
+              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
             }
         });
       } else {
