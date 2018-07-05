@@ -3,8 +3,8 @@ $('#modal-import-json-protocol').on('hidden.bs.modal', function () {
 })
 <% if @protocolsio_too_big %>
 $('#modal-import-json-protocol').modal('hide');
-HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_size_error',
-                 size: Rails.configuration.x.file_max_size_mb ) %>','danger');
+HelperModule.flashAlertMsg(I18n.t('my_modules.protocols.load_from_file_size_error',
+                                  { size: $(document.body).data('file-max-size-mb') ) }, 'danger');
 <% elsif @protocolsio_invalid_file %>
 $('#modal-import-json-protocol').modal('hide');
 HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_invalid_error') %>','danger');
