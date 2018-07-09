@@ -475,10 +475,11 @@ var RepositoryDatatable = (function(global) {
         SmartAnnotation.init(el);
       }
     });
-    // Adjust columns width in table header
-    adjustTableHeader();
+
     // Init selectpicker
     _initSelectPicker();
+    // Adjust columns width in table header
+    adjustTableHeader();
   }
 
   global.onClickToggleAssignedRecords = function() {
@@ -673,7 +674,7 @@ var RepositoryDatatable = (function(global) {
         // initialize smart annotation
         _.each($('[data-object="repository_cell"]'), function(el) {
           if (_.isUndefined($(el).data('atwho'))) {
-                  SmartAnnotation.init(el);
+            SmartAnnotation.init(el);
           }
         });
         // Adjust columns width in table header
