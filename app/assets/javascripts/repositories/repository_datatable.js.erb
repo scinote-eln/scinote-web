@@ -475,10 +475,11 @@ var RepositoryDatatable = (function(global) {
         SmartAnnotation.init(el);
       }
     });
-    // Adjust columns width in table header
-    adjustTableHeader();
+
     // Init selectpicker
     _initSelectPicker();
+    // Adjust columns width in table header
+    adjustTableHeader();
   }
 
   global.onClickToggleAssignedRecords = function() {
@@ -673,7 +674,7 @@ var RepositoryDatatable = (function(global) {
         // initialize smart annotation
         _.each($('[data-object="repository_cell"]'), function(el) {
           if (_.isUndefined($(el).data('atwho'))) {
-                  SmartAnnotation.init(el);
+            SmartAnnotation.init(el);
           }
         });
         // Adjust columns width in table header
@@ -1075,12 +1076,13 @@ var RepositoryDatatable = (function(global) {
 
   // Takes object and surrounds it with input
   function changeToInputFileField(object, name, value) {
-    return "<div class='repository-input-file-field'><div class='form-group'>" +
+    return "<div class='repository-input-file-field'>"+
+        "<div class='new-input-file-field-div'><div class='form-group'>" +
         "<input type='file' class='form-control' data-object='" +
         object + "' name='" + name + "' value='" + value + "'></div>" +
         "<a onClick='clearFileInput(this)'>" +
         "<i class='fas fa-times'></i>" +
-        "</a></div>";
+        "</a></div></div>";
   }
 
   global.clearFileInput = function (el) {

@@ -40,6 +40,8 @@
 }
 
 .repository-input-file-field {
+  width: auto;
+
   .form-group {
     align-items: baseline;
     border: 1px solid $color-alto;
@@ -80,6 +82,22 @@
     margin-left: 5px;
   }
 }
+
+.new-input-file-field-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .form-group {
+    border: 0 !important;
+    display: inline-block !important;
+  }
+
+  a {
+    display: inline-block !important;
+  }
+}
+
 
 .repository-dropdown {
   max-width: 174px;
