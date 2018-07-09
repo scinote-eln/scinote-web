@@ -118,7 +118,7 @@
         <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
       </button>
       <button type="button" class="btn btn-default"
-        id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
+        id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
         <span class="glyphicon glyphicon-trash"></span>
         <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
           <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden

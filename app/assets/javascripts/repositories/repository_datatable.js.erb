@@ -826,6 +826,11 @@ var RepositoryDatatable = (function(global) {
     });
   };
 
+  // Delete record
+  global.onClickDelete = function() {
+    $('#deleteRepositoryRecord').modal('show');
+  };
+
   // Enable/disable edit button
   function updateButtons() {
     if (currentMode === 'viewMode') {
