@@ -24,10 +24,10 @@
    * @returns {undefinded}
    */
   RepositoryItemEditForm.prototype.renderForm = function(table) {
-    var colIndex     = getColumnIndex(table, '#row-name');
-    var cells        = this.itemData.repository_row.repository_cells;
+    var colIndex    = getColumnIndex(table, '#row-name');
+    var cells       = this.itemData.repository_row.repository_cells;
     var listColumns = this.itemData.repository_row.repository_column_items;
-    var formData     = this.formData;
+    var formData    = this.formData;
 
     if (colIndex) {
       $(this.repositoryItemElement).children('td').eq(colIndex)
@@ -194,7 +194,7 @@
       "' data-id='" + id + "'>" + buttonLabel +
       "</button></div><div><p class='file-name-label'>" + fileName +
       "</p></div>";
-    if(fileName.length > 0) {
+    if(value.file_file_name) {
       html += "<div><a data-action='removeAsset' ";
       html += "onClick='clearFileInput(this)'><i class='fas fa-times'></i></a>";
     } else {
