@@ -81,6 +81,21 @@
   }
 }
 
+.new-input-file-field-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  .form-group {
+    border: 0 !important;
+    display: inline-block !important;
+
+  }
+  a {
+    display: inline-block !important;
+  }
+}
+
+
 .repository-dropdown {
   max-width: 174px;
   width: 174px;

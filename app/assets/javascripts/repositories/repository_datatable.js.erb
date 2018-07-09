@@ -1070,7 +1070,8 @@ var RepositoryDatatable = (function(global) {
 
   // Takes object and surrounds it with input
   function changeToInputFileField(object, name, value) {
-    return "<div class='repository-input-file-field'><div class='form-group'>" +
+    return "<div class='repository-input-file-field new-input-file-field-div'>"+
+        "<div class='form-group'>" +
         "<input type='file' class='form-control' data-object='" +
         object + "' name='" + name + "' value='" + value + "'></div>" +
         "<a onClick='clearFileInput(this)'>" +
