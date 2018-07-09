@@ -192,7 +192,7 @@
       id + "' style='display:none' /><button class='btn btn-default' " +
       "data-object='" + object + "' name='" + name + "' value='" + value +
       "' data-id='" + id + "'>" + buttonLabel +
-      "</button></div><div><p class='file-name-label'>" + fileName +
+      "</button></div><div><p class='file-name-label'>" + truncateLongString(fileName, 20) +
       "</p></div>";
     if(value.file_file_name) {
       html += "<div><a data-action='removeAsset' ";
@@ -312,7 +312,7 @@
                             .find('.file-name-label')[0]);
       var file   = this.files[0];
       if (file) {
-        $label.text(file.name);
+        $label.text(truncateLongString(file.name, 20));
         input.attr('remove', false);
         $($label.closest('.repository-input-file-field')
                 .find('[data-action="removeAsset"]')[0]).show();
