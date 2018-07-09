@@ -28,8 +28,8 @@
         $('#results-collapse-btn').click(function () {
           $('.result .panel-collapse').collapse('hide');
           $(document).find('span.collapse-result-icon').each(function()  {
-            $(this).addClass('glyphicon-collapse-down');
-            $(this).removeClass('glyphicon-collapse-up');
+            $(this).addClass('fa-caret-square-down');
+            $(this).removeClass('fa-caret-square-up');
           });
         });
 
@@ -80,8 +80,8 @@
           var collapseIcon = $(this).find('.collapse-result-icon');
           var collapsed = $(this).hasClass('collapsed');
           // Toggle collapse button
-          collapseIcon.toggleClass('glyphicon-collapse-up', !collapsed);
-          collapseIcon.toggleClass('glyphicon-collapse-down', collapsed);
+          collapseIcon.toggleClass('fa-caret-square-up', !collapsed);
+          collapseIcon.toggleClass('fa-caret-square-down', collapsed);
         });
     }
 
@@ -100,8 +100,8 @@
     function _expandAllResults() {
       $('.result .panel-collapse').collapse('show');
       $(document).find('span.collapse-result-icon').each(function()  {
-        $(this).addClass('glyphicon-collapse-up');
-        $(this).removeClass('glyphicon-collapse-down');
+        $(this).addClass('fa-caret-square-up');
+        $(this).removeClass('fa-caret-square-down');
       });
       $(document).find('div.step-result-hot-table').each(function()  {
         _renderTable(this);
@@ -111,8 +111,8 @@
     function expandResult(result) {
       $('.panel-collapse', result).collapse('show');
       $(result).find('span.collapse-result-icon').each(function()  {
-        $(this).addClass('glyphicon-collapse-up');
-        $(this).removeClass('glyphicon-collapse-down');
+        $(this).addClass('fa-caret-square-up');
+        $(this).removeClass('fa-caret-square-down');
       });
       _renderTable($(result).find('div.step-result-hot-table'));
       animateSpinner(null, false);

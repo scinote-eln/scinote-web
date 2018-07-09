@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-6 col-sm-6 col-md-4">
     <div class="badge-icon">
-      <span class="glyphicon glyphicon-calendar"></span>
+      <span class="fas fa-calendar-alt"></span>
     </div>
     <div class="well well-sm">
       <span class="hidden-xs hidden-sm hidden-md"><%=t "my_modules.module_header.start_date" %></span>
@@ -13,10 +13,10 @@
     <div class="badge-icon">
       <% if can_manage_module?(@my_module) %>
         <%= link_to due_date_my_module_path(@my_module, format: :json), remote: true, class: "due-date-link", style: "color: inherit" do %>
-          <span class="glyphicon glyphicon-calendar"></span>
+          <span class="fas fa-calendar-alt"></span>
         <% end %>
       <% else %>
-        <span class="glyphicon glyphicon-calendar"></span>
+        <span class="fas fa-calendar-alt"></span>
       <% end %>
     </div>
     <div class="well well-sm">
@@ -39,7 +39,7 @@
 
   <div class="col-xs-6 col-sm-6 col-md-4">
     <div class="badge-icon">
-      <span class="glyphicon glyphicon-ok"></span>
+      <span class="fas fa-check"></span>
     </div>
     <div class="well well-sm">
       <span class="task-state-label">
@@ -77,10 +77,10 @@
   <div class="badge-icon">
      <% if can_manage_module?(@my_module) %>
       <%= link_to description_my_module_path(@my_module, format: :json), remote: true, class: "description-link", style: "color: inherit" do %>
-        <span class="glyphicon glyphicon-info-sign"></span>
+        <span class="fas fa-info-circle"></span>
       <% end %>
     <% else %>
-      <span class="glyphicon glyphicon-info-sign"></span>
+      <span class="fas fa-info-circle"></span>
     <% end %>
   </div>
   <div class="well well-sm">

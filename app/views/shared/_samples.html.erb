@@ -23,18 +23,18 @@
 
   <% if can_create_samples?(@team) %>
     <button type="button" class="btn btn-default editAdd" id="addSample" onclick="onClickAddSample()">
-      <span class="glyphicon glyphicon-plus"></span>
+      <span class="fas fa-plus"></span>
       <span class="hidden-xs"><%= t("samples.add_new_sample") %></span>
     </button>
     <button type="button" class="btn btn-default" id="importSamplesButton" data-toggle="modal" data-target="#modal-import-samples">
-      <span class="glyphicon glyphicon-cloud-upload"></span>
+      <span class="fas fa-cloud-upload-alt"></span>
       <span class="hidden-xs"><%= t("samples.import") %></span>
       </button>
   <% end %>
 
   <% if can_read_team?(@team) %>
     <a href="#" class="btn btn-default" id="exportSamplesButton" data-turbolinks="false">
-      <span class="glyphicon glyphicon-cloud-download"></span>
+      <span class="fas fa-cloud-download-alt"></span>
       <span class="hidden-xs"><%= t("samples.export") %></span>
     </a>
 
@@ -83,11 +83,11 @@
 
 <div class="btn-group" id="saveCancel" data-toggle="buttons" style="display:none">
   <button type="button" class="btn btn-primary" id="saveSample" onclick="onClickSave()">
-    <span class="glyphicon glyphicon-save"></span>
+    <span class="fas fa-save"></span>
     <%= t("samples.save_sample") %>
   </button>
   <button type="button" class="btn btn-default" id="cancelSave" onclick="onClickCancel()">
-    <span class="glyphicon glyphicon-remove visible-xs-inline"></span>
+    <span class="fas fa-times visible-xs-inline"></span>
     <span class="hidden-xs"><%= t("samples.cancel_save") %></span>
   </button>
 </div>
@@ -102,7 +102,7 @@
   <!-- Don't check if user can manage the selected samples, because the ones that he can't, will be left untouched -->
   <button type="button" class="btn btn-default"
     id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
-    <span class="glyphicon glyphicon-trash"></span>
+    <span class="fas fa-trash-alt"></span>
     <span class="hidden-xs-custom"><%= t'samples.delete_samples' %></span>
       <%= submit_tag I18n.t('samples.delete_samples'), :class => "hidden
       delete_samples_submit" %>
@@ -111,13 +111,13 @@
   <% if module_page? && can_assign_sample_to_module?(@my_module) %>
     <button type="button" class="btn btn-default"
       id="assignSamples" onclick="$(this).next().click();" disabled>
-      <span class="glyphicon glyphicon-ok-circle"></span>
+      <span class="fas fa-check-circle"></span>
       <span class="hidden-xs-custom"><%= t'samples.assign_samples_to_module' %></span>
     </button>
     <%= submit_tag MyModulesController::ASSIGN_SAMPLES, :class => "hidden" %>
     <button type="button" class="btn btn-default"
       id="unassignSamples" onclick="$(this).next().click();" disabled>
-      <span class="glyphicon glyphicon-ban-circle"></span>
+      <span class="fas fa-ban"></span>
       <span class="hidden-xs-custom"><%= t'samples.unassign_samples_to_module' %></span>
     </button>
     <%= submit_tag MyModulesController::UNASSIGN_SAMPLES, :class => "hidden" %>
