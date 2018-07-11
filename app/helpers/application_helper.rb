@@ -166,7 +166,7 @@ module ApplicationHelper
     end
 
     user_name = user.full_name
-    # binding.pry
+ 
     unless skip_user_status || user_still_in_team
       user_name << " #{I18n.t('atwho.res.removed')}"
     end
