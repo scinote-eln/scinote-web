@@ -21,17 +21,22 @@ module SearchableModel
       end
 
       if options[:whole_word].to_s == 'true' ||
-         options[:whole_phrase].to_s == 'true'
+         options[:whole_phrase].to_s == 'true' ||
+         options[:at_search].to_s == 'true'
         unless attrs.empty?
           like = options[:match_case].to_s == 'true' ? '~' : '~*'
+          like = 'SIMILAR TO' if options[:at_search].to_s == 'true'
 
           if options[:whole_word].to_s == 'true'
             a_query = query.split
                            .map { |a| Regexp.escape(a) }
                            .join('|')
+          elsif options[:at_search].to_s == 'true'
+            a_query = "%#{Regexp.escape(query).downcase}%"
           else
             a_query = Regexp.escape(query)
           end
+
           # quick fix to enable searching by repositoy_row id
           id_index = { present: false }
           where_str =
@@ -40,7 +45,8 @@ module SearchableModel
                 id_index = { present: true, val: i }
                 "(#{a}) = :t#{i} OR "
               else
-                "(trim_html_tags(#{a})) #{like} :t#{i} OR "
+                col = options[:at_search].to_s == 'true' ? "lower(#{a})": a
+                "(trim_html_tags(#{col})) #{like} :t#{i} OR "
               end
             end
             ).join[0..-5]
@@ -53,7 +59,6 @@ module SearchableModel
               end
             end
           ).to_h
-
           return where(where_str, vals)
         end
       end

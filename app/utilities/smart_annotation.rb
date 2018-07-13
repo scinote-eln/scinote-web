@@ -101,7 +101,7 @@ class SmartAnnotation
   def repository_rows(repository)
     res = RepositoryRow
           .where(repository: repository)
-          .where_attributes_like('name', @query)
+          .where_attributes_like('name', @query, at_search: true)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
     rep_items_list = []
     splitted_name = repository.name.gsub(/[^0-9a-z ]/i, '').split
