@@ -63,7 +63,12 @@
        <li class="<%= 'active' if on_settings_team_page? %>" >
          <span class="tree-link line-wrap no-indent">
            <% if on_settings_team_page? %>
-           <span title="<%= t("users.settings.sidebar.teams") %>"><%= t("users.settings.sidebar.teams") %></span>
+             <span title="<%= t("users.settings.sidebar.teams") %>">
+               <%= link_to t("users.settings.sidebar.teams"),
+                           teams_path,
+                           data: { 'no-turbolink' => 'true' },
+                           class: 'all-teams-navigation-link' %>
+             </span>
            <% else %>
              <%= link_to t("users.settings.sidebar.teams"),
                          teams_path,
