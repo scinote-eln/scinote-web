@@ -140,7 +140,7 @@ module ApplicationHelper
   end
 
   # Generate smart annotation link for one user object
-  def popover_for_user_name(user, team = nil)
+  def popover_for_user_name(user, team = nil, skip_user_status = false)
     user_still_in_team = user.teams.include?(team)
 
     user_description = %(<div class='col-xs-4'>
@@ -166,7 +166,10 @@ module ApplicationHelper
     end
 
     user_name = user.full_name
-    user_name << ' ' + I18n.t('atwho.res.removed') if !user_still_in_team
+ 
+    unless skip_user_status || user_still_in_team
+      user_name << " #{I18n.t('atwho.res.removed')}"
+    end
 
     raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
         "alt='avatar' class='atwho-user-img-popover'" \
