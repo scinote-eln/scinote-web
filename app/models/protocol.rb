@@ -43,7 +43,7 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_public? do |protocol|
     # Public protocol must have unique name inside its team
     protocol
-      .validates_uniqueness_of :name,
+      .validates_uniqueness_of :name, case_sensitive: false,
                                scope: :team,
                                conditions: -> {
                                  where(
@@ -57,7 +57,7 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_private? do |protocol|
     # Private protocol must have unique name inside its team & user scope
     protocol
-      .validates_uniqueness_of :name,
+      .validates_uniqueness_of :name, case_sensitive: false,
                                scope: [:team, :added_by],
                                conditions: -> {
                                  where(
@@ -70,7 +70,7 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_archived? do |protocol|
     # Archived protocol must have unique name inside its team & user scope
     protocol
-      .validates_uniqueness_of :name,
+      .validates_uniqueness_of :name, case_sensitive: false,
                                scope: [:team, :added_by],
                                conditions: -> {
                                  where(
