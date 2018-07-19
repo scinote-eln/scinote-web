@@ -1,3 +1,4 @@
+//= require my_modules
 //= require protocols/import_export/import
 //= require comments
 

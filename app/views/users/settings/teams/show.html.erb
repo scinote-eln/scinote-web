@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
@@ -89,7 +93,7 @@
       <div class="panel-body">
         <div class="col-xs-24 col-sm-12">
           <a href="#" class="btn btn-primary pull-right row" data-trigger="invite-users"
-             data-turbolinks="false" data-modal-id="team-invite-users-modal">
+             data-modal-id="team-invite-users-modal" data-remote="true">
             <span class="fas fa-plus"></span>
             <%= t("users.settings.teams.edit.add_user") %>
           </a>

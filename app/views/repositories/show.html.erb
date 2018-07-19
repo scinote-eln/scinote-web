@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <% provide(:head_title, t("libraries.show.head_title", library: @repository.name)) %>
 <%= stylesheet_link_tag 'datatables' %>
 <% provide(:container_class, "no-second-nav-container") %>
@@ -146,7 +150,7 @@
 <%= render partial: 'repositories/export_repository_modal.html.erb',
            locals: { repository: @repository } %>
 
-<%= javascript_include_tag 'repositories/edit', 'data-turbolinks-track' => true %>
+<%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
-<%= javascript_include_tag "repositories/show", "data-turbolinks-track" => true %>
-<%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "repositories/show" %>
+<%= javascript_include_tag "repositories/index" %>
