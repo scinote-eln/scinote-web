@@ -73,7 +73,7 @@ class Step < ApplicationRecord
     end
   end
 
-  def destroy(current_user)
+  def destroy(current_user = nil)
     @current_user = current_user
 
     # Store IDs of assets & tables so they
@@ -125,7 +125,7 @@ class Step < ApplicationRecord
 
     # Generate "delete" activity, but only if protocol is
     # located inside module
-    if (protocol.my_module.present?) then
+    if protocol.my_module.present? && @current_user.present?
       Activity.create(
         type_of: :destroy_step,
         project: protocol.my_module.experiment.project,

@@ -42,7 +42,7 @@ class UserTeam < ApplicationRecord
     where(user: user, team: team)
   end
 
-  def destroy(new_owner)
+  def destroy(new_owner = nil)
     # If any project of the team has the sole owner and that
     # owner is the user to be removed from the team, then we must
     # create a new owner of the project (the provided user).
