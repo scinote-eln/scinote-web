@@ -27,7 +27,7 @@
         });
 
       // Show modal
-      editNameModal.modal('how');
+      editNameModal.modal('show');
     }).on('ajax:error', function() {
       // TODO
     });
