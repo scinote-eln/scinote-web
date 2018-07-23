@@ -68,7 +68,7 @@
       $(this).renderFormErrors('user', data.responseJSON);
     });
 
-  function processFile(ev) {
+  $('#user-avatar-field :submit').click(function(ev) {
     var $form = $(ev.target.form);
     var $fileInput = $form.find('input[type=file]');
     $form.clearFormErrors();
@@ -77,5 +77,5 @@
       // Local file uploading
       animateSpinner();
     }
-  }
+  });
 }());
