@@ -92,6 +92,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    aes_key_wrap (1.0.1)
     ajax-datatables-rails (0.3.1)
       railties (>= 3.1)
     arel (8.0.0)
@@ -123,6 +124,7 @@ GEM
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
+    bindata (2.4.3)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     bootstrap-sass (3.3.7)
@@ -246,6 +248,10 @@ GEM
     js_cookie_rails (2.1.4)
       railties (>= 3.1)
     json (1.8.6)
+    json-jwt (1.9.4)
+      activesupport
+      aes_key_wrap
+      bindata
     json-schema (2.8.0)
       addressable (>= 2.4)
     json_matchers (0.7.2)
@@ -561,6 +567,7 @@ DEPENDENCIES
   jquery-turbolinks
   jquery-ui-rails
   js_cookie_rails
+  json-jwt
   json_matchers
   jwt (~> 1.5)
   kaminari
