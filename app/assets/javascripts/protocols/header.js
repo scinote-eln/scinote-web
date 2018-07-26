@@ -5,7 +5,9 @@ var authorsLabel = $("[data-role='authors-refresh']");
 var descriptionLabel = $("[data-role='description-refresh']");
 
 var editMetadataModal = $("#edit-protocol-metadata-modal");
+
 var keywordsEngine;
+
 function initModalSubmitAndHide() {
   editMetadataModal
   .on("hidden.bs.modal", function() {

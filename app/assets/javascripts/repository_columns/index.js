@@ -2,7 +2,6 @@
   'use strict';
 
   // @TODO refactor that eventually
-
   function initEditCoumnModal() {
     var modalID = '#manageRepositoryColumn';
     var colRadID = '#repository_column_data_type_repositorylistvalue';
