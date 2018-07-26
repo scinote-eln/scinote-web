@@ -70,7 +70,7 @@
         $('.file-download-link')
           .addClass('disabled-with-click-events')
           .attr('title',
-                '<%= I18n.t('general.file.processing')%>')
+                $('#locale_data').attr('data-GENERAL_FILE_PROCESSING'))
           .click(function(ev) {
             ev.preventDefault();
             ev.stopPropagation();

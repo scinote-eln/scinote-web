@@ -1102,11 +1102,11 @@ function changeToEditMode() {
           '<span class="text">' + generateColumnNameTooltip(thederName) + '</span> ' +
           '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
-          '<span class="ok glyphicon glyphicon-ok" style="display: none;" title="<%= I18n.t("general.save") %>"></span>' +
-          '<span class="cancel glyphicon glyphicon-remove" style="display: none;" title="<%= I18n.t("general.cancel") %>"></span>' +
-          '<span class="vis glyphicon ' + visClass + '" title="<%= I18n.t("samples.columns_visibility") %>"></span> ' +
-          '<span class="edit fas fa-pencil-alt ' + editClass + '" title="<%= I18n.t("general.edit") %>"></span>' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass + '" title="<%= I18n.t("samples.columns_delete") %>"></span>' +
+          '<span class="ok glyphicon glyphicon-ok" style="display: none;" title=' + $('#locale_data').attr('data-GENERAL_SAVE') + '></span>' +
+          '<span class="cancel glyphicon glyphicon-remove" style="display: none;" title=' + $('#locale_data').attr('data-GENERAL_CANCEL') + '></span>' +
+          '<span class="vis glyphicon ' + visClass + '" title=' + $('#locale_data').attr('data-SAMPLES_COLUMNS_VISIBILITY') + '></span> ' +
+          '<span class="edit fas fa-pencil-alt ' + editClass + '" title=' + $('#locale_data').attr('data-GENERAL_EDIT') + '></span>' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '" title=' + $('#locale_data').attr('data-SAMPLES_COLUMNS_DELETE') + '></span>' +
           '</span><br></span></li>';
         dropdownList.append(html);
       }
@@ -1444,10 +1444,10 @@ function changeToEditMode() {
 
   function generateColumnNameTooltip(name) {
     if( $.trim(name).length >
-        <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) {
+        $('#const_data').attr('data-NAME_TRUNCATION_LENGTH_DROPDOWN')) {
       return '<div class="modal-tooltip">' +
              truncateLongString(name,
-               <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) +
+               $('#const_data').attr('data-NAME_TRUNCATION_LENGTH_DROPDOWN')) +
              '<span class="modal-tooltiptext">' + name + '</span></div>';
     } else {
       return name;

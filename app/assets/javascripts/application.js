@@ -184,10 +184,10 @@ var HelperModule = (function(){
 
   helpers.treeLinkTruncation = function() {
     $('.tree-link a').each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+      truncateLongString( $(this), $('#const_data').attr('data-NAME_TRUNCATION_LENGTH') );
     });
     $(".tree-link span").each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+      truncateLongString( $(this), $('#const_data').attr('data-NAME_TRUNCATION_LENGTH') );
     });
   }
 

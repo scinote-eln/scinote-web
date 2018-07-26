@@ -21,7 +21,7 @@
 
     // Set max tags
     tagsInput.tagsinput({
-      maxTags: <%= Constants::INVITE_USERS_LIMIT %>
+      maxTags: $('#const_data').attr('data-INVITE_USERS_LIMIT')
     });
 
     modal

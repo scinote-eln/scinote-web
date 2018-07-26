@@ -14,8 +14,8 @@
 
           $container.handsontable({
             data: data,
-            startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
-            startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+            startRows: $('#const_data').attr('data-HANDSONTABLE_INIT_ROWS_CNT'),
+            startCols: $('#const_data').attr('data-HANDSONTABLE_INIT_COLS_CNT'),
             minRows: 1,
             minCols: 1,
             rowHeaders: true,

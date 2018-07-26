@@ -5,9 +5,7 @@ var authorsLabel = $("[data-role='authors-refresh']");
 var descriptionLabel = $("[data-role='description-refresh']");
 
 var editMetadataModal = $("#edit-protocol-metadata-modal");
-
 var keywordsEngine;
-
 function initModalSubmitAndHide() {
   editMetadataModal
   .on("hidden.bs.modal", function() {
@@ -88,11 +86,11 @@ function initEditKeywords() {
 
     // Init tagsinput & typeahead
     input.tagsinput({
-      maxChars: <%= Constants::NAME_MAX_LENGTH %>,
+      maxChars: $('#const_data').attr('data-NAME_MAX_LENGTH'),
       trimValue: true,
       typeaheadjs: {
         highlight: true,
-        minLength: <%= Constants::NAME_MIN_LENGTH %>,
+        minLength: $('#const_data').attr('data-NAME_MIN_LENGTH'),
         name: "keywords",
         source: keywordsEngine
       }

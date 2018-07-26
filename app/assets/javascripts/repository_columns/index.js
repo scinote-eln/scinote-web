@@ -2,6 +2,7 @@
   'use strict';
 
   // @TODO refactor that eventually
+
   function initEditCoumnModal() {
     var modalID = '#manageRepositoryColumn';
     var colRadID = '#repository_column_data_type_repositorylistvalue';
@@ -45,7 +46,7 @@
         });
       }).fail(function(error) {
         HelperModule.flashAlertMsg(
-          "<%= I18n.t("libraries.repository_columns.no_permissions") %>",
+          $('#locale_data').attr('data-LIB_REPCOL_NO_PERMISSIONS'),
           'danger');
       });
     });
@@ -64,7 +65,7 @@
         });
       }).fail(function(error) {
         HelperModule.flashAlertMsg(
-          "<%= I18n.t("libraries.repository_columns.no_permissions") %>",
+          $('#locale_data').attr('data-LIB_REPCOL_NO_PERMISSIONS'),
           'danger');
       });
     });
@@ -119,10 +120,10 @@
     html += '</div><div class="col-xs-4"><span class="controlls pull-right">';
     html += '<button class="btn btn-default" data-action="edit">';
     html += '<span class="fas fa-pencil-alt"></span>&nbsp;';
-    html += '<%= I18n.t "libraries.repository_columns.index.edit_column" %></button>&nbsp;';
+    html += $('#locale_data').attr('data-LIB_REPCOL_INDEX_EDITCOL') + '</button>&nbsp;';
     html += '<button class="btn btn-default delete-column" data-action="destroy">';
     html += '<span class="glyphicon glyphicon-trash"></span>&nbsp;';
-    html += '<%= I18n.t "libraries.repository_columns.index.delete_column" %>';
+    html += $('#locale_data').attr('data-LIB_REPCOL_INDEX_DELCOL') + '</button>&nbsp;';
     html += '</button></span></div></li>';
     $(html).insertBefore('.repository-columns-body ul li:first')
            .promise()
@@ -148,7 +149,7 @@
         var listValueId = 'repository_column_data_type_repositorylistvalue';
         if($(this).attr('id') === listValueId) {
           $('[data-role="tagsinput"]').tagsinput({
-            maxChars: <%= Constants::NAME_MAX_LENGTH %>,
+            maxChars: $('#const_data').attr('data-NAME_MAX_LENGTH'),
             trimValue: true
           });
           $('.bootstrap-tagsinput').show();

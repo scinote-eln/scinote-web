@@ -210,7 +210,7 @@ var Comments = (function() {
         if (leftPos + menu.width() > $(window).width()) {
           menu.offset({ left: leftPos - menu.width(),
                         top: (parentTopPos +
-                              <%= Constants::DROPDOWN_TOP_OFFSET_PX %>)});
+                              $("#const_data").attr('data-DROPDOWN_TOP_OFFSET_PX'))});
         }
       });
     }
@@ -236,7 +236,7 @@ var Comments = (function() {
       var $el = $(el);
       var offset = useParentOffset ? $el.offset().top : $el.position().top;
       $el.find('.dropdown-menu-fixed')
-        .offset({ top: (offset + <%= Constants::DROPDOWN_TOP_OFFSET_PX %>) });
+        .offset({ top: (offset + $("#const_data").attr('data-DROPDOWN_TOP_OFFSET_PX')) });
     });
   }
 

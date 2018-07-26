@@ -22,7 +22,7 @@
     if(element.data('hasfile')) {
       $alertSection.append(
         '<div class="alert alert-danger">' +
-        '<%=I18n.t("projects.reports.new.save_PDF_to_inventory_modal.asset_present_warning_html") %>' +
+        $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_ASSET_PRESENT_WARNING_HTML') +
         '</div>'
       )
     }
@@ -127,7 +127,7 @@
         .selectpicker({liveSearch: true})
         .ajaxSelectPicker({
           ajax: {
-            url: '<%= Rails.application.routes.url_helpers.available_rows_path %>',
+            url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_AVAILABLE_ROWS_PATH'),
             type: 'POST',
             dataType: 'json',
             data: function () {
@@ -139,7 +139,7 @@
             }
           },
           locale: {
-            emptyTitle: '<%= I18n.t('projects.reports.new.save_PDF_to_inventory_modal.nothing_selected') %>'
+            emptyTitle: $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED ')
           },
           preprocessData: appendSearchResultsForItems,
           emptyRequest: true,
@@ -162,7 +162,7 @@
         .selectpicker({liveSearch: true})
         .ajaxSelectPicker({
           ajax: {
-            url: '<%= Rails.application.routes.url_helpers.available_asset_type_columns_path %>',
+            url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH'),
             type: 'POST',
             dataType: 'json',
             data: function () {
@@ -173,7 +173,7 @@
             }
           },
           locale: {
-            emptyTitle: '<%= I18n.t('projects.reports.new.save_PDF_to_inventory_modal.nothing_selected') %>'
+            emptyTitle: $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED ')
           },
           preprocessData: appendSearchResultsForColumns,
           emptyRequest: true,
@@ -198,7 +198,7 @@
         .selectpicker({liveSearch: true})
         .ajaxSelectPicker({
           ajax: {
-            url: '<%= Rails.application.routes.url_helpers.reports_available_repositories_path %>',
+            url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH'),
             type: 'POST',
             dataType: 'json',
             data: function () {
@@ -206,7 +206,7 @@
             }
           },
           locale: {
-            emptyTitle: '<%= I18n.t('projects.reports.new.save_PDF_to_inventory_modal.nothing_selected') %>'
+            emptyTitle: $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED ')
           },
           preprocessData: appendSearchResults,
           emptyRequest: true,
@@ -230,7 +230,7 @@
     $('#savePDFtoInventorySubmit').off().on('click', function() {
       animateSpinner();
       $.ajax({
-        url: '<%= Rails.application.routes.url_helpers.reports_save_pdf_to_inventory_item_path %>',
+        url: $('#rails_route_data').attr('data-RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH'),
         data: Object.assign(SELECTED_IDS, { html: $(REPORT_CONTENT).html() }, {}),
         type: 'POST',
         success: function(data) {

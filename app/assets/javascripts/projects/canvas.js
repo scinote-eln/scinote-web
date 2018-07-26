@@ -36,7 +36,7 @@ var DEFAULT_CONNECTOR_STYLE =
 } ];
 var DEFAULT_CONNECTOR_STYLE_2 =
 {
-  strokeStyle: '<%= Constants::COLOR_WHITE %>',
+  strokeStyle: $("#const_data").attr('data-COLOR_WHITE'),
   lineWidth: 1.5,
   outlineColor: "transparent",
   outlineWidth: 0
@@ -57,7 +57,7 @@ var EDIT_ENDPOINT_STYLE =
 } ];
 var EDIT_CONNECTOR_STYLE_2 =
 {
-  strokeStyle: '<%= Constants::COLOR_WHITE %>',
+  strokeStyle: $("#const_data").attr('data-COLOR_WHITE'),
   lineWidth: 3,
   outlineColor: "transparent",
   outlineWidth: 0
@@ -1360,7 +1360,7 @@ function bindNewModuleAction(gridDistX, gridDistY) {
     var input = $("#new-module-name-input");
     // Validate module name
     var moduleNameValid = textValidator(ev, input,
-      <%= Constants::NAME_MIN_LENGTH %>, <%= Constants::NAME_MAX_LENGTH %>,
+      $("#const_data").attr('data-NAME_MIN_LENGTH'), $("#const_data").attr('data-NAME_MAX_LENGTH'),
       true);
     if (moduleNameValid) {
       // Set the "clicked" property to true
@@ -1451,7 +1451,7 @@ function initEditModules() {
     var input = modal.find("#edit-module-name-input");
     // Validate module name
     var moduleNameValid = textValidator(ev, input,
-      <%= Constants::NAME_MIN_LENGTH %>, <%= Constants::NAME_MAX_LENGTH %>,
+      $("#const_data").attr('data-NAME_MIN_LENGTH'), $("#const_data").attr('data-NAME_MAX_LENGTH'),
       true);
     if (moduleNameValid) {
       var newName = input.val();
