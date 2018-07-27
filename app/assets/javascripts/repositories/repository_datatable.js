@@ -115,10 +115,10 @@ var RepositoryDatatable = (function(global) {
       },
       // Next 2 options are provided by server-side default state
       //  (and get overriden once state load from server kicks in)
-      order: <%= default_table_order_as_js_array %>,
+      order: JSON.parse($('#datatable_empty_tables_data').attr('data-DEFAULT_TABLE_ORDER_AS_JS_ARRAY')),
       columns: (function() {
         var numOfColumns = $(TABLE_ID).data('num-columns');
-        var columns = <%= default_table_columns %>;
+        var columns = JSON.parse($('#datatable_empty_tables_data').attr('data-DEFAULT_TABLE_COLUMNS'));
         for (var i = 0; i < numOfColumns; i++) {
           if (columns[i] == undefined) {
             // This should only occur for custom columns

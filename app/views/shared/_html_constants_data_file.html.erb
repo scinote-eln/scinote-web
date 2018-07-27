@@ -1,0 +1,74 @@
+<!-- To include ruby arrays as javascript arrays, they need to be formatted correctly,
+ and JSON.parse(array) should be used on other end -->
+<div id="const_data"
+ data-DROPDOWN_TOP_OFFSET_PX="<%= Constants::DROPDOWN_TOP_OFFSET_PX %>"
+ data-HANDSONTABLE_INIT_ROWS_CNT="<%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>"
+ data-HANDSONTABLE_INIT_COLS_CNT="<%= Constants::HANDSONTABLE_INIT_COLS_CNT %>"
+ data-TEXT_MAX_LENGTH="<%= Constants::TEXT_MAX_LENGTH %>"
+ data-COLOR_WHITE="<%= Constants::COLOR_WHITE %>"
+ data-NAME_MIN_LENGTH="<%= Constants::NAME_MIN_LENGTH %>"
+ data-NAME_MAX_LENGTH="<%= Constants::NAME_MAX_LENGTH %>"
+ data-NAME_TRUNCATION_LENGTH="<%= Constants::NAME_TRUNCATION_LENGTH %>"
+ data-NAME_TRUNCATION_LENGTH_DROPDOWN = "<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
+
+ data-ATWHO_SEARCH_LIMIT="<%= Constants::ATWHO_SEARCH_LIMIT %>"
+ data-FILENAME_TRUNCATION_LENGTH = "<%= Constants::FILENAME_TRUNCATION_LENGTH %>"
+ data-AVATAR_MAX_SIZE_MB = "<%= Constants::AVATAR_MAX_SIZE_MB.megabytes %>"
+ data-INVITE_USERS_LIMIT = "<%= Constants::INVITE_USERS_LIMIT %>"
+></div>
+<div id="locale_data"
+ data-LIB_REPCOL_NO_PERMISSIONS="<%= I18n.t("libraries.repository_columns.no_permissions") %>"
+ data-LIB_REPCOL_INDEX_EDITCOL="<%= I18n.t "libraries.repository_columns.index.edit_column" %>"
+ data-LIB_REPCOL_INDEX_DELCOL="<%= I18n.t "libraries.repository_columns.index.delete_column" %>"
+ data-ATWHO_USERS_NAV1 = "<%= I18n.t("atwho.users.navigate_1") %>"
+ data-ATWHO_USERS_NAV2 = "<%= I18n.t("atwho.users.navigate_2") %>"
+ data-ATWHO_USERS_CONF1 = "<%= I18n.t("atwho.users.confirm_1") %>"
+ data-ATWHO_USERS_CONF2 = "<%= I18n.t("atwho.users.confirm_2") %>"
+ data-ATWHO_USERS_DSMS1 = "<%= I18n.t("atwho.users.dismiss_1") %>"
+ data-ATWHO_USERS_DSMS2 = "<%= I18n.t("atwho.users.dismiss_2") %>"
+ data-ATWHO_USERS_TITLE = "<%= I18n.t("atwho.users.title") %>"
+ data-ATWHO_NORES = "<%= I18n.t("atwho.no_results") %>"
+ data-ATWHO_RES_ARCH = "<%= I18n.t("atwho.res.archived") %>"
+ data-ASSETS_CLIPBOARD_MODAL_TITLE = "<%= I18n.t("assets.from_clipboard.modal_title") %>"
+ data-ASSETS_CLIPBOARD_IMG_PREVIEW = "<%= I18n.t("assets.from_clipboard.image_preview") %>"
+ data-ASSETS_CLIPBOARD_FILE_NAME = "<%= I18n.t("assets.from_clipboard.file_name") %>"
+ data-ASSETS_CLIPBOARD_FILE_NAME_PLACEHOLDER = "<%= I18n.t("assets.from_clipboard.file_name_placeholder") %>"
+ data-GENERAL_CANCEL = "<%= I18n.t("general.cancel") %>"
+ data-GENERAL_FILE_PROCESSING = "<%= I18n.t("general.file.processing") %>"
+ data-GENERAL_SAVE = "<%= I18n.t("general.save") %>"
+ data-GENERAL_EDIT = "<%= I18n.t("general.edit") %>"
+ data-SAMPLES_COLUMNS_VISIBILITY = "<%= I18n.t("samples.columns_visibility") %>"
+ data-SAMPLES_COLUMNS_DELETE = "<%= I18n.t("samples.columns_delete") %>"
+
+
+ data-ASSETS_CLIPBOARD_ADD_IMAGE = "<%= I18n.t("assets.from_clipboard.add_image") %>"
+ data-ASSETS_DRAGNDROP_FILE_LABEL = "<%= I18n.t("assets.drag_n_drop.file_label") %>"
+ data-GENERAL_TEXT_LENGTH_TOO_LONG = "<%= I18n.t("general.text.length_too_long", max_length: Constants::NAME_MAX_LENGTH) %>"
+ data-GENERAL_FILE_SIZE_EXCEEDED_AVATAR = "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::AVATAR_MAX_SIZE_MB %>"
+ data-USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE = "<%= I18n.t('users.registrations.edit.avatar_total_size', size: Constants::AVATAR_MAX_SIZE_MB) %>"
+ data-PROJECTS_REPORTS_SAVE_PDF_ASSET_PRESENT_WARNING_HTML = "<%=I18n.t('projects.reports.new.save_PDF_to_inventory_modal.asset_present_warning_html') %>"
+ data-PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED = "<%= I18n.t('projects.reports.new.save_PDF_to_inventory_modal.nothing_selected') %>"
+
+ data-TINYMCE_UPLOAD_WINDOW_TITLE = "<%= I18n.t 'tiny_mce.upload_window_title' %>"
+ data-TINYMCE_UPLOAD_WINDOW_LABEL = "<%= I18n.t 'tiny_mce.upload_window_label' %>"
+ data-TINYMCE_INSERT_BTN = "<%= I18n.t 'tiny_mce.insert_btn' %>"
+ data-TINYMCE_ERROR_MESSAGE = "<%= I18n.t 'tiny_mce.error_message' %>"
+ data-TINYMCE_SERVER_NOT_RESPONDED = "<%= I18n.t 'tiny_mce.server_not_respond' %>"
+></div>
+<div id="asset_path_data"
+  data-HIGHLIGHTJS_GITHUB_THEME="<%= asset_path('highlightjs-github-theme') %>"
+></div>
+<div id="rails_route_data"
+  data-RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH = "<%= Rails.application.routes.url_helpers.reports_visible_projects_path %>"
+  data-RAILS_URL_HELPER_AVAILABLE_ROWS_PATH = "<%= Rails.application.routes.url_helpers.available_rows_path %>"
+  data-RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH = "<%= Rails.application.routes.url_helpers.available_asset_type_columns_path %>"
+  data-RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH = "<%= Rails.application.routes.url_helpers.reports_available_repositories_path %>"
+  data-RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH = "<%= Rails.application.routes.url_helpers.reports_save_pdf_to_inventory_item_path %>"
+  data-RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = "<%= Rails.application.routes.url_helpers.tiny_mce_assets_path %>"
+  data-RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH = "<%= Rails.application.routes.url_helpers.repository_list_items_path %>"
+
+></div>
+<div id="datatable_empty_tables_data"
+  data-DEFAULT_TABLE_COLUMNS='<%= default_table_columns %>'
+  data-DEFAULT_TABLE_ORDER_AS_JS_ARRAY='<%= default_table_order_as_js_array %>'
+></div>
