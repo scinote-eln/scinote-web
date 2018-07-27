@@ -48,7 +48,7 @@ module BootstrapFormHelper
       end
       res << "<input type='datetime' class='form-control' name='#{input_name}' id='#{id}' readonly data-ts='#{timestamp}' />"
       if options[:clear] then
-        res << "<span class='input-group-addon' id='#{id}_clear'><span class='glyphicon glyphicon-remove'></span></span></div>"
+        res << "<span class='input-group-addon' id='#{id}_clear'><span class='fas fa-times'></span></span></div>"
       end
       res << "</div></div></div></div><script type='text/javascript'>$(function () { var dt = $('##{id}'); dt.datetimepicker({ #{jsOpts}ignoreReadonly: true, locale: '#{js_locale}', format: '#{js_format}' }); if (dt.length > 0 && dt.data['ts'] != '') { $('##{id}').data('DateTimePicker').date(moment($('##{id}').data('ts'))); }"
       if options[:clear] then
@@ -181,8 +181,8 @@ module BootstrapFormHelper
       id = "#{@object_name}_#{name.to_s}"
       input_name = "#{@object_name}[#{name.to_s}]"
 
-      icon_str = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>'
-      icon_str_hidden = '<span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none;"></span>'
+      icon_str = '<span class="fas fa-check" aria-hidden="true"></span>'
+      icon_str_hidden = '<span class="fas fa-check" aria-hidden="true" style="display: none;"></span>'
 
       label = name.to_s.humanize
       if options[:label] then

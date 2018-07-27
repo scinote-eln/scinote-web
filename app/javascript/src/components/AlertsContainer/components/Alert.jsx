@@ -18,12 +18,12 @@ class Alert extends Component {
     return classes[type] || classes.success;
   }
 
-  static glyphiconClass(type) {
+  static fasClass(type) {
     const classes = {
-      error: "glyphicon-exclamation-sign",
-      alert: "glyphicon-exclamation-sign",
-      notice: "glyphicon-info-sign",
-      success: "glyphicon-ok-sign"
+      error: "fa-exclamation-circle",
+      alert: "fa-exclamation-circle",
+      notice: "fa-info-circle",
+      success: "fa-check-circle"
     };
     return classes[type] || classes.success;
   }
@@ -45,9 +45,9 @@ class Alert extends Component {
        ${Alert.alertClass(this.props.type)}
        alert-dismissable
        alert-floating`;
-    const glyphiconClassName =
-      `glyphicon
-       ${Alert.glyphiconClass(this.props.type)}`;
+    const fasClassName =
+      `fas
+       ${Alert.fasClass(this.props.type)}`;
 
     return (
       <Wrapper className={alertClassName}>
@@ -61,7 +61,7 @@ class Alert extends Component {
                       onClick={this.props.onClose}>
                 <span aria-hidden="true">×</span>
               </button>
-              <span className={glyphiconClassName} />
+              <span className={fasClassName} />
               <span>&nbsp;{this.props.message}</span>
             </Col>
           </Row>

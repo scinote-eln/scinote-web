@@ -37,12 +37,12 @@
     <h3 class="panel-title">
       <% if result.is_asset %>
         <% if result.asset.is_image? %>
-          <span class="glyphicon glyphicon-picture"></span>
+          <span class="fas fa-image"></span>
         <% else %>
-          <span class="glyphicon glyphicon-file"></span>
+          <span class="fas fa-file"></span>
         <% end %>
       <% elsif result.is_text %>
-        <span class="glyphicon glyphicon-asterisk"></span>
+        <span class="fas fa-asterisk"></span>
       <% elsif result.is_table %>
         <span class="fas fa-table"></span>
       <% end %>

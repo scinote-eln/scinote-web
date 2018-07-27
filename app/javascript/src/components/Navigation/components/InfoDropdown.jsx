@@ -48,7 +48,7 @@ class InfoDropdown extends Component<*, State> {
         noCaret
         title={
           <span>
-            <span className="glyphicon glyphicon-info-sign" />&nbsp;
+            <span className="fas fa-info-circle" />&nbsp;
             <span className="visible-xs-inline visible-sm-inline">
               <FormattedMessage id="navbar.info_label" />
             </span>

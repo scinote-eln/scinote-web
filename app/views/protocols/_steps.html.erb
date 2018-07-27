@@ -6,15 +6,15 @@
          class="btn btn-primary"
          data-action="new-step"
          data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        <span class="fas fa-plus" aria-hidden="true"></span>
         <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
       </a>
     <% end %>
     <a class="btn btn-default" data-action="collapse-steps">
-      <span class="glyphicon glyphicon-collapse-up"></span>
+      <span class="fas fa-caret-square-up"></span>
       <span class="hidden-xs"><%= t("protocols.steps.collapse_label") %></a></span>
     <a class="btn btn-default" data-action="expand-steps">
-      <span class="glyphicon glyphicon-collapse-down"></span>
+      <span class="fas fa-caret-square-down"></span>
       <span class="hidden-xs"><%= t("protocols.steps.expand_label") %></a></span>
   </div>
 
