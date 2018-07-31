@@ -91,6 +91,7 @@ RSpec.configure do |config|
   # Devise
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ApiHelper, type: :controller
+  config.include ApiHelper, type: :request
   config.extend ControllerMacros, type: :controller
 
   config.filter_run_excluding broken: true
