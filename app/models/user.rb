@@ -474,21 +474,6 @@ class User < ApplicationRecord
   private
 
   def destroy_notifications
-    # Find all notifications where user is the only reference
-    # on the notification, and destroy all such notifications
-    # (user_notifications are destroyed when notification is
-    # destroyed). We try to do this efficiently (hence in_groups_of).
-    nids_all = notifications.pluck(:id)
-    nids_all.in_groups_of(1000, false) do |nids|
-      Notification
-        .where(id: nids)
-        .joins(:user_notifications)
-        .group('notifications.id')
-        .having('count(notification_id) <= 1')
-        .destroy_all
-    end
-
-    # Now, simply destroy all user notification relations left
-    user_notifications.destroy_all
+    UserDataDeletion.destroy_notifications(self)
   end
 end
