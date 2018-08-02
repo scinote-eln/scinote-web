@@ -1,7 +1,5 @@
-// jquery.turbolinks MUST IMMEDIATELY FOLLOW jquery inclusion
 // turbolinks MUST BE THE LAST inclusion
 //= require jquery
-//= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery.mousewheel.min
 //= require jquery.scrollTo
@@ -240,7 +238,7 @@ var HelperModule = (function(){
     helpers.dismissAlert();
   }
 
-  $( document ).ready(function() {
+  $(document).on('turbolinks:load', function() {
     helpers.treeLinkTruncation();
     helpers.hideFlashMsg();
     helpers.dismissAlert();
@@ -250,7 +248,7 @@ var HelperModule = (function(){
 })();
 
 (function() {
-  $(document).ready(function() {
+  $(document).on('turbolinks:load', function() {
     // initialize code markup in rich text fields
     $('[class^=language]').each(function(i, block) {
       hljs.highlightBlock(block);
@@ -258,5 +256,10 @@ var HelperModule = (function(){
 
     // fix dropdown-menu style throughout the app
     $('.dropdown-header').parent('ul').addClass('custom-dropdown-menu');
+
+    // Close all open modals before caching
+    $(document).on('turbolinks:before-cache', function() {
+      $('.modal').modal('hide');
+    });
   });
 })();

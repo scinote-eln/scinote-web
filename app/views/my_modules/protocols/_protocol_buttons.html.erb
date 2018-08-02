@@ -27,7 +27,7 @@
     </ul>
   </div>
   <% if can_read_experiment?(@my_module.experiment) %>
-    <%= link_to raw("<span class=\"fas fa-upload\"></span><span class=\"hidden-xs-custom\">&nbsp;" + t('my_modules.protocols.buttons.export') + "</span>"), export_protocols_path(protocol_ids: @protocol.id), class: "btn btn-default", data: {no_turbolink: true} %>
+    <%= link_to raw("<span class=\"fas fa-upload\"></span><span class=\"hidden-xs-custom\">&nbsp;" + t('my_modules.protocols.buttons.export') + "</span>"), export_protocols_path(protocol_ids: @protocol.id), class: "btn btn-default", data: { turbolinks: false } %>
   <% else %>
     <a href="#" class="btn btn-default disabled"><span class="fas fa-upload"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
   <% end %>

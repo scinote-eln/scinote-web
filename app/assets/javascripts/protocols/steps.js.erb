@@ -651,30 +651,27 @@
     Comments.initDeleteComments("#steps");
   }
 
-  $(document).ready(function() {
-    // On init
-    initCallBacks();
-    initHandsOnTable($(document));
-    expandAllSteps();
-    setupAssetsLoading();
-    initStepsComments();
-    initPreviewModal();
-    TinyMCE.highlight();
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
-    newStepHandler();
-    $(function () {
+  // On init
+  initCallBacks();
+  initHandsOnTable($(document));
+  expandAllSteps();
+  setupAssetsLoading();
+  initStepsComments();
+  initPreviewModal();
+  TinyMCE.highlight();
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
+  newStepHandler();
 
-      $("[data-action='collapse-steps']").click(function () {
-        $('.step .panel-collapse').collapse('hide');
-        $(document).find("span.collapse-step-icon").each(function()  {
-          $(this).addClass("fa-caret-square-down");
-          $(this).removeClass("fa-caret-square-up");
-        });
+  $(function () {
+    $("[data-action='collapse-steps']").click(function () {
+      $('.step .panel-collapse').collapse('hide');
+      $(document).find("span.collapse-step-icon").each(function()  {
+        $(this).addClass("fa-caret-square-down");
+        $(this).removeClass("fa-caret-square-up");
       });
-
-      $("[data-action='expand-steps']").click(expandAllSteps);
     });
-  })
+    $("[data-action='expand-steps']").click(expandAllSteps);
+  });
 
   global.initHandsOnTable = initHandsOnTable;
 })(window);

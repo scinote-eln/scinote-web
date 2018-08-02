@@ -12,11 +12,11 @@
           <%= link_to t('protocols.index.archive_results.preview'), download_asset_path(result.asset),
               class: 'file-preview-link',
               id: "modal_link#{result.asset.id}",
-              data: { no_turbolink: true, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(result.asset) } %>
+              data: { turbolinks: false, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(result.asset) } %>
         <% elsif result.is_text %>
-          <%= link_to option_text, result_text_download_path(result.result_text_id), data: {no_turbolink: true} %>
+          <%= link_to option_text, result_text_download_path(result.result_text_id), data: { turbolinks: false } %>
         <% elsif result.is_table %>
-          <%= link_to option_text, result_table_download_path(result.result_table_id), data: {no_turbolink: true} %>
+          <%= link_to option_text, result_table_download_path(result.result_table_id), data: { turbolinks: false } %>
         <% end %>
       </li>
       <% if can_manage_result?(result) %>

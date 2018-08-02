@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <% provide(:head_title, t('projects.reports.index.head_title').html_safe) %>
 <%= stylesheet_link_tag 'datatables' %>
 
@@ -6,7 +10,7 @@
     <div class="row">
       <div class="col-md-12">
         <% if can_manage_reports?(current_team) %>
-          <%= link_to '#', class: 'btn btn-primary', id: 'new-report-btn', 'data-no-turbolink' => true do %>
+          <%= link_to '#', remote: true, class: 'btn btn-primary', id: 'new-report-btn' do %>
             <span class="fas fa-plus" aria-hidden="true"></span>
             <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
           <% end %>
@@ -70,7 +74,7 @@
 </div>
 
 
-<div class="modal" id="new-report-modal" tabindex="-1" role="dialog" aria-labelledby="delete-reports-modal-label">
+<div class="modal" id="new-report-modal" tabindex="-1" role="dialog" aria-labelledby="create-reports-modal-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
