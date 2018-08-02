@@ -70,9 +70,9 @@
                   </a>
                 </li>
                 <li>
-                <%= link_to "#modal-import-json-protocol", "data-toggle" => "modal" do %>
-                <span class="fas fa-file"></span>
-                <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
+                <%= link_to "#modal-import-json-protocol", data: { toggle: 'modal', remote: true } do %>
+                  <span class="fas fa-file"></span>
+                  <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
                 <% end %>
                 </li>
               </ul>

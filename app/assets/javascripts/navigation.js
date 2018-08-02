@@ -1,3 +1,5 @@
+/* globals animateSpinner */
+
 (function() {
   'use strict';
 
