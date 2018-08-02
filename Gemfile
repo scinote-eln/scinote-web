@@ -20,6 +20,7 @@ gem 'omniauth-linkedin-oauth2'
 
 # Gems for API implementation
 gem 'jwt', '~> 1.5'
+gem 'json-jwt'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
