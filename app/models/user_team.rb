@@ -13,7 +13,6 @@ class UserTeam < ApplicationRecord
   belongs_to :team, inverse_of: :user_teams, optional: true
 
   before_destroy :destroy_associations
-  after_create :create_samples_table_state
 
   after_commit do
     Views::Datatables::DatatablesReport.refresh_materialized_view
@@ -23,9 +22,6 @@ class UserTeam < ApplicationRecord
     I18n.t("user_teams.enums.role.#{role}")
   end
 
-  def create_samples_table_state
-    SamplesTable.create_samples_table_state(self)
-  end
 
   def destroy_associations
     # Destroy the user from all team's projects
