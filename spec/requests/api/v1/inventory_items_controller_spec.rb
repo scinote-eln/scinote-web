@@ -70,7 +70,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       )
     end
 
-    it 'Response with correct inventory items, 30 per page' do
+    it 'Response with correct inventory items, 100 per page' do
       hash_body = nil
       get api_v1_team_inventory_items_path(
         team_id: @teams.first.id,
