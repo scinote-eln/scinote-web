@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangePrimaryKeyToBigintOnRepositories < ActiveRecord::Migration[5.1]
   def up
     change_column :repository_rows, :id, :bigint

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "Api::V1::InventoryItemsController", type: :request do
+RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
