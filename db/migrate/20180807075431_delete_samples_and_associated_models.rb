@@ -1,11 +1,11 @@
 class DeleteSamplesAndAssociatedModels < ActiveRecord::Migration[5.1]
   def up
-    drop_table :samples_tables
-    drop_table :sample_custom_fields
-    drop_table :sample_my_modules
-    drop_table :samples
-    drop_table :sample_types
-    drop_table :sample_groups
+    drop_table :samples_tables, force: :cascade
+    drop_table :sample_custom_fields, force: :cascade
+    drop_table :sample_my_modules, force: :cascade
+    drop_table :samples, force: :cascade
+    drop_table :sample_types, force: :cascade
+    drop_table :sample_groups, force: :cascade
   end
 
   def down

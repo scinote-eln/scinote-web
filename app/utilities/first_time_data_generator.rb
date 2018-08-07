@@ -93,64 +93,6 @@ module FirstTimeDataGenerator
       )
       repository_rows_to_assign << repository_row
     end
-    # Create sample types
-    SampleType.create(
-      name: 'Potato leaves',
-      team: team
-    )
-
-    SampleType.create(
-      name: 'Tea leaves',
-      team: team
-    )
-
-    SampleType.create(
-      name: 'Potato bug',
-      team: team
-    )
-
-    SampleGroup.create(
-      name: 'Fodder',
-      team: team,
-      color: Constants::TAG_COLORS[1]
-    )
-
-    SampleGroup.create(
-      name: 'Nutrient',
-      team: team,
-      color: Constants::TAG_COLORS[0]
-    )
-
-    SampleGroup.create(
-      name: 'Seed',
-      team: team,
-      color: Constants::TAG_COLORS[2]
-    )
-
-    samples = []
-    # Generate random sample names start
-    # and put it on the beginning of 5 samples
-    sample_name = (0...3).map{65.+(rand(26)).chr}.join << '/'
-    for i in 1..5
-      samples << Sample.create(
-        name: sample_name + i.to_s,
-        team: team,
-        user: user,
-        sample_type: rand < 0.8 ? pluck_random(team.sample_types) : nil,
-        sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
-      )
-    end
-
-    sample_name = (0...3).map{65.+(rand(26)).chr}.join << '/'
-    for i in 1..5
-      samples << Sample.create(
-        name: sample_name + i.to_s,
-        team: team,
-        user: user,
-        sample_type: rand < 0.8 ? pluck_random(team.sample_types) : nil,
-        sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
-      )
-    end
 
     name = 'Demo project - qPCR'
     exp_name = 'My first experiment'
@@ -385,12 +327,6 @@ module FirstTimeDataGenerator
     end
 
     my_modules[1].downstream_modules.each do |mm|
-      samples_to_assign.each do |s|
-        SampleMyModule.create(
-          sample: s,
-          my_module: mm
-        )
-      end
       repository_rows_to_assign.each do |repository_row|
         MyModuleRepositoryRow.create!(
           repository_row: repository_row,
