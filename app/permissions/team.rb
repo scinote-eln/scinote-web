@@ -103,13 +103,6 @@ Canaid::Permissions.register_for(Protocol) do
   end
 end
 
-Canaid::Permissions.register_for(Sample) do
-  # sample: update, delete
-  can :manage_sample do |user, sample|
-    can_create_samples?(user, sample.team)
-  end
-end
-
 Canaid::Permissions.register_for(CustomField) do
   # sample: update/delete field
   can :manage_sample_column do |user, custom_field|
