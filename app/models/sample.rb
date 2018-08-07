@@ -28,11 +28,6 @@ class Sample < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    team_ids = Team.joins(:user_teams)
-                   .where('user_teams.user_id = ?', user.id)
-                   .distinct
-                   .pluck(:id)
-
     new_query = []
     new_query
   end
