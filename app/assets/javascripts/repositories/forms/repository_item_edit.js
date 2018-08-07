@@ -125,14 +125,19 @@
       } else {
         var colId = element.replace('colId-', '');
         var $el   = $('#' + element);
+        // don't save anything if element is not visible
+        if($el.length == 0) {
+          return true;
+        }
         if($el.attr('type') === 'file') {
-          // don't save anything if element is deleted
+          // handle deleting of element
           if($el.attr('remove') === "true") {
-            return true;
+            formDataObj.append('repository_cells[' +  colId + ']', 'remove');
+          } else {
+            formDataObj.append('repository_cells[' +  colId + ']',
+                               getFileValue($el));
           }
-          formDataObj.append('repository_cells[' +  colId + ']',
-                             getFileValue($el));
-        } else if(value.length > 0) {
+        } else if(value.length >= 0) {
           formDataObj.append('repository_cells[' +  colId + ']', value);
         }
       }

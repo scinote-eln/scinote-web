@@ -134,7 +134,7 @@ class RepositoryRowsController < ApplicationController
                 existing.delete
               end
             elsif existing.value_type == 'RepositoryAssetValue'
-              next if value.blank?
+              existing.value.destroy && next if value == 'remove'
               if existing.value.asset.update(file: value)
                 existing.value.asset.created_by = current_user
                 existing.value.asset.last_modified_by = current_user
@@ -145,6 +145,7 @@ class RepositoryRowsController < ApplicationController
                 }
               end
             else
+              existing.value.destroy && next if value == ''
               existing.value.data = value
               if existing.value.save
                 record_annotation_notification(@record, existing)
@@ -156,16 +157,11 @@ class RepositoryRowsController < ApplicationController
               end
             end
           else
+            next if value == ''
             # Looks like it is a new cell, so we need to create new value, cell
             # will be created automatically
             next if create_cell_value(@record, key, value, errors).nil?
           end
-        end
-        # Clean up empty cells, not present in updated record
-        @record.repository_cells.each do |cell|
-          next if cell.value_type == 'RepositoryListValue'
-          cell.value.destroy unless cell_params
-                                    .key?(cell.repository_column_id.to_s)
         end
       else
         @record.repository_cells.each { |c| c.value.destroy }
