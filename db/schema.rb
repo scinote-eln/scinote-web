@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180524091143) do
+ActiveRecord::Schema.define(version: 20180807075431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -505,82 +505,6 @@ ActiveRecord::Schema.define(version: 20180524091143) do
     t.index ["user_id"], name: "index_results_on_user_id"
   end
 
-  create_table "sample_custom_fields", id: :serial, force: :cascade do |t|
-    t.string "value", null: false
-    t.integer "custom_field_id", null: false
-    t.integer "sample_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index "trim_html_tags((value)::text) gin_trgm_ops", name: "index_sample_custom_fields_on_value", using: :gin
-    t.index ["custom_field_id"], name: "index_sample_custom_fields_on_custom_field_id"
-    t.index ["sample_id"], name: "index_sample_custom_fields_on_sample_id"
-  end
-
-  create_table "sample_groups", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "color", default: "#ff0000", null: false
-    t.integer "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
-    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_sample_groups_on_name", using: :gin
-    t.index ["created_by_id"], name: "index_sample_groups_on_created_by_id"
-    t.index ["last_modified_by_id"], name: "index_sample_groups_on_last_modified_by_id"
-    t.index ["team_id"], name: "index_sample_groups_on_team_id"
-  end
-
-  create_table "sample_my_modules", id: :serial, force: :cascade do |t|
-    t.integer "sample_id", null: false
-    t.integer "my_module_id", null: false
-    t.integer "assigned_by_id"
-    t.datetime "assigned_on"
-    t.index ["assigned_by_id"], name: "index_sample_my_modules_on_assigned_by_id"
-    t.index ["my_module_id"], name: "index_sample_my_modules_on_my_module_id"
-    t.index ["sample_id", "my_module_id"], name: "index_sample_my_modules_on_sample_id_and_my_module_id"
-  end
-
-  create_table "sample_types", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
-    t.integer "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
-    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_sample_types_on_name", using: :gin
-    t.index ["created_by_id"], name: "index_sample_types_on_created_by_id"
-    t.index ["last_modified_by_id"], name: "index_sample_types_on_last_modified_by_id"
-    t.index ["team_id"], name: "index_sample_types_on_team_id"
-  end
-
-  create_table "samples", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
-    t.integer "user_id", null: false
-    t.integer "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "sample_group_id"
-    t.integer "sample_type_id"
-    t.integer "last_modified_by_id"
-    t.integer "nr_of_modules_assigned_to", default: 0
-    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_samples_on_name", using: :gin
-    t.index ["last_modified_by_id"], name: "index_samples_on_last_modified_by_id"
-    t.index ["sample_group_id"], name: "index_samples_on_sample_group_id"
-    t.index ["sample_type_id"], name: "index_samples_on_sample_type_id"
-    t.index ["team_id"], name: "index_samples_on_team_id"
-    t.index ["user_id"], name: "index_samples_on_user_id"
-  end
-
-  create_table "samples_tables", id: :serial, force: :cascade do |t|
-    t.jsonb "status", default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "assigned"=>"all", "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
-    t.integer "user_id", null: false
-    t.integer "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["team_id"], name: "index_samples_tables_on_team_id"
-    t.index ["user_id"], name: "index_samples_tables_on_user_id"
-  end
-
   create_table "settings", id: :serial, force: :cascade do |t|
     t.text "type", null: false
     t.jsonb "values", default: {}, null: false
@@ -916,22 +840,6 @@ ActiveRecord::Schema.define(version: 20180524091143) do
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
-  add_foreign_key "sample_custom_fields", "custom_fields"
-  add_foreign_key "sample_custom_fields", "samples"
-  add_foreign_key "sample_groups", "teams"
-  add_foreign_key "sample_groups", "users", column: "created_by_id"
-  add_foreign_key "sample_groups", "users", column: "last_modified_by_id"
-  add_foreign_key "sample_my_modules", "my_modules"
-  add_foreign_key "sample_my_modules", "samples"
-  add_foreign_key "sample_my_modules", "users", column: "assigned_by_id"
-  add_foreign_key "sample_types", "teams"
-  add_foreign_key "sample_types", "users", column: "created_by_id"
-  add_foreign_key "sample_types", "users", column: "last_modified_by_id"
-  add_foreign_key "samples", "sample_groups"
-  add_foreign_key "samples", "sample_types"
-  add_foreign_key "samples", "teams"
-  add_foreign_key "samples", "users"
-  add_foreign_key "samples", "users", column: "last_modified_by_id"
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_tables", "steps"
