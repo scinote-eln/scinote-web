@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class ApiController < ActionController::API
     attr_reader :iss
@@ -50,7 +52,7 @@ module Api
     def authenticate
       if auth_params[:grant_type] == 'password'
         user = User.find_by_email(auth_params[:email])
-        unless user && user.valid_password?(auth_params[:password])
+        unless user&.valid_password?(auth_params[:password])
           raise StandardError, 'Default: Wrong user password'
         end
         payload = { user_id: user.id }

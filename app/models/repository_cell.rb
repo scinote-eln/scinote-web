@@ -8,22 +8,26 @@ class RepositoryCell < ActiveRecord::Base
                      dependent: :destroy
   belongs_to :repository_text_value,
              (lambda do
-               where(repository_cells: { value_type: 'RepositoryTextValue' })
+               joins(:repository_cell)
+               .where(repository_cells: { value_type: 'RepositoryTextValue' })
              end),
              optional: true, foreign_key: :value_id
   belongs_to :repository_date_value,
              (lambda do
-               where(repository_cells: { value_type: 'RepositoryDateValue' })
+               joins(:repository_cell)
+               .where(repository_cells: { value_type: 'RepositoryDateValue' })
              end),
              optional: true, foreign_key: :value_id
   belongs_to :repository_list_value,
              (lambda do
-               where(repository_cells: { value_type: 'RepositoryListValue' })
+               joins(:repository_cell)
+               .where(repository_cells: { value_type: 'RepositoryListValue' })
              end),
              optional: true, foreign_key: :value_id
   belongs_to :repository_asset_value,
              (lambda do
-               where(repository_cells: { value_type: 'RepositoryAssetValue' })
+               joins(:repository_cell)
+               .where(repository_cells: { value_type: 'RepositoryAssetValue' })
              end),
              optional: true, foreign_key: :value_id
 

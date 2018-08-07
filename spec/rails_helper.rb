@@ -71,6 +71,14 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.before(:all) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean
+  end
+
   config.around(:each, type: :background_job) do |example|
     run_background_jobs_immediately do
       example.run

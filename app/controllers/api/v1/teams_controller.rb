@@ -16,7 +16,6 @@ module Api
 
       def load_team
         @team = Team.find(params.require(:id))
-        return render json: {}, status: :not_found unless @team
         return render json: {}, status: :forbidden unless can_read_team?(@team)
       end
     end
