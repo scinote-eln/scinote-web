@@ -1,5 +1,4 @@
 class MyModulesController < ApplicationController
-  include SampleActions
   include TeamsHelper
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers

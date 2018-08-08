@@ -1,5 +1,4 @@
 class ProjectsController < ApplicationController
-  include SampleActions
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
