@@ -316,15 +316,15 @@ module FirstTimeDataGenerator
     ).sneaky_save
 
     # Assign 4 samples to modules
-    samples_to_assign = []
-    taken_sample_ids = []
-    for _ in 1..4
-      begin
-        sample = samples.sample
-      end while sample.id.in? taken_sample_ids
-      taken_sample_ids << sample.id
-      samples_to_assign << sample
-    end
+    # samples_to_assign = []
+    # taken_sample_ids = []
+    # for _ in 1..4
+    #   begin
+    #     sample = samples.sample
+    #   end while sample.id.in? taken_sample_ids
+    #   taken_sample_ids << sample.id
+    #   samples_to_assign << sample
+    # end
 
     my_modules[1].downstream_modules.each do |mm|
       repository_rows_to_assign.each do |repository_row|
@@ -526,9 +526,9 @@ module FirstTimeDataGenerator
     )
     temp_text = "There are many biological replicates we harvested " \
                 "for each type of sample (code-names):\n\n"
-    samples_to_assign.each do |s|
-      temp_text << "* #{s.name}\n\n"
-    end
+    # samples_to_assign.each do |s|
+    #   temp_text << "* #{s.name}\n\n"
+    # end
     temp_result.result_text = ResultText.new(
       text: temp_text
     )
@@ -737,10 +737,10 @@ module FirstTimeDataGenerator
       created_by: user,
       team: team,
       contents: tab_content['module6']['distribution'] % {
-        sample0: samples_to_assign[0].name,
-        sample1: samples_to_assign[1].name,
-        sample2: samples_to_assign[2].name,
-        sample3: samples_to_assign[3].name
+        sample0: 'Sample 0', # samples_to_assign[0].name,
+        sample1: 'Sample 1', # samples_to_assign[1].name,
+        sample2: 'Sample 2', # samples_to_assign[2].name,
+        sample3: 'Sample 3'  # samples_to_assign[3].name
       }
     )
     temp_result.save

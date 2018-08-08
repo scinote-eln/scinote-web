@@ -6,14 +6,12 @@ class ProjectsController < ApplicationController
   before_action :generate_intro_demo, only: :index
   before_action :load_vars, only: %i(show edit update
                                      notifications reports
-                                     samples experiment_archive
-                                     delete_samples samples_index)
-  before_action :load_projects_tree, only: %i(index show samples archive
+                                     experiment_archive)
+  before_action :load_projects_tree, only: %i(index show archive
                                               experiment_archive)
   before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
-                                                  samples experiment_archive
-                                                  samples_index)
+                                                  experiment_archive)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
 
@@ -268,8 +266,8 @@ class ProjectsController < ApplicationController
   end
 
   def samples
-    @samples_index_link = samples_index_project_path(@project, format: :json)
-    @team = @project.team
+    # @samples_index_link = samples_index_project_path(@project, format: :json)
+    # @team = @project.team
   end
 
   def experiment_archive
@@ -277,6 +275,7 @@ class ProjectsController < ApplicationController
   end
 
   def samples_index
+    byebug
     @team = @project.team
     @user = current_user
     respond_to do |format|
