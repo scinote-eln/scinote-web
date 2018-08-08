@@ -19,8 +19,10 @@ gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 
 # Gems for API implementation
-gem 'jwt', '~> 1.5'
+gem 'active_model_serializers', '~> 0.10.7'
 gem 'json-jwt'
+gem 'jwt', '~> 1.5'
+gem 'kaminari'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'

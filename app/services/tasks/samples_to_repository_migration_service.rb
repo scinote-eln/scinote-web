@@ -173,6 +173,7 @@ module Tasks
         LEFT OUTER JOIN sample_groups
         ON samples.sample_group_id = sample_groups.id
         WHERE samples.team_id = #{team.id}
+        ORDER BY samples.id
       SQL
 
       ActiveRecord::Base.connection.execute(samples_sql).to_a

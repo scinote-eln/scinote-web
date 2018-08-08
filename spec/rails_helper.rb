@@ -59,6 +59,18 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.before(:all) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:all) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean
+  end
+
   config.around(:each, type: :background_job) do |example|
     run_background_jobs_immediately do
       example.run
@@ -91,6 +103,7 @@ RSpec.configure do |config|
   # Devise
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ApiHelper, type: :controller
+  config.include ApiHelper, type: :request
   config.extend ControllerMacros, type: :controller
 
   config.filter_run_excluding broken: true
