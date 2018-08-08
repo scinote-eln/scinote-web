@@ -3,10 +3,9 @@
 module Api
   module V1
     class InventoryCellSerializer < ActiveModel::Serializer
-      attribute :id
+      type :inventory_cells
+      attributes :id, :data_type, :data
       attribute :repository_column_id, key: :column_id
-      attribute :data_type
-      attribute :data
 
       def data_type
         type_id = RepositoryColumn

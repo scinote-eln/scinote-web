@@ -3,6 +3,7 @@
 module Api
   module V1
     class InventoryItemSerializer < ActiveModel::Serializer
+      type :inventory_items
       attributes :id, :name
       has_many :repository_cells, key: :inventory_cells,
                                   serializer: InventoryCellSerializer,
