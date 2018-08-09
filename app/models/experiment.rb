@@ -117,16 +117,6 @@ class Experiment < ApplicationRecord
     my_modules.where(archived: true)
   end
 
-  def assigned_samples
-    # Sample.joins(:my_modules).where(my_modules: { id: my_modules })
-    []
-  end
-
-  def unassigned_samples(assigned_samples)
-    # Sample.where(team_id: team).where.not(id: assigned_samples)
-    []
-  end
-
   def update_canvas(
     to_archive,
     to_add,

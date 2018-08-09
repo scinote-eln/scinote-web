@@ -58,8 +58,6 @@ class User < ApplicationRecord
   has_many :comments, inverse_of: :user
   has_many :activities, inverse_of: :user
   has_many :results, inverse_of: :user
-  has_many :samples, inverse_of: :user
-  has_many :samples_tables, inverse_of: :user, dependent: :destroy
   has_many :repositories, inverse_of: :user
   has_many :repository_table_states, inverse_of: :user, dependent: :destroy
   has_many :steps, inverse_of: :user
@@ -135,24 +133,6 @@ class User < ApplicationRecord
   has_many :restored_results,
            class_name: 'Result',
            foreign_key: 'restored_by_id'
-  has_many :created_sample_groups,
-           class_name: 'SampleGroup',
-           foreign_key: 'created_by_id'
-  has_many :modified_sample_groups,
-           class_name: 'SampleGroup',
-           foreign_key: 'last_modified_by_id'
-  has_many :assigned_sample_my_modules,
-           class_name: 'SampleMyModule',
-           foreign_key: 'assigned_by_id'
-  has_many :created_sample_types,
-           class_name: 'SampleType',
-           foreign_key: 'created_by_id'
-  has_many :modified_sample_types,
-           class_name: 'SampleType',
-           foreign_key: 'last_modified_by_id'
-  has_many :modified_samples,
-           class_name: 'Sample',
-           foreign_key: 'last_modified_by_id'
   has_many :modified_steps, class_name: 'Step', foreign_key: 'modified_by_id'
   has_many :created_tables, class_name: 'Table', foreign_key: 'created_by_id'
   has_many :modified_tables,

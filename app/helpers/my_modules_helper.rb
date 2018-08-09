@@ -11,10 +11,6 @@ module MyModulesHelper
     step.assets.order(:file_updated_at)
   end
 
-  def number_of_samples(my_module)
-    0
-  end
-
   def ordered_result_of(my_module)
     my_module.results.where(archived: false).order(created_at: :desc)
   end
