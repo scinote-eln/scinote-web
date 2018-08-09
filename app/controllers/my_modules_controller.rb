@@ -7,9 +7,8 @@ class MyModulesController < ApplicationController
 
   before_action :load_vars,
                 only: %i(show update destroy description due_date protocols
-                         results samples activities activities_tab
-                         assign_samples unassign_samples delete_samples
-                         toggle_task_state samples_index archive
+                         activities activities_tab
+                         toggle_task_state archive
                          complete_my_module repository repository_index
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
@@ -21,20 +20,17 @@ class MyModulesController < ApplicationController
                                            assign_repository_records_modal
                                            repository_index)
   before_action :load_projects_tree, only: %i(protocols results activities
-                                              samples repository archive)
+                                              repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions, only: %i(description due_date)
   before_action :check_view_permissions, only:
-    %i(show activities activities_tab protocols results samples samples_index
-       archive)
+    %i(show activities activities_tab protocols results archive)
   before_action :check_complete_module_permission, only: :complete_my_module
   before_action :check_assign_repository_records_permissions,
                 only: %i(unassign_repository_records_modal
                          assign_repository_records_modal
                          assign_repository_records
-                         unassign_repository_records
-                         assign_samples
-                         unassign_samples)
+                         unassign_repository_records)
 
   layout 'fluid'.freeze
 
@@ -273,102 +269,6 @@ class MyModulesController < ApplicationController
                                 .experiment
                                 .project
                                 .team)
-  end
-
-  # Submit actions
-  def assign_samples
-    if params[:sample_ids].present?
-      samples = []
-
-      params[:sample_ids].each do |id|
-        sample = Sample.find_by_id(id)
-        sample.last_modified_by = current_user
-        sample.save
-
-        if sample
-          samples << sample
-        end
-      end
-
-      task_names = []
-      new_samples = []
-      @my_module.downstream_modules.each do |my_module|
-        new_samples = samples.select { |el| my_module.samples.exclude?(el) }
-        my_module.samples.push(*new_samples)
-        task_names << my_module.name
-      end
-      if new_samples.any?
-        Activity.create(
-          type_of: :assign_sample,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.assign_sample',
-            user: current_user.full_name,
-            tasks: task_names.join(', '),
-            samples: new_samples.map(&:name).join(', ')
-          )
-        )
-      end
-    end
-    redirect_to samples_my_module_path(@my_module)
-  end
-
-  def unassign_samples
-    if params[:sample_ids].present?
-      samples = []
-
-      params[:sample_ids].each do |id|
-        sample = Sample.find_by_id(id)
-        sample.last_modified_by = current_user
-        sample.save
-
-        if sample && @my_module.samples.include?(sample)
-          samples << sample
-        end
-      end
-
-      task_names = []
-      @my_module.downstream_modules.each do |my_module|
-        task_names << my_module.name
-        my_module.samples.destroy(samples & my_module.samples)
-      end
-      if samples.any?
-        Activity.create(
-          type_of: :unassign_sample,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.unassign_sample',
-            user: current_user.full_name,
-            tasks: task_names.join(', '),
-            samples: samples.map(&:name).join(', ')
-          )
-        )
-      end
-    end
-    redirect_to samples_my_module_path(@my_module)
-  end
-
-  # AJAX actions
-  def samples_index
-    @team = @my_module.experiment.project.team
-
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           nil,
-                                           @my_module,
-                                           nil,
-                                           current_user)
-      end
-    end
   end
 
   # AJAX actions

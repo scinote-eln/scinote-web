@@ -8,9 +8,9 @@ class ExperimentsController < ApplicationController
   before_action :set_experiment,
                 except: %i(new create)
   before_action :set_project,
-                only: %i(new create samples_index samples module_archive
-                         clone_modal move_modal delete_samples)
-  before_action :load_projects_tree, only: %i(canvas samples module_archive)
+                only: %i(new create module_archive
+                         clone_modal move_modal)
+  before_action :load_projects_tree, only: %i(canvas module_archive)
   before_action :check_view_permissions,
                 only: %i(canvas module_archive)
   before_action :check_manage_permissions, only: :edit
@@ -285,17 +285,17 @@ class ExperimentsController < ApplicationController
   end
 
   def samples
-    @samples_index_link = samples_index_experiment_path(@experiment,
-                                                        format: :json)
-    @team = @experiment.project.team
+    # @samples_index_link = samples_index_experiment_path(@experiment,
+    #                                                     format: :json)
+    # @team = @experiment.project.team
   end
 
   def samples_index
-    @team = @experiment.project.team
+    # @team = @experiment.project.team
 
-    respond_to do |format|
-      format.html
-    end
+    # respond_to do |format|
+    #   format.html
+    # end
   end
 
   def updated_img

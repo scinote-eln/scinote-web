@@ -12,7 +12,7 @@ module MyModulesHelper
   end
 
   def number_of_samples(my_module)
-    my_module.samples.count
+    0
   end
 
   def ordered_result_of(my_module)

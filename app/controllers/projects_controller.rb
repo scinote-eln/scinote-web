@@ -275,20 +275,11 @@ class ProjectsController < ApplicationController
   end
 
   def samples_index
-    byebug
-    @team = @project.team
-    @user = current_user
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           @project,
-                                           nil,
-                                           nil,
-                                           @user)
-      end
-    end
+    # @team = @project.team
+    # @user = current_user
+    # respond_to do |format|
+    #   format.html
+    # end
   end
 
   private
