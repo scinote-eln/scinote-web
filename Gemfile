@@ -82,7 +82,7 @@ gem 'devise-async',
 gem 'discard', '~> 1.0'
 
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
+gem 'tinymce-rails', '~> 4.7.13' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
