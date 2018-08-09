@@ -9,7 +9,7 @@
 
   // Sets callbacks for toggling checkboxes
   function applyCheckboxCallBack()  {
-    $("[data-action='check-item']").on('click', function(e){
+    $("[data-action='check-item']").off().on('click', function(e){
       var checkboxitem = $(this).find("input");
       var checked = checkboxitem.is(":checked");
       $.ajax({
