@@ -603,7 +603,7 @@ DEPENDENCIES
   sneaky-save!
   spinjs-rails
   starscope
-  tinymce-rails (~> 4.7.11)
+  tinymce-rails (~> 4.7.13)
   turbolinks (~> 2.0)
   tzinfo-data
   uglifier (>= 1.3.0)
@@ -618,4 +618,4 @@ RUBY VERSION
    ruby 2.4.3p205
 
 BUNDLED WITH
-   1.16.2
+   1.16.3
