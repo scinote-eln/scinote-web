@@ -33,21 +33,6 @@ module Api
         render json: teams_json, status: :ok
       end
 
-      def task_samples
-        task = MyModule.find_by_id(params[:task_id])
-        return render json: {}, status: :not_found unless task
-        return render json: {}, status: :forbidden unless
-          can_read_experiment?(task.experiment)
-        samples = task.samples
-        samples_json = []
-        samples.find_each do |s|
-          sample = {}
-          sample['sample_id'] = s.id.to_s
-          sample['name'] = s.name
-          samples_json << sample
-        end
-        render json: samples_json, status: :ok
-      end
     end
   end
 end

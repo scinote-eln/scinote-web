@@ -59,36 +59,6 @@ class CustomFieldsController < ApplicationController
     end
   end
 
-  def destroy_html
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'samples/delete_custom_field_modal_body.html.erb',
-            locals: { column_index: params[:column_index] }
-          )
-        }
-      end
-    end
-  end
-
-  def destroy
-    @del_custom_field = @custom_field.dup
-    respond_to do |format|
-      format.json do
-        if @custom_field.destroy
-          SamplesTable.update_samples_table_state(
-            @del_custom_field,
-            params[:custom_field][:column_index]
-          )
-          render json: { status: :ok }
-        else
-          render json: { status: :unprocessable_entity }
-        end
-      end
-    end
-  end
-
   private
 
   def load_vars
