@@ -9,8 +9,8 @@
     <style media="all">
       html, body { height: 100%; min-height: 100%; }
     </style>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
@@ -38,7 +38,7 @@
       <div class="alert alert-danger alert-dismissable alert-floating">
         <div class="container">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <span class="glyphicon glyphicon-exclamation-sign"></span>
+          <span class="fas fa-exclamation-circle"></span>
           <span><%= sanitize_input(flash[:error]) %></span>
         </div>
       </div>

@@ -1,7 +1,5 @@
-// jquery.turbolinks MUST IMMEDIATELY FOLLOW jquery inclusion
 // turbolinks MUST BE THE LAST inclusion
 //= require jquery
-//= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery.mousewheel.min
 //= require jquery.scrollTo
@@ -209,21 +207,21 @@ var HelperModule = (function(){
   }
 
   helpers.flashAlertMsg = function(message, type) {
-    var alertType, glyphSign;
+    var alertType, fasSign;
 
     $('#notifications').html('');
     if (type === 'success') {
       alertType = ' alert-success ';
-      glyphSign = ' glyphicon-ok-sign ';
+      fasSign = ' fa-check-circle ';
     } else if (type === 'danger') {
       alertType = ' alert-danger ';
-      glyphSign = ' glyphicon-exclamation-sign ';
+      fasSign = ' fa-exclamation-circle ';
     } else if (type === 'info') {
       alertType = ' alert-info ';
-      glyphSign = ' glyphicon-exclamation-sign ';
+      fasSign = ' fa-exclamation-circle ';
     } else if (type === 'warning') {
       alertType = ' alert-warning ';
-      glyphSign = ' glyphicon-exclamation-sign ';
+      fasSign = ' fa-exclamation-circle ';
     }
     var htmlSnippet = '<div id="alert-flash" class="alert alert' + alertType +
                       'alert-dismissable alert-floating">' +
@@ -231,7 +229,7 @@ var HelperModule = (function(){
                         '<button type="button" class="close" ' +
                         'data-dismiss="alert" aria-label="Close">' +
                           '<span aria-hidden="true">×</span></button>' +
-                            '<span class="glyphicon' + glyphSign + '"></span>&nbsp;' +
+                            '<span class="fas' + fasSign + '"></span>&nbsp;' +
                             '<span>' + message + '</span>' +
                           '</div>' +
                         '</div>';
@@ -240,7 +238,7 @@ var HelperModule = (function(){
     helpers.dismissAlert();
   }
 
-  $( document ).ready(function() {
+  $(document).on('turbolinks:load', function() {
     helpers.treeLinkTruncation();
     helpers.hideFlashMsg();
     helpers.dismissAlert();
@@ -250,7 +248,7 @@ var HelperModule = (function(){
 })();
 
 (function() {
-  $(document).ready(function() {
+  $(document).on('turbolinks:load', function() {
     // initialize code markup in rich text fields
     $('[class^=language]').each(function(i, block) {
       hljs.highlightBlock(block);
@@ -258,5 +256,10 @@ var HelperModule = (function(){
 
     // fix dropdown-menu style throughout the app
     $('.dropdown-header').parent('ul').addClass('custom-dropdown-menu');
+
+    // Close all open modals before caching
+    $(document).on('turbolinks:before-cache', function() {
+      $('.modal').modal('hide');
+    });
   });
 })();

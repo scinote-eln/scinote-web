@@ -14,7 +14,7 @@
       <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
         <li class="dropdown-header"><%=t "projects.index.options_header" %></li>
         <% if can_restore_experiment?(experiment) %>
-          <li><a href="#" class="form-submit-link" data-submit-form="<%= experiment_form.options[:html][:id] %>"><%= t "projects.experiment_archive.restore_option" %></a></li>
+          <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>"><%= t "projects.experiment_archive.restore_option" %></a></li>
         <% end %>
       </ul>
     </div>
@@ -38,7 +38,7 @@
       </div>
       <div class="col-xs-8">
         <span title="<%=t "projects.experiment_archive.archived_on_title", date: l(experiment.archived_on, format: :full_date), time: l(experiment.archived_on, format: :time) %>">
-          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+          <span class="fas fa-calendar-alt" aria-hidden="true"></span>
           <%=l experiment.archived_on, format: :full_date %>
         </span>
       </div>
@@ -49,7 +49,7 @@
       </div>
       <div class="col-xs-8">
         <span title="<%=t "projects.experiment_archive.created_on_title", date: l(experiment.created_at, format: :full_date), time: l(experiment.created_at, format: :time) %>">
-          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+          <span class="fas fa-calendar-alt" aria-hidden="true"></span>
           <%=l experiment.created_at, format: :full_date %>
         </span>
       </div>
@@ -60,7 +60,7 @@
       </div>
       <div class="col-xs-8">
         <span title="<%=t "projects.experiment_archive.created_on_title", date: l(experiment.updated_at, format: :full_date), time: l(experiment.updated_at, format: :time) %>">
-          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+          <span class="fas fa-calendar-alt" aria-hidden="true"></span>
           <%=l experiment.updated_at, format: :full_date %>
         </span>
       </div>

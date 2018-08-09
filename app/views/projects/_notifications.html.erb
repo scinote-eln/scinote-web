@@ -9,7 +9,7 @@
       <li class="notification alert-red">
         <div class="date-time">
           <span><%= l(mod.due_date, format: :full) %></span>
-          <span class="glyphicon glyphicon-alert"></span>
+          <span class="fas fa-exclamation-triangle"></span>
         </div>
         <%=t "projects.index.module_overdue_html", module: mod.name, days: days %>
       </li>
@@ -18,7 +18,7 @@
       <li class="notification alert-yellow">
         <div class="date-time">
           <span><%= l(mod.due_date, format: :full) %></span>
-          <span class="glyphicon glyphicon-alert"></span>
+          <span class="fas fa-exclamation-triangle"></span>
         </div>
         <%=t "projects.index.module_one_day_due_html", module: mod.name %>
       </li>

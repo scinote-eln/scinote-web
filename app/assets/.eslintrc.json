@@ -1,0 +1,32 @@
+{
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
+  "extends": ["airbnb-base/legacy"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 5,
+    "ecmaFeatures": {
+      "impliedStrict": true
+    }
+  },
+  "rules": {
+    "space-before-function-paren": ["error", "never"],
+    "func-names": ["error", "never"],
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "markers": ["="]
+      }
+    ],
+    "lines-around-comment": [
+      "warn",
+      {
+        "beforeLineComment": false
+      }
+    ]
+  }
+}

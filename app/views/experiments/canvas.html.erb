@@ -20,7 +20,7 @@
           <span class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
-              <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+              <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
               <span class="caret"></span>
             </button>
             <%= render partial: 'experiments/dropdown_actions.html.erb',
@@ -31,13 +31,13 @@
           <span class="hidden-xs"><%=t 'experiments.canvas.zoom' %></span>
           <div id="zoom-level-buttons" class="btn-group" data-toggle="buttons">
             <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
-              <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
+              <span class="fas fa-th-large" aria-hidden="true" ></span>
             <% end %>
             <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "medium_zoom" do %>
-              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+              <span class="fas fa-th-list" aria-hidden="true"></span>
             <% end %>
             <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "small_zoom" do %>
-              <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+              <span class="fas fa-th" aria-hidden="true"></span>
             <% end %>
           </div>
         </div>

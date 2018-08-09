@@ -49,7 +49,7 @@
                   </div>
                   <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-success', onclick: "processFile(event);" %>
+                    <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-success' %>
                   </div>
                 </div>
               </div>
@@ -132,7 +132,7 @@
                   </div>
                   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
                     <div class="alert alert-info" style="margin-top: 15px;" role="alert">
-                      <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                      <span class="fas fa-info-circle" aria-hidden="true"></span>
                       <%=t "users.registrations.edit.waiting_for_confirm", email: resource.unconfirmed_email %>
                     </div>
                   <% end %>

@@ -8,28 +8,23 @@
     var stepResults = modal.find('[data-role=step-results]');
     var stepResultsDiv = modal.find('[data-role=step-results][data-clear]');
     var inviteBtn = modal.find('[data-role=invite-btn]');
-    var inviteWithRoleDiv =
-      modal.find('[data-role=invite-with-role-div]');
-    var inviteWithRoleBtn =
-      modal.find('[data-role=invite-with-role-btn]');
-    var teamSelectorCheckbox =
-      modal.find('[data-role=team-selector-checkbox]');
-    var teamSelectorDropdown =
-      modal.find('[data-role=team-selector-dropdown]');
+    var inviteWithRoleDiv = modal.find('[data-role=invite-with-role-div]');
+    var inviteWithRoleBtn = modal.find('[data-role=invite-with-role-btn]');
+    var teamSelectorCheckbox = modal.find('[data-role=team-selector-checkbox]');
+    var teamSelectorDropdown = modal.find('[data-role=team-selector-dropdown]');
     var teamSelectorDropdown2 = $();
     var tagsInput = modal.find('[data-role=tags-input]');
 
     // Set max tags
     tagsInput.tagsinput({
-      maxTags: <%= Constants::INVITE_USERS_LIMIT %>
+      maxTags: modal.data('max-tags')
     });
 
-    modal
-    .on('show.bs.modal', function() {
+    modal.on('show.bs.modal', function() {
       // This cannot be scoped outside this function
       // because it is generated via JS
-      teamSelectorDropdown2 =
-        teamSelectorDropdown.parent().find('button.dropdown-toggle, li');
+      teamSelectorDropdown2 = teamSelectorDropdown.parent()
+        .find('button.dropdown-toggle, li');
 
       // Show/hide correct step
       stepForm.show();
@@ -77,12 +72,10 @@
       }
 
       // Toggle depending on input tags
-      tagsInput
-      .on('itemAdded', function(event) {
+      tagsInput.on('itemAdded', function() {
         inviteBtn.removeAttr('disabled');
         inviteWithRoleBtn.removeAttr('disabled');
-      })
-      .on('itemRemoved', function(event) {
+      }).on('itemRemoved', function() {
         if ($(this).val() === null) {
           inviteBtn.attr('disabled', 'disabled');
           inviteWithRoleBtn.attr('disabled', 'disabled');
@@ -91,11 +84,12 @@
 
       // Click action
       modal.find('[data-action=invite]').on('click', function() {
-        animateSpinner(modalDialog);
-
         var data = {
           emails: tagsInput.val()
         };
+
+        animateSpinner(modalDialog);
+
         switch (type) {
           case 'invite_to_team':
             data.teamId = modal.attr('data-team-id');
@@ -143,14 +137,12 @@
           }
         });
       });
-    })
-    .on('shown.bs.modal', function() {
+    }).on('shown.bs.modal', function() {
       tagsInput.tagsinput('focus');
 
       // Remove 'data-invited="true"' status
       modal.removeAttr('data-invited');
-    })
-    .on('hide.bs.modal', function() {
+    }).on('hide.bs.modal', function() {
       // 'Reset' modal state
       tagsInput.tagsinput('removeAll');
       teamSelectorCheckbox.prop('checked', false);
@@ -175,14 +167,12 @@
     $("[data-trigger='invite-users']").on('click', function() {
       var id = $(this).attr('data-modal-id');
       $('[data-role=invite-users-modal][data-id=' + id + ']')
-      .modal('show');
+        .modal('show');
     });
   }
 
-  $(document).ready(function() {
-    $('[data-role=invite-users-modal]').each(function() {
-      initializeModal($(this));
-    });
-    initializeModalsToggle();
+  $('[data-role=invite-users-modal]').each(function() {
+    initializeModal($(this));
   });
-})();
+  initializeModalsToggle();
+}());

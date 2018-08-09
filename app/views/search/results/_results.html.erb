@@ -1,14 +1,14 @@
 <% results.each do |result| %>
   <h5>
     <% if result.is_text %>
-      <span class="glyphicon glyphicon-asterisk"></span>
+      <span class="fas fa-asterisk"></span>
     <% elsif result.is_table %>
       <span class="fas fa-table"></span>
     <% else %>
       <% if result.asset.is_image? %>
-        <span class="glyphicon glyphicon-picture"></span>
+        <span class="fas fa-image"></span>
       <% else %>
-        <span class="glyphicon glyphicon-file"></span>
+        <span class="fas fa-file"></span>
       <% end %>
     <% end %>
     <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query, target: nil } %>

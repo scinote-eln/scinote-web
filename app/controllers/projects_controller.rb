@@ -295,6 +295,8 @@ class ProjectsController < ApplicationController
 
   private
 
+  include FirstTimeDataGenerator
+
   def generate_intro_demo
     return unless current_user.sign_in_count == 1
     team = current_user.teams.where(created_by: current_user).first

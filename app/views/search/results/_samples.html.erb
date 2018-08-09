@@ -1,6 +1,6 @@
 <% results.each do |sample| %>
   <h5>
-    <span class="glyphicon glyphicon-tint"></span>
+    <span class="fas fa-tint"></span>
     <%=t "search.index.samples.sample" %>
     <%= highlight sample.name, search_query.strip.split(/\s+/) %>
   </h5>
@@ -17,7 +17,7 @@
     <br>
     <span>
       <%=t "search.index.samples.sample_group" %>
-      <span class="glyphicon glyphicon-asterisk" style="<%= "color: #{sample.sample_group.color}" if sample.sample_group.present? %>"></span>
+      <span class="fas fa-asterisk" style="<%= "color: #{sample.sample_group.color}" if sample.sample_group.present? %>"></span>
       <% if sample.sample_group.present? %>
         <%= highlight sample.sample_group.name, search_query.strip.split(/\s+/) %>
       <% else %>

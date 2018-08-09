@@ -12,11 +12,11 @@
     <% if can_manage_experiment?(@experiment) %>
       <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
         <span class="hbtn-default">
-          <span class="glyphicon glyphicon-credit-card"></span>
+          <span class="fas fa-credit-card"></span>
           <%= t("experiments.canvas.edit.new_module") %>
         </span>
         <span class="hbtn-hover">
-          <span class="glyphicon glyphicon-credit-card"></span>
+          <span class="fas fa-credit-card"></span>
           <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
           <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
         </span>
@@ -25,7 +25,7 @@
     <div class="btn-group pull-right" role="group">
       <%= link_to canvas_experiment_path(@experiment), type: "button", class: "btn btn-default cancel-edit-canvas" do %>
         <span class="hidden-xs"><%= t("experiments.canvas.edit.cancel") %></span>
-        <span class="glyphicon glyphicon-remove visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
+        <span class="fas fa-times visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
       <% end %>
       <%= f.submit class: "btn btn-success", id: "canvas-save" do %>
         <span class="visibile-xs"><%= t("experiments.canvas.edit.save_short") %></span>

@@ -11,7 +11,7 @@
 <div class="row">
   <div class="col-xs-6 col-sm-4 col-md-4">
     <div class="badge-icon">
-      <span class="glyphicon glyphicon-calendar"></span>
+      <span class="fas fa-calendar-alt"></span>
     </div>
     <div class="well well-sm">
       <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.created_at" %>:</span>
@@ -21,7 +21,7 @@
 
   <div class="col-xs-6 col-sm-4 col-md-4">
     <div class="badge-icon">
-      <span class="glyphicon glyphicon-calendar"></span>
+      <span class="fas fa-calendar-alt"></span>
     </div>
     <div class="well well-sm">
       <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.updated_at" %>:</span>
@@ -43,10 +43,10 @@
     <div class="badge-icon">
       <% if can_manage_protocol_in_repository?(@protocol) %>
         <a data-action="edit-keywords" data-remote="true" href="<%= edit_keywords_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
-          <span class="glyphicon glyphicon-text-color"></span>
+          <span class="fas fa-font"></span>
         </a>
       <% else %>
-        <span class="glyphicon glyphicon-text-color"></span>
+        <span class="fas fa-font"></span>
       <% end %>
     </div>
     <div class="well well-sm">
@@ -65,10 +65,10 @@
     <div class="badge-icon">
       <% if can_manage_protocol_in_repository?(@protocol) %>
         <a data-action="edit-authors" data-remote="true" href="<%= edit_authors_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
-          <span class="glyphicon glyphicon-education"></span>
+          <span class="fas fa-graduation-cap"></span>
         </a>
       <% else %>
-        <span class="glyphicon glyphicon-education"></span>
+        <span class="fas fa-graduation-cap"></span>
       <% end %>
     </div>
     <div class="well well-sm">
@@ -87,10 +87,10 @@
     <div class="badge-icon">
       <% if can_manage_protocol_in_repository?(@protocol) %>
         <a data-action="edit-description" data-remote="true" href="<%= edit_description_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
-          <span class="glyphicon glyphicon-info-sign"></span>
+          <span class="fas fa-info-circle"></span>
         </a>
       <% else %>
-        <span class="glyphicon glyphicon-info-sign"></span>
+        <span class="fas fa-info-circle"></span>
       <% end %>
     </div>
     <div class="well well-sm">

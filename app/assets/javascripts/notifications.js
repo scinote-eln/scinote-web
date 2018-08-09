@@ -1,6 +1,8 @@
-$(document.body).ready(function () {
+(function() {
+  'use strict';
+
   $('.btn-more-notifications')
-    .on("ajax:success", function (e, data) {
+    .on('ajax:success', function(e, data) {
       var list = $('.notifications-list');
       var moreBtn = $('.btn-more-notifications');
       if (data.html) {
@@ -16,4 +18,4 @@ $(document.body).ready(function () {
         moreBtn.remove();
       }
     });
-});
+}());
