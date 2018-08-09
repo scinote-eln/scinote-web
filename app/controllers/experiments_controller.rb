@@ -284,6 +284,20 @@ class ExperimentsController < ApplicationController
   def module_archive
   end
 
+  def samples
+    @samples_index_link = samples_index_experiment_path(@experiment,
+                                                        format: :json)
+    @team = @experiment.project.team
+  end
+
+  def samples_index
+    @team = @experiment.project.team
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
   def updated_img
     respond_to do |format|
       format.json do

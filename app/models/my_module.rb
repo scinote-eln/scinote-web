@@ -136,7 +136,8 @@ class MyModule < ApplicationRecord
     MyModule.transaction do
       archived = super
       # Unassociate all samples from module.
-      archived = SampleMyModule.where(my_module: self).destroy_all if archived
+      # Below line commented, (sci 2228, testing)
+      # archived = SampleMyModule.where(my_module: self).destroy_all if archived
       # Remove all connection between modules.
       archived = Connection.where(input_id: id).delete_all if archived
       archived = Connection.where(output_id: id).delete_all if archived
@@ -179,7 +180,8 @@ class MyModule < ApplicationRecord
   end
 
   def unassigned_samples
-    Sample.where(team_id: experiment.project.team).where.not(id: samples)
+    # Sample.where(team_id: experiment.project.team).where.not(id: samples)
+    []
   end
 
   def unassigned_tags
@@ -225,11 +227,13 @@ class MyModule < ApplicationRecord
   end
 
   def first_n_samples(count = Constants::SEARCH_LIMIT)
-    samples.order(name: :asc).limit(count)
+    # samples.order(name: :asc).limit(count)
+    []
   end
 
   def number_of_samples
-    samples.count
+    # samples.count
+    0
   end
 
   def is_overdue?(datetime = DateTime.current)
