@@ -32,38 +32,6 @@ module ApplicationHelper
     end
   end
 
-  def sample_types_page_project?
-    controller_name == 'sample_types' &&
-      @my_module.nil? &&
-      @experiment.nil?
-  end
-
-  def sample_groups_page_project?
-    controller_name == 'sample_groups' &&
-      @my_module.nil? &&
-      @experiment.nil?
-  end
-
-  def sample_types_page_my_module?
-    controller_name == 'sample_types' && !@my_module.nil?
-  end
-
-  def sample_groups_page_my_module?
-    controller_name == 'sample_groups' && !@my_module.nil?
-  end
-
-  def sample_groups_page_experiment?
-    controller_name == 'sample_groups' &&
-      @my_module.nil? &&
-      !@experiment.nil?
-  end
-
-  def sample_types_page_expermient?
-    controller_name == 'sample_types' &&
-      @my_module.nil? &&
-      !@experiment.nil?
-  end
-
   def module_repository_page?
     controller_name == 'my_modules' && !@repository.nil?
   end
@@ -166,7 +134,7 @@ module ApplicationHelper
     end
 
     user_name = user.full_name
- 
+
     unless skip_user_status || user_still_in_team
       user_name << " #{I18n.t('atwho.res.removed')}"
     end

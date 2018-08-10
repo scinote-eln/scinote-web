@@ -55,8 +55,6 @@ class Activity < ApplicationRecord
     :create_report,
     :delete_report,
     :edit_report,
-    :assign_sample,
-    :unassign_sample,
     :complete_task,
     :uncomplete_task,
     :assign_repository_record,

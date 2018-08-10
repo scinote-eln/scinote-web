@@ -18,9 +18,6 @@ class ProjectsController < ApplicationController
   # except parameter could be used but it is not working.
   layout 'fluid'
 
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
-
   def index
     if params[:team]
       current_team_switch(Team.find_by_id(params[:team]))
@@ -265,21 +262,8 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def samples
-    # @samples_index_link = samples_index_project_path(@project, format: :json)
-    # @team = @project.team
-  end
-
   def experiment_archive
     current_team_switch(@project.team)
-  end
-
-  def samples_index
-    # @team = @project.team
-    # @user = current_user
-    # respond_to do |format|
-    #   format.html
-    # end
   end
 
   private

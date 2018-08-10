@@ -69,15 +69,6 @@ class MyModuleTest < ActiveSupport::TestCase
     assert_equal 0, unassigned_users.size
   end
 
-  test "should get unassigned samples" do
-    unassigned_samples = @my_module.unassigned_samples
-    assert_equal 5, unassigned_samples.size
-    @my_module.samples << unassigned_samples.first
-    assert @my_module.save
-    unassigned_samples = @my_module.unassigned_samples
-    assert_equal 4, unassigned_samples.size
-  end
-
   test "should get unassigned tags" do
     unassigned_tags = @my_module.unassigned_tags
     assert_equal 2, unassigned_tags.size
@@ -92,10 +83,6 @@ class MyModuleTest < ActiveSupport::TestCase
   end
 
   test "should get last activities" do
-    skip
-  end
-
-  test "should get specified number of samples" do
     skip
   end
 
@@ -131,10 +118,6 @@ class MyModuleTest < ActiveSupport::TestCase
   end
 
   test "should get downstream modules" do
-    skip
-  end
-
-  test "should get samples in JSON format" do
     skip
   end
 

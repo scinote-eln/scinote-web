@@ -38,9 +38,6 @@ class MyModulesController < ApplicationController
   ASSIGN_SAMPLES = 'Assign'.freeze
   UNASSIGN_SAMPLES = 'Unassign'.freeze
 
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
-
   def show
     respond_to do |format|
       format.json {
@@ -254,7 +251,6 @@ class MyModulesController < ApplicationController
   end
 
   def samples
-    @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
     @team = @my_module.experiment.project.team
   end
 
@@ -582,11 +578,6 @@ class MyModulesController < ApplicationController
   def check_assign_repository_records_permissions
     render_403 unless module_page? &&
                       can_assign_repository_rows_to_module?(@my_module)
-  end
-
-  def check_assign_samples_permissions
-    render_403 unless module_page? &&
-                      can_assign_sample_to_module?(@my_module)
   end
 
   def check_complete_module_permission

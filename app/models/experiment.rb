@@ -612,13 +612,13 @@ class Experiment < ApplicationRecord
     # leaving it commented because im not sure if it should be deleted, testing
     # (SCI 2228)
     # filtered_edges.each do |a, b|
-      # source = my_modules.includes({ inputs: :from }, :samples).find(a.to_i)
-      # target = my_modules.find(b.to_i)
-      # Do this only for new edges
-      # next unless previous_sources[target.id].exclude?(source)
-      # Go as high upstream as new edges take us
-      # and then assign samples to all downsteam samples
-      # assign_samples_to_new_downstream_modules(previous_sources,visited,source)
+    #   source = my_modules.includes({ inputs: :from }, :samples).find(a.to_i)
+    #   target = my_modules.find(b.to_i)
+    #   # Do this only for new edges
+    #   next unless previous_sources[target.id].exclude?(source)
+    #   # Go as high upstream as new edges take us
+    #   # and then assign samples to all downsteam samples
+    #   assign_samples_to_new_downstream_modules(previous_sources,visited,source)
     # end
 
     # Save topological order of modules (for modules without workflow,

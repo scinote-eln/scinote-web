@@ -20,9 +20,6 @@ class ExperimentsController < ApplicationController
 
   layout 'fluid'.freeze
 
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
-
   def new
     @experiment = Experiment.new
     respond_to do |format|
@@ -282,20 +279,6 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
-  end
-
-  def samples
-    # @samples_index_link = samples_index_experiment_path(@experiment,
-    #                                                     format: :json)
-    # @team = @experiment.project.team
-  end
-
-  def samples_index
-    # @team = @experiment.project.team
-
-    # respond_to do |format|
-    #   format.html
-    # end
   end
 
   def updated_img
