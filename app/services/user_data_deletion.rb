@@ -39,7 +39,6 @@ class UserDataDeletion
             my_module.results.destroy_all
             my_module.my_module_tags.destroy_all
             my_module.task_comments.destroy_all
-            my_module.outputs.destroy_all
             my_module.my_module_repository_rows.destroy_all
             my_module.user_my_modules.destroy_all
             my_module.report_elements.destroy_all
