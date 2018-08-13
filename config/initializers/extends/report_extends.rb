@@ -139,6 +139,7 @@ module ReportExtends
       checker.call(report_element)
     end
   end
+
   SET_ELEMENT_REFERENCES_LIST = [
     ElementReference.new(
       proc do |report_element|
