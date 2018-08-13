@@ -7,7 +7,7 @@ class MyModulesController < ApplicationController
 
   before_action :load_vars,
                 only: %i(show update destroy description due_date protocols
-                         activities activities_tab
+                         results activities activities_tab
                          toggle_task_state archive
                          complete_my_module repository repository_index
                          assign_repository_records unassign_repository_records
