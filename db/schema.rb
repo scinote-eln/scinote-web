@@ -114,6 +114,8 @@ ActiveRecord::Schema.define(version: 20180524091143) do
   create_table "connections", id: :serial, force: :cascade do |t|
     t.integer "input_id", null: false
     t.integer "output_id", null: false
+    t.index ["input_id"], name: "index_connections_on_input_id"	
+    t.index ["output_id"], name: "index_connections_on_output_id"
   end
 
   create_table "custom_fields", id: :serial, force: :cascade do |t|
