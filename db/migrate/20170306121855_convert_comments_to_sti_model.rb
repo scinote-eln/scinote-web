@@ -44,11 +44,6 @@ class ConvertCommentsToStiModel < ActiveRecord::Migration[4.2]
       end
     end
 
-    drop_table :sample_comments do |t|
-      t.integer :sample_id, null: false
-      t.integer :comment_id, null: false
-    end
-
     drop_table :project_comments do |t|
       t.integer :project_id, null: false
       t.integer :comment_id, null: false

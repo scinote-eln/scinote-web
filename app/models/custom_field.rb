@@ -14,11 +14,4 @@ class CustomField < ApplicationRecord
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
              optional: true
-  has_many :sample_custom_fields, inverse_of: :custom_field, dependent: :destroy
-
-  after_create :update_samples_table_state
-
-  def update_samples_table_state
-    SamplesTable.update_samples_table_state(self, nil)
-  end
 end

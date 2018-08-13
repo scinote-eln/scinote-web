@@ -1,5 +1,4 @@
 class ProjectsController < ApplicationController
-  include SampleActions
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
@@ -7,22 +6,17 @@ class ProjectsController < ApplicationController
   before_action :generate_intro_demo, only: :index
   before_action :load_vars, only: %i(show edit update
                                      notifications reports
-                                     samples experiment_archive
-                                     delete_samples samples_index)
-  before_action :load_projects_tree, only: %i(index show samples archive
+                                     experiment_archive)
+  before_action :load_projects_tree, only: %i(index show archive
                                               experiment_archive)
   before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
-                                                  samples experiment_archive
-                                                  samples_index)
+                                                  experiment_archive)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
 
   # except parameter could be used but it is not working.
   layout 'fluid'
-
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
 
   def index
     if params[:team]
@@ -268,29 +262,8 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def samples
-    @samples_index_link = samples_index_project_path(@project, format: :json)
-    @team = @project.team
-  end
-
   def experiment_archive
     current_team_switch(@project.team)
-  end
-
-  def samples_index
-    @team = @project.team
-    @user = current_user
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           @project,
-                                           nil,
-                                           nil,
-                                           @user)
-      end
-    end
   end
 
   private

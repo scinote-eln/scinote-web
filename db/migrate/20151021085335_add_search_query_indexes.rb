@@ -21,9 +21,6 @@ class AddSearchQueryIndexes < ActiveRecord::Migration[4.2]
       add_gist_index :results, :name
       add_gist_index :assets, :file_file_name
 
-      # There's already semi-useless BTree index on samples
-      remove_index :samples, :name
-      add_gist_index :samples, :name
     end
   end
 
@@ -43,10 +40,6 @@ class AddSearchQueryIndexes < ActiveRecord::Migration[4.2]
       remove_index :steps, :name
       remove_index :results, :name
       remove_index :assets, :file_file_name
-
-      # Re-add semi-useless BTree index on samples
-      remove_index :samples, :name
-      add_index :samples, :name
     end
   end
 end

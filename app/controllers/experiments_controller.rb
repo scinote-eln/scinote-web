@@ -1,5 +1,4 @@
 class ExperimentsController < ApplicationController
-  include SampleActions
   include TeamsHelper
   include InputSanitizeHelper
   include ActionView::Helpers::TextHelper
@@ -9,9 +8,9 @@ class ExperimentsController < ApplicationController
   before_action :set_experiment,
                 except: %i(new create)
   before_action :set_project,
-                only: %i(new create samples_index samples module_archive
-                         clone_modal move_modal delete_samples)
-  before_action :load_projects_tree, only: %i(canvas samples module_archive)
+                only: %i(new create module_archive
+                         clone_modal move_modal)
+  before_action :load_projects_tree, only: %i(canvas module_archive)
   before_action :check_view_permissions,
                 only: %i(canvas module_archive)
   before_action :check_manage_permissions, only: :edit
@@ -20,9 +19,6 @@ class ExperimentsController < ApplicationController
   before_action :check_move_permissions, only: %i(move_modal move)
 
   layout 'fluid'.freeze
-
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
 
   def new
     @experiment = Experiment.new
@@ -283,28 +279,6 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
-  end
-
-  def samples
-    @samples_index_link = samples_index_experiment_path(@experiment,
-                                                        format: :json)
-    @team = @experiment.project.team
-  end
-
-  def samples_index
-    @team = @experiment.project.team
-
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           nil,
-                                           nil,
-                                           @experiment,
-                                           current_user)
-      end
-    end
   end
 
   def updated_img

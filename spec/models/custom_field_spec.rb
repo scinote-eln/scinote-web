@@ -20,14 +20,12 @@ describe CustomField, type: :model do
     it { should belong_to :user }
     it { should belong_to :team }
     it { should belong_to(:last_modified_by).class_name('User') }
-    it { should have_many :sample_custom_fields }
   end
 
   describe 'Should be a valid object' do
     before do
       @user = create :user, email: 'example_one@adsf.com'
       @team = create :team
-      @samples_table = create :samples_table, user: @user, team: @team
     end
 
     it { should validate_presence_of :name }

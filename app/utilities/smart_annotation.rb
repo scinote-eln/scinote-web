@@ -75,28 +75,6 @@ class SmartAnnotation
     experiments_list
   end
 
-  def samples
-    # Search samples
-    res = Sample
-          .search(@current_user, false, @query, 1, @current_team)
-          .limit(Constants::ATWHO_SEARCH_LIMIT)
-
-    samples_list = []
-    res.each do |sample_res|
-      sam = {}
-      sam['id'] = sample_res.id.base62_encode
-      sam['name'] = sanitize(sample_res.name)
-      sam['description'] = "#{I18n.t('Added')} #{I18n.l(
-        sample_res.created_at, format: :full_date
-      )} #{I18n.t('by')} #{truncate(
-        sanitize(sample_res.user.full_name,
-                 length: Constants::NAME_TRUNCATION_LENGTH)
-      )}"
-      sam['type'] = 'sam'
-      samples_list << sam
-    end
-    samples_list
-  end
 
   def repository_rows(repository)
     res = RepositoryRow

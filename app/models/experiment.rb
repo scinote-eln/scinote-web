@@ -117,14 +117,6 @@ class Experiment < ApplicationRecord
     my_modules.where(archived: true)
   end
 
-  def assigned_samples
-    Sample.joins(:my_modules).where(my_modules: { id: my_modules })
-  end
-
-  def unassigned_samples(assigned_samples)
-    Sample.where(team_id: team).where.not(id: assigned_samples)
-  end
-
   def update_canvas(
     to_archive,
     to_add,
@@ -616,17 +608,18 @@ class Experiment < ApplicationRecord
 
     visited = []
     # Assign samples to all new downstream modules
-    filtered_edges.each do |a, b|
-      source = my_modules.includes({ inputs: :from }, :samples).find(a.to_i)
-      target = my_modules.find(b.to_i)
-      # Do this only for new edges
-      next unless previous_sources[target.id].exclude?(source)
-      # Go as high upstream as new edges take us
-      # and then assign samples to all downsteam samples
-      assign_samples_to_new_downstream_modules(previous_sources,
-                                               visited,
-                                               source)
-    end
+    # Commented out, not sure if still relevant, samples are not used anymore,
+    # leaving it commented because im not sure if it should be deleted, testing
+    # (SCI 2228)
+    # filtered_edges.each do |a, b|
+    #   source = my_modules.includes({ inputs: :from }, :samples).find(a.to_i)
+    #   target = my_modules.find(b.to_i)
+    #   # Do this only for new edges
+    #   next unless previous_sources[target.id].exclude?(source)
+    #   # Go as high upstream as new edges take us
+    #   # and then assign samples to all downsteam samples
+    #   assign_samples_to_new_downstream_modules(previous_sources,visited,source)
+    # end
 
     # Save topological order of modules (for modules without workflow,
     # leave them unordered)
