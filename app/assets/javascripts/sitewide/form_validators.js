@@ -103,9 +103,9 @@ function checklistsValidator(ev, checklists, editMode) {
 
 var FileTypeEnum = Object.freeze({
   FILE: $(document.body).data('file-max-size-mb') * 1024 * 1024,
-  AVATAR: $('#const_data').attr('data-AVATAR_MAX_SIZE_MB')
+  AVATAR: $(document.body).data('avatar-max-size-mb')
 });
-
+debugger
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
   canBeEmpty = (typeof canBeEmpty !== 'undefined') ? canBeEmpty : false;
   var filesValid = true;
@@ -163,7 +163,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
         case FileTypeEnum.FILE:
           return I18n.t('general.file.total_size', { size: $(document.body).data('file-max-size-mb') }).strToErrorFormat();
         case FileTypeEnum.AVATAR:
-          return $('#locale_data').attr('data-USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE ').strToErrorFormat();
+          return $('#locale_data').attr('data-USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE').strToErrorFormat();
       }
     }
   }
