@@ -437,6 +437,21 @@ class User < ApplicationRecord
     statistics
   end
 
+  def self.from_azure_jwt_token(token_payload)
+    includes(:user_identities)
+      .where(
+        'user_identities.provider=? AND user_identities.uid=?',
+        Api.configuration.azure_ad_apps[token_payload[:aud]][:provider],
+        token_payload[:sub]
+      )
+      .references(:user_identities)
+      .take
+  end
+
+  def has_linked_account?(provider)
+    user_identities.where(provider: provider).exists?
+  end
+
   # json friendly attributes
   NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
                            assignments_email_notification

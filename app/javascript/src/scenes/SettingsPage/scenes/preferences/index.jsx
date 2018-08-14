@@ -94,7 +94,7 @@ class SettingsPreferences extends Component<Props, State> {
               title="settings_page.system_message"
               subtitle="settings_page.system_message_msg"
               emailNotification={this.state.system_message_email_notification}
-              iconClasses="glyphicon glyphicon-tower"
+              iconClasses="fas fa-chess-rook"
               iconBackground={ICON_GREEN_COLOR}
               reloadInfo={this.getPreferencesInfo}
             />

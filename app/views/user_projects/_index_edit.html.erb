@@ -35,7 +35,7 @@
       </div>
       <div class="col-xs-3 col-sm-2">
         <%= link_to project_user_project_path(@project, user_proj, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
-        <span class="glyphicon glyphicon-remove"></span>
+        <span class="fas fa-times"></span>
         <% end %>
       </div>
 
@@ -67,7 +67,7 @@
     </div>
     <div class="col-xs-4 col-sm-2">
     <%= f.button class: 'btn btn-primary' do %>
-      <span class="glyphicon glyphicon-plus"></span>
+      <span class="fas fa-plus"></span>
       <span class="hidden-xs"><%= t("projects.index.modal_manage_users.create") %></span>
     <% end %>
     </div>

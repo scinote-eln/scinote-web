@@ -4,8 +4,8 @@
     <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
@@ -14,6 +14,9 @@
     <%= stylesheet_pack_tag 'fontawesome' %>
 
     <%= csrf_meta_tags %>
+    <% if content_for?(:head) %>
+      <%= yield(:head) %>
+    <% end %>
   </head>
   <body
     class="<%= yield :body_class %>"

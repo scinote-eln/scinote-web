@@ -5,7 +5,7 @@
     <div class="pull-right">
       <% unless ff.object.file.exists? && ff.object.locked? %>
         <%= ff.remove_nested_fields_link do %>
-          <span class="glyphicon glyphicon-remove"></span>
+          <span class="fas fa-times"></span>
         <% end %>
       <% end %>
     </div>

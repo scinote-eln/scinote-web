@@ -163,32 +163,29 @@ var Comments = (function() {
 
   // restore comments after update or when new element is created
   function bindCommentInitializerToNewElement() {
-    $(document)
-      .ready(function() {
-        if( document.getElementById('steps') !== null ) {
-          $('#steps')
-            .change(function() {
-              $('.step-save')
-                .on('click', function() {
-                  $(document)
-                    .on('ajax:success', function(){
-                      initializeComments();
-                    });
+    if( document.getElementById('steps') !== null ) {
+      $('#steps')
+        .change(function() {
+          $('.step-save')
+            .on('click', function() {
+              $(document)
+                .on('ajax:success', function(){
+                  initializeComments();
                 });
             });
-        } else if ( document.getElementById('results') !== null ) {
-          $('#results')
-            .change(function() {
-              $('.save-result')
-                .on('click', function() {
-                  $(document)
-                    .on('ajax:success', function(){
-                      initializeComments();
-                    });
+        });
+    } else if ( document.getElementById('results') !== null ) {
+      $('#results')
+        .change(function() {
+          $('.save-result')
+            .on('click', function() {
+              $(document)
+                .on('ajax:success', function(){
+                  initializeComments();
                 });
             });
-          }
-    });
+        });
+      }
   }
 
   function initCommentOptions(scrollableContainer, useParentOffset) {

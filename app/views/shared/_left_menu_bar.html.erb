@@ -8,7 +8,7 @@
         <% end %>
       </li>
       <li class="<%= "active" if repositories_are_selected? %>">
-        <%= link_to repositories_path, data: { no_turbolink: false }, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
+        <%= link_to repositories_path, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
           <span class="fas fa-list-alt" aria-hidden="true"></span>
           <span><%= t('left_menu_bar.repositories') %></span>
         <% end %>
@@ -20,7 +20,7 @@
         <% end %>
       </li>
       <li class="<%= "active" if reports_are_selected? %>">
-        <%= link_to reports_path, data: { no_turbolink: false }, id: "reports-link", title: t('left_menu_bar.reports') do %>
+        <%= link_to reports_path, id: "reports-link", title: t('left_menu_bar.reports') do %>
           <span class="fas fa-clipboard-check"></span>
           <span><%= t('left_menu_bar.reports') %></span>
         <% end %>

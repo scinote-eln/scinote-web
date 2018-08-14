@@ -4,8 +4,8 @@
 var RepositoryDatatable = (function(global) {
   'use strict';
 
-  var TABLE_ID   = '';
-  var TABLE      = {};
+  var TABLE_ID = '';
+  var TABLE = null;
 
   /**
    * This variable is declared on window object,
@@ -1336,7 +1336,10 @@ var RepositoryDatatable = (function(global) {
   }
 
   function destroy() {
-    TABLE = {};
+    if (TABLE !== null) {
+      TABLE.destroy();
+      TABLE = null;
+    }
     TABLE_ID = '';
   }
 

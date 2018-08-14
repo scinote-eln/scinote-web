@@ -4,7 +4,7 @@
     <%= t("protocols.steps.new.checklist_panel_title") %>
     <div class="pull-right">
       <%= ff.remove_nested_fields_link do %>
-        <span class="glyphicon glyphicon-remove"></span>
+        <span class="fas fa-times"></span>
       <% end %>
     </div>
   </div>
@@ -35,7 +35,7 @@
               <div class="col-xs-1">
                 <div class="btn btn-link">
                   <%= chkItems.remove_nested_fields_link do %>
-                    <span class="glyphicon glyphicon-remove"></span>
+                    <span class="fas fa-times"></span>
                   <% end %>
                 </div>
               </div>
@@ -45,7 +45,7 @@
       <% end %>
     </ul>
     <%= ff.add_nested_fields_link :checklist_items do %>
-      <span class="glyphicon glyphicon-plus"></span>
+      <span class="fas fa-plus"></span>
       <%= t("protocols.steps.new.checklist_add_item") %>
     <% end %>
   </div>

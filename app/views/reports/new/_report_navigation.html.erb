@@ -3,7 +3,7 @@
 
     <div class="dropdown" id="sort-report">
       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span class="glyphicon glyphicon-sort visible-xs-inline"></span>
+        <span class="fas fa-sort visible-xs-inline"></span>
         <span class="hidden-xs"><%= t'projects.reports.new.nav_sort_by' %></span>
         <span class="caret"></span>
       </button>
@@ -14,7 +14,7 @@
     </div>
 
     <%= link_to "", class: "btn btn-default", remote: true, id: "print-report" do %>
-      <span class="glyphicon glyphicon-print"></span>
+      <span class="fas fa-print"></span>
       <span class="hidden-xs"><%=t "projects.reports.new.nav_print" %></span>
     <% end %>
     <%= form_tag generate_project_reports_path(@project, format: :pdf), method: :post, target: "_blank", class: "get-report-pdf-form" do %>

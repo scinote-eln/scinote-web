@@ -1119,8 +1119,8 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
 
   var toggleIcon = document.createElement("span");
   $(toggleIcon)
-  .addClass("glyphicon")
-  .addClass("glyphicon-triangle-bottom")
+  .addClass("fas")
+  .addClass("fa-caret-down")
   .attr("aria-hidden", "true")
   .appendTo(dropdownToggle);
 

@@ -1,18 +1,18 @@
 <div class="btn-group" role="group" aria-label="" style="margin-left: 15px;">
   <div class="btn-group">
     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-      <span class="glyphicon glyphicon-import"></span>
+      <span class="fas fa-download"></span>
       <span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.load_protocol") %></span>
     </a>
     <ul class="dropdown-menu">
       <% if can_manage_protocol_in_module?(@protocol) %>
         <li>
           <%= link_to load_from_repository_modal_protocol_path(@protocol, format: :json), remote: true, data: { action: "load-from-repository" } do %>
-            <span class="glyphicon glyphicon-book"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_repository") %>
+            <span class="fas fa-book"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_repository") %>
           <% end %>
         </li>
       <% else %>
-        <li class="disabled"><a href="#"><span class="glyphicon glyphicon-book"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_repository") %></a></li>
+        <li class="disabled"><a href="#"><span class="fas fa-book"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_repository") %></a></li>
       <% end %>
       <% if can_manage_protocol_in_module?(@protocol) %>
         <li>
@@ -27,17 +27,17 @@
     </ul>
   </div>
   <% if can_read_experiment?(@my_module.experiment) %>
-    <%= link_to raw("<span class=\"glyphicon glyphicon-export\"></span><span class=\"hidden-xs-custom\">&nbsp;" + t('my_modules.protocols.buttons.export') + "</span>"), export_protocols_path(protocol_ids: @protocol.id), class: "btn btn-default", data: {no_turbolink: true} %>
+    <%= link_to raw("<span class=\"fas fa-upload\"></span><span class=\"hidden-xs-custom\">&nbsp;" + t('my_modules.protocols.buttons.export') + "</span>"), export_protocols_path(protocol_ids: @protocol.id), class: "btn btn-default", data: { turbolinks: false } %>
   <% else %>
-    <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
+    <a href="#" class="btn btn-default disabled"><span class="fas fa-upload"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
   <% end %>
   <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) %>
     <span data-hook="protocol-copy-to-repository">
       <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), id: "protocol-copy-to-repository", class: "btn btn-default", remote: true, data: { action: "copy-to-repository" } do %>
-        <span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
+        <span class="fas fa-copy"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
       <% end %>
     </span>
   <% else %>
-    <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span></a>
+    <a href="#" class="btn btn-default disabled"><span class="fas fa-copy"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span></a>
   <% end %>
 </div>

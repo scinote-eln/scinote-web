@@ -19,7 +19,7 @@
                      value="<%= @display_query %>">
                <span class="input-group-btn">
                 <button class="btn btn-default" type="submit">
-                  <span class="glyphicon glyphicon-search"></span>
+                  <span class="fas fa-search"></span>
                 </button>
               </span>
             </div>
@@ -83,7 +83,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @module_search_count %></span>
-              <span class="glyphicon glyphicon-credit-card"></span>
+              <span class="fas fa-credit-card"></span>
               <%= t'Modules' %>
             </a>
           </li>
@@ -97,7 +97,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @result_search_count %></span>
-              <span class="glyphicon glyphicon-modal-window"></span>
+              <span class="fas fa-columns"></span>
               <%= t'Results' %>
             </a>
           </li>
@@ -153,7 +153,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @step_search_count %></span>
-              <span class="glyphicon glyphicon-circle-arrow-right"></span>
+              <span class="fas fa-arrow-circle-right"></span>
               <%= t'Steps' %>
             </a>
           </li>

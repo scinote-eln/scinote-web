@@ -64,7 +64,7 @@ class Extends
   API_VERSIONS = ['20170715']
 
   # Array used for injecting names of additional authentication methods for API
-  API_PLUGABLE_AUTH_METHODS = []
+  API_PLUGABLE_AUTH_METHODS = [:azure_jwt_auth]
 
   OMNIAUTH_PROVIDERS = [:linkedin]
 
