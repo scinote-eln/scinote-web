@@ -8,7 +8,7 @@
       <% if result.asset.is_image? %>
         <span class="glyphicon glyphicon-picture"></span>
       <% else %>
-        <span class="glyphicon glyphicon-file"></span>
+        <span class="fas fa-paperclip"></span>
       <% end %>
     <% end %>
     <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query, target: nil } %>
