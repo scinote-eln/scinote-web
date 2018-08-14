@@ -105,7 +105,6 @@ var FileTypeEnum = Object.freeze({
   FILE: $(document.body).data('file-max-size-mb') * 1024 * 1024,
   AVATAR: $(document.body).data('avatar-max-size-mb')
 });
-debugger
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
   canBeEmpty = (typeof canBeEmpty !== 'undefined') ? canBeEmpty : false;
   var filesValid = true;
