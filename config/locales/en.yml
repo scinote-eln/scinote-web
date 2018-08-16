@@ -1992,3 +1992,8 @@ en:
       password_confirmation_not_match: "doesn't match"
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
+
+  test:
+    popover:
+      test: "You don't have permission to invite additional users to this team -- just kidding, test text"
+      learn_more: "https://support.scinote.net/hc/en-us/articles/115001787811-What-are-the-permissions-for-each-user-role-"
