@@ -298,7 +298,7 @@ en:
       print_title: "%{project} | Report"
       index:
         head_title: " Reports"
-        new: "New"
+        new: "New report"
         edit: "Edit"
         delete: "Delete"
         thead_project_name: "Project name"
@@ -355,7 +355,7 @@ en:
             tasks_tab: "Choose tasks"
             content_tab: "Choose content"
           project_contents_inner:
-            instructions: "Select experiments/tasks to include in the report"
+            instructions: "To create a project report select one or multiple experiment. You can include an entire experiment or individual experimental tasks."
             no_modules: "The project contains no tasks"
             no_module_group: "No workflow"
           module_contents:
@@ -364,7 +364,7 @@ en:
             steps_tab: "Protocols content"
             results_tab: "Results content"
           module_contents_inner:
-            instructions: "Choose what information from task/s to include in the report"
+            instructions: "Select the information from your task that you would like to include to your report."
             check_all: "All tasks content"
             steps: "Steps"
             completed_steps: "Completed"
@@ -595,7 +595,7 @@ en:
       buttons:
         load_protocol: "Load Protocol"
         load_protocol_from_repository: "from repository"
-        load_protocol_from_file: "from file"
+        load_protocol_from_file: "from computer"
         export: "Export Protocol"
         copy_to_repository: "Copy To Protocol Repository"
       confirm_link_update_modal:
@@ -648,7 +648,7 @@ en:
         type_label: "Copy to"
         type_public: "Team protocols"
         type_private: "My protocols"
-        type_text: "You can copy the protocol to protocols repository visible to all team members, or to your protocols repository."
+        type_text: "You can make a copy of a protocol and save it to Team protocols or My protocols. Team protocols are visible to all team members, My protocols are for personal usage only."
         link_label: "Link task to this protocol repository"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to repository."
@@ -1993,7 +1993,53 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
-  test:
-    popover:
-      test: "You don't have permission to invite additional users to this team -- just kidding, test text"
-      learn_more: "https://support.scinote.net/hc/en-us/articles/115001787811-What-are-the-permissions-for-each-user-role-"
+  popover_test:
+    text:
+      invite_to_sci: "Invite other scientists to SciNote and gain additional free SciNote space for your Team. How?"
+      new_project: "Project is the topmost layer when you are organizing your data in SciNote. It allows you to assign members and keep all project-related data within one project card."
+      experiment:
+        copy: "Copy this experiment as a template to another project. Only tasks and protocol steps will be copied!"
+        dates: "The date stamp illustrates the date when this experiment was created and when it was last time modified."
+        move: "Move your experiment to another project together with all the inside tasks. Make sure that members of both projects are the same even if a few other members were added."
+      task:
+        due_date: "To plan your work and stay organized, set the due dates to your tasks."
+        new: "Your experiment can be defined by a series of tasks. Start by adding the tasks and, if needed, connect them into a workflow."
+        color_tag: "Create personalised colorful tags to mark your tasks based on your preferences."
+        due_date_specific: "For easy and transparent organisation of your work, you can set a due date to a specific task."
+        results: "This feature enables you to save your lab results in three different ways. As a classic text, created table or uploaded file from computer."
+      protocol:
+        step_edit: "Here you can edit protocol step name, its description, add checklists, tables or files."
+        step_add_files: "Drag and drop your files here. SciNote supports all type of files and images."
+        linking: "By establishing the link between the task protocol and the protocol in a repository you can see if any of the versions has been modified and decide to update either of them at any point."
+        complete: "If you are done working on this task, complete it just by clicking on this button."
+        inventories: "You can associate your lab resources with a task by assigning inventory items."
+        num_linked: "This number represents how many tasks are linked to the selected protocol."
+      inventory:
+        new: "Inventories in SciNote enables you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
+        visibility: "You can toggle the visibility of inventory columns, making them visible or hidden."
+        manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, files or be defined as a dropdown list."
+
+    link:
+      invite_to_sci: "https://support.scinote.net/hc/en-us/articles/115003902929"
+      new_project: "https://support.scinote.net/hc/en-us/articles/115003373852"
+      experiment:
+        copy: "https://support.scinote.net/hc/en-us/articles/115001434365"
+        dates: "https://support.scinote.net/hc/en-us/articles/115001799832"
+        move: "https://support.scinote.net/hc/en-us/articles/115001434385"
+      task:
+        due_date: "https://support.scinote.net/hc/en-us/articles/360000527572"
+        new: "https://support.scinote.net/hc/en-us/articles/360000537411"
+        color_tag: "https://support.scinote.net/hc/en-us/articles/360007237912"
+        due_date_specific: "https://support.scinote.net/hc/en-us/articles/360000527572"
+        results: "https://support.scinote.net/hc/en-us/articles/360007238592"
+      protocol:
+        step_edit: "https://support.scinote.net/hc/en-us/articles/115001788051"
+        step_add_files: "https://support.scinote.net/hc/en-us/articles/360007237252"
+        linking: "https://support.scinote.net/hc/en-us/articles/115003680385"
+        complete: "https://support.scinote.net/hc/en-us/articles/115001799812"
+        inventories: "https://support.scinote.net/hc/en-us/articles/360004694971"
+        num_linked: "https://support.scinote.net/hc/en-us/articles/115001788711"
+      inventory:
+        new: "https://support.scinote.net/hc/en-us/articles/360004627792"
+        visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
+        manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
