@@ -39,7 +39,7 @@
           <% end %>
         </div>
       <% end %>
-      <span>
+      <span class="popover_v2" data-popoverlink="<%= I18n.t('popover_test.link.experiment.dates') %>" data-popovercontent="<%= I18n.t('popover_test.text.experiment.dates') %>">
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
       </span>

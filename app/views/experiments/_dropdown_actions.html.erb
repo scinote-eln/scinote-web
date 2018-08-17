@@ -16,14 +16,18 @@
                   clone_modal_experiment_url(experiment),
                   remote: true,
                   type: 'button',
-                  class: 'clone-experiment' %></li>
+                  class: 'clone-experiment popover_v2',
+                  data: { popoverlink: I18n.t('popover_test.link.experiment.copy'), popovercontent: I18n.t('popover_test.text.experiment.copy') }
+                  %></li>
   <% end %>
   <% if can_move_experiment?(experiment) %>
     <li><%= link_to t('experiments.move.label_title'),
                   move_modal_experiment_url(experiment),
                   remote: true,
                   type: 'button',
-                  class: 'move-experiment' %></li>
+                  class: 'move-experiment popover_v2',
+                  data: { popoverlink: I18n.t('popover_test.link.experiment.move'), popovercontent: I18n.t('popover_test.text.experiment.move') }
+                   %></li>
   <% end %>
   <% if can_manage_experiment?(experiment) %>
   <li><%= link_to t('experiments.archive.label_title'),

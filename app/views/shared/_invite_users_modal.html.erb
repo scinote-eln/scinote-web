@@ -115,7 +115,7 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
           </button>
 
           <div class="btn-group" data-role="invite-with-role-div">
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true" aria-expanded="false" data-role="invite-with-role-btn" disabled="disabled">
+            <button type="button" class="btn btn-success dropdown-toggle popover_v2" data-popoverlink="<%= I18n.t('popover_test.link.invite_to_sci') %>" data-popovercontent="<%= I18n.t('popover_test.text.invite_to_sci') %>"  data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true" aria-expanded="false" data-role="invite-with-role-btn" disabled="disabled">
               <%= t('invite_users.invite_btn') %>
               &nbsp;
               <span class="caret"></span>
