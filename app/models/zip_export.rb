@@ -112,4 +112,9 @@ class ZipExport < ApplicationRecord
     file = FileUtils.touch("#{tmp_dir}/export.csv").first
     File.open(file, 'wb') { |f| f.write(data) }
   end
+
+  def generate_team_zip(tmp_dir, data, options = {})
+    file = FileUtils.touch("#{tmp_dir}/#{options[:filename]}").first
+    File.open(file, 'wb') { |f| f.write(data) }
+  end
 end

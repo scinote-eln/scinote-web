@@ -180,6 +180,38 @@ class ReportsController < ApplicationController
     end
   end
 
+  def export_project_pdf
+    @project = Project.find_by_id(1)
+
+    @report = Report.find_by_id(1)
+    current_team_switch(@report.project.team)
+    @report.cleanup_report
+    render_to_string 'reports/new.html.erb'
+
+    content = params[:html]
+
+    filename = "#{@project.name}.pdf"
+    file_absolute_path = Rails.root.join(
+      'public/',
+      filename
+    ).to_s
+    pdf_file = render_to_string pdf: file_absolute_path,
+                                header: { right: '[page] of [topage]' },
+                                locals: { content: content },
+                                template: 'reports/report.pdf.erb',
+                                disable_javascript: true,
+                                save_to_file: file_absolute_path,
+                                save_only: true
+
+    zip = ZipExport.create(user: current_user)
+    zip.generate_exportable_zip(
+      current_user,
+      pdf_file,
+      :team,
+      filename: filename
+    )
+  end
+
   def save_pdf_to_inventory_item
     save_pdf_to_inventory_item = ReportActions::SavePdfToInventoryItem.new(
       current_user, current_team, save_PDF_params
