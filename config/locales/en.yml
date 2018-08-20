@@ -1801,6 +1801,11 @@ en:
 
   notifications:
     title: "Notifications"
+    tips:
+      title: "Help Tips"
+      text1: "When you place your mouse over specific element of SciNote, we show you a tip with description of this element."
+      text2: "You may want to turn that off if you feel confident in here."
+      toggle: "Show Help Tips NO/YES"
     email_settings: "E-mail notifications"
     form:
       assignments: "Assignment"

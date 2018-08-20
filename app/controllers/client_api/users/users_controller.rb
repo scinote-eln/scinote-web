@@ -78,7 +78,8 @@ module ClientApi
                       :time_zone, :assignments_notification,
                       :assignments_email_notification, :recent_notification,
                       :recent_email_notification,
-                      :system_message_email_notification)
+                      :system_message_email_notification,
+                      :popover_v2_toggle )
       end
 
       def success_response(args = {})
