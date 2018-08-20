@@ -9,7 +9,10 @@
   <div id="repository-toolbar">
 
     <% if can_create_repository_rows?(@repository.team) %>
-      <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
+      <button type="button" class="btn btn-primary editAdd popover_v2"
+      id="addRepositoryRecord" onclick="onClickAddRecord()"
+      data-popoverlink="<%= I18n.t('popover_test.link.inventory.new') %>"
+      data-popovercontent="<%= I18n.t('popover_test.text.inventory.new') %>">
         <span class="glyphicon glyphicon-plus"></span>
         <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
       </button>

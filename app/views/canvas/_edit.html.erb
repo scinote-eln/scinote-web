@@ -10,12 +10,12 @@
 >
   <%= bootstrap_form_tag url: canvas_experiment_url, method: "post" do |f| %>
     <% if can_manage_experiment?(@experiment) %>
-      <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
-        <span class="hbtn-default">
+      <%=link_to "", type: "button", class: "btn btn-primary popover_v2", id: "canvas-new-module" do %>
+        <span class="hbtn-default popover_v2">
           <span class="glyphicon glyphicon-credit-card"></span>
           <%= t("experiments.canvas.edit.new_module") %>
         </span>
-        <span class="hbtn-hover">
+        <span class="hbtn-hover popover_v2">
           <span class="glyphicon glyphicon-credit-card"></span>
           <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
           <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>

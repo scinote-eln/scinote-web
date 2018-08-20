@@ -199,8 +199,12 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def modules_html(record)
-    "<a href='#' data-action='load-linked-children'" +
-    " data-url='#{linked_children_protocol_path(record)}'>" +
+    "<a href='#' data-action='load-linked-children' class='popover_v2' " +
+    "data-popoverlink='" +
+    I18n.t('popover_test.link.protocol.num_linked') +
+    "' data-popovercontent='" +
+    I18n.t('popover_test.text.protocol.num_linked') +
+    "' data-url='#{linked_children_protocol_path(record)}'>" +
     "#{record.nr_of_linked_children}" +
     "</a>"
   end
