@@ -12,23 +12,13 @@
       $('.popover_v2').each(function(i,obj) {
         var link = $(obj).data('popoverlink')
         var text_data = $(obj).data('popovercontent')
-        /* Testing
-        var needed_attribute = $(obj).attr("data-content");
 
-        if (typeof needed_attribute !== typeof undefined && needed_attribute !== false && needed_attribute !== "") {
-          // Do nothing, will negate the above logic later
-        }else{
-          $(obj).attr( "data-content","content" )
-          // without a data-content attribute in its parent element, the popover will NEVER render
-          // it assumes it is empty because I fill data trough the template.
-        }
-        */
         $(obj).popover({
           html: true,
           container: 'body',
           placement: 'auto right',
           trigger: 'manual',
-          content: 'should never be empty',
+          content: 'popovers will not display if empty',
           template: '<div class="popover popover_'+i+'_window" role="tooltip" style="background-color:#F0F0F0;font-family:Lato;font-size:14px;" color="#000000" >' +
           '<div class="popover-body" >' + text_data + '</div>' +
           '<br><br><br>' +
@@ -53,6 +43,7 @@
                 $(".popover_"+i+"_window").on("mouseenter", function () {
                   $(".popover_"+i+"_window").css("background-color","#DADADA");
                 });
+
               }
             }, 1000);
         }).on("mouseleave", function () {
