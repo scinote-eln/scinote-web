@@ -223,6 +223,15 @@ class TeamsController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
 
+  def export_all
+    if export_params[:project_ids]
+      TeamZipExporter.generate_zip(export_params, @team, current_user)
+    else
+      flash[:alert] = t('zip_export.export_error')
+    end
+    redirect_back(fallback_location: root_path)
+  end
+
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
     redirect_to root_path
   end
@@ -280,4 +289,5 @@ class TeamsController < ApplicationController
       :samples
     )
   end
+
 end
