@@ -1,14 +1,7 @@
-// Custom jQuery function that finds elements including
-// the parent element
-$.fn.findWithSelf = function(selector) {
-  return this.filter(selector).add(this.find(selector));
-};
+var REPORT_CONTENT = '#report-content';
+var ADD_CONTENTS_FORM_ID = '#add-contents-form';
+var SAVE_REPORT_FORM_ID = '#save-report-form';
 
-var REPORT_CONTENT = "#report-content";
-var ADD_CONTENTS_FORM_ID = "#add-contents-form";
-var SAVE_REPORT_FORM_ID = "#save-report-form";
-
-var hotTableContainers = null;
 var addContentsModal = null;
 var addContentsModalBody = null;
 var saveReportModal = null;
@@ -16,25 +9,15 @@ var saveReportModalBody = null;
 
 var ignoreUnsavedWorkAlert;
 
+// Custom jQuery function that finds elements including
+// the parent element
+$.fn.findWithSelf = function(selector) {
+  return this.filter(selector).add(this.find(selector));
+};
+
 /**
  * INITIALIZATION FUNCTIONS
  */
-
- /**
-  * Initializes page
-  */
- function init() {
-   initializeReportElements($(REPORT_CONTENT));
-   initializeGlobalReportSort();
-   initializePrintPopup();
-   initializeSaveToPdf();
-   initializeSaveReport();
-   initializeAddContentsModal();
-   initializeUnsavedWorkDialog();
-
-   // Automatically display the "Add content" modal
-   $('.new-element.initial').click();
- }
 
 /**
  * Initialize the hands on table on the given
@@ -470,14 +453,28 @@ function initializeUnsavedWorkDialog() {
     }
     if (exit) {
       // We leave the page so remove all listeners
-      $(window).off('beforeunload');
-      $(document).off('page:before-change');
+      $(document).off('turbolinks:before-visit');
     }
     return exit;
   }
 
-  $(window).on('beforeunload', beforeUnload);
-  $(document).on('page:before-change', beforeUnload);
+  $(document).on('turbolinks:before-visit', beforeUnload);
+}
+
+/**
+ * Initializes page
+ */
+function init() {
+  initializeReportElements($(REPORT_CONTENT));
+  initializeGlobalReportSort();
+  initializePrintPopup();
+  initializeSaveToPdf();
+  initializeSaveReport();
+  initializeAddContentsModal();
+  initializeUnsavedWorkDialog();
+
+  // Automatically display the "Add content" modal
+  $('.new-element.initial').click();
 }
 
 /**
@@ -945,9 +942,7 @@ function constructElementContentsJson(el) {
   return jsonEl;
 }
 
-$(document).ready(function() {
-  // Check if we are actually at new report page
-  if ($(REPORT_CONTENT).length) {
-    init();
-  }
-})
+// Check if we are actually at new report page
+if ($(REPORT_CONTENT).length) {
+  init();
+}

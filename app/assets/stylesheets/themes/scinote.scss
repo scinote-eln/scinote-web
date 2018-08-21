@@ -406,7 +406,7 @@ a[data-toggle="tooltip"] {
 #help-link {
   padding: 13px;
 
-  .glyphicon.glyphicon-info-sign {
+  .fas.fa-info-circle {
     font-size: $font-size-large;
     margin-top: 4px;
   }
@@ -456,7 +456,7 @@ a[data-toggle="tooltip"] {
         padding-left: 10px;
       }
 
-      &:not(.disabled) span.glyphicon {
+      &:not(.disabled) span.fas {
         color: transparent !important;
       }
     }
@@ -1715,7 +1715,7 @@ th.custom-field .modal-tooltiptext {
 
 .atwho-li-res {
 
-  .glyphicon-tint {
+  .fa-tint {
     margin-left: 5px;
     margin-right: 5px;
   }
@@ -1817,7 +1817,7 @@ a.disabled-with-click-events {
     margin-right: 400px;
   }
 
-  .glyphicon {
+  .fas {
     margin-left: 100px;
   }
 
@@ -1827,7 +1827,7 @@ a.disabled-with-click-events {
       display: none;
     }
 
-    .glyphicon {
+    .fas {
       margin-left: 10px;
     }
   }

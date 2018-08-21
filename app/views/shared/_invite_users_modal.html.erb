@@ -35,6 +35,7 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
   data-url="<%= invite_users_path %>"
   data-backdrop="static"
   data-keyboard="false"
+  data-max-tags="<%= Constants::INVITE_USERS_LIMIT %>"
   <%= "data-team-id=#{team.id}" if invite_to_team %>
   <%= "data-team-role=#{role}" if type.in?(%w(invite_to_team_with_role invite_with_team_selector_and_role)) %>
 >
@@ -122,13 +123,13 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
             </button>
             <ul class="dropdown-menu">
               <li>
-                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'team-role' => 'guest' } %>
+                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'team-role' => 'guest', remote: true } %>
               </li>
               <li>
-                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'team-role' => 'normal_user' } %>
+                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'team-role' => 'normal_user', remote: true } %>
               </li>
               <li>
-                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'team-role' => 'admin' } %>
+                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'team-role' => 'admin', remote: true } %>
               </li>
             </ul>
           </div>

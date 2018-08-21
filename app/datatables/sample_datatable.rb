@@ -149,10 +149,10 @@ class SampleDatatable < CustomDatatable
 
   def sample_group_cell(record)
     if record.sample_group.nil?
-      "<span class='glyphicon glyphicon-asterisk'></span> " \
+      "<span class='fas fa-asterisk'></span> " \
         "#{I18n.t('samples.table.no_group')}"
     else
-      "<span class='glyphicon glyphicon-asterisk' " \
+      "<span class='fas fa-asterisk' " \
         "style='color: #{escape_input(record.sample_group.color)}'></span> " \
         "#{escape_input(record.sample_group.name)}"
     end

@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
 <% if current_team %>
@@ -22,7 +26,7 @@
           </div>
           <div class="btn-group" role="group">
             <a class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
-              <span class="glyphicon glyphicon-plus"></span>
+              <span class="fas fa-plus"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
             </a>
             <a class="btn btn-default" data-action="edit">
@@ -30,7 +34,7 @@
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
             </a>
             <a class="btn btn-default" data-action="clone">
-              <span class="glyphicon glyphicon-duplicate"></span>
+              <span class="fas fa-copy"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
             </a>
             <% if @type == :public %>
@@ -52,12 +56,12 @@
              aria-expanded="false"
              href="#"
              <%= 'disabled' unless can_create_protocols_in_repository?(@current_team) %>>
-            <span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
+            <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
             <% if can_create_protocols_in_repository?(@current_team) %>
               <ul class="dropdown-menu">
                 <li>
                   <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-                    <span class="glyphicon glyphicon-file"></span>
+                    <span class="fas fa-file"></span>
                     <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
                     <input type="file" value="" accept=".eln" data-role="import-file-input"
                     data-team-id="<%= @current_team.id %>"
@@ -66,22 +70,22 @@
                   </a>
                 </li>
                 <li>
-                <%= link_to "#modal-import-json-protocol", "data-toggle" => "modal" do %>
-                <span class="glyphicon glyphicon-file"></span>
-                <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
+                <%= link_to "#modal-import-json-protocol", data: { toggle: 'modal', remote: true } do %>
+                  <span class="fas fa-file"></span>
+                  <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
                 <% end %>
                 </li>
               </ul>
             <% end %>
             <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
-              <span class="glyphicon glyphicon-export"></span>
+              <span class="fas fa-upload"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
             </a>
           </div>
 
           <div class="btn-group" role="group">
             <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
-              <span class="glyphicon glyphicon-briefcase"></span>
+              <span class="fas fa-briefcase"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
             </a>
           </div>
@@ -91,7 +95,7 @@
           </div>
           <div class="btn-group" role="group">
             <a class="btn btn-default" data-action="restore" data-url="<%= restore_protocols_path %>">
-              <span class="glyphicon glyphicon-refresh"></span>
+              <span class="fas fa-sync-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
             </a>
           </div>

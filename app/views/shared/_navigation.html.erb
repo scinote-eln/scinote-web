@@ -44,7 +44,7 @@
                         data-id="<%= team.id %>"
                         class="text-center change-team">
                         <% if current_team == team %>
-                          <span class="glyphicon glyphicon-ok-sign"></span> <strong><%= team.name %></strong>
+                          <span class="fas fa-check-circle"></span> <strong><%= team.name %></strong>
                         <% else %>
                           <span class="team-name"><%= team.name %></span>
                         <% end %>
@@ -55,7 +55,7 @@
                 <% if current_user.teams.length > 1 && can_create_teams? %>
                   <li>
                     <%= link_to new_team_path do %>
-                      <span class="glyphicon glyphicon-plus"></span>
+                      <span class="fas fa-plus"></span>
                       <%= t('users.settings.teams.index.new_team') %>
                     <% end %>
                   </li>

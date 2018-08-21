@@ -7,10 +7,10 @@
   <div id="results-toolbar">
     <div class="pull-right">
       <button class="btn btn-default" id="results-collapse-btn">
-        <span class="glyphicon glyphicon-collapse-up"></span>
+        <span class="fas fa-caret-square-up"></span>
         <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></button></span>
       <button class="btn btn-default" id="results-expand-btn">
-        <span class="glyphicon glyphicon-collapse-down"></span>
+        <span class="fas fa-caret-square-down"></span>
         <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></button></span>
     </div>
 
@@ -23,7 +23,7 @@
          id="new-result-text"
          data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
          href="#">
-        <span class="glyphicon glyphicon-font"></span>
+        <span class="fas fa-font"></span>
         <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
       </a>
       <a class="btn btn-primary"
@@ -37,7 +37,7 @@
          id="new-result-asset"
          data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
          href="#">
-        <span class="glyphicon glyphicon-picture"></span>
+        <span class="fas fa-image"></span>
         <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
       </a>
     </div>

@@ -1,9 +1,9 @@
 <div class="btn-group">
   <% if @protocol.unlinked? %>
     <a type="button" class="btn btn-info" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_unlinked.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_unlinked.text") %>">
-      <span class="glyphicon glyphicon-book"></span>
+      <span class="fas fa-book"></span>
       &nbsp;
-      <span class="glyphicon glyphicon-remove-sign"></span>
+      <span class="fas fa-times-sign"></span>
     </a>
     <a type="button" class="btn btn-info dropdown-toggle" disabled="disabled">
       <span class="caret"></span>
@@ -11,9 +11,9 @@
   <% else %>
     <% if @protocol.linked_no_diff? %>
       <a type="button" class="btn btn-info" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_linked_no_diff.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_linked_no_diff.text") %>">
-        <span class="glyphicon glyphicon-book"></span>
+        <span class="fas fa-book"></span>
         &nbsp;
-        <span class="glyphicon glyphicon-ok-sign"></span>
+        <span class="fas fa-check-circle"></span>
       </a>
       <a type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>
@@ -32,9 +32,9 @@
       </ul>
     <% elsif @protocol.newer_than_parent? %>
       <a type="button" class="btn btn-warning" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_newer_than_parent.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_newer_than_parent.text", self_ts: l(@protocol.updated_at, format: :full), parent_ts: l(@protocol.parent.updated_at, format: :full)).html_safe %>">
-        <span class="glyphicon glyphicon-book"></span>
+        <span class="fas fa-book"></span>
         &nbsp;
-        <span class="glyphicon glyphicon-circle-arrow-down"></span>
+        <span class="fas fa-arrow-circle-up"></span>
       </a>
       <a type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>
@@ -73,9 +73,9 @@
       </ul>
     <% elsif @protocol.parent_newer? %>
       <a type="button" class="btn btn-warning" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_newer.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_newer.text", self_ts: l(@protocol.updated_at, format: :full), parent_ts: l(@protocol.parent.updated_at, format: :full)).html_safe %>">
-        <span class="glyphicon glyphicon-book"></span>
+        <span class="fas fa-book"></span>
         &nbsp;
-        <span class="glyphicon glyphicon-circle-arrow-up"></span>
+        <span class="fas fa-arrow-circle-up"></span>
       </a>
       <a type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>
@@ -104,9 +104,9 @@
       </ul>
     <% elsif @protocol.parent_and_self_newer? %>
       <a type="button" class="btn btn-warning" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_and_self_newer.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_and_self_newer.text", self_ts: l(@protocol.updated_at, format: :full), parent_ts: l(@protocol.parent.updated_at, format: :full)).html_safe %>">
-        <span class="glyphicon glyphicon-book"></span>
+        <span class="fas fa-book"></span>
         &nbsp;
-        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span class="fas fa-exclamation-circle"></span>
       </a>
       <a type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>

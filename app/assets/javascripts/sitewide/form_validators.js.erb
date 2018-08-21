@@ -111,8 +111,10 @@ function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
   var filesValid = true;
   if (fileInputs.length) {
     var filesPresentValid = canBeEmpty || filesPresentValidator(ev, fileInputs);
-    var filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
-
+    var filesSizeValid = false;
+    if (filesPresentValid) {
+      filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
+    }
     // File spoof check is done on server-side only
     filesValid = filesPresentValid && filesSizeValid;
   }

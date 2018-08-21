@@ -4,12 +4,12 @@
 <% comments = result.result_comments %>
 <% timestamp = asset.created_at %>
 <% name = result.name %>
-<% icon_class = 'glyphicon ' + (is_image ? 'glyphicon-picture' : 'glyphicon-file') %>
+<% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
 <div class="report-element report-result-element report-result-asset-element" data-ts="<%= timestamp.to_i %>" data-type="result_asset" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="<%= icon_class %>">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left result-icon">
-        <span class="glyphicon <%= icon_class %>"></span>
+        <span class="<%= icon_class %>"></span>
       </div>
       <div class="pull-left result-name">
         <%= name %>

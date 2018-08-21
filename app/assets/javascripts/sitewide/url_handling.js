@@ -25,20 +25,6 @@ function getParam(param, asArray) {
   }, []);
 }
 
-/*
- * bootstrap-select should handle detection automatically but when
- * rails version it does not detect selects with selectpicker class.
- */
-$(document).ready(function () {
-  $(".selectpicker").selectpicker();
+$(document).on('turbolinks:load', function() {
   initFormSubmitLinks();
-
-  $("#hide-alert").click(function(ev) {
-    $(this).closest("div.alert").addClass("alert-hidden");
-    $("#content-wrapper").addClass("alert-hidden");
-
-    ev.preventDefault();
-    ev.stopPropagation();
-    return false;
-  });
 });

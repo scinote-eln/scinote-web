@@ -5,11 +5,9 @@
     RepositoryDatatable.destroy()
     RepositoryDatatable.init($('#content').attr('data-repo-id'));
     RepositoryDatatable.redrawTableOnSidebarToggle();
+    onClickToggleAssignedRecords();
   }
 
   // initialze repository datatable
-  $(document).ready(function() {
-    initTable()
-    onClickToggleAssignedRecords();
-  });
-})();
+  initTable();
+}());

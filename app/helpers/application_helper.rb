@@ -148,7 +148,7 @@ module ApplicationHelper
        alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
       #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
-      <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+      <span class='fas fa-times' aria-hidden='true'></span>
       </div></div><div class='row'><div class='col-xs-12'>
       <p class='silver'>#{user.email}</p>)
     if user_still_in_team

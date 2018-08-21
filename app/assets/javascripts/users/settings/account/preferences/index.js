@@ -8,6 +8,7 @@
    */
   function toggleFormVisibility(form, edit) {
     if (edit) {
+      form.find('.selectpicker').selectpicker();
       form.find("[data-part='view']").hide();
       form.find("[data-part='edit']").show();
       form.find("[data-part='edit'] input:not([type='file']):not([type='submit']):first").focus();

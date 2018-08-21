@@ -2,11 +2,11 @@
   <div class="badge-num">
     <span class="badge icon">
     <% if result.is_text %>
-    <span class="glyphicon glyphicon-font"></span>
+    <span class="fas fa-font"></span>
     <% elsif result.is_table %>
     <span class="fas fa-table"></span>
     <% elsif result.is_asset %>
-    <span class="glyphicon glyphicon-picture"></span>
+    <span class="fas fa-image"></span>
     <% end %>
     </span>
   </div>
@@ -25,7 +25,7 @@
              data-confirm-text="<%= t('my_modules.results.archive_confirm') %>"
              title="<%= t'my_modules.results.options.archive_title' %>"
              onclick="Results.archive(event, this);">
-            <span class="glyphicon glyphicon-briefcase"></span>
+            <span class="fas fa-briefcase"></span>
           </a>
           <%= form_for :result, url: result_path_of_type(result), method: :patch, html: {id: 'result-archive-form-' + result.id.to_s } do |f| %>
             <%= f.hidden_field :archived, value: true %>
@@ -33,7 +33,7 @@
         <% end %>
       </div>
       <a class="result-panel-collapse-link" href="#result-panel-<%= result.id %>" data-toggle="collapse" data-remote="true">
-        <span class="glyphicon glyphicon-collapse-down collapse-result-icon"></span>
+        <span class="fas fa-caret-square-down collapse-result-icon"></span>
         <strong><%= result.name %></strong> |
         <span><%= t('my_modules.results.published_on', timestamp: l(result.created_at, format: :full), user: h(result.user.full_name)).html_safe %></span>
       </a>

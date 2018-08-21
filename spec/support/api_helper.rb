@@ -12,6 +12,6 @@ module ApiHelper
   end
 
   def json
-    JSON.parse(response.body)
+    ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(response.body))
   end
 end

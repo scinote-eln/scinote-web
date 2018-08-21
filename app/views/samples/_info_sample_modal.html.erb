@@ -19,7 +19,7 @@
           <br>
           <span>
             <%= t "samples.modal_info.sample_group" %>
-            <span class="glyphicon glyphicon-asterisk" style="<%= "color: #{@sample.sample_group.color}" if @sample.sample_group.present? %>"></span>
+            <span class="fas fa-asterisk" style="<%= "color: #{@sample.sample_group.color}" if @sample.sample_group.present? %>"></span>
             <% if @sample.sample_group.present? %>
               <%= @sample.sample_group.name %>
             <% else %>
@@ -64,7 +64,7 @@
                         <%= render partial: 'search/results/partials/experiment_text.html.erb',
                                   locals: { experiment: mod.experiment } %>
                       </li>
-                      <li><span class='glyphicon glyphicon-credit-card'></span>&nbsp;
+                      <li><span class='fas fa-credit-card'></span>&nbsp;
                         <%= render partial: 'search/results/partials/my_module_text.html.erb',
                                   locals: { my_module: mod, link_to_page: :samples } %>
                       </li>
