@@ -115,6 +115,7 @@
   RepositoryItemEditForm.prototype.parseToFormObject = function(tableID, selectedRecord) {
     var formData = this.formData;
     var formDataObj = new FormData();
+    var removeFileColumns = [];
     formDataObj.append('request_url', $(tableID).data('current-uri'));
     formDataObj.append('repository_row_id', $(selectedRecord).attr('id'));
 
@@ -132,7 +133,8 @@
         if($el.attr('type') === 'file') {
           // handle deleting of element
           if($el.attr('remove') === "true") {
-            formDataObj.append('repository_cells[' +  colId + ']', 'remove');
+            removeFileColumns.push(colId);
+            formDataObj.append('repository_cells[' + colId + ']', null);
           } else {
             formDataObj.append('repository_cells[' +  colId + ']',
                                getFileValue($el));
@@ -142,6 +144,7 @@
         }
       }
     });
+    formDataObj.append('remove_file_columns', JSON.stringify(removeFileColumns));
     return formDataObj;
   }
   /**

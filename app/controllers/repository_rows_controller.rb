@@ -134,7 +134,7 @@ class RepositoryRowsController < ApplicationController
                 existing.delete
               end
             elsif existing.value_type == 'RepositoryAssetValue'
-              existing.value.destroy && next if value == 'remove'
+              existing.value.destroy && next if remove_file_columns_params.include?(key)
               if existing.value.asset.update(file: value)
                 existing.value.asset.created_by = current_user
                 existing.value.asset.last_modified_by = current_user
@@ -363,6 +363,10 @@ class RepositoryRowsController < ApplicationController
 
   def cell_params
     params.permit(repository_cells: {}).to_h[:repository_cells]
+  end
+
+  def remove_file_columns_params
+    JSON.parse(params.fetch(:remove_file_columns) { '[]' })
   end
 
   def selected_params
