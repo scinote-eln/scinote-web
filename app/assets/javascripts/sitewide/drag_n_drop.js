@@ -128,17 +128,17 @@
       html += '<div class="modal-content"><div class="modal-header">';
       html += '<button type="button" class="close" data-dismiss="modal"';
       html += ' aria-label="Close"><span aria-hidden="true">&times;</span>';
-      html +=  '</button><h4 class="modal-title"><%= I18n.t('assets.from_clipboard.modal_title') %></h4>';
-      html += '</div><div class="modal-body"><p><strong><%= I18n.t('assets.from_clipboard.image_preview') %></strong></p>';
+      html +=  '</button><h4 class="modal-title">' + $('#locale_data').attr('data-ASSETS_CLIPBOARD_MODAL_TITLE') + '</h4>';
+      html += '</div><div class="modal-body"><p><strong>' + $('#locale_data').attr('data-ASSETS_CLIPBOARD_IMG_PREVIEW') + '</strong></p>';
       html += '<canvas style="border:1px solid grey;max-width:400px;max-height:300px" id="clipboardPreview" />';
-      html += '<p><strong><%= I18n.t('assets.from_clipboard.file_name') %></strong></p>';
+      html += '<p><strong>' + $('#locale_data').attr('data-ASSETS_CLIPBOARD_FILE_NAME') + '</strong></p>';
       html += '<div class="input-group">';
       html += '<input id="clipboardImageName" type="text" class="form-control" ';
-      html += 'placeholder="<%= I18n.t('assets.from_clipboard.file_name_placeholder') %>" aria-describedby="image-name">';
+      html += 'placeholder=' + $('#locale_data').attr('data-ASSETS_CLIPBOARD_FILE_NAME_PLACEHOLDER') + ' aria-describedby="image-name">';
       html += '<span class="input-group-addon" id="image-name"></span></div>';
       html += '</div><div class="modal-footer">';
-      html += '<button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t('general.cancel') %></button>';
-      html += '<button type="button" class="btn btn-success" data-action="addImageFormClipboard"><%= I18n.t('assets.from_clipboard.add_image') %></button>';
+      html += '<button type="button" class="btn btn-default" data-dismiss="modal">' + $('#locale_data').attr('data-GENERAL_CANCEL') + '</button>';
+      html += '<button type="button" class="btn btn-success" data-action="addImageFormClipboard">' + $('#locale_data').attr('data-ASSETS_CLIPBOARD_ADD_IMAGE') + '</button>';
       html += '</div></div></div></div><!-- /.modal -->';
       return $(html).appendTo($('body')).promise().done(function() {
         // display modal
@@ -271,15 +271,15 @@
       var html = '<div class="panel panel-default panel-step-attachment-new">';
       html += '<div class="panel-heading">';
       html += '<span class="fas fa-file"></span>';
-      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>';
+      html += $('#locale_data').attr('data-ASSETS_DRAGNDROP_FILE_LABEL');
       html += '<div class="pull-right">';
       html += '<a data-item-id="' + i + '" href="#">';
       html += '<span class="fas fa-times"></span></a></div></div>';
       html += '<div class="panel-body">';
       html += '<label class="control-label">';
-      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>:</label> ';
+      html += $('#locale_data').attr('data-ASSETS_DRAGNDROP_FILE_LABEL') + ':</label> ';
       html += truncateLongString(asset.name,
-                                 <%= Constants::FILENAME_TRUNCATION_LENGTH %>);
+                                 $('#const_data').attr('data-FILENAME_TRUNCATION_LENGTH'));
       html += _validateFilesSize(asset);
       html += '</div></div>';
       return html;
@@ -429,9 +429,9 @@
     }
 
     function validateTextSize(input) {
-      if(input.value.length > <%= Constants::NAME_MAX_LENGTH %>) {
+      if(input.value.length > $('#const_data').attr('data-NAME_MAX_LENGTH')) {
         $(input).parent().find('.dnd-error').remove();
-        $(input).after("<p class='dnd-error'><%= I18n.t('general.text.length_too_long', max_length: Constants::NAME_MAX_LENGTH) %></p>");
+        $(input).after("<p class='dnd-error'>" + $('#locale_data').attr('data-GENERAL_TEXT_LENGTH_TOO_LONG') + "</p>");
         isValid = false;
       } else {
         $(input).parent().find('.dnd-error').remove();
@@ -443,7 +443,7 @@
       var html = '<div class="panel panel-default panel-result-attachment-new">';
       html += '<div class="panel-heading">';
       html += '<span class="fas fa-file"></span>';
-      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>';
+      html += $('#locale_data').attr('data-ASSETS_DRAGNDROP_FILE_LABEL');
       html += '<div class="pull-right">';
       html += '<a data-item-id="' + i + '" href="#">';
       html += '<span class="fas fa-times"></span></a></div></div>';
@@ -453,9 +453,9 @@
       html += 'onChange="DragNDropResults.validateTextSize(this)"';
       html += ' rel="results[name]" name="results[name][' + i + ']">';
       html += '</div><div class="form-group"><label class="control-label">';
-      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>:</label> ';
+      html += $('#locale_data').attr('data-ASSETS_DRAGNDROP_FILE_LABEL') + ':</label> ';
       html += truncateLongString(asset.name,
-                                 <%= Constants::FILENAME_TRUNCATION_LENGTH %>);
+                                 $('#const_data').attr('data-FILENAME_TRUNCATION_LENGTH'));
       html += _validateFilesSize(asset);
       html += '</div></div>';
       return html;

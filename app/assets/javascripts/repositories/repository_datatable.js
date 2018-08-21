@@ -113,12 +113,12 @@ var RepositoryDatatable = (function(global) {
           $(row).addClass('selected');
         }
       },
-      <% # Next 2 options are provided by server-side default state
-         # (and get overriden once state load from server kicks in) %>
-      order: <%= default_table_order_as_js_array %>,
+      // Next 2 options are provided by server-side default state
+      //  (and get overriden once state load from server kicks in)
+      order: JSON.parse($('#datatable_empty_tables_data').attr('data-DEFAULT_TABLE_ORDER_AS_JS_ARRAY')),
       columns: (function() {
         var numOfColumns = $(TABLE_ID).data('num-columns');
-        var columns = <%= default_table_columns %>;
+        var columns = JSON.parse($('#datatable_empty_tables_data').attr('data-DEFAULT_TABLE_COLUMNS'));
         for (var i = 0; i < numOfColumns; i++) {
           if (columns[i] == undefined) {
             // This should only occur for custom columns
@@ -982,7 +982,7 @@ var RepositoryDatatable = (function(global) {
   function initialListItemsRequest(column_id) {
     var massage_response = [];
     $.ajax({
-      url: '<%= Rails.application.routes.url_helpers.repository_list_items_path %>',
+      url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH'),
       type: 'POST',
       dataType: 'json',
       async: false,
@@ -1017,7 +1017,7 @@ var RepositoryDatatable = (function(global) {
       .selectpicker({liveSearch: true})
       .ajaxSelectPicker({
         ajax: {
-          url: '<%= Rails.application.routes.url_helpers.repository_list_items_path %>',
+          url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH'),
           type: 'POST',
           dataType: 'json',
           data: function () {

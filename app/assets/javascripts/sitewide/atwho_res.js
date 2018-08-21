@@ -176,15 +176,15 @@ var SmartAnnotation = (function() {
        '</div>' +
        '<div class="help">' +
        '<div>' +
-       '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
-       '<%= I18n.t("atwho.users.navigate_2") %>' +
+       '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_NAV1') + '</strong> ' +
+       $('#locale_data').attr('data-ATWHO_USERS_NAV2') +
        '</div>' +
-       '<div><strong><%= I18n.t("atwho.users.confirm_1") %></strong> ' +
-       '<%= I18n.t("atwho.users.confirm_2") %>' +
+       '<div><strong>' + $('#locale_data').attr('data-ATWHO_USERS_CONF1') + '</strong> ' +
+       $('#locale_data').attr('data-ATWHO_USERS_CONF2') +
        '</div>' +
        '<div>' +
-       '<strong><%= I18n.t("atwho.users.dismiss_1") %></strong> ' +
-       '<%= I18n.t("atwho.users.dismiss_2") %>' +
+       '<strong> ' + $('#locale_data').attr('data-ATWHO_USERS_DSMS1') + ' </strong> ' +
+       $('#locale_data').attr('data-ATWHO_USERS_DSMS2') +
        '</div>' +
        '</div>' +
        '</div>';
@@ -194,7 +194,7 @@ var SmartAnnotation = (function() {
 
     function noResultsTemplate() {
       var res = '<div class="atwho-no-results" data-no-results="1">';
-      res += '<span><%= I18n.t("atwho.no_results") %></span>';
+      res += '<span>' + $('#locale_data').attr('data-ATWHO_NORES') + '</span>';
       res += '</div>';
       return res;
     }
@@ -204,7 +204,7 @@ var SmartAnnotation = (function() {
       var res = '';
       res += '<li class="atwho-li atwho-li-res" data-name="' +
               truncateLongString(map.name,
-                <%= Constants::NAME_TRUNCATION_LENGTH %>) +
+                $('#const_data').attr('data-NAME_TRUNCATION_LENGTH')) +
               '" data-id="' + map.id + '" data-type="' +
               map.type + '">';
       switch(map.type) {
@@ -226,10 +226,10 @@ var SmartAnnotation = (function() {
       res += '&nbsp;';
       res += '<span data-val="name" class="res-name">';
       res += truncateLongString(map.name,
-        <%= Constants::NAME_TRUNCATION_LENGTH %>);
+        $('#const_data').attr('data-NAME_TRUNCATION_LENGTH'));
       res += '</span>';
       if(map.archived) {
-        res += '<%= I18n.t("atwho.res.archived") %></span>';
+        res += $('#locale_data').attr('data-ATWHO_RES_ARCH');
       } else {
         res += '</span>';
       }
@@ -371,7 +371,7 @@ var SmartAnnotation = (function() {
           },
         },
         headerTpl: generateFilterMenu(defaultFilterType),
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
+        limit: $('#const_data').attr('data-ATWHO_SEARCH_LIMIT'),
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
@@ -442,26 +442,26 @@ var SmartAnnotation = (function() {
         },
         headerTpl:
           '<div class="atwho-header-res">' +
-          '<div class="title-user"><%= I18n.t("atwho.users.title") %></div>' +
+          '<div class="title-user">' + $('#locale_data').attr('data-ATWHO_USERS_TITLE') + '</div>' +
           '<div class="help">' +
           '<div>' +
-          '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
-          '<%= I18n.t("atwho.users.navigate_2") %>' +
+          '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_NAV1') + '</strong> ' +
+          $('#locale_data').attr('data-ATWHO_USERS_NAV2') +
           '</div>' +
           '<div>' +
-          '<strong><%= I18n.t("atwho.users.confirm_1") %></strong> ' +
-          '<%= I18n.t("atwho.users.confirm_2") %>' +
+          '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_CONF1') + '</strong> ' +
+          $('#locale_data').attr('data-ATWHO_USERS_CONF2') +
           '</div>' +
           '<div>' +
-          '<strong><%= I18n.t("atwho.users.dismiss_1") %></strong> ' +
-          '<%= I18n.t("atwho.users.dismiss_2") %>' +
+          '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_DSMS1') + '</strong> ' +
+          $('#locale_data').attr('data-ATWHO_USERS_DSMS2') +
           '</div>' +
           '</div>' +
           '<div class="dismiss">' +
           '<span class="fas fa-times"></span>' +
           '</div>' +
           '</div>',
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
+        limit: $('#const_data').attr('data-ATWHO_SEARCH_LIMIT'),
         startsWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000

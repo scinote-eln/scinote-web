@@ -29,8 +29,11 @@
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
     data-file-max-size-mb="<%= Rails.configuration.x.file_max_size_mb %>"
+    data-avatar-max-size-mb= "<%= ::Constants::AVATAR_MAX_SIZE_MB.megabytes %>"
     <% end %>
   >
+  <!-- Below are constants, made because of .js.erb to .js file conversions, where files cant use rails constants anymore-->
+  <%= render "shared/html_constants_data_file.html.erb" %>
 
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>

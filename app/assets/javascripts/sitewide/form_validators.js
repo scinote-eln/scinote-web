@@ -71,7 +71,7 @@ function checklistsValidator(ev, checklists, editMode) {
 
           if ($itemInput.val()) {
             var itemNameValid = textValidator(ev, $itemInput, 1,
-              <%= Constants::TEXT_MAX_LENGTH %>);
+              $('#const_data').attr('data-TEXT_MAX_LENGTH'));
             if (!itemNameValid) {
               noErrors = false;
             }
@@ -88,7 +88,7 @@ function checklistsValidator(ev, checklists, editMode) {
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
       var textLimitMin = allowBlankChklstName ? 0 : 1;
       var checklistNameValid = textValidator(ev, $checklistInput,
-        textLimitMin, <%= Constants::TEXT_MAX_LENGTH %>);
+        textLimitMin, $('#const_data').attr('data-TEXT_MAX_LENGTH'));
       if (!checklistNameValid) {
         noErrors = false;
       } else if (allowBlankChklstName) {
@@ -103,9 +103,8 @@ function checklistsValidator(ev, checklists, editMode) {
 
 var FileTypeEnum = Object.freeze({
   FILE: $(document.body).data('file-max-size-mb') * 1024 * 1024,
-  AVATAR: <%= Constants::AVATAR_MAX_SIZE_MB.megabytes %>
+  AVATAR: $(document.body).data('avatar-max-size-mb')
 });
-
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
   canBeEmpty = (typeof canBeEmpty !== 'undefined') ? canBeEmpty : false;
   var filesValid = true;
@@ -144,7 +143,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
         case FileTypeEnum.FILE:
          return I18n.t('general.file.size_exceeded', { file_size: $(document.body).data('file-max-size-mb') }).strToErrorFormat();
         case FileTypeEnum.AVATAR:
-          return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::AVATAR_MAX_SIZE_MB %>".strToErrorFormat();
+          return $('#locale_data').attr('data-GENERAL_FILE_SIZE_EXCEEDED_AVATAR').strToErrorFormat();
       }
     }
   };
@@ -165,7 +164,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
         case FileTypeEnum.FILE:
           return I18n.t('general.file.total_size', { size: $(document.body).data('file-max-size-mb') }).strToErrorFormat();
         case FileTypeEnum.AVATAR:
-          return "<%= I18n.t('users.registrations.edit.avatar_total_size', size: Constants::AVATAR_MAX_SIZE_MB) %>".strToErrorFormat();
+          return $('#locale_data').attr('data-USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE').strToErrorFormat();
       }
     }
   }
