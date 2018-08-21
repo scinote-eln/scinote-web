@@ -1,10 +1,10 @@
 (function() {
   'use strict';
 
-  $(document).ready(function() {
-    //if( user has popovers turned on from settings ){
+ $.init_popover_v2 = function() {
+    if ($(document.body).data("popover_v2_enabled")===true || $(document.body).data("popover_v2_enabled")== null ){
       var popovers_array = [];
-
+      $('.popover_open').remove() // Destroy all (if any) old open popovers
       $('.popover_v2').each(function(i,obj) {
         var popover_object = obj;
         popovers_array.push(popover_object);
@@ -19,7 +19,7 @@
           placement: 'auto right',
           trigger: 'manual',
           content: 'popovers will not display if empty',
-          template: '<div class="popover popover_'+i+'_window" role="tooltip" style="background-color:#F0F0F0;font-family:Lato;font-size:14px;" color="#000000" >' +
+          template: '<div class="popover popover_'+i+'_window popover_open" role="tooltip" style="background-color:#F0F0F0;font-family:Lato;font-size:14px;" color="#000000" >' +
           '<div class="popover-body" >' + text_data + '</div>' +
           '<br><br><br>' +
           '<div class="popover-footer" style="position:absolute;bottom:5px;right:5px;background-color:#E8E8E8;border-radius: 3px;">' +
@@ -51,7 +51,7 @@
                 if (!$(".popover_"+i+"_window:hover").length) {
                     $(obj).popover("hide")
                 }
-            }, 500);
+            }, 300);
         }).on("shown.bs.popover", function(){
           // hide all other popovers
           popovers_array.forEach(function (arrayItem) {
@@ -61,8 +61,13 @@
           });
         });
       })
-  //}
+    }
+  }
+
+  $(document).ready(function() {
+    $.init_popover_v2();
   });
+
 }());
 
 /* copy and paste shortcut
