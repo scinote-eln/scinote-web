@@ -9,7 +9,7 @@
 
   // Sets callbacks for toggling checkboxes
   function applyCheckboxCallBack()  {
-    $("[data-action='check-item']").on('click', function(e){
+    $("[data-action='check-item']").off().on('click', function(e){
       var checkboxitem = $(this).find("input");
       var checked = checkboxitem.is(":checked");
       $.ajax({
@@ -48,7 +48,7 @@
             $('.task-state-label').html(data.module_state_label);
             task_button
               .find('button')
-              .html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' +
+              .html('<span class="fas fa-times"></span>&nbsp;' +
                     data.task_button_title);
             modal.modal('hide');
           },
@@ -81,7 +81,7 @@
             button = step.find("[data-action='complete-step']");
             button.attr("data-action", "uncomplete-step");
             button.find(".btn").removeClass("btn-toggle").addClass("btn-default");
-            button.find("button").html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' + data.new_title);
+            button.find("button").html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
 
             if (data.task_ready_to_complete) {
               $('#completed-task-modal').modal('show');
@@ -94,7 +94,7 @@
             button = step.find("[data-action='uncomplete-step']");
             button.attr("data-action", "complete-step");
             button.find(".btn").removeClass("btn-default").addClass("btn-toggle");
-            button.find("button").html('<span class="glyphicon glyphicon-ok"></span>&nbsp;' + data.new_title);
+            button.find("button").html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
           }
         },
         error: function (data) {
@@ -196,8 +196,8 @@
         var collapseIcon = $(this).find(".collapse-step-icon");
         var collapsed = $(this).hasClass("collapsed");
         // Toggle collapse button
-        collapseIcon.toggleClass("glyphicon-collapse-up", !collapsed);
-        collapseIcon.toggleClass("glyphicon-collapse-down", collapsed);
+        collapseIcon.toggleClass("fa-caret-square-up", !collapsed);
+        collapseIcon.toggleClass("fa-caret-square-down", collapsed);
 
       });
   }
@@ -620,16 +620,16 @@
       renderTable($(this));
     });
     $(document).find("span.collapse-step-icon").each(function()  {
-      $(this).addClass("glyphicon-collapse-up");
-      $(this).removeClass("glyphicon-collapse-down");
+      $(this).addClass("fa-caret-square-up");
+      $(this).removeClass("fa-caret-square-down");
     });
   }
 
   function expandStep(step) {
     $('.panel-collapse', step).collapse('show');
     $(step).find("span.collapse-step-icon")
-      .addClass("glyphicon-collapse-up")
-      .removeClass("glyphicon-collapse-down");
+      .addClass("fa-caret-square-up")
+      .removeClass("fa-caret-square-down");
     $(step).find("div.step-result-hot-table").each(function()  {
       renderTable($(this));
     });
@@ -651,30 +651,27 @@
     Comments.initDeleteComments("#steps");
   }
 
-  $(document).ready(function() {
-    // On init
-    initCallBacks();
-    initHandsOnTable($(document));
-    expandAllSteps();
-    setupAssetsLoading();
-    initStepsComments();
-    initPreviewModal();
-    TinyMCE.highlight();
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
-    newStepHandler();
-    $(function () {
+  // On init
+  initCallBacks();
+  initHandsOnTable($(document));
+  expandAllSteps();
+  setupAssetsLoading();
+  initStepsComments();
+  initPreviewModal();
+  TinyMCE.highlight();
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
+  newStepHandler();
 
-      $("[data-action='collapse-steps']").click(function () {
-        $('.step .panel-collapse').collapse('hide');
-        $(document).find("span.collapse-step-icon").each(function()  {
-          $(this).addClass("glyphicon-collapse-down");
-          $(this).removeClass("glyphicon-collapse-up");
-        });
+  $(function () {
+    $("[data-action='collapse-steps']").click(function () {
+      $('.step .panel-collapse').collapse('hide');
+      $(document).find("span.collapse-step-icon").each(function()  {
+        $(this).addClass("fa-caret-square-down");
+        $(this).removeClass("fa-caret-square-up");
       });
-
-      $("[data-action='expand-steps']").click(expandAllSteps);
     });
-  })
+    $("[data-action='expand-steps']").click(expandAllSteps);
+  });
 
   global.initHandsOnTable = initHandsOnTable;
 })(window);

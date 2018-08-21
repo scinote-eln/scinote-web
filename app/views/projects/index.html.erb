@@ -38,7 +38,7 @@
           <br />
           <a class="btn btn-primary btn-lg"
             id="new-project-btn">
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="fas fa-plus"></span>
             <span class="hidden-xs"><%= t('projects.index.no_projects.create_new_button') %></span>
           </a>
         <% else %>
@@ -87,7 +87,7 @@
             <% if @teams.exists? && can_create_projects?(current_team) %>
             <!-- new project button -->
               <a class="btn btn-primary pull-right" id="new-project-btn">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span class="fas fa-plus" aria-hidden="true"></span>
                 <span class="hidden-xs"><%=t "projects.index.new" %></span>
               </a>
             <% end %>
@@ -96,7 +96,7 @@
             <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span class="hidden-xs"><%= t'projects.index.sort' %></span>
-                <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+                <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="sortMenu">
@@ -122,4 +122,4 @@
 
 <% end %>
 
-<%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "projects/index" %>

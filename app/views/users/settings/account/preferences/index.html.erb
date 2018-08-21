@@ -39,7 +39,7 @@
               <div class="form-group" style="max-width: 500px;">
                 <%= f.select :time_zone, ActiveSupport::TimeZone.all.collect { |tz|
                       [tz.formatted_offset + " " + tz.name, tz.name]
-                    }, {}, {class: 'form-control selectpicker', 'ata-role' => 'clear'} %>
+                    }, {}, {class: 'form-control selectpicker', 'data-role': 'clear'} %>
                 <small><%= t("users.settings.account.preferences.edit.time_zone_sublabel") %></small>
               </div>
               <div>
@@ -110,7 +110,7 @@
           </div>
           <div class="row">
             <div class="col-sm-2">
-              <span class="system-message hidden-sm"><i class="glyphicon glyphicon-tower" aria-hidden="true"></i></span>
+              <span class="system-message hidden-sm"><i class="fas fa-chess-rook" aria-hidden="true"></i></span>
             </div>
             <div class="col-sm-10">
               <strong><%=t 'notifications.form.system_message' %></strong>

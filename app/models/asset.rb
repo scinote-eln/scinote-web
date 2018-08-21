@@ -91,19 +91,30 @@ class Asset < ApplicationRecord
 
   def self.search(
     user,
-    _include_archived,
+    include_archived,
     query = nil,
     page = 1,
     _current_team = nil,
     options = {}
   )
 
+    project_ids =
+      Project
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .pluck(:id)
+    team_ids = user.teams.pluck(:id)
+
     new_query =
       Asset
       .distinct
-      .select('assets.*')
       .left_outer_joins(:asset_text_datum)
-      .where(team: user.teams)
+      .left_outer_joins(
+        step: { protocol: { my_module: { experiment: :project } } }
+      )
+      .left_outer_joins(result: { my_module: { experiment: :project } })
+      .left_outer_joins(repository_cell: { repository_column: :repository })
+      .where('projects.id IN (?) OR repositories.team_id IN (?)',
+             project_ids, team_ids)
 
     a_query = s_query = ''
 
@@ -157,11 +168,14 @@ class Asset < ApplicationRecord
 
     # Show all results if needed
     if page != Constants::SEARCH_NO_LIMIT
-      new_query.select("ts_headline(data, to_tsquery('" +
-                       sanitize_sql_for_conditions(s_query) +
-                       "'), 'StartSel=<mark>, StopSel=</mark>') headline")
-               .limit(Constants::SEARCH_LIMIT)
-               .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query = new_query.select('assets.*, asset_text_data.data AS data')
+                           .limit(Constants::SEARCH_LIMIT)
+                           .offset((page - 1) * Constants::SEARCH_LIMIT)
+      Asset.select(
+        "assets_search.*, ts_headline(assets_search.data, to_tsquery('" +
+        sanitize_sql_for_conditions(s_query) +
+        "'), 'StartSel=<mark>, StopSel=</mark>') AS headline"
+      ).from(new_query, 'assets_search')
     else
       new_query
     end

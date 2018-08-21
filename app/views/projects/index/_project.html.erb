@@ -18,7 +18,7 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
             <%= link_to t("projects.index.edit_option"), edit_project_path(project, format: :json), remote: true, "data-action" => "edit" %>
           </li>
           <% if can_archive_project?(project) %>
-            <li><a href="#" class="form-submit-link" data-submit-form="<%= project_form.options[:html][:id] %>" data-confirm-form="<%= t("projects.index.archive_confirm") %>"><%= t 'projects.index.archive_option' %></a></li>
+            <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= project_form.options[:html][:id] %>" data-confirm-form="<%= t("projects.index.archive_confirm") %>"><%= t 'projects.index.archive_option' %></a></li>
           <% end %>
         </ul>
       </div>

@@ -261,13 +261,15 @@ function importProtocolFromFile(
 
   /* Navigation functions */
 
-  function navigationJumpToFirstProtocol() {
+  function navigationJumpToFirstProtocol(ev) {
+    ev.preventDefault();
     currentProtocol = 0;
     previewProtocol(currentProtocol, true);
     updateNavigationButtons();
   }
 
-  function navigationJumpToPreviousProtocol() {
+  function navigationJumpToPreviousProtocol(ev) {
+    ev.preventDefault();
     if (currentProtocol > 0) {
       currentProtocol--;
     }
@@ -275,7 +277,8 @@ function importProtocolFromFile(
     updateNavigationButtons();
   }
 
-  function navigationJumpToNextProtocol() {
+  function navigationJumpToNextProtocol(ev) {
+    ev.preventDefault();
     if (currentProtocol < (nrOfProtocols - 1)) {
       currentProtocol++;
     }
@@ -283,7 +286,8 @@ function importProtocolFromFile(
     updateNavigationButtons();
   }
 
-  function navigationJumpToLastProtocol() {
+  function navigationJumpToLastProtocol(ev) {
+    ev.preventDefault();
     currentProtocol = nrOfProtocols - 1;
     previewProtocol(currentProtocol, true);
     updateNavigationButtons();
@@ -344,34 +348,34 @@ function importProtocolFromFile(
     // Bind on "Import" buttons
     $("[data-action='import-current']")
     .off("click")
-    .on("click", function() { importCurrentProtocol(); });
+    .on("click", function(ev) { importCurrentProtocol(ev); });
     $("[data-action='import-all']")
     .off("click")
-    .on("click", function() { importAllProtocols(); });
+    .on("click", function(ev) { importAllProtocols(ev); });
 
     // Bind on navigation buttons
     $("[data-action='jump-to-first-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToFirstProtocol(); });
+    .on("click", function(ev) { navigationJumpToFirstProtocol(ev); });
     $("[data-action='jump-to-previous-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToPreviousProtocol(); });
+    .on("click", function(ev) { navigationJumpToPreviousProtocol(ev); });
     $("[data-action='jump-to-next-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToNextProtocol(); });
+    .on("click", function(ev) { navigationJumpToNextProtocol(ev); });
     $("[data-action='jump-to-last-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToLastProtocol(); });
+    .on("click", function(ev) { navigationJumpToLastProtocol(ev); });
     updateNavigationButtons();
   }
 
   /* Actual import */
 
-  function importCurrentProtocol() {
-
+  function importCurrentProtocol(ev) {
     var check_linked = $("[data-role='protocol-status-bar']")
                         .text();
     var confirm_message = "";
+    ev.preventDefault();
     if( check_linked.trim() !== '(unlinked)' ){
       confirm_message = I18n.t("protocols.import_export.import_modal.import_to_linked_task_file");
     } else {
@@ -403,9 +407,11 @@ function importProtocolFromFile(
     }
   }
 
-  function importAllProtocols() {
+  function importAllProtocols(ev) {
     var nrOfImportedProtocols = 0;
     var datas = [];
+
+    ev.preventDefault();
 
     // Show spinner
     animateSpinner(importModal);

@@ -1,10 +1,11 @@
-(function(global) {
-  /**
-   * The functions here are global because they need to be
-   * accesed from outside (in reports view).
-   */
+/**
+ * The functions here are global because they need to be
+ * accesed from outside (in reports view).
+ */
 
-  var STORAGE_TREE_KEY = "scinote-sidebar-tree-collapsed-ids";
+/* global I18n _ */
+(function(global) {
+  var STORAGE_TREE_KEY = 'scinote-sidebar-tree-collapsed-ids';
 
   /**
    * Get all collapsed sidebar elements.
@@ -13,24 +14,24 @@
   global.sessionGetCollapsedSidebarElements = function() {
     var val = sessionStorage.getItem(STORAGE_TREE_KEY);
     if (val === null) {
-      val = "[]";
+      val = '[]';
       sessionStorage.setItem(STORAGE_TREE_KEY, val);
     }
     return JSON.parse(val);
-  }
+  };
 
   /**
    * Collapse a specified element in the sidebar.
    * @param id - The collapsed element's ID.
    */
   global.sessionCollapseSidebarElement = function(project, id) {
-    var ids = sessionGetCollapsedSidebarElements();
+    var ids = global.sessionGetCollapsedSidebarElements();
     var item = _.findWhere(ids, { prid: project });
     var collapsed = { prid: project, ids: [] };
-    var stored_projects = _.pluck(ids, 'prid');
+    var storedProjects = _.pluck(ids, 'prid');
 
-    if ( _.contains(stored_projects, project ) ){
-      if ( item && _.indexOf(item.ids, id) === -1 ) {
+    if (_.contains(storedProjects, project)) {
+      if (item && _.indexOf(item.ids, id) === -1) {
         _.findWhere(ids, { prid: project }).ids.push(id);
       }
     } else {
@@ -38,27 +39,27 @@
       ids.push(collapsed);
     }
     sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
-  }
+  };
 
   /**
    * Expand a specified element in the sidebar.
    * @param id - The expanded element's ID.
    */
   global.sessionExpandSidebarElement = function(project, id, elements) {
-    var ids = sessionGetCollapsedSidebarElements();
+    var ids = global.sessionGetCollapsedSidebarElements();
     var item = _.findWhere(ids, { prid: project});
     var index = -1;
 
-    if ( item ) {
+    if (item) {
       index = _.indexOf(item.ids, id);
-      recalculateElementsPositions(ids, item, elements);
+      global.recalculateElementsPositions(ids, item, elements);
     }
 
-    if ( index !== -1 ) {
+    if (index !== -1) {
       item.ids.splice(index, 1);
       sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
     }
-  }
+  };
 
   /**
    * Recalculate the position of the elements after an experiment
@@ -67,19 +68,19 @@
   global.recalculateElementsPositions = function(ids, item, elements) {
     var diff;
 
-    if ( item.eleNum > elements ){
+    if (item.eleNum > elements) {
       diff = item.eleNum - elements;
-      _.map(item.ids, function(element, index){
+      _.map(item.ids, function(element, index) {
         item.ids[index] = element - diff;
       });
-    } else if ( item.eleNum < elements ) {
-      diff = elements - item.eleNum ;
-      _.map(item.ids, function(element, index){
+    } else if (item.eleNum < elements) {
+      diff = elements - item.eleNum;
+      _.map(item.ids, function(element, index) {
         item.ids[index] = element + diff;
       });
     }
 
-    if ( item.eleNum !== elements) {
+    if (item.eleNum !== elements) {
       item.eleNum = elements;
       sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
     }
@@ -90,58 +91,55 @@
    */
   global.setupSidebarTree = function() {
     function toggleLi(el, collapse, animate) {
-      var children = el
-      .find(" > ul > li");
+      var children = el.find(' > ul > li');
 
       if (collapse) {
         if (animate) {
-        children.hide("fast");
+          children.hide('fast');
         } else {
           children.hide();
         }
-        el
-        .find(" > span i")
-        .attr("title", I18n.t('sidebar.branch_expand'))
-        .removeClass("expanded");
+        el.find(' > span i')
+          .attr('title', I18n.t('sidebar.branch_expand'))
+          .removeClass('expanded');
       } else {
         if (animate) {
-          children.show("fast");
+          children.show('fast');
         } else {
           children.show();
         }
-        el
-        .find(" > span i")
-        .attr("title", I18n.t('sidebar.branch_collapse'))
-        .addClass("expanded");
+        el.find(' > span i')
+          .attr('title', I18n.t('sidebar.branch_collapse'))
+          .addClass('expanded');
       }
     }
 
     // Add triangle icons and titles to every parent node
-    $(".tree li:has(ul)")
-    .addClass("parent_li")
-    .find(" > span i")
-    .attr("title", I18n.t('sidebar.branch_collapse'));
-    $(".tree li.parent_li ")
-    .find("> span i")
-    .removeClass("no-arrow")
-    .addClass("glyphicon glyphicon-triangle-right expanded");
+    $('.tree li:has(ul)')
+      .addClass('parent_li')
+      .find(' > span i')
+      .attr('title', I18n.t('sidebar.branch_collapse'));
+    $('.tree li.parent_li ')
+      .find('> span i')
+      .removeClass('no-arrow')
+      .addClass('fas fa-caret-right expanded');
 
     // Add IDs to all parent <lis>
     var i = 0;
     _.each($('[data-parent="candidate"]'), function(el) {
-      $(el).attr("data-toggle-id", i++);
+      $(el).attr('data-toggle-id', i += 1);
     });
 
     // Get the current project
     var project = $('[data-project-id]').data('projectId');
 
     // Set number of elements
-    sessionExpandSidebarElement(project,
-                                null,
-                                $('[data-parent="candidate"]').length );
+    sessionExpandSidebarElement(
+      project, null, $('[data-parent="candidate"]').length
+    );
 
     // Get the session-stored elements
-    var collapsedIds = sessionGetCollapsedSidebarElements();
+    var collapsedIds = global.sessionGetCollapsedSidebarElements();
 
     // Get the current project stored elements
     var currentProjectIds = _.findWhere(collapsedIds, { prid: project });
@@ -240,8 +238,11 @@
   }
 
   function scrollToSelectedItem() {
-    var offset = $('#slide-panel .active').offset().top - 50;
-    $('#slide-panel .tree').scrollTo(offset, 10);
+    var offset;
+    if ($('#slide-panel .active').length) {
+      offset = $('#slide-panel .active').offset().top - 50;
+      $('#slide-panel .tree').scrollTo(offset, 10);
+    }
   }
 
   // Initialize click listeners
@@ -249,7 +250,7 @@
 
   // Actually display wrapper, which is, up to now,
   // hidden
-  $("#wrapper").show();
+  $('#wrapper').show();
 
   // Resize the sidebar automatically
   resizeSidebarContents();
@@ -257,8 +258,8 @@
   // Bind onto window resize function
   $(window).resize(function() {
     resizeSidebarContents();
-    scrollToSelectedItem()
+    scrollToSelectedItem();
   });
 
-  $(document).ready(scrollToSelectedItem);
-})(window);
+  scrollToSelectedItem();
+}(window));

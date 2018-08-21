@@ -55,9 +55,7 @@
     })
   })();
 
-  $(document).ready(function() {
-    if (SideBarToggle.isToggledStorage()) {
-      SideBarToggle.hide();;
-    }
-  })
+  if (SideBarToggle.isToggledStorage()) {
+    SideBarToggle.hide();;
+  }
 })(window);

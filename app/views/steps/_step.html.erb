@@ -12,13 +12,13 @@
              href="<%= move_up_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.up_arrow_title") %>"
              data-remote="true">
-              <span class="glyphicon glyphicon-arrow-up"></span></a>
+              <span class="fas fa-arrow-up"></span></a>
           <a data-action="move-step"
              class="btn btn-link"
              href="<%= move_down_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.down_arrow_title") %>"
              data-remote="true">
-            <span class="glyphicon glyphicon-arrow-down"></a>
+            <span class="fas fa-arrow-down"></a>
           <a data-action="edit-step"
              class="btn btn-link popover_v2"
              title="<%= t("protocols.steps.options.edit_title") %>"
@@ -30,7 +30,7 @@
           </a>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
-            <span class="glyphicon glyphicon-trash">
+            <span class="fas fa-trash-alt">
           <% end %>
         <% end %>
       </div>
@@ -38,7 +38,7 @@
          href="#step-panel-<%= step.id %>"
          data-toggle="collapse"
          data-remote="true">
-        <span class="glyphicon glyphicon-collapse-down collapse-step-icon"></span>
+        <span class="fas fa-caret-square-down collapse-step-icon"></span>
         <strong><%= step.name %></strong> |
         <span><%= sanitize_input t('protocols.steps.published_on',
                                    timestamp: l(step.created_at, format: :full),
@@ -129,7 +129,7 @@
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
                 <button class="btn btn-default">
-                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="fas fa-times"></span>
                   <%= t("protocols.steps.options.uncomplete_title") %>
                 </button>
               </div>
@@ -138,7 +138,7 @@
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
                 <button class="btn btn-toggle">
-                  <span class="glyphicon glyphicon-ok"></span>
+                  <span class="fas fa-check"></span>
                   <%= t("protocols.steps.options.complete_title") %>
                 </button>
               </div>

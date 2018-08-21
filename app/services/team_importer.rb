@@ -98,7 +98,7 @@ class TeamImporter
 
       team_json['projects'].each do |project_json|
         create_activities(project_json['activities'])
-        create_reports(project_json['reports'])
+        create_reports(project_json['reports'], team)
         project_json['experiments'].each do |experiment_json|
           experiment_json['my_modules'].each do |my_module_json|
             create_task_connections(my_module_json['outputs'])
@@ -734,7 +734,7 @@ class TeamImporter
     end
   end
 
-  def create_reports(reports_json)
+  def create_reports(reports_json, team)
     reports_json.each do |report_json|
       report_el_parent_mappings = {}
       report_element_mappings = {}
@@ -743,6 +743,7 @@ class TeamImporter
       report.project_id = @project_mappings[report.project_id]
       report.user_id = find_user(report.user_id)
       report.last_modified_by_id = find_user(report.last_modified_by_id)
+      report.team_id = team.id
       report.save!
       @report_counter += 1
       report_json['report_elements'].each do |report_element_json|
