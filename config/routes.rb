@@ -543,6 +543,8 @@ Rails.application.routes.draw do
       namespace :v1 do
         resources :teams, only: %i(index show) do
         end
+        resources :users, only: %i(show) do
+        end
       end
     end
   end
