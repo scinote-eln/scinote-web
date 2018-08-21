@@ -21,7 +21,7 @@
       <div class="form-group">
       <%= hidden_field_tag "html", "" %>
       <%= link_to "", class: "btn btn-default", remote: true, id: "get-report-pdf" do %>
-        <span class="fas fa-file-download"></span>
+        <span class="fas fa-upload"></span>
         <span class="hidden-xs"><%=t "projects.reports.new.nav_pdf" %></span>
       <% end %>
       </div>
@@ -30,6 +30,8 @@
     <button
       onclick="$('#savePDFtoInventory').modal('show')"
       class="btn btn-default">
+      <span class="fas fa-save">
+      </span>
       <%=t 'projects.reports.new.save_PDF_to_inventory'%>
     </button>
 
