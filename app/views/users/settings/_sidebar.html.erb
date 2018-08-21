@@ -6,12 +6,12 @@
        <li class="parent_li" >
          <span class="tree-link line-wrap no-indent">
            <i title="<%= t('sidebar.branch_expand') %>"
-              class="glyphicon glyphicon-triangle-right triangleRight"
+              class="fas fa-caret-right triangleRight"
               aria-hidden="true"
               style="<%= 'display: none;' if on_settings_account_page? %>"
               ></i>
            <i title="<%= t('sidebar.branch_collapse') %>"
-              class="glyphicon glyphicon-triangle-right expanded triangleDown"
+              class="fas fa-caret-right expanded triangleDown"
               aria-hidden="true"
               style="<%= 'display: none;' unless on_settings_account_page? %>"
               ></i>
@@ -83,9 +83,7 @@
 <% end %>
 
 <script>
- $(document).ready(function() {
-   $('#wrapper').show();
- })
+  $('#wrapper').show();
 </script>
 
 <%= javascript_include_tag("users/settings/list_toggle") %>

@@ -299,7 +299,7 @@ path, ._jsPlumb_endpoint {
     height: 0px;
     display: inline-block;
 
-    & .glyphicon {
+    & .fas {
       position: inherit;
     }
 
@@ -423,7 +423,7 @@ li.module-hover {
       }
     }
 
-    .glyphicon, .fas {
+    .fas {
       color: $color-white;
       font-size: $font-size-h6;
     }

@@ -19,7 +19,10 @@ gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 
 # Gems for API implementation
+gem 'active_model_serializers', '~> 0.10.7'
+gem 'json-jwt'
 gem 'jwt', '~> 1.5'
+gem 'kaminari'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
@@ -29,7 +32,6 @@ gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
-gem 'jquery-turbolinks'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-scrollto-rails',
@@ -40,7 +42,7 @@ gem 'spinjs-rails'
 gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
-gem 'turbolinks', '~> 2.0'
+gem 'turbolinks', '~> 5.1.1'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.10'
 gem 'logging', '~> 2.0.0'
@@ -80,7 +82,7 @@ gem 'devise-async',
 gem 'discard', '~> 1.0'
 
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
+gem 'tinymce-rails', '~> 4.7.13' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

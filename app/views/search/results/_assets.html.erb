@@ -1,12 +1,12 @@
 <% @asset_results.each do |asset| %>
   <h5>
     <% if asset.is_image? %>
-      <span class="glyphicon glyphicon-picture"></span>
+      <span class="fas fa-image"></span>
     <% else %>
       <% if wopi_file?(asset) %>
         <%= file_extension_icon(asset) %>
       <% else %>
-        <span class="glyphicon glyphicon-file"></span>
+        <span class="fas fa-file"></span>
       <% end %>
     <% end %>
     <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query } %>

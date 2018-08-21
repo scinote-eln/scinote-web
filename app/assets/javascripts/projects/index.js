@@ -67,6 +67,7 @@
     Comments.initDeleteComments('.panel-project .tab-content');
 
     // initialize project tab remote loading
+    $('.panel-project .active').removeClass('active');
     $('.panel-project .panel-footer [role=tab]')
 
       .on('ajax:before', function(e) {

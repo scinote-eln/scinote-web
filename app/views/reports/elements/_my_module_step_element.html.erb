@@ -6,7 +6,7 @@
 <% assets = step.assets %>
 <% checklists = step.checklists %>
 <% comments = step.step_comments %>
-<div class="report-element report-step-element" data-ts="<%= timestamp.to_i %>" data-type="step" data-id='{ "step_id": <%= step.id %> }' data-scroll-id="<%= step.id %>" data-modal-title="<%=t "projects.reports.elements.modals.step_contents.head_title", step: step.name %>" data-name="<%=t "projects.reports.elements.step.sidebar_name", pos: (step.position + 1), name: step.name %>" data-icon-class="glyphicon glyphicon-circle-arrow-right">
+<div class="report-element report-step-element" data-ts="<%= timestamp.to_i %>" data-type="step" data-id='{ "step_id": <%= step.id %> }' data-scroll-id="<%= step.id %>" data-modal-title="<%=t "projects.reports.elements.modals.step_contents.head_title", step: step.name %>" data-name="<%=t "projects.reports.elements.step.sidebar_name", pos: (step.position + 1), name: step.name %>" data-icon-class="fas fa-arrow-circle-right">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">
@@ -21,7 +21,7 @@
     <div class="row">
       <div class="pull-left step-name">
         <h5>
-          <span class="glyphicon glyphicon-circle-arrow-right"></span>
+          <span class="fas fa-arrow-circle-right"></span>
           <b><%=t "projects.reports.elements.step.step_pos", pos: (step.position + 1) %></b>&nbsp;<%= step.name %>
           <%= step_status_label(step) %>
         </h5>

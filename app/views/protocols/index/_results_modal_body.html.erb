@@ -5,7 +5,7 @@
 
 <% if failed.count > 0 %>
   <div class="alert alert-danger" style="margin-bottom: 15px;" role="alert">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    <span class="fas fa-exclamation-circle"></span>
     <%= t("protocols.index.#{en_action}.message_failed", nr: failed.count) %>
   </div>
 <% end %>

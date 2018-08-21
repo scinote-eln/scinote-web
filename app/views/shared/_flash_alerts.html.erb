@@ -3,7 +3,7 @@
   <div id="alert-flash" class="alert alert-success alert-dismissable alert-floating">
     <div>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <span class="glyphicon glyphicon-ok-sign"></span>
+      <span class="fas fa-check-circle"></span>
       <span><%= sanitize_input(flash[:success]) %></span>
     </div>
   </div>
@@ -12,7 +12,7 @@
   <div id="alert-flash" class="alert alert-info alert-dismissable alert-floating">
     <div>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <span class="glyphicon glyphicon-info-sign"></span>
+      <span class="fas fa-info-circle"></span>
       <span><%= notice %></span>
     </div>
   </div>
@@ -21,7 +21,7 @@
   <div id="alert-flash" class="alert alert-danger alert-dismissable alert-floating">
     <div>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      <span class="fas fa-exclamation-circle"></span>
       <span><%= alert || sanitize_input(flash[:error]) %></span>
     </div>
   </div>

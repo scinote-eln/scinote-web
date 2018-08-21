@@ -121,7 +121,7 @@
     html += '<span class="fas fa-pencil-alt"></span>&nbsp;';
     html += $('#locale_data').attr('data-LIB_REPCOL_INDEX_EDITCOL') + '</button>&nbsp;';
     html += '<button class="btn btn-default delete-column" data-action="destroy">';
-    html += '<span class="glyphicon glyphicon-trash"></span>&nbsp;';
+    html += '<span class="fas fa-trash-alt"></span>&nbsp;';
     html += $('#locale_data').attr('data-LIB_REPCOL_INDEX_DELCOL') + '</button>&nbsp;';
     html += '</button></span></div></li>';
     $(html).insertBefore('.repository-columns-body ul li:first')
@@ -222,9 +222,7 @@
     Initializers
   ********************************* */
 
-  $(document).ready(function() {
-    initEditCoumnModal();
-    initDeleteColumnModal();
-    initNewColumnModal();
-  });
+  initEditCoumnModal();
+  initDeleteColumnModal();
+  initNewColumnModal();
 })();

@@ -96,4 +96,14 @@ namespace :data do
     )
     TeamImporter.new.import_from_dir(args[:dir_path])
   end
+
+  desc 'Delete team and all data inside the team'
+  task :team_delete, [:team_id] => [:environment] do |_, args|
+    Rails.logger.info(
+      "Deleting team with ID:#{args[:team_id]} and all data inside the team"
+    )
+    team = Team.find_by_id(args[:team_id])
+    raise StandardError, 'Can not load team' unless team
+    UserDataDeletion.delete_team_data(team) if team
+  end
 end

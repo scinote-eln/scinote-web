@@ -96,9 +96,7 @@
     return publicAPI;
   })();
 
-  $(document).ready(function() {
-    ResutlAssets.initNewResultAsset();
-    ResutlAssets.applyEditResultAssetCallback();
-    global.initPreviewModal();
-  });
-})(window);
+  ResutlAssets.initNewResultAsset();
+  ResutlAssets.applyEditResultAssetCallback();
+  global.initPreviewModal();
+}(window));

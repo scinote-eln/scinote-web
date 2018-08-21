@@ -1,3 +1,8 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <meta name="turbolinks-visit-control" content="reload">
+<% end %>
+
 <% provide(:head_title, t("projects.reports.new.head_title", project: h(@project.name)).html_safe) %>
 
 <div id="notifications"></div>
