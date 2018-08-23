@@ -31,11 +31,27 @@ class RepositoryCell < ActiveRecord::Base
              end),
              optional: true, foreign_key: :value_id
 
+  validates_inclusion_of :repository_column,
+                         in: (lambda do |cell|
+                           cell.repository_row.repository.repository_columns
+                         end)
   validates :repository_column, presence: true
   validate :repository_column_data_type
   validates :repository_row,
             uniqueness: { scope: :repository_column },
             unless: :importing
+
+  def self.create_with_value(row, column, data, user)
+    cell = new(repository_row: row, repository_column: column)
+    cell.transaction do
+      value_klass = column.data_type.constantize
+      value = value_klass.new_with_payload(data, repository_cell: cell,
+                                                 created_by: user,
+                                                 last_modified_by: user)
+      cell.value = value
+      value.save!
+    end
+  end
 
   private
 

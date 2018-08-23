@@ -3,7 +3,7 @@
 module Api
   module V1
     class RepositoryTextValueSerializer < ActiveModel::Serializer
-      attribute :formatted, key: :value
+      attribute :formatted, key: :text
     end
   end
 end
