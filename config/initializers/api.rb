@@ -10,6 +10,7 @@ Api.configure do |config|
   end
 
   config.core_api_v1_preview = true if ENV['CORE_API_V1_PREVIEW']
+  
   Paperclip::DataUriAdapter.register if ENV['CORE_API_V1_PREVIEW']
 
   vars = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
