@@ -93,7 +93,7 @@
       <div class="panel-body">
         <div class="col-xs-24 col-sm-12">
           <a href="#" class="btn btn-primary pull-right row" data-trigger="invite-users"
-             data-modal-id="team-invite-users-modal" data-remote="true">
+             data-modal-id="team-invite-users-modal">
             <span class="fas fa-plus"></span>
             <%= t("users.settings.teams.edit.add_user") %>
           </a>
@@ -137,4 +137,5 @@
 <%= render partial: 'users/settings/user_teams/destroy_user_team_modal.html.erb' %>
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag 'users/settings/teams/show' %>
+<%= javascript_include_tag 'users/settings/teams/invite_users_modal' %>
 <span data-hook="team-bottom"></span>

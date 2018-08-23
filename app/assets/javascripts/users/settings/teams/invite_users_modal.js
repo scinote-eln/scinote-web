@@ -164,8 +164,10 @@
   }
 
   function initializeModalsToggle() {
-    $("[data-trigger='invite-users']").on('click', function() {
+    $("[data-trigger='invite-users']").on('click', function(event) {
       var id = $(this).attr('data-modal-id');
+      event.preventDefault();
+      event.stopPropagation();
       $('[data-role=invite-users-modal][data-id=' + id + ']')
         .modal('show');
     });
