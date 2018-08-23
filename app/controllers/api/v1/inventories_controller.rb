@@ -9,18 +9,18 @@ module Api
       def index
         inventories =
           @team.repositories.page(params[:page]).per(params[:page_size])
-        render json: inventories, each_serializer: InventorySerializer
+        render jsonapi: inventories, each_serializer: InventorySerializer
       end
 
       def show
-        render json: @inventory, serializer: InventorySerializer
+        render jsonapi: @inventory, serializer: InventorySerializer
       end
 
       private
 
       def load_team
         @team = Team.find(params.require(:team_id))
-        return render json: {}, status: :forbidden unless can_read_team?(@team)
+        return render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
       end
 
       def load_inventory

@@ -15,7 +15,7 @@ module Api
                       repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES
                     ).page(params.dig(:page, :number))
                     .per(params.dig(:page, :size))
-        render json: items,
+        render jsonapi: items,
                each_serializer: InventoryItemSerializer,
                include: :inventory_cells
       end
@@ -43,7 +43,7 @@ module Api
         else
           item = @inventory.repository_rows.create!(attributes)
         end
-        render json: item,
+        render jsonapi: item,
                serializer: InventoryItemSerializer,
                include: :inventory_cells,
                status: :created
@@ -53,7 +53,7 @@ module Api
 
       def load_team
         @team = Team.find(params.require(:team_id))
-        return render json: {}, status: :forbidden unless can_read_team?(@team)
+        return render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
       end
 
       def load_inventory

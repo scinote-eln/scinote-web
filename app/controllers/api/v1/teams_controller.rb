@@ -5,18 +5,18 @@ module Api
 
       def index
         teams = current_user.teams.page(params[:page]).per(params[:page_size])
-        render json: teams, each_serializer: TeamSerializer
+        render jsonapi: teams, each_serializer: TeamSerializer
       end
 
       def show
-        render json: @team, serializer: TeamSerializer
+        render jsonapi: @team, serializer: TeamSerializer
       end
 
       private
 
       def load_team
         @team = Team.find(params.require(:id))
-        return render json: {}, status: :forbidden unless can_read_team?(@team)
+        return render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
       end
     end
   end
