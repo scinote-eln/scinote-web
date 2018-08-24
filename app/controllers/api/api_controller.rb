@@ -34,6 +34,8 @@ module Api
     end
 
     def health
+      User.new && Team.new && Project.new
+      User.first if params[:db]
       render plain: 'RUNNING'
     end
 
