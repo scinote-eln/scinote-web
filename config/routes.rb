@@ -545,11 +545,15 @@ Rails.application.routes.draw do
           resources :teams, only: %i(index show) do
             resources :inventories, only: %i(index show) do
               get 'columns', to: 'inventory_columns#index'
-              get 'items', to: 'inventory_items#index'
+              resources :inventory_items,
+                        only: %i(index create),
+                        path: 'items',
+                        as: :items
             end
           end
           resources :users, only: %i(show) do
-            resources :user_identities, only: %i(index create show update destroy)
+            resources :user_identities,
+                      only: %i(index create show update destroy)
           end
         end
       end

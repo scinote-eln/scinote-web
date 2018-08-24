@@ -20,4 +20,13 @@ class RepositoryListValue < ApplicationRecord
     return nil unless repository_list_item
     repository_list_item.data
   end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.repository_list_item = value.repository_cell
+                                      .repository_column
+                                      .repository_list_items
+                                      .find(payload)
+    value
+  end
 end

@@ -75,7 +75,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       get api_v1_team_inventory_items_path(
         team_id: @teams.first.id,
         inventory_id: @teams.first.repositories.first.id
-      ), params: { page_size: 100 }, headers: @valid_headers
+      ), params: { page: { size: 100 } }, headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource

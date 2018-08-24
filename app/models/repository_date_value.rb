@@ -17,4 +17,10 @@ class RepositoryDateValue < ApplicationRecord
   def formatted
     data
   end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.data = payload
+    value
+  end
 end
