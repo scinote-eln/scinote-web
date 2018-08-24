@@ -16,12 +16,14 @@ module Api
     attr_accessor :core_api_token_ttl
     attr_accessor :core_api_token_iss
     attr_accessor :azure_ad_apps
+    attr_accessor :core_api_v1_preview
 
     def initialize
       @core_api_sign_alg = 'HS256'
       @core_api_token_ttl = 30.minutes
       @core_api_token_iss = 'SciNote'
       @azure_ad_apps = {}
+      @core_api_v1_preview = false
     end
   end
 end
