@@ -543,8 +543,12 @@ Rails.application.routes.draw do
       if Api.configuration.core_api_v1_preview
         namespace :v1 do
           resources :teams, only: %i(index show) do
-            resources :inventories, only: %i(index show) do
-              get 'columns', to: 'inventory_columns#index'
+            resources :inventories,
+                      only: %i(index create show update destroy) do
+              resources :inventory_columns,
+                        only: %i(index create show update destroy),
+                        path: 'columns',
+                        as: :columns
               resources :inventory_items,
                         only: %i(index create show update destroy),
                         path: 'items',

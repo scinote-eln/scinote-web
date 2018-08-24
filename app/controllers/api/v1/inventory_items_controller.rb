@@ -78,7 +78,7 @@ module Api
         if item_changed
           @inventory_item.last_modified_by = current_user
           @inventory_item.save!
-          render json: @inventory_item,
+          render jsonapi: @inventory_item,
                  serializer: InventoryItemSerializer,
                  include: :inventory_cells
         else
