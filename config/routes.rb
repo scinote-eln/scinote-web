@@ -547,6 +547,8 @@ Rails.application.routes.draw do
             get 'items', to: 'inventory_items#index'
           end
         end
+        resources :users, only: %i(show) do
+        end
       end
     end
   end
