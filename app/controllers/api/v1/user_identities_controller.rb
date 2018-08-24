@@ -7,26 +7,27 @@ module Api
       before_action :load_user_identity, only: %i(show update destroy)
 
       def index
-        identities =
-          @user.user_identities.page(params[:page]).per(params[:page_size])
-        render json: identities, each_serializer: UserIdentitySerializer
+        identities = @user.user_identities
+                          .page(params.dig(:page, :number))
+                          .per(params.dig(:page, :size))
+        render jsonapi: identities, each_serializer: UserIdentitySerializer
       end
 
       def create
         identity = @user.user_identities.create!(user_identity_params)
-        render json: identity,
+        render jsonapi: identity,
                serializer: UserIdentitySerializer,
                status: :created
       end
 
       def show
-        render json: @identity, serializer: UserIdentitySerializer
+        render jsonapi: @identity, serializer: UserIdentitySerializer
       end
 
       def update
         @identity.attributes = update_user_identity_params
         if @identity.changed? && @identity.save!
-          render json: @identity, serializer: UserIdentitySerializer
+          render jsonapi: @identity, serializer: UserIdentitySerializer
         else
           render body: nil
         end

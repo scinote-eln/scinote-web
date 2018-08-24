@@ -6,7 +6,7 @@ module Api
       before_action :load_user, only: :show
 
       def show
-        render json: @user, serializer: UserSerializer
+        render jsonapi: @user, serializer: UserSerializer
       end
 
       private
@@ -15,7 +15,7 @@ module Api
         @user = User.joins(:user_teams)
                     .where('user_teams.team': current_user.teams)
                     .find_by_id(params[:id])
-        return render json: {}, status: :forbidden unless @user
+        render jsonapi: {}, status: :forbidden unless @user
       end
     end
   end
