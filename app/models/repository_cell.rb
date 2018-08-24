@@ -41,7 +41,7 @@ class RepositoryCell < ActiveRecord::Base
             uniqueness: { scope: :repository_column },
             unless: :importing
 
-  def self.create_with_value(row, column, data, user)
+  def self.create_with_value!(row, column, data, user)
     cell = new(repository_row: row, repository_column: column)
     cell.transaction do
       value_klass = column.data_type.constantize

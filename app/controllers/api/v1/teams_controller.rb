@@ -1,10 +1,14 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class TeamsController < BaseController
       before_action :load_team, only: :show
 
       def index
-        teams = current_user.teams.page(params[:page]).per(params[:page_size])
+        teams = current_user.teams
+                            .page(params.dig(:page, :number))
+                            .per(params.dig(:page, :size))
         render jsonapi: teams, each_serializer: TeamSerializer
       end
 
@@ -16,7 +20,7 @@ module Api
 
       def load_team
         @team = Team.find(params.require(:id))
-        return render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
+        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
       end
     end
   end

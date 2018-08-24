@@ -23,6 +23,19 @@ class RepositoryAssetValue < ApplicationRecord
     asset.file_file_name
   end
 
+  def data_changed?(_new_data)
+    true
+  end
+
+  def update_data!(new_data, user)
+    file = Paperclip.io_adapters.for(new_data[:file_data])
+    file.original_filename = new_data[:file_name]
+    asset.file = file
+    asset.last_modified_by = user
+    self.last_modified_by = user
+    asset.save! && save!
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     team = value.repository_cell.repository_column.repository.team

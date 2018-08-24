@@ -7,8 +7,9 @@ module Api
       before_action :load_inventory, only: %i(show)
 
       def index
-        inventories =
-          @team.repositories.page(params[:page]).per(params[:page_size])
+        inventories = @team.repositories
+                           .page(params.dig(:page, :number))
+                           .per(params.dig(:page, :size))
         render jsonapi: inventories, each_serializer: InventorySerializer
       end
 
@@ -20,7 +21,7 @@ module Api
 
       def load_team
         @team = Team.find(params.require(:team_id))
-        return render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
+        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
       end
 
       def load_inventory
