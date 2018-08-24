@@ -30,7 +30,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
       )
     end
 
-    it 'When invalid request, requested user in not member of the same teams' do
+    it 'When invalid request, requested user is not member of the same teams' do
       hash_body = nil
       get api_v1_user_path(id: @user3.id), headers: @valid_headers
       expect(response).to have_http_status(403)

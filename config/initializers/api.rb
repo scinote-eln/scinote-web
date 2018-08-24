@@ -9,6 +9,8 @@ Api.configure do |config|
     config.core_api_token_iss = ENV['CORE_API_TOKEN_ISS']
   end
 
+  config.core_api_v1_preview = true if ENV['CORE_API_V1_PREVIEW']
+
   vars = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
   vars.each do |name, value|
     app_name = name.sub('_AZURE_AD_APP_ID', '')

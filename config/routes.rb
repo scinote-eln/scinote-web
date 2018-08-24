@@ -540,14 +540,17 @@ Rails.application.routes.draw do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
       post 'auth/token', to: 'api#authenticate'
-      namespace :v1 do
-        resources :teams, only: %i(index show) do
-          resources :inventories, only: %i(index show) do
-            get 'columns', to: 'inventory_columns#index'
-            get 'items', to: 'inventory_items#index'
+      if Api.configuration.core_api_v1_preview
+        namespace :v1 do
+          resources :teams, only: %i(index show) do
+            resources :inventories, only: %i(index show) do
+              get 'columns', to: 'inventory_columns#index'
+              get 'items', to: 'inventory_items#index'
+            end
           end
-        end
-        resources :users, only: %i(show) do
+          resources :users, only: %i(show) do
+            resources :user_identities, only: %i(index create show update destroy)
+          end
         end
       end
     end
