@@ -5,7 +5,8 @@ module Api
     class InventoryItemsController < BaseController
       before_action :load_team
       before_action :load_inventory
-      before_action :check_manage_permissions, only: %i(create)
+      before_action :load_inventory_item, only: %i(show update destroy)
+      before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
         items =
@@ -35,7 +36,7 @@ module Api
               cell_attributes = cell_params[:attributes]
               column =
                 @inventory.repository_columns.find(cell_attributes[:column_id])
-              RepositoryCell.create_with_value(
+              RepositoryCell.create_with_value!(
                 item, column, cell_attributes[:value], current_user
               )
             end
@@ -49,15 +50,60 @@ module Api
                status: :created
       end
 
+      def show
+        render jsonapi: @inventory_item,
+               serializer: InventoryItemSerializer,
+               include: :inventory_cells
+      end
+
+      def update
+        item_changed = false
+        if inventory_cells_params.present?
+          inventory_cells_params.each do |p|
+            p.require(%i(id attributes))
+            p.require(:attributes).require(:value)
+          end
+          @inventory_item.transaction do
+            inventory_cells_params.each do |cell_params|
+              cell = @inventory_item.repository_cells.find(cell_params[:id])
+              cell_value = cell_params.dig(:attributes, :value)
+              next unless cell.value.data_changed?(cell_value)
+              cell.value.update_data!(cell_value, current_user)
+              item_changed = true
+            end
+          end
+        end
+        @inventory_item.attributes = update_inventory_item_params
+        item_changed = true if @inventory_item.changed?
+        if item_changed
+          @inventory_item.last_modified_by = current_user
+          @inventory_item.save!
+          render json: @inventory_item,
+                 serializer: InventoryItemSerializer,
+                 include: :inventory_cells
+        else
+          render body: nil
+        end
+      end
+
+      def destroy
+        @inventory_item.destroy!
+        render body: nil
+      end
+
       private
 
       def load_team
         @team = Team.find(params.require(:team_id))
-        return render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
+        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
       end
 
       def load_inventory
         @inventory = @team.repositories.find(params.require(:inventory_id))
+      end
+
+      def load_inventory_item
+        @inventory_item = @inventory.repository_rows.find(params[:id].to_i)
       end
 
       def check_manage_permissions
@@ -73,6 +119,14 @@ module Api
         end
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: %i(name uid) })[:data]
+      end
+
+      def update_inventory_item_params
+        unless params.require(:data).require(:id).to_i == params[:id].to_i
+          raise ActionController::BadRequest,
+                'Object ID mismatch in URL and request body'
+        end
+        inventory_item_params[:attributes]
       end
 
       # Partially implement sideposting draft
