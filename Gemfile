@@ -51,7 +51,6 @@ gem 'rgl' # Graph framework for project diagram calculations
 gem 'nested_form_fields'
 gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
-gem 'kaminari'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
 gem 'wicked_pdf', '~> 1.1.0'

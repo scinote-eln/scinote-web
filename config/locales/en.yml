@@ -1943,6 +1943,12 @@ en:
       status_ok: "Ok"
       expired_token: "Token is expired"
       invalid_token: "Token is invalid"
+    v1:
+      inventory_data_types:
+        t0: "text"
+        t1: "date"
+        t2: "list"
+        t3: "file"
 
   Add: "Add"
   Asset: "File"

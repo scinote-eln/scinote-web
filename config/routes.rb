@@ -542,6 +542,9 @@ Rails.application.routes.draw do
       post 'auth/token', to: 'api#authenticate'
       namespace :v1 do
         resources :teams, only: %i(index show) do
+          resources :inventories, only: %i(index show) do
+            get 'items', to: 'inventory_items#index'
+          end
         end
       end
     end
