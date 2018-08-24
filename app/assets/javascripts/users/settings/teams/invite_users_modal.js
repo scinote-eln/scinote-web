@@ -173,8 +173,11 @@
     });
   }
 
-  $('[data-role=invite-users-modal]').each(function() {
-    initializeModal($(this));
+  $(document).on('turbolinks:load', function() {
+    $('[data-role=invite-users-modal]').each(function() {
+      initializeModal($(this));
+    });
+
+    initializeModalsToggle();
   });
-  initializeModalsToggle();
 }());
