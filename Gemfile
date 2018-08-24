@@ -90,6 +90,8 @@ gem 'devise_security_extension',
     git: 'https://github.com/phatworx/devise_security_extension.git',
     ref: 'b2ee978'
 
+gem 'gon' # Ruby variables inside .js files (so we dont use js.erb)
+
 # Permission helper Gem
 gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'master'
 

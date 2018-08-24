@@ -233,6 +233,10 @@ GEM
     gherkin (5.0.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    gon (6.2.1)
+      actionpack (>= 3.0)
+      multi_json
+      request_store (>= 1.0)
     hammerjs-rails (2.0.8)
     hashie (3.5.7)
     i18n (0.9.5)
@@ -400,6 +404,8 @@ GEM
     rdoc (4.3.0)
     recaptcha (4.6.3)
       json
+    request_store (1.4.1)
+      rack (>= 1.4)
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
@@ -566,6 +572,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   figaro
+  gon
   hammerjs-rails
   i18n-js (~> 3.0)
   jbuilder
@@ -631,4 +638,4 @@ RUBY VERSION
    ruby 2.4.3p205
 
 BUNDLED WITH
-   1.16.3
+   1.16.4
