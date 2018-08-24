@@ -543,6 +543,7 @@ Rails.application.routes.draw do
       namespace :v1 do
         resources :teams, only: %i(index show) do
           resources :inventories, only: %i(index show) do
+            get 'columns', to: 'inventory_columns#index'
             get 'items', to: 'inventory_items#index'
           end
         end
