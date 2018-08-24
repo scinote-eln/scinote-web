@@ -1,6 +1,5 @@
 class RepositoryListValue < ApplicationRecord
-  belongs_to :repository_list_item,
-             optional: true
+  belongs_to :repository_list_item
   belongs_to :created_by,
              foreign_key: :created_by_id,
              class_name: 'User'
