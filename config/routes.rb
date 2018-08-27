@@ -65,6 +65,11 @@ Rails.application.routes.draw do
     post 'users/settings/user_current_team',
          to: 'users/settings#user_current_team',
          as: 'user_current_team'
+    # Also changes users current team
+    # link_to sends get requests when opened in new tab for some reason
+    # So this route is simillar to the top one
+    get 'users/settings/user_current_team',
+        to: 'users/settings#user_current_team'
 
     get 'users/settings/teams',
         to: 'users/settings/teams#index',

@@ -10,10 +10,20 @@ module SearchHelper
   def route_to_other_team(path, search_team, text)
     if search_team != current_team
       link_to text,
-              path,
-              data: { no_turbolink: true,
-                      confirm: t('users.settings.changed_team_in_search',
-                                 team: search_team.name) }
+              user_current_team_path(
+                user: {
+                  path: path,
+                  current_team_id: search_team.id
+                }
+              ),
+              method: :post,
+              data: {
+                no_turbolink: true,
+                confirm: t(
+                  'users.settings.changed_team_in_search',
+                  team: search_team.name
+                )
+              }
     else
       link_to text, path, data: { no_turbolink: true }
     end
@@ -22,10 +32,20 @@ module SearchHelper
   def route_to_other_team_btn(path, search_team, text)
     if search_team != current_team
       link_to text,
-              path,
+              user_current_team_path(
+                user: {
+                  path: path,
+                  current_team_id: search_team.id
+                }
+              ),
+              method: :post,
               class: 'btn btn-success',
-              data: { confirm: t('users.settings.changed_team_in_search',
-                                 team: search_team.name) }
+              data: {
+                confirm: t(
+                  'users.settings.changed_team_in_search',
+                  team: search_team.name
+                )
+              }
     else
       link_to text, path, class: 'btn btn-success'
     end
