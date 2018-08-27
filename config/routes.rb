@@ -65,6 +65,8 @@ Rails.application.routes.draw do
     post 'users/settings/user_current_team',
          to: 'users/settings#user_current_team',
          as: 'user_current_team'
+    get 'users/settings/user_current_team',
+        to: 'projects#index'
 
     get 'users/settings/teams',
         to: 'users/settings/teams#index',

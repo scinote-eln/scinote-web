@@ -12,6 +12,10 @@ module Users
         if @user.save
           flash[:success] = t('users.settings.changed_team_flash',
                               team: @changed_team.name)
+          if params[:user] && params[:user][:path]
+            redirect_to params[:user][:path]
+            return
+          end
           redirect_to root_path
           return
         end

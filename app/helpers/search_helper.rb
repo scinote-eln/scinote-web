@@ -9,10 +9,14 @@ module SearchHelper
 
   def route_to_other_team(path, search_team, text)
     if search_team != current_team
-      #byebug
-      current_team_switch(search_team)
       link_to text,
-              path,
+              user_current_team_path(
+                user: {
+                  path: path,
+                  current_team_id: search_team.id
+                }
+              ),
+              method: :post,
               data: {
                 no_turbolink: true,
                 confirm: t(
@@ -28,7 +32,13 @@ module SearchHelper
   def route_to_other_team_btn(path, search_team, text)
     if search_team != current_team
       link_to text,
-              path,
+              user_current_team_path(
+                user: {
+                  path: path,
+                  current_team_id: search_team.id
+                }
+              ),
+              method: :post,
               class: 'btn btn-success',
               data: {
                 no_turbolink: true,
