@@ -41,14 +41,13 @@ module SearchHelper
               method: :post,
               class: 'btn btn-success',
               data: {
-                no_turbolink: true,
                 confirm: t(
                   'users.settings.changed_team_in_search',
                   team: search_team.name
                 )
               }
     else
-      link_to text, path, class: 'btn btn-success', data: { no_turbolink: true }
+      link_to text, path, class: 'btn btn-success'
     end
   end
 end
