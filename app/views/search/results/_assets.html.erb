@@ -1,7 +1,7 @@
 <% @asset_results.each do |asset| %>
   <h5>
     <% if asset.is_image? %>
-      <span class="fas fa-image"></span>
+      <span class="fas fa-paperclip"></span>
     <% else %>
       <% if wopi_file?(asset) %>
         <%= file_extension_icon(asset) %>
