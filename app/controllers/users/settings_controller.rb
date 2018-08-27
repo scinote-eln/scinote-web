@@ -5,6 +5,10 @@ module Users
     ]
 
     def user_current_team
+      unless params[:user] && params[:user][:current_team_id]
+        redirect_to root_path
+        return
+      end
       team_id = params[:user][:current_team_id].to_i
       if @user.teams_ids.include?(team_id)
         @user.current_team_id = team_id
