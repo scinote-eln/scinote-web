@@ -67,7 +67,9 @@ class ZipExport < ApplicationRecord
       File.join(Rails.root, "tmp/temp-zip-#{Time.now.to_i}")
     ).first
     output_file = File.new(
-      File.join(Rails.root, "tmp/zip-ready/export123-#{Time.now.to_i}.zip"),
+      File.join(Rails.root,
+                "tmp/zip-ready/projects_export-timestamp-#{Time.now.to_i}.zip"
+               ),
       'w+'
     )
     fill_content(dir_to_zip, data, type, options)
@@ -76,7 +78,8 @@ class ZipExport < ApplicationRecord
     generate_notification(user) if save
   end
 
-  #handle_asynchronously :generate_exportable_zip
+  handle_asynchronously :generate_exportable_zip
+  #handle_asynchronously :generate_export_all_zip
 
   private
 
@@ -195,23 +198,48 @@ class ZipExport < ApplicationRecord
 
   def export_assets(assets, directory)
     # Helper method to extract given assets to the directory
-    assets.each do |asset|
-      file = FileUtils.touch("#{directory}/#{asset.file_file_name}").first
+    assets.each_with_index do |asset, i|
+      file = FileUtils.touch("#{directory}/#{asset.file_file_name}_#{i}").first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
+    end
+  end
+
+  def export_step_assets(assets, directory)
+    # Helper method to extract given step assets to the directory
+    assets.each_with_index do |step_asset, i|
+      asset = step_asset.asset
+      file = FileUtils.touch(
+        "#{directory}/#{asset.file_file_name}_#{i}_Step#{step_asset.step.position+1}"
+      ).first
+      File.open(file, 'wb') { |f| f.write(asset.open.read) }
+    end
+  end
+
+  def export_step_tables(tables, directory)
+    # Helper method to extract given tables to the directory
+    tables.each_with_index do |table, i|
+      table_name = table.name.presence || 'Table'
+      table_name += i.to_s
+      file = FileUtils.touch(
+        "#{directory}/#{handle_name(table_name)}_#{i}_Step#{step_asset.step.position+1}}.csv"
+      ).first
+      File.open(file, 'wb') { |f| f.write(table.contents) }
     end
   end
 
   def export_tables(tables, directory)
     # Helper method to extract given tables to the directory
-    tables.each do |table|
-      file = FileUtils.touch("#{directory}/#{handle_name(table.name)}.csv").first
+    tables.each_with_index do |table, i|
+      table_name = table.name.presence || 'Table'
+      table_name += i.to_s
+      file = FileUtils.touch("#{directory}/#{table_name}.csv").first
       File.open(file, 'wb') { |f| f.write(table.contents) }
     end
   end
 
-  def save_inventories_to_csv(path, repo, repo_rows)
+  def save_inventories_to_csv(path, repo, repo_rows, id)
     # Helper method for saving inventories to CSV
-    repo_name = handle_name(repo.name)
+    repo_name = handle_name(repo.name) + "_#{id}"
     file = FileUtils.touch("#{path}/#{repo_name}.csv").first
 
     # Attachment folder
@@ -251,8 +279,8 @@ class ZipExport < ApplicationRecord
     File.open(file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments
-    assets.each do |asset|
-      file = FileUtils.touch("#{attach_path}/#{asset.file_file_name}").first
+    assets.each_with_index do |asset, i|
+      file = FileUtils.touch("#{attach_path}/#{asset.file_file_name}_#{i}").first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
   end
@@ -270,8 +298,8 @@ class ZipExport < ApplicationRecord
     FileUtils.mkdir_p("#{team_path}/Archived projects")
 
     # Iterate through every project
-    data.each do |id, p|
-        project_name = handle_name(p.name)
+    data.each_with_index do |(id, p), ind|
+        project_name = handle_name(p.name) + "_#{ind}"
         root = p.archived ? "#{team_path}/Archived projects" : "#{team_path}/Projects"
         root += "/#{project_name}"
         FileUtils.mkdir_p(root)
@@ -288,19 +316,19 @@ class ZipExport < ApplicationRecord
                                                           ).distinct
 
         # Iterate through every inventory repo and save it to CSV
-        repo_rows.map{|x| x.repository}.uniq.each do |repo|
+        repo_rows.map{|x| x.repository}.uniq.each_with_index do |repo, repo_ind|
           curr_repo_rows = repo_rows.select{|x| x.repository_id == repo.id}
-          save_inventories_to_csv(inventories, repo, curr_repo_rows)
+          save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_ind)
         end
 
         # Include all experiments
-        p.experiments.each do |ex|
-          experiment_path = "#{root}/#{handle_name(ex.name)}"
+        p.experiments.each_with_index do |ex, ex_ind|
+          experiment_path = "#{root}/#{handle_name(ex.name)}_#{ex_ind}"
           FileUtils.mkdir_p(experiment_path)
 
           # Include all modules
-          ex.my_modules.each do |my_module|
-            my_module_path = "#{experiment_path}/#{handle_name(my_module.name)}"
+          ex.my_modules.each_with_index do |my_module, mod_ind|
+            my_module_path = "#{experiment_path}/#{handle_name(my_module.name)}_#{mod_ind}"
             FileUtils.mkdir_p(my_module_path)
 
             protocol_path = "#{my_module_path}/Protocol attachments"
@@ -309,7 +337,7 @@ class ZipExport < ApplicationRecord
             FileUtils.mkdir_p(result_path)
 
             steps = my_module.protocols.map{ |p| p.steps }.flatten
-            export_assets(StepAsset.where(step: steps).map {|s| s.asset}, protocol_path)
+            export_step_assets(StepAsset.where(step: steps), protocol_path)
             export_tables(StepTable.where(step: steps).map {|s| s.table}, protocol_path)
 
             export_assets(ResultAsset.where(result: my_module.results).map {|r| r.asset}, result_path)
