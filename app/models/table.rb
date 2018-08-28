@@ -128,4 +128,15 @@ class Table < ApplicationRecord
       Table.connection.execute(sql)
     end
   end
+
+  def to_csv
+    require 'csv'
+
+    data = JSON.parse(contents)['data']
+    CSV.generate do |csv|
+     data.each do |row|
+        csv << row
+      end
+    end
+  end
 end

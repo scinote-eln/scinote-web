@@ -223,7 +223,7 @@ class ZipExport < ApplicationRecord
       file = FileUtils.touch(
         "#{directory}/#{handle_name(table_name)}_#{i}_Step#{step_asset.step.position+1}}.csv"
       ).first
-      File.open(file, 'wb') { |f| f.write(table.contents) }
+      File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
   end
 
@@ -233,7 +233,7 @@ class ZipExport < ApplicationRecord
       table_name = table.name.presence || 'Table'
       table_name += i.to_s
       file = FileUtils.touch("#{directory}/#{table_name}.csv").first
-      File.open(file, 'wb') { |f| f.write(table.contents) }
+      File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
   end
 
