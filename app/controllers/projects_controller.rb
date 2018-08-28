@@ -248,7 +248,6 @@ class ProjectsController < ApplicationController
       @project.save
     end
     # This is the "info" view
-    current_team_switch(@project.team)
     @current_sort = @project.experiments_order
   end
 
@@ -316,6 +315,9 @@ class ProjectsController < ApplicationController
   end
 
   def load_projects_tree
+    # Switch to correct team
+    current_team_switch(@project.team) unless @project.nil?
+
     if current_user.teams.any?
       @current_team = current_team if current_team
 

@@ -266,6 +266,7 @@ class MyModulesController < ApplicationController
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_403 if @repository.nil? || !can_read_team?(@repository.team)
+    current_team_switch(@repository.team)
   end
 
   def archive
@@ -661,6 +662,8 @@ class MyModulesController < ApplicationController
   end
 
   def load_projects_tree
+    # Switch to correct team
+    current_team_switch(@project.team) unless @project.nil?
     @projects_tree = current_user.projects_tree(current_team, nil)
   end
 
