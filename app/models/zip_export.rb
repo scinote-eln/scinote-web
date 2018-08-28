@@ -1,5 +1,6 @@
 require 'zip'
 require 'fileutils'
+require 'csv'
 
 # To use ZipExport you have to define the generate_( type )_zip method!
 # Example:
@@ -203,10 +204,59 @@ class ZipExport < ApplicationRecord
   def export_tables(tables, directory)
     # Helper method to extract given tables to the directory
     tables.each do |table|
-      file = FileUtils.touch("#{directory}/#{table.name}.csv").first
+      file = FileUtils.touch("#{directory}/#{handle_name(table.name)}.csv").first
       File.open(file, 'wb') { |f| f.write(table.contents) }
     end
   end
+
+  def save_inventories_to_csv(path, repo, repo_rows)
+    # Helper method for saving inventories to CSV
+    repo_name = handle_name(repo.name)
+    file = FileUtils.touch("#{path}/#{repo_name}.csv").first
+
+    # Attachment folder
+    rel_attach_path = "#{repo_name}_ATTACHMENTS"
+    attach_path = "#{path}/#{rel_attach_path}"
+    FileUtils.mkdir_p(attach_path)
+
+    # Define headers and columns IDs
+    headers = ['ID', 'Name', 'Added on', 'Added by'] +
+              repo.repository_columns.map{|x| x.name}
+    col_ids = repo.repository_columns.map{|x| x.id}
+
+    # Generate CSV
+    assets = []
+    csv_data = CSV.generate do |csv|
+      csv << headers
+
+      repo_rows.each do |row|
+        csv_row = [row.id, row.name, row.created_at, row.created_by.name]
+        #  TODO: take care of uneven number of columns
+        row.repository_cells.each do |cell|
+          case cell.value_type
+          when 'RepositoryAssetValue'
+            csv_row << "#{rel_attach_path}/#{cell.value.asset.file_file_name}"
+            assets << cell.value.asset
+          when 'RepositoryListValue'
+            csv_row << cell.value.formatted
+          when 'RepositoryDateValue'
+            csv_row << cell.value.formatted
+          when 'RepositoryTextValue'
+            csv_row << cell.value.formatted
+          end
+        end
+        csv << csv_row
+      end
+    end
+    File.open(file, 'wb') { |f| f.write(csv_data) }
+
+    # Save all attachments
+    assets.each do |asset|
+      file = FileUtils.touch("#{attach_path}/#{asset.file_file_name}").first
+      File.open(file, 'wb') { |f| f.write(asset.open.read) }
+    end
+  end
+
 
   def generate_teams_zip(tmp_dir, data, _options = {})
     # Export all functionality
@@ -231,6 +281,18 @@ class ZipExport < ApplicationRecord
         inventories = "#{root}/Inventories"
         FileUtils.mkdir_p(inventories)
 
+        # Find all assigned inventories through all tasks in the project
+        task_ids = p.project_my_modules
+        repo_rows = RepositoryRow.joins(:my_modules).where(my_modules:
+                                                           { id: task_ids }
+                                                          ).distinct
+
+        # Iterate through every inventory repo and save it to CSV
+        repo_rows.map{|x| x.repository}.uniq.each do |repo|
+          curr_repo_rows = repo_rows.select{|x| x.repository_id == repo.id}
+          save_inventories_to_csv(inventories, repo, curr_repo_rows)
+        end
+
         # Include all experiments
         p.experiments.each do |ex|
           experiment_path = "#{root}/#{handle_name(ex.name)}"
@@ -245,7 +307,6 @@ class ZipExport < ApplicationRecord
             result_path = "#{my_module_path}/Result attachments"
             FileUtils.mkdir_p(protocol_path)
             FileUtils.mkdir_p(result_path)
-
 
             steps = my_module.protocols.map{ |p| p.steps }.flatten
             export_assets(StepAsset.where(step: steps).map {|s| s.asset}, protocol_path)
