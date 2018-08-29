@@ -149,7 +149,7 @@ body {
   width: 100% !important;
 }
 /* Makes blue selected element line fill parent (as it should, fixes sci-2672) */
-.bootstrap-select {
+.repository-dropdown {
   .dropdown-menu{
     ul{
         .selected{
@@ -160,6 +160,7 @@ body {
     }
   }
 }
+
 mark,.mark {
   background-color: $brand-warning;
 }
