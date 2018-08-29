@@ -323,6 +323,12 @@ label {
 
 // Result table element style
 .report-result-table-element {
+  .report-element-header {
+    .table-name {
+      margin-left: 15px;
+    }
+  }
+
   .report-element-body {
     padding-top: 30px;
   }

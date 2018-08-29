@@ -464,6 +464,7 @@ en:
           file_name: "[ %{file} ]"
           user_time: "Uploaded by %{user} on %{timestamp}."
         result_table:
+          table_name: "[ %{name} ]"
           user_time: "Created by %{user} on %{timestamp}."
         result_text:
           user_time: "Created by %{user} on %{timestamp}."

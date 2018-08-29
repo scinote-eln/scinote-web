@@ -1,4 +1,4 @@
-<% if table.blank? and @table.present? then table = @table end %>
+<% table ||= @table %>
 <% timestamp = table.created_at %>
 <div class="report-element report-step-attachment-element report-step-table-element" data-ts="<%= timestamp.to_i %>" data-type="step_table" data-id='{ "table_id": <%= table.id %> }' data-scroll-id="<%= table.id %>" data-name="<%= table.name %>" data-icon-class="fas fa-table">
   <div class="report-element-header">
@@ -6,11 +6,21 @@
       <div class="pull-left attachment-icon">
           <span class="fas fa-table"></span>
       </div>
-      <% if table && table.name %>
-        <div class="pull-left table-name">
-          <em><%=t 'projects.reports.elements.step_table.table_name', name: table.name %></em>
-        </div>
-      <% end %>
+      <div class="pull-left table-name">
+        <% if defined? path and path.present? %>
+          <a href="<%= path %>">
+            <em><%=t 'projects.reports.elements.step_table.table_name',
+                     name: truncate(table && table.name ? "#{table.name}.csv" : "#{table.step.name}.csv",
+                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+          </a>
+        <% else %>
+          <% if table && table.name %>
+            <em><%=t 'projects.reports.elements.step_table.table_name',
+                     name: truncate(table.name,
+                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+          <% end %>
+        <% end %>
+      </div>
       <div class="pull-left user-time">
         <%=t 'projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full) %>
       </div>

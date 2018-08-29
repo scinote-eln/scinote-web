@@ -180,33 +180,31 @@ class ReportsController < ApplicationController
     end
   end
 
-  def export_project_pdf
-    @project = Project.find_by_id(1)
-
-    @report = Report.find_by_id(1)
+  def export_project_pdf(project)
+    @project = project
+    @report = Report.first
+    # cleans all the deleted report
     current_team_switch(@report.project.team)
     @report.cleanup_report
-    render_to_string 'reports/new.html.erb'
 
-    content = params[:html]
+    html_string = render_to_string 'reports/new.html.erb', export_all: true
+    parsed_html = Nokogiri::HTML(html_string)
+    project_pdf_content = parsed_html.at_css('#report-content')
 
     filename = "#{@project.name}.pdf"
-    file_absolute_path = Rails.root.join(
-      'public/',
-      filename
-    ).to_s
-    pdf_file = render_to_string pdf: file_absolute_path,
-                                header: { right: '[page] of [topage]' },
-                                locals: { content: content },
-                                template: 'reports/report.pdf.erb',
-                                disable_javascript: true,
-                                save_to_file: file_absolute_path,
-                                save_only: true
+    pdf_content = render_to_string(
+      pdf: filename,
+      header: { right: '[page] of [topage]' },
+      locals: { content: project_pdf_content.to_s },
+      template: 'reports/report.pdf.erb',
+      disable_javascript: true,
+      disable_internal_links: false
+    )
 
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      pdf_file,
+      pdf_content,
       :team,
       filename: filename
     )
