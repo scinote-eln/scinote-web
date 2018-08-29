@@ -1,4 +1,4 @@
-<% if asset.blank? and @asset.present? then asset = @asset end %>
+<% asset ||= @asset %>
 <% is_image = asset.is_image? %>
 <% timestamp = asset.created_at %>
 <% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
@@ -9,7 +9,17 @@
         <span class="<%= icon_class %>"></span>
       </div>
       <div class="pull-left file-name">
-        <em><%=t 'projects.reports.elements.step_asset.file_name', file: truncate( asset.file_file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+        <% if defined? path and path.present? %>
+          <a href="<%= path %>">
+            <em><%=t 'projects.reports.elements.step_asset.file_name',
+                     file: truncate(asset.file_file_name,
+                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+          </a>
+        <% else %>
+          <em><%=t 'projects.reports.elements.step_asset.file_name',
+                   file: truncate(asset.file_file_name,
+                                  length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+        <% end %>
       </div>
       <div class="pull-left user-time">
         <%=t 'projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full) %>

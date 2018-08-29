@@ -41,6 +41,42 @@ module ReportsHelper
     locals = provided_locals.nil? ? {} : provided_locals.clone
     locals[:children] = children_html
 
+    # Set path local for files and tables
+    if element['type_of'].in? %w(step_asset step_table result_asset
+                                 result_table)
+
+      parent_el = ReportElement.find(element['parent_id'])
+      parent_type = parent_el[:type_of]
+      parent = parent_type.singularize.classify.constantize
+                          .find(parent_el["#{parent_type}_id"])
+
+      if parent.class == Step
+        obj_name = if element['type_of'] == 'step_asset'
+                     Asset.find(element[:asset_id]).file_file_name
+                   else
+                     Table.find(element[:table_id]).name
+                   end
+        obj_folder_name = 'Protocol attachments'
+        parent_module = if parent.protocol.present?
+                          parent.protocol.my_module
+                        else
+                          parent.my_module
+                        end
+      else
+        obj_name = if element['type_of'] == 'result_asset'
+                     Asset.find(element[:result_id]).file_file_name
+                   else
+                     Table.find(element[:result_id]).result.name
+                   end
+        obj_folder_name = 'Results attachments'
+        parent_module = parent
+      end
+      parent_exp = parent_module.experiment
+
+      locals[:path] = "#{parent_exp.name}/#{parent_module.name}/" \
+        "#{obj_folder_name}/#{obj_name}"
+    end
+
     # ReportExtends is located in config/initializers/extends/report_extends.rb
 
     ReportElement.type_ofs.keys.each do |type|
