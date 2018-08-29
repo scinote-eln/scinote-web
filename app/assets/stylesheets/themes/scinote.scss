@@ -148,15 +148,12 @@ body {
 .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
   width: 100% !important;
 }
-/* Makes blue selected element line fill parent (as it should, fixes sci-2672) */
+
+// Makes blue selected element line fill parent (as it should, fixes sci-2672)
 .repository-dropdown {
-  .dropdown-menu{
-    ul{
-        .selected{
-          a{
-            display: block !important;
-          }
-        }
+  .selected {
+    a {
+      display: block !important;
     }
   }
 }
