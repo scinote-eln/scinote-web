@@ -262,4 +262,9 @@ var HelperModule = (function(){
       $('.modal').modal('hide');
     });
   });
+
+  /* Fix .selectpicker (bootstrap-select) to work with Turbolinks 5.x */
+  $(document).on('turbolinks:load', function() {
+    $(window).trigger('load.bs.select.data-api');
+  });
 })();

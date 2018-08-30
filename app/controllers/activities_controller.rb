@@ -23,7 +23,7 @@ class ActivitiesController < ApplicationController
     activities = current_user.last_activities
                              .page(page)
                              .per(Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-    unless activities.last_page?
+    unless activities.blank? || activities.last_page?
       more_url = url_for(
         activities_url(
           format: :json,
