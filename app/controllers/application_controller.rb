@@ -78,6 +78,8 @@ class ApplicationController < ActionController::Base
     # so no controller calls it. and i havent found a better way to pass it
     # the variable below
     Gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = tiny_mce_assets_path
+    Gon.global.HIGHLIGHTJS_GITHUB_THEME =
+      ActionController::Base.helpers.asset_path('highlightjs-github-theme')
   end
 
   # With this Devise callback user is redirected directly to sign in page instead
