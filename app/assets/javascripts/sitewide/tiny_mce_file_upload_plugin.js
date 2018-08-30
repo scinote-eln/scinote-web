@@ -1,6 +1,5 @@
 (function() {
   'use strict';
-
   tinymce.PluginManager.requireLangPack('customimageuploader');
 
   tinymce.create('tinymce.plugins.CustomImageUploader', {
@@ -8,7 +7,7 @@
       var form, iframe, win, throbber, editor = ed;
       function showDialog() {
         win = editor.windowManager.open({
-          title: $('#locale_data').attr('data-TINYMCE_UPLOAD_WINDOW_TITLE'),
+          title: gon.global.TINYMCE_UPLOAD_WINDOW_TITLE,
           width: 520 + parseInt(editor.getLang(
                                          'customimageuploader.delta_width', 0
                                        ), 10),
@@ -19,7 +18,7 @@
             {type: 'iframe', url: 'javascript:void(0)'},
             {type: 'textbox',
              name: 'file',
-             label: $('#locale_data').attr('data-TINYMCE_UPLOAD_WINDOW_LABEL'),
+             label: gon.global.TINYMCE_UPLOAD_WINDOW_LABEL,
              subtype: 'file'},
             {type: 'container',
              classes: 'error',
@@ -27,10 +26,10 @@
             {type: 'container', classes: 'throbber'},
           ],
           buttons: [
-            {text: $('#locale_data').attr('data-TINYMCE_INSERT_BTN'),
+            {text: gon.global.TINYMCE_INSERT_BTN,
              onclick: insertImage,
              subtype: 'primary'},
-            {text: $('#locale_data').attr('data-GENERAL_CANCEL'),
+            {text: gon.global.GENERAL_CANCEL,
              onclick: editor.windowManager.close}
           ],
         }, {
@@ -43,7 +42,7 @@
         iframe = win.find('iframe')[0];
         form = createElement('form', {
           action: editor.getParam('customimageuploader_form_url',
-                                  $('#rails_route_data').attr('data-RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH')),
+            gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH),
           target: iframe._id,
           method: 'POST',
           enctype: 'multipart/form-data',
@@ -109,7 +108,7 @@
 
       function insertImage() {
         if(getInputValue('file') == '') {
-          return handleError($('#locale_data').attr('data-TINYMCE_ERROR_MESSAGE'));
+          return handleError(gon.global.TINYMCE_ERROR_MESSAGE);
         }
 
         throbber = new top.tinymce.ui.Throbber(win.getEl());
@@ -143,7 +142,7 @@
           var doc = target.contentDocument || target.contentWindow.document;
           handleResponse(doc.getElementsByTagName("body")[0].innerHTML);
         } else {
-          handleError($('#locale_data').attr('data-TINYMCE_SERVER_NOT_RESPONDED'));
+          handleError(gon.global.TINYMCE_SERVER_NOT_RESPONDED);
         }
       }
 
@@ -222,14 +221,14 @@
 
       // Add a button that opens a window
       editor.addButton('customimageuploader', {
-        tooltip: $('#locale_data').attr('data-TINYMCE_UPLOAD_WINDOW_LABEL'),
+        tooltip: gon.global.TINYMCE_UPLOAD_WINDOW_LABEL,
         icon: 'image',
         onclick: showDialog
       });
 
       // Adds a menu item to the tools menu
       editor.addMenuItem('customimageuploader', {
-        text: $('#locale_data').attr('data-TINYMCE_UPLOAD_WINDOW_LABEL'),
+        text: gon.global.TINYMCE_UPLOAD_WINDOW_LABEL,
         icon: 'image',
         context: 'insert',
         onclick: showDialog

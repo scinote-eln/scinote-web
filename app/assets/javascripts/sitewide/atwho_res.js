@@ -176,15 +176,15 @@ var SmartAnnotation = (function() {
        '</div>' +
        '<div class="help">' +
        '<div>' +
-       '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_NAV1') + '</strong> ' +
-       $('#locale_data').attr('data-ATWHO_USERS_NAV2') +
+       '<strong>' + gon.global.ATWHO_USERS_NAV1 + '</strong> ' +
+       gon.global.ATWHO_USERS_NAV2 +
        '</div>' +
-       '<div><strong>' + $('#locale_data').attr('data-ATWHO_USERS_CONF1') + '</strong> ' +
-       $('#locale_data').attr('data-ATWHO_USERS_CONF2') +
+       '<div><strong>' + gon.global.ATWHO_USERS_CONF1 + '</strong> ' +
+       gon.global.ATWHO_USERS_CONF2 +
        '</div>' +
        '<div>' +
-       '<strong> ' + $('#locale_data').attr('data-ATWHO_USERS_DSMS1') + ' </strong> ' +
-       $('#locale_data').attr('data-ATWHO_USERS_DSMS2') +
+       '<strong> ' + gon.global.ATWHO_USERS_DSMS1 + ' </strong> ' +
+       gon.global.ATWHO_USERS_DSMS2 +
        '</div>' +
        '</div>' +
        '</div>';
@@ -194,7 +194,7 @@ var SmartAnnotation = (function() {
 
     function noResultsTemplate() {
       var res = '<div class="atwho-no-results" data-no-results="1">';
-      res += '<span>' + $('#locale_data').attr('data-ATWHO_NORES') + '</span>';
+      res += '<span>' + gon.global.ATWHO_NORES + '</span>';
       res += '</div>';
       return res;
     }
@@ -204,7 +204,7 @@ var SmartAnnotation = (function() {
       var res = '';
       res += '<li class="atwho-li atwho-li-res" data-name="' +
               truncateLongString(map.name,
-                $('#const_data').attr('data-NAME_TRUNCATION_LENGTH')) +
+                gon.global.NAME_TRUNCATION_LENGTH) +
               '" data-id="' + map.id + '" data-type="' +
               map.type + '">';
       switch(map.type) {
@@ -226,10 +226,10 @@ var SmartAnnotation = (function() {
       res += '&nbsp;';
       res += '<span data-val="name" class="res-name">';
       res += truncateLongString(map.name,
-        $('#const_data').attr('data-NAME_TRUNCATION_LENGTH'));
+        gon.global.NAME_TRUNCATION_LENGTH);
       res += '</span>';
       if(map.archived) {
-        res += $('#locale_data').attr('data-ATWHO_RES_ARCH');
+        res += gon.global.ATWHO_RES_ARCH;
       } else {
         res += '</span>';
       }
@@ -371,7 +371,7 @@ var SmartAnnotation = (function() {
           },
         },
         headerTpl: generateFilterMenu(defaultFilterType),
-        limit: $('#const_data').attr('data-ATWHO_SEARCH_LIMIT'),
+        limit: gon.global.ATWHO_SEARCH_LIMIT,
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
@@ -442,26 +442,26 @@ var SmartAnnotation = (function() {
         },
         headerTpl:
           '<div class="atwho-header-res">' +
-          '<div class="title-user">' + $('#locale_data').attr('data-ATWHO_USERS_TITLE') + '</div>' +
+          '<div class="title-user">' + gon.global.ATWHO_USERS_TITLE + '</div>' +
           '<div class="help">' +
           '<div>' +
-          '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_NAV1') + '</strong> ' +
-          $('#locale_data').attr('data-ATWHO_USERS_NAV2') +
+          '<strong>' + gon.global.ATWHO_USERS_NAV1 + '</strong> ' +
+          gon.global.ATWHO_USERS_NAV2 +
           '</div>' +
           '<div>' +
-          '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_CONF1') + '</strong> ' +
-          $('#locale_data').attr('data-ATWHO_USERS_CONF2') +
+          '<strong>' + gon.global.ATWHO_USERS_CONF1 + '</strong> ' +
+          gon.global.ATWHO_USERS_CONF2 +
           '</div>' +
           '<div>' +
-          '<strong>' + $('#locale_data').attr('data-ATWHO_USERS_DSMS1') + '</strong> ' +
-          $('#locale_data').attr('data-ATWHO_USERS_DSMS2') +
+          '<strong>' + gon.global.ATWHO_USERS_DSMS1 + '</strong> ' +
+          gon.global.ATWHO_USERS_DSMS2 +
           '</div>' +
           '</div>' +
           '<div class="dismiss">' +
           '<span class="fas fa-times"></span>' +
           '</div>' +
           '</div>',
-        limit: $('#const_data').attr('data-ATWHO_SEARCH_LIMIT'),
+        limit: gon.global.ATWHO_SEARCH_LIMIT,
         startsWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000

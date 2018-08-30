@@ -82,7 +82,7 @@ var TinyMCE = (function() {
 
             });
           },
-          codesample_content_css:  $('#asset_path_data').attr('data-HIGHLIGHTJS_GITHUB_THEME')
+          codesample_content_css:  gon.global.HIGHLIGHTJS_GITHUB_THEME
         });
       }
     },

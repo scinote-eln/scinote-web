@@ -140,20 +140,20 @@
         case ResultTypeEnum.TABLE:
           var $nameInput = $form.find('#result_name');
           var nameValid = textValidator(ev, $nameInput, 0,
-            $('#const_data').attr('data-NAME_MAX_LENGTH'));
+            gon.global.NAME_MAX_LENGTH);
           break;
         case ResultTypeEnum.TEXT:
           var $nameInput = $form.find('#result_name');
           var nameValid = textValidator(ev, $nameInput, 0,
-            $('#const_data').attr('data-NAME_MAX_LENGTH'));
+            gon.global.NAME_MAX_LENGTH);
           var $descrTextarea = $form.find("#result_result_text_attributes_text");
           var $tinyMCEInput = TinyMCE.getContent();
-          textValidator(ev, $descrTextarea, 1, $('#const_data').attr('data-TEXT_MAX_LENGTH'), false, $tinyMCEInput);
+          textValidator(ev, $descrTextarea, 1, gon.global.TEXT_MAX_LENGTH, false, $tinyMCEInput);
           break;
         case ResultTypeEnum.COMMENT:
           var $commentInput = $form.find('#comment_message');
           var commentValid = textValidator(ev, $commentInput, 1,
-            $('#const_data').attr('data-TEXT_MAX_LENGTH'));
+            gon.global.TEXT_MAX_LENGTH);
           break;
       }
     }

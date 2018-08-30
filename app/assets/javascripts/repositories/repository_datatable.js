@@ -1,9 +1,7 @@
 //= require jquery-ui/widgets/sortable
 //= require repositories/forms/repository_item_edit.js
-
 var RepositoryDatatable = (function(global) {
   'use strict';
-
   var TABLE_ID = '';
   var TABLE = null;
 
@@ -115,10 +113,10 @@ var RepositoryDatatable = (function(global) {
       },
       // Next 2 options are provided by server-side default state
       //  (and get overriden once state load from server kicks in)
-      order: JSON.parse($('#datatable_empty_tables_data').attr('data-DEFAULT_TABLE_ORDER_AS_JS_ARRAY')),
+      order: JSON.parse(gon.global.DEFAULT_TABLE_ORDER_AS_JS_ARRAY),
       columns: (function() {
         var numOfColumns = $(TABLE_ID).data('num-columns');
-        var columns = JSON.parse($('#datatable_empty_tables_data').attr('data-DEFAULT_TABLE_COLUMNS'));
+        var columns = JSON.parse(gon.global.DEFAULT_TABLE_COLUMNS);
         for (var i = 0; i < numOfColumns; i++) {
           if (columns[i] == undefined) {
             // This should only occur for custom columns
@@ -982,7 +980,7 @@ var RepositoryDatatable = (function(global) {
   function initialListItemsRequest(column_id) {
     var massage_response = [];
     $.ajax({
-      url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH'),
+      url: gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH,
       type: 'POST',
       dataType: 'json',
       async: false,
@@ -1017,7 +1015,7 @@ var RepositoryDatatable = (function(global) {
       .selectpicker({liveSearch: true})
       .ajaxSelectPicker({
         ajax: {
-          url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH'),
+          url: gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH,
           type: 'POST',
           dataType: 'json',
           data: function () {

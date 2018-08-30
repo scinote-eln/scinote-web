@@ -1102,11 +1102,11 @@ function changeToEditMode() {
           '<span class="text">' + generateColumnNameTooltip(thederName) + '</span> ' +
           '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
-          '<span class="ok fas fa-check" style="display: none;" title=' + $('#locale_data').attr('data-GENERAL_SAVE') + '></span>' +
-          '<span class="cancel fas fa-times" style="display: none;" title=' + $('#locale_data').attr('data-GENERAL_CANCEL') + '></span>' +
-          '<span class="vis fas' + visClass + '" title=' + $('#locale_data').attr('data-SAMPLES_COLUMNS_VISIBILITY') + '></span> ' +
-          '<span class="edit fas fa-pencil-alt ' + editClass + '" title=' + $('#locale_data').attr('data-GENERAL_EDIT') + '></span>' +
-          '<span class="del fas fa-trash-alt ' + delClass + '" title=' + $('#locale_data').attr('data-SAMPLES_COLUMNS_DELETE') + '></span>' +
+          '<span class="ok fas fa-check" style="display: none;" title=' + gon.global.GENERAL_SAVE + '></span>' +
+          '<span class="cancel fas fa-times" style="display: none;" title=' + gon.global.GENERAL_CANCEL + '></span>' +
+          '<span class="vis fas' + visClass + '" title=' + gon.global.SAMPLES_COLUMNS_VISIBILITY + '></span> ' +
+          '<span class="edit fas fa-pencil-alt ' + editClass + '" title=' + gon.global.GENERAL_EDIT + '></span>' +
+          '<span class="del fas fa-trash-alt ' + delClass + '" title=' + gon.global.SAMPLES_COLUMNS_DELETE + '></span>' +
           '</span><br></span></li>';
         dropdownList.append(html);
       }
@@ -1444,10 +1444,10 @@ function changeToEditMode() {
 
   function generateColumnNameTooltip(name) {
     if( $.trim(name).length >
-        $('#const_data').attr('data-NAME_TRUNCATION_LENGTH_DROPDOWN')) {
+        gon.global.NAME_TRUNCATION_LENGTH_DROPDOWN) {
       return '<div class="modal-tooltip">' +
              truncateLongString(name,
-               $('#const_data').attr('data-NAME_TRUNCATION_LENGTH_DROPDOWN')) +
+               gon.global.NAME_TRUNCATION_LENGTH_DROPDOWN) +
              '<span class="modal-tooltiptext">' + name + '</span></div>';
     } else {
       return name;

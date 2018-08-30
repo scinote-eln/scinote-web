@@ -14,8 +14,8 @@
 
           $container.handsontable({
             data: data,
-            startRows: $('#const_data').attr('data-HANDSONTABLE_INIT_ROWS_CNT'),
-            startCols: $('#const_data').attr('data-HANDSONTABLE_INIT_COLS_CNT'),
+            startRows: gon.global.HANDSONTABLE_INIT_ROWS_CNT,
+            startCols: gon.global.HANDSONTABLE_INIT_COLS_CNT,
             minRows: 1,
             minCols: 1,
             rowHeaders: true,

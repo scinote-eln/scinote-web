@@ -14,7 +14,7 @@
     $('.selectpicker').selectpicker({liveSearch: true})
       .ajaxSelectPicker({
         ajax: {
-          url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH'),
+          url: gon.global.RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH,
           type: 'POST',
           dataType: 'json',
           data: function () {

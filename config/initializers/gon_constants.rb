@@ -1,5 +1,10 @@
-module GonConstants
+# after_initialize is used because routes need to be initialzed
+Rails.application.config.after_initialize do
+  #Rails.application.reload_routes!
   include RepositoryDatatableHelper
+  #include Rails.application.routes.url_helpers
+
+
 
   Gon.global.DROPDOWN_TOP_OFFSET_PX = Constants::DROPDOWN_TOP_OFFSET_PX
   Gon.global.HANDSONTABLE_INIT_ROWS_CNT = Constants::HANDSONTABLE_INIT_ROWS_CNT
@@ -75,17 +80,18 @@ module GonConstants
 
   Gon.global.HIGHLIGHTJS_GITHUB_THEME = ActionController::Base.helpers.asset_path('highlightjs-github-theme')
 
-  Gon.global.DEFAULT_TABLE_COLUMNS = RepositoryDatatableHelper.default_table_columns
-  Gon.global.DEFAULT_TABLE_ORDER_AS_JS_ARRAY = RepositoryDatatableHelper.default_table_order_as_js_array
+  Gon.global.DEFAULT_TABLE_COLUMNS = default_table_columns
+  Gon.global.DEFAULT_TABLE_ORDER_AS_JS_ARRAY = default_table_order_as_js_array
 
   # The below constants cant be used because this loads before routes
-=begin
-  Gon.global.RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH = Rails.application.routes.url_helpers.reports_visible_projects_path
-  Gon.global.RAILS_URL_HELPER_AVAILABLE_ROWS_PATH = Rails.application.routes.url_helpers.available_rows_path
-  Gon.global.RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH = Rails.application.routes.url_helpers.available_asset_type_columns_path
-  Gon.global.RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH =  Rails.application.routes.url_helpers.reports_available_repositories_path
-  Gon.global.RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH = Rails.application.routes.url_helpers.reports_save_pdf_to_inventory_item_path
-  Gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = Rails.application.routes.url_helpers.tiny_mce_assets_path
-  Gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH = Rails.application.routes.url_helpers.repository_list_items_path
-=end
+  #Gon.global.RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH = reports_visible_projects_path
+  #Gon.global.RAILS_URL_HELPER_AVAILABLE_ROWS_PATH = available_rows_path
+  #Gon.global.RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH = available_asset_type_columns_path
+  #Gon.global.RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH =  reports_available_repositories_path
+  #Gon.global.RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH = reports_save_pdf_to_inventory_item_path
+  #Gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH = repository_list_items_path
+  #Gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = tiny_mce_assets_path
+  # The above constants cant be initialized yet because the routes arent initialized.
+  # So they are implemented in the controllers for their functions.
+
 end

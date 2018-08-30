@@ -45,7 +45,7 @@
         });
       }).fail(function(error) {
         HelperModule.flashAlertMsg(
-          $('#locale_data').attr('data-LIB_REPCOL_NO_PERMISSIONS'),
+          gon.global.LIB_REPCOL_NO_PERMISSIONS,
           'danger');
       });
     });
@@ -64,7 +64,7 @@
         });
       }).fail(function(error) {
         HelperModule.flashAlertMsg(
-          $('#locale_data').attr('data-LIB_REPCOL_NO_PERMISSIONS'),
+          gon.global.LIB_REPCOL_NO_PERMISSIONS,
           'danger');
       });
     });
@@ -119,10 +119,10 @@
     html += '</div><div class="col-xs-4"><span class="controlls pull-right">';
     html += '<button class="btn btn-default" data-action="edit">';
     html += '<span class="fas fa-pencil-alt"></span>&nbsp;';
-    html += $('#locale_data').attr('data-LIB_REPCOL_INDEX_EDITCOL') + '</button>&nbsp;';
+    html += gon.global.LIB_REPCOL_INDEX_EDITCOL + '</button>&nbsp;';
     html += '<button class="btn btn-default delete-column" data-action="destroy">';
     html += '<span class="fas fa-trash-alt"></span>&nbsp;';
-    html += $('#locale_data').attr('data-LIB_REPCOL_INDEX_DELCOL') + '</button>&nbsp;';
+    html += gon.global.LIB_REPCOL_INDEX_DELCOL + '</button>&nbsp;';
     html += '</button></span></div></li>';
     $(html).insertBefore('.repository-columns-body ul li:first')
            .promise()
@@ -148,7 +148,7 @@
         var listValueId = 'repository_column_data_type_repositorylistvalue';
         if($(this).attr('id') === listValueId) {
           $('[data-role="tagsinput"]').tagsinput({
-            maxChars: $('#const_data').attr('data-NAME_MAX_LENGTH'),
+            maxChars: gon.global.NAME_MAX_LENGTH,
             trimValue: true
           });
           $('.bootstrap-tagsinput').show();

@@ -22,7 +22,7 @@
     if(element.data('hasfile')) {
       $alertSection.append(
         '<div class="alert alert-danger">' +
-        $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_ASSET_PRESENT_WARNING_HTML') +
+        gon.global.PROJECTS_REPORTS_SAVE_PDF_ASSET_PRESENT_WARNING_HTML +
         '</div>'
       )
     }
@@ -119,7 +119,6 @@
       $(this).parent().find('input').trigger('keyup');
     });
   }
-
   function initInventoryItemSelectPicker() {
     ITEM_PICKER =
       $('#selectInventoryItem')
@@ -127,7 +126,7 @@
         .selectpicker({liveSearch: true})
         .ajaxSelectPicker({
           ajax: {
-            url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_AVAILABLE_ROWS_PATH'),
+            url: gon.global.RAILS_URL_HELPER_AVAILABLE_ROWS_PATH,
             type: 'POST',
             dataType: 'json',
             data: function () {
@@ -139,7 +138,7 @@
             }
           },
           locale: {
-            emptyTitle: $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED ')
+            emptyTitle: gon.global.PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED
           },
           preprocessData: appendSearchResultsForItems,
           emptyRequest: true,
@@ -162,7 +161,7 @@
         .selectpicker({liveSearch: true})
         .ajaxSelectPicker({
           ajax: {
-            url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH'),
+            url: gon.global.RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH,
             type: 'POST',
             dataType: 'json',
             data: function () {
@@ -173,7 +172,7 @@
             }
           },
           locale: {
-            emptyTitle: $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED ')
+            emptyTitle: gon.global.PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED
           },
           preprocessData: appendSearchResultsForColumns,
           emptyRequest: true,
@@ -198,7 +197,7 @@
         .selectpicker({liveSearch: true})
         .ajaxSelectPicker({
           ajax: {
-            url: $('#rails_route_data').attr('data-RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH'),
+            url: gon.global.RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH,
             type: 'POST',
             dataType: 'json',
             data: function () {
@@ -206,7 +205,7 @@
             }
           },
           locale: {
-            emptyTitle: $('#locale_data').attr('data-PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED ')
+            emptyTitle: gon.global.PROJECTS_REPORTS_SAVE_PDF_NOTHING_SELECTED 
           },
           preprocessData: appendSearchResults,
           emptyRequest: true,
@@ -230,7 +229,7 @@
     $('#savePDFtoInventorySubmit').off().on('click', function() {
       animateSpinner();
       $.ajax({
-        url: $('#rails_route_data').attr('data-RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH'),
+        url: gon.global.RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH,
         data: Object.assign(SELECTED_IDS, { html: $(REPORT_CONTENT).html() }, {}),
         type: 'POST',
         success: function(data) {

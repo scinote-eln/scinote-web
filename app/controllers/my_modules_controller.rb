@@ -646,6 +646,7 @@ class MyModulesController < ApplicationController
 
   def load_vars
     @my_module = MyModule.find_by_id(params[:id])
+    load_path_constants
     if @my_module
       @experiment = @my_module.experiment
       @project = @my_module.experiment.project if @experiment
@@ -662,6 +663,11 @@ class MyModulesController < ApplicationController
 
   def load_projects_tree
     @projects_tree = current_user.projects_tree(current_team, nil)
+  end
+
+  def load_path_constants
+    Gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH =
+      repository_list_items_path
   end
 
   def check_manage_permissions

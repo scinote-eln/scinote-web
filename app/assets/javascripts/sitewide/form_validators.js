@@ -71,7 +71,7 @@ function checklistsValidator(ev, checklists, editMode) {
 
           if ($itemInput.val()) {
             var itemNameValid = textValidator(ev, $itemInput, 1,
-              $('#const_data').attr('data-TEXT_MAX_LENGTH'));
+              gon.global.TEXT_MAX_LENGTH);
             if (!itemNameValid) {
               noErrors = false;
             }
@@ -88,7 +88,7 @@ function checklistsValidator(ev, checklists, editMode) {
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
       var textLimitMin = allowBlankChklstName ? 0 : 1;
       var checklistNameValid = textValidator(ev, $checklistInput,
-        textLimitMin, $('#const_data').attr('data-TEXT_MAX_LENGTH'));
+        textLimitMin, gon.global.TEXT_MAX_LENGTH);
       if (!checklistNameValid) {
         noErrors = false;
       } else if (allowBlankChklstName) {
@@ -103,7 +103,7 @@ function checklistsValidator(ev, checklists, editMode) {
 
 var FileTypeEnum = Object.freeze({
   FILE: $(document.body).data('file-max-size-mb') * 1024 * 1024,
-  AVATAR: $(document.body).data('avatar-max-size-mb')
+  AVATAR: gon.global.AVATAR_MAX_SIZE_MB
 });
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
   canBeEmpty = (typeof canBeEmpty !== 'undefined') ? canBeEmpty : false;
@@ -143,7 +143,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
         case FileTypeEnum.FILE:
          return I18n.t('general.file.size_exceeded', { file_size: $(document.body).data('file-max-size-mb') }).strToErrorFormat();
         case FileTypeEnum.AVATAR:
-          return $('#locale_data').attr('data-GENERAL_FILE_SIZE_EXCEEDED_AVATAR').strToErrorFormat();
+          return gon.global.GENERAL_FILE_SIZE_EXCEEDED_AVATAR.strToErrorFormat();
       }
     }
   };
@@ -164,7 +164,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
         case FileTypeEnum.FILE:
           return I18n.t('general.file.total_size', { size: $(document.body).data('file-max-size-mb') }).strToErrorFormat();
         case FileTypeEnum.AVATAR:
-          return $('#locale_data').attr('data-USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE').strToErrorFormat();
+          return gon.global.USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE.strToErrorFormat();
       }
     }
   }

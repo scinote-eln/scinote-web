@@ -291,8 +291,8 @@
       var contents = $(this).find('.hot-contents');
 
       $container.handsontable({
-        startRows: $("#const_data").attr('data-HANDSONTABLE_INIT_ROWS_CNT'),
-        startCols: $("#const_data").attr('data-HANDSONTABLE_INIT_COLS_CNT'),
+        startRows: gon.global.HANDSONTABLE_INIT_ROWS_CNT,
+        startCols: gon.global.HANDSONTABLE_INIT_COLS_CNT,
         rowHeaders: true,
         colHeaders: true,
         fillHandle: false,
@@ -337,8 +337,8 @@
 
       $container.handsontable({
         data: data,
-        startRows: $("#const_data").attr('data-HANDSONTABLE_INIT_ROWS_CNT'),
-        startCols: $("#const_data").attr('data-HANDSONTABLE_INIT_COLS_CNT'),
+        startRows: gon.global.HANDSONTABLE_INIT_ROWS_CNT,
+        startCols: gon.global.HANDSONTABLE_INIT_COLS_CNT,
         minRows: 1,
         minCols: 1,
         rowHeaders: true,
@@ -540,11 +540,11 @@
     var checklistsValid = checklistsValidator(ev, $checklists, editMode);
     var $nameInput = $form.find("#step_name");
     var nameValid = textValidator(ev, $nameInput, 1,
-      $("#const_data").attr('data-NAME_MAX_LENGTH'));
+      gon.global.NAME_MAX_LENGTH);
     var $descrTextarea = $form.find("#step_description");
     var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
-      $("#const_data").attr('data-TEXT_MAX_LENGTH'), false, $tinyMCEInput);
+      gon.global.TEXT_MAX_LENGTH, false, $tinyMCEInput);
 
     if (DragNDropSteps.filesStatus() &&
         checklistsValid &&
