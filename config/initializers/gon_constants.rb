@@ -1,8 +1,6 @@
 # after_initialize is used because routes need to be initialzed
 Rails.application.config.after_initialize do
-  #Rails.application.reload_routes!
   include RepositoryDatatableHelper
-  #include Rails.application.routes.url_helpers
 
 
 
@@ -63,7 +61,9 @@ Rails.application.config.after_initialize do
   Gon.global.GENERAL_TEXT_LENGTH_TOO_LONG = I18n.t(
     'general.text.length_too_long', max_length: Constants::NAME_MAX_LENGTH
   )
-  Gon.global.GENERAL_FILE_SIZE_EXCEEDED_AVATAR = I18n.t ('general.file.size_exceeded'), file_size: Constants::AVATAR_MAX_SIZE_MB
+  Gon.global.GENERAL_FILE_SIZE_EXCEEDED_AVATAR = I18n.t (
+    'general.file.size_exceeded'
+  ), file_size: Constants::AVATAR_MAX_SIZE_MB
   Gon.global.USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE = I18n.t 'users.registrations.edit.avatar_total_size', size: Constants::AVATAR_MAX_SIZE_MB
   Gon.global.PROJECTS_REPORTS_SAVE_PDF_ASSET_PRESENT_WARNING_HTML = I18n.t(
     'projects.reports.new.save_PDF_to_inventory_modal.asset_present_warning_html'
@@ -72,26 +72,34 @@ Rails.application.config.after_initialize do
     'projects.reports.new.save_PDF_to_inventory_modal.nothing_selected'
   )
 
-  Gon.global.TINYMCE_UPLOAD_WINDOW_TITLE =  I18n.t 'tiny_mce.upload_window_title'
-  Gon.global.TINYMCE_UPLOAD_WINDOW_LABEL =  I18n.t 'tiny_mce.upload_window_label'
+  Gon.global.TINYMCE_UPLOAD_WINDOW_TITLE =
+    I18n.t 'tiny_mce.upload_window_title'
+  Gon.global.TINYMCE_UPLOAD_WINDOW_LABEL =
+    I18n.t 'tiny_mce.upload_window_label'
   Gon.global.TINYMCE_INSERT_BTN =  I18n.t 'tiny_mce.insert_btn'
   Gon.global.TINYMCE_ERROR_MESSAGE = I18n.t 'tiny_mce.error_message'
   Gon.global.TINYMCE_SERVER_NOT_RESPONDED = I18n.t 'tiny_mce.server_not_respond'
 
-  Gon.global.HIGHLIGHTJS_GITHUB_THEME = ActionController::Base.helpers.asset_path('highlightjs-github-theme')
+  Gon.global.HIGHLIGHTJS_GITHUB_THEME =
+    ActionController::Base.helpers.asset_path('highlightjs-github-theme')
 
   Gon.global.DEFAULT_TABLE_COLUMNS = default_table_columns
   Gon.global.DEFAULT_TABLE_ORDER_AS_JS_ARRAY = default_table_order_as_js_array
 
-  # The below constants cant be used because this loads before routes
-  #Gon.global.RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH = reports_visible_projects_path
-  #Gon.global.RAILS_URL_HELPER_AVAILABLE_ROWS_PATH = available_rows_path
-  #Gon.global.RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH = available_asset_type_columns_path
-  #Gon.global.RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH =  reports_available_repositories_path
-  #Gon.global.RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH = reports_save_pdf_to_inventory_item_path
-  #Gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH = repository_list_items_path
-  #Gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = tiny_mce_assets_path
-  # The above constants cant be initialized yet because the routes arent initialized.
-  # So they are implemented in the controllers for their functions.
+  # Gon.global.RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH =
+  #   reports_visible_projects_path
+  # Gon.global.RAILS_URL_HELPER_AVAILABLE_ROWS_PATH = available_rows_path
+  # Gon.global.RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH =
+  #  available_asset_type_columns_path
+  # Gon.global.RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH =
+  #  reports_available_repositories_path
+  # Gon.global.RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH =
+  #  reports_save_pdf_to_inventory_item_path
+  # Gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH =
+  #  repository_list_items_path
+  # Gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = tiny_mce_assets_path
 
+  # The above constants cant be initialized yet,
+  # because the routes arent initialized.
+  # So they are implemented in the controllers for their functions.
 end

@@ -1,7 +1,9 @@
 //= require jquery-ui/widgets/sortable
 //= require repositories/forms/repository_item_edit.js
+
 var RepositoryDatatable = (function(global) {
   'use strict';
+
   var TABLE_ID = '';
   var TABLE = null;
 

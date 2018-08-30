@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
@@ -31,6 +32,7 @@
     data-file-max-size-mb="<%= Rails.configuration.x.file_max_size_mb %>"
     <% end %>
   >
+
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>
 
