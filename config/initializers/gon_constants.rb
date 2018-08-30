@@ -83,7 +83,7 @@ Rails.application.config.after_initialize do
   Gon.global.TINYMCE_SERVER_NOT_RESPONDED = I18n.t 'tiny_mce.server_not_respond'
 
   Gon.global.HIGHLIGHTJS_GITHUB_THEME =
-    ActionController::Base.helpers.asset_path('highlightjs-github-theme')
+    ::ActionController::Base.helpers.asset_path('highlightjs-github-theme')
 
   Gon.global.DEFAULT_TABLE_COLUMNS = default_table_columns
   Gon.global.DEFAULT_TABLE_ORDER_AS_JS_ARRAY = default_table_order_as_js_array
