@@ -2,8 +2,6 @@
 Rails.application.config.after_initialize do
   include RepositoryDatatableHelper
 
-
-
   Gon.global.DROPDOWN_TOP_OFFSET_PX = Constants::DROPDOWN_TOP_OFFSET_PX
   Gon.global.HANDSONTABLE_INIT_ROWS_CNT = Constants::HANDSONTABLE_INIT_ROWS_CNT
   Gon.global.HANDSONTABLE_INIT_COLS_CNT = Constants::HANDSONTABLE_INIT_COLS_CNT
@@ -12,13 +10,13 @@ Rails.application.config.after_initialize do
   Gon.global.NAME_MIN_LENGTH = Constants::NAME_MIN_LENGTH
   Gon.global.NAME_MAX_LENGTH = Constants::NAME_MAX_LENGTH
   Gon.global.NAME_TRUNCATION_LENGTH = Constants::NAME_TRUNCATION_LENGTH
-  Gon.global.NAME_TRUNCATION_LENGTH_DROPDOWN = Constants::NAME_TRUNCATION_LENGTH_DROPDOWN
+  Gon.global.NAME_TRUNCATION_LENGTH_DROPDOWN =
+    Constants::NAME_TRUNCATION_LENGTH_DROPDOWN
 
   Gon.global.ATWHO_SEARCH_LIMIT = Constants::ATWHO_SEARCH_LIMIT
   Gon.global.FILENAME_TRUNCATION_LENGTH = Constants::FILENAME_TRUNCATION_LENGTH
   Gon.global.AVATAR_MAX_SIZE_MB =  Constants::AVATAR_MAX_SIZE_MB.megabytes
   Gon.global.INVITE_USERS_LIMIT =  Constants::INVITE_USERS_LIMIT
-
 
   Gon.global.LIB_REPCOL_NO_PERMISSIONS = I18n.t(
     'libraries.repository_columns.no_permissions'
@@ -44,7 +42,8 @@ Rails.application.config.after_initialize do
   Gon.global.ASSETS_CLIPBOARD_IMG_PREVIEW = I18n.t(
     'assets.from_clipboard.image_preview'
   )
-  Gon.global.ASSETS_CLIPBOARD_FILE_NAME = I18n.t('assets.from_clipboard.file_name')
+  Gon.global.ASSETS_CLIPBOARD_FILE_NAME =
+    I18n.t('assets.from_clipboard.file_name')
   Gon.global.ASSETS_CLIPBOARD_FILE_NAME_PLACEHOLDER = I18n.t(
     'assets.from_clipboard.file_name_placeholder'
   )
@@ -55,16 +54,19 @@ Rails.application.config.after_initialize do
   Gon.global.SAMPLES_COLUMNS_VISIBILITY = I18n.t('samples.columns_visibility')
   Gon.global.SAMPLES_COLUMNS_DELETE = I18n.t('samples.columns_delete')
 
-
-  Gon.global.ASSETS_CLIPBOARD_ADD_IMAGE = I18n.t('assets.from_clipboard.add_image')
-  Gon.global.ASSETS_DRAGNDROP_FILE_LABEL = I18n.t('assets.drag_n_drop.file_label')
+  Gon.global.ASSETS_CLIPBOARD_ADD_IMAGE =
+    I18n.t('assets.from_clipboard.add_image')
+  Gon.global.ASSETS_DRAGNDROP_FILE_LABEL =
+    I18n.t('assets.drag_n_drop.file_label')
   Gon.global.GENERAL_TEXT_LENGTH_TOO_LONG = I18n.t(
     'general.text.length_too_long', max_length: Constants::NAME_MAX_LENGTH
   )
   Gon.global.GENERAL_FILE_SIZE_EXCEEDED_AVATAR = I18n.t (
     'general.file.size_exceeded'
   ), file_size: Constants::AVATAR_MAX_SIZE_MB
-  Gon.global.USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE = I18n.t 'users.registrations.edit.avatar_total_size', size: Constants::AVATAR_MAX_SIZE_MB
+  Gon.global.USERS_REGISTRATIONS_EDIT_AVATAR_TOTAL_SIZE = I18n.t (
+    'users.registrations.edit.avatar_total_size'
+    ), size: Constants::AVATAR_MAX_SIZE_MB
   Gon.global.PROJECTS_REPORTS_SAVE_PDF_ASSET_PRESENT_WARNING_HTML = I18n.t(
     'projects.reports.new.save_PDF_to_inventory_modal.asset_present_warning_html'
   )
