@@ -115,6 +115,7 @@
   RepositoryItemEditForm.prototype.parseToFormObject = function(tableID, selectedRecord) {
     var formData = this.formData;
     var formDataObj = new FormData();
+    var removeFileColumns = [];
     formDataObj.append('request_url', $(tableID).data('current-uri'));
     formDataObj.append('repository_row_id', $(selectedRecord).attr('id'));
 
@@ -125,18 +126,25 @@
       } else {
         var colId = element.replace('colId-', '');
         var $el   = $('#' + element);
+        // don't save anything if element is not visible
+        if($el.length == 0) {
+          return true;
+        }
         if($el.attr('type') === 'file') {
-          // don't save anything if element is deleted
+          // handle deleting of element
           if($el.attr('remove') === "true") {
-            return true;
+            removeFileColumns.push(colId);
+            formDataObj.append('repository_cells[' + colId + ']', null);
+          } else {
+            formDataObj.append('repository_cells[' +  colId + ']',
+                               getFileValue($el));
           }
-          formDataObj.append('repository_cells[' +  colId + ']',
-                             getFileValue($el));
-        } else if(value.length > 0) {
+        } else if(value.length >= 0) {
           formDataObj.append('repository_cells[' +  colId + ']', value);
         }
       }
     });
+    formDataObj.append('remove_file_columns', JSON.stringify(removeFileColumns));
     return formDataObj;
   }
   /**
