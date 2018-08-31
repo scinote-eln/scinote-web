@@ -545,11 +545,15 @@
     var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
+    var $table_names = $form.find(".table_name");
+    var table_nameValid = textValidator(ev, $table_names, 1,
+      <%= Constants::NAME_MAX_LENGTH %>);
 
     if (DragNDropSteps.filesStatus() &&
         checklistsValid &&
         nameValid &&
-        descriptionValid) {
+        descriptionValid &&
+        table_nameValid ) {
 
       $form.find("[data-role='editable-table']").each(function() {
         var hot = $(this).find(".hot").handsontable('getInstance');
