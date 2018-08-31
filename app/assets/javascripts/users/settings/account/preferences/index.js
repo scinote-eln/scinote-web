@@ -72,7 +72,7 @@
   function notificationsSettings() {
     var notification_settings = [ "recent_notification",
                                   "assignments_notification",
-                                  "popover_v2_toggle" ]
+                                  "popovers_enabled" ]
 
     for (var i = 0; i < notification_settings.length; i++ ) {
       var setting = $('[name="' + notification_settings[i] + '"]');

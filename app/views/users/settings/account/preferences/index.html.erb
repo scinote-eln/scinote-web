@@ -133,8 +133,7 @@
               </div>
             </div>
           </div>
-          <br>
-          <h4><%= t('notifications.tips.title') %></h4>
+          <h4><%= t('users.settings.account.preferences.edit.tips.title') %></h4>
           <div class="row">
             <div class="col-sm-2">
               <span class="assignment hidden-sm">
@@ -142,20 +141,21 @@
               </span>
             </div>
             <div class="col-sm-10">
-              <p><%=t 'notifications.tips.text1' %></p>
-              <p><%=t 'notifications.tips.text2' %></p>
+              <p><%=t 'users.settings.account.preferences.edit.tips.text1' %></p>
+              <p><%=t 'users.settings.account.preferences.edit.tips.text2' %></p>
               <div class="row">
                 <div class="col-sm-4">
-                  <%=t 'notifications.tips.toggle' %>
+                  <%=t 'users.settings.account.preferences.edit.tips.toggle' %>
                 </div>
                 <div class="col-sm-8">
-                  <%= check_box_tag :popover_v2_toggle, @user.popover_v2_toggle %>
+                  <%= check_box_tag :popovers_enabled, @user.popovers_enabled %>
                 </div>
               </div>
             </div>
           </div>
           <% end %>
         </div>
+        <br>
       </div>
     </div>
   </div>

@@ -1413,6 +1413,11 @@ en:
             time_zone_label: "Time zone"
             time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
             time_zone_title: "Time zone"
+            tips:
+              title: "Help Tips"
+              text1: "When you place your mouse over specific element of SciNote, we show you a tip with description of this element."
+              text2: "You may want to turn that off if you feel confident in here."
+              toggle: "Show Help Tips"
           update_flash: "Preferences successfully updated."
         addons:
           head_title: "Settings | Add-ons"
@@ -1801,11 +1806,6 @@ en:
 
   notifications:
     title: "Notifications"
-    tips:
-      title: "Help Tips"
-      text1: "When you place your mouse over specific element of SciNote, we show you a tip with description of this element."
-      text2: "You may want to turn that off if you feel confident in here."
-      toggle: "Show Help Tips NO/YES"
     email_settings: "E-mail notifications"
     form:
       assignments: "Assignment"

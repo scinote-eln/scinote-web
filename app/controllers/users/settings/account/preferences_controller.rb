@@ -41,8 +41,8 @@ module Users
             params[:assignments_notification_email] ? true : false
           @user.system_message_email_notification =
             params[:system_message_notification_email] ? true : false
-          @user.popover_v2_toggle =
-            params[:popover_v2_toggle] ? true : false
+          @user.popovers_enabled =
+            params[:popovers_enabled] ? true : false
           if @user.save
             respond_to do |format|
               format.json do

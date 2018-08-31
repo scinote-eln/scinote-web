@@ -43,9 +43,9 @@ class User < ApplicationRecord
       assignments_email: false,
       recent: true,
       recent_email: false,
-      system_message_email: false,
-      popover_v2_toggle: true
-    }
+      system_message_email: false
+    },
+    popovers_enabled: true
   )
 
   # Relations
@@ -458,7 +458,7 @@ class User < ApplicationRecord
                            assignments_email_notification
                            recent_email_notification
                            system_message_email_notification
-                           popover_v2_toggle )
+                           popovers_enabled )
   # declare notifications getters
   NOTIFICATIONS_TYPES.each do |name|
     define_method(name) do
