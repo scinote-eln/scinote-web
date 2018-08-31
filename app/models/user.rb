@@ -43,9 +43,9 @@ class User < ApplicationRecord
       assignments_email: false,
       recent: true,
       recent_email: false,
-      system_message_email: false
-    },
-    popovers_enabled: true
+      system_message_email: false,
+      popovers_enabled: true
+    }
   )
 
   # Relations
