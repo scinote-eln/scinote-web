@@ -84,6 +84,8 @@ Rails.application.config.after_initialize do
 
   Gon.global.HIGHLIGHTJS_GITHUB_THEME =
     ::ActionController::Base.helpers.asset_path('highlightjs-github-theme')
+  # "/assets/highlightjs-github-theme-e672f429d9699d1d66dcd7c3b0d294aedca3b6a11cfc01bdb4b07d889abfca4b.css"
+  #Gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = tiny_mce_assets_path
 
   Gon.global.DEFAULT_TABLE_COLUMNS = default_table_columns
   Gon.global.DEFAULT_TABLE_ORDER_AS_JS_ARRAY = default_table_order_as_js_array
