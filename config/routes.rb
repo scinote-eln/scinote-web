@@ -554,10 +554,13 @@ Rails.application.routes.draw do
                         path: 'items',
                         as: :items
             end
-          end
-          resources :users, only: %i(show) do
-            resources :user_identities,
-                      only: %i(index create show update destroy)
+            resources :projects, only: %i(index show) do
+              resources :experiments, only: %i(index show)
+            end
+            resources :users, only: %i(show) do
+              resources :user_identities,
+                        only: %i(index create show update destroy)
+            end
           end
         end
       end
