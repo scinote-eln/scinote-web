@@ -43,7 +43,7 @@ class User < ApplicationRecord
       assignments_email: false,
       recent: true,
       recent_email: false,
-      system_message_email: false,
+      system_message_email: false
     },
     tooltips_enabled: true
   )
