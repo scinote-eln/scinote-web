@@ -66,13 +66,13 @@
   });
 
   notificationsSettings();
-  initNotificationSettingsForm();
+  tooltipSettings();
+  initTogglableSettingsForm();
 
   // Setup notification checkbox buttons
   function notificationsSettings() {
     var notification_settings = [ "recent_notification",
-                                  "assignments_notification",
-                                  "popovers_enabled" ]
+                                  "assignments_notification" ]
 
     for (var i = 0; i < notification_settings.length; i++ ) {
       var setting = $('[name="' + notification_settings[i] + '"]');
@@ -142,9 +142,22 @@
     );
   }
 
+// Initialize tooltips settings form
+  function tooltipSettings() {
+    var toggleInput = $('[name="tooltips_enabled"]');
+    toggleInput
+      .checkboxpicker({ onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle' });
+
+    if (toggleInput.attr('value') === 'true') {
+      toggleInput.prop('checked', true);
+    } else {
+      toggleInput.prop('checked', false);
+    }
+  }
+
   // triggers submit action when the user clicks
-  function initNotificationSettingsForm() {
-    $('#notifications-settings-panel')
+  function initTogglableSettingsForm() {
+    $('#togglable-settings-panel')
       .find('.btn-group')
       .on('click', function() {
         $(this).submit();

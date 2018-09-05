@@ -44,8 +44,8 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false,
-      popovers_enabled: true
-    }
+    },
+    tooltips_enabled: true
   )
 
   # Relations
@@ -457,8 +457,8 @@ class User < ApplicationRecord
   NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
                            assignments_email_notification
                            recent_email_notification
-                           system_message_email_notification
-                           popovers_enabled )
+                           system_message_email_notification)
+
   # declare notifications getters
   NOTIFICATIONS_TYPES.each do |name|
     define_method(name) do

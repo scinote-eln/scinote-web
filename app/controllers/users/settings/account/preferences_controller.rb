@@ -5,7 +5,7 @@ module Users
         before_action :load_user, only: [
           :index,
           :update,
-          :notifications_settings
+          :update_togglable_settings
         ]
         layout 'fluid'
 
@@ -30,19 +30,25 @@ module Users
           end
         end
 
-        def notifications_settings
-          @user.assignments_notification =
-            params[:assignments_notification] ? true : false
-          @user.recent_notification =
-            params[:recent_notification] ? true : false
-          @user.recent_email_notification =
-            params[:recent_notification_email] ? true : false
-          @user.assignments_email_notification =
-            params[:assignments_notification_email] ? true : false
-          @user.system_message_email_notification =
-            params[:system_message_notification_email] ? true : false
-          @user.popovers_enabled =
-            params[:popovers_enabled] ? true : false
+        def update_togglable_settings
+          read_from_params(:assignments_notification) do |val|
+            @user.assignments_notification = val
+          end
+          read_from_params(:recent_notification) do |val|
+            @user.recent_notification = val
+          end
+          read_from_params(:recent_notification_email) do |val|
+            @user.recent_email_notification = val
+          end
+          read_from_params(:assignments_notification_email) do |val|
+            @user.assignments_email_notification = val
+          end
+          read_from_params(:system_message_notification_email) do |val|
+            @user.system_message_email_notification = val
+          end
+          read_from_params(:tooltips_enabled) do |val|
+            @user.settings[:tooltips_enabled] = val
+          end
           if @user.save
             respond_to do |format|
               format.json do
@@ -72,6 +78,10 @@ module Users
           params.require(:user).permit(
             :time_zone
           )
+        end
+
+        def read_from_params(name)
+          yield(params.include?(name) ? true : false)
         end
       end
     end

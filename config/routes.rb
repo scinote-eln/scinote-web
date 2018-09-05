@@ -56,9 +56,9 @@ Rails.application.routes.draw do
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
-    post 'users/settings/account/preferences/notifications_settings',
-         to: 'users/settings/account/preferences#notifications_settings',
-         as: 'notifications_settings',
+    post 'users/settings/account/preferences/togglable_settings',
+         to: 'users/settings/account/preferences#update_togglable_settings',
+         as: 'update_togglable_settings',
          defaults: { format: 'json' }
 
     # Change user's current team
