@@ -61,9 +61,9 @@ module ReportsHelper
                      suffix = '.csv'
                      name.empty? ? 'Table' : name
                    end
-        obj_name = truncate(
-          obj_name,
-          length: Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH
+        obj_name = obj_name.truncate(
+          Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
+          omission: ''
         )
         obj_name += "_Step#{parent.position + 1}#{suffix}"
         obj_folder_name = 'Protocol attachments'
@@ -83,18 +83,26 @@ module ReportsHelper
                      suffix = '.csv'
                      name.empty? ? 'Table' : name
                    end
-        obj_name = truncate(
-          obj_name,
-          length: Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH
+        obj_name = obj_name.truncate(
+          Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
+          omission: ''
         )
-        obj_name += "#{suffix}"
+        obj_name += suffix
         obj_folder_name = 'Results attachments'
         parent_module = parent
       end
-      parent_exp = parent_module.experiment
+
+      parent_module_name = parent_module.name.truncate(
+        Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
+        omission: ''
+      )
+      parent_exp_name = parent_module.experiment.name.truncate(
+        Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
+        omission: ''
+      )
 
       locals[:filename] = obj_name
-      locals[:path] = "#{parent_exp.name}/#{parent_module.name}/" \
+      locals[:path] = "#{parent_exp_name}/#{parent_module_name}/" \
         "#{obj_folder_name}/#{obj_name}"
     end
 
