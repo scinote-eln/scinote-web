@@ -12,11 +12,15 @@ module Api
                               .page(params.dig(:page, :number))
                               .per(params.dig(:page, :size))
 
-        render jsonapi: experiments, each_serializer: ExperimentSerializer
+        render jsonapi: experiments,
+          links: { self: api_v1_team_project_experiments_path },
+            each_serializer: ExperimentSerializer
       end
 
       def show
-        render jsonapi: @experiment, serializer: ExperimentSerializer
+        render jsonapi: @experiment,
+          links: { self: api_v1_team_project_experiment_path },
+          serializer: ExperimentSerializer
       end
 
       private
