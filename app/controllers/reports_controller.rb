@@ -187,24 +187,30 @@ class ReportsController < ApplicationController
     current_team_switch(@report.project.team)
     @report.cleanup_report
 
-    html_string = render_to_string 'reports/new.html.erb', export_all: true
-    parsed_html = Nokogiri::HTML(html_string)
-    project_pdf_content = parsed_html.at_css('#report-content')
+    page_html_string = render_to_string 'reports/new.html.erb', export_all: true
+    parsed_page_html = Nokogiri::HTML(page_html_string)
+    parsed_pdf_html = parsed_page_html.at_css('#report-content')
 
     filename = "#{@project.name}.pdf"
-    pdf_content = render_to_string(
+    parsed_pdf = render_to_string(
       pdf: filename,
       header: { right: '[page] of [topage]' },
-      locals: { content: project_pdf_content.to_s },
+      locals: { content: parsed_pdf_html.to_s },
       template: 'reports/report.pdf.erb',
       disable_javascript: true,
       disable_internal_links: false
     )
 
+    # Dirty workaround to convert absolute links back to relative ones, since
+    # WickedPdf does the opposite, based on the path where the file parsing is
+    # done
+    parsed_pdf_with_relative_links =
+      parsed_pdf.gsub('/URI (file:////tmp/', '/URI (')
+
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      pdf_content,
+      parsed_pdf_with_relative_links,
       :team,
       filename: filename
     )
