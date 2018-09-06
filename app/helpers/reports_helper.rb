@@ -66,7 +66,7 @@ module ReportsHelper
         obj_name = if element['type_of'] == 'result_asset'
                      Asset.find(element[:result_id]).file_file_name
                    else
-                     Table.find(element[:result_id]).result.name
+                     locals[:name] = Result.find(element[:result_id]).name
                    end
         obj_folder_name = 'Results attachments'
         parent_module = parent

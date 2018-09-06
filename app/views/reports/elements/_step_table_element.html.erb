@@ -10,7 +10,7 @@
         <% if defined? path and path.present? %>
           <a href="<%= path %>">
             <em><%=t 'projects.reports.elements.step_table.table_name',
-                     name: truncate(table && table.name ? "#{table.name}.csv" : "#{table.step.name}.csv",
+                     name: truncate(table && table.name.present? ? "#{table.name}.csv" : "#{table.step.name}.csv",
                                     length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
           </a>
         <% else %>
