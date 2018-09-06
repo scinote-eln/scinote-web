@@ -44,6 +44,19 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
+
+    @valid_hash_body = { data:
+                         { type: 'inventory_items',
+                           attributes: {
+                             name: Faker::Name.unique.name
+                           } },
+                         included:  [
+                           { type: 'inventory_cells',
+                             attributes: {
+                               column_id: text_column.id,
+                               value: Faker::Name.unique.name
+                             } }
+                         ] }
   end
 
   describe 'GET inventory_items, #index' do
@@ -124,6 +137,36 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body).to match({})
+    end
+  end
+
+  describe 'POST inventory_item, #create' do
+    before :all do
+      @valid_headers['Content-Type'] = 'application/json'
+    end
+
+    it 'Response with correct inventory item' do
+      hash_body = nil
+      post api_v1_team_inventory_items_path(
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), params: @valid_hash_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 201
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryRow.last,
+               serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:data]
+      )
+      expect(hash_body[:included]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryRow.last,
+               serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:included]
+      )
     end
   end
 end
