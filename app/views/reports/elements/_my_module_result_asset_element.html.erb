@@ -3,23 +3,21 @@
 <% is_image = result.asset.is_image? %>
 <% comments = result.result_comments %>
 <% timestamp = asset.created_at %>
-<% name = result.name %>
 <% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
-<div class="report-element report-result-element report-result-asset-element" data-ts="<%= timestamp.to_i %>" data-type="result_asset" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="<%= icon_class %>">
+<div class="report-element report-result-element report-result-asset-element" data-ts="<%= timestamp.to_i %>" data-type="result_asset" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= result.name %>" data-icon-class="<%= icon_class %>">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left result-icon">
         <span class="<%= icon_class %>"></span>
       </div>
       <div class="pull-left result-name">
-        <%= name %>
+        <%= result.name %>
       </div>
       <div class="pull-left file-name">
         <% if defined? path and path.present? %>
           <a href="<%= path %>">
             <em><%=t "projects.reports.elements.result_asset.file_name",
-                     file: truncate(asset.file_file_name,
-                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+                     file: filename %></em>
           </a>
         <% else %>
           <em><%=t "projects.reports.elements.result_asset.file_name",
