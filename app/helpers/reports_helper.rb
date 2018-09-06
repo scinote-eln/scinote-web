@@ -52,10 +52,20 @@ module ReportsHelper
 
       if parent.class == Step
         obj_name = if element['type_of'] == 'step_asset'
-                     Asset.find(element[:asset_id]).file_file_name
+                     name = Asset.find(element[:asset_id]).file_file_name
+                     suffix = name.split('.').second
+                     suffix.prepend('.') if suffix
+                     name.split('.').first
                    else
-                     Table.find(element[:table_id]).name
+                     name = Table.find(element[:table_id]).name
+                     suffix = '.csv'
+                     name.empty? ? 'Table' : name
                    end
+        obj_name = truncate(
+          obj_name,
+          length: Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH
+        )
+        obj_name += "_Step#{parent.position + 1}#{suffix}"
         obj_folder_name = 'Protocol attachments'
         parent_module = if parent.protocol.present?
                           parent.protocol.my_module
@@ -64,15 +74,26 @@ module ReportsHelper
                         end
       else
         obj_name = if element['type_of'] == 'result_asset'
-                     Asset.find(element[:result_id]).file_file_name
+                     name = Asset.find(element[:result_id]).file_file_name
+                     suffix = name.split('.').second
+                     suffix.prepend('.') if suffix
+                     name.split('.').first
                    else
-                     locals[:name] = Result.find(element[:result_id]).name
+                     name = Result.find(element[:result_id]).name
+                     suffix = '.csv'
+                     name.empty? ? 'Table' : name
                    end
+        obj_name = truncate(
+          obj_name,
+          length: Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH
+        )
+        obj_name += "#{suffix}"
         obj_folder_name = 'Results attachments'
         parent_module = parent
       end
       parent_exp = parent_module.experiment
 
+      locals[:filename] = obj_name
       locals[:path] = "#{parent_exp.name}/#{parent_module.name}/" \
         "#{obj_folder_name}/#{obj_name}"
     end

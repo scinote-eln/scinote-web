@@ -12,8 +12,7 @@
         <% if defined? path and path.present? %>
           <a href="<%= path %>">
             <em><%=t 'projects.reports.elements.step_asset.file_name',
-                     file: truncate(asset.file_file_name,
-                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+                     file: filename %></em>
           </a>
         <% else %>
           <em><%=t 'projects.reports.elements.step_asset.file_name',
