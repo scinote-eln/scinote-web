@@ -168,5 +168,38 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
           .as_json[:included]
       )
     end
+
+    it 'When invalid request, non existing inventory' do
+      hash_body = nil
+      post api_v1_team_inventory_items_path(
+        team_id: @teams.first.id,
+        inventory_id: -1
+      ), params: @valid_hash_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status(404)
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+
+    it 'When invalid request, user in not member of the team' do
+      hash_body = nil
+      post api_v1_team_inventory_items_path(
+        team_id: @teams.second.id,
+        inventory_id: @valid_inventory.id
+      ), params: @valid_hash_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status(403)
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+
+    it 'When invalid request, repository from another team' do
+      hash_body = nil
+      post api_v1_team_inventory_items_path(
+        team_id: @teams.first.id,
+        inventory_id: @teams.second.repositories.first.id
+      ), params: @valid_hash_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status(404)
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
   end
 end
