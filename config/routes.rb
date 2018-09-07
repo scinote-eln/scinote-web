@@ -581,6 +581,8 @@ Rails.application.routes.draw do
                    resources :my_modules, only: %i(index show),
                    path: 'descendants',
                    as: :descendants
+                   # The above two are just my modules (tasks), so im not sure 
+                   # if i should duplicate controllers and serializers
                    resources :activities, only: %i(index show),
                    path: 'activities',
                    as: :activities
