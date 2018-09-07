@@ -1996,28 +1996,28 @@ en:
 
   popover_test:
     text:
-      invite_to_sci: "Invite other scientists to SciNote and gain additional free SciNote space for your Team. How?"
+      invite_to_sci: "Invite other scientists to SciNote and gain additional free storage space for your team. How?"
       new_project: "Project is the topmost layer when you are organizing your data in SciNote. It allows you to assign members and keep all project-related data within one project card."
       experiment:
         copy: "Copy this experiment as a template to another project. Only tasks and protocol steps will be copied!"
-        dates: "The date stamp illustrates the date when this experiment was created and when it was last time modified."
-        move: "Move your experiment to another project together with all the inside tasks. Make sure that members of both projects are the same even if a few other members were added."
+        dates: "You can see the date when this experiment was created and when it was last modified."
+        move: "Move your experiment with all its tasks to another project. Make sure that members of both projects are the same even if a few other members were added."
       task:
-        due_date: "To plan your work and stay organized, set the due dates to your tasks."
+        due_date: "Set due dates to your tasks and stay organized."
         new: "Your experiment can be defined by a series of tasks. Start by adding the tasks and, if needed, connect them into a workflow."
-        color_tag: "Create personalised colorful tags to mark your tasks based on your preferences."
-        due_date_specific: "For easy and transparent organisation of your work, you can set a due date to a specific task."
-        results: "This feature enables you to save your lab results in three different ways. As a classic text, created table or uploaded file from computer."
+        color_tag: "Create personalised colorful tags to mark your tasks."
+        due_date_specific: "Set a due date to a specific task."
+        results: "You have three options to save your lab results: as classic text, created table or uploaded file from computer."
       protocol:
-        step_edit: "Here you can edit protocol step name, its description, add checklists, tables or files."
-        step_add_files: "Drag and drop your files here. SciNote supports all type of files and images."
-        linking: "By establishing the link between the task protocol and the protocol in a repository you can see if any of the versions has been modified and decide to update either of them at any point."
-        complete: "If you are done working on this task, complete it just by clicking on this button."
-        inventories: "You can associate your lab resources with a task by assigning inventory items."
+        step_edit: "You can edit the name and description of a protocol step, add checklists, tables or files."
+        step_add_files: "Drag and drop your files here. SciNote supports all types of files and images."
+        linking: "By linking the protocol in your task and the protocol in a repository you can see if any of the versions has been modified and decide to update either of them at any point."
+        complete: "You can complete the task if you are done working on it."
+        inventories: "You can assign inventory items to your task."
         num_linked: "This number represents how many tasks are linked to the selected protocol."
       inventory:
-        new: "Inventories in SciNote enables you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
-        visibility: "You can toggle the visibility of inventory columns, making them visible or hidden."
+        new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
+        visibility: "You can make inventory columns visible or hidden."
         manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, files or be defined as a dropdown list."
 
     link:
