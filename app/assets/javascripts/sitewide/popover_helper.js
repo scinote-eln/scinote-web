@@ -2,7 +2,7 @@
   'use strict';
 
  $.init_popover_v2 = function() {
-    if ($(document.body).data("popover_v2_enabled")===true || $(document.body).data("popover_v2_enabled")== null ){
+    if ($(document.body).data("tooltips-enabled")===true || $(document.body).data("tooltips-enabled")== null ){
       var popovers_array = [];
       $('.popover_open').remove() // Destroy all (if any) old open popovers
       $('.popover_v2').each(function(i,obj) {
