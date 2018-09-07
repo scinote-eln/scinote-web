@@ -559,7 +559,32 @@ Rails.application.routes.draw do
                 resources :my_modules,
                           only: %i(index show),
                           path: 'tasks',
-                          as: :tasks
+                 as: :tasks do
+                  resources :my_module_repository_rows, only: %i(index show),
+                            path: 'task_inventory_rows',
+                            as: :task_inventory_rows
+                  resources :user_my_modules, only: %i(index show),
+                            path: 'user_tasks',
+                            as: :user_tasks
+                  resources :my_module_tags, only: %i(index show),
+                            path: 'task_tags',
+                            as: :task_tags
+                  resources :protocols, only: %i(index show),
+                            path: 'protocols',
+                            as: :protocols
+                  resources :results, only: %i(index show),
+                            path: 'results',
+                            as: :results
+                  resources :my_module_antecessors, only: %i(index show),
+                            path: 'ancestors',
+                            as: :ancestors
+                  resources :my_modules, only: %i(index show),
+                            path: 'descendants',
+                            as: :descendants
+                  resources :activities, only: %i(index show),
+                            path: 'activities',
+                            as: :activities
+                end
                 resources :my_module_groups,
                           only: %i(index show),
                           path: 'task_groups',
