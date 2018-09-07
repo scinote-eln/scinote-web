@@ -10,10 +10,11 @@ module Api
 
       def index
         my_module_groups = @experiment.my_module_groups
-                              .page(params.dig(:page, :number))
-                              .per(params.dig(:page, :size))
+                                      .page(params.dig(:page, :number))
+                                      .per(params.dig(:page, :size))
 
-        render jsonapi: my_module_groups, each_serializer: MyModuleGroupSerializer
+        render jsonapi: my_module_groups,
+          each_serializer: MyModuleGroupSerializer
       end
 
       def show
@@ -29,16 +30,22 @@ module Api
 
       def load_project
         @project = @team.projects.find(params.require(:project_id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(@project)
+        render jsonapi: {}, status: :forbidden unless can_read_project?(
+          @project
+        )
       end
 
       def load_experiment
         @experiment = @project.experiments.find(params.require(:experiment_id))
-        render jsonapi: {}, status: :forbidden unless can_read_experiment?(@experiment)
+        render jsonapi: {}, status: :forbidden unless can_read_experiment?(
+          @experiment
+        )
       end
 
       def load_task_groups
-        @my_module_group = @experiment.my_module_groups.find(params.require(:id))
+        @my_module_group = @experiment.my_module_groups.find(
+          params.require(:id)
+        )
         render jsonapi: {}, status: :not_found if @my_module_group.nil?
       end
     end

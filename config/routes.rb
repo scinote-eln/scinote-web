@@ -540,7 +540,7 @@ Rails.application.routes.draw do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
       post 'auth/token', to: 'api#authenticate'
-      #if Api.configuration.core_api_v1_preview
+      if Api.configuration.core_api_v1_preview
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
@@ -564,6 +564,10 @@ Rails.application.routes.draw do
                  only: %i(index show),
                  path: 'task_groups',
                  as: :task_groups
+                resources :connections,
+                 only: %i(index show),
+                 path: 'connections',
+                 as: :connections
               end
             end
             resources :users, only: %i(show) do
@@ -572,7 +576,7 @@ Rails.application.routes.draw do
             end
           end
         end
-      #end
+      end
     end
   end
 

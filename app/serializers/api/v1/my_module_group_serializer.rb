@@ -3,9 +3,9 @@
 module Api
   module V1
     class MyModuleGroupSerializer < ActiveModel::Serializer
-      type :task_group
+      type :MyModuleGroup
       attributes :id, :created_at, :updated_at, :created_by_id, :experiment_id
-      belongs_to :experiment
+      belongs_to :experiment, serializer: ExperimentSerializer
     end
   end
 end
