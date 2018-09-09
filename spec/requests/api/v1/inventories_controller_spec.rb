@@ -92,4 +92,74 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
       expect(hash_body).to match({})
     end
   end
+
+  describe 'PATCH inventory, #update' do
+    before :all do
+      @valid_headers['Content-Type'] = 'application/json'
+      @inventory = ActiveModelSerializers::SerializableResource.new(
+        Repository.first,
+        serializer: Api::V1::InventorySerializer
+      )
+    end
+
+    it 'Response with correctly updated inventory' do
+      hash_body = nil
+      updated_inventory = @inventory.as_json
+      updated_inventory[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_path(
+        id: @teams.first.repositories.first.id,
+        team_id: @teams.first.id
+      ), params: updated_inventory.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body.to_json).to match(updated_inventory.to_json)
+    end
+
+    it 'When invalid request, inventory does not belong to team' do
+      hash_body = nil
+      updated_inventory = @inventory.as_json
+      updated_inventory[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_path(
+        id: @teams.second.repositories.first.id,
+        team_id: @teams.first.id
+      ), params: updated_inventory.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 404
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+
+    it 'When invalid request, non-existent inventory' do
+      hash_body = nil
+      updated_inventory = @inventory.as_json
+      updated_inventory[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_path(
+        id: 123,
+        team_id: @teams.first.id
+      ), params: updated_inventory.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 404
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+
+    it 'When invalid request, user in not member of the team' do
+      hash_body = nil
+      updated_inventory = @inventory.as_json
+      updated_inventory[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_path(
+        id: @teams.second.repositories.first.id,
+        team_id: @teams.second.id
+      ), params: updated_inventory.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 403
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+  end
 end
