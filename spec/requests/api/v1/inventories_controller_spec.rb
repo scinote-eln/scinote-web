@@ -92,4 +92,36 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
       expect(hash_body).to match({})
     end
   end
+
+  describe 'DELETE inventories, #destroy' do
+    it 'Destroys inventory' do
+      deleted_id = @teams.first.repositories.last.id
+      delete api_v1_team_inventory_path(
+        id: deleted_id,
+        team_id: @teams.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(200)
+      expect(Repository.where(id: deleted_id)).to_not exist
+      expect(RepositoryRow.where(repository: deleted_id).count).to equal 0
+      expect(RepositoryColumn.where(repository: deleted_id).count).to equal 0
+    end
+
+    it 'Invalid request, non existing inventory' do
+      delete api_v1_team_inventory_path(
+        id: 123,
+        team_id: @teams.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(404)
+    end
+
+    it 'When invalid request, repository from another team' do
+      deleted_id = @teams.first.repositories.last.id
+      delete api_v1_team_inventory_path(
+        id: deleted_id,
+        team_id: @teams.second.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(403)
+      expect(Repository.where(id: deleted_id)).to exist
+    end
+  end
 end
