@@ -126,4 +126,75 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(hash_body).to match({})
     end
   end
+
+  describe 'PATCH inventory_items, #update' do
+    before :all do
+      @valid_headers['Content-Type'] = 'application/json'
+      @inventory_item = ActiveModelSerializers::SerializableResource.new(
+        RepositoryRow.last,
+        serializer: Api::V1::InventoryItemSerializer,
+        include: :inventory_cells
+      )
+    end
+
+    it 'Response with correctly updated inventory item for name field' do
+      hash_body = nil
+      updated_inventory_item = @inventory_item.as_json[:data]
+      updated_inventory_item[:attributes][:name] = Faker::Name.unique.name
+      patch api_v1_team_inventory_item_path(
+        id: RepositoryRow.last.id,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), params: { data: updated_inventory_item }.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data].to_json).to match(updated_inventory_item.to_json)
+    end
+
+    it 'Response with correctly updated inventory item for list item column' do
+      hash_body = nil
+      updated_inventory_item = @inventory_item.as_json[:included]
+      updated_inventory_item.each do |cell|
+                                    attributes = cell[:attributes]
+                                    if attributes[:value_type] == 'list'
+                                        cell[:attributes] = {
+                                          :value_type => "list",
+                                          :value => Faker::Name.unique.name,
+                                          :column_id => 2
+                                        }
+                                    end
+                                  end
+      puts updated_inventory_item
+      patch api_v1_team_inventory_item_path(
+        id: RepositoryRow.last.id,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), params: @inventory_item.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:included].to_json).to match(updated_inventory_item.to_json)
+    end
+
+    # it 'Response with correctly updated inventory item for text item column' do
+    #   hash_body = nil
+    #   updated_inventory_item = @inventory_item.as_json[:included]
+    #   updated_inventory_item.each do |cell|
+    #                                 attributes = cell[:attributes]
+    #                                 if attributes[:value_type] == 'text'
+    #                                     attributes[:value] = Faker::Name.unique.name
+    #                                 end
+    #                               end
+    #   patch api_v1_team_inventory_item_path(
+    #     id: RepositoryRow.last.id,
+    #     team_id: @teams.first.id,
+    #     inventory_id: @valid_inventory.id
+    #   ), params: @inventory_item.to_json,
+    #   headers: @valid_headers
+    #   expect(response).to have_http_status 200
+    #   expect { hash_body = json }.not_to raise_exception
+    #   expect(hash_body[:included].to_json).to match(updated_inventory_item.to_json)
+    # end
+  end
 end
