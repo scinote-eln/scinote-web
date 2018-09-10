@@ -598,10 +598,13 @@ Rails.application.routes.draw do
               end
             end
           end
+<<<<<<< HEAD
           resources :users, only: %i(show) do
             resources :user_identities,
                       only: %i(index create show update destroy)
           end
+=======
+>>>>>>>  Added results endpoint
         end
       end
     end
