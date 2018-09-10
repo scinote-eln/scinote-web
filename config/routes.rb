@@ -597,10 +597,10 @@ Rails.application.routes.draw do
                           as: :connections
               end
             end
-            resources :users, only: %i(show) do
-              resources :user_identities,
-                        only: %i(index create show update destroy)
-            end
+          end
+          resources :users, only: %i(show) do
+            resources :user_identities,
+                      only: %i(index create show update destroy)
           end
         end
       end
