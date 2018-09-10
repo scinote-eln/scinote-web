@@ -575,12 +575,14 @@ Rails.application.routes.draw do
                   resources :results, only: %i(index show),
                             path: 'results',
                             as: :results
-                  resources :my_module_antecessors, only: %i(index show),
-                            path: 'ancestors',
-                            as: :ancestors
-                  resources :my_modules, only: %i(index show),
-                            path: 'descendants',
-                            as: :descendants
+                  get 'inputs',
+                      to: 'my_modules#inputs'
+                  get 'inputs/:id',
+                      to: 'my_modules#input'
+                  get 'outputs',
+                      to: 'my_modules#outputs'
+                  get 'outputs/:id',
+                      to: 'my_modules#output'
                   resources :activities, only: %i(index show),
                             path: 'activities',
                             as: :activities
