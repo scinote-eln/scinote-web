@@ -14,12 +14,15 @@ module Api
                             .page(params.dig(:page, :number))
                             .per(params.dig(:page, :size))
 
-        render jsonapi: results,
-          each_serializer: ResultSerializer
+        render jsonapi: results, include: %w(
+          result_table result_text result_asset
+        ), each_serializer: ResultSerializer
       end
 
       def show
-        render jsonapi: @result, serializer: ResultSerializer
+        render jsonapi: @result, include: %w(
+          result_table result_text result_asset
+        ), serializer: ResultSerializer
       end
 
       private

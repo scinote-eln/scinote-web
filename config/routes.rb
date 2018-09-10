@@ -540,7 +540,7 @@ Rails.application.routes.draw do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
       post 'auth/token', to: 'api#authenticate'
-      #if Api.configuration.core_api_v1_preview
+      if Api.configuration.core_api_v1_preview
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
@@ -572,6 +572,9 @@ Rails.application.routes.draw do
                    resources :protocols, only: %i(index show),
                    path: 'protocols',
                    as: :protocols
+                   resources :results, only: %i(index show),
+                   path: 'results',
+                   as: :results
                    get 'inputs',
                        to: 'my_modules#inputs'
                    get 'inputs/:id',
@@ -599,7 +602,7 @@ Rails.application.routes.draw do
                         only: %i(index create show update destroy)
             end
           end
-        #end
+        end
       end
     end
   end
