@@ -7,6 +7,7 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task, only: :show
+      before_action :load_task_relative, only: %i(outputs output inputs input)
 
       def index
         tasks = @experiment.my_modules
@@ -18,6 +19,32 @@ module Api
 
       def show
         render jsonapi: @my_module, serializer: MyModuleSerializer
+      end
+
+      def outputs
+        outputs = @my_module.my_modules
+                            .page(params.dig(:page, :number))
+                            .per(params.dig(:page, :size))
+        render jsonapi: outputs, each_serializer: MyModuleSerializer
+      end
+
+      def output
+        output = @my_module.my_modules.find(params.require(:id))
+        render jsonapi: {}, status: :not_found if output.nil?
+        render jsonapi: output, serializer: MyModuleSerializer
+      end
+
+      def inputs
+        inputs = @my_module.my_module_antecessors
+                           .page(params.dig(:page, :number))
+                           .per(params.dig(:page, :size))
+        render jsonapi: inputs, each_serializer: MyModuleSerializer
+      end
+
+      def input
+        input = @my_module.my_module_antecessors.find(params.require(:id))
+        render jsonapi: {}, status: :not_found if input.nil?
+        render jsonapi: input, serializer: MyModuleSerializer
       end
 
       private
@@ -43,6 +70,15 @@ module Api
 
       def load_task
         @my_module = @experiment.my_modules.find(params.require(:id))
+        render jsonapi: {}, status: :not_found if @my_module.nil?
+      end
+
+      # Made the method below because its more elegant than changing parameters
+      # in routes file, and here. It exists because when we call input or output
+      # for a task, the "id" that used to be task id is now an id for the output
+      # or input.
+      def load_task_relative
+        @my_module = @experiment.my_modules.find(params.require(:task_id))
         render jsonapi: {}, status: :not_found if @my_module.nil?
       end
     end
