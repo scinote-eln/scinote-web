@@ -554,7 +554,8 @@ Rails.application.routes.draw do
                         path: 'items',
                         as: :items
             end
-            resources :projects, only: %i(index show) do
+            resources :projects, only: %i(index show), path: 'projects',
+                      as: :projects do
               resources :experiments, only: %i(index show) do
                 resources :my_modules,
                           only: %i(index show),
