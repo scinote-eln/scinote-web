@@ -557,17 +557,17 @@ Rails.application.routes.draw do
             resources :projects, only: %i(index show) do
               resources :experiments, only: %i(index show) do
                 resources :my_modules,
-                 only: %i(index show),
-                 path: 'tasks',
-                 as: :tasks
+                          only: %i(index show),
+                          path: 'tasks',
+                          as: :tasks
                 resources :my_module_groups,
-                 only: %i(index show),
-                 path: 'task_groups',
-                 as: :task_groups
+                          only: %i(index show),
+                          path: 'task_groups',
+                          as: :task_groups
                 resources :connections,
-                 only: %i(index show),
-                 path: 'connections',
-                 as: :connections
+                          only: %i(index show),
+                          path: 'connections',
+                          as: :connections
               end
             end
           end
