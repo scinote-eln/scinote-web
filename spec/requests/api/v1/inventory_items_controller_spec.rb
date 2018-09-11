@@ -126,4 +126,50 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(hash_body).to match({})
     end
   end
+
+  describe 'DELETE inventory_items, #destroy' do
+    it 'Destroys inventory item' do
+      deleted_id = @teams.first.repositories.first.repository_rows.last.id
+      delete api_v1_team_inventory_item_path(
+        id: deleted_id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(200)
+      expect(RepositoryRow.where(id: deleted_id)).to_not exist
+      expect(RepositoryCell.where(repository_row: deleted_id).count).to equal 0
+    end
+
+    it 'Invalid request, non existing inventory item' do
+      deleted_id = RepositoryRow.last.id + 1
+      delete api_v1_team_inventory_item_path(
+        id: deleted_id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(404)
+    end
+
+    it 'When invalid request, incorrect repository' do
+      deleted_id = @teams.first.repositories.first.repository_rows.last.id
+      delete api_v1_team_inventory_item_path(
+        id: deleted_id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.second.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(404)
+      expect(RepositoryRow.where(id: deleted_id)).to exist
+    end
+
+    it 'When invalid request, repository from another team' do
+      deleted_id = @teams.first.repositories.first.repository_rows.last.id
+      delete api_v1_team_inventory_item_path(
+        id: deleted_id,
+        team_id: @teams.second.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(403)
+      expect(RepositoryRow.where(id: deleted_id)).to exist
+    end
+  end
 end
