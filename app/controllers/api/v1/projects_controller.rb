@@ -6,7 +6,6 @@ module Api
       before_action :load_team
       before_action :load_project, only: :show
 
-
       def index
         projects = @team.projects
                         .page(params.dig(:page, :number))
