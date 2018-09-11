@@ -161,7 +161,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(RepositoryRow.where(id: deleted_id)).to exist
     end
 
-    it 'When invalid request, repository from another team' do
+    it 'When invalid request, repository from another team' do
       deleted_id = @teams.first.repositories.first.repository_rows.last.id
       delete api_v1_team_inventory_item_path(
         id: deleted_id,
