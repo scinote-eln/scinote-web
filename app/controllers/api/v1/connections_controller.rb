@@ -10,6 +10,8 @@ module Api
       before_action :load_connection, only: :show
 
       def index
+        @connections = @connections.page(params.dig(:page, :number))
+                                   .per(params.dig(:page, :size))
         render jsonapi: @connections, each_serializer: ConnectionSerializer
       end
 
