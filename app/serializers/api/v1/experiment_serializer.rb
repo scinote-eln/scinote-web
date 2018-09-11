@@ -4,7 +4,7 @@ module Api
   module V1
     class ExperimentSerializer < ActiveModel::Serializer
       type :experiments
-      attributes :id, :name, :description, :created_by_id, :archived
+      attributes :id, :name, :description, :archived
     end
   end
 end
