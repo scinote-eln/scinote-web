@@ -41,8 +41,14 @@ module ReportsHelper
     locals = provided_locals.nil? ? {} : provided_locals.clone
     locals[:children] = children_html
 
-    # Set path local for files and tables
-    if element['type_of'].in? %w(step_asset step_table result_asset
+    # Set path and filename local variables for files and tables
+    if element['type_of'] == 'my_module_repository'
+      obj_name = Repository.find(element[:repository_id]).name + '.csv'
+      obj_folder_name = 'Inventories'
+
+      locals[:filename] = obj_name
+      locals[:path] = "#{obj_folder_name}/#{obj_name}"
+    elsif element['type_of'].in? %w(step_asset step_table result_asset
                                  result_table)
 
       parent_el = ReportElement.find(element['parent_id'])

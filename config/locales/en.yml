@@ -459,6 +459,7 @@ en:
           no_samples: "No samples"
         module_repository:
           name: "%{repository} of task %{my_module}"
+          table_name: "[ %{name} ]"
           no_items: "No items"
         result_asset:
           file_name: "[ %{file} ]"
