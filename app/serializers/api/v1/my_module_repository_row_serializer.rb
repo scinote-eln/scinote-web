@@ -4,8 +4,8 @@ module Api
   module V1
     class MyModuleRepositoryRowSerializer < ActiveModel::Serializer
       type :task_inventory_rows
-      attributes :id, :repository_row_id, :my_module_id, :assigned_by_id,
-                 :created_at, :updated_at
+      attributes :id, :repository_row_id, :my_module_id
+
       belongs_to :my_module, serializer: MyModuleSerializer
     end
   end
