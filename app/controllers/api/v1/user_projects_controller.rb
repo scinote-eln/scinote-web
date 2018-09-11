@@ -9,8 +9,8 @@ module Api
 
       def index
         user_projects = @project.user_projects
-                           .page(params.dig(:page, :number))
-                           .per(params.dig(:page, :size))
+                                .page(params.dig(:page, :number))
+                                .per(params.dig(:page, :size))
 
         render jsonapi: user_projects, each_serializer: UserProjectSerializer
       end
