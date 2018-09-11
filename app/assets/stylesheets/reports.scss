@@ -330,7 +330,7 @@ label {
   }
 
   .report-element-body {
-    padding-top: 30px;
+    padding-top: 15px;
   }
 }
 
@@ -499,6 +499,14 @@ label {
     .repository-name {
       margin-left: 5px;
     }
+
+    .table-name {
+      margin-left: 15px;
+    }
+  }
+
+  .report-element-body {
+    padding-top: 15px;
   }
 
   &:hover > .report-element-header {

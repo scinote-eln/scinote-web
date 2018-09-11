@@ -13,6 +13,14 @@
       <div class="pull-left repository-name">
         <%=t "projects.reports.elements.module_repository.name", repository: repository.name, my_module: my_module.name %>
       </div>
+      <% if defined? path and path.present? %>
+        <div class="pull-left table-name">
+            <a href="<%= path %>">
+              <em><%=t "projects.reports.elements.module_repository.table_name",
+                       name: filename %></em>
+            </a>
+        </div>
+      <% end %>
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
       </div>
