@@ -93,7 +93,9 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       @request_body = { data:
                          { type: 'inventory_columns',
                            attributes: {
-                             name: Faker::Name.unique.name
+                             name: Faker::Name.unique.name,
+                             data_type:
+                              RepositoryColumn.data_types.values.first
                            } } }
     end
 
@@ -195,6 +197,21 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(response).to have_http_status(400)
       expect { hash_body = json }.to_not raise_exception
       expect(hash_body).to match({})
+    end
+
+    it 'When invalid request, missing attributes values' do
+      hash_body = nil
+      [:name, :data_type].each do |attr|
+        invalid_request_body = @request_body.deep_dup
+        invalid_request_body[:data][:attributes].delete(attr)
+        post api_v1_team_inventory_columns_path(
+          team_id: @teams.first.id,
+          inventory_id: @teams.first.repositories.first.id
+        ), params: invalid_request_body.to_json, headers: @valid_headers
+        expect(response).to have_http_status(400)
+        expect { hash_body = json }.to_not raise_exception
+        expect(hash_body).to match({})
+      end
     end
   end
 end
