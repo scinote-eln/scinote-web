@@ -6,7 +6,7 @@ module Api
       before_action :load_team
       before_action :load_inventory
       before_action :load_inventory_column, only: %i(show update destroy)
-      before_action :check_manage_permissions, only: %i(create update destroy)
+      before_action :check_manage_permissions, only: %i(update destroy)
 
       def index
         columns = @inventory.repository_columns
@@ -19,7 +19,7 @@ module Api
 
       def create
         inventory_column =
-          @inventory.inventory_columns.create!(inventory_column_params)
+          @inventory.repository_columns.create!(inventory_column_params)
         render jsonapi: inventory_column,
                serializer: InventoryColumnSerializer,
                status: :created
@@ -72,7 +72,9 @@ module Api
                 'Wrong object type within parameters'
         end
         params.require(:data).require(:attributes)
-        params.permit(data: { attributes: %i(name) })[:data]
+        params
+          .permit(data: { attributes: %i(name data_type) })[:data]
+          .merge(created_by: @current_user)
       end
 
       def update_inventory_column_params
