@@ -201,7 +201,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
 
     it 'When invalid request, missing attributes values' do
       hash_body = nil
-      [:name, :data_type].each do |attr|
+      %i(name data_type).each do |attr|
         invalid_request_body = @request_body.deep_dup
         invalid_request_body[:data][:attributes].delete(attr)
         post api_v1_team_inventory_columns_path(
