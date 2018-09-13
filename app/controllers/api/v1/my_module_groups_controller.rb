@@ -6,7 +6,7 @@ module Api
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
-      before_action :load_task_groups, only: :show
+      before_action :load_task_group, only: :show
 
       def index
         my_module_groups = @experiment.my_module_groups
@@ -42,11 +42,10 @@ module Api
         )
       end
 
-      def load_task_groups
+      def load_task_group
         @my_module_group = @experiment.my_module_groups.find(
           params.require(:id)
         )
-        render jsonapi: {}, status: :not_found if @my_module_group.nil?
       end
     end
   end

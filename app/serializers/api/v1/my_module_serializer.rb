@@ -4,8 +4,8 @@ module Api
   module V1
     class MyModuleSerializer < ActiveModel::Serializer
       type :tasks
-      attributes :id, :name, :due_date, :description,
-                 :my_module_group_id, :nr_of_assigned_samples, :state
+      attributes :id, :name, :due_date, :description, :state
+      attribute :my_module_group_id, key: :task_group_id
       belongs_to :experiment, serializer: ExperimentSerializer
     end
   end
