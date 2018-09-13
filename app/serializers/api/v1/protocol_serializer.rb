@@ -5,8 +5,10 @@ module Api
     class ProtocolSerializer < ActiveModel::Serializer
       type :protocols
       attributes :id, :name, :authors, :description,
-                 :my_module_id, :team_id, :protocol_type,
+                 :team_id, :protocol_type,
                  :nr_of_linked_children
+      attribute :my_module_id, key: :task_id
+
       belongs_to :my_module, serializer: MyModuleSerializer
     end
   end
