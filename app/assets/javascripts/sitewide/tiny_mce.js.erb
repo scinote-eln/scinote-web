@@ -18,7 +18,7 @@ var TinyMCE = (function() {
     init : function() {
       if (typeof tinyMCE != 'undefined') {
         tinyMCE.init({
-          cache_suffix: '?v=4.7.13',
+          cache_suffix: '?v=4.7.13', // This suffix should be changed any time library is updated
           selector: 'textarea.tinymce',
           toolbar: ["undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample"],
           plugins: "autoresize,customimageuploader,link,advlist,codesample,autolink,lists,charmap,hr,anchor,searchreplace,wordcount,visualblocks,visualchars,insertdatetime,nonbreaking,save,contextmenu,directionality,paste,textcolor,colorpicker,textpattern",
