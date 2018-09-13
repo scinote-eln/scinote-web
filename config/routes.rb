@@ -559,7 +559,9 @@ Rails.application.routes.draw do
                 resources :my_modules,
                           only: %i(index show),
                           path: 'tasks',
-                          as: :tasks
+                          as: :tasks do
+                  resources :results, only: %i(index create show)
+                end
                 resources :my_module_groups,
                           only: %i(index show),
                           path: 'task_groups',
