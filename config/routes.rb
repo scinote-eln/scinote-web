@@ -559,7 +559,7 @@ Rails.application.routes.draw do
                 resources :my_modules,
                           only: %i(index show),
                           path: 'tasks',
-                 as: :tasks do
+                as: :tasks do
                   resources :my_module_repository_rows, only: %i(index show),
                             path: 'task_inventory_rows',
                             as: :task_inventory_rows
