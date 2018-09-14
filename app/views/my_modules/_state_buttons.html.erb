@@ -1,8 +1,8 @@
 <div class="pull-right my_module-state-buttons">
   <% if can_complete_module?(@my_module) %>
-    <div class="btn-group popover_v2"
-    data-popoverlink="<%= I18n.t('popover_test.link.protocol.complete') %>"
-    data-popovercontent="<%= I18n.t('popover_test.text.protocol.complete') %>">
+    <div class="btn-group help_tooltips"
+         data-tooltiplink="<%= I18n.t('tooltips.link.protocol.complete') %>"
+         data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.complete') %>">
       <% if !@my_module.completed? %>
         <div data-action="complete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
           <%= render 'my_modules/state_button_complete.html.erb' %>

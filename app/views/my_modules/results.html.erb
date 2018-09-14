@@ -15,9 +15,9 @@
     </div>
 
     <% if can_manage_module?(@my_module) %>
-      <div class="popover_v2" style="width:25%"
-      data-popoverlink="<%= I18n.t('popover_test.link.task.results') %>"
-      data-popovercontent="<%= I18n.t('popover_test.text.task.results') %>">
+      <div class="help_tooltips" style="width:25%"
+           data-tooltiplink="<%= I18n.t('tooltips.link.task.results') %>"
+           data-tooltipcontent="<%= I18n.t('tooltips.text.task.results') %>">
       <span class="hidden-xs"><%= t'my_modules.results.add_label' %></span>
       <a class="btn btn-primary"
          id="new-result-text"

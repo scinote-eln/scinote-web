@@ -13,10 +13,10 @@
   <div id="repository-toolbar">
 
     <% if can_create_repository_rows?(@repository.team) %>
-      <button type="button" class="btn btn-primary editAdd popover_v2"
-      id="addRepositoryRecord" onclick="onClickAddRecord()"
-      data-popoverlink="<%= I18n.t('popover_test.link.inventory.new') %>"
-      data-popovercontent="<%= I18n.t('popover_test.text.inventory.new') %>">
+      <button type="button" class="btn btn-primary editAdd help_tooltips"
+              id="addRepositoryRecord" onclick="onClickAddRecord()"
+              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.new') %>"
+              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.new') %>">
         <span class="fas fa-plus"></span>
         <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
       </button>

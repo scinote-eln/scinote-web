@@ -1994,7 +1994,7 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
-  popover_test:
+  tooltips:
     text:
       invite_to_sci: "Invite other scientists to SciNote and gain additional free storage space for your team. How?"
       new_project: "Project is the topmost layer when you are organizing your data in SciNote. It allows you to assign members and keep all project-related data within one project card."

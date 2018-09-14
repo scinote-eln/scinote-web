@@ -30,11 +30,12 @@
 
   <div class="panel-body">
     <% if can_manage_module?(my_module) %>
-      <%= link_to due_date_my_module_path(my_module, format: :json), remote: true, class: "due-date-link due-date-refresh popover_v2",
-      data: {
-        popoverlink: I18n.t('popover_test.link.task.due_date'),
-        popovercontent: I18n.t('popover_test.text.task.due_date')
-      } do %>
+      <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
+                  class: "due-date-link due-date-refresh help_tooltips",
+                  data: {
+                    tooltiplink: I18n.t('tooltips.link.task.due_date'),
+                    tooltipcontent: I18n.t('tooltips.text.task.due_date')
+                  } do %>
         <%= render partial: "my_modules/due_date_label.html.erb", locals: { my_module: my_module } %>
       <% end %>
     <% else %>

@@ -1,6 +1,6 @@
-<div class="panel panel-default panel-protocol-status popover_v2"
-data-popoverlink="<%= I18n.t('popover_test.link.protocol.linking') %>"
-data-popovercontent="<%= I18n.t('popover_test.text.protocol.linking') %>">
+<div class="panel panel-default panel-protocol-status help_tooltips"
+     data-tooltiplink="<%= I18n.t('tooltips.link.protocol.linking') %>"
+     data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.linking') %>">
   <div class="panel-body">
     <% if @protocol.linked? %>
       <%= protocol_status_href(@protocol) %>

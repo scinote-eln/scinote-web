@@ -39,7 +39,7 @@
           <% end %>
         </div>
       <% end %>
-      <span class="popover_v2" data-popoverlink="<%= I18n.t('popover_test.link.experiment.dates') %>" data-popovercontent="<%= I18n.t('popover_test.text.experiment.dates') %>">
+      <span class="help_tooltips" data-tooltiplink="<%= I18n.t('tooltips.link.experiment.dates') %>" data-tooltipcontent="<%= I18n.t('tooltips.text.experiment.dates') %>">
         <span class="fas fa-calendar-alt" aria-hidden="true"></span>
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
       </span>

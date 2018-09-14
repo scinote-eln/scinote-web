@@ -19,8 +19,11 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success popover_v2",
-              data: { popoverlink: I18n.t('popover_test.link.new_project'), popovercontent: I18n.t('popover_test.text.new_project')} %>
+              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success help_tooltips",
+                           data: {
+                             tooltiplink: I18n.t('tooltips.link.new_project'),
+                             tooltipcontent: I18n.t('tooltips.text.new_project')
+                           } %>
             </div>
           </div>
         </div>

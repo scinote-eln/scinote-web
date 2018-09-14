@@ -13,21 +13,23 @@
   <li data-hook="experiment-actions-second-child"></li>
   <% if can_clone_experiment?(experiment) %>
     <li><%= link_to t('experiments.clone.label_title'),
-                  clone_modal_experiment_url(experiment),
-                  remote: true,
-                  type: 'button',
-                  class: 'clone-experiment popover_v2',
-                  data: { popoverlink: I18n.t('popover_test.link.experiment.copy'), popovercontent: I18n.t('popover_test.text.experiment.copy') }
-                  %></li>
+                    clone_modal_experiment_url(experiment),
+                    remote: true, type: 'button',
+                    class: 'clone-experiment help_tooltips',
+                    data: {
+                      tooltiplink: I18n.t('tooltips.link.experiment.copy'),
+                      tooltipcontent: I18n.t('tooltips.text.experiment.copy')
+                    } %></li>
   <% end %>
   <% if can_move_experiment?(experiment) %>
     <li><%= link_to t('experiments.move.label_title'),
-                  move_modal_experiment_url(experiment),
-                  remote: true,
-                  type: 'button',
-                  class: 'move-experiment popover_v2',
-                  data: { popoverlink: I18n.t('popover_test.link.experiment.move'), popovercontent: I18n.t('popover_test.text.experiment.move') }
-                   %></li>
+                    move_modal_experiment_url(experiment),
+                    remote: true, type: 'button',
+                    class: 'move-experiment help_tooltips',
+                    data: {
+                      tooltiplink: I18n.t('tooltips.link.experiment.move'),
+                      tooltipcontent: I18n.t('tooltips.text.experiment.move')
+                    } %></li>
   <% end %>
   <% if can_manage_experiment?(experiment) %>
   <li><%= link_to t('experiments.archive.label_title'),
