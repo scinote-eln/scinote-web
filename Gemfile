@@ -15,6 +15,9 @@ gem 'bootstrap_form'
 gem 'yomu'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
+
+# Gems for OAuth2 subsystem
+gem 'doorkeeper', '~> 4.4'
 gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 

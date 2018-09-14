@@ -42,5 +42,11 @@ module Scinote
 
     # SciNote Core Application version
     VERSION = File.read(Rails.root.join('VERSION')).strip.freeze
+
+    # Doorkeeper overrides
+    config.to_prepare do
+      # Only Authorization endpoint
+      Doorkeeper::AuthorizationsController.layout 'sign_in_halt'
+    end
   end
 end
