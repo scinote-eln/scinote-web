@@ -1792,25 +1792,26 @@ th.custom-field .modal-tooltiptext {
   cursor: pointer;
 }
 
-.tooltip-open{
-  background-color:$color-lightsilver;
-  font-size:$font-size-base;
+.tooltip-open {
+  background-color: $color-lightsilver;
   color: $color-black;
+  font-size: $font-size-base;
 
-  .popover-footer{
-    position:absolute;
-    bottom:5px;
-    right:5px;
-    background-color:$color-lightgray;
+  .popover-footer {
+    background-color: $color-lightgray;
     border-radius: 3px;
+    bottom: 5px;
+    position: absolute;
+    right: 5px;
 
-    a{
+    a {
       color: $color-darkgray;
     }
   }
 }
-.tooltip_enter{
-  background-color:$color-darksilver;
+
+.tooltip-enter {
+  background-color: $color-darksilver;
 }
 
 .my_module-state-buttons {

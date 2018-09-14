@@ -45,17 +45,17 @@
           setTimeout(function() {
             if ($(obj).hover().length > 0) {
               $(obj).popover("show");
-              $(".tooltip_" + i + "_window").removeClass("tooltip_enter");
+              $(".tooltip_" + i + "_window").removeClass("tooltip-enter");
               var top = $(obj).offset().top;
               $('.tooltip_' + i + '_window').css({
                 top: (top) + 'px'
               });
               $(".tooltip_" + i + "_window").off("mouseleave").on("mouseleave", function() {
-                $(".tooltip_" + i + "_window").removeClass("tooltip_enter");
+                $(".tooltip_" + i + "_window").removeClass("tooltip-enter");
                 $(obj).popover('hide');
               });
               $(".tooltip_" + i + "_window").off("mouseenter").on("mouseenter", function() {
-                $(".tooltip_" + i + "_window").addClass("tooltip_enter");
+                $(".tooltip_" + i + "_window").addClass("tooltip-enter");
               });
             }
           }, 1000);
