@@ -181,7 +181,7 @@ ActiveRecord::Schema.define(version: 20180813120338) do
   end
 
   create_table "my_module_repository_rows", id: :serial, force: :cascade do |t|
-    t.integer "repository_row_id", null: false
+    t.bigint "repository_row_id", null: false
     t.integer "my_module_id"
     t.integer "assigned_by_id", null: false
     t.datetime "created_at"
@@ -420,11 +420,11 @@ ActiveRecord::Schema.define(version: 20180813120338) do
     t.index ["last_modified_by_id"], name: "index_repository_asset_values_on_last_modified_by_id"
   end
 
-  create_table "repository_cells", id: :serial, force: :cascade do |t|
-    t.integer "repository_row_id"
+  create_table "repository_cells", force: :cascade do |t|
+    t.bigint "repository_row_id"
     t.integer "repository_column_id"
     t.string "value_type"
-    t.integer "value_id"
+    t.bigint "value_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["repository_column_id"], name: "index_repository_cells_on_repository_column_id"
@@ -432,7 +432,7 @@ ActiveRecord::Schema.define(version: 20180813120338) do
     t.index ["value_type", "value_id"], name: "index_repository_cells_on_value_type_and_value_id"
   end
 
-  create_table "repository_columns", id: :serial, force: :cascade do |t|
+  create_table "repository_columns", force: :cascade do |t|
     t.integer "repository_id"
     t.integer "created_by_id", null: false
     t.string "name"
@@ -442,7 +442,7 @@ ActiveRecord::Schema.define(version: 20180813120338) do
     t.index ["repository_id"], name: "index_repository_columns_on_repository_id"
   end
 
-  create_table "repository_date_values", id: :serial, force: :cascade do |t|
+  create_table "repository_date_values", force: :cascade do |t|
     t.datetime "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -476,7 +476,7 @@ ActiveRecord::Schema.define(version: 20180813120338) do
     t.index ["repository_list_item_id"], name: "index_repository_list_values_on_repository_list_item_id"
   end
 
-  create_table "repository_rows", id: :serial, force: :cascade do |t|
+  create_table "repository_rows", force: :cascade do |t|
     t.integer "repository_id"
     t.integer "created_by_id", null: false
     t.integer "last_modified_by_id", null: false
@@ -497,7 +497,7 @@ ActiveRecord::Schema.define(version: 20180813120338) do
     t.index ["user_id"], name: "index_repository_table_states_on_user_id"
   end
 
-  create_table "repository_text_values", id: :serial, force: :cascade do |t|
+  create_table "repository_text_values", force: :cascade do |t|
     t.string "data"
     t.datetime "created_at"
     t.datetime "updated_at"

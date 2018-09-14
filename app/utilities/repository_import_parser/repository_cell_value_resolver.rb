@@ -48,11 +48,10 @@ module RepositoryImportParser
       if @column_list_items_size >= Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
         return
       end
-      item = RepositoryListItem.new(data: value,
-                                    created_by: @user,
-                                    last_modified_by: @user,
-                                    repository_column: @column,
-                                    repository: @repository)
+      item = @column.repository_list_items.new(data: value,
+                                               created_by: @user,
+                                               last_modified_by: @user,
+                                               repository: @repository)
       if item.save
         @column_list_items_size += 1
         return item

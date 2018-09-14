@@ -17,12 +17,12 @@
       <% if can_manage_protocol_in_module?(@protocol) %>
         <li>
           <a class="btn-open-file" href="#" data-action="load-from-file" data-import-url="<%= load_from_file_protocol_path(@protocol, format: :json) %>">
-            <span class="fas fa-file"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_file") %>
+            <span class="fas fa-paperclip"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_file") %>
             <input type="file" value="" accept=".eln" data-turbolinks="false">
           </a>
         </li>
       <% else %>
-        <li class="disabled"><a href="#"><span class="fas fa-file"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_file") %></a></li>
+        <li class="disabled"><a href="#"><span class="fas fa-paperclip"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_file") %></a></li>
       <% end %>
     </ul>
   </div>

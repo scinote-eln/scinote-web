@@ -542,8 +542,41 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      namespace :v1 do
-        resources :teams, only: %i(index show) do
+      if Api.configuration.core_api_v1_preview
+        namespace :v1 do
+          resources :teams, only: %i(index show) do
+            resources :inventories,
+                      only: %i(index create show update destroy) do
+              resources :inventory_columns,
+                        only: %i(index create show update destroy),
+                        path: 'columns',
+                        as: :columns
+              resources :inventory_items,
+                        only: %i(index create show update destroy),
+                        path: 'items',
+                        as: :items
+            end
+            resources :projects, only: %i(index show) do
+              resources :experiments, only: %i(index show) do
+                resources :my_modules,
+                          only: %i(index show),
+                          path: 'tasks',
+                          as: :tasks
+                resources :my_module_groups,
+                          only: %i(index show),
+                          path: 'task_groups',
+                          as: :task_groups
+                resources :connections,
+                          only: %i(index show),
+                          path: 'connections',
+                          as: :connections
+              end
+            end
+          end
+          resources :users, only: %i(show) do
+            resources :user_identities,
+                      only: %i(index create show update destroy)
+          end
         end
       end
     end
