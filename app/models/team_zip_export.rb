@@ -168,7 +168,7 @@ class TeamZipExport < ZipExport
       table_name = table.name.presence || 'Table'
       table_name += i.to_s
       file = FileUtils.touch(
-        "#{directory}/#{handle_name(table_name)}_#{i}_Step#{step_table.step.position+1}}.csv"
+        "#{directory}/#{handle_name(table_name)}_#{i}_Step#{step_table.step.position+1}.csv"
       ).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
@@ -207,7 +207,8 @@ class TeamZipExport < ZipExport
       assets[asset] = "#{attach_path}/#{file_name}"
 
       asset_counter += 1
-      return "#{rel_attach_path}/#{file_name}"
+      rel_path = "#{rel_attach_path}/#{file_name}"
+      return "=HYPERLINK(\"#{rel_path}\", \"#{rel_path}\")"
     end
 
     # Generate CSV
