@@ -28,7 +28,7 @@ class TeamZipExport < ZipExport
     generate_notification(user) if save
   end
 
-  handle_asynchronously :generate_exportable_zip
+  #handle_asynchronously :generate_exportable_zip
 
   private
 
@@ -127,10 +127,19 @@ class TeamZipExport < ZipExport
     name.gsub(/^-|\.+$| +$/, '_')
   end
 
+  # Appends given suffix to file_name and then adds original extension
+  def append_suffix(file_name, suffix)
+    ext = File.extname(file_name)
+    File.basename(file_name, ext) + suffix + ext
+  end
+
   # Helper method to extract given assets to the directory
   def export_assets(assets, directory)
     assets.each_with_index do |asset, i|
-      file = FileUtils.touch("#{directory}/#{asset.file_file_name}_#{i}").first
+      file = FileUtils.touch("#{directory}/#{append_suffix(asset.file_file_name,
+                             "_#{i}"
+                            )}"
+      ).first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
   end
@@ -140,7 +149,9 @@ class TeamZipExport < ZipExport
     assets.each_with_index do |step_asset, i|
       asset = step_asset.asset
       file = FileUtils.touch(
-        "#{directory}/#{asset.file_file_name}_#{i}_Step#{step_asset.step.position+1}"
+        "#{directory}/#{append_suffix(asset.file_file_name,
+                                      "_#{i}_Step#{step_asset.step.position+1}"
+                                     )}"
       ).first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
@@ -211,7 +222,8 @@ class TeamZipExport < ZipExport
 
     # Save all attachments
     assets.each_with_index do |asset, i|
-      file = FileUtils.touch("#{attach_path}/#{asset.file_file_name}_#{i}").first
+      file = FileUtils.touch("#{attach_path}/#{append_suffix(asset.file_file_name,
+                             "_#{i}")}").first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
   end
