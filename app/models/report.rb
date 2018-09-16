@@ -20,7 +20,7 @@ class Report < ApplicationRecord
 
   # Report either has many report elements (if grouped by timestamp),
   # or many module elements (if grouped by module)
-  has_many :report_elements, inverse_of: :report, dependent: :destroy
+  has_many :report_elements, inverse_of: :report, dependent: :delete_all
 
   after_commit do
     Views::Datatables::DatatablesReport.refresh_materialized_view
