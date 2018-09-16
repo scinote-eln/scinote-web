@@ -12,6 +12,7 @@ class TeamZipExport < ZipExport
   MAX_NAME_SIZE = 20
 
   def generate_exportable_zip(user, data, type, options = {})
+    @user = user
     FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready'))
     dir_to_zip = FileUtils.mkdir_p(
       File.join(Rails.root, "tmp/temp-zip-#{Time.now.to_i}")
@@ -28,15 +29,15 @@ class TeamZipExport < ZipExport
     generate_notification(user) if save
   end
 
-  #handle_asynchronously :generate_exportable_zip
+  handle_asynchronously :generate_exportable_zip
 
   private
 
   # Export all functionality
   def generate_teams_zip(tmp_dir, data, _options = {})
     # Create team folder
-    team = _options[:team]
-    team_path = "#{tmp_dir}/#{handle_name(team.name)}"
+    @team = _options[:team]
+    team_path = "#{tmp_dir}/#{handle_name(@team.name)}"
     FileUtils.mkdir_p(team_path)
 
     # Create Projects folders
@@ -77,18 +78,21 @@ class TeamZipExport < ZipExport
             my_module_path = "#{experiment_path}/#{handle_name(my_module.name)}_#{mod_ind}"
             FileUtils.mkdir_p(my_module_path)
 
+            # Create upper directories for both elements
             protocol_path = "#{my_module_path}/Protocol attachments"
             result_path = "#{my_module_path}/Result attachments"
             FileUtils.mkdir_p(protocol_path)
             FileUtils.mkdir_p(result_path)
 
+            # Export protocols
             steps = my_module.protocols.map{ |p| p.steps }.flatten
             export_step_assets(StepAsset.where(step: steps), protocol_path)
-            export_tables(StepTable.where(step: steps).map {|s| s.table}, protocol_path)
+            export_step_tables(StepTable.where(step: steps), protocol_path)
 
-            export_assets(ResultAsset.where(result: my_module.results)
+            # Export results
+            export_result_assets(ResultAsset.where(result: my_module.results)
                                      .map {|r| r.asset}, result_path)
-            export_tables(ResultTable.where(result: my_module.results)
+            export_result_tables(ResultTable.where(result: my_module.results)
                                      .map {|r| r.table}, result_path)
           end
         end
@@ -134,7 +138,7 @@ class TeamZipExport < ZipExport
   end
 
   # Helper method to extract given assets to the directory
-  def export_assets(assets, directory)
+  def export_result_assets(assets, directory)
     assets.each_with_index do |asset, i|
       file = FileUtils.touch("#{directory}/#{append_suffix(asset.file_file_name,
                              "_#{i}"
@@ -158,23 +162,24 @@ class TeamZipExport < ZipExport
   end
 
   # Helper method to extract given tables to the directory
-  def export_step_tables(tables, directory)
-    tables.each_with_index do |table, i|
+  def export_step_tables(step_tables, directory)
+    step_tables.each_with_index do |step_table, i|
+      table = step_table.table
       table_name = table.name.presence || 'Table'
       table_name += i.to_s
       file = FileUtils.touch(
-        "#{directory}/#{handle_name(table_name)}_#{i}_Step#{step_asset.step.position+1}}.csv"
+        "#{directory}/#{handle_name(table_name)}_#{i}_Step#{step_table.step.position+1}}.csv"
       ).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
   end
 
   # Helper method to extract given tables to the directory
-  def export_tables(tables, directory)
+  def export_result_tables(tables, directory)
     tables.each_with_index do |table, i|
       table_name = table.name.presence || 'Table'
       table_name += i.to_s
-      file = FileUtils.touch("#{directory}/#{table_name}.csv").first
+      file = FileUtils.touch("#{directory}/#{handle_name(table_name)}.csv").first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
   end
@@ -190,40 +195,29 @@ class TeamZipExport < ZipExport
     FileUtils.mkdir_p(attach_path)
 
     # Define headers and columns IDs
-    headers = ['ID', 'Name', 'Added on', 'Added by'] +
-              repo.repository_columns.map{|x| x.name}
-    col_ids = repo.repository_columns.map{|x| x.id}
+    col_ids = [-3, -4, -5, -6] + repo.repository_columns.map{ |x| x.id }
+
+    # Define callback function for file name
+    assets = {}
+    asset_counter = 0
+    handle_name_func = lambda do |asset|
+      file_name = "#{append_suffix(asset.file_file_name, "_#{asset_counter}")}"
+
+      # Save pair for downloading it later
+      assets[asset] = "#{attach_path}/#{file_name}"
+
+      asset_counter += 1
+      return "#{rel_attach_path}/#{file_name}"
+    end
 
     # Generate CSV
-    assets = []
-    csv_data = CSV.generate do |csv|
-      csv << headers
-
-      repo_rows.each do |row|
-        csv_row = [row.id, row.name, row.created_at, row.created_by.name]
-        #  TODO: take care of uneven number of columns
-        row.repository_cells.each do |cell|
-          case cell.value_type
-          when 'RepositoryAssetValue'
-            csv_row << "#{rel_attach_path}/#{cell.value.asset.file_file_name}"
-            assets << cell.value.asset
-          when 'RepositoryListValue'
-            csv_row << cell.value.formatted
-          when 'RepositoryDateValue'
-            csv_row << cell.value.formatted
-          when 'RepositoryTextValue'
-            csv_row << cell.value.formatted
-          end
-        end
-        csv << csv_row
-      end
-    end
+    csv_data = RepositoryZipExport.to_csv(repo_rows, col_ids, @user, @team,
+                                          handle_name_func)
     File.open(file, 'wb') { |f| f.write(csv_data) }
 
-    # Save all attachments
-    assets.each_with_index do |asset, i|
-      file = FileUtils.touch("#{attach_path}/#{append_suffix(asset.file_file_name,
-                             "_#{i}")}").first
+    # Save all attachments (it doesn't work directly in callback function
+    assets.each do |asset, path|
+      file = FileUtils.touch(path).first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
   end

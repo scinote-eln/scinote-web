@@ -16,7 +16,7 @@ module RepositoryZipExport
     )
   end
 
-  def self.to_csv(rows, column_ids, user, team)
+  def self.to_csv(rows, column_ids, user, team, handle_file_name_func = nil)
     # Parse column names
     csv_header = []
     column_ids.each do |c_id|
@@ -56,10 +56,21 @@ module RepositoryZipExport
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)
+
                        if cell
-                         SmartAnnotations::TagToText.new(
-                           user, team, cell.value.formatted
-                         ).text
+                         if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
+                           handle_file_name_func.call(cell.value.asset)
+                           #puts(tmp)
+                           #puts 'outtt'
+
+                          #SmartAnnotations::TagToText.new(
+                            #user, team, cell.value.formatted
+                          #).text
+                         else
+                          SmartAnnotations::TagToText.new(
+                            user, team, cell.value.formatted
+                          ).text
+                         end
                        end
                      end
         end
