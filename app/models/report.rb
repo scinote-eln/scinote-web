@@ -93,6 +93,208 @@ class Report < ApplicationRecord
     end
   end
 
+  def self.generate_whole_project_report(project, current_user, current_team)
+    report_contents = []
+    report_contents << {
+      'type_of' => 'project_header',
+      'id' => {
+        'project_id' => project.id
+      },
+      'sort_order' => nil,
+      'children' => []
+    }
+
+    project.experiments.each do |exp|
+      modules = []
+
+      exp.my_modules.each do |my_module|
+        module_children = []
+
+        my_module.protocol.steps.each do |step|
+          step_children = []
+
+          step.assets.each do |asset|
+            step_children << {
+              'type_of' => 'step_asset',
+              'id' => {
+                'asset_id' => asset.id
+              },
+              'sort_order' => nil,
+              'children' => []
+            }
+          end
+          step.tables.each do |table|
+            step_children << {
+              'type_of' => 'step_table',
+              'id' => {
+                'table_id' => table.id
+              },
+              'sort_order' => nil,
+              'children' => []
+            }
+          end
+          step.checklists.each do |step_checklist|
+            step_children << {
+              'type_of' => 'step_checklist',
+              'id' => {
+                'checklist_id' => step_checklist.id
+              },
+              'sort_order' => nil,
+              'children' => []
+            }
+          end
+          if step.step_comments.any?
+            step_children << {
+              'type_of' => 'step_comments',
+              'id' => {
+                'step_id' => step.id
+              },
+              'sort_order' => 'asc',
+              'children' => []
+            }
+          end
+
+          module_children << {
+            'type_of' => 'step',
+            'id' => {
+              'step_id' => step.id
+            },
+            'sort_order' => nil,
+            'children' => step_children
+          }
+        end
+
+        my_module.results.each do |result|
+          if result.asset
+            result_comments = []
+
+            if result.result_comments.any?
+              result_comments << {
+                'type_of' => 'result_comments',
+                'id' => {
+                  'result_id' => result.id
+                },
+                'sort_order' => 'asc',
+                'children' => []
+              }
+            end
+
+            module_children << {
+              'type_of' => 'result_asset',
+              'id' => {
+                'result_id' => result.id
+              },
+              'sort_order' => nil,
+              'children' => []
+            }
+          elsif result.table
+            result_comments = []
+
+            if result.result_comments.any?
+              result_comments << {
+                'type_of' => 'result_comments',
+                'id' => {
+                  'result_id' => result.id
+                },
+                'sort_order' => 'asc',
+                'children' => []
+              }
+            end
+
+            module_children << {
+              'type_of' => 'result_table',
+              'id' => {
+                'result_id' => result.id
+              },
+              'sort_order' => nil,
+              'children' => result_comments
+            }
+          elsif result.result_text
+            result_comments = []
+
+            if result.result_comments.any?
+              result_comments << {
+                'type_of' => 'result_comments',
+                'id' => {
+                  'result_id' => result.id
+                },
+                'sort_order' => 'asc',
+                'children' => []
+              }
+            end
+
+            module_children << {
+              'type_of' => 'result_text',
+              'id' => {
+                'result_id' => result.id
+              },
+              'sort_order' => nil,
+              'children' => result_comments
+            }
+          end
+        end
+
+        if my_module.activities.any?
+          module_children << {
+            'type_of' => 'my_module_activity',
+            'id' => {
+              'my_module_id' => my_module.id
+            },
+            'sort_order' => 'asc',
+            'children' => []
+          }
+        end
+
+        module_repositories_id =
+          my_module.repository_rows.map(&:repository_id).uniq
+        module_repositories_id.each do |repo_id|
+          module_children << {
+            'type_of' => 'my_module_repository',
+            'id' => {
+              'my_module_id' => my_module.id,
+              'repository_id' => repo_id
+            },
+            'sort_order' => 'asc',
+            'children' => []
+          }
+        end
+
+        modules << {
+          'type_of' => 'my_module',
+          'id' => {
+            'my_module_id' => my_module.id
+          },
+          'sort_order' => nil,
+          'children' => module_children
+        }
+      end
+
+      report_contents << {
+        'type_of' => 'experiment',
+        'id' => {
+          'experiment_id' => exp.id
+        },
+        'sort_order' => nil,
+        'children' => modules
+      }
+    end
+
+    dummy_name = loop do
+      dummy_name = SecureRandom.hex(10)
+      break dummy_name unless Report.where(name: dummy_name).exists?
+    end
+
+    report = Report.new
+    report.name = dummy_name
+    report.project = project
+    report.user = current_user
+    report.team = current_team
+    report.last_modified_by = current_user
+
+    report.save_with_contents(report_contents)
+    report
+  end
+
   private
 
   # Recursively save a single JSON element
