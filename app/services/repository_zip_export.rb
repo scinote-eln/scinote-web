@@ -60,12 +60,6 @@ module RepositoryZipExport
                        if cell
                          if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
                            handle_file_name_func.call(cell.value.asset)
-                           #puts(tmp)
-                           #puts 'outtt'
-
-                          #SmartAnnotations::TagToText.new(
-                            #user, team, cell.value.formatted
-                          #).text
                          else
                           SmartAnnotations::TagToText.new(
                             user, team, cell.value.formatted
