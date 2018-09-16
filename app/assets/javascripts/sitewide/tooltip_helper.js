@@ -4,6 +4,8 @@
   $.initTooltips = function() {
     if ($(document.body).data("tooltips-enabled") === true || $(document.body).data("tooltips-enabled") == null) {
       var popoversArray = [];
+      var leaveTimeout;
+      var enterTimeout
       $('.tooltip_open').remove(); // Destroy all (if any) old open popovers
       $('.help_tooltips').each(function(i, obj) {
         var popoverObject = obj;
@@ -35,14 +37,16 @@
               $(arrayItem).popover("hide");
             }
           });
-        }).off("mouseleave").on("mouseleave", function() {
-          setTimeout(function() {
-            if (!$(".tooltip_" + i + "_window:hover").length) {
+        }).off("mouseleave").on("mouseleave", function( ) {
+          clearTimeout(enterTimeout);
+          leaveTimeout = setTimeout(function() {
+            if (!$(".tooltip_" + i + "_window:hover").length > 0) {
               $(obj).popover("hide");
             }
           }, 100);
         }).off("mouseenter").on("mouseenter", function() {
-          setTimeout(function() {
+          clearTimeout(leaveTimeout);
+          enterTimeout = setTimeout(function() {
             if ($(obj).hover().length > 0) {
               $(obj).popover("show");
               $(".tooltip_" + i + "_window").removeClass("tooltip-enter");
