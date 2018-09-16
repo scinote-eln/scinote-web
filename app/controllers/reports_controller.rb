@@ -187,6 +187,7 @@ class ReportsController < ApplicationController
     page_html_string = render_to_string 'reports/new.html.erb', export_all: true
     parsed_page_html = Nokogiri::HTML(page_html_string)
     parsed_pdf_html = parsed_page_html.at_css('#report-content')
+    @report.destroy
 
     filename = "#{@project.name}.pdf"
     parsed_pdf = render_to_string(
@@ -411,7 +412,6 @@ class ReportsController < ApplicationController
     report.last_modified_by = current_user
 
     report.save_with_contents(report_contents)
-    # TODO: do report.destroy after it is downloaded
     report
   end
 
