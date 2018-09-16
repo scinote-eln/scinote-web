@@ -8,8 +8,8 @@ module TeamZipExporter
       .index_by(&:id)
 
     options = {team: team}
-    zip = ZipExport.create(user: current_user)
-    zip.generate_export_all_zip(
+    zip = TeamZipExport.create(user: current_user)
+    zip.generate_exportable_zip(
       current_user,
       ids,
       :teams,
