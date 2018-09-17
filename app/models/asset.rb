@@ -98,23 +98,31 @@ class Asset < ApplicationRecord
     options = {}
   )
 
-    project_ids =
-      Project
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
-    team_ids = user.teams.pluck(:id)
+    teams = user.teams.select(:id)
 
-    new_query =
-      Asset
-      .distinct
-      .left_outer_joins(:asset_text_datum)
-      .left_outer_joins(
-        step: { protocol: { my_module: { experiment: :project } } }
-      )
-      .left_outer_joins(result: { my_module: { experiment: :project } })
-      .left_outer_joins(repository_cell: { repository_column: :repository })
-      .where('projects.id IN (?) OR repositories.team_id IN (?)',
-             project_ids, team_ids)
+    assets_in_steps = Asset.joins(:step).where(
+      'steps.id IN (?)',
+      Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+          .select(:id)
+    ).pluck(:id)
+
+    assets_in_results = Asset.joins(:result).where(
+      'results.id IN (?)',
+      Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+            .select(:id)
+    ).pluck(:id)
+
+    assets_in_inventories = Asset.joins(
+      repository_cell: { repository_column: :repository }
+    ).where('repositories.team_id IN (?)', teams).pluck(:id)
+
+    assets =
+      Asset.distinct
+           .where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
+                  assets_in_steps, assets_in_results, assets_in_inventories)
+
+    new_query = Asset.left_outer_joins(:asset_text_datum)
+                     .from(assets, 'assets')
 
     a_query = s_query = ''
 
