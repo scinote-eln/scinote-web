@@ -186,7 +186,8 @@ class ReportsController < ApplicationController
       @project, current_user, current_team
     )
 
-    page_html_string = render_to_string 'reports/new.html.erb', export_all: true
+    page_html_string = render_to_string 'reports/new.html.erb',
+                                        locals: { export_all: true }
     parsed_page_html = Nokogiri::HTML(page_html_string)
     parsed_pdf_html = parsed_page_html.at_css('#report-content')
     @report.destroy

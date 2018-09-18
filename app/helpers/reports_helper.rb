@@ -41,75 +41,78 @@ module ReportsHelper
     locals = provided_locals.nil? ? {} : provided_locals.clone
     locals[:children] = children_html
 
-    # Set path and filename local variables for files and tables
-    if element['type_of'] == 'my_module_repository'
-      obj_name = Repository.find(element[:repository_id]).name + '.csv'
-      obj_folder_name = 'Inventories'
+    if provided_locals[:export_all]
+      # Set path and filename local variables for files and tables
 
-      locals[:filename] = obj_name
-      locals[:path] = "#{obj_folder_name}/#{obj_name}"
-    elsif element['type_of'].in? %w(step_asset step_table result_asset
-                                 result_table)
+      if element['type_of'] == 'my_module_repository'
+        obj_name = Repository.find(element[:repository_id]).name + '.csv'
+        obj_folder_name = 'Inventories'
 
-      parent_el = ReportElement.find(element['parent_id'])
-      parent_type = parent_el[:type_of]
-      parent = parent_type.singularize.classify.constantize
-                          .find(parent_el["#{parent_type}_id"])
+        locals[:filename] = obj_name
+        locals[:path] = "#{obj_folder_name}/#{obj_name}"
+      elsif element['type_of'].in? %w(step_asset step_table result_asset
+                                   result_table)
 
-      if parent.class == Step
-        obj_name = if element['type_of'] == 'step_asset'
-                     name = Asset.find(element[:asset_id]).file_file_name
-                     suffix = name.split('.').second
-                     suffix.prepend('.') if suffix
-                     name.split('.').first
-                   else
-                     name = Table.find(element[:table_id]).name
-                     suffix = '.csv'
-                     name.empty? ? 'Table' : name
-                   end
-        obj_name = obj_name.truncate(
+        parent_el = ReportElement.find(element['parent_id'])
+        parent_type = parent_el[:type_of]
+        parent = parent_type.singularize.classify.constantize
+                            .find(parent_el["#{parent_type}_id"])
+
+        if parent.class == Step
+          obj_name = if element['type_of'] == 'step_asset'
+                       name = Asset.find(element[:asset_id]).file_file_name
+                       suffix = name.split('.').second
+                       suffix.prepend('.') if suffix
+                       name.split('.').first
+                     else
+                       name = Table.find(element[:table_id]).name
+                       suffix = '.csv'
+                       name.empty? ? 'Table' : name
+                     end
+          obj_name = obj_name.truncate(
+            Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
+            omission: ''
+          )
+          obj_name += "_Step#{parent.position + 1}#{suffix}"
+          obj_folder_name = 'Protocol attachments'
+          parent_module = if parent.protocol.present?
+                            parent.protocol.my_module
+                          else
+                            parent.my_module
+                          end
+        else
+          obj_name = if element['type_of'] == 'result_asset'
+                       name = Asset.find(element[:result_id]).file_file_name
+                       suffix = name.split('.').second
+                       suffix.prepend('.') if suffix
+                       name.split('.').first
+                     else
+                       name = Result.find(element[:result_id]).name
+                       suffix = '.csv'
+                       name.empty? ? 'Table' : name
+                     end
+          obj_name = obj_name.truncate(
+            Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
+            omission: ''
+          )
+          obj_name += suffix
+          obj_folder_name = 'Results attachments'
+          parent_module = parent
+        end
+
+        parent_module_name = parent_module.name.truncate(
           Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
           omission: ''
         )
-        obj_name += "_Step#{parent.position + 1}#{suffix}"
-        obj_folder_name = 'Protocol attachments'
-        parent_module = if parent.protocol.present?
-                          parent.protocol.my_module
-                        else
-                          parent.my_module
-                        end
-      else
-        obj_name = if element['type_of'] == 'result_asset'
-                     name = Asset.find(element[:result_id]).file_file_name
-                     suffix = name.split('.').second
-                     suffix.prepend('.') if suffix
-                     name.split('.').first
-                   else
-                     name = Result.find(element[:result_id]).name
-                     suffix = '.csv'
-                     name.empty? ? 'Table' : name
-                   end
-        obj_name = obj_name.truncate(
+        parent_exp_name = parent_module.experiment.name.truncate(
           Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
           omission: ''
         )
-        obj_name += suffix
-        obj_folder_name = 'Results attachments'
-        parent_module = parent
+
+        locals[:filename] = obj_name
+        locals[:path] = "#{parent_exp_name}/#{parent_module_name}/" \
+          "#{obj_folder_name}/#{obj_name}"
       end
-
-      parent_module_name = parent_module.name.truncate(
-        Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
-        omission: ''
-      )
-      parent_exp_name = parent_module.experiment.name.truncate(
-        Constants::EXPORTED_FILE_NAME_TRUNCATION_LENGTH,
-        omission: ''
-      )
-
-      locals[:filename] = obj_name
-      locals[:path] = "#{parent_exp_name}/#{parent_module_name}/" \
-        "#{obj_folder_name}/#{obj_name}"
     end
 
     # ReportExtends is located in config/initializers/extends/report_extends.rb
