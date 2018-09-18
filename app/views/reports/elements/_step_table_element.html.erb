@@ -7,7 +7,7 @@
           <span class="fas fa-table"></span>
       </div>
       <div class="pull-left table-name">
-        <% if defined? path and path.present? %>
+        <% if defined? export_all and export_all %>
           <a href="<%= path %>">
             <em><%=t 'projects.reports.elements.step_table.table_name',
                      name: filename %></em>

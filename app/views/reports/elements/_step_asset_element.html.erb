@@ -9,7 +9,7 @@
         <span class="<%= icon_class %>"></span>
       </div>
       <div class="pull-left file-name">
-        <% if defined? path and path.present? %>
+        <% if defined? export_all and export_all %>
           <a href="<%= path %>">
             <em><%=t 'projects.reports.elements.step_asset.file_name',
                      file: filename %></em>

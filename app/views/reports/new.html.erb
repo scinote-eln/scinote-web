@@ -32,7 +32,7 @@
 
     <% if @report.present? %>
       <% @report.root_elements.each do |el| %>
-        <%= render_report_element(el) %>
+        <%= render_report_element(el, local_assigns) %>
         <%= render_new_element(false) %>
       <% end %>
     <% else %>

@@ -12,7 +12,7 @@
         <div class="pull-left result-name">
           <%= result.name %>
         </div>
-        <% if defined? path and path.present? %>
+        <% if defined? export_all and export_all %>
           <div class="pull-left table-name">
               <a href="<%= path %>">
                 <em><%=t "projects.reports.elements.result_table.table_name",
