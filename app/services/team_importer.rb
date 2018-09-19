@@ -19,6 +19,7 @@ class TeamImporter
     @tag_mappings = {}
     @result_text_mappings = {}
     @repository_row_mappings = {}
+    @repository_list_item_mappings = {}
     @result_mappings = {}
     @checklist_mappings = {}
     @table_mappings = {}
@@ -353,7 +354,10 @@ class TeamImporter
       @repository_mappings[orig_repository_id] = repository.id
       @repository_counter += 1
       repository_json['repository_columns'].each do |repository_column_json|
-        repository_column = RepositoryColumn.new(repository_column_json)
+
+        repository_column = RepositoryColumn.new(
+          repository_column_json['repository_column']
+        )							 
         orig_rep_col_id = repository_column.id
         repository_column.id = nil
         repository_column.repository = repository
@@ -361,6 +365,18 @@ class TeamImporter
           find_user(repository_column.created_by_id)
         repository_column.save!
         @repository_column_mappings[orig_rep_col_id] = repository_column.id
+        next unless repository_column.data_type == 'RepositoryListValue'
+        repository_column_json['repository_list_items'].each do |list_item|
+          created_by_id = find_user(repository_column.created_by_id)
+          repository_list_item = RepositoryListItem.new(data: list_item['data'])
+          repository_list_item.repository_column = repository_column
+          repository_list_item.repository = repository
+          repository_list_item.created_by_id = created_by_id
+          repository_list_item.last_modified_by_id = created_by_id
+          repository_list_item.save!
+          @repository_list_item_mappings[list_item['id']] =
+            repository_list_item.id
+        end
       end
       create_repository_rows(repository_json['repository_rows'], repository)
     end
@@ -874,5 +890,31 @@ class TeamImporter
   def find_user(user_id)
     return nil if user_id.nil?
     @user_mappings[user_id] ? @user_mappings[user_id] : @admin_id
+  end
+
+  def find_list_item_id(list_item_id)
+    @repository_list_item_mappings[list_item_id]
+  end
+
+  def create_cell_value(repository_cell, value_json, team)
+    cell_json = value_json['repository_value']
+    case repository_cell.value_type
+    when 'RepositoryListValue'
+      list_item_id = find_list_item_id(cell_json['repository_list_item_id'])
+      repository_value = RepositoryListValue.new(
+        repository_list_item_id: list_item_id.to_i
+      )
+    when 'RepositoryTextValue'
+      repository_value = RepositoryTextValue.new(cell_json)
+    when 'RepositoryAssetValue'
+      asset = create_asset(value_json['repository_value_asset'], team)
+      repository_value = RepositoryAssetValue.new(asset: asset)
+    end
+    repository_value.id = nil
+    repository_value.created_by_id = find_user(cell_json['created_by_id'])
+    repository_value.last_modified_by_id =
+      find_user(cell_json['last_modified_by_id'])
+    repository_value.repository_cell = repository_cell
+    repository_value.save!
   end
 end

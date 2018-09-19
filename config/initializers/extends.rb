@@ -59,7 +59,6 @@ class Extends
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
                                 repository_list_value: :repository_list_item,
                                 repository_asset_value: :asset]
-
   # List of implemented core API versions
   API_VERSIONS = ['20170715']
 
