@@ -10,4 +10,11 @@ module StringUtility
     mid_length = length - edge_length * 2
     string.gsub(/(#{edge}).{#{mid_length},}(#{edge})/, '\1...\2')
   end
+
+  def to_filesystems_compatible_filename(file_or_folder_name)
+    file_or_folder_name.strip
+                       .sub(/^[.-]*/, '')
+                       .sub(/\.*$/, '')
+                       .gsub(/[^\w',;. -]/, '_')
+  end
 end
