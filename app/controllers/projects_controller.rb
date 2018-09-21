@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
                                      notifications reports
                                      samples experiment_archive
                                      delete_samples samples_index)
-  before_action :load_projects_tree, only: %i(index show samples archive
+  before_action :load_projects_tree, only: %i(show samples archive
                                               experiment_archive)
   before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
@@ -25,14 +25,32 @@ class ProjectsController < ApplicationController
   DELETE_SAMPLES = 'Delete'.freeze
 
   def index
-    if params[:team]
-      current_team_switch(Team.find_by_id(params[:team]))
+    respond_to do |format|
+      format.json do
+        @current_team = current_team if current_team
+        @current_team ||= current_user.teams.first
+        @projects = ProjectsOverviewService.new(@current_team, current_user)
+                                           .project_cards(params)
+      end
+      format.html do
+        current_team_switch(Team.find_by_id(params[:team])) if params[:team]
+        @teams = current_user.teams
+        # New project for create new project modal
+        @project = Project.new
+        load_projects_tree
+      end
     end
+  end
 
-    @teams = current_user.teams
-
-    # New project for create new project modal
-    @project = Project.new
+  def index_dt
+    respond_to do |format|
+      format.json do
+        @current_team = current_team if current_team
+        @current_team ||= current_user.teams.first
+        @projects = ProjectsOverviewService.new(@current_team, current_user)
+                                           .projects_datatable(params)
+      end
+    end
   end
 
   def archive
