@@ -1811,6 +1811,11 @@ en:
       recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
       system_message: 'System message'
       system_message_description: 'System message notifications are specifically sent by site maintainers to notify all users about a system update.'
+    deliver:
+      download_link: "Download link:"
+      email_subject: "Your SciNote export is ready!"
+      email_body: "<p>The export of SciNote project(s) that you requested is ready!</p><p>You can find the link to download the file below or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons.</p>"
+      email_end_greeting: "<p>Best regards,</p><p>Your SciNote team</p>"
     show_all: "Show all notifications"
     show_more: "Show more notifications"
     no_notifications: "No notifications."
@@ -1878,7 +1883,7 @@ en:
 
   zip_export:
     modal_label: 'Export inventory'
-    notification_title: 'Your package is ready to be exported!'
+    notification_title: 'Your requested export package is ready!'
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
     modal_label: 'Export request received'

@@ -1,13 +1,16 @@
-<p>Hello <%= @user.name %>!</p>
+<p>Hello <%= @user.name %>,</p>
 
-<p><%= I18n.t("notifications.email_title") %></p>
-
-<p>Type: <%= I18n.t("notifications.types.#{@notification.type_of}") %></p>
+<% unless @notification.deliver? %>
+  <p><%= I18n.t("notifications.email_title") %></p>
+  <p>Type: <%= I18n.t("notifications.types.#{@notification.type_of}") %></p>
+<% end %>
 
 <p>
-  <% if @notification.system_message? || @notification.deliver?   %>
+  <% if @notification.system_message? %>
     <% # We assume the system notification is clean %>
     <%= @notification.title.html_safe %>
+  <% elsif @notification.deliver? %>
+    <%= I18n.t("notifications.deliver.email_body").html_safe %>
   <% else %>
     <%= sanitize_input(prepend_server_url_to_links(@notification.title)) %>
   <% end %>
@@ -18,8 +21,12 @@
     <% # We assume the system notification is clean %>
     <%= @notification.message.html_safe %>
   <% elsif @notification.deliver? %>
+    <p>
+      <%= I18n.t("notifications.deliver.email_end_greeting").html_safe %>
+    </p>
     <% # work around the problem with inserting the link of zipExport %>
     <% zip_id = /data-id='(\d*)'/.match(@notification.message)[1] %>
+    <%= I18n.t("notifications.deliver.download_link") %>
     <%= @notification.message.gsub(/href='.+'/, "href='#{zip_exports_download_url(zip_id)}'").html_safe %>
   <% else %>
     <%= sanitize_input(prepend_server_url_to_links(@notification.message)) %>
