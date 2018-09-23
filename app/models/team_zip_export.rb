@@ -21,7 +21,8 @@ class TeamZipExport < ZipExport
     output_file = File.new(
       File.join(Rails.root,
                 "tmp/zip-ready/projects_export-timestamp-#{Time.now.to_i}.zip"),
-      'w+')
+      'w+'
+    )
     fill_content(dir_to_zip, data, type, options)
     zip!(dir_to_zip, output_file.path)
     self.zip_file = File.open(output_file)
