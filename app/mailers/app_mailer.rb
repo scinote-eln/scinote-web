@@ -10,9 +10,9 @@ class AppMailer < Devise::Mailer
     @notification = notification
     subject =
       if notification.deliver?
-        subject = I18n.t('notifications.deliver.email_subject')
+        I18n.t('notifications.deliver.email_subject')
       else
-        subject = I18n.t('notifications.email_title')
+        I18n.t('notifications.email_title')
       end
     headers = {
       to: @user.email,

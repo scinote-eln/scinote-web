@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
-  before_action :load_vars, only: [:parse_sheet, :import_samples, :export_samples
-                                   :export_all]
+  before_action :load_vars, only: [:parse_sheet, :import_samples,
+                                   :export_samples, :export_all]
 
   before_action :check_create_samples_permissions, only: %i(parse_sheet
                                                             import_samples)
