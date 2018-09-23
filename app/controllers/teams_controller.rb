@@ -289,5 +289,4 @@ class TeamsController < ApplicationController
       :samples
     )
   end
-
 end

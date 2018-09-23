@@ -4,7 +4,8 @@ require 'csv'
 
 class TeamZipExport < ZipExport
   has_attached_file :zip_file,
-    path: '/zip_exports/:attachment/:id_partition/:hash/:style/:filename'
+                    path: '/zip_exports/:attachment/:id_partition/' \
+                          ':hash/:style/:filename'
   validates_attachment :zip_file,
                        content_type: { content_type: 'application/zip' }
 
@@ -19,10 +20,8 @@ class TeamZipExport < ZipExport
     ).first
     output_file = File.new(
       File.join(Rails.root,
-                "tmp/zip-ready/projects_export-timestamp-#{Time.now.to_i}.zip"
-               ),
-      'w+'
-    )
+                "tmp/zip-ready/projects_export-timestamp-#{Time.now.to_i}.zip"),
+      'w+')
     fill_content(dir_to_zip, data, type, options)
     zip!(dir_to_zip, output_file.path)
     self.zip_file = File.open(output_file)
@@ -34,9 +33,9 @@ class TeamZipExport < ZipExport
   private
 
   # Export all functionality
-  def generate_teams_zip(tmp_dir, data, _options = {})
+  def generate_teams_zip(tmp_dir, data, options = {})
     # Create team folder
-    @team = _options[:team]
+    @team = options[:team]
     team_path = "#{tmp_dir}/#{handle_name(@team.name)}"
     FileUtils.mkdir_p(team_path)
 
@@ -47,8 +46,12 @@ class TeamZipExport < ZipExport
     # Iterate through every project
     data.each_with_index do |(_, p), ind|
       project_name = handle_name(p.name) + "_#{ind}"
-      root = p.archived ? "#{team_path}/Archived projects" :
-                          "#{team_path}/Projects"
+      root =
+        if p.archived
+          "#{team_path}/Archived projects"
+        else
+          "#{team_path}/Projects"
+        end
       root += "/#{project_name}"
       FileUtils.mkdir_p(root)
 
@@ -60,8 +63,8 @@ class TeamZipExport < ZipExport
       # Find all assigned inventories through all tasks in the project
       task_ids = p.project_my_modules
       repo_rows = RepositoryRow.joins(:my_modules)
-                                .where(my_modules: { id: task_ids })
-                                .distinct
+                               .where(my_modules: { id: task_ids })
+                               .distinct
 
       # Iterate through every inventory repo and save it to CSV
       repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_ind|
@@ -128,7 +131,7 @@ class TeamZipExport < ZipExport
 
     # Remove control characters
     name = name.chars.map(&:ord).select { |s| (s > 31 && s < 127) || s > 127 }
-                     .pack('U*')
+               .pack('U*')
 
     # Remove leading hyphens, trailing dots/spaces
     name.gsub(/^-|\.+$| +$/, '_')

@@ -135,8 +135,8 @@ class Table < ApplicationRecord
     data = JSON.parse(contents)['data']
     CSV.generate do |csv|
      data.each do |row|
-        csv << row
-      end
+       csv << row
+     end
     end
   end
 end
