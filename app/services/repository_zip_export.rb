@@ -58,12 +58,13 @@ module RepositoryZipExport
                                  .find_by(repository_column_id: c_id)
 
                        if cell
-                         if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
+                         if cell.value_type == 'RepositoryAssetValue' &&
+                             handle_file_name_func
                            handle_file_name_func.call(cell.value.asset)
                          else
-                          SmartAnnotations::TagToText.new(
-                            user, team, cell.value.formatted
-                          ).text
+                           SmartAnnotations::TagToText.new(
+                             user, team, cell.value.formatted
+                           ).text
                          end
                        end
                      end

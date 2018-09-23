@@ -113,5 +113,4 @@ class ZipExport < ApplicationRecord
     file = FileUtils.touch("#{tmp_dir}/export.csv").first
     File.open(file, 'wb') { |f| f.write(data) }
   end
-
 end

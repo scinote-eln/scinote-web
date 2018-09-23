@@ -234,29 +234,33 @@ class TeamZipExport < ZipExport
 
   # Zip the input directory.
   def write()
-    entries = Dir.entries(@inputDir); entries.delete("."); entries.delete("..")
-    io = Zip::File.open(@outputFile, Zip::File::CREATE);
+    entries = Dir.entries(@inputDir)
+    entries.delete(".")
+    entries.delete("..")
 
-    write_entries(entries, "", io)
-    io.close();
+    io = Zip::File.open(@outputFile, Zip::File::CREATE);
+    write_entries(entries, '', io)
+    io.close()
   end
 
   # A helper method to make the recursion work.
   def write_entries(input_dir, entries, path, io)
-    entries.each { |e|
-      zipFilePath = path == "" ? e : File.join(path, e)
-      diskFilePath = File.join(input_dir, zipFilePath)
-      puts "Deflating " + diskFilePath
-      if  File.directory?(diskFilePath)
-        io.mkdir(zipFilePath)
-        subdir = Dir.entries(diskFilePath); subdir.delete("."); subdir.delete("..")
-        write_entries(input_dir, subdir, zipFilePath, io)
-      else
-        io.get_output_stream(zipFilePath) {
-          |f| f.puts(File.open(diskFilePath, "rb").read())
-        }
-      end
-    }
-  end
+    entries.each do |e|
+      zip_file_path = path == '' ? e : File.join(path, e)
+      disk_file_path = File.join(input_dir, zip_file_path)
+      puts 'Deflating ' + disk_file_path
+      if File.directory?(disk_file_path)
+        io.mkdir(zip_file_path)
+        subdir = Dir.entries(disk_file_path)
+        subdir.delete('.')
+        subdir.delete('..')
 
+        write_entries(input_dir, subdir, zip_file_path, io)
+      else
+        io.get_output_stream(zip_file_path) do |f|
+          f.puts File.open(disk_file_path, 'rb').read()
+        end
+      end
+    end
+  end
 end

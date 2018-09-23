@@ -5,9 +5,9 @@ module TeamZipExporter
     project_ids = params[:project_ids]
     ids = Project.where(id: project_ids,
                         team_id: team)
-      .index_by(&:id)
+                 .index_by(&:id)
 
-    options = {team: team}
+    options = { team: team }
     zip = TeamZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
@@ -16,5 +16,4 @@ module TeamZipExporter
       options
     )
   end
-
 end
