@@ -45,57 +45,59 @@ class TeamZipExport < ZipExport
     FileUtils.mkdir_p("#{team_path}/Archived projects")
 
     # Iterate through every project
-    data.each_with_index do |(id, p), ind|
-        project_name = handle_name(p.name) + "_#{ind}"
-        root = p.archived ? "#{team_path}/Archived projects" : "#{team_path}/Projects"
-        root += "/#{project_name}"
-        FileUtils.mkdir_p(root)
+    data.each_with_index do |(_, p), ind|
+      project_name = handle_name(p.name) + "_#{ind}"
+      root = p.archived ? "#{team_path}/Archived projects" :
+                          "#{team_path}/Projects"
+      root += "/#{project_name}"
+      FileUtils.mkdir_p(root)
 
-        file = FileUtils.touch("#{root}/#{project_name}_REPORT.pdf").first
+      FileUtils.touch("#{root}/#{project_name}_REPORT.pdf").first
 
-        inventories = "#{root}/Inventories"
-        FileUtils.mkdir_p(inventories)
+      inventories = "#{root}/Inventories"
+      FileUtils.mkdir_p(inventories)
 
-        # Find all assigned inventories through all tasks in the project
-        task_ids = p.project_my_modules
-        repo_rows = RepositoryRow.joins(:my_modules).where(my_modules:
-                                                           { id: task_ids }
-                                                          ).distinct
+      # Find all assigned inventories through all tasks in the project
+      task_ids = p.project_my_modules
+      repo_rows = RepositoryRow.joins(:my_modules)
+                                .where(my_modules: { id: task_ids })
+                                .distinct
 
-        # Iterate through every inventory repo and save it to CSV
-        repo_rows.map{|x| x.repository}.uniq.each_with_index do |repo, repo_ind|
-          curr_repo_rows = repo_rows.select{|x| x.repository_id == repo.id}
-          save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_ind)
+      # Iterate through every inventory repo and save it to CSV
+      repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_ind|
+        curr_repo_rows = repo_rows.select { |x| x.repository_id == repo.id }
+        save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_ind)
+      end
+
+      # Include all experiments
+      p.experiments.each_with_index do |ex, ex_ind|
+        experiment_path = "#{root}/#{handle_name(ex.name)}_#{ex_ind}"
+        FileUtils.mkdir_p(experiment_path)
+
+        # Include all modules
+        ex.my_modules.each_with_index do |my_module, mod_ind|
+          my_module_path = "#{experiment_path}/" \
+            "#{handle_name(my_module.name)}_#{mod_ind}"
+          FileUtils.mkdir_p(my_module_path)
+
+          # Create upper directories for both elements
+          protocol_path = "#{my_module_path}/Protocol attachments"
+          result_path = "#{my_module_path}/Result attachments"
+          FileUtils.mkdir_p(protocol_path)
+          FileUtils.mkdir_p(result_path)
+
+          # Export protocols
+          steps = my_module.protocols.map(&:steps).flatten
+          export_step_assets(StepAsset.where(step: steps), protocol_path)
+          export_step_tables(StepTable.where(step: steps), protocol_path)
+
+          # Export results
+          export_result_assets(ResultAsset.where(result: my_module.results)
+                                    .map(&:asset), result_path)
+          export_result_tables(ResultTable.where(result: my_module.results)
+                                    .map(&:table), result_path)
         end
-
-        # Include all experiments
-        p.experiments.each_with_index do |ex, ex_ind|
-          experiment_path = "#{root}/#{handle_name(ex.name)}_#{ex_ind}"
-          FileUtils.mkdir_p(experiment_path)
-
-          # Include all modules
-          ex.my_modules.each_with_index do |my_module, mod_ind|
-            my_module_path = "#{experiment_path}/#{handle_name(my_module.name)}_#{mod_ind}"
-            FileUtils.mkdir_p(my_module_path)
-
-            # Create upper directories for both elements
-            protocol_path = "#{my_module_path}/Protocol attachments"
-            result_path = "#{my_module_path}/Result attachments"
-            FileUtils.mkdir_p(protocol_path)
-            FileUtils.mkdir_p(result_path)
-
-            # Export protocols
-            steps = my_module.protocols.map{ |p| p.steps }.flatten
-            export_step_assets(StepAsset.where(step: steps), protocol_path)
-            export_step_tables(StepTable.where(step: steps), protocol_path)
-
-            # Export results
-            export_result_assets(ResultAsset.where(result: my_module.results)
-                                     .map {|r| r.asset}, result_path)
-            export_result_tables(ResultTable.where(result: my_module.results)
-                                     .map {|r| r.table}, result_path)
-          end
-        end
+      end
     end
   end
 
@@ -122,10 +124,11 @@ class TeamZipExport < ZipExport
     end
 
     # Truncate and replace reserved characters
-    name = name[0, MAX_NAME_SIZE].gsub(/[*":<>?\/\\|~]/, '_')
+    name = name[0, MAX_NAME_SIZE].gsub(%r{[*":<>?/\\|~]}, '_')
 
     # Remove control characters
-    name = name.chars.map{|s| s.ord}.select{|s| (s > 31 && s < 127) || s > 127}.pack("U*")
+    name = name.chars.map(&:ord).select { |s| (s > 31 && s < 127) || s > 127 }
+                     .pack('U*')
 
     # Remove leading hyphens, trailing dots/spaces
     name.gsub(/^-|\.+$| +$/, '_')
@@ -141,7 +144,7 @@ class TeamZipExport < ZipExport
   def export_result_assets(assets, directory)
     assets.each_with_index do |asset, i|
       file = FileUtils.touch("#{directory}/#{append_suffix(asset.file_file_name,
-                             "_#{i}")}").first
+                                                           "_#{i}")}").first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
   end
@@ -151,8 +154,9 @@ class TeamZipExport < ZipExport
     assets.each_with_index do |step_asset, i|
       asset = step_asset.asset
       file = FileUtils.touch(
-        "#{directory}/#{append_suffix(asset.file_file_name,
-                        "_#{i}_Step#{step_asset.step.position + 1}")}"
+        "#{directory}/" \
+        "#{append_suffix(asset.file_file_name,
+                         "_#{i}_Step#{step_asset.step.position + 1}")}"
       ).first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
@@ -237,7 +241,7 @@ class TeamZipExport < ZipExport
     entries.delete('.')
     entries.delete('..')
 
-    io = Zip::File.open(@outputFile, Zip::File::CREATE);
+    io = Zip::File.open(@outputFile, Zip::File::CREATE)
     write_entries(entries, '', io)
     io.close
   end
