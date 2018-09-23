@@ -59,7 +59,7 @@ module RepositoryZipExport
 
                        if cell
                          if cell.value_type == 'RepositoryAssetValue' &&
-                             handle_file_name_func
+                            handle_file_name_func
                            handle_file_name_func.call(cell.value.asset)
                          else
                            SmartAnnotations::TagToText.new(

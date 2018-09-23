@@ -141,9 +141,7 @@ class TeamZipExport < ZipExport
   def export_result_assets(assets, directory)
     assets.each_with_index do |asset, i|
       file = FileUtils.touch("#{directory}/#{append_suffix(asset.file_file_name,
-                             "_#{i}"
-                            )}"
-      ).first
+                             "_#{i}")}").first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
   end
@@ -154,8 +152,7 @@ class TeamZipExport < ZipExport
       asset = step_asset.asset
       file = FileUtils.touch(
         "#{directory}/#{append_suffix(asset.file_file_name,
-                                      "_#{i}_Step#{step_asset.step.position+1}"
-                                     )}"
+                        "_#{i}_Step#{step_asset.step.position + 1}")}"
       ).first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
@@ -168,7 +165,8 @@ class TeamZipExport < ZipExport
       table_name = table.name.presence || 'Table'
       table_name += i.to_s
       file = FileUtils.touch(
-        "#{directory}/#{handle_name(table_name)}_#{i}_Step#{step_table.step.position+1}.csv"
+        "#{directory}/#{handle_name(table_name)}" \
+        "_#{i}_Step#{step_table.step.position + 1}.csv"
       ).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
@@ -179,7 +177,8 @@ class TeamZipExport < ZipExport
     tables.each_with_index do |table, i|
       table_name = table.name.presence || 'Table'
       table_name += i.to_s
-      file = FileUtils.touch("#{directory}/#{handle_name(table_name)}.csv").first
+      file = FileUtils.touch("#{directory}/#{handle_name(table_name)}.csv")
+                      .first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
   end
@@ -195,13 +194,13 @@ class TeamZipExport < ZipExport
     FileUtils.mkdir_p(attach_path)
 
     # Define headers and columns IDs
-    col_ids = [-3, -4, -5, -6] + repo.repository_columns.map{ |x| x.id }
+    col_ids = [-3, -4, -5, -6] + repo.repository_columns.map(&:id)
 
     # Define callback function for file name
     assets = {}
     asset_counter = 0
     handle_name_func = lambda do |asset|
-      file_name = "#{append_suffix(asset.file_file_name, "_#{asset_counter}")}"
+      file_name = append_suffix(asset.file_file_name, "_#{asset_counter}").to_s
 
       # Save pair for downloading it later
       assets[asset] = "#{attach_path}/#{file_name}"
@@ -217,9 +216,9 @@ class TeamZipExport < ZipExport
     File.open(file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments (it doesn't work directly in callback function
-    assets.each do |asset, path|
-      file = FileUtils.touch(path).first
-      File.open(file, 'wb') { |f| f.write(asset.open.read) }
+    assets.each do |asset, asset_path|
+      file = FileUtils.touch(asset_path).first
+      File.open(file, 'wb') { |f| f.write asset.open.read }
     end
   end
 
@@ -228,19 +227,19 @@ class TeamZipExport < ZipExport
     files = Dir.entries(input_dir)
     files.delete_if { |el| el == '..' || el == '.' }
     Zip::File.open(output_file, Zip::File::CREATE) do |zipfile|
-      write_entries(input_dir, files, "", zipfile)
+      write_entries(input_dir, files, '', zipfile)
     end
   end
 
   # Zip the input directory.
-  def write()
+  def write
     entries = Dir.entries(@inputDir)
-    entries.delete(".")
-    entries.delete("..")
+    entries.delete('.')
+    entries.delete('..')
 
     io = Zip::File.open(@outputFile, Zip::File::CREATE);
     write_entries(entries, '', io)
-    io.close()
+    io.close
   end
 
   # A helper method to make the recursion work.
@@ -258,7 +257,7 @@ class TeamZipExport < ZipExport
         write_entries(input_dir, subdir, zip_file_path, io)
       else
         io.get_output_stream(zip_file_path) do |f|
-          f.puts File.open(disk_file_path, 'rb').read()
+          f.puts File.open(disk_file_path, 'rb').read
         end
       end
     end
