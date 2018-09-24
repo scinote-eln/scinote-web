@@ -5,7 +5,7 @@
     if ($(document.body).data("tooltips-enabled") === true || $(document.body).data("tooltips-enabled") == null) {
       var popoversArray = [];
       var leaveTimeout;
-      var enterTimeout
+      var enterTimeout;
       $('.tooltip_open').remove(); // Destroy all (if any) old open popovers
       $('.help_tooltips').each(function(i, obj) {
         var popoverObject = obj;

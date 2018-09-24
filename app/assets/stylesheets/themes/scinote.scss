@@ -1793,25 +1793,25 @@ th.custom-field .modal-tooltiptext {
 }
 
 .tooltip-open {
-  background-color: $color-lightsilver;
+  background-color: $color-concrete;
   color: $color-black;
   font-size: $font-size-base;
 
   .popover-footer {
-    background-color: $color-lightgray;
+    background-color: $color-gainsboro;
     border-radius: 3px;
     bottom: 5px;
     position: absolute;
     right: 5px;
 
     a {
-      color: $color-darkgray;
+      color: $color-dove-gray;
     }
   }
 }
 
 .tooltip-enter {
-  background-color: $color-darksilver;
+  background-color: $color-alto;
 }
 
 .my_module-state-buttons {
