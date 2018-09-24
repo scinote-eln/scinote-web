@@ -238,6 +238,30 @@ class Project < ApplicationRecord
     parsed_pdf_html = parsed_page_html.at_css('#report-content')
     report.destroy
 
+    tables = parsed_pdf_html.css('.hot-table-contents')
+                            .zip(parsed_pdf_html.css('.hot-table-container'))
+    tables.each do |table_input, table_container|
+      table_vals = JSON.parse(table_input['value'])
+      table_data = table_vals['data']
+      table_headers = table_vals['headers']
+      table_headers ||= ('A'..'Z').first(table_data[0].count)
+
+      table_el = table_container.add_child('<table></table>').first
+      row_el = table_el.add_child('<tr></tr>').first
+      row_el.add_child('<th></th>').first
+      table_headers.each do |col|
+        row_el.add_child("<th>#{col}</th>").first
+      end
+
+      table_data.each.with_index(1) do |row, index|
+        row_el = table_el.add_child('<tr></tr>').first
+        row_el.add_child("<td>#{index}</td>").first
+        row.each do |col|
+          row_el.add_child("<td>#{col}</td>").first
+        end
+      end
+    end
+
     parsed_pdf = ApplicationController.render(
       pdf: pdf_name,
       header: { right: '[page] of [topage]' },
