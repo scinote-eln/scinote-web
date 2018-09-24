@@ -1801,6 +1801,28 @@ th.custom-field .modal-tooltiptext {
   cursor: pointer;
 }
 
+.tooltip-open {
+  background-color: $color-concrete;
+  color: $color-black;
+  font-size: $font-size-base;
+
+  .popover-footer {
+    background-color: $color-gainsboro;
+    border-radius: 3px;
+    bottom: 5px;
+    position: absolute;
+    right: 5px;
+
+    a {
+      color: $color-dove-gray;
+    }
+  }
+}
+
+.tooltip-enter {
+  background-color: $color-alto;
+}
+
 .my_module-state-buttons {
   padding-top: 6px;
 }

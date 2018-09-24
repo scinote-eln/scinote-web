@@ -14,9 +14,11 @@
         <h2><strong><%=t 'libraries.repository_columns.index.manage_column' %></strong></h2>
       </div>
       <div class="col-md-6 text-right">
-        <button class="btn btn-primary"
+        <button class="btn btn-primary help_tooltips"
                 data-modal-url="<%= repository_columns_create_html_path(@repository) %>"
-                data-action="new-column-modal">
+                data-action="new-column-modal"
+                data-tooltiplink="<%= I18n.t('tooltips.link.inventory.manage_columns') %>"
+                data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.manage_columns') %>">
           <span class="fas fa-plus"></span>&nbsp;<%=t 'libraries.repository_columns.index.new_column' %>
         </button>
       </div>

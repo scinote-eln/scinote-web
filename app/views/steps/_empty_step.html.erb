@@ -43,6 +43,9 @@
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-assets">
     <div class="text-center new-asset-box">
+      <span class="help_tooltips"
+            data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_add_files') %>"
+            data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_add_files') %>">
       <%=t 'assets.drag_n_drop.label_html' %>
       <label>
         <span class="btn btn-primary">
@@ -54,6 +57,7 @@
                id="drag-n-drop-assets"
                style="display: none" multiple>
       </label>
+      </span>
     </div>
     <div id="new-step-assets-group" class="form-group">
       <%= f.nested_fields_for :assets do |ff| %>

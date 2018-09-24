@@ -20,10 +20,12 @@
              data-remote="true">
             <span class="fas fa-arrow-down"></a>
           <a data-action="edit-step"
-             class="btn btn-link"
+             class="btn btn-link help_tooltips"
              title="<%= t("protocols.steps.options.edit_title") %>"
              href="<%= edit_step_path(step, format: :json) %>"
-             data-remote="true">
+             data-remote="true"
+             data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_edit') %>"
+             data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_edit') %>" >
             <span class="fas fa-pencil-alt">
           </a>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",

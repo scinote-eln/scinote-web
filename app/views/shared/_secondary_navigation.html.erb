@@ -107,7 +107,9 @@
               <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositoriesDropdownMenuLink">
                 <% @my_module.experiment.project.team.repositories.order(created_at: :asc).each do |repository| %>
                   <li>
-                    <a class="dropdown-item <%= "active-item" if module_repository_page? && @repository == repository %>"
+                    <a class="dropdown-item <%= "active-item" if module_repository_page? && @repository == repository %> help_tooltips"
+                       data-tooltiplink="<%= I18n.t('tooltips.link.protocol.inventories') %>"
+                       data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.inventories') %>"
                        href="<%= repository_my_module_url(id: @my_module, repository_id: repository) %>"
                        title="<%= repository.name %>">
                       <%= truncate(repository.name) %>

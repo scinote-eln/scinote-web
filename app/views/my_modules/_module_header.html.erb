@@ -9,7 +9,9 @@
     </div>
   </div>
 
-  <div class="col-xs-6 col-sm-6 col-md-4">
+  <div class="col-xs-6 col-sm-6 col-md-4 help_tooltips"
+       data-tooltiplink="<%= I18n.t('tooltips.link.task.due_date_specific') %>"
+       data-tooltipcontent="<%= I18n.t('tooltips.text.task.due_date_specific') %>">
     <div class="badge-icon">
       <% if can_manage_module?(@my_module) %>
         <%= link_to due_date_my_module_path(@my_module, format: :json), remote: true, class: "due-date-link", style: "color: inherit" do %>
