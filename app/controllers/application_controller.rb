@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   before_action :update_current_team, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
-  after_action :load_path_constant
 
 
   def respond_422(message = t('client_api.permission_error'))
@@ -72,15 +71,6 @@ class ApplicationController < ActionController::Base
         current_team_id: current_user.teams.first.id
       )
     end
-  end
-
-  def load_path_constant
-    # Put this here because tiny_mce_assets_plugin is sitewide,
-    # so no controller calls it. and i havent found a better way to pass it
-    # the variable below
-    Gon.global.RAILS_URL_HELPER_TINY_MCE_ASSETS_PATH = tiny_mce_assets_path
-    Gon.global.HIGHLIGHTJS_GITHUB_THEME =
-      ::ActionController::Base.helpers.asset_path('highlightjs-github-theme')
   end
 
   # With this Devise callback user is redirected directly to sign in page instead

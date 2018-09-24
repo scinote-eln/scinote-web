@@ -25,9 +25,6 @@ class ReportsController < ApplicationController
 
   before_action :load_vars, only: %i(edit update)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
-  before_action :load_path_constants, only: %i(
-    index visible_projects available_repositories
-  )
   before_action :load_visible_projects, only: %i(index visible_projects)
   before_action :load_available_repositories,
                 only: %i(new edit available_repositories)
@@ -472,7 +469,6 @@ class ReportsController < ApplicationController
 
   def load_vars_nested
     @project = Project.find_by_id(params[:project_id])
-    load_path_constants
     render_404 unless @project
   end
 
@@ -500,19 +496,6 @@ class ReportsController < ApplicationController
       AvailableRepository.new(repository.id,
                               ellipsize(repository.name, 75, 50))
     end
-  end
-
-  def load_path_constants
-    Gon.global.RAILS_URL_HELPER_REPORTS_VISISBLE_PROJECTS_PATH =
-      reports_visible_projects_path
-    Gon.global.RAILS_URL_HELPER_AVAILABLE_ROWS_PATH =
-      available_rows_path
-    Gon.global.RAILS_URL_HELPER_AVAILABLE_ASSET_TYPE_COLUMNS_PATH =
-      available_asset_type_columns_path
-    Gon.global.RAILS_URL_HELPER_REPORTS_AVAILABLE_REPOSITORIES_PATH =
-      reports_available_repositories_path
-    Gon.global.RAIL_URL_HELPER_REPORTS_SAVE_PDF_TO_INVENTORY_ITEM_PATH =
-      reports_save_pdf_to_inventory_item_path
   end
 
   def report_params

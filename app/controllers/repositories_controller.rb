@@ -284,7 +284,6 @@ class RepositoriesController < ApplicationController
 
   def load_vars
     repository_id = params[:id] || params[:repository_id]
-    load_path_constants
     @repository = Repository.find_by_id(repository_id)
     render_404 unless @repository
   end
@@ -293,11 +292,6 @@ class RepositoriesController < ApplicationController
     @team = current_team
     render_404 unless @team
     @repositories = @team.repositories.order(created_at: :asc)
-  end
-
-  def load_path_constants
-    Gon.global.RAILS_URL_HELPER_REPOSITORY_LIST_ITEMS_PATH =
-      repository_list_items_path
   end
 
   def check_team
