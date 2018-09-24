@@ -44,7 +44,8 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
-    }
+    },
+    tooltips_enabled: true
   )
 
   # Relations
@@ -457,6 +458,7 @@ class User < ApplicationRecord
                            assignments_email_notification
                            recent_email_notification
                            system_message_email_notification)
+
   # declare notifications getters
   NOTIFICATIONS_TYPES.each do |name|
     define_method(name) do
