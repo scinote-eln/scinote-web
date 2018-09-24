@@ -4,7 +4,10 @@ module Api
   module V1
     class ResultSerializer < ActiveModel::Serializer
       type :results
-      attributes :name, :archived
+      attributes :name, :user_id, :archived
+      attribute :my_module_id, key: :task_id
+
+      belongs_to :my_module, serializer: MyModuleSerializer
       has_one :result_asset, key: :asset,
                              serializer: ResultAssetSerializer,
                              class_name: 'ResultAsset',

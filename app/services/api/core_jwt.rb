@@ -30,5 +30,13 @@ module Api
       return true if time_left < (Api.configuration.core_api_token_ttl.to_i / 2)
       false
     end
+
+    # Method used by Doorkeeper for custom tokens
+    def self.generate(options = {})
+      encode(
+        { user_id: options[:resource_owner_id] },
+        options[:expires_in].seconds.from_now.to_i
+      )
+    end
   end
 end

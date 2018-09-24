@@ -5,7 +5,7 @@ module Api
     class InventoriesController < BaseController
       before_action :load_team
       before_action :load_inventory, only: %i(show update destroy)
-      before_action :check_manage_permissions, only: %i(create update destroy)
+      before_action :check_manage_permissions, only: %i(update destroy)
 
       def index
         inventories = @team.repositories
@@ -15,7 +15,12 @@ module Api
       end
 
       def create
-        inventory = @team.repositories.create!(inventory_params)
+        unless can_create_repositories?(@team)
+          return render body: nil, status: :forbidden
+        end
+        inventory = @team.repositories.create!(
+          inventory_params.merge(created_by: current_user)
+        )
         render jsonapi: inventory,
                serializer: InventorySerializer,
                status: :created

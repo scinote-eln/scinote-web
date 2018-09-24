@@ -7,7 +7,7 @@ module Api
       before_action :load_inventory
       before_action :load_inventory_column, only: %i(show update destroy)
       before_action :check_manage_permissions, only: %i(update destroy)
-
+      before_action :check_create_permissions, only: %i(create)
       def index
         columns = @inventory.repository_columns
                             .includes(:repository_list_items)
@@ -62,6 +62,12 @@ module Api
 
       def check_manage_permissions
         unless can_manage_repository_column?(@inventory_column)
+          render body: nil, status: :forbidden
+        end
+      end
+
+      def check_create_permissions
+        unless can_manage_repository?(@inventory)
           render body: nil, status: :forbidden
         end
       end
