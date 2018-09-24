@@ -6,8 +6,8 @@ module Api
       include TinyMceHelper
 
       before_action :load_vars
-      before_action :load_result, only: %i(show update destroy)
-      before_action :check_manage_permissions, only: %i(create update destroy)
+      before_action :load_result, only: %i(show)
+      before_action :check_manage_permissions, only: %i(create)
 
       def index
         results = @task.results
@@ -59,9 +59,7 @@ module Api
       end
 
       def create_text_result
-        result_text = ResultText.new(
-          text: result_text_params.require(:attributes).require(:text)
-        )
+        result_text = ResultText.new(text: result_text_params[:text])
         result_text.transaction do
           if tiny_mce_asset_params.present?
             tiny_mce_asset_params.each do |t|
@@ -95,19 +93,31 @@ module Api
                 'Wrong object type within parameters'
         end
         params.require(:data).require(:attributes).require(:name)
-        params.permit(data: { attributes: :name })[:data]
+        params.permit(data: { attributes: :name })[:data][:attributes]
       end
 
       # Partially implement sideposting draft
       # https://github.com/json-api/json-api/pull/1197
       def result_text_params
-        params[:included]&.select { |el| el[:type] == 'result_texts' }&.first
+        prms =
+          params[:included]&.select { |el| el[:type] == 'result_texts' }&.first
+        prms.require(:attributes).require(:text)
+        prms[:attributes]
       end
 
       def tiny_mce_asset_params
         prms = params[:included]&.select { |el| el[:type] == 'tiny_mce_assets' }
         prms.each do |p|
           p.require(:attributes).require(%i(file_data file_name file_token))
+        end
+        file_tokens = prms.map { |p| p[:attributes][:file_token] }
+        result_text_params[:text].scan(
+          /\[~tiny_mce_id:(\w+)\]/
+        ).flatten.each do |token|
+          unless file_tokens.include?(token)
+            raise StandardError,
+                  'Text contains reference to nonexisting TinyMCE image'
+          end
         end
         prms
       end
