@@ -28,7 +28,8 @@ sheet.each 2 do |row|
     else
       # else we found a value we want to record, we should break after this and go to next row
       if col === 0
-        programLevelName = cell
+        # We need to make sure the quotes in the output string (sql script) are broken out
+        programLevelName = cell.gsub("'", "''")
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         valuesClause = "VALUES ('#{programLevelName}', '#{created}', '#{created}')"
@@ -36,7 +37,8 @@ sheet.each 2 do |row|
         all_inserts << programLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 1
-        topicLevelName = cell
+        # We need to make sure the quotes in the output string (sql script) are broken out
+        topicLevelName = cell.gsub("'", "''")
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         prevIdClause = "(SELECT id FROM rap_program_levels WHERE name = '#{programLevelName}')"
@@ -45,7 +47,8 @@ sheet.each 2 do |row|
         all_inserts << topicLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 2
-        projectLevelName = cell
+        # We need to make sure the quotes in the output string (sql script) are broken out
+        projectLevelName = cell.gsub("'", "''")
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         prevIdClause = "(SELECT id FROM rap_topic_levels WHERE name = '#{topicLevelName}')"
@@ -54,7 +57,8 @@ sheet.each 2 do |row|
         all_inserts << projectLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 3
-        taskLevelName = cell
+        # We need to make sure the quotes in the output string (sql script) are broken out
+        taskLevelName = cell.gsub("'", "''")
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         prevIdClause = "(SELECT id FROM rap_project_levels WHERE name = '#{projectLevelName}')"
