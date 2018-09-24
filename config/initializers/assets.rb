@@ -28,6 +28,8 @@ Rails.application.config.assets.precompile +=
 Rails.application.config.assets.precompile +=
   %w(users/settings/teams/add_user_modal.js)
 Rails.application.config.assets.precompile += %w(users/settings/teams/show.js)
+Rails.application.config.assets.precompile +=
+  %w(users/settings/teams/invite_users_modal.js)
 Rails.application.config.assets.precompile += %w(my_modules/activities.js)
 Rails.application.config.assets.precompile += %w(my_modules/protocols.js)
 Rails.application.config.assets.precompile +=

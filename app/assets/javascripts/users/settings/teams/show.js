@@ -1,5 +1,3 @@
-//= require users/settings/teams/invite_users_modal
-
 (function() {
   'use strict';
 

@@ -82,7 +82,10 @@ gem 'devise-async',
 gem 'discard', '~> 1.0'
 
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
+gem 'tinymce-rails', '~> 4.7.13' # Rich text editor - SEE BELOW
+# Any time you update tinymce-rails Gem, also update the cache_suffix parameter in
+# sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js
+# TinyMCE files which might cause errors
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
@@ -105,7 +108,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'
-  gem 'rubocop', '= 0.51.0', require: false
+  gem 'rubocop', '>= 0.59.0', require: false
   gem 'scss_lint', require: false
   gem 'starscope', require: false
   gem 'bullet'

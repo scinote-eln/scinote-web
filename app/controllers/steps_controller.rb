@@ -515,6 +515,7 @@ class StepsController < ApplicationController
     params[:tables_attributes].each do |_, table|
       next unless table['_destroy']
       table_to_destroy = Table.find_by_id(table['id'])
+      next if table_to_destroy.nil?
       table_to_destroy.report_elements.destroy_all
     end
   end

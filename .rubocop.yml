@@ -100,7 +100,6 @@ Style/HashSyntax:
 
 Style/IfUnlessModifier:
   Enabled: true
-  Metrics/LineLength: 80
 
 Layout/IndentationConsistency:
   EnforcedStyle: normal
@@ -377,10 +376,7 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-##################### Lint #####################################
-
-Lint/AssignmentInCondition:
-  AllowSafeAssignment: true
+##################### Layout ###################################
 
 Layout/BlockAlignment:
   EnforcedStyleAlignWith: either
@@ -388,11 +384,16 @@ Layout/BlockAlignment:
 Layout/EndAlignment:
   EnforcedStyleAlignWith: keyword
 
-Lint/DuplicateMethods:
-  Enabled: false
-
 Layout/DefEndAlignment:
   EnforcedStyleAlignWith: start_of_line
+
+##################### Lint #####################################
+
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: true
+
+Lint/DuplicateMethods:
+  Enabled: false
 
 Lint/UnusedBlockArgument:
   IgnoreEmptyBlocks: true
@@ -408,7 +409,7 @@ Lint/EachWithObjectArgument:
 Lint/HandleExceptions:
   Enabled: false
 
-Lint/LiteralInCondition:
+Lint/LiteralAsCondition:
   Enabled: true
 
 Lint/EmptyInterpolation:
