@@ -26,8 +26,10 @@ sheet.each 2 do |row|
       end
       next
     else
+      if cell.casecmp("Not Applicable") == 0
+        # do nothing          
       # else we found a value we want to record, we should break after this and go to next row
-      if col === 0
+      elsif col === 0
         # We need to make sure the quotes in the output string (sql script) are broken out
         programLevelName = cell.gsub("'", "''")
         # Check to see if this value already exists in the database.
