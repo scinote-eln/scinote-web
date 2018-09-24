@@ -52,7 +52,6 @@ module Api
         @protocol = @my_module.protocols.find(
           params.require(:id)
         )
-        render jsonapi: {}, status: :not_found if @protocol.nil?
       end
     end
   end

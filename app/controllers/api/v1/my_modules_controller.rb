@@ -30,7 +30,6 @@ module Api
 
       def output
         output = @my_module.my_modules.find(params.require(:id))
-        render jsonapi: {}, status: :not_found if output.nil?
         render jsonapi: output, serializer: MyModuleSerializer
       end
 
@@ -43,7 +42,6 @@ module Api
 
       def input
         input = @my_module.my_module_antecessors.find(params.require(:id))
-        render jsonapi: {}, status: :not_found if input.nil?
         render jsonapi: input, serializer: MyModuleSerializer
       end
 
@@ -70,7 +68,6 @@ module Api
 
       def load_task
         @my_module = @experiment.my_modules.find(params.require(:id))
-        render jsonapi: {}, status: :not_found if @my_module.nil?
       end
 
       # Made the method below because its more elegant than changing parameters
@@ -79,7 +76,6 @@ module Api
       # or input.
       def load_task_relative
         @my_module = @experiment.my_modules.find(params.require(:task_id))
-        render jsonapi: {}, status: :not_found if @my_module.nil?
       end
     end
   end

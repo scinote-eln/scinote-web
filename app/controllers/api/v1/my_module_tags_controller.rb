@@ -7,7 +7,7 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task
-      before_action :load_task_repository_row, only: :show
+      before_action :load_task_tag, only: :show
 
       def index
         task_tags = @my_module.my_module_tags
@@ -48,7 +48,7 @@ module Api
         render jsonapi: {}, status: :not_found if @my_module.nil?
       end
 
-      def load_task_repository_row
+      def load_task_tag
         @task_tag = @my_module.my_module_tags.find(
           params.require(:id)
         )

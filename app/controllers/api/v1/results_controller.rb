@@ -48,14 +48,12 @@ module Api
 
       def load_task
         @my_module = @experiment.my_modules.find(params.require(:task_id))
-        render jsonapi: {}, status: :not_found if @my_module.nil?
       end
 
       def load_result
         @result = @my_module.results.find(
           params.require(:id)
         )
-        render jsonapi: {}, status: :not_found if @result.nil?
       end
     end
   end

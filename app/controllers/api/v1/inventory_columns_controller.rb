@@ -6,7 +6,7 @@ module Api
       before_action :load_team
       before_action :load_inventory
       before_action :load_inventory_column, only: %i(show update destroy)
-      before_action :check_manage_permissions, only: %i(update destroy)
+      before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
         columns = @inventory.repository_columns
