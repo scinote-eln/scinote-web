@@ -45,7 +45,6 @@ module Api
 
       def load_task
         @my_module = @experiment.my_modules.find(params.require(:task_id))
-        render jsonapi: {}, status: :not_found if @my_module.nil?
       end
 
       def load_protocol
