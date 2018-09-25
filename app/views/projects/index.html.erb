@@ -85,7 +85,7 @@
 
             <% if @teams.exists? && can_create_projects?(current_team) %>
             <!-- new project button -->
-              <a class="btn btn-primary pull-right" id="new-project-btn">
+              <a class="btn btn-primary" id="new-project-btn">
                 <span class="fas fa-plus" aria-hidden="true"></span>
                 <span class="hidden-xs"><%=t "projects.index.new" %></span>
               </a>

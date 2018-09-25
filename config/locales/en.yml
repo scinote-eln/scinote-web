@@ -125,8 +125,9 @@ en:
 
   nav2:
     all_projects:
-      index: "Projects"
-      archive: "Archived projects"
+      index: "Active"
+      archive: "Archived"
+      all: "All"
     projects:
       show: "Experiments"
       samples: "Samples"
