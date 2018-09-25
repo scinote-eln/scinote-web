@@ -1,4 +1,7 @@
 include UsersGenerator
+# TODO is this right? Can't find the RapGenerator include...
+require "#{Rails.root}/app/utilities/rap_generators"
+include RapGenerator
 
 if User.count.zero?
   if ENV['ADMIN_NAME'].present? &&
@@ -71,7 +74,8 @@ if RapProgramLevel.count.zero?
             # skip this one
           else
             # Get the corresponding parent rap_program_level_id before creating a new RapTopicLevel
-            program_id = RapProgramLevel.find(:name => programLevelName).id
+            # program_id = RapProgramLevel.find(:name => programLevelName).id
+            program_id = RapProgramLevel.where(name: programLevelName).take.id
             create_rap_topic_level(topicLevelName, program_id)
           end
 
@@ -81,7 +85,8 @@ if RapProgramLevel.count.zero?
             # skip this one
           else
             # Get the corresponding parent rap_topic_level_id before creating a new RapProjectLevel
-            topic_id = RapTopicLevel.find(:name => topicLevelName).id
+            # topic_id = RapTopicLevel.find(:name => topicLevelName).id
+            topic_id = RapTopicLevel.where(name: topicLevelName).take.id
             create_rap_project_level(projectLevelName, topic_id)
           end
 
@@ -91,7 +96,8 @@ if RapProgramLevel.count.zero?
             # skip this one
           else
             # Get the corresponding parent rap_project_level_id before creating a new RapTaskLevel
-            project_id = RapProjectLevel.find(:name => projectLevelName).id
+            # project_id = RapProjectLevel.find(:name => projectLevelName).id
+            project_id = RapProjectLevel.where(name: projectLevelName).take.id
             create_rap_task_level(taskLevelName, project_id)
           end
         end

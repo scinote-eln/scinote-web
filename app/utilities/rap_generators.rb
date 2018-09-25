@@ -58,4 +58,4 @@ module RapGenerator
     new_rap_task.updated_at = Time.now
     new_rap_task.save!
   end
-  
+end
