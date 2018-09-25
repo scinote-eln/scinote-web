@@ -250,20 +250,26 @@ class Project < ApplicationRecord
                  .add_child('<table class="handsontable"></table>').first
 
       # Add header row
+      header_cell = '<th>'\
+                      '<div class="relative">'\
+                        '<span>%s</span>'\
+                      '</div>'\
+                    '</th>'
       header_el = table_el.add_child('<thead></thead>').first
       row_el = header_el.add_child('<tr></tr>').first
-      row_el.add_child('<th style="min-width: 50px;"><div class="relative"><span class="colHeader"></span></div></th>').first
+      row_el.add_child(format(header_cell, '')).first
       table_headers.each do |col|
-        row_el.add_child("<th style=\"width: 50px;\"><div class=\"relative\"><span class=\"colHeader\">#{col}</span></div></th>").first
+        row_el.add_child(format(header_cell, col)).first
       end
 
       # Add body rows
+      body_cell = '<td>%s</td>'
       body_el = table_el.add_child('<tbody></tbody>').first
-      table_data.each.with_index(1) do |row, index|
+      table_data.each.with_index(1) do |row, idx|
         row_el = body_el.add_child('<tr></tr>').first
-        row_el.add_child("<th style=\"min-width: 50px;\"><div class=\"relative\"><span class=\"rowHeader\">#{index}</span></div></th>").first
+        row_el.add_child(format(header_cell, idx)).first
         row.each do |col|
-          row_el.add_child("<td style=\"min-width: 50px;\">#{col}</td>").first
+          row_el.add_child(format(body_cell, col)).first
         end
       end
     end
