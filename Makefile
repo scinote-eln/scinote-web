@@ -1,5 +1,5 @@
 APP_HOME="/usr/src/app"
-DB_IP=$(shell docker inspect scinote_db_test | grep "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
+DB_IP=$(shell docker inspect scinote_db_development | grep "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
 PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 
 define PRODUCTION_CONFIG_BODY
@@ -7,6 +7,7 @@ SECRET_KEY_BASE=$(shell openssl rand -hex 64)
 PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 DATABASE_URL=postgresql://postgres@db/scinote_production
 PAPERCLIP_STORAGE=filesystem
+ENABLE_TUTORIAL=true
 ENABLE_RECAPTCHA=false
 ENABLE_USER_CONFIRMATION=false
 ENABLE_USER_REGISTRATION=true
@@ -38,7 +39,7 @@ db-cli:
 	@$(MAKE) rails cmd="rails db"
 
 db-load-dump:
-	@$(MAKE) rails cmd="rake db:drop db:create;pg_restore --verbose --clean --no-acl --no-owner -h $(DB_IP) -p 5432 -U postgres -d scinote_test latest.dump"
+	@$(MAKE) rails cmd="rake db:drop db:create;pg_restore --verbose --clean --no-acl --no-owner -h $(DB_IP) -p 5432 -U postgres -d scinote_development latest.dump"
 
 database:
 	@$(MAKE) rails cmd="rake db:create db:setup db:migrate"
@@ -58,7 +59,7 @@ rails-production:
 run:
 	rm tmp/pids/server.pid || true
 	@docker-compose up -d
-	@docker attach scinote_web_test
+	@docker attach scinote_web_development
 
 start:
 	@docker-compose start
@@ -82,10 +83,7 @@ integration-tests:
 	@$(MAKE) rails cmd="bundle exec cucumber"
 
 tests-ci:
-	@docker-compose run --rm web bash -c "bundle install && npm install"
-	@docker-compose up -d webpack
-	@docker-compose ps
-	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAILER_PORT=$MAILER_PORT -e SMTP_DOMAIN=$SMTP_DOMAIN -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SMTP_ADDRESS=$SMTP_ADDRESS -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost -e PAPERCLIP_STORAGE=filesystem -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && npm install && bundle exec rspec && bundle exec cucumber"
+	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAILER_PORT=$MAILER_PORT -e SMTP_DOMAIN=$SMTP_DOMAIN -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SMTP_ADDRESS=$SMTP_ADDRESS -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost -e PAPERCLIP_STORAGE=filesystem -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "bundle install && rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
 
 console:
 	@$(MAKE) rails cmd="rails console"
