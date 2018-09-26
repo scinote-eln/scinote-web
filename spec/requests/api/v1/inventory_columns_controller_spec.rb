@@ -214,4 +214,49 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       end
     end
   end
+
+  describe 'DELETE inventory_columns, #destroy' do
+    it 'Destroys inventory column' do
+      deleted_id = @teams.first.repositories.first.repository_columns.last.id
+      delete api_v1_team_inventory_column_path(
+        id: deleted_id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(200)
+      expect(RepositoryColumn.where(id: deleted_id)).to_not exist
+      expect(RepositoryCell.where(repository_column: deleted_id).count).to equal 0
+    end
+
+    it 'Invalid request, non existing inventory column' do
+      delete api_v1_team_inventory_column_path(
+        id: 1001,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(404)
+    end
+
+    it 'When invalid request, incorrect repository' do
+      deleted_id = @teams.first.repositories.first.repository_columns.last.id
+      delete api_v1_team_inventory_column_path(
+        id: deleted_id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.second.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(404)
+      expect(RepositoryColumn.where(id: deleted_id)).to exist
+    end
+
+    it 'When invalid request, repository from another team' do
+      deleted_id = @teams.first.repositories.first.repository_columns.last.id
+      delete api_v1_team_inventory_column_path(
+        id: deleted_id,
+        team_id: @teams.second.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(403)
+      expect(RepositoryColumn.where(id: deleted_id)).to exist
+    end
+  end
 end

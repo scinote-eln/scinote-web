@@ -5,6 +5,7 @@ module Api
     class ActivitiesController < BaseController
       before_action :load_team
       before_action :load_project
+
       before_action :load_project_activity, only: :project_activity
       before_action :load_experiment, except: %i(
         project_activities project_activity
@@ -25,6 +26,7 @@ module Api
         render jsonapi: @activity, serializer: ActivitySerializer
       end
 
+<<<<<<< HEAD
       def project_activities
         activities = @project.activities
                              .page(params.dig(:page, :number))
@@ -38,6 +40,8 @@ module Api
         render jsonapi: @project_activity, serializer: ActivitySerializer
       end
 
+=======
+>>>>>>> 2a1c3037b8d19dd4ba3a7ae599fe0d7e6c5a2e24
       private
 
       def load_team
@@ -70,6 +74,7 @@ module Api
         )
         render jsonapi: {}, status: :not_found if @activity.nil?
       end
+<<<<<<< HEAD
 
       def load_project_activity
         @project_activity = @project.activities.find(
@@ -77,6 +82,8 @@ module Api
         )
         render jsonapi: {}, status: :not_found if @project_activity.nil?
       end
+=======
+>>>>>>> 2a1c3037b8d19dd4ba3a7ae599fe0d7e6c5a2e24
     end
   end
 end
