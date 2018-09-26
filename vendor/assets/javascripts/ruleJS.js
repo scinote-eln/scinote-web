@@ -1038,10 +1038,10 @@ var ruleJS = (function (root) {
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
           try{
             var number1_big = new Big(number1);
-            var result_big = number1_big.plus(number2)
-            result = parseFloat(result_big)
+            var result_big = number1_big.plus(number2);
+            result = parseFloat(result_big);
           } catch(e) {
-            result = number1 + number2
+            result = number1 + number2;
           }
           //MODIFICATION END
 
@@ -1051,24 +1051,23 @@ var ruleJS = (function (root) {
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
           try{
             var number1_big = new Big(number1);
-            var result_big = number1_big.minus(number2)
-            result = parseFloat(result_big)
+            var result_big = number1_big.minus(number2);
+            result = parseFloat(result_big);
           } catch(e) {
-            result = number1 - number2
+            result = number1 - number2;
           }
           //MODIFICATION END
 
           //ORIGINAL: result = number1 - number2;
           break;
         case '/':
-
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
           try{
             var number1_big = new Big(number1);
-            var result_big = number1_big.div(number2)
-            result = parseFloat(result_big)
+            var result_big = number1_big.div(number2);
+            result = parseFloat(result_big);
           } catch(e){
-            result = number1 / number2
+            result = number1 / number2;
           }
           //MODIFICATION END
 
@@ -1081,14 +1080,13 @@ var ruleJS = (function (root) {
           }
           break;
         case '*':
-
           //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
           try{
             var number1_big = new Big(number1);
-            var result_big = number1_big.times(number2)
-            result = parseFloat(result_big)
+            var result_big = number1_big.times(number2);
+            result = parseFloat(result_big);
           } catch(e) {
-            result = number1 * number2
+            result = number1 * number2;
           }
           //MODIFICATION END
 
