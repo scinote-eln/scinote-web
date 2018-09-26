@@ -582,7 +582,7 @@ Rails.application.routes.draw do
                   resources :protocols, only: %i(index show),
                             path: 'protocols',
                             as: :protocols
-                  resources :results, only: %i(index show),
+                  resources :results, only: %i(index create show),
                             path: 'results',
                             as: :results
                   get 'inputs',
