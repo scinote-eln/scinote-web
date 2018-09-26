@@ -156,16 +156,15 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       hash_body = nil
       updated_inventory_item = @inventory_item.as_json[:included]
       updated_inventory_item.each do |cell|
-                                    attributes = cell[:attributes]
-                                    if attributes[:value_type] == 'list'
-                                      cell[:attributes] = {
-                                        value_type: 'list',
-                                        value: Faker::Name.unique.name,
-                                        column_id: 2
-                                      }
-                                    end
-                                  end
-      puts updated_inventory_item
+        attributes = cell[:attributes]
+        if attributes[:value_type] == 'list'
+          cell[:attributes] = {
+            value_type: 'list',
+            value: Faker::Name.unique.name,
+            column_id: 2
+          }
+        end
+      end
       patch api_v1_team_inventory_item_path(
         id: RepositoryRow.last.id,
         team_id: @teams.first.id,
@@ -181,11 +180,11 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       hash_body = nil
       updated_inventory_item = @inventory_item.as_json[:included]
       updated_inventory_item.each do |cell|
-                                    attributes = cell[:attributes]
-                                    if attributes[:value_type] == 'text'
-                                        attributes[:value] = Faker::Name.unique.name
-                                    end
-                                  end
+        attributes = cell[:attributes]
+        if attributes[:value_type] == 'text'
+          attributes[:value] = Faker::Name.unique.name
+        end
+      end
       patch api_v1_team_inventory_item_path(
         id: RepositoryRow.last.id,
         team_id: @teams.first.id,
