@@ -112,9 +112,8 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
-          .new(RepositoryColumn.last,
-               serializer: Api::V1::InventoryColumnSerializer,
-               include: :inventory_cells)
+          .new(Repository.last,
+               serializer: Api::V1::InventorySerializer)
           .as_json[:data]
       )
     end
