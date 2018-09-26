@@ -43,7 +43,8 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
     end
 
     @valid_headers =
-      { 'Authorization': 'Bearer ' + generate_token(@user.id) }
+      { 'Authorization': 'Bearer ' + generate_token(@user.id),
+        'Content-Type': 'application/json' }
 
     @valid_hash_body = { data:
                          { type: 'inventory_items',
@@ -141,10 +142,6 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
   end
 
   describe 'POST inventory_item, #create' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-    end
-
     it 'Response with correct inventory item' do
       hash_body = nil
       post api_v1_team_inventory_items_path(
