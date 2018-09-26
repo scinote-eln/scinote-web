@@ -5,6 +5,7 @@ class ProtocolsController < ApplicationController
   include ProtocolsExporter
   include InputSanitizeHelper
   include ProtocolsIoHelper
+  include TeamsHelper
 
   before_action :check_create_permissions, only: %i(
     create_new_modal
@@ -142,7 +143,10 @@ class ProtocolsController < ApplicationController
     move_protocol('restore')
   end
 
-  def edit; end
+  def edit
+    # Switch to correct team
+    current_team_switch(@protocol.team)
+  end
 
   def update_metadata
     @protocol.record_timestamps = false
