@@ -15,6 +15,22 @@ $color-module-hover: $brand-primary;
   }
 }
 
+/* Secondary navigation */
+
+.navbar-nav {
+
+  .btn-group .btn-toggle:not(.active) {
+    background-color: $color-white;
+    border-color: $color-silver;
+    color: $color-emperor;
+  }
+
+  .projects-view-mode-switch {
+    margin: 10px;
+  }
+
+}
+
 /* Canvas index page */
 
 #canvas-container:not(.canvas-container-edit-mode) {
