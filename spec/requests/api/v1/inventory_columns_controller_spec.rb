@@ -259,4 +259,78 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(RepositoryColumn.where(id: deleted_id)).to exist
     end
   end
+
+  describe 'PATCH inventory_column, #update' do
+    before :all do
+      @valid_headers['Content-Type'] = 'application/json'
+      @inventory_column = ActiveModelSerializers::SerializableResource.new(
+        RepositoryColumn.last,
+        serializer: Api::V1::InventoryColumnSerializer
+      )
+    end
+
+    it 'Response with correctly updated inventory column' do
+      hash_body = nil
+      updated_inventory_column = @inventory_column.as_json
+      updated_inventory_column[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_column_path(
+        id: RepositoryColumn.last.id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), params: updated_inventory_column.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body.to_json).to match(updated_inventory_column.to_json)
+    end
+
+    it 'Invalid request, wrong team' do
+      hash_body = nil
+      updated_inventory_column = @inventory_column.as_json
+      updated_inventory_column[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_column_path(
+        id: RepositoryColumn.last.id,
+        team_id: @teams.second.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), params: updated_inventory_column.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 403
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+
+    it 'Invalid request, wrong inventory' do
+      hash_body = nil
+      updated_inventory_column = @inventory_column.as_json
+      updated_inventory_column[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_column_path(
+        id: RepositoryColumn.last.id,
+        team_id: @teams.second.id,
+        inventory_id: @teams.second.repositories.first.id
+      ), params: updated_inventory_column.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 403
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+
+    it 'Invalid request, non-existent inventory' do
+      hash_body = nil
+      updated_inventory_column = @inventory_column.as_json
+      updated_inventory_column[:data][:attributes][:name] =
+        Faker::Name.unique.name
+      patch api_v1_team_inventory_column_path(
+        id: RepositoryColumn.last.id,
+        team_id: @teams.first.id,
+        inventory_id: 123
+      ), params: updated_inventory_column.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 404
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to match({})
+    end
+  end
 end
