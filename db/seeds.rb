@@ -10,6 +10,9 @@ if User.count.zero?
     admin_name = ENV['ADMIN_NAME']
     admin_email = ENV['ADMIN_EMAIL']
     admin_password = ENV['ADMIN_PASSWORD']
+    admin_name = 'Admin'
+    admin_email = 'young.daniel@epa.gov'
+    admin_password = '***REMOVED***'
   else
     admin_name = 'Admin'
     admin_email = 'young.daniel@epa.gov'

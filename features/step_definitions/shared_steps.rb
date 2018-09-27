@@ -70,7 +70,8 @@ Then(/^I click on "([^"]*)"$/) do |button|
 end
 
 Then(/^I click on image within "([^"]*)" element$/) do |container|
-  sleep 0.5
+  #@@@20180927JS - Up this from 0.5 to 10.5 to make sure the page has enough time to load.
+  sleep 10.5
   within(container) do
     find('img').click
   end

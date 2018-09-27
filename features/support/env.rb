@@ -31,6 +31,8 @@ Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = 30
 Capybara.asset_host = 'http://localhost:3001'
 Capybara.server_port = 3001
+#@@@20180927JS - https://stackoverflow.com/questions/21033560/capybara-unable-to-find-css
+Capybara.ignore_hidden_elements = false
 
 # enables email helper methods
 World(Capybara::Email::DSL)
