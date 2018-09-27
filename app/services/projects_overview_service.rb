@@ -8,8 +8,8 @@ class ProjectsOverviewService
 
   def project_cards(params)
     records = fetch_records
-    records = records.where(archived: true) if params[:archived] == 'true'
-    records = records.where(archived: false) if params[:archived] == 'false'
+    records = records.where(archived: true) if params[:filter] == 'archived'
+    records = records.where(archived: false) if params[:filter] == 'active'
     return records unless params[:sort]
     case params[:sort]
     when 'new'
@@ -29,8 +29,8 @@ class ProjectsOverviewService
     per_page = params[:length] == '-1' ? 10 : params[:length].to_i
     page = params[:start] ? (params[:start].to_i / per_page) + 1 : 1
     records = fetch_dt_records
-    records = records.where(archived: true) if params[:archived] == 'true'
-    records = records.where(archived: false) if params[:archived] == 'false'
+    records = records.where(archived: true) if params[:filter] == 'archived'
+    records = records.where(archived: false) if params[:filter] == 'active'
     search_value = params.dig(:search, :value)
     records = search(records, search_value) if search_value.present?
     sort(records, params).page(page).per(per_page)

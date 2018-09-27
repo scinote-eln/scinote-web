@@ -247,7 +247,7 @@ en:
       sort_old: "Oldest first"
       sort_atoz: "From A to Z"
       sort_ztoa: "From Z to A"
-      start_date: "Start date"
+      start_date: "Start date:"
       activity_tab: "Activity"
       users_tab: "Users"
       notifications_tab: "Notifications"

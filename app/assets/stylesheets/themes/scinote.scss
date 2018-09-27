@@ -651,9 +651,50 @@ ul.double-line > li {
 }
 
 .panel-project {
+  color: $color-silver-chalice;
+
+  .nav .btn-link {
+    padding: 10px 5px;
+  }
+
+  &.selected {
+    border-color: $brand-primary;
+    box-shadow: 0px 3px 10px $brand-primary !important;
+  }
+
+  &.archived {
+    &,
+    .panel-heading,
+    .panel-body,
+    .panel-footer-scinote {
+      background-color: $color-concrete;
+      background-image: none;
+    }
+  }
+
   .panel-heading {
-    background-color: $brand-primary;
-    color: $color-white;
+    background-color: $color-white;
+    color: $color-silver-chalice;
+
+    .dropdown-toggle {
+      padding: 6px;
+    }
+  }
+
+  .panel-title {
+    color: $brand-primary;
+
+    .fas {
+      color: $color-silver-chalice;
+    }
+  }
+
+  .panel-body .row {
+    padding: 5px;
+  }
+
+  .panel-footer .nav {
+    padding: 0 10px;
   }
 }
 

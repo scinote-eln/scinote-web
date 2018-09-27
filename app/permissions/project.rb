@@ -1,7 +1,6 @@
 Canaid::Permissions.register_for(Project) do
   # Project must be active for all the specified permissions
-  %i(read_project
-     manage_project
+  %i(manage_project
      archive_project
      create_experiments
      create_comments_in_project

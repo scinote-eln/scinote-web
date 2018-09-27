@@ -6,5 +6,7 @@ class UserMyModule < ApplicationRecord
              foreign_key: 'assigned_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :my_module, inverse_of: :user_my_modules, optional: true
+  belongs_to :my_module, inverse_of: :user_my_modules,
+                         touch: true,
+                         optional: true
 end

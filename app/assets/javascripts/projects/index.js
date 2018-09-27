@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global Comments CounterBadge animateSpinner */
+/* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule */
 
 //= require comments
 (function() {
@@ -28,28 +28,7 @@
 
   var projectsViewMode = 'cards';
   var projectsViewFilter = $('.projects-view-filter.active').data('filter');
-
-  function initProjectsViewFilter() {
-    $('.projects-view-filter').click(function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      $('.projects-view-filter').removeClass('active');
-      $(this).addClass('active');
-      if ($(this).data('filter') === projectsViewFilter) {
-        return;
-      }
-      projectsViewFilter = $(this).data('filter');
-    });
-  }
-
-  function initProjectsViewModeSwitch() {
-    $('input[name=projects-view-mode-selector]').on('change', function() {
-      if ($(this).val() === projectsViewMode) {
-        return;
-      }
-      projectsViewMode = $(this).val();
-    });
-  }
+  var projectsViewSort = 'new';
 
   /**
    * Initialize the JS for new project modal to work.
@@ -129,20 +108,16 @@
             animateSpinner(this);
           })
           .on('ajax:success', function(ev2, data2) {
-            // Project saved, replace changed project's title
-            var responseHtml = $(data2.html);
-            var id = responseHtml.attr('data-id');
-            var newTitle = responseHtml.find('.panel-title');
-            var existingTitle = $(".panel-project[data-id='" + id + "'] .panel-title");
-
-            existingTitle.after(newTitle);
-            existingTitle.remove();
-
             // Hide modal
             editProjectModal.modal('hide');
+
+            HelperModule.flashAlertMsg(data2.message, 'success');
+
+            // Project saved, reload cards view
+            loadCardsView();
           })
           .on('ajax:error', function(ev2, data2) {
-            $(this).renderFormErrors('project', data2.responseJSON);
+            $(this).renderFormErrors('project', data2.responseJSON.errors);
           })
           .on('ajax:complete', function() {
             animateSpinner(this, false);
@@ -276,14 +251,37 @@
     projectActionsModalBody = projectActionsModal.find('.modal-body');
     projectActionsModalFooter = projectActionsModal.find('.modal-footer');
 
-    initProjectsViewFilter();
-    initProjectsViewModeSwitch();
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
     Comments.initCommentOptions('ul.content-comments', true);
     Comments.initEditComments('.panel-project .tab-content');
     Comments.initDeleteComments('.panel-project .tab-content');
+
+    $('.project-card-selector').click(function() {
+      if (this.checked) {
+        $(this).closest('.panel-project').addClass('selected');
+      } else {
+        $(this).closest('.panel-project').removeClass('selected');
+      }
+    });
+
+    // init project archive/restore function
+    $('.panel-project .panel-heading form')
+      .on('ajax:beforeSend', function() {
+        animateSpinner($('#projects-cards-view'));
+      })
+      .on('ajax:success', function(ev, data) {
+        HelperModule.flashAlertMsg(data.message, 'success');
+        // Project saved, reload cards view
+        loadCardsView();
+      })
+      .on('ajax:error', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      })
+      .on('ajax:complete', function() {
+        animateSpinner($('#projects-cards-view'), false);
+      });
 
     // initialize project tab remote loading
     $('.panel-project .active').removeClass('active');
@@ -324,5 +322,70 @@
       });
   }
 
-  init();
+  function loadCardsView() {
+    // Load HTML with projects list
+    var viewContainer = $('#projects-cards-view');
+    animateSpinner(viewContainer, true);
+    $.ajax({
+      url: $('#projects-cards-view').data('projects-url'),
+      type: 'GET',
+      dataType: 'json',
+      data: {
+        filter: projectsViewFilter,
+        sort: projectsViewSort
+      },
+      success: function(data) {
+        viewContainer.html(data.html);
+        initFormSubmitLinks(viewContainer);
+        init();
+      },
+      error: function() {
+        viewContainer.html('Error loading project list');
+      }
+    });
+  }
+
+  function initProjectsViewFilter() {
+    $('.projects-view-filter').click(function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $('.projects-view-filter').removeClass('active');
+      $(this).addClass('active');
+      if ($(this).data('filter') === projectsViewFilter) {
+        return;
+      }
+      projectsViewFilter = $(this).data('filter');
+      if ($('#projects-cards-view').hasClass('active')) {
+        loadCardsView();
+      }
+    });
+  }
+
+  function initProjectsViewModeSwitch() {
+    $('input[name=projects-view-mode-selector]').on('change', function() {
+      if ($(this).val() === projectsViewMode) {
+        return;
+      }
+      projectsViewMode = $(this).val();
+    });
+  }
+
+  function initSorting() {
+    $('#sortMenuDropdown a').click(function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (projectsViewSort !== $(this).data('sort')) {
+        $('#sortMenuDropdown a').removeClass('disabled');
+        projectsViewSort = $(this).data('sort');
+        loadCardsView();
+        $(this).addClass('disabled');
+        $('#sortMenu').dropdown('toggle');
+      }
+    });
+  }
+
+  initProjectsViewFilter();
+  initProjectsViewModeSwitch();
+  initSorting();
+  loadCardsView();
 }());
