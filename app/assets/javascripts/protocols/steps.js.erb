@@ -550,7 +550,7 @@
     $form.find(".table_name").each(function(index , tableName) {
       if (tableName.value.length > 0) {
         tableNamesValidArray[index] = textValidator(ev, tableName, 1,
-          gon.global.NAME_MAX_LENGTH);
+          <%= Constants::NAME_MAX_LENGTH %> );
       } else {
         tableNamesValidArray[index] = true;
       }
