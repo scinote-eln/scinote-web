@@ -545,21 +545,29 @@
     var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
-    var $table_names = $form.find(".table_name");
-    var table_nameValid;
-    if ($table_names.length > 0) // if table exists check its title, if not, its validated
-      {
-        table_nameValid = textValidator(ev, $table_names, 1,
-          <%= Constants::NAME_MAX_LENGTH %>);
-      }else{
-        table_nameValid = true
+    var tableNamesValidArray = [];
+    // iterate over table titles and validate their length
+    $form.find(".table_name").each(function(index , tableName) {
+      if (tableName.value.length > 0) {
+        tableNamesValidArray[index] = textValidator(ev, tableName, 1,
+          gon.global.NAME_MAX_LENGTH);
+      } else {
+        tableNamesValidArray[index] = true;
       }
-
+    });
+    var tableNamesValid = true;
+    // passes if all table names are valid
+    for (var i=0;i<tableNamesValidArray.length;i++){
+      if(tableNamesValidArray[i] !== true){
+        tableNamesValid = false;
+        break;
+      }
+    }
     if (DragNDropSteps.filesStatus() &&
         checklistsValid &&
         nameValid &&
         descriptionValid &&
-        table_nameValid ) {
+        tableNamesValid ) {
 
       $form.find("[data-role='editable-table']").each(function() {
         var hot = $(this).find(".hot").handsontable('getInstance');
