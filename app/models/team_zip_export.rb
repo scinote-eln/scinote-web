@@ -20,7 +20,7 @@ class TeamZipExport < ZipExport
     ).first
     output_file = File.new(
       File.join(Rails.root,
-                "tmp/zip-ready/projects_export-timestamp-#{Time.now.to_i}.zip"),
+                "tmp/zip-ready/projects-export-#{Time.now.to_i}.zip"),
       'w+'
     )
     fill_content(dir_to_zip, data, type, options)
@@ -56,7 +56,7 @@ class TeamZipExport < ZipExport
       root += "/#{project_name}"
       FileUtils.mkdir_p(root)
 
-      FileUtils.touch("#{root}/#{project_name}_REPORT.pdf").first
+      FileUtils.touch("#{root}/#{project_name}_Report.pdf").first
 
       inventories = "#{root}/Inventories"
       FileUtils.mkdir_p(inventories)
@@ -68,9 +68,9 @@ class TeamZipExport < ZipExport
                                .distinct
 
       # Iterate through every inventory repo and save it to CSV
-      repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_ind|
+      repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_idx|
         curr_repo_rows = repo_rows.select { |x| x.repository_id == repo.id }
-        save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_ind)
+        save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
       end
 
       # Include all experiments
@@ -92,14 +92,14 @@ class TeamZipExport < ZipExport
 
           # Export protocols
           steps = my_module.protocols.map(&:steps).flatten
-          export_step_assets(StepAsset.where(step: steps), protocol_path)
-          export_step_tables(StepTable.where(step: steps), protocol_path)
+          export_assets(StepAsset.where(step: steps), :step, protocol_path)
+          export_tables(StepTable.where(step: steps), :step, protocol_path)
 
           # Export results
-          export_result_assets(ResultAsset.where(result: my_module.results)
-                                    .map(&:asset), result_path)
-          export_result_tables(ResultTable.where(result: my_module.results)
-                                    .map(&:table), result_path)
+          export_assets(ResultAsset.where(result: my_module.results),
+                        :result, result_path)
+          export_tables(ResultTable.where(result: my_module.results),
+                        :result, result_path)
         end
       end
     end
@@ -124,7 +124,7 @@ class TeamZipExport < ZipExport
     if name == '..'
       return '__'
     elsif name == '.'
-      return '.'
+      return '_'
     end
 
     # Truncate and replace reserved characters
@@ -139,54 +139,42 @@ class TeamZipExport < ZipExport
   end
 
   # Appends given suffix to file_name and then adds original extension
-  def append_suffix(file_name, suffix)
+  def append_file_suffix(file_name, suffix)
     ext = File.extname(file_name)
     File.basename(file_name, ext) + suffix + ext
   end
 
   # Helper method to extract given assets to the directory
-  def export_result_assets(assets, directory)
-    assets.each_with_index do |asset, i|
-      file = FileUtils.touch("#{directory}/#{append_suffix(asset.file_file_name,
-                                                           "_#{i}")}").first
-      File.open(file, 'wb') { |f| f.write(asset.open.read) }
-    end
-  end
-
-  # Helper method to extract given step assets to the directory
-  def export_step_assets(assets, directory)
-    assets.each_with_index do |step_asset, i|
-      asset = step_asset.asset
-      file = FileUtils.touch(
-        "#{directory}/" \
-        "#{append_suffix(asset.file_file_name,
-                         "_#{i}_Step#{step_asset.step.position + 1}")}"
-      ).first
+  def export_assets(elements, type, directory)
+    elements.each_with_index do |element, i|
+      asset = element.asset
+      if type == :step
+        name = "#{directory}/" \
+               "#{append_file_suffix(asset.file_file_name,
+                                     "_#{i}_Step#{element.step.position + 1}")}"
+      elsif type == :result
+        name = "#{directory}/#{append_file_suffix(asset.file_file_name,
+                                                  "_#{i}")}"
+      end
+      file = FileUtils.touch(name).first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
     end
   end
 
   # Helper method to extract given tables to the directory
-  def export_step_tables(step_tables, directory)
-    step_tables.each_with_index do |step_table, i|
-      table = step_table.table
+  def export_tables(elements, type, directory)
+    elements.each_with_index do |element, i|
+      table = element.table
       table_name = table.name.presence || 'Table'
       table_name += i.to_s
-      file = FileUtils.touch(
-        "#{directory}/#{handle_name(table_name)}" \
-        "_#{i}_Step#{step_table.step.position + 1}.csv"
-      ).first
-      File.open(file, 'wb') { |f| f.write(table.to_csv) }
-    end
-  end
 
-  # Helper method to extract given tables to the directory
-  def export_result_tables(tables, directory)
-    tables.each_with_index do |table, i|
-      table_name = table.name.presence || 'Table'
-      table_name += i.to_s
-      file = FileUtils.touch("#{directory}/#{handle_name(table_name)}.csv")
-                      .first
+      if type == :step
+        name = "#{directory}/#{handle_name(table_name)}" \
+               "_#{i}_Step#{element.step.position + 1}.csv"
+      elsif type == :result
+        name = "#{directory}/#{handle_name(table_name)}.csv"
+      end
+      file = FileUtils.touch(name).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
     end
   end
@@ -197,7 +185,7 @@ class TeamZipExport < ZipExport
     file = FileUtils.touch("#{path}/#{repo_name}.csv").first
 
     # Attachment folder
-    rel_attach_path = "#{repo_name}_ATTACHMENTS"
+    rel_attach_path = "#{repo_name}_attachments"
     attach_path = "#{path}/#{rel_attach_path}"
     FileUtils.mkdir_p(attach_path)
 
@@ -208,7 +196,8 @@ class TeamZipExport < ZipExport
     assets = {}
     asset_counter = 0
     handle_name_func = lambda do |asset|
-      file_name = append_suffix(asset.file_file_name, "_#{asset_counter}").to_s
+      file_name = append_file_suffix(asset.file_file_name,
+                                     "_#{asset_counter}").to_s
 
       # Save pair for downloading it later
       assets[asset] = "#{attach_path}/#{file_name}"
@@ -233,21 +222,13 @@ class TeamZipExport < ZipExport
   # Recursive zipping
   def zip!(input_dir, output_file)
     files = Dir.entries(input_dir)
-    files.delete_if { |el| el == '..' || el == '.' }
+
+    # Don't zip current/above directory
+    files.delete_if { |el| ['.', '..'].include?(el) }
+
     Zip::File.open(output_file, Zip::File::CREATE) do |zipfile|
       write_entries(input_dir, files, '', zipfile)
     end
-  end
-
-  # Zip the input directory.
-  def write
-    entries = Dir.entries(@inputDir)
-    entries.delete('.')
-    entries.delete('..')
-
-    io = Zip::File.open(@outputFile, Zip::File::CREATE)
-    write_entries(entries, '', io)
-    io.close
   end
 
   # A helper method to make the recursion work.
@@ -259,8 +240,9 @@ class TeamZipExport < ZipExport
       if File.directory?(disk_file_path)
         io.mkdir(zip_file_path)
         subdir = Dir.entries(disk_file_path)
-        subdir.delete('.')
-        subdir.delete('..')
+
+        # Remove current/above directory to prevent infinite recursion
+        subdir.delete_if { |el| ['.', '..'].include?(el) }
 
         write_entries(input_dir, subdir, zip_file_path, io)
       else

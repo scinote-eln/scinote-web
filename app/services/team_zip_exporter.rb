@@ -1,6 +1,6 @@
 module TeamZipExporter
   def self.generate_zip(params, team, current_user)
-    Rails.logger.warn('Exporting team zip')
+    Rails.logger.info('Exporting team zip')
 
     project_ids = params[:project_ids]
     ids = Project.where(id: project_ids,

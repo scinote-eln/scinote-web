@@ -63,7 +63,6 @@ class ZipExport < ApplicationRecord
 
   handle_asynchronously :generate_exportable_zip
 
-  # A helper method to make the recursion work.
   private
 
   def method_missing(m, *args, &block)
