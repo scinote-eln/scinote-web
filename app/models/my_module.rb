@@ -66,6 +66,13 @@ class MyModule < ApplicationRecord
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
 
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
+  scope :active, -> { where(archived: false) }
+  scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
+  scope :one_day_prior, (lambda do
+    where('my_modules.due_date > ? AND my_modules.due_date < ?',
+          Time.current.utc,
+          Time.current.utc + 1.day)
+  end)
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30

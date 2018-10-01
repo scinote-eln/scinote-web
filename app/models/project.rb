@@ -150,11 +150,7 @@ class Project < ApplicationRecord
   end
 
   def user_role(user)
-    unless self.users.include? user
-      return nil
-    end
-
-    return (self.user_projects.select { |up| up.user == user }).first.role
+    user_projects.find_by_user_id(user)&.role
   end
 
   def sorted_active_experiments(sort_by = :new)

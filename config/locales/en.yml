@@ -212,6 +212,10 @@ en:
     index:
       head_title: "Home"
       archive: "Archive"
+      archived: "Archived"
+      active: "Active"
+      hidden: "Project members only"
+      visible: "All team members"
       no_projects:
         text: "You don't have any active projects."
         title: "Please create your Project"
