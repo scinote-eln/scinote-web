@@ -1,0 +1,37 @@
+<% cache project do %>
+  <% active = !project.archived %>
+  <% if (true || active && can_manage_project?(project)) || (!active && can_restore_project?(project)) %>
+    <div class="dropdown pull-right">
+      <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="fas fa-ellipsis-v"></span>
+      </button>
+      <% project_form = nil %>
+      <%= form_for project, namespace: view_mode, format: :json, method: :put, remote: true do |f| %>
+        <% project_form = f %>
+        <%= f.hidden_field :archived, value: active %>
+      <% end %>
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="top: 105%;">
+        <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
+        <% if active %>
+          <li>
+            <%= link_to t("projects.index.edit_option"), edit_project_path(project, format: :json), remote: true, "data-action" => "edit" %>
+          </li>
+          <li>
+            <a href="#"
+               class="form-submit-link"
+               data-turbolinks="false"
+               data-submit-form="<%= project_form.options[:html][:id] %>"
+               data-confirm-form="<%= t("projects.index.archive_confirm") %>"><%= t 'projects.index.archive_option' %></a>
+          </li>
+        <% else %>
+          <li>
+            <a href="#"
+              class="form-submit-link"
+              data-turbolinks="false"
+              data-submit-form="<%= project_form.options[:html][:id] %>"><%= t 'projects.index.restore_option' %></a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

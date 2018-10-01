@@ -49,6 +49,7 @@ class ProjectsController < ApplicationController
   end
 
   def index_dt
+    @draw = params[:draw].to_i
     respond_to do |format|
       format.json do
         @current_team = current_team if current_team
@@ -93,10 +94,10 @@ class ProjectsController < ApplicationController
         )
       )
 
-      flash[:success] = t("projects.create.success_flash", name: @project.name)
+      message = t('projects.create.success_flash', name: @project.name)
       respond_to do |format|
         format.json {
-          render json: { url: projects_path }, status: :ok
+          render json: { message: message }, status: :ok
         }
       end
     else

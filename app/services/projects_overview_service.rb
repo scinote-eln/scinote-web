@@ -121,7 +121,7 @@ class ProjectsOverviewService
   def sort(records, params)
     order = params[:order]&.values&.first
     if order
-      dir = order[:dir] == 'DESC' ? 'DESC' : 'ASC'
+      dir = order[:dir] == 'desc' ? 'DESC' : 'ASC'
       column_index = order[:column]
     else
       dir = 'ASC'

@@ -188,7 +188,7 @@ Rails.application.routes.draw do
     end
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
-    get 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
+    post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
 
     resources :reports, only: :index
     get 'reports/datatable', to: 'reports#datatable'

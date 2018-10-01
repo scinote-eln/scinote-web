@@ -283,6 +283,14 @@ en:
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+    table:
+      status: "Status"
+      name: "Project name"
+      start: "Start date"
+      visibility: "Visible to"
+      users: "Users"
+      experiments: "Experiments"
+      tasks: "Tasks"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
     update:
