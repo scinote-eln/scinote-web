@@ -15,6 +15,7 @@
       $('.help_tooltips').each(function(i, obj) {
         var link = $(obj).data('tooltiplink');
         var textData = $(obj).data('tooltipcontent');
+        var customStyle = $(obj).data('tooltipstyle');
 
         $(obj)
           .popover({
@@ -23,7 +24,9 @@
             placement: 'auto right',
             trigger: 'manual',
             content: 'popovers will not display if empty',
-            template: '<div class="popover tooltip_' + i + '_window tooltip-open" role="tooltip" >'
+            template:
+              '<div class="popover tooltip_' + i + '_window tooltip-open" '
+              + 'role="tooltip" style="' + customStyle + '">'
               + '<div class="popover-body" >' + textData + '</div>'
               + '<br><br><br>'
               + '<div class="popover-footer">'
@@ -78,7 +81,7 @@
     }
   };
 
-  $(document).ready(function() {
+  $(document).on('turbolinks:load', function() {
     $.initTooltips();
   });
 }());
