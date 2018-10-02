@@ -1415,8 +1415,8 @@ en:
             time_zone_title: "Time zone"
             tips:
               title: "Help Tips"
-              text1: "When you place your mouse over specific element of SciNote, we show you a tip with description of this element."
-              text2: "You may want to turn that off if you feel confident in here."
+              text1: "When you place your mouse cursor on a certain element in SciNote and hold it for a bit, a short and helpful description will appear."
+              text2: "If you feel confident in SciNote already, you can turn off these Help Tips."
               toggle: "Show Help Tips"
           update_flash: "Preferences successfully updated."
         addons:
