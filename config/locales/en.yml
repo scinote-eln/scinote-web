@@ -391,7 +391,7 @@ en:
             step_tab: "Step content"
             results_tab: "Results content"
           step_contents_inner:
-            instructions: "Choose what information from task protocol step/s to include in the report"
+            instructions: "Select the information from task protocol step/s to include in the report"
             check_all: "All protocols steps content"
             tables: "Tables"
             no_tables: "Step contains no tables"
