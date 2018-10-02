@@ -111,12 +111,21 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
           </button>
 
           <!-- Invite buttons -->
-          <button type="button" data-role="invite-btn" class="btn btn-success" disabled="disabled" data-action="invite">
+          <button type="button" class="btn btn-success help_tooltips"
+                  data-tooltiplink="<%= I18n.t('tooltips.link.invite_to_sci') %>"
+                  data-tooltipcontent="<%= I18n.t('tooltips.text.invite_to_sci') %>"
+                  data-role="invite-btn" data-action="invite"
+                  disabled="disabled">
             <%= t('invite_users.invite_btn') %>
           </button>
 
           <div class="btn-group" data-role="invite-with-role-div">
-            <button type="button" class="btn btn-success dropdown-toggle help_tooltips" data-tooltiplink="<%= I18n.t('tooltips.link.invite_to_sci') %>" data-tooltipcontent="<%= I18n.t('tooltips.text.invite_to_sci') %>"  data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true" aria-expanded="false" data-role="invite-with-role-btn" disabled="disabled">
+            <button type="button" class="btn btn-success dropdown-toggle help_tooltips"
+                    data-tooltiplink="<%= I18n.t('tooltips.link.invite_to_sci') %>"
+                    data-tooltipcontent="<%= I18n.t('tooltips.text.invite_to_sci') %>"
+                    data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true"
+                    aria-expanded="false" data-role="invite-with-role-btn"
+                    disabled="disabled">
               <%= t('invite_users.invite_btn') %>
               &nbsp;
               <span class="caret"></span>
