@@ -623,8 +623,6 @@ ul.double-line > li {
   color: $brand-primary;
 }
 
-#projects-index,
-#project-archive,
 #project-show,
 #experiment-archive,
 #module-archive,
@@ -651,6 +649,7 @@ ul.double-line > li {
 }
 
 .panel-project {
+  box-shadow: 0 3px 6px $color-alto;
   color: $color-silver-chalice;
 
   &:not(.selected) .panel-heading .project-card-selector,
@@ -669,7 +668,7 @@ ul.double-line > li {
 
   &.selected {
     border-color: $brand-primary;
-    box-shadow: 0px 3px 10px $brand-primary !important;
+    box-shadow: 0 3px 10px $brand-primary;
   }
 
   &.archived {
