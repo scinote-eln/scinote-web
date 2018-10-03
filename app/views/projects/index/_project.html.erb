@@ -1,48 +1,83 @@
-<div id="<%= project.id %>" class="panel panel-default panel-project" data-id="<%= project.id %>"
-data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>">
+<% active = !project.archived %>
+<div id="<%= project.id %>"
+     class="panel panel-default panel-project <%= 'archived' unless active %>"
+     data-id="<%= project.id %>"
+     data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>">
   <div class="panel-heading">
 
-    <% if can_manage_project?(project) %>
+    <% if (active && (can_manage_project?(project) || can_archive_project?(project))) || (!active && can_restore_project?(project)) %>
       <div class="dropdown pull-right">
         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="caret"></span>
         </button>
         <% project_form = nil %>
-        <%= form_for project, method: :patch, format: :html do |f| %>
+        <%= form_for project, format: :json, method: :put, remote: true do |f| %>
           <% project_form = f %>
-          <%= f.hidden_field :archived, value: true %>
+          <%= f.hidden_field :archived, value: active %>
         <% end %>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="top: 105%;">
           <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
-          <li>
-            <%= link_to t("projects.index.edit_option"), edit_project_path(project, format: :json), remote: true, "data-action" => "edit" %>
-          </li>
-          <% if can_archive_project?(project) %>
-            <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= project_form.options[:html][:id] %>" data-confirm-form="<%= t("projects.index.archive_confirm") %>"><%= t 'projects.index.archive_option' %></a></li>
+          <% if active && can_manage_project?(project) %>
+            <li>
+              <%= link_to t("projects.index.edit_option"), edit_project_path(project, format: :json), remote: true, "data-action" => "edit" %>
+            </li>
+          <% elsif active && can_archive_project?(project) %>
+            <li>
+              <a href="#"
+                 class="form-submit-link"
+                 data-turbolinks="false"
+                 data-submit-form="<%= project_form.options[:html][:id] %>"
+                 data-confirm-form="<%= t("projects.index.archive_confirm") %>"><%= t 'projects.index.archive_option' %></a>
+            </li>
+          <% else %>
+            <li>
+              <a href="#"
+                class="form-submit-link"
+                data-turbolinks="false"
+                data-submit-form="<%= project_form.options[:html][:id] %>"><%= t 'projects.index.restore_option' %></a>
+            </li>
           <% end %>
         </ul>
       </div>
     <% end %>
 
-    <h3 class="panel-title">
-      <% if project.hidden? then %>
-        <span class="fas fa-eye-slash" aria-hidden="true" title="<%=t "projects.index.visibility_private" %>"></span>
-      <% else %>
-        <span class="fas fa-eye" aria-hidden="true" title="<%=t "projects.index.visibility_public" %>"></span>
-      <% end %>
-      <% if can_read_project?(project) then %>
+    <div class="pull-right">
+      <input class="project-card-selector" type="checkbox" name="project-<%= project.id %>">
+    </div>
+
+    <div class="panel-title">
+      <span class="fas <%= active ? 'fa-arrow-alt-circle-right' : 'fa-archive' %> "></span>
+      <% if active %>
         <%= link_to project.name, project_path(project), id: "#{project.id}-project-canvas-link" %>
       <% else %>
         <%= project.name %>
       <% end %>
-    </h3>
+    </div>
   </div>
 
   <div class="panel-body">
     <div class="row">
-      <div class="col-xs-6"><%= t('projects.index.start_date') %></div>
-      <div class="col-xs-6">
-      <%=l project.created_at, format: :full_date %>
+      <% if project.hidden? %>
+        <div class="col-xs-1">
+          <i class="fas fa-lg fa-eye-slash" aria-hidden="true" title="<%= t("projects.index.hidden") %>"></i>
+        </div>
+        <div class="col-xs-10">
+          <span><%= t("projects.index.hidden") %></span>
+        </div>
+      <% else %>
+        <div class="col-xs-1">
+          <i class="fas fa-lg fa-eye" aria-hidden="true" title="<%= t("projects.index.visible") %>"></i>
+        </div>
+        <div class="col-xs-10">
+          <span><%= t("projects.index.visible") %></span>
+        </div>
+      <% end %>
+    </div>
+    <div class="row">
+      <div class="col-xs-1"></div>
+      <div class="col-xs-10">
+        <%= t('projects.index.start_date') %>
+        <strong><%= l(project.created_at, format: :full_date) %></strong>
       </div>
     </div>
   </div>
@@ -51,49 +86,53 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-tabs-less" role="tablist" data-hook="project-footer-icons">
-      <% if can_read_project?(project) %>
-        <li role="presentation">
-          <a class="btn btn-link" href="<%= url_for project_project_activities_path(project_id: project.id, format: :json) %>" aria-controls="activities-<%= project.id %>" role="tab" data-remote="true">
-            <span class="fas fa-list"></span>
-          </a>
-        </li>
-        <li role="presentation">
-          <a class="btn btn-link" href="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>" aria-controls="users-<%= project.id %>" role="tab" data-remote="true">
-            <span class="fas fa-users"></span>
-            <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless project.users.count.positive? %>"
-                  data-linked-id="<%= project.id %>">
-              <%= project.users.count %>
-            </span>
-          </a>
-        </li>
-        <li role="presentation">
-          <a class="btn btn-link" href="<%= url_for notifications_project_path(id: project.id, format: :json) %>" aria-controls="notifications-<%= project.id %>" role="tab" data-remote="true">
-            <span class="fas fa-bell"></span>
-            <% if project.notifications_count(current_user).positive? %>
-              <span class="badge badge-indicator"><%= project.notifications_count(current_user) %></span>
-            <% end %>
-          </a>
-        </li>
-        <li role="presentation">
-          <a class="btn btn-link" href="<%= url_for project_project_comments_path(project_id: project.id, format: :json) %>" aria-controls="comments-<%= project.id %>" role="tab" data-remote="true">
-            <span class="fas fa-comment"></span>
-            <span class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless project.project_comments.count.positive? %>"
-                  data-linked-id="<%= project.id %>">
-              <%= project.project_comments.count %>
-            </span>
-          </a>
-        </li>
-      <% end %>
+      <li role="presentation">
+        <a class="btn btn-link <%= 'disabled' unless active %>"
+           href="<%= url_for project_project_activities_path(project_id: project.id, format: :json) %>"
+           aria-controls="activities-<%= project.id %>" role="tab" data-remote="true">
+          <span class="fas fa-list"></span>
+        </a>
+      </li>
+      <li class="pull-right" role="presentation">
+        <a class="btn btn-link <%= 'disabled' unless active %>"
+           href="<%= url_for project_project_comments_path(project_id: project.id, format: :json) %>"
+           aria-controls="comments-<%= project.id %>" role="tab" data-remote="true">
+          <span class="fas fa-comment"></span>
+          <span class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless project.comment_count.positive? %>"
+                data-linked-id="<%= project.id %>">
+            <%= project.comment_count %>
+          </span>
+        </a>
+      </li>
+      <li class="pull-right" role="presentation">
+        <a class="btn btn-link <%= 'disabled' unless active %>"
+           href="<%= url_for notifications_project_path(id: project.id, format: :json) %>"
+           aria-controls="notifications-<%= project.id %>" role="tab" data-remote="true">
+          <span class="fas fa-bell"></span>
+          <% if project.notification_count.positive? %>
+            <span class="badge badge-indicator"><%= project.notification_count %></span>
+          <% end %>
+        </a>
+      </li>
+      <li class="pull-right" role="presentation">
+        <a class="btn btn-link <%= 'disabled' unless active %>"
+           href="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>"
+           aria-controls="users-<%= project.id %>" role="tab" data-remote="true">
+          <span class="fas fa-users"></span>
+          <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless project.user_count.positive? %>"
+                data-linked-id="<%= project.id %>">
+            <%= project.user_count %>
+          </span>
+        </a>
+      </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content" data-hook="project-dropdown-panel">
-      <% if can_read_project?(project) %>
-        <div role="tabpanel" class="tab-pane" id="activities-<%= project.id %>"></div>
-        <div role="tabpanel" class="tab-pane" id="users-<%= project.id %>"></div>
-        <div role="tabpanel" class="tab-pane" id="notifications-<%= project.id %>"></div>
-        <div role="tabpanel" class="tab-pane" id="comments-<%= project.id %>"></div>
-      <% end %>
+      <div role="tabpanel" class="tab-pane" id="activities-<%= project.id %>"></div>
+      <div role="tabpanel" class="tab-pane" id="users-<%= project.id %>"></div>
+      <div role="tabpanel" class="tab-pane" id="notifications-<%= project.id %>"></div>
+      <div role="tabpanel" class="tab-pane" id="comments-<%= project.id %>"></div>
     </div>
 
   </div>

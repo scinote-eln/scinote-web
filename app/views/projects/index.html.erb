@@ -98,12 +98,18 @@
                 <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu" aria-labelledby="sortMenu">
+              <ul id="sortMenuDropdown" class="dropdown-menu" aria-labelledby="sortMenu">
               <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
                 <% if @current_sort != sort %>
-                <li><a href="?<%= {team: @current_team.id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+                  <li>
+                    <a class="<%= 'disabled' if sort == 'new' %>" href="#" data-sort="<%= sort %>">
+                      <%= t('projects.index.sort_' + sort) %>
+                    </a>
+                  </li>
                 <% else %>
-                <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+                  <li >
+                    <a class="disabled" href="#"><%= t('projects.index.sort_' + sort) %></a>
+                  </li>
                 <% end %>
               <% end %>
               </ul>
@@ -113,8 +119,10 @@
         </form>
       </div>
 
-      <%= render partial: "projects/index/team_projects",
-                locals: { projects: @projects_tree } %>
+      <div class="tab-content">
+        <div class="tab-pane active" id="projects-cards-view" data-projects-url="<%= projects_path %>"></div>
+        <div class="tab-pane" id="projects-table-view">Table view</div>
+      </div>
     <% end %>
 
   </div>

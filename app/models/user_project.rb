@@ -10,7 +10,7 @@ class UserProject < ApplicationRecord
              foreign_key: 'assigned_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :project, inverse_of: :user_projects, optional: true
+  belongs_to :project, inverse_of: :user_projects, touch: true, optional: true
 
   before_destroy :destroy_associations
 
