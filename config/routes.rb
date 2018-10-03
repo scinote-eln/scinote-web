@@ -550,7 +550,12 @@ Rails.application.routes.draw do
               resources :inventory_columns,
                         only: %i(index create show update destroy),
                         path: 'columns',
-                        as: :columns
+                        as: :columns do
+                resources :inventory_list_items,
+                          only: %i(index create show update destroy),
+                          path: 'list_items',
+                          as: :list_items
+              end
               resources :inventory_items,
                         only: %i(index create show update destroy),
                         path: 'items',
