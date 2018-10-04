@@ -85,6 +85,16 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body).to match({})
     end
+
+    it 'When invalid request, items from text column' do
+      get api_v1_team_inventory_column_list_items_path(
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id,
+        column_id: @text_column.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(400)
+      expect(response.body).to be_empty
+    end
   end
 
   describe 'GET inventory_list_items, #show' do
@@ -110,8 +120,8 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       get api_v1_team_inventory_column_list_item_path(
         id: 999,
         team_id: @teams.first.id,
-        inventory_id: 123,
-        column_id: 999
+        inventory_id: @teams.first.repositories.first.id,
+        column_id: @list_column.id
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
@@ -296,6 +306,21 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
         column_id: @list_column
       ), params: invalid_request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(400)
+      expect { hash_body = json }.to_not raise_exception
+      expect(hash_body).to match({})
+    end
+
+    it 'When invalid request, non existing item' do
+      hash_body = nil
+      invalid_request_body = @request_body.deep_dup
+      invalid_request_body[:id] = 999
+      put api_v1_team_inventory_column_list_item_path(
+        id: 999,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id,
+        column_id: @list_column
+      ), params: invalid_request_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status(404)
       expect { hash_body = json }.to_not raise_exception
       expect(hash_body).to match({})
     end
