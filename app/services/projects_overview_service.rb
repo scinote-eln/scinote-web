@@ -40,7 +40,11 @@ class ProjectsOverviewService
 
   def projects_datatable
     table_state = @view_state.state.dig('projects', 'table')
-    per_page = @params[:length] == '-1' ? 10 : @params[:length].to_i
+    per_page = if @params[:length] && @params[:length] != '-1'
+                 @params[:length].to_i
+               else
+                 10
+               end
     table_state['length'] = per_page if table_state['length'] != per_page
     page = @params[:start] ? (@params[:start].to_i / per_page) + 1 : 1
     records = fetch_dt_records
