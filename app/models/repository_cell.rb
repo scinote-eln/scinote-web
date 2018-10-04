@@ -51,6 +51,7 @@ class RepositoryCell < ActiveRecord::Base
       cell.value = value
       value.save!
     end
+    cell
   end
 
   private
