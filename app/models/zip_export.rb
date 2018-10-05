@@ -1,5 +1,6 @@
 require 'zip'
 require 'fileutils'
+require 'csv'
 
 # To use ZipExport you have to define the generate_( type )_zip method!
 # Example:

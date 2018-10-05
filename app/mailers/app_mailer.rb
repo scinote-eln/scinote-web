@@ -8,9 +8,15 @@ class AppMailer < Devise::Mailer
   def notification(user, notification, opts = {})
     @user = user
     @notification = notification
+    subject =
+      if notification.deliver?
+        I18n.t('notifications.deliver.email_subject')
+      else
+        I18n.t('notifications.email_title')
+      end
     headers = {
       to: @user.email,
-      subject: I18n.t('notifications.email_title')
+      subject: subject
     }.merge(opts)
     mail(headers)
   end

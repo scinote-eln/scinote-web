@@ -1,9 +1,11 @@
 class TeamsController < ApplicationController
-  before_action :load_vars, only: [:parse_sheet, :import_samples, :export_samples]
+  before_action :load_vars, only: %i(:parse_sheet :import_samples
+                                     :export_samples :export_all)
 
   before_action :check_create_samples_permissions, only: %i(parse_sheet
                                                             import_samples)
   before_action :check_view_samples_permission, only: [:export_samples]
+  before_action :check_export_all_permission, only: [:export_all]
 
   def parse_sheet
     session[:return_to] ||= request.referer
@@ -223,6 +225,15 @@ class TeamsController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
 
+  def export_all
+    if export_params[:project_ids]
+      TeamZipExporter.generate_zip(export_params, @team, current_user)
+    else
+      flash[:alert] = t('zip_export.export_error')
+    end
+    redirect_back(fallback_location: root_path)
+  end
+
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
     redirect_to root_path
   end
@@ -266,6 +277,17 @@ class TeamsController < ApplicationController
   def check_view_samples_permission
     unless can_read_team?(@team)
       render_403
+    end
+  end
+
+  def check_export_all_permission
+    render_403 unless can_read_team?(@team)
+
+    if export_params[:project_ids]
+      projects = Project.where(id: export_params[:project_ids])
+      projects.each do |project|
+        render_403 unless can_read_project(current_user, project)
+      end
     end
   end
 
