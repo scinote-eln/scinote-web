@@ -17,7 +17,7 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 
 # Gems for OAuth2 subsystem
-gem 'doorkeeper', '~> 4.4'
+gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 
