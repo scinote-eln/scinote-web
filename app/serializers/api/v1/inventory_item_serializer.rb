@@ -7,7 +7,8 @@ module Api
       attributes :name
       has_many :repository_cells, key: :inventory_cells,
                                   serializer: InventoryCellSerializer,
-                                  class_name: 'RepositoryCell'
+                                  class_name: 'RepositoryCell',
+                                  unless: -> { object.repository_cells.empty? }
     end
   end
 end
