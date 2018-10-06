@@ -14,8 +14,9 @@ module Api
                             .includes(:repository_list_items)
                             .page(params.dig(:page, :number))
                             .per(params.dig(:page, :size))
-        render jsonapi: columns, each_serializer: InventoryColumnSerializer,
-        include: :inventory_list_items
+        render jsonapi: columns,
+               each_serializer: InventoryColumnSerializer,
+               hide_list_items: true
       end
 
       def create
@@ -27,7 +28,9 @@ module Api
       end
 
       def show
-        render jsonapi: @inventory_column, serializer: InventoryColumnSerializer
+        render jsonapi: @inventory_column,
+               serializer: InventoryColumnSerializer,
+               include: :inventory_list_items
       end
 
       def update

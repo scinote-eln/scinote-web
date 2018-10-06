@@ -7,7 +7,9 @@ module Api
       attributes :name, :data_type
       has_many :repository_list_items, key: :inventory_list_items,
                                        serializer: InventoryListItemSerializer,
-                                       class_name: 'RepositoryListItem'
+                                       class_name: 'RepositoryListItem',
+                                       if: -> { object.data_type == 'RepositoryListValue' &&
+                                                !instance_options[:hide_list_items] }
 
       def data_type
         type_id = RepositoryColumn

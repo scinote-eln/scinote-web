@@ -41,15 +41,8 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
         ActiveModelSerializers::SerializableResource
           .new(@valid_inventory.repository_columns.limit(10),
                each_serializer: Api::V1::InventoryColumnSerializer,
-               include: :inventory_columns)
+               hide_list_items: true)
           .as_json[:data]
-      )
-      expect(hash_body[:included]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_inventory.repository_columns.limit(10),
-               each_serializer: Api::V1::InventoryColumnSerializer,
-               include: :inventory_list_items)
-          .as_json[:included]
       )
     end
 
@@ -84,6 +77,100 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body).to match({})
+    end
+  end
+
+  describe 'GET inventory_column, #show' do
+    it 'Valid text column response' do
+      text_column = @valid_inventory.repository_columns.first
+      hash_body = nil
+      get api_v1_team_inventory_column_path(
+        id: text_column.id,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(text_column,
+              serializer: Api::V1::InventoryColumnSerializer)
+          .as_json[:data]
+      )
+      expect(hash_body[:data]).not_to include('relationships')
+    end
+
+    it 'Valid list column response' do
+      list_column = @valid_inventory.repository_columns.second
+      hash_body = nil
+      get api_v1_team_inventory_column_path(
+        id: list_column.id,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(list_column,
+              serializer: Api::V1::InventoryColumnSerializer)
+          .as_json[:data]
+      )
+      expect(hash_body[:data]).to include('relationships')
+      expect(hash_body[:included]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_columns.limit(10),
+               each_serializer: Api::V1::InventoryColumnSerializer,
+               include: :inventory_list_items)
+          .as_json[:included]
+      )
+    end
+
+    it 'Valid file column response' do
+      file_column = @valid_inventory.repository_columns.third
+      hash_body = nil
+      get api_v1_team_inventory_column_path(
+        id: file_column.id,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(file_column,
+              serializer: Api::V1::InventoryColumnSerializer)
+          .as_json[:data]
+      )
+      expect(hash_body[:data]).not_to include('relationships')
+    end
+
+    it 'Invalid request, non existing inventory column' do
+      get api_v1_team_inventory_column_path(
+        id: 1001,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(404)
+    end
+
+    it 'When invalid request, incorrect repository' do
+      id = @teams.first.repositories.first.repository_columns.last.id
+      get api_v1_team_inventory_column_path(
+        id: id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.second.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(404)
+      expect(RepositoryColumn.where(id: id)).to exist
+    end
+
+    it 'When invalid request, repository from another team' do
+      id = @teams.first.repositories.first.repository_columns.last.id
+      get api_v1_team_inventory_column_path(
+        id: id,
+        team_id: @teams.second.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(403)
+      expect(RepositoryColumn.where(id: id)).to exist
     end
   end
 
