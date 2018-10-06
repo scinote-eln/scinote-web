@@ -10,12 +10,6 @@ module Api
                                        class_name: 'RepositoryListItem',
                                        if: -> { object.data_type == 'RepositoryListValue' &&
                                                 !instance_options[:hide_list_items] }
-
-      def data_type
-        type_id = RepositoryColumn
-                  .data_types[object.data_type]
-        I18n.t("api.v1.inventory_data_types.t#{type_id}")
-      end
     end
   end
 end
