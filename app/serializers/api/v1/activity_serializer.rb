@@ -6,7 +6,7 @@ module Api
       type :activities
       attributes :id, :my_module_id, :user_id, :type_of, :message,
                  :project_id, :experiment_id
-      belongs_to :my_module, serializer: MyModuleSerializer
+      belongs_to :my_module, serializer: TaskSerializer
     end
   end
 end

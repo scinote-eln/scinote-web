@@ -7,7 +7,7 @@ module Api
       attributes :id, :user_id
       attribute :my_module_id, key: :task_id
 
-      belongs_to :my_module, serializer: MyModuleSerializer
+      belongs_to :my_module, serializer: TaskSerializer
     end
   end
 end

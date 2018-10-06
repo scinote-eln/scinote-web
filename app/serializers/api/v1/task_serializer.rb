@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class MyModuleSerializer < ActiveModel::Serializer
+    class TaskSerializer < ActiveModel::Serializer
       type :tasks
       attributes :id, :name, :due_date, :description, :state
       attribute :my_module_group_id, key: :task_group_id

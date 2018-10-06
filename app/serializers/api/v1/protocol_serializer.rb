@@ -9,7 +9,7 @@ module Api
                  :nr_of_linked_children
       attribute :my_module_id, key: :task_id
 
-      belongs_to :my_module, serializer: MyModuleSerializer
+      belongs_to :my_module, serializer: TaskSerializer
     end
   end
 end

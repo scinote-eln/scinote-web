@@ -7,7 +7,7 @@ module Api
       attributes :name, :user_id, :archived
       attribute :my_module_id, key: :task_id
 
-      belongs_to :my_module, serializer: MyModuleSerializer
+      belongs_to :my_module, serializer: TaskSerializer
       has_one :result_asset, key: :asset,
                              serializer: ResultAssetSerializer,
                              class_name: 'ResultAsset',

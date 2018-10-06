@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class MyModuleGroupsController < BaseController
+    class TaskGroupsController < BaseController
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
@@ -12,13 +12,16 @@ module Api
         my_module_groups = @experiment.my_module_groups
                                       .page(params.dig(:page, :number))
                                       .per(params.dig(:page, :size))
-
+        incl = params[:include] == 'tasks' ? :tasks : nil
         render jsonapi: my_module_groups,
-          each_serializer: MyModuleGroupSerializer
+               each_serializer: TaskGroupSerializer,
+               include: incl
       end
 
       def show
-        render jsonapi: @my_module_group, serializer: MyModuleGroupSerializer
+        render jsonapi: @my_module_group,
+               serializer: TaskGroupSerializer,
+               include: :tasks
       end
 
       private

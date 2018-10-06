@@ -14,35 +14,35 @@ module Api
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
 
-        render jsonapi: tasks, each_serializer: MyModuleSerializer
+        render jsonapi: tasks, each_serializer: TaskSerializer
       end
 
       def show
-        render jsonapi: @my_module, serializer: MyModuleSerializer
+        render jsonapi: @my_module, serializer: TaskSerializer
       end
 
       def outputs
         outputs = @my_module.my_modules
                             .page(params.dig(:page, :number))
                             .per(params.dig(:page, :size))
-        render jsonapi: outputs, each_serializer: MyModuleSerializer
+        render jsonapi: outputs, each_serializer: TaskSerializer
       end
 
       def output
         output = @my_module.my_modules.find(params.require(:id))
-        render jsonapi: output, serializer: MyModuleSerializer
+        render jsonapi: output, serializer: TaskSerializer
       end
 
       def inputs
         inputs = @my_module.my_module_antecessors
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
-        render jsonapi: inputs, each_serializer: MyModuleSerializer
+        render jsonapi: inputs, each_serializer: TaskSerializer
       end
 
       def input
         input = @my_module.my_module_antecessors.find(params.require(:id))
-        render jsonapi: input, serializer: MyModuleSerializer
+        render jsonapi: input, serializer: TaskSerializer
       end
 
       private

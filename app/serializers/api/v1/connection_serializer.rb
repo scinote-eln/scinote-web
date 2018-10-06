@@ -5,8 +5,8 @@ module Api
     class ConnectionSerializer < ActiveModel::Serializer
       type :connections
       attributes :id, :input_id, :output_id
-      has_one :input_task, serializer: MyModuleSerializer
-      has_one :output_task, serializer: MyModuleSerializer
+      has_one :input_task, serializer: TaskSerializer
+      has_one :output_task, serializer: TaskSerializer
       def input_task
         MyModule.find(object.input_id)
       end
