@@ -581,9 +581,7 @@ Rails.application.routes.draw do
                             as: :results
                   get 'inputs', to: 'tasks#inputs'
                   get 'outputs', to: 'tasks#outputs'
-                  resources :activities, only: %i(index show),
-                            path: 'activities',
-                            as: :activities
+                  get 'activities', to: 'tasks#activities'
                 end
               end
             end

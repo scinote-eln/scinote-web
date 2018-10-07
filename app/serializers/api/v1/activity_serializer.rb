@@ -4,9 +4,15 @@ module Api
   module V1
     class ActivitySerializer < ActiveModel::Serializer
       type :activities
-      attributes :id, :my_module_id, :user_id, :type_of, :message,
-                 :project_id, :experiment_id
-      belongs_to :my_module, serializer: TaskSerializer
+      attributes :id, :type_of, :message
+      belongs_to :project, serializer: ProjectSerializer
+      belongs_to :experiment, serializer: TaskSerializer,
+                              if: -> { object.experiment.present? }
+      belongs_to :my_module, key: :task,
+                             serializer: TaskSerializer,
+                             class_name: 'MyModule',
+                             if: -> { object.my_module.present? }
+      belongs_to :user, serializer: UserSerializer
     end
   end
 end
