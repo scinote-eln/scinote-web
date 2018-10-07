@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class MyModulesController < BaseController
+    class TasksController < BaseController
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
