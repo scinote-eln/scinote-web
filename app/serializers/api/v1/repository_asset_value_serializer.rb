@@ -23,8 +23,9 @@ module Api
         elsif object.asset&.file&.is_stored_on_s3?
           object.asset.presigned_url(download: true)
         else
+          # TODO
           # separate api endpoint for local files download is needed
-          download_asset_path(object.asset.id)
+          'url'#download_asset_path(object.asset.id)
         end
       end
     end
