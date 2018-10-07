@@ -579,14 +579,8 @@ Rails.application.routes.draw do
                   resources :results, only: %i(index create show),
                             path: 'results',
                             as: :results
-                  get 'inputs',
-                      to: 'my_modules#inputs'
-                  get 'inputs/:id',
-                      to: 'my_modules#input'
-                  get 'outputs',
-                      to: 'my_modules#outputs'
-                  get 'outputs/:id',
-                      to: 'my_modules#output'
+                  get 'inputs', to: 'tasks#inputs'
+                  get 'outputs', to: 'tasks#outputs'
                   resources :activities, only: %i(index show),
                             path: 'activities',
                             as: :activities

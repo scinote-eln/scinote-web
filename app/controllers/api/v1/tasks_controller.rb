@@ -7,7 +7,7 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task, only: :show
-      before_action :load_task_relative, only: %i(outputs output inputs input)
+      before_action :load_task_relative, only: %i(inputs outputs)
 
       def index
         tasks = @experiment.my_modules
@@ -21,18 +21,6 @@ module Api
         render jsonapi: @task, serializer: TaskSerializer
       end
 
-      def outputs
-        outputs = @task.my_modules
-                            .page(params.dig(:page, :number))
-                            .per(params.dig(:page, :size))
-        render jsonapi: outputs, each_serializer: TaskSerializer
-      end
-
-      def output
-        output = @task.my_modules.find(params.require(:id))
-        render jsonapi: output, serializer: TaskSerializer
-      end
-
       def inputs
         inputs = @task.my_module_antecessors
                            .page(params.dig(:page, :number))
@@ -40,9 +28,11 @@ module Api
         render jsonapi: inputs, each_serializer: TaskSerializer
       end
 
-      def input
-        input = @task.my_module_antecessors.find(params.require(:id))
-        render jsonapi: input, serializer: TaskSerializer
+      def outputs
+        outputs = @task.my_modules
+                            .page(params.dig(:page, :number))
+                            .per(params.dig(:page, :size))
+        render jsonapi: outputs, each_serializer: TaskSerializer
       end
 
       private
