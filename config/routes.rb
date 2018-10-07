@@ -572,9 +572,9 @@ Rails.application.routes.draw do
                   resources :task_users, only: %i(index show),
                             path: 'users',
                             as: :users
-                  resources :my_module_tags, only: %i(index show),
-                            path: 'task_tags',
-                            as: :task_tags
+                  resources :task_tags, only: %i(index show),
+                            path: 'tags',
+                            as: :tags
                   resources :protocols, only: %i(index show),
                             path: 'protocols',
                             as: :protocols
