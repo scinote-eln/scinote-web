@@ -12,11 +12,10 @@ module Api
       def index
         items =
           @task.repository_rows
-                    .includes(repository_cells: :repository_column)
-                    .includes(
-                      repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES
-                    ).page(params.dig(:page, :number))
-                    .per(params.dig(:page, :size))
+               .includes(repository_cells: :repository_column)
+               .includes(repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES)
+               .page(params.dig(:page, :number))
+               .per(params.dig(:page, :size))
         incl = params[:include] == 'inventory_cells' ? :inventory_cells : nil
         render jsonapi: items,
                each_serializer: InventoryItemSerializer,

@@ -6,10 +6,10 @@ module Api
       type :protocols
       attributes :id, :name, :authors, :description, :protocol_type
       has_many :protocol_keywords,
-        key: :keywords,
-        serializer: ProtocolKeywordSerializer,
-        class_name: 'ProtocolKeyword',
-        unless: -> { object.protocol_keywords.empty? }
+               key: :keywords,
+               serializer: ProtocolKeywordSerializer,
+               class_name: 'ProtocolKeyword',
+               unless: -> { object.protocol_keywords.empty? }
       belongs_to :parent, serializer: ProtocolSerializer,
                           if: -> { object.parent.present? }
     end

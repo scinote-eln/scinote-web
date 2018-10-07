@@ -93,7 +93,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(text_column,
-              serializer: Api::V1::InventoryColumnSerializer)
+               serializer: Api::V1::InventoryColumnSerializer)
           .as_json[:data]
       )
       expect(hash_body[:data]).not_to include('relationships')
@@ -111,7 +111,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(list_column,
-              serializer: Api::V1::InventoryColumnSerializer)
+               serializer: Api::V1::InventoryColumnSerializer)
           .as_json[:data]
       )
       expect(hash_body[:data]).to include('relationships')
@@ -136,7 +136,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(file_column,
-              serializer: Api::V1::InventoryColumnSerializer)
+               serializer: Api::V1::InventoryColumnSerializer)
           .as_json[:data]
       )
       expect(hash_body[:data]).not_to include('relationships')

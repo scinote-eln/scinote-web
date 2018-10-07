@@ -23,8 +23,8 @@ module Api
 
       def inputs
         inputs = @task.my_module_antecessors
-                           .page(params.dig(:page, :number))
-                           .per(params.dig(:page, :size))
+                      .page(params.dig(:page, :number))
+                      .per(params.dig(:page, :size))
         render jsonapi: inputs, each_serializer: TaskSerializer
       end
 
