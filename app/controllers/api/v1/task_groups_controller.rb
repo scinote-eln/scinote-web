@@ -9,17 +9,17 @@ module Api
       before_action :load_task_group, only: :show
 
       def index
-        my_module_groups = @experiment.my_module_groups
+        task_groups = @experiment.my_module_groups
                                       .page(params.dig(:page, :number))
                                       .per(params.dig(:page, :size))
         incl = params[:include] == 'tasks' ? :tasks : nil
-        render jsonapi: my_module_groups,
+        render jsonapi: task_groups,
                each_serializer: TaskGroupSerializer,
                include: incl
       end
 
       def show
-        render jsonapi: @my_module_group,
+        render jsonapi: @task_group,
                serializer: TaskGroupSerializer,
                include: :tasks
       end
@@ -46,7 +46,7 @@ module Api
       end
 
       def load_task_group
-        @my_module_group = @experiment.my_module_groups.find(
+        @task_group = @experiment.my_module_groups.find(
           params.require(:id)
         )
       end
