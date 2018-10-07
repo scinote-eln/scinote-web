@@ -10,7 +10,7 @@ module Api
       before_action :load_protocol, only: :show
 
       def index
-        protocols = @my_module.protocols
+        protocols = @task.protocols
                               .page(params.dig(:page, :number))
                               .per(params.dig(:page, :size))
 
@@ -44,11 +44,11 @@ module Api
       end
 
       def load_task
-        @my_module = @experiment.my_modules.find(params.require(:task_id))
+        @task = @experiment.my_modules.find(params.require(:task_id))
       end
 
       def load_protocol
-        @protocol = @my_module.protocols.find(
+        @protocol = @task.protocols.find(
           params.require(:id)
         )
       end
