@@ -586,7 +586,9 @@ Rails.application.routes.draw do
           end
           resources :users, only: %i(show) do
             resources :user_identities,
-                      only: %i(index create show update destroy)
+                      only: %i(index create show update destroy),
+                      path: 'identities',
+                      as: :identities
           end
         end
       end
