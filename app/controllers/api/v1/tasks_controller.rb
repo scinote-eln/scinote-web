@@ -18,30 +18,30 @@ module Api
       end
 
       def show
-        render jsonapi: @my_module, serializer: TaskSerializer
+        render jsonapi: @task, serializer: TaskSerializer
       end
 
       def outputs
-        outputs = @my_module.my_modules
+        outputs = @task.my_modules
                             .page(params.dig(:page, :number))
                             .per(params.dig(:page, :size))
         render jsonapi: outputs, each_serializer: TaskSerializer
       end
 
       def output
-        output = @my_module.my_modules.find(params.require(:id))
+        output = @task.my_modules.find(params.require(:id))
         render jsonapi: output, serializer: TaskSerializer
       end
 
       def inputs
-        inputs = @my_module.my_module_antecessors
+        inputs = @task.my_module_antecessors
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
         render jsonapi: inputs, each_serializer: TaskSerializer
       end
 
       def input
-        input = @my_module.my_module_antecessors.find(params.require(:id))
+        input = @task.my_module_antecessors.find(params.require(:id))
         render jsonapi: input, serializer: TaskSerializer
       end
 
@@ -67,7 +67,7 @@ module Api
       end
 
       def load_task
-        @my_module = @experiment.my_modules.find(params.require(:id))
+        @task = @experiment.my_modules.find(params.require(:id))
       end
 
       # Made the method below because its more elegant than changing parameters
@@ -75,7 +75,7 @@ module Api
       # for a task, the "id" that used to be task id is now an id for the output
       # or input.
       def load_task_relative
-        @my_module = @experiment.my_modules.find(params.require(:task_id))
+        @task = @experiment.my_modules.find(params.require(:task_id))
       end
     end
   end

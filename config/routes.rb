@@ -566,9 +566,9 @@ Rails.application.routes.draw do
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
                 resources :tasks, only: %i(index show) do
-                  resources :my_module_repository_rows, only: %i(index show),
-                            path: 'task_inventory_rows',
-                            as: :task_inventory_rows
+                  resources :task_inventory_items, only: %i(index show),
+                            path: 'items',
+                            as: :items
                   resources :user_my_modules, only: %i(index show),
                             path: 'user_tasks',
                             as: :user_tasks

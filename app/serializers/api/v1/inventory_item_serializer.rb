@@ -9,6 +9,10 @@ module Api
                                   serializer: InventoryCellSerializer,
                                   class_name: 'RepositoryCell',
                                   unless: -> { object.repository_cells.empty? }
+      belongs_to :repository, key: :inventory,
+                              serializer: InventorySerializer,
+                              class_name: 'Repository',
+                              if: -> { instance_options[:show_repository] }
     end
   end
 end
