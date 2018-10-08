@@ -50,7 +50,9 @@ module Api
 
       def load_vars
         @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
+        unless can_read_team?(@team)
+          return render jsonapi: {}, status: :forbidden
+        end
         @inventory = @team.repositories.find(params.require(:inventory_id))
         @inventory_item = @inventory.repository_rows.find(params[:item_id].to_i)
       end
@@ -71,8 +73,9 @@ module Api
           raise ActionController::BadRequest,
                 'Wrong object type within parameters'
         end
-        params.require(:data).require(:attributes).require(%i(value column_id))
-        params.require(:data).require(:attributes).permit(%i(value column_id))
+        params.require(:data).require(:attributes).require(:column_id)
+        params.require(:data).require(:attributes).require(:value)
+        params[:data][:attributes]
       end
 
       def update_inventory_cell_params
