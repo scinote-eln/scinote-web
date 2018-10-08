@@ -34,7 +34,7 @@ json.data do
     json.set! 'tasks', project.task_count
     json.set! 'actions', render(
       partial: 'projects/index/project_actions_dropdown.html.erb',
-      locals: { project: project, view_mode: 'table' }
+      locals: { project: project }
     )
   end
 end
