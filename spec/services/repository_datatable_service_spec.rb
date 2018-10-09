@@ -1,4 +1,4 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
 describe RepositoryDatatableService do
   let!(:team) { create :team }
