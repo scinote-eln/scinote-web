@@ -24,7 +24,7 @@ module Api
           object.asset.presigned_url(download: true)
         else
           # separate api endpoint for local files download is needed
-          download_asset_path(object.asset.id)
+          object.asset.file.url
         end
       end
     end
