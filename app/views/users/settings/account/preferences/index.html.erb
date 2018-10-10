@@ -54,7 +54,7 @@
                      url: update_togglable_settings_path(format: :json),
                      html: { method: :post, id: 'togglable-settings-panel' },
                      remote: true) do |f| %>
-          <div class="notification-settings-container">
+          <div class="preferences-settings-container">
             <h4><%= t('notifications.title') %></h4>
             <div class="row">
               <div class="col-sm-2">
@@ -135,7 +135,7 @@
             </div>
           </div>
           <hr>
-          <div class="tooltips-settings-container">
+          <div class="preferences-settings-container">
             <h4><%= t('users.settings.account.preferences.edit.tips.title') %></h4>
             <div class="row">
               <div class="col-sm-2">
