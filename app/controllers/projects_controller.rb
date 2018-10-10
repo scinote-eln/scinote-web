@@ -29,8 +29,9 @@ class ProjectsController < ApplicationController
       format.json do
         @current_team = current_team if current_team
         @current_team ||= current_user.teams.first
-        @projects = ProjectsOverviewService.new(@current_team, current_user)
-                                           .project_cards(params)
+        @projects = ProjectsOverviewService
+                    .new(@current_team, current_user, params)
+                    .project_cards
         render json: {
           html: render_to_string(
             partial: 'projects/index/team_projects.html.erb',
@@ -43,6 +44,10 @@ class ProjectsController < ApplicationController
         @teams = current_user.teams
         # New project for create new project modal
         @project = Project.new
+        view_state =
+          current_team.current_view_state(current_user)
+        @current_filter = view_state.state['filter']
+        @current_sort = view_state.state.dig('cards', 'sort')
         load_projects_tree
       end
     end
@@ -54,8 +59,9 @@ class ProjectsController < ApplicationController
       format.json do
         @current_team = current_team if current_team
         @current_team ||= current_user.teams.first
-        @projects = ProjectsOverviewService.new(@current_team, current_user)
-                                           .projects_datatable(params)
+        @projects = ProjectsOverviewService
+                    .new(@current_team, current_user, params)
+                    .projects_datatable
       end
     end
   end
@@ -313,6 +319,16 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def dt_state_load
+    respond_to do |format|
+      format.json do
+        render json: {
+          state: current_team.current_view_state(current_user).state['table']
+        }
+      end
+    end
+  end
+
   private
 
   include FirstTimeDataGenerator
@@ -338,9 +354,8 @@ class ProjectsController < ApplicationController
   def load_projects_tree
     if current_user.teams.any?
       @current_team = current_team if current_team
-
       @current_team ||= current_user.teams.first
-      @current_sort = params[:sort].to_s
+      @current_sort ||= 'new'
       @projects_tree = current_user.projects_tree(@current_team, @current_sort)
     else
       @projects_tree = []

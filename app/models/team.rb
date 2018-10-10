@@ -35,9 +35,26 @@ class Team < ApplicationRecord
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :datatables_reports,
            class_name: 'Views::Datatables::DatatablesReport'
+  has_many :view_states, as: :viewable, dependent: :destroy
 
   after_commit do
     Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
+
+  def current_view_state(user)
+    state = view_states.where(user: user).take
+    state || view_states.create!(user: user, state: default_view_state)
+  end
+
+  def default_view_state
+    { filter: 'active',
+      cards: { sort: 'new' },
+      table: {
+        'start': 0,
+        'length': 10,
+        'order' => [2, 'asc'],
+        'time': Time.new.to_i
+      } }
   end
 
   def search_users(query = nil)

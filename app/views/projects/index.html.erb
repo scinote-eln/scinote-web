@@ -100,17 +100,13 @@
               </button>
               <ul id="sortMenuDropdown" class="dropdown-menu" aria-labelledby="sortMenu">
               <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
-                <% if @current_sort != sort %>
-                  <li>
-                    <a class="<%= 'disabled' if sort == 'new' %>" href="#" data-sort="<%= sort %>">
-                      <%= t('projects.index.sort_' + sort) %>
-                    </a>
-                  </li>
-                <% else %>
-                  <li >
-                    <a class="disabled" href="#"><%= t('projects.index.sort_' + sort) %></a>
-                  </li>
-                <% end %>
+                <li>
+                  <% if @current_sort != sort %>
+                    <a href="#" data-sort="<%= sort %>"><%= t('projects.index.sort_' + sort) %></a>
+                  <% else %>
+                    <a class="disabled" href="#" data-sort="<%= sort %>"><%= t('projects.index.sort_' + sort) %></a>
+                  <% end %>
+                </li>
               <% end %>
               </ul>
             </div>

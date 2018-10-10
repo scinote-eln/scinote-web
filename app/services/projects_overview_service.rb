@@ -1,17 +1,30 @@
 # frozen_string_literal: true
 
 class ProjectsOverviewService
-  def initialize(team, user)
+  def initialize(team, user, params)
     @team = team
     @user = user
+    @params = params
+    @view_state = @team.current_view_state(@user)
+    if @view_state.state['filter'] != @params[:filter] &&
+       %w(active archived all).include?(@params[:filter])
+      @view_state.state['filter'] = @params[:filter]
+    end
   end
 
-  def project_cards(params)
+  def project_cards
+    cards_state = @view_state.state['cards']
     records = fetch_records
-    records = records.where(archived: true) if params[:filter] == 'archived'
-    records = records.where(archived: false) if params[:filter] == 'active'
-    return records unless params[:sort]
-    case params[:sort]
+    records = records.where(archived: true) if @params[:filter] == 'archived'
+    records = records.where(archived: false) if @params[:filter] == 'active'
+    if @params[:sort] &&
+       cards_state['sort'] != @params[:sort] &&
+       %w(new old atoz ztoa).include?(@params[:sort])
+      cards_state['sort'] = @params[:sort]
+      @view_state.state['cards'] = cards_state
+    end
+    @view_state.save! if @view_state.changed?
+    case cards_state['sort']
     when 'new'
       records.order(created_at: :desc)
     when 'old'
@@ -25,15 +38,19 @@ class ProjectsOverviewService
     end
   end
 
-  def projects_datatable(params)
-    per_page = params[:length] == '-1' ? 10 : params[:length].to_i
-    page = params[:start] ? (params[:start].to_i / per_page) + 1 : 1
+  def projects_datatable
+    table_state = @view_state.state['table']
+    per_page = @params[:length] == '-1' ? 10 : @params[:length].to_i
+    table_state['length'] = per_page if table_state['length'] != per_page
+    page = @params[:start] ? (@params[:start].to_i / per_page) + 1 : 1
     records = fetch_dt_records
-    records = records.where(archived: true) if params[:filter] == 'archived'
-    records = records.where(archived: false) if params[:filter] == 'active'
-    search_value = params.dig(:search, :value)
+    records = records.where(archived: true) if @params[:filter] == 'archived'
+    records = records.where(archived: false) if @params[:filter] == 'active'
+    search_value = @params.dig(:search, :value)
     records = search(records, search_value) if search_value.present?
-    sort(records, params).page(page).per(per_page)
+    records = sort(records).page(page).per(per_page)
+    @view_state.save! if @view_state.changed?
+    records
   end
 
   private
@@ -118,14 +135,18 @@ class ProjectsOverviewService
     }
   end
 
-  def sort(records, params)
-    order = params[:order]&.values&.first
+  def sort(records)
+    order_state = @view_state.state['table']['order'][0]
+    order = @params[:order]&.values&.first
     if order
       dir = order[:dir] == 'desc' ? 'DESC' : 'ASC'
       column_index = order[:column]
     else
       dir = 'ASC'
       column_index = '1'
+    end
+    if order_state != [column_index.to_i, dir.downcase]
+      @view_state.state['table']['order'][0] = [column_index.to_i, dir.downcase]
     end
     sort_column = sortable_columns[column_index]
     sort_column ||= sortable_columns['1']

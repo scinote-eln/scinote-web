@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180524091143) do
+ActiveRecord::Schema.define(version: 20181008130519) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -796,6 +796,17 @@ ActiveRecord::Schema.define(version: 20180524091143) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "view_states", force: :cascade do |t|
+    t.jsonb "state"
+    t.bigint "user_id"
+    t.string "viewable_type"
+    t.bigint "viewable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_view_states_on_user_id"
+    t.index ["viewable_type", "viewable_id"], name: "index_view_states_on_viewable_type_and_viewable_id"
+  end
+
   create_table "wopi_actions", id: :serial, force: :cascade do |t|
     t.string "action", null: false
     t.string "extension", null: false
@@ -959,6 +970,7 @@ ActiveRecord::Schema.define(version: 20180524091143) do
   add_foreign_key "user_teams", "users"
   add_foreign_key "user_teams", "users", column: "assigned_by_id"
   add_foreign_key "users", "teams", column: "current_team_id"
+  add_foreign_key "view_states", "users"
   add_foreign_key "wopi_actions", "wopi_apps"
   add_foreign_key "wopi_apps", "wopi_discoveries"
   add_foreign_key "zip_exports", "users"
