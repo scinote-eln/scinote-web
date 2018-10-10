@@ -556,16 +556,14 @@ Rails.application.routes.draw do
                         path: 'items',
                         as: :items
             end
-            resources :projects, only: %i(index show), path: 'projects',
-                      as: :projects do
+            resources :projects, only: %i(index show) do
               resources :user_projects, only: %i(index show),
-                path: 'user_projects', as: :user_projects
+                path: 'users', as: :users
               resources :project_comments, only: %i(index show),
-                path: 'project_comments', as: :project_comments
+                path: 'comments', as: :comments
+              get 'activities', to: 'projects#activities'
               resources :reports, only: %i(index show),
                 path: 'reports', as: :reports
-              get 'activities', to: 'activities#project_activities'
-              get 'activities/:id', to: 'activities#project_activity'
               resources :experiments, only: %i(index show) do
                 resources :my_module_groups,
                           only: %i(index show),

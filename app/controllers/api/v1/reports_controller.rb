@@ -12,11 +12,16 @@ module Api
                           .page(params.dig(:page, :number))
                           .per(params.dig(:page, :size))
 
-        render jsonapi: reports, each_serializer: ReportSerializer
+        render jsonapi: reports,
+               each_serializer: ReportSerializer,
+               hide_project: true
       end
 
       def show
-        render jsonapi: @report, serializer: ReportSerializer
+        render jsonapi: @report,
+               serializer: ReportSerializer,
+               hide_project: true,
+               include: :user
       end
 
       private

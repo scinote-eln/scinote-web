@@ -4,9 +4,9 @@ module Api
   module V1
     class UserProjectSerializer < ActiveModel::Serializer
       type :user_projects
-      attributes :id, :role, :user_id
+      attributes :id, :role
 
-      belongs_to :project, serializer: ProjectSerializer
+      belongs_to :user, serializer: UserSerializer
     end
   end
 end

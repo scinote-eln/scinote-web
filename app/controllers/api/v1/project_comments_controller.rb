@@ -13,11 +13,15 @@ module Api
                                    .per(params.dig(:page, :size))
 
         render jsonapi: project_comments,
-          each_serializer: ProjectCommentSerializer
+               each_serializer: CommentSerializer,
+               hide_project: true
       end
 
       def show
-        render jsonapi: @project_comment, serializer: ProjectCommentSerializer
+        render jsonapi: @project_comment,
+               serializer: CommentSerializer,
+               hide_project: true,
+               include: :user
       end
 
       private
