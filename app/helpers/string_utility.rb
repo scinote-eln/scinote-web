@@ -12,6 +12,10 @@ module StringUtility
   end
 
   def to_filesystems_compatible_filename(file_or_folder_name)
+    file_or_folder_name = file_or_folder_name.truncate(
+      Constants::EXPORTED_FILENAME_TRUNCATION_LENGTH,
+      omission: ''
+    )
     file_or_folder_name.strip
                        .sub(/^[.-]*/, '')
                        .sub(/\.*$/, '')
