@@ -6,4 +6,22 @@ namespace :exportable_items do
     puts "All exportable zip files older than " \
          "'#{num.days.ago}' have been removed"
   end
+
+  desc 'Resets export project counter to 0'
+  task reset_export_projects_counter: :environment do
+    User.all.each do |user|
+      User.transaction do
+        begin
+          user.export_vars['num_of_export_all_last_24_hours'] = 0
+          user.save
+        rescue ActiveRecord::ActiveRecordError,
+               ArgumentError,
+               ActiveRecord::RecordNotSaved => e
+          puts "Error creating user, transaction reverted: #{e}"
+        end
+      end
+    end
+    puts 'Export project counter successfully ' \
+         'reset on all users'
+  end
 end
