@@ -276,13 +276,12 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       updated_inventory_item = @inventory_item.as_json[:included]
       updated_inventory_item.each do |cell|
         attributes = cell[:attributes]
-        if attributes[:value_type] == 'list'
-          cell[:attributes] = {
-            value_type: 'list',
-            value: Faker::Name.unique.name,
-            column_id: 2
-          }
-        end
+        next unless attributes[:value_type] == 'list'
+        cell[:attributes] = {
+          value_type: 'list',
+          value: Faker::Name.unique.name,
+          column_id: 2
+        }
       end
       patch api_v1_team_inventory_item_path(
         id: RepositoryRow.last.id,
@@ -292,7 +291,9 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       headers: @valid_headers
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body[:included].to_json).to match(updated_inventory_item.to_json)
+      expect(hash_body[:included].to_json).to match(
+        updated_inventory_item.to_json
+      )
     end
 
     it 'Response with correctly updated inventory item for text item column' do
@@ -312,7 +313,9 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       headers: @valid_headers
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body[:included].to_json).to match(updated_inventory_item.to_json)
+      expect(hash_body[:included].to_json).to match(
+        updated_inventory_item.to_json
+      )
     end
   end
 end
