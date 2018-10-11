@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddVariablesToUsers < ActiveRecord::Migration[5.1]
   def up
     add_column :users, :variables, :jsonb, default: {}, null: false

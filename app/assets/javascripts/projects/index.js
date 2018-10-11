@@ -219,31 +219,31 @@
    */
   function initExportProjectsModal() {
     $exportProjectsBtn = $('#export-projects-button')
-      $exportProjectsBtn.click(function() {
+    $exportProjectsBtn.click(function() {
 
-        // Load HTML to refresh users list
-        $.ajax({
-          url: $exportProjectsBtn.data('export-projects-url'),
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            project_ids: selectedProjects
-          },
-          success: function(data) {
-            // Update modal title
-            exportProjectsModalHeader.html(data.title);
+      // Load HTML to refresh users list
+      $.ajax({
+        url: $exportProjectsBtn.data('export-projects-url'),
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          project_ids: selectedProjects
+        },
+        success: function(data) {
+          // Update modal title
+          exportProjectsModalHeader.html(data.title);
 
-            // Set modal body
-            exportProjectsModalBody.html(data.html);
+          // Set modal body
+          exportProjectsModalBody.html(data.html);
 
-            // Show the modal
-            exportProjectsModal.modal('show');
-          },
-          error: function() {
-            // TODO
-          }
-        });
+          // Show the modal
+          exportProjectsModal.modal('show');
+        },
+        error: function() {
+          // TODO
+        }
       });
+    });
 
     // Remove modal content when modal window is closed.
     exportProjectsModal.on('hidden.bs.modal', function() {
