@@ -1,6 +1,9 @@
 class User < ApplicationRecord
-  include SearchableModel, SettingsModel, VariablesModel
-  include User::TeamRoles, User::ProjectRoles
+  include SearchableModel
+  include SettingsModel
+  include VariablesModel
+  include User::TeamRoles
+  include User::ProjectRoles
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
