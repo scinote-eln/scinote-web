@@ -1,0 +1,12 @@
+<p>Your export request for <strong><%= num_projects %> projects in <%= @team.name %> </strong> team is being processed and will soon be exported in a .zip file format. It may take anywhere from 5 minutes up to several hours, depending on the file size. Please also note, that any new data in the projects from this point will not be included in the exported file.
+</p>
+
+<p>
+  When it's ready, you will receive a confirmation e-mail and the <strong> link </strong> to your file will appear in your <strong>SciNote notifications</strong>. For security reasons, the link will <strong>expire in 7 days</strong>.
+</p>
+
+<p>
+  <i>
+  Please note that the number of exports is limited to <%= limit %> requests per day - you currently have <%= num_of_requests_left %> more.
+  </i>
+</p>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180524091143) do
+ActiveRecord::Schema.define(version: 20180930205254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -786,6 +786,7 @@ ActiveRecord::Schema.define(version: 20180524091143) do
     t.integer "current_team_id"
     t.string "authentication_token", limit: 30
     t.jsonb "settings", default: {}, null: false
+    t.jsonb "variables", default: {}, null: false
     t.index "trim_html_tags((full_name)::text) gin_trgm_ops", name: "index_users_on_full_name", using: :gin
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

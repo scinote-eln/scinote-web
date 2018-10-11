@@ -178,6 +178,7 @@ Rails.application.routes.draw do
         # post 'import_samples'
         # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
+        post 'export_projects'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_repositories', to: 'at_who#repositories'

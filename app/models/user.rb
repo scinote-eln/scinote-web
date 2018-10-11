@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include SearchableModel, SettingsModel
+  include SearchableModel, SettingsModel, VariablesModel
   include User::TeamRoles, User::ProjectRoles
 
   acts_as_token_authenticatable
@@ -44,6 +44,14 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
+    }
+  )
+
+  store_accessor :variables, :export_vars
+
+  default_variables(
+    export_vars: {
+      num_of_export_all_last_24_hours: 0
     }
   )
 

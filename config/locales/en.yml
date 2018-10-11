@@ -283,6 +283,10 @@ en:
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+    export_projects:
+      export_button: "Export projects..."
+      modal_title_success: 'Your export is being prepared'
+      modal_title_error: 'Your export is denied'
     table:
       status: "Status"
       name: "Project name"
