@@ -1,11 +1,11 @@
 class TeamsController < ApplicationController
-  before_action :load_vars, only: %i(:parse_sheet :import_samples
-                                     :export_samples :export_all)
+  before_action :load_vars, only: %i(parse_sheet import_samples
+                                     export_samples export_projects)
 
   before_action :check_create_samples_permissions, only: %i(parse_sheet
                                                             import_samples)
   before_action :check_view_samples_permission, only: [:export_samples]
-  before_action :check_export_all_permission, only: [:export_all]
+  before_action :check_export_projects_permissions, only: [:export_projects]
 
   def parse_sheet
     session[:return_to] ||= request.referer
@@ -225,9 +225,36 @@ class TeamsController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
 
-  def export_all
-    if export_params[:project_ids]
-      TeamZipExporter.generate_zip(export_params, @team, current_user)
+  def export_projects
+    if export_projects_params[:project_ids]
+      # Check if user has enough requests for the day
+      limit = ENV['EXPORT_ALL_LIMIT_24_HOURS'].to_i || 3
+      if current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
+        render json: {
+          html: render_to_string(
+            partial: 'projects/export/error.html.erb',
+            locals: { limit: limit }
+          ),
+          title: t('projects.export_projects.modal_title_error')
+        }
+      else
+        current_user.export_vars['num_of_export_all_last_24_hours'] += 1
+        current_user.save
+
+        ids = generate_export_projects_zip
+        curr_num = current_user.export_vars['num_of_export_all_last_24_hours']
+
+        render json: {
+          html: render_to_string(
+            partial: 'projects/export/success.html.erb',
+            locals: { num_projects: ids.length,
+                      limit: limit,
+                      num_of_requests_left: limit - curr_num }
+          ),
+          title: t('projects.export_projects.modal_title_success')
+        }
+      end
+      return
     else
       flash[:alert] = t('zip_export.export_error')
     end
@@ -270,6 +297,10 @@ class TeamsController < ApplicationController
     params.permit(sample_ids: [], header_ids: []).to_h
   end
 
+  def export_projects_params
+    params.permit(:id, project_ids: []).to_h
+  end
+
   def check_create_samples_permissions
     render_403 unless can_create_samples?(@team)
   end
@@ -280,13 +311,13 @@ class TeamsController < ApplicationController
     end
   end
 
-  def check_export_all_permission
+  def check_export_projects_permissions
     render_403 unless can_read_team?(@team)
 
-    if export_params[:project_ids]
-      projects = Project.where(id: export_params[:project_ids])
+    if export_projects_params[:project_ids]
+      projects = Project.where(id: export_projects_params[:project_ids])
       projects.each do |project|
-        render_403 unless can_read_project(current_user, project)
+        render_403 unless can_read_project?(current_user, project)
       end
     end
   end
@@ -301,5 +332,21 @@ class TeamsController < ApplicationController
       ),
       :samples
     )
+  end
+
+  def generate_export_projects_zip
+    ids = Project.where(id: export_projects_params[:project_ids],
+                        team_id: @team)
+                 .index_by(&:id)
+
+    options = { team: @team }
+    zip = TeamZipExport.create(user: current_user)
+    zip.generate_exportable_zip(
+      current_user,
+      ids,
+      :teams,
+      options
+    )
+    ids
   end
 end

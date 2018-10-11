@@ -27,6 +27,10 @@
   var projectActionsModalBody = null;
   var projectActionsModalFooter = null;
 
+  var exportProjectsModal = null;
+  var exportProjectsModalHeader = null;
+  var exportProjectsModalBody = null;
+
   var projectsViewMode = 'cards';
   var projectsViewFilter = $('.projects-view-filter.active').data('filter');
   var projectsViewFilterChanged = false;
@@ -210,6 +214,44 @@
       });
   }
 
+  /**
+   * Initialize the JS for export projects modal to work.
+   */
+  function initExportProjectsModal() {
+    $exportProjectsBtn = $('#export-projects-button')
+      $exportProjectsBtn.click(function() {
+
+        // Load HTML to refresh users list
+        $.ajax({
+          url: $exportProjectsBtn.data('export-projects-url'),
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            project_ids: selectedProjects
+          },
+          success: function(data) {
+            // Update modal title
+            exportProjectsModalHeader.html(data.title);
+
+            // Set modal body
+            exportProjectsModalBody.html(data.html);
+
+            // Show the modal
+            exportProjectsModal.modal('show');
+          },
+          error: function() {
+            // TODO
+          }
+        });
+      });
+
+    // Remove modal content when modal window is closed.
+    exportProjectsModal.on('hidden.bs.modal', function() {
+      exportProjectsModalHeader.html('');
+      exportProjectsModalBody.html('');
+    });
+  }
+
   // Initialize reloading manage user modal content after posting new
   // user.
 
@@ -295,10 +337,15 @@
     projectActionsModalBody = projectActionsModal.find('.modal-body');
     projectActionsModalFooter = projectActionsModal.find('.modal-footer');
 
+    exportProjectsModal = $('#export-projects-modal');
+    exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
+    exportProjectsModalBody = exportProjectsModal.find('.modal-body');
+
     updateSelectedCards();
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
+    initExportProjectsModal();
     Comments.initCommentOptions('ul.content-comments', true);
     Comments.initEditComments('.panel-project .tab-content');
     Comments.initDeleteComments('.panel-project .tab-content');
