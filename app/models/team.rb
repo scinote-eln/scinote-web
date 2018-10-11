@@ -36,6 +36,11 @@ class Team < ApplicationRecord
   has_many :datatables_reports,
            class_name: 'Views::Datatables::DatatablesReport'
 
+  has_many :oauth_applications,
+           class_name: 'Doorkeeper::Application',
+           as: :owner,
+           dependent: :destroy
+
   after_commit do
     Views::Datatables::DatatablesReport.refresh_materialized_view
   end
