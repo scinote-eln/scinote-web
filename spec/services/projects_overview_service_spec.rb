@@ -336,12 +336,55 @@ describe ProjectsOverviewService do
           expect(projects2.length).to eq 12
         end
       end
+    end
 
-      context "with request parameters { filter: 'archived' }" do
-        let(:params) { super().merge(filter: 'archived') }
+    context "with request parameters { filter: 'archived' }" do
+      let(:params) { super().merge(filter: 'archived') }
+
+      it 'returns archived projects, sorted by ascending archivation ' \
+         'attribute (active first), offset by 0, paginated by 10' do
+        projects = projects_overview.projects_datatable(params)
+        expect(projects.length).to eq 10
+        expect(projects.uniq.length).to eq projects.length
+        expect(projects).not_to include(project_1, project_3, project_6)
+        projects1 = projects.select(&:archived?)
+        expect(projects1.length).to eq 10
+      end
+
+      context 'with request parameters { start: 15 }' do
+        let(:params) { super().merge(start: 15) }
 
         it 'returns archived projects, sorted by ascending archivation ' \
-           'attribute (active first), offset by 0, paginated by 10' do
+           'attribute (active first), offset by 15, paginated by 10' do
+          projects = projects_overview.projects_datatable(params)
+          expect(projects.length).to eq 3
+          expect(projects.uniq.length).to eq projects.length
+          expect(projects).not_to include(project_1, project_2, project_3,
+                                          project_4, project_5, project_6)
+          projects1 = projects.select(&:archived?)
+          expect(projects1.length).to eq 3
+        end
+      end
+
+      context 'with request parameters { length: 5 }' do
+        let(:params) { super().merge(length: 5) }
+
+        it 'returns archived projects, sorted by ascending archivation ' \
+           'attribute (active first), offset by 0, paginated by 5' do
+          projects = projects_overview.projects_datatable(params)
+          expect(projects.length).to eq 5
+          expect(projects.uniq.length).to eq projects.length
+          expect(projects).not_to include(project_1, project_3, project_6)
+          projects1 = projects.select(&:archived?)
+          expect(projects1.length).to eq 5
+        end
+      end
+
+      context "with request parameters { order: { '0': { dir: 'ASC' } } }" do
+        let(:params) { super().merge(order: { '0': { dir: 'ASC' } }) }
+
+        it 'returns archived projects, sorted by ascending archivation ' \
+           'attribute (archived first), offset by 0, paginated by 10' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 10
           expect(projects.uniq.length).to eq projects.length
@@ -349,97 +392,54 @@ describe ProjectsOverviewService do
           projects1 = projects.select(&:archived?)
           expect(projects1.length).to eq 10
         end
+      end
 
-        context 'with request parameters { start: 15 }' do
-          let(:params) { super().merge(start: 15) }
+      context "with request parameters { order: { '0': { dir: 'DESC' } } }" do
+        let(:params) { super().merge(order: { '0': { dir: 'DESC' } }) }
 
-          it 'returns archived projects, sorted by ascending archivation ' \
-             'attribute (active first), offset by 15, paginated by 10' do
-            projects = projects_overview.projects_datatable(params)
-            expect(projects.length).to eq 3
-            expect(projects.uniq.length).to eq projects.length
-            expect(projects).not_to include(project_1, project_2, project_3,
-                                            project_4, project_5, project_6)
-            projects1 = projects.select(&:archived?)
-            expect(projects1.length).to eq 3
-          end
+        it 'returns archived projects, sorted by descending ' \
+           'archivation attribute (archived first), offset by 0, ' \
+           'paginated by 10' do
+          projects = projects_overview.projects_datatable(params)
+          expect(projects.length).to eq 10
+          expect(projects.uniq.length).to eq projects.length
+          expect(projects).not_to include(project_1, project_3, project_6)
+          projects1 = projects.select(&:archived?)
+          expect(projects1.length).to eq 10
+        end
+      end
+
+      context 'with request parameters { start: 13, length: 4 }' do
+        let(:params) { super().merge(start: 13, length: 4) }
+
+        it 'returns archived projects, sorted by ascending archivation ' \
+           'attribute (active first), offset by 13, paginated by 4' do
+          projects = projects_overview.projects_datatable(params)
+          expect(projects.length).to eq 1
+          expect(projects).not_to include(project_1, project_2, project_3,
+                                          project_4, project_5, project_6)
+          projects1 = projects.select(&:archived?)
+          expect(projects1.length).to eq 1
+        end
+      end
+
+      context "with request parameters { start: 7, length: 6, " \
+              "order: { '0': { dir: 'DESC', column: '3' } } }" do
+        let(:params) do
+          super().merge(start: 7, length: 6,
+                        order: { '0': { dir: 'DESC', column: '3' } })
         end
 
-        context 'with request parameters { length: 5 }' do
-          let(:params) { super().merge(length: 5) }
-
-          it 'returns archived projects, sorted by ascending archivation ' \
-             'attribute (active first), offset by 0, paginated by 5' do
-            projects = projects_overview.projects_datatable(params)
-            expect(projects.length).to eq 5
-            expect(projects.uniq.length).to eq projects.length
-            expect(projects).not_to include(project_1, project_3, project_6)
-            projects1 = projects.select(&:archived?)
-            expect(projects1.length).to eq 5
-          end
-        end
-
-        context "with request parameters { order: { '0': { dir: 'ASC' } } }" do
-          let(:params) { super().merge(order: { '0': { dir: 'ASC' } }) }
-
-          it 'returns archived projects, sorted by ascending archivation ' \
-             'attribute (archived first), offset by 0, paginated by 10' do
-            projects = projects_overview.projects_datatable(params)
-            expect(projects.length).to eq 10
-            expect(projects.uniq.length).to eq projects.length
-            expect(projects).not_to include(project_1, project_3, project_6)
-            projects1 = projects.select(&:archived?)
-            expect(projects1.length).to eq 10
-          end
-        end
-
-        context "with request parameters { order: { '0': { dir: 'DESC' } } }" do
-          let(:params) { super().merge(order: { '0': { dir: 'DESC' } }) }
-
-          it 'returns archived projects, sorted by descending ' \
-             'archivation attribute (archived first), offset by 0, ' \
-             'paginated by 10' do
-            projects = projects_overview.projects_datatable(params)
-            expect(projects.length).to eq 10
-            expect(projects.uniq.length).to eq projects.length
-            expect(projects).not_to include(project_1, project_3, project_6)
-            projects1 = projects.select(&:archived?)
-            expect(projects1.length).to eq 10
-          end
-        end
-
-        context 'with request parameters { start: 13, length: 4 }' do
-          let(:params) { super().merge(start: 13, length: 4) }
-
-          it 'returns archived projects, sorted by ascending archivation ' \
-             'attribute (active first), offset by 13, paginated by 4' do
-            projects = projects_overview.projects_datatable(params)
-            expect(projects.length).to eq 1
-            expect(projects).not_to include(project_1, project_2, project_3,
-                                            project_4, project_5, project_6)
-            projects1 = projects.select(&:archived?)
-            expect(projects1.length).to eq 1
-          end
-        end
-
-        context "with request parameters { start: 7, length: 6, " \
-                "order: { '0': { dir: 'DESC', column: '3' } } }" do
-          let(:params) do
-            super().merge(start: 7, length: 6,
-                          order: { '0': { dir: 'DESC', column: '3' } })
-          end
-
-          it 'returns archived projects, sorted by descending creation ' \
-             'time attribute (active first), offset by 7, paginated by ' \
-             '6' do
-            projects = projects_overview.projects_datatable(params)
-            expect(projects.length).to eq 6
-            expect(projects.uniq.length).to eq projects.length
-            expect(projects.last(2)).to eq [project_5, project_4]
-            expect(projects).not_to include(project_1, project_3, project_6)
-            projects1 = projects.select(&:archived?)
-            expect(projects1.length).to eq 6
-          end
+        it 'returns archived projects, sorted by descending creation ' \
+           'time attribute (active first), offset by 7, paginated by ' \
+           '6' do
+          projects = projects_overview.projects_datatable(params)
+          expect(projects.length).to eq 6
+          expect(projects.uniq.length).to eq projects.length
+          expect(projects.last(2)).to eq [project_5, project_4]
+          expect(projects).not_to include(project_1, project_3, project_6)
+          projects1 = projects.select(&:archived?)
+          expect(projects1.length).to eq 6
         end
       end
     end
