@@ -7,8 +7,19 @@ module ReportsHelper
   end
 
   def render_report_element(element, provided_locals = nil)
-    children_html = ''.html_safe
+    # Determine partial
 
+    file_name = element.type_of
+    if element.type_of.in? ReportExtends::MY_MODULE_CHILDREN_ELEMENTS
+      file_name = "my_module_#{element.type_of.singularize}"
+    end
+    view = "reports/elements/#{file_name}_element.html.erb"
+
+    # Set locals
+
+    locals = provided_locals.nil? ? {} : provided_locals.clone
+
+    children_html = ''.html_safe
     # First, recursively render element's children
     if element.comments? || element.project_header?
       # Render no children
@@ -33,25 +44,18 @@ module ReportsHelper
       end
       children_html.safe_concat render_new_element(false)
     end
-
-    file_name = element.type_of
-    if element.type_of.in? ReportExtends::MY_MODULE_CHILDREN_ELEMENTS
-      file_name = "my_module_#{element.type_of.singularize}"
-    end
-    view = "reports/elements/#{file_name}_element.html.erb"
-
-    locals = provided_locals.nil? ? {} : provided_locals.clone
     locals[:children] = children_html
 
     if provided_locals[:export_all]
-      # Set path and filename local variables for files and tables
+      # Set path and filename locals for files and tables in export all ZIP
 
       if element['type_of'] == 'my_module_repository'
-        obj_name = Repository.find(element[:repository_id]).name + '.csv'
+        obj = Repository.find(element[:repository_id])
+        obj_filename = obj_name_to_filename(obj)
         obj_folder_name = 'Inventories'
 
-        locals[:filename] = obj_name
-        locals[:path] = "#{obj_folder_name}/#{obj_name}"
+        locals[:filename] = obj_filename
+        locals[:path] = "#{obj_folder_name}/#{obj_filename}"
       elsif element['type_of'].in? %w(step_asset step_table result_asset
                                       result_table)
 
@@ -61,37 +65,26 @@ module ReportsHelper
                             .find(parent_el["#{parent_type}_id"])
 
         if parent.class == Step
-          obj_name = if element['type_of'] == 'step_asset'
-                       name = Asset.find(element[:asset_id]).file_file_name
-                       suffix = name.split('.').second
-                       suffix.prepend('.') if suffix
-                       name.split('.').first
-                     else
-                       name = Table.find(element[:table_id]).name
-                       suffix = '.csv'
-                       name.empty? ? 'Table' : name
-                     end
-          obj_name = to_filesystems_compatible_filename(obj_name)
-          obj_name += "_Step#{parent.position + 1}#{suffix}"
+          obj = if element['type_of'] == 'step_asset'
+                  Asset.find(element[:asset_id])
+                elsif element['type_of'] == 'step_table'
+                  Table.find(element[:table_id])
+                end
+          obj_filename = obj_name_to_filename(obj,
+                                              "_Step#{parent.position + 1}")
           obj_folder_name = 'Protocol attachments'
           parent_module = if parent.protocol.present?
                             parent.protocol.my_module
                           else
                             parent.my_module
                           end
-        else
-          obj_name = if element['type_of'] == 'result_asset'
-                       name = Asset.find(element[:result_id]).file_file_name
-                       suffix = name.split('.').second
-                       suffix.prepend('.') if suffix
-                       name.split('.').first
-                     else
-                       name = Result.find(element[:result_id]).name
-                       suffix = '.csv'
-                       name.empty? ? 'Table' : name
-                     end
-          obj_name = to_filesystems_compatible_filename(obj_name)
-          obj_name += suffix
+        elsif parent.class == MyModule
+          obj = if element['type_of'] == 'result_asset'
+                  Result.find(element[:result_id]).asset
+                elsif element['type_of'] == 'result_table'
+                  Result.find(element[:result_id])
+                end
+          obj_filename = obj_name_to_filename(obj)
           obj_folder_name = 'Results attachments'
           parent_module = parent
         end
@@ -101,21 +94,21 @@ module ReportsHelper
         parent_exp_name =
           to_filesystems_compatible_filename(parent_module.experiment.name)
 
-        locals[:filename] = obj_name
+        locals[:filename] = obj_filename
         locals[:path] = "#{parent_exp_name}/#{parent_module_name}/" \
-          "#{obj_folder_name}/#{obj_name}"
+          "#{obj_folder_name}/#{obj_filename}"
       end
     end
 
     # ReportExtends is located in config/initializers/extends/report_extends.rb
-
     ReportElement.type_ofs.keys.each do |type|
       next unless element.public_send("#{type}?")
       element.element_references.each do |el_ref|
         locals[el_ref.class.name.underscore.to_sym] = el_ref
       end
-      locals[:order] = element
-                       .sort_order if type.in? ReportExtends::SORTED_ELEMENTS
+      if type.in? ReportExtends::SORTED_ELEMENTS
+        locals[:order] = element.sort_order
+      end
     end
 
     (render partial: view, locals: locals).html_safe
@@ -179,5 +172,20 @@ module ReportsHelper
       el.replace(tag)
     end
     html_doc.to_s
+  end
+
+  private
+
+  def obj_name_to_filename(obj, name_suffix = '')
+    obj_name = if obj.class == Asset
+                 obj_name, suffix = obj.file_file_name.split('.')
+                 suffix.prepend('.') if suffix
+                 obj_name
+               elsif obj.class.in? [Table, Result, Repository]
+                 suffix = '.csv'
+                 obj.name.present? ? obj.name : obj.class.name
+               end
+    obj_name = to_filesystems_compatible_filename(obj_name)
+    obj_name += "#{name_suffix}#{suffix}"
   end
 end
