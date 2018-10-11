@@ -562,6 +562,13 @@ Rails.application.routes.draw do
                         as: :items
             end
             resources :projects, only: %i(index show) do
+              resources :user_projects, only: %i(index show),
+                path: 'users', as: :users
+              resources :project_comments, only: %i(index show),
+                path: 'comments', as: :comments
+              get 'activities', to: 'projects#activities'
+              resources :reports, only: %i(index show),
+                path: 'reports', as: :reports
               resources :experiments, only: %i(index show) do
                 resources :my_module_groups,
                           only: %i(index show),
