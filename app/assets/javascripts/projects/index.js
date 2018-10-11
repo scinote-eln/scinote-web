@@ -218,9 +218,8 @@
    * Initialize the JS for export projects modal to work.
    */
   function initExportProjectsModal() {
-    $exportProjectsBtn = $('#export-projects-button')
+    var $exportProjectsBtn = $('#export-projects-button');
     $exportProjectsBtn.click(function() {
-
       // Load HTML to refresh users list
       $.ajax({
         url: $exportProjectsBtn.data('export-projects-url'),
