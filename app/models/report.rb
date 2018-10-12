@@ -94,15 +94,7 @@ class Report < ApplicationRecord
   end
 
   def self.generate_whole_project_report(project, current_user, current_team)
-    report_contents = []
-    report_contents << {
-      'type_of' => 'project_header',
-      'id' => {
-        'project_id' => project.id
-      },
-      'sort_order' => nil,
-      'children' => []
-    }
+    report_contents = gen_element_content(project, nil, 'project_header', true)
 
     project.experiments.each do |exp|
       modules = []
@@ -111,188 +103,91 @@ class Report < ApplicationRecord
         module_children = []
 
         my_module.protocol.steps.each do |step|
-          step_children = []
+          step_children =
+            gen_element_content(step, step.assets, 'step_asset')
+          step_children +=
+            gen_element_content(step, step.tables, 'step_table')
+          step_children +=
+            gen_element_content(step, step.checklists, 'step_checklist')
+          step_children +=
+            gen_element_content(step, nil, 'step_comments', true, 'asc')
 
-          step.assets.each do |asset|
-            step_children << {
-              'type_of' => 'step_asset',
-              'id' => {
-                'asset_id' => asset.id
-              },
-              'sort_order' => nil,
-              'children' => []
-            }
-          end
-          step.tables.each do |table|
-            step_children << {
-              'type_of' => 'step_table',
-              'id' => {
-                'table_id' => table.id
-              },
-              'sort_order' => nil,
-              'children' => []
-            }
-          end
-          step.checklists.each do |step_checklist|
-            step_children << {
-              'type_of' => 'step_checklist',
-              'id' => {
-                'checklist_id' => step_checklist.id
-              },
-              'sort_order' => nil,
-              'children' => []
-            }
-          end
-          if step.step_comments.any?
-            step_children << {
-              'type_of' => 'step_comments',
-              'id' => {
-                'step_id' => step.id
-              },
-              'sort_order' => 'asc',
-              'children' => []
-            }
-          end
-
-          module_children << {
-            'type_of' => 'step',
-            'id' => {
-              'step_id' => step.id
-            },
-            'sort_order' => nil,
-            'children' => step_children
-          }
+          module_children +=
+            gen_element_content(step, nil, 'step', true, nil, step_children)
         end
 
         my_module.results.each do |result|
-          if result.asset
-            result_comments = []
+          result_children =
+            gen_element_content(result, nil, 'result_comments', true, 'asc')
 
-            if result.result_comments.any?
-              result_comments << {
-                'type_of' => 'result_comments',
-                'id' => {
-                  'result_id' => result.id
-                },
-                'sort_order' => 'asc',
-                'children' => []
-              }
-            end
-
-            module_children << {
-              'type_of' => 'result_asset',
-              'id' => {
-                'result_id' => result.id
-              },
-              'sort_order' => nil,
-              'children' => []
-            }
-          elsif result.table
-            result_comments = []
-
-            if result.result_comments.any?
-              result_comments << {
-                'type_of' => 'result_comments',
-                'id' => {
-                  'result_id' => result.id
-                },
-                'sort_order' => 'asc',
-                'children' => []
-              }
-            end
-
-            module_children << {
-              'type_of' => 'result_table',
-              'id' => {
-                'result_id' => result.id
-              },
-              'sort_order' => nil,
-              'children' => result_comments
-            }
-          elsif result.result_text
-            result_comments = []
-
-            if result.result_comments.any?
-              result_comments << {
-                'type_of' => 'result_comments',
-                'id' => {
-                  'result_id' => result.id
-                },
-                'sort_order' => 'asc',
-                'children' => []
-              }
-            end
-
-            module_children << {
-              'type_of' => 'result_text',
-              'id' => {
-                'result_id' => result.id
-              },
-              'sort_order' => nil,
-              'children' => result_comments
-            }
-          end
+          result_type = if result.asset
+                          'result_asset'
+                        elsif result.table
+                          'result_table'
+                        elsif result.result_text
+                          'result_text'
+                        end
+          module_children +=
+            gen_element_content(result, nil, result_type, true, nil,
+                                result_children)
         end
 
-        if my_module.activities.any?
-          module_children << {
-            'type_of' => 'my_module_activity',
-            'id' => {
-              'my_module_id' => my_module.id
-            },
-            'sort_order' => 'asc',
-            'children' => []
-          }
-        end
+        module_children +=
+          gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
+        module_children +=
+          gen_element_content(my_module,
+                              my_module.repository_rows.select(:repository_id)
+                                       .distinct.map(&:repository),
+                              'my_module_repository', true, 'asc')
 
-        module_repositories_id =
-          my_module.repository_rows.map(&:repository_id).uniq
-        module_repositories_id.each do |repo_id|
-          module_children << {
-            'type_of' => 'my_module_repository',
-            'id' => {
-              'my_module_id' => my_module.id,
-              'repository_id' => repo_id
-            },
-            'sort_order' => 'asc',
-            'children' => []
-          }
-        end
-
-        modules << {
-          'type_of' => 'my_module',
-          'id' => {
-            'my_module_id' => my_module.id
-          },
-          'sort_order' => nil,
-          'children' => module_children
-        }
+        modules +=
+          gen_element_content(my_module, nil, 'my_module', true, nil,
+                              module_children)
       end
 
-      report_contents << {
-        'type_of' => 'experiment',
-        'id' => {
-          'experiment_id' => exp.id
-        },
-        'sort_order' => nil,
-        'children' => modules
-      }
-    end
-
-    dummy_name = loop do
-      dummy_name = SecureRandom.hex(10)
-      break dummy_name unless Report.where(name: dummy_name).exists?
+      report_contents +=
+        gen_element_content(exp, nil, 'experiment', true, nil, modules)
     end
 
     report = Report.new
-    report.name = dummy_name
+    report.name = loop do
+      dummy_name = SecureRandom.hex(10)
+      break dummy_name unless Report.where(name: dummy_name).exists?
+    end
     report.project = project
     report.user = current_user
     report.team = current_team
     report.last_modified_by = current_user
-
     report.save_with_contents(report_contents)
     report
+  end
+
+  def self.gen_element_content(parent_obj, association_objs, type_of,
+                               use_parent_id = false, sort_order = nil,
+                               children = nil)
+    parent_type = parent_obj.class.name.underscore
+    type = type_of.split('_').last.singularize
+    extra_id_needed = use_parent_id && !association_objs.nil?
+    elements = []
+
+    association_objs ||= [nil]
+    association_objs.each do |obj|
+      elements << {
+        'type_of' => type_of,
+        'id' => {}.tap do |ids_hash|
+                  if use_parent_id
+                    ids_hash["#{parent_type}_id"] = parent_obj.id
+                  else
+                    ids_hash["#{type}_id"] = obj.id
+                  end
+                  ids_hash["#{type}_id"] = obj.id if extra_id_needed
+                end,
+        'sort_order' => sort_order.present? ? sort_order : nil,
+        'children' => children.present? ? children : []
+      }
+    end
+
+    elements
   end
 
   private
