@@ -525,6 +525,7 @@
     TABLE = $(TABLE_ID).DataTable({
       dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
       stateSave: true,
+      stateDuration: 0,
       processing: true,
       serverSide: true,
       scrollY: '64vh',

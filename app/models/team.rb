@@ -47,14 +47,14 @@ class Team < ApplicationRecord
   end
 
   def default_view_state
-    { filter: 'active',
-      cards: { sort: 'new' },
-      table: {
-        'start': 0,
-        'length': 10,
-        'order' => [2, 'asc'],
-        'time': Time.new.to_i
-      } }
+    { 'projects' =>
+      { 'cards' => { 'sort' => 'new' },
+        'table' =>
+          { 'time' => Time.now.to_i,
+            'order' => [[2, 'asc']],
+            'start' => 0,
+            'length' => 10 },
+        'filter' => 'active' } }
   end
 
   def search_users(query = nil)

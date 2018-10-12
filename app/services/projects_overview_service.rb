@@ -6,14 +6,14 @@ class ProjectsOverviewService
     @user = user
     @params = params
     @view_state = @team.current_view_state(@user)
-    if @view_state.state['filter'] != @params[:filter] &&
+    if @view_state.state.dig('projects', 'filter') != @params[:filter] &&
        %w(active archived all).include?(@params[:filter])
-      @view_state.state['filter'] = @params[:filter]
+      @view_state.state['projects']['filter'] = @params[:filter]
     end
   end
 
   def project_cards
-    cards_state = @view_state.state['cards']
+    cards_state = @view_state.state.dig('projects', 'cards')
     records = fetch_records
     records = records.where(archived: true) if @params[:filter] == 'archived'
     records = records.where(archived: false) if @params[:filter] == 'active'
@@ -21,7 +21,7 @@ class ProjectsOverviewService
        cards_state['sort'] != @params[:sort] &&
        %w(new old atoz ztoa).include?(@params[:sort])
       cards_state['sort'] = @params[:sort]
-      @view_state.state['cards'] = cards_state
+      @view_state.state['projects']['cards'] = cards_state
     end
     @view_state.save! if @view_state.changed?
     case cards_state['sort']
@@ -39,7 +39,7 @@ class ProjectsOverviewService
   end
 
   def projects_datatable
-    table_state = @view_state.state['table']
+    table_state = @view_state.state.dig('projects', 'table')
     per_page = @params[:length] == '-1' ? 10 : @params[:length].to_i
     table_state['length'] = per_page if table_state['length'] != per_page
     page = @params[:start] ? (@params[:start].to_i / per_page) + 1 : 1
@@ -49,7 +49,10 @@ class ProjectsOverviewService
     search_value = @params.dig(:search, :value)
     records = search(records, search_value) if search_value.present?
     records = sort(records).page(page).per(per_page)
-    @view_state.save! if @view_state.changed?
+    if @view_state.changed?
+      @view_state.state['projects']['table']['time'] = Time.now.to_i
+      @view_state.save!
+    end
     records
   end
 
@@ -136,7 +139,7 @@ class ProjectsOverviewService
   end
 
   def sort(records)
-    order_state = @view_state.state['table']['order'][0]
+    order_state = @view_state.state['projects']['table']['order'][0]
     order = @params[:order]&.values&.first
     if order
       dir = order[:dir] == 'desc' ? 'DESC' : 'ASC'
@@ -146,7 +149,8 @@ class ProjectsOverviewService
       column_index = '1'
     end
     if order_state != [column_index.to_i, dir.downcase]
-      @view_state.state['table']['order'][0] = [column_index.to_i, dir.downcase]
+      @view_state.state['projects']['table']['order'][0] =
+        [column_index.to_i, dir.downcase]
     end
     sort_column = sortable_columns[column_index]
     sort_column ||= sortable_columns['1']

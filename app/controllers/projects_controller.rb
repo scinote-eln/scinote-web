@@ -46,8 +46,8 @@ class ProjectsController < ApplicationController
         @project = Project.new
         view_state =
           current_team.current_view_state(current_user)
-        @current_filter = view_state.state['filter']
-        @current_sort = view_state.state.dig('cards', 'sort')
+        @current_filter = view_state.state.dig('projects', 'filter')
+        @current_sort = view_state.state.dig('projects', 'cards', 'sort')
         load_projects_tree
       end
     end
@@ -323,7 +323,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          state: current_team.current_view_state(current_user).state['table']
+          state: current_team.current_view_state(current_user)
+            .state.dig('projects', 'table')
         }
       end
     end
