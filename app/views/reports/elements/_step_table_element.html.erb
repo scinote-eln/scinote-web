@@ -13,7 +13,7 @@
                      name: filename %></em>
           </a>
         <% else %>
-          <% if table && table.name %>
+          <% if table.try(:name) %>
             <em><%=t 'projects.reports.elements.step_table.table_name',
                      name: truncate(table.name,
                                     length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>

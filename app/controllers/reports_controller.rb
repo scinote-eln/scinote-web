@@ -11,6 +11,7 @@ class ReportsController < ApplicationController
     edit
     update
     generate
+    export_whole_project_pdf
     save_modal
     project_contents_modal
     experiment_contents_modal
@@ -192,7 +193,7 @@ class ReportsController < ApplicationController
     parsed_pdf_html = parsed_page_html.at_css('#report-content')
     @report.destroy
 
-    filename = "#{@project.name}.pdf"
+    filename = "#{@project.name}_Report.pdf"
     parsed_pdf = render_to_string(
       pdf: filename,
       header: { right: '[page] of [topage]' },
