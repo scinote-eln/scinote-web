@@ -34,7 +34,7 @@ class TeamZipExport < ZipExport
   private
 
   # Export all functionality
-  def generate_teams_zip(tmp_dir, data, options = {})
+  def generate_team_zip(tmp_dir, data, options = {})
     # Create team folder
     @team = options[:team]
     team_path = "#{tmp_dir}/#{handle_name(@team.name)}"
@@ -56,7 +56,10 @@ class TeamZipExport < ZipExport
       root += "/#{project_name}"
       FileUtils.mkdir_p(root)
 
-      FileUtils.touch("#{root}/#{project_name}_Report.pdf").first
+      # Export whole project report PDF
+      project_report_pdf = p.generate_report_pdf(@user, @team)
+      file = FileUtils.touch("#{root}/#{project_name}_Report.pdf").first
+      File.open(file, 'wb') { |f| f.write(project_report_pdf) }
 
       inventories = "#{root}/Inventories"
       FileUtils.mkdir_p(inventories)

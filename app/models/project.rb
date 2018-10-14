@@ -222,7 +222,7 @@ class Project < ApplicationRecord
     res
   end
 
-  def export_report(user, team)
+  def generate_report_pdf(user, team)
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
     proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
     renderer = ApplicationController.renderer.new(warden: proxy)
@@ -253,15 +253,6 @@ class Project < ApplicationRecord
     # Dirty workaround to convert absolute links back to relative ones, since
     # WickedPdf does the opposite, based on the path where the file parsing is
     # done
-    parsed_pdf_with_relative_links =
-      parsed_pdf.gsub('/URI (file:////tmp/', '/URI (')
-
-    zip = ZipExport.create(user: user)
-    zip.generate_exportable_zip(
-      user,
-      parsed_pdf_with_relative_links,
-      :team,
-      filename: filename
-    )
+    parsed_pdf.gsub('/URI (file:////tmp/', '/URI (')
   end
 end
