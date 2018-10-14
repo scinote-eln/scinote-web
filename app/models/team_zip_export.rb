@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 require 'zip'
 require 'fileutils'
 require 'csv'
 
 class TeamZipExport < ZipExport
+  include StringUtility
+
   has_attached_file :zip_file,
                     path: '/zip_exports/:attachment/:id_partition/' \
                           ':hash/:style/:filename'
   validates_attachment :zip_file,
                        content_type: { content_type: 'application/zip' }
-
-  # Length of allowed name size
-  MAX_NAME_SIZE = 20
 
   def generate_exportable_zip(user, data, type, options = {})
     @user = user
@@ -37,7 +38,7 @@ class TeamZipExport < ZipExport
   def generate_team_zip(tmp_dir, data, options = {})
     # Create team folder
     @team = options[:team]
-    team_path = "#{tmp_dir}/#{handle_name(@team.name)}"
+    team_path = "#{tmp_dir}/#{to_filesystem_name(@team.name)}"
     FileUtils.mkdir_p(team_path)
 
     # Create Projects folders
@@ -46,7 +47,7 @@ class TeamZipExport < ZipExport
 
     # Iterate through every project
     data.each_with_index do |(_, p), ind|
-      project_name = handle_name(p.name) + "_#{ind}"
+      project_name = to_filesystem_name(p.name) + "_#{ind}"
       root =
         if p.archived
           "#{team_path}/Archived projects"
@@ -78,13 +79,13 @@ class TeamZipExport < ZipExport
 
       # Include all experiments
       p.experiments.each_with_index do |ex, ex_ind|
-        experiment_path = "#{root}/#{handle_name(ex.name)}_#{ex_ind}"
+        experiment_path = "#{root}/#{to_filesystem_name(ex.name)}_#{ex_ind}"
         FileUtils.mkdir_p(experiment_path)
 
         # Include all modules
         ex.my_modules.each_with_index do |my_module, mod_ind|
           my_module_path = "#{experiment_path}/" \
-            "#{handle_name(my_module.name)}_#{mod_ind}"
+            "#{to_filesystem_name(my_module.name)}_#{mod_ind}"
           FileUtils.mkdir_p(my_module_path)
 
           # Create upper directories for both elements
@@ -122,25 +123,6 @@ class TeamZipExport < ZipExport
     UserNotification.create(notification: notification, user: user)
   end
 
-  def handle_name(name)
-    # Handle reserved directories
-    if name == '..'
-      return '__'
-    elsif name == '.'
-      return '_'
-    end
-
-    # Truncate and replace reserved characters
-    name = name[0, MAX_NAME_SIZE].gsub(%r{[*":<>?/\\|~]}, '_')
-
-    # Remove control characters
-    name = name.chars.map(&:ord).select { |s| (s > 31 && s < 127) || s > 127 }
-               .pack('U*')
-
-    # Remove leading hyphens, trailing dots/spaces
-    name.gsub(/^-|\.+$| +$/, '_')
-  end
-
   # Appends given suffix to file_name and then adds original extension
   def append_file_suffix(file_name, suffix)
     ext = File.extname(file_name)
@@ -172,10 +154,10 @@ class TeamZipExport < ZipExport
       table_name += i.to_s
 
       if type == :step
-        name = "#{directory}/#{handle_name(table_name)}" \
+        name = "#{directory}/#{to_filesystem_name(table_name)}" \
                "_#{i}_Step#{element.step.position + 1}.csv"
       elsif type == :result
-        name = "#{directory}/#{handle_name(table_name)}.csv"
+        name = "#{directory}/#{to_filesystem_name(table_name)}.csv"
       end
       file = FileUtils.touch(name).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
@@ -184,7 +166,7 @@ class TeamZipExport < ZipExport
 
   # Helper method for saving inventories to CSV
   def save_inventories_to_csv(path, repo, repo_rows, id)
-    repo_name = handle_name(repo.name) + "_#{id}"
+    repo_name = to_filesystem_name(repo.name) + "_#{id}"
     file = FileUtils.touch("#{path}/#{repo_name}.csv").first
 
     # Attachment folder

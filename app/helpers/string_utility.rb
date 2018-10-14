@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StringUtility
   def ellipsize(
     string,
@@ -11,14 +13,24 @@ module StringUtility
     string.gsub(/(#{edge}).{#{mid_length},}(#{edge})/, '\1...\2')
   end
 
-  def to_filesystems_compatible_filename(file_or_folder_name)
-    file_or_folder_name = file_or_folder_name.truncate(
-      Constants::EXPORTED_FILENAME_TRUNCATION_LENGTH,
-      omission: ''
-    )
-    file_or_folder_name.strip
-                       .sub(/^[.-]*/, '')
-                       .sub(/\.*$/, '')
-                       .gsub(/[^\w',;. -]/, '_')
+  # Convert string to filesystem compatible file/folder name
+  def to_filesystem_name(name)
+    # Handle reserved directories
+    if name == '..'
+      return '__'
+    elsif name == '.'
+      return '_'
+    end
+
+    # Truncate and replace reserved characters
+    name = name[0, Constants::EXPORTED_FILENAME_TRUNCATION_LENGTH]
+           .gsub(%r{[*":<>?/\\|~]}, '_')
+
+    # Remove control characters
+    name = name.chars.map(&:ord).select { |s| (s > 31 && s < 127) || s > 127 }
+               .pack('U*')
+
+    # Remove leading hyphens, trailing dots/spaces
+    name.gsub(/^-|\.+$| +$/, '_')
   end
 end

@@ -89,10 +89,8 @@ module ReportsHelper
           parent_module = parent
         end
 
-        parent_module_name =
-          to_filesystems_compatible_filename(parent_module.name)
-        parent_exp_name =
-          to_filesystems_compatible_filename(parent_module.experiment.name)
+        parent_module_name = to_filesystem_name(parent_module.name)
+        parent_exp_name = to_filesystem_name(parent_module.experiment.name)
 
         locals[:filename] = obj_filename
         locals[:path] = "#{parent_exp_name}/#{parent_module_name}/" \
@@ -176,16 +174,16 @@ module ReportsHelper
 
   private
 
-  def obj_name_to_filename(obj, name_suffix = '')
+  def obj_name_to_filename(obj, filename_suffix = '')
     obj_name = if obj.class == Asset
-                 obj_name, suffix = obj.file_file_name.split('.')
-                 suffix.prepend('.') if suffix
+                 obj_name, extension = obj.file_file_name.split('.')
+                 extension&.prepend('.')
                  obj_name
                elsif obj.class.in? [Table, Result, Repository]
-                 suffix = '.csv'
+                 extension = '.csv'
                  obj.name.present? ? obj.name : obj.class.name
                end
-    obj_name = to_filesystems_compatible_filename(obj_name)
-    obj_name += "#{name_suffix}#{suffix}"
+    obj_name = to_filesystem_name(obj_name)
+    obj_name + "#{filename_suffix}#{extension}"
   end
 end
