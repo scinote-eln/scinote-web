@@ -78,6 +78,7 @@ module ReportsHelper
       if obj_id
         locals[:path] =
           provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
+          .sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
         locals[:filename] = locals[:path].split('/').last
       end
     end
