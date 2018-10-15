@@ -7,12 +7,6 @@ module Api
       attributes :id, :value_type, :value
       attribute :repository_column_id, key: :column_id
 
-      def value_type
-        type_id = RepositoryColumn
-                  .data_types[object.repository_column.data_type]
-        I18n.t("api.v1.inventory_data_types.t#{type_id}")
-      end
-
       def value
         value =
           case object.value_type

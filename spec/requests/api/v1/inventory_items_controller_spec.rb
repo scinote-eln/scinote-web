@@ -75,6 +75,24 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                include: :inventory_cells)
           .as_json[:data]
       )
+      expect(hash_body).not_to include('included')
+    end
+
+    it 'Response with correct inventory items, included cells' do
+      hash_body = nil
+      get api_v1_team_inventory_items_path(
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id,
+        include: 'inventory_cells'
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_rows.limit(10),
+               each_serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:data]
+      )
       expect(hash_body[:included]).to match(
         ActiveModelSerializers::SerializableResource
           .new(@valid_inventory.repository_rows.limit(10),
@@ -98,13 +116,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                include: :inventory_cells)
           .as_json[:data]
       )
-      expect(hash_body[:included]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_inventory.repository_rows.limit(100),
-               each_serializer: Api::V1::InventoryItemSerializer,
-               include: :inventory_cells)
-          .as_json[:included]
-      )
+      expect(hash_body).not_to include('included')
     end
 
     it 'When invalid request, user in not member of the team' do

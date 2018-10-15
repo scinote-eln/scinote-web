@@ -2,47 +2,46 @@
 
 module Api
   module V1
-    class MyModulesController < BaseController
+    class TasksController < BaseController
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
       before_action :load_task, only: :show
-      before_action :load_task_relative, only: %i(outputs output inputs input)
+      before_action :load_task_relative, only: %i(inputs outputs activities)
 
       def index
         tasks = @experiment.my_modules
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
 
-        render jsonapi: tasks, each_serializer: MyModuleSerializer
+        render jsonapi: tasks, each_serializer: TaskSerializer
       end
 
       def show
-        render jsonapi: @my_module, serializer: MyModuleSerializer
-      end
-
-      def outputs
-        outputs = @my_module.my_modules
-                            .page(params.dig(:page, :number))
-                            .per(params.dig(:page, :size))
-        render jsonapi: outputs, each_serializer: MyModuleSerializer
-      end
-
-      def output
-        output = @my_module.my_modules.find(params.require(:id))
-        render jsonapi: output, serializer: MyModuleSerializer
+        render jsonapi: @task, serializer: TaskSerializer
       end
 
       def inputs
-        inputs = @my_module.my_module_antecessors
-                           .page(params.dig(:page, :number))
-                           .per(params.dig(:page, :size))
-        render jsonapi: inputs, each_serializer: MyModuleSerializer
+        inputs = @task.my_module_antecessors
+                      .page(params.dig(:page, :number))
+                      .per(params.dig(:page, :size))
+        render jsonapi: inputs, each_serializer: TaskSerializer
       end
 
-      def input
-        input = @my_module.my_module_antecessors.find(params.require(:id))
-        render jsonapi: input, serializer: MyModuleSerializer
+      def outputs
+        outputs = @task.my_modules
+                            .page(params.dig(:page, :number))
+                            .per(params.dig(:page, :size))
+        render jsonapi: outputs, each_serializer: TaskSerializer
+      end
+
+      def activities
+        activities = @task.activities
+                          .page(params.dig(:page, :number))
+                          .per(params.dig(:page, :size))
+
+        render jsonapi: activities,
+          each_serializer: ActivitySerializer
       end
 
       private
@@ -67,7 +66,7 @@ module Api
       end
 
       def load_task
-        @my_module = @experiment.my_modules.find(params.require(:id))
+        @task = @experiment.my_modules.find(params.require(:id))
       end
 
       # Made the method below because its more elegant than changing parameters
@@ -75,7 +74,7 @@ module Api
       # for a task, the "id" that used to be task id is now an id for the output
       # or input.
       def load_task_relative
-        @my_module = @experiment.my_modules.find(params.require(:task_id))
+        @task = @experiment.my_modules.find(params.require(:task_id))
       end
     end
   end

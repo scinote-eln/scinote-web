@@ -16,9 +16,10 @@ module Api
                       repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES
                     ).page(params.dig(:page, :number))
                     .per(params.dig(:page, :size))
+        incl = params[:include] == 'inventory_cells' ? :inventory_cells : nil
         render jsonapi: items,
                each_serializer: InventoryItemSerializer,
-               include: :inventory_cells
+               include: incl
       end
 
       def create

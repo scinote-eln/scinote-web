@@ -61,7 +61,7 @@ class Extends
                                 repository_asset_value: :asset]
 
   # List of implemented core API versions
-  API_VERSIONS = ['20170715']
+  API_VERSIONS = ['v1']
 
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = [:azure_jwt_auth]

@@ -14,8 +14,9 @@ module Api
                             .includes(:repository_list_items)
                             .page(params.dig(:page, :number))
                             .per(params.dig(:page, :size))
-        render jsonapi: columns, each_serializer: InventoryColumnSerializer,
-        include: :inventory_list_items
+        render jsonapi: columns,
+               each_serializer: InventoryColumnSerializer,
+               hide_list_items: true
       end
 
       def create
@@ -23,18 +24,22 @@ module Api
           @inventory.repository_columns.create!(inventory_column_params)
         render jsonapi: inventory_column,
                serializer: InventoryColumnSerializer,
+               hide_list_items: true,
                status: :created
       end
 
       def show
-        render jsonapi: @inventory_column, serializer: InventoryColumnSerializer
+        render jsonapi: @inventory_column,
+               serializer: InventoryColumnSerializer,
+               include: :inventory_list_items
       end
 
       def update
         @inventory_column.attributes = update_inventory_column_params
         if @inventory_column.changed? && @inventory_column.save!
           render jsonapi: @inventory_column,
-                          serializer: InventoryColumnSerializer
+                          serializer: InventoryColumnSerializer,
+                          hide_list_items: true
         else
           render body: nil
         end
@@ -88,6 +93,10 @@ module Api
         unless params.require(:data).require(:id).to_i == params[:id].to_i
           raise ActionController::BadRequest,
                 'Object ID mismatch in URL and request body'
+        end
+        if params.require(:data).require(:attributes).include?(:data_type)
+          raise ActionController::BadRequest,
+                'Update of data_type attribute is not allowed'
         end
         inventory_column_params[:attributes]
       end

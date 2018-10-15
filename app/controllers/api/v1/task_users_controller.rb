@@ -2,23 +2,24 @@
 
 module Api
   module V1
-    class MyModuleGroupsController < BaseController
+    class TaskUsersController < BaseController
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
-      before_action :load_task_group, only: :show
+      before_action :load_task
+      before_action :load_user, only: :show
 
       def index
-        my_module_groups = @experiment.my_module_groups
-                                      .page(params.dig(:page, :number))
-                                      .per(params.dig(:page, :size))
+        users = @task.users
+                               .page(params.dig(:page, :number))
+                               .per(params.dig(:page, :size))
 
-        render jsonapi: my_module_groups,
-          each_serializer: MyModuleGroupSerializer
+        render jsonapi: users,
+          each_serializer: UserSerializer
       end
 
       def show
-        render jsonapi: @my_module_group, serializer: MyModuleGroupSerializer
+        render jsonapi: @user, serializer: UserSerializer
       end
 
       private
@@ -42,8 +43,12 @@ module Api
         )
       end
 
-      def load_task_group
-        @my_module_group = @experiment.my_module_groups.find(
+      def load_task
+        @task = @experiment.my_modules.find(params.require(:task_id))
+      end
+
+      def load_user
+        @user = @task.users.find(
           params.require(:id)
         )
       end

@@ -13,7 +13,9 @@ module Api
       end
 
       def show
-        render jsonapi: @team, serializer: TeamSerializer
+        render jsonapi: @team,
+               serializer: TeamSerializer,
+               include: :created_by
       end
 
       private
