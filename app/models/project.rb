@@ -222,19 +222,18 @@ class Project < ApplicationRecord
     res
   end
 
-  def generate_report_pdf(user, team)
+  def generate_report_pdf(user, team, obj_filenames = nil)
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
     proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
     renderer = ApplicationController.renderer.new(warden: proxy)
 
-    report = Report.generate_whole_project_report(
-      self, user, team
-    )
+    report = Report.generate_whole_project_report(self, user, team)
 
-    page_html_string = renderer.render 'reports/new.html.erb',
-                                       locals: { export_all: true },
-                                       assigns: { project: self,
-                                                  report: report }
+    page_html_string =
+      renderer.render 'reports/new.html.erb',
+                      locals: { export_all: true,
+                                obj_filenames: obj_filenames },
+                      assigns: { project: self, report: report }
     parsed_page_html = Nokogiri::HTML(page_html_string)
     parsed_pdf_html = parsed_page_html.at_css('#report-content')
     report.destroy

@@ -50,12 +50,7 @@ module ReportsHelper
       # Set path and filename locals for files and tables in export all ZIP
 
       if element['type_of'] == 'my_module_repository'
-        obj = Repository.find(element[:repository_id])
-        obj_filename = obj_name_to_filename(obj)
-        obj_folder_name = 'Inventories'
-
-        locals[:filename] = obj_filename
-        locals[:path] = "#{obj_folder_name}/#{obj_filename}"
+        obj_id = element[:repository_id]
       elsif element['type_of'].in? %w(step_asset step_table result_asset
                                       result_table)
 
@@ -65,36 +60,25 @@ module ReportsHelper
                             .find(parent_el["#{parent_type}_id"])
 
         if parent.class == Step
-          obj = if element['type_of'] == 'step_asset'
-                  Asset.find(element[:asset_id])
-                elsif element['type_of'] == 'step_table'
-                  Table.find(element[:table_id])
-                end
-          obj_filename = obj_name_to_filename(obj,
-                                              "_Step#{parent.position + 1}")
-          obj_folder_name = 'Protocol attachments'
-          parent_module = if parent.protocol.present?
-                            parent.protocol.my_module
-                          else
-                            parent.my_module
-                          end
+          obj_id = if element['type_of'] == 'step_asset'
+                     element[:asset_id]
+                   elsif element['type_of'] == 'step_table'
+                     element[:table_id]
+                   end
         elsif parent.class == MyModule
-          obj = if element['type_of'] == 'result_asset'
-                  Result.find(element[:result_id]).asset
-                elsif element['type_of'] == 'result_table'
-                  Result.find(element[:result_id])
-                end
-          obj_filename = obj_name_to_filename(obj)
-          obj_folder_name = 'Results attachments'
-          parent_module = parent
+          result = Result.find(element[:result_id])
+          obj_id = if element['type_of'] == 'result_asset'
+                     result.asset.id
+                   elsif element['type_of'] == 'result_table'
+                     result.table.id
+                   end
         end
+      end
 
-        parent_module_name = to_filesystem_name(parent_module.name)
-        parent_exp_name = to_filesystem_name(parent_module.experiment.name)
-
-        locals[:filename] = obj_filename
-        locals[:path] = "#{parent_exp_name}/#{parent_module_name}/" \
-          "#{obj_folder_name}/#{obj_filename}"
+      if obj_id
+        locals[:path] =
+          provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
+        locals[:filename] = locals[:path].split('/').last
       end
     end
 

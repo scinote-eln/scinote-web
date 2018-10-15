@@ -47,6 +47,9 @@ class TeamZipExport < ZipExport
 
     # Iterate through every project
     data.each_with_index do |(_, p), ind|
+      obj_filenames = { my_module_repository: {}, step_asset: {},
+                        step_table: {}, result_asset: {}, result_table: {} }
+
       project_name = to_filesystem_name(p.name) + "_#{ind}"
       root =
         if p.archived
@@ -56,11 +59,6 @@ class TeamZipExport < ZipExport
         end
       root += "/#{project_name}"
       FileUtils.mkdir_p(root)
-
-      # Export whole project report PDF
-      project_report_pdf = p.generate_report_pdf(@user, @team)
-      file = FileUtils.touch("#{root}/#{project_name}_Report.pdf").first
-      File.open(file, 'wb') { |f| f.write(project_report_pdf) }
 
       inventories = "#{root}/Inventories"
       FileUtils.mkdir_p(inventories)
@@ -74,7 +72,8 @@ class TeamZipExport < ZipExport
       # Iterate through every inventory repo and save it to CSV
       repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_idx|
         curr_repo_rows = repo_rows.select { |x| x.repository_id == repo.id }
-        save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
+        obj_filenames[:my_module_repository][repo.id] =
+          save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
       end
 
       # Include all experiments
@@ -96,16 +95,29 @@ class TeamZipExport < ZipExport
 
           # Export protocols
           steps = my_module.protocols.map(&:steps).flatten
-          export_assets(StepAsset.where(step: steps), :step, protocol_path)
-          export_tables(StepTable.where(step: steps), :step, protocol_path)
+          obj_filenames[:step_asset].merge!(
+            export_assets(StepAsset.where(step: steps), :step, protocol_path)
+          )
+          obj_filenames[:step_table].merge!(
+            export_tables(StepTable.where(step: steps), :step, protocol_path)
+          )
 
           # Export results
-          export_assets(ResultAsset.where(result: my_module.results),
-                        :result, result_path)
-          export_tables(ResultTable.where(result: my_module.results),
-                        :result, result_path)
+          obj_filenames[:result_asset].merge!(
+            export_assets(ResultAsset.where(result: my_module.results),
+                          :result, result_path)
+          )
+          obj_filenames[:result_table].merge!(
+            export_tables(ResultTable.where(result: my_module.results),
+                          :result, result_path)
+          )
         end
       end
+
+      # Generate and export whole project report PDF
+      project_report_pdf = p.generate_report_pdf(@user, @team, obj_filenames)
+      file = FileUtils.touch("#{root}/#{project_name}_Report.pdf").first
+      File.open(file, 'wb') { |f| f.write(project_report_pdf) }
     end
   end
 
@@ -131,8 +143,11 @@ class TeamZipExport < ZipExport
 
   # Helper method to extract given assets to the directory
   def export_assets(elements, type, directory)
+    asset_indexes = {}
+
     elements.each_with_index do |element, i|
       asset = element.asset
+
       if type == :step
         name = "#{directory}/" \
                "#{append_file_suffix(asset.file_file_name,
@@ -143,11 +158,16 @@ class TeamZipExport < ZipExport
       end
       file = FileUtils.touch(name).first
       File.open(file, 'wb') { |f| f.write(asset.open.read) }
+      asset_indexes[asset.id] = name
     end
+
+    asset_indexes
   end
 
   # Helper method to extract given tables to the directory
   def export_tables(elements, type, directory)
+    table_indexes = {}
+
     elements.each_with_index do |element, i|
       table = element.table
       table_name = table.name.presence || 'Table'
@@ -161,13 +181,16 @@ class TeamZipExport < ZipExport
       end
       file = FileUtils.touch(name).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
+      table_indexes[table.id] = name
     end
+
+    table_indexes
   end
 
   # Helper method for saving inventories to CSV
   def save_inventories_to_csv(path, repo, repo_rows, id)
-    repo_name = to_filesystem_name(repo.name) + "_#{id}"
-    file = FileUtils.touch("#{path}/#{repo_name}.csv").first
+    repo_name = "#{path}/#{to_filesystem_name(repo.name)}_#{id}.csv"
+    file = FileUtils.touch(repo_name).first
 
     # Attachment folder
     rel_attach_path = "#{repo_name}_attachments"
@@ -202,6 +225,8 @@ class TeamZipExport < ZipExport
       file = FileUtils.touch(asset_path).first
       File.open(file, 'wb') { |f| f.write asset.open.read }
     end
+
+    repo_name
   end
 
   # Recursive zipping
