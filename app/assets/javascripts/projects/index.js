@@ -369,8 +369,9 @@
         $(this).closest('.panel-project').removeClass('selected');
         selectedProjects.splice(index, 1);
 
-        if (selectedProjects.length == 0)
+        if (selectedProjects.length === 0) {
           exportProjectsBtn.addClass('disabled');
+        }
       }
     });
 
@@ -541,8 +542,9 @@
       } else if (!this.checked && index !== -1) {
         selectedProjects.splice(index, 1);
 
-        if (selectedProjects.length == 0)
+        if (selectedProjects.length === 0)  {
           exportProjectsBtn.addClass('disabled');
+        }
       }
 
       updateDataTableSelectAllCtrl();
