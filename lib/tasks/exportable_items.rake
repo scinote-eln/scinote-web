@@ -9,7 +9,7 @@ namespace :exportable_items do
 
   desc 'Resets export project counter to 0'
   task reset_export_projects_counter: :environment do
-    User.all.each do |user|
+    User.find_each do |user|
       User.transaction do
         begin
           user.export_vars['num_of_export_all_last_24_hours'] = 0
@@ -17,7 +17,8 @@ namespace :exportable_items do
         rescue ActiveRecord::ActiveRecordError,
                ArgumentError,
                ActiveRecord::RecordNotSaved => e
-          puts "Error creating user, transaction reverted: #{e}"
+          puts "Error resetting users num_of_export_all_last_24_hours " \
+               "variable to 0, transaction reverted: #{e}"
         end
       end
     end
