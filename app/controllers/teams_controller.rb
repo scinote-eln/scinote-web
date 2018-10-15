@@ -5,7 +5,7 @@ class TeamsController < ApplicationController
   before_action :check_create_samples_permissions, only: %i(parse_sheet
                                                             import_samples)
   before_action :check_view_samples_permission, only: [:export_samples]
-  before_action :check_export_projects_permissions, only: [:export_projects]
+  before_action :check_export_projects_permissions, only: :export_projects
 
   def parse_sheet
     session[:return_to] ||= request.referer
@@ -228,8 +228,9 @@ class TeamsController < ApplicationController
   def export_projects
     if export_projects_params[:project_ids]
       # Check if user has enough requests for the day
-      limit = ENV['EXPORT_ALL_LIMIT_24_HOURS'].to_i || 3
-      if current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
+      limit = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
+      if limit.zero? \
+        || current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
         render json: {
           html: render_to_string(
             partial: 'projects/export/error.html.erb',
@@ -254,11 +255,7 @@ class TeamsController < ApplicationController
           title: t('projects.export_projects.modal_title_success')
         }
       end
-      return
-    else
-      flash[:alert] = t('zip_export.export_error')
     end
-    redirect_back(fallback_location: root_path)
   end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
