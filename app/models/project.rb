@@ -238,6 +238,42 @@ class Project < ApplicationRecord
     parsed_pdf_html = parsed_page_html.at_css('#report-content')
     report.destroy
 
+    tables = parsed_pdf_html.css('.hot-table-contents')
+                            .zip(parsed_pdf_html.css('.hot-table-container'))
+    tables.each do |table_input, table_container|
+      table_vals = JSON.parse(table_input['value'])
+      table_data = table_vals['data']
+      table_headers = table_vals['headers']
+      table_headers ||= ('A'..'Z').first(table_data[0].count)
+
+      table_el = table_container
+                 .add_child('<table class="handsontable"></table>').first
+
+      # Add header row
+      header_cell = '<th>'\
+                      '<div class="relative">'\
+                        '<span>%s</span>'\
+                      '</div>'\
+                    '</th>'
+      header_el = table_el.add_child('<thead></thead>').first
+      row_el = header_el.add_child('<tr></tr>').first
+      row_el.add_child(format(header_cell, '')).first
+      table_headers.each do |col|
+        row_el.add_child(format(header_cell, col)).first
+      end
+
+      # Add body rows
+      body_cell = '<td>%s</td>'
+      body_el = table_el.add_child('<tbody></tbody>').first
+      table_data.each.with_index(1) do |row, idx|
+        row_el = body_el.add_child('<tr></tr>').first
+        row_el.add_child(format(header_cell, idx)).first
+        row.each do |col|
+          row_el.add_child(format(body_cell, col)).first
+        end
+      end
+    end
+
     parsed_pdf = ApplicationController.render(
       pdf: pdf_name,
       header: { right: '[page] of [topage]' },
