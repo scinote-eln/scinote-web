@@ -25,7 +25,7 @@ module Api
         else
           # TODO
           # separate api endpoint for local files download is needed
-          'url'#download_asset_path(object.asset.id)
+          object.asset.file.url
         end
       end
     end
