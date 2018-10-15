@@ -5,9 +5,7 @@ module Api
     class ProjectSerializer < ActiveModel::Serializer
       type :projects
       attributes :id, :name, :visibility, :due_date,
-                 :archived, :experiments_order
-
-      belongs_to :team, serializer: TeamSerializer
+                 :archived
     end
   end
 end

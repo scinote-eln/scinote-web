@@ -15,7 +15,7 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
   describe 'GET user_identities, #index' do
     it 'When valid request, requested identities for current user' do
       hash_body = nil
-      get api_v1_user_user_identities_path(user_id: @user1.id),
+      get api_v1_user_identities_path(user_id: @user1.id),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
@@ -28,7 +28,7 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
 
     it 'When invalid request, requested user is not signed in user' do
       hash_body = nil
-      get api_v1_user_user_identities_path(user_id: @user2.id),
+      get api_v1_user_identities_path(user_id: @user2.id),
           headers: @valid_headers
       expect(response).to have_http_status(403)
       expect(hash_body).to match(nil)
@@ -36,7 +36,7 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
 
     it 'When invalid request, non existing user' do
       hash_body = nil
-      get api_v1_user_user_identities_path(user_id: 123),
+      get api_v1_user_identities_path(user_id: 123),
           headers: @valid_headers
       expect(response).to have_http_status(403)
       expect(hash_body).to match(nil)
@@ -46,7 +46,7 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
   describe 'POST user_identities, #create' do
     it 'When valid request, create new identity for current user' do
       hash_body = nil
-      post api_v1_user_user_identities_path(user_id: @user1.id),
+      post api_v1_user_identities_path(user_id: @user1.id),
            params: {
              data: { type: 'user_identities',
                      attributes: { uid: Faker::Crypto.unique.sha1,
@@ -66,7 +66,7 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
   describe 'GET user_identity, #show' do
     it 'When valid request, requested specific identity for current user' do
       hash_body = nil
-      get api_v1_user_user_identity_path(
+      get api_v1_user_identity_path(
         user_id: @user1.id, id: @user1.user_identities.order(:id).last
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
@@ -82,7 +82,7 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
   describe 'PUT user_identities, #update' do
     it 'When valid request, update identity for current user' do
       hash_body = nil
-      put api_v1_user_user_identity_path(user_id: @user1.id,
+      put api_v1_user_identity_path(user_id: @user1.id,
             id: @user1.user_identities.order(:id).last),
           params: {
             data: { id: @user1.user_identities.order(:id).last.id,
@@ -103,7 +103,7 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
   describe 'DELETE user_identity, #destroy' do
     it 'When valid request, destroy specified identity for current user' do
       identity = @user1.user_identities.order(:id).last
-      delete api_v1_user_user_identity_path(user_id: @user1.id, id: identity),
+      delete api_v1_user_identity_path(user_id: @user1.id, id: identity),
              headers: @valid_headers
       expect(response).to have_http_status(200)
       expect(response.body).to eq('')

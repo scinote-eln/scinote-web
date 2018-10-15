@@ -16,8 +16,8 @@ describe Api::ApiController, type: :controller do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body).to match(
         'message' => I18n.t('api.core.status_ok'),
-        'versions' => [{ 'version' => '20170715',
-                         'baseUrl' => '/api/20170715/' }]
+        'versions' => [{ 'version' => 'v1',
+                         'baseUrl' => '/api/v1/' }]
       )
     end
   end
