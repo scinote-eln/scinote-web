@@ -7,11 +7,14 @@ require 'csv'
 class TeamZipExport < ZipExport
   include StringUtility
 
-  has_attached_file :zip_file,
-                    path: '/zip_exports/:attachment/:id_partition/' \
-                          ':hash/:style/:filename'
-  validates_attachment :zip_file,
-                       content_type: { content_type: 'application/zip' }
+  # Override path only for S3
+  if ENV['PAPERCLIP_STORAGE'] == 's3'
+    has_attached_file :zip_file,
+                      path: '/zip_exports/:attachment/:id_partition/' \
+                            ':hash/:style/:filename'
+    validates_attachment :zip_file,
+                         content_type: { content_type: 'application/zip' }
+  end
 
   def generate_exportable_zip(user, data, type, options = {})
     @user = user
