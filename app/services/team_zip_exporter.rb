@@ -12,7 +12,7 @@ module TeamZipExporter
     zip.generate_exportable_zip(
       current_user,
       ids,
-      :teams,
+      :team,
       options
     )
   end

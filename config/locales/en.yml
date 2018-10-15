@@ -459,11 +459,13 @@ en:
           no_samples: "No samples"
         module_repository:
           name: "%{repository} of task %{my_module}"
+          table_name: "[ %{name} ]"
           no_items: "No items"
         result_asset:
           file_name: "[ %{file} ]"
           user_time: "Uploaded by %{user} on %{timestamp}."
         result_table:
+          table_name: "[ %{name} ]"
           user_time: "Created by %{user} on %{timestamp}."
         result_text:
           user_time: "Created by %{user} on %{timestamp}."

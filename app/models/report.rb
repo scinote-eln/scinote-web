@@ -20,7 +20,7 @@ class Report < ApplicationRecord
 
   # Report either has many report elements (if grouped by timestamp),
   # or many module elements (if grouped by module)
-  has_many :report_elements, inverse_of: :report, dependent: :destroy
+  has_many :report_elements, inverse_of: :report, dependent: :delete_all
 
   after_commit do
     Views::Datatables::DatatablesReport.refresh_materialized_view
@@ -91,6 +91,103 @@ class Report < ApplicationRecord
     report_elements.each do |el|
       el.clean_removed_or_archived_elements
     end
+  end
+
+  def self.generate_whole_project_report(project, current_user, current_team)
+    report_contents = gen_element_content(project, nil, 'project_header', true)
+
+    project.experiments.each do |exp|
+      modules = []
+
+      exp.my_modules.each do |my_module|
+        module_children = []
+
+        my_module.protocol.steps.each do |step|
+          step_children =
+            gen_element_content(step, step.assets, 'step_asset')
+          step_children +=
+            gen_element_content(step, step.tables, 'step_table')
+          step_children +=
+            gen_element_content(step, step.checklists, 'step_checklist')
+          step_children +=
+            gen_element_content(step, nil, 'step_comments', true, 'asc')
+
+          module_children +=
+            gen_element_content(step, nil, 'step', true, nil, step_children)
+        end
+
+        my_module.results.each do |result|
+          result_children =
+            gen_element_content(result, nil, 'result_comments', true, 'asc')
+
+          result_type = if result.asset
+                          'result_asset'
+                        elsif result.table
+                          'result_table'
+                        elsif result.result_text
+                          'result_text'
+                        end
+          module_children +=
+            gen_element_content(result, nil, result_type, true, nil,
+                                result_children)
+        end
+
+        module_children +=
+          gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
+        module_children +=
+          gen_element_content(my_module,
+                              my_module.repository_rows.select(:repository_id)
+                                       .distinct.map(&:repository),
+                              'my_module_repository', true, 'asc')
+
+        modules +=
+          gen_element_content(my_module, nil, 'my_module', true, nil,
+                              module_children)
+      end
+
+      report_contents +=
+        gen_element_content(exp, nil, 'experiment', true, nil, modules)
+    end
+
+    report = Report.new
+    report.name = loop do
+      dummy_name = SecureRandom.hex(10)
+      break dummy_name unless Report.where(name: dummy_name).exists?
+    end
+    report.project = project
+    report.user = current_user
+    report.team = current_team
+    report.last_modified_by = current_user
+    report.save_with_contents(report_contents)
+    report
+  end
+
+  def self.gen_element_content(parent_obj, association_objs, type_of,
+                               use_parent_id = false, sort_order = nil,
+                               children = nil)
+    parent_type = parent_obj.class.name.underscore
+    type = type_of.split('_').last.singularize
+    extra_id_needed = use_parent_id && !association_objs.nil?
+    elements = []
+
+    association_objs ||= [nil]
+    association_objs.each do |obj|
+      elements << {
+        'type_of' => type_of,
+        'id' => {}.tap do |ids_hash|
+                  if use_parent_id
+                    ids_hash["#{parent_type}_id"] = parent_obj.id
+                  else
+                    ids_hash["#{type}_id"] = obj.id
+                  end
+                  ids_hash["#{type}_id"] = obj.id if extra_id_needed
+                end,
+        'sort_order' => sort_order.present? ? sort_order : nil,
+        'children' => children.present? ? children : []
+      }
+    end
+
+    elements
   end
 
   private
