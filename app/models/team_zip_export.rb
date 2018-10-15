@@ -191,13 +191,16 @@ class TeamZipExport < ZipExport
 
   # Helper method for saving inventories to CSV
   def save_inventories_to_csv(path, repo, repo_rows, id)
-    repo_name = "#{path}/#{to_filesystem_name(repo.name)}_#{id}.csv"
-    file = FileUtils.touch(repo_name).first
+    repo_name = "#{to_filesystem_name(repo.name)}_#{id}"
 
     # Attachment folder
     rel_attach_path = "#{repo_name}_attachments"
     attach_path = "#{path}/#{rel_attach_path}"
     FileUtils.mkdir_p(attach_path)
+
+    # CSV file
+    csv_file_path = "#{path}/#{to_filesystem_name(repo.name)}_#{id}.csv"
+    csv_file = FileUtils.touch(csv_file_path).first
 
     # Define headers and columns IDs
     col_ids = [-3, -4, -5, -6] + repo.repository_columns.map(&:id)
@@ -220,7 +223,7 @@ class TeamZipExport < ZipExport
     # Generate CSV
     csv_data = RepositoryZipExport.to_csv(repo_rows, col_ids, @user, @team,
                                           handle_name_func)
-    File.open(file, 'wb') { |f| f.write(csv_data) }
+    File.open(csv_file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
