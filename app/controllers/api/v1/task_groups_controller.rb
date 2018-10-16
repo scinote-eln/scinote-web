@@ -2,24 +2,26 @@
 
 module Api
   module V1
-    class ActivitiesController < BaseController
+    class TaskGroupsController < BaseController
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
-      before_action :load_task
-      before_action :load_activity, only: :show
+      before_action :load_task_group, only: :show
 
       def index
-        activities = @my_module.activities
-                               .page(params.dig(:page, :number))
-                               .per(params.dig(:page, :size))
-
-        render jsonapi: activities,
-          each_serializer: ActivitySerializer
+        task_groups = @experiment.my_module_groups
+                                      .page(params.dig(:page, :number))
+                                      .per(params.dig(:page, :size))
+        incl = params[:include] == 'tasks' ? :tasks : nil
+        render jsonapi: task_groups,
+               each_serializer: TaskGroupSerializer,
+               include: incl
       end
 
       def show
-        render jsonapi: @activity, serializer: ActivitySerializer
+        render jsonapi: @task_group,
+               serializer: TaskGroupSerializer,
+               include: :tasks
       end
 
       private
@@ -43,16 +45,10 @@ module Api
         )
       end
 
-      def load_task
-        @my_module = @experiment.my_modules.find(params.require(:task_id))
-        render jsonapi: {}, status: :not_found if @my_module.nil?
-      end
-
-      def load_activity
-        @activity = @my_module.activities.find(
+      def load_task_group
+        @task_group = @experiment.my_module_groups.find(
           params.require(:id)
         )
-        render jsonapi: {}, status: :not_found if @activity.nil?
       end
     end
   end

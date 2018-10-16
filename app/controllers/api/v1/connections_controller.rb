@@ -12,11 +12,16 @@ module Api
       def index
         @connections = @connections.page(params.dig(:page, :number))
                                    .per(params.dig(:page, :size))
-        render jsonapi: @connections, each_serializer: ConnectionSerializer
+        incl = params[:include] == 'tasks' ? %i(input_task output_task) : nil
+        render jsonapi: @connections,
+               each_serializer: ConnectionSerializer,
+               include: incl
       end
 
       def show
-        render jsonapi: @connection, serializer: ConnectionSerializer
+        render jsonapi: @connection,
+               serializer: ConnectionSerializer,
+               include: %i(input_task output_task)
       end
 
       private

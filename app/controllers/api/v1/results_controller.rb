@@ -14,7 +14,7 @@ module Api
                        .page(params.dig(:page, :number))
                        .per(params.dig(:page, :size))
         render jsonapi: results, each_serializer: ResultSerializer,
-                                 include: %i(asset table text)
+                                 include: %i(text table file)
       end
 
       def create
@@ -22,13 +22,13 @@ module Api
         throw ActionController::ParameterMissing unless @result
         render jsonapi: @result,
                serializer: ResultSerializer,
-               include: %i(asset table text),
+               include: %i(text table file),
                status: :created
       end
 
       def show
         render jsonapi: @result, serializer: ResultSerializer,
-                                 include: %i(asset table text)
+                                 include: %i(text table file)
       end
 
       private

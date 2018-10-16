@@ -27,7 +27,9 @@ module Api
       end
 
       def show
-        render jsonapi: @inventory, serializer: InventorySerializer
+        render jsonapi: @inventory,
+               serializer: InventorySerializer,
+               include: :created_by
       end
 
       def update
