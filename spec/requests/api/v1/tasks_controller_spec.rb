@@ -40,7 +40,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(@valid_experiment.my_modules,
-               each_serializer: Api::V1::MyModuleSerializer)
+               each_serializer: Api::V1::TaskSerializer)
           .as_json[:data]
       )
     end
@@ -95,7 +95,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(@valid_experiment.my_modules.first,
-               serializer: Api::V1::MyModuleSerializer)
+               serializer: Api::V1::TaskSerializer)
           .as_json[:data]
       )
     end
