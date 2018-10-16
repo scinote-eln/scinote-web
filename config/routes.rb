@@ -559,7 +559,12 @@ Rails.application.routes.draw do
               resources :inventory_items,
                         only: %i(index create show update destroy),
                         path: 'items',
-                        as: :items
+                        as: :items do
+                resources :inventory_cells,
+                          only: %i(index create show update destroy),
+                          path: 'cells',
+                          as: :cells
+              end
             end
             resources :projects, only: %i(index show) do
               resources :user_projects, only: %i(index show),

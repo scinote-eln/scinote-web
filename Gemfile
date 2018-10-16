@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-ruby '2.4.3'
+ruby '2.4.4'
 
 gem 'rails', '5.1.6'
 gem 'webpacker', '~> 2.0'
@@ -46,7 +46,7 @@ gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
 gem 'turbolinks', '~> 5.1.1'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', '~> 1.0', group: :doc
 gem 'bcrypt', '~> 3.1.10'
 gem 'logging', '~> 2.0.0'
 gem 'aspector' # Aspect-oriented programming for Rails
