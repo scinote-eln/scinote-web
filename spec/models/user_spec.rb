@@ -37,6 +37,7 @@ describe User, type: :model do
     it { should have_db_column :invited_by_type }
     it { should have_db_column :invitations_count }
     it { should have_db_column :settings }
+    it { should have_db_column :variables }
     it { should have_db_column :current_team_id }
     it { should have_db_column :authentication_token }
   end
@@ -177,6 +178,10 @@ describe User, type: :model do
     it { is_expected.to respond_to(:recent_notification) }
     it { is_expected.to respond_to(:recent_email_notification) }
     it { is_expected.to respond_to(:system_message_email_notification) }
+  end
+
+  describe 'user variables' do
+    it { is_expected.to respond_to(:export_vars) }
   end
 
   describe '#last_activities' do

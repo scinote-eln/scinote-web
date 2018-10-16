@@ -1,6 +1,9 @@
 class User < ApplicationRecord
-  include SearchableModel, SettingsModel
-  include User::TeamRoles, User::ProjectRoles
+  include SearchableModel
+  include SettingsModel
+  include VariablesModel
+  include User::TeamRoles
+  include User::ProjectRoles
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -44,6 +47,14 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
+    }
+  )
+
+  store_accessor :variables, :export_vars
+
+  default_variables(
+    export_vars: {
+      num_of_export_all_last_24_hours: 0
     }
   )
 
