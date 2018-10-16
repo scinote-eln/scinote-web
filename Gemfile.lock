@@ -399,7 +399,7 @@ GEM
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
-    rdoc (4.3.0)
+    rdoc (6.0.4)
     recaptcha (4.6.3)
       json
     responders (2.4.0)
@@ -461,9 +461,8 @@ GEM
     scss_lint (0.56.0)
       rake (>= 0.9, < 13)
       sass (~> 3.5.3)
-    sdoc (0.4.2)
-      json (~> 1.7, >= 1.7.7)
-      rdoc (~> 4.0)
+    sdoc (1.0.0)
+      rdoc (>= 5.0)
     shoulda-matchers (3.1.2)
       activesupport (>= 4.0.0)
     silencer (1.0.1)
@@ -611,7 +610,7 @@ DEPENDENCIES
   sass-rails (~> 5.0.6)
   scenic (~> 1.4)
   scss_lint
-  sdoc (~> 0.4.0)
+  sdoc (~> 1.0)
   shoulda-matchers
   silencer
   simple_token_authentication (~> 1.15.1)
@@ -634,4 +633,4 @@ RUBY VERSION
    ruby 2.4.4p296
 
 BUNDLED WITH
-   1.16.3
+   1.16.6
