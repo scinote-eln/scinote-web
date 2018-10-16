@@ -2,24 +2,24 @@
 
 module Api
   module V1
-    class UserMyModulesController < BaseController
+    class TaskTagsController < BaseController
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
       before_action :load_task
-      before_action :load_user_task, only: :show
+      before_action :load_tag, only: :show
 
       def index
-        user_tasks = @my_module.user_my_modules
-                               .page(params.dig(:page, :number))
-                               .per(params.dig(:page, :size))
+        tags = @task.tags
+                    .page(params.dig(:page, :number))
+                    .per(params.dig(:page, :size))
 
-        render jsonapi: user_tasks,
-          each_serializer: UserMyModuleSerializer
+        render jsonapi: tags,
+               each_serializer: TagSerializer
       end
 
       def show
-        render jsonapi: @user_task, serializer: UserMyModuleSerializer
+        render jsonapi: @tag, serializer: TagSerializer
       end
 
       private
@@ -44,13 +44,15 @@ module Api
       end
 
       def load_task
-        @my_module = @experiment.my_modules.find(params.require(:task_id))
+        @task = @experiment.my_modules.find(params.require(:task_id))
+        render jsonapi: {}, status: :not_found if @task.nil?
       end
 
-      def load_user_task
-        @user_task = @my_module.user_my_modules.find(
+      def load_tag
+        @tag = @task.tags.find(
           params.require(:id)
         )
+        render jsonapi: {}, status: :not_found if @tag.nil?
       end
     end
   end

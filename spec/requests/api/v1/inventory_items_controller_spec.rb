@@ -75,6 +75,24 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                include: :inventory_cells)
           .as_json[:data]
       )
+      expect(hash_body).not_to include('included')
+    end
+
+    it 'Response with correct inventory items, included cells' do
+      hash_body = nil
+      get api_v1_team_inventory_items_path(
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id,
+        include: 'inventory_cells'
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_rows.limit(10),
+               each_serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:data]
+      )
       expect(hash_body[:included]).to match(
         ActiveModelSerializers::SerializableResource
           .new(@valid_inventory.repository_rows.limit(10),
@@ -98,13 +116,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                include: :inventory_cells)
           .as_json[:data]
       )
-      expect(hash_body[:included]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_inventory.repository_rows.limit(100),
-               each_serializer: Api::V1::InventoryItemSerializer,
-               include: :inventory_cells)
-          .as_json[:included]
-      )
+      expect(hash_body).not_to include('included')
     end
 
     it 'When invalid request, user in not member of the team' do
@@ -243,6 +255,32 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body).to match({})
+    end
+  end
+
+  describe 'PATCH inventory_items, #update' do
+    before :all do
+      @valid_headers['Content-Type'] = 'application/json'
+      @inventory_item = ActiveModelSerializers::SerializableResource.new(
+        RepositoryRow.last,
+        serializer: Api::V1::InventoryItemSerializer,
+        include: :inventory_cells
+      )
+    end
+
+    it 'Response with correctly updated inventory item for name field' do
+      hash_body = nil
+      updated_inventory_item = @inventory_item.as_json[:data]
+      updated_inventory_item[:attributes][:name] = Faker::Name.unique.name
+      patch api_v1_team_inventory_item_path(
+        id: RepositoryRow.last.id,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), params: { data: updated_inventory_item }.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data].to_json).to match(updated_inventory_item.to_json)
     end
   end
 end
