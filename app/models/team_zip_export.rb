@@ -38,7 +38,7 @@ class TeamZipExport < ZipExport
   private
 
   # Export all functionality
-  def generate_team_zip(tmp_dir, data, options = {})
+  def generate_teams_zip(tmp_dir, data, options = {})
     # Create team folder
     @team = options[:team]
     team_path = "#{tmp_dir}/#{to_filesystem_name(@team.name)}"
