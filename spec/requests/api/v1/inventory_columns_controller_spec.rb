@@ -181,8 +181,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
                          { type: 'inventory_columns',
                            attributes: {
                              name: Faker::Name.unique.name,
-                             data_type:
-                              RepositoryColumn.data_types.values.first
+                             data_type: 'text'
                            } } }
     end
 
