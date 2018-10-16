@@ -786,6 +786,7 @@ ActiveRecord::Schema.define(version: 20181008130519) do
     t.integer "current_team_id"
     t.string "authentication_token", limit: 30
     t.jsonb "settings", default: {}, null: false
+    t.jsonb "variables", default: {}, null: false
     t.index "trim_html_tags((full_name)::text) gin_trgm_ops", name: "index_users_on_full_name", using: :gin
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

@@ -137,6 +137,11 @@ Rails.application.routes.draw do
         to: 'zip_exports#download',
         as: 'zip_exports_download'
 
+    # Get Team Zip Export
+    get 'zip_exports/download_export_all_zip/:id',
+        to: 'zip_exports#download_export_all_zip',
+        as: 'zip_exports_download_export_all'
+
     get 'zip_exports/file_expired',
         to: 'zip_exports#file_expired',
         as: 'file_expired'
@@ -173,6 +178,7 @@ Rails.application.routes.draw do
         # post 'import_samples'
         # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
+        post 'export_projects'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_repositories', to: 'at_who#repositories'

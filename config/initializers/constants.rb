@@ -25,6 +25,9 @@ class Constants
   DROPDOWN_TEXT_MAX_LENGTH = 15
   # Max characters for filenames, after which they get truncated
   FILENAME_TRUNCATION_LENGTH = 50
+  # Max characters for names of exported files and folders, after which they get
+  # truncated
+  EXPORTED_FILENAME_TRUNCATION_LENGTH = 20
 
   USER_INITIALS_MAX_LENGTH = 4
   # Password 'key stretching' factor
