@@ -9,8 +9,14 @@ module Api
                key: :inventory_list_items,
                serializer: InventoryListItemSerializer,
                class_name: 'RepositoryListItem',
-               if: -> { object.data_type == 'RepositoryListValue' &&
-                        !instance_options[:hide_list_items] }
+               if: (lambda do
+                 object.data_type == 'RepositoryListValue' &&
+                   !instance_options[:hide_list_items]
+               end)
+
+      def data_type
+        Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS[object.data_type]
+      end
     end
   end
 end

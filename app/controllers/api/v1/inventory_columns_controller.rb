@@ -84,9 +84,15 @@ module Api
                 'Wrong object type within parameters'
         end
         params.require(:data).require(:attributes)
-        params
-          .permit(data: { attributes: %i(name data_type) })[:data]
-          .merge(created_by: @current_user)
+        new_params = params
+                     .permit(data: { attributes: %i(name data_type) })[:data]
+                     .merge(created_by: @current_user)
+        if new_params[:attributes][:data_type].present?
+          new_params[:attributes][:data_type] =
+            Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS
+            .key(new_params.dig(:attributes, :data_type))
+        end
+        new_params
       end
 
       def update_inventory_column_params
@@ -94,7 +100,7 @@ module Api
           raise ActionController::BadRequest,
                 'Object ID mismatch in URL and request body'
         end
-        if params.require(:data).require(:attributes).include?(:data_type)
+        if inventory_column_params[:attributes].include?(:data_type)
           raise ActionController::BadRequest,
                 'Update of data_type attribute is not allowed'
         end
