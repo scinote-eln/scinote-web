@@ -66,6 +66,11 @@ class Extends
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = [:azure_jwt_auth]
 
+  API_REPOSITORY_DATA_TYPE_MAPPINGS = { 'RepositoryTextValue' => 'text',
+                                        'RepositoryDateValue' => 'date',
+                                        'RepositoryListValue' => 'list',
+                                        'RepositoryAssetValue' => 'file' }
+
   OMNIAUTH_PROVIDERS = [:linkedin]
 
   INITIAL_USER_OPTIONS = {}

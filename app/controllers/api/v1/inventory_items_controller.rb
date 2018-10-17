@@ -119,7 +119,7 @@ module Api
                 'Wrong object type within parameters'
         end
         params.require(:data).require(:attributes)
-        params.permit(data: { attributes: %i(name uid) })[:data]
+        params.permit(data: { attributes: :name })[:data]
       end
 
       def update_inventory_item_params
