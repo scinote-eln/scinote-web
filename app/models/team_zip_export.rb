@@ -63,6 +63,9 @@ class TeamZipExport < ZipExport
       root += "/#{project_name}"
       FileUtils.mkdir_p(root)
 
+      Dir.chdir(root)
+      root = '.'
+
       inventories = "#{root}/Inventories"
       FileUtils.mkdir_p(inventories)
 

@@ -274,7 +274,7 @@ class Project < ApplicationRecord
       end
     end
 
-    parsed_pdf = ApplicationController.render(
+    ApplicationController.render(
       pdf: pdf_name,
       header: { right: '[page] of [topage]' },
       locals: { content: parsed_pdf_html.to_s },
@@ -282,11 +282,8 @@ class Project < ApplicationRecord
       disable_javascript: true,
       disable_internal_links: false,
       current_user: user,
-      current_team: team
+      current_team: team,
+      extra: '--keep-relative-links'
     )
-    # Dirty workaround to convert absolute links back to relative ones, since
-    # WickedPdf does the opposite, based on the path where the file parsing is
-    # done
-    parsed_pdf.gsub('/URI (file:////tmp/', '/URI (')
   end
 end
