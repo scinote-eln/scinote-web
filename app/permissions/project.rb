@@ -38,6 +38,14 @@ Canaid::Permissions.register_for(Project) do
     user.is_owner_of_project?(project) && project.archived?
   end
 
+  # team: export projects
+  can :export_project do |user, project|
+    user.is_technician_or_higher_of_project?(project) ||
+      user.viewer?(project) ||
+      user.is_admin_of_team?(project.team) ||
+      (project.visible? && user.is_member_of_team?(project.team))
+  end
+
   # experiment: create
   can :create_experiments do |user, project|
     user.is_user_or_higher_of_project?(project)
