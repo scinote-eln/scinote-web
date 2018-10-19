@@ -44,6 +44,7 @@ class AssetsController < ApplicationController
 
   def file_preview
     response_json = {
+      'id' => @asset.id,
       'type' => (@asset.is_image? ? 'image' : 'file'),
 
       'filename' => truncate(@asset.file_file_name,
@@ -122,6 +123,17 @@ class AssetsController < ApplicationController
     @ttl = (tkn.ttl * 1000).to_s
 
     render layout: false
+  end
+
+  def update_image
+    @asset = Asset.find(params[:id])
+    return render_403 unless can_read_team?(@asset.team)
+    image_file = Paperclip.io_adapters.for(params[:image])
+    image_file.original_filename = @asset.file_file_name
+    @asset.file = image_file
+    @asset.save!
+    # Post process file here
+    @asset.post_process_file(@asset.team)
   end
 
   private
