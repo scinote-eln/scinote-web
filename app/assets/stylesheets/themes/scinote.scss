@@ -1518,6 +1518,13 @@ table.dataTable {
     float: right;
     margin-right: 20px;
   }
+
+  .file-save-link {
+    color: $color-white;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
 }
 
 // Disable textarea resizing throughout application
