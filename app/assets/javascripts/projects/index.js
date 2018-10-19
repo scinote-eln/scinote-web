@@ -36,7 +36,7 @@
   var projectsViewFilter = $('.projects-view-filter.active').data('filter');
   var projectsViewFilterChanged = false;
   var projectsChanged = false;
-  var projectsViewSort = 'new';
+  var projectsViewSort = $('#sortMenuDropdown a.disabled').data('sort');
 
   var TABLE;
 
@@ -582,7 +582,8 @@
     var TABLE_ID = '#projects-overview-table';
     TABLE = $(TABLE_ID).DataTable({
       dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
-      stateSave: false,
+      stateSave: true,
+      stateDuration: 0,
       processing: true,
       serverSide: true,
       scrollY: '64vh',
@@ -662,14 +663,18 @@
         initRowSelection();
         initFormSubmitLinks($(this));
       },
-      stateLoadCallback: function() {
-        // to be implemented
+      stateLoadCallback: function(settings, callback) {
+        $.ajax({
+          url: $(TABLE_ID).data('state-load-source'),
+          dataType: 'json',
+          type: 'GET',
+          success: function(json) {
+            callback(json.state);
+          }
+        });
       },
-      stateSaveCallback: function(settings, data) {
-        // to be implemented
-      },
-      fnInitComplete: function() {
-        // to be implemented
+      stateSaveCallback: function() {
+        // Don't do anything, state will be updated at backend, based on params
       }
     });
 

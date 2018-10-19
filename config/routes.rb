@@ -195,6 +195,8 @@ Rails.application.routes.draw do
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
     post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
+    get 'projects/dt_state_load', to: 'projects#dt_state_load',
+                                  as: 'projects_dt_state_load'
 
     resources :reports, only: :index
     get 'reports/datatable', to: 'reports#datatable'

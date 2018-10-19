@@ -208,6 +208,7 @@ class User < ApplicationRecord
   has_many :notifications, through: :user_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
+  has_many :view_states, dependent: :destroy
 
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them

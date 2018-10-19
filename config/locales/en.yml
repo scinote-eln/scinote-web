@@ -59,6 +59,11 @@ en:
           attributes:
             name:
               taken: "This project name has to be unique inside a team (this includes the archive)."
+        view_state:
+          attributes:
+            viewable_id:
+              not_unique: "State already exists for this user and parent object"
+
   helpers:
     label:
       team:
