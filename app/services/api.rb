@@ -17,6 +17,7 @@ module Api
     attr_accessor :core_api_token_iss
     attr_accessor :azure_ad_apps
     attr_accessor :core_api_v1_preview
+    attr_accessor :core_api_rate_limit
 
     def initialize
       @core_api_sign_alg = 'HS256'
@@ -24,6 +25,7 @@ module Api
       @core_api_token_iss = 'SciNote'
       @azure_ad_apps = {}
       @core_api_v1_preview = false
+      @core_api_rate_limit = 1000
     end
   end
 end
