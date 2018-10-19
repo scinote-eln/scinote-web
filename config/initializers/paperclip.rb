@@ -1,3 +1,4 @@
+Paperclip::DataUriAdapter.register
 
 if ENV['PAPERCLIP_HASH_SECRET'].nil?
   puts "WARNING! Environment variable PAPERCLIP_HASH_SECRET must be set."
