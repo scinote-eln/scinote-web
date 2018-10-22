@@ -24,8 +24,7 @@ module TinyMceHelper
     text.gsub(regex) do |el|
       match = el.match(regex)
       img = TinyMceAsset.find_by_id(match[1])
-      next unless img && img.team == current_team
-      next unless check_image_permissions(obj, img)
+      next unless img && check_image_permissions(obj, img)
       if pdf_export_ready
         report_image_asset_url(img, :tiny_mce_asset, 'tiny-mce-pdf-ready')
       else
