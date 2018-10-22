@@ -1930,6 +1930,7 @@ en:
       upload_failure: "Upload connection error. Try again or contact the administrator."
     text:
       not_blank: "can't be blank"
+      length_too_long_general: "is too long"
       length_too_long: "is too long (maximum is %{max_length} characters)"
       length_too_short: "is too short (minimum is %{min_length} characters)"
     query:
