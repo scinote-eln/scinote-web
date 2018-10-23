@@ -306,8 +306,7 @@ describe ProjectsOverviewService do
         end
 
         it 'returns archived projects, sorted by ascending name ' \
-           'attribute (hidden first), offset by 1, paginated by ' \
-           '2' do
+           'attribute, offset by 1, paginated by 2' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 2
           expect(projects).to eq [project_3, project_1]
@@ -322,14 +321,14 @@ describe ProjectsOverviewService do
         end
 
         it 'returns archived projects, sorted by descending name ' \
-           'attribute (visible first), offset by 3, paginated by ' \
-           '12' do
+           'attribute, offset by 3, paginated by 12' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 12
           expect(projects.uniq.length).to eq projects.length
-          expect(projects.last(2)).to eq [project_1, project_3]
-          expect(projects).not_to include(project_2, project_4, project_5,
-                                          project_6)
+          expect(projects).to eq [project_26, project_24, project_22,
+                                  project_20, project_18, project_16,
+                                  project_14, project_12, project_10,
+                                  project_8, project_1, project_3]
           projects1 = projects.reject(&:archived?)
           expect(projects1.length).to eq 12
           projects2 = projects.select(&:visible?)
@@ -342,7 +341,7 @@ describe ProjectsOverviewService do
       let(:params) { super().merge(filter: 'archived') }
 
       it 'returns archived projects, sorted by ascending archivation ' \
-         'attribute (active first), offset by 0, paginated by 10' do
+         'attribute (archived first), offset by 0, paginated by 10' do
         projects = projects_overview.projects_datatable(params)
         expect(projects.length).to eq 10
         expect(projects.uniq.length).to eq projects.length
@@ -355,7 +354,7 @@ describe ProjectsOverviewService do
         let(:params) { super().merge(start: 15) }
 
         it 'returns archived projects, sorted by ascending archivation ' \
-           'attribute (active first), offset by 15, paginated by 10' do
+           'attribute (archived first), offset by 15, paginated by 10' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 3
           expect(projects.uniq.length).to eq projects.length
@@ -370,7 +369,7 @@ describe ProjectsOverviewService do
         let(:params) { super().merge(length: 5) }
 
         it 'returns archived projects, sorted by ascending archivation ' \
-           'attribute (active first), offset by 0, paginated by 5' do
+           'attribute (archived first), offset by 0, paginated by 5' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 5
           expect(projects.uniq.length).to eq projects.length
@@ -398,8 +397,8 @@ describe ProjectsOverviewService do
         let(:params) { super().merge(order: { '0': { dir: 'DESC' } }) }
 
         it 'returns archived projects, sorted by descending ' \
-           'archivation attribute (archived first), offset by 0, ' \
-           'paginated by 10' do
+           'archivation attribute (archived first), offset by 0, paginated by' \
+           '10' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 10
           expect(projects.uniq.length).to eq projects.length
@@ -413,7 +412,7 @@ describe ProjectsOverviewService do
         let(:params) { super().merge(start: 13, length: 4) }
 
         it 'returns archived projects, sorted by ascending archivation ' \
-           'attribute (active first), offset by 13, paginated by 4' do
+           'attribute (archived first), offset by 13, paginated by 4' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 1
           expect(projects).not_to include(project_1, project_2, project_3,
@@ -431,13 +430,12 @@ describe ProjectsOverviewService do
         end
 
         it 'returns archived projects, sorted by descending creation ' \
-           'time attribute (active first), offset by 7, paginated by ' \
-           '6' do
+           'time attribute, offset by 7, paginated by 6' do
           projects = projects_overview.projects_datatable(params)
           expect(projects.length).to eq 6
           expect(projects.uniq.length).to eq projects.length
-          expect(projects.last(2)).to eq [project_5, project_4]
-          expect(projects).not_to include(project_1, project_3, project_6)
+          expect(projects).to eq [project_13, project_11, project_9,
+                                  project_7, project_5, project_4]
           projects1 = projects.select(&:archived?)
           expect(projects1.length).to eq 6
         end
