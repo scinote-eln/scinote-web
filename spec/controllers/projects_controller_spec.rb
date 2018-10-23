@@ -11,8 +11,8 @@ describe ProjectsController, type: :controller do
   let!(:user) { User.first }
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
-  let!(:projects_overview) do
-    ProjectsOverviewService.new(team, user)
+  before do
+    @projects_overview = ProjectsOverviewService.new(team, user, params)
   end
 
   let!(:project_1) do
@@ -62,8 +62,9 @@ describe ProjectsController, type: :controller do
 
   describe '#index' do
     context 'in JSON format' do
+      let(:params) { { team: team.id, sort: 'atoz' } }
+
       it 'returns success response' do
-        params = { team: team.id, sort: 'atoz' }
         get :index, params: params, format: :json
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'application/json'
@@ -73,9 +74,11 @@ describe ProjectsController, type: :controller do
 
   describe '#index_dt' do
     context 'in JSON format' do
+      let(:params) do
+        { start: 1, length: 2, order: { '0': { dir: 'ASC', column: '2' } } }
+      end
+
       it 'returns success response' do
-        params = { start: 1, length: 2,
-                   order: { '0': { dir: 'ASC', column: '2' } } }
         get :index_dt, params: params, format: :json
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'application/json'
@@ -85,8 +88,9 @@ describe ProjectsController, type: :controller do
 
   describe '#archive' do
     context 'in JSON format' do
+      let(:params) { { team: team.id, sort: 'atoz' } }
+
       it 'returns success response' do
-        params = { team: team.id, sort: 'atoz' }
         get :archive, params: params, format: :json
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'application/json'
@@ -96,9 +100,12 @@ describe ProjectsController, type: :controller do
 
   describe '#create' do
     context 'in JSON format' do
+      let(:params) do
+        { project: { name: 'test project A1', team_id: team.id,
+                     visibility: 'visible', archived: false } }
+      end
+
       it 'returns success response, then unprocessable_entity on second run' do
-        params = { project: { name: 'test project A1', team_id: team.id,
-                              visibility: 'visible', archived: false } }
         get :create, params: params, format: :json
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'application/json'
@@ -111,8 +118,9 @@ describe ProjectsController, type: :controller do
 
   describe '#edit' do
     context 'in JSON format' do
+      let(:params) { { id: project_1.id } }
+
       it 'returns success response' do
-        params = { id: project_1.id }
         get :edit, params: params, format: :json
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'application/json'
@@ -122,10 +130,13 @@ describe ProjectsController, type: :controller do
 
   describe '#update' do
     context 'in HTML format' do
+      let(:params) do
+        { id: project_1.id,
+          project: { name: 'test project A1', team_id: team.id,
+                     visibility: 'visible' } }
+      end
+
       it 'returns redirect response' do
-        params = { id: project_1.id,
-                   project: { name: 'test project A1', team_id: team.id,
-                              visibility: 'visible' } }
         put :update, params: params
         expect(response).to have_http_status(:redirect)
         expect(response.content_type).to eq 'text/html'
@@ -135,10 +146,13 @@ describe ProjectsController, type: :controller do
 
   describe '#show' do
     context 'in HTML format' do
+      let(:params) do
+        { id: project_1.id, sort: 'old',
+          project: { name: 'test project A1', team_id: team.id,
+                     visibility: 'visible' } }
+      end
+
       it 'returns success response' do
-        params = { id: project_1.id, sort: 'old',
-                   project: { name: 'test project A1', team_id: team.id,
-                              visibility: 'visible' } }
         get :show, params: params
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'text/html'
@@ -148,10 +162,13 @@ describe ProjectsController, type: :controller do
 
   describe '#notifications' do
     context 'in JSON format' do
+      let(:params) do
+        { id: project_1.id,
+          project: { name: 'test project A1', team_id: team.id,
+                     visibility: 'visible' } }
+      end
+
       it 'returns success response' do
-        params = { id: project_1.id,
-                   project: { name: 'test project A1', team_id: team.id,
-                              visibility: 'visible' } }
         get :notifications, format: :json, params: params
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'application/json'
@@ -161,10 +178,13 @@ describe ProjectsController, type: :controller do
 
   describe '#experiment_archive' do
     context 'in HTML format' do
+      let(:params) do
+        { id: project_1.id,
+          project: { name: 'test project A1', team_id: team.id,
+                     visibility: 'visible' } }
+      end
+
       it 'returns success response' do
-        params = { id: project_1.id,
-                   project: { name: 'test project A1', team_id: team.id,
-                              visibility: 'visible' } }
         get :experiment_archive, params: params
         expect(response).to have_http_status(:success)
         expect(response.content_type).to eq 'text/html'
