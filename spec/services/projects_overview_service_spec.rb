@@ -205,6 +205,7 @@ describe ProjectsOverviewService do
         expect(projects).not_to include(project_2, project_4, project_5,
                                         project_6)
         projects1 = projects.reject(&:archived?)
+                            .select(&:visible?)
         expect(projects1.length).to eq 10
       end
     end
@@ -220,6 +221,7 @@ describe ProjectsOverviewService do
         expect(projects).not_to include(project_2, project_4, project_5,
                                         project_6)
         projects1 = projects.reject(&:archived?)
+                            .select(&:visible?)
         expect(projects1.length).to eq 10
       end
 
@@ -234,6 +236,7 @@ describe ProjectsOverviewService do
           expect(projects).not_to include(project_1, project_2, project_3,
                                           project_4, project_5, project_6)
           projects1 = projects.reject(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 2
         end
       end
@@ -249,6 +252,7 @@ describe ProjectsOverviewService do
           expect(projects).not_to include(project_2, project_4, project_5,
                                           project_6)
           projects1 = projects.reject(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 5
         end
       end
@@ -264,6 +268,7 @@ describe ProjectsOverviewService do
           expect(projects).not_to include(project_2, project_4, project_5,
                                           project_6)
           projects1 = projects.reject(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 10
         end
       end
@@ -280,6 +285,7 @@ describe ProjectsOverviewService do
           expect(projects).not_to include(project_2, project_4, project_5,
                                           project_6)
           projects1 = projects.reject(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 10
         end
       end
@@ -294,6 +300,7 @@ describe ProjectsOverviewService do
           expect(projects).not_to include(project_1, project_2, project_3,
                                           project_4, project_5, project_6)
           projects1 = projects.reject(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 0
         end
       end
@@ -330,9 +337,8 @@ describe ProjectsOverviewService do
                                   project_14, project_12, project_10,
                                   project_8, project_1, project_3]
           projects1 = projects.reject(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 12
-          projects2 = projects.select(&:visible?)
-          expect(projects2.length).to eq 12
         end
       end
     end
@@ -347,6 +353,7 @@ describe ProjectsOverviewService do
         expect(projects.uniq.length).to eq projects.length
         expect(projects).not_to include(project_1, project_3, project_6)
         projects1 = projects.select(&:archived?)
+                            .select(&:visible?)
         expect(projects1.length).to eq 10
       end
 
@@ -361,6 +368,7 @@ describe ProjectsOverviewService do
           expect(projects).not_to include(project_1, project_2, project_3,
                                           project_4, project_5, project_6)
           projects1 = projects.select(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 3
         end
       end
@@ -375,6 +383,7 @@ describe ProjectsOverviewService do
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_3, project_6)
           projects1 = projects.select(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 5
         end
       end
@@ -389,6 +398,7 @@ describe ProjectsOverviewService do
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_3, project_6)
           projects1 = projects.select(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 10
         end
       end
@@ -404,6 +414,7 @@ describe ProjectsOverviewService do
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_3, project_6)
           projects1 = projects.select(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 10
         end
       end
@@ -418,6 +429,7 @@ describe ProjectsOverviewService do
           expect(projects).not_to include(project_1, project_2, project_3,
                                           project_4, project_5, project_6)
           projects1 = projects.select(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 1
         end
       end
@@ -437,6 +449,7 @@ describe ProjectsOverviewService do
           expect(projects).to eq [project_13, project_11, project_9,
                                   project_7, project_5, project_4]
           projects1 = projects.select(&:archived?)
+                              .select(&:visible?)
           expect(projects1.length).to eq 6
         end
       end
