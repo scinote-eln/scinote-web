@@ -3,7 +3,9 @@
 module Api
   module V1
     class InventoryListItemsController < BaseController
-      before_action :load_vars
+      before_action :load_team
+      before_action :load_inventory
+      before_action :load_inventory_column
       before_action :load_inventory_list_item, only: %i(show update destroy)
       before_action :check_manage_permissions, only: %i(create update destroy)
 
@@ -44,16 +46,11 @@ module Api
 
       private
 
-      def load_vars
-        @team = Team.find(params.require(:team_id))
-        unless can_read_team?(@team)
-          return render jsonapi: {}, status: :forbidden
-        end
-        @inventory = @team.repositories.find(params.require(:inventory_id))
+      def load_inventory_column
         @inventory_column =
           @inventory.repository_columns.find(params.require(:column_id))
         unless @inventory_column.data_type == 'RepositoryListValue'
-          return render body: nil, status: :bad_request
+          raise TypeError
         end
       end
 
@@ -64,14 +61,13 @@ module Api
 
       def check_manage_permissions
         unless can_manage_repository_column?(@inventory_column)
-          render body: nil, status: :forbidden
+          permission_error(RepositoryListItem, :manage)
         end
       end
 
       def inventory_list_item_params
         unless params.require(:data).require(:type) == 'inventory_list_items'
-          raise ActionController::BadRequest,
-                'Wrong object type within parameters'
+          raise TypeError
         end
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: %i(data) })[:data].merge(
@@ -83,8 +79,7 @@ module Api
 
       def update_inventory_list_item_params
         unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise ActionController::BadRequest,
-                'Object ID mismatch in URL and request body'
+          raise IDMismatchError
         end
         inventory_list_item_params[:attributes]
       end

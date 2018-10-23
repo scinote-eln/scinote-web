@@ -13,16 +13,14 @@ module Api
       end
 
       def show
-        render jsonapi: @team,
-               serializer: TeamSerializer,
-               include: :created_by
+        render jsonapi: @team, serializer: TeamSerializer, include: :created_by
       end
 
       private
 
       def load_team
         @team = Team.find(params.require(:id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
+        permission_error(Team, :read) unless can_read_team?(@team)
       end
     end
   end

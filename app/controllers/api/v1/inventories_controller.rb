@@ -16,7 +16,7 @@ module Api
 
       def create
         unless can_create_repositories?(@team)
-          return render body: nil, status: :forbidden
+          return permission_error(Repository, :create)
         end
         inventory = @team.repositories.create!(
           inventory_params.merge(created_by: current_user)
@@ -37,7 +37,7 @@ module Api
         if @inventory.changed? && @inventory.save!
           render jsonapi: @inventory, serializer: InventorySerializer
         else
-          render body: nil
+          render body: nil, status: :no_content
         end
       end
 
@@ -48,25 +48,19 @@ module Api
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
       def load_inventory
         @inventory = @team.repositories.find(params.require(:id))
       end
 
       def check_manage_permissions
         unless can_manage_repository?(@inventory)
-          render body: nil, status: :forbidden
+          permission_error(Repository, :manage)
         end
       end
 
       def inventory_params
         unless params.require(:data).require(:type) == 'inventories'
-          raise ActionController::BadRequest,
-                'Wrong object type within parameters'
+          raise TypeError
         end
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: %i(name) })[:data]
@@ -74,8 +68,7 @@ module Api
 
       def update_inventory_params
         unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise ActionController::BadRequest,
-                'Object ID mismatch in URL and request body'
+          raise IDMismatchError
         end
         inventory_params[:attributes]
       end

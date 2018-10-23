@@ -1943,6 +1943,42 @@ en:
       status_ok: "Ok"
       expired_token: "Token is expired"
       invalid_token: "Token is invalid"
+      errors:
+        general:
+          title: "Error"
+          detail: "Something went wrong, please contact resource owner"
+        parameter:
+          title: "Missing parameter"
+        validation:
+          title: "Validation error"
+        read_permission:
+          title: "Permission denied"
+          detail: "You don't have permission to access %{model}"
+        create_permission:
+          title: "Permission denied"
+          detail: "You don't have permission to create %{model}"
+        manage_permission:
+          title: "Permission denied"
+          detail: "You don't have permission to manage %{model}"
+        record_not_found:
+          title: "Not found"
+          detail: "%{model} record with id %{id} not found in the specified scope"
+        id_mismatch:
+          title: "Object ID mismatch"
+          detail: "Object ID mismatch in URL and request body"
+        type:
+          title: "Wrong type"
+          detail: "Wrong object type within parameters"
+        inventory_column_type:
+          title: "Not allowed"
+          detail: "Update of data_type attribute is not allowed"
+        result_missing_tinymce:
+          title: "Error"
+          detail: "Text contains reference to nonexisting TinyMCE image"
+        result_wrong_tinymce:
+          title: "Error"
+          detail: "Image reference not found in the text"
+
 
   Add: "Add"
   Asset: "File"

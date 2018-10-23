@@ -59,7 +59,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing inventory' do
@@ -71,7 +71,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, repository from another team' do
@@ -83,17 +83,19 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, items from text column' do
+      hash_body = nil
       get api_v1_team_inventory_column_list_items_path(
         team_id: @teams.first.id,
         inventory_id: @valid_inventory.id,
         column_id: @text_column.id
       ), headers: @valid_headers
       expect(response).to have_http_status(400)
-      expect(response.body).to be_empty
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
   end
 
@@ -125,7 +127,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, list item from another column' do
@@ -138,7 +140,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 
@@ -179,7 +181,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: @request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status 403
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing inventory' do
@@ -191,7 +193,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: @request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status 404
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, repository from another team' do
@@ -203,7 +205,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: @request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, incorrect type' do
@@ -217,7 +219,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: invalid_request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(400)
       expect { hash_body = json }.to_not raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
 
     it 'When invalid request, missing type param' do
@@ -231,7 +233,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: invalid_request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(400)
       expect { hash_body = json }.to_not raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
 
     it 'When invalid request, missing attributes values' do
@@ -245,7 +247,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: invalid_request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(400)
       expect { hash_body = json }.to_not raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
   end
 
@@ -292,7 +294,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: invalid_request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(400)
       expect { hash_body = json }.to_not raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
 
     it 'When invalid request, missing attributes values' do
@@ -307,7 +309,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: invalid_request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(400)
       expect { hash_body = json }.to_not raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
 
     it 'When invalid request, non existing item' do
@@ -322,7 +324,7 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), params: invalid_request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.to_not raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 

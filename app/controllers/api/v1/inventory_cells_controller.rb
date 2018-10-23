@@ -3,7 +3,10 @@
 module Api
   module V1
     class InventoryCellsController < BaseController
-      before_action :load_vars
+      before_action :load_team
+      before_action :load_inventory
+      before_action :load_inventory_column, only: :create
+      before_action :load_inventory_item
       before_action :load_inventory_cell, only: %i(show update destroy)
       before_action :check_manage_permissions, only: %i(create update destroy)
 
@@ -16,10 +19,8 @@ module Api
       end
 
       def create
-        column = @inventory.repository_columns
-                           .find(inventory_cell_params[:column_id])
         cell = RepositoryCell.create_with_value!(@inventory_item,
-                                                 column,
+                                                 @inventory_column,
                                                  inventory_cell_params[:value],
                                                  current_user)
         render jsonapi: cell,
@@ -48,12 +49,7 @@ module Api
 
       private
 
-      def load_vars
-        @team = Team.find(params.require(:team_id))
-        unless can_read_team?(@team)
-          return render jsonapi: {}, status: :forbidden
-        end
-        @inventory = @team.repositories.find(params.require(:inventory_id))
+      def load_inventory_item
         @inventory_item = @inventory.repository_rows.find(params[:item_id].to_i)
       end
 
@@ -64,14 +60,13 @@ module Api
 
       def check_manage_permissions
         unless can_manage_repository_rows?(@team)
-          render body: nil, status: :forbidden
+          permission_error(RepositoryRow, :manage)
         end
       end
 
       def inventory_cell_params
         unless params.require(:data).require(:type) == 'inventory_cells'
-          raise ActionController::BadRequest,
-                'Wrong object type within parameters'
+          raise TypeError
         end
         params.require(:data).require(:attributes).require(:column_id)
         params.require(:data).require(:attributes).require(:value)
@@ -80,8 +75,7 @@ module Api
 
       def update_inventory_cell_params
         unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise ActionController::BadRequest,
-                'Object ID mismatch in URL and request body'
+          raise IDMismatchError
         end
         inventory_cell_params
       end

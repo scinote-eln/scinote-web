@@ -29,23 +29,14 @@ module Api
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
       def load_project
         @project = @team.projects.find(params.require(:id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
+        permission_error(Project, :read) unless can_read_project?(@project)
       end
 
       def load_project_relative
         @project = @team.projects.find(params.require(:project_id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
+        permission_error(Project, :read) unless can_read_project?(@project)
       end
     end
   end
