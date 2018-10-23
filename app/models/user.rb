@@ -350,7 +350,7 @@ class User < ApplicationRecord
     result || []
   end
 
-  def projects_tree(team, sort_by = nil)
+  def projects_tree(team, filter_by = nil, sort_by = nil)
     result = team.projects.includes(active_experiments: :active_my_modules)
     unless is_admin_of_team?(team)
       # Only admins see all projects of the team
@@ -359,19 +359,25 @@ class User < ApplicationRecord
       )
     end
 
-    sort =
-      case sort_by
-      when 'old'
-        { created_at: :asc }
-      when 'atoz'
-        { name: :asc }
-      when 'ztoa'
-        { name: :desc }
-      else
-        { created_at: :desc }
-      end
-
-    result.where(archived: false).distinct.order(sort)
+    result = case filter_by
+             when 'archived'
+               result.where(archived: true)
+             when 'active'
+               result.where(archived: false)
+             else
+               result
+             end
+    sort = case sort_by
+           when 'old'
+             { created_at: :asc }
+           when 'atoz'
+             { name: :asc }
+           when 'ztoa'
+             { name: :desc }
+           else
+             { created_at: :desc }
+           end
+    result.distinct.order(sort)
   end
 
   # Finds all activities of user that is assigned to project. If user
