@@ -8,7 +8,7 @@ describe ProjectsOverviewService do
   let!(:user) { create :user }
   let!(:team) { create :team }
   let!(:projects_overview) do
-    ProjectsOverviewService.new(team, user)
+    ProjectsOverviewService.new(team, user, {})
   end
 
   let!(:project_1) do
@@ -49,7 +49,8 @@ describe ProjectsOverviewService do
 
     context 'with request parameters {  }' do
       it 'returns all projects' do
-        projects = projects_overview.project_cards(params)
+        projects_overview.instance_variable_set(:@params, params)
+        projects = projects_overview.project_cards
         expect(projects).to include(project_1, project_2, project_3, project_4,
                                     project_5)
         expect(projects).not_to include project_6
@@ -62,7 +63,8 @@ describe ProjectsOverviewService do
       let(:params) { { filter: 'active' } }
 
       it 'returns all active projects' do
-        projects = projects_overview.project_cards(params)
+        projects_overview.instance_variable_set(:@params, params)
+        projects = projects_overview.project_cards
         expect(projects.length).to eq PROJECTS_CNT / 2 - 1
         expect(projects.uniq.length).to eq projects.length
         expect(projects).to include(project_1, project_3)
@@ -75,7 +77,8 @@ describe ProjectsOverviewService do
 
         it 'returns all active projects, sorted by ascending creation ' \
            'time attribute' do
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2 - 1
           expect(projects.uniq.length).to eq projects.length
           expect(projects.first(2)).to eq [project_1, project_3]
@@ -89,8 +92,8 @@ describe ProjectsOverviewService do
 
         it 'returns all active projects, sorted by descending creation ' \
            'time attribute' do
-
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2 - 1
           expect(projects.uniq.length).to eq projects.length
           expect(projects.last(2)).to eq [project_3, project_1]
@@ -104,7 +107,8 @@ describe ProjectsOverviewService do
 
         it 'returns all active projects, sorted by ascending name ' \
            'attribute' do
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2 - 1
           expect(projects.uniq.length).to eq projects.length
           expect(projects.first(2)).to eq [project_3, project_1]
@@ -118,7 +122,8 @@ describe ProjectsOverviewService do
 
         it 'returns all active projects, sorted by descending name ' \
            ' attribute' do
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2 - 1
           expect(projects.uniq.length).to eq projects.length
           expect(projects.last(2)).to eq [project_1, project_3]
@@ -132,7 +137,8 @@ describe ProjectsOverviewService do
       let(:params) { super().merge(filter: 'archived') }
 
       it 'returns all archived projects' do
-        projects = projects_overview.project_cards(params)
+        projects_overview.instance_variable_set(:@params, params)
+        projects = projects_overview.project_cards
         expect(projects.length).to eq PROJECTS_CNT / 2
         expect(projects.uniq.length).to eq projects.length
         expect(projects).to include(project_2, project_4, project_5)
@@ -144,7 +150,8 @@ describe ProjectsOverviewService do
 
         it 'returns all archived projects, sorted by ascending creation ' \
            'time attribute' do
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2
           expect(projects.uniq.length).to eq projects.length
           expect(projects.first(3)).to eq [project_2, project_4, project_5]
@@ -157,7 +164,8 @@ describe ProjectsOverviewService do
 
         it 'returns all archived projects, sorted by descending creation ' \
            'time attribute' do
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2
           expect(projects.uniq.length).to eq projects.length
           expect(projects.last(3)).to eq [project_5, project_4, project_2]
@@ -170,7 +178,8 @@ describe ProjectsOverviewService do
 
         it 'returns all archived projects, sorted by ascending name ' \
            ' attribute' do
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2
           expect(projects.uniq.length).to eq projects.length
           expect(projects.first(3)).to eq [project_4, project_2, project_5]
@@ -183,7 +192,8 @@ describe ProjectsOverviewService do
 
         it 'returns all archived projects, sorted by descending name ' \
            ' attribute' do
-          projects = projects_overview.project_cards(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.project_cards
           expect(projects.length).to eq PROJECTS_CNT / 2
           expect(projects.uniq.length).to eq projects.length
           expect(projects.last(3)).to eq [project_5, project_2, project_4]
@@ -199,7 +209,8 @@ describe ProjectsOverviewService do
     context 'with request parameters { {} }' do
       it 'returns projects, sorted by ascending archivation attribute (active' \
          ' first), offset by 0, paginated by 10' do
-        projects = projects_overview.projects_datatable(params)
+        projects_overview.instance_variable_set(:@params, params)
+        projects = projects_overview.projects_datatable
         expect(projects.length).to eq 10
         expect(projects.uniq.length).to eq projects.length
         expect(projects).not_to include(project_2, project_4, project_5,
@@ -215,7 +226,8 @@ describe ProjectsOverviewService do
 
       it 'returns active projects, sorted by ascending archivation ' \
          'attribute (active first), offset by 0, paginated by 10' do
-        projects = projects_overview.projects_datatable(params)
+        projects_overview.instance_variable_set(:@params, params)
+        projects = projects_overview.projects_datatable
         expect(projects.length).to eq 10
         expect(projects.uniq.length).to eq projects.length
         expect(projects).not_to include(project_2, project_4, project_5,
@@ -230,7 +242,8 @@ describe ProjectsOverviewService do
 
         it 'returns active projects, sorted by ascending archivation ' \
            'attribute (active first), offset by 15, paginated by 10' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 2
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_2, project_3,
@@ -246,7 +259,8 @@ describe ProjectsOverviewService do
 
         it 'returns active projects, sorted by ascending archivation ' \
            'attribute (active first), offset by 0, paginated by 5' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 5
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_2, project_4, project_5,
@@ -257,12 +271,13 @@ describe ProjectsOverviewService do
         end
       end
 
-      context "with request parameters { order: { '0': { dir: 'ASC' } } }" do
-        let(:params) { super().merge(order: { '0': { dir: 'ASC' } }) }
+      context "with request parameters { order: { '0': { dir: 'asc' } } }" do
+        let(:params) { super().merge(order: { '0': { dir: 'asc' } }) }
 
         it 'returns active projects, sorted by ascending archivation ' \
            'attribute (archived first), offset by 0, paginated by 10' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 10
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_2, project_4, project_5,
@@ -273,13 +288,14 @@ describe ProjectsOverviewService do
         end
       end
 
-      context "with request parameters { order: { '0': { dir: 'DESC' } } }" do
-        let(:params) { super().merge(order: { '0': { dir: 'DESC' } }) }
+      context "with request parameters { order: { '0': { dir: 'desc' } } }" do
+        let(:params) { super().merge(order: { '0': { dir: 'desc' } }) }
 
         it 'returns active projects, sorted by descending ' \
            'archivation attribute (archived first), offset by 0, ' \
            'paginated by 10' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 10
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_2, project_4, project_5,
@@ -295,7 +311,8 @@ describe ProjectsOverviewService do
 
         it 'returns active projects, sorted by ascending archivation ' \
            'attribute (active first), offset by 13, paginated by 4' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 0
           expect(projects).not_to include(project_1, project_2, project_3,
                                           project_4, project_5, project_6)
@@ -306,30 +323,32 @@ describe ProjectsOverviewService do
       end
 
       context "with request parameters { start: 1, length: 2, " \
-              "order: { '0': { dir: 'ASC', column: '2' } } }" do
+              "order: { '0': { dir: 'asc', column: '2' } } }" do
         let(:params) do
           super().merge(start: 1, length: 2,
-                        order: { '0': { dir: 'ASC', column: '2' } })
+                        order: { '0': { dir: 'asc', column: '2' } })
         end
 
         it 'returns archived projects, sorted by ascending name ' \
            'attribute, offset by 1, paginated by 2' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 2
           expect(projects).to eq [project_3, project_1]
         end
       end
 
       context "with request parameters { start: 3, length: 12, " \
-              "order: { '0': { dir: 'DESC', column: '2' } } }" do
+              "order: { '0': { dir: 'desc', column: '2' } } }" do
         let(:params) do
           super().merge(start: 3, length: 12,
-                        order: { '0': { dir: 'DESC', column: '2' } })
+                        order: { '0': { dir: 'desc', column: '2' } })
         end
 
         it 'returns archived projects, sorted by descending name ' \
            'attribute, offset by 3, paginated by 12' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 12
           expect(projects.uniq.length).to eq projects.length
           expect(projects).to eq [project_26, project_24, project_22,
@@ -348,7 +367,8 @@ describe ProjectsOverviewService do
 
       it 'returns archived projects, sorted by ascending archivation ' \
          'attribute (archived first), offset by 0, paginated by 10' do
-        projects = projects_overview.projects_datatable(params)
+        projects_overview.instance_variable_set(:@params, params)
+        projects = projects_overview.projects_datatable
         expect(projects.length).to eq 10
         expect(projects.uniq.length).to eq projects.length
         expect(projects).not_to include(project_1, project_3, project_6)
@@ -362,7 +382,8 @@ describe ProjectsOverviewService do
 
         it 'returns archived projects, sorted by ascending archivation ' \
            'attribute (archived first), offset by 15, paginated by 10' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 3
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_2, project_3,
@@ -378,7 +399,8 @@ describe ProjectsOverviewService do
 
         it 'returns archived projects, sorted by ascending archivation ' \
            'attribute (archived first), offset by 0, paginated by 5' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 5
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_3, project_6)
@@ -388,12 +410,13 @@ describe ProjectsOverviewService do
         end
       end
 
-      context "with request parameters { order: { '0': { dir: 'ASC' } } }" do
-        let(:params) { super().merge(order: { '0': { dir: 'ASC' } }) }
+      context "with request parameters { order: { '0': { dir: 'asc' } } }" do
+        let(:params) { super().merge(order: { '0': { dir: 'asc' } }) }
 
         it 'returns archived projects, sorted by ascending archivation ' \
            'attribute (archived first), offset by 0, paginated by 10' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 10
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_3, project_6)
@@ -403,13 +426,14 @@ describe ProjectsOverviewService do
         end
       end
 
-      context "with request parameters { order: { '0': { dir: 'DESC' } } }" do
-        let(:params) { super().merge(order: { '0': { dir: 'DESC' } }) }
+      context "with request parameters { order: { '0': { dir: 'desc' } } }" do
+        let(:params) { super().merge(order: { '0': { dir: 'desc' } }) }
 
         it 'returns archived projects, sorted by descending ' \
            'archivation attribute (archived first), offset by 0, paginated by' \
            '10' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 10
           expect(projects.uniq.length).to eq projects.length
           expect(projects).not_to include(project_1, project_3, project_6)
@@ -424,7 +448,8 @@ describe ProjectsOverviewService do
 
         it 'returns archived projects, sorted by ascending archivation ' \
            'attribute (archived first), offset by 13, paginated by 4' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 1
           expect(projects).not_to include(project_1, project_2, project_3,
                                           project_4, project_5, project_6)
@@ -435,15 +460,16 @@ describe ProjectsOverviewService do
       end
 
       context "with request parameters { start: 7, length: 6, " \
-              "order: { '0': { dir: 'DESC', column: '3' } } }" do
+              "order: { '0': { dir: 'desc', column: '3' } } }" do
         let(:params) do
           super().merge(start: 7, length: 6,
-                        order: { '0': { dir: 'DESC', column: '3' } })
+                        order: { '0': { dir: 'desc', column: '3' } })
         end
 
         it 'returns archived projects, sorted by descending creation ' \
            'time attribute, offset by 7, paginated by 6' do
-          projects = projects_overview.projects_datatable(params)
+          projects_overview.instance_variable_set(:@params, params)
+          projects = projects_overview.projects_datatable
           expect(projects.length).to eq 6
           expect(projects.uniq.length).to eq projects.length
           expect(projects).to eq [project_13, project_11, project_9,
