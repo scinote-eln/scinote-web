@@ -435,7 +435,14 @@
         sort: projectsViewSort
       },
       success: function(data) {
-        viewContainer.html(data.html);
+        if (data.html.search('id="edit-project-cards-form-') > 0) {
+          $('#projects-absent').hide();
+          $('#projects-present').show();
+          viewContainer.html(data.html);
+        } else {
+          $('#projects-present').hide();
+          $('#projects-absent').show();
+        }
         initFormSubmitLinks(viewContainer);
         init();
       },
