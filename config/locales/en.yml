@@ -1386,7 +1386,8 @@ en:
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
-        team_name_help: "Team name is required in order to create your own Team. After you create your own Team, you will be able to join other Teams as well."
+        team_name_placeholder: "e.g. John's lab"
+        team_name_help: "This is the name of your lab or your group. You can invite other members to your team if needed."
       new_with_provider:
         head_title: "Complete the Sign up"
     statistics:
