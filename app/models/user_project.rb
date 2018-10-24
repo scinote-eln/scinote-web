@@ -5,7 +5,7 @@ class UserProject < ApplicationRecord
   validates :user, presence: true
   validates :project, presence: true
 
-  belongs_to :user, inverse_of: :user_projects, optional: true
+  belongs_to :user, inverse_of: :user_projects, touch: true, optional: true
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',
              class_name: 'User',
