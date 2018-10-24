@@ -99,13 +99,16 @@ class ProjectsOverviewService
   def fetch_dt_records
     projects = @team.projects.joins(
       'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
-    ).joins(
-      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id'\
-      ' AND experiments.archived = projects.archived'
-    ).joins(
-      'LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id'\
-      ' AND my_modules.archived = projects.archived'
     )
+    exp_join =
+      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id'
+    task_join =
+      'LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id'
+    unless @params[:filter] == 'archived'
+      exp_join += ' AND experiments.archived = projects.archived'
+      task_join += ' AND my_modules.archived = projects.archived'
+    end
+    projects = projects.joins(exp_join).joins(task_join)
 
     # Only admins see all projects of the team
     unless @user.is_admin_of_team?(@team)
