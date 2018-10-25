@@ -435,10 +435,10 @@
         sort: projectsViewSort
       },
       success: function(data) {
-        if (data.html.search('id="edit-project-cards-form-') > 0) {
+        if (data.html.search(/id="edit-project-cards-form-\d+"/)) {
+          viewContainer.html(data.html);
           $('#projects-absent').hide();
           $('#projects-present').show();
-          viewContainer.html(data.html);
         } else {
           $('#projects-present').hide();
           $('#projects-absent').show();
@@ -664,7 +664,16 @@
         { data: 'tasks' },
         { data: 'actions' }
       ],
+      fnPreDrawCallback: function() {
+        $('#projects-absent').hide();
+        $('#projects-present').show();
+      },
       fnDrawCallback: function() {
+        var $table = TABLE.table().node();
+        if ($('.dataTables_empty', $table).length) {
+          $('#projects-present').hide();
+          $('#projects-absent').show();
+        }
         animateSpinner(this, false);
         updateDataTableSelectAllCtrl();
         initRowSelection();
