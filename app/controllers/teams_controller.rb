@@ -314,7 +314,7 @@ class TeamsController < ApplicationController
     if export_projects_params[:project_ids]
       projects = Project.where(id: export_projects_params[:project_ids])
       projects.each do |project|
-        render_403 unless can_read_project?(current_user, project)
+        render_403 unless can_export_project?(current_user, project)
       end
     end
   end
