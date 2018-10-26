@@ -52,7 +52,6 @@ Canaid::Permissions.register_for(Project) do
     user.is_owner_of_project?(project) && project.archived?
   end
 
-
   # experiment: create
   can :create_experiments do |user, project|
     user.is_user_or_higher_of_project?(project)
