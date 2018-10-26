@@ -9,6 +9,7 @@ module Api
 
       def index
         projects = @team.projects
+                        .visible_to(current_user, @team)
                         .page(params.dig(:page, :number))
                         .per(params.dig(:page, :size))
 
