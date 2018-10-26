@@ -63,6 +63,10 @@ class TeamZipExport < ZipExport
       root += "/#{project_name}"
       FileUtils.mkdir_p(root)
 
+      # Change current dir for correct generation of relative links
+      Dir.chdir(root)
+      root = '.'
+
       inventories = "#{root}/Inventories"
       FileUtils.mkdir_p(inventories)
 
@@ -234,7 +238,7 @@ class TeamZipExport < ZipExport
       File.open(file, 'wb') { |f| f.write asset.open.read }
     end
 
-    repo_name
+    csv_file_path
   end
 
   # Recursive zipping
