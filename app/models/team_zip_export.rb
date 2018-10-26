@@ -166,7 +166,11 @@ class TeamZipExport < ZipExport
                                                   "_#{i}")}"
       end
       file = FileUtils.touch(name).first
-      File.open(file, 'wb') { |f| f.write(asset.open.read) }
+      if asset.file.exists?
+        File.open(file, 'wb') do |f|
+          f.write(Paperclip.io_adapters.for(asset.file).read)
+        end
+      end
       asset_indexes[asset.id] = name
     end
 
