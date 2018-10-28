@@ -75,17 +75,9 @@ module Api
         raise JWT::InvalidPayload, 'Default: Wrong ISS in the token'
       end
       payload = CoreJwt.decode(token)
-      @current_user = User.find_by_id(payload['user_id'])
+      @current_user = User.find_by_id(payload['sub'])
       unless current_user
         raise JWT::InvalidPayload, 'Default: User mapping not found'
-      end
-
-      # Implement sliding sessions, i.e send new token in case of successful
-      # authorization and when tokens TTL reached specific value (to avoid token
-      # generation on each request)
-      if CoreJwt.refresh_needed?(payload)
-        new_token = CoreJwt.encode(user_id: current_user.id)
-        response.headers['X-Access-Token'] = new_token
       end
     end
 
