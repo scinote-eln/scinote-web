@@ -435,7 +435,14 @@
         sort: projectsViewSort
       },
       success: function(data) {
-        viewContainer.html(data.html);
+        if (data.html.search(/id="edit-project-cards-form-\d+"/)) {
+          viewContainer.html(data.html);
+          $('#projects-absent').hide();
+          $('#projects-present').show();
+        } else {
+          $('#projects-present').hide();
+          $('#projects-absent').show();
+        }
         initFormSubmitLinks(viewContainer);
         init();
       },
@@ -657,7 +664,16 @@
         { data: 'tasks' },
         { data: 'actions' }
       ],
+      fnPreDrawCallback: function() {
+        $('#projects-absent').hide();
+        $('#projects-present').show();
+      },
       fnDrawCallback: function() {
+        var $table = TABLE.table().node();
+        if ($('.dataTables_empty', $table).length) {
+          $('#projects-present').hide();
+          $('#projects-absent').show();
+        }
         animateSpinner(this, false);
         updateDataTableSelectAllCtrl();
         initRowSelection();

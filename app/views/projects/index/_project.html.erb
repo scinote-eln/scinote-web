@@ -5,7 +5,7 @@
      data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>">
   <div class="panel-heading">
 
-    <%= render partial: "projects/index/project_actions_dropdown.html.erb", locals: { project: project } %>
+    <%= render partial: "projects/index/project_actions_dropdown.html.erb", locals: { project: project, view: 'cards' } %>
 
     <div class="pull-right">
       <input class="project-card-selector" type="checkbox" name="project-<%= project.id %>">

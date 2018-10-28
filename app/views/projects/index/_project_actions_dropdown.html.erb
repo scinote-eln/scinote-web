@@ -6,7 +6,7 @@
         <span class="caret"></span>
       </button>
       <% project_form = nil %>
-      <%= form_for project, format: :json, method: :put, remote: true do |f| %>
+      <%= form_for project, format: :json, method: :put, remote: true, html: {id: "edit-project-#{view}-form-#{project.id}" } do |f| %>
         <% project_form = f %>
         <%= f.hidden_field :archived, value: active %>
       <% end %>
