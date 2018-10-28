@@ -13,7 +13,15 @@ Rails.application.routes.draw do
                               confirmations: 'users/confirmations',
                               omniauth_callbacks: 'users/omniauth_callbacks' }
 
-    root 'projects#index'
+    devise_scope :user do
+      authenticated :user do
+        root 'projects#index'
+      end
+
+      unauthenticated do
+        root 'users/sessions#new'
+      end
+    end
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
