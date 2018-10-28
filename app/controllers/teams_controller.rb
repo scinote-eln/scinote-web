@@ -229,8 +229,8 @@ class TeamsController < ApplicationController
     if export_projects_params[:project_ids]
       # Check if user has enough requests for the day
       limit = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
-      if limit.zero? \
-        || current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
+      if !limit.zero? \
+        && current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
         render json: {
           html: render_to_string(
             partial: 'projects/export/error.html.erb',
