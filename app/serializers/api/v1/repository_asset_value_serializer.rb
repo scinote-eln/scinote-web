@@ -18,7 +18,7 @@ module Api
       end
 
       def url
-        if !object.asset&.file_present
+        if !object.asset&.file&.exists?
           nil
         elsif object.asset&.file&.is_stored_on_s3?
           object.asset.presigned_url(download: true)
