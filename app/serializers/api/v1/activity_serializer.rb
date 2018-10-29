@@ -6,7 +6,7 @@ module Api
       type :activities
       attributes :id, :type_of, :message
       belongs_to :project, serializer: ProjectSerializer
-      belongs_to :experiment, serializer: TaskSerializer,
+      belongs_to :experiment, serializer: ExperimentSerializer,
                               if: -> { object.experiment.present? }
       belongs_to :my_module, key: :task,
                              serializer: TaskSerializer,
