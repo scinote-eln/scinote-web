@@ -39,6 +39,16 @@ class Project < ApplicationRecord
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
 
+  scope :visible_to, (lambda do |user, team|
+                        unless user.is_admin_of_team?(team)
+                          left_outer_joins(:user_projects)
+                          .where(
+                            'visibility = 1 OR user_projects.user_id = :id',
+                            id: user.id
+                          )
+                        end
+                      end)
+
   after_commit do
     Views::Datatables::DatatablesReport.refresh_materialized_view
   end
