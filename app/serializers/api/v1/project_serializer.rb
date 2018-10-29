@@ -4,8 +4,11 @@ module Api
   module V1
     class ProjectSerializer < ActiveModel::Serializer
       type :projects
-      attributes :id, :name, :visibility, :due_date,
-                 :archived
+      attributes :name, :visibility, :start_date, :archived
+
+      def start_date
+        object.created_at
+      end
     end
   end
 end
