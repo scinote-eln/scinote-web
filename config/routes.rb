@@ -581,7 +581,7 @@ Rails.application.routes.draw do
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',
                             as: :items
-                  resources :task_users, only: %i(index show),
+                  resources :task_users, only: %i(index),
                             path: 'users',
                             as: :users
                   resources :task_tags, only: %i(index show),
