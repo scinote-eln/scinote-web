@@ -35,18 +35,17 @@ module Api
 
       def load_vars
         @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-
+        unless can_read_team?(@team)
+          return render jsonapi: {}, status: :forbidden
+        end
         @project = @team.projects.find(params.require(:project_id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
-
+        unless can_read_project?(@project)
+          return render jsonapi: {}, status: :forbidden
+        end
         @experiment = @project.experiments.find(params.require(:experiment_id))
-        render jsonapi: {}, status: :forbidden unless can_read_experiment?(
-          @experiment
-        )
-
+        unless can_read_experiment?(@experiment)
+          return render jsonapi: {}, status: :forbidden
+        end
         @task = @experiment.my_modules.find(params.require(:task_id))
       end
 
