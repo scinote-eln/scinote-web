@@ -73,7 +73,7 @@ module Api
       end
 
       def check_create_permissions
-        unless can_manage_repository?(@inventory)
+        unless can_create_repository_columns?(@inventory.team)
           render body: nil, status: :forbidden
         end
       end
