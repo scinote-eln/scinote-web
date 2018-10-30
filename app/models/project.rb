@@ -225,6 +225,7 @@ class Project < ApplicationRecord
   def generate_report_pdf(user, team, pdf_name, obj_filenames = nil)
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
     proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
+    proxy.set_user(user, scope: :user, store: false)
     renderer = ApplicationController.renderer.new(warden: proxy)
 
     report = Report.generate_whole_project_report(self, user, team)
