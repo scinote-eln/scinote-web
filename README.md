@@ -1,10 +1,18 @@
 # sciNote
-
 ![sciNote logo](http://scinote.net/wp-content/uploads/2015/10/logo_sciNote_final.png)
 
 ## About
-
 [sciNote is an open source electronic lab notebook](https://scinote.net) ([ELN](https://en.wikipedia.org/wiki/Electronic_lab_notebook)) that helps you manage your laboratory work and stores all your experimental data in one place. sciNote is specifically designed for life science students, researchers, lab technicians and group leaders. This software is developed using Visual Studio Code in macOS High Sierra.
+
+## Land and Materials Management Division
+US EPA
+Office of Research and Development
+National Risk Management Research Laboratory
+26 W. Martin Luther King Dr. (ML-CHL)
+Cincinnati, OH 45268-3001
+
+#### Contact Manager: Michael Gonzalez, Chief, ECEB (gonzalez.michael@epa.gov)
+#### Contact Software Configuration Management: Daniel Young (young.daniel@epa.gov)
 
 ## Build & run
 
