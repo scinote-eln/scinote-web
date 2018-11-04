@@ -58,7 +58,10 @@ class ZipExport < ApplicationRecord
     fill_content(dir_to_zip, data, type, options)
     zip!(dir_to_zip, output_file.path)
     self.zip_file = File.open(output_file)
-    generate_notification(user) if save
+    if save
+      FileUtils.rm_rf([dir_to_zip, output_file], secure: true)
+      generate_notification(user)
+    end
   end
 
   handle_asynchronously :generate_exportable_zip
