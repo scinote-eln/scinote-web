@@ -30,7 +30,10 @@ class TeamZipExport < ZipExport
     fill_content(dir_to_zip, data, type, options)
     zip!(dir_to_zip, output_file.path)
     self.zip_file = File.open(output_file)
-    generate_notification(user) if save
+    if save
+      FileUtils.rm_rf([dir_to_zip, output_file], secure: true)
+      generate_notification(user)
+    end
   end
 
   handle_asynchronously :generate_exportable_zip
@@ -128,6 +131,9 @@ class TeamZipExport < ZipExport
       file = FileUtils.touch("#{root}/#{pdf_name}").first
       File.open(file, 'wb') { |f| f.write(project_report_pdf) }
     end
+
+    # Change current dir outside tmp_dir, since tmp_dir will be deleted
+    Dir.chdir(File.join(Rails.root, 'tmp'))
   end
 
   def generate_notification(user)
