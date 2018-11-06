@@ -286,5 +286,7 @@ class Project < ApplicationRecord
       current_team: team,
       extra: '--keep-relative-links'
     )
+  ensure
+    report.destroy if report.present?
   end
 end
