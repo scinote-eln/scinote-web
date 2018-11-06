@@ -324,7 +324,7 @@
     newProjectModal = $('#new-project-modal');
     newProjectModalForm = newProjectModal.find('form');
     newProjectModalBody = newProjectModal.find('.modal-body');
-    newProjectBtn = $('#new-project-btn');
+    newProjectBtn = $('.new-project-btn');
 
     editProjectModal = $('#edit-project-modal');
     editProjectModalTitle = editProjectModal.find('#edit-project-modal-label');
