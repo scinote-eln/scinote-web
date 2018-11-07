@@ -64,13 +64,15 @@ describe RepositoryZipExport, type: :background_job do
     end
 
     it 'generates a zip with csv file with exported rows' do
-      RepositoryZipExport.generate_zip(params, repository, user)
-      zip = ZipExport.first.zip_file_file_name
-                     .gsub('export-', '')
-                     .gsub('.zip', '')
-      csv_path = Rails.root.join('tmp', "temp-zip-#{zip}", 'export.csv').to_s
+      csv_zip_path = RepositoryZipExport.generate_zip(params, repository, user)
+      parsed_csv_content = Zip::File.open(csv_zip_path) do |zip_file|
+        csv_file = zip_file.glob('*.csv').first
+        csv_content = csv_file.get_input_stream.read
+        CSV.parse(csv_content, headers: true)
+      end
       index = 0
-      CSV.foreach(csv_path, headers: true) do |row|
+
+      parsed_csv_content.each do |row|
         row_hash = row.to_h
         expect(row_hash.fetch('Sample group')).to eq 'item one'
         expect(row_hash.fetch('Custom items')).to eq 'custum column value'
