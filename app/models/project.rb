@@ -237,7 +237,6 @@ class Project < ApplicationRecord
                       assigns: { project: self, report: report }
     parsed_page_html = Nokogiri::HTML(page_html_string)
     parsed_pdf_html = parsed_page_html.at_css('#report-content')
-    report.destroy
 
     tables = parsed_pdf_html.css('.hot-table-contents')
                             .zip(parsed_pdf_html.css('.hot-table-container'))
