@@ -54,7 +54,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, user in not member of the team' do
@@ -66,7 +66,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing experiment' do
@@ -78,7 +78,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 
@@ -110,7 +110,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing task' do
@@ -123,7 +123,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, task from unaccessible experiment' do
@@ -136,7 +136,7 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 end

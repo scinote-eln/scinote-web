@@ -87,11 +87,8 @@ module Api
           raise IDMismatchError
         end
         if inventory_column_params[:attributes].include?(:data_type)
-          return render_error(
-            I18n.t('api.core.errors.inventory_column_type.title'),
-            I18n.t('api.core.errors.inventory_column_type.detail'),
-            :bad_request
-          )
+          raise ActiveRecord::RecordInvalid,
+                I18n.t('api.core.errors.inventory_column_type.detail')
         end
         inventory_column_params[:attributes]
       end

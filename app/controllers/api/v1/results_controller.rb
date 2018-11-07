@@ -22,7 +22,6 @@ module Api
 
       def create
         create_text_result if result_text_params.present?
-        throw ActionController::ParameterMissing unless @result
         render jsonapi: @result,
                serializer: ResultSerializer,
                include: %i(text table file),
@@ -54,11 +53,8 @@ module Api
               image_params = t[:attributes]
               token = image_params[:file_token]
               unless result_text.text["[~tiny_mce_id:#{token}]"]
-                return render_error(
-                  I18n.t('api.core.errors.result_wrong_tinymce.title'),
-                  I18n.t('api.core.errors.result_wrong_tinymce.detail'),
-                  :bad_request
-                )
+                raise ActiveRecord::RecordInvalid,
+                      I18n.t('api.core.errors.result_wrong_tinymce.detail')
               end
               image = Paperclip.io_adapters.for(image_params[:file_data])
               image.original_filename = image_params[:file_name]
@@ -102,11 +98,8 @@ module Api
           /\[~tiny_mce_id:(\w+)\]/
         ).flatten.each do |token|
           unless file_tokens.include?(token)
-            return render_error(
-              I18n.t('api.core.errors.result_missing_tinymce.title'),
-              I18n.t('api.core.errors.result_missing_tinymce.detail'),
-              :bad_request
-            )
+            raise ActiveRecord::RecordInvalid,
+                  I18n.t('api.core.errors.result_missing_tinymce.detail')
           end
         end
         prms

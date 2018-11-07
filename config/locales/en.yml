@@ -1970,13 +1970,10 @@ en:
           title: "Wrong type"
           detail: "Wrong object type within parameters"
         inventory_column_type:
-          title: "Not allowed"
           detail: "Update of data_type attribute is not allowed"
         result_missing_tinymce:
-          title: "Error"
           detail: "Text contains reference to nonexisting TinyMCE image"
         result_wrong_tinymce:
-          title: "Error"
           detail: "Image reference not found in the text"
 
 
