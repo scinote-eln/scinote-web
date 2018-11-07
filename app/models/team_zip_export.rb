@@ -91,9 +91,13 @@ class TeamZipExport < ZipExport
         FileUtils.mkdir_p(experiment_path)
 
         # Include all modules
-        ex.my_modules.each_with_index do |my_module, mod_ind|
+        ex.my_modules.order(:workflow_order)
+          .each_with_index do |my_module, mod_ind|
+
+          mod_pos =
+            my_module.workflow_order == -1 ? '' : my_module.workflow_order
           my_module_path = "#{experiment_path}/" \
-            "#{to_filesystem_name(my_module.name)} (#{mod_ind})"
+            "#{mod_pos} #{to_filesystem_name(my_module.name)} (#{mod_ind})"
           FileUtils.mkdir_p(my_module_path)
 
           # Create upper directories for both elements
