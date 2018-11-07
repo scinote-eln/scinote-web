@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :experiment do
-    name 'My Experiment'
+    name { Faker::Name.unique.name }
     description 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
   end
 

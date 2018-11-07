@@ -7,7 +7,6 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task
-      before_action :load_protocol, only: :show
 
       def index
         protocols = @task.protocols
@@ -15,10 +14,6 @@ module Api
                          .per(params.dig(:page, :size))
         render jsonapi: protocols,
           each_serializer: ProtocolSerializer
-      end
-
-      def show
-        render jsonapi: @protocol, serializer: ProtocolSerializer
       end
 
       private
