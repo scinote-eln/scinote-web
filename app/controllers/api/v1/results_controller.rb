@@ -41,7 +41,9 @@ module Api
       end
 
       def check_manage_permissions
-        permission_error(MyModule, :manage) unless can_manage_module?(@task)
+        unless can_manage_module?(@task)
+          raise PermissionError.new(MyModule, :manage)
+        end
       end
 
       def create_text_result

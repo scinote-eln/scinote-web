@@ -6,6 +6,7 @@ module Api
       before_action :load_team
       before_action :load_inventory
       before_action :load_inventory_column
+      before_action :check_column_type
       before_action :load_inventory_list_item, only: %i(show update destroy)
       before_action :check_manage_permissions, only: %i(create update destroy)
 
@@ -46,9 +47,7 @@ module Api
 
       private
 
-      def load_inventory_column
-        @inventory_column =
-          @inventory.repository_columns.find(params.require(:column_id))
+      def check_column_type
         unless @inventory_column.data_type == 'RepositoryListValue'
           raise TypeError
         end
@@ -61,7 +60,7 @@ module Api
 
       def check_manage_permissions
         unless can_manage_repository_column?(@inventory_column)
-          permission_error(RepositoryListItem, :manage)
+          raise PermissionError.new(RepositoryListItem, :manage)
         end
       end
 

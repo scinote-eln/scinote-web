@@ -5,6 +5,14 @@ module Api
     class BaseController < ApiController
       class TypeError < StandardError; end
       class IDMismatchError < StandardError; end
+      class PermissionError < StandardError
+        attr_reader :klass
+        attr_reader :mode
+        def initialize(klass, mode)
+          @klass = klass
+          @mode = mode
+        end
+      end
 
       rescue_from StandardError do |e|
         logger.error e.message
@@ -12,6 +20,15 @@ module Api
         render_error(I18n.t('api.core.errors.general.title'),
                      I18n.t('api.core.errors.general.detail'),
                      :bad_request)
+      end
+
+      rescue_from PermissionError do |e|
+        model = e.klass.name.underscore
+        render_error(
+          I18n.t("api.core.errors.#{e.mode}_permission.title"),
+          I18n.t("api.core.errors.#{e.mode}_permission.detail", model: model),
+          :forbidden
+        )
       end
 
       rescue_from TypeError do
@@ -64,43 +81,40 @@ module Api
         }, status: status
       end
 
-      def permission_error(klass, mode)
-        model = klass.name.underscore
-        render_error(
-          I18n.t("api.core.errors.#{mode}_permission.title"),
-          I18n.t("api.core.errors.#{mode}_permission.detail", model: model),
-          :forbidden
-        )
+      def load_team(key = :team_id)
+        @team = Team.find(params.require(key))
+        raise PermissionError.new(Team, :read) unless can_read_team?(@team)
       end
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        permission_error(Team, :read) unless can_read_team?(@team)
+      def load_inventory(key = :inventory_id)
+        @inventory = @team.repositories.find(params.require(key))
       end
 
-      def load_inventory
-        @inventory = @team.repositories.find(params.require(:inventory_id))
-      end
-
-      def load_inventory_column
+      def load_inventory_column(key = :column_id)
         @inventory_column = @inventory.repository_columns
-                                      .find(inventory_cell_params[:column_id])
+                                      .find(params.require(key))
       end
 
-      def load_project
-        @project = @team.projects.find(params.require(:project_id))
-        permission_error(Project, :read) unless can_read_project?(@project)
+      def load_inventory_item(key = :item_id)
+        @inventory_item = @inventory.repository_rows.find(params[key].to_i)
       end
 
-      def load_experiment
-        @experiment = @project.experiments.find(params.require(:experiment_id))
-        permission_error(Experiment, :read) unless can_read_experiment?(
-          @experiment
-        )
+      def load_project(key = :project_id)
+        @project = @team.projects.find(params.require(key))
+        unless can_read_project?(@project)
+          raise PermissionError.new(Project, :read)
+        end
       end
 
-      def load_task
-        @task = @experiment.my_modules.find(params.require(:task_id))
+      def load_experiment(key = :experiment_id)
+        @experiment = @project.experiments.find(params.require(key))
+        unless can_read_experiment?(@experiment)
+          raise PermissionError.new(Experiment, :read)
+        end
+      end
+
+      def load_task(key = :task_id)
+        @task = @experiment.my_modules.find(params.require(key))
       end
     end
   end

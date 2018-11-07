@@ -5,7 +5,9 @@ module Api
     class InventoryItemsController < BaseController
       before_action :load_team
       before_action :load_inventory
-      before_action :load_inventory_item, only: %i(show update destroy)
+      before_action only: %i(show update destroy) do
+        load_inventory_item(:id)
+      end
       before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
@@ -94,13 +96,9 @@ module Api
 
       private
 
-      def load_inventory_item
-        @inventory_item = @inventory.repository_rows.find(params[:id].to_i)
-      end
-
       def check_manage_permissions
         unless can_manage_repository_rows?(@team)
-          permission_error(RepositoryItem, :manage)
+          raise PermissionError.new(RepositoryItem, :manage)
         end
       end
 

@@ -49,8 +49,9 @@ module Api
 
       private
 
-      def load_inventory_item
-        @inventory_item = @inventory.repository_rows.find(params[:item_id].to_i)
+      def load_inventory_column
+        @inventory_column = @inventory.repository_columns
+                                      .find(inventory_cell_params[:column_id])
       end
 
       def load_inventory_cell
@@ -60,7 +61,7 @@ module Api
 
       def check_manage_permissions
         unless can_manage_repository_rows?(@team)
-          permission_error(RepositoryRow, :manage)
+          raise PermissionError.new(RepositoryRow, :manage)
         end
       end
 

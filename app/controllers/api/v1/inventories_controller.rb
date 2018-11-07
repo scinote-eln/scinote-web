@@ -4,7 +4,9 @@ module Api
   module V1
     class InventoriesController < BaseController
       before_action :load_team
-      before_action :load_inventory, only: %i(show update destroy)
+      before_action only: %i(show update destroy) do
+        load_inventory(:id)
+      end
       before_action :check_manage_permissions, only: %i(update destroy)
 
       def index
@@ -16,7 +18,7 @@ module Api
 
       def create
         unless can_create_repositories?(@team)
-          return permission_error(Repository, :create)
+          raise PermissionError.new(Repository, :create)
         end
         inventory = @team.repositories.create!(
           inventory_params.merge(created_by: current_user)
@@ -48,13 +50,9 @@ module Api
 
       private
 
-      def load_inventory
-        @inventory = @team.repositories.find(params.require(:id))
-      end
-
       def check_manage_permissions
         unless can_manage_repository?(@inventory)
-          permission_error(Repository, :manage)
+          raise PermissionError.new(Repository, :manage)
         end
       end
 

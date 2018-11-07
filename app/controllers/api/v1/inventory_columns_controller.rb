@@ -5,7 +5,9 @@ module Api
     class InventoryColumnsController < BaseController
       before_action :load_team
       before_action :load_inventory
-      before_action :load_inventory_column, only: %i(show update destroy)
+      before_action only: %i(show update destroy) do
+        load_inventory_column(:id)
+      end
       before_action :check_manage_permissions, only: %i(update destroy)
       before_action :check_create_permissions, only: %i(create)
 
@@ -52,20 +54,15 @@ module Api
 
       private
 
-      def load_inventory_column
-        @inventory_column = @inventory.repository_columns
-                                      .find(params.require(:id))
-      end
-
       def check_manage_permissions
         unless can_manage_repository_column?(@inventory_column)
-          permission_error(RepositoryColumn, :manage)
+          raise PermissionError.new(RepositoryColumn, :manage)
         end
       end
 
       def check_create_permissions
         unless can_manage_repository?(@inventory)
-          permission_error(RepositoryColumn, :create)
+          raise PermissionError.new(RepositoryColumn, :create)
         end
       end
 

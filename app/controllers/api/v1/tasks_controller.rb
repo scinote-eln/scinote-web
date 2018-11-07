@@ -6,7 +6,9 @@ module Api
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
-      before_action :load_task, only: :show
+      before_action only: :show do
+        load_task(:id)
+      end
       before_action :load_task_relative, only: %i(inputs outputs activities)
 
       def index
@@ -45,10 +47,6 @@ module Api
       end
 
       private
-
-      def load_task
-        @task = @experiment.my_modules.find(params.require(:id))
-      end
 
       # Made the method below because its more elegant than changing parameters
       # in routes file, and here. It exists because when we call input or output
