@@ -35,8 +35,7 @@
         <% if @teams.exists? && can_create_projects?(current_team) %>
           <h2><strong><%=t 'projects.index.no_projects.title' %><strong></h2>
           <br />
-          <a class="btn btn-primary btn-lg"
-            id="new-project-btn">
+          <a class="btn btn-primary btn-lg new-project-btn">
             <span class="fas fa-plus"></span>
             <span class="hidden-xs"><%= t('projects.index.no_projects.create_new_button') %></span>
           </a>
@@ -103,7 +102,7 @@
 
             <% if @teams.exists? && can_create_projects?(current_team) %>
             <!-- new project button -->
-              <a class="btn btn-primary" id="new-project-btn">
+              <a class="btn btn-primary new-project-btn">
                 <span class="fas fa-plus" aria-hidden="true"></span>
                 <span class="hidden-xs"><%=t "projects.index.new" %></span>
               </a>
