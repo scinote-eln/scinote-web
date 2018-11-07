@@ -64,8 +64,6 @@ class ZipExport < ApplicationRecord
       FileUtils.rm_rf([dir_to_zip, output_file], secure: true)
       generate_notification(user)
     end
-
-    zip_file.path
   end
 
   handle_asynchronously :generate_exportable_zip
