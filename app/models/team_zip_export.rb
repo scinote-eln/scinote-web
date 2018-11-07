@@ -55,7 +55,7 @@ class TeamZipExport < ZipExport
       obj_filenames = { my_module_repository: {}, step_asset: {},
                         step_table: {}, result_asset: {}, result_table: {} }
 
-      project_name = to_filesystem_name(p.name) + "_#{ind}"
+      project_name = to_filesystem_name(p.name) + " (#{ind})"
       root =
         if p.archived
           "#{team_path}/Archived projects"
@@ -87,13 +87,13 @@ class TeamZipExport < ZipExport
 
       # Include all experiments
       p.experiments.each_with_index do |ex, ex_ind|
-        experiment_path = "#{root}/#{to_filesystem_name(ex.name)}_#{ex_ind}"
+        experiment_path = "#{root}/#{to_filesystem_name(ex.name)} (#{ex_ind})"
         FileUtils.mkdir_p(experiment_path)
 
         # Include all modules
         ex.my_modules.each_with_index do |my_module, mod_ind|
           my_module_path = "#{experiment_path}/" \
-            "#{to_filesystem_name(my_module.name)}_#{mod_ind}"
+            "#{to_filesystem_name(my_module.name)} (#{mod_ind})"
           FileUtils.mkdir_p(my_module_path)
 
           # Create upper directories for both elements
@@ -124,7 +124,7 @@ class TeamZipExport < ZipExport
       end
 
       # Generate and export whole project report PDF
-      pdf_name = "#{project_name}_Report.pdf"
+      pdf_name = "#{project_name} Report.pdf"
       project_report_pdf =
         p.generate_report_pdf(@user, @team, pdf_name, obj_filenames)
       file = FileUtils.touch("#{root}/#{pdf_name}").first
@@ -206,16 +206,16 @@ class TeamZipExport < ZipExport
   end
 
   # Helper method for saving inventories to CSV
-  def save_inventories_to_csv(path, repo, repo_rows, id)
-    repo_name = "#{to_filesystem_name(repo.name)}_#{id}"
+  def save_inventories_to_csv(path, repo, repo_rows, idx)
+    repo_name = "#{to_filesystem_name(repo.name)} (#{idx})"
 
     # Attachment folder
-    rel_attach_path = "#{repo_name}_attachments"
+    rel_attach_path = "#{repo_name} attachments"
     attach_path = "#{path}/#{rel_attach_path}"
     FileUtils.mkdir_p(attach_path)
 
     # CSV file
-    csv_file_path = "#{path}/#{to_filesystem_name(repo.name)}_#{id}.csv"
+    csv_file_path = "#{path}/#{repo_name}.csv"
     csv_file = FileUtils.touch(csv_file_path).first
 
     # Define headers and columns IDs
