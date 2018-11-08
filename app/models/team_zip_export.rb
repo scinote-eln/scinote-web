@@ -54,11 +54,7 @@ class TeamZipExport < ZipExport
       obj_filenames = { my_module_repository: {}, step_asset: {},
                         step_table: {}, result_asset: {}, result_table: {} }
 
-      project_name = to_filesystem_name(p.name) + " (#{ind})"
-      project_path = team_path
-      project_path += '/Archived projects' if p.archived
-      project_path += "/#{project_name}"
-      FileUtils.mkdir_p(project_path)
+      project_path = make_model_dir(team_path, p, ind)
 
       # Change current dir for correct generation of relative links
       Dir.chdir(project_path)
@@ -85,21 +81,13 @@ class TeamZipExport < ZipExport
 
       # Include all experiments
       p.experiments.each_with_index do |ex, ex_ind|
-        exp_name = to_filesystem_name(ex.name) + "(#{ex_ind})"
-        experiment_path = project_path
-        experiment_path += '/Archived experiments' if ex.archived
-        experiment_path += "/#{exp_name}"
-        FileUtils.mkdir_p(experiment_path)
+        experiment_path = make_model_dir(project_path, ex, ex_ind)
 
         # Include all modules
         ex.my_modules.order(:workflow_order)
           .each_with_index do |my_module, mod_pos|
 
-          my_module_name = "(#{mod_pos})" + to_filesystem_name(my_module.name)
-          my_module_path = experiment_path
-          my_module_path += '/Archived modules' if my_module.archived
-          my_module_path += "/#{my_module_name}"
-          FileUtils.mkdir_p(my_module_path)
+          my_module_path = make_model_dir(experiment_path, my_module, mod_pos)
 
           # Create upper directories for both elements
           protocol_path = "#{my_module_path}/Protocol attachments"
@@ -152,6 +140,19 @@ class TeamZipExport < ZipExport
                 "#{zip_file_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
+  end
+
+  # Create directory for project, experiment, or module
+  def make_model_dir(parent_path, model, index)
+    model_name = format(
+      model.class == MyModule ? '(%<idx>) %<name>' : '%<name> (%<idx>)',
+      idx: index, name: to_filesystem_name(model.name)
+    )
+    model_path = parent_path
+    model_path += '/Archived' if model.archived
+    model_path += "/#{model_name}"
+    FileUtils.mkdir_p(model_path)
+    model_path
   end
 
   # Appends given suffix to file_name and then adds original extension
