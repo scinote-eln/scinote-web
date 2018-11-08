@@ -29,7 +29,7 @@
 
   <div class="content-pane" id="projects-index">
 
-    <div id="projects-absent" style="<%= 'display:none' if @projects_tree.any? %>">
+    <div id="projects-absent" style="display:none">
       <div class="jumbotron text-center" style="margin-top:12%">
         <strong><%=t 'projects.index.no_projects.text' %></strong>
         <% if @teams.exists? && can_create_projects?(current_team) %>
@@ -44,7 +44,7 @@
         <% end %>
       </div>
     </div>
-    <div id="projects-present" style="<%= 'display:none' if @projects_tree.empty? %>">
+    <div id="projects-present" style="display:none">
       <!-- Edit project modal -->
       <div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
         <div class="modal-dialog" role="document">
