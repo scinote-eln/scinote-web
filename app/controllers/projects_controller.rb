@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
             partial: 'projects/index/team_projects.html.erb',
                      locals: { projects: @projects }
           ),
-          count: @projects.count
+          count: @projects.size
         }
       end
       format.html do
