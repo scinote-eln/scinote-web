@@ -18,21 +18,20 @@ class TeamZipExport < ZipExport
 
   def generate_exportable_zip(user, data, type, options = {})
     @user = user
-    FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready'))
-    dir_to_zip = FileUtils.mkdir_p(
+    zip_input_dir = FileUtils.mkdir_p(
       File.join(Rails.root, "tmp/temp-zip-#{Time.now.to_i}")
     ).first
-    output_file = File.new(
-      File.join(Rails.root,
-                "tmp/zip-ready/projects-export-#{Time.now.to_i}.zip"),
+    zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
+    zip_file = File.new(
+      File.join(zip_dir, "projects-export-#{Time.now.to_i}.zip"),
       'w+'
     )
-    fill_content(dir_to_zip, data, type, options)
-    zip!(dir_to_zip, output_file.path)
-    self.zip_file = File.open(output_file)
+    fill_content(zip_input_dir, data, type, options)
+    zip!(zip_input_dir, zip_file)
+    self.zip_file = File.open(zip_file)
     generate_notification(user) if save
   ensure
-    FileUtils.rm_rf([dir_to_zip, output_file], secure: true)
+    FileUtils.rm_rf([zip_input_dir, zip_file], secure: true)
   end
 
   handle_asynchronously :generate_exportable_zip
@@ -257,7 +256,7 @@ class TeamZipExport < ZipExport
     # Don't zip current/above directory
     files.delete_if { |el| ['.', '..'].include?(el) }
 
-    Zip::File.open(output_file, Zip::File::CREATE) do |zipfile|
+    Zip::File.open(output_file.path, Zip::File::CREATE) do |zipfile|
       write_entries(input_dir, files, '', zipfile)
     end
   end
