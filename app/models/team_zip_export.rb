@@ -46,8 +46,7 @@ class TeamZipExport < ZipExport
     team_path = "#{tmp_dir}/#{to_filesystem_name(@team.name)}"
     FileUtils.mkdir_p(team_path)
 
-    # Create Projects folders
-    FileUtils.mkdir_p("#{team_path}/Projects")
+    # Create explicit folder for archived projects
     FileUtils.mkdir_p("#{team_path}/Archived projects")
 
     # Iterate through every project
@@ -56,20 +55,16 @@ class TeamZipExport < ZipExport
                         step_table: {}, result_asset: {}, result_table: {} }
 
       project_name = to_filesystem_name(p.name) + " (#{ind})"
-      root =
-        if p.archived
-          "#{team_path}/Archived projects"
-        else
-          "#{team_path}/Projects"
-        end
-      root += "/#{project_name}"
-      FileUtils.mkdir_p(root)
+      project_path = team_path
+      project_path += '/Archived projects' if p.archived
+      project_path += "/#{project_name}"
+      FileUtils.mkdir_p(project_path)
 
       # Change current dir for correct generation of relative links
-      Dir.chdir(root)
-      root = '.'
+      Dir.chdir(project_path)
+      project_path = '.'
 
-      inventories = "#{root}/Inventories"
+      inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
       # Find all assigned inventories through all tasks in the project
@@ -85,17 +80,25 @@ class TeamZipExport < ZipExport
           save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
       end
 
+      # Create explicit folder for archived experiments
+      FileUtils.mkdir_p("#{team_path}/Archived experiments")
+
       # Include all experiments
       p.experiments.each_with_index do |ex, ex_ind|
-        experiment_path = "#{root}/#{to_filesystem_name(ex.name)} (#{ex_ind})"
+        exp_name = to_filesystem_name(ex.name) + "(#{ex_ind})"
+        experiment_path = project_path
+        experiment_path += '/Archived experiments' if ex.archived
+        experiment_path += "/#{exp_name}"
         FileUtils.mkdir_p(experiment_path)
 
         # Include all modules
         ex.my_modules.order(:workflow_order)
           .each_with_index do |my_module, mod_pos|
 
-          my_module_path = "#{experiment_path}/" \
-            "(#{mod_pos}) #{to_filesystem_name(my_module.name)}"
+          my_module_name = "(#{mod_pos})" + to_filesystem_name(my_module.name)
+          my_module_path = experiment_path
+          my_module_path += '/Archived modules' if my_module.archived
+          my_module_path += "/#{my_module_name}"
           FileUtils.mkdir_p(my_module_path)
 
           # Create upper directories for both elements
@@ -129,7 +132,7 @@ class TeamZipExport < ZipExport
       pdf_name = "#{project_name} Report.pdf"
       project_report_pdf =
         p.generate_report_pdf(@user, @team, pdf_name, obj_filenames)
-      file = FileUtils.touch("#{root}/#{pdf_name}").first
+      file = FileUtils.touch("#{project_path}/#{pdf_name}").first
       File.open(file, 'wb') { |f| f.write(project_report_pdf) }
     end
 
