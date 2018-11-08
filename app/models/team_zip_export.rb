@@ -46,15 +46,13 @@ class TeamZipExport < ZipExport
     team_path = "#{tmp_dir}/#{to_filesystem_name(@team.name)}"
     FileUtils.mkdir_p(team_path)
 
-    # Create explicit folder for archived projects
-    FileUtils.mkdir_p("#{team_path}/Archived projects")
-
     # Iterate through every project
     data.each_with_index do |(_, p), ind|
       obj_filenames = { my_module_repository: {}, step_asset: {},
                         step_table: {}, result_asset: {}, result_table: {} }
 
       project_path = make_model_dir(team_path, p, ind)
+      project_name = project_path.split('/')[-1]
 
       # Change current dir for correct generation of relative links
       Dir.chdir(project_path)
@@ -75,9 +73,6 @@ class TeamZipExport < ZipExport
         obj_filenames[:my_module_repository][repo.id] =
           save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
       end
-
-      # Create explicit folder for archived experiments
-      FileUtils.mkdir_p("#{team_path}/Archived experiments")
 
       # Include all experiments
       p.experiments.each_with_index do |ex, ex_ind|
@@ -145,11 +140,15 @@ class TeamZipExport < ZipExport
   # Create directory for project, experiment, or module
   def make_model_dir(parent_path, model, index)
     model_name = format(
-      model.class == MyModule ? '(%<idx>) %<name>' : '%<name> (%<idx>)',
+      model.class == MyModule ? '(%<idx>s) %<name>s' : '%<name>s (%<idx>s)',
       idx: index, name: to_filesystem_name(model.name)
     )
+
     model_path = parent_path
-    model_path += '/Archived' if model.archived
+    if model.archived
+      model_path += '/Archived'
+      FileUtils.mkdir_p(model_path)
+    end
     model_path += "/#{model_name}"
     FileUtils.mkdir_p(model_path)
     model_path
