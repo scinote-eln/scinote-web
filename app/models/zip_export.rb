@@ -47,6 +47,8 @@ class ZipExport < ApplicationRecord
   end
 
   def generate_exportable_zip(user, data, type, options = {})
+    I18n.backend.date_format =
+      user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
     FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready'))
     dir_to_zip = FileUtils.mkdir_p(
       File.join(Rails.root, "tmp/temp-zip-#{Time.now.to_i}")

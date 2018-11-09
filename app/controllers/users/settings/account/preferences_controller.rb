@@ -68,9 +68,7 @@ module Users
         end
 
         def update_params
-          params.require(:user).permit(
-            :time_zone
-          )
+          params.require(:user).permit(:time_zone, :date_format)
         end
       end
     end

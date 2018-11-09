@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   helper_method :current_team
   before_action :update_current_team, if: :user_signed_in?
+  before_action :set_date_format, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
 
@@ -80,5 +81,10 @@ class ApplicationController < ActionController::Base
 
   def set_time_zone(&block)
     Time.use_zone(current_user.settings[:time_zone], &block)
+  end
+
+  def set_date_format
+    I18n.backend.date_format =
+      current_user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
   end
 end

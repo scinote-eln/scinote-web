@@ -49,6 +49,48 @@
             </div>
           </div>
         <% end %>
+        <%= form_for(@user,
+                     url: update_preferences_path(format: :json),
+                     remote: true,
+                     html: {
+                      method: :put,
+                      'data-for' => 'date_format',
+                      'data-turbolinks' => false
+                    }) do |f| %>
+          <div data-part="view">
+            <div class="form-group">
+              <%= f.label t("users.settings.account.preferences.edit.date_format_label") %>
+              <div class="input-group" style="max-width: 500px;">
+                <input class="form-control"
+                       disabled="disabled"
+                       autocomplete="off"
+                       type="text"
+                       value="<%= l(Time.now, format: :full_date) %>"
+                       name="fake_user[settings][time_zone]"
+                       id="fake_user_settings_date_format">
+                <span class="input-group-btn">
+                  <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
+                </span>
+              </div>
+              <small><%= t("users.settings.account.preferences.edit.date_format_sublabel") %></small>
+            </div>
+          </div>
+          <div data-part="edit" style="display: none;">
+            <div class="well">
+              <h4><%=t "users.settings.account.preferences.edit.date_format_title" %></h4>
+              <div class="form-group" style="max-width: 500px;">
+                <%= f.select :date_format, Constants::SUPPORTED_DATE_FORMATS.collect { |df|
+                      ["#{l(Time.now, format: :full_date, date_format: df)}", df]
+                    }, {}, { class: 'form-control selectpicker', 'data-role': 'clear' } %>
+                <small><%= t("users.settings.account.preferences.edit.date_format_sublabel") %></small>
+              </div>
+              <div>
+                <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
+                <%= f.submit t("general.save"), class: "btn btn-success" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
         <hr>
         <div class="notification-settings-container">
           <h4><%= t('notifications.title') %></h4>

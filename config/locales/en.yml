@@ -1437,6 +1437,9 @@ en:
             time_zone_label: "Time zone"
             time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
             time_zone_title: "Time zone"
+            date_format_label: "Date format"
+            date_format_sublabel: "Date format setting affects all date display throughout application."
+            date_format_title: "Date format"
           update_flash: "Preferences successfully updated."
         addons:
           head_title: "Settings | Add-ons"
@@ -1810,16 +1813,10 @@ en:
 
   time:
     formats:
-      full: "%d.%m.%Y %H:%M"
-        # This format is used for JS datetimepicker,
-        # only in different notation;
-        # it should be the same as the above full format
       full_js: "D.M.YYYY HH:mm"
-        # This format is used only in datatables
-        # to format the timestamp in SQL so it can
-        # be easily searched by input param
-      datatables_date: 'DD.MM.YYYY HH24:MI'
-      full_date: "%d.%m.%Y"
+      full: "%{date_format} %H:%M"
+      full_with_tz: "%{date_format} %H:%M %z"
+      full_date: "%{date_format}"
       time: "%H:%M"
       short: "%H"
 

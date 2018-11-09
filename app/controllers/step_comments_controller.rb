@@ -73,7 +73,7 @@ class StepCommentsController < ApplicationController
                 comment: @comment
               }
             ),
-            date: @comment.created_at.strftime('%d.%m.%Y')
+            date: I18n.l(@comment.created_at, format: :full_date)
           },
           status: :created
         }

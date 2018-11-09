@@ -115,7 +115,18 @@ class Constants
   # URL); it expires in exactly one day
   URL_LONG_EXPIRE_TIME = 86_400
 
-  DATE_FORMAT = '%d.%m.%Y %H:%M'.freeze
+  DEFAULT_DATE_FORMAT = '%m/%d/%Y'.freeze
+
+  SUPPORTED_DATE_FORMATS = [
+    # US formats
+    '%m/%d/%Y', '%m.%d.%Y', '%m. %d. %Y', '%m-%d-%Y', '%-m/%-d/%Y',
+    '%-m.%-d.%Y', '%-m. %-d. %Y', '%-m-%-d-%Y',
+    # European formats
+    '%d/%m/%Y', '%d.%m.%Y', '%d. %m. %Y', '%d-%b-%Y', '%Y-%m-%d',
+    '%d.%b.%Y', '%Y/%b/%d', '%d, %B, %Y', '%B, %d, %Y', '%-d/%-m/%Y',
+    '%-d.%-m.%Y', '%-d. %-m. %Y', '%d-%m-%Y', '%Y-%-m-%-d', '%-d-%b-%Y',
+    '%Y-%b-%-d', '%-d, %B, %Y', '%B, %d, %Y'
+  ].freeze
 
   #=============================================================================
   # Application colors

@@ -36,7 +36,6 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   def new_search_condition(column, value)
     model, column = column.split('.')
     model = model.constantize
-    formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
     case column
     when 'published_on'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',

@@ -24,7 +24,14 @@ module BootstrapFormHelper
       input_name = "#{@object_name}[#{name.to_s}]"
       timestamp = @object[name] ? "#{@object[name].to_i}000" : ""
       js_locale = I18n.locale.to_s
-      js_format = I18n.t("time.formats.full_js")
+      js_format = I18n.backend.date_format.dup
+      js_format.gsub!(/%-d/, 'D')
+      js_format.gsub!(/%d/, 'DD')
+      js_format.gsub!(/%-m/, 'M')
+      js_format.gsub!(/%m/, 'MM')
+      js_format.gsub!(/%b/, 'MMM')
+      js_format.gsub!(/%B/, 'MMMM')
+      js_format.gsub!('%Y', 'YYYY')
 
       label = name.to_s.humanize
       if options[:label] then

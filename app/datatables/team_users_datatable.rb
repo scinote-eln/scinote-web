@@ -36,8 +36,6 @@ class TeamUsersDatatable < CustomDatatable
   def new_search_condition(column, value)
     model, column = column.split('.')
     model = model.constantize
-    formated_date = (I18n.t 'time.formats.datatables_date')
-                    .gsub!(/^\"|\"?$/, '')
     if column == 'created_at'
       casted_column = ::Arel::Nodes::NamedFunction.new(
         'CAST',
