@@ -47,12 +47,14 @@ class TeamZipExport < ZipExport
     FileUtils.mkdir_p(team_path)
 
     # Iterate through every project
-    data.each_with_index do |(_, p), ind|
+    p_idx = p_archive_idx = 0
+    data.each do |(_, p)|
+      idx = p.archived ? (p_archive_idx += 1) : (p_idx += 1)
+      project_path = make_model_dir(team_path, p, idx)
+      project_name = project_path.split('/')[-1]
+
       obj_filenames = { my_module_repository: {}, step_asset: {},
                         step_table: {}, result_asset: {}, result_table: {} }
-
-      project_path = make_model_dir(team_path, p, ind)
-      project_name = project_path.split('/')[-1]
 
       # Change current dir for correct generation of relative links
       Dir.chdir(project_path)
@@ -75,14 +77,16 @@ class TeamZipExport < ZipExport
       end
 
       # Include all experiments
-      p.experiments.each_with_index do |ex, ex_ind|
-        experiment_path = make_model_dir(project_path, ex, ex_ind)
+      ex_idx = ex_archive_idx = 0
+      p.experiments.each do |ex|
+        idx = ex.archived ? (ex_archive_idx += 1) : (ex_idx += 1)
+        experiment_path = make_model_dir(project_path, ex, idx)
 
         # Include all modules
-        ex.my_modules.order(:workflow_order)
-          .each_with_index do |my_module, mod_pos|
-
-          my_module_path = make_model_dir(experiment_path, my_module, mod_pos)
+        mod_pos = mod_archive_pos = 0
+        ex.my_modules.order(:workflow_order).each do |my_module|
+          pos = my_module.archived ? (mod_archive_pos += 1) : (mod_pos += 1)
+          my_module_path = make_model_dir(experiment_path, my_module, pos)
 
           # Create upper directories for both elements
           protocol_path = "#{my_module_path}/Protocol attachments"
@@ -139,6 +143,7 @@ class TeamZipExport < ZipExport
 
   # Create directory for project, experiment, or module
   def make_model_dir(parent_path, model, index)
+    # For MyModule, the index indicates its position in project sidebar
     model_name = format(
       model.class == MyModule ? '(%<idx>s) %<name>s' : '%<name>s (%<idx>s)',
       idx: index, name: to_filesystem_name(model.name)
