@@ -105,13 +105,13 @@ class ProjectsOverviewService
       'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
     )
     exp_join =
-      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id'
+      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id'\
+      ' AND ((projects.archived = true)'\
+      ' OR (projects.archived = false AND experiments.archived = false))'
     task_join =
-      'LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id'
-    unless @params[:filter] == 'archived'
-      exp_join += ' AND experiments.archived = projects.archived'
-      task_join += ' AND my_modules.archived = projects.archived'
-    end
+      'LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id'\
+      ' AND ((projects.archived = true)'\
+      ' OR (projects.archived = false AND my_modules.archived = false))'
     projects = projects.joins(exp_join).joins(task_join)
 
     # Only admins see all projects of the team
