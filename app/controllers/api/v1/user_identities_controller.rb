@@ -29,7 +29,7 @@ module Api
         if @identity.changed? && @identity.save!
           render jsonapi: @identity, serializer: UserIdentitySerializer
         else
-          render body: nil
+          render body: nil, status: :no_content
         end
       end
 
@@ -42,7 +42,7 @@ module Api
 
       def load_user
         @user = current_user if current_user.id == params[:user_id].to_i
-        return render body: nil, status: :forbidden unless @user
+        raise PermissionError.new(User, :read) unless @user
       end
 
       def load_user_identity
@@ -51,8 +51,7 @@ module Api
 
       def user_identity_params
         unless params.require(:data).require(:type) == 'user_identities'
-          raise ActionController::BadRequest,
-                'Wrong object type within parameters'
+          raise TypeError
         end
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: %i(provider uid) })[:data]
@@ -60,8 +59,7 @@ module Api
 
       def update_user_identity_params
         unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise ActionController::BadRequest,
-                'Object ID mismatch in URL and request body'
+          raise IDMismatchError
         end
         user_identity_params
       end

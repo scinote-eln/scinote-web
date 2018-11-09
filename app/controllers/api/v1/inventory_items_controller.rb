@@ -5,7 +5,9 @@ module Api
     class InventoryItemsController < BaseController
       before_action :load_team
       before_action :load_inventory
-      before_action :load_inventory_item, only: %i(show update destroy)
+      before_action only: %i(show update destroy) do
+        load_inventory_item(:id)
+      end
       before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
@@ -83,7 +85,7 @@ module Api
                  serializer: InventoryItemSerializer,
                  include: :inventory_cells
         else
-          render body: nil
+          render body: nil, status: :no_content
         end
       end
 
@@ -94,29 +96,15 @@ module Api
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
-      def load_inventory
-        @inventory = @team.repositories.find(params.require(:inventory_id))
-      end
-
-      def load_inventory_item
-        @inventory_item = @inventory.repository_rows.find(params[:id].to_i)
-      end
-
       def check_manage_permissions
         unless can_manage_repository_rows?(@team)
-          render body: nil, status: :forbidden
+          raise PermissionError.new(RepositoryItem, :manage)
         end
       end
 
       def inventory_item_params
         unless params.require(:data).require(:type) == 'inventory_items'
-          raise ActionController::BadRequest,
-                'Wrong object type within parameters'
+          raise TypeError
         end
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: :name })[:data]
@@ -124,8 +112,7 @@ module Api
 
       def update_inventory_item_params
         unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise ActionController::BadRequest,
-                'Object ID mismatch in URL and request body'
+          raise IDMismatchError
         end
         inventory_item_params[:attributes]
       end

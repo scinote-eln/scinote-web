@@ -15,7 +15,7 @@ module Api
         @user = User.joins(:user_teams)
                     .where('user_teams.team': current_user.teams)
                     .find_by_id(params[:id])
-        render jsonapi: {}, status: :forbidden unless @user
+        raise PermissionError.new(User, :read) unless @user
       end
     end
   end

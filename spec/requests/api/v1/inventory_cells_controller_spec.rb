@@ -143,7 +143,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing item' do
@@ -155,7 +155,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 
@@ -187,7 +187,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing cell' do
@@ -200,7 +200,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 
@@ -271,7 +271,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: invalid_file_body.to_json, headers: @valid_headers
       expect(response).to have_http_status 400
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
 
     it 'When invalid request, non existing inventory' do
@@ -283,7 +283,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: @valid_text_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, user in not member of the team' do
@@ -295,7 +295,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: @valid_text_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, repository from another team' do
@@ -307,7 +307,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: @valid_text_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 
@@ -385,7 +385,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: invalid_file_body.to_json, headers: @valid_headers
       expect(response).to have_http_status 400
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 400)
     end
 
     it 'When invalid request, non existing inventory' do
@@ -398,7 +398,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: @valid_text_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
 
     it 'When invalid request, user in not member of the team' do
@@ -411,7 +411,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: @valid_text_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, repository from another team' do
@@ -424,7 +424,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), params: @valid_text_body.to_json, headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 

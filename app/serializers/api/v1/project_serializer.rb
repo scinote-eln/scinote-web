@@ -7,7 +7,7 @@ module Api
       attributes :name, :visibility, :start_date, :archived
 
       def start_date
-        object.created_at
+        I18n.l(object.created_at, format: :full)
       end
     end
   end
