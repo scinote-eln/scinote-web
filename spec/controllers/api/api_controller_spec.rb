@@ -13,14 +13,14 @@ describe Api::ApiController, type: :controller do
 
     it 'Response with correct JSON status structure' do
       hash_body = nil
-      expect{hash_body = json}.not_to raise_exception
-      expect(hash_body).to include(:message => I18n.t('api.core.status_ok'))
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body).to include(message: I18n.t('api.core.status_ok'))
       expect(hash_body).to include('versions')
 
-      Extends::API_VERSIONS.each_with_index do |ver, index|
+      Extends::API_VERSIONS.each do |ver|
         expect(hash_body['versions']).to include(
-          { 'version' => ver,
-            'baseUrl' => "/api/#{ver}/" }
+          'version' => ver,
+          'baseUrl' => "/api/#{ver}/"
         )
       end
     end
