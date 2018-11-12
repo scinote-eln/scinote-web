@@ -131,7 +131,8 @@
             <!-- export projects button -->
             <button type="button" class="btn btn-default pull-right"
                                   id="export-projects-button"
-                                  data-export-projects-url="<%= export_projects_team_path(current_team) %>">
+                                  data-export-projects-url="<%= export_projects_team_path(current_team) %>"
+                                  disabled>
             <span class="fas fa-file-export"></span>
             <span class="hidden-xs-custom"><%= t("projects.export_projects.export_button") %></span>
           </button>

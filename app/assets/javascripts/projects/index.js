@@ -340,7 +340,6 @@
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
     exportProjectsBtn = $('#export-projects-button');
-    exportProjectsBtn.addClass('disabled');
 
     updateSelectedCards();
     initNewProjectModal();
@@ -363,14 +362,14 @@
       if (this.checked && index === -1) {
         $(this).closest('.panel-project').addClass('selected');
         selectedProjects.push(projectId);
-        exportProjectsBtn.removeClass('disabled');
+        exportProjectsBtn.removeAttr('disabled');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         $(this).closest('.panel-project').removeClass('selected');
         selectedProjects.splice(index, 1);
 
         if (selectedProjects.length === 0) {
-          exportProjectsBtn.addClass('disabled');
+          exportProjectsBtn.attr('disabled', 'disabled');
         }
       }
     });
@@ -544,13 +543,13 @@
       // If checkbox is checked and row ID is not in list of selected project IDs
       if (this.checked && index === -1) {
         selectedProjects.push(rowId);
-        exportProjectsBtn.removeClass('disabled');
+        exportProjectsBtn.removeAttr('disabled');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         selectedProjects.splice(index, 1);
 
-        if (selectedProjects.length === 0)  {
-          exportProjectsBtn.addClass('disabled');
+        if (selectedProjects.length === 0) {
+          exportProjectsBtn.attr('disabled', 'disabled');
         }
       }
 
