@@ -5,7 +5,9 @@ module Api
     class InventoryColumnsController < BaseController
       before_action :load_team
       before_action :load_inventory
-      before_action :load_inventory_column, only: %i(show update destroy)
+      before_action only: %i(show update destroy) do
+        load_inventory_column(:id)
+      end
       before_action :check_manage_permissions, only: %i(update destroy)
       before_action :check_create_permissions, only: %i(create)
 
@@ -41,7 +43,7 @@ module Api
                           serializer: InventoryColumnSerializer,
                           hide_list_items: true
         else
-          render body: nil
+          render body: nil, status: :no_content
         end
       end
 
@@ -52,36 +54,21 @@ module Api
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
-      def load_inventory
-        @inventory = @team.repositories.find(params.require(:inventory_id))
-      end
-
-      def load_inventory_column
-        @inventory_column = @inventory.repository_columns
-                                      .find(params.require(:id))
-      end
-
       def check_manage_permissions
         unless can_manage_repository_column?(@inventory_column)
-          render body: nil, status: :forbidden
+          raise PermissionError.new(RepositoryColumn, :manage)
         end
       end
 
       def check_create_permissions
         unless can_create_repository_columns?(@inventory.team)
-          render body: nil, status: :forbidden
+          raise PermissionError.new(RepositoryColumn, :create)
         end
       end
 
       def inventory_column_params
         unless params.require(:data).require(:type) == 'inventory_columns'
-          raise ActionController::BadRequest,
-                'Wrong object type within parameters'
+          raise TypeError
         end
         params.require(:data).require(:attributes)
         new_params = params
@@ -97,12 +84,11 @@ module Api
 
       def update_inventory_column_params
         unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise ActionController::BadRequest,
-                'Object ID mismatch in URL and request body'
+          raise IDMismatchError
         end
         if inventory_column_params[:attributes].include?(:data_type)
-          raise ActionController::BadRequest,
-                'Update of data_type attribute is not allowed'
+          raise ActiveRecord::RecordInvalid,
+                I18n.t('api.core.errors.inventory_column_type.detail')
         end
         inventory_column_params[:attributes]
       end

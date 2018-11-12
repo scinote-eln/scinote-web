@@ -10,8 +10,8 @@ module Api
 
       def index
         task_groups = @experiment.my_module_groups
-                                      .page(params.dig(:page, :number))
-                                      .per(params.dig(:page, :size))
+                                 .page(params.dig(:page, :number))
+                                 .per(params.dig(:page, :size))
         incl = params[:include] == 'tasks' ? :tasks : nil
         render jsonapi: task_groups,
                each_serializer: TaskGroupSerializer,
@@ -26,29 +26,8 @@ module Api
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
-      def load_project
-        @project = @team.projects.find(params.require(:project_id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
-      end
-
-      def load_experiment
-        @experiment = @project.experiments.find(params.require(:experiment_id))
-        render jsonapi: {}, status: :forbidden unless can_read_experiment?(
-          @experiment
-        )
-      end
-
       def load_task_group
-        @task_group = @experiment.my_module_groups.find(
-          params.require(:id)
-        )
+        @task_group = @experiment.my_module_groups.find(params.require(:id))
       end
     end
   end

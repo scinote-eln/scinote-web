@@ -4,7 +4,9 @@ module Api
   module V1
     class ProjectsController < BaseController
       before_action :load_team
-      before_action :load_project, only: :show
+      before_action only: :show do
+        load_project(:id)
+      end
       before_action :load_project_relative, only: :activities
 
       def index
@@ -30,23 +32,11 @@ module Api
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
-      def load_project
-        @project = @team.projects.find(params.require(:id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
-      end
-
       def load_project_relative
         @project = @team.projects.find(params.require(:project_id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
+        unless can_read_project?(@project)
+          raise PermissionError.new(Project, :read)
+        end
       end
     end
   end

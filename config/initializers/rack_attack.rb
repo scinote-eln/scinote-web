@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+return unless Rails.env.production?
+
 Rack::Attack.throttle('api requests by ip',
                       limit: Api.configuration.core_api_rate_limit,
                       period: 60) do |request|
-  request.ip if request.path =~ %r{^\/api\/}
+  request.ip if request.path.match?(%r{^\/api\/})
 end
 
 Rack::Attack.throttled_response = lambda do |env|

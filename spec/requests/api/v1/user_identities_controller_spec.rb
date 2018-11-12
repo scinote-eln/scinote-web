@@ -31,7 +31,8 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
       get api_v1_user_identities_path(user_id: @user2.id),
           headers: @valid_headers
       expect(response).to have_http_status(403)
-      expect(hash_body).to match(nil)
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing user' do
@@ -39,7 +40,8 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
       get api_v1_user_identities_path(user_id: 123),
           headers: @valid_headers
       expect(response).to have_http_status(403)
-      expect(hash_body).to match(nil)
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
   end
 

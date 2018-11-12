@@ -42,7 +42,7 @@ RSpec.describe 'Api::V1::TeamsController', type: :request do
       get api_v1_team_path(id: @teams.first.id), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 403)
     end
 
     it 'When invalid request, non existing team' do
@@ -50,7 +50,7 @@ RSpec.describe 'Api::V1::TeamsController', type: :request do
       get api_v1_team_path(id: 123), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to match({})
+      expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
 end

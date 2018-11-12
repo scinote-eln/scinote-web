@@ -10,36 +10,16 @@ module Api
 
       def index
         protocols = @task.protocols
-                              .page(params.dig(:page, :number))
-                              .per(params.dig(:page, :size))
-
+                         .page(params.dig(:page, :number))
+                         .per(params.dig(:page, :size))
         render jsonapi: protocols,
           each_serializer: ProtocolSerializer
       end
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
-      def load_project
-        @project = @team.projects.find(params.require(:project_id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
-      end
-
-      def load_experiment
-        @experiment = @project.experiments.find(params.require(:experiment_id))
-        render jsonapi: {}, status: :forbidden unless can_read_experiment?(
-          @experiment
-        )
-      end
-
-      def load_task
-        @task = @experiment.my_modules.find(params.require(:task_id))
+      def load_protocol
+        @protocol = @task.protocols.find(params.require(:id))
       end
     end
   end

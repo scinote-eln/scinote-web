@@ -5,7 +5,10 @@ module Api
     class ResultsController < BaseController
       include TinyMceHelper
 
-      before_action :load_vars
+      before_action :load_team
+      before_action :load_project
+      before_action :load_experiment
+      before_action :load_task
       before_action :load_result, only: %i(show)
       before_action :check_manage_permissions, only: %i(create)
 
@@ -19,7 +22,6 @@ module Api
 
       def create
         create_text_result if result_text_params.present?
-        throw ActionController::ParameterMissing unless @result
         render jsonapi: @result,
                serializer: ResultSerializer,
                include: %i(text table file),
@@ -33,28 +35,14 @@ module Api
 
       private
 
-      def load_vars
-        @team = Team.find(params.require(:team_id))
-        unless can_read_team?(@team)
-          return render jsonapi: {}, status: :forbidden
-        end
-        @project = @team.projects.find(params.require(:project_id))
-        unless can_read_project?(@project)
-          return render jsonapi: {}, status: :forbidden
-        end
-        @experiment = @project.experiments.find(params.require(:experiment_id))
-        unless can_read_experiment?(@experiment)
-          return render jsonapi: {}, status: :forbidden
-        end
-        @task = @experiment.my_modules.find(params.require(:task_id))
-      end
-
       def load_result
         @result = @task.results.find(params.require(:id))
       end
 
       def check_manage_permissions
-        render body: nil, status: :forbidden unless can_manage_module?(@task)
+        unless can_manage_module?(@task)
+          raise PermissionError.new(MyModule, :manage)
+        end
       end
 
       def create_text_result
@@ -65,7 +53,8 @@ module Api
               image_params = t[:attributes]
               token = image_params[:file_token]
               unless result_text.text["[~tiny_mce_id:#{token}]"]
-                raise StandardError, 'Image reference not found in the text'
+                raise ActiveRecord::RecordInvalid,
+                      I18n.t('api.core.errors.result_wrong_tinymce.detail')
               end
               image = Paperclip.io_adapters.for(image_params[:file_data])
               image.original_filename = image_params[:file_name]
@@ -74,23 +63,18 @@ module Api
                                     "[~tiny_mce_id:#{tiny_img.id}]")
             end
           end
-          @result = Result.new(
-            user: current_user,
-            my_module: @task,
-            name: result_params[:name],
-            result_text: result_text,
-            last_modified_by: current_user
-          )
+          @result = Result.new(user: current_user,
+                               my_module: @task,
+                               name: result_params[:name],
+                               result_text: result_text,
+                               last_modified_by: current_user)
           @result.save! && result_text.save!
           link_tiny_mce_assets(result_text.text, result_text)
         end
       end
 
       def result_params
-        unless params.require(:data).require(:type) == 'results'
-          raise ActionController::BadRequest,
-                'Wrong object type within parameters'
-        end
+        raise TypeError unless params.require(:data).require(:type) == 'results'
         params.require(:data).require(:attributes).require(:name)
         params.permit(data: { attributes: :name })[:data][:attributes]
       end
@@ -114,8 +98,8 @@ module Api
           /\[~tiny_mce_id:(\w+)\]/
         ).flatten.each do |token|
           unless file_tokens.include?(token)
-            raise StandardError,
-                  'Text contains reference to nonexisting TinyMCE image'
+            raise ActiveRecord::RecordInvalid,
+                  I18n.t('api.core.errors.result_missing_tinymce.detail')
           end
         end
         prms

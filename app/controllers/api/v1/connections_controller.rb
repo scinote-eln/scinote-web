@@ -26,25 +26,6 @@ module Api
 
       private
 
-      def load_team
-        @team = Team.find(params.require(:team_id))
-        render jsonapi: {}, status: :forbidden unless can_read_team?(@team)
-      end
-
-      def load_project
-        @project = @team.projects.find(params.require(:project_id))
-        render jsonapi: {}, status: :forbidden unless can_read_project?(
-          @project
-        )
-      end
-
-      def load_experiment
-        @experiment = @project.experiments.find(params.require(:experiment_id))
-        render jsonapi: {}, status: :forbidden unless can_read_experiment?(
-          @experiment
-        )
-      end
-
       def load_connections
         @connections = Connection.joins(
           'LEFT JOIN my_modules AS inputs ON input_id = inputs.id'
