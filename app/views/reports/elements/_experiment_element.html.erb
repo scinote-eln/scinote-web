@@ -22,7 +22,11 @@
       <div class="pull-left experiment-name">
         <h4>
           <i class="fas fa-flask"></i>
-          <%= name %></h4>
+          <%= name %>
+          <% if experiment.archived? %>
+            <span class="label label-warning"><%=t 'search.index.archived' %></span>
+          <% end %>
+        </h4>
       </div>
     </div>
     <div class="row">
