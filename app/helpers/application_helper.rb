@@ -133,7 +133,6 @@ module ApplicationHelper
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       next unless user
-      team ||= current_team
       popover_for_user_name(user, team)
     end
     new_text
@@ -166,7 +165,7 @@ module ApplicationHelper
     end
 
     user_name = user.full_name
- 
+
     unless skip_user_status || user_still_in_team
       user_name << " #{I18n.t('atwho.res.removed')}"
     end

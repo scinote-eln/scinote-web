@@ -1,5 +1,6 @@
 class Team < ApplicationRecord
   include SearchableModel
+  include ViewableModel
 
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
@@ -38,6 +39,17 @@ class Team < ApplicationRecord
 
   after_commit do
     Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
+
+  def default_view_state
+    { 'projects' =>
+      { 'cards' => { 'sort' => 'new' },
+        'table' =>
+          { 'time' => Time.now.to_i,
+            'order' => [[2, 'asc']],
+            'start' => 0,
+            'length' => 10 },
+        'filter' => 'active' } }
   end
 
   def search_users(query = nil)

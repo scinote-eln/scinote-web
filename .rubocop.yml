@@ -3,7 +3,7 @@ AllCops:
     - "vendor/**/*"
     - "db/schema.rb"
   UseCache: false
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.4
 
 ##################### Style ####################################
 

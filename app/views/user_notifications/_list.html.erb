@@ -9,6 +9,9 @@
       </div>
       <div class="col-xs-9 col-md-11">
         <strong><%= sanitize_input(notification.title) %></strong> <br>
+        <% if notification.deliver? %>
+          Click the link to download the file.</br>
+        <% end %>
         <%= l(notification.created_at, format: :full) %> | <%= sanitize_input(notification.message) %>
       </div>
     </div>

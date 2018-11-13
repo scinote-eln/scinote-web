@@ -18,18 +18,43 @@
       <!-- True secondary navigation (buttons on the right side) -->
       <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">
         <% if all_projects_page? %>
-          <% if can_read_team?(current_team) then %>
-            <li id="canvas-nav-tab" class="<%= "active" if is_all_projects_index? %>">
-              <a href="<%= projects_path %>" title="<%=t "nav2.all_projects.index" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.all_projects.index" %></span>
-                <span class="hidden-xs hidden-lg fas fa-folder"></span>
+          <% if can_read_team?(current_team) %>
+            <li id="projects-active-nav-tab"
+                class="<%= 'active' if @current_filter == 'active' %> projects-view-filter"
+                data-filter="active">
+              <a href="#" title="<%=t "nav2.all_projects.index" %>">
+                <span><%=t "nav2.all_projects.index" %></span>
               </a>
             </li>
-            <li id="project-archive-nav-tab" class="<%= "active" if is_all_projects_archive? %>">
-              <a href="<%= projects_archive_path %>" title="<%=t "nav2.all_projects.archive" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.all_projects.archive" %></span>
-                <span class="hidden-xs hidden-lg fas fa-briefcase"></span>
+            <li id="projects-archive-nav-tab"
+                class="<%= 'active' if @current_filter == 'archived' %> projects-view-filter"
+                data-filter="archived">
+              <a href="#" title="<%=t "nav2.all_projects.archive" %>">
+                <span><%=t "nav2.all_projects.archive" %></span>
               </a>
+            </li>
+            <li id="projects-all-nav-tab"
+                class="<%= 'active' if @current_filter == 'all' %> projects-view-filter"
+                data-filter="all">
+              <a href="#" title="<%=t "nav2.all_projects.all" %>">
+                <span><%=t "nav2.all_projects.all" %></span>
+              </a>
+            </li>
+            <li>
+              <ul class="list-unstyled">
+                <li>
+                  <div class="btn-group projects-view-mode-switch" data-toggle="buttons">
+                    <a class="btn btn-toggle active" href="#projects-cards-view" data-toggle="tab" data-mode="cards">
+                      <input type="radio" name="projects-view-mode-selector" value="cards">
+                      <i class="fas fa-th-large"></i>
+                    </a>
+                    <a class="btn btn-toggle" href="#projects-table-view" data-toggle="tab" data-mode="table">
+                      <input type="radio" name="projects-view-mode-selector" value="table">
+                      <i class="fas fa-th-list"></i>
+                    </a>
+                  </div>
+                </li>
+              </ul>
             </li>
           <% end %>
 

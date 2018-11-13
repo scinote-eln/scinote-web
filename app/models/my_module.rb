@@ -31,7 +31,7 @@ class MyModule < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :experiment, inverse_of: :my_modules, optional: true
+  belongs_to :experiment, inverse_of: :my_modules, touch: true, optional: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
@@ -66,6 +66,13 @@ class MyModule < ApplicationRecord
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
 
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
+  scope :active, -> { where(archived: false) }
+  scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
+  scope :one_day_prior, (lambda do
+    where('my_modules.due_date > ? AND my_modules.due_date < ?',
+          Time.current.utc,
+          Time.current.utc + 1.day)
+  end)
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30

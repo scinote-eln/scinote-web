@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
                                      notifications reports
                                      samples experiment_archive
                                      delete_samples samples_index)
-  before_action :load_projects_tree, only: %i(index show samples archive
+  before_action :load_projects_tree, only: %i(show samples archive
                                               experiment_archive)
   before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
@@ -25,14 +25,46 @@ class ProjectsController < ApplicationController
   DELETE_SAMPLES = 'Delete'.freeze
 
   def index
-    if params[:team]
-      current_team_switch(Team.find_by_id(params[:team]))
+    respond_to do |format|
+      format.json do
+        @current_team = current_team if current_team
+        @current_team ||= current_user.teams.first
+        @projects = ProjectsOverviewService
+                    .new(@current_team, current_user, params)
+                    .project_cards
+        render json: {
+          html: render_to_string(
+            partial: 'projects/index/team_projects.html.erb',
+                     locals: { projects: @projects }
+          ),
+          count: @projects.size
+        }
+      end
+      format.html do
+        current_team_switch(Team.find_by_id(params[:team])) if params[:team]
+        @teams = current_user.teams
+        # New project for create new project modal
+        @project = Project.new
+        view_state =
+          current_team.current_view_state(current_user)
+        @current_filter = view_state.state.dig('projects', 'filter')
+        @current_sort = view_state.state.dig('projects', 'cards', 'sort')
+        load_projects_tree
+      end
     end
+  end
 
-    @teams = current_user.teams
-
-    # New project for create new project modal
-    @project = Project.new
+  def index_dt
+    @draw = params[:draw].to_i
+    respond_to do |format|
+      format.json do
+        @current_team = current_team if current_team
+        @current_team ||= current_user.teams.first
+        @projects = ProjectsOverviewService
+                    .new(@current_team, current_user, params)
+                    .projects_datatable
+      end
+    end
   end
 
   def archive
@@ -69,10 +101,10 @@ class ProjectsController < ApplicationController
         )
       )
 
-      flash[:success] = t("projects.create.success_flash", name: @project.name)
+      message = t('projects.create.success_flash', name: @project.name)
       respond_to do |format|
         format.json {
-          render json: { url: projects_path }, status: :ok
+          render json: { message: message }, status: :ok
         }
       end
     else
@@ -110,8 +142,9 @@ class ProjectsController < ApplicationController
          (project_params[:archived] == 'false' &&
            !can_restore_project?(@project))
         return_error = true
-        is_archive = URI(request.referer).path == projects_archive_path ? "restore" : "archive"
-        flash_error = t("projects.#{is_archive}.error_flash", name: @project.name)
+        is_archive = project_params[:archived] == 'true' ? 'archive' : 'restore'
+        flash_error =
+          t("projects.#{is_archive}.error_flash", name: @project.name)
       end
     elsif !can_manage_project?(@project)
       render_403 && return
@@ -119,19 +152,19 @@ class ProjectsController < ApplicationController
 
     message_renamed = nil
     message_visibility = nil
-    if project_params.include? :name and
-      project_params[:name] != @project.name then
+    if (project_params.include? :name) &&
+       (project_params[:name] != @project.name)
       message_renamed = t(
-        "activities.rename_project",
+        'activities.rename_project',
         user: current_user.full_name,
         project_old: @project.name,
         project_new: project_params[:name]
       )
     end
-    if project_params.include? :visibility and
-      project_params[:visibility] != @project.visibility then
+    if (project_params.include? :visibility) &&
+       (project_params[:visibility] != @project.visibility)
       message_visibility = t(
-        "activities.change_project_visibility",
+        'activities.change_project_visibility',
         user: current_user.full_name,
         project: @project.name,
         visibility: project_params[:visibility] == "visible" ?
@@ -141,7 +174,7 @@ class ProjectsController < ApplicationController
     end
 
     @project.last_modified_by = current_user
-    if @project.update(project_params)
+    if !return_error && @project.update(project_params)
       # Add activities if needed
       if message_visibility.present?
         Activity.create(
@@ -161,10 +194,15 @@ class ProjectsController < ApplicationController
       end
 
       flash_success = t('projects.update.success_flash', name: @project.name)
+      if project_params[:archived] == 'true'
+        flash_success = t('projects.archive.success_flash', name: @project.name)
+      elsif project_params[:archived] == 'false'
+        flash_success = t('projects.restore.success_flash', name: @project.name)
+      end
       respond_to do |format|
-        format.html {
+        format.html do
           # Redirect URL for archive view is different as for other views.
-          if URI(request.referer).path == projects_archive_path
+          if project_params[:archived] == 'false'
             # The project should be restored
             unless @project.archived
               @project.restore(current_user)
@@ -175,56 +213,45 @@ class ProjectsController < ApplicationController
                 user: current_user,
                 project: @project,
                 message: t(
-                  "activities.restore_project",
+                  'activities.restore_project',
                   user: current_user.full_name,
                   project: @project.name
                 )
               )
-
-              flash_success = t('projects.restore.success_flash',
-                name: @project.name)
             end
-            redirect_to projects_archive_path
-          else
+          elsif @project.archived
             # The project should be archived
-            if @project.archived
-              @project.archive(current_user)
+            @project.archive(current_user)
 
-              # "Archive project" activity
-              Activity.create(
-                type_of: :archive_project,
-                user: current_user,
-                project: @project,
-                message: t(
-                  "activities.archive_project",
-                  user: current_user.full_name,
-                  project: @project.name
-                )
+            # "Archive project" activity
+            Activity.create(
+              type_of: :archive_project,
+              user: current_user,
+              project: @project,
+              message: t(
+                'activities.archive_project',
+                user: current_user.full_name,
+                project: @project.name
               )
-
-              flash_success = t('projects.archive.success_flash', name: @project.name)
-            end
-            redirect_to projects_path
+            )
           end
+          redirect_to projects_path
           flash[:success] = flash_success
-        }
-        format.json {
+        end
+        format.json do
           render json: {
             status: :ok,
-            html: render_to_string({
-              partial: "projects/index/project.html.erb",
-              locals: { project: @project }
-              })
+            message: flash_success
           }
-        }
+        end
       end
     else
       return_error = true
     end
 
-    if return_error then
+    if return_error
       respond_to do |format|
-        format.html {
+        format.html do
           flash[:error] = flash_error
           # Redirect URL for archive view is different as for other views.
           if URI(request.referer).path == projects_archive_path
@@ -232,11 +259,11 @@ class ProjectsController < ApplicationController
           else
             redirect_to projects_path
           end
-        }
-        format.json {
-          render json: @project.errors,
-            status: :unprocessable_entity
-        }
+        end
+        format.json do
+          render json: { message: flash_error, errors: @project.errors },
+                 status: :unprocessable_entity
+        end
       end
     end
   end
@@ -293,6 +320,17 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def dt_state_load
+    respond_to do |format|
+      format.json do
+        render json: {
+          state: current_team.current_view_state(current_user)
+            .state.dig('projects', 'table')
+        }
+      end
+    end
+  end
+
   private
 
   include FirstTimeDataGenerator
@@ -320,9 +358,8 @@ class ProjectsController < ApplicationController
     current_team_switch(@project.team) unless @project.nil?
     if current_user.teams.any?
       @current_team = current_team if current_team
-
       @current_team ||= current_user.teams.first
-      @current_sort = params[:sort].to_s
+      @current_sort ||= 'new'
       @projects_tree = current_user.projects_tree(@current_team, @current_sort)
     else
       @projects_tree = []
