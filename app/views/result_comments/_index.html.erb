@@ -4,24 +4,30 @@
 </div>
 <hr>
 <ul class="no-style double-line content-comments">
-  <% if @comments.length == @per_page %>
+  <% if comments.size == per_page %>
     <li class="comment-more text-center">
-      <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
+      <a class="btn btn-default btn-more-comments"
+         href="<%= url_for(result_result_comments_path(result, format: :json, from: comments.first.id)) %>"
+         data-remote="true">
         <%=t "general.more_comments" %>
       </a>
     </li>
   <% end %>
-  <% if @comments.size == 0 then %>
+  <% if comments.size == 0 then %>
     <li class="no-comments"><em><%= t 'general.no_comments' %></em></li>
   <% else %>
-    <%= render 'result_comments/list.html.erb', comments: @comments %>
+    <%= render 'result_comments/list.html.erb', comments: comments %>
   <% end %>
 </ul>
 <% if can_create_comments_in_module?(@my_module) then %>
   <ul class="no-style double-line">
     <li>
       <hr>
-      <%= bootstrap_form_for :comment, url: { format: :json }, method: :post, remote: true, html: { class: 'comment-form' } do |f| %>
+      <%= bootstrap_form_for :comment,
+                             url: result_result_comments_path(result, format: :json),
+                             method: :post,
+                             remote: true,
+                             html: { class: 'comment-form' } do |f| %>
         <%= f.smart_text_area :message,
                               single_line: true,
                               hide_label: true,
