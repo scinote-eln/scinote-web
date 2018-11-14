@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require 'csv'
+
 module RepositoryZipExport
   def self.generate_zip(params, repository, current_user)
     # Fetch rows in the same order as in the currently viewed datatable

@@ -149,6 +149,15 @@ body {
   width: 100% !important;
 }
 
+// Makes blue selected element line fill parent (as it should, fixes sci-2672)
+.repository-dropdown {
+  .selected {
+    a {
+      display: block !important;
+    }
+  }
+}
+
 mark,.mark {
   background-color: $brand-warning;
 }
@@ -1857,6 +1866,28 @@ th.custom-field .modal-tooltiptext {
   cursor: pointer;
 }
 
+.tooltip-open {
+  background-color: $color-concrete;
+  color: $color-black;
+  font-size: $font-size-base;
+
+  .popover-footer {
+    background-color: $color-gainsboro;
+    border-radius: 3px;
+    bottom: 5px;
+    position: absolute;
+    right: 5px;
+
+    a {
+      color: $color-dove-gray;
+    }
+  }
+}
+
+.tooltip-enter {
+  background-color: $color-alto;
+}
+
 .my_module-state-buttons {
   padding-top: 6px;
 }
@@ -1900,6 +1931,10 @@ a.disabled-with-click-events {
 
 .linkedin-signin-button {
   margin: 15px 0;
+}
+
+.sign-in-up-links {
+  padding-bottom: 60px;
 }
 
 .tiny-mce-pdf-ready {

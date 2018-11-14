@@ -349,7 +349,9 @@ class ExperimentsController < ApplicationController
   end
 
   def load_projects_tree
-    @projects_tree = current_user.projects_tree(current_team)
+    # Switch to correct team
+    current_team_switch(@experiment.project.team) unless @experiment.project.nil?
+    @projects_tree = current_user.projects_tree(current_team, nil)
   end
 
   def check_view_permissions

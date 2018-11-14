@@ -98,23 +98,31 @@ class Asset < ApplicationRecord
     options = {}
   )
 
-    project_ids =
-      Project
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
-    team_ids = user.teams.pluck(:id)
+    teams = user.teams.select(:id)
 
-    new_query =
-      Asset
-      .distinct
-      .left_outer_joins(:asset_text_datum)
-      .left_outer_joins(
-        step: { protocol: { my_module: { experiment: :project } } }
-      )
-      .left_outer_joins(result: { my_module: { experiment: :project } })
-      .left_outer_joins(repository_cell: { repository_column: :repository })
-      .where('projects.id IN (?) OR repositories.team_id IN (?)',
-             project_ids, team_ids)
+    assets_in_steps = Asset.joins(:step).where(
+      'steps.id IN (?)',
+      Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+          .select(:id)
+    ).pluck(:id)
+
+    assets_in_results = Asset.joins(:result).where(
+      'results.id IN (?)',
+      Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+            .select(:id)
+    ).pluck(:id)
+
+    assets_in_inventories = Asset.joins(
+      repository_cell: { repository_column: :repository }
+    ).where('repositories.team_id IN (?)', teams).pluck(:id)
+
+    assets =
+      Asset.distinct
+           .where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
+                  assets_in_steps, assets_in_results, assets_in_inventories)
+
+    new_query = Asset.left_outer_joins(:asset_text_datum)
+                     .from(assets, 'assets')
 
     a_query = s_query = ''
 
@@ -213,48 +221,52 @@ class Asset < ApplicationRecord
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      delay(queue: :assets, run_at: 20.minutes.from_now)
-        .extract_asset_text(team)
+      Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
+           .extract_asset_text(id)
     else
       # Update asset's estimated size immediately
       update_estimated_size(team)
     end
   end
 
-  def extract_asset_text(team = nil)
-    return if file.blank?
+  def self.extract_asset_text(asset_id)
+    asset = find_by_id(asset_id)
+    return unless asset.present? && asset.file.present?
 
     begin
-      file_path = file.path
+      file_path = asset.file.path
 
-      if file.is_stored_on_s3?
-        fa = file.fetch
+      if asset.file.is_stored_on_s3?
+        fa = asset.file.fetch
         file_path = fa.path
       end
 
-      if (!Yomu.class_eval('@@server_pid'))
-        Yomu.server(:text,nil)
+      unless Yomu.class_eval('@@server_pid')
+        Yomu.server(:text, nil)
         sleep(5)
       end
       y = Yomu.new file_path
 
       text_data = y.text
 
-      if asset_text_datum.present?
+      if asset.asset_text_datum.present?
         # Update existing text datum if it exists
-        asset_text_datum.update(data: text_data)
+        asset.asset_text_datum.update(data: text_data)
       else
         # Create new text datum
-        AssetTextDatum.create(data: text_data, asset: self)
+        AssetTextDatum.create(data: text_data, asset: asset)
       end
 
-      Rails.logger.info "Asset #{id}: Asset file successfully extracted"
+      Rails.logger.info "Asset #{asset.id}: Asset file successfully extracted"
 
       # Finally, update asset's estimated size to include
       # the data vector
-      update_estimated_size(team)
-    rescue Exception => e
-      Rails.logger.fatal "Asset #{id}: Error extracting contents from asset file #{file.path}: " + e.message
+      asset.update_estimated_size(asset.team)
+    rescue StandardError => e
+      Rails.logger.fatal(
+        "Asset #{asset.id}: Error extracting contents from asset "\
+        "file #{asset.file.path}: #{e.message}"
+      )
     ensure
       File.delete file_path if fa
     end

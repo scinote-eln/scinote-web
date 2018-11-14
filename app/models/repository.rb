@@ -34,16 +34,19 @@ class Repository < ApplicationRecord
     repository = nil,
     options = {}
   )
-    repositories = repository ? repository : Repository.where(team: user.teams)
+    repositories = repository || Repository.where(team: user.teams)
 
     includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
     searchable_attributes = ['repository_rows.name', 'users.full_name'] +
                             Extends::REPOSITORY_EXTRA_SEARCH_ATTR
 
+    all_rows = RepositoryRow.where(repository: repositories)
+
     new_query = RepositoryRow
+                .distinct
+                .from(all_rows, 'repository_rows')
                 .left_outer_joins(:created_by)
                 .left_outer_joins(includes_json)
-                .where(repository: repositories)
                 .where_attributes_like(searchable_attributes, query, options)
 
     # Show all results if needed
@@ -56,7 +59,6 @@ class Repository < ApplicationRecord
         .group('repositories.id')
     else
       new_query
-        .distinct
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end

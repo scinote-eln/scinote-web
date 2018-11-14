@@ -41,7 +41,7 @@ class TeamsController < ApplicationController
       )
 
       if @temp_file.save
-        @temp_file.destroy_obsolete
+        TempFile.destroy_obsolete(@temp_file.id)
         respond_to do |format|
           format.json do
             render json: {

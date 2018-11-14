@@ -14,8 +14,12 @@
 
     <div>
       <% if @member_of > 0 %>
+        <%= t("users.settings.teams.index.description_label") %>
+        <br><br>
         <%= t("users.settings.teams.index.member_of", count: @member_of) %>
       <% else %>
+        <%= t("users.settings.teams.index.description_label") %>
+        <br><br>
         <em><%= t("users.settings.teams.index.no_teams") %></em>
       <% end %>
       <% if can_create_teams? %>

@@ -36,7 +36,7 @@ module ImportRepository
       )
 
       if temp_file.save
-        temp_file.destroy_obsolete
+        TempFile.destroy_obsolete(temp_file.id)
         return temp_file
       end
     end

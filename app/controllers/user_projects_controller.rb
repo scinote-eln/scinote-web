@@ -3,10 +3,11 @@ class UserProjectsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_vars
+  before_action :load_up_var, only: %i(update destroy)
   before_action :check_view_permissions, only: :index
   before_action :check_manage_users_permissions, only: :index_edit
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permisisons, only: %i(update destroy)
+  before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
     @users = @project.user_projects
@@ -86,12 +87,6 @@ class UserProjectsController < ApplicationController
   end
 
   def update
-    @up = UserProject.find(params[:id])
-
-    unless @up
-      render_404
-    end
-
     @up.role = up_params[:role]
 
     if @up.save
@@ -168,16 +163,12 @@ class UserProjectsController < ApplicationController
 
   def load_vars
     @project = Project.find_by_id(params[:project_id])
-    unless @project
-      render_404
-    end
+    render_404 unless @project
+  end
 
-    if action_name == "destroy"
-      @up = UserProject.find(params[:id])
-      unless @up
-        render_404
-      end
-    end
+  def load_up_var
+    @up = UserProject.find(params[:id])
+    render_404 unless @up
   end
 
   def check_view_permissions
@@ -192,9 +183,9 @@ class UserProjectsController < ApplicationController
     render_403 unless can_create_projects?(current_team)
   end
 
-  def check_manage_permisisons
-    render_403 unless can_manage_project?(@project) ||
-                      params[:id] != current_user.id
+  def check_manage_permissions
+    render_403 unless can_manage_project?(@project) &&
+                      @up.user_id != current_user.id
   end
 
   def init_gui

@@ -19,7 +19,11 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success" %>
+              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success help_tooltips",
+                           data: {
+                             tooltiplink: I18n.t('tooltips.link.new_project'),
+                             tooltipcontent: I18n.t('tooltips.text.new_project')
+                           } %>
             </div>
           </div>
         </div>
@@ -29,7 +33,7 @@
 
   <div class="content-pane" id="projects-index">
 
-    <div id="projects-absent" style="<%= 'display:none' if @projects_tree.any? %>">
+    <div id="projects-absent" style="display:none">
       <div class="jumbotron text-center" style="margin-top:12%">
         <strong><%=t 'projects.index.no_projects.text' %></strong>
         <% if @teams.exists? && can_create_projects?(current_team) %>
@@ -44,7 +48,7 @@
         <% end %>
       </div>
     </div>
-    <div id="projects-present" style="<%= 'display:none' if @projects_tree.empty? %>">
+    <div id="projects-present" style="display:none">
       <!-- Edit project modal -->
       <div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
         <div class="modal-dialog" role="document">
@@ -131,7 +135,8 @@
             <!-- export projects button -->
             <button type="button" class="btn btn-default pull-right"
                                   id="export-projects-button"
-                                  data-export-projects-url="<%= export_projects_team_path(current_team) %>">
+                                  data-export-projects-url="<%= export_projects_team_path(current_team) %>"
+                                  disabled>
             <span class="fas fa-file-export"></span>
             <span class="hidden-xs-custom"><%= t("projects.export_projects.export_button") %></span>
           </button>

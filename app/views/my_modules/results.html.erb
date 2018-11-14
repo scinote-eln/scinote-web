@@ -15,6 +15,9 @@
     </div>
 
     <% if can_manage_module?(@my_module) %>
+      <div class="help_tooltips" style="width:25%"
+           data-tooltiplink="<%= I18n.t('tooltips.link.task.results') %>"
+           data-tooltipcontent="<%= I18n.t('tooltips.text.task.results') %>">
       <span class="hidden-xs"><%= t'my_modules.results.add_label' %></span>
       <a class="btn btn-primary"
          id="new-result-text"
@@ -37,6 +40,7 @@
         <span class="fas fa-paperclip"></span>
         <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
       </a>
+    </div>
     <% end %>
   </div>
 

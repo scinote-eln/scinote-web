@@ -13,7 +13,10 @@
   <div id="repository-toolbar">
 
     <% if can_create_repository_rows?(@repository.team) %>
-      <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
+      <button type="button" class="btn btn-primary editAdd help_tooltips"
+              id="addRepositoryRecord" onclick="onClickAddRecord()"
+              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.new') %>"
+              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.new') %>">
         <span class="fas fa-plus"></span>
         <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
       </button>

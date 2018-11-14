@@ -340,7 +340,6 @@
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
     exportProjectsBtn = $('#export-projects-button');
-    exportProjectsBtn.addClass('disabled');
 
     updateSelectedCards();
     initNewProjectModal();
@@ -363,14 +362,14 @@
       if (this.checked && index === -1) {
         $(this).closest('.panel-project').addClass('selected');
         selectedProjects.push(projectId);
-        exportProjectsBtn.removeClass('disabled');
+        exportProjectsBtn.removeAttr('disabled');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         $(this).closest('.panel-project').removeClass('selected');
         selectedProjects.splice(index, 1);
 
         if (selectedProjects.length === 0) {
-          exportProjectsBtn.addClass('disabled');
+          exportProjectsBtn.attr('disabled', 'disabled');
         }
       }
     });
@@ -435,13 +434,13 @@
         sort: projectsViewSort
       },
       success: function(data) {
-        if (data.html.search(/id="edit-project-cards-form-\d+"/)) {
-          viewContainer.html(data.html);
-          $('#projects-absent').hide();
-          $('#projects-present').show();
-        } else {
+        viewContainer.html(data.html);
+        if (data.count === 0 && projectsViewFilter !== 'archived') {
           $('#projects-present').hide();
           $('#projects-absent').show();
+        } else {
+          $('#projects-absent').hide();
+          $('#projects-present').show();
         }
         initFormSubmitLinks(viewContainer);
         init();
@@ -544,13 +543,13 @@
       // If checkbox is checked and row ID is not in list of selected project IDs
       if (this.checked && index === -1) {
         selectedProjects.push(rowId);
-        exportProjectsBtn.removeClass('disabled');
+        exportProjectsBtn.removeAttr('disabled');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         selectedProjects.splice(index, 1);
 
-        if (selectedProjects.length === 0)  {
-          exportProjectsBtn.addClass('disabled');
+        if (selectedProjects.length === 0) {
+          exportProjectsBtn.attr('disabled', 'disabled');
         }
       }
 
@@ -664,16 +663,7 @@
         { data: 'tasks' },
         { data: 'actions' }
       ],
-      fnPreDrawCallback: function() {
-        $('#projects-absent').hide();
-        $('#projects-present').show();
-      },
       fnDrawCallback: function() {
-        var $table = TABLE.table().node();
-        if ($('.dataTables_empty', $table).length) {
-          $('#projects-present').hide();
-          $('#projects-absent').show();
-        }
         animateSpinner(this, false);
         updateDataTableSelectAllCtrl();
         initRowSelection();
@@ -712,6 +702,8 @@
     if ($(event.target).data('mode') === 'table') {
       // table tab
       $('#sortMenu').hide();
+      $('#projects-absent').hide();
+      $('#projects-present').show();
       if ($.isEmptyObject(TABLE)) {
         dataTableInit();
       } else if (projectsViewFilterChanged) {

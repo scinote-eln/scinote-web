@@ -90,14 +90,14 @@ class ProjectsOverviewService
         'visibility = 1 OR user_projects.user_id = :user_id', user_id: @user.id
       )
     end
-    projects = projects
-               .select('projects.*')
-               .select('COUNT(DISTINCT user_projects.id) AS user_count')
-               .select('COUNT(DISTINCT comments.id) AS comment_count')
-               .select('COUNT(DISTINCT due_modules.id) AS notification_count')
-               .group('projects.id')
-               .limit(1_000_000)
-    Project.from(projects, 'projects')
+    projects
+      .select('projects.*')
+      .select('(SELECT COUNT(DISTINCT user_projects.id) FROM user_projects '\
+        'WHERE user_projects.project_id = projects.id) AS user_count')
+      .select('COUNT(DISTINCT comments.id) AS comment_count')
+      .select('COUNT(DISTINCT due_modules.id) AS notification_count')
+      .group('projects.id')
+      .limit(1_000_000)
   end
 
   def fetch_dt_records
@@ -105,13 +105,13 @@ class ProjectsOverviewService
       'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
     )
     exp_join =
-      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id'
+      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id'\
+      ' AND ((projects.archived = true)'\
+      ' OR (projects.archived = false AND experiments.archived = false))'
     task_join =
-      'LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id'
-    unless @params[:filter] == 'archived'
-      exp_join += ' AND experiments.archived = projects.archived'
-      task_join += ' AND my_modules.archived = projects.archived'
-    end
+      'LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id'\
+      ' AND ((projects.archived = true)'\
+      ' OR (projects.archived = false AND my_modules.archived = false))'
     projects = projects.joins(exp_join).joins(task_join)
 
     # Only admins see all projects of the team
@@ -120,13 +120,13 @@ class ProjectsOverviewService
         'visibility = 1 OR user_projects.user_id = :user_id', user_id: @user.id
       )
     end
-    projects = projects
-               .select('projects.*')
-               .select('COUNT(DISTINCT user_projects.id) AS user_count')
-               .select('COUNT(DISTINCT experiments.id) AS experiment_count')
-               .select('COUNT(DISTINCT my_modules.id) AS task_count')
-               .group('projects.id')
-    Project.from(projects, 'projects')
+    projects
+      .select('projects.*')
+      .select('(SELECT COUNT(DISTINCT user_projects.id) FROM user_projects '\
+        'WHERE user_projects.project_id = projects.id) AS user_count')
+      .select('COUNT(DISTINCT experiments.id) AS experiment_count')
+      .select('COUNT(DISTINCT my_modules.id) AS task_count')
+      .group('projects.id')
   end
 
   def search(records, value)

@@ -10,7 +10,9 @@
 >
   <%= bootstrap_form_tag url: canvas_experiment_url, method: "post" do |f| %>
     <% if can_manage_experiment?(@experiment) %>
-      <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
+      <%=link_to "", type: "button", class: "btn btn-primary help_tooltips", id: "canvas-new-module",
+                     data: { tooltiplink: I18n.t('tooltips.link.task.new'),
+                     tooltipcontent: I18n.t('tooltips.text.task.new') } do %>
         <span class="hbtn-default">
           <span class="fas fa-credit-card"></span>
           <%= t("experiments.canvas.edit.new_module") %>

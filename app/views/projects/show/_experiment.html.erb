@@ -39,7 +39,7 @@
           <% end %>
         </div>
       <% end %>
-      <span>
+      <span class="help_tooltips" data-tooltiplink="<%= I18n.t('tooltips.link.experiment.dates') %>" data-tooltipcontent="<%= I18n.t('tooltips.text.experiment.dates') %>">
         <span class="fas fa-calendar-alt" aria-hidden="true"></span>
         <%= l(experiment.created_at, format: :full_date) %> - <%= localize(experiment.updated_at, format: :full_date) %>
       </span>

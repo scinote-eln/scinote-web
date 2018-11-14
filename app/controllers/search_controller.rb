@@ -173,7 +173,6 @@ class SearchController < ApplicationController
     @protocol_search_count = fetch_cached_count Protocol
     @step_search_count = fetch_cached_count Step
     @checklist_search_count = fetch_cached_count Checklist
-    @sample_search_count = fetch_cached_count Sample
     @repository_search_count_total = count_by_repository
     @asset_search_count = fetch_cached_count Asset
     @table_search_count = fetch_cached_count Table
@@ -188,7 +187,6 @@ class SearchController < ApplicationController
     @search_results_count += @protocol_search_count
     @search_results_count += @step_search_count
     @search_results_count += @checklist_search_count
-    @search_results_count += @sample_search_count
     @search_results_count += @repository_search_count_total
     @search_results_count += @asset_search_count
     @search_results_count += @table_search_count

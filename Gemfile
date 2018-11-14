@@ -22,7 +22,6 @@ gem 'omniauth-linkedin-oauth2'
 gem 'active_model_serializers', '~> 0.10.7'
 gem 'json-jwt'
 gem 'jwt', '~> 1.5'
-gem 'kaminari'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
@@ -108,7 +107,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'
-  gem 'rubocop', '= 0.51.0', require: false
+  gem 'rubocop', '>= 0.59.0', require: false
   gem 'scss_lint', require: false
   gem 'starscope', require: false
   gem 'bullet'

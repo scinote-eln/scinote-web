@@ -92,52 +92,27 @@
           </div>
         <% end %>
         <hr>
-        <div class="notification-settings-container">
-          <h4><%= t('notifications.title') %></h4>
-          <%= form_for(@user,
-                       url: notifications_settings_path(format: :json),
-                       html: { method: :post, id: 'notifications-settings-panel' },
-                       remote: true) do |f| %>
-          <div class="row">
-            <div class="col-sm-2">
-              <span class="assignment hidden-sm">
-                <i class="fas fa-newspaper"></i>
-              </span>
-            </div>
-            <div class="col-sm-10">
-              <strong><%=t 'notifications.form.assignments' %></strong>
-              <p><%=t 'notifications.form.assignments_description' %></p>
-              <div class="row">
-                <div class="col-sm-4">
-                  <%=t 'notifications.form.notification_scinote' %>
-                </div>
-                <div class="col-sm-8">
-                  <%= check_box_tag :assignments_notification, @user.assignments_notification %>
-                </div>
+        <%= form_for(@user,
+                     url: update_togglable_settings_path(format: :json),
+                     html: { method: :post, id: 'togglable-settings-panel' },
+                     remote: true) do |f| %>
+          <div class="preferences-settings-container">
+            <h4><%= t('notifications.title') %></h4>
+            <div class="row">
+              <div class="col-sm-2">
+                <span class="assignment hidden-sm">
+                  <i class="fas fa-newspaper"></i>
+                </span>
               </div>
-              <div class="row">
-                <div class="col-sm-4">
-                  <%=t 'notifications.form.notification_email' %>
-                </div>
-                <div class="col-sm-8">
-                  <%= check_box_tag :assignments_notification_email, @user.assignments_email_notification %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-2">
-              <%= image_tag 'icon_small/missing.png', class: 'img-circle ' %>
-            </div>
-            <div class="col-sm-10">
-                <strong><%=t 'notifications.form.recent_notification' %></strong>
-                <p><%=t 'notifications.form.recent_notification_description' %></p>
+              <div class="col-sm-10">
+                <strong><%=t 'notifications.form.assignments' %></strong>
+                <p><%=t 'notifications.form.assignments_description' %></p>
                 <div class="row">
                   <div class="col-sm-4">
                     <%=t 'notifications.form.notification_scinote' %>
                   </div>
                   <div class="col-sm-8">
-                    <%= check_box_tag :recent_notification, @user.recent_notification %>
+                    <%= check_box_tag :assignments_notification, @user.assignments_notification %>
                   </div>
                 </div>
                 <div class="row">
@@ -145,38 +120,84 @@
                     <%=t 'notifications.form.notification_email' %>
                   </div>
                   <div class="col-sm-8">
-                    <%= check_box_tag :recent_notification_email, @user.recent_email_notification %>
+                    <%= check_box_tag :assignments_notification_email, @user.assignments_email_notification %>
                   </div>
                 </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-2">
-              <span class="system-message hidden-sm"><i class="fas fa-chess-rook" aria-hidden="true"></i></span>
-            </div>
-            <div class="col-sm-10">
-              <strong><%=t 'notifications.form.system_message' %></strong>
-              <p><%=t 'notifications.form.system_message_description' %></p>
-              <div class="row">
-                <div class="col-sm-4">
-                  <%=t 'notifications.form.notification_scinote' %>
-                </div>
-                <div class="col-sm-8">
-                  <%= check_box_tag :system_message_notification %>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-4">
-                  <%=t 'notifications.form.notification_email' %>
-                </div>
-                <div class="col-sm-8">
-                  <%= check_box_tag :system_message_notification_email, @user.system_message_email_notification %>
-                </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-sm-2">
+                <%= image_tag 'icon_small/missing.png', class: 'img-circle ' %>
+              </div>
+              <div class="col-sm-10">
+                  <strong><%=t 'notifications.form.recent_notification' %></strong>
+                  <p><%=t 'notifications.form.recent_notification_description' %></p>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <%=t 'notifications.form.notification_scinote' %>
+                    </div>
+                    <div class="col-sm-8">
+                      <%= check_box_tag :recent_notification, @user.recent_notification %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <%=t 'notifications.form.notification_email' %>
+                    </div>
+                    <div class="col-sm-8">
+                      <%= check_box_tag :recent_notification_email, @user.recent_email_notification %>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-2">
+                <span class="system-message hidden-sm"><i class="fas fa-chess-rook" aria-hidden="true"></i></span>
+              </div>
+              <div class="col-sm-10">
+                <strong><%=t 'notifications.form.system_message' %></strong>
+                <p><%=t 'notifications.form.system_message_description' %></p>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <%=t 'notifications.form.notification_scinote' %>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= check_box_tag :system_message_notification %>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <%=t 'notifications.form.notification_email' %>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= check_box_tag :system_message_notification_email, @user.system_message_email_notification %>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <% end %>
-        </div>
+          <hr>
+          <div class="preferences-settings-container">
+            <h4><%= t('users.settings.account.preferences.edit.tips.title') %></h4>
+            <div class="row">
+              <div class="col-sm-2">
+              </div>
+              <div class="col-sm-10">
+                <p><%=t 'users.settings.account.preferences.edit.tips.text1' %></p>
+                <p><%=t 'users.settings.account.preferences.edit.tips.text2' %></p>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <%=t 'users.settings.account.preferences.edit.tips.toggle' %>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= check_box_tag :tooltips_enabled, @user.settings[:tooltips_enabled] %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        <br>
       </div>
     </div>
   </div>

@@ -36,7 +36,8 @@ class ProjectsController < ApplicationController
           html: render_to_string(
             partial: 'projects/index/team_projects.html.erb',
                      locals: { projects: @projects }
-          )
+          ),
+          count: @projects.size
         }
       end
       format.html do
@@ -353,13 +354,13 @@ class ProjectsController < ApplicationController
   end
 
   def load_projects_tree
+    # Switch to correct team
+    current_team_switch(@project.team) unless @project.nil? || @project.new_record?
     if current_user.teams.any?
       @current_team = current_team if current_team
       @current_team ||= current_user.teams.first
       @current_sort ||= 'new'
-      @projects_tree = current_user.projects_tree(
-        @current_team, @current_filter, @current_sort
-      )
+      @projects_tree = current_user.projects_tree(@current_team, @current_sort)
     else
       @projects_tree = []
     end

@@ -544,12 +544,30 @@
     var $descrTextarea = $form.find("#step_description");
     var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
-      <%= Constants::TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
-
+      <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
+    var tableNamesValidArray = [];
+    // iterate over table titles and validate their length
+    $form.find(".table_name").each(function(index , tableName) {
+      if (tableName.value.length > 0) {
+        tableNamesValidArray[index] = textValidator(ev, tableName, 1,
+          <%= Constants::NAME_MAX_LENGTH %> );
+      } else {
+        tableNamesValidArray[index] = true;
+      }
+    });
+    var tableNamesValid = true;
+    // passes if all table names are valid
+    for (var i=0;i<tableNamesValidArray.length;i++){
+      if(tableNamesValidArray[i] !== true){
+        tableNamesValid = false;
+        break;
+      }
+    }
     if (DragNDropSteps.filesStatus() &&
         checklistsValid &&
         nameValid &&
-        descriptionValid) {
+        descriptionValid &&
+        tableNamesValid ) {
 
       $form.find("[data-role='editable-table']").each(function() {
         var hot = $(this).find(".hot").handsontable('getInstance');
