@@ -25,6 +25,7 @@ class Table < ApplicationRecord
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
+  after_save { result&.touch; step&.touch }
   #accepts_nested_attributes_for :table
 
   def self.search(user,

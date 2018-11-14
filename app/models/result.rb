@@ -19,17 +19,11 @@ class Result < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :my_module, inverse_of: :results, optional: true
-  has_one :result_asset,
-    inverse_of: :result,
-    dependent: :destroy
+  has_one :result_asset, inverse_of: :result, dependent: :destroy
   has_one :asset, through: :result_asset
-  has_one :result_table,
-    inverse_of: :result,
-    dependent: :destroy
+  has_one :result_table, inverse_of: :result, dependent: :destroy
   has_one :table, through: :result_table
-  has_one :result_text,
-    inverse_of: :result,
-    dependent: :destroy
+  has_one :result_text, inverse_of: :result, dependent: :destroy
   has_many :result_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
 
