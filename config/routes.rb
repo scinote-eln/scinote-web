@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  use_doorkeeper do
+    skip_controllers :applications, :authorized_applications, :token_info
+  end
   require 'subdomain'
 
   def draw(routes_name)
@@ -556,10 +559,65 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      post 'auth/token', to: 'api#authenticate'
       if Api.configuration.core_api_v1_preview
         namespace :v1 do
           resources :teams, only: %i(index show) do
+            resources :inventories,
+                      only: %i(index create show update destroy) do
+              resources :inventory_columns,
+                        only: %i(index create show update destroy),
+                        path: 'columns',
+                        as: :columns do
+                resources :inventory_list_items,
+                          only: %i(index create show update destroy),
+                          path: 'list_items',
+                          as: :list_items
+              end
+              resources :inventory_items,
+                        only: %i(index create show update destroy),
+                        path: 'items',
+                        as: :items do
+                resources :inventory_cells,
+                          only: %i(index create show update destroy),
+                          path: 'cells',
+                          as: :cells
+              end
+            end
+            resources :projects, only: %i(index show) do
+              resources :user_projects, only: %i(index show),
+                path: 'users', as: :users
+              resources :project_comments, only: %i(index show),
+                path: 'comments', as: :comments
+              get 'activities', to: 'projects#activities'
+              resources :reports, only: %i(index show),
+                path: 'reports', as: :reports
+              resources :experiments, only: %i(index show) do
+                resources :task_groups, only: %i(index show)
+                resources :connections, only: %i(index show)
+                resources :tasks, only: %i(index show) do
+                  resources :task_inventory_items, only: %i(index show),
+                            path: 'items',
+                            as: :items
+                  resources :task_users, only: %i(index),
+                            path: 'users',
+                            as: :users
+                  resources :task_tags, only: %i(index show),
+                            path: 'tags',
+                            as: :tags
+                  resources :protocols, only: %i(index show)
+                  resources :results, only: %i(index create show)
+                  get 'inputs', to: 'tasks#inputs'
+                  get 'outputs', to: 'tasks#outputs'
+                  get 'activities', to: 'tasks#activities'
+                end
+              end
+            end
+          end
+          resources :users, only: %i(show) do
+            resources :user_identities,
+                      only: %i(index create show update destroy),
+                      path: 'identities',
+                      as: :identities
           end
         end
       end

@@ -25,10 +25,12 @@ module Api
       )[:iss].to_s
     end
 
-    def self.refresh_needed?(payload)
-      time_left = payload[:exp].to_i - Time.now.to_i
-      return true if time_left < (Api.configuration.core_api_token_ttl.to_i / 2)
-      false
+    # Method used by Doorkeeper for custom tokens
+    def self.generate(options = {})
+      encode(
+        { sub: options[:resource_owner_id] },
+        options[:expires_in].seconds.from_now.to_i
+      )
     end
   end
 end

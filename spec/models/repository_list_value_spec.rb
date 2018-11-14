@@ -20,13 +20,13 @@ RSpec.describe RepositoryListValue, type: :model do
 
   describe '#formatted' do
     let!(:repository) { create :repository }
-    let!(:repository_column) { create :repository_column, name: 'My column' }
     let!(:repository_column) do
-      create :repository_column, data_type: :RepositoryListValue
+      create :repository_column, name: 'My column',
+                                 data_type: :RepositoryListValue
     end
     let!(:repository_row) { create :repository_row, name: 'My row' }
     let!(:repository_list_value) do
-      create :repository_list_value, repository_cell_attributes: {
+      build :repository_list_value, repository_cell_attributes: {
         repository_column: repository_column,
         repository_row: repository_row
       }
@@ -38,49 +38,20 @@ RSpec.describe RepositoryListValue, type: :model do
                          repository: repository,
                          repository_column: repository_column
       repository_list_value.repository_list_item = list_item
-      repository_list_value.save
+      repository_list_value.save!
       expect(repository_list_value.reload.formatted).to eq 'my item'
-    end
-
-    it 'retuns only the the item related to the list' do
-      repository_row_two = create :repository_row, name: 'New row'
-      repository_list_value_two =
-        create :repository_list_value, repository_cell_attributes: {
-          repository_column: repository_column,
-          repository_row: repository_row_two
-        }
-      list_item = create :repository_list_item,
-                         data: 'new item',
-                         repository: repository,
-                         repository_column: repository_column
-      repository_list_value.repository_list_item = list_item
-      expect(repository_list_value.reload.formatted).to_not eq 'my item'
-      expect(repository_list_value.formatted).to eq ''
-    end
-
-    it 'returns an empty string if no item selected' do
-      list_item = create :repository_list_item,
-                         data: 'my item',
-                         repository: repository,
-                         repository_column: repository_column
-      expect(repository_list_value.reload.formatted).to eq ''
-    end
-
-    it 'returns an empty string if item does not exists' do
-      repository_list_value.repository_list_item = nil
-      expect(repository_list_value.reload.formatted).to eq ''
     end
   end
 
   describe '#data' do
     let!(:repository) { create :repository }
-    let!(:repository_column) { create :repository_column, name: 'My column' }
     let!(:repository_column) do
-      create :repository_column, data_type: :RepositoryListValue
+      create :repository_column, name: 'My column',
+                                 data_type: :RepositoryListValue
     end
     let!(:repository_row) { create :repository_row, name: 'My row' }
     let!(:repository_list_value) do
-      create :repository_list_value, repository_cell_attributes: {
+      build :repository_list_value, repository_cell_attributes: {
         repository_column: repository_column,
         repository_row: repository_row
       }
@@ -92,36 +63,24 @@ RSpec.describe RepositoryListValue, type: :model do
                          repository: repository,
                          repository_column: repository_column
       repository_list_value.repository_list_item = list_item
-      repository_list_value.save
+      repository_list_value.save!
       expect(repository_list_value.reload.data).to eq 'my item'
     end
 
     it 'retuns only the the item related to the list' do
-      repository_row_two = create :repository_row, name: 'New row'
-      create :repository_list_value,
-             repository_cell_attributes: {
-               repository_column: repository_column,
-               repository_row: repository_row_two
-             }
+      repository_column_two = create :repository_column, name: 'New column'
       list_item = create :repository_list_item,
                          data: 'new item',
                          repository: repository,
-                         repository_column: repository_column
-      repository_list_value.repository_list_item = list_item
-      expect(repository_list_value.reload.data).to_not eq 'my item'
-      expect(repository_list_value.data).to be_nil
-    end
-
-    it 'returns an empty string if no item selected' do
-      create :repository_list_item, data: 'my item',
-                                    repository: repository,
-                                    repository_column: repository_column
-      expect(repository_list_value.reload.data).to be_nil
-    end
-
-    it 'returns an empty string if item does not exists' do
-      repository_list_value.repository_list_item = nil
-      expect(repository_list_value.reload.data).to be_nil
+                         repository_column: repository_column_two
+      repository_list_value_two = build :repository_list_value,
+                                        repository_cell_attributes: {
+                                          repository_column: repository_column,
+                                          repository_row: repository_row
+                                        }
+      repository_list_value_two.repository_list_item = list_item
+      saved = repository_list_value_two.save
+      expect(saved).to eq false
     end
   end
 end
