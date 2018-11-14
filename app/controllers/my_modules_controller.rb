@@ -383,7 +383,7 @@ class MyModulesController < ApplicationController
                                              current_user,
                                              @my_module)
     @assigned_rows = records.assigned_rows
-    @repository_row_count = records.repository_rows.count
+    @repository_row_count = records.repository_rows.length
     @columns_mappings = records.mappings
     @repository_rows = records.repository_rows.page(page).per(per_page)
     render 'repository_rows/index.json'

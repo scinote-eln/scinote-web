@@ -38,6 +38,9 @@ public/system/*
 # Ignore robots.txt
 public/robots.txt
 
+$ Ignore compiled assets
+public/packs-test/*
+
 tags
 *.orig
 *.swp

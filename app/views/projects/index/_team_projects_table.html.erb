@@ -1,0 +1,22 @@
+<div class="projects-overview-table">
+  <table id="projects-overview-table" class="table"
+    data-source="<%= projects_index_dt_path %>"
+    data-state-load-source="<%= projects_dt_state_load_path %>">
+    <thead>
+      <tr>
+        <th><input name="select_all" value="1" type="checkbox"></th>
+        <th><%= t("projects.table.status") %></th>
+        <th><%= t("projects.table.name") %></th>
+        <th><%= t("projects.table.start") %></th>
+        <th><%= t("projects.table.visibility") %></th>
+        <th><%= t("projects.table.users") %></th>
+        <th><%= t("projects.table.experiments") %></th>
+        <th><%= t("projects.table.tasks") %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<%= stylesheet_link_tag 'datatables' %>
