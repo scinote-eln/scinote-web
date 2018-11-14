@@ -32,16 +32,10 @@ class ActivitiesController < ApplicationController
         )
       )
     end
-    # send last activity date of the previus batch
-    previous_activity = Activity.find_by_id(params[:last_activity])
-    if previous_activity&.created_at
-      previus_date = I18n.l(previous_activity.created_at, format: :full_date)
-    end
     {
       activities: activities,
       more_activities_url: more_url,
-      page: page,
-      previous_activity_created_at: previus_date
+      page: page
     }
   end
 end
