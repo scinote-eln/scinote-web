@@ -134,6 +134,18 @@ class AssetsController < ApplicationController
     @asset.save!
     # Post process file here
     @asset.post_process_file(@asset.team)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'shared/asset_link',
+            locals: { asset: @asset, display_image_tag: true },
+            formats: :html
+          )
+        }
+      end
+    end
   end
 
   private
