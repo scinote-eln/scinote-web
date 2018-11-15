@@ -289,9 +289,16 @@ en:
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
     export_projects:
-      export_button: "Export projects..."
-      modal_title_success: 'Your export is being prepared'
-      modal_title_error: 'Your export is denied'
+      export_button: "Export projects"
+      error_title: "Your export is denied"
+      error_text_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
+      error_text_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
+      modal_title: "Export projects"
+      modal_text_p1_html: "You are about to export <strong>%{num_projects} project/s in %{team}</strong> team. Projects will be exported in a .zip file format. It may take anywhere from 5 minutes up to several hours, depending on the file size. Please also note that any new data in the projects from this point will not be included in the exported file."
+      modal_text_p2_html: "When export is ready, you will receive a confirmation e-mail and the <strong> link </strong> to your .zip file will appear in your <strong>SciNote notifications</strong>. For security reasons, the link will <strong>expire in 7 days</strong>."
+      modal_text_p3_html: "Please note that the number of exports is limited to %{limit} requests per day. After you confirm this export you will have %{num} left."
+      modal_submit: "Export"
+      success_flash: "Export request received. Your export request is being processed."
     table:
       status: "Status"
       name: "Project name"

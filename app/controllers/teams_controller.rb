@@ -1,11 +1,13 @@
 class TeamsController < ApplicationController
   before_action :load_vars, only: %i(parse_sheet import_samples
-                                     export_samples export_projects)
+                                     export_samples export_projects
+                                     export_projects_modal)
 
   before_action :check_create_samples_permissions, only: %i(parse_sheet
                                                             import_samples)
   before_action :check_view_samples_permission, only: [:export_samples]
-  before_action :check_export_projects_permissions, only: :export_projects
+  before_action :check_export_projects_permissions,
+                only: %i(export_projects_modal export_projects)
 
   def parse_sheet
     session[:return_to] ||= request.referer
@@ -226,33 +228,31 @@ class TeamsController < ApplicationController
   end
 
   def export_projects
-    if export_projects_params[:project_ids]
-      # Check if user has enough requests for the day
+    unless export_proj_requests_exceeded
+      current_user.export_vars['num_of_export_all_last_24_hours'] += 1
+      current_user.save
+
+      generate_export_projects_zip
+
+      render json: {
+        flash: t('projects.export_projects.success_flash')
+      }, status: :ok
+    end
+  end
+
+  def export_projects_modal
+    if @exp_projects.present?
       limit = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
-      if !limit.zero? \
-        && current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
-        render json: {
-          html: render_to_string(
-            partial: 'projects/export/error.html.erb',
-            locals: { limit: limit }
-          ),
-          title: t('projects.export_projects.modal_title_error')
-        }
-      else
-        current_user.export_vars['num_of_export_all_last_24_hours'] += 1
-        current_user.save
-
-        ids = generate_export_projects_zip
+      unless export_proj_requests_exceeded
         curr_num = current_user.export_vars['num_of_export_all_last_24_hours']
-
         render json: {
           html: render_to_string(
-            partial: 'projects/export/success.html.erb',
-            locals: { num_projects: ids.length,
+            partial: 'projects/export/modal.html.erb',
+            locals: { num_projects: @exp_projects.size,
                       limit: limit,
-                      num_of_requests_left: limit - curr_num }
+                      num_of_requests_left: limit - curr_num - 1 }
           ),
-          title: t('projects.export_projects.modal_title_success')
+          title: t('projects.export_projects.modal_title')
         }
       end
     end
@@ -312,10 +312,26 @@ class TeamsController < ApplicationController
     render_403 unless can_read_team?(@team)
 
     if export_projects_params[:project_ids]
-      projects = Project.where(id: export_projects_params[:project_ids])
-      projects.each do |project|
+      @exp_projects = Project.where(id: export_projects_params[:project_ids])
+      @exp_projects.each do |project|
         render_403 unless can_export_project?(current_user, project)
       end
+    end
+  end
+
+  def export_proj_requests_exceeded
+    # Check if user has enough requests for the day
+    limit = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
+    if !limit.zero? \
+      && current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
+      render json: {
+        html: render_to_string(
+          partial: 'projects/export/error.html.erb',
+          locals: { limit: limit }
+        ),
+        title: t('projects.export_projects.error_title'),
+        status: 'error'
+      }
     end
   end
 
@@ -332,9 +348,7 @@ class TeamsController < ApplicationController
   end
 
   def generate_export_projects_zip
-    ids = Project.where(id: export_projects_params[:project_ids],
-                        team_id: @team)
-                 .index_by(&:id)
+    ids = @exp_projects.where(team_id: @team).index_by(&:id)
 
     options = { team: @team }
     zip = TeamZipExport.create(user: current_user)
