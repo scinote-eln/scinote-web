@@ -50,7 +50,7 @@ class AssetsController < ApplicationController
       'filename' => truncate(@asset.file_file_name,
                              length:
                                Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => download_asset_path(@asset)
+      'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
     }
 
     if @asset.is_image?

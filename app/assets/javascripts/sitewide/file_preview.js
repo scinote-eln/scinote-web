@@ -18,6 +18,7 @@
   }
 
   function initImageEditor(data) {
+    var imageEditor;
     var blackTheme = {
       'common.bi.image': '',
       'common.bisize.width': '0',
@@ -101,10 +102,9 @@
       'colorpicker.title.color': '#fff'
     };
 
-    var imageEditor = new tui.ImageEditor('#tui-image-editor', {
+    imageEditor = new tui.ImageEditor('#tui-image-editor', {
       includeUI: {
         loadImage: {
-          // path: data['large-preview-url'],
           path: data['download-url'],
           name: data.filename
         },
@@ -143,7 +143,8 @@
         }
       }).done(function() {
         animateSpinner(null, false);
-        imageEditor.clearObjects();
+        imageEditor.destroy();
+        imageEditor = {};
         $('#tui-image-editor').html('');
         $('#fileEditModal').modal('hide');
       });
