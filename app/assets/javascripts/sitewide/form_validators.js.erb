@@ -45,7 +45,11 @@ function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tiny
       errMsg = I18n.t("general.text.length_too_short", { min_length: textLimitMin });
     }
   } else if (nameTooLong) {
-    errMsg = I18n.t("general.text.length_too_long", { max_length: textLimitMax });
+    if(tinyMCEInput){
+      errMsg = I18n.t("general.text.length_too_long_general");
+    } else {
+      errMsg = I18n.t("general.text.length_too_long", { max_length: textLimitMax });
+    }
   }
 
   var noErrors = _.isUndefined(errMsg);

@@ -13,7 +13,15 @@ Rails.application.routes.draw do
                               confirmations: 'users/confirmations',
                               omniauth_callbacks: 'users/omniauth_callbacks' }
 
-    root 'projects#index'
+    devise_scope :user do
+      authenticated :user do
+        root 'projects#index'
+      end
+
+      unauthenticated do
+        root 'users/sessions#new'
+      end
+    end
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
@@ -137,6 +145,11 @@ Rails.application.routes.draw do
         to: 'zip_exports#download',
         as: 'zip_exports_download'
 
+    # Get Team Zip Export
+    get 'zip_exports/download_export_all_zip/:id',
+        to: 'zip_exports#download_export_all_zip',
+        as: 'zip_exports_download_export_all'
+
     get 'zip_exports/file_expired',
         to: 'zip_exports#file_expired',
         as: 'file_expired'
@@ -173,6 +186,7 @@ Rails.application.routes.draw do
         # post 'import_samples'
         # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
+        post 'export_projects'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_repositories', to: 'at_who#repositories'
@@ -188,6 +202,9 @@ Rails.application.routes.draw do
     end
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
+    post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
+    get 'projects/dt_state_load', to: 'projects#dt_state_load',
+                                  as: 'projects_dt_state_load'
 
     resources :reports, only: :index
     get 'reports/datatable', to: 'reports#datatable'

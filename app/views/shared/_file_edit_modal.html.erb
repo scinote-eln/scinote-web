@@ -1,0 +1,23 @@
+<div id="fileEditModal"
+     class="modal modal-file-edit"
+     role="dialog"
+     aria-labelledby="fileEditModal"
+     aria-hidden="true"
+     data-backdrop="static"
+     data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
+        <span class="file-name"></span>
+        <a class="file-save-link" href='#'>
+          <p><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
+        </a>
+      </div>
+      <div class="modal-body">
+        <div id="tui-image-editor">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

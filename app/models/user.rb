@@ -1,6 +1,9 @@
 class User < ApplicationRecord
-  include SearchableModel, SettingsModel
-  include User::TeamRoles, User::ProjectRoles
+  include SearchableModel
+  include SettingsModel
+  include VariablesModel
+  include User::TeamRoles
+  include User::ProjectRoles
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -46,6 +49,14 @@ class User < ApplicationRecord
       system_message_email: false
     },
     tooltips_enabled: true
+  )
+
+  store_accessor :variables, :export_vars
+
+  default_variables(
+    export_vars: {
+      num_of_export_all_last_24_hours: 0
+    }
   )
 
   # Relations
@@ -198,6 +209,7 @@ class User < ApplicationRecord
   has_many :notifications, through: :user_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
+  has_many :view_states, dependent: :destroy
 
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
@@ -348,18 +360,16 @@ class User < ApplicationRecord
       )
     end
 
-    sort =
-      case sort_by
-      when 'old'
-        { created_at: :asc }
-      when 'atoz'
-        { name: :asc }
-      when 'ztoa'
-        { name: :desc }
-      else
-        { created_at: :desc }
-      end
-
+    sort = case sort_by
+           when 'old'
+             { created_at: :asc }
+           when 'atoz'
+             { name: :asc }
+           when 'ztoa'
+             { name: :desc }
+           else
+             { created_at: :desc }
+           end
     result.where(archived: false).distinct.order(sort)
   end
 

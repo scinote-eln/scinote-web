@@ -1,24 +1,31 @@
-<% if result.blank? and @result.present? then result = @result end %>
+<% result ||= @result %>
 <% table = result.table %>
 <% comments = result.result_comments %>
 <% timestamp = table.created_at %>
-<% name = result.name %>
-<div class="report-element report-result-element report-result-table-element" data-ts="<%= timestamp.to_i %>" data-type="result_table" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="fas fa-table">
+<div class="report-element report-result-element report-result-table-element" data-ts="<%= timestamp.to_i %>" data-type="result_table" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= result.name %>" data-icon-class="fas fa-table">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left result-name-container">
-        <div class="result-icon">
-            <span class="fas fa-table"></span>
+        <div class="pull-left result-icon">
+          <span class="fas fa-table"></span>
         </div>
-        <div class="result-name">
-          <%= name %>
+        <div class="pull-left result-name">
+          <%= result.name %>
         </div>
-        <div class="user-time">
+        <% if defined? export_all and export_all %>
+          <div class="pull-left table-name">
+              <a href="<%= path %>">
+                <em><%=t "projects.reports.elements.result_table.table_name",
+                         name: filename %></em>
+              </a>
+          </div>
+        <% end %>
+        <div class="pull-left user-time">
           <%=t "projects.reports.elements.result_table.user_time", user: result.user.full_name , timestamp: l(timestamp, format: :full) %>
         </div>
-      </div>
-      <div class="pull-right controls">
-        <%= render partial: "reports/elements/element_controls.html.erb" %>
+        <div class="pull-right controls">
+          <%= render partial: "reports/elements/element_controls.html.erb" %>
+        </div>
       </div>
     </div>
   </div>

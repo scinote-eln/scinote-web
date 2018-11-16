@@ -150,11 +150,7 @@ class Project < ApplicationRecord
   end
 
   def user_role(user)
-    unless self.users.include? user
-      return nil
-    end
-
-    return (self.user_projects.select { |up| up.user == user }).first.role
+    user_projects.find_by_user_id(user)&.role
   end
 
   def sorted_active_experiments(sort_by = :new)
@@ -224,5 +220,72 @@ class Project < ApplicationRecord
       res += 1 if t.is_overdue? || t.is_one_day_prior?
     end
     res
+  end
+
+  def generate_report_pdf(user, team, pdf_name, obj_filenames = nil)
+    ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
+    proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
+    proxy.set_user(user, scope: :user, store: false)
+    renderer = ApplicationController.renderer.new(warden: proxy)
+
+    report = Report.generate_whole_project_report(self, user, team)
+
+    page_html_string =
+      renderer.render 'reports/new.html.erb',
+                      locals: { export_all: true,
+                                obj_filenames: obj_filenames },
+                      assigns: { project: self, report: report }
+    parsed_page_html = Nokogiri::HTML(page_html_string)
+    parsed_pdf_html = parsed_page_html.at_css('#report-content')
+
+    tables = parsed_pdf_html.css('.hot-table-contents')
+                            .zip(parsed_pdf_html.css('.hot-table-container'))
+    tables.each do |table_input, table_container|
+      table_vals = JSON.parse(table_input['value'])
+      table_data = table_vals['data']
+      table_headers = table_vals['headers']
+      table_headers ||= ('A'..'Z').first(table_data[0].count)
+
+      table_el = table_container
+                 .add_child('<table class="handsontable"></table>').first
+
+      # Add header row
+      header_cell = '<th>'\
+                      '<div class="relative">'\
+                        '<span>%s</span>'\
+                      '</div>'\
+                    '</th>'
+      header_el = table_el.add_child('<thead></thead>').first
+      row_el = header_el.add_child('<tr></tr>').first
+      row_el.add_child(format(header_cell, '')).first
+      table_headers.each do |col|
+        row_el.add_child(format(header_cell, col)).first
+      end
+
+      # Add body rows
+      body_cell = '<td>%s</td>'
+      body_el = table_el.add_child('<tbody></tbody>').first
+      table_data.each.with_index(1) do |row, idx|
+        row_el = body_el.add_child('<tr></tr>').first
+        row_el.add_child(format(header_cell, idx)).first
+        row.each do |col|
+          row_el.add_child(format(body_cell, col)).first
+        end
+      end
+    end
+
+    ApplicationController.render(
+      pdf: pdf_name,
+      header: { right: '[page] of [topage]' },
+      locals: { content: parsed_pdf_html.to_s },
+      template: 'reports/report.pdf.erb',
+      disable_javascript: true,
+      disable_internal_links: false,
+      current_user: user,
+      current_team: team,
+      extra: '--keep-relative-links'
+    )
+  ensure
+    report.destroy if report.present?
   end
 end

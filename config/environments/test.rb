@@ -96,6 +96,6 @@ Rails.application.configure do
   # disable sign in with LinkedIn account
   config.x.linkedin_signin_enabled = false
 
-  # prevents compile assets
-  config.assets.compile = false
+  # enable assets compiling
+  config.assets.compile = true
 end

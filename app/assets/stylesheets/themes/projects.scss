@@ -1,0 +1,14 @@
+@import "constants";
+
+// Projects overview table
+
+.projects-overview-table {
+  .fas {
+    color: $color-silver-chalice;
+    margin-right: 5px;
+  }
+
+  .archived {
+    background-color: $color-concrete;
+  }
+}

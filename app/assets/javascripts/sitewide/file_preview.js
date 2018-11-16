@@ -1,4 +1,4 @@
-
+//= require assets
 
 (function(global) {
   'use strict';
@@ -18,7 +18,7 @@
   }
 
   function initImageEditor(data) {
-    // var ImageEditor = require('tui-image-editor');
+    var imageEditor;
     var blackTheme = {
       'common.bi.image': '',
       'common.bisize.width': '0',
@@ -102,15 +102,15 @@
       'colorpicker.title.color': '#fff'
     };
 
-    var imageEditor = new tui.ImageEditor('#tui-image-editor', {
+    imageEditor = new tui.ImageEditor('#tui-image-editor', {
       includeUI: {
         loadImage: {
-          path: data['large-preview-url'],
-          name: 'SampleImage'
+          path: data['download-url'],
+          name: data.filename
         },
         theme: blackTheme, // or whiteTheme
-        // menu: ['shape', 'filter'],
-        initMenu: 'filter',
+        menu: ['draw', 'text', 'shape', 'crop', 'flip', 'icon', 'filter'],
+        initMenu: 'draw',
         menuBarPosition: 'bottom'
       },
       cssMaxWidth: 700,
@@ -122,17 +122,31 @@
       usageStatistics: false
     });
 
-    $('.file-save-link').click(function(ev) {
+    $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
+    $('#fileEditModal').modal('show');
+
+    $('.tui-image-editor-header').hide();
+
+    $('.file-save-link').off().click(function(ev) {
       ev.preventDefault();
       ev.stopPropagation();
+      animateSpinner(null, true);
       $.ajax({
         type: 'POST',
         url: '/files/' + data.id + '/update_image',
         data: {
           image: imageEditor.toDataURL()
+        },
+        success: function(res) {
+          $('#modal_link' + data.id).parent().html(res.html);
+          setupAssetsLoading();
         }
       }).done(function() {
-        console.log('saved');
+        animateSpinner(null, false);
+        imageEditor.destroy();
+        imageEditor = {};
+        $('#tui-image-editor').html('');
+        $('#fileEditModal').modal('hide');
       });
     });
 
@@ -163,14 +177,18 @@
           } else {
             animateSpinner('.file-preview-container', false);
             modal.find('.file-preview-container')
-              .append('<canvas></canvas>');
-              // .append($('<img>')
-              //   .attr('src', data['large-preview-url'])
-              //   .attr('alt', name)
-              //   .click(function(ev) {
-              //     ev.stopPropagation();
-              //   }))
-            initImageEditor(data);
+              .append($('<img>')
+                .attr('src', data['large-preview-url'])
+                .attr('alt', name)
+                .click(function(ev) {
+                  ev.stopPropagation();
+                }));
+            modal.find('.file-edit-link').off().click(function(ev) {
+              ev.preventDefault();
+              ev.stopPropagation();
+              modal.modal('hide');
+              initImageEditor(data);
+            });
           }
         } else {
           modal.find('.file-preview-container').html(data['preview-icon']);
