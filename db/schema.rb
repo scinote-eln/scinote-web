@@ -181,7 +181,7 @@ ActiveRecord::Schema.define(version: 20181008130519) do
   end
 
   create_table "my_module_repository_rows", id: :serial, force: :cascade do |t|
-    t.integer "repository_row_id", null: false
+    t.bigint "repository_row_id", null: false
     t.integer "my_module_id"
     t.integer "assigned_by_id", null: false
     t.datetime "created_at"
@@ -238,6 +238,47 @@ ActiveRecord::Schema.define(version: 20181008130519) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_notifications_on_created_at"
+  end
+
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.integer "resource_owner_id", null: false
+    t.bigint "application_id", null: false
+    t.string "token", null: false
+    t.integer "expires_in", null: false
+    t.text "redirect_uri", null: false
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.string "scopes"
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.integer "resource_owner_id"
+    t.bigint "application_id"
+    t.text "token", null: false
+    t.string "refresh_token"
+    t.integer "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.string "scopes"
+    t.string "previous_refresh_token", default: "", null: false
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+  end
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "uid", null: false
+    t.string "secret", null: false
+    t.text "redirect_uri", null: false
+    t.string "scopes", default: "", null: false
+    t.boolean "confidential", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
   create_table "projects", id: :serial, force: :cascade do |t|
@@ -379,11 +420,11 @@ ActiveRecord::Schema.define(version: 20181008130519) do
     t.index ["last_modified_by_id"], name: "index_repository_asset_values_on_last_modified_by_id"
   end
 
-  create_table "repository_cells", id: :serial, force: :cascade do |t|
-    t.integer "repository_row_id"
+  create_table "repository_cells", force: :cascade do |t|
+    t.bigint "repository_row_id"
     t.integer "repository_column_id"
     t.string "value_type"
-    t.integer "value_id"
+    t.bigint "value_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["repository_column_id"], name: "index_repository_cells_on_repository_column_id"
@@ -391,7 +432,7 @@ ActiveRecord::Schema.define(version: 20181008130519) do
     t.index ["value_type", "value_id"], name: "index_repository_cells_on_value_type_and_value_id"
   end
 
-  create_table "repository_columns", id: :serial, force: :cascade do |t|
+  create_table "repository_columns", force: :cascade do |t|
     t.integer "repository_id"
     t.integer "created_by_id", null: false
     t.string "name"
@@ -401,7 +442,7 @@ ActiveRecord::Schema.define(version: 20181008130519) do
     t.index ["repository_id"], name: "index_repository_columns_on_repository_id"
   end
 
-  create_table "repository_date_values", id: :serial, force: :cascade do |t|
+  create_table "repository_date_values", force: :cascade do |t|
     t.datetime "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -435,7 +476,7 @@ ActiveRecord::Schema.define(version: 20181008130519) do
     t.index ["repository_list_item_id"], name: "index_repository_list_values_on_repository_list_item_id"
   end
 
-  create_table "repository_rows", id: :serial, force: :cascade do |t|
+  create_table "repository_rows", force: :cascade do |t|
     t.integer "repository_id"
     t.integer "created_by_id", null: false
     t.integer "last_modified_by_id", null: false
@@ -456,7 +497,7 @@ ActiveRecord::Schema.define(version: 20181008130519) do
     t.index ["user_id"], name: "index_repository_table_states_on_user_id"
   end
 
-  create_table "repository_text_values", id: :serial, force: :cascade do |t|
+  create_table "repository_text_values", force: :cascade do |t|
     t.string "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -876,6 +917,10 @@ ActiveRecord::Schema.define(version: 20181008130519) do
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
   add_foreign_key "notifications", "users", column: "generator_user_id"
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "projects", "teams"
   add_foreign_key "projects", "users", column: "archived_by_id"
   add_foreign_key "projects", "users", column: "created_by_id"

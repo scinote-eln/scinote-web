@@ -139,9 +139,9 @@ class ProjectsOverviewService
       '2' => 'projects.name',
       '3' => 'projects.created_at',
       '4' => 'projects.visibility',
-      '5' => 'projects.user_count',
-      '6' => 'projects.experiment_count',
-      '7' => 'projects.task_count'
+      '5' => 'user_count',
+      '6' => 'experiment_count',
+      '7' => 'task_count'
     }
   end
 

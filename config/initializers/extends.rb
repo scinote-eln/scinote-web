@@ -61,10 +61,15 @@ class Extends
                                 repository_asset_value: :asset]
 
   # List of implemented core API versions
-  API_VERSIONS = %w(20170715 v1)
+  API_VERSIONS = ['v1']
 
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = [:azure_jwt_auth]
+
+  API_REPOSITORY_DATA_TYPE_MAPPINGS = { 'RepositoryTextValue' => 'text',
+                                        'RepositoryDateValue' => 'date',
+                                        'RepositoryListValue' => 'list',
+                                        'RepositoryAssetValue' => 'file' }
 
   OMNIAUTH_PROVIDERS = [:linkedin]
 

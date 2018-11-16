@@ -10,7 +10,7 @@ class RepositoryRow < ApplicationRecord
              foreign_key: :last_modified_by_id,
              class_name: 'User',
              optional: true
-  has_many :repository_cells, dependent: :destroy
+  has_many :repository_cells, -> { order(:id) }, dependent: :destroy
   has_many :repository_columns, through: :repository_cells
   has_many :my_module_repository_rows,
            inverse_of: :repository_row, dependent: :destroy
