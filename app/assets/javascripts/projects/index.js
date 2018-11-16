@@ -224,7 +224,7 @@
       // Load HTML to refresh users list
       $.ajax({
         url: exportProjectsBtn.data('export-projects-modal-url'),
-        type: 'POST',
+        type: 'GET',
         dataType: 'json',
         data: {
           project_ids: selectedProjects
@@ -236,10 +236,14 @@
           // Set modal body
           exportProjectsModalBody.html(data.html);
 
-          // Update modal footer (show/hide export button)
+          // Update modal footer (show/hide buttons)
           if (data.status === 'error') {
+            $('#export-projects-modal-close').show();
+            $('#export-projects-modal-cancel').hide();
             exportProjectsSubmit.hide();
           } else {
+            $('#export-projects-modal-close').hide();
+            $('#export-projects-modal-cancel').show();
             exportProjectsSubmit.show();
           }
           // Show the modal

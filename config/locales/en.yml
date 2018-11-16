@@ -290,7 +290,7 @@ en:
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
     export_projects:
       export_button: "Export projects"
-      error_title: "Your export is denied"
+      error_title: "Export denied"
       error_text_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
       error_text_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
       modal_title: "Export projects"
