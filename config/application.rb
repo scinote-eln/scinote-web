@@ -15,6 +15,9 @@ module Scinote
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Add rack-attack middleware for request rate limiting
+    config.middleware.use Rack::Attack
+
     # Swap the Rack::MethodOverride with a wrapped middleware for WOPI handling
     require_relative '../app/middlewares/wopi_method_override'
     config.middleware.swap Rack::MethodOverride, WopiMethodOverride
@@ -42,5 +45,11 @@ module Scinote
 
     # SciNote Core Application version
     VERSION = File.read(Rails.root.join('VERSION')).strip.freeze
+
+    # Doorkeeper overrides
+    config.to_prepare do
+      # Only Authorization endpoint
+      Doorkeeper::AuthorizationsController.layout 'sign_in_halt'
+    end
   end
 end

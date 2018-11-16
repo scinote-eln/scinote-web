@@ -15,6 +15,9 @@ gem 'bootstrap_form'
 gem 'yomu'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
+
+# Gems for OAuth2 subsystem
+gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 
@@ -22,6 +25,8 @@ gem 'omniauth-linkedin-oauth2'
 gem 'active_model_serializers', '~> 0.10.7'
 gem 'json-jwt'
 gem 'jwt', '~> 1.5'
+gem 'kaminari'
+gem 'rack-attack'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
@@ -42,7 +47,7 @@ gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
 gem 'turbolinks', '~> 5.1.1'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', '~> 1.0', group: :doc
 gem 'bcrypt', '~> 3.1.10'
 gem 'logging', '~> 2.0.0'
 gem 'aspector' # Aspect-oriented programming for Rails
@@ -50,7 +55,6 @@ gem 'rgl' # Graph framework for project diagram calculations
 gem 'nested_form_fields'
 gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
-gem 'kaminari'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
 gem 'wicked_pdf', '~> 1.1.0'

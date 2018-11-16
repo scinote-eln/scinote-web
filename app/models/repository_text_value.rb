@@ -18,4 +18,20 @@ class RepositoryTextValue < ApplicationRecord
   def formatted
     data
   end
+
+  def data_changed?(new_data)
+    new_data != data
+  end
+
+  def update_data!(new_data, user)
+    self.data = new_data
+    self.last_modified_by = user
+    save!
+  end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.data = payload
+    value
+  end
 end

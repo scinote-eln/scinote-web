@@ -1,5 +1,5 @@
 class UserIdentity < ActiveRecord::Base
   belongs_to :user
-  validates :provider, uniqueness: { scope: :user_id }
-  validates :uid, uniqueness: { scope: :provider }
+  validates :provider, presence: true, uniqueness: { scope: :user_id }
+  validates :uid, presence: true, uniqueness: { scope: :provider }
 end
