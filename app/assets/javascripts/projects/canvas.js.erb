@@ -873,23 +873,21 @@ function bindEditTagsAjax(elements) {
 
   // Reload tags HTML element when modal is closed
   manageTagsModal.on("hide.bs.modal", function(){
-    var tasks = $("div.panel");
+    var task = $("div.panel[data-module-id='" +
+                 manageTagsModal.data('module-id') + "']");
 
-    tasks.each(function(){
-      var task = $(this);
-      // Load HTML
-      $.ajax({
-        url: task.attr("data-module-tags-url"),
-        type: "GET",
-        dataType: "json",
-        success: function(data){
-          task.find(".edit-tags-link")
-          .html(data.html_canvas);
-        },
-        error: function(data){
-          // TODO
-        }
-      })
+    // Load HTML
+    $.ajax({
+      url: task.attr("data-module-tags-url"),
+      type: "GET",
+      dataType: "json",
+      success: function(data){
+        task.find(".edit-tags-link")
+        .html(data.html_canvas);
+      },
+      error: function(data){
+        // TODO
+      }
     });
   });
 
