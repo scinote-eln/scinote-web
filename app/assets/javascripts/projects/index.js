@@ -31,6 +31,7 @@
   var exportProjectsModalHeader = null;
   var exportProjectsModalBody = null;
   var exportProjectsBtn = null;
+  var exportProjectsSubmit = null;
 
   var projectsViewMode = 'cards';
   var projectsViewFilter = $('.projects-view-filter.active').data('filter');
@@ -222,8 +223,8 @@
     exportProjectsBtn.click(function() {
       // Load HTML to refresh users list
       $.ajax({
-        url: exportProjectsBtn.data('export-projects-url'),
-        type: 'POST',
+        url: exportProjectsBtn.data('export-projects-modal-url'),
+        type: 'GET',
         dataType: 'json',
         data: {
           project_ids: selectedProjects
@@ -235,6 +236,16 @@
           // Set modal body
           exportProjectsModalBody.html(data.html);
 
+          // Update modal footer (show/hide buttons)
+          if (data.status === 'error') {
+            $('#export-projects-modal-close').show();
+            $('#export-projects-modal-cancel').hide();
+            exportProjectsSubmit.hide();
+          } else {
+            $('#export-projects-modal-close').hide();
+            $('#export-projects-modal-cancel').show();
+            exportProjectsSubmit.show();
+          }
           // Show the modal
           exportProjectsModal.modal('show');
         },
@@ -248,6 +259,28 @@
     exportProjectsModal.on('hidden.bs.modal', function() {
       exportProjectsModalHeader.html('');
       exportProjectsModalBody.html('');
+    });
+  }
+
+  function initExportProjects() {
+    // Submit the export projects
+    exportProjectsSubmit.click(function() {
+      $.ajax({
+        url: exportProjectsSubmit.data('export-projects-submit-url'),
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          project_ids: selectedProjects
+        },
+        success: function(data) {
+          // Hide modal and show success flash
+          exportProjectsModal.modal('hide');
+          HelperModule.flashAlertMsg(data.flash, 'success');
+        },
+        error: function() {
+          // TODO
+        }
+      });
     });
   }
 
@@ -340,12 +373,14 @@
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
     exportProjectsBtn = $('#export-projects-button');
+    exportProjectsSubmit = $('#export-projects-modal-submit');
 
     updateSelectedCards();
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
     initExportProjectsModal();
+    initExportProjects();
     Comments.initCommentOptions('ul.content-comments', true);
     Comments.initEditComments('.panel-project .tab-content');
     Comments.initDeleteComments('.panel-project .tab-content');

@@ -74,7 +74,14 @@
         <div class="modal-body">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
+          <button id="export-projects-modal-close" type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
+          <button id="export-projects-modal-cancel" type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <button id="export-projects-modal-submit"
+                  type="button"
+                  class="btn btn-success"
+                  data-export-projects-submit-url="<%= export_projects_team_path(current_team) %>">
+            <%=t "projects.export_projects.modal_submit" %>
+          </button>
         </div>
       </div>
     </div>
@@ -135,7 +142,7 @@
             <!-- export projects button -->
             <button type="button" class="btn btn-default pull-right"
                                   id="export-projects-button"
-                                  data-export-projects-url="<%= export_projects_team_path(current_team) %>"
+                                  data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>"
                                   disabled>
             <span class="fas fa-file-export"></span>
             <span class="hidden-xs-custom"><%= t("projects.export_projects.export_button") %></span>
