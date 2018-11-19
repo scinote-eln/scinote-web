@@ -37,5 +37,5 @@
   <% end %>
 </div>
 <div data-role="comment-message-container">
-  <div data-role="comment-message"><%= custom_auto_link(comment.message) %></div>
+  <div data-role="comment-message"><%= custom_auto_link(comment.message, team: current_team) %></div>
 </div>

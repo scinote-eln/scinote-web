@@ -55,7 +55,8 @@
               <div class="ql-editor">
                 <%= custom_auto_link(generate_image_tag_from_token(step.description, step),
                                      simple_format: false,
-                                     tags: %w(img)) %>
+                                     tags: %w(img),
+                                     team: current_team) %>
               </div>
             <% end %>
           </div>
@@ -95,7 +96,7 @@
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
               <% step.checklists.asc.each do |checklist| %>
-                <strong><%= custom_auto_link(checklist.name) %></strong>
+                <strong><%= custom_auto_link(checklist.name, team: current_team) %></strong>
                 <% if checklist.checklist_items.empty? %>
                   </br>
                   <%= t("protocols.steps.empty_checklist") %>
@@ -114,7 +115,7 @@
                                  value=""
                                  disabled="disabled" />
                         <% end %>
-                        <%= custom_auto_link(checklist_item.text) %>
+                        <%= custom_auto_link(checklist_item.text, team: current_team) %>
                       </label>
                     </div>
                   <% end %>
