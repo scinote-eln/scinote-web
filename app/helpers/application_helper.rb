@@ -158,7 +158,7 @@ module ApplicationHelper
         #{I18n.t('atwho.users.popover_html',
                  role: user_t.role.capitalize,
                  team: user_t.team.name,
-                 time: user_t.created_at.strftime('%B %Y'))}
+                 time: I18n.l(user_t.created_at, format: :full_date))}
         </p></div></div></div>)
     else
       user_description += %(<p></p></div></div></div>)

@@ -41,6 +41,7 @@ class User < ApplicationRecord
 
   default_settings(
     time_zone: 'UTC',
+    date_format: Constants::DEFAULT_DATE_FORMAT,
     notifications_settings: {
       assignments: true,
       assignments_email: false,
@@ -239,6 +240,18 @@ class User < ApplicationRecord
     # avatar_file_name == "face.png"
     # avatar_content_type == "image/png"
     @avatar_remote_url = url_value
+  end
+
+  def date_format
+    settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
+  end
+
+  def date_format=(date_format)
+    return if settings[:date_format] == date_format
+    if Constants::SUPPORTED_DATE_FORMATS.include?(date_format)
+      settings[:date_format] = date_format
+      clear_view_cache
+    end
   end
 
   def current_team
@@ -524,5 +537,9 @@ class User < ApplicationRecord
 
     # Now, simply destroy all user notification relations left
     user_notifications.destroy_all
+  end
+
+  def clear_view_cache
+    Rails.cache.delete_matched(%r{^views\/users\/#{id}-})
   end
 end

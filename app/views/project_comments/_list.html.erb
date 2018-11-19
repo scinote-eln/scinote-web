@@ -5,7 +5,7 @@
     <% if comment_day <= current_day && comment_day > day %>
       <% day = days_since_1970(comment.created_at) %>
       <li class="comment-date-separator">
-        <p class="text-center"><%= comment.created_at.strftime('%d.%m.%Y') %></p>
+        <p class="text-center"><%= l(comment.created_at, format: :full_date) %></p>
       </li>
      <% end %>
   <li class="comment">

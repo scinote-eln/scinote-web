@@ -144,7 +144,13 @@ class MyModulesController < ApplicationController
   end
 
   def update
-    @my_module.assign_attributes(my_module_params)
+    update_params = my_module_params
+    if update_params[:due_date].present?
+      update_params[:due_date] = Time.strptime(
+        update_params[:due_date], I18n.backend.date_format.dup.delete('-')
+      )
+    end
+    @my_module.assign_attributes(update_params)
     @my_module.last_modified_by = current_user
     description_changed = @my_module.description_changed?
 
