@@ -28,7 +28,8 @@
             <a href="#"
                data-action="delete-comment"
                data-url="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
-               data-confirm-message="<%= t('comments.delete_confirm') %>">
+               data-confirm-message="<%= t('comments.delete_confirm') %>"
+               data-turbolinks="false">
               <%= t('comments.options_dropdown.delete') %>
             </a>
           </li>

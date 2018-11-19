@@ -151,6 +151,8 @@
             <div class="step-comment"
                  id="step-comments-<%= step.id %>"
                  data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
+              <%= render partial: "step_comments/index.html.erb",
+                         locals: { step: step, comments: step.last_comments, per_page: Constants::COMMENTS_SEARCH_LIMIT } %>
             </div>
           </div>
         <% end %>

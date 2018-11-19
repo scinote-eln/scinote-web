@@ -16,18 +16,21 @@ var Comments = (function() {
       $.each(comments, function(){
         var that = $(this);
         var link = that.attr('data-href');
-        $.ajax({ method: 'GET',
-                 url: link,
-                 beforeSend: animateSpinner(that, true) })
-          .done(function(data) {
-            that.html(data.html);
-            initCommentForm(that);
-            initCommentsLink(that);
-            scrollBottom(that.find('.content-comments'));
-          })
-          .always(function() {
-            animateSpinner(that, false);
-          });
+        if(that.html().length === 0) {
+          $.ajax({ method: 'GET',
+                   url: link,
+                   beforeSend: animateSpinner(that, true) })
+            .done(function(data) {
+              that.html(data.html);
+
+            })
+            .always(function() {
+              animateSpinner(that, false);
+            });
+        }
+        initCommentForm(that);
+        initCommentsLink(that);
+        scrollBottom(that.find('.content-comments'));
       });
     }
   }
@@ -238,7 +241,8 @@ var Comments = (function() {
   }
 
   function initDeleteComments(parent) {
-    $(parent).on('click', '[data-action=delete-comment]', function() {
+    $(parent).on('click', '[data-action=delete-comment]', function(ev) {
+      ev.preventDefault();
       var $this = $(this);
       if (confirm($this.attr('data-confirm-message'))) {
         $.ajax({

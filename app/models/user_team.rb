@@ -5,7 +5,7 @@ class UserTeam < ApplicationRecord
   validates :user, presence: true
   validates :team, presence: true
 
-  belongs_to :user, inverse_of: :user_teams, optional: true
+  belongs_to :user, inverse_of: :user_teams, touch: true, optional: true
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',
              class_name: 'User',

@@ -71,6 +71,7 @@ class Asset < ApplicationRecord
   # Needed because Paperclip validatates on creation
   after_initialize :filter_paperclip_errors, if: :new_record?
   before_destroy :paperclip_delete, prepend: true
+  after_save { result&.touch; step&.touch }
 
   attr_accessor :file_content, :file_info, :preview_cached
 

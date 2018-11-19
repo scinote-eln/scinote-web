@@ -1,3 +1,4 @@
+<div>
   <strong>
     <%=t "my_modules.results.comment_title", user: comment.user.full_name, time: l(comment.created_at, format: :time) %>
   </strong>
@@ -28,7 +29,7 @@
              data-action="delete-comment"
              data-url="<%= result_result_comment_path(comment.result, comment, format: :json) %>"
              data-confirm-message="<%= t('comments.delete_confirm') %>"
-             data-no-turbolink="true">
+             data-turbolinks="false">
             <%= t('comments.options_dropdown.delete') %>
           </a>
         </li>
