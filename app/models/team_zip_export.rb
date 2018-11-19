@@ -144,14 +144,19 @@ class TeamZipExport < ZipExport
   # Create directory for project, experiment, or module
   def make_model_dir(parent_path, model, index)
     # For MyModule, the index indicates its position in project sidebar
-    model_name = format(
-      model.class == MyModule ? '(%<idx>s) %<name>s' : '%<name>s (%<idx>s)',
-      idx: index, name: to_filesystem_name(model.name)
-    )
+    if model.class == MyModule
+      class_name = 'module'
+      model_format = '(%<idx>s) %<name>s'
+    else
+      class_name = model.class.to_s.downcase.pluralize
+      model_format = '%<name>s (%<idx>s)'
+    end
+    model_name =
+      format(model_format, idx: index, name: to_filesystem_name(model.name))
 
     model_path = parent_path
     if model.archived
-      model_path += '/Archived'
+      model_path += "/Archived #{class_name}"
       FileUtils.mkdir_p(model_path)
     end
     model_path += "/#{model_name}"
