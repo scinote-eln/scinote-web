@@ -248,6 +248,7 @@ function initLinkedChildrenModal() {
           if (childrenTableEl) {
             // Only initialize table if it's present
             var childrenDatatable = childrenTableEl.DataTable({
+              autoWidth: false,
               dom: "RBltpi",
               stateSave: false,
               buttons: [],
