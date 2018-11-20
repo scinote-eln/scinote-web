@@ -19,11 +19,12 @@ class TeamZipExport < ZipExport
   def generate_exportable_zip(user, data, type, options = {})
     @user = user
     zip_input_dir = FileUtils.mkdir_p(
-      File.join(Rails.root, "tmp/temp-zip-#{Time.now.to_i}")
+      File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")
     ).first
     zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
     zip_file = File.new(
-      File.join(zip_dir, "projects-export-#{Time.now.to_i}.zip"),
+      File.join(zip_dir,
+                "projects_export_#{Time.now.strftime('%F_%H-%M-%S')}.zip"),
       'w+'
     )
     fill_content(zip_input_dir, data, type, options)
@@ -45,30 +46,21 @@ class TeamZipExport < ZipExport
     team_path = "#{tmp_dir}/#{to_filesystem_name(@team.name)}"
     FileUtils.mkdir_p(team_path)
 
-    # Create Projects folders
-    FileUtils.mkdir_p("#{team_path}/Projects")
-    FileUtils.mkdir_p("#{team_path}/Archived projects")
-
     # Iterate through every project
-    data.each_with_index do |(_, p), ind|
+    p_idx = p_archive_idx = 0
+    data.each do |(_, p)|
+      idx = p.archived ? (p_archive_idx += 1) : (p_idx += 1)
+      project_path = make_model_dir(team_path, p, idx)
+      project_name = project_path.split('/')[-1]
+
       obj_filenames = { my_module_repository: {}, step_asset: {},
                         step_table: {}, result_asset: {}, result_table: {} }
 
-      project_name = to_filesystem_name(p.name) + "_#{ind}"
-      root =
-        if p.archived
-          "#{team_path}/Archived projects"
-        else
-          "#{team_path}/Projects"
-        end
-      root += "/#{project_name}"
-      FileUtils.mkdir_p(root)
-
       # Change current dir for correct generation of relative links
-      Dir.chdir(root)
-      root = '.'
+      Dir.chdir(project_path)
+      project_path = '.'
 
-      inventories = "#{root}/Inventories"
+      inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
       # Find all assigned inventories through all tasks in the project
@@ -85,15 +77,16 @@ class TeamZipExport < ZipExport
       end
 
       # Include all experiments
-      p.experiments.each_with_index do |ex, ex_ind|
-        experiment_path = "#{root}/#{to_filesystem_name(ex.name)}_#{ex_ind}"
-        FileUtils.mkdir_p(experiment_path)
+      ex_idx = ex_archive_idx = 0
+      p.experiments.each do |ex|
+        idx = ex.archived ? (ex_archive_idx += 1) : (ex_idx += 1)
+        experiment_path = make_model_dir(project_path, ex, idx)
 
         # Include all modules
-        ex.my_modules.each_with_index do |my_module, mod_ind|
-          my_module_path = "#{experiment_path}/" \
-            "#{to_filesystem_name(my_module.name)}_#{mod_ind}"
-          FileUtils.mkdir_p(my_module_path)
+        mod_pos = mod_archive_pos = 0
+        ex.my_modules.order(:workflow_order).each do |my_module|
+          pos = my_module.archived ? (mod_archive_pos += 1) : (mod_pos += 1)
+          my_module_path = make_model_dir(experiment_path, my_module, pos)
 
           # Create upper directories for both elements
           protocol_path = "#{my_module_path}/Protocol attachments"
@@ -123,10 +116,10 @@ class TeamZipExport < ZipExport
       end
 
       # Generate and export whole project report PDF
-      pdf_name = "#{project_name}_Report.pdf"
+      pdf_name = "#{project_name} Report.pdf"
       project_report_pdf =
         p.generate_report_pdf(@user, @team, pdf_name, obj_filenames)
-      file = FileUtils.touch("#{root}/#{pdf_name}").first
+      file = FileUtils.touch("#{project_path}/#{pdf_name}").first
       File.open(file, 'wb') { |f| f.write(project_report_pdf) }
     end
 
@@ -146,6 +139,29 @@ class TeamZipExport < ZipExport
                 "#{zip_file_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
+  end
+
+  # Create directory for project, experiment, or module
+  def make_model_dir(parent_path, model, index)
+    # For MyModule, the index indicates its position in project sidebar
+    if model.class == MyModule
+      class_name = 'module'
+      model_format = '(%<idx>s) %<name>s'
+    else
+      class_name = model.class.to_s.downcase.pluralize
+      model_format = '%<name>s (%<idx>s)'
+    end
+    model_name =
+      format(model_format, idx: index, name: to_filesystem_name(model.name))
+
+    model_path = parent_path
+    if model.archived
+      model_path += "/Archived #{class_name}"
+      FileUtils.mkdir_p(model_path)
+    end
+    model_path += "/#{model_name}"
+    FileUtils.mkdir_p(model_path)
+    model_path
   end
 
   # Appends given suffix to file_name and then adds original extension
@@ -205,16 +221,16 @@ class TeamZipExport < ZipExport
   end
 
   # Helper method for saving inventories to CSV
-  def save_inventories_to_csv(path, repo, repo_rows, id)
-    repo_name = "#{to_filesystem_name(repo.name)}_#{id}"
+  def save_inventories_to_csv(path, repo, repo_rows, idx)
+    repo_name = "#{to_filesystem_name(repo.name)} (#{idx})"
 
     # Attachment folder
-    rel_attach_path = "#{repo_name}_attachments"
+    rel_attach_path = "#{repo_name} attachments"
     attach_path = "#{path}/#{rel_attach_path}"
     FileUtils.mkdir_p(attach_path)
 
     # CSV file
-    csv_file_path = "#{path}/#{to_filesystem_name(repo.name)}_#{id}.csv"
+    csv_file_path = "#{path}/#{repo_name}.csv"
     csv_file = FileUtils.touch(csv_file_path).first
 
     # Define headers and columns IDs
