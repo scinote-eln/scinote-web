@@ -1940,3 +1940,23 @@ a.disabled-with-click-events {
 .tiny-mce-pdf-ready {
   max-width: 100%;
 }
+
+.doorkeeper-authorization {
+
+  .doorkeeper-scinote-logo {
+    background-image: asset-url("/images/scinote_icon.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 180px;
+  }
+
+  .doorkeeper-actions-left {
+    padding-right: 3px;
+  }
+
+  .doorkeeper-actions-right {
+    padding-left: 3px;
+  }
+
+}

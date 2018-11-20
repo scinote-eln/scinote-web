@@ -1,42 +1,53 @@
-<div class="center-block center-block-narrow">
-  <header class="page-header" role="banner">
-    <h1><%= t('.title') %></h1>
-  </header>
+<% provide(:head_title, t('doorkeeper.authorizations.new.head_title')) %>
 
-  <main role="main">
-    <p class="h4">
-      <%= raw t('.prompt', client_name: content_tag(:strong, class: 'text-info') { @pre_auth.client.name }) %>
-    </p>
+<div class="center-block center-block-narrow doorkeeper-authorization">
+  <div class="row text-center">
+    <div class="doorkeeper-scinote-logo"></div>
+  </div>
 
-    <% if @pre_auth.scopes.count > 0 %>
-      <div id="oauth-permissions">
-        <p><%= t('.able_to') %>:</p>
+  <h3 class="text-justify">
+    <%= t('doorkeeper.authorizations.new.title', client_name: @pre_auth.client.name ) %>
+  </h3>
+  <br>
+  <div>
+    <h5>
+      <strong><%= @pre_auth.client.name %></strong>
+      <%= t('doorkeeper.authorizations.new.scopes_title') %>
+    </h5>
+    <ul>
+      <li><%= t('doorkeeper.authorizations.new.scope_1') %></li>
+      <li><%= t('doorkeeper.authorizations.new.scope_2') %></li>
+    </ul>
+    <h5>
+      <%= t('doorkeeper.authorizations.new.terms', client_name: @pre_auth.client.name) %>
+    </h5>
+  </div>
+  <br>
 
-        <ul class="text-info">
-          <% @pre_auth.scopes.each do |scope| %>
-            <li><%= t scope, scope: [:doorkeeper, :scopes] %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <div class="actions">
-      <%= form_tag oauth_authorization_path, method: :post do %>
-        <%= hidden_field_tag :client_id, @pre_auth.client.uid %>
-        <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri %>
-        <%= hidden_field_tag :state, @pre_auth.state %>
-        <%= hidden_field_tag :response_type, @pre_auth.response_type %>
-        <%= hidden_field_tag :scope, @pre_auth.scope %>
-        <%= submit_tag t('doorkeeper.authorizations.buttons.authorize'), class: "btn btn-success btn-lg btn-block" %>
-      <% end %>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right doorkeeper-actions-left">
       <%= form_tag oauth_authorization_path, method: :delete do %>
         <%= hidden_field_tag :client_id, @pre_auth.client.uid %>
         <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri %>
         <%= hidden_field_tag :state, @pre_auth.state %>
         <%= hidden_field_tag :response_type, @pre_auth.response_type %>
         <%= hidden_field_tag :scope, @pre_auth.scope %>
-        <%= submit_tag t('doorkeeper.authorizations.buttons.deny'), class: "btn btn-danger btn-lg btn-block" %>
+        <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge %>
+        <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method %>
+        <%= submit_tag t('general.cancel'), class: "btn btn-default" %>
       <% end %>
     </div>
-  </main>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-left doorkeeper-actions-right">
+      <%= form_tag oauth_authorization_path, method: :post do %>
+        <%= hidden_field_tag :client_id, @pre_auth.client.uid %>
+        <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri %>
+        <%= hidden_field_tag :state, @pre_auth.state %>
+        <%= hidden_field_tag :response_type, @pre_auth.response_type %>
+        <%= hidden_field_tag :scope, @pre_auth.scope %>
+        <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge %>
+        <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method %>
+        <%= submit_tag t('doorkeeper.authorizations.buttons.authorize'), class: "btn btn-success" %>
+      <% end %>
+    </div>
+  </div>
 </div>
