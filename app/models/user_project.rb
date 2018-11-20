@@ -2,7 +2,7 @@ class UserProject < ApplicationRecord
   enum role: { owner: 0, normal_user: 1, technician: 2, viewer: 3 }
 
   validates :role, presence: true
-  validates :user, presence: true
+  validates :user, presence: true, uniqueness: { scope: :project }
   validates :project, presence: true
 
   belongs_to :user, inverse_of: :user_projects, touch: true, optional: true

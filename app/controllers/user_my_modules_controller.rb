@@ -64,12 +64,11 @@ class UserMyModulesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json {
-          render :json => {
-            :errors => [
-              flash_error]
+        format.json do
+          render json: {
+            errors: @um.errors
           }
-        }
+        end
       end
     end
   end
@@ -102,13 +101,11 @@ class UserMyModulesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json {
-          render :json => {
-            :errors => [
-              flash_error
-            ]
+        format.json do
+          render json: {
+            errors: @um.errors
           }
-        }
+        end
       end
     end
   end

@@ -111,14 +111,12 @@ class UserProjectsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json {
-          render :json => {
+        format.json do
+          render json: {
             status: 'error',
-            :errors => [
-              flash_error
-            ]
+            errors: @up.errors
           }
-        }
+        end
       end
     end
   end
@@ -148,13 +146,11 @@ class UserProjectsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json {
-          render :json => {
-            :errors => [
-              flash_error
-            ]
+        format.json do
+          render json: {
+            errors: @up.errors
           }
-        }
+        end
       end
     end
   end

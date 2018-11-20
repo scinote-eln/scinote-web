@@ -1,5 +1,6 @@
 class UserMyModule < ApplicationRecord
-  validates :user, :my_module, presence: true
+  validates :user, presence: true, uniqueness: { scope: :my_module }
+  validates :my_module, presence: true
 
   belongs_to :user, inverse_of: :user_my_modules, touch: true, optional: true
   belongs_to :assigned_by,
