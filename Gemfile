@@ -4,6 +4,8 @@ source 'http://rubygems.org'
 
 ruby '2.4.5'
 
+
+gem 'webpacker', '~> 3.5'
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form'
 gem 'devise', '~> 4.3.0'

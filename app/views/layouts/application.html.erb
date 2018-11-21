@@ -18,14 +18,9 @@
       <%= yield(:head) %>
     <% end %>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.7/fabric.js"></script>
-    <script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.3.0/tui-code-snippet.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/nhnent/tui.color-picker/v2.2.0/dist/tui-color-picker.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-color-picker/v2.2.0/tui-color-picker.css">
+    <%= javascript_pack_tag 'tui_image_editor' %>
+    <%= stylesheet_pack_tag 'tui_image_editor_styles' %>
 
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-image-editor/v3.2.2/tui-image-editor.css">
-    <script src="https://uicdn.toast.com/tui-image-editor/v3.2.2/tui-image-editor.js"></script>
   </head>
   <body
     class="<%= yield :body_class %>"
