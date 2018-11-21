@@ -38,7 +38,7 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "8080:8080"
+      - "3035:3035"
     command: >
       bash -c "./bin/webpack-dev-server"
     environment:
