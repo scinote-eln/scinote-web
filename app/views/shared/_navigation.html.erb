@@ -42,7 +42,8 @@
                     <li class="team-name-item">
                       <a href="#"
                         data-id="<%= team.id %>"
-                        class="text-center change-team">
+                        class="text-center change-team"
+                        data-turbolinks="false">
                         <% if current_team == team %>
                           <span class="fas fa-check-circle"></span> <strong><%= team.name %></strong>
                         <% else %>
