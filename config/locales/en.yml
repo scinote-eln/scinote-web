@@ -52,6 +52,18 @@ en:
       email_already_taken: "SciNote account with email %{email} alreday exists"
       failed_to_save: "Failed to create new user"
 
+  doorkeeper:
+    authorizations:
+      buttons:
+        authorize: "Authorize"
+      new:
+        head_title: "OAuth authorization"
+        title: "Authorize %{client_name} to connect to your SciNote account"
+        scopes_title: " would like to:"
+        scope_1: "Use basic profile information associated with your SciNote account"
+        scope_2: "Create, read, update, and delete data within SciNote on behalf of your user account using SciNote API."
+        terms: "%{client_name} terms may apply."
+
   activerecord:
     errors:
       models:
