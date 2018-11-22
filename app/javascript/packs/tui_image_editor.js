@@ -1,4 +1,4 @@
-global.tui = {}
+global.tui = {};
 global.tui.usageStatistics = false;
 require('tui-code-snippet');
 
