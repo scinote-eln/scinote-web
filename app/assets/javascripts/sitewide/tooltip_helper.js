@@ -79,6 +79,12 @@
           });
       });
     }
+
+    $(document.body).on('click', function() {
+      $('.help_tooltips').each(function(i, obj) {
+        $(obj).popover('hide');
+      });
+    });
   };
 
   $(document).on('turbolinks:load', function() {
