@@ -22,7 +22,6 @@ var Comments = (function() {
                    beforeSend: animateSpinner(that, true) })
             .done(function(data) {
               that.html(data.html);
-
             })
             .always(function() {
               animateSpinner(that, false);
@@ -51,7 +50,7 @@ var Comments = (function() {
   // Initialize show more comments link.
   function initCommentsLink($el) {
 
-    $el.find('.btn-more-comments')
+    $el.find('.btn-more-comments').off()
     .on('ajax:success', function (e, data) {
       if (data.html) {
         var list = $(this).parents('ul');
@@ -92,7 +91,7 @@ var Comments = (function() {
 
     $('.help-block', $form).addClass('hide');
 
-    $form.on('ajax:send', function () {
+    $form.off().on('ajax:send', function () {
       $('#comment_message', $form).attr('readonly', true);
     })
     .on('ajax:success', function (e, data) {
@@ -162,33 +161,6 @@ var Comments = (function() {
         .attr('readonly', false)
         .focus();
     });
-  }
-
-  // restore comments after update or when new element is created
-  function bindCommentInitializerToNewElement() {
-    if( document.getElementById('steps') !== null ) {
-      $('#steps')
-        .change(function() {
-          $('.step-save')
-            .on('click', function() {
-              $(document)
-                .on('ajax:success', function(){
-                  initializeComments();
-                });
-            });
-        });
-    } else if ( document.getElementById('results') !== null ) {
-      $('#results')
-        .change(function() {
-          $('.save-result')
-            .on('click', function() {
-              $(document)
-                .on('ajax:success', function(){
-                  initializeComments();
-                });
-            });
-        });
-      }
   }
 
   function initCommentOptions(scrollableContainer, useParentOffset) {
@@ -377,7 +349,6 @@ var Comments = (function() {
     scrollBottom: scrollBottom,
     moreComments: initCommentsLink,
     form: initCommentForm,
-    bindNewElement: bindCommentInitializerToNewElement,
     initCommentOptions: initCommentOptions,
     initDeleteComments: initDeleteComments,
     initEditComments: initEditComments
