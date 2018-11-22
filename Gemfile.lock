@@ -300,7 +300,7 @@ GEM
     logging (2.0.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    loofah (2.2.2)
+    loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
@@ -377,7 +377,10 @@ GEM
       pry (>= 0.10.4)
     public_suffix (3.0.2)
     puma (3.11.2)
+<<<<<<< HEAD
     raabro (1.1.6)
+=======
+>>>>>>> e4bfe216... Fix webpack config [SCI-2856]
     rack (2.0.6)
     rack-attack (5.4.1)
       rack (>= 1.0, < 3)
