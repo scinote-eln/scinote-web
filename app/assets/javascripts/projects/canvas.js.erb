@@ -862,6 +862,7 @@ function bindEditTagsAjax(elements) {
   // Initialize ajax listeners and elements style on modal body. This
   // function must be called when modal body is changed.
   function initTagsModalBody(data) {
+    manageTagsModal.data('module-id', data.my_module.id)
     manageTagsModalBody.html(data.html);
     manageTagsModalBody.find(".selectpicker").selectpicker();
     initAddTagForm();
