@@ -24,6 +24,7 @@
     <div class="row">
       <div class="col-xs-12 text-container ql-editor">
         <%= custom_auto_link(generate_image_tag_from_token(result_text.text, result_text, true),
+                             team: current_team,
                              simple_format: false,
                              tags: %w(img)) %>
       </div>

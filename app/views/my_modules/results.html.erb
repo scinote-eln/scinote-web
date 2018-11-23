@@ -48,9 +48,7 @@
 
   <div id="results" data-module-id="<%= @my_module.id %>">
   <% ordered_result_of(@my_module).each do |result| %>
-    <% cache [current_user, result] do %>
-      <%= render partial: "result", locals: { result: result } %>
-    <% end %>
+    <%= render partial: "result", locals: { result: result } %>
   <% end %>
   </div>
 </div>

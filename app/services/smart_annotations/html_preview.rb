@@ -36,7 +36,7 @@ module SmartAnnotations
           return "<span class='sa-type'>Tsk</span> <a href='" \
                  "#{ROUTES.module_archive_experiment_path(
                    object.experiment
-                 )}'>#{object.name}</a> #{I18n.t('atwho.res.archived')}"
+                 )}'>#{object.name} #{I18n.t('atwho.res.archived')}</a>"
         end
         "<span class='sa-type'>Tsk</span> " \
         "<a href='#{ROUTES.protocols_my_module_path(object)}'>" \

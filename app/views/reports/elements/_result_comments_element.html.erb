@@ -31,7 +31,7 @@
                 </span>
                 <span class="comment-message">
                   &nbsp;
-                  <%= custom_auto_link(comment.message) %>
+                  <%= custom_auto_link(comment.message, team: current_team) %>
                 </span>
               </li>
             <% end %>

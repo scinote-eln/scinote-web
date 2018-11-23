@@ -25,9 +25,7 @@
 
 <div id="steps">
   <% @protocol.steps.order(:position).each do |step| %>
-    <% cache [current_user, step] do %>
-      <%= render partial: "steps/step.html.erb", locals: { step: step } %>
-    <% end %>
+    <%= render partial: "steps/step.html.erb", locals: { step: step } %>
   <% end %>
 </div>
 <% if @protocol.steps.count == 0 %>
