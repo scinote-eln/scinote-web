@@ -282,12 +282,13 @@ module ProtocolsIoHelper
   def pio_stp(iterating_key, parse_elements_array, en_local_text)
     append = ''
     parse_elements_array.each do |element|
-      return '' unless iterating_key[element]
-      append += fill_attributes(
-        element,
-        iterating_key[element],
-        en_local_text
-      )
+      if iterating_key[element]
+        append += fill_attributes(
+          element,
+          iterating_key[element],
+          en_local_text
+        )
+      end
     end
     append
   end
@@ -444,16 +445,23 @@ module ProtocolsIoHelper
             name developer version link repository os_name os_version
           )
           trans_text = 'protocols.protocols_io_import.comp_append.soft_packg.'
+          puts('before')
+          puts(newj[i.to_s]['description'])
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
+          puts('after')
+          puts(newj[i.to_s]['description'])
+
+          puts(key)
+          puts(key['source'])
         when 9
           pe_array = %w(
             name link
           )
           trans_text = 'protocols.protocols_io_import.comp_append.dataset.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
         when 15
           pe_array = %w(
