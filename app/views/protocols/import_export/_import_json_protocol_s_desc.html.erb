@@ -85,43 +85,43 @@
             <% when 9 %>
               <% step_info_string += not_null(key['source']['name']).html_safe %>
               <br>
-              <%= t('protocols.protocols_io_import.preview.dataset_name') %>
+              <%= t('protocols.protocols_io_import.preview.dataset_name').html_safe %>
               <%= prepare_for_view(key['source']['name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= prepare_for_view(key['source']['link'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
             <% when 15 %>
-              <% step_info_string += not_null(key['source_data']['description']) %>
+              <% step_info_string += not_null(key['source']['description']) %>
               <br>
-              <strong><%= key['name']+': ' %></strong>
-              <%= prepare_for_view('<pre><code>'+key['source_data']['name'].gsub(/\n/, '<br>')+'</code></pre>',ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= t('protocols.protocols_io_import.preview.command_name').html_safe %>
+              <%= prepare_for_view('<pre><code>'+key['source']['name'].gsub(/\n/, '<br>')+'</code></pre>',ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.s_desc') %>
-              <%= prepare_for_view(key['source_data']['description'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view(key['source']['description'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.os') %>
-              <%= prepare_for_view(key['source_data']['os_name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe + ' , ' +
-              prepare_for_view(key['source_data']['os_version'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view(key['source']['os_name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe + ' , ' +
+              prepare_for_view(key['source']['os_version'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
             <% when 18 %>
               <br>
-              <strong><%= t('protocols.protocols_io_import.preview.sub_prot') %></strong>
-              <%= pio_eval_title_len(sanitize_input(key['source_data']['protocol_name'])).html_safe %>
+              <%= t('protocols.protocols_io_import.preview.sub_prot').html_safe %>
+              <%= pio_eval_title_len(sanitize_input(key['source']['title'])).html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.auth') %>
-              <%= prepare_for_view(key['source_data']['full_name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view(key['source']['title_html'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <br>
-              <% if key['source_data']['link'].present? %>
+              <% if key['source']['uri'].present? %>
                 <%= t('protocols.protocols_io_import.preview.s_nobr_link') %>
-                <%= prepare_for_view(key['source_data']['link'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+                <%= prepare_for_view(key['source']['uri'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <% end %>
             <% when 19 %>
-              <% step_info_string += not_null(key['source_data']['body']) %>
+              <% step_info_string += not_null(key['source']['body']) %>
               <br>
-              <strong><%= not_null(key['name'])+': ' %></strong>
-              <%= prepare_for_view(key['source_data']['body'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= t('protocols.protocols_io_import.preview.safety_info').html_safe %>
+              <%= prepare_for_view(key['source']['body'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.s_link') %>
-              <%= prepare_for_view(key['source_data']['link'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view(key['source']['link'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
             <% else %>
             <% end #case if%>
           <% end #inner if%>

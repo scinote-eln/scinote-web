@@ -467,21 +467,21 @@ module ProtocolsIoHelper
           pe_array = %w(
             name description os_name os_version
           )
-          key['source_data']['name'] =
+          key['source']['name'] =
             '<pre><code>' +
-            not_null(key['source_data']['name'].gsub(/\n/, '<br>')) +
+            not_null(key['source']['name'].gsub(/\n/, '<br>')) +
             '</code></pre>'
           trans_text = 'protocols.protocols_io_import.comp_append.command.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
         when 18
           pe_array = %w(
-            protocol_name full_name link
+            title title_html uri
           )
           trans_text = 'protocols.protocols_io_import.comp_append.sub_protocol.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
         when 19
           pe_array = %w(
@@ -489,7 +489,7 @@ module ProtocolsIoHelper
           )
           trans_text = 'protocols.protocols_io_import.comp_append.safety_infor.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
         end # case end
       end # finished looping over step components
