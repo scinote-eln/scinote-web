@@ -29,7 +29,7 @@
              vendor_name: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
              keywords: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
              tags: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
-             publish_date: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+             published_on: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
              link: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG,
              vendor_link: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG } %>
         <% allowed_image_attributes = %w(
@@ -39,7 +39,11 @@
           <% element = element.to_s %>
 
           <% if(json_object[element].present?) %>
-            <% if element == 'tags' %>
+              <% if element == 'published_on' %>
+                <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
+                <strong><%= t(translation_string) %></strong>
+                <%= prepare_for_view(Time.at(json_object[element]).utc.to_datetime,protocol_attr_len_hash[element.to_sym]).html_safe %>
+            <% elsif element == 'tags' %>
               <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
               <strong><%= t(translation_string) %></strong>
               <% string_of_tags='' %>

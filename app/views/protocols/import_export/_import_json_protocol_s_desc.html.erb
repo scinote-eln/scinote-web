@@ -31,15 +31,13 @@
         <div data-val="description" class="ql-editor">
         <% step_info_string = '' %>
         <% step['components'].each do |key|  %>
-          <% puts('component') %>
-          <% puts(key) %>
           <% if whitelist_simple.include?(key['type_id']) && key['source'].present? %>
               <br>
               <% case key['type_id']
               when 1 %>
                 <% data = key['source']['description'] %>
                 <% if data.present? %>
-                  <% step_info_string += uniq_tables(sanitize_input(not_null(data))).join %>
+                  <% step_info_string += not_null(data) %>
                   <br>
                   <strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
                   <%= prepare_for_view(

@@ -82,26 +82,23 @@ module ProtocolsIoHelper
     return tables, string_without_tables
   end
 
-  def uniq_tables(description_string)
-    # Extract uniq tables from the HTML
+  def string_html_table_remove(description_string)
     description_string.remove!("\n", "\t", "\r", "\f")
     table_whole_regex = %r{(<table\b[^>]*>.*?<\/table>)}m
-    description_string.scan(table_whole_regex).uniq
-  end
-
-  def string_html_table_remove(description_string)
-    table_pattern_array = uniq_tables(description_string)
-    if table_pattern_array.length.zero?
-      description_string
-    else
-      table_text = table_pattern_array.length.times.collect { t('protocols.protocols_io_import.comp_append.table_moved').html_safe }.join
-      "<div class='text-blocks'><br>#{table_text}<br></div>"
+    table_pattern_array = description_string.scan(table_whole_regex)
+    string_without_tables = description_string
+    table_pattern_array.each do |table_pattern|
+      string_without_tables = string_without_tables.gsub(
+        table_pattern[0],
+        t('protocols.protocols_io_import.comp_append.table_moved').html_safe
+      )
     end
+    string_without_tables
   end
 
   def pio_eval_prot_desc(text, attribute_name)
     case attribute_name
-    when 'publish_date'
+    when 'published_on'
       pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL)
     when 'vendor_link', 'link'
       pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG)
@@ -291,7 +288,7 @@ module ProtocolsIoHelper
   def protocols_io_fill_desc(json_hash)
     unshortened_string_for_tables = ''
     description_array = %w[
-      ( before_start warning guidelines manuscript_citation publish_date
+      ( before_start warning guidelines manuscript_citation published_on
       vendor_name vendor_link keywords tags link created_on )
     ]
     allowed_image_attributes = %w[

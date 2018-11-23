@@ -1554,7 +1554,7 @@ en:
         sub_prot: "This protocol also contains an attached sub-protocol:"
         auth: "Author:"
         manuscript_citation: "Manuscript citation:"
-        publish_date: "Publish date:"
+        published_on: "Publish date:"
         vendor_name: "Vendor name:"
         vendor_link: "Vendor link:"
         keywords: "Keywords:"
