@@ -36,6 +36,5 @@
 </div>
 <strong><%= comment.user.full_name %>:</strong>
 <div data-role="comment-message-container">
-  <% byebug %>
   <div data-role="comment-message"><%= custom_auto_link(comment.message, team: current_team) %></div>
 </div>
