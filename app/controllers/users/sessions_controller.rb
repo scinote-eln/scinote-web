@@ -2,9 +2,16 @@ class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  def new
+    # set @oauth_authorize to disable sign-ins
+    # with third party applications (e.g. LinkedIn)
+    @oauth_authorize = false
+    if session['oauth_authorize'] == true
+      @oauth_authorize = true
+      session['oauth_authorize'] = false
+    end
+    super
+  end
 
   # POST /resource/sign_in
   # def create

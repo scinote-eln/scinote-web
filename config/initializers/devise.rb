@@ -314,4 +314,14 @@ Devise.setup do |config|
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
+
+  Warden::Manager.before_failure do |env, opts|
+    if env.key?('action_controller.instance') &&
+       (cont = env['action_controller.instance']).instance_of?(Doorkeeper::AuthorizationsController) &&
+       cont.action_name == 'new'
+      # pass oauth_authorize param
+      env['rack.session'] ||= {}
+      env['rack.session']['oauth_authorize'] = true
+    end
+  end
 end

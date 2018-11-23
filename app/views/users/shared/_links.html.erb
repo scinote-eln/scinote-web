@@ -25,7 +25,7 @@
     <div data-hook="omniauth-sign-in-links"></div>
   <% end -%>
 
-  <%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled %>
+  <%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled && @oauth_authorize == false %>
     <%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? && controller_name != 'registrations' %>
       <%= link_to omniauth_authorize_path(resource_name, :linkedin), :title => "Sign in with LinkedIn" do %>
         <%= image_tag('linkedin/Sign-in-Large---Default.png',
