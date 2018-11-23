@@ -128,15 +128,17 @@
     $('.tui-image-editor-header').hide();
 
     $('.file-save-link').off().click(function(ev) {
+      var dataUpload = new FormData();
       ev.preventDefault();
       ev.stopPropagation();
+      dataUpload.append('image', imageEditor.toDataURL());
       animateSpinner(null, true);
       $.ajax({
         type: 'POST',
         url: '/files/' + data.id + '/update_image',
-        data: {
-          image: imageEditor.toDataURL()
-        },
+        data: dataUpload,
+        contentType: false,
+        processData: false,
         success: function(res) {
           $('#modal_link' + data.id).parent().html(res.html);
           setupAssetsLoading();
