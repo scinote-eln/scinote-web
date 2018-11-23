@@ -59,7 +59,7 @@
             <div class="col-xs-4">
               <label><%= t('protocols.import_export.import_modal.updated_at_label') %></label>
 
-              <% display_last_modified=Time.at(not_null(@json_object['last_modified']).to_i) %>
+              <% display_last_modified=eval_last_modified(@json_object['steps']) %>
               <%= f.text_field :last_modified, :value =>
               display_last_modified.to_s,readonly: true, class:
               "form-control" %>

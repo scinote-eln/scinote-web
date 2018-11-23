@@ -155,6 +155,13 @@ module ProtocolsIoHelper
     text.map { |auth| auth['name'] }.join(', ')
   end
 
+  def eval_last_modified(steps)
+    timestamps = steps.map do |step|
+      step['modified_on'] if step['modified_on'].present?
+    end
+    Time.at(timestamps.max).utc.to_datetime
+  end
+
   # Checks so that null values are returned as zero length strings
   # Did this so views arent as ugly (i avoid using if present statements)
   def not_null(attribute)
