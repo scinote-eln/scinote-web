@@ -1,5 +1,5 @@
-<%  whitelist_simple=['1','6','17'] %>
-<%  whitelist_complex=['8','9','15','18','19','20']%>
+<%  whitelist_simple=[1, 6, 17] %>
+<%  whitelist_complex=[8, 9, 15, 18, 19, 20]%>
 <%  step_table_elements_array = [] %>
 <% json_object['steps'].each_with_index do |step,counter_orig| %>
 <% @remaining = ProtocolsIoHelper::PIO_S_AVAILABLE_LENGTH %>
@@ -15,13 +15,13 @@
       <span class="step-panel-collapse-link" data-toggle="collapse">
         <span class="fas fa-caret-square-up collapse-step-icon"></span>
         <% title = nil %>
-        <% step['components'].each do |key1,value1| #finding section (title of step) %>
-          <% key1 = value1 if value1.class == Hash %>
-          <%  if(key1['component_type_id']=='6') %>
-            <% title = pio_eval_title_len(sanitize_input(key1['data'])) if key1['data'].present? %>
+        <% step['components'].each do |comp| # finding section (title of step) %>
+          <%  if comp['type_id'] == 6 %>
+            <% title = pio_eval_title_len(sanitize_input(comp['source']['title'])) \
+              if comp.dig('source', 'title').present? %>
             <% end %>
         <% end %>
-        <% title ||=t('protocols.protocols_io_import.comp_append.missing_step') %>
+        <% title ||= t('protocols.protocols_io_import.comp_append.missing_step') %>
         <strong data-val="name"><%= title %></strong>
       </span>
     </div>
@@ -30,31 +30,40 @@
       <div class="tab-pane active" role="tabpanel">
         <div data-val="description" class="ql-editor">
         <% step_info_string = '' %>
-        <% step['components'].each do |key,value|  %>
-        <%#here i made an if to distinguish the first step from the
-          others, because the first step #sometimes has index values as keys instead of
-          hashes, you might see this elsewhere %>
-          <% key = value if value.class == Hash %>
-          <% if whitelist_simple.include?(key['component_type_id']) &&
-            key['data'].present? %>
-            <br>
-            <% case key['component_type_id']
-            when '1' %>
-              <% step_info_string += not_null(key['data']) %>
+        <% step['components'].each do |key|  %>
+          <% puts('component') %>
+          <% puts(key) %>
+          <% if whitelist_simple.include?(key['type_id']) && key['source'].present? %>
               <br>
-              <strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
-              <%= prepare_for_view(key['data'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table',true).html_safe %>
-              <br>
-            <% when '17' %>
-              <% step_info_string += not_null(key['data']) %>
-              <br>
-              <strong><%= t('protocols.protocols_io_import.preview.s_exp_res') %></strong>
-              <%= prepare_for_view(key['data'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table',true).html_safe %>
-              <br>
-            <% end %>
-          <% elsif key && whitelist_complex.include?(key['component_type_id']) %>
-            <% case key['component_type_id']
-            when '8'%>
+              <% case key['type_id']
+              when 1 %>
+                <% data = key['source']['description'] %>
+                <% if data.present? %>
+                  <% step_info_string += uniq_tables(sanitize_input(not_null(data))).join %>
+                  <br>
+                  <strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
+                  <%= prepare_for_view(
+                        data,
+                        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+                        'table', true).html_safe %>
+                  <br>
+                <% end %>
+              <% when 17 %>
+                <% data = key['source']['body'] %>
+                <% if data.present? %>
+                  <% step_info_string += not_null(data) %>
+                  <br>
+                  <strong><%= t('protocols.protocols_io_import.preview.s_exp_res') %></strong>
+                  <%= prepare_for_view(
+                        data,
+                        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+                        'table', true).html_safe %>
+                  <br>
+                <% end %>
+              <% end %> <%# end case %>
+          <% elsif key && whitelist_complex.include?(key['type_id']) %>
+            <% case key['type_id']
+            when 8 %>
               <% step_info_string += not_null(key['source_data']['name']) %>
               <br>
               <strong><%= not_null(key['name'])+': ' %></strong>
@@ -75,7 +84,7 @@
               <%= t('protocols.protocols_io_import.preview.os') %>
               <%= prepare_for_view(key['source_data']['os_name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe + ' , ' +
               prepare_for_view(key['source_data']['os_version'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
-            <% when '9'%>
+            <% when 9 %>
               <% step_info_string += not_null(key['source_data']['name']) %>
               <br>
               <strong><%= not_null(key['name'])+': ' %></strong>
@@ -83,7 +92,7 @@
               <br>
               <%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= prepare_for_view(key['source_data']['link'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
-            <% when '15'%>
+            <% when 15 %>
               <% step_info_string += not_null(key['source_data']['description']) %>
               <br>
               <strong><%= key['name']+': ' %></strong>
@@ -95,7 +104,7 @@
               <%= t('protocols.protocols_io_import.preview.os') %>
               <%= prepare_for_view(key['source_data']['os_name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe + ' , ' +
               prepare_for_view(key['source_data']['os_version'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
-            <% when '18'%>
+            <% when 18 %>
               <br>
               <strong><%= t('protocols.protocols_io_import.preview.sub_prot') %></strong>
               <%= pio_eval_title_len(sanitize_input(key['source_data']['protocol_name'])).html_safe %>
@@ -107,7 +116,7 @@
                 <%= t('protocols.protocols_io_import.preview.s_nobr_link') %>
                 <%= prepare_for_view(key['source_data']['link'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <% end %>
-            <% when '19'%>
+            <% when 19 %>
               <% step_info_string += not_null(key['source_data']['body']) %>
               <br>
               <strong><%= not_null(key['name'])+': ' %></strong>

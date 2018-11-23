@@ -82,18 +82,21 @@ module ProtocolsIoHelper
     return tables, string_without_tables
   end
 
-  def string_html_table_remove(description_string)
+  def uniq_tables(description_string)
+    # Extract uniq tables from the HTML
     description_string.remove!("\n", "\t", "\r", "\f")
     table_whole_regex = %r{(<table\b[^>]*>.*?<\/table>)}m
-    table_pattern_array = description_string.scan(table_whole_regex)
-    string_without_tables = description_string
-    table_pattern_array.each do |table_pattern|
-      string_without_tables = string_without_tables.gsub(
-        table_pattern[0],
-        t('protocols.protocols_io_import.comp_append.table_moved').html_safe
-      )
+    description_string.scan(table_whole_regex).uniq
+  end
+
+  def string_html_table_remove(description_string)
+    table_pattern_array = uniq_tables(description_string)
+    if table_pattern_array.length.zero?
+      description_string
+    else
+      table_text = table_pattern_array.length.times.collect { t('protocols.protocols_io_import.comp_append.table_moved').html_safe }.join
+      "<div class='text-blocks'><br>#{table_text}<br></div>"
     end
-    string_without_tables
   end
 
   def pio_eval_prot_desc(text, attribute_name)
@@ -150,6 +153,11 @@ module ProtocolsIoHelper
     end
   end
 
+  def pio_eval_authors(text)
+    # Extract authors names from the JSON
+    text.map { |auth| auth['name'] }.join(', ')
+  end
+
   # Checks so that null values are returned as zero length strings
   # Did this so views arent as ugly (i avoid using if present statements)
   def not_null(attribute)
@@ -166,9 +174,9 @@ module ProtocolsIoHelper
 
   def step_hash_null?(step_json)
     step_json.dig(
-      0, 'components', 0, 'component_type_id'
+      0, 'components', 0, 'type_id'
     ).nil? && step_json.dig(
-      0, 'components', '0', 'component_type_id'
+      0, 'components', '0', 'type_id'
     ).nil?
   end
 
