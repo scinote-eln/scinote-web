@@ -10,7 +10,8 @@
     <% # We assume the system notification is clean %>
     <%= @notification.title.html_safe %>
   <% elsif @notification.deliver? %>
-    <%= I18n.t("notifications.deliver.email_body").html_safe %>
+    <p><%= I18n.t("notifications.deliver.email_body_1") %></p>
+    <p><%= I18n.t("notifications.deliver.email_body_2") %></p>
   <% else %>
     <%= sanitize_input(prepend_server_url_to_links(@notification.title)) %>
   <% end %>
@@ -21,12 +22,9 @@
     <% # We assume the system notification is clean %>
     <%= @notification.message.html_safe %>
   <% elsif @notification.deliver? %>
-    <p>
-      <%= I18n.t("notifications.deliver.email_end_greeting").html_safe %>
-    </p>
-    <% # work around the problem with inserting the link of zipExport %>
-    <% zip_id = /data-id='(\d*)'/.match(@notification.message)[1] %>
     <%= I18n.t("notifications.deliver.download_link") %>
+    <% # work around the problem with inserting the link of zipExport %>
+    <% zip_id = /data-id=('|")(\d*)('|")/.match(@notification.message)[2] %>
     <%= @notification.message.gsub(/href='.+'/, "href='#{zip_exports_download_url(zip_id)}'").html_safe %>
   <% else %>
     <%= sanitize_input(prepend_server_url_to_links(@notification.message)) %>
