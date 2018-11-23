@@ -603,58 +603,67 @@ class ProtocolsController < ApplicationController
   end
 
   def protocolsio_import_create
-    @protocolsio_too_big = false
-    @protocolsio_invalid_file = false
-    @protocolsio_no_file = false
-    if params[:json_file].nil?
-      @protocolsio_no_file = true
-      respond_to do |format|
-        format.js {}
+    begin
+      @protocolsio_too_big = false
+      @protocolsio_invalid_file = false
+      @protocolsio_no_file = false
+      if params[:json_file].nil?
+        @protocolsio_no_file = true
+        respond_to do |format|
+          format.js {}
+        end
+        return 0 # return 0 stops the rest of the controller code from executing
       end
-      return 0 # return 0 stops the rest of the controller code from executing
-    end
-    extension = File.extname(params[:json_file].path)
-    file_size = File.size(params[:json_file].path)
-    if extension != '.txt' && extension != '.json'
-      @protocolsio_invalid_file = true
-      respond_to do |format|
-        format.js {}
+      extension = File.extname(params[:json_file].path)
+      file_size = File.size(params[:json_file].path)
+      if extension != '.txt' && extension != '.json'
+        @protocolsio_invalid_file = true
+        respond_to do |format|
+          format.js {}
+        end
+        return 0 # return 0 stops the rest of the controller code from executing
       end
-      return 0 # return 0 stops the rest of the controller code from executing
-    end
-    if file_size > Rails.configuration.x.file_max_size_mb.megabytes
-      @protocolsio_too_big = true
-      respond_to do |format|
-        format.js {}
-        # if file is too big, default to the js.erb file,
-        # named the same as this controller
-        # where a javascript alert is called
+      if file_size > Rails.configuration.x.file_max_size_mb.megabytes
+        @protocolsio_too_big = true
+        respond_to do |format|
+          format.js {}
+          # if file is too big, default to the js.erb file,
+          # named the same as this controller
+          # where a javascript alert is called
+        end
+        return 0 # return 0 stops the rest of the controller code from executing
       end
-      return 0 # return 0 stops the rest of the controller code from executing
-    end
-    json_file_contents = File.read(params[:json_file].path)
-    json_file_contents.gsub! '\"', "'"
-    # escaped double quotes too stressfull, html works with single quotes too
-    # json double quotes dont get escaped since they dont match \"
-    unless valid_protocol_json(json_file_contents)
-      @protocolsio_invalid_file = true
-      respond_to do |format|
-        format.js {}
+      json_file_contents = File.read(params[:json_file].path)
+      json_file_contents.gsub! '\"', "'"
+      # escaped double quotes too stressfull, html works with single quotes too
+      # json double quotes dont get escaped since they dont match \"
+      unless valid_protocol_json(json_file_contents)
+        @protocolsio_invalid_file = true
+        respond_to do |format|
+          format.js {}
+        end
+        return 0 # return 0 stops the rest of the controller code from executing
       end
-      return 0 # return 0 stops the rest of the controller code from executing
-    end
-    @json_object = JSON.parse(json_file_contents)
-    unless step_hash_null?(@json_object['steps'])
-      @json_object['steps'] = protocols_io_guid_reorder_step_json(
-        @json_object['steps']
-      )
-    end
-
-    @protocol = Protocol.new
-    respond_to do |format|
-      format.js {} # go to the js.erb file named the same as this controller,
-      # where a preview modal is rendered,
-      # and some modals get closed and opened
+      @json_object = JSON.parse(json_file_contents)
+      unless step_hash_null?(@json_object['steps'])
+        @json_object['steps'] = protocols_io_guid_reorder_step_json(
+          @json_object['steps']
+        )
+      end
+      @protocol = Protocol.new
+      respond_to do |format|
+        format.js {} # go to the js.erb file named the same as this controller,
+        # where a preview modal is rendered,
+        # and some modals get closed and opened
+      end
+    rescue => e
+      Rails.logger.error(e.message)
+      @protocolsio_general_error = true
+      respond_to do |format|
+        format.js {} # go to the js.erb file named the same as this controller,
+        # where a preview modal is rendered,
+        # and some modals get closed and opened
+      end
     end
   end
 
