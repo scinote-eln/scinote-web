@@ -282,13 +282,12 @@ module ProtocolsIoHelper
   def pio_stp(iterating_key, parse_elements_array, en_local_text)
     append = ''
     parse_elements_array.each do |element|
-      if iterating_key[element]
-        append += fill_attributes(
-          element,
-          iterating_key[element],
-          en_local_text
-        )
-      end
+      next unless iterating_key[element]
+      append += fill_attributes(
+        element,
+        iterating_key[element],
+        en_local_text
+      )
     end
     append
   end
@@ -350,11 +349,10 @@ module ProtocolsIoHelper
       elsif json_hash[e].present?
         if e == 'published_on'
           data = Time.at(json_hash[e]).utc.to_datetime.to_s
-          unshortened_string_for_tables += data
         else
           data = json_hash[e]
-          unshortened_string_for_tables += data
         end
+        unshortened_string_for_tables += data
         new_e = '<strong>' + e.humanize + '</strong>'
         image_tag = allowed_image_attributes.include?(e) ? Array('img') : Array(nil)
         description_string +=
