@@ -331,7 +331,8 @@ module ProtocolsIoHelper
             ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
           ) +
           + '<br>'
-      elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
+      elsif e == 'tags' && json_hash[e].present? \
+            && json_hash[e].any? && json_hash[e] != ''
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
           new_e.to_s + ': '
@@ -346,13 +347,19 @@ module ProtocolsIoHelper
         )
         description_string += '<br>'
       elsif json_hash[e].present?
-        unshortened_string_for_tables += json_hash[e]
+        if e == 'published_on'
+          data = Time.at(json_hash[e]).utc.to_datetime.to_s
+          unshortened_string_for_tables += data
+        else
+          data = json_hash[e]
+          unshortened_string_for_tables += data
+        end
         new_e = '<strong>' + e.humanize + '</strong>'
         image_tag = allowed_image_attributes.include?(e) ? Array('img') : Array(nil)
         description_string +=
           new_e.to_s + ':  ' + # intercept tables here, before cut
           pio_eval_prot_desc(
-            sanitize_input(json_hash[e], image_tag),
+            sanitize_input(data, image_tag),
             e
           ).html_safe + '<br>'
       end
@@ -422,17 +429,17 @@ module ProtocolsIoHelper
         key = value if value.class == Hash
         # append is the string that we append values into for description
         # pio_stp_x means protocols io step (id of component) parser
-        case key['component_type_id']
+        case key['type_id']
         # intercept tables in all of below before cutting
-        when '1'
-          unshortened_step_table_string += key['data']
-          newj[i.to_s]['description'] += pio_stp_1(key['data'])
-        when '6'
-          newj[i.to_s]['name'] = pio_stp_6(key['data'])
-        when '17'
-          unshortened_step_table_string += key['data']
-          newj[i.to_s]['description'] += pio_stp_17(key['data'])
-        when '8'
+        when 1
+          unshortened_step_table_string += key['source']['description']
+          newj[i.to_s]['description'] += pio_stp_1(key['source']['description'])
+        when 6
+          newj[i.to_s]['name'] = pio_stp_6(key['source']['title'])
+        when 17
+          unshortened_step_table_string += key['source']['body']
+          newj[i.to_s]['description'] += pio_stp_17(key['source']['body'])
+        when 8
           pe_array = %w(
             name developer version link repository os_name os_version
           )
@@ -440,7 +447,7 @@ module ProtocolsIoHelper
           newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
-        when '9'
+        when 9
           pe_array = %w(
             name link
           )
@@ -448,7 +455,7 @@ module ProtocolsIoHelper
           newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
-        when '15'
+        when 15
           pe_array = %w(
             name description os_name os_version
           )
@@ -460,7 +467,7 @@ module ProtocolsIoHelper
           newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
-        when '18'
+        when 18
           pe_array = %w(
             protocol_name full_name link
           )
@@ -468,7 +475,7 @@ module ProtocolsIoHelper
           newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
-        when '19'
+        when 19
           pe_array = %w(
             body link
           )
