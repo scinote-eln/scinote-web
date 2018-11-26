@@ -98,7 +98,7 @@ module ProtocolsIoHelper
 
   def pio_eval_prot_desc(text, attribute_name)
     case attribute_name
-    when 'publish_date'
+    when 'published_on'
       pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL)
     when 'vendor_link', 'link'
       pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG)
@@ -150,6 +150,22 @@ module ProtocolsIoHelper
     end
   end
 
+  def pio_eval_authors(text)
+    # Extract authors names from the JSON
+    text.map { |auth| auth['name'] }.join(', ')
+  rescue StandardError
+    []
+  end
+
+  def eval_last_modified(steps)
+    timestamps = steps.map do |step|
+      step['modified_on'] if step['modified_on'].present?
+    end
+    Time.at(timestamps.max).utc.to_datetime
+  rescue StandardError
+    Time.at(0).utc.to_datetime
+  end
+
   # Checks so that null values are returned as zero length strings
   # Did this so views arent as ugly (i avoid using if present statements)
   def not_null(attribute)
@@ -166,9 +182,9 @@ module ProtocolsIoHelper
 
   def step_hash_null?(step_json)
     step_json.dig(
-      0, 'components', 0, 'component_type_id'
+      0, 'components', 0, 'type_id'
     ).nil? && step_json.dig(
-      0, 'components', '0', 'component_type_id'
+      0, 'components', '0', 'type_id'
     ).nil?
   end
 
@@ -270,7 +286,7 @@ module ProtocolsIoHelper
   def pio_stp(iterating_key, parse_elements_array, en_local_text)
     append = ''
     parse_elements_array.each do |element|
-      return '' unless iterating_key[element]
+      next unless iterating_key[element]
       append += fill_attributes(
         element,
         iterating_key[element],
@@ -283,7 +299,7 @@ module ProtocolsIoHelper
   def protocols_io_fill_desc(json_hash)
     unshortened_string_for_tables = ''
     description_array = %w[
-      ( before_start warning guidelines manuscript_citation publish_date
+      ( before_start warning guidelines manuscript_citation published_on
       vendor_name vendor_link keywords tags link created_on )
     ]
     allowed_image_attributes = %w[
@@ -319,7 +335,8 @@ module ProtocolsIoHelper
             ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
           ) +
           + '<br>'
-      elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
+      elsif e == 'tags' && json_hash[e].present? \
+            && json_hash[e].any? && json_hash[e] != ''
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
           new_e.to_s + ': '
@@ -334,13 +351,19 @@ module ProtocolsIoHelper
         )
         description_string += '<br>'
       elsif json_hash[e].present?
-        unshortened_string_for_tables += json_hash[e]
+        data =
+          if e == 'published_on'
+            Time.at(json_hash[e]).utc.to_datetime.to_s
+          else
+            json_hash[e]
+          end
+        unshortened_string_for_tables += data
         new_e = '<strong>' + e.humanize + '</strong>'
         image_tag = allowed_image_attributes.include?(e) ? Array('img') : Array(nil)
         description_string +=
           new_e.to_s + ':  ' + # intercept tables here, before cut
           pio_eval_prot_desc(
-            sanitize_input(json_hash[e], image_tag),
+            sanitize_input(data, image_tag),
             e
           ).html_safe + '<br>'
       end
@@ -410,59 +433,59 @@ module ProtocolsIoHelper
         key = value if value.class == Hash
         # append is the string that we append values into for description
         # pio_stp_x means protocols io step (id of component) parser
-        case key['component_type_id']
+        case key['type_id']
         # intercept tables in all of below before cutting
-        when '1'
-          unshortened_step_table_string += key['data']
-          newj[i.to_s]['description'] += pio_stp_1(key['data'])
-        when '6'
-          newj[i.to_s]['name'] = pio_stp_6(key['data'])
-        when '17'
-          unshortened_step_table_string += key['data']
-          newj[i.to_s]['description'] += pio_stp_17(key['data'])
-        when '8'
+        when 1
+          unshortened_step_table_string += key['source']['description']
+          newj[i.to_s]['description'] += pio_stp_1(key['source']['description'])
+        when 6
+          newj[i.to_s]['name'] = pio_stp_6(key['source']['title'])
+        when 17
+          unshortened_step_table_string += key['source']['body']
+          newj[i.to_s]['description'] += pio_stp_17(key['source']['body'])
+        when 8
           pe_array = %w(
             name developer version link repository os_name os_version
           )
           trans_text = 'protocols.protocols_io_import.comp_append.soft_packg.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
-        when '9'
+        when 9
           pe_array = %w(
             name link
           )
           trans_text = 'protocols.protocols_io_import.comp_append.dataset.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
-        when '15'
+        when 15
           pe_array = %w(
             name description os_name os_version
           )
-          key['source_data']['name'] =
+          key['source']['name'] =
             '<pre><code>' +
-            not_null(key['source_data']['name'].gsub(/\n/, '<br>')) +
+            not_null(key['source']['name'].gsub(/\n/, '<br>')) +
             '</code></pre>'
           trans_text = 'protocols.protocols_io_import.comp_append.command.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
-        when '18'
+        when 18
           pe_array = %w(
-            protocol_name full_name link
+            title title_html uri
           )
           trans_text = 'protocols.protocols_io_import.comp_append.sub_protocol.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
-        when '19'
+        when 19
           pe_array = %w(
             body link
           )
           trans_text = 'protocols.protocols_io_import.comp_append.safety_infor.'
           newj[i.to_s]['description'] += pio_stp(
-            key['source_data'], pe_array, trans_text
+            key['source'], pe_array, trans_text
           )
         end # case end
       end # finished looping over step components
@@ -475,5 +498,24 @@ module ProtocolsIoHelper
       )[0]
     end # steps
     newj
+  end
+
+  def get_steps(json)
+    # Get steps of the given json_object
+    if json.key?('steps') && json['steps'].respond_to?('each')
+      json['steps']
+    else
+      []
+    end
+  end
+
+  def get_components(step_json)
+    # Get components of given step_json
+    if step_json.key?('components') &&
+       step_json['components'].respond_to?('each')
+      step_json['components']
+    else
+      []
+    end
   end
 end
