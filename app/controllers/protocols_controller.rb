@@ -656,13 +656,11 @@ class ProtocolsController < ApplicationController
       # where a preview modal is rendered,
       # and some modals get closed and opened
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error(e.message)
     @protocolsio_general_error = true
     respond_to do |format|
-      format.js {} # go to the js.erb file named the same as this controller,
-      # where a preview modal is rendered,
-      # and some modals get closed and opened
+      format.js {}
     end
   end
 

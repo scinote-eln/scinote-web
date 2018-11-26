@@ -151,23 +151,19 @@ module ProtocolsIoHelper
   end
 
   def pio_eval_authors(text)
-    begin
-      # Extract authors names from the JSON
-      text.map { |auth| auth['name'] }.join(', ')
-    rescue Exception
-      []
-    end
+    # Extract authors names from the JSON
+    text.map { |auth| auth['name'] }.join(', ')
+  rescue StandardError
+    []
   end
 
   def eval_last_modified(steps)
-    begin
-      timestamps = steps.map do |step|
-        step['modified_on'] if step['modified_on'].present?
-      end
-      Time.at(timestamps.max).utc.to_datetime
-    rescue Exception
-      Time.at(0).utc.to_datetime
+    timestamps = steps.map do |step|
+      step['modified_on'] if step['modified_on'].present?
     end
+    Time.at(timestamps.max).utc.to_datetime
+  rescue StandardError
+    Time.at(0).utc.to_datetime
   end
 
   # Checks so that null values are returned as zero length strings
@@ -522,5 +518,4 @@ module ProtocolsIoHelper
       []
     end
   end
-
 end
