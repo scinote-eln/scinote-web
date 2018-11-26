@@ -39,10 +39,10 @@
           <% element = element.to_s %>
 
           <% if(json_object[element].present?) %>
-              <% if element == 'published_on' %>
-                <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
-                <strong><%= t(translation_string) %></strong>
-                <%= prepare_for_view(Time.at(json_object[element]).utc.to_datetime,protocol_attr_len_hash[element.to_sym]).html_safe %>
+            <% if element == 'published_on' %>
+              <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
+              <strong><%= t(translation_string) %></strong>
+              <%= prepare_for_view(Time.at(json_object[element]).utc.to_datetime,protocol_attr_len_hash[element.to_sym]).html_safe %>
             <% elsif element == 'tags' %>
               <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
               <strong><%= t(translation_string) %></strong>

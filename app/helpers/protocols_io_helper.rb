@@ -151,15 +151,23 @@ module ProtocolsIoHelper
   end
 
   def pio_eval_authors(text)
-    # Extract authors names from the JSON
-    text.map { |auth| auth['name'] }.join(', ')
+    begin
+      # Extract authors names from the JSON
+      text.map { |auth| auth['name'] }.join(', ')
+    rescue Exception
+      []
+    end
   end
 
   def eval_last_modified(steps)
-    timestamps = steps.map do |step|
-      step['modified_on'] if step['modified_on'].present?
+    begin
+      timestamps = steps.map do |step|
+        step['modified_on'] if step['modified_on'].present?
+      end
+      Time.at(timestamps.max).utc.to_datetime
+    rescue Exception
+      Time.at(0).utc.to_datetime
     end
-    Time.at(timestamps.max).utc.to_datetime
   end
 
   # Checks so that null values are returned as zero length strings
@@ -347,11 +355,12 @@ module ProtocolsIoHelper
         )
         description_string += '<br>'
       elsif json_hash[e].present?
-        if e == 'published_on'
-          data = Time.at(json_hash[e]).utc.to_datetime.to_s
-        else
-          data = json_hash[e]
-        end
+        data =
+          if e == 'published_on'
+            Time.at(json_hash[e]).utc.to_datetime.to_s
+          else
+            json_hash[e]
+          end
         unshortened_string_for_tables += data
         new_e = '<strong>' + e.humanize + '</strong>'
         image_tag = allowed_image_attributes.include?(e) ? Array('img') : Array(nil)
@@ -443,16 +452,9 @@ module ProtocolsIoHelper
             name developer version link repository os_name os_version
           )
           trans_text = 'protocols.protocols_io_import.comp_append.soft_packg.'
-          puts('before')
-          puts(newj[i.to_s]['description'])
           newj[i.to_s]['description'] += pio_stp(
             key['source'], pe_array, trans_text
           )
-          puts('after')
-          puts(newj[i.to_s]['description'])
-
-          puts(key)
-          puts(key['source'])
         when 9
           pe_array = %w(
             name link
@@ -501,4 +503,24 @@ module ProtocolsIoHelper
     end # steps
     newj
   end
+
+  def get_steps(json)
+    # Get steps of the given json_object
+    if json.key?('steps') && json['steps'].respond_to?('each')
+      json['steps']
+    else
+      []
+    end
+  end
+
+  def get_components(step_json)
+    # Get components of given step_json
+    if step_json.key?('components') &&
+       step_json['components'].respond_to?('each')
+      step_json['components']
+    else
+      []
+    end
+  end
+
 end

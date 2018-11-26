@@ -1,7 +1,7 @@
 <%  whitelist_simple=[1, 6, 17] %>
 <%  whitelist_complex=[8, 9, 15, 18, 19, 20]%>
 <%  step_table_elements_array = [] %>
-<% json_object['steps'].each_with_index do |step,counter_orig| %>
+<% get_steps(json_object).each_with_index do |step, counter_orig| %>
 <% @remaining = ProtocolsIoHelper::PIO_S_AVAILABLE_LENGTH %>
 <% counter = counter_orig + 2 %>
 <div style="display: block;">
@@ -15,7 +15,7 @@
       <span class="step-panel-collapse-link" data-toggle="collapse">
         <span class="fas fa-caret-square-up collapse-step-icon"></span>
         <% title = nil %>
-        <% step['components'].each do |comp| # finding section (title of step) %>
+        <% get_components(step).each do |comp| # finding section (title of step) %>
           <%  if comp['type_id'] == 6 %>
             <% title = pio_eval_title_len(sanitize_input(comp['source']['title'])) \
               if comp.dig('source', 'title').present? %>
@@ -30,7 +30,7 @@
       <div class="tab-pane active" role="tabpanel">
         <div data-val="description" class="ql-editor">
         <% step_info_string = '' %>
-        <% step['components'].each do |key|  %>
+        <% get_components(step).each do |key|  %>
           <% if whitelist_simple.include?(key['type_id']) && key['source'].present? %>
               <br>
               <% case key['type_id']
