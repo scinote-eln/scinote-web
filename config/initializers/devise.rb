@@ -315,6 +315,11 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
+  # If user acesses authorizations/new (Doorkeeper endpoint to authorize an
+  # OAuth client), and user is not logged in yet, we want to hide the 3rd party
+  # OAuth signup buttons on login page (to prevent multiple OAuth loops); so
+  # a boolean is stored in the session, before 302 redirection to login page is
+  # performed.
   Warden::Manager.before_failure do |env, _opts|
     if env.key?('action_controller.instance') &&
        (cont = env['action_controller.instance'])
