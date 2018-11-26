@@ -1861,9 +1861,10 @@ en:
       system_message_description: 'System message notifications are specifically sent by site maintainers to notify all users about a system update.'
     deliver:
       download_link: "Download link:"
+      download_text: "Click the link to download the file."
       email_subject: "Your SciNote export is ready!"
-      email_body: "<p>The export of SciNote project(s) that you requested is ready!</p><p>You can find the link to download the file below or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons.</p>"
-      email_end_greeting: "<p>Best regards,</p><p>Your SciNote team</p>"
+      email_body_1: "The export of SciNote data that you requested is ready!"
+      email_body_2: "You can find the link to download the file below or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons."
     show_all: "Show all notifications"
     show_more: "Show more notifications"
     no_notifications: "No notifications."
