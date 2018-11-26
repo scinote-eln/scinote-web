@@ -6,11 +6,10 @@
   box-shadow: 1px 3px 6px 0 $color-alto;
   height: 100%;
   left: 0;
-  overflow-x: hidden;
+  padding-bottom: 50px;
   position: fixed;
   width: 83px;
   z-index: 1001;
-  padding-bottom: 50px;
 
   .scroll-wrapper {
     height: 100%;
