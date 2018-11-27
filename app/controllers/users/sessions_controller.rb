@@ -6,7 +6,7 @@ class Users::SessionsController < Devise::SessionsController
     # If user was redirected here from OAuth's authorize/new page (Doorkeeper
     # endpoint for authorizing an OAuth client), 3rd party sign-in buttons
     # (e.g. LinkedIn) should be hidden. See config/initializers/devise.rb.
-    @oauth_authorize = true if session['oauth_authorize'] == true
+    @oauth_authorize = session['oauth_authorize'] == true
     super
   end
 
