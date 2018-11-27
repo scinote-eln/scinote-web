@@ -2,9 +2,13 @@ class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  def new
+    # If user was redirected here from OAuth's authorize/new page (Doorkeeper
+    # endpoint for authorizing an OAuth client), 3rd party sign-in buttons
+    # (e.g. LinkedIn) should be hidden. See config/initializers/devise.rb.
+    @oauth_authorize = session['oauth_authorize'] == true
+    super
+  end
 
   # POST /resource/sign_in
   # def create
