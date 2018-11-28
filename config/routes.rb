@@ -599,13 +599,13 @@ Rails.application.routes.draw do
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',
                             as: :items
-                  resources :task_users, only: %i(index),
+                  resources :task_users, only: %i(index show),
                             path: 'users',
                             as: :users
                   resources :task_tags, only: %i(index show),
                             path: 'tags',
                             as: :tags
-                  resources :protocols, only: %i(index show)
+                  resources :protocols, only: %i(index)
                   resources :results, only: %i(index create show)
                   get 'inputs', to: 'tasks#inputs'
                   get 'outputs', to: 'tasks#outputs'

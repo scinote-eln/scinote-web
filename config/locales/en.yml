@@ -2002,6 +2002,11 @@ en:
       status_ok: "Ok"
       expired_token: "Token is expired"
       invalid_token: "Token is invalid"
+      missing_token: "Core: No token in the header"
+      no_iss: "Core: Missing ISS in the token"
+      wrong_iss: "Default: Wrong ISS in the token"
+      no_user_mapping: "Default: User mapping not found"
+      no_azure_user_mapping: "Azure AD: User mapping not found"
       errors:
         general:
           title: "Error"

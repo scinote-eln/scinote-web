@@ -7,7 +7,6 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task
-      before_action :load_inventory_item, only: :show
 
       def index
         items =
@@ -24,7 +23,7 @@ module Api
       end
 
       def show
-        render jsonapi: @item,
+        render jsonapi: @task.repository_rows.find(params.require(:id)),
                serializer: InventoryItemSerializer,
                show_repository: true,
                include: %i(inventory_cells inventory)
