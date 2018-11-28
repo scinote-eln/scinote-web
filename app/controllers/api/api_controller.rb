@@ -56,16 +56,18 @@ module Api
       token_payload, = Api::AzureJwt.decode(token)
       @current_user = User.from_azure_jwt_token(token_payload)
       unless current_user
-        raise JWT::InvalidPayload, 'Azure AD: User mapping not found'
+        raise JWT::InvalidPayload, I18n.t('api.core.no_azure_user_mapping')
       end
     end
 
     def authenticate_request!
       @token = request.headers['Authorization']&.sub('Bearer ', '')
-      raise StandardError, 'Common: No token in the header' unless @token
+      unless @token
+        raise JWT::VerificationError, I18n.t('api.core.missing_token')
+      end
 
       @iss = CoreJwt.read_iss(token)
-      raise JWT::InvalidPayload, 'Common: Missing ISS in the token' unless @iss
+      raise JWT::InvalidPayload, I18n.t('api.core.no_iss') unless @iss
 
       Extends::API_PLUGABLE_AUTH_METHODS.each do |auth_method|
         method(auth_method).call
@@ -74,12 +76,12 @@ module Api
 
       # Default token implementation
       unless iss == Api.configuration.core_api_token_iss
-        raise JWT::InvalidPayload, 'Default: Wrong ISS in the token'
+        raise JWT::InvalidPayload, I18n.t('api.core.wrong_iss')
       end
       payload = CoreJwt.decode(token)
       @current_user = User.find_by_id(payload['sub'])
       unless current_user
-        raise JWT::InvalidPayload, 'Default: User mapping not found'
+        raise JWT::InvalidPayload, I18n.t('api.core.no_user_mapping')
       end
     end
 

@@ -65,6 +65,15 @@ module Api
         )
       end
 
+      rescue_from JWT::DecodeError,
+                  JWT::InvalidPayload,
+                  JWT::VerificationError,
+                  JWT::ExpiredSignature do |e|
+        render_error(
+          I18n.t('api.core.invalid_token'), e.message, :unauthorized
+        )
+      end
+
       private
 
       def render_error(title, message, status)
