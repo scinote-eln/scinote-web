@@ -124,7 +124,7 @@ class StepCommentsController < ApplicationController
               step_name: @step.name
             )
           )
-          message = custom_auto_link(@comment.message)
+          message = custom_auto_link(@comment.message, team: current_team)
           render json: { comment: message }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },

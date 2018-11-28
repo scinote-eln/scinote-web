@@ -166,18 +166,20 @@ module ApplicationHelper
 
     user_name = user.full_name
 
-    unless skip_user_status || user_still_in_team
-      user_name << " #{I18n.t('atwho.res.removed')}"
-    end
-
-    raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+    html =
+      raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
         "alt='avatar' class='atwho-user-img-popover'" \
         " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>") +
       raw('<a onClick="$(this).popover(\'show\')" ' \
-          'class="atwho-user-popover" data-container="body" ' \
-          'data-html="true" tabindex="0" data-trigger="focus" ' \
-          'data-placement="top" data-toggle="popover" data-content="') +
+        'class="atwho-user-popover" data-container="body" ' \
+        'data-html="true" tabindex="0" data-trigger="focus" ' \
+        'data-placement="top" data-toggle="popover" data-content="') +
       raw(user_description) + raw('" >') + user_name + raw('</a>')
+
+    unless skip_user_status || user_still_in_team
+      html << " #{I18n.t('atwho.res.removed')}"
+    end
+    html
   end
 
   # Dirty, dirty hack for displaying images in reports
