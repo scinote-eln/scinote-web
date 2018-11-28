@@ -607,8 +607,6 @@ Rails.application.routes.draw do
                             as: :tags
                   resources :protocols, only: %i(index show)
                   resources :results, only: %i(index create show)
-                  get 'inputs', to: 'tasks#inputs'
-                  get 'outputs', to: 'tasks#outputs'
                   get 'activities', to: 'tasks#activities'
                 end
               end
