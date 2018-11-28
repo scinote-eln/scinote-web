@@ -14,10 +14,8 @@ Paperclip::Attachment.default_options.merge!(
 Paperclip::UriAdapter.register
 
 if ENV['PAPERCLIP_STORAGE'] == 's3'
-  if ENV['S3_BUCKET'].nil? || ENV['AWS_REGION'].nil? ||
-     ENV['AWS_ACCESS_KEY_ID'].nil? || ENV['AWS_SECRET_ACCESS_KEY'].nil?
-    puts 'WARNING! Environment variables S3_BUCKET, AWS_REGION, '\
-         'AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be set.'
+  if ENV['S3_BUCKET'].nil? || ENV['AWS_REGION'].nil?
+    puts 'WARNING! Environment variables S3_BUCKET and AWS_REGION must be set.'
     exit 1
   end
 
