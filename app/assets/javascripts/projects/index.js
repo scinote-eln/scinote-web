@@ -8,7 +8,7 @@
 // - refactor view handling using library, ex. backbone.js
 
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   I18n */
+   I18n setupSidebarTree */
 
 //= require comments
 (function() {
@@ -454,6 +454,16 @@
     } else {
       TABLE.draw();
     }
+    // Also refresh sidebar tree navigation
+    $.ajax({
+      url: $('#projects-cards-view').data('projects-sidebar-url'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        $('#slide-panel .tree').html('<ul>' + data.html + '</ul>');
+        setupSidebarTree();
+      }
+    });
   }
 
   function loadCardsView() {
