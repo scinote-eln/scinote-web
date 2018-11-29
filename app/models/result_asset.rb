@@ -1,7 +1,7 @@
 class ResultAsset < ApplicationRecord
   validates :result, :asset, presence: true
 
-  belongs_to :result, inverse_of: :result_asset, touch: true, optional: true
+  belongs_to :result, inverse_of: :result_asset, optional: true
   belongs_to :asset,
              inverse_of: :result_asset,
              dependent: :destroy,

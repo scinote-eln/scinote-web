@@ -7,7 +7,7 @@ class Checklist < ApplicationRecord
             length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :step, presence: true
 
-  belongs_to :step, inverse_of: :checklists, touch: true, optional: true
+  belongs_to :step, inverse_of: :checklists, optional: true
   belongs_to :created_by,
              foreign_key: 'created_by_id',
              class_name: 'User',

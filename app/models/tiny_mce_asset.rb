@@ -5,10 +5,9 @@ class TinyMceAsset < ApplicationRecord
   after_destroy :release_team_space
 
   belongs_to :team, inverse_of: :tiny_mce_assets, optional: true
-  belongs_to :step, inverse_of: :tiny_mce_assets, touch: true, optional: true
+  belongs_to :step, inverse_of: :tiny_mce_assets, optional: true
   belongs_to :result_text,
              inverse_of: :tiny_mce_assets,
-             touch: true,
              optional: true
   has_attached_file :image,
                     styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg] },
