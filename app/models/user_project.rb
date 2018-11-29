@@ -5,12 +5,12 @@ class UserProject < ApplicationRecord
   validates :user, presence: true, uniqueness: { scope: :project }
   validates :project, presence: true
 
-  belongs_to :user, inverse_of: :user_projects, touch: true, optional: true
+  belongs_to :user, inverse_of: :user_projects, optional: true
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :project, inverse_of: :user_projects, touch: true, optional: true
+  belongs_to :project, inverse_of: :user_projects, optional: true
 
   before_destroy :destroy_associations
 

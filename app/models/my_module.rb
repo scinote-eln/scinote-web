@@ -31,7 +31,7 @@ class MyModule < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :experiment, inverse_of: :my_modules, touch: true, optional: true
+  belongs_to :experiment, inverse_of: :my_modules, optional: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
