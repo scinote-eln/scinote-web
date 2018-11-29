@@ -114,6 +114,33 @@
       }
     }
 
+    // Make active current project/experiment/task
+    function activateCurrent() {
+      var sidebar = $('#slide-panel');
+      var projectId = sidebar.data('current-project');
+      var experimentId = sidebar.data('current-experiment');
+      var taskId = sidebar.data('current-task');
+      var currentPage = sidebar.data('page');
+      var li;
+
+      if (currentPage === 'project') {
+        li = sidebar.find('li[data-project-id="' + projectId + '"]');
+      } else if (currentPage === 'experiment') {
+        li = sidebar.find('[data-experiment-id="' + experimentId + '"]');
+      } else if (currentPage === 'canvas') {
+        li = sidebar.find('[data-experiment-id="' + experimentId + '"]');
+        li.find('.task-tree-link')
+          .append('<a href="" class="canvas-center-on">'
+                  + '<span class="fas fa-map-marker-alt"></span></a>');
+      } else if (currentPage === 'task') {
+        li = sidebar.find('[data-module-id="' + taskId + '"]');
+      }
+      li.find('a:first').addClass('disabled');
+      li.addClass('active');
+    }
+
+    activateCurrent();
+
     // Add triangle icons and titles to every parent node
     $('.tree li:has(ul)')
       .addClass('parent_li')

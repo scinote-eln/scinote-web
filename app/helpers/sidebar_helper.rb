@@ -1,13 +1,4 @@
 module SidebarHelper
-
-  def currently_active?(my_module)
-      @my_module.present? and @my_module.id == my_module.id
-  end
-
-  def is_canvas?
-    action_name == "canvas"
-  end
-
   def project_action_to_link_to(project)
     case action_name
     when 'samples'

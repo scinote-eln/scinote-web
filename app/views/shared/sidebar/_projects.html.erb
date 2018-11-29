@@ -1,18 +1,8 @@
 <ul>
-  <% if @projects_tree.present? then %>
+  <% if @projects_tree.present? %>
     <% @projects_tree.each do |project| %>
-      <% if project_page? && project == @project %>
-        <li class="active" data-parent="candidate">
-          <span class="tree-link line-wrap no-indent">
-            <i class="no-arrow"></i>
-            <span data-project-id="<%= @project.id %>"
-                  title="<%= @project.name %>"><%= @project.name %></span>
-          </span>
-          <%= render partial: 'shared/sidebar/experiments',
-                    locals: { project: project } %>
-        </li>
-      <% else %>
-        <li data-parent="candidate">
+      <% cache [current_user, project] do %>
+        <li data-parent="candidate" data-project-id="<%= project.id %>">
           <span class="tree-link line-wrap no-indent">
             <i class="no-arrow"></i>
               <%= link_to project.name,
@@ -20,8 +10,7 @@
                           title: project.name,
                           data: { project_id: project.id } %>
           </span>
-          <%= render partial: 'shared/sidebar/experiments',
-                    locals: { project: project } %>
+          <%= render partial: 'shared/sidebar/experiments', locals: { project: project } %>
         </li>
       <% end %>
     <% end %>

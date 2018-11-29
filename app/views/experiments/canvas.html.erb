@@ -1,5 +1,5 @@
 <% provide(:head_title, t("experiments.canvas.head_title", project: h(@project.name)).html_safe) %>
-<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/sidebar", locals: { current_experiment: @experiment, page: 'canvas' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="content-pane" id="experiment-canvas">
