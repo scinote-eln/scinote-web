@@ -43,11 +43,8 @@ class Report < ApplicationRecord
     new_query =
       Report
       .distinct
-      .joins('LEFT OUTER JOIN users ON users.id = reports.user_id ' \
-             'OR users.id = reports.last_modified_by_id')
       .where('reports.project_id IN (?)', project_ids)
-      .where('reports.user_id = (?)', user.id)
-      .where_attributes_like([:name, :description], query, options)
+      .where_attributes_like(%i(name description), query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
