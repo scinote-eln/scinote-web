@@ -19,6 +19,7 @@ function init() {
   initCreateNewModal();
   initModals();
   initImport();
+  $.initTooltips();
 }
 
 // Initialize protocols DataTable
