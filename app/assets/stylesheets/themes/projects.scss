@@ -11,4 +11,8 @@
   .archived {
     background-color: $color-concrete;
   }
+
+  tbody tr td:last-child {
+    height: 34px;
+  }
 }
