@@ -45,10 +45,12 @@ class ProjectsController < ApplicationController
         @teams = current_user.teams
         # New project for create new project modal
         @project = Project.new
-        view_state =
-          current_team.current_view_state(current_user)
-        @current_filter = view_state.state.dig('projects', 'filter')
-        @current_sort = view_state.state.dig('projects', 'cards', 'sort')
+        if current_team
+          view_state =
+            current_team.current_view_state(current_user)
+          @current_filter = view_state.state.dig('projects', 'filter')
+          @current_sort = view_state.state.dig('projects', 'cards', 'sort')
+        end
         load_projects_tree
       end
     end
