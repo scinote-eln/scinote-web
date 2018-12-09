@@ -31,6 +31,7 @@ module SearchableModel
             a_query = query.split
                            .map { |a| Regexp.escape(a) }
                            .join('|')
+            a_query = "(#{a_query})"
           elsif options[:at_search].to_s == 'true'
             a_query = "%#{Regexp.escape(query).downcase}%"
           else
@@ -49,7 +50,7 @@ module SearchableModel
             ).join[0..-5]
           vals = (
             attrs.map.with_index do |_, i|
-              ["t#{i}".to_sym, '\\y(' + a_query + ')\\y']
+              ["t#{i}".to_sym, a_query]
             end
           ).to_h
           return where(where_str, vals)
