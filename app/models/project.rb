@@ -27,7 +27,7 @@ class Project < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :team, inverse_of: :projects, optional: true
+  belongs_to :team, inverse_of: :projects, touch: true, optional: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project

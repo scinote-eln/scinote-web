@@ -1,5 +1,5 @@
 <% provide(:head_title, t("my_modules.module_archive.head_title", project: h(@my_module.experiment.project.name), module: h(@my_module.name)).html_safe) %>
-<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="content-pane" id="result-archive">

@@ -1,5 +1,5 @@
 <% provide(:head_title, t("projects.show.head_title", project: h(@project.name)).html_safe) %>
-<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/sidebar", locals: { current_project: @project, page: 'project' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="content-pane" id="project-show">

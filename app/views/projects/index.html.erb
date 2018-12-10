@@ -1,7 +1,7 @@
 <% provide(:head_title, t("projects.index.head_title")) %>
 
 <% if current_team %>
-  <%= render partial: "shared/sidebar" %>
+  <%= render partial: "shared/sidebar", locals: { page: 'project' } %>
   <%= render partial: "shared/secondary_navigation" %>
 
   <% if can_create_projects?(current_team) %>

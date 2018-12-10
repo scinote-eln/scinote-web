@@ -1,16 +1,8 @@
 <% if project.active_experiments.present? %>
   <ul>
     <% project.active_experiments.each do |experiment| %>
-      <% if experiment_page? && experiment == @experiment %>
-        <li class="active" data-parent="candidate">
-          <span class="tree-link line-wrap first-indent">
-            <i class="no-arrow"></i>
-            <span title="<%= @experiment.name %>"><%= @experiment.name %></span>
-          </span>
-          <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: @experiment } %>
-        </li>
-      <% else %>
-        <li data-parent="candidate">
+      <% cache [current_user, experiment] do %>
+        <li data-parent="candidate" data-experiment-id="<%= experiment.id %>">
           <span class="tree-link line-wrap first-indent">
             <i class="no-arrow"></i>
             <%= link_to experiment.name,
