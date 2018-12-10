@@ -25,7 +25,12 @@
     <%= I18n.t("notifications.deliver.download_link") %>
     <% # work around the problem with inserting the link of zipExport %>
     <% zip_id = /data-id=('|")(\d*)('|")/.match(@notification.message)[2] %>
-    <%= @notification.message.gsub(/href='.+'/, "href='#{zip_exports_download_url(zip_id)}'").html_safe %>
+    <% if /download_export_all_zip/.match(@notification.message) %>
+      <% download_url = zip_exports_download_export_all_url(zip_id) %>
+    <% else %>
+      <% download_url = zip_exports_download_url(zip_id) %>
+    <% end %>
+    <%= @notification.message.gsub(/href='.+'/, "href='#{download_url}'").html_safe %>
   <% else %>
     <%= sanitize_input(prepend_server_url_to_links(@notification.message)) %>
   <% end %>
