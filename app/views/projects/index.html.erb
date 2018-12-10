@@ -153,7 +153,11 @@
       </div>
 
       <div class="tab-content">
-        <div class="tab-pane active" id="projects-cards-view" data-projects-url="<%= projects_path %>"></div>
+        <div class="tab-pane active"
+             id="projects-cards-view"
+             data-projects-url="<%= projects_path %>"
+             data-projects-sidebar-url="<%= projects_sidebar_path %>">
+        </div>
         <div class="tab-pane" id="projects-table-view">
           <%= render partial: "projects/index/team_projects_table" %>
         </div>

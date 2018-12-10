@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
                                      notifications reports
                                      samples experiment_archive
                                      delete_samples samples_index)
-  before_action :load_projects_tree, only: %i(show samples archive
+  before_action :load_projects_tree, only: %i(sidebar show samples archive
                                               experiment_archive)
   before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
@@ -63,6 +63,19 @@ class ProjectsController < ApplicationController
         @projects = ProjectsOverviewService
                     .new(@current_team, current_user, params)
                     .projects_datatable
+      end
+    end
+  end
+
+  def sidebar
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'shared/sidebar/projects.html.erb',
+            formats: :html
+          )
+        }
       end
     end
   end
