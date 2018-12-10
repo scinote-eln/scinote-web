@@ -97,6 +97,7 @@ function initProtocolsTable() {
     },
     fnDrawCallback: function(settings, json) {
       animateSpinner(this, false);
+      $.initTooltips();
     },
     preDrawCallback: function(settings) {
       animateSpinner(this);

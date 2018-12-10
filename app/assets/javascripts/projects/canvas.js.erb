@@ -885,6 +885,8 @@ function bindEditTagsAjax(elements) {
       success: function(data){
         task.find(".edit-tags-link")
         .html(data.html_canvas);
+        // initialize tooltips again
+        $.initTooltips();
       },
       error: function(data){
         // TODO
