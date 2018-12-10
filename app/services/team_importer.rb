@@ -249,33 +249,34 @@ class TeamImporter
     tmce_assets_json.each do |tiny_mce_asset_json|
       tiny_mce_asset = TinyMceAsset.new(tiny_mce_asset_json)
       # Try to find and load file
-      tiny_mce_file = File.open(
+      File.open(
         File.join(@import_dir, 'tiny_mce_assets', tiny_mce_asset.id.to_s,
                   tiny_mce_asset.image_file_name)
-      )
-      orig_tmce_id = tiny_mce_asset.id
-      tiny_mce_asset.id = nil
-      if tiny_mce_asset.step_id.present?
-        tiny_mce_asset.step_id = @step_mappings[tiny_mce_asset.step_id]
-      end
-      if tiny_mce_asset.result_text_id.present?
-        tiny_mce_asset.result_text_id =
-          @result_text_mappings[tiny_mce_asset.result_text_id]
-      end
-      tiny_mce_asset.team = team
-      tiny_mce_asset.image = tiny_mce_file
-      tiny_mce_asset.save!
-      @mce_asset_counter += 1
-      if tiny_mce_asset.step_id.present?
-        step = Step.find_by_id(tiny_mce_asset.step_id)
-        step.description.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                              "[~tiny_mce_id:#{tiny_mce_asset.id}]")
-        step.save!
-      end
-      if tiny_mce_asset.result_text_id.present?
-        result_text = ResultText.find_by_id(tiny_mce_asset.result_text_id)
-        result_text.text.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                              "[~tiny_mce_id:#{tiny_mce_asset.id}]")
+      ) do |tiny_mce_file|
+        orig_tmce_id = tiny_mce_asset.id
+        tiny_mce_asset.id = nil
+        if tiny_mce_asset.step_id.present?
+          tiny_mce_asset.step_id = @step_mappings[tiny_mce_asset.step_id]
+        end
+        if tiny_mce_asset.result_text_id.present?
+          tiny_mce_asset.result_text_id =
+            @result_text_mappings[tiny_mce_asset.result_text_id]
+        end
+        tiny_mce_asset.team = team
+        tiny_mce_asset.image = tiny_mce_file
+        tiny_mce_asset.save!
+        @mce_asset_counter += 1
+        if tiny_mce_asset.step_id.present?
+          step = Step.find_by_id(tiny_mce_asset.step_id)
+          step.description.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                "[~tiny_mce_id:#{tiny_mce_asset.id}]")
+          step.save!
+        end
+        if tiny_mce_asset.result_text_id.present?
+          result_text = ResultText.find_by_id(tiny_mce_asset.result_text_id)
+          result_text.text.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                "[~tiny_mce_id:#{tiny_mce_asset.id}]")
+        end
       end
     end
   end
@@ -292,7 +293,9 @@ class TeamImporter
       if user.avatar.present?
         avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s,
                                 user.avatar_file_name)
-        user.avatar = File.open(avatar_path) if File.exist?(avatar_path)
+        if File.exist?(avatar_path)
+          File.open(avatar_path) { |f| user.avatar = f }
+        end
       end
       user.save!
       @user_counter += 1
@@ -696,18 +699,20 @@ class TeamImporter
   # returns asset object
   def create_asset(asset_json, team)
     asset = Asset.new(asset_json)
-    orig_asset_id = asset.id
-    file =
-      File.open("#{@import_dir}/assets/#{asset.id}/#{asset.file_file_name}")
-    asset.id = nil
-    asset.created_by_id = find_user(asset.created_by_id)
-    asset.last_modified_by_id =
-      find_user(asset.last_modified_by_id)
-    asset.team = team
-    asset.file = file
-    asset.save!
-    @asset_mappings[orig_asset_id] = asset.id
-    @asset_counter += 1
+    File.open(
+      "#{@import_dir}/assets/#{asset.id}/#{asset.file_file_name}"
+    ) do |file|
+      orig_asset_id = asset.id
+      asset.id = nil
+      asset.created_by_id = find_user(asset.created_by_id)
+      asset.last_modified_by_id =
+        find_user(asset.last_modified_by_id)
+      asset.team = team
+      asset.file = file
+      asset.save!
+      @asset_mappings[orig_asset_id] = asset.id
+      @asset_counter += 1
+    end
     asset
   end
 
