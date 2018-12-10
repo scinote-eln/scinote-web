@@ -46,12 +46,12 @@
                  locals: { flash: flash, notice: notice, alert: alert } %>
     <% end %>
 
-    <%= render "shared/left_menu_bar" if user_signed_in? && current_user.teams.exists? %>
+    <%= render "shared/left_menu_bar" if user_signed_in? %>
 
     <div id="content-wrapper">
-      <% if user_signed_in? && current_user.teams.empty? %>
+      <% if user_signed_in? && current_user.teams.empty? && !(activities_are_selected? || settings_are_selected?) %>
         <!-- If member of no teams -->
-        <div class="jumbotron">
+        <div id="no-teams-jumbotron" class="jumbotron">
           <h2><%=t 'general.no_teams.title' %></h2>
           <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
         </div>

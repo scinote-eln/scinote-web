@@ -29,6 +29,10 @@ table {
   @include button-variant($btn-toggle-color, $btn-toggle-bg, $btn-toggle-border);
 }
 
+#no-teams-jumbotron {
+  padding-left: 50px;
+}
+
 #alert-container {
   margin-bottom: 20px;
 }

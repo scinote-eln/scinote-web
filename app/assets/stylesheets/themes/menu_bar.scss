@@ -20,7 +20,8 @@
 
   ul.nav > li {
 
-    & > a {
+    & > a,
+    & > span {
       color: $color-silver-chalice;
       display: grid;
       font-size: $font-size-h6;
@@ -43,6 +44,12 @@
       & > a {
         color: $color-emperor;
       }
+    }
+
+    &.disabled {
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: .65;
     }
   }
 
