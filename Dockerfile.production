@@ -6,6 +6,8 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   apt-get update -qq && \
   apt-get install -y \
   nodejs \
+  groff-base \
+  awscli \
   postgresql-client \
   netcat \
   default-jre-headless \
