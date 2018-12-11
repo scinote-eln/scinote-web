@@ -147,7 +147,8 @@ class MyModulesController < ApplicationController
     update_params = my_module_params
     if update_params[:due_date].present?
       update_params[:due_date] = Time.strptime(
-        update_params[:due_date], I18n.backend.date_format.dup.delete('-')
+        update_params[:due_date].delete('-'),
+        I18n.backend.date_format.dup.delete('-')
       )
     end
     @my_module.assign_attributes(update_params)
