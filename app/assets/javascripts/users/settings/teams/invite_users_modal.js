@@ -20,7 +20,7 @@
       maxTags: modal.data('max-tags')
     });
 
-    modal.on('show.bs.modal', function() {
+    modal.off('show.bs.modal').on('show.bs.modal', function() {
       // This cannot be scoped outside this function
       // because it is generated via JS
       teamSelectorDropdown2 = teamSelectorDropdown.parent()
@@ -83,7 +83,7 @@
       });
 
       // Click action
-      modal.find('[data-action=invite]').on('click', function() {
+      modal.find('[data-action=invite]').off('click').on('click', function() {
         var data = {
           emails: tagsInput.val()
         };
