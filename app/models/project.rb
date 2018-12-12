@@ -232,7 +232,9 @@ class Project < ApplicationRecord
     res
   end
 
-  def generate_teams_export_report_html(user, team, html_name, obj_filenames = nil)
+  def generate_teams_export_report_html(
+    user, team, html_title, obj_filenames = nil
+  )
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
     proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
     proxy.set_user(user, scope: :user, store: false)
@@ -249,7 +251,7 @@ class Project < ApplicationRecord
     parsed_html = parsed_page_html.at_css('#report-content')
 
     tables = parsed_html.css('.hot-table-contents')
-                            .zip(parsed_html.css('.hot-table-container'))
+                        .zip(parsed_html.css('.hot-table-container'))
     tables.each do |table_input, table_container|
       table_vals = JSON.parse(table_input['value'])
       table_data = table_vals['data']
@@ -287,7 +289,7 @@ class Project < ApplicationRecord
     ApplicationController.render(
       layout: false,
       locals: {
-        title: html_name,
+        title: html_title,
         content: parsed_html.children.map(&:to_s).join
       },
       template: 'team_zip_exports/report',
