@@ -1,31 +1,58 @@
 <div id="left-menu-bar" class="menu-bar">
   <div class="scroll-wrapper">
     <ul class="nav">
-      <li class="<%= "active" if projects_are_selected? %>">
-        <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
-          <span class="fas fa-folder"></span>
-          <span><%= t('left_menu_bar.projects') %></span>
-        <% end %>
-      </li>
-      <li class="<%= "active" if repositories_are_selected? %>">
-        <%= link_to repositories_path, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
-          <span class="fas fa-list-alt" aria-hidden="true"></span>
-          <span><%= t('left_menu_bar.repositories') %></span>
-        <% end %>
-      </li>
-      <li class="<%= "active" if templates_are_selected? %>">
-        <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates'),
-                                    data: { turbolinks: false } do %>
-          <span class="fas fa-edit"></span>
-          <span><%= t('left_menu_bar.templates') %></span>
-        <% end %>
-      </li>
-      <li class="<%= "active" if reports_are_selected? %>">
-        <%= link_to reports_path, id: "reports-link", title: t('left_menu_bar.reports') do %>
-          <span class="fas fa-clipboard-check"></span>
-          <span><%= t('left_menu_bar.reports') %></span>
-        <% end %>
-      </li>
+      <% if current_user.teams.empty? %>
+        <li class="disabled">
+          <span>
+            <span class="fas fa-folder"></span>
+            <span><%= t('left_menu_bar.projects') %></span>
+          </span>
+        </li>
+        <li class="disabled">
+          <span>
+            <span class="fas fa-list-alt" aria-hidden="true"></span>
+            <span><%= t('left_menu_bar.repositories') %></span>
+          </span>
+        </li>
+        <li class="disabled">
+          <span>
+            <span class="fas fa-edit"></span>
+            <span><%= t('left_menu_bar.templates') %></span>
+          </span>
+        </li>
+        <li class="disabled">
+          <span>
+            <span class="fas fa-clipboard-check"></span>
+            <span><%= t('left_menu_bar.reports') %></span>
+          </span>
+        </li>
+      <% else %>
+        <li class="<%= "active" if projects_are_selected? %>">
+          <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
+            <span class="fas fa-folder"></span>
+            <span><%= t('left_menu_bar.projects') %></span>
+          <% end %>
+        </li>
+        <li class="<%= "active" if repositories_are_selected? %>">
+          <%= link_to repositories_path, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
+            <span class="fas fa-list-alt" aria-hidden="true"></span>
+            <span><%= t('left_menu_bar.repositories') %></span>
+          <% end %>
+        </li>
+        <li class="<%= "active" if templates_are_selected? %>">
+          <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates'),
+                                      data: { turbolinks: false } do %>
+            <span class="fas fa-edit"></span>
+            <span><%= t('left_menu_bar.templates') %></span>
+          <% end %>
+        </li>
+        <li class="<%= "active" if reports_are_selected? %>">
+          <%= link_to reports_path, id: "reports-link", title: t('left_menu_bar.reports') do %>
+            <span class="fas fa-clipboard-check"></span>
+            <span><%= t('left_menu_bar.reports') %></span>
+          <% end %>
+        </li>
+      <% end %>
     </ul>
     <ul class="nav nav-bottom">
       <li class="<%= "active" if activities_are_selected? %>">
