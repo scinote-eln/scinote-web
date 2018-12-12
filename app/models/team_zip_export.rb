@@ -115,11 +115,11 @@ class TeamZipExport < ZipExport
         end
       end
 
-      # Generate and export whole project report PDF
-      pdf_name = "#{project_name} Report.pdf"
+      # Generate and export whole project report HTML
+      html_name = "#{project_name} Report.html"
       project_report_pdf =
-        p.generate_report_pdf(@user, @team, pdf_name, obj_filenames)
-      file = FileUtils.touch("#{project_path}/#{pdf_name}").first
+        p.generate_teams_export_report_html(@user, @team, html_name, obj_filenames)
+      file = FileUtils.touch("#{project_path}/#{html_name}").first
       File.open(file, 'wb') { |f| f.write(project_report_pdf) }
     end
 
