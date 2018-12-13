@@ -15,7 +15,7 @@
     </div>
 
     <% if can_manage_module?(@my_module) %>
-      <div class="help_tooltips" style="width:25%"
+      <div class="help_tooltips" style="display:inline-block"
            data-tooltiplink="<%= I18n.t('tooltips.link.task.results') %>"
            data-tooltipcontent="<%= I18n.t('tooltips.text.task.results') %>">
       <span class="hidden-xs"><%= t'my_modules.results.add_label' %></span>
