@@ -232,7 +232,9 @@ class Project < ApplicationRecord
     res
   end
 
-  def generate_report_pdf(user, team, pdf_name, obj_filenames = nil)
+  def generate_teams_export_report_html(
+    user, team, html_title, obj_filenames = nil
+  )
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
     proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
     proxy.set_user(user, scope: :user, store: false)
@@ -246,10 +248,10 @@ class Project < ApplicationRecord
                                 obj_filenames: obj_filenames },
                       assigns: { project: self, report: report }
     parsed_page_html = Nokogiri::HTML(page_html_string)
-    parsed_pdf_html = parsed_page_html.at_css('#report-content')
+    parsed_html = parsed_page_html.at_css('#report-content')
 
-    tables = parsed_pdf_html.css('.hot-table-contents')
-                            .zip(parsed_pdf_html.css('.hot-table-container'))
+    tables = parsed_html.css('.hot-table-contents')
+                        .zip(parsed_html.css('.hot-table-container'))
     tables.each do |table_input, table_container|
       table_vals = JSON.parse(table_input['value'])
       table_data = table_vals['data']
@@ -285,15 +287,14 @@ class Project < ApplicationRecord
     end
 
     ApplicationController.render(
-      pdf: pdf_name,
-      header: { right: '[page] of [topage]' },
-      locals: { content: parsed_pdf_html.to_s },
-      template: 'reports/report.pdf.erb',
-      disable_javascript: true,
-      disable_internal_links: false,
+      layout: false,
+      locals: {
+        title: html_title,
+        content: parsed_html.children.map(&:to_s).join
+      },
+      template: 'team_zip_exports/report',
       current_user: user,
-      current_team: team,
-      extra: '--keep-relative-links'
+      current_team: team
     )
   ensure
     report.destroy if report.present?
