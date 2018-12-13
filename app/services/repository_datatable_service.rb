@@ -32,18 +32,10 @@ class RepositoryDatatableService
   end
 
   def fetch_records
-    repository_rows = RepositoryRow.preload(:repository_columns,
-                                            :created_by,
-                                            repository_cells: :value)
-                                   .joins(:created_by)
+    repository_rows = RepositoryRow.joins(:created_by)
                                    .where(repository: @repository)
     if @my_module
       @assigned_rows = @my_module.repository_rows
-                                 .preload(
-                                   :repository_columns,
-                                   :created_by,
-                                   repository_cells: :value
-                                 )
                                  .joins(:created_by)
                                  .where(repository: @repository)
       return @assigned_rows if @params[:assigned] == 'assigned'
