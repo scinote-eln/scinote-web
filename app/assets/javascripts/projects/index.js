@@ -220,7 +220,7 @@
    * Initialize the JS for export projects modal to work.
    */
   function initExportProjectsModal() {
-    exportProjectsBtn.click(function() {
+    exportProjectsBtn.off('click').click(function() {
       // Load HTML to refresh users list
       $.ajax({
         url: exportProjectsBtn.data('export-projects-modal-url'),
@@ -264,7 +264,7 @@
 
   function initExportProjects() {
     // Submit the export projects
-    exportProjectsSubmit.click(function() {
+    exportProjectsSubmit.off('click').click(function() {
       $.ajax({
         url: exportProjectsSubmit.data('export-projects-submit-url'),
         type: 'POST',
@@ -388,7 +388,7 @@
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
 
-    $('.project-card-selector').click(function() {
+    $('.project-card-selector').off('click').click(function() {
       var projectId = $(this).closest('.panel-project').data('id');
       // Determine whether ID is in the list of selected project IDs
       var index = $.inArray(projectId, selectedProjects);
