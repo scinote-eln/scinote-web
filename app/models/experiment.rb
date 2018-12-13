@@ -2,7 +2,7 @@ class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
 
-  belongs_to :project, inverse_of: :experiments, optional: true
+  belongs_to :project, inverse_of: :experiments, touch: true, optional: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
              class_name: 'User',

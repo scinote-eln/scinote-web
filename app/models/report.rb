@@ -22,10 +22,6 @@ class Report < ApplicationRecord
   # or many module elements (if grouped by module)
   has_many :report_elements, inverse_of: :report, dependent: :delete_all
 
-  after_commit do
-    Views::Datatables::DatatablesReport.refresh_materialized_view
-  end
-
   def self.search(
     user,
     include_archived,
@@ -54,6 +50,20 @@ class Report < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.visible_by(user, team)
+    projects = team.projects.joins(
+      'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
+    ).where(archived: false)
+
+    # Only admins see all projects of the team
+    unless user.is_admin_of_team?(team)
+      projects = projects.where(
+        'visibility = 1 OR user_projects.user_id = :user_id', user_id: user.id
+      )
+    end
+    where(project: projects)
   end
 
   def root_elements

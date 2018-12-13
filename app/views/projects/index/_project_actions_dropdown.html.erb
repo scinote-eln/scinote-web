@@ -1,3 +1,4 @@
+<% cache [current_user, project] do %>
   <% active = !project.archived %>
   <% if (active && (can_manage_project?(project) || can_archive_project?(project))) || (!active && can_restore_project?(project)) %>
     <div class="dropdown pull-right">
@@ -35,3 +36,4 @@
       </ul>
     </div>
   <% end %>
+<% end %>

@@ -49,10 +49,6 @@ class Project < ApplicationRecord
                         end
                       end)
 
-  after_commit do
-    Views::Datatables::DatatablesReport.refresh_materialized_view
-  end
-
   def self.visible_from_user_by_name(user, team, name)
     if user.is_admin_of_team? team
       return where('projects.archived IS FALSE AND projects.name ILIKE ?',

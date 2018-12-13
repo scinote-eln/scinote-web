@@ -40,7 +40,7 @@ class ReportsController < ApplicationController
         render json: ::ReportDatatable.new(
           view_context,
           current_user,
-          current_team.datatables_reports.visible_by(current_user, current_team)
+          Report.visible_by(current_user, current_team)
         )
       end
     end
