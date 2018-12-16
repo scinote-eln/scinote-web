@@ -65,7 +65,7 @@
                        disabled="disabled"
                        autocomplete="off"
                        type="text"
-                       value="<%= l(Time.now, format: :full_date) %>"
+                       value="<%= l(Time.new(2014, 5, 16), format: :full_date) %>"
                        name="fake_user[settings][time_zone]"
                        id="fake_user_settings_date_format">
                 <span class="input-group-btn">
@@ -80,7 +80,7 @@
               <h4><%=t "users.settings.account.preferences.edit.date_format_title" %></h4>
               <div class="form-group" style="max-width: 500px;">
                 <%= f.select :date_format, Constants::SUPPORTED_DATE_FORMATS.collect { |df|
-                      ["#{l(Time.now, format: :full_date, date_format: df)}", df]
+                      ["#{l(Time.new(2014, 5, 16), format: :full_date, date_format: df)}", df]
                     }, {}, { class: 'form-control selectpicker', 'data-role': 'clear' } %>
                 <small><%= t("users.settings.account.preferences.edit.date_format_sublabel") %></small>
               </div>
