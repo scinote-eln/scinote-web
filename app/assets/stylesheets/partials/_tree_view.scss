@@ -78,6 +78,10 @@
     a {
       color: $color-emperor;
 
+      &.disabled {
+        color: $color-white;
+      }
+
       &:hover {
         color: $brand-primary;
       }
