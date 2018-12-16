@@ -4,20 +4,6 @@ module DatabaseHelper
     ActiveRecord::Base.connection.adapter_name == adapter_name
   end
 
-  # Create PostgreSQL extension. PostgreSQL only!
-  def create_extension(ext_name)
-    ActiveRecord::Base.connection.execute(
-      "CREATE EXTENSION #{ext_name};"
-    )
-  end
-
-  # Drop PostgreSQL extension. PostgreSQL only!
-  def drop_extension(ext_name)
-    ActiveRecord::Base.connection.execute(
-      "DROP EXTENSION #{ext_name};"
-    )
-  end
-
   # Create gist trigram index. PostgreSQL only!
   def add_gist_index(table, column)
     ActiveRecord::Base.connection.execute(
