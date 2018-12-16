@@ -25,7 +25,14 @@ class RepositoryRowsController < ApplicationController
     @assigned_rows = records.assigned_rows
     @repository_row_count = records.repository_rows.length
     @columns_mappings = records.mappings
-    @repository_rows = records.repository_rows.page(page).per(per_page)
+    @repository_rows = records.repository_rows
+                              .page(page)
+                              .per(per_page)
+                              .preload(
+                                :repository_columns,
+                                :created_by,
+                                repository_cells: :value
+                              )
   end
 
   def create
