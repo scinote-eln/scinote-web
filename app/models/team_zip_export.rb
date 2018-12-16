@@ -35,7 +35,8 @@ class TeamZipExport < ZipExport
     FileUtils.rm_rf([zip_input_dir, zip_file], secure: true)
   end
 
-  handle_asynchronously :generate_exportable_zip
+  handle_asynchronously :generate_exportable_zip,
+                        queue: :team_zip_export
 
   private
 
