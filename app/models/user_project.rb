@@ -5,18 +5,14 @@ class UserProject < ApplicationRecord
   validates :user, presence: true, uniqueness: { scope: :project }
   validates :project, presence: true
 
-  belongs_to :user, inverse_of: :user_projects, optional: true
+  belongs_to :user, inverse_of: :user_projects, touch: true, optional: true
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :project, inverse_of: :user_projects, optional: true
+  belongs_to :project, inverse_of: :user_projects, touch: true, optional: true
 
   before_destroy :destroy_associations
-
-  after_commit do
-    Views::Datatables::DatatablesReport.refresh_materialized_view
-  end
 
   def role_str
     I18n.t("user_projects.enums.role.#{role.to_s}")
