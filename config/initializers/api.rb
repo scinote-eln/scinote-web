@@ -9,7 +9,8 @@ Api.configure do |config|
     config.core_api_token_iss = ENV['CORE_API_TOKEN_ISS']
   end
 
-  config.core_api_rate_limit = ENV['CORE_API_RATE_LIMIT'].to_i || 1000
+  config.core_api_rate_limit =
+    ENV['CORE_API_RATE_LIMIT'] ? ENV['CORE_API_RATE_LIMIT'].to_i : 1000
 
   config.core_api_v1_preview = true if ENV['CORE_API_V1_PREVIEW']
 
