@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8">
     <style type="text/css">
-      <%= Rails.application.assets['application.css'].to_s.html_safe %>
+      <%= Rails.application.assets_manifest.find_sources('application.css').first.to_s.html_safe %>
     </style>
     <title><%= title %></title>
   </head>
