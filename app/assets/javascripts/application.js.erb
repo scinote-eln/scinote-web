@@ -255,11 +255,11 @@ var HelperModule = (function(){
 
     // fix dropdown-menu style throughout the app
     $('.dropdown-header').parent('ul').addClass('custom-dropdown-menu');
+  });
 
-    // Close all open modals before caching
-    $(document).on('turbolinks:before-cache', function() {
-      $('.modal').modal('hide');
-    });
+  // Close all open modals before caching
+  $(document).on('turbolinks:before-cache', function() {
+    $('.modal').off().modal('hide');
   });
 
   /* Fix .selectpicker (bootstrap-select) to work with Turbolinks 5.x */
