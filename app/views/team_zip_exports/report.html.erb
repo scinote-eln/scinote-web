@@ -2,13 +2,19 @@
   <head>
     <meta charset="utf-8">
     <style type="text/css">
-      <%= Rails.application.assets_manifest.find_sources('application.css').first.to_s.html_safe %>
+      <%= Rails.application
+               .assets_manifest
+               .find_sources('application.css')
+               .first
+               .to_s
+               .force_encoding(Encoding::UTF_8)
+               .html_safe %>
     </style>
     <title><%= title %></title>
   </head>
   <body class='print-report-body'>
     <div class='print-report'>
-    <%= content.html_safe %>
+      <%= content.force_encoding(Encoding::UTF_8).html_safe %>
     </div>
   </body>
 </html>
