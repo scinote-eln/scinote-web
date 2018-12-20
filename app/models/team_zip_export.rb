@@ -9,8 +9,13 @@ class TeamZipExport < ZipExport
 
   # Override path only for S3
   if ENV['PAPERCLIP_STORAGE'] == 's3'
-    s3_path = '/zip_exports/:attachment/:id_partition/:hash/:style/:filename'
-    s3_path.prepend("/#{ENV['S3_SUBFOLDER']}") if ENV['S3_SUBFOLDER']
+    s3_path =
+      if ENV['S3_SUBFOLDER']
+        "/#{ENV['S3_SUBFOLDER']}/zip_exports/:attachment/"\
+        ":id_partition/:hash/:style/:filename"
+      else
+        '/zip_exports/:attachment/:id_partition/:hash/:style/:filename'
+      end
 
     has_attached_file :zip_file, path: s3_path
     validates_attachment :zip_file,
