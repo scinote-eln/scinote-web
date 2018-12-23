@@ -30,7 +30,7 @@ class TeamZipExport < ZipExport
     zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
     zip_file = File.new(
       File.join(zip_dir,
-                "projects_export_#{Time.now.strftime('%F_%H-%M-%S')}.zip"),
+                "projects_export_#{Time.now.strftime('%F_%H-%M-%S_UTC')}.zip"),
       'w+'
     )
     fill_content(zip_input_dir, data, type, options)

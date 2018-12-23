@@ -56,7 +56,7 @@ class ZipExport < ApplicationRecord
     ).first
     zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
     zip_file = File.new(
-      File.join(zip_dir, "export_#{Time.now.strftime('%F %H-%M-%S')}.zip"),
+      File.join(zip_dir, "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip"),
       'w+'
     )
     fill_content(zip_input_dir, data, type, options)
