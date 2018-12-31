@@ -56,6 +56,9 @@
           modal.modal('hide');
         });
         modal.modal();
+        modal.find('a[disabled=disabled]').click(function(ev){
+          ev.preventDefault();
+        });
         $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
       },
       error: function(ev) {
