@@ -374,6 +374,12 @@ Rails.application.routes.draw do
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
+        get 'repositories_dropdown',
+            to: 'my_modules#repositories_dropdown',
+            as: :repositories_dropdown
+        get 'repositories_dropdown/:repository_id',
+            to: 'my_modules#repositories_dropdown',
+            as: :repositories_dropdown_repository_tab
         # Renders sample datatable for single module (ajax action)
         # post 'samples_index'
         # post :assign_samples,

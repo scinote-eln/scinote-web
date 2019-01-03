@@ -66,6 +66,7 @@ Rails.application.config.assets.precompile +=
 Rails.application.config.assets.precompile += %w(datatables.js)
 Rails.application.config.assets.precompile += %w(search/index.js)
 Rails.application.config.assets.precompile += %w(navigation.js)
+Rails.application.config.assets.precompile += %w(secondary_navigation.js)
 Rails.application.config.assets.precompile += %w(datatables.css)
 Rails.application.config.assets.precompile += %w(my_modules.js)
 Rails.application.config.assets.precompile += %w(canvas-to-blob.min.js)

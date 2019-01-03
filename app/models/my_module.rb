@@ -174,6 +174,12 @@ class MyModule < ApplicationRecord
     restored
   end
 
+  def repository_rows_count(repository)
+    my_module_repository_rows.joins(repository_row: :repository)
+                             .where('repositories.id': repository.id)
+                             .count
+  end
+
   def unassigned_users
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +

@@ -1,7 +1,7 @@
 class RepositoryRow < ApplicationRecord
   include SearchableModel
 
-  belongs_to :repository, optional: true
+  belongs_to :repository, touch: true, optional: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
              class_name: 'User',

@@ -14,7 +14,8 @@ class MyModulesController < ApplicationController
                          complete_my_module repository repository_index
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
-                         assign_repository_records_modal)
+                         assign_repository_records_modal
+                         repositories_dropdown)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -27,7 +28,7 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions, only: %i(description due_date)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
-       archive)
+       archive repositories_dropdown)
   before_action :check_complete_module_permission, only: :complete_my_module
   before_action :check_assign_repository_records_permissions,
                 only: %i(unassign_repository_records_modal
@@ -401,6 +402,17 @@ class MyModulesController < ApplicationController
                                 repository_cells: :value
                               )
     render 'repository_rows/index.json'
+  end
+
+  def repositories_dropdown
+    load_repository if params[:repository_id].present?
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(partial: 'repositories_dropdown.html.erb')
+        }
+      end
+    end
   end
 
   # Submit actions
