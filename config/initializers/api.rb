@@ -11,9 +11,9 @@ Api.configure do |config|
 
   config.core_api_rate_limit = ENV['CORE_API_RATE_LIMIT'].to_i || 1000
 
-  config.core_api_v1_preview = true if ENV['CORE_API_V1_PREVIEW']
+  config.core_api_v1_enabled = true if ENV['CORE_API_V1_ENABLED']
 
-  Paperclip::DataUriAdapter.register if ENV['CORE_API_V1_PREVIEW']
+  Paperclip::DataUriAdapter.register if ENV['CORE_API_V1_ENABLED']
 
   vars = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
   vars.each do |name, value|
