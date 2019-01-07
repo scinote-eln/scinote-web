@@ -555,11 +555,8 @@ module FirstTimeDataGenerator
       user: user,
       created_at: generate_random_time(my_modules[1].created_at, 4.days)
     )
-    temp_text = "There are many biological replicates we harvested " \
-                "for each type of sample (code-names):\n\n"
-    # samples_to_assign.each do |s|
-    #   temp_text << "* #{s.name}\n\n"
-    # end
+    temp_text = 'There are many biological replicates we harvested ' \
+                'for each type of sample.'
     temp_result.result_text = ResultText.new(
       text: temp_text
     )
@@ -1007,10 +1004,10 @@ module FirstTimeDataGenerator
       created_by: user,
       team: team,
       contents: tab_content['module6']['distribution'] % {
-        sample0: 'Sample 0', # samples_to_assign[0].name,
-        sample1: 'Sample 1', # samples_to_assign[1].name,
-        sample2: 'Sample 2', # samples_to_assign[2].name,
-        sample3: 'Sample 3'  # samples_to_assign[3].name
+        sample0: 'Sample 0',
+        sample1: 'Sample 1',
+        sample2: 'Sample 2',
+        sample3: 'Sample 3'
       }
     )
     temp_result.save
