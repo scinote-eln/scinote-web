@@ -109,6 +109,7 @@ group :development, :test do
   gem 'byebug'
   gem 'factory_bot_rails'
   gem 'listen', '~> 3.0'
+  gem 'overcommit'
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
