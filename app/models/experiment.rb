@@ -98,12 +98,6 @@ class Experiment < ApplicationRecord
     end
   end
 
-  def modules_without_group
-    MyModule.where(experiment_id: id)
-            .where(my_module_group: nil)
-            .where(archived: false)
-  end
-
   def active_module_groups
     my_module_groups.joins(:my_modules)
                     .where('my_modules.archived = ?', false)
@@ -250,14 +244,12 @@ class Experiment < ApplicationRecord
     subg = {}
 
     # Draw orphan modules
-    if modules_without_group
-      modules_without_group.each do |my_module|
-        graph
-          .subgraph(rank: 'same')
-          .add_nodes("Orphan-#{my_module.id}",
-                     label: label,
-                     pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
-      end
+    my_modules.without_group.each do |my_module|
+      graph
+        .subgraph(rank: 'same')
+        .add_nodes("Orphan-#{my_module.id}",
+                   label: label,
+                   pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
     end
 
     # Draw grouped modules
@@ -371,7 +363,7 @@ class Experiment < ApplicationRecord
     end
 
     # Copy modules without group
-    clone.my_modules << modules_without_group.map do |m|
+    clone.my_modules << my_modules.without_group.map do |m|
       m.deep_clone_to_experiment(current_user, clone)
     end
     clone.save
