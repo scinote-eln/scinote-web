@@ -10,16 +10,11 @@ class UserTeam < ApplicationRecord
   belongs_to :team, inverse_of: :user_teams
 
   before_destroy :destroy_associations
-  after_create :create_samples_table_state
-  validates_uniqueness_of :user_id, scope: :team_id
 
   def role_str
     I18n.t("user_teams.enums.role.#{role}")
   end
 
-  def create_samples_table_state
-    SamplesTable.create_samples_table_state(self)
-  end
 
   def destroy_associations
     # Destroy the user from all team's projects

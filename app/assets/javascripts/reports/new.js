@@ -29,10 +29,10 @@ function initializeHandsonTable(el) {
   var inputObj = JSON.parse(input.attr("value"));
   var data = inputObj.data;
 
-  // Special handling if this is a samples table
-  if (input.hasClass("hot-samples")) {
+  // Special handling if this is a repository table
+  if (input.hasClass("hot-repository-items")) {
     var headers = inputObj.headers;
-    var parentEl = el.closest(".report-module-samples-element");
+    var parentEl = el.closest(".report-module-repository-element");
     var order = parentEl.attr("data-order") === "asc";
 
     el.handsontable({

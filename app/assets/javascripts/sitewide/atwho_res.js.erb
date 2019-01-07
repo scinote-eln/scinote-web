@@ -244,9 +244,6 @@ var SmartAnnotation = (function() {
         case 'exp':
           res += '<span class="res-description">&lt; ' + map.projectName + '</span>';
           break;
-        case 'sam':
-          res += '<span class="res-description">' + map.description + '</span>';
-          break;
       }
 
       res += '</li>';
@@ -469,8 +466,7 @@ var SmartAnnotation = (function() {
       .atwho(atWhoSettings('#', DEFAULT_SEARCH_FILTER))
       // .atwho(atWhoSettings('task#', FilterTypeEnum.TASK))   Waiting for better times
       // .atwho(atWhoSettings('project#', FilterTypeEnum.PROJECT))
-      // .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT))
-      // .atwho(atWhoSettings('sample#', FilterTypeEnum.REPOSITORY));
+      // .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT));
     }
 
     return {

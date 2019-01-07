@@ -500,25 +500,6 @@ label {
 
 }
 
-/** Module samples element */
-.report-module-samples-element {
-  margin-bottom: 0;
-
-  .report-element-header {
-    border-bottom: none;
-
-    .samples-name {
-      margin-left: 5px;
-    }
-  }
-
-  &:hover > .report-element-header {
-    .samples-icon,.samples-name {
-      color: $brand-primary;
-    }
-  }
-}
-
 // Module repository element
 .report-module-repository-element {
   margin-bottom: 0;

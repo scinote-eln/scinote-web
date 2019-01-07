@@ -55,10 +55,6 @@ class MyModule < ApplicationRecord
            through: :inputs,
            source: :from,
            class_name: 'MyModule'
-  has_many :sample_my_modules,
-           inverse_of: :my_module,
-           dependent: :destroy
-  has_many :samples, through: :sample_my_modules
   has_many :my_module_repository_rows,
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
@@ -157,14 +153,10 @@ class MyModule < ApplicationRecord
 
     MyModule.transaction do
       archived = super
-      # Unassociate all samples from module.
-      archived = SampleMyModule.where(my_module: self).destroy_all if archived
       # Remove all connection between modules.
       archived = Connection.where(input_id: id).delete_all if archived
       archived = Connection.where(output_id: id).delete_all if archived
-      unless archived
-        raise ActiveRecord::Rollback
-      end
+      raise ActiveRecord::Rollback unless archived
     end
     archived
   end
@@ -204,10 +196,6 @@ class MyModule < ApplicationRecord
       " AND users.id NOT IN " +
       "(SELECT DISTINCT user_id FROM user_my_modules WHERE user_my_modules.my_module_id = #{id.to_s})"
     )
-  end
-
-  def unassigned_samples
-    Sample.where(team_id: experiment.project.team).where.not(id: samples)
   end
 
   def unassigned_tags
@@ -250,14 +238,6 @@ class MyModule < ApplicationRecord
     # Temporary function (until we fully support
     # multiple protocols per module)
     protocols.count > 0 ? protocols.first : nil
-  end
-
-  def first_n_samples(count = Constants::SEARCH_LIMIT)
-    samples.order(name: :asc).limit(count)
-  end
-
-  def number_of_samples
-    samples.count
   end
 
   def is_overdue?(datetime = DateTime.current)
@@ -329,40 +309,6 @@ class MyModule < ApplicationRecord
       modules.push(*my_module.my_module_antecessors)
     end
     final
-  end
-
-
-  # Generate the samples belonging to this module
-  # in JSON form, suitable for display in handsontable.js
-  def samples_json_hot(order)
-    data = []
-    samples.order(created_at: order).each do |sample|
-      sample_json = []
-      sample_json << sample.name
-      if sample.sample_type.present?
-        sample_json << sample.sample_type.name
-      else
-        sample_json << I18n.t("samples.table.no_type")
-      end
-      if sample.sample_group.present?
-        sample_json << sample.sample_group.name
-      else
-        sample_json << I18n.t("samples.table.no_group")
-      end
-      sample_json << I18n.l(sample.created_at, format: :full)
-      sample_json << sample.user.full_name
-      data << sample_json
-    end
-
-    # Prepare column headers
-    headers = [
-      I18n.t("samples.table.sample_name"),
-      I18n.t("samples.table.sample_type"),
-      I18n.t("samples.table.sample_group"),
-      I18n.t("samples.table.added_on"),
-      I18n.t("samples.table.added_by")
-    ]
-    { data: data, headers: headers }
   end
 
   # Generate the repository rows belonging to this module

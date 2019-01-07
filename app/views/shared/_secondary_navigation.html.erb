@@ -57,10 +57,7 @@
               </ul>
             </li>
           <% end %>
-
-        <% elsif project_page? ||
-              sample_types_page_project? ||
-              sample_groups_page_project? %>
+        <% elsif project_page? %>
           <% if can_read_project?(@project) then %>
             <li id="canvas-nav-tab" class="<%= "active" if is_project_show? %>">
               <a href="<%= project_url(@project) %>" title="<%=t "nav2.projects.show" %>">
@@ -76,9 +73,7 @@
             </li>
           <% end %>
 
-        <% elsif experiment_page? ||
-                 sample_groups_page_experiment? ||
-                 sample_types_page_expermient? %>
+        <% elsif experiment_page? %>
           <% if can_read_experiment?(@experiment) %>
             <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
               <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
@@ -96,9 +91,7 @@
               </li>
           <% end %>
 
-        <% elsif module_page? ||
-                 sample_types_page_my_module? ||
-                 sample_groups_page_my_module? %>
+        <% elsif module_page? %>
           <% if can_read_experiment?(@my_module.experiment) %>
             <li id="steps-nav-tab" class="<%= "active" if is_module_protocols? %>">
               <a href="<%= protocols_my_module_url(@my_module) %>" title="<%=t "nav2.modules.steps" %>">

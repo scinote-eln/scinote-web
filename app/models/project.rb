@@ -204,12 +204,6 @@ class Project < ApplicationRecord
     st
   end
 
-  def assigned_samples
-    Sample.joins(:my_modules).where(my_modules: {
-                                      id: my_modules_ids.split(',')
-                                    })
-  end
-
   def my_modules_ids
     ids = active_experiments.map do |exp|
       exp.my_modules.pluck(:id) if exp.my_modules

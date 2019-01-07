@@ -133,20 +133,6 @@ div.print-report {
     }
   }
 
-  .report-module-samples-element {
-    & > .report-element-header {
-      .samples-icon,.samples-name {
-        color: $color-black !important;
-      }
-    }
-
-    &:hover > .report-element-header {
-      .samples-icon,.samples-name {
-        color: $color-black !important;
-      }
-    }
-  }
-
   .report-module-activity-element {
     & > .report-element-header {
       .activity-icon,.activity-name {

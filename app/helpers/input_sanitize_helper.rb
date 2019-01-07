@@ -4,7 +4,7 @@ module InputSanitizeHelper
   # Rails default ActionController::Base.helpers.sanitize method call
   # the ActiveRecord connecton method on the caller object which in
   # our cases throws an error when called from not ActiveRecord objects
-  # such as SamplesDatatables
+  # such as Datatables
   def sanitize_input(html, tags = [], attributes = [])
     Sanitize.fragment(
       html,

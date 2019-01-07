@@ -164,64 +164,6 @@ module FirstTimeDataGenerator
       )
       repository_rows_to_assign << repository_row
     end
-    # Create sample types
-    SampleType.create(
-      name: 'Potato leaves',
-      team: team
-    )
-
-    SampleType.create(
-      name: 'Tea leaves',
-      team: team
-    )
-
-    SampleType.create(
-      name: 'Potato bug',
-      team: team
-    )
-
-    SampleGroup.create(
-      name: 'Fodder',
-      team: team,
-      color: Constants::TAG_COLORS[1]
-    )
-
-    SampleGroup.create(
-      name: 'Nutrient',
-      team: team,
-      color: Constants::TAG_COLORS[0]
-    )
-
-    SampleGroup.create(
-      name: 'Seed',
-      team: team,
-      color: Constants::TAG_COLORS[2]
-    )
-
-    samples = []
-    # Generate random sample names start
-    # and put it on the beginning of 5 samples
-    sample_name = (0...3).map{65.+(rand(26)).chr}.join << '/'
-    for i in 1..5
-      samples << Sample.create(
-        name: sample_name + i.to_s,
-        team: team,
-        user: user,
-        sample_type: rand < 0.8 ? pluck_random(team.sample_types) : nil,
-        sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
-      )
-    end
-
-    sample_name = (0...3).map{65.+(rand(26)).chr}.join << '/'
-    for i in 1..5
-      samples << Sample.create(
-        name: sample_name + i.to_s,
-        team: team,
-        user: user,
-        sample_type: rand < 0.8 ? pluck_random(team.sample_types) : nil,
-        sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
-      )
-    end
 
     experiment_description =
       'Polymerase chain reaction (PCR) monitors the amplification of DNA ' \
@@ -347,24 +289,7 @@ module FirstTimeDataGenerator
       created_at: generate_random_time(archived_module.created_at, 2.minutes)
     )
 
-    # Assign 4 samples to modules
-    samples_to_assign = []
-    taken_sample_ids = []
-    for _ in 1..4
-      begin
-        sample = samples.sample
-      end while sample.id.in? taken_sample_ids
-      taken_sample_ids << sample.id
-      samples_to_assign << sample
-    end
-
     my_modules[1].downstream_modules.each do |mm|
-      samples_to_assign.each do |s|
-        SampleMyModule.create(
-          sample: s,
-          my_module: mm
-        )
-      end
       repository_rows_to_assign.each do |repository_row|
         MyModuleRepositoryRow.create!(
           repository_row: repository_row,
@@ -632,9 +557,9 @@ module FirstTimeDataGenerator
     )
     temp_text = "There are many biological replicates we harvested " \
                 "for each type of sample (code-names):\n\n"
-    samples_to_assign.each do |s|
-      temp_text << "* #{s.name}\n\n"
-    end
+    # samples_to_assign.each do |s|
+    #   temp_text << "* #{s.name}\n\n"
+    # end
     temp_result.result_text = ResultText.new(
       text: temp_text
     )
@@ -1082,10 +1007,10 @@ module FirstTimeDataGenerator
       created_by: user,
       team: team,
       contents: tab_content['module6']['distribution'] % {
-        sample0: samples_to_assign[0].name,
-        sample1: samples_to_assign[1].name,
-        sample2: samples_to_assign[2].name,
-        sample3: samples_to_assign[3].name
+        sample0: 'Sample 0', # samples_to_assign[0].name,
+        sample1: 'Sample 1', # samples_to_assign[1].name,
+        sample2: 'Sample 2', # samples_to_assign[2].name,
+        sample3: 'Sample 3'  # samples_to_assign[3].name
       }
     )
     temp_result.save

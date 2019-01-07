@@ -1,5 +1,4 @@
 class MyModulesController < ApplicationController
-  include SampleActions
   include TeamsHelper
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
@@ -9,9 +8,8 @@ class MyModulesController < ApplicationController
 
   before_action :load_vars,
                 only: %i(show update destroy description due_date protocols
-                         results samples activities activities_tab
-                         assign_samples unassign_samples delete_samples
-                         toggle_task_state samples_index archive
+                         results activities activities_tab
+                         toggle_task_state archive
                          complete_my_module repository repository_index
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
@@ -24,7 +22,7 @@ class MyModulesController < ApplicationController
                                            assign_repository_records_modal
                                            repository_index)
   before_action :load_projects_tree, only: %i(protocols results activities
-                                              samples repository archive)
+                                              repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions,
                 only: %i(description due_date update_description update_protocol_description)
@@ -42,13 +40,6 @@ class MyModulesController < ApplicationController
   before_action :set_inline_name_editing, only: %i(protocols results activities repository archive)
 
   layout 'fluid'.freeze
-
-  # Define submit actions constants (used in routing)
-  ASSIGN_SAMPLES = 'Assign'.freeze
-  UNASSIGN_SAMPLES = 'Unassign'.freeze
-
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
 
   def show
     respond_to do |format|
@@ -293,11 +284,6 @@ class MyModulesController < ApplicationController
                                 .team)
   end
 
-  def samples
-    @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
-    @team = @my_module.experiment.project.team
-  end
-
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_403 if @repository.nil? || !can_read_team?(@repository.team)
@@ -310,72 +296,6 @@ class MyModulesController < ApplicationController
                                 .experiment
                                 .project
                                 .team)
-  end
-
-  # Submit actions
-  def assign_samples
-    if params[:sample_ids].present?
-      samples = []
-
-      params[:sample_ids].each do |id|
-        sample = Sample.find_by_id(id)
-        sample.last_modified_by = current_user
-        sample.save
-
-        if sample
-          samples << sample
-        end
-      end
-
-      task_names = []
-      new_samples = []
-      @my_module.downstream_modules.each do |my_module|
-        new_samples = samples.select { |el| my_module.samples.exclude?(el) }
-        my_module.samples.push(*new_samples)
-        task_names << my_module.name
-      end
-    end
-    redirect_to samples_my_module_path(@my_module)
-  end
-
-  def unassign_samples
-    if params[:sample_ids].present?
-      samples = []
-
-      params[:sample_ids].each do |id|
-        sample = Sample.find_by_id(id)
-        sample.last_modified_by = current_user
-        sample.save
-
-        if sample && @my_module.samples.include?(sample)
-          samples << sample
-        end
-      end
-
-      task_names = []
-      @my_module.downstream_modules.each do |my_module|
-        task_names << my_module.name
-        my_module.samples.destroy(samples & my_module.samples)
-      end
-    end
-    redirect_to samples_my_module_path(@my_module)
-  end
-
-  # AJAX actions
-  def samples_index
-    @team = @my_module.experiment.project.team
-
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           nil,
-                                           @my_module,
-                                           nil,
-                                           current_user)
-      end
-    end
   end
 
   # AJAX actions
@@ -698,11 +618,6 @@ class MyModulesController < ApplicationController
   def check_assign_repository_records_permissions
     render_403 unless module_page? &&
                       can_assign_repository_rows_to_module?(@my_module)
-  end
-
-  def check_assign_samples_permissions
-    render_403 unless module_page? &&
-                      can_assign_sample_to_module?(@my_module)
   end
 
   def check_complete_module_permission

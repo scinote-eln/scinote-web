@@ -11,7 +11,7 @@ HelperModule.flashAlertMsg(I18n.t('my_modules.protocols.load_from_file_size_erro
 $('#modal-import-json-protocol').modal('hide');
 HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_invalid_error') %>','danger');
 <% elsif @protocolsio_no_file %>
-$('#pio_no_file_error_span').addClass('has-error').html('<span class="help-block"> <%= t('teams.parse_sheet.errors.no_file_selected') %></span>');
+$('#pio_no_file_error_span').addClass('has-error').html('<span class="help-block"> <%= t('repositories.parse_sheet.errors.no_file_selected') %></span>');
 <% @protocolsio_no_file = false %>
 <% else %>
   $('#modal-import-json-protocol').modal('hide');
