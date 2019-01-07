@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190520135317) do
+ActiveRecord::Schema.define(version: 20190726102200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "pg_trgm"
   enable_extension "btree_gist"
+  enable_extension "pg_stat_statements"
+  enable_extension "pg_trgm"
 
   create_table "activities", force: :cascade do |t|
     t.bigint "my_module_id"
@@ -62,10 +63,10 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.bigint "last_modified_by_id"
     t.integer "estimated_size", default: 0, null: false
     t.boolean "file_present", default: false, null: false
+    t.boolean "file_processing"
     t.string "lock", limit: 1024
     t.integer "lock_ttl"
     t.integer "version", default: 1
-    t.boolean "file_processing"
     t.integer "team_id"
     t.integer "file_image_quality"
     t.index "trim_html_tags((file_file_name)::text) gin_trgm_ops", name: "index_assets_on_file_file_name", using: :gin
@@ -126,19 +127,7 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.index ["output_id"], name: "index_connections_on_output_id"
   end
 
-  create_table "custom_fields", force: :cascade do |t|
-    t.string "name", null: false
-    t.bigint "user_id", null: false
-    t.bigint "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "last_modified_by_id"
-    t.index ["last_modified_by_id"], name: "index_custom_fields_on_last_modified_by_id"
-    t.index ["team_id"], name: "index_custom_fields_on_team_id"
-    t.index ["user_id"], name: "index_custom_fields_on_user_id"
-  end
-
-  create_table "delayed_jobs", force: :cascade do |t|
+  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -224,7 +213,6 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
     t.datetime "restored_on"
-    t.integer "nr_of_assigned_samples", default: 0
     t.integer "workflow_order", default: -1, null: false
     t.bigint "experiment_id", default: 0, null: false
     t.integer "state", limit: 2, default: 0
@@ -434,8 +422,8 @@ ActiveRecord::Schema.define(version: 20190520135317) do
   create_table "repository_cells", force: :cascade do |t|
     t.bigint "repository_row_id"
     t.integer "repository_column_id"
-    t.string "value_type"
     t.bigint "value_id"
+    t.string "value_type"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["repository_column_id"], name: "index_repository_cells_on_repository_column_id"
@@ -557,82 +545,6 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.index ["user_id"], name: "index_results_on_user_id"
   end
 
-  create_table "sample_custom_fields", force: :cascade do |t|
-    t.string "value", null: false
-    t.bigint "custom_field_id", null: false
-    t.bigint "sample_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index "trim_html_tags((value)::text) gin_trgm_ops", name: "index_sample_custom_fields_on_value", using: :gin
-    t.index ["custom_field_id"], name: "index_sample_custom_fields_on_custom_field_id"
-    t.index ["sample_id"], name: "index_sample_custom_fields_on_sample_id"
-  end
-
-  create_table "sample_groups", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "color", default: "#ff0000", null: false
-    t.bigint "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "created_by_id"
-    t.bigint "last_modified_by_id"
-    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_sample_groups_on_name", using: :gin
-    t.index ["created_by_id"], name: "index_sample_groups_on_created_by_id"
-    t.index ["last_modified_by_id"], name: "index_sample_groups_on_last_modified_by_id"
-    t.index ["team_id"], name: "index_sample_groups_on_team_id"
-  end
-
-  create_table "sample_my_modules", force: :cascade do |t|
-    t.bigint "sample_id", null: false
-    t.bigint "my_module_id", null: false
-    t.bigint "assigned_by_id"
-    t.datetime "assigned_on"
-    t.index ["assigned_by_id"], name: "index_sample_my_modules_on_assigned_by_id"
-    t.index ["my_module_id"], name: "index_sample_my_modules_on_my_module_id"
-    t.index ["sample_id", "my_module_id"], name: "index_sample_my_modules_on_sample_id_and_my_module_id"
-  end
-
-  create_table "sample_types", force: :cascade do |t|
-    t.string "name", null: false
-    t.bigint "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "created_by_id"
-    t.bigint "last_modified_by_id"
-    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_sample_types_on_name", using: :gin
-    t.index ["created_by_id"], name: "index_sample_types_on_created_by_id"
-    t.index ["last_modified_by_id"], name: "index_sample_types_on_last_modified_by_id"
-    t.index ["team_id"], name: "index_sample_types_on_team_id"
-  end
-
-  create_table "samples", force: :cascade do |t|
-    t.string "name", null: false
-    t.bigint "user_id", null: false
-    t.bigint "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "sample_group_id"
-    t.bigint "sample_type_id"
-    t.bigint "last_modified_by_id"
-    t.integer "nr_of_modules_assigned_to", default: 0
-    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_samples_on_name", using: :gin
-    t.index ["last_modified_by_id"], name: "index_samples_on_last_modified_by_id"
-    t.index ["sample_group_id"], name: "index_samples_on_sample_group_id"
-    t.index ["sample_type_id"], name: "index_samples_on_sample_type_id"
-    t.index ["team_id"], name: "index_samples_on_team_id"
-    t.index ["user_id"], name: "index_samples_on_user_id"
-  end
-
-  create_table "samples_tables", force: :cascade do |t|
-    t.jsonb "status", default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "assigned"=>"all", "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
-    t.integer "user_id", null: false
-    t.integer "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["team_id"], name: "index_samples_tables_on_team_id"
-    t.index ["user_id"], name: "index_samples_tables_on_user_id"
-  end
-
   create_table "settings", force: :cascade do |t|
     t.text "type", null: false
     t.jsonb "values", default: {}, null: false
@@ -726,6 +638,9 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.bigint "last_modified_by_id"
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
+    t.integer "billing_account_id"
+    t.bigint "hub_spot_deal_id"
+    t.index ["billing_account_id"], name: "index_teams_on_billing_account_id"
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id"
     t.index ["name"], name: "index_teams_on_name"
@@ -868,11 +783,13 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer "invitation_limit"
-    t.string "invited_by_type"
     t.integer "invited_by_id"
+    t.string "invited_by_type"
     t.integer "invitations_count", default: 0
     t.bigint "current_team_id"
     t.string "authentication_token", limit: 30
+    t.integer "ai_manuscripts_limit", default: 0
+    t.bigint "hub_spot_contact_id"
     t.jsonb "settings", default: {}, null: false
     t.jsonb "variables", default: {}, null: false
     t.index "trim_html_tags((full_name)::text) gin_trgm_ops", name: "index_users_on_full_name", using: :gin
@@ -937,6 +854,10 @@ ActiveRecord::Schema.define(version: 20190520135317) do
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
+  add_foreign_key "billing_subscription_addons", "billing_addons"
+  add_foreign_key "billing_subscription_addons", "billing_subscriptions"
+  add_foreign_key "billing_subscriptions", "billing_accounts"
+  add_foreign_key "billing_subscriptions", "billing_plans"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
@@ -947,9 +868,6 @@ ActiveRecord::Schema.define(version: 20190520135317) do
   add_foreign_key "comments", "users", column: "last_modified_by_id"
   add_foreign_key "connections", "my_modules", column: "input_id"
   add_foreign_key "connections", "my_modules", column: "output_id"
-  add_foreign_key "custom_fields", "teams"
-  add_foreign_key "custom_fields", "users"
-  add_foreign_key "custom_fields", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "archived_by_id"
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
@@ -1021,22 +939,8 @@ ActiveRecord::Schema.define(version: 20190520135317) do
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
-  add_foreign_key "sample_custom_fields", "custom_fields"
-  add_foreign_key "sample_custom_fields", "samples"
-  add_foreign_key "sample_groups", "teams"
-  add_foreign_key "sample_groups", "users", column: "created_by_id"
-  add_foreign_key "sample_groups", "users", column: "last_modified_by_id"
-  add_foreign_key "sample_my_modules", "my_modules"
-  add_foreign_key "sample_my_modules", "samples"
-  add_foreign_key "sample_my_modules", "users", column: "assigned_by_id"
-  add_foreign_key "sample_types", "teams"
-  add_foreign_key "sample_types", "users", column: "created_by_id"
-  add_foreign_key "sample_types", "users", column: "last_modified_by_id"
-  add_foreign_key "samples", "sample_groups"
-  add_foreign_key "samples", "sample_types"
-  add_foreign_key "samples", "teams"
-  add_foreign_key "samples", "users"
-  add_foreign_key "samples", "users", column: "last_modified_by_id"
+  add_foreign_key "scinote_ai_manuscripts", "users"
+  add_foreign_key "scinote_core_gamification_scores", "users"
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_tables", "steps"
@@ -1049,6 +953,7 @@ ActiveRecord::Schema.define(version: 20190520135317) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
+  add_foreign_key "teams", "billing_accounts"
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"
   add_foreign_key "tokens", "users"
