@@ -53,6 +53,12 @@ Rails.application.routes.draw do
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
+    # JS backend helpers
+    get 'helpers/to_user_date_format',
+        to: 'application#to_user_date_format',
+        as: 'to_user_date_format',
+        defaults: { format: 'json' }
+
     # Settings
     resources :users, only: :index # needed for testing signup
     # needed for testing edit passowrd
