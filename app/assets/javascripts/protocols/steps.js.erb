@@ -118,6 +118,7 @@
       toggleButtons(true);
 
       setTimeout(function() {
+        $.initTooltips();
         initStepsComments();
         initPreviewModal();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
@@ -613,6 +614,7 @@
           setupAssetsLoading();
           DragNDropSteps.clearFiles();
           initPreviewModal();
+          $.initTooltips();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {
