@@ -5,8 +5,14 @@
        data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.inventories') %>"
        href="<%= repository_my_module_url(id: @my_module, repository_id: repository) %>"
        title="<%= repository.name %>">
-      <% cache [current_user, repository] do %>
-        <%= truncate(repository.name) + " (#{@my_module.repository_rows_count(repository)})" %>
+      <% if enable_counters %>
+        <% cache [current_user, repository] do %>
+          <%= truncate(repository.name) %>
+          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count(repository)})" %></span>
+        <% end %>
+      <% else %>
+        <%= truncate(repository.name) %>
+        <span class="assigned-items-counter"><i class="fas fa-spinner fa-spin"></i></span>
       <% end %>
     </a>
   </li>

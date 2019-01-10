@@ -131,7 +131,9 @@
                 <span class="hidden-xs hidden-lg fas fa-list-alt"></span>
                 <span class="caret"></span>
               </a>
-              <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositoriesDropdownMenuLink"></ul>
+              <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositoriesDropdownMenuLink">
+                <%= render partial: "repositories_dropdown.html.erb", locals: { enable_counters: false } %>
+              </ul>
             </li>
           <% end %>
           <% if can_read_experiment?(@my_module.experiment) then %>

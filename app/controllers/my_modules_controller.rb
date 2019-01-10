@@ -409,7 +409,10 @@ class MyModulesController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'repositories_dropdown.html.erb')
+          html: render_to_string(
+            partial: 'repositories_dropdown.html.erb',
+            locals: { enable_counters: true }
+          )
         }
       end
     end
