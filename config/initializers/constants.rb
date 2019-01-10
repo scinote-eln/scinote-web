@@ -187,6 +187,17 @@ class Constants
   # Other
   #=============================================================================
 
+  FILE_TEXT_FORMATS = %w(doc docm docx dot dotm dotx odt rtf).freeze
+
+  FILE_TABLE_FORMATS = %w(csv ods xls xlsb xlsm xlsx).freeze
+
+  FILE_PRESENTATION_FORMATS =
+    %w(odp pot potm potx pps ppsm ppsx ppt pptm pptx).freeze
+
+  WOPI_EDITABLE_FORMATS = %w(
+    docx docm odt xlsx xlsm xlsb ods pptx ppsx odp
+  ).freeze
+
   TEXT_EXTRACT_FILE_TYPES = [
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
