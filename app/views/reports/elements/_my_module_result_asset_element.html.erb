@@ -38,7 +38,11 @@
     <div class="report-element-body">
         <div class="row">
           <div class="col-xs-12 file-image">
-            <%= report_image_asset_url(asset) %>
+            <% if defined?(export_all) && export_all %>
+              <img class="report-export-img" src="<%= path %>">
+            <% else %>
+              <%= report_image_asset_url(asset) %>
+            <% end %>
           </div>
         </div>
     </div>

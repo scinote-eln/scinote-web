@@ -26,7 +26,15 @@ module TinyMceHelper
       img = TinyMceAsset.find_by_id(match[1])
       next unless img && check_image_permissions(obj, img)
       if pdf_export_ready
-        report_image_asset_url(img, :tiny_mce_asset, 'tiny-mce-pdf-ready')
+        tmp_f = Tempfile.open(img.image_file_name, Rails.root.join('tmp'))
+        begin
+          img.image.copy_to_local_file(:large, tmp_f.path)
+          encoded_image = Base64.strict_encode64(tmp_f.read)
+          "<img src='data:image/jpg;base64,#{encoded_image}'>"
+        ensure
+          tmp_f.close
+          tmp_f.unlink
+        end
       else
         image_tag(img.url,
                   class: 'img-responsive',
