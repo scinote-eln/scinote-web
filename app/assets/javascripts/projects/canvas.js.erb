@@ -873,18 +873,21 @@ function bindEditTagsAjax(elements) {
   manageTagsModalBody = manageTagsModal.find(".modal-body");
 
   // Reload tags HTML element when modal is closed
-  manageTagsModal.on("hide.bs.modal", function(){
+  manageTagsModal.off().on("hide.bs.modal", function(){
     var task = $("div.panel[data-module-id='" +
                  manageTagsModal.data('module-id') + "']");
 
     // Load HTML
     $.ajax({
-      url: task.attr("data-module-tags-url"),
+      url: $('#canvas-container').attr('data-module-tags-url'),
       type: "GET",
       dataType: "json",
-      success: function(data){
-        task.find(".edit-tags-link")
-        .html(data.html_canvas);
+      success: function(data) {
+        $.each(data.my_modules, function(index, my_module){
+          $('div.panel[data-module-id=' + my_module.id + ']')
+            .find(".edit-tags-link")
+            .html(my_module.tags);
+        });
         // initialize tooltips again
         $.initTooltips();
       },

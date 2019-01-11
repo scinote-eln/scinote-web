@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div id="canvas-container" data-project-id="<%= @project.id %>">
+  <div id="canvas-container" data-project-id="<%= @project.id %>" data-module-tags-url="<%= my_module_tags_experiment_path(@experiment) %>">
     <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @active_modules } %>
   </div>
 </div>
