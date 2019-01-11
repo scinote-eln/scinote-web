@@ -222,7 +222,7 @@ class Experiment < ApplicationRecord
   end
 
   def generate_workflow_img
-    WorkflowImageGenerator.execute(experiment_id: id)
+    Experiments::GenerateWorkflowImageService.call(experiment_id: id)
   end
 
   # Clone this experiment to given project
