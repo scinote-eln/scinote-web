@@ -399,7 +399,7 @@ module ProtocolsIoHelper
     # (complex mapping with nested hashes) id 8 = software package,
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
-    # id 20= regents (materials, like scinote samples kind of)
+    # id 20= regents (materials, like scinote inventories kind of)
 
     original_json['steps'] = protocols_io_guid_reorder_step_json(
       original_json['steps']
