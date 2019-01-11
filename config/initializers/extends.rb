@@ -34,7 +34,7 @@ class Extends
                            step_table: 10,
                            step_comments: 11,
                            result_comments: 12,
-                           project_activity: 13, # TODO
+                           project_activity: 13, # NOT USED, kept b/c of integer enums
                            project_samples: 14, # DEPRECATED in SCI-2228, kept b/c of integer enums
                            experiment: 15,
                            # Higher number because of addons
