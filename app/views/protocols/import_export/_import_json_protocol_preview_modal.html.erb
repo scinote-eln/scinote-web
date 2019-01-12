@@ -60,9 +60,7 @@
               <label><%= t('protocols.import_export.import_modal.updated_at_label') %></label>
 
               <% display_last_modified=eval_last_modified(@json_object['steps']) %>
-              <%= f.text_field :last_modified, :value =>
-              I18n.l(display_last_modified, format: :full), readonly: true, class:
-              "form-control" %>
+              <%= f.text_field :last_modified, :value => display_last_modified, readonly: true, class: "form-control" %>
             </div>
           </div>
         </div>
