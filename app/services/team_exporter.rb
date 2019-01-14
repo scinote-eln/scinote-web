@@ -48,7 +48,7 @@ class TeamExporter
       end
       yield if block_given?
       dir = FileUtils.mkdir_p(File.join(dir_name, a.id.to_s)).first
-      if ENV['S3_BUCKET']
+      if defined?(S3_BUCKET)
         s3_asset =
           S3_BUCKET.object(a.public_send(attachment_name).path.remove(%r{^/}))
         file_name = a.public_send(attachment_name).original_filename
