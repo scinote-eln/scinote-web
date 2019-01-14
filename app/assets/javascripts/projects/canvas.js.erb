@@ -886,7 +886,7 @@ function bindEditTagsAjax(elements) {
         $.each(data.my_modules, function(index, my_module){
           $('div.panel[data-module-id=' + my_module.id + ']')
             .find(".edit-tags-link")
-            .html(my_module.tags);
+            .html(my_module.tags_html);
         });
         // initialize tooltips again
         $.initTooltips();

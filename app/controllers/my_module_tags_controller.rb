@@ -41,7 +41,7 @@ class MyModuleTagsController < ApplicationController
     experiment.active_my_modules.each do |my_module|
       res << {
         id: my_module.id,
-        tags: render_to_string(
+        tags_html: render_to_string(
           partial: 'canvas/tags.html.erb',
           locals: { my_module: my_module }
         )
