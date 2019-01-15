@@ -12,7 +12,7 @@ FactoryBot.define do
     project { create :project, created_by: user }
     factory :experiment_with_tasks do
       after(:create) do |e|
-        create_list :my_module, 3, experiment: e
+        create_list :my_module, 3, :with_tag, experiment: e
       end
     end
   end
