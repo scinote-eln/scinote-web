@@ -9,8 +9,7 @@
   data-module-x="<%= my_module.x %>"
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>"
-  data-module-tags-url="<%= my_module_my_module_tags_url(my_module, format: :json) %>"
-  data-module-users-tab-url="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>">
+  data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
 
   <% if can_manage_module?(my_module) %>
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">

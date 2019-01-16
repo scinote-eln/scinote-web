@@ -311,6 +311,7 @@ Rails.application.routes.draw do
         get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
         post 'canvas', to: 'canvas#update' # Save updated canvas action
         get 'module_archive' # Module archive for single experiment
+        get 'my_module_tags', to: 'my_module_tags#canvas_index'
         get 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
