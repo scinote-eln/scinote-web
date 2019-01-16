@@ -28,8 +28,8 @@ module ModelExporters
         end
         # Copying tiny_mce_assets
         copy_files(@tiny_mce_assets_to_copy,
-                  :image,
-                  File.join(@dir_to_export, 'tiny_mce_assets'))
+                   :image,
+                   File.join(@dir_to_export, 'tiny_mce_assets'))
         puts "Exported assets: #{@asset_counter}"
         puts "Exported tinyMCE assets: #{@team.tiny_mce_assets.count}"
         puts "Exported users: #{@team.users.count}"
@@ -66,8 +66,9 @@ module ModelExporters
     def notification(notification)
       notification_json = notification.as_json
       notification_json['type_of'] = Extends::NOTIFICATIONS_TYPES
-                                    .key(notification.read_attribute('type_of'))
-                                    .to_s
+                                     .key(notification
+                                          .read_attribute('type_of'))
+                                     .to_s
       notification_json
     end
 
