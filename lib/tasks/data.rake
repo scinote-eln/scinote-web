@@ -117,4 +117,13 @@ namespace :data do
     ee&.export_to_dir
   end
 
+  desc 'Import experiment from directory to given project'
+  task :experiment_import, %i(dir_path project_id user_id) => [:environment] do |_, args|
+    Rails.logger.info(
+      "Importing experiment from directory #{args[:dir_path]}"
+    )
+    TeamImporter.new.import_template_experiment_from_dir(args[:dir_path],
+                                                         args[:project_id],
+                                                         args[:user_id])
+  end
 end

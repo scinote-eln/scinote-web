@@ -20,7 +20,7 @@ module ModelExporters
         # Writing JSON file with experiment structure
         File.write(
           File.join(@dir_to_export, 'experiment_export.json'),
-          experiment.to_json
+          experiment[0].to_json
         )
         # Copying assets
         copy_files(@assets_to_copy, :file, File.join(@dir_to_export, 'assets')) do
