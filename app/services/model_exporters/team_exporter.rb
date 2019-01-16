@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'fileutils'
-
 module ModelExporters
   class TeamExporter < ModelExporter
     def initialize(team_id)
@@ -93,7 +91,7 @@ module ModelExporters
 
     def project(project)
       experiments = project.experiments.map do |e|
-        experiment, assets = ExperimentExporter.new(e).experiment
+        experiment, assets = ExperimentExporter.new(e.id).experiment
         @assets_to_copy << assets
         experiment
       end

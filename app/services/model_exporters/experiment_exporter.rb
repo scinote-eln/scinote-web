@@ -1,18 +1,40 @@
-require 'fileutils'
+# frozen_string_literal: true
 
 module ModelExporters
-  class ExperimentExporter
-    def initialize(experiment)
-      @experiment = experiment
+  class ExperimentExporter < ModelExporter
+    def initialize(experiment_id)
+      @experiment = Experiment.find_by_id(experiment_id)
       raise StandardError, 'Can not load experiment' unless @experiment
 
       @assets_to_copy = []
     end
 
-    def experiment()
+    def export_to_dir
+      @asset_counter = 0
+      @experiment.transaction(isolation: :serializable) do
+        @dir_to_export = FileUtils.mkdir_p(
+          File.join("tmp/experiment_#{@experiment.id}" \
+                    "_export_#{Time.now.to_i}")
+        ).first
+
+        # Writing JSON file with experiment structure
+        File.write(
+          File.join(@dir_to_export, 'experiment_export.json'),
+          experiment.to_json
+        )
+        # Copying assets
+        copy_files(@assets_to_copy, :file, File.join(@dir_to_export, 'assets')) do
+          @asset_counter += 1
+        end
+        puts "Exported assets: #{@asset_counter}"
+        puts 'Done!'
+      end
+    end
+
+    def experiment
       return {
         experiment: @experiment,
-        my_modules:  @experiment.my_modules.map { |m| my_module(m) },
+        my_modules: @experiment.my_modules.map { |m| my_module(m) },
         my_module_groups: @experiment.my_module_groups
       }, @assets_to_copy
     end
@@ -60,6 +82,7 @@ module ModelExporters
 
     def table(table)
       return {} if table.nil?
+
       table_json = table.as_json(except: %i(contents data_vector))
       table_json['contents'] = Base64.encode64(table.contents)
       table_json['data_vector'] = Base64.encode64(table.data_vector)

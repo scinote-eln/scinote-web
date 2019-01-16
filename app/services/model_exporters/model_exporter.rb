@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+
 module ModelExporters
   class ModelExporter
     def copy_files(assets, attachment_name, dir_name)

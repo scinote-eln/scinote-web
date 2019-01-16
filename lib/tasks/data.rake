@@ -86,7 +86,7 @@ namespace :data do
       "Exporting team with ID:#{args[:team_id]} to directory in tmp"
     )
     te = ModelExporters::TeamExporter.new(args[:team_id])
-    te.export_to_dir if te
+    te&.export_to_dir
   end
 
   desc 'Import team from directory'
@@ -104,6 +104,17 @@ namespace :data do
     )
     team = Team.find_by_id(args[:team_id])
     raise StandardError, 'Can not load team' unless team
+
     UserDataDeletion.delete_team_data(team) if team
   end
+
+  desc 'Export experiment to directory'
+  task :experiment_export, [:experiment_id] => [:environment] do |_, args|
+    Rails.logger.info(
+      "Exporting experiment with ID:#{args[:experiment_id]} to directory in tmp"
+    )
+    ee = ModelExporters::ExperimentExporter.new(args[:experiment_id])
+    ee&.export_to_dir
+  end
+
 end
