@@ -193,12 +193,7 @@ class TeamZipExport < ZipExport
         name = "#{directory}/#{append_file_suffix(asset.file_file_name,
                                                   "_#{i}")}"
       end
-      file = FileUtils.touch(name).first
-      if asset.file.exists?
-        File.open(file, 'wb') do |f|
-          f.write(Paperclip.io_adapters.for(asset.file).read)
-        end
-      end
+      asset.file.copy_to_local_file(:original, name) if asset.file.exists?
       asset_indexes[asset.id] = name
     end
 
@@ -266,8 +261,7 @@ class TeamZipExport < ZipExport
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
-      file = FileUtils.touch(asset_path).first
-      File.open(file, 'wb') { |f| f.write asset.open.read }
+      asset.file.copy_to_local_file(:original, asset_path)
     end
 
     csv_file_path
@@ -301,7 +295,7 @@ class TeamZipExport < ZipExport
         write_entries(input_dir, subdir, zip_file_path, io)
       else
         io.get_output_stream(zip_file_path) do |f|
-          f.puts File.open(disk_file_path, 'rb').read
+          f.write(File.open(disk_file_path, 'rb').read)
         end
       end
     end
