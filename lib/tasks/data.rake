@@ -85,7 +85,7 @@ namespace :data do
     Rails.logger.info(
       "Exporting team with ID:#{args[:team_id]} to directory in tmp"
     )
-    te = TeamExporter.new(args[:team_id])
+    te = ModelExporters::TeamExporter.new(args[:team_id])
     te.export_to_dir if te
   end
 
