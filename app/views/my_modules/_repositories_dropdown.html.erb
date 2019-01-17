@@ -6,7 +6,7 @@
        href="<%= repository_my_module_url(id: @my_module, repository_id: repository) %>"
        title="<%= repository.name %>">
       <% if enable_counters %>
-        <% cache [current_user, repository] do %>
+        <% cache [repository, @my_module] do %>
           <%= truncate(repository.name) %>
           <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count(repository)})" %></span>
         <% end %>
