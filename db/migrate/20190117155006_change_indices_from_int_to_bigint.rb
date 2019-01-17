@@ -1,6 +1,15 @@
 class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
   def up
-  # find primary and foreign keys of type integer throughout the database
+  # The request for this migration comes from a ticket SCI-2936,
+  # the request is to change all of the indices (primary and foreign keys) to bigint type
+  # 
+  # What it basically does is finds all of the indices of type int and changes them to bigint
+  # A minor complication/restraint is, postgres prohibits changes of the fields
+  # that are used in postgres view, so firstly we drop all of (user defined) views
+  # then change the column types and recreate vies afterwards.
+
+
+    # find primary and foreign keys of type integer throughout the database
     sql = <<-EOM
       select tc.table_schema, tc.table_name, kc.column_name, ic.data_type
       from information_schema.table_constraints tc
@@ -15,18 +24,17 @@ class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
                tc.table_name,
                kc.position_in_unique_constraint;
     EOM
+    keys = execute(sql)
 
     # get all user defined views
-    user_viewes = ActiveRecord::Base.connection.execute(
+    user_viewes = execute(
       "select  *  from pg_views where schemaname = any (current_schemas(false))"
-      )
+      ) if keys.any?
 
     # drop all existing views
     user_viewes.each do |user_view|
-      ActiveRecord::Base.connection.execute("drop view #{user_view['viewname']}")
-    end
-
-    keys = ActiveRecord::Base.connection.execute(sql)
+      execute("drop view #{user_view['viewname']}")
+    end if keys.any?
 
     # change all keys
     keys.each do |key|
@@ -35,7 +43,12 @@ class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
 
     # recreate user defined views
     user_viewes.each do |user_view|
-      ActiveRecord::Base.connection.execute("create view #{user_view['viewname']} as #{user_view['definition']}")
-    end
+      execute("create view #{user_view['viewname']} as #{user_view['definition']}")
+    end if keys.any?
+  end
+
+  def down
+    # Bad, bad things can happen if we reverse this migration, so we'll 
+    # simply skip it
   end
 end
