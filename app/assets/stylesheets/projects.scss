@@ -463,16 +463,56 @@ li.module-hover {
   }
 }
 
+
+#project-show {
+  @media (min-width: 1400px) {
+    .col-md-6 {
+      width: 33.3333333333%;;
+    }
+  }
+}
+
 // EXPERIMENT PANEL
 .experiment-panel {
   @include box-shadow(0 4px 8px 0 $color-dove-gray);
-  height: 550px;
+  height: 400px;
   margin: 0 auto;
   margin-bottom: 35px;
   margin-top: 45px;
   max-width: 700px;
   display: flex;
   flex-direction: column;
+
+  .panel-title {
+    margin-bottom: 14px;
+  }
+
+  .panel-heading .clone-experiment,
+  .panel-heading .dropdown {
+    display: none;
+  }
+
+  &:hover .clone-experiment,
+  &:hover .dropdown {
+    display: block;
+  }
+
+  .panel-date {
+    color: $color-silver-chalice;
+  }
+
+  .clone-experiment {
+    color: $color-silver-chalice;
+    padding-top: 2px;
+    padding-left: 4px;
+  }
+
+  .dropdown {
+    color: $color-silver-chalice;
+    button {
+      padding-left: 6px;
+    }
+  }
 
   .panel-body {
     display: flex;
@@ -481,20 +521,21 @@ li.module-hover {
   }
 
   .experiment-description {
-    border: 1px solid $color-alto;
-    border-radius: 4px;
-    height: 100px;
+    max-height: 86px;
     margin-top: 10px;
     overflow-x: hidden;
-    overflow-y: scroll;
-    padding: 10px;
+
+    p {
+      margin: 0;
+    }
   }
 
   .experiment-no-description {
     color: $color-alto;
     display: block;
-    font-size: $font-size-h4;
+    font-size: $font-size-large;
     font-weight: bold;
+    margin-top: 10px;
     text-align: center;
 
     a {
@@ -508,9 +549,9 @@ li.module-hover {
     display: block;
     font-size: 26px;
     font-weight: bold;
-    height: 300px;
+    max-height: 200px;
     margin: 15px 0;
-    padding-top: 150px;
+    padding-top: 50px;
     text-align: center;
 
     a {
@@ -521,11 +562,11 @@ li.module-hover {
 }
 
 .workflowimg-container {
-  height: 300px;
+  max-height: 200px;
   margin: 15px 0;
 
   img {
-    max-height: 300px;
+    max-height: 190px;
     max-width: 100%;
   }
 }
@@ -540,7 +581,7 @@ li.module-hover {
 .big-plus {
   color: $color-gainsboro;
   display: block;
-  font-size: 250px;
+  font-size: 180px;
   margin: 20px 0;
   text-align: center;
 

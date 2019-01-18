@@ -44,7 +44,6 @@
     // click on buttonClass summons modalName dialog
     modals = {
       '.edit-experiment': '#edit-experiment-modal-',
-      '.clone-experiment': '#clone-experiment-modal-',
       '.move-experiment': '#move-experiment-modal-'
     };
 
@@ -118,16 +117,25 @@
       initializeModal($(this), id);
     });
   }
-  // Bind modal to new-experiment action
-  initializeModal($("#new-experiment"), '#new-experiment-modal');
 
-  // Bind modal to big-plus new experiment actions
-  initializeModal('.big-plus', '#new-experiment-modal');
+  $(document).on('turbolinks:load', function() {
+    // Bind modal to new-experiment action
+    initializeModal($("#new-experiment"), '#new-experiment-modal');
 
-  // Bind modal to all actions listed on dropdown accesible from experiment
-  // panel
-  initializeDropdownActions();
+    // Bind modal to big-plus new experiment actions
+    initializeModal('.big-plus', '#new-experiment-modal');
 
-  // init
-  initEditNoDescription();
+    // Bind modals to all clone-experiment actions
+    $.each($('.clone-experiment'), function() {
+      var id = $(this).closest('.experiment-panel').data('id')
+      initializeModal($(this), '#clone-experiment-modal-' + id);
+    });
+
+    // Bind modal to all actions listed on dropdown accesible from experiment
+    // panel
+    initializeDropdownActions();
+
+    // init
+    initEditNoDescription();
+  } );
 })();

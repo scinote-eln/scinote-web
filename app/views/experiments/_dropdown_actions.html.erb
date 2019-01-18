@@ -11,16 +11,6 @@
                 class: 'edit-experiment' %></li>
   <% end %>
   <li data-hook="experiment-actions-second-child"></li>
-  <% if can_clone_experiment?(experiment) %>
-    <li><%= link_to t('experiments.clone.label_title'),
-                    clone_modal_experiment_url(experiment),
-                    remote: true, type: 'button',
-                    class: 'clone-experiment help_tooltips',
-                    data: {
-                      tooltiplink: I18n.t('tooltips.link.experiment.copy'),
-                      tooltipcontent: I18n.t('tooltips.text.experiment.copy')
-                    } %></li>
-  <% end %>
   <% if can_move_experiment?(experiment) %>
     <li><%= link_to t('experiments.move.label_title'),
                     move_modal_experiment_url(experiment),

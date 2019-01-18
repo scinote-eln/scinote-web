@@ -44,8 +44,6 @@
     <% @project.sorted_active_experiments(@current_sort).each_with_index do |experiment, index| %>
       <%= render partial: 'projects/show/experiment',
                  locals: { experiment: experiment } %>
-
-      <%= content_tag(:div, '', class: 'clearfix visible-lg-block') if (index + 1) % 2 == 0 %>
     <% end %>
     <% if can_create_experiments?(@project) %>
       <%= render 'projects/show/new_experiment' %>

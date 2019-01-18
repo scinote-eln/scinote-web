@@ -769,7 +769,7 @@ en:
       label_title: 'Archive'
     clone:
       modal_title: 'Copy experiment %{experiment} as template'
-      label_title: 'Copy as template (only Protocols steps copied)'
+      label_title: 'Copy as template'
       modal_submit: 'Copy'
       success_flash: 'Successfully copied experiment %{experiment} as template.'
       error_flash: 'Could not copy the experiment as template.'
