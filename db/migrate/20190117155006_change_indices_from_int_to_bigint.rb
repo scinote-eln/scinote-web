@@ -26,25 +26,27 @@ class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
     EOM
     keys = execute(sql)
 
-    # get all user defined views
-    user_viewes = execute(
-      "select  *  from pg_views where schemaname = any (current_schemas(false))"
-      ) if keys.any?
+    if keys.any?
+      # get all user defined views
+      user_viewes = execute(
+        "select  *  from pg_views where schemaname = any (current_schemas(false))"
+                           )
 
-    # drop all existing views
-    user_viewes.each do |user_view|
-      execute("drop view #{user_view['viewname']}")
-    end if keys.any?
+      # drop all existing views
+      user_viewes.each do |user_view|
+        execute("drop view #{user_view['viewname']}")
+      end
 
-    # change all keys
-    keys.each do |key|
-      change_column key['table_name'], key['column_name'], :bigint
+      # change all keys
+      keys.each do |key|
+        change_column key['table_name'], key['column_name'], :bigint
+      end
+
+      # recreate user defined views
+      user_viewes.each do |user_view|
+        execute("create view #{user_view['viewname']} as #{user_view['definition']}")
+      end
     end
-
-    # recreate user defined views
-    user_viewes.each do |user_view|
-      execute("create view #{user_view['viewname']} as #{user_view['definition']}")
-    end if keys.any?
   end
 
   def down
