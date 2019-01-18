@@ -311,6 +311,7 @@ Rails.application.routes.draw do
         get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
         post 'canvas', to: 'canvas#update' # Save updated canvas action
         get 'module_archive' # Module archive for single experiment
+        get 'my_module_tags', to: 'my_module_tags#canvas_index'
         get 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
@@ -374,6 +375,12 @@ Rails.application.routes.draw do
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
+        get 'repositories_dropdown',
+            to: 'my_modules#repositories_dropdown',
+            as: :repositories_dropdown
+        get 'repositories_dropdown/:repository_id',
+            to: 'my_modules#repositories_dropdown',
+            as: :repositories_dropdown_repository_tab
         # Renders sample datatable for single module (ajax action)
         # post 'samples_index'
         # post :assign_samples,
@@ -561,7 +568,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Api.configuration.core_api_v1_preview
+      if Api.configuration.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,

@@ -206,6 +206,11 @@ label {
     padding-top: 10px;
     padding-left: 15px;
     padding-right: 15px;
+
+    .report-export-img {
+      max-height: 300px;
+      max-width: 300px;
+    }
   }
 
   .report-element-children {

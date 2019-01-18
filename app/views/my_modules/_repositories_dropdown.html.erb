@@ -1,0 +1,22 @@
+<% @my_module.experiment.project.team.repositories.order(created_at: :asc).each do |repository| %>
+  <li>
+    <a class="dropdown-item <%= "active-item" if @repository == repository %> help_tooltips"
+       data-tooltiplink="<%= I18n.t('tooltips.link.protocol.inventories') %>"
+       data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.inventories') %>"
+       href="<%= repository_my_module_url(id: @my_module, repository_id: repository) %>"
+       title="<%= repository.name %>">
+      <% if enable_counters %>
+        <% cache [repository, @my_module] do %>
+          <%= truncate(repository.name) %>
+          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count(repository)})" %></span>
+        <% end %>
+      <% else %>
+        <%= truncate(repository.name) %>
+        <span class="assigned-items-counter"><i class="fas fa-spinner fa-spin"></i></span>
+      <% end %>
+    </a>
+  </li>
+  <% unless @my_module.experiment.project.team.repositories.last == repository %>
+    <li class="divider"></li>
+  <% end %>
+<% end %>
