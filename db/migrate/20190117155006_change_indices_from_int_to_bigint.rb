@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
   def up
     # The request for this migration comes from a ticket SCI-2936,
@@ -33,7 +34,7 @@ class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
     if keys.any?
       # get all user defined views
       user_viewes = execute(
-        "select  *  from pg_views where schemaname = any (current_schemas(false))"
+        'select  *  from pg_views where schemaname = any (current_schemas(false))'
       )
 
       # drop all existing views
