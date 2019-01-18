@@ -85,8 +85,8 @@ namespace :data do
     Rails.logger.info(
       "Exporting team with ID:#{args[:team_id]} to directory in tmp"
     )
-    te = TeamExporter.new(args[:team_id])
-    te.export_to_dir if te
+    te = ModelExporters::TeamExporter.new(args[:team_id])
+    te&.export_to_dir
   end
 
   desc 'Import team from directory'
@@ -104,6 +104,26 @@ namespace :data do
     )
     team = Team.find_by_id(args[:team_id])
     raise StandardError, 'Can not load team' unless team
+
     UserDataDeletion.delete_team_data(team) if team
+  end
+
+  desc 'Export experiment to directory'
+  task :experiment_export, [:experiment_id] => [:environment] do |_, args|
+    Rails.logger.info(
+      "Exporting experiment with ID:#{args[:experiment_id]} to directory in tmp"
+    )
+    ee = ModelExporters::ExperimentExporter.new(args[:experiment_id])
+    ee&.export_to_dir
+  end
+
+  desc 'Import experiment from directory to given project'
+  task :experiment_import, %i(dir_path project_id user_id) => [:environment] do |_, args|
+    Rails.logger.info(
+      "Importing experiment from directory #{args[:dir_path]}"
+    )
+    TeamImporter.new.import_template_experiment_from_dir(args[:dir_path],
+                                                         args[:project_id],
+                                                         args[:user_id])
   end
 end
