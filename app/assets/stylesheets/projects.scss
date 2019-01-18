@@ -467,7 +467,7 @@ li.module-hover {
 #project-show {
   @media (min-width: 1400px) {
     .col-md-6 {
-      width: 33.3333333333%;;
+      width: 33.3333333333%;
     }
   }
 }
@@ -475,13 +475,13 @@ li.module-hover {
 // EXPERIMENT PANEL
 .experiment-panel {
   @include box-shadow(0 4px 8px 0 $color-dove-gray);
+  display: flex;
+  flex-direction: column;
   height: 400px;
   margin: 0 auto;
   margin-bottom: 35px;
   margin-top: 45px;
   max-width: 700px;
-  display: flex;
-  flex-direction: column;
 
   .panel-title {
     margin-bottom: 14px;
@@ -503,12 +503,13 @@ li.module-hover {
 
   .clone-experiment {
     color: $color-silver-chalice;
-    padding-top: 2px;
     padding-left: 4px;
+    padding-top: 2px;
   }
 
   .dropdown {
     color: $color-silver-chalice;
+
     button {
       padding-left: 6px;
     }
@@ -521,8 +522,8 @@ li.module-hover {
   }
 
   .experiment-description {
-    max-height: 86px;
     margin-top: 10px;
+    max-height: 86px;
     overflow-x: hidden;
 
     p {
@@ -549,8 +550,8 @@ li.module-hover {
     display: block;
     font-size: 26px;
     font-weight: bold;
-    max-height: 200px;
     margin: 15px 0;
+    max-height: 200px;
     padding-top: 50px;
     text-align: center;
 
@@ -562,8 +563,8 @@ li.module-hover {
 }
 
 .workflowimg-container {
-  max-height: 200px;
   margin: 15px 0;
+  max-height: 200px;
 
   img {
     max-height: 190px;

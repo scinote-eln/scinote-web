@@ -120,14 +120,14 @@
 
   $(document).on('turbolinks:load', function() {
     // Bind modal to new-experiment action
-    initializeModal($("#new-experiment"), '#new-experiment-modal');
+    initializeModal($('#new-experiment'), '#new-experiment-modal');
 
     // Bind modal to big-plus new experiment actions
     initializeModal('.big-plus', '#new-experiment-modal');
 
     // Bind modals to all clone-experiment actions
     $.each($('.clone-experiment'), function() {
-      var id = $(this).closest('.experiment-panel').data('id')
+      var id = $(this).closest('.experiment-panel').data('id');
       initializeModal($(this), '#clone-experiment-modal-' + id);
     });
 
@@ -137,5 +137,5 @@
 
     // init
     initEditNoDescription();
-  } );
+  });
 })();
