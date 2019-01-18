@@ -68,11 +68,13 @@ class MyModule < ApplicationRecord
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
   scope :active, -> { where(archived: false) }
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
+  scope :without_group, -> { active.where(my_module_group: nil) }
   scope :one_day_prior, (lambda do
     where('my_modules.due_date > ? AND my_modules.due_date < ?',
           Time.current.utc,
           Time.current.utc + 1.day)
   end)
+  scope :workflow_ordered, -> { order(workflow_order: :asc) }
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30

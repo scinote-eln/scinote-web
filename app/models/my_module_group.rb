@@ -10,10 +10,6 @@ class MyModuleGroup < ApplicationRecord
              optional: true
   has_many :my_modules, inverse_of: :my_module_group, dependent: :nullify
 
-  def ordered_modules
-    my_modules.order(workflow_order: :asc)
-  end
-
   def deep_clone_to_experiment(current_user, experiment)
     clone = MyModuleGroup.new(
       created_by: created_by,
@@ -21,12 +17,12 @@ class MyModuleGroup < ApplicationRecord
     )
 
     # Get clones of modules from this group, save them as hash
-    cloned_modules = ordered_modules.each_with_object({}) do |m, hash|
-      hash[m.id] = m.deep_clone_to_experiment(current_user, experiment)
-      hash
+    cloned_modules = my_modules.workflow_ordered.each_with_object({}) do |m, h|
+      h[m.id] = m.deep_clone_to_experiment(current_user, experiment)
+      h
     end
 
-    ordered_modules.each do |m|
+    my_modules.workflow_ordered.each do |m|
       # Copy connections
       m.inputs.each do |inp|
         Connection.create(
