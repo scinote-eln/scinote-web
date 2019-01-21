@@ -1,59 +1,191 @@
 # frozen_string_literal: true
+
 class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
   def up
-    # The request for this migration comes from a ticket SCI-2936,
-    # the request is to change all of the indices (primary and foreign keys)
-    # to bigint type
-    #
-    # What it basically does is finds all of the indices of type int and
-    # changes them to bigint.
-    #
-    # A minor complication/restraint is, postgres prohibits changes
-    # of the fieldsthat are used in postgres view, so firstly we drop all
-    # of (user defined)views then change the column types
-    #  and recreate views afterwards.
+    drop_view :datatables_teams
 
+    change_column :activities, :id, :bigint
+    change_column :assets, :id, :bigint
+    change_column :asset_text_data, :id, :bigint
+    change_column :checklist_items, :id, :bigint
+    change_column :checklists, :id, :bigint
+    change_column :comments, :id, :bigint
+    change_column :connections, :id, :bigint
+    change_column :custom_fields, :id, :bigint
+    change_column :delayed_jobs, :id, :bigint
+    change_column :experiments, :id, :bigint
+    change_column :my_module_groups, :id, :bigint
+    change_column :my_module_repository_rows, :id, :bigint
+    change_column :my_modules, :id, :bigint
+    change_column :my_module_tags, :id, :bigint
+    change_column :notifications, :id, :bigint
+    change_column :projects, :id, :bigint
+    change_column :protocol_keywords, :id, :bigint
+    change_column :protocol_protocol_keywords, :id, :bigint
+    change_column :protocols, :id, :bigint
+    change_column :report_elements, :id, :bigint
+    change_column :reports, :id, :bigint
+    change_column :repositories, :id, :bigint
+    change_column :repository_table_states, :id, :bigint
+    change_column :result_assets, :id, :bigint
+    change_column :results, :id, :bigint
+    change_column :result_tables, :id, :bigint
+    change_column :result_texts, :id, :bigint
+    change_column :sample_custom_fields, :id, :bigint
+    change_column :sample_groups, :id, :bigint
+    change_column :sample_my_modules, :id, :bigint
+    change_column :samples, :id, :bigint
+    change_column :samples_tables, :id, :bigint
+    change_column :sample_types, :id, :bigint
+    change_column :settings, :id, :bigint
+    change_column :step_assets, :id, :bigint
+    change_column :steps, :id, :bigint
+    change_column :step_tables, :id, :bigint
+    change_column :tables, :id, :bigint
+    change_column :tags, :id, :bigint
+    change_column :teams, :id, :bigint
+    change_column :temp_files, :id, :bigint
+    change_column :tiny_mce_assets, :id, :bigint
+    change_column :tokens, :id, :bigint
+    change_column :user_identities, :id, :bigint
+    change_column :user_my_modules, :id, :bigint
+    change_column :user_notifications, :id, :bigint
+    change_column :user_projects, :id, :bigint
+    change_column :users, :id, :bigint
+    change_column :user_teams, :id, :bigint
+    change_column :wopi_actions, :id, :bigint
+    change_column :wopi_apps, :id, :bigint
+    change_column :wopi_discoveries, :id, :bigint
+    change_column :zip_exports, :id, :bigint
+    change_column :activities, :user_id, :bigint
+    change_column :activities, :my_module_id, :bigint
+    change_column :activities, :project_id, :bigint
+    change_column :activities, :experiment_id, :bigint
+    change_column :assets, :created_by_id, :bigint
+    change_column :assets, :last_modified_by_id, :bigint
+    change_column :asset_text_data, :asset_id, :bigint
+    change_column :checklist_items, :checklist_id, :bigint
+    change_column :checklist_items, :last_modified_by_id, :bigint
+    change_column :checklist_items, :created_by_id, :bigint
+    change_column :checklists, :step_id, :bigint
+    change_column :checklists, :created_by_id, :bigint
+    change_column :checklists, :last_modified_by_id, :bigint
+    change_column :comments, :last_modified_by_id, :bigint
+    change_column :comments, :user_id, :bigint
+    change_column :connections, :output_id, :bigint
+    change_column :connections, :input_id, :bigint
+    change_column :custom_fields, :team_id, :bigint
+    change_column :custom_fields, :user_id, :bigint
+    change_column :custom_fields, :last_modified_by_id, :bigint
+    change_column :experiments, :created_by_id, :bigint
+    change_column :experiments, :restored_by_id, :bigint
+    change_column :experiments, :archived_by_id, :bigint
+    change_column :experiments, :last_modified_by_id, :bigint
+    change_column :my_module_groups, :experiment_id, :bigint
+    change_column :my_module_groups, :created_by_id, :bigint
+    change_column :my_module_repository_rows, :assigned_by_id, :bigint
+    change_column :my_modules, :last_modified_by_id, :bigint
+    change_column :my_modules, :created_by_id, :bigint
+    change_column :my_modules, :experiment_id, :bigint
+    change_column :my_modules, :my_module_group_id, :bigint
+    change_column :my_modules, :archived_by_id, :bigint
+    change_column :my_modules, :restored_by_id, :bigint
+    change_column :my_module_tags, :created_by_id, :bigint
+    change_column :notifications, :generator_user_id, :bigint
+    change_column :oauth_access_grants, :resource_owner_id, :bigint
+    change_column :oauth_access_tokens, :resource_owner_id, :bigint
+    change_column :projects, :team_id, :bigint
+    change_column :projects, :archived_by_id, :bigint
+    change_column :projects, :restored_by_id, :bigint
+    change_column :projects, :created_by_id, :bigint
+    change_column :projects, :last_modified_by_id, :bigint
+    change_column :protocol_keywords, :team_id, :bigint
+    change_column :protocol_protocol_keywords, :protocol_keyword_id, :bigint
+    change_column :protocol_protocol_keywords, :protocol_id, :bigint
+    change_column :protocols, :team_id, :bigint
+    change_column :protocols, :added_by_id, :bigint
+    change_column :protocols, :parent_id, :bigint
+    change_column :protocols, :restored_by_id, :bigint
+    change_column :protocols, :archived_by_id, :bigint
+    change_column :protocols, :my_module_id, :bigint
+    change_column :report_elements, :report_id, :bigint
+    change_column :report_elements, :experiment_id, :bigint
+    change_column :report_elements, :table_id, :bigint
+    change_column :report_elements, :asset_id, :bigint
+    change_column :report_elements, :checklist_id, :bigint
+    change_column :report_elements, :result_id, :bigint
+    change_column :report_elements, :step_id, :bigint
+    change_column :report_elements, :my_module_id, :bigint
+    change_column :report_elements, :project_id, :bigint
+    change_column :reports, :user_id, :bigint
+    change_column :reports, :last_modified_by_id, :bigint
+    change_column :reports, :project_id, :bigint
+    change_column :repositories, :created_by_id, :bigint
+    change_column :repository_columns, :created_by_id, :bigint
+    change_column :repository_date_values, :last_modified_by_id, :bigint
+    change_column :repository_date_values, :created_by_id, :bigint
+    change_column :repository_rows, :last_modified_by_id, :bigint
+    change_column :repository_rows, :created_by_id, :bigint
+    change_column :repository_text_values, :created_by_id, :bigint
+    change_column :repository_text_values, :last_modified_by_id, :bigint
+    change_column :result_assets, :result_id, :bigint
+    change_column :result_assets, :asset_id, :bigint
+    change_column :results, :archived_by_id, :bigint
+    change_column :results, :user_id, :bigint
+    change_column :results, :last_modified_by_id, :bigint
+    change_column :results, :restored_by_id, :bigint
+    change_column :results, :my_module_id, :bigint
+    change_column :result_tables, :result_id, :bigint
+    change_column :result_tables, :table_id, :bigint
+    change_column :result_texts, :result_id, :bigint
+    change_column :sample_custom_fields, :custom_field_id, :bigint
+    change_column :sample_custom_fields, :sample_id, :bigint
+    change_column :sample_groups, :team_id, :bigint
+    change_column :sample_groups, :last_modified_by_id, :bigint
+    change_column :sample_groups, :created_by_id, :bigint
+    change_column :sample_my_modules, :my_module_id, :bigint
+    change_column :sample_my_modules, :sample_id, :bigint
+    change_column :sample_my_modules, :assigned_by_id, :bigint
+    change_column :samples, :sample_group_id, :bigint
+    change_column :samples, :last_modified_by_id, :bigint
+    change_column :samples, :sample_type_id, :bigint
+    change_column :samples, :team_id, :bigint
+    change_column :samples, :user_id, :bigint
+    change_column :sample_types, :created_by_id, :bigint
+    change_column :sample_types, :team_id, :bigint
+    change_column :sample_types, :last_modified_by_id, :bigint
+    change_column :step_assets, :asset_id, :bigint
+    change_column :step_assets, :step_id, :bigint
+    change_column :steps, :last_modified_by_id, :bigint
+    change_column :steps, :user_id, :bigint
+    change_column :steps, :protocol_id, :bigint
+    change_column :step_tables, :step_id, :bigint
+    change_column :step_tables, :table_id, :bigint
+    change_column :tables, :created_by_id, :bigint
+    change_column :tables, :last_modified_by_id, :bigint
+    change_column :tags, :last_modified_by_id, :bigint
+    change_column :tags, :created_by_id, :bigint
+    change_column :tags, :project_id, :bigint
+    change_column :teams, :last_modified_by_id, :bigint
+    change_column :teams, :created_by_id, :bigint
+    change_column :tokens, :user_id, :bigint
+    change_column :user_my_modules, :my_module_id, :bigint
+    change_column :user_my_modules, :assigned_by_id, :bigint
+    change_column :user_my_modules, :user_id, :bigint
+    change_column :user_notifications, :user_id, :bigint
+    change_column :user_notifications, :notification_id, :bigint
+    change_column :user_projects, :assigned_by_id, :bigint
+    change_column :user_projects, :user_id, :bigint
+    change_column :user_projects, :project_id, :bigint
+    change_column :users, :current_team_id, :bigint
+    change_column :user_teams, :user_id, :bigint
+    change_column :user_teams, :team_id, :bigint
+    change_column :user_teams, :assigned_by_id, :bigint
+    change_column :wopi_actions, :wopi_app_id, :bigint
+    change_column :wopi_apps, :wopi_discovery_id, :bigint
+    change_column :zip_exports, :user_id, :bigint
 
-    # find primary and foreign keys of type integer throughout the database
-    sql = <<-EOM
-      select tc.table_schema, tc.table_name, kc.column_name, ic.data_type
-      from information_schema.table_constraints tc
-        join information_schema.key_column_usage kc
-          on kc.table_name = tc.table_name and kc.table_schema = tc.table_schema and kc.constraint_name = tc.constraint_name
-        join information_schema.columns ic
-          on ic.table_schema = tc.table_schema and ic.table_name=tc.table_name and ic.column_name = kc.column_name
-      where (tc.constraint_type = 'PRIMARY KEY' OR tc.constraint_type = 'FOREIGN KEY')
-        and kc.ordinal_position is not null
-        and ic.data_type = 'integer'
-      order by tc.table_schema,
-               tc.table_name,
-               kc.position_in_unique_constraint;
-    EOM
-    keys = execute(sql)
-
-    if keys.any?
-      # get all user defined views
-      user_viewes = execute(
-        'select  *  from pg_views where schemaname = any (current_schemas(false))'
-      )
-
-      # drop all existing views
-      user_viewes.each do |user_view|
-        execute("drop view #{user_view['viewname']}")
-      end
-
-      # change all keys
-      keys.each do |key|
-        change_column key['table_name'], key['column_name'], :bigint
-      end
-
-      # recreate user defined views
-      user_viewes.each do |user_view|
-        execute(
-          "create view #{user_view['viewname']} as #{user_view['definition']}"
-        )
-      end
-    end
+    create_view :datatables_teams
   end
 
   def down
