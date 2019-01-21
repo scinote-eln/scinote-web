@@ -1,5 +1,5 @@
 <div class="pull-right">
-  <span class="text-muted"><%= l comment.created_at, format: '%H:%M' %></span>
+  <span class="text-muted"><%= l comment.created_at, format: :time %></span>
   <% if can_manage_comment_in_project?(comment) %>
     <div class="dropdown dropdown-comment">
       <a href="#"

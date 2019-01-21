@@ -161,9 +161,9 @@ module ProtocolsIoHelper
     timestamps = steps.map do |step|
       step['modified_on'] if step['modified_on'].present?
     end
-    Time.at(timestamps.max).utc.to_datetime
+    I18n.l(Time.at(timestamps.max), format: :full)
   rescue StandardError
-    Time.at(0).utc.to_datetime
+    I18n.l(Time.at(0), format: :full)
   end
 
   # Checks so that null values are returned as zero length strings
