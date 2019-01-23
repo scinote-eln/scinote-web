@@ -1,0 +1,1170 @@
+{
+    "experiment": {
+        "archived": false,
+        "archived_by_id": null,
+        "archived_on": null,
+        "created_at": "2019-01-21T13:27:53.342Z",
+        "created_by_id": 1,
+        "description": "",
+        "id": 3,
+        "last_modified_by_id": 1,
+        "name": "Experiment export",
+        "project_id": 1,
+        "restored_by_id": null,
+        "restored_on": null,
+        "updated_at": "2019-01-21T13:32:46.473Z",
+        "workflowimg_content_type": "image/png",
+        "workflowimg_file_name": "wimg20190121-1-111oj8z.png",
+        "workflowimg_file_size": 4581,
+        "workflowimg_updated_at": "2019-01-21T13:31:04.682Z"
+    },
+    "my_module_groups": [
+        {
+            "created_at": "2019-01-21T13:32:46.449Z",
+            "created_by_id": 1,
+            "experiment_id": 3,
+            "id": 13,
+            "updated_at": "2019-01-21T13:32:46.449Z"
+        },
+        {
+            "created_at": "2019-01-21T13:32:46.460Z",
+            "created_by_id": 1,
+            "experiment_id": 3,
+            "id": 14,
+            "updated_at": "2019-01-21T13:32:46.460Z"
+        }
+    ],
+    "my_modules": [
+        {
+            "my_module": {
+                "archived": true,
+                "archived_by_id": 1,
+                "archived_on": "2019-01-21T13:32:46.000Z",
+                "completed_on": null,
+                "created_at": "2019-01-17T09:42:11.511Z",
+                "created_by_id": 1,
+                "description": null,
+                "due_date": "2019-01-28T12:44:56.555Z",
+                "experiment_id": 3,
+                "id": 9,
+                "last_modified_by_id": 1,
+                "my_module_group_id": null,
+                "name": "Data analysis - Pfaffl method",
+                "nr_of_assigned_samples": 0,
+                "restored_by_id": 1,
+                "restored_on": "2019-01-21T13:31:37.000Z",
+                "state": "uncompleted",
+                "updated_at": "2019-01-21T13:32:46.278Z",
+                "workflow_order": -1,
+                "x": 64,
+                "y": 46
+            },
+            "my_module_repository_rows": [],
+            "my_module_tags": [],
+            "outputs": [],
+            "protocols": [
+                {
+                    "protocol": {
+                        "added_by_id": null,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "authors": null,
+                        "created_at": "2019-01-21T12:44:56.564Z",
+                        "description": null,
+                        "id": 9,
+                        "my_module_id": 9,
+                        "name": null,
+                        "nr_of_linked_children": 0,
+                        "parent_id": null,
+                        "parent_updated_at": null,
+                        "protocol_type": "unlinked",
+                        "published_on": null,
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T13:31:55.946Z"
+                    },
+                    "protocol_protocol_keywords": [],
+                    "steps": [
+                        {
+                            "assets": [],
+                            "checklists": [],
+                            "step": {
+                                "completed": false,
+                                "completed_on": null,
+                                "created_at": "2019-01-21T13:31:55.921Z",
+                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">",
+                                "id": 21,
+                                "last_modified_by_id": 1,
+                                "name": "Temp step",
+                                "position": 0,
+                                "protocol_id": 9,
+                                "updated_at": "2019-01-21T13:31:55.921Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [],
+                            "step_comments": [],
+                            "step_tables": [],
+                            "tables": []
+                        }
+                    ]
+                }
+            ],
+            "results": [],
+            "task_comments": [],
+            "user_my_modules": [
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-17T09:42:54.874Z",
+                    "id": 9,
+                    "my_module_id": 9,
+                    "updated_at": "2019-01-21T12:44:56.591Z",
+                    "user_id": 1
+                }
+            ]
+        },
+        {
+            "my_module": {
+                "archived": false,
+                "archived_by_id": null,
+                "archived_on": null,
+                "completed_on": null,
+                "created_at": "2019-01-21T13:01:34.508Z",
+                "created_by_id": 1,
+                "description": null,
+                "due_date": null,
+                "experiment_id": 3,
+                "id": 12,
+                "last_modified_by_id": 1,
+                "my_module_group_id": null,
+                "name": "Lonely task",
+                "nr_of_assigned_samples": 0,
+                "restored_by_id": null,
+                "restored_on": null,
+                "state": "uncompleted",
+                "updated_at": "2019-01-21T13:28:43.805Z",
+                "workflow_order": -1,
+                "x": 64,
+                "y": 46
+            },
+            "my_module_repository_rows": [],
+            "my_module_tags": [],
+            "outputs": [],
+            "protocols": [
+                {
+                    "protocol": {
+                        "added_by_id": null,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "authors": null,
+                        "created_at": "2019-01-21T13:01:34.544Z",
+                        "description": null,
+                        "id": 12,
+                        "my_module_id": 12,
+                        "name": null,
+                        "nr_of_linked_children": 0,
+                        "parent_id": null,
+                        "parent_updated_at": null,
+                        "protocol_type": "unlinked",
+                        "published_on": null,
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T13:04:30.641Z"
+                    },
+                    "protocol_protocol_keywords": [],
+                    "steps": [
+                        {
+                            "assets": [],
+                            "checklists": [
+                                {
+                                    "checklist": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "created_by_id": null,
+                                        "id": 2,
+                                        "last_modified_by_id": null,
+                                        "name": "Guide",
+                                        "step_id": 18,
+                                        "updated_at": "2019-01-21T13:04:30.562Z"
+                                    },
+                                    "checklist_items": [
+                                        {
+                                            "checked": false,
+                                            "checklist_id": 2,
+                                            "created_at": "2019-01-21T13:04:30.565Z",
+                                            "created_by_id": null,
+                                            "id": 8,
+                                            "last_modified_by_id": null,
+                                            "position": 0,
+                                            "text": "Wolf",
+                                            "updated_at": "2019-01-21T13:04:30.565Z"
+                                        },
+                                        {
+                                            "checked": true,
+                                            "checklist_id": 2,
+                                            "created_at": "2019-01-21T13:04:30.568Z",
+                                            "created_by_id": null,
+                                            "id": 9,
+                                            "last_modified_by_id": null,
+                                            "position": 1,
+                                            "text": "Cat",
+                                            "updated_at": "2019-01-21T13:04:32.708Z"
+                                        },
+                                        {
+                                            "checked": false,
+                                            "checklist_id": 2,
+                                            "created_at": "2019-01-21T13:04:30.570Z",
+                                            "created_by_id": null,
+                                            "id": 10,
+                                            "last_modified_by_id": null,
+                                            "position": 2,
+                                            "text": "Bull",
+                                            "updated_at": "2019-01-21T13:04:30.570Z"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "step": {
+                                "completed": false,
+                                "completed_on": null,
+                                "created_at": "2019-01-21T13:04:30.558Z",
+                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">",
+                                "id": 18,
+                                "last_modified_by_id": 1,
+                                "name": "Lonelier step",
+                                "position": 0,
+                                "protocol_id": 12,
+                                "updated_at": "2019-01-21T13:04:30.564Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [],
+                            "step_comments": [],
+                            "step_tables": [],
+                            "tables": []
+                        }
+                    ]
+                }
+            ],
+            "results": [],
+            "task_comments": [],
+            "user_my_modules": []
+        },
+        {
+            "my_module": {
+                "archived": false,
+                "archived_by_id": null,
+                "archived_on": null,
+                "completed_on": null,
+                "created_at": "2019-01-21T13:01:34.493Z",
+                "created_by_id": 1,
+                "description": null,
+                "due_date": null,
+                "experiment_id": 3,
+                "id": 11,
+                "last_modified_by_id": 1,
+                "my_module_group_id": 13,
+                "name": "Workflow 2 - task 2",
+                "nr_of_assigned_samples": 0,
+                "restored_by_id": null,
+                "restored_on": null,
+                "state": "uncompleted",
+                "updated_at": "2019-01-21T13:32:46.452Z",
+                "workflow_order": 1,
+                "x": 0,
+                "y": 46
+            },
+            "my_module_repository_rows": [],
+            "my_module_tags": [],
+            "outputs": [],
+            "protocols": [
+                {
+                    "protocol": {
+                        "added_by_id": null,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "authors": null,
+                        "created_at": "2019-01-21T13:01:34.502Z",
+                        "description": null,
+                        "id": 11,
+                        "my_module_id": 11,
+                        "name": null,
+                        "nr_of_linked_children": 0,
+                        "parent_id": null,
+                        "parent_updated_at": null,
+                        "protocol_type": "unlinked",
+                        "published_on": null,
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T13:09:36.370Z"
+                    },
+                    "protocol_protocol_keywords": [],
+                    "steps": [
+                        {
+                            "assets": [
+                                {
+                                    "created_at": "2019-01-21T13:09:35.615Z",
+                                    "created_by_id": 1,
+                                    "estimated_size": 17799,
+                                    "file_content_type": "image/png",
+                                    "file_file_name": "100gen_line_bending.png",
+                                    "file_file_size": 16181,
+                                    "file_present": true,
+                                    "file_processing": false,
+                                    "file_updated_at": "2019-01-21T13:10:05.392Z",
+                                    "id": 21,
+                                    "last_modified_by_id": null,
+                                    "lock": null,
+                                    "lock_ttl": null,
+                                    "team_id": 1,
+                                    "updated_at": "2019-01-21T13:10:06.290Z",
+                                    "version": 1
+                                }
+                            ],
+                            "checklists": [],
+                            "step": {
+                                "completed": false,
+                                "completed_on": null,
+                                "created_at": "2019-01-21T13:09:35.466Z",
+                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">",
+                                "id": 20,
+                                "last_modified_by_id": 1,
+                                "name": "Workflow 2 step",
+                                "position": 0,
+                                "protocol_id": 11,
+                                "updated_at": "2019-01-21T13:10:06.292Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [
+                                {
+                                    "asset_id": 21,
+                                    "id": 9,
+                                    "step_id": 20
+                                }
+                            ],
+                            "step_comments": [],
+                            "step_tables": [],
+                            "tables": []
+                        }
+                    ]
+                }
+            ],
+            "results": [],
+            "task_comments": [],
+            "user_my_modules": []
+        },
+        {
+            "my_module": {
+                "archived": false,
+                "archived_by_id": null,
+                "archived_on": null,
+                "completed_on": null,
+                "created_at": "2019-01-21T13:01:34.470Z",
+                "created_by_id": 1,
+                "description": null,
+                "due_date": null,
+                "experiment_id": 3,
+                "id": 10,
+                "last_modified_by_id": 1,
+                "my_module_group_id": 13,
+                "name": "Workflow 2 - task 1",
+                "nr_of_assigned_samples": 0,
+                "restored_by_id": null,
+                "restored_on": null,
+                "state": "uncompleted",
+                "updated_at": "2019-01-21T13:32:46.456Z",
+                "workflow_order": 0,
+                "x": 0,
+                "y": 29
+            },
+            "my_module_repository_rows": [],
+            "my_module_tags": [],
+            "outputs": [
+                {
+                    "id": 34,
+                    "input_id": 11,
+                    "output_id": 10
+                }
+            ],
+            "protocols": [
+                {
+                    "protocol": {
+                        "added_by_id": null,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "authors": null,
+                        "created_at": "2019-01-21T13:01:34.485Z",
+                        "description": null,
+                        "id": 10,
+                        "my_module_id": 10,
+                        "name": null,
+                        "nr_of_linked_children": 0,
+                        "parent_id": null,
+                        "parent_updated_at": null,
+                        "protocol_type": "unlinked",
+                        "published_on": null,
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T13:05:20.594Z"
+                    },
+                    "protocol_protocol_keywords": [],
+                    "steps": [
+                        {
+                            "assets": [],
+                            "checklists": [],
+                            "step": {
+                                "completed": false,
+                                "completed_on": null,
+                                "created_at": "2019-01-21T13:05:20.547Z",
+                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">",
+                                "id": 19,
+                                "last_modified_by_id": 1,
+                                "name": "USB step",
+                                "position": 0,
+                                "protocol_id": 10,
+                                "updated_at": "2019-01-21T13:05:36.010Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [],
+                            "step_comments": [
+                                {
+                                    "associated_id": 19,
+                                    "created_at": "2019-01-21T13:05:36.007Z",
+                                    "id": 10,
+                                    "last_modified_by_id": null,
+                                    "message": "Comment 12",
+                                    "updated_at": "2019-01-21T13:05:36.007Z",
+                                    "user_id": 1
+                                }
+                            ],
+                            "step_tables": [
+                                {
+                                    "id": 2,
+                                    "step_id": 19,
+                                    "table_id": 5
+                                }
+                            ],
+                            "tables": [
+                                {
+                                    "contents": "eyJkYXRhIjpbWyIxIixudWxsLG51bGwsbnVsbCxudWxsXSxbbnVsbCwiMiIs\nbnVsbCxudWxsLG51bGxdLFtudWxsLG51bGwsIjMiLG51bGwsbnVsbF0sW251\nbGwsbnVsbCxudWxsLCI0IixudWxsXSxbbnVsbCxudWxsLG51bGwsbnVsbCwi\nNSJdXX0=\n",
+                                    "created_at": "2019-01-21T13:05:20.550Z",
+                                    "created_by_id": 1,
+                                    "data_vector": "JzEnOjEgJzInOjcgJzMnOjEzICc0JzoxOSAnNSc6MjUgJ251bGwnOjIsMyw0\nLDUsNiw4LDksMTAsMTEsMTIsMTQsMTUsMTYsMTcsMTgsMjAsMjEsMjIsMjMs\nMjQ=\n",
+                                    "id": 5,
+                                    "last_modified_by_id": null,
+                                    "name": "USB table",
+                                    "team_id": 1,
+                                    "updated_at": "2019-01-21T13:05:20.550Z"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "results": [],
+            "task_comments": [],
+            "user_my_modules": []
+        },
+        {
+            "my_module": {
+                "archived": false,
+                "archived_by_id": null,
+                "archived_on": null,
+                "completed_on": null,
+                "created_at": "2019-01-19T07:51:02.803Z",
+                "created_by_id": 1,
+                "description": null,
+                "due_date": "2019-01-28T12:44:56.002Z",
+                "experiment_id": 3,
+                "id": 1,
+                "last_modified_by_id": null,
+                "my_module_group_id": 14,
+                "name": "Experiment design",
+                "nr_of_assigned_samples": 0,
+                "restored_by_id": null,
+                "restored_on": null,
+                "state": "uncompleted",
+                "updated_at": "2019-01-21T13:32:46.464Z",
+                "workflow_order": 2,
+                "x": 0,
+                "y": 0
+            },
+            "my_module_repository_rows": [],
+            "my_module_tags": [
+                {
+                    "created_by_id": null,
+                    "id": 1,
+                    "my_module_id": 1,
+                    "tag_id": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 32,
+                    "input_id": 4,
+                    "output_id": 1
+                }
+            ],
+            "protocols": [
+                {
+                    "protocol": {
+                        "added_by_id": null,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "authors": null,
+                        "created_at": "2019-01-21T12:44:56.065Z",
+                        "description": null,
+                        "id": 1,
+                        "my_module_id": 1,
+                        "name": null,
+                        "nr_of_linked_children": 0,
+                        "parent_id": null,
+                        "parent_updated_at": null,
+                        "protocol_type": "unlinked",
+                        "published_on": null,
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T12:44:56.065Z"
+                    },
+                    "protocol_protocol_keywords": [],
+                    "steps": [
+                        {
+                            "assets": [],
+                            "checklists": [],
+                            "step": {
+                                "completed": true,
+                                "completed_on": "2019-01-19T10:56:48.558Z",
+                                "created_at": "2019-01-19T08:52:33.490Z",
+                                "description": "Compare response of PVYNTN, cab4 and PR1 genes in mock/virus inoculated potatoes & in time",
+                                "id": 1,
+                                "last_modified_by_id": null,
+                                "name": "Gene expression",
+                                "position": 0,
+                                "protocol_id": 1,
+                                "updated_at": "2019-01-21T12:59:03.007Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [],
+                            "step_comments": [
+                                {
+                                    "associated_id": 1,
+                                    "created_at": "2019-01-21T12:59:03.005Z",
+                                    "id": 9,
+                                    "last_modified_by_id": null,
+                                    "message": "Very nice job!",
+                                    "updated_at": "2019-01-21T12:59:03.005Z",
+                                    "user_id": 1
+                                }
+                            ],
+                            "step_tables": [],
+                            "tables": []
+                        }
+                    ]
+                }
+            ],
+            "results": [
+                {
+                    "asset": null,
+                    "result": {
+                        "archived": false,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "created_at": "2019-01-20T00:57:52.635Z",
+                        "id": 1,
+                        "last_modified_by_id": null,
+                        "my_module_id": 1,
+                        "name": "Experimental design",
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "updated_at": "2019-01-21T12:44:58.101Z",
+                        "user_id": 1
+                    },
+                    "result_comments": [],
+                    "result_text": null,
+                    "table": {
+                        "contents": "eyJkYXRhIjpbWyIiLCIiLCIiLG51bGwsbnVsbF0sWyIiLCIiLCIiLG51bGws\nbnVsbF0sWyJncm91cC90aW1lIiwiMSBkcGkiLCI2IGRwaSIsIiIsIiJdLFsi\nUFZZTlROIiwiMSIsIjEiLCIiLCIiXSxbIm1vY2siLCIxIiwiMSIsIiIsIiJd\nLFtudWxsLG51bGwsbnVsbCxudWxsLG51bGxdXX0=\n",
+                        "created_at": "2019-01-21T12:44:58.086Z",
+                        "created_by_id": 1,
+                        "data_vector": "JzEnOjYsMTEsMTIsMTQsMTUgJzYnOjggJ2RwaSc6Nyw5ICdncm91cC90aW1l\nJzo1ICdtb2NrJzoxMyAnbnVsbCc6MSwyLDMsNCwxNiwxNywxOCwxOSwyMCAn\ncHZ5bnRuJzoxMA==\n",
+                        "id": 1,
+                        "last_modified_by_id": null,
+                        "name": "",
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T12:44:58.093Z"
+                    }
+                },
+                {
+                    "asset": {
+                        "created_at": "2019-01-21T12:45:29.138Z",
+                        "created_by_id": 1,
+                        "estimated_size": 232,
+                        "file_content_type": "text/plain",
+                        "file_file_name": "samples.txt",
+                        "file_file_size": 69,
+                        "file_present": true,
+                        "file_processing": false,
+                        "file_updated_at": "2019-01-21T12:45:28.889Z",
+                        "id": 1,
+                        "last_modified_by_id": 1,
+                        "lock": null,
+                        "lock_ttl": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T13:06:01.610Z",
+                        "version": 1
+                    },
+                    "result": {
+                        "archived": true,
+                        "archived_by_id": 1,
+                        "archived_on": "2019-01-21T13:15:54.000Z",
+                        "created_at": "2019-01-20T18:09:01.268Z",
+                        "id": 6,
+                        "last_modified_by_id": 1,
+                        "my_module_id": 1,
+                        "name": "sF",
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "updated_at": "2019-01-21T13:15:54.487Z",
+                        "user_id": 1
+                    },
+                    "result_comments": [],
+                    "result_text": null,
+                    "table": {}
+                }
+            ],
+            "task_comments": [
+                {
+                    "associated_id": 1,
+                    "created_at": "2019-01-20T01:27:40.727Z",
+                    "id": 2,
+                    "last_modified_by_id": null,
+                    "message": "We should have a meeting to discuss sampling parametrs soon.",
+                    "updated_at": "2019-01-21T12:44:57.607Z",
+                    "user_id": 1
+                },
+                {
+                    "associated_id": 1,
+                    "created_at": "2019-01-19T11:47:29.757Z",
+                    "id": 3,
+                    "last_modified_by_id": null,
+                    "message": "I agree.",
+                    "updated_at": "2019-01-21T12:44:57.620Z",
+                    "user_id": 1
+                }
+            ],
+            "user_my_modules": [
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-19T07:52:25.851Z",
+                    "id": 1,
+                    "my_module_id": 1,
+                    "updated_at": "2019-01-21T12:44:56.118Z",
+                    "user_id": 1
+                }
+            ]
+        },
+        {
+            "my_module": {
+                "archived": false,
+                "archived_by_id": null,
+                "archived_on": null,
+                "completed_on": null,
+                "created_at": "2019-01-17T08:25:30.434Z",
+                "created_by_id": 1,
+                "description": null,
+                "due_date": "2019-03-25T12:44:56.326Z",
+                "experiment_id": 3,
+                "id": 5,
+                "last_modified_by_id": null,
+                "my_module_group_id": 14,
+                "name": "Reverse transcription",
+                "nr_of_assigned_samples": 4,
+                "restored_by_id": null,
+                "restored_on": null,
+                "state": "uncompleted",
+                "updated_at": "2019-01-21T13:32:46.467Z",
+                "workflow_order": 4,
+                "x": 33,
+                "y": 16
+            },
+            "my_module_repository_rows": [
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.146Z",
+                    "id": 16,
+                    "my_module_id": 5,
+                    "repository_row_id": 1,
+                    "updated_at": "2019-01-21T12:44:57.146Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.169Z",
+                    "id": 17,
+                    "my_module_id": 5,
+                    "repository_row_id": 2,
+                    "updated_at": "2019-01-21T12:44:57.169Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.184Z",
+                    "id": 18,
+                    "my_module_id": 5,
+                    "repository_row_id": 3,
+                    "updated_at": "2019-01-21T12:44:57.184Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.201Z",
+                    "id": 19,
+                    "my_module_id": 5,
+                    "repository_row_id": 4,
+                    "updated_at": "2019-01-21T12:44:57.201Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.217Z",
+                    "id": 20,
+                    "my_module_id": 5,
+                    "repository_row_id": 5,
+                    "updated_at": "2019-01-21T12:44:57.217Z"
+                }
+            ],
+            "my_module_tags": [
+                {
+                    "created_by_id": null,
+                    "id": 5,
+                    "my_module_id": 5,
+                    "tag_id": 2
+                }
+            ],
+            "outputs": [],
+            "protocols": [
+                {
+                    "protocol": {
+                        "added_by_id": null,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "authors": null,
+                        "created_at": "2019-01-21T12:44:56.334Z",
+                        "description": null,
+                        "id": 5,
+                        "my_module_id": 5,
+                        "name": null,
+                        "nr_of_linked_children": 0,
+                        "parent_id": null,
+                        "parent_updated_at": null,
+                        "protocol_type": "unlinked",
+                        "published_on": null,
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T12:57:52.015Z"
+                    },
+                    "protocol_protocol_keywords": [],
+                    "steps": [
+                        {
+                            "assets": [],
+                            "checklists": [
+                                {
+                                    "checklist": {
+                                        "created_at": "2019-01-21T12:44:58.537Z",
+                                        "created_by_id": null,
+                                        "id": 1,
+                                        "last_modified_by_id": null,
+                                        "name": "Mastermix",
+                                        "step_id": 9,
+                                        "updated_at": "2019-01-21T12:44:58.537Z"
+                                    },
+                                    "checklist_items": [
+                                        {
+                                            "checked": true,
+                                            "checklist_id": 1,
+                                            "created_at": "2019-01-21T12:44:58.540Z",
+                                            "created_by_id": null,
+                                            "id": 1,
+                                            "last_modified_by_id": null,
+                                            "position": null,
+                                            "text": "RT buffer",
+                                            "updated_at": "2019-01-21T12:50:40.690Z"
+                                        },
+                                        {
+                                            "checked": true,
+                                            "checklist_id": 1,
+                                            "created_at": "2019-01-21T12:44:58.542Z",
+                                            "created_by_id": null,
+                                            "id": 2,
+                                            "last_modified_by_id": null,
+                                            "position": null,
+                                            "text": "dNTP mix",
+                                            "updated_at": "2019-01-21T12:50:41.287Z"
+                                        },
+                                        {
+                                            "checked": false,
+                                            "checklist_id": 1,
+                                            "created_at": "2019-01-21T12:44:58.543Z",
+                                            "created_by_id": null,
+                                            "id": 3,
+                                            "last_modified_by_id": null,
+                                            "position": null,
+                                            "text": "Random Primers",
+                                            "updated_at": "2019-01-21T12:44:58.543Z"
+                                        },
+                                        {
+                                            "checked": false,
+                                            "checklist_id": 1,
+                                            "created_at": "2019-01-21T12:44:58.545Z",
+                                            "created_by_id": null,
+                                            "id": 4,
+                                            "last_modified_by_id": null,
+                                            "position": null,
+                                            "text": "RNase inhibitor",
+                                            "updated_at": "2019-01-21T12:44:58.545Z"
+                                        },
+                                        {
+                                            "checked": false,
+                                            "checklist_id": 1,
+                                            "created_at": "2019-01-21T12:44:58.547Z",
+                                            "created_by_id": null,
+                                            "id": 5,
+                                            "last_modified_by_id": null,
+                                            "position": null,
+                                            "text": "Reverse transcriptase",
+                                            "updated_at": "2019-01-21T12:44:58.547Z"
+                                        },
+                                        {
+                                            "checked": false,
+                                            "checklist_id": 1,
+                                            "created_at": "2019-01-21T12:44:58.548Z",
+                                            "created_by_id": null,
+                                            "id": 6,
+                                            "last_modified_by_id": null,
+                                            "position": null,
+                                            "text": "Optional: Luciferase mRNA (denatured)",
+                                            "updated_at": "2019-01-21T12:44:58.548Z"
+                                        },
+                                        {
+                                            "checked": false,
+                                            "checklist_id": 1,
+                                            "created_at": "2019-01-21T12:44:58.550Z",
+                                            "created_by_id": null,
+                                            "id": 7,
+                                            "last_modified_by_id": null,
+                                            "position": null,
+                                            "text": "H2O to 12.5 ul",
+                                            "updated_at": "2019-01-21T12:44:58.550Z"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "step": {
+                                "completed": true,
+                                "completed_on": "2019-01-17T13:52:32.426Z",
+                                "created_at": "2019-01-17T13:15:20.691Z",
+                                "description": "High Capacity cDNA Reverse Transcription Kit (Applied Biosystems)",
+                                "id": 9,
+                                "last_modified_by_id": null,
+                                "name": "Prepare mastermix for RT",
+                                "position": 1,
+                                "protocol_id": 5,
+                                "updated_at": "2019-01-21T12:44:58.539Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [],
+                            "step_comments": [],
+                            "step_tables": [],
+                            "tables": []
+                        },
+                        {
+                            "assets": [],
+                            "checklists": [],
+                            "step": {
+                                "completed": false,
+                                "completed_on": null,
+                                "created_at": "2019-01-17T12:58:06.802Z",
+                                "description": "25\u00b0C for 10 min 37\u00b0C for 2 h",
+                                "id": 10,
+                                "last_modified_by_id": null,
+                                "name": "RT reaction",
+                                "position": 2,
+                                "protocol_id": 5,
+                                "updated_at": "2019-01-21T12:44:58.483Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [],
+                            "step_comments": [],
+                            "step_tables": [],
+                            "tables": []
+                        },
+                        {
+                            "assets": [],
+                            "checklists": [],
+                            "step": {
+                                "completed": true,
+                                "completed_on": "2019-01-17T17:37:06.427Z",
+                                "created_at": "2019-01-17T09:35:43.770Z",
+                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>1 ug of RNA denature at 80\u00b0C for 5 min --&gt; ice</p></body></html>",
+                                "id": 8,
+                                "last_modified_by_id": 1,
+                                "name": "RNA denaturation",
+                                "position": 0,
+                                "protocol_id": 5,
+                                "updated_at": "2019-01-21T12:57:51.929Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [],
+                            "step_comments": [],
+                            "step_tables": [
+                                {
+                                    "id": 1,
+                                    "step_id": 8,
+                                    "table_id": 4
+                                }
+                            ],
+                            "tables": [
+                                {
+                                    "contents": "eyJkYXRhIjpbWyIxMSIsIjIyIiwiMzMiLCI0NCIsIjU1Il0sW251bGwsbnVs\nbCxudWxsLG51bGwsbnVsbF0sW251bGwsbnVsbCxudWxsLG51bGwsbnVsbF0s\nW251bGwsbnVsbCxudWxsLG51bGwsbnVsbF0sW251bGwsbnVsbCxudWxsLG51\nbGwsIjY3OCJdXX0=\n",
+                                    "created_at": "2019-01-21T12:57:51.923Z",
+                                    "created_by_id": 1,
+                                    "data_vector": "JzExJzoxICcyMic6MiAnMzMnOjMgJzQ0Jzo0ICc1NSc6NSAnNjc4JzoyNSAn\nbnVsbCc6Niw3LDgsOSwxMCwxMSwxMiwxMywxNCwxNSwxNiwxNywxOCwxOSwy\nMCwyMSwyMiwyMywyNA==\n",
+                                    "id": 4,
+                                    "last_modified_by_id": null,
+                                    "name": "",
+                                    "team_id": 1,
+                                    "updated_at": "2019-01-21T12:57:51.923Z"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "results": [],
+            "task_comments": [
+                {
+                    "associated_id": 5,
+                    "created_at": "2019-01-17T18:29:15.198Z",
+                    "id": 6,
+                    "last_modified_by_id": null,
+                    "message": "Please show Steve the RT procedure.",
+                    "updated_at": "2019-01-21T12:44:57.665Z",
+                    "user_id": 1
+                }
+            ],
+            "user_my_modules": [
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-17T08:27:25.032Z",
+                    "id": 5,
+                    "my_module_id": 5,
+                    "updated_at": "2019-01-21T12:44:56.361Z",
+                    "user_id": 1
+                }
+            ]
+        },
+        {
+            "my_module": {
+                "archived": false,
+                "archived_by_id": null,
+                "archived_on": null,
+                "completed_on": null,
+                "created_at": "2019-01-18T16:17:06.765Z",
+                "created_by_id": 1,
+                "description": null,
+                "due_date": "2019-03-11T12:44:56.265Z",
+                "experiment_id": 3,
+                "id": 4,
+                "last_modified_by_id": null,
+                "my_module_group_id": 14,
+                "name": "RNA quality & quantity - BIOANALYSER",
+                "nr_of_assigned_samples": 4,
+                "restored_by_id": null,
+                "restored_on": null,
+                "state": "uncompleted",
+                "updated_at": "2019-01-21T13:32:46.471Z",
+                "workflow_order": 3,
+                "x": 33,
+                "y": 0
+            },
+            "my_module_repository_rows": [
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.027Z",
+                    "id": 11,
+                    "my_module_id": 4,
+                    "repository_row_id": 1,
+                    "updated_at": "2019-01-21T12:44:57.027Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.047Z",
+                    "id": 12,
+                    "my_module_id": 4,
+                    "repository_row_id": 2,
+                    "updated_at": "2019-01-21T12:44:57.047Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.062Z",
+                    "id": 13,
+                    "my_module_id": 4,
+                    "repository_row_id": 3,
+                    "updated_at": "2019-01-21T12:44:57.062Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.078Z",
+                    "id": 14,
+                    "my_module_id": 4,
+                    "repository_row_id": 4,
+                    "updated_at": "2019-01-21T12:44:57.078Z"
+                },
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-21T12:44:57.093Z",
+                    "id": 15,
+                    "my_module_id": 4,
+                    "repository_row_id": 5,
+                    "updated_at": "2019-01-21T12:44:57.093Z"
+                }
+            ],
+            "my_module_tags": [
+                {
+                    "created_by_id": null,
+                    "id": 4,
+                    "my_module_id": 4,
+                    "tag_id": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 33,
+                    "input_id": 5,
+                    "output_id": 4
+                }
+            ],
+            "protocols": [
+                {
+                    "protocol": {
+                        "added_by_id": null,
+                        "archived_by_id": null,
+                        "archived_on": null,
+                        "authors": null,
+                        "created_at": "2019-01-21T12:44:56.272Z",
+                        "description": null,
+                        "id": 4,
+                        "my_module_id": 4,
+                        "name": null,
+                        "nr_of_linked_children": 0,
+                        "parent_id": null,
+                        "parent_updated_at": null,
+                        "protocol_type": "unlinked",
+                        "published_on": null,
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T12:44:56.272Z"
+                    },
+                    "protocol_protocol_keywords": [],
+                    "steps": [
+                        {
+                            "assets": [
+                                {
+                                    "created_at": "2019-01-21T12:45:32.296Z",
+                                    "created_by_id": 1,
+                                    "estimated_size": 1129370,
+                                    "file_content_type": "application/pdf",
+                                    "file_file_name": "G2938-90034_KitRNA6000Nano_ebook.pdf",
+                                    "file_file_size": 974068,
+                                    "file_present": true,
+                                    "file_processing": false,
+                                    "file_updated_at": "2019-01-21T12:45:32.237Z",
+                                    "id": 8,
+                                    "last_modified_by_id": 1,
+                                    "lock": null,
+                                    "lock_ttl": null,
+                                    "team_id": 1,
+                                    "updated_at": "2019-01-21T13:06:04.590Z",
+                                    "version": 1
+                                }
+                            ],
+                            "checklists": [],
+                            "step": {
+                                "completed": false,
+                                "completed_on": null,
+                                "created_at": "2019-01-18T16:27:28.209Z",
+                                "description": null,
+                                "id": 7,
+                                "last_modified_by_id": null,
+                                "name": "Use Nano chip for testing RNA integrity",
+                                "position": 0,
+                                "protocol_id": 4,
+                                "updated_at": "2019-01-21T13:06:04.592Z",
+                                "user_id": 1
+                            },
+                            "step_assets": [
+                                {
+                                    "asset_id": 8,
+                                    "id": 3,
+                                    "step_id": 7
+                                }
+                            ],
+                            "step_comments": [],
+                            "step_tables": [],
+                            "tables": []
+                        }
+                    ]
+                }
+            ],
+            "results": [
+                {
+                    "asset": {
+                        "created_at": "2019-01-21T12:45:32.847Z",
+                        "created_by_id": 1,
+                        "estimated_size": 46131,
+                        "file_content_type": "image/jpeg",
+                        "file_file_name": "Bioanalyser_result.JPG",
+                        "file_file_size": 41938,
+                        "file_present": true,
+                        "file_processing": false,
+                        "file_updated_at": "2019-01-21T12:45:43.655Z",
+                        "id": 9,
+                        "last_modified_by_id": 1,
+                        "lock": null,
+                        "lock_ttl": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T12:45:44.269Z",
+                        "version": 1
+                    },
+                    "result": {
+                        "archived": true,
+                        "archived_by_id": 1,
+                        "archived_on": "2019-01-21T13:16:01.000Z",
+                        "created_at": "2019-01-20T13:55:26.927Z",
+                        "id": 11,
+                        "last_modified_by_id": 1,
+                        "my_module_id": 4,
+                        "name": "Result of RNA integrity",
+                        "restored_by_id": null,
+                        "restored_on": null,
+                        "updated_at": "2019-01-21T13:16:01.326Z",
+                        "user_id": 1
+                    },
+                    "result_comments": [],
+                    "result_text": null,
+                    "table": {}
+                }
+            ],
+            "task_comments": [],
+            "user_my_modules": [
+                {
+                    "assigned_by_id": 1,
+                    "created_at": "2019-01-18T16:18:49.946Z",
+                    "id": 4,
+                    "my_module_id": 4,
+                    "updated_at": "2019-01-21T12:44:56.301Z",
+                    "user_id": 1
+                }
+            ]
+        }
+    ]
+}
