@@ -35,6 +35,8 @@ class Team < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
 
+  after_create :generate_intro_demo
+
   def default_view_state
     { 'projects' =>
       { 'cards' => { 'sort' => 'new' },
@@ -303,5 +305,16 @@ class Team < ApplicationRecord
 
   def protocol_keywords_list
     ProtocolKeyword.where(team: self).pluck(:name)
+  end
+
+  private
+
+  include FirstTimeDataGenerator
+
+  def generate_intro_demo
+    user = User.find(created_by_id)
+    if user.created_teams.order(:created_at).first == self
+      seed_demo_data(user, self)
+    end
   end
 end
