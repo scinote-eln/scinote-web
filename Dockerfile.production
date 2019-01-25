@@ -6,6 +6,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   apt-get update -qq && \
   apt-get install -y \
   libjemalloc1 \
+  libssl1.0-dev \
   nodejs \
   groff-base \
   awscli \
