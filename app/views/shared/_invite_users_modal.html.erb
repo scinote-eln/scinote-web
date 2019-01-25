@@ -99,6 +99,16 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
               </div>
             <% end %>
           <% end %>
+          <% if ENV['ENABLE_RECAPTCHA'] %>
+            <div id="recaptcha-service" class="g-recaptcha"
+                 data-callback="recaptchaCallback"
+                 data-sitekey=<%= ENV['RECAPTCHA_SITE_KEY'] %>></div>
+            <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl=en"></script>
+            <input type="hidden" id="recaptcha-invite-modal" value="">
+            <div class="form-group has-error hidden" id="recaptcha-error-msg" >
+              <span class="has-error help-block"></span>
+            </div>
+          <% end %>
         </div>
         <div class="results-container" data-role="step-results" data-clear="true">
         </div>

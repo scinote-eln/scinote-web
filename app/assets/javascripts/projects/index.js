@@ -11,7 +11,7 @@
    I18n setupSidebarTree */
 
 //= require comments
-(function() {
+(function(global) {
   var newProjectModal = null;
   var newProjectModalForm = null;
   var newProjectModalBody = null;
@@ -203,7 +203,7 @@
   }
 
   // Initialize users editing modal remote loading.
-  function initUsersEditLink($el) {
+  global.initUsersEditLink = function($el) {
     $el.find('.manage-users-link')
       .on('ajax:before', function() {
         var projectId = $(this).closest('.panel-default').attr('id');
@@ -771,4 +771,4 @@
   initProjectsViewModeSwitch();
   initSorting();
   loadCardsView();
-}());
+}(window));

@@ -66,6 +66,8 @@ module Paperclip
   # Checks file for spoofing
   class MediaTypeSpoofDetector
     def spoofed?
+      return false if ENV['DISABLE_SPOOF_CHECKING']
+
       if has_name? && has_extension? && (media_type_mismatch? ||
         mapping_override_mismatch?)
         Paperclip.log("Content Type Spoof: Filename #{File.basename(@name)} "\
@@ -121,8 +123,8 @@ module Paperclip
         end
       end
       @type_from_file_command
-    rescue Cocaine::CommandLineError
-      ''
+    rescue StandardError => e
+      puts e
     end
 
     # Determine file media type from it's content (file and mimetype command)

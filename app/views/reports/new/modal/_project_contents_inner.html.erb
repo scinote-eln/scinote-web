@@ -19,7 +19,7 @@
 
                 <% experiment.my_module_groups.each do |my_module_group| %>
                   <% next unless my_module_group.my_modules.is_archived(false).exists? %>
-                  <% my_module_group.ordered_modules.is_archived(false).each do |my_module| %>
+                  <% my_module_group.my_modules.workflow_ordered.is_archived(false).each do |my_module| %>
                     <li>
                       <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
                     </li>
@@ -27,13 +27,10 @@
                 <% end %>
 
                 <!-- Tasks without groups -->
-                <% modules_without_group = experiment.modules_without_group %>
-                <% if modules_without_group.exists? %>
-                  <% modules_without_group.each do |my_module| %>
-                    <li>
-                      <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
-                    </li>
-                  <% end %>
+                <% experiment.my_modules.without_group.each do |my_module| %>
+                  <li>
+                    <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
+                  </li>
                 <% end %>
 
               </ul>

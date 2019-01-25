@@ -98,12 +98,6 @@ class Experiment < ApplicationRecord
     end
   end
 
-  def modules_without_group
-    MyModule.where(experiment_id: id)
-            .where(my_module_group: nil)
-            .where(archived: false)
-  end
-
   def active_module_groups
     my_module_groups.joins(:my_modules)
                     .where('my_modules.archived = ?', false)
@@ -227,125 +221,8 @@ class Experiment < ApplicationRecord
     true
   end
 
-  # This method generate the workflow image and saves it as
-  # experiment attachment
   def generate_workflow_img
-    require 'graphviz'
-
-    graph = GraphViz.new(:G,
-                         type: :digraph,
-                         use: :neato)
-
-    graph[:size] = '4,4'
-    graph.node[color: Constants::COLOR_ALTO,
-               style: :filled,
-               fontcolor: Constants::COLOR_EMPEROR,
-               shape: 'circle',
-               fontname: 'Arial',
-               fontsize: '16.0']
-
-    graph.edge[color: Constants::COLOR_ALTO]
-
-    label = ''
-    subg = {}
-
-    # Draw orphan modules
-    if modules_without_group
-      modules_without_group.each do |my_module|
-        graph
-          .subgraph(rank: 'same')
-          .add_nodes("Orphan-#{my_module.id}",
-                     label: label,
-                     pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
-      end
-    end
-
-    # Draw grouped modules
-    if my_module_groups.many?
-      my_module_groups.each_with_index do |group, gindex|
-        subgraph_name = "cluster-#{gindex}"
-        subg[subgraph_name] = graph.subgraph(rank: 'same')
-        group.ordered_modules.each_with_index do |my_module, index|
-          if my_module.outputs.any?
-            parent = subg[subgraph_name]
-                     .add_nodes("#{subgraph_name}-#{index}",
-                                label: label,
-                                pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
-
-            my_module.outputs.each_with_index do |output, i|
-              child_mod = MyModule.find_by_id(output.input_id)
-              child_node = subg[subgraph_name]
-                           .add_nodes("#{subgraph_name}-O#{child_mod.id}-#{i}",
-                                      label: label,
-                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
-
-              subg[subgraph_name].add_edges(parent, child_node)
-            end
-          elsif my_module.inputs.any?
-            parent = subg[subgraph_name]
-                     .add_nodes("#{subgraph_name}-#{index}",
-                                label: label,
-                                pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
-
-            my_module.inputs.each_with_index do |input, i|
-              child_mod = MyModule.find_by_id(input.output_id)
-              child_node = subg[subgraph_name]
-                           .add_nodes("#{subgraph_name}-I#{child_mod.id}-#{i}",
-                                      label: label,
-                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
-
-              subg[subgraph_name].add_edges(child_node, parent)
-            end
-          end
-        end
-      end
-    else
-      my_module_groups.each do |group|
-        group.ordered_modules.each_with_index do |my_module, index|
-          if my_module.outputs.any?
-            parent = graph.add_nodes("N-#{index}",
-                                     label: label,
-                                     pos: "#{my_module.x / 10},-#{ my_module.y / 10}!")
-
-            my_module.outputs.each_with_index do |output, i|
-              child_mod = MyModule.find_by_id(output.input_id)
-              child_node = graph
-                           .add_nodes("N-O#{child_mod.id}-#{i}",
-                                      label: label,
-                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
-              graph.add_edges(parent, child_node)
-            end
-          elsif my_module.inputs.any?
-            parent = graph.add_nodes("N-#{index}",
-                                     label: label,
-                                     pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
-            my_module.inputs.each_with_index do |input, i|
-              child_mod = MyModule.find_by_id(input.output_id)
-              child_node = graph
-                           .add_nodes("N-I#{child_mod.id}-#{i}",
-                                      label: label,
-                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
-              graph.add_edges(child_node, parent)
-            end
-          end
-        end
-      end
-    end
-
-    file_location = Tempfile.open(['wimg', '.png'],
-                                  Rails.root.join('tmp'))
-
-    graph.output(png: file_location.path)
-
-    begin
-      file = File.open(file_location)
-      self.workflowimg = file
-      file.close
-      save
-      touch(:workflowimg_updated_at)
-    rescue => ex
-      logger.error ex.message
-    end
+    Experiments::GenerateWorkflowImageService.call(experiment_id: id)
   end
 
   # Clone this experiment to given project
@@ -371,7 +248,7 @@ class Experiment < ApplicationRecord
     end
 
     # Copy modules without group
-    clone.my_modules << modules_without_group.map do |m|
+    clone.my_modules << my_modules.without_group.map do |m|
       m.deep_clone_to_experiment(current_user, clone)
     end
     clone.save

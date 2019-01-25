@@ -24,18 +24,11 @@ Feature: Team settings
     And I should see "BioSistemika Process Company" on "#team-name" element
 
   @javascript
-  Scenario: Successfully adds team description
-    Given I'm on "BioSistemika Process" team settings page
-    Then I click on ".description-label" element
-    And I fill in "I was on Triglav one summer." in "team_description" textarea field
-    Then I click "Save" button
-    And I should see "I was on Triglav one summer." on ".description-label" element
-
-  @javascript
   Scenario: Successfully changes team description
     Given I'm on "BioSistemika Process" team settings page
     Then I click on ".description-label" element
-    And I change "Lorem ipsum dolor sit amet, consectetuer adipiscing eli." with "I was on Triglav one summer." in "team_description" textarea field
+    Then I should not see "I was on Triglav one summer." on ".description-label" element
+    And I fill in "I was on Triglav one summer." in "team_description" textarea field
     Then I click "Save" button
     And I should see "I was on Triglav one summer." on ".description-label" element
 

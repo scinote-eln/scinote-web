@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Project, type: :model do
@@ -39,22 +41,30 @@ describe Project, type: :model do
     it { should have_many :report_elements }
   end
 
-  describe 'Should be a valid object' do
-    let(:user) { create :user }
-    let(:team) { create :team, created_by: user }
-    it { should validate_presence_of :visibility }
-    it { should validate_presence_of :team }
-    it do
-      should validate_length_of(:name).is_at_least(Constants::NAME_MIN_LENGTH)
-        .is_at_most(Constants::NAME_MAX_LENGTH)
+  describe 'Validations' do
+    describe '#visibility' do
+      it { should validate_presence_of :visibility }
     end
 
-    it 'should have a unique name scoped to team' do
-      create :project, created_by: user, last_modified_by: user, team: team
-      project_two = build :project, created_by: user,
-                                    last_modified_by: user,
-                                    team: team
-      expect(project_two).to_not be_valid
+    describe '#team' do
+      it { should validate_presence_of :team }
+    end
+
+    describe '#name' do
+      it 'should be at least 2 long and max 255 long' do
+        should validate_length_of(:name)
+          .is_at_least(Constants::NAME_MIN_LENGTH)
+          .is_at_most(Constants::NAME_MAX_LENGTH)
+      end
+
+      it 'should be uniq per project and team' do
+        first_project = create :project
+        second_project = build :project,
+                               name: first_project.name,
+                               team: first_project.team
+
+        expect(second_project).to_not be_valid
+      end
     end
   end
 end

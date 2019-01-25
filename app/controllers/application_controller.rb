@@ -36,6 +36,16 @@ class ApplicationController < ActionController::Base
     Team.find_by_id(current_user.current_team_id)
   end
 
+  def to_user_date_format
+    ts = I18n.l(Time.parse(params[:timestamp]),
+                format: params[:ts_format].to_sym)
+    respond_to do |format|
+      format.json do
+        render json: { ts: ts }, status: :ok
+      end
+    end
+  end
+
   protected
 
   def render_403(style = 'danger')

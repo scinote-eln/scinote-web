@@ -53,16 +53,14 @@
               <label><%= t('protocols.import_export.import_modal.created_at_label') %></label>
 
               <% display_created_at=Time.at(not_null(@json_object['created_on']).to_i) %>
-              <%= f.text_field :created_at, :value => display_created_at.to_s,
+              <%= f.text_field :created_at, :value => I18n.l(display_created_at, format: :full),
               readonly: true, class: "form-control" %>
             </div>
             <div class="col-xs-4">
               <label><%= t('protocols.import_export.import_modal.updated_at_label') %></label>
 
               <% display_last_modified=eval_last_modified(@json_object['steps']) %>
-              <%= f.text_field :last_modified, :value =>
-              display_last_modified.to_s,readonly: true, class:
-              "form-control" %>
+              <%= f.text_field :last_modified, :value => display_last_modified, readonly: true, class: "form-control" %>
             </div>
           </div>
         </div>
