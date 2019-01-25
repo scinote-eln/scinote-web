@@ -229,8 +229,7 @@ class TeamsController < ApplicationController
 
   def export_projects
     unless export_proj_requests_exceeded?
-      current_user.export_vars['num_of_export_all_last_24_hours'] += 1
-      current_user.save
+      current_user.increase_daily_exports_counter!
 
       generate_export_projects_zip
 
