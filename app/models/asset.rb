@@ -73,7 +73,7 @@ class Asset < ApplicationRecord
   before_destroy :paperclip_delete, prepend: true
   after_save { result&.touch; step&.touch }
 
-  attr_accessor :file_content, :file_info, :preview_cached
+  attr_accessor :file_content, :file_info, :preview_cached, :in_template
 
   def file_empty(name, size)
     file_ext = name.split(".").last
@@ -223,16 +223,17 @@ class Asset < ApplicationRecord
       # The extract_asset_text also includes
       # estimated size calculation
       Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
-           .extract_asset_text(id)
+           .extract_asset_text(id, in_template)
     else
       # Update asset's estimated size immediately
       update_estimated_size(team)
     end
   end
 
-  def self.extract_asset_text(asset_id)
+  def self.extract_asset_text(asset_id, in_template = false)
     asset = find_by_id(asset_id)
     return unless asset.present? && asset.file.present?
+    asset.in_template = in_template
 
     begin
       file_path = asset.file.path
@@ -293,12 +294,10 @@ class Asset < ApplicationRecord
   # If team is provided, its space_taken
   # is updated as well
   def update_estimated_size(team = nil)
-    if file_file_size.blank?
-      return
-    end
+    return if file_file_size.blank? || in_template
 
     es = file_file_size
-    if asset_text_datum.present? and asset_text_datum.persisted? then
+    if asset_text_datum.present? && asset_text_datum.persisted?
       asset_text_datum.reload
       es += get_octet_length_record(asset_text_datum, :data)
       es += get_octet_length_record(asset_text_datum, :data_vector)

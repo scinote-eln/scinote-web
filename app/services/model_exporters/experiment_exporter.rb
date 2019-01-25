@@ -9,9 +9,10 @@ module ModelExporters
       @assets_to_copy = []
     end
 
-    def export_to_dir
+    def export_template_to_dir
       @asset_counter = 0
       @experiment.transaction(isolation: :serializable) do
+        @experiment.uuid ||= SecureRandom.uuid
         @dir_to_export = FileUtils.mkdir_p(
           File.join("tmp/experiment_#{@experiment.id}" \
                     "_export_#{Time.now.to_i}")
@@ -19,11 +20,12 @@ module ModelExporters
 
         # Writing JSON file with experiment structure
         File.write(
-          File.join(@dir_to_export, 'experiment_export.json'),
+          File.join(@dir_to_export, 'experiment.json'),
           experiment[0].to_json
         )
         # Copying assets
-        copy_files(@assets_to_copy, :file, File.join(@dir_to_export, 'assets')) do
+        assets_dir = File.join(@dir_to_export, 'assets')
+        copy_files(@assets_to_copy, :file, assets_dir) do
           @asset_counter += 1
         end
         puts "Exported assets: #{@asset_counter}"

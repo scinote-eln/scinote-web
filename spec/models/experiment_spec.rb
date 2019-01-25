@@ -23,6 +23,7 @@ describe Experiment, type: :model do
     it { should have_db_column :workflowimg_content_type }
     it { should have_db_column :workflowimg_file_size }
     it { should have_db_column :workflowimg_updated_at }
+    it { should have_db_column :uuid }
   end
 
   describe 'Relations' do
@@ -62,6 +63,22 @@ describe Experiment, type: :model do
                                            project: project,
                                            created_by: project.created_by,
                                            last_modified_by: project.created_by
+      expect(new_exp).to_not be_valid
+    end
+
+    it 'should have uniq uuid scoped on project' do
+      uuid = SecureRandom.uuid
+      puts uuid
+      create :experiment, name: 'experiment',
+                          project: project,
+                          created_by: project.created_by,
+                          last_modified_by: project.created_by,
+                          uuid: uuid
+      new_exp = build_stubbed :experiment, name: 'new experiment',
+                                           project: project,
+                                           created_by: project.created_by,
+                                           last_modified_by: project.created_by,
+                                           uuid: uuid
       expect(new_exp).to_not be_valid
     end
   end

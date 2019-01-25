@@ -21,6 +21,7 @@ describe Project, type: :model do
     it { should have_db_column :restored_by_id }
     it { should have_db_column :restored_on }
     it { should have_db_column :experiments_order }
+    it { should have_db_column :template }
   end
 
   describe 'Relations' do

@@ -109,21 +109,30 @@ namespace :data do
   end
 
   desc 'Export experiment to directory'
-  task :experiment_export, [:experiment_id] => [:environment] do |_, args|
+  task :experiment_template_export, [:experiment_id] => [:environment] do |_, args|
     Rails.logger.info(
-      "Exporting experiment with ID:#{args[:experiment_id]} to directory in tmp"
+      "Exporting experiment template with ID:#{args[:experiment_id]} to directory in tmp"
     )
     ee = ModelExporters::ExperimentExporter.new(args[:experiment_id])
-    ee&.export_to_dir
+    ee&.export_template_to_dir
   end
 
   desc 'Import experiment from directory to given project'
-  task :experiment_import, %i(dir_path project_id user_id) => [:environment] do |_, args|
+  task :experiment_template_import, %i(dir_path project_id user_id) => [:environment] do |_, args|
     Rails.logger.info(
       "Importing experiment from directory #{args[:dir_path]}"
     )
-    TeamImporter.new.import_template_experiment_from_dir(args[:dir_path],
+    TeamImporter.new.import_experiment_template_from_dir(args[:dir_path],
                                                          args[:project_id],
                                                          args[:user_id])
+  end
+
+  desc 'Update all templates projects'
+  task update_all_templates: :environment do
+    Rails.logger.info('Templates, syncing all templates projects')
+    updated, total = TemplatesService.new.update_all_projects
+    Rails.logger.info(
+      "Templates, total number of updated projects: #{updated} out of #{total}}"
+    )
   end
 end
