@@ -37,6 +37,8 @@ class Team < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
 
+  attr_accessor :without_templates
+
   def default_view_state
     { 'projects' =>
       { 'cards' => { 'sort' => 'new' },
@@ -310,6 +312,7 @@ class Team < ApplicationRecord
   private
 
   def generate_template_project
+    return if without_templates
     user = created_by
     return unless user
     Project.transaction do

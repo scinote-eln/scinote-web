@@ -4,5 +4,6 @@ FactoryBot.define do
     name 'My team'
     description 'Lorem ipsum dolor sit amet, consectetuer adipiscing eli.'
     space_taken 1048576
+    without_templates true
   end
 end
