@@ -5,7 +5,7 @@
         "archived_on": null,
         "created_at": "2019-01-21T13:27:53.342Z",
         "created_by_id": 1,
-        "description": "",
+        "description": "My description",
         "id": 3,
         "last_modified_by_id": 1,
         "name": "Experiment export",
