@@ -187,7 +187,9 @@ describe User, type: :model do
   describe '#last_activities' do
     let!(:user) { create :user }
     let!(:project) { create :project }
-    let!(:user_projects) { create :user_project, project: project, user: user }
+    let!(:user_projects) do
+      create :user_project, :viewer, project: project, user: user
+    end
     let!(:activity_one) { create :activity, user: user, project: project }
     let!(:activity_two) { create :activity, user: user, project: project }
 
