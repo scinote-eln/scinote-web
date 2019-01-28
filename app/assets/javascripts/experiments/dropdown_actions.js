@@ -44,6 +44,7 @@
     // click on buttonClass summons modalName dialog
     modals = {
       '.edit-experiment': '#edit-experiment-modal-',
+      '.clone-experiment': '#clone-experiment-modal-',
       '.move-experiment': '#move-experiment-modal-'
     };
 
@@ -112,7 +113,7 @@
   // Initialize no description edit link
   function initEditNoDescription(){
     var modal = "#edit-experiment-modal-";
-    $.each($(".experiment-no-description a"), function(){
+    $.each($(".experiment-no-description"), function(){
       var id = modal + $(this).data("id");
       initializeModal($(this), id);
     });
@@ -124,6 +125,9 @@
 
     // Bind modal to big-plus new experiment actions
     initializeModal('.big-plus', '#new-experiment-modal');
+
+    // Bind modal to new-exp-title action
+    initializeModal('.new-exp-title', '#new-experiment-modal');
 
     // Bind modals to all clone-experiment actions
     $.each($('.clone-experiment'), function() {

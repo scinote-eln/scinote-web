@@ -38,43 +38,45 @@
         <%= l(experiment.created_at, format: :full_date) %> - <%= l(experiment.updated_at, format: :full_date) %>
       </span>
 
-      <div data-hook="experiment-card-body">
+      <div data-hook="experiment-card-description">
         <% if experiment.description? %>
           <div class='experiment-description'>
             <%= custom_auto_link(experiment.description, team: current_team) %>
           </div>
         <% else %>
-          <span class='experiment-no-description'>
-            <% if can_manage_experiment?(experiment) %>
-              <%= link_to t('experiments.edit.add-description'),
-                          edit_project_experiment_url(@project, experiment),
-                          remote: true,
-                          data: { id: experiment.id } %>
-            <% else %>
-              <p><%= t('experiments.edit.no-description') %></p>
-            <% end %>
-          </span>
+          <% if can_manage_experiment?(experiment) %>
+            <%= link_to t('experiments.edit.add-description'),
+                        edit_project_experiment_url(@project, experiment),
+                        remote: true,
+                        data: { id: experiment.id },
+                        class: 'experiment-no-description' %>
+          <% else %>
+            <p class='experiment-no-description'><%= t('experiments.edit.no-description') %></p>
+          <% end %>
         <% end %>
       </div>
     </div>
 
     <div class="panel-body">
       <% if experiment.active_modules.length > 0 %>
-        <div class="workflowimg-container"
-             data-check-img="<%= updated_img_experiment_url(experiment) %>"
-             data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
-             data-timestamp="<%= experiment.updated_at %>" >
-        </div>
+        <%= link_to canvas_experiment_path(experiment) do %>
+          <div class="workflowimg-container"
+               data-check-img="<%= updated_img_experiment_url(experiment) %>"
+               data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
+               data-timestamp="<%= experiment.updated_at %>" >
+          </div>
+        <% end %>
       <% else %>
-        <div class="no-workflowimg">
-          <% if can_manage_experiment?(experiment) %>
-            <p><%= link_to( t('experiments.edit.add_task'),
-                            canvas_experiment_path(experiment,
-                                                   editMode: true)) %></p>
-          <% else %>
+        <% if can_manage_experiment?(experiment) %>
+          <%= link_to( t('experiments.edit.add_task'),
+                       canvas_experiment_path(experiment, editMode: true),
+                       class: 'no-workflowimg') %>
+        <% else %>
+          <div class="no-workflowimg">
             <p><%= t('experiments.edit.no_workflowimg') %></p>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
+
       <% end %>
 
     </div>
