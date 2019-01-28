@@ -13,7 +13,7 @@ class TemplatesService
   end
 
   def update_project(project)
-    return unless project.template == true
+    return unless project.template
     owner = project.user_projects
                    .where(role: 'owner')
                    .order(:created_at)

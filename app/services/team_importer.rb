@@ -156,7 +156,7 @@ class TeamImporter
     project = Project.find_by_id(project_id)
     experiment_json = JSON.parse(File.read("#{@import_dir}/experiment.json"))
 
-    # Handle situation when experimaent with same name already exists
+    # Handle situation when experiment with same name already exists
     exp_name = experiment_json.dig('experiment', 'name')
     if project.experiments.where(name: exp_name).present?
       experiment_names = project.experiments.map(&:name)

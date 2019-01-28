@@ -109,16 +109,19 @@ namespace :data do
   end
 
   desc 'Export experiment to directory'
-  task :experiment_template_export, [:experiment_id] => [:environment] do |_, args|
+  task :experiment_template_export,
+       [:experiment_id] => [:environment] do |_, args|
     Rails.logger.info(
-      "Exporting experiment template with ID:#{args[:experiment_id]} to directory in tmp"
+      "Exporting experiment template with ID:#{args[:experiment_id]} "\
+      "to directory in tmp"
     )
     ee = ModelExporters::ExperimentExporter.new(args[:experiment_id])
     ee&.export_template_to_dir
   end
 
   desc 'Import experiment from directory to given project'
-  task :experiment_template_import, %i(dir_path project_id user_id) => [:environment] do |_, args|
+  task :experiment_template_import,
+       %i(dir_path project_id user_id) => [:environment] do |_, args|
     Rails.logger.info(
       "Importing experiment from directory #{args[:dir_path]}"
     )
