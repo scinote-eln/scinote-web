@@ -56,7 +56,8 @@ class User < ApplicationRecord
 
   default_variables(
     export_vars: {
-      num_of_export_all_last_24_hours: 0
+      num_of_export_all_last_24_hours: 0,
+      last_export_timestamp: Date.today.to_time.to_i
     }
   )
 
@@ -503,6 +504,16 @@ class User < ApplicationRecord
       attr_name = name.gsub('_notification', '').to_sym
       notifications_settings[attr_name] = value
     end
+  end
+
+  def increase_daily_exports_counter!
+    if Time.at(export_vars['last_export_timestamp'] || 0).to_date == Date.today
+      export_vars['num_of_export_all_last_24_hours'] += 1
+    else
+      export_vars['last_export_timestamp'] = Date.today.to_time.to_i
+      export_vars['num_of_export_all_last_24_hours'] = 1
+    end
+    save
   end
 
   protected

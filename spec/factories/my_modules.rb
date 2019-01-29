@@ -8,5 +8,8 @@ FactoryBot.define do
     workflow_order { MyModule.where(experiment_id: experiment.id).count + 1 }
     experiment
     my_module_group { create :my_module_group, experiment: experiment }
+    trait :with_tag do
+      tags { create_list :tag, 3, project: experiment.project }
+    end
   end
 end

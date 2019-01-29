@@ -2,10 +2,12 @@ FROM ruby:2.4.5
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 # additional dependecies
+# libSSL-1.0 is required by wkhtmltopdf binary
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   apt-get update -qq && \
   apt-get install -y \
   libjemalloc1 \
+  libssl1.0-dev \
   nodejs \
   postgresql-client \
   default-jre-headless \

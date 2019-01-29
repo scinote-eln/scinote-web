@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Tag < ApplicationRecord
   include SearchableModel
 
@@ -48,7 +50,10 @@ class Tag < ApplicationRecord
     end
   end
 
-  def deep_clone_to_project(project)
+  def clone_to_project_or_return_existing(project)
+    tag = Tag.find_by(project: project, name: name, color: color)
+    return tag if tag
+
     Tag.create(
       name: name,
       color: color,

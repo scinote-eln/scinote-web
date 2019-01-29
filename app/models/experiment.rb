@@ -255,24 +255,6 @@ class Experiment < ApplicationRecord
     clone
   end
 
-  def move_to_project(project)
-    self.project = project
-
-    my_modules.each do |m|
-      new_tags = []
-      m.tags.each do |t|
-        new_tags << t.deep_clone_to_project(project)
-      end
-      m.my_module_tags.destroy_all
-
-      project.tags << new_tags
-      m.tags << new_tags
-    end
-    result = save
-    touch(:workflowimg_updated_at) if result
-    result
-  end
-
   # Get projects where user is either owner or user in the same team
   # as this experiment
   def projects_with_role_above_user(current_user)
