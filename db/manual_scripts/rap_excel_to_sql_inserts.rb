@@ -1,3 +1,36 @@
+# include UsersGenerator
+# # TODO is this right? Can't find the RapGenerator include...
+# require "#{Rails.root}/app/utilities/rap_generators"
+# include RapGenerator
+
+# if User.count.zero?
+#   if ENV['ADMIN_NAME'].present? &&
+#      ENV['ADMIN_EMAIL'].present? &&
+#      ENV['ADMIN_PASSWORD'].present?
+#     admin_name = ENV['ADMIN_NAME']
+#     admin_email = ENV['ADMIN_EMAIL']
+#     admin_password = ENV['ADMIN_PASSWORD']
+#     admin_name = 'Admin'
+#     admin_email = 'young.daniel@epa.gov'
+#     admin_password = '***REMOVED***'
+#   else
+#     admin_name = 'Admin'
+#     admin_email = 'young.daniel@epa.gov'
+#     admin_password = '***REMOVED***'
+#   end
+
+#   # Create admin user
+#   create_user(
+#     admin_name,
+#     admin_email,
+#     admin_password,
+#     true,
+#     Constants::DEFAULT_PRIVATE_TEAM_NAME,
+#     [],
+#     Extends::INITIAL_USER_OPTIONS
+#   )
+# end
+
 # Import all RAP Information from Excel into the database using the four rap models.
 require 'spreadsheet'
 require 'byebug'
@@ -12,6 +45,7 @@ topicLevelName = ""
 projectLevelName = ""
 taskLevelName = ""
 created = Time.now.strftime('%B %d, %Y')
+
 sheet.each 2 do |row|
   # iterate through each cel
   col = 0
@@ -27,7 +61,8 @@ sheet.each 2 do |row|
       next
     else
       if cell.casecmp("Not Applicable") == 0
-        # do nothing          
+        # do nothing
+
       # else we found a value we want to record, we should break after this and go to next row
       elsif col === 0
         # We need to make sure the quotes in the output string (sql script) are broken out
@@ -38,6 +73,7 @@ sheet.each 2 do |row|
         programLevelInsert = "INSERT INTO rap_program_levels (name, created_at, updated_at) #{valuesClause};\n"
         all_inserts << programLevelInsert
         # Write the insert statement to our SQL file.
+        
       elsif col === 1
         # We need to make sure the quotes in the output string (sql script) are broken out
         topicLevelName = cell.gsub("'", "''")

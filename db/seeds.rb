@@ -36,6 +36,7 @@ end
 if RapProgramLevel.count.zero?
   # Import all RAP Information from Excel into the database using the four rap models.
   require 'spreadsheet'
+  all_inserts = []
   in_file_name = "./rap_info_april_12_2018.xls"
   excel_data = Spreadsheet.open in_file_name
   sheet = excel_data.worksheet 0
@@ -43,6 +44,7 @@ if RapProgramLevel.count.zero?
   topicLevelName = ""
   projectLevelName = ""
   taskLevelName = ""
+  created = Time.now.strftime('%B %d, %Y')
   
   sheet.each 2 do |row|
     # iterate through each cell
@@ -112,5 +114,6 @@ end # end of RapProgramLevel.count.zero?
 
 # TODO If any Project database entries are missing their rap_task_level_id values, then we need to set a default.
 # if RapProgramLevel.exists?(:rap_task_level_id => nil)
+# rap_task_level_id = RapTaskLevel.minimum(:id)
   
 # end

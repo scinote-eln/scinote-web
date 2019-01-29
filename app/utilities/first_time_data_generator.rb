@@ -167,6 +167,9 @@ module FirstTimeDataGenerator
       end
     end
 
+    # rap_task_level_id = RapTaskLevel.where(name: projectLevelName).take.id
+    rap_task_level_id = RapTaskLevel.minimum(:id)
+
     project = Project.create(
       visibility: 0,
       name: name,
@@ -175,7 +178,8 @@ module FirstTimeDataGenerator
       created_by: user,
       created_at: generate_random_time(1.week.ago),
       last_modified_by: user,
-      archived: false
+      archived: false,
+      rap_task_level_id: rap_task_level_id
     )
 
     experiment = Experiment.create(
