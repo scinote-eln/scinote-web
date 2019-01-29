@@ -5,6 +5,8 @@ module Users
 
     prepend_before_action :check_captcha, only: [:update]
 
+    prepend_before_action :check_captcha_for_invite, only: [:invite_users]
+
     before_action :check_invite_users_permission, only: :invite_users
 
     before_action :update_sanitized_params, only: :update
@@ -185,6 +187,15 @@ module Users
 
       if target_user.assignments_notification
         UserNotification.create(notification: notification, user: target_user)
+      end
+    end
+
+    def check_captcha_for_invite
+      if Rails.configuration.x.enable_recaptcha
+        unless verify_recaptcha
+          render json: { recaptcha_error: t('invite_users.errors.recaptcha') },
+                 status: :unprocessable_entity
+        end
       end
     end
 

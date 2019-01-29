@@ -71,3 +71,6 @@ features/addons
 spec/addons
 !features/addons/.gitkeep
 !spec/addons/.gitkeep
+
+# RVM/rbenv ruby version for local development
+.ruby-version

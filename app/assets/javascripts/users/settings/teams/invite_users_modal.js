@@ -1,6 +1,16 @@
 (function() {
   'use strict';
 
+  function reloadRecaptchaIfExists() {
+    if (typeof grecaptcha !== 'undefined') {
+      grecaptcha.reset();
+    }
+  }
+
+  window.recaptchaCallback = function recaptchaCallback(response) {
+    $('#recaptcha-invite-modal').val(response);
+  };
+
   function initializeModal(modal) {
     var modalDialog = modal.find('.modal-dialog');
     var type = modal.attr('data-type');
@@ -14,6 +24,9 @@
     var teamSelectorDropdown = modal.find('[data-role=team-selector-dropdown]');
     var teamSelectorDropdown2 = $();
     var tagsInput = modal.find('[data-role=tags-input]');
+    var recaptchaInput = modal.find('#recaptcha-invite-modal');
+    var recaptchaErrorMsgDiv = modal.find('#recaptcha-error-msg');
+    var recaptchaErrorText = modal.find('#recaptcha-error-msg>span');
 
     // Set max tags
     tagsInput.tagsinput({
@@ -85,7 +98,8 @@
       // Click action
       modal.find('[data-action=invite]').off('click').on('click', function() {
         var data = {
-          emails: tagsInput.val()
+          emails: tagsInput.val(),
+          'g-recaptcha-response': recaptchaInput.val()
         };
 
         animateSpinner(modalDialog);
@@ -130,16 +144,23 @@
             // Add 'data-invited="true"' status to modal element
             modal.attr('data-invited', 'true');
           },
-          error: function() {
+          error: function(jqXHR) {
+            // ReCaptcha fails
+            if (jqXHR.status === 422) {
+              recaptchaErrorMsgDiv.removeClass('hidden');
+              recaptchaErrorText.text(jqXHR.responseJSON.recaptcha_error);
+            } else {
+              modal.modal('hide');
+              alert('Error inviting users.');
+            }
+            reloadRecaptchaIfExists();
             animateSpinner(modalDialog, false);
-            modal.modal('hide');
-            alert('Error inviting users.');
           }
         });
       });
     }).on('shown.bs.modal', function() {
       tagsInput.tagsinput('focus');
-
+      recaptchaErrorMsgDiv.addClass('hidden');
       // Remove 'data-invited="true"' status
       modal.removeAttr('data-invited');
     }).on('hide.bs.modal', function() {
@@ -150,6 +171,7 @@
       inviteWithRoleBtn.attr('disabled', 'disabled');
       teamSelectorDropdown2.addClass('disabled');
       animateSpinner(modalDialog, false);
+      recaptchaErrorMsgDiv.addClass('hidden');
 
       // Unbind event listeners
       teamSelectorCheckbox.off('change');
@@ -160,6 +182,8 @@
       stepResultsDiv.html('');
       stepResults.hide();
       stepForm.show();
+      reloadRecaptchaIfExists();
+      recaptchaInput.val('');
     });
   }
 

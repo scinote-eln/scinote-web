@@ -115,8 +115,29 @@ function importProtocolFromFile(
         $("#protocol_authors").val($(this).children("authors").text());
         $("#import_protocol_description").val($(this).children("description").text());
       }
-      $("#protocol_created_at").val($(this).children("created_at").text());
-      $("#protocol_updated_at").val($(this).children("updated_at").text());
+
+      $.ajax({
+        url: "/helpers/to_user_date_format.json",
+        type: "GET",
+        data: { "timestamp": $(this).children("created_at").text(),
+                "ts_format": "full" },
+        dataType: "json",
+        async: false,
+        success: function (data) {
+          $("#protocol_created_at").val(data.ts);
+        }
+      });
+      $.ajax({
+        url: "/helpers/to_user_date_format.json",
+        type: "GET",
+        data: { "timestamp": $(this).children("updated_at").text(),
+                "ts_format": "full" },
+        dataType: "json",
+        async: false,
+        success: function (data) {
+          $("#protocol_updated_at").val(data.ts);
+        }
+      });
     });
 
     // PREVIEW

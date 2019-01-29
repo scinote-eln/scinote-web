@@ -350,6 +350,9 @@ Style/WhenThen:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context']
+
 Metrics/ClassLength:
   Enabled: false
 

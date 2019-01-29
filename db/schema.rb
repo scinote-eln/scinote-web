@@ -10,22 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181212162649) do
+ActiveRecord::Schema.define(version: 20190117155006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "pg_trgm"
   enable_extension "btree_gist"
 
-  create_table "activities", id: :serial, force: :cascade do |t|
-    t.integer "my_module_id"
-    t.integer "user_id"
+  create_table "activities", force: :cascade do |t|
+    t.bigint "my_module_id"
+    t.bigint "user_id"
     t.integer "type_of", null: false
     t.string "message", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "project_id", null: false
-    t.integer "experiment_id"
+    t.bigint "project_id", null: false
+    t.bigint "experiment_id"
     t.index ["created_at"], name: "index_activities_on_created_at"
     t.index ["experiment_id"], name: "index_activities_on_experiment_id"
     t.index ["my_module_id"], name: "index_activities_on_my_module_id"
@@ -34,9 +34,9 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
-  create_table "asset_text_data", id: :serial, force: :cascade do |t|
+  create_table "asset_text_data", force: :cascade do |t|
     t.text "data", null: false
-    t.integer "asset_id", null: false
+    t.bigint "asset_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.tsvector "data_vector"
@@ -44,15 +44,15 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["data_vector"], name: "index_asset_text_data_on_data_vector", using: :gin
   end
 
-  create_table "assets", id: :serial, force: :cascade do |t|
+  create_table "assets", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
     t.integer "file_file_size"
     t.datetime "file_updated_at"
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.integer "estimated_size", default: 0, null: false
     t.boolean "file_present", default: false, null: false
     t.string "lock", limit: 1024
@@ -67,14 +67,14 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["team_id"], name: "index_assets_on_team_id"
   end
 
-  create_table "checklist_items", id: :serial, force: :cascade do |t|
+  create_table "checklist_items", force: :cascade do |t|
     t.string "text", null: false
     t.boolean "checked", default: false, null: false
-    t.integer "checklist_id", null: false
+    t.bigint "checklist_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.integer "position"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_checklist_items_on_text", using: :gin
     t.index ["checklist_id"], name: "index_checklist_items_on_checklist_id"
@@ -82,25 +82,25 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["last_modified_by_id"], name: "index_checklist_items_on_last_modified_by_id"
   end
 
-  create_table "checklists", id: :serial, force: :cascade do |t|
+  create_table "checklists", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "step_id", null: false
+    t.bigint "step_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_checklists_on_name", using: :gin
     t.index ["created_by_id"], name: "index_checklists_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_checklists_on_last_modified_by_id"
     t.index ["step_id"], name: "index_checklists_on_step_id"
   end
 
-  create_table "comments", id: :serial, force: :cascade do |t|
+  create_table "comments", force: :cascade do |t|
     t.string "message", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "last_modified_by_id"
+    t.bigint "last_modified_by_id"
     t.string "type"
     t.integer "associated_id"
     t.index "trim_html_tags((message)::text) gin_trgm_ops", name: "index_comments_on_message", using: :gin
@@ -111,26 +111,26 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "connections", id: :serial, force: :cascade do |t|
-    t.integer "input_id", null: false
-    t.integer "output_id", null: false
+  create_table "connections", force: :cascade do |t|
+    t.bigint "input_id", null: false
+    t.bigint "output_id", null: false
     t.index ["input_id"], name: "index_connections_on_input_id"
     t.index ["output_id"], name: "index_connections_on_output_id"
   end
 
-  create_table "custom_fields", id: :serial, force: :cascade do |t|
+  create_table "custom_fields", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "user_id", null: false
-    t.integer "team_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "team_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "last_modified_by_id"
+    t.bigint "last_modified_by_id"
     t.index ["last_modified_by_id"], name: "index_custom_fields_on_last_modified_by_id"
     t.index ["team_id"], name: "index_custom_fields_on_team_id"
     t.index ["user_id"], name: "index_custom_fields_on_user_id"
   end
 
-  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
+  create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -146,16 +146,16 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["queue"], name: "delayed_jobs_queue"
   end
 
-  create_table "experiments", id: :serial, force: :cascade do |t|
+  create_table "experiments", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
     t.integer "project_id", null: false
-    t.integer "created_by_id", null: false
-    t.integer "last_modified_by_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "last_modified_by_id", null: false
     t.boolean "archived", default: false, null: false
-    t.integer "archived_by_id"
+    t.bigint "archived_by_id"
     t.datetime "archived_on"
-    t.integer "restored_by_id"
+    t.bigint "restored_by_id"
     t.datetime "restored_on"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -171,53 +171,53 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
   end
 
-  create_table "my_module_groups", id: :serial, force: :cascade do |t|
+  create_table "my_module_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "experiment_id", default: 0, null: false
+    t.bigint "created_by_id"
+    t.bigint "experiment_id", default: 0, null: false
     t.index ["created_by_id"], name: "index_my_module_groups_on_created_by_id"
     t.index ["experiment_id"], name: "index_my_module_groups_on_experiment_id"
   end
 
-  create_table "my_module_repository_rows", id: :serial, force: :cascade do |t|
+  create_table "my_module_repository_rows", force: :cascade do |t|
     t.bigint "repository_row_id", null: false
     t.integer "my_module_id"
-    t.integer "assigned_by_id", null: false
+    t.bigint "assigned_by_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["my_module_id", "repository_row_id"], name: "index_my_module_ids_repository_row_ids"
     t.index ["repository_row_id"], name: "index_my_module_repository_rows_on_repository_row_id"
   end
 
-  create_table "my_module_tags", id: :serial, force: :cascade do |t|
+  create_table "my_module_tags", force: :cascade do |t|
     t.integer "my_module_id"
     t.integer "tag_id"
-    t.integer "created_by_id"
+    t.bigint "created_by_id"
     t.index ["created_by_id"], name: "index_my_module_tags_on_created_by_id"
     t.index ["my_module_id"], name: "index_my_module_tags_on_my_module_id"
     t.index ["tag_id"], name: "index_my_module_tags_on_tag_id"
   end
 
-  create_table "my_modules", id: :serial, force: :cascade do |t|
+  create_table "my_modules", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "due_date"
     t.string "description"
     t.integer "x", default: 0, null: false
     t.integer "y", default: 0, null: false
-    t.integer "my_module_group_id"
+    t.bigint "my_module_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false, null: false
     t.datetime "archived_on"
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
-    t.integer "archived_by_id"
-    t.integer "restored_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
     t.datetime "restored_on"
     t.integer "nr_of_assigned_samples", default: 0
     t.integer "workflow_order", default: -1, null: false
-    t.integer "experiment_id", default: 0, null: false
+    t.bigint "experiment_id", default: 0, null: false
     t.integer "state", limit: 2, default: 0
     t.datetime "completed_on"
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_my_modules_on_description", using: :gin
@@ -230,18 +230,18 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["restored_by_id"], name: "index_my_modules_on_restored_by_id"
   end
 
-  create_table "notifications", id: :serial, force: :cascade do |t|
+  create_table "notifications", force: :cascade do |t|
     t.string "title"
     t.string "message"
     t.integer "type_of", null: false
-    t.integer "generator_user_id"
+    t.bigint "generator_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_notifications_on_created_at"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
-    t.integer "resource_owner_id", null: false
+    t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
     t.string "token", null: false
     t.integer "expires_in", null: false
@@ -254,7 +254,7 @@ ActiveRecord::Schema.define(version: 20181212162649) do
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
-    t.integer "resource_owner_id"
+    t.bigint "resource_owner_id"
     t.bigint "application_id"
     t.text "token", null: false
     t.string "refresh_token"
@@ -281,19 +281,19 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
-  create_table "projects", id: :serial, force: :cascade do |t|
+  create_table "projects", force: :cascade do |t|
     t.string "name", null: false
     t.integer "visibility", default: 0, null: false
     t.datetime "due_date"
-    t.integer "team_id", null: false
+    t.bigint "team_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false, null: false
     t.datetime "archived_on"
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
-    t.integer "archived_by_id"
-    t.integer "restored_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
     t.datetime "restored_on"
     t.string "experiments_order"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
@@ -304,36 +304,36 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["team_id"], name: "index_projects_on_team_id"
   end
 
-  create_table "protocol_keywords", id: :serial, force: :cascade do |t|
+  create_table "protocol_keywords", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "nr_of_protocols", default: 0
-    t.integer "team_id", null: false
+    t.bigint "team_id", null: false
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_protocol_keywords_on_name", using: :gin
     t.index ["team_id"], name: "index_protocol_keywords_on_team_id"
   end
 
-  create_table "protocol_protocol_keywords", id: :serial, force: :cascade do |t|
-    t.integer "protocol_id", null: false
-    t.integer "protocol_keyword_id", null: false
+  create_table "protocol_protocol_keywords", force: :cascade do |t|
+    t.bigint "protocol_id", null: false
+    t.bigint "protocol_keyword_id", null: false
     t.index ["protocol_id"], name: "index_protocol_protocol_keywords_on_protocol_id"
     t.index ["protocol_keyword_id"], name: "index_protocol_protocol_keywords_on_protocol_keyword_id"
   end
 
-  create_table "protocols", id: :serial, force: :cascade do |t|
+  create_table "protocols", force: :cascade do |t|
     t.string "name"
     t.text "authors"
     t.text "description"
-    t.integer "added_by_id"
-    t.integer "my_module_id"
-    t.integer "team_id", null: false
+    t.bigint "added_by_id"
+    t.bigint "my_module_id"
+    t.bigint "team_id", null: false
     t.integer "protocol_type", default: 0, null: false
-    t.integer "parent_id"
+    t.bigint "parent_id"
     t.datetime "parent_updated_at"
-    t.integer "archived_by_id"
+    t.bigint "archived_by_id"
     t.datetime "archived_on"
-    t.integer "restored_by_id"
+    t.bigint "restored_by_id"
     t.datetime "restored_on"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -351,22 +351,22 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["team_id"], name: "index_protocols_on_team_id"
   end
 
-  create_table "report_elements", id: :serial, force: :cascade do |t|
+  create_table "report_elements", force: :cascade do |t|
     t.integer "position", null: false
     t.integer "type_of", null: false
     t.integer "sort_order", default: 0
-    t.integer "report_id"
+    t.bigint "report_id"
     t.integer "parent_id"
-    t.integer "project_id"
-    t.integer "my_module_id"
-    t.integer "step_id"
-    t.integer "result_id"
-    t.integer "checklist_id"
-    t.integer "asset_id"
-    t.integer "table_id"
+    t.bigint "project_id"
+    t.bigint "my_module_id"
+    t.bigint "step_id"
+    t.bigint "result_id"
+    t.bigint "checklist_id"
+    t.bigint "asset_id"
+    t.bigint "table_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "experiment_id"
+    t.bigint "experiment_id"
     t.integer "repository_id"
     t.index ["asset_id"], name: "index_report_elements_on_asset_id"
     t.index ["checklist_id"], name: "index_report_elements_on_checklist_id"
@@ -381,14 +381,14 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["table_id"], name: "index_report_elements_on_table_id"
   end
 
-  create_table "reports", id: :serial, force: :cascade do |t|
+  create_table "reports", force: :cascade do |t|
     t.string "name", null: false
     t.string "description"
-    t.integer "project_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "project_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "last_modified_by_id"
+    t.bigint "last_modified_by_id"
     t.bigint "team_id"
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_reports_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_reports_on_name", using: :gin
@@ -398,9 +398,9 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_reports_on_user_id"
   end
 
-  create_table "repositories", id: :serial, force: :cascade do |t|
+  create_table "repositories", force: :cascade do |t|
     t.integer "team_id"
-    t.integer "created_by_id", null: false
+    t.bigint "created_by_id", null: false
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -434,7 +434,7 @@ ActiveRecord::Schema.define(version: 20181212162649) do
 
   create_table "repository_columns", force: :cascade do |t|
     t.integer "repository_id"
-    t.integer "created_by_id", null: false
+    t.bigint "created_by_id", null: false
     t.string "name"
     t.integer "data_type", null: false
     t.datetime "created_at"
@@ -446,8 +446,8 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.datetime "data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "created_by_id", null: false
-    t.integer "last_modified_by_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "last_modified_by_id", null: false
   end
 
   create_table "repository_list_items", force: :cascade do |t|
@@ -478,8 +478,8 @@ ActiveRecord::Schema.define(version: 20181212162649) do
 
   create_table "repository_rows", force: :cascade do |t|
     t.integer "repository_id"
-    t.integer "created_by_id", null: false
-    t.integer "last_modified_by_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "last_modified_by_id", null: false
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -487,7 +487,7 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["repository_id"], name: "index_repository_rows_on_repository_id"
   end
 
-  create_table "repository_table_states", id: :serial, force: :cascade do |t|
+  create_table "repository_table_states", force: :cascade do |t|
     t.jsonb "state", null: false
     t.integer "user_id", null: false
     t.integer "repository_id", null: false
@@ -501,41 +501,41 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.string "data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "created_by_id", null: false
-    t.integer "last_modified_by_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "last_modified_by_id", null: false
     t.index "trim_html_tags((data)::text) gin_trgm_ops", name: "index_repository_text_values_on_data", using: :gin
   end
 
-  create_table "result_assets", id: :serial, force: :cascade do |t|
-    t.integer "result_id", null: false
-    t.integer "asset_id", null: false
+  create_table "result_assets", force: :cascade do |t|
+    t.bigint "result_id", null: false
+    t.bigint "asset_id", null: false
     t.index ["result_id", "asset_id"], name: "index_result_assets_on_result_id_and_asset_id"
   end
 
-  create_table "result_tables", id: :serial, force: :cascade do |t|
-    t.integer "result_id", null: false
-    t.integer "table_id", null: false
+  create_table "result_tables", force: :cascade do |t|
+    t.bigint "result_id", null: false
+    t.bigint "table_id", null: false
     t.index ["result_id", "table_id"], name: "index_result_tables_on_result_id_and_table_id"
   end
 
-  create_table "result_texts", id: :serial, force: :cascade do |t|
+  create_table "result_texts", force: :cascade do |t|
     t.string "text", null: false
-    t.integer "result_id", null: false
+    t.bigint "result_id", null: false
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
     t.index ["result_id"], name: "index_result_texts_on_result_id"
   end
 
-  create_table "results", id: :serial, force: :cascade do |t|
+  create_table "results", force: :cascade do |t|
     t.string "name"
-    t.integer "my_module_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "my_module_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false, null: false
     t.datetime "archived_on"
-    t.integer "last_modified_by_id"
-    t.integer "archived_by_id"
-    t.integer "restored_by_id"
+    t.bigint "last_modified_by_id"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
     t.datetime "restored_on"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_results_on_name", using: :gin
     t.index ["archived_by_id"], name: "index_results_on_archived_by_id"
@@ -546,10 +546,10 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_results_on_user_id"
   end
 
-  create_table "sample_custom_fields", id: :serial, force: :cascade do |t|
+  create_table "sample_custom_fields", force: :cascade do |t|
     t.string "value", null: false
-    t.integer "custom_field_id", null: false
-    t.integer "sample_id"
+    t.bigint "custom_field_id", null: false
+    t.bigint "sample_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "trim_html_tags((value)::text) gin_trgm_ops", name: "index_sample_custom_fields_on_value", using: :gin
@@ -557,52 +557,52 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["sample_id"], name: "index_sample_custom_fields_on_sample_id"
   end
 
-  create_table "sample_groups", id: :serial, force: :cascade do |t|
+  create_table "sample_groups", force: :cascade do |t|
     t.string "name", null: false
     t.string "color", default: "#ff0000", null: false
-    t.integer "team_id", null: false
+    t.bigint "team_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_sample_groups_on_name", using: :gin
     t.index ["created_by_id"], name: "index_sample_groups_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_sample_groups_on_last_modified_by_id"
     t.index ["team_id"], name: "index_sample_groups_on_team_id"
   end
 
-  create_table "sample_my_modules", id: :serial, force: :cascade do |t|
-    t.integer "sample_id", null: false
-    t.integer "my_module_id", null: false
-    t.integer "assigned_by_id"
+  create_table "sample_my_modules", force: :cascade do |t|
+    t.bigint "sample_id", null: false
+    t.bigint "my_module_id", null: false
+    t.bigint "assigned_by_id"
     t.datetime "assigned_on"
     t.index ["assigned_by_id"], name: "index_sample_my_modules_on_assigned_by_id"
     t.index ["my_module_id"], name: "index_sample_my_modules_on_my_module_id"
     t.index ["sample_id", "my_module_id"], name: "index_sample_my_modules_on_sample_id_and_my_module_id"
   end
 
-  create_table "sample_types", id: :serial, force: :cascade do |t|
+  create_table "sample_types", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "team_id", null: false
+    t.bigint "team_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_sample_types_on_name", using: :gin
     t.index ["created_by_id"], name: "index_sample_types_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_sample_types_on_last_modified_by_id"
     t.index ["team_id"], name: "index_sample_types_on_team_id"
   end
 
-  create_table "samples", id: :serial, force: :cascade do |t|
+  create_table "samples", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "user_id", null: false
-    t.integer "team_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "team_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "sample_group_id"
-    t.integer "sample_type_id"
-    t.integer "last_modified_by_id"
+    t.bigint "sample_group_id"
+    t.bigint "sample_type_id"
+    t.bigint "last_modified_by_id"
     t.integer "nr_of_modules_assigned_to", default: 0
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_samples_on_name", using: :gin
     t.index ["last_modified_by_id"], name: "index_samples_on_last_modified_by_id"
@@ -612,7 +612,7 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_samples_on_user_id"
   end
 
-  create_table "samples_tables", id: :serial, force: :cascade do |t|
+  create_table "samples_tables", force: :cascade do |t|
     t.jsonb "status", default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "assigned"=>"all", "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
     t.integer "user_id", null: false
     t.integer "team_id", null: false
@@ -622,35 +622,35 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_samples_tables_on_user_id"
   end
 
-  create_table "settings", id: :serial, force: :cascade do |t|
+  create_table "settings", force: :cascade do |t|
     t.text "type", null: false
     t.jsonb "values", default: {}, null: false
     t.index ["type"], name: "index_settings_on_type", unique: true
   end
 
-  create_table "step_assets", id: :serial, force: :cascade do |t|
-    t.integer "step_id", null: false
-    t.integer "asset_id", null: false
+  create_table "step_assets", force: :cascade do |t|
+    t.bigint "step_id", null: false
+    t.bigint "asset_id", null: false
     t.index ["step_id", "asset_id"], name: "index_step_assets_on_step_id_and_asset_id"
   end
 
-  create_table "step_tables", id: :serial, force: :cascade do |t|
-    t.integer "step_id", null: false
-    t.integer "table_id", null: false
+  create_table "step_tables", force: :cascade do |t|
+    t.bigint "step_id", null: false
+    t.bigint "table_id", null: false
     t.index ["step_id", "table_id"], name: "index_step_tables_on_step_id_and_table_id", unique: true
   end
 
-  create_table "steps", id: :serial, force: :cascade do |t|
+  create_table "steps", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.integer "position", null: false
     t.boolean "completed", null: false
     t.datetime "completed_on"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "last_modified_by_id"
-    t.integer "protocol_id", null: false
+    t.bigint "last_modified_by_id"
+    t.bigint "protocol_id", null: false
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_steps_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_steps_on_name", using: :gin
     t.index ["created_at"], name: "index_steps_on_created_at"
@@ -660,12 +660,12 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_steps_on_user_id"
   end
 
-  create_table "tables", id: :serial, force: :cascade do |t|
+  create_table "tables", force: :cascade do |t|
     t.binary "contents", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.tsvector "data_vector"
     t.string "name", default: ""
     t.integer "team_id"
@@ -677,26 +677,26 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["team_id"], name: "index_tables_on_team_id"
   end
 
-  create_table "tags", id: :serial, force: :cascade do |t|
+  create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "color", default: "#ff0000", null: false
-    t.integer "project_id", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "project_id", null: false
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_tags_on_name", using: :gin
     t.index ["created_by_id"], name: "index_tags_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_tags_on_last_modified_by_id"
     t.index ["project_id"], name: "index_tags_on_project_id"
   end
 
-  create_table "teams", id: :serial, force: :cascade do |t|
+  create_table "teams", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "created_by_id"
-    t.integer "last_modified_by_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
@@ -704,7 +704,7 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["name"], name: "index_teams_on_name"
   end
 
-  create_table "temp_files", id: :serial, force: :cascade do |t|
+  create_table "temp_files", force: :cascade do |t|
     t.string "session_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -714,7 +714,7 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.datetime "file_updated_at"
   end
 
-  create_table "tiny_mce_assets", id: :serial, force: :cascade do |t|
+  create_table "tiny_mce_assets", force: :cascade do |t|
     t.string "image_file_name"
     t.string "image_content_type"
     t.integer "image_file_size"
@@ -730,13 +730,13 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["team_id"], name: "index_tiny_mce_assets_on_team_id"
   end
 
-  create_table "tokens", id: :serial, force: :cascade do |t|
+  create_table "tokens", force: :cascade do |t|
     t.string "token", null: false
     t.integer "ttl", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
   end
 
-  create_table "user_identities", id: :serial, force: :cascade do |t|
+  create_table "user_identities", force: :cascade do |t|
     t.integer "user_id"
     t.string "provider", null: false
     t.string "uid", null: false
@@ -747,20 +747,20 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_user_identities_on_user_id"
   end
 
-  create_table "user_my_modules", id: :serial, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "my_module_id", null: false
+  create_table "user_my_modules", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "my_module_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "assigned_by_id"
+    t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_my_modules_on_assigned_by_id"
     t.index ["my_module_id"], name: "index_user_my_modules_on_my_module_id"
     t.index ["user_id"], name: "index_user_my_modules_on_user_id"
   end
 
-  create_table "user_notifications", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "notification_id"
+  create_table "user_notifications", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "notification_id"
     t.boolean "checked", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -769,31 +769,31 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["user_id"], name: "index_user_notifications_on_user_id"
   end
 
-  create_table "user_projects", id: :serial, force: :cascade do |t|
+  create_table "user_projects", force: :cascade do |t|
     t.integer "role"
-    t.integer "user_id", null: false
-    t.integer "project_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "assigned_by_id"
+    t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_projects_on_assigned_by_id"
     t.index ["project_id"], name: "index_user_projects_on_project_id"
     t.index ["user_id"], name: "index_user_projects_on_user_id"
   end
 
-  create_table "user_teams", id: :serial, force: :cascade do |t|
+  create_table "user_teams", force: :cascade do |t|
     t.integer "role", default: 1, null: false
-    t.integer "user_id", null: false
-    t.integer "team_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "team_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "assigned_by_id"
+    t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_teams_on_assigned_by_id"
     t.index ["team_id"], name: "index_user_teams_on_team_id"
     t.index ["user_id"], name: "index_user_teams_on_user_id"
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "full_name", null: false
     t.string "initials", null: false
     t.string "email", default: "", null: false
@@ -824,7 +824,7 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.string "invited_by_type"
     t.integer "invited_by_id"
     t.integer "invitations_count", default: 0
-    t.integer "current_team_id"
+    t.bigint "current_team_id"
     t.string "authentication_token", limit: 30
     t.jsonb "settings", default: {}, null: false
     t.jsonb "variables", default: {}, null: false
@@ -849,21 +849,21 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.index ["viewable_type", "viewable_id"], name: "index_view_states_on_viewable_type_and_viewable_id"
   end
 
-  create_table "wopi_actions", id: :serial, force: :cascade do |t|
+  create_table "wopi_actions", force: :cascade do |t|
     t.string "action", null: false
     t.string "extension", null: false
     t.string "urlsrc", null: false
-    t.integer "wopi_app_id", null: false
+    t.bigint "wopi_app_id", null: false
     t.index ["extension", "action"], name: "index_wopi_actions_on_extension_and_action"
   end
 
-  create_table "wopi_apps", id: :serial, force: :cascade do |t|
+  create_table "wopi_apps", force: :cascade do |t|
     t.string "name", null: false
     t.string "icon", null: false
-    t.integer "wopi_discovery_id", null: false
+    t.bigint "wopi_discovery_id", null: false
   end
 
-  create_table "wopi_discoveries", id: :serial, force: :cascade do |t|
+  create_table "wopi_discoveries", force: :cascade do |t|
     t.integer "expires", null: false
     t.string "proof_key_mod", null: false
     t.string "proof_key_exp", null: false
@@ -871,8 +871,8 @@ ActiveRecord::Schema.define(version: 20181212162649) do
     t.string "proof_key_old_exp", null: false
   end
 
-  create_table "zip_exports", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
+  create_table "zip_exports", force: :cascade do |t|
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "zip_file_file_name"
