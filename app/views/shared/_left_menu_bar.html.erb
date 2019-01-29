@@ -33,6 +33,9 @@
           <span><%= t('left_menu_bar.activities') %></span>
         <% end %>
       </li>
+
+
+
       <!-- support -->
       <li class="dropup">
         <a href="#"
@@ -47,17 +50,20 @@
           <span><%= t('left_menu_bar.support') %></span>
         </a>
         <ul class="dropdown-menu" data-hook="support-dropdown">
-          <li><%= link_to t('left_menu_bar.support_links.support'),
-                            Constants::SUPPORT_URL,
-                            target: "_blank" %></li>
-          <li><%= link_to t('left_menu_bar.support_links.tutorials'),
-                            Constants::TUTORIALS_URL,
-                            target: "_blank" %></li>
-          <li><%= link_to t('left_menu_bar.support_links.webinars'),
-                            Constants::WEBINARS_URL,
-                            target: "_blank" %></li>
+            <li href="<%= contact_path %>">
+              <%= link_to t('nav.help.contact'), contact_path %>
+            </li>
+            <li href=""
+              <%= about_path %>">
+              <%= link_to t('nav.help.about'), about_path %>
+            </li>
+            <li href="<%= training_path %>">
+              <%= link_to t('nav.help.training'), training_path %>
+            </li>
         </ul>
       </li>
+
+
       <li class="<%= "active" if settings_are_selected? %>">
         <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
           <span class="fas fa-cog"></span>

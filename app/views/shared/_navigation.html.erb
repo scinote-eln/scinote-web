@@ -160,6 +160,38 @@
             </ul>
           </li>
 
+        <!-- help -->
+        <li class="dropdown">
+          <a href="#"
+             id="help-link"
+             class="dropdown-toggle"
+             title="<%= t('nav.label.info') %>"
+             data-toggle="dropdown"
+             role="button"
+             aria-haspopup="true"
+             aria-expanded="false">
+            <span class="glyphicon glyphicon-info-sign"></span>
+            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.info') %></span>
+          </a>
+          
+            
+          <ul class="dropdown-menu" data-hook="navigation-help-menu">
+            <li href="<%= contact_path %>">
+              <%= link_to t('nav.help.contact'), contact_path %>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li href=""
+              <%= about_path %>">
+              <%= link_to t('nav.help.about'), about_path %>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li href="<%= training_path %>">
+              <%= link_to t('nav.help.training'), training_path %>
+            </li>
+          </ul>
+          
+        </li>
+
         </ul>
       </div>
       <% end %>

@@ -90,7 +90,7 @@ en:
       support: "Customer support"
       premium: "Premium"
       contact: "Contact us"
-      about: "About sciNote"
+      about: "About SciNote"
       training: "Training"
     activities:
       none: "No activities!"
@@ -214,7 +214,6 @@ en:
       delete: "Delete"
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occured while deleting comment."
-
   help:
     contact:
       head_title: "Contact"
@@ -222,7 +221,6 @@ en:
       head_title: "About"
     training:
       head_title: "Training"
-
   projects:
     index:
       head_title: "Home"
@@ -267,7 +265,7 @@ en:
       content_loading: "Loading..."
       edit_option: "Edit"
       archive_option: "Archive"
-      archive_confirm: "Are you sure you want to archive Research Effort Activity?"
+      archive_confirm: "Are you sure you want to archive this Research Effort Activity?"
       restore_option: "Restore"
       options_header: "Options"
       comment_placeholder: "Your Message"
@@ -276,7 +274,7 @@ en:
       back_to_projects_index: "Back to home"
       modal_new_project:
         modal_title: "Research Effort Activity"
-        create: "Create Research Effort Activity"
+        create: "Research Effort Activity"
         name: "Research Effort Activity name"
         name_placeholder: "Research Effort Activity"
         team: "Team"
@@ -1321,7 +1319,7 @@ en:
     create_experiment: "<i>%{user}</i> created experiment <strong>%{experiment}</strong>."
     edit_experiment: "<i>%{user}</i> edited experiment <strong>%{experiment}</strong>."
     clone_experiment: "<i>%{user}</i> copied experiment <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong> as template."
-    move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from Research Effort Activity <strong>%{project_original}</strong> to Research Effort Activity <strong>%{project_new}</strong>."
+    move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from Research Effort Activity <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
     add_comment_to_project: "<i>%{user}</i> commented on Research Effort Activity <strong>%{project}</strong>."
     edit_project_comment: "<i>%{user}</i> edited comment on Research Effort Activity <strong>%{project}</strong>."
     delete_project_comment: "<i>%{user}</i> deleted comment on Research Effort Activity <strong>%{project}</strong>."
