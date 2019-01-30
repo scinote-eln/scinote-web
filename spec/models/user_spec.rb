@@ -187,7 +187,9 @@ describe User, type: :model do
   describe '#last_activities' do
     let!(:user) { create :user }
     let!(:project) { create :project }
-    let!(:user_projects) { create :user_project, project: project, user: user }
+    let!(:user_projects) do
+      create :user_project, :viewer, project: project, user: user
+    end
     let!(:activity_one) { create :activity, user: user, project: project }
     let!(:activity_two) { create :activity, user: user, project: project }
 
@@ -196,6 +198,64 @@ describe User, type: :model do
       expect(activities.count).to eq 2
       expect(activities).to include activity_one
       expect(activities).to include activity_two
+    end
+  end
+
+  describe '#increase_daily_exports_counter!' do
+    let(:user) { create :user }
+    context 'when last_export_timestamp is set' do
+      it 'increases counter by 1' do
+        expect { user.increase_daily_exports_counter! }
+          .to change {
+            user.reload.export_vars['num_of_export_all_last_24_hours']
+          }.from(0).to(1)
+      end
+
+      it 'sets last_export_timestamp on today' do
+        user.export_vars['last_export_timestamp'] = Date.yesterday.to_time.to_i
+        user.save
+
+        expect { user.increase_daily_exports_counter! }
+          .to change {
+            user.reload.export_vars['last_export_timestamp']
+          }.to(Date.today.to_time.to_i)
+      end
+
+      it 'sets new counter for today' do
+        user.export_vars = {
+          'num_of_export_all_last_24_hours': 3,
+          'last_export_timestamp': Date.yesterday.to_time.to_i
+        }
+        user.save
+
+        expect { user.increase_daily_exports_counter! }
+          .to change {
+            user.reload.export_vars['num_of_export_all_last_24_hours']
+          }.from(3).to(1)
+      end
+    end
+
+    context 'when last_export_timestamp not exists (existing users)' do
+      it 'sets last_export_timestamp on today' do
+        user.export_vars.delete('last_export_timestamp')
+        user.save
+
+        expect { user.increase_daily_exports_counter! }
+          .to change {
+            user.reload.export_vars['last_export_timestamp']
+          }.from(nil).to(Date.today.to_time.to_i)
+      end
+
+      it 'starts count reports with 1' do
+        user.export_vars.delete('last_export_timestamp')
+        user.export_vars['num_of_export_all_last_24_hours'] = 2
+        user.save
+
+        expect { user.increase_daily_exports_counter! }
+          .to change {
+            user.reload.export_vars['num_of_export_all_last_24_hours']
+          }.from(2).to(1)
+      end
     end
   end
 end

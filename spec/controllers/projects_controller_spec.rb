@@ -54,11 +54,15 @@ describe ProjectsController, type: :controller do
     end
   end
 
+  # rubocop:disable Security/Eval
+  # rubocop:disable Style/EvalWithLocation
   (1..PROJECTS_CNT).each do |i|
     let!("user_projects_#{i}") do
-      create :user_project, project: eval("project_#{i}"), user: user
+      create :user_project, :owner, project: eval("project_#{i}"), user: user
     end
   end
+  # rubocop:enable Security/Eval
+  # rubocop:enable Style/EvalWithLocation
 
   describe '#index' do
     context 'in JSON format' do

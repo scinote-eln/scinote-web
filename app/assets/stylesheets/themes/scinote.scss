@@ -783,7 +783,9 @@ ul.double-line > li {
     }
 
     .manage-users-link {
+      display: block;
       padding-left: 15px;
+      margin-bottom: 10px;
     }
   }
 
@@ -1402,6 +1404,10 @@ table.dataTable {
       vertical-align: middle;
       margin: 0;
     }
+  }
+
+  .g-recaptcha {
+    margin-top: 20px;
   }
 }
 

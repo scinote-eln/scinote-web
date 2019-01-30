@@ -128,6 +128,11 @@ Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" textarea field$/) do |old_
   textarea.set(new_text)
 end
 
+Then(/^I should not see "([^"]*)" on "([^"]*)" element$/) do |text, element|
+  wait_for_ajax
+  expect(find(element)).not_to have_content(text)
+end
+
 Then(/^I should see "([^"]*)" on "([^"]*)" element$/) do |text, element|
   wait_for_ajax
   expect(find(element)).to have_content(text)

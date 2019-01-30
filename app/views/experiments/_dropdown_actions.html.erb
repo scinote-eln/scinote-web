@@ -31,7 +31,7 @@
                       tooltipcontent: I18n.t('tooltips.text.experiment.move')
                     } %></li>
   <% end %>
-  <% if can_manage_experiment?(experiment) %>
+  <% if can_archive_experiment?(experiment) %>
   <li><%= link_to t('experiments.archive.label_title'),
                 archive_experiment_url(experiment),
                 type: 'button',
