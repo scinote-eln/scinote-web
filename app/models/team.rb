@@ -6,6 +6,8 @@ class Team < ApplicationRecord
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
 
+  after_create :generate_template_project
+
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
@@ -34,6 +36,8 @@ class Team < ApplicationRecord
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
+
+  attr_accessor :without_templates
 
   def default_view_state
     { 'projects' =>
@@ -303,5 +307,22 @@ class Team < ApplicationRecord
 
   def protocol_keywords_list
     ProtocolKeyword.where(team: self).pluck(:name)
+  end
+
+  private
+
+  def generate_template_project
+    return if without_templates
+    user = created_by
+    return unless user
+    Project.transaction do
+      tmpl_project = projects.create!(
+        name: Constants::TEMPLATES_PROJECT_NAME,
+        visibility: :visible,
+        template: true
+      )
+      tmpl_project.user_projects.create!(user: user, role: 0)
+      TemplatesService.new.update_project(tmpl_project)
+    end
   end
 end

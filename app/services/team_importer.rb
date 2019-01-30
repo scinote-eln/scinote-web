@@ -143,7 +143,7 @@ class TeamImporter
     end
   end
 
-  def import_template_experiment_from_dir(import_dir, project_id,
+  def import_experiment_template_from_dir(import_dir, project_id,
                                           user_id)
     # Remove callbacks that can cause problems when importing
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
@@ -154,56 +154,42 @@ class TeamImporter
 
     # Parse the experiment file and save it to DB
     project = Project.find_by_id(project_id)
-    experiment_json = JSON.parse(File.read("#{@import_dir}/experiment_export.json"))
-    experiment = create_experiment(experiment_json, project, user_id)
+    experiment_json = JSON.parse(File.read("#{@import_dir}/experiment.json"))
 
-    # Create connections for modules
-    experiment_json['my_modules'].each do |my_module_json|
-      create_task_connections(my_module_json['outputs'])
+    # Handle situation when experiment with same name already exists
+    exp_name = experiment_json.dig('experiment', 'name')
+    if project.experiments.where(name: exp_name).present?
+      experiment_names = project.experiments.map(&:name)
+      i = 1
+      i += 1 while experiment_names.include?("#{exp_name} (#{i})")
+      experiment_json['experiment']['name'] = "#{exp_name} (#{i})"
     end
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.no_touching do
+        experiment = create_experiment(experiment_json, project, user_id)
 
-    # Create UUID for the template experiment
-    # TODO: this requires DB migration first
-    # experiment.template_uid = Digest::SHA256.new("#{expirement.name + experiment.created_at}")
-    # experiment.save!
+        # Create connections for modules
+        experiment_json['my_modules'].each do |my_module_json|
+          create_task_connections(my_module_json['outputs'])
+        end
 
+        update_smart_annotations_in_project(project)
+
+        puts "Imported experiment: #{experiment.id}"
+        return experiment
+      end
+    end
+  ensure
     # Reset callbacks
     MyModule.set_callback(:create, :before, :create_blank_protocol)
     Protocol.set_callback(:save, :after, :update_linked_children)
-
-    puts "Imported experiment: #{experiment.id}"
-    experiment
   end
 
   private
 
   def update_smart_annotations(team)
     team.projects.each do |pr|
-      pr.project_comments.each do |comment|
-        comment.save! if update_annotation(comment.message)
-      end
-      pr.experiments.each do |exp|
-        exp.save! if update_annotation(exp.description)
-        exp.my_modules.each do |task|
-          task.task_comments.each do |comment|
-            comment.save! if update_annotation(comment.message)
-          end
-          task.save! if update_annotation(task.description)
-          task.protocol.steps.each do |step|
-            step.step_comments.each do |comment|
-              comment.save! if update_annotation(comment.message)
-            end
-            step.save! if update_annotation(step.description)
-          end
-          task.results.each do |res|
-            res.result_comments.each do |comment|
-              comment.save! if update_annotation(comment.message)
-            end
-            next unless res.result_text
-            res.save! if update_annotation(res.result_text.text)
-          end
-        end
-      end
+      update_smart_annotations_in_project(pr)
     end
     team.protocols.where(my_module: nil).each do |protocol|
       protocol.steps.each do |step|
@@ -217,6 +203,34 @@ class TeamImporter
       rep.repository_rows.find_each do |row|
         row.repository_cells.each do |cell|
           cell.value.save! if update_annotation(cell.value.data)
+        end
+      end
+    end
+  end
+
+  def update_smart_annotations_in_project(project)
+    project.project_comments.each do |comment|
+      comment.save! if update_annotation(comment.message)
+    end
+    project.experiments.each do |exp|
+      exp.save! if update_annotation(exp.description)
+      exp.my_modules.each do |task|
+        task.task_comments.each do |comment|
+          comment.save! if update_annotation(comment.message)
+        end
+        task.save! if update_annotation(task.description)
+        task.protocol.steps.each do |step|
+          step.step_comments.each do |comment|
+            comment.save! if update_annotation(comment.message)
+          end
+          step.save! if update_annotation(step.description)
+        end
+        task.results.each do |res|
+          res.result_comments.each do |comment|
+            comment.save! if update_annotation(comment.message)
+          end
+          next unless res.result_text
+          res.save! if update_annotation(res.result_text.text)
         end
       end
     end
@@ -761,7 +775,9 @@ class TeamImporter
         user_id || find_user(asset.last_modified_by_id)
       asset.team = team
       asset.file = file
+      asset.in_template = true if @is_template
       asset.save!
+      asset.post_process_file(team)
       @asset_mappings[orig_asset_id] = asset.id
       @asset_counter += 1
     end

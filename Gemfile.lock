@@ -221,6 +221,8 @@ GEM
     doorkeeper (5.0.0)
       railties (>= 4.2)
     erubi (1.7.1)
+    et-orbi (1.1.7)
+      tzinfo
     execjs (2.7.0)
     factory_bot (4.8.2)
       activesupport (>= 3.0.0)
@@ -234,6 +236,9 @@ GEM
     ffi (1.9.18)
     figaro (1.1.1)
       thor (~> 0.14)
+    fugit (1.1.7)
+      et-orbi (~> 1.1, >= 1.1.7)
+      raabro (~> 1.1)
     gherkin (5.0.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -363,6 +368,7 @@ GEM
       pry (>= 0.10.4)
     public_suffix (3.0.2)
     puma (3.11.2)
+    raabro (1.1.6)
     rack (2.0.6)
     rack-attack (5.4.1)
       rack (>= 1.0, < 3)
@@ -449,6 +455,8 @@ GEM
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.1)
+    rufus-scheduler (3.5.2)
+      fugit (~> 1.1, >= 1.1.5)
     sanitize (4.6.6)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
@@ -617,6 +625,7 @@ DEPENDENCIES
   rubocop (>= 0.59.0)
   ruby-graphviz (~> 1.2)
   rubyzip
+  rufus-scheduler (~> 3.5)
   sanitize (~> 4.4)
   sass-rails (~> 5.0.6)
   scenic (~> 1.4)
@@ -641,7 +650,7 @@ DEPENDENCIES
   yomu
 
 RUBY VERSION
-   ruby 2.4.4p296
+   ruby 2.4.5p335
 
 BUNDLED WITH
-   1.17.1
+   1.17.2

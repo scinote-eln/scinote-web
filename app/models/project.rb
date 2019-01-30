@@ -49,6 +49,8 @@ class Project < ApplicationRecord
                         end
                       end)
 
+  scope :templates, -> { where(template: true) }
+
   def self.visible_from_user_by_name(user, team, name)
     if user.is_admin_of_team? team
       return where('projects.archived IS FALSE AND projects.name ILIKE ?',

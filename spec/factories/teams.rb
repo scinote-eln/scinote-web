@@ -6,6 +6,7 @@ FactoryBot.define do
     sequence(:name) { |n| "My team-#{n}" }
     description { Faker::Lorem.sentence }
     space_taken { 1048576 }
+    without_templates true
     trait :with_members do
       users { create_list :user, 3 }
     end

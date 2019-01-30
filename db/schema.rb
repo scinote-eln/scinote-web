@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 20190117155006) do
     t.string "workflowimg_content_type"
     t.integer "workflowimg_file_size"
     t.datetime "workflowimg_updated_at"
+    t.uuid "uuid"
     t.index ["archived_by_id"], name: "index_experiments_on_archived_by_id"
     t.index ["created_by_id"], name: "index_experiments_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id"
@@ -296,6 +297,7 @@ ActiveRecord::Schema.define(version: 20190117155006) do
     t.bigint "restored_by_id"
     t.datetime "restored_on"
     t.string "experiments_order"
+    t.boolean "template"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index ["archived_by_id"], name: "index_projects_on_archived_by_id"
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"
