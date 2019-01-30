@@ -161,9 +161,8 @@ class TeamImporter
     if project.experiments.where(name: exp_name).present?
       experiment_names = project.experiments.map(&:name)
       i = 1
-      new_name = "#{exp_name} (#{i})"
-      i += 1 while experiment_names.include?(new_name)
-      experiment_json['experiment']['name'] = new_name
+      i += 1 while experiment_names.include?("#{exp_name} (#{i})")
+      experiment_json['experiment']['name'] = "#{exp_name} (#{i})"
     end
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.no_touching do
