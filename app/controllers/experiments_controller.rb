@@ -185,37 +185,15 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
+    service = Experiments::CopyExperimentAsTemplateService
+              .call(experiment_id: @experiment.id,
+                    project_id: move_experiment_param,
+                    user_id: current_user.id)
 
-    # Try to clone the experiment
-    success = true
-    if @experiment.projects_with_role_above_user(current_user).include?(project)
-      cloned_experiment = @experiment.deep_clone_to_project(current_user,
-                                                            project)
-      success = cloned_experiment.valid?
-      # Create workflow image
-      cloned_experiment.delay.generate_workflow_img if success
-    else
-      success = false
-    end
-
-    if success
-      Activity.create(
-        type_of: :clone_experiment,
-        project: project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.clone_experiment',
-          user: current_user.full_name,
-          experiment_new: cloned_experiment.name,
-          experiment_original: @experiment.name
-        )
-      )
-
+    if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(cloned_experiment)
+      redirect_to canvas_experiment_path(service.cloned_experiment)
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
