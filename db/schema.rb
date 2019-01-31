@@ -668,8 +668,10 @@ ActiveRecord::Schema.define(version: 20190125123107) do
     t.boolean "show_on_login", default: false
     t.datetime "source_created_at"
     t.bigint "source_id"
+    t.datetime "last_time_changed_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["last_time_changed_at"], name: "index_system_notifications_on_last_time_changed_at"
     t.index ["source_created_at"], name: "index_system_notifications_on_source_created_at"
     t.index ["source_id"], name: "index_system_notifications_on_source_id"
   end

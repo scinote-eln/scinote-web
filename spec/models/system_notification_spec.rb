@@ -33,6 +33,10 @@ describe SystemNotification do
     describe '#source_created_at' do
       it { is_expected.to validate_presence_of(:source_created_at) }
     end
+
+    describe '#last_time_changed_at' do
+      it { is_expected.to validate_presence_of(:last_time_changed_at) }
+    end
   end
 
   describe 'Associations' do

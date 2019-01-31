@@ -5,6 +5,6 @@ class SystemNotification < ApplicationRecord
   has_many :users, through: :user_system_notifications
 
   validates :title, :modal_title, :modal_body, :description,
-            :source_created_at, :source_id,
+            :source_created_at, :source_id, :last_time_changed_at,
             presence: true
 end
