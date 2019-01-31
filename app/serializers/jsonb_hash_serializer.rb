@@ -1,6 +1,6 @@
 class JsonbHashSerializer
   def self.dump(hash)
-    hash.nil? ? "{}" : hash.to_json
+    hash.nil? ? '{}' : hash.to_json
   end
 
   def self.load(hash)
