@@ -78,6 +78,16 @@ class Result < ApplicationRecord
     comments.reverse
   end
 
+  def type
+    if asset
+      'result_asset'
+    elsif table
+      'result_table'
+    elsif result_text
+      'result_text'
+    end
+  end
+
   def is_text
     self.result_text.present?
   end

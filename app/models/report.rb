@@ -127,15 +127,8 @@ class Report < ApplicationRecord
           result_children =
             gen_element_content(result, nil, 'result_comments', true, 'asc')
 
-          result_type = if result.asset
-                          'result_asset'
-                        elsif result.table
-                          'result_table'
-                        elsif result.result_text
-                          'result_text'
-                        end
           module_children +=
-            gen_element_content(result, nil, result_type, true, nil,
+            gen_element_content(result, nil, result.type, true, nil,
                                 result_children)
         end
 

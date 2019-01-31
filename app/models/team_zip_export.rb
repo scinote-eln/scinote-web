@@ -130,9 +130,9 @@ class TeamZipExport < ZipExport
       file = FileUtils.touch("#{project_path}/#{html_name}").first
       File.open(file, 'wb') { |f| f.write(project_report_pdf) }
     end
-
+  ensure
     # Change current dir outside tmp_dir, since tmp_dir will be deleted
-    Dir.chdir(File.join(Rails.root, 'tmp'))
+    Dir.chdir(Rails.root)
   end
 
   def generate_notification(user)
