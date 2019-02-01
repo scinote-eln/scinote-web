@@ -17,7 +17,8 @@ namespace :notifications do
         modal_title: system_notification.title,
         modal_body: system_notification.message,
         show_on_login: false,
-        source_created_at: system_notification.created_at
+        source_created_at: system_notification.created_at,
+        last_time_changed_at: system_notification.created_at
       )
 
       created_at = system_notification.created_at
