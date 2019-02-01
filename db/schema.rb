@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190117155006) do
+ActiveRecord::Schema.define(version: 20190125123107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -660,6 +660,22 @@ ActiveRecord::Schema.define(version: 20190117155006) do
     t.index ["user_id"], name: "index_steps_on_user_id"
   end
 
+  create_table "system_notifications", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.string "modal_title"
+    t.text "modal_body"
+    t.boolean "show_on_login", default: false
+    t.datetime "source_created_at"
+    t.bigint "source_id"
+    t.datetime "last_time_changed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_time_changed_at"], name: "index_system_notifications_on_last_time_changed_at"
+    t.index ["source_created_at"], name: "index_system_notifications_on_source_created_at"
+    t.index ["source_id"], name: "index_system_notifications_on_source_id"
+  end
+
   create_table "tables", force: :cascade do |t|
     t.binary "contents", null: false
     t.datetime "created_at", null: false
@@ -779,6 +795,19 @@ ActiveRecord::Schema.define(version: 20190117155006) do
     t.index ["assigned_by_id"], name: "index_user_projects_on_assigned_by_id"
     t.index ["project_id"], name: "index_user_projects_on_project_id"
     t.index ["user_id"], name: "index_user_projects_on_user_id"
+  end
+
+  create_table "user_system_notifications", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "system_notification_id"
+    t.datetime "seen_at"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["read_at"], name: "index_user_system_notifications_on_read_at"
+    t.index ["seen_at"], name: "index_user_system_notifications_on_seen_at"
+    t.index ["system_notification_id"], name: "index_user_system_notifications_on_system_notification_id"
+    t.index ["user_id"], name: "index_user_system_notifications_on_user_id"
   end
 
   create_table "user_teams", force: :cascade do |t|
@@ -1012,6 +1041,8 @@ ActiveRecord::Schema.define(version: 20190117155006) do
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
+  add_foreign_key "user_system_notifications", "system_notifications"
+  add_foreign_key "user_system_notifications", "users"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
   add_foreign_key "user_teams", "users", column: "assigned_by_id"

@@ -209,6 +209,8 @@ class User < ApplicationRecord
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
+  has_many :user_system_notifications
+  has_many :system_notifications, through: :user_system_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
   has_many :view_states, dependent: :destroy
