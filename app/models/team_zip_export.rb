@@ -129,6 +129,18 @@ class TeamZipExport < ZipExport
       )
       file = FileUtils.touch("#{project_path}/#{html_name}").first
       File.open(file, 'wb') { |f| f.write(project_report_pdf) }
+
+      # Add Handsontable and dependent JS files (mimick frontend formula
+      # processing).
+      required_js = %w(handsontable.full.min.js lodash.js numeral.js numeric.js
+                       md5.js jstat.js formula.js parser.js ruleJS.js
+                       handsontable.formula.js big.min.js)
+      required_js.each do |filename|
+        filepath = File.join(Rails.root,
+                             "vendor/assets/javascripts/#{filename}/")
+        dest_folder = "#{project_path}/"
+        FileUtils.cp(filepath, dest_folder)
+      end
     end
 
     # Change current dir outside tmp_dir, since tmp_dir will be deleted
