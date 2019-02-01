@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class TemplatesService
-  def initialize
-    templates_dir_pattern = "#{Rails.root}/app/assets/templates/experiment_*/"
+  def initialize(base_dir = nil)
+    @base_dir = base_dir ? base_dir : "#{Rails.root}/app/assets/templates"
+    templates_dir_pattern = "#{@base_dir}/experiment_*/"
     @experiment_templates = {}
     Dir.glob(templates_dir_pattern).each do |tmplt_dir|
       id = /[0-9]+/.match(tmplt_dir.split('/').last)[0]
@@ -21,7 +22,7 @@ class TemplatesService
                    .user
     return unless owner.present?
     updated = false
-    exp_tmplt_dir_prefix = "#{Rails.root}/app/assets/templates/experiment_"
+    exp_tmplt_dir_prefix = "#{@base_dir}/experiment_"
     existing = project.experiments.where.not(uuid: nil).pluck(:uuid)
     @experiment_templates.except(*existing).each_value do |id|
       importer_service = TeamImporter.new
