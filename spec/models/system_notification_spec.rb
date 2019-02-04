@@ -42,4 +42,31 @@ describe SystemNotification do
   describe 'Associations' do
     it { is_expected.to have_many(:users) }
   end
+
+  describe 'self.last_sync_timestamp' do
+    context 'when there is no users or system notifications in db' do
+      it 'returns nil' do
+        expect(described_class.last_sync_timestamp).to be_nil
+      end
+    end
+
+    context 'when there is no system notifications in db' do
+      it 'returns last user created_at' do
+        create :user
+
+        expect(described_class.last_sync_timestamp)
+          .to be == User.last.created_at.to_i
+      end
+    end
+
+    context 'when have some system notifications' do
+      it 'returns last system notifications last_time_changed_at timestamp' do
+        create :user
+        create :system_notification
+
+        expect(described_class.last_sync_timestamp)
+          .to be SystemNotification.last.last_time_changed_at.to_i
+      end
+    end
+  end
 end
