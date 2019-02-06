@@ -1,0 +1,2 @@
+module SystemNotificationsHelper
+end

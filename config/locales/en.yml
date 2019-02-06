@@ -1291,7 +1291,11 @@ en:
     color_label: "Sample group color"
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
-
+  system_notifications:
+    index:
+      whats_new: "What's new"
+      more_notifications: "More notifications"
+      no_notifiocations: "No system notifications"
   activities:
     index:
       today: "Today"

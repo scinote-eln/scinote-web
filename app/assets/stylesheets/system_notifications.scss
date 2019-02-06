@@ -1,0 +1,85 @@
+@import 'constants';
+@import "mixins";
+
+// System notification partial
+.system-notification{
+	position:relative;
+	display: inline-block;
+	min-height: 70px;
+	width: 100%;
+	padding-bottom:5px;
+	margin-bottom:5px;
+	border-bottom:1px solid $color-gainsboro;
+	.status-block{
+		height: 0px;
+		width: 60px;
+		float: left;
+		.status-icon{
+			width: 30px;
+			height: 30px;
+			border-radius:15px;
+			margin: 15px 20px;
+			background: $brand-success;
+			text-align:center;
+			line-height:32px;
+			&.seen{
+				background: $color-gainsboro;
+			}
+			i{
+				color:white;
+				font-size:18px;
+			}
+		}
+	}
+	.body-block{
+		width: calc(100% - 70px);
+		float: right;
+		.datetime{
+			opacity: 0.7;
+			line-height: 20px;
+			font-size: 12px;
+		}
+		.title{
+			margin: 0px;
+			line-height: 20px;
+		}
+		.message{
+			line-height:20px
+		}
+
+	}
+}
+
+
+// Global system notification
+#system-notifications-index{
+	#search-bar-notifications{
+		width:100%;
+		padding:0px 0px 10px 0px;
+		border-bottom:1px solid $color-gainsboro;
+		margin:10px 0px;
+		.form-group{
+			width:100%;
+			.input-group{
+				width:100%;
+				max-width:600px;
+			}
+		}
+	}
+	.no_notification_meessage{
+		padding: 20px 0px
+	}
+
+	.title-container{
+		border-bottom:1px solid $color-gainsboro;
+		position:relative;
+		width:calc(100% + 40px);
+		left:-20px;
+		padding-left:20px;
+		padding-bottom:10px;
+		margin:0px
+	}
+	.btn-more-notifications{
+		margin-top:0px
+	}
+}
