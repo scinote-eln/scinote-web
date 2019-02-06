@@ -1295,7 +1295,7 @@ en:
     index:
       whats_new: "What's new"
       more_notifications: "More notifications"
-      no_notifiocations: "No system notifications"
+      no_notifications: "No system notifications"
   activities:
     index:
       today: "Today"
