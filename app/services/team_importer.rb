@@ -168,6 +168,11 @@ class TeamImporter
       ActiveRecord::Base.no_touching do
         experiment = create_experiment(experiment_json, project, user_id)
 
+        experiment.my_modules.each do |my_module|
+          my_module.nr_of_assigned_samples = 0
+          my_module.save(touch: false)
+        end
+
         # Create connections for modules
         experiment_json['my_modules'].each do |my_module_json|
           create_task_connections(my_module_json['outputs'])
