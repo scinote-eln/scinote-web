@@ -19,11 +19,15 @@ describe TeamImporter do
         create :user
         @user = create :user
         @team = create :team
-        create :project, name: 'Placeholder project', visibility: 1,
+        create :project, name: 'Temp project', visibility: 1,
           team: @team, archived: false, created_at: time
 
         @project = create :project, name: 'Project', visibility: 1, team: @team,
           archived: false, created_at: time
+
+        # Reassign if multiple tests are run
+        PROJECT_ID = @project.id
+        USER_ID = @user.id
 
         @team_importer =  TeamImporter.new
         @exp = @team_importer.import_experiment_template_from_dir(TEMPLATE_DIR,
@@ -32,7 +36,6 @@ describe TeamImporter do
       end
 
       describe 'Experiment variables' do
-        it { expect(@exp.id).to eq 1 }
         it { expect(@exp.project.id).to eq PROJECT_ID }
         it { expect(@exp.name).to eq 'Experiment export' }
         it { expect(@exp.description).to eq 'My description' }
