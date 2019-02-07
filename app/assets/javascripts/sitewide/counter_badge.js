@@ -6,6 +6,7 @@ var CounterBadge = (function() {
       $('.' + type +
         '-badge-indicator[data-linked-id="' +
         linkedId + '"]').first();
+    console.log(count)
     if (badge.length) {
       badge.html(count);
       if (count > 0) {
