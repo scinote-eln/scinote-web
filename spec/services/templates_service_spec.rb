@@ -36,8 +36,8 @@ describe TemplatesService do
         expect(tmpl_exp.uuid).to_not eq(nil)
         expect(tmpl_exp.my_modules.pluck(:name))
           .to match_array(demo_exp.my_modules.pluck(:name))
-        tmpl_tasks = tmpl_exp.my_modules.order(:id)
-        demo_tasks = demo_exp.my_modules.order(:id)
+        tmpl_tasks = tmpl_exp.my_modules
+        demo_tasks = demo_exp.my_modules
         demo_tasks.each do |demo_task|
           tmpl_task = tmpl_tasks.find_by_name(demo_task.name)
           expect(tmpl_task.name).to eq(demo_task.name)
@@ -70,7 +70,7 @@ describe TemplatesService do
               expect(demo_step.assets.pluck(:file_file_name))
                 .to match_array(tmpl_step.assets.pluck(:file_file_name))
             end
-            tmpl_step.assets.order(:id).each do |asset|
+            tmpl_step.assets.each do |asset|
               expect(asset.file.exists?).to eq(true)
             end
             if demo_step.tables.present?
