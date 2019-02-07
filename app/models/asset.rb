@@ -242,6 +242,7 @@ class Asset < ApplicationRecord
         file_path = fa.path
       end
 
+      # Start Tika as a server
       if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
         Yomu.server(:text)
       end
