@@ -29,6 +29,8 @@ module Experiments
         end
 
         raise ActiveRecord::Rollback unless @exp.save
+        # To pass the ExperimentsController#updated_img check
+        @exp.update(workflowimg_updated_at: @exp.updated_at)
       end
 
       @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
