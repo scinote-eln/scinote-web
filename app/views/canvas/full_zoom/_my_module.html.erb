@@ -1,5 +1,5 @@
 <div class="panel panel-default module-large
-  <%= get_task_alert_color(my_module) %>
+  <%= get_task_alert_color(my_module) %>"
   id="<%= my_module.id %>"
   data-module-id="<%= my_module.id %>"
   data-module-name="<%= my_module.name %>"
@@ -9,6 +9,7 @@
   data-module-x="<%= my_module.x %>"
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>"
+  data-module-users-tab-url="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
   data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
 
   <% if can_manage_module?(my_module) %>
