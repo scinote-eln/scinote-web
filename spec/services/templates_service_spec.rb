@@ -14,6 +14,8 @@ describe TemplatesService do
         create(:user_team, user: admin_user, team: main_team)
         seed_demo_data(main_team.created_by, main_team)
         dj_worker = Delayed::Worker.new
+        # Two runs are needed to execute additional jobs which get generated
+        # during first run
         Delayed::Job.all.each { |job| dj_worker.run(job) }
         Delayed::Job.all.each { |job| dj_worker.run(job) }
         demo_exp = main_team.projects.first.experiments.first
