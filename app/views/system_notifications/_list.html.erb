@@ -1,3 +1,3 @@
-<% notifications.each_with_index do |notification, index| %>
-  <%= render 'notification.html.erb', notification: notification %>
+<% notifications.each do |notification| %>
+  <%= render partial: 'notification.html.erb', locals: { notification: notification} %>
 <% end %>

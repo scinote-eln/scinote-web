@@ -1,45 +1,39 @@
 'use strict';
 
 (function() {
-  function initSystemNotificationsButton() {
-    $('.btn-more-notifications')
-      .on('ajax:success', function(e, data) {
-        $(data.html).insertAfter($('.notifications-container .system-notification').last());
-        if (data.more_url) {
-          $(this).attr('href', data.more_url);
-        } else {
-          $(this).remove();
-        }
-      });
-  }
-  function initSystemNotificationsScrollCheck(){
-    $(window).scroll(function() {
-    	SystemNotificationsMarkAsSeen()
-    })
-  }
+  $(window).scroll(function() {
+    SystemNotificationsMarkAsSeen();
+  });
   initSystemNotificationsButton();
-  initSystemNotificationsScrollCheck()
-  SystemNotificationsMarkAsSeen()
+  SystemNotificationsMarkAsSeen();
 }());
 
 // update selected notiifcations
-function SystemNotificationsMarkAsSeen(){
-	var notifications=SystemNotificationsCheckVisible()
-    	if (notifications.length > 0){
-    		$.post('system_notifications/mark',{notifications: JSON.stringify(notifications)})
-    	}
+function SystemNotificationsMarkAsSeen() {
+  var WindowSize = $(window).height();
+  var DefaultNotificaitonSize = 75;
+  var NotificationsToUpdate = [];
+
+  _.each($('.system-notification[data-new="1"]'), function(el) {
+    var NotificationTopPosition = el.getBoundingClientRect().top;
+    if (NotificationTopPosition > 0 && NotificationTopPosition < (WindowSize - DefaultNotificaitonSize)){
+      NotificationsToUpdate.push(el.dataset.systemNotificationId);
+      el.dataset.new = 0;
+    }
+  });
+  if (NotificationsToUpdate.length > 0) {
+    $.post('system_notifications/mark_as_seen', { notifications: JSON.stringify(NotificationsToUpdate) });
+  }
 }
 
-// prepare notificaitons to update
-function SystemNotificationsCheckVisible(){
-  var window_size= $(window).height()
-  var defaul_notifications_size = 75
-  var notifications_to_update=[]
-  _.each($('.system-notification[data-new="1"]'), function(el) {
-    if (el.getBoundingClientRect().top > 0 && el.getBoundingClientRect().top < (window_size - defaul_notifications_size)){
-      notifications_to_update.push(el.id)
-      el.dataset.new=0
-    }
-  })
-  return notifications_to_update
+function initSystemNotificationsButton() {
+  $('.btn-more-notifications')
+    .on('ajax:success', function(e, data) {
+      $(data.html).insertAfter($('.notifications-container .system-notification').last());
+      if (data.more_url) {
+        $(this).attr('href', data.more_url);
+      } else {
+        $(this).remove();
+      }
+    });
 }

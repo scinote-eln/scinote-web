@@ -1,13 +1,13 @@
-<% provide(:head_title, "What's new") %>
-
-
-
+<% provide(:head_title, t("system_notifications.index.whats_new")) %>
 <div class="content-pane" id="system-notifications-index">
-	<h3 class="title-container"><strong><%= t('system_notifications.index.whats_new') %></strong></h3>
-	<%= form_tag system_notifications_path, method: :get, id: 'search-bar-notifications', class: 'navbar-form navbar-left', role: 'search' do %>
+  <h3 class="title-container">
+    <strong><%= t("system_notifications.index.whats_new") %></strong>
+    <%= link_to t("system_notifications.index.settings"), nil %>
+  </h3>
+  <%= form_tag system_notifications_path, method: :get, id: "search-bar-notifications", class: "navbar-form navbar-left", role: "search" do %>
   <div class="form-group">
     <div class="input-group">
-      <input class="form-control" type="text" name="q" placeholder="<%= t('nav.label.search') %>" value="<%= params[:q] %>" >
+      <input class="form-control" type="text" name="search_queue" placeholder="<%= t("nav.label.search") %>" value="<%= params[:search_queue] %>" />
       <span class="input-group-btn">
         <button id="search-button" class="btn btn-default" type="submit">
           <span class="fas fa-search"></span>
@@ -15,26 +15,21 @@
       </span>
     </div>
   </div>
-<% end %>
-
-	<div class="notifications-container">
-		<% @system_notifications[:notifications].each_with_index do |notification, index| %>
-			<%= render partial: "notification", locals: { notification: notification } %>
-		<% end %> 
-	</div>
-		<% if @system_notifications[:more_notifications_url] %>
-			<div class="text-center">
-				<a class="btn btn-default btn-more-notifications"
-					href="<%= @system_notifications[:more_notifications_url] %>"
-					data-remote="true">
-					<%= t('system_notifications.index.more_notifications') %></a>
-			</div>
- 		<% elsif @system_notifications[:notifications].count == 0 %>
- 			<div class="text-center">
- 				<span class="no_notification_meessage"><%= t('system_notifications.index.no_notifications') %></span>
- 			</div>
- 		<% end %>
- 	
+  <% end %>
+  <div class="notifications-container">
+    <%= render partial: "list", locals: { notifications: @system_notifications[:notifications] } %>
+  </div>
+    <div class="text-center">
+      <% p @system_notifications[:notifications].as_json %>
+    <% if @system_notifications[:more_notifications_url] && @system_notifications[:notifications].present? %>
+        <a class="btn btn-default btn-more-notifications"
+          href="<%= @system_notifications[:more_notifications_url] %>"
+          data-remote="true">
+          <%= t("system_notifications.index.more_notifications") %></a>
+    <% else %>
+        <span class="no_notification_meessage"><%= t("system_notifications.index.no_notifications") %></span>
+    <% end %>
+    </div>
 </div>
 
-<%= javascript_include_tag 'system_notifications/index.js' %>
+<%= javascript_include_tag "system_notifications/index.js" %>
