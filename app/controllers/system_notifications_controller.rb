@@ -30,19 +30,24 @@ class SystemNotificationsController < ApplicationController
 
   def prepare_notifications
     page = (params[:page] || 1).to_i
-    system_notifications = SystemNotification.last_notifications(current_user, params[:search_queue])
-                                             .page(page).per(Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-    unless system_notifications.blank? || system_notifications.last_page?
+    query = params[:search_queue]
+    per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT
+    notifications = SystemNotification.last_notifications(current_user, query)
+                                      .page(page)
+                                      .per(per_page)
+    
+    unless notifications.blank? || notifications.last_page?
       more_url = url_for(
         system_notifications_url(
           format: :json,
-          page: page + 1
+          page: page + 1,
+          search_queue: query
         )
       )
     end
     @system_notifications = {
-      notifications: system_notifications,
-      more_notifications_url: more_url || nil
+      notifications: notifications,
+      more_notifications_url: more_url
     }
   end
 end

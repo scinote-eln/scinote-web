@@ -5,6 +5,7 @@ class UserSystemNotification < ApplicationRecord
   belongs_to :system_notification
 
   def self.mark_as_seen(notifications)
-    where(system_notification_id: notifications).update_all(seen_at: DateTime.now)
+    where(system_notification_id: notifications)
+      .update_all(seen_at: Time.now)
   end
 end

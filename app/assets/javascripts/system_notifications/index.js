@@ -1,22 +1,14 @@
 'use strict';
 
-(function() {
-  $(window).scroll(function() {
-    SystemNotificationsMarkAsSeen();
-  });
-  initSystemNotificationsButton();
-  SystemNotificationsMarkAsSeen();
-}());
-
 // update selected notiifcations
 function SystemNotificationsMarkAsSeen() {
   var WindowSize = $(window).height();
-  var DefaultNotificaitonSize = 75;
+  var NotificaitonSize = 75;
   var NotificationsToUpdate = [];
 
   _.each($('.system-notification[data-new="1"]'), function(el) {
     var NotificationTopPosition = el.getBoundingClientRect().top;
-    if (NotificationTopPosition > 0 && NotificationTopPosition < (WindowSize - DefaultNotificaitonSize)){
+    if (NotificationTopPosition > 0 && NotificationTopPosition < (WindowSize - NotificaitonSize)) {
       NotificationsToUpdate.push(el.dataset.systemNotificationId);
       el.dataset.new = 0;
     }
@@ -37,3 +29,11 @@ function initSystemNotificationsButton() {
       }
     });
 }
+
+(function() {
+  $(window).scroll(function() {
+    SystemNotificationsMarkAsSeen();
+  });
+  initSystemNotificationsButton();
+  SystemNotificationsMarkAsSeen();
+}());
