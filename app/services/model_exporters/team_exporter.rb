@@ -55,7 +55,7 @@ module ModelExporters
         repositories: team.repositories.map { |r| repository(r) },
         tiny_mce_assets: team.tiny_mce_assets,
         protocols: team.protocols.where(my_module: nil).map do |pr|
-          ProtocolExporter.new(pr.id).protocol
+          protocol(pr)
         end,
         protocol_keywords: team.protocol_keywords,
         projects: team.projects.map { |p| project(p) }

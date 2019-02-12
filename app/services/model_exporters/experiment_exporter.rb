@@ -48,9 +48,7 @@ module ModelExporters
         task_comments: my_module.task_comments,
         my_module_repository_rows: my_module.my_module_repository_rows,
         user_my_modules: my_module.user_my_modules,
-        protocols: my_module.protocols.map do |pr|
-          ProtocolExporter.new(pr.id).protocol
-        end,
+        protocols: my_module.protocols.map { |pr| protocol(pr) },
         results: my_module.results.map { |res| result(res) }
       }
     end
