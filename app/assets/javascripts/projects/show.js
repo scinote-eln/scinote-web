@@ -14,7 +14,7 @@
     var timestamp = container.data("timestamp");
     var img_url = container.data('updated-img');
 
-    animateSpinner(container, true);
+    animateSpinner(container, true, { color: '#555', top: '60%', zIndex: '100' });
     checkUpdatedImg(img_url, url, timestamp, container);
   }
 
@@ -54,6 +54,7 @@
       type: "GET",
       dataType: "json",
       success: function (data) {
+        el.children('img').remove();
         el.append(data.workflowimg);
       },
       error: function (ev) {
