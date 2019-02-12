@@ -3,6 +3,7 @@
 module ModelExporters
   class ExperimentExporter < ModelExporter
     def initialize(experiment_id)
+      @include_archived = true
       @experiment = Experiment.find_by_id(experiment_id)
       raise StandardError, 'Can not load experiment' unless @experiment
 
@@ -11,6 +12,7 @@ module ModelExporters
 
     def export_template_to_dir
       @asset_counter = 0
+      @include_archived = false
       @experiment.transaction do
         @experiment.uuid ||= SecureRandom.uuid
         @dir_to_export = FileUtils.mkdir_p(
@@ -35,10 +37,17 @@ module ModelExporters
     end
 
     def experiment
+      if @include_archived
+        my_modules = @experiment.my_modules
+        my_module_groups = @experiment.my_module_groups
+      else
+        my_modules = @experiment.active_my_modules
+        my_module_groups = @experiment.active_module_groups
+      end
       return {
         experiment: @experiment,
-        my_modules: @experiment.my_modules.map { |m| my_module(m) },
-        my_module_groups: @experiment.my_module_groups
+        my_modules: my_modules.map { |m| my_module(m) },
+        my_module_groups: my_module_groups
       }, @assets_to_copy
     end
 
