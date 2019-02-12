@@ -1,6 +1,6 @@
 class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
-
+  after_action :after_sign_in, only: :create
   # GET /resource/sign_in
   def new
     # If user was redirected here from OAuth's authorize/new page (Doorkeeper
@@ -32,7 +32,6 @@ class Users::SessionsController < Devise::SessionsController
       sign_in(:user, user)
       # This will cause new token to be generated
       user.update(authentication_token: nil)
-
       redirect_url = root_path
     else
       flash[:error] = t('devise.sessions.auth_token_create.wrong_credentials')
@@ -44,6 +43,10 @@ class Users::SessionsController < Devise::SessionsController
         redirect_to redirect_url
       end
     end
+  end
+
+  def after_sign_in
+    flash[:system_notification_modal] = true
   end
 
   protected

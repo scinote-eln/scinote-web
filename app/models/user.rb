@@ -485,9 +485,10 @@ class User < ApplicationRecord
   def has_linked_account?(provider)
     user_identities.where(provider: provider).exists?
   end
-
+  
+  # This method must be overwriten for addons that will be installed
   def show_login_system_notification?
-    user_system_notifications.show_on_login
+    user_system_notifications.show_on_login.present?
   end
 
   # json friendly attributes

@@ -30,14 +30,12 @@ class SystemNotificationsController < ApplicationController
     render json: { result: 'failed' }
   end
 
-  def mark_read
+  def mark_as_read
     current_user.user_system_notifications.mark_read(params[:id])
     render json: { result: 'ok' }
   rescue StandardError
     render json: { result: 'failed' }
   end
-
-
 
   private
 
