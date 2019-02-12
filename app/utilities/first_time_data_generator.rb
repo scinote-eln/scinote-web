@@ -1061,7 +1061,7 @@ module FirstTimeDataGenerator
       project: project,
       created_at: created_at,
       updated_at: created_at,
-      message: t('activities.add_comment_to_project',
+      message: I18n.t('activities.add_comment_to_project',
                  user: user.full_name,
                  project: project.name)
     ).sneaky_save
@@ -1082,7 +1082,7 @@ module FirstTimeDataGenerator
       my_module: my_module,
       created_at: created_at,
       updated_at: created_at,
-      message: t('activities.add_comment_to_module',
+      message: I18n.t('activities.add_comment_to_module',
                  user: user.full_name,
                  module: my_module.name)
     ).sneaky_save
@@ -1103,7 +1103,7 @@ module FirstTimeDataGenerator
       my_module: result.my_module,
       created_at: created_at,
       updated_at: created_at,
-      message: t('activities.add_comment_to_result',
+      message: I18n.t('activities.add_comment_to_result',
                  user: user.full_name,
                  result: result.name)
     ).sneaky_save
@@ -1124,7 +1124,7 @@ module FirstTimeDataGenerator
       my_module: step.protocol.my_module,
       created_at: created_at,
       updated_at: created_at,
-      message: t('activities.add_comment_to_step',
+      message: I18n.t('activities.add_comment_to_step',
                  user: user.full_name,
                  step: step.position + 1,
                  step_name: step.name)

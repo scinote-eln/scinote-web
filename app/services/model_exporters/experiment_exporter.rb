@@ -9,7 +9,7 @@ module ModelExporters
 
     def export_template_to_dir
       @asset_counter = 0
-      @experiment.transaction(isolation: :serializable) do
+      @experiment.transaction do
         @experiment.uuid ||= SecureRandom.uuid
         @dir_to_export = FileUtils.mkdir_p(
           File.join("tmp/experiment_#{@experiment.id}" \
@@ -28,6 +28,7 @@ module ModelExporters
         end
         puts "Exported assets: #{@asset_counter}"
         puts 'Done!'
+        return @dir_to_export
       end
     end
 
