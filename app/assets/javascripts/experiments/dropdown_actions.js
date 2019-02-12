@@ -112,8 +112,8 @@
   }
   // Initialize no description edit link
   function initEditNoDescription(){
-    var modal = "#edit-experiment-modal-";
-    $.each($(".experiment-no-description"), function(){
+    var modal = '#edit-experiment-modal-';
+    $.each($('.experiment-no-description'), function() {
       var id = modal + $(this).data("id");
       initializeModal($(this), id);
     });
