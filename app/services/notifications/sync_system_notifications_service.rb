@@ -36,7 +36,7 @@ module Notifications
       end
 
       query = { query: { last_sync_timestamp: last_sync,
-                         notifications_channel: channel },
+                         channels_slug: channel },
                 headers: { 'accept':
                             'application/vnd.system-notifications.1+json' } }
 
@@ -47,6 +47,13 @@ module Notifications
         if @api_call.response.code.to_i != 200
           @errors[:api_error] =
             [@api_call.response.code.to_s, @api_call.response.message].join('-')
+
+          # Add message for logging if exists
+          if @api_call.parsed_response.try('error')
+            @errors[:api_error] += ': ' + @api_call
+                                   .parsed_response['error']
+                                   .flatten&.join(' - ').to_s
+          end
         end
       rescue SocketError, HTTParty::Error, StandardError => e
         @errors[e.class.to_s.downcase.to_sym] = e.message
@@ -55,7 +62,7 @@ module Notifications
     end
 
     def save_new_notifications
-      @api_call.parsed_response['system_notifications'].each do |sn|
+      @api_call.parsed_response['notifications'].each do |sn|
         # Save new notification if not exists or override old 1
         attrs =
           sn.slice('title',

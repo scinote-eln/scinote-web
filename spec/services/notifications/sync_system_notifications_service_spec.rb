@@ -14,7 +14,7 @@ describe Notifications::SyncSystemNotificationsService do
       FactoryBot.attributes_for(:system_notification)
                 .merge('source_id': id)
     end
-    { system_notifications: notifications }
+    { notifications: notifications }
   end
 
   context 'when request is successful' do
@@ -28,7 +28,7 @@ describe Notifications::SyncSystemNotificationsService do
       stub_request(:get, url)
         .with(query: { 'last_sync_timestamp':
                          SystemNotification.last_sync_timestamp,
-                       'notifications_channel': 'test-channel' },
+                       'channels_slug': 'test-channel' },
               headers: { 'accept':
                            'application/vnd.system-notifications.1+json' })
         .to_return(body: first_call_result.to_json,
@@ -41,7 +41,7 @@ describe Notifications::SyncSystemNotificationsService do
     end
 
     it 'does not add 10 notifications because ther are already in DB' do
-      first_call_result[:system_notifications].each do |sn|
+      first_call_result[:notifications].each do |sn|
         SystemNotification.create(sn)
       end
 
@@ -54,7 +54,7 @@ describe Notifications::SyncSystemNotificationsService do
     end
 
     it 'add only 3 notifications' do
-      first_call_result[:system_notifications][2..8].each do |sn|
+      first_call_result[:notifications][2..8].each do |sn|
         SystemNotification.create(sn)
       end
 
@@ -73,7 +73,7 @@ describe Notifications::SyncSystemNotificationsService do
       stub_request(:get, url)
         .with(query: { 'last_sync_timestamp':
                          SystemNotification.last_sync_timestamp,
-                       'notifications_channel': 'test-channel' })
+                       'channels_slug': 'test-channel' })
         .to_return(status: [500, 'Internal Server Error'])
     end
 
