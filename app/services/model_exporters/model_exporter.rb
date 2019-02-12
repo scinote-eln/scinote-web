@@ -4,6 +4,14 @@ require 'fileutils'
 
 module ModelExporters
   class ModelExporter
+    attr_accessor :assets_to_copy
+    attr_accessor :tiny_mce_assets_to_copy
+
+    def initialize
+      @assets_to_copy = []
+      @tiny_mce_assets_to_copy = []
+    end
+
     def copy_files(assets, attachment_name, dir_name)
       assets.flatten.each do |a|
         next unless a.public_send(attachment_name).present?
@@ -32,6 +40,22 @@ module ModelExporters
 
     def export_to_dir
       raise NotImplementedError, '#export_to_dir method not implemented.'
+    end
+
+    def checklist(checklist)
+      {
+        checklist: checklist,
+        checklist_items: checklist.checklist_items
+      }
+    end
+
+    def table(table)
+      return {} if table.nil?
+
+      table_json = table.as_json(except: %i(contents data_vector))
+      table_json['contents'] = Base64.encode64(table.contents)
+      table_json['data_vector'] = Base64.encode64(table.data_vector)
+      table_json
     end
   end
 end

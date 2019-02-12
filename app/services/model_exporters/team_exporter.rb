@@ -3,11 +3,8 @@
 module ModelExporters
   class TeamExporter < ModelExporter
     def initialize(team_id)
-      @team = Team.includes(:user_teams).find_by_id(team_id)
-      raise StandardError, 'Can not load team' unless @team
-
-      @assets_to_copy = []
-      @tiny_mce_assets_to_copy = []
+      super()
+      @team = Team.includes(:user_teams).find(team_id)
     end
 
     def export_to_dir
@@ -57,7 +54,9 @@ module ModelExporters
         custom_fields: team.custom_fields,
         repositories: team.repositories.map { |r| repository(r) },
         tiny_mce_assets: team.tiny_mce_assets,
-        protocols: team.protocols.where(my_module: nil).map { |pr| protocol(pr) },
+        protocols: team.protocols.where(my_module: nil).map do |pr|
+          ProtocolExporter.new(pr.id).protocol
+        end,
         protocol_keywords: team.protocol_keywords,
         projects: team.projects.map { |p| project(p) }
       }
