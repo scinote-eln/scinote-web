@@ -35,7 +35,7 @@ class SystemNotificationsController < ApplicationController
     notifications = SystemNotification.last_notifications(current_user, query)
                                       .page(page)
                                       .per(per_page)
-    
+
     unless notifications.blank? || notifications.last_page?
       more_url = url_for(
         system_notifications_url(
