@@ -425,10 +425,13 @@ Rails.application.routes.draw do
       end
     end
 
-    # System notifications routes
-    resources :system_notifications, only: [:index] do
+    #system notifications routes
+    resources :system_notifications, only: [:index,:show] do
       collection do
         post 'mark_as_seen'
+      end
+      member do
+        post 'mark_as_read'
       end
     end
 

@@ -24,3 +24,17 @@ if User.count.zero?
     Extends::INITIAL_USER_OPTIONS
   )
 end
+
+50.times do |i|
+  notification=SystemNotification.create(
+    title: "Test #{i}",
+    description: "Test description #{i}",
+    modal_title: "Test #{i}",
+    modal_body: "Test description #{i}",
+    show_on_login: true,
+    source_id: 1,
+    source_created_at: DateTime.now,
+    last_time_changed_at: DateTime.now
+  )
+  UserSystemNotification.create(user_id: 1, system_notification_id: notification.id)
+end

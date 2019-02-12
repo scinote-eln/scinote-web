@@ -1,4 +1,7 @@
 <% provide(:head_title, t("system_notifications.index.whats_new")) %>
+
+<%= render partial: "system_notification_modal", locals: { notification: nil} %>
+
 <div class="content-pane" id="system-notifications-index">
   <h3 class="title-container">
     <strong><%= t("system_notifications.index.whats_new") %></strong>

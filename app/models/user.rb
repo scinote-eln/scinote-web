@@ -486,6 +486,10 @@ class User < ApplicationRecord
     user_identities.where(provider: provider).exists?
   end
 
+  def show_login_system_notification?
+    user_system_notifications.show_on_login
+  end
+
   # json friendly attributes
   NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
                            assignments_email_notification
