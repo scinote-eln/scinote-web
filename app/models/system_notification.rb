@@ -37,4 +37,13 @@ class SystemNotification < ApplicationRecord
                    'user_system_notifications.seen_at'
                  )
   end
+
+  def self.last_sync_timestamp
+    # If no notifications are present, the created_at of the
+    # first user is used as the "initial sync time-point"
+    SystemNotification
+      .order(last_time_changed_at: :desc)
+      .first&.last_time_changed_at&.to_i ||
+      User.order(created_at: :desc).first&.created_at&.to_i
+  end
 end

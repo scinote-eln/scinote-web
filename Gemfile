@@ -59,6 +59,7 @@ gem 'delayed_paperclip',
     git: 'https://github.com/jrgifford/delayed_paperclip.git',
     ref: 'fcf574c'
 gem 'faker' # Generate fake data
+gem 'httparty'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
@@ -84,6 +85,7 @@ gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
+gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
 
@@ -119,6 +121,7 @@ group :development, :test do
   gem 'rubocop', '>= 0.59.0', require: false
   gem 'scss_lint', require: false
   gem 'starscope', require: false
+  gem 'timecop'
 end
 
 group :test do
@@ -131,6 +134,7 @@ group :test do
   gem 'poltergeist'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
+  gem 'webmock'
 end
 
 group :production do
