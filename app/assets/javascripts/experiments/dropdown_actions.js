@@ -112,22 +112,34 @@
   }
   // Initialize no description edit link
   function initEditNoDescription(){
-    var modal = "#edit-experiment-modal-";
-    $.each($(".experiment-no-description a"), function(){
+    var modal = '#edit-experiment-modal-';
+    $.each($('.experiment-no-description'), function() {
       var id = modal + $(this).data("id");
       initializeModal($(this), id);
     });
   }
-  // Bind modal to new-experiment action
-  initializeModal($("#new-experiment"), '#new-experiment-modal');
 
-  // Bind modal to big-plus new experiment actions
-  initializeModal('.big-plus', '#new-experiment-modal');
+  $(document).on('turbolinks:load', function() {
+    // Bind modal to new-experiment action
+    initializeModal($('#new-experiment'), '#new-experiment-modal');
 
-  // Bind modal to all actions listed on dropdown accesible from experiment
-  // panel
-  initializeDropdownActions();
+    // Bind modal to big-plus new experiment actions
+    initializeModal('.big-plus', '#new-experiment-modal');
 
-  // init
-  initEditNoDescription();
+    // Bind modal to new-exp-title action
+    initializeModal('.new-exp-title', '#new-experiment-modal');
+
+    // Bind modals to all clone-experiment actions
+    $.each($('.clone-experiment'), function() {
+      var id = $(this).closest('.experiment-panel').data('id');
+      initializeModal($(this), '#clone-experiment-modal-' + id);
+    });
+
+    // Bind modal to all actions listed on dropdown accesible from experiment
+    // panel
+    initializeDropdownActions();
+
+    // init
+    initEditNoDescription();
+  });
 })();

@@ -17,50 +17,68 @@
           <%= render partial: 'experiments/dropdown_actions.html.erb',
                               locals: { project: @project, experiment: experiment } %>
         </div>
-      <% end %>
-      <h3 class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></h3>
-
-    </div>
-    <div class="panel-body">
-      <% if experiment.active_modules.length > 0 %>
-        <div class="workflowimg-container"
-             data-check-img="<%= updated_img_experiment_url(experiment) %>"
-             data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
-             data-timestamp="<%= experiment.updated_at %>" >
-        </div>
-      <% else %>
-        <div class="no-workflowimg">
-          <% if can_manage_experiment?(experiment) %>
-            <p><%= link_to( t('experiments.edit.add_task'),
-                            canvas_experiment_path(experiment,
-                                                   editMode: true)) %></p>
-          <% else %>
-            <p><%= t('experiments.edit.no_workflowimg') %></p>
+        <% if can_clone_experiment?(experiment) %>
+          <%= link_to clone_modal_experiment_url(experiment),
+                      remote: true, type: 'button',
+                      class: 'clone-experiment help_tooltips pull-right',
+                      data: {
+                        tooltiplink: I18n.t('tooltips.link.experiment.copy'),
+                        tooltipcontent: I18n.t('tooltips.text.experiment.copy')
+                      } do %>
+            <span class="fas fa-copy"></span>&nbsp;
+            <%= t('experiments.clone.label_title') %>
           <% end %>
-        </div>
+        <% end %>
       <% end %>
-      <span class="help_tooltips" data-tooltiplink="<%= I18n.t('tooltips.link.experiment.dates') %>" data-tooltipcontent="<%= I18n.t('tooltips.text.experiment.dates') %>">
+
+      <div class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></div>
+
+      <span class="help_tooltips panel-date" data-tooltiplink="<%= I18n.t('tooltips.link.experiment.dates') %>" data-tooltipcontent="<%= I18n.t('tooltips.text.experiment.dates') %>">
         <span class="fas fa-calendar-alt" aria-hidden="true"></span>
         <%= l(experiment.created_at, format: :full_date) %> - <%= l(experiment.updated_at, format: :full_date) %>
       </span>
-      <div data-hook="experiment-card-body">
+
+      <div data-hook="experiment-card-description">
         <% if experiment.description? %>
           <div class='experiment-description'>
             <%= custom_auto_link(experiment.description, team: current_team) %>
           </div>
         <% else %>
-          <span class='experiment-no-description'>
-            <% if can_manage_experiment?(experiment) %>
-              <%= link_to t('experiments.edit.add-description'),
-                          edit_project_experiment_url(@project, experiment),
-                          remote: true,
-                          data: { id: experiment.id } %>
-            <% else %>
-              <p><%= t('experiments.edit.no-description') %></p>
-            <% end %>
-          </span>
+          <% if can_manage_experiment?(experiment) %>
+            <%= link_to t('experiments.edit.add-description'),
+                        edit_project_experiment_url(@project, experiment),
+                        remote: true,
+                        data: { id: experiment.id },
+                        class: 'experiment-no-description' %>
+          <% else %>
+            <p class='experiment-no-description'><%= t('experiments.edit.no-description') %></p>
+          <% end %>
         <% end %>
       </div>
+    </div>
+
+    <div class="panel-body">
+      <% if experiment.active_modules.length > 0 %>
+        <%= link_to canvas_experiment_path(experiment) do %>
+          <div class="workflowimg-container"
+               data-check-img="<%= updated_img_experiment_url(experiment) %>"
+               data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
+               data-timestamp="<%= experiment.updated_at %>" >
+          </div>
+        <% end %>
+      <% else %>
+        <% if can_manage_experiment?(experiment) %>
+          <%= link_to( t('experiments.edit.add_task'),
+                       canvas_experiment_path(experiment, editMode: true),
+                       class: 'no-workflowimg') %>
+        <% else %>
+          <div class="no-workflowimg">
+            <p><%= t('experiments.edit.no_workflowimg') %></p>
+          </div>
+        <% end %>
+
+      <% end %>
+
     </div>
   </div>
 </div>

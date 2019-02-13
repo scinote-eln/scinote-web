@@ -10,6 +10,41 @@
                .force_encoding(Encoding::UTF_8)
                .html_safe %>
     </style>
+
+    <script src="handsontable.full.min.js"></script>
+
+    <!-- Libraries for formulas -->
+    <script src="lodash.js"></script>
+    <script src="numeral.js"></script>
+    <script src="numeric.js"></script>
+    <script src="md5.js"></script>
+    <script src="jstat.js"></script>
+    <script src="formula.js"></script>
+    <script src="parser.js"></script>
+    <script src="ruleJS.js"></script>
+    <script src="handsontable.formula.js"></script>
+    <script src="big.min.js"></script>
+
+    <!-- Init Handsontables -->
+    <script>
+      window.onload = function() {
+        var tables = document.getElementsByClassName('hot-table-container');
+        var tableVals = document.getElementsByClassName('hot-table-contents');
+
+        for (i = 0; i < tables.length; i++) {
+          tables[i].innerHTML=''
+          new Handsontable(tables[i], {
+              data: JSON.parse(tableVals[i].value).data,
+              rowHeaders: true,
+              colHeaders: true,
+              filters: true,
+              dropdownMenu: true,
+              formulas: true
+          });
+        }
+      };
+    </script>
+
     <title><%= title %></title>
   </head>
   <body class='print-report-body'>

@@ -246,6 +246,8 @@ class Project < ApplicationRecord
     parsed_page_html = Nokogiri::HTML(page_html_string)
     parsed_html = parsed_page_html.at_css('#report-content')
 
+    # Style tables (mimick frontend processing)
+
     tables = parsed_html.css('.hot-table-contents')
                         .zip(parsed_html.css('.hot-table-container'))
     tables.each do |table_input, table_container|

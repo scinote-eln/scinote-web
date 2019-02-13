@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExperimentsController < ApplicationController
   include SampleActions
   include TeamsHelper
@@ -183,37 +185,15 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
+    service = Experiments::CopyExperimentAsTemplateService
+              .call(experiment_id: @experiment.id,
+                    project_id: move_experiment_param,
+                    user_id: current_user.id)
 
-    # Try to clone the experiment
-    success = true
-    if @experiment.projects_with_role_above_user(current_user).include?(project)
-      cloned_experiment = @experiment.deep_clone_to_project(current_user,
-                                                            project)
-      success = cloned_experiment.valid?
-      # Create workflow image
-      cloned_experiment.delay.generate_workflow_img if success
-    else
-      success = false
-    end
-
-    if success
-      Activity.create(
-        type_of: :clone_experiment,
-        project: project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.clone_experiment',
-          user: current_user.full_name,
-          experiment_new: cloned_experiment.name,
-          experiment_original: @experiment.name
-        )
-      )
-
+    if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(cloned_experiment)
+      redirect_to canvas_experiment_path(service.cloned_experiment)
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
@@ -237,49 +217,23 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
-    old_project = @experiment.project
+    service = Experiments::MoveToProjectService
+              .call(experiment_id: @experiment.id,
+                    project_id: move_experiment_param,
+                    user_id: current_user.id)
 
-    # Try to move the experiment
-    success = true
-    if @experiment.moveable_projects(current_user).include?(project)
-      success = @experiment.move_to_project(project)
-    else
-      success = false
-    end
-
-    if success
-      Activity.create(
-        type_of: :move_experiment,
-        project: project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.move_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name,
-          project_new: project.name,
-          project_original: old_project.name
-        )
-      )
-
+    if service.succeed?
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
-      respond_to do |format|
-        format.json do
-          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
-        end
-      end
+      path = canvas_experiment_url(@experiment)
+      status = :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: { message: t('experiments.move.error_flash',
-                                    experiment:
-                                      escape_input(@experiment.name)) },
-                                    status: :unprocessable_entity
-        end
-      end
+      message = t('experiments.move.error_flash',
+                  experiment: escape_input(@experiment.name))
+      status = :unprocessable_entity
     end
+
+    render json: { message: message, path: path }, status: status
   end
 
   def module_archive
@@ -346,6 +300,10 @@ class ExperimentsController < ApplicationController
 
   def experiment_params
     params.require(:experiment).permit(:name, :description, :archived)
+  end
+
+  def move_experiment_param
+    params.require(:experiment).require(:project_id)
   end
 
   def load_projects_tree

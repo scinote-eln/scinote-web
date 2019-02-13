@@ -242,12 +242,12 @@ class Asset < ApplicationRecord
         file_path = fa.path
       end
 
-      unless Yomu.class_eval('@@server_pid')
-        Yomu.server(:text, nil)
-        sleep(5)
+      # Start Tika as a server
+      if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
+        Yomu.server(:text)
       end
-      y = Yomu.new file_path
 
+      y = Yomu.new file_path
       text_data = y.text
 
       if asset.asset_text_datum.present?

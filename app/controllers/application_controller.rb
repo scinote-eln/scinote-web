@@ -75,8 +75,10 @@ class ApplicationController < ActionController::Base
   private
 
   def update_current_team
-    if current_user.current_team_id.blank? &&
-       current_user.teams.count > 0
+    current_team = Team.find_by_id(current_user.current_team_id)
+    if (current_team.nil? || !current_user.is_member_of_team?(current_team)) &&
+       current_user.teams.count.positive?
+
       current_user.update(
         current_team_id: current_user.teams.first.id
       )

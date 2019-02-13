@@ -769,7 +769,7 @@ en:
       label_title: 'Archive'
     clone:
       modal_title: 'Copy experiment %{experiment} as template'
-      label_title: 'Copy as template (only Protocols steps copied)'
+      label_title: 'Copy as template'
       modal_submit: 'Copy'
       success_flash: 'Successfully copied experiment %{experiment} as template.'
       error_flash: 'Could not copy the experiment as template.'
@@ -1831,6 +1831,8 @@ en:
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
+    errors:
+      recaptcha: "reCAPTCHA verification failed, please try again"
     results:
       heading: "Invitation results:"
       user_exists: "User is already a member of SciNote."

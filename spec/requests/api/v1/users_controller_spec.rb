@@ -4,9 +4,9 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::UsersController', type: :request do
   before :all do
-    @user1 = create(:user, email: Faker::Internet.unique.email)
-    @user2 = create(:user, email: Faker::Internet.unique.email)
-    @user3 = create(:user, email: Faker::Internet.unique.email)
+    @user1 = create(:user)
+    @user2 = create(:user)
+    @user3 = create(:user)
     @team1 = create(:team, created_by: @user1)
     @team2 = create(:team, created_by: @user2)
     @team3 = create(:team, created_by: @user3)
@@ -40,7 +40,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
 
     it 'When invalid request, non existing user' do
       hash_body = nil
-      get api_v1_user_path(id: 123), headers: @valid_headers
+      get api_v1_user_path(id: -1), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 403)
