@@ -6,5 +6,6 @@ FactoryBot.define do
     sequence(:name) { |n| "My team-#{n}" }
     description { Faker::Lorem.sentence }
     space_taken { 1048576 }
+    without_intro_demo true
   end
 end
