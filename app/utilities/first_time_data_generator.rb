@@ -585,7 +585,7 @@ module FirstTimeDataGenerator
       'Collection of potatoes'
     ]
 
-    module_step_description1 =
+    module_step_descriptions = [
       '<html>
         <body>
           <p>50% of samples should be mock inoculated
@@ -600,10 +600,7 @@ module FirstTimeDataGenerator
             data-atwho-at-query=\"#\">[#' + sample_name + '5~rep_item~5]</span>.
           </p>
         </body>
-      </html>'
-
-    module_step_descriptions = [
-      module_step_description1,
+      </html>',
       'Collect samples in <strong>2ml tubes</strong> and put them in '\
       '<strong>liquid nitrogen</strong> and store at <strong>80°C</strong>.',
       '50% of PVYNTN inoculated potatos and 50% of Mock inoculated potatos ' \
@@ -893,7 +890,7 @@ module FirstTimeDataGenerator
     step = my_modules[3].protocol.steps.where('position = 0').take
     checklist = Checklist.new(
       name: 'If using the RNeasy Kit for the first time, read ' \
-            '“Important Notes” in the attached file',
+            '"Important Notes" in the attached file',
       step: step
     )
     module_checklist_items = [
@@ -925,9 +922,7 @@ module FirstTimeDataGenerator
       'microcentrifuge. Ensure that the centrifuge does not cool below 20°C.'
     ]
     module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(
-        text: item
-      )
+      checklist.checklist_items << ChecklistItem.new(text: item)
     end
     checklist.save
 
@@ -952,9 +947,7 @@ module FirstTimeDataGenerator
       'stock solution as described in Appendix D (page 67).'
     ]
     module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(
-        text: item
-      )
+      checklist.checklist_items << ChecklistItem.new(text: item)
     end
     checklist.save
 
@@ -980,9 +973,7 @@ module FirstTimeDataGenerator
       'after performing this step.'
     ]
     module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(
-        text: item
-      )
+      checklist.checklist_items << ChecklistItem.new(text: item)
     end
     checklist.save
 
@@ -1041,9 +1032,7 @@ module FirstTimeDataGenerator
     )
 
     module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(
-        text: item
-      )
+      checklist.checklist_items << ChecklistItem.new(text: item)
     end
     checklist.save
 
@@ -1106,9 +1095,7 @@ module FirstTimeDataGenerator
       'Turn on the UV light'
     ]
     module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(
-        text: item
-      )
+      checklist.checklist_items << ChecklistItem.new(text: item)
     end
     checklist.save
 
@@ -1404,9 +1391,7 @@ module FirstTimeDataGenerator
       'Use gloves at all times'
     ]
     module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(
-        text: item
-      )
+      checklist.checklist_items << ChecklistItem.new(text: item)
     end
     checklist.save
 
