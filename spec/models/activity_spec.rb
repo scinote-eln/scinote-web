@@ -8,7 +8,7 @@ describe Activity, type: :model do
   describe 'Database table' do
     it { should have_db_column :id }
     it { should have_db_column :my_module_id }
-    it { should have_db_column :user_id }
+    it { should have_db_column :owner_id }
     it { should have_db_column :type_of }
     it { should have_db_column :message }
     it { should have_db_column :created_at }
@@ -21,7 +21,7 @@ describe Activity, type: :model do
     it { should belong_to :project }
     it { should belong_to :experiment }
     it { should belong_to :my_module }
-    it { should belong_to :user }
+    it { should belong_to :owner }
   end
 
   describe 'Should be a valid object' do

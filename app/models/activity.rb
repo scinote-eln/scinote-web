@@ -1,7 +1,7 @@
 class Activity < ApplicationRecord
   include InputSanitizeHelper
 
-  after_create :generate_notification
+  # after_create :generate_notification
 
   enum type_of: [
     :create_project,
@@ -66,9 +66,16 @@ class Activity < ApplicationRecord
   validates :type_of, presence: true
 
   belongs_to :project, inverse_of: :activities
+
+  # Depricated in SCI-3025
   belongs_to :experiment, inverse_of: :activities, optional: true
+  # Depricated in SCI-3025
   belongs_to :my_module, inverse_of: :activities, optional: true
-  belongs_to :user, inverse_of: :activities
+  belongs_to :owner, inverse_of: :activities, class_name: 'User'
+
+  # [MyModule, Experiment, Protoco...? Are we going to list all avaible types?]
+  belongs_to :subject, polymorphic: true
+
 
   private
 
