@@ -313,16 +313,6 @@ class Team < ApplicationRecord
 
   def generate_template_project
     return if without_templates
-    user = created_by
-    return unless user
-    Project.transaction do
-      tmpl_project = projects.create!(
-        name: Constants::TEMPLATES_PROJECT_NAME,
-        visibility: :visible,
-        template: true
-      )
-      tmpl_project.user_projects.create!(user: user, role: 0)
-      TemplatesService.new.update_project(tmpl_project)
-    end
+    TemplatesService.new.update_team(self)
   end
 end
