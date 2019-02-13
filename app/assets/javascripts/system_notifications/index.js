@@ -1,14 +1,12 @@
 'use strict';
 
 // update selected notiifcations
-function SystemNotificationsMarkAsSeen() {
-  var WindowSize = $(window).height();
-  var NotificaitonSize = 75;
+function SystemNotificationsMarkAsSeen(container=window) {
+  var WindowSize = $(container).height();
   var NotificationsToUpdate = [];
-
   _.each($('.system-notification[data-new="1"]'), function(el) {
-    var NotificationTopPosition = el.getBoundingClientRect().top;
-    if (NotificationTopPosition > 0 && NotificationTopPosition < (WindowSize - NotificaitonSize)) {
+    var NotificationTopPosition = el.getBoundingClientRect().top
+    if (NotificationTopPosition > 0 && NotificationTopPosition < WindowSize) {
       NotificationsToUpdate.push(el.dataset.systemNotificationId);
       el.dataset.new = 0;
     }

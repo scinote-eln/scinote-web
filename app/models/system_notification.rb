@@ -25,10 +25,12 @@ class SystemNotification < ApplicationRecord
 
   def self.last_notifications(
     user,
-    query = nil
+    query = nil,
+    unseen = false
   )
     notifications = order(last_time_changed_at: :DESC)
     notifications = notifications.search_notifications(query) if query.present?
+    notifications = notifications.where('user_system_notifications.seen_at IS NULL') if unseen
     notifications.joins(:user_system_notifications)
                  .where('user_system_notifications.user_id = ?', user.id)
                  .select(

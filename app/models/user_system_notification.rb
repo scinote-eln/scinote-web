@@ -4,6 +4,8 @@ class UserSystemNotification < ApplicationRecord
   belongs_to :user
   belongs_to :system_notification
 
+  scope :unseen, -> { where(seen_at: nil) }
+
   def self.mark_as_seen(notifications_id)
     where(system_notification_id: notifications_id)
       .update_all(seen_at: Time.now)
@@ -14,6 +16,16 @@ class UserSystemNotification < ApplicationRecord
     if notification && notification.read_at.nil?
       notification.update(read_at: Time.now)
     end
+  end
+
+  def self.unseen_count
+    unseen.count
+  end
+
+  def self.modal(notification_id)
+    select(:modal_title, :modal_body, 'system_notifications.id')
+      .joins(:system_notification)
+      .find_by_system_notification_id(notification_id)
   end
 
   def self.show_on_login(update_read_time = false)

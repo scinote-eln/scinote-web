@@ -40,6 +40,7 @@
     <%= render "shared/about_modal" %>
     <%= render "shared/file_preview_modal.html.erb" %>
     <%= render "shared/navigation" %>
+    <%= render partial: "system_notifications/system_notification_modal", locals: { notification: nil} %>
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
       <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: current_user.user_system_notifications.show_on_login(true) } %>
     <% end %>

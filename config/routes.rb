@@ -429,6 +429,7 @@ Rails.application.routes.draw do
     resources :system_notifications, only: [:index,:show] do
       collection do
         post 'mark_as_seen'
+        get 'unseen_counter'
       end
       member do
         post 'mark_as_read'

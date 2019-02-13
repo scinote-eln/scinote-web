@@ -87,6 +87,7 @@ table {
 }
 
 .notifications-dropdown-header,
+.system-notifications-dropdown-header,
 .dropdown-header {
   background-color: $brand-primary;
   color: $color-concrete;
@@ -97,6 +98,9 @@ table {
   a {
     color: $color-white;
   }
+}
+.system-notifications-dropdown-header{
+  background-color: $brand-success;
 }
 
 .well-search-checklist {
