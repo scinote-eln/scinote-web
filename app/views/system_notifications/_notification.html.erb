@@ -1,0 +1,22 @@
+<div
+    class="system-notification"
+    data-new="<%= notification.seen_at ? 0 : 1 %>"
+    data-system-notification-id="<%= notification.id %>"
+  >
+  <div class="status-block">
+    <div class="status-icon <%= notification.seen_at ? "seen" : "" %>">
+      <i class="fas fa-gift"></i>
+    </div>
+  </div>
+  <div class="body-block">
+    <div class="datetime">
+       <span><%= l(notification.last_time_changed_at, format: :full) %></span>
+    </div>
+    <h5 class="title">
+  <strong><%= notification.title %></strong>
+    </h5>
+    <div class="message">
+      <span><%= notification.description %></span>
+    </div>
+  </div>
+</div>

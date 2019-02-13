@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   use_doorkeeper do
     skip_controllers :applications, :authorized_applications, :token_info
   end
@@ -421,6 +422,13 @@ Rails.application.routes.draw do
         post 'toggle_step_state'
         get 'move_down'
         get 'move_up'
+      end
+    end
+
+    # System notifications routes
+    resources :system_notifications, only: [:index] do
+      collection do
+        post 'mark_as_seen'
       end
     end
 
