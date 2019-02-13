@@ -37,9 +37,9 @@ describe TemplatesService do
         expect(tmpl_exp.name).to eq(demo_exp.name)
         expect(tmpl_exp.uuid).to_not eq(nil)
         expect(tmpl_exp.my_modules.pluck(:name))
-          .to match_array(demo_exp.my_modules.pluck(:name))
+          .to match_array(demo_exp.active_my_modules.pluck(:name))
         tmpl_tasks = tmpl_exp.my_modules
-        demo_tasks = demo_exp.my_modules
+        demo_tasks = demo_exp.active_my_modules
         demo_tasks.each do |demo_task|
           tmpl_task = tmpl_tasks.find_by_name(demo_task.name)
           expect(tmpl_task.name).to eq(demo_task.name)
