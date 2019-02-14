@@ -6,8 +6,15 @@ class UserSystemNotification < ApplicationRecord
 
   scope :unseen, -> { where(seen_at: nil) }
 
-  def self.mark_as_seen(notifications_id)
-    where(system_notification_id: notifications_id)
+  def send_email
+    if user.system_message_email_notification
+      AppMailer
+        .system_notification(user, system_notification)
+    end
+  end
+
+  def self.mark_as_seen(notifications)
+    where(system_notification_id: notifications)
       .update_all(seen_at: Time.now)
   end
 

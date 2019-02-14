@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AppMailer < Devise::Mailer
   helper :application, :mailer, :input_sanitize
   include Devise::Controllers::UrlHelpers
@@ -18,6 +20,19 @@ class AppMailer < Devise::Mailer
       to: @user.email,
       subject: subject
     }.merge(opts)
+    mail(headers)
+  end
+
+  def system_notification(user, system_notification)
+    @user = user
+    @system_notification = system_notification
+
+    headers = {
+      to: @user.email,
+      subject: "[#{t('system_notifications.emails.title')}] "\
+               "#{@system_notification.title}"
+    }
+
     mail(headers)
   end
 end

@@ -15,6 +15,25 @@ describe UserSystemNotification do
     it { is_expected.to belong_to(:system_notification) }
   end
 
+  describe '.send_email' do
+    context 'when user has enabled notifications' do
+      it 'delivers new email' do
+        allow(user_system_notification.user)
+          .to receive(:system_message_email_notification).and_return(true)
+
+        expect { user_system_notification.send_email&.deliver_now }
+          .to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
+    end
+
+    context 'when user has disabled notifications' do
+      it 'doesn\'t deliver new email' do
+        expect { user_system_notification.send_email&.deliver_now }
+          .not_to(change { ActionMailer::Base.deliveries.count })
+      end
+    end
+  end
+
   describe 'Methods' do
     let(:notifcation_one) { create :system_notification }
     let(:notifcation_two) { create :system_notification }

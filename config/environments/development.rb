@@ -57,6 +57,8 @@ Rails.application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
+  config.action_mailer.preview_path = "#{Rails.root}/test/mailers/previews"
+
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
