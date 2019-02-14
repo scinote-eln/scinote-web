@@ -25,12 +25,13 @@ describe TemplatesService do
         FileUtils.remove_dir(tmplts_dir) if Dir.exist?(tmplts_dir)
         FileUtils.mkdir(tmplts_dir)
         FileUtils.mv(exp_dir, "#{tmplts_dir}/experiment_#{demo_exp.id}")
-        templates_project = create :project, name: 'Templates', template: true
+        templates_project =
+          create :project, name: 'Templates', template: true, team: main_team
         create(
           :user_project, :owner, project: templates_project, user: admin_user
         )
         ts = TemplatesService.new(tmplts_dir)
-        ts.update_project(templates_project)
+        ts.update_team(main_team)
         Delayed::Job.all.each { |job| dj_worker.run(job) }
         tmpl_exp = templates_project.experiments.first
 

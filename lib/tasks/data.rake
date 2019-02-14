@@ -133,7 +133,7 @@ namespace :data do
   desc 'Update all templates projects'
   task update_all_templates: :environment do
     Rails.logger.info('Templates, syncing all templates projects')
-    updated, total = TemplatesService.new.update_all_projects
+    updated, total = TemplatesService.new.update_all_templates
     Rails.logger.info(
       "Templates, total number of updated projects: #{updated} out of #{total}}"
     )
