@@ -10,7 +10,7 @@ class MyModuleGroup < ApplicationRecord
              optional: true
   has_many :my_modules, inverse_of: :my_module_group, dependent: :nullify
 
-  scope :active, (lambda do
+  scope :without_archived_modules, (lambda do
     joins(:my_modules).where('my_modules.archived = ?', false).distinct
   end)
 

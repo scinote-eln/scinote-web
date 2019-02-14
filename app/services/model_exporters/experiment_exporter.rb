@@ -42,7 +42,7 @@ module ModelExporters
         my_module_groups = @experiment.my_module_groups
       else
         my_modules = @experiment.my_modules.active
-        my_module_groups = @experiment.my_module_groups.active
+        my_module_groups = @experiment.my_module_groups.without_archived_modules
       end
       return {
         experiment: @experiment,
