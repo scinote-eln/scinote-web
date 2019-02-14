@@ -18,7 +18,7 @@ class SystemNotificationsController < ApplicationController
   end
 
   def show
-    render json: current_user.user_system_notifications.modal(params[:id]) || {}
+    render json: current_user.system_notifications.modals.find_by_id(params[:id]) || {}
   end
 
   # Update seen_at parameter for system notifications
@@ -31,7 +31,7 @@ class SystemNotificationsController < ApplicationController
   end
 
   def mark_as_read
-    current_user.user_system_notifications.mark_read(params[:id])
+    current_user.user_system_notifications.mark_as_read(params[:id])
     render json: { result: 'ok' }
   rescue StandardError
     render json: { result: 'failed' }

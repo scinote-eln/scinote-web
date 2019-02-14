@@ -9,17 +9,11 @@ class UserSystemNotification < ApplicationRecord
       .update_all(seen_at: Time.now)
   end
 
-  def self.mark_read(notification_id)
+  def self.mark_as_read(notification_id)
     notification = find_by_system_notification_id(notification_id)
     if notification && notification.read_at.nil?
       notification.update(read_at: Time.now)
     end
-  end
-
-  def self.modal(notification_id)
-    select(:modal_title, :modal_body, 'system_notifications.id')
-      .joins(:system_notification)
-      .find_by_system_notification_id(notification_id)
   end
 
   def self.show_on_login(update_read_time = false)
