@@ -18,7 +18,7 @@
     <div class="collapse navbar-collapse" id="main-menu">
       <ul class="nav navbar-nav navbar-left" id="nav-team-switch">
         <!-- System notification dropdown -->
-         <li class="dropdown">
+         <li class="dropdown system-notifications">
           <a href="#"
              id="system-notifications-dropdown"
              class="dropdown-toggle"
@@ -27,25 +27,25 @@
              role="button"
              aria-haspopup="true"
              aria-expanded="false"
-             data-href="<%= system_notifications_url(format: :json, unseen: true) %>">
+             data-href="<%= system_notifications_url(format: :json) %>">
             <i class="fas fa-gift"></i>
-            <span class="visible-xs-inline visible-sm-inline">What's new</span>
+            <span class="visible-xs-inline visible-sm-inline"><%= t("system_notifications.index.whats_new") %></span>
             <span id="count-system-notifications"
                   data-href="<%= unseen_counter_system_notifications_url %>">
             </span>
           </a>
           <ul class="dropdown-menu dropdown-system-notifications">
             <li class="system-notifications-dropdown-header">
-              <span class="pull-left">What's new</span>
+              <span class="pull-left"><%= t("system_notifications.index.whats_new") %></span>
               <span class="show-all">
-                <%= link_to 'See all', system_notifications_path %>
+                <%= link_to t('system_notifications.index.see_all'), system_notifications_path %>
               </span>
               <span class="pull-right">
                 <%= link_to t('nav.user.settings'), preferences_path %>
               </span>
             </li>
             <li class="system-notifications-no-recent">
-              <em>No recent system notifications</em>
+              <em><%= t("system_notifications.index.no_notifications") %></em>
             </li>
           </ul>
         </li>
@@ -115,7 +115,7 @@
                        name="q"
                        placeholder="<%= t('nav.search') %>" />
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="submit"><%=t 'nav.search_button' %></button>
+                  <button class="btn btn-default" type="submit"><%= t 'nav.search_button' %></button>
                 </span>
               </div>
           <% end %>

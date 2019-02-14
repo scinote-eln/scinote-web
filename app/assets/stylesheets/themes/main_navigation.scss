@@ -365,6 +365,7 @@
 // System notiifcations dropdown
 
 #system-notifications-dropdown {
+
   .fa-gift {
     font-size: $font-size-large;
   }
@@ -384,7 +385,7 @@
 }
 
 .dropdown-system-notifications {
-  margin-bottom:10px;
+  margin-bottom: 10px;
   max-height: 500px;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -394,21 +395,20 @@
   word-wrap: break-word;
 
   .system-notifications-no-recent {
-    padding: 0px 0px 10px 10px;
+    padding: 0 0 10px 10px;
   }
 
-  .system-notifications-dropdown-header{
-    margin-bottom:10px;
+  .system-notifications-dropdown-header {
+    margin-bottom: 10px;
 
-    .show-all{
-      margin-left:20px;
+    .show-all {
+      margin-left: 20px;
 
     }
-    a{
-        font-size: $font-size-small;
-        font-weight: $headings-font-weight;
+
+    a {
+      font-size: $font-size-small;
+      font-weight: $headings-font-weight;
     }
   }
-
-  
 }

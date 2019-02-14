@@ -51,7 +51,7 @@
       });
   }
 
-  function loadUnseenNotificationsNumber(element='notifications',icon='.fa-bell') {
+  function loadUnseenNotificationsNumber(element = 'notifications', icon = '.fa-bell') {
     var notificationCount = $('#count-' + element);
     $.ajax({
       url: notificationCount.attr('data-href'),
@@ -62,7 +62,7 @@
         if (data.notificationNmber > 0) {
           notificationCount.html(data.notificationNmber);
           notificationCount.show();
-          toggleNotificationBellPosition(element,icon);
+          toggleNotificationBellPosition(element, icon);
         } else {
           notificationCount.hide();
         }
@@ -70,7 +70,7 @@
     });
   }
 
-  function toggleNotificationBellPosition(element='notifications',icon='.fa-bell') {
+  function toggleNotificationBellPosition(element = 'notifications', icon = '.fa-bell') {
     var notificationCount = $('#count-' + element);
     var button = $('#' + element + '-dropdown');
 
@@ -120,6 +120,12 @@
           beforeSend: animateSpinner($('.system-notifications-dropdown-header'), true),
           success: function(data) {
             var ul = $('.dropdown-menu.dropdown-system-notifications');
+            // After closing system notification modal release system notifications dropdown
+            $('#manage-module-system-notification-modal').on('hidden.bs.modal', function() {
+              setTimeout(function() {
+                $('.dropdown.system-notifications')[0].dataset.closable = true;
+              }, 100);
+            });
             $('.system-notifications-dropdown-header')
               .nextAll('.system-notification')
               .remove();
@@ -134,19 +140,22 @@
           }
         });
         $('#count-system-notifications').hide();
-        toggleNotificationBellPosition('system-notifications','.fa-gift');
-      }); 
+        toggleNotificationBellPosition('system-notifications', '.fa-gift');
+      });
   }
 
   // init
-  loadDropdownSystemNotifications()
-  $('.dropdown-system-notifications').scroll(function() { 
+  loadDropdownSystemNotifications();
+  $('.dropdown-system-notifications').scroll(function() {
     SystemNotificationsMarkAsSeen('.dropdown-system-notifications');
   });
-  $('.dropdown').on('hide.bs.dropdown', function () {
-    if ($('.modal.in').length > 0){
-      return false;
-    }
-  });
-  loadUnseenNotificationsNumber('system-notifications','.fa-gift')
+  loadUnseenNotificationsNumber('system-notifications', '.fa-gift');
+  // Override dropdown menu closing action while system notification modal open
+  $('.dropdown.system-notifications').on('hide.bs.dropdown',
+    function() {
+      if (this.dataset.closable === 'false') {
+        return false;
+      }
+      return true;
+    });
 })();

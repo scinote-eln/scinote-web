@@ -40,7 +40,9 @@ class SystemNotificationsController < ApplicationController
   end
 
   def unseen_counter
-    render json: {notificationNmber: current_user.user_system_notifications.unseen_count}
+    render json: {
+      notificationNmber: current_user.user_system_notifications.unseen_count
+    }
   end
 
   private
@@ -48,9 +50,8 @@ class SystemNotificationsController < ApplicationController
   def prepare_notifications
     page = (params[:page] || 1).to_i
     query = params[:search_queue]
-    unseen = params[:unseen]
     per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT
-    notifications = SystemNotification.last_notifications(current_user, query, unseen)
+    notifications = SystemNotification.last_notifications(current_user, query)
                                       .page(page)
                                       .per(per_page)
 

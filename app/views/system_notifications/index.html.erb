@@ -3,7 +3,7 @@
 <div class="content-pane" id="system-notifications-index">
   <h3 class="title-container">
     <strong><%= t("system_notifications.index.whats_new") %></strong>
-    <%= link_to t("system_notifications.index.settings"), nil %>
+    <%= link_to t("system_notifications.index.settings"), preferences_path %>
   </h3>
   <%= form_tag system_notifications_path, method: :get, id: "search-bar-notifications", class: "navbar-form navbar-left", role: "search" do %>
   <div class="form-group">
@@ -32,4 +32,3 @@
     </div>
 </div>
 
-<%= javascript_include_tag "system_notifications/index.js" %>
