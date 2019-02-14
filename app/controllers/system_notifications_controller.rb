@@ -18,7 +18,8 @@ class SystemNotificationsController < ApplicationController
   end
 
   def show
-    render json: current_user.system_notifications.modals.find_by_id(params[:id]) || {}
+    render json: current_user.system_notifications.modals
+                             .find_by_id(params[:id]) || {}
   end
 
   # Update seen_at parameter for system notifications
