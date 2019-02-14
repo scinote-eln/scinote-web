@@ -41,8 +41,8 @@ module ModelExporters
         my_modules = @experiment.my_modules
         my_module_groups = @experiment.my_module_groups
       else
-        my_modules = @experiment.active_my_modules
-        my_module_groups = @experiment.active_module_groups
+        my_modules = @experiment.my_modules.active
+        my_module_groups = @experiment.my_module_groups.active
       end
       return {
         experiment: @experiment,

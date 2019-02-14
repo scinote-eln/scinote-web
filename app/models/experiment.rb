@@ -100,12 +100,6 @@ class Experiment < ApplicationRecord
     end
   end
 
-  def active_module_groups
-    my_module_groups.joins(:my_modules)
-                    .where('my_modules.archived = ?', false)
-                    .distinct
-  end
-
   def active_modules
     my_modules.where(archived: false)
   end
