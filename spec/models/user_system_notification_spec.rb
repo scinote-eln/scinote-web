@@ -16,19 +16,30 @@ describe UserSystemNotification do
   end
 
   describe '.send_email' do
+    before do
+      Delayed::Worker.delay_jobs = false
+    end
+
+    after do
+      Delayed::Worker.delay_jobs = true
+    end
+
     context 'when user has enabled notifications' do
-      it 'delivers new email' do
+      it 'delivers an email on creating new user_system_notification' do
         allow(user_system_notification.user)
           .to receive(:system_message_email_notification).and_return(true)
 
-        expect { user_system_notification.send_email&.deliver_now }
+        expect { user_system_notification.save }
           .to change { ActionMailer::Base.deliveries.count }.by(1)
       end
     end
 
     context 'when user has disabled notifications' do
-      it 'doesn\'t deliver new email' do
-        expect { user_system_notification.send_email&.deliver_now }
+      it 'doesn\'t deliver email on creating new user_system_notification' do
+        allow(user_system_notification.user)
+          .to receive(:system_message_email_notification).and_return(false)
+
+        expect { user_system_notification.save }
           .not_to(change { ActionMailer::Base.deliveries.count })
       end
     end

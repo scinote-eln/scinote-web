@@ -4,17 +4,13 @@ class UserSystemNotification < ApplicationRecord
   belongs_to :user
   belongs_to :system_notification
 
+  after_create :send_email,
+               if: proc { |sn| sn.user.system_message_email_notification }
+
   scope :unseen, -> { where(seen_at: nil) }
 
-  def send_email
-    if user.system_message_email_notification
-      AppMailer
-        .system_notification(user, system_notification)
-    end
-  end
-
-  def self.mark_as_seen(notifications)
-    where(system_notification_id: notifications)
+  def self.mark_as_seen(notifications_id)
+    where(system_notification_id: notifications_id)
       .update_all(seen_at: Time.now)
   end
 
@@ -48,5 +44,11 @@ class UserSystemNotification < ApplicationRecord
       end
       notification
     end
+  end
+
+  private
+
+  def send_email
+    AppMailer.delay.system_notification(user, system_notification)
   end
 end

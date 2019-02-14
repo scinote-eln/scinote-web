@@ -17,6 +17,14 @@ describe Notifications::SyncSystemNotificationsService do
     { notifications: notifications }
   end
 
+  before(:all) do
+    Timecop.freeze
+  end
+
+  after(:all) do
+    Timecop.return
+  end
+
   context 'when request is successful' do
     before do |test|
       if test.metadata[:add_notifications_before]
@@ -65,6 +73,12 @@ describe Notifications::SyncSystemNotificationsService do
       allow(SystemNotification).to receive(:last_sync_timestamp).and_return(nil)
 
       expect(service_call.errors).to have_key(:last_sync_timestamp)
+    end
+
+    it 'adds 20 user_system_notifications records' do
+      create :user # add another user, so have 2 users in DB
+
+      expect { service_call }.to change { UserSystemNotification.count }.by(20)
     end
   end
 
