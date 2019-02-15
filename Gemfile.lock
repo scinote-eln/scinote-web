@@ -247,7 +247,8 @@ GEM
     hammerjs-rails (2.0.8)
     hashdiff (0.3.8)
     hashie (3.5.7)
-    httparty (0.16.2)
+    httparty (0.13.7)
+      json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
@@ -600,7 +601,7 @@ DEPENDENCIES
   faker
   figaro
   hammerjs-rails
-  httparty
+  httparty (~> 0.13.1)
   i18n-js (~> 3.0)
   jbuilder
   jquery-rails

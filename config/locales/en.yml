@@ -1293,7 +1293,7 @@ en:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
   system_notifications:
     emails:
-      title: "What's new notification"
+      subject: "You've received a What's new notification"
       intro_paragraph: "Hello %{user_name}, you received new What's new notification!"
     index:
       whats_new: "What's New"

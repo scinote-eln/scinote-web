@@ -23,15 +23,14 @@ class AppMailer < Devise::Mailer
     mail(headers)
   end
 
-  def system_notification(user, system_notification)
+  def system_notification(user, system_notification, opts = {})
     @user = user
     @system_notification = system_notification
 
     headers = {
       to: @user.email,
-      subject: "[#{t('system_notifications.emails.title')}] "\
-               "#{@system_notification.title}"
-    }
+      subject: t('system_notifications.emails.subject')
+    }.merge(opts)
 
     mail(headers)
   end
