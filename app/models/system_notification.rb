@@ -2,6 +2,8 @@
 
 class SystemNotification < ApplicationRecord
   include PgSearch
+
+  scope :modals, -> { select(:modal_title, :modal_body, :id) }
   # Full text postgreSQL search configuration
   pg_search_scope :search_notifications, against: %i(title description),
                                            using: {
@@ -34,7 +36,8 @@ class SystemNotification < ApplicationRecord
                    :title,
                    :description,
                    :last_time_changed_at,
-                   'user_system_notifications.seen_at'
+                   'user_system_notifications.seen_at',
+                   'user_system_notifications.read_at'
                  )
   end
 

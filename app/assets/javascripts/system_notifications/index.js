@@ -18,10 +18,33 @@ function SystemNotificationsMarkAsSeen() {
   }
 }
 
+function bindSystemNotificationAjax() {
+  var SystemNotificationModal = null;
+  var SystemNotificationModalBody = null;
+  var SystemNotificationModalTitle = null;
+
+  SystemNotificationModal = $('#manage-module-system-notification-modal');
+  SystemNotificationModalBody = SystemNotificationModal.find('.modal-body');
+  SystemNotificationModalTitle = SystemNotificationModal.find('#manage-module-system-notification-modal-label');
+
+  $('.modal-system-notification')
+    .on('ajax:success', function(ev, data) {
+      var SystemNotification = $('.system-notification[data-system-notification-id=' + data.id + ']')[0];
+      SystemNotificationModalBody.html(data.modal_body);
+      SystemNotificationModalTitle.text(data.modal_title);
+      // Open modal
+      SystemNotificationModal.modal('show');
+      if (SystemNotification.dataset.unread === '1') {
+        $.post('system_notifications/' + data.id + '/mark_as_read');
+      }
+    });
+}
+
 function initSystemNotificationsButton() {
   $('.btn-more-notifications')
     .on('ajax:success', function(e, data) {
       $(data.html).insertAfter($('.notifications-container .system-notification').last());
+      bindSystemNotificationAjax();
       if (data.more_url) {
         $(this).attr('href', data.more_url);
       } else {
@@ -30,10 +53,9 @@ function initSystemNotificationsButton() {
     });
 }
 
-(function() {
-  $(window).scroll(function() {
-    SystemNotificationsMarkAsSeen();
-  });
-  initSystemNotificationsButton();
+$(window).scroll(function() {
   SystemNotificationsMarkAsSeen();
-}());
+});
+initSystemNotificationsButton();
+SystemNotificationsMarkAsSeen();
+bindSystemNotificationAjax();
