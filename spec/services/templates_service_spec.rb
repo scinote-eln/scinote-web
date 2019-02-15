@@ -25,21 +25,22 @@ describe TemplatesService do
         FileUtils.remove_dir(tmplts_dir) if Dir.exist?(tmplts_dir)
         FileUtils.mkdir(tmplts_dir)
         FileUtils.mv(exp_dir, "#{tmplts_dir}/experiment_#{demo_exp.id}")
-        templates_project = create :project, name: 'Templates', template: true
+        templates_project =
+          create :project, name: 'Templates', template: true, team: main_team
         create(
           :user_project, :owner, project: templates_project, user: admin_user
         )
         ts = TemplatesService.new(tmplts_dir)
-        ts.update_project(templates_project)
+        ts.update_team(main_team)
         Delayed::Job.all.each { |job| dj_worker.run(job) }
         tmpl_exp = templates_project.experiments.first
 
         expect(tmpl_exp.name).to eq(demo_exp.name)
         expect(tmpl_exp.uuid).to_not eq(nil)
         expect(tmpl_exp.my_modules.pluck(:name))
-          .to match_array(demo_exp.my_modules.pluck(:name))
+          .to match_array(demo_exp.active_my_modules.pluck(:name))
         tmpl_tasks = tmpl_exp.my_modules
-        demo_tasks = demo_exp.my_modules
+        demo_tasks = demo_exp.active_my_modules
         demo_tasks.each do |demo_task|
           tmpl_task = tmpl_tasks.find_by_name(demo_task.name)
           expect(tmpl_task.name).to eq(demo_task.name)
