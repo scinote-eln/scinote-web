@@ -68,6 +68,8 @@ describe SystemNotification do
         expect(described_class.last_sync_timestamp)
           .to be SystemNotification.last.last_time_changed_at.to_i
       end
+    end
+  end
 
   describe 'Methods' do
     let(:notifcation_one) { create :system_notification }

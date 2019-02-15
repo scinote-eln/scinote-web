@@ -44,7 +44,7 @@ describe UserSystemNotification do
       usn = create :user_system_notification,
                    user: user,
                    system_notification: notifcation_one
-      user.user_system_notifications.mark_read(usn.system_notification_id)
+      user.user_system_notifications.mark_as_read(usn.system_notification_id)
       expect(UserSystemNotification.find(usn.id).read_at).not_to be_nil
     end
 
