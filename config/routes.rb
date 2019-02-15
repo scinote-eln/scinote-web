@@ -425,7 +425,7 @@ Rails.application.routes.draw do
       end
     end
 
-    #system notifications routes
+    # System notifications routes
     resources :system_notifications, only: [:index,:show] do
       collection do
         post 'mark_as_seen'
