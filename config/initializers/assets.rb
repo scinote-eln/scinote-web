@@ -65,6 +65,7 @@ Rails.application.config.assets.precompile +=
   %w(protocols/import_export/export.js)
 Rails.application.config.assets.precompile += %w(datatables.js)
 Rails.application.config.assets.precompile += %w(search/index.js)
+Rails.application.config.assets.precompile += %w(global_activities/side_pane.js)
 Rails.application.config.assets.precompile += %w(navigation.js)
 Rails.application.config.assets.precompile += %w(secondary_navigation.js)
 Rails.application.config.assets.precompile += %w(datatables.css)

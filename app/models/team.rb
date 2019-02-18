@@ -7,6 +7,7 @@ class Team < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
   after_create :generate_template_project
+  scope :teams_select, -> { select(:id,:name).order(name: :asc) }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,

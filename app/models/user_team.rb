@@ -1,6 +1,8 @@
 class UserTeam < ApplicationRecord
   enum role: { guest: 0, normal_user: 1, admin: 2 }
 
+  scope :my_teams, -> { where(role: 2) }
+
   validates :role, presence: true
   validates :user, presence: true
   validates :team, presence: true
@@ -17,6 +19,13 @@ class UserTeam < ApplicationRecord
 
   def role_str
     I18n.t("user_teams.enums.role.#{role}")
+  end
+
+  def self.my_employees(user)
+    users=where(:team_id => user.user_teams.my_teams.pluck(:team_id))
+          .joins(:user).select(:full_name, 'users.id as id').as_json.uniq
+    users=[user.as_json.select{|k| ["id","full_name"].include? k}] if users.length == 0
+    users
   end
 
   def create_samples_table_state

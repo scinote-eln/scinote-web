@@ -648,10 +648,8 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :global_activities, only: [:index]
-  namespace :global_activities do
-    get 'search_subjects', to: 'global_activities#search_subjects',
-                           as: 'search_subjects'
+  resources :global_activities, only: [:index] do
+    get :search_subjects, on: :collection
   end
 
   constraints WopiSubdomain do
