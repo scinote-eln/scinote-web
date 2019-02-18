@@ -6,10 +6,7 @@
 <% end %>
 
 <p>
-  <% if @notification.system_message? %>
-    <% # We assume the system notification is clean %>
-    <%= @notification.title.html_safe %>
-  <% elsif @notification.deliver? %>
+  <% if @notification.deliver? %>
     <p><%= I18n.t("notifications.deliver.email_body_1") %></p>
     <p><%= I18n.t("notifications.deliver.email_body_2") %></p>
   <% else %>
@@ -18,10 +15,7 @@
 </p>
 
 <p>
-  <% if @notification.system_message? %>
-    <% # We assume the system notification is clean %>
-    <%= @notification.message.html_safe %>
-  <% elsif @notification.deliver? %>
+  <% if @notification.deliver? %>
     <%= I18n.t("notifications.deliver.download_link") %>
     <% # work around the problem with inserting the link of zipExport %>
     <% zip_id = /data-id=('|")(\d*)('|")/.match(@notification.message)[2] %>

@@ -57,18 +57,6 @@ class AppMailerPreview < ActionMailer::Preview
     )
   end
 
-  def system_message_notification
-    AppMailer.notification(
-      fake_user,
-      Notification.new(
-        type_of: :system_message,
-        title: 'SciNote 9.1 released!',
-        message: '<a href="#" target="_blank">View release notes</a>',
-        created_at: Time.now
-      )
-    )
-  end
-
   def delivery_notification
     AppMailer.notification(
       fake_user,
