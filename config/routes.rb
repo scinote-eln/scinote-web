@@ -424,6 +424,17 @@ Rails.application.routes.draw do
       end
     end
 
+    # System notifications routes
+    resources :system_notifications, only: %i(index show) do
+      collection do
+        post 'mark_as_seen'
+        get 'unseen_counter'
+      end
+      member do
+        post 'mark_as_read'
+      end
+    end
+
     # tinyMCE image uploader endpoint
     post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
 

@@ -82,6 +82,12 @@ class AppMailerPreview < ActionMailer::Preview
     )
   end
 
+  def system_notification
+    sn = FactoryBot.build(:system_notification)
+    user = FactoryBot.build(:user)
+    AppMailer.system_notification(user, sn)
+  end
+
   private
 
   def fake_user

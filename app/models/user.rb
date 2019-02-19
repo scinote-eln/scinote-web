@@ -209,6 +209,8 @@ class User < ApplicationRecord
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
+  has_many :user_system_notifications
+  has_many :system_notifications, through: :user_system_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
   has_many :view_states, dependent: :destroy
@@ -482,6 +484,11 @@ class User < ApplicationRecord
 
   def has_linked_account?(provider)
     user_identities.where(provider: provider).exists?
+  end
+
+  # This method must be overwriten for addons that will be installed
+  def show_login_system_notification?
+    user_system_notifications.show_on_login.present?
   end
 
   # json friendly attributes

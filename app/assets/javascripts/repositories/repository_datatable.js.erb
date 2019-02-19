@@ -1284,6 +1284,7 @@ var RepositoryDatatable = (function(global) {
         });
         reorderer.order(listIds, false);
         loadColumnsNames();
+        initRowSelection();
       }
     });
     $('.sorting').on('click', checkAvailableColumns);

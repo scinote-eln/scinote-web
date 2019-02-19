@@ -270,7 +270,7 @@ function importProtocolFromFile(
                                      element.getAttribute('fileref'));
       var image_tag = "<img style='max-width:300px; max-height:300px;' src='data:" + element.children[1].innerHTML + ";base64," + assetBytes + "' />"
       description = description.replace(match, image_tag); // replace the token with image
-    }).bind(this);
+    });
     // I know is crazy but is the only way I found to pass valid HTML
     return $('<div></div>').html(
       description.replace('<!--[CDATA[  ', '')

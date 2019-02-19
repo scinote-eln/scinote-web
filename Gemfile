@@ -10,6 +10,7 @@ gem 'devise', '~> 4.3.0'
 gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 0.18'
+gem 'pg_search' # PostgreSQL full text search
 gem 'rails', '5.1.6'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
@@ -58,6 +59,7 @@ gem 'delayed_paperclip',
     git: 'https://github.com/jrgifford/delayed_paperclip.git',
     ref: 'fcf574c'
 gem 'faker' # Generate fake data
+gem 'httparty', '~> 0.13.1'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
@@ -119,6 +121,7 @@ group :development, :test do
   gem 'rubocop', '>= 0.59.0', require: false
   gem 'scss_lint', require: false
   gem 'starscope', require: false
+  gem 'timecop'
 end
 
 group :test do
@@ -131,6 +134,7 @@ group :test do
   gem 'poltergeist'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
+  gem 'webmock'
 end
 
 group :production do

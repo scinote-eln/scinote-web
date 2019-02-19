@@ -574,8 +574,10 @@ class ProtocolsController < ApplicationController
       transaction_error = false
       Protocol.transaction do
         begin
-          protocol = import_new_protocol(@protocol_json, @team, @type, current_user)
-        rescue Exception
+          protocol =
+            import_new_protocol(@protocol_json, @team, @type, current_user)
+        rescue StandardError => ex
+          Rails.logger.error ex.message
           transaction_error = true
           raise ActiveRecord:: Rollback
         end

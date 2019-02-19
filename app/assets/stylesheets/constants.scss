@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,400italic&subset=latin,latin-ext);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,400i,700&subset=latin-ext);
 
 //==============================================================================
 // Colors
@@ -58,7 +58,7 @@ $link-hover-color: darken($link-color, 15%);
 $link-hover-decoration: underline;
 
 // Typography
-$font-family-lato: lato, "Open Sans", Arial, Helvetica, sans-serif;
+$font-family-lato: Lato, "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-sans-serif: "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
 $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
