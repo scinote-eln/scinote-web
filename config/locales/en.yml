@@ -1291,7 +1291,16 @@ en:
     color_label: "Sample group color"
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
-
+  system_notifications:
+    emails:
+      subject: "You've received a What's new notification"
+      intro_paragraph: "Hello %{user_name}, you received new What's new notification!"
+    index:
+      whats_new: "What's New"
+      more_notifications: "More system notifications"
+      no_notifications: "No more system notifications"
+      settings: "Settings"
+      see_all: "See all"
   activities:
     index:
       today: "Today"

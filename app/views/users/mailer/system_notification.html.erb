@@ -1,0 +1,10 @@
+<p>
+  <%= I18n.t("system_notifications.emails.intro_paragraph", user_name: @user.name) %>
+</p>
+<p>
+  <%= link_to @system_notification.title.html_safe, system_notifications_url %>
+</p>
+
+<p>
+  <%= @system_notification.description.html_safe %>
+</p>
