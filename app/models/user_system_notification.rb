@@ -18,12 +18,6 @@ class UserSystemNotification < ApplicationRecord
     end
   end
 
-  def self.modal(notification_id)
-    select(:modal_title, :modal_body, 'system_notifications.id')
-      .joins(:system_notification)
-      .find_by_system_notification_id(notification_id)
-  end
-
   def self.show_on_login(update_read_time = false)
     # for notification check leave update_read_time empty
     notification = joins(:system_notification)
