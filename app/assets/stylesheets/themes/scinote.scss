@@ -656,6 +656,7 @@ ul.double-line > li {
   background-color: $color-white;
 
   &>.panel-title {
+    color: $brand-primary;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
