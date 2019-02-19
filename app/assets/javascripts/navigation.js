@@ -151,11 +151,10 @@
   });
   loadUnseenNotificationsNumber('system-notifications', '.fa-gift');
   // Override dropdown menu closing action while system notification modal open
-  $('.dropdown.system-notifications').on('hide.bs.dropdown',
-    function() {
-      if (this.dataset.closable === 'false') {
-        return false;
-      }
-      return true;
-    });
+  $('.dropdown.system-notifications').on('hide.bs.dropdown', function() {
+    if (this.dataset.closable === 'false') {
+      return false;
+    }
+    return true;
+  });
 })();

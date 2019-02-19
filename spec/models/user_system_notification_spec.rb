@@ -20,17 +20,6 @@ describe UserSystemNotification do
     let(:notifcation_two) { create :system_notification }
     let(:notifcation_three) { create :system_notification, :show_on_login }
 
-    it 'unseen_count return right count' do
-      create :user_system_notification,
-             :seen,
-             user: user,
-             system_notification: notifcation_one
-      create :user_system_notification,
-             user: user,
-             system_notification: notifcation_two
-      notifications_count = user.user_system_notifications.unseen_count
-      expect(notifications_count).to eq 1
-    end
     it 'make_as_seen update seen_at' do
       usn = create :user_system_notification,
                    user: user,

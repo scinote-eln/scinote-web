@@ -41,7 +41,7 @@ class SystemNotificationsController < ApplicationController
 
   def unseen_counter
     render json: {
-      notificationNmber: current_user.user_system_notifications.unseen_count
+      notificationNmber: current_user.user_system_notifications.unseen.count
     }
   end
 

@@ -18,10 +18,6 @@ class UserSystemNotification < ApplicationRecord
     end
   end
 
-  def self.unseen_count
-    unseen.count
-  end
-
   def self.modal(notification_id)
     select(:modal_title, :modal_body, 'system_notifications.id')
       .joins(:system_notification)
