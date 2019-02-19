@@ -15,6 +15,36 @@ describe UserSystemNotification do
     it { is_expected.to belong_to(:system_notification) }
   end
 
+  describe '.create' do
+    before do
+      Delayed::Worker.delay_jobs = false
+    end
+
+    after do
+      Delayed::Worker.delay_jobs = true
+    end
+
+    context 'when user has enabled notifications' do
+      it 'calls send an email on creation' do
+        allow(user_system_notification.user)
+          .to receive(:system_message_email_notification).and_return(true)
+
+        expect(user_system_notification).to receive(:send_email)
+        user_system_notification.save
+      end
+    end
+
+    context 'when user has disabled notifications' do
+      it 'doesn\'t call send an email on createion' do
+        allow(user_system_notification.user)
+          .to receive(:system_message_email_notification).and_return(false)
+
+        expect(user_system_notification).not_to receive(:send_email)
+        user_system_notification.save
+      end
+    end
+  end
+
   describe 'Methods' do
     let(:notifcation_one) { create :system_notification }
     let(:notifcation_two) { create :system_notification }

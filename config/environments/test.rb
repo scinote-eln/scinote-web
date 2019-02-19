@@ -56,7 +56,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: Rails.application.secrets.mail_server_url }
   config.action_mailer.default_options = { from: Rails.application.secrets.mail_from }
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
     address: Rails.application.secrets.mailer_address,

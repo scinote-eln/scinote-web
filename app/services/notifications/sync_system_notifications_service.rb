@@ -81,6 +81,7 @@ module Notifications
             .where(source_id: attrs[:source_id]).first_or_initialize(attrs)
 
         if n.new_record?
+          n.users = User.all
           n.save!
         elsif n.last_time_changed_at < attrs[:last_time_changed_at]
           n.update_attributes!(attrs)
