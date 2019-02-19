@@ -908,6 +908,8 @@ class Constants
   # Team name for default admin user
   DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
 
+  TEMPLATES_PROJECT_NAME = 'Templates'.freeze
+
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
   #   *                       / | \    (/\|/\)   / | \                      *

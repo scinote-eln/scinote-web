@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 namespace :notifications do
-  desc 'Copies system notifications to newly created data structure. IT SHOULD BE RUN ONE TIME ONLY'
+  desc 'Copies system notifications to newly created data structure.' \
+       'IT SHOULD BE RUN ONE TIME ONLY'
   task copy_system_notifications: :environment do
     t0 = Time.now
     system_notifications = Notification
@@ -71,3 +73,4 @@ namespace :notifications do
     system_notifications.delete_all
   end
 end
+# rubocop:enable Metrics/BlockLength

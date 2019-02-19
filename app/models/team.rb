@@ -6,6 +6,8 @@ class Team < ApplicationRecord
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
 
+  after_create :generate_template_project
+
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
@@ -35,6 +37,7 @@ class Team < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
 
+  attr_accessor :without_templates
   attr_accessor :without_intro_demo
   after_create :generate_intro_demo
 
@@ -309,6 +312,11 @@ class Team < ApplicationRecord
   end
 
   private
+
+  def generate_template_project
+    return if without_templates
+    TemplatesService.new.update_team(self)
+  end
 
   include FirstTimeDataGenerator
 

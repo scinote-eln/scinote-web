@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   use_doorkeeper do
     skip_controllers :applications, :authorized_applications, :token_info
   end
@@ -426,7 +425,7 @@ Rails.application.routes.draw do
     end
 
     # System notifications routes
-    resources :system_notifications, only: [:index,:show] do
+    resources :system_notifications, only: %i(index show) do
       collection do
         post 'mark_as_seen'
         get 'unseen_counter'

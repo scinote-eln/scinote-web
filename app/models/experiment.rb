@@ -40,6 +40,8 @@ class Experiment < ApplicationRecord
   validates :project, presence: true
   validates :created_by, presence: true
   validates :last_modified_by, presence: true
+  validates :uuid, uniqueness: { scope: :project },
+                   unless: proc { |e| e.uuid.blank? }
   with_options if: :archived do |experiment|
     experiment.validates :archived_by, presence: true
     experiment.validates :archived_on, presence: true
@@ -96,12 +98,6 @@ class Experiment < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
-  end
-
-  def active_module_groups
-    my_module_groups.joins(:my_modules)
-                    .where('my_modules.archived = ?', false)
-                    .distinct
   end
 
   def active_modules

@@ -10,6 +10,10 @@ class MyModuleGroup < ApplicationRecord
              optional: true
   has_many :my_modules, inverse_of: :my_module_group, dependent: :nullify
 
+  scope :without_archived_modules, (lambda do
+    joins(:my_modules).where('my_modules.archived = ?', false).distinct
+  end)
+
   def deep_clone_to_experiment(current_user, experiment)
     clone = MyModuleGroup.new(
       created_by: created_by,
