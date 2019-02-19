@@ -1,14 +1,12 @@
 'use strict';
 
 // update selected notiifcations
-function SystemNotificationsMarkAsSeen() {
-  var WindowSize = $(window).height();
-  var NotificaitonSize = 75;
+function SystemNotificationsMarkAsSeen(container = window) {
+  var WindowSize = $(container).height();
   var NotificationsToUpdate = [];
-
   _.each($('.system-notification[data-new="1"]'), function(el) {
     var NotificationTopPosition = el.getBoundingClientRect().top;
-    if (NotificationTopPosition > 0 && NotificationTopPosition < (WindowSize - NotificaitonSize)) {
+    if (NotificationTopPosition > 0 && NotificationTopPosition < WindowSize) {
       NotificationsToUpdate.push(el.dataset.systemNotificationId);
       el.dataset.new = 0;
     }
@@ -32,6 +30,7 @@ function bindSystemNotificationAjax() {
       var SystemNotification = $('.system-notification[data-system-notification-id=' + data.id + ']')[0];
       SystemNotificationModalBody.html(data.modal_body);
       SystemNotificationModalTitle.text(data.modal_title);
+      $('.dropdown.system-notifications')[0].dataset.closable = false;
       // Open modal
       SystemNotificationModal.modal('show');
       if (SystemNotification.dataset.unread === '1') {

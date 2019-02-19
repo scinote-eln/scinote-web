@@ -5,14 +5,14 @@ FactoryBot.define do
     user
     system_notification
     trait :seen do
-      seen { Faker::Time.between(3.days.ago, Date.today) }
+      seen_at { Faker::Time.between(3.days.ago, Date.today) }
     end
     trait :read do
-      read { Faker::Time.between(3.days.ago, Date.today) }
+      read_at { Faker::Time.between(3.days.ago, Date.today) }
     end
     trait :seen_and_read do
-      seen { Faker::Time.between(3.days.ago, Date.today) }
-      read { Faker::Time.between(seen, Date.today) }
+      seen_at { Faker::Time.between(3.days.ago, Date.today) }
+      read_at { Faker::Time.between(seen_at, Date.today) }
     end
   end
 end

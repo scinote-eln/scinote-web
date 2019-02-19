@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe SystemNotification do
+  let(:user) { create :user }
   subject(:system_notification) { build :system_notification }
 
   it 'is valid' do
@@ -67,6 +68,46 @@ describe SystemNotification do
         expect(described_class.last_sync_timestamp)
           .to be SystemNotification.last.last_time_changed_at.to_i
       end
+    end
+  end
+
+  describe 'Methods' do
+    let(:notifcation_one) { create :system_notification }
+    let(:notifcation_two) { create :system_notification, title: 'Special one' }
+    before do
+      create :user_system_notification,
+             user: user,
+             system_notification: notifcation_one
+      create :user_system_notification,
+             user: user,
+             system_notification: notifcation_two
+    end
+
+    it 'get last notifications without search' do
+      result = SystemNotification.last_notifications(user)
+      expect(result.length).to eq 2
+      expect(result.first).to respond_to(
+        :id,
+        :title,
+        :description,
+        :last_time_changed_at,
+        :seen_at,
+        :read_at
+      )
+    end
+
+    it 'get last notifications with search' do
+      result = SystemNotification.last_notifications(user, 'Special one')
+      expect(result.length).to eq 1
+      expect(result.first).to respond_to(
+        :id,
+        :title,
+        :description,
+        :last_time_changed_at,
+        :seen_at,
+        :read_at
+      )
+      expect(result.first.title).to eq 'Special one'
     end
   end
 end

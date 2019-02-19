@@ -31,11 +31,18 @@ class SystemNotificationsController < ApplicationController
     render json: { result: 'failed' }
   end
 
+  # Update read_at parameter for system notifications
   def mark_as_read
     current_user.user_system_notifications.mark_as_read(params[:id])
     render json: { result: 'ok' }
   rescue StandardError
     render json: { result: 'failed' }
+  end
+
+  def unseen_counter
+    render json: {
+      notificationNmber: current_user.user_system_notifications.unseen.count
+    }
   end
 
   private

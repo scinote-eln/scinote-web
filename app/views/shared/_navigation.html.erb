@@ -17,6 +17,38 @@
     <% if user_signed_in? %>
     <div class="collapse navbar-collapse" id="main-menu">
       <ul class="nav navbar-nav navbar-left" id="nav-team-switch">
+        <!-- System notification dropdown -->
+         <li class="dropdown system-notifications">
+          <a href="#"
+             id="system-notifications-dropdown"
+             class="dropdown-toggle"
+             title="System notifications"
+             data-toggle="dropdown"
+             role="button"
+             aria-haspopup="true"
+             aria-expanded="false"
+             data-href="<%= system_notifications_url(format: :json) %>">
+            <i class="fas fa-gift"></i>
+            <span class="visible-xs-inline visible-sm-inline"><%= t("system_notifications.index.whats_new") %></span>
+            <span id="count-system-notifications"
+                  data-href="<%= unseen_counter_system_notifications_url %>">
+            </span>
+          </a>
+          <ul class="dropdown-menu dropdown-system-notifications">
+            <li class="system-notifications-dropdown-header">
+              <span class="pull-left"><%= t("system_notifications.index.whats_new") %></span>
+              <span class="show-all">
+                <%= link_to t('system_notifications.index.see_all'), system_notifications_path %>
+              </span>
+              <span class="pull-right">
+                <%= link_to t('nav.user.settings'), preferences_path %>
+              </span>
+            </li>
+            <li class="system-notifications-no-recent">
+              <em><%= t("system_notifications.index.no_notifications") %></em>
+            </li>
+          </ul>
+        </li>
         <!-- Global team switch -->
         <% if current_user.teams.length > 0 %>
           <li id="team-switch">
@@ -83,7 +115,7 @@
                        name="q"
                        placeholder="<%= t('nav.search') %>" />
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="submit"><%=t 'nav.search_button' %></button>
+                  <button class="btn btn-default" type="submit"><%= t 'nav.search_button' %></button>
                 </span>
               </div>
           <% end %>
@@ -136,7 +168,7 @@
                   data-href="<%= unseen_notification_url(current_user) %>">
             </span>
           </a>
-          <ul class="dropdown-menu dropdown-notifications">
+          <ul class="dropdown-menu dropdown-notifications system-notifications">
             <li class="notifications-dropdown-header">
               <span><%= t('notifications.title') %></span>
               <span class="pull-right">
@@ -159,4 +191,5 @@
 </nav>
 <div id="loading-animation"></div>
 
+<%= javascript_include_tag("system_notifications/index") %>
 <%= javascript_include_tag("navigation") %>
