@@ -1294,7 +1294,7 @@ en:
   system_notifications:
     emails:
       subject: "You've received a What's new notification"
-      intro_paragraph: "Hello %{user_name}, you received new What's new notification!"
+      intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
     index:
       whats_new: "What's New"
       more_notifications: "More system notifications"
