@@ -106,7 +106,7 @@ class ProjectsController < ApplicationController
       # Create "project created" activity
       Activity.create(
         type_of: :create_project,
-        user: current_user,
+        owner: current_user,
         project: @project,
         message: t(
           "activities.create_project",
@@ -201,7 +201,7 @@ class ProjectsController < ApplicationController
       if message_renamed.present?
         Activity.create(
           type_of: :rename_project,
-          user: current_user,
+          owner: current_user,
           project: @project,
           message: message_renamed
         )

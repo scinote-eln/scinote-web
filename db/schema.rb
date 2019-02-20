@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20190213064847) do
   create_table "activities", force: :cascade do |t|
     t.bigint "my_module_id"
     t.bigint "owner_id"
-    t.integer "type_of"
+    t.integer "type_of", null: false
     t.string "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
