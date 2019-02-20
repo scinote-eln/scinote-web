@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :system_notification do
     sequence(:title) { |n| "System notification #{n}" }
-    description { Faker::ChuckNorris.fact }
+    description { Faker::ChuckNorris.fact[0..255] }
     modal_title { Faker::Name.first_name }
     modal_body { Faker::Lorem.paragraphs(4).map { |pr| "<p>#{pr}</p>" }.join }
     source_created_at { Faker::Time.between(3.days.ago, Date.today) }
