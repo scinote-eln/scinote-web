@@ -12,7 +12,7 @@ function SystemNotificationsMarkAsSeen(container = window) {
     }
   });
   if (NotificationsToUpdate.length > 0) {
-    $.post('system_notifications/mark_as_seen', { notifications: JSON.stringify(NotificationsToUpdate) });
+    $.post('/system_notifications/mark_as_seen', { notifications: JSON.stringify(NotificationsToUpdate) });
   }
 }
 
@@ -34,7 +34,7 @@ function bindSystemNotificationAjax() {
       // Open modal
       SystemNotificationModal.modal('show');
       if (SystemNotification.dataset.unread === '1') {
-        $.post('system_notifications/' + data.id + '/mark_as_read');
+        $.post('/system_notifications/' + data.id + '/mark_as_read');
       }
     });
 }
