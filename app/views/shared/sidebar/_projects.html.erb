@@ -1,6 +1,6 @@
 <ul>
   <% @projects_tree.each do |project| %>
-    <% cache [current_user, project] do %>
+    <% cache [action_name, current_user, project] do %>
       <li data-parent="candidate" data-project-id="<%= project.id %>">
         <span class="tree-link line-wrap no-indent">
           <i class="no-arrow"></i>
