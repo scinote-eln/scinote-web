@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190117155006) do
+ActiveRecord::Schema.define(version: 20190213064847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,19 +19,26 @@ ActiveRecord::Schema.define(version: 20190117155006) do
 
   create_table "activities", force: :cascade do |t|
     t.bigint "my_module_id"
-    t.bigint "user_id"
+    t.bigint "owner_id"
     t.integer "type_of", null: false
-    t.string "message", null: false
+    t.string "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "project_id", null: false
     t.bigint "experiment_id"
+    t.string "subject_type"
+    t.bigint "subject_id"
+    t.bigint "team_id"
+    t.integer "group_type"
+    t.json "values"
     t.index ["created_at"], name: "index_activities_on_created_at"
     t.index ["experiment_id"], name: "index_activities_on_experiment_id"
     t.index ["my_module_id"], name: "index_activities_on_my_module_id"
+    t.index ["owner_id"], name: "index_activities_on_owner_id"
     t.index ["project_id"], name: "index_activities_on_project_id"
+    t.index ["subject_type", "subject_id"], name: "index_activities_on_subject_type_and_subject_id"
+    t.index ["team_id"], name: "index_activities_on_team_id"
     t.index ["type_of"], name: "index_activities_on_type_of"
-    t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
   create_table "asset_text_data", force: :cascade do |t|
@@ -885,7 +892,7 @@ ActiveRecord::Schema.define(version: 20190117155006) do
   add_foreign_key "activities", "experiments"
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
-  add_foreign_key "activities", "users"
+  add_foreign_key "activities", "users", column: "owner_id"
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
