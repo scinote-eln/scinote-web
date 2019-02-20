@@ -6,16 +6,16 @@
   border-bottom: 1px solid $color-gainsboro;
   color: $color-emperor;
   display: inline-block;
-  padding-top: 5px;
+  float: left;
   min-height: 70px;
   padding-bottom: 5px;
+  padding-top: 5px;
   position: relative;
-  float:left;
   width: 100%;
 
-  &:hover{
+  &:hover {
     background: $color-concrete;
-    opacity: 0.7;
+    opacity: .7;
   }
 
   .status-block {
@@ -69,12 +69,12 @@
 
 // Global system notification
 #system-notifications-index {
-  position: relative;
   display: inline-block;
+  position: relative;
 
   #search-bar-notifications {
     border-bottom: 1px solid $color-gainsboro;
-    margin: 10px 0 0 0;
+    margin: 10px 0 0;
     padding: 0 0 10px;
     width: 100%;
 
