@@ -20,8 +20,11 @@ class SystemNotification < ApplicationRecord
             :source_created_at, :source_id, :last_time_changed_at,
             presence: true
 
-  validates :title, :description,
+  validates :title, :description, :modal_title,
             length: { maximum: Constants::NAME_MAX_LENGTH }
+
+  validates :modal_body,
+            length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
 
   def self.last_notifications(
     user,

@@ -13,18 +13,22 @@ describe SystemNotification do
   describe 'Validations' do
     describe '#title' do
       it { is_expected.to validate_presence_of(:title) }
+      it { is_expected.to validate_length_of(:title).is_at_most(255) }
     end
 
     describe '#modal_title' do
       it { is_expected.to validate_presence_of(:modal_title) }
+      it { is_expected.to validate_length_of(:modal_title).is_at_most(255) }
     end
 
     describe '#modal_body' do
       it { is_expected.to validate_presence_of(:modal_body) }
+      it { is_expected.to validate_length_of(:modal_body).is_at_most(50000) }
     end
 
     describe '#description' do
       it { is_expected.to validate_presence_of(:description) }
+      it { is_expected.to validate_length_of(:description).is_at_most(255) }
     end
 
     describe '#source_id' do
