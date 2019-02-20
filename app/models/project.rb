@@ -1,5 +1,7 @@
 class Project < ApplicationRecord
-  include ArchivableModel, SearchableModel
+  include ArchivableModel
+  include SearchableModel
+  include SearchableByNameModel
 
   enum visibility: { hidden: 0, visible: 1 }
 
@@ -128,6 +130,20 @@ class Project < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(user, teams)
+    # Admins see all projects in the team
+    # Member of the projects can view
+    # If project is visible everyone from the team can view it
+    Project.where(team: teams)
+           .left_outer_joins(team: :user_teams)
+           .left_outer_joins(:user_projects)
+           .where('projects.visibility = 1 OR '\
+                  'user_projects.user_id = :user_id OR '\
+                  '(user_teams.user_id = :user_id AND user_teams.role = 2)',
+                  user_id: user.id)
+           .distinct
   end
 
   def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)

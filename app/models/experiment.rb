@@ -1,6 +1,7 @@
 class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
+  include SearchableByNameModel
 
   belongs_to :project, inverse_of: :experiments, touch: true, optional: true
   belongs_to :created_by,
@@ -96,6 +97,10 @@ class Experiment < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(user, teams)
+    where(project: Project.viewable_by_user(user, teams))
   end
 
   def active_module_groups
