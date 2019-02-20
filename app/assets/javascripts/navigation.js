@@ -109,7 +109,7 @@
 
   function loadDropdownSystemNotifications() {
     var button = $('#system-notifications-dropdown');
-    var noRecentText = $('.dropdown-system-notifications .system-notifications-no-recent');
+    var noRecentText = $('.system-notifications-no-recent');
     button
       .on('click', function() {
         noRecentText.hide();
@@ -119,7 +119,7 @@
           dataType: 'json',
           beforeSend: animateSpinner($('.system-notifications-dropdown-header'), true),
           success: function(data) {
-            var ul = $('.dropdown-menu.dropdown-system-notifications');
+            var ul = $('.dropdown-system-notifications');
             // After closing system notification modal release system notifications dropdown
             $('#manage-module-system-notification-modal').on('hidden.bs.modal', function() {
               setTimeout(function() {
@@ -132,7 +132,7 @@
             $('.system-notifications-dropdown-header')
               .after(data.html);
             animateSpinner($('.system-notifications-dropdown-header'), false);
-            if (ul.children('.system-notification').length === 0) {
+            if (ul.find('.system-notification').length === 0) {
               noRecentText.show();
             }
             bindSystemNotificationAjax();
