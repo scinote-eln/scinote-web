@@ -99,7 +99,7 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
               </div>
             <% end %>
           <% end %>
-          <% if ENV['ENABLE_RECAPTCHA'] %>
+          <% if ENV['ENABLE_RECAPTCHA'] == 'true' %>
             <div id="recaptcha-service" class="g-recaptcha"
                  data-callback="recaptchaCallback"
                  data-sitekey=<%= ENV['RECAPTCHA_SITE_KEY'] %>></div>
