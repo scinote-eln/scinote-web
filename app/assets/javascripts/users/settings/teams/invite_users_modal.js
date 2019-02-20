@@ -24,7 +24,6 @@
     var teamSelectorDropdown = modal.find('[data-role=team-selector-dropdown]');
     var teamSelectorDropdown2 = $();
     var tagsInput = modal.find('[data-role=tags-input]');
-    var recaptchaInput = modal.find('#recaptcha-invite-modal');
     var recaptchaErrorMsgDiv = modal.find('#recaptcha-error-msg');
     var recaptchaErrorText = modal.find('#recaptcha-error-msg>span');
 
@@ -99,7 +98,7 @@
       modal.find('[data-action=invite]').off('click').on('click', function() {
         var data = {
           emails: tagsInput.val(),
-          'g-recaptcha-response': recaptchaInput.val()
+          'g-recaptcha-response': $('#recaptcha-invite-modal').val()
         };
 
         animateSpinner(modalDialog);
@@ -183,7 +182,7 @@
       stepResults.hide();
       stepForm.show();
       reloadRecaptchaIfExists();
-      recaptchaInput.val('');
+      $('#recaptcha-invite-modal').val('');
     });
   }
 
