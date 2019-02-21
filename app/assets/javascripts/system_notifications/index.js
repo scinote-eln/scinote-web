@@ -21,12 +21,12 @@ function bindSystemNotificationAjax() {
       var SystemNotification = $('.system-notification[data-system-notification-id=' + data.id + ']');
       SystemNotificationModalBody.html(data.modal_body);
       SystemNotificationModalTitle.text(data.modal_title);
-      $('.dropdown.system-notifications').removeClass('open')
+      $('.dropdown.system-notifications').removeClass('open');
       // Open modal
       SystemNotificationModal.modal('show');
       if (SystemNotification[0].dataset.unread === '1') {
-        $.each(SystemNotification, (index,e) => e.dataset.unread = '0')
-        SystemNotification.find('.status-icon').addClass('seen')
+        $.each(SystemNotification, (index, e) => { e.dataset.unread = '0'; });
+        SystemNotification.find('.status-icon').addClass('seen');
         $.post('/system_notifications/' + data.id + '/mark_as_read');
       }
     });
@@ -35,7 +35,7 @@ function bindSystemNotificationAjax() {
 function initSystemNotificationsButton() {
   $('.btn-more-notifications')
     .on('ajax:success', function(e, data) {
-      $(data.html).insertAfter($('.notifications-container .system-notification').last());
+      $(data.html).insertAfter($('.system-notifications-container .system-notification').last());
       bindSystemNotificationAjax();
       if (data.more_url) {
         $(this).attr('href', data.more_url);

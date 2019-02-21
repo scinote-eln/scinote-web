@@ -13,13 +13,16 @@
   position: relative;
   width: 100%;
 
-  &[data-unread="0"]{
-    .body-block{
-      .title{
-        font-weight:normal
+  &[data-unread="0"] {
+
+    .body-block {
+
+      .title {
+        font-weight: normal;
       }
     }
   }
+
   &:hover {
     background: $color-concrete;
     opacity: .7;
@@ -62,9 +65,9 @@
     }
 
     .title {
+      font-weight: bold;
       line-height: 20px;
       margin: 0;
-      font-weight:bold;
     }
 
     .message {
@@ -79,9 +82,11 @@
 #system-notifications-index {
   display: inline-block;
   position: relative;
+  width: 100%;
 
   #search-bar-notifications {
     border-bottom: 1px solid $color-gainsboro;
+    display: none;
     margin: 10px 0 0;
     padding: 0 0 10px;
     width: 100%;

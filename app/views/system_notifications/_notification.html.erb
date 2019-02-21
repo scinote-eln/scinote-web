@@ -1,25 +1,24 @@
-<%= link_to system_notification_path(notification.id, format: :json), class: "modal-system-notification", remote: true do %>
-  <div
-    class="system-notification"
-    data-new="<%= notification.seen_at ? 0 : 1 %>"
-    data-unread="<%= notification.read_at ? 0 : 1 %>"
-    data-system-notification-id="<%= notification.id %>"
-  >
-    <div class="status-block">
-      <div class="status-icon <%= notification.read_at ? "seen" : "" %>">
-        <i class="fas fa-gift"></i>
-      </div>
+<%= link_to system_notification_path(notification.id, format: :json), {
+    class: "modal-system-notification system-notification",
+    'data-new': notification.seen_at ? 0 : 1,
+    'data-unread': notification.read_at ? 0 : 1,
+    'data-system-notification-id': notification.id,
+     remote: true
+   } do %>
+  <div class="status-block">
+    <div class="status-icon <%= notification.read_at ? "seen" : "" %>">
+      <i class="fas fa-gift"></i>
     </div>
-    <div class="body-block">
-      <div class="datetime">
-        <span><%= l(notification.last_time_changed_at, format: :full) %></span>
-      </div>
-      <h5 class="title">
-        <%= notification.title %>
-      </h5>
-      <div class="message">
-        <span><%= notification.description %></span>
-      </div>
+  </div>
+  <div class="body-block">
+    <div class="datetime">
+      <span><%= l(notification.last_time_changed_at, format: :full) %></span>
+    </div>
+    <h5 class="title">
+      <%= notification.title %>
+    </h5>
+    <div class="message">
+      <span><%= notification.description %></span>
     </div>
   </div>
 <% end %>

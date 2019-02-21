@@ -113,6 +113,7 @@
     button
       .on('click', function() {
         noRecentText.hide();
+        $('.dropdown-system-notifications .system-notification').remove();
         $.ajax({
           url: button.attr('data-href'),
           type: 'GET',
