@@ -1,18 +1,9 @@
 'use strict';
 
 // update selected notiifcations
-function SystemNotificationsMarkAsSeen(container = window) {
-  var WindowSize = $(container).height();
-  var NotificationsToUpdate = [];
-  _.each($('.system-notification[data-new="1"]'), function(el) {
-    var NotificationTopPosition = el.getBoundingClientRect().top;
-    if (NotificationTopPosition > 0 && NotificationTopPosition < WindowSize) {
-      NotificationsToUpdate.push(el.dataset.systemNotificationId);
-      el.dataset.new = 0;
-    }
-  });
-  if (NotificationsToUpdate.length > 0) {
-    $.post('/system_notifications/mark_as_seen', { notifications: JSON.stringify(NotificationsToUpdate) });
+function SystemNotificationsMarkAsSeen() {
+  if ($('.system-notification[data-new="1"]').length > 0) {
+    $.post('/system_notifications/mark_as_seen');
   }
 }
 
@@ -27,13 +18,15 @@ function bindSystemNotificationAjax() {
 
   $('.modal-system-notification')
     .on('ajax:success', function(ev, data) {
-      var SystemNotification = $('.system-notification[data-system-notification-id=' + data.id + ']')[0];
+      var SystemNotification = $('.system-notification[data-system-notification-id=' + data.id + ']');
       SystemNotificationModalBody.html(data.modal_body);
       SystemNotificationModalTitle.text(data.modal_title);
-      $('.dropdown.system-notifications')[0].dataset.closable = false;
+      $('.dropdown.system-notifications').removeClass('open')
       // Open modal
       SystemNotificationModal.modal('show');
-      if (SystemNotification.dataset.unread === '1') {
+      if (SystemNotification[0].dataset.unread === '1') {
+        $.each(SystemNotification, (index,e) => e.dataset.unread = '0')
+        SystemNotification.find('.status-icon').addClass('seen')
         $.post('/system_notifications/' + data.id + '/mark_as_read');
       }
     });
@@ -52,9 +45,6 @@ function initSystemNotificationsButton() {
     });
 }
 
-$(window).scroll(function() {
-  SystemNotificationsMarkAsSeen();
-});
 initSystemNotificationsButton();
 SystemNotificationsMarkAsSeen();
 bindSystemNotificationAjax();

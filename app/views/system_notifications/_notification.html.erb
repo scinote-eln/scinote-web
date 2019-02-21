@@ -6,7 +6,7 @@
     data-system-notification-id="<%= notification.id %>"
   >
     <div class="status-block">
-      <div class="status-icon <%= notification.seen_at ? "seen" : "" %>">
+      <div class="status-icon <%= notification.read_at ? "seen" : "" %>">
         <i class="fas fa-gift"></i>
       </div>
     </div>
@@ -15,7 +15,7 @@
         <span><%= l(notification.last_time_changed_at, format: :full) %></span>
       </div>
       <h5 class="title">
-        <strong><%= notification.title %></strong>
+        <%= notification.title %>
       </h5>
       <div class="message">
         <span><%= notification.description %></span>

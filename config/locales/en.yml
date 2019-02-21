@@ -1300,7 +1300,7 @@ en:
       more_notifications: "More system notifications"
       no_notifications: "No more system notifications"
       settings: "Settings"
-      see_all: "See all"
+      see_all: "show all"
   activities:
     index:
       today: "Today"
