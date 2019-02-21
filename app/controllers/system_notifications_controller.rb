@@ -24,8 +24,7 @@ class SystemNotificationsController < ApplicationController
 
   # Update seen_at parameter for system notifications
   def mark_as_seen
-    notifications = JSON.parse(params[:notifications])
-    current_user.user_system_notifications.mark_as_seen(notifications)
+    current_user.user_system_notifications.mark_as_seen
     render json: { result: 'ok' }
   rescue StandardError
     render json: { result: 'failed' }

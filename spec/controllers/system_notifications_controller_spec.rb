@@ -41,14 +41,6 @@ describe SystemNotificationsController, type: :controller do
       expect(user.user_system_notifications.where(seen_at: nil).count).to eq 0
     end
 
-    it '#mark_as_seen response failed on wrong id\'s format' do
-      params = { notifications: 'wrong format' }
-      get :mark_as_seen, format: :json, params: params
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body['result']).to eq 'failed'
-    end
-
     it '#mark_as_read correctly set read_at' do
       params = {
         id: user.user_system_notifications.first.system_notification_id
