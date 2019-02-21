@@ -152,8 +152,8 @@ module FirstTimeDataGenerator
       )
     end
 
-    name = 'Demo project - qPCR'
-    exp_name = 'Polymerase chain reaction'
+    name = 'Demo project'
+    exp_name = 'qPCR Experiment Version 01'
     # If there is an existing demo project, archive and rename it
     if team.projects.where(name: name).present?
       # TODO: check if we still need this code
@@ -161,7 +161,7 @@ module FirstTimeDataGenerator
       # old.archive! user
       i = 1
       while team.projects.where(
-        name: name = "Demo project - qPCR (#{i})"
+        name: name = "#{name} (#{i})"
       ).present?
         i += 1
       end

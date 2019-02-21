@@ -138,4 +138,16 @@ namespace :data do
       "Templates, total number of updated projects: #{updated} out of #{total}}"
     )
   end
+
+  desc 'Create demo project on existing users'
+  task create_demo_project_on_existing_users: :environment do
+    require "#{Rails.root}/app/utilities/first_time_data_generator"
+    include FirstTimeDataGenerator
+
+    Rails.logger.info('Creating demo project on existing users')
+
+    User.find_each do |user|
+      seed_demo_data(user, user.teams.first)
+    end
+  end
 end
