@@ -1297,10 +1297,10 @@ en:
       intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
     index:
       whats_new: "What's New"
-      more_notifications: "More system notifications"
-      no_notifications: "No more system notifications"
+      more_notifications: "Show more notifications"
+      no_notifications: "No more notifications"
       settings: "Settings"
-      see_all: "See all"
+      see_all: "show all"
   activities:
     index:
       today: "Today"

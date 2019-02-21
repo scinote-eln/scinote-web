@@ -55,7 +55,7 @@ describe UserSystemNotification do
                    user: user,
                    system_notification: notifcation_one
       notifications_to_update = [usn.system_notification_id]
-      user.user_system_notifications.mark_as_seen(notifications_to_update)
+      user.user_system_notifications.mark_as_seen
       expect(UserSystemNotification.find(usn.id).seen_at).not_to be_nil
     end
 

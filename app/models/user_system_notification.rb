@@ -9,9 +9,8 @@ class UserSystemNotification < ApplicationRecord
 
   scope :unseen, -> { where(seen_at: nil) }
 
-  def self.mark_as_seen(notifications_id)
-    where(system_notification_id: notifications_id)
-      .update_all(seen_at: Time.now)
+  def self.mark_as_seen
+    unseen.update_all(seen_at: Time.now)
   end
 
   def self.mark_as_read(notification_id)
