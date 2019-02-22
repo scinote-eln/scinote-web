@@ -11,7 +11,7 @@
        data-current-task="<%= current_task&.id %>">
     <div class="tree">
       <ul>
-        <% cache [current_user, current_team] do %>
+        <% cache [action_name, current_user, current_team] do %>
           <%= render partial: 'shared/sidebar/projects' %>
         <% end %>
       </ul>

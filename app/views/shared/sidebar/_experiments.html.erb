@@ -1,7 +1,7 @@
 <% if project.active_experiments.present? %>
   <ul>
     <% project.active_experiments.each do |experiment| %>
-      <% cache [current_user, experiment] do %>
+      <% cache [action_name, current_user, experiment] do %>
         <li data-parent="candidate" data-experiment-id="<%= experiment.id %>">
           <span class="tree-link line-wrap first-indent">
             <i class="no-arrow"></i>
