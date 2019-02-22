@@ -25,6 +25,7 @@
 
   &:hover {
     background: $color-concrete;
+    color: $color-emperor;
     opacity: .7;
   }
 
@@ -101,8 +102,13 @@
     }
   }
 
-  .no-notification-meessage {
-    padding: 20px 0;
+  .system-notifications-container {
+    display: inline-block;
+    width:100%;
+  }
+
+  .no-notification-message {
+    margin: 20px 0;
   }
 
   .title-container {

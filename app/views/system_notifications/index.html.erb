@@ -20,16 +20,16 @@
   <div class="system-notifications-container">
     <%= render partial: "list", locals: { notifications: @system_notifications[:notifications] } %>
   </div>
-    <div class="text-center">
-    <% if @system_notifications[:more_notifications_url] && @system_notifications[:notifications].present? %>
-        <a class="btn btn-default btn-more-notifications"
+  <div class="text-center">
+  <% if @system_notifications[:more_notifications_url] && @system_notifications[:notifications].present? %>
+      <a class="btn btn-default btn-more-notifications"
           href="<%= @system_notifications[:more_notifications_url] %>"
           data-remote="true">
           <%= t("system_notifications.index.more_notifications") %></a>
-    <% else %>
-        <span class="no_notification_meessage"><%= t("system_notifications.index.no_notifications") %></span>
-    <% end %>
-    </div>
+  <% else %>
+      <span class="no-notification-message"><%= t("system_notifications.index.no_notifications") %></span>
+  <% end %>
+  </div>
 </div>
 
 <%= javascript_include_tag("system_notifications/index") %>
