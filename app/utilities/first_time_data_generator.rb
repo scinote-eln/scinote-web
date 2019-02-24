@@ -153,7 +153,7 @@ module FirstTimeDataGenerator
     end
 
     name = 'Demo project'
-    exp_name = 'qPCR Experiment Version 01'
+    exp_name = 'Polymerase chain reaction'
     # If there is an existing demo project, archive and rename it
     if team.projects.where(name: name).present?
       # TODO: check if we still need this code
