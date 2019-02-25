@@ -916,7 +916,7 @@ ActiveRecord::Schema.define(version: 20190125123107) do
   add_foreign_key "activities", "experiments"
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
-  add_foreign_key "activities", "users", column: "owner_id"
+  add_foreign_key "activities", "users"
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
