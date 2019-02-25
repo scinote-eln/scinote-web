@@ -61,9 +61,10 @@ class MyModule < ApplicationRecord
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
-  has_many :activities, inverse_of: :my_module
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
+  # Associations for old activity type
+  has_many :activities, inverse_of: :my_module
 
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
   scope :active, -> { where(archived: false) }

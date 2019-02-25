@@ -24,6 +24,7 @@ class Experiment < ApplicationRecord
            class_name: 'MyModule'
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
+  # Associations for old activity type
   has_many :activities, inverse_of: :experiment
 
   has_attached_file :workflowimg
