@@ -248,14 +248,14 @@ class MyModule < ApplicationRecord
   end
 
   def is_overdue?(datetime = DateTime.current)
-    due_date.present? and datetime.utc > due_date.utc
+    due_date.present? && datetime.utc > due_date.end_of_day.utc
   end
 
   def overdue_for_days(datetime = DateTime.current)
-    if due_date.blank? or due_date.utc > datetime.utc
-      return 0
+    if due_date.blank? || due_date.end_of_day.utc > datetime.utc
+      0
     else
-      return ((datetime.utc.to_i - due_date.utc.to_i) / (60*60*24).to_f).ceil
+      ((datetime.utc.to_i - due_date.end_of_day.utc.to_i) / 1.day.to_f).ceil
     end
   end
 
@@ -264,7 +264,9 @@ class MyModule < ApplicationRecord
   end
 
   def is_due_in?(datetime, diff)
-    due_date.present? and datetime.utc < due_date.utc and datetime.utc > (due_date.utc - diff)
+    due_date.present? &&
+      datetime.utc < due_date.end_of_day.utc &&
+      datetime.utc > (due_date.end_of_day.utc - diff)
   end
 
   def space_taken
