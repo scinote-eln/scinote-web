@@ -1,0 +1,44 @@
+@import "constants";
+@import "mixins";
+
+.my-modules-protocols-index {
+  padding-top: 15px !important;
+
+  .first-row {
+    max-height: 40px;
+
+    .date-block {
+      max-width: 250px;
+    }
+
+    div {
+      height: 45px;
+    }
+
+    .complete-button-container {
+      float: right;
+      max-width: 165px;
+
+      .my_module-state-buttons {
+        padding-top: 0;
+      }
+    }
+  }
+
+  .well {
+    border: 0;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .badge-icon {
+    background: transparent;
+    color: $color-silver;
+    padding-right: 5px;
+
+    + .well-sm {
+      margin-left: 32px;
+    }
+  }
+}
