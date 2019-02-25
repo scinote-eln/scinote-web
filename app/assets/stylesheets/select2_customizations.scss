@@ -1,0 +1,89 @@
+@import "constants";
+@import "mixins";
+
+.select2-container {
+
+  .select2-selection {
+    max-height: 23px;
+    overflow: hidden;
+    position: relative;
+
+    &.select2-selection--multiple {
+      border: 1px solid $color-alto;
+    }
+
+    .select2-selection__rendered {
+      width: 200%;
+    }
+
+    .select2-selection__choice {
+      background: $color-concrete;
+      border: 1px solid $color-alto;
+
+      .select2-selection__choice__remove {
+        float: right;
+        margin: 0;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .select2-dropdown {
+    border: 1px solid $color-alto;
+
+    .select2_select_all {
+      border: 0;
+      border-bottom: 1px solid $color-alto;
+      border-radius: 0;
+      cursor: pointer;
+      line-height: 20px;
+      padding: 5px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .select2-results__option[role="group"] {
+      strong {
+        font-size: $font-size-base;
+      }
+    }
+
+    .select2-results__option[role="treeitem"] {
+      background: $color-white;
+      line-height: 18px;
+      padding-left: 30px;
+      position: relative;
+
+      &::before {
+        background: $color-white;
+        border: 1px solid $color-emperor;
+        border-radius: 6px;
+        content: "";
+        height: 12px;
+        left: 0;
+        margin: 9px;
+        position: absolute;
+        top: 0;
+        transition: .3s;
+        width: 12px;
+      }
+
+      &.select2-results__option--highlighted {
+        background: inherit;
+        color: inherit;
+      }
+
+      &[aria-selected="true"] {
+        background: $color-concrete;
+
+        &::before {
+          background: $color-emperor;
+        }
+      }
+
+      &:hover {
+        background: $color-alto;
+      }
+    }
+  }
+}
