@@ -84,10 +84,10 @@ class Extends
   FILE_FA_ICON_MAPPINGS = {}
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Project Experiment MyModule Result Protocol Step
+    Team Repository Project Experiment MyModule Result Protocol Step
   )
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
-    Project Experiment MyModule Result Protocol Step
+    Repository Project Experiment MyModule Result Protocol Step
   )
 end

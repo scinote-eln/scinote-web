@@ -52,7 +52,7 @@ class ActivitiesService
       'created_at > :from',
       from: Time.zone.parse(last_date).end_of_day.utc
     ).exists?
-    results[last_date] = activities
+    results[last_date] = activities.to_a
     [results, more_left]
   end
 end

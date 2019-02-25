@@ -40,6 +40,7 @@ class GlobalActivitiesController < ApplicationController
     subject_types.each do |subject|
       matched = subject.constantize
                        .search_by_name(current_user, teams, query)
+                       .limit(Constants::SEARCH_LIMIT)
                        .pluck(:id, :name)
       next if matched.length.zero?
       results[subject] = matched.map { |pr| { id: pr[0], name: pr[1] } }
@@ -60,7 +61,6 @@ class GlobalActivitiesController < ApplicationController
   end
 
   def subject_search_params
-    params.require(:query)
     params.permit(:query, teams: [], subject_types: [])
   end
 end
