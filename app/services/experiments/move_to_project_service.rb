@@ -76,6 +76,7 @@ module Experiments
       Activity.create(
         type_of: :move_experiment,
         project: @project,
+        team: @project.team,
         subject: @exp,
         owner: @user,
         message: I18n.t(

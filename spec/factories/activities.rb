@@ -6,5 +6,12 @@ FactoryBot.define do
     message Faker::Lorem.sentence(10)
     project
     subject { create :project }
+    owner { create :user }
+    team
+    trait :old do
+      project
+      experiment
+      subject { nil }
+    end
   end
 end

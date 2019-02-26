@@ -214,7 +214,7 @@ module FirstTimeDataGenerator
     # Activity for creating project
     Activity.new(
       type_of: :create_project,
-      user: user,
+      owner: user,
       project: project,
       message: I18n.t(
         'activities.create_project',
@@ -286,7 +286,7 @@ module FirstTimeDataGenerator
       # Create module activity
       Activity.new(
         type_of: :create_module,
-        user: user,
+        owner: user,
         project: project,
         my_module: my_module,
         message: I18n.t(
@@ -306,7 +306,7 @@ module FirstTimeDataGenerator
       )
       Activity.new(
         type_of: :assign_user_to_module,
-        user: user,
+        owner: user,
         project: project,
         my_module: my_module,
         message: I18n.t(
@@ -340,7 +340,7 @@ module FirstTimeDataGenerator
     # Activity for creating archived module
     Activity.new(
       type_of: :create_module,
-      user: user,
+      owner: user,
       project: project,
       my_module: archived_module,
       message: I18n.t(
@@ -355,7 +355,7 @@ module FirstTimeDataGenerator
     # Activity for archiving archived module
     Activity.new(
       type_of: :archive_module,
-      user: user,
+      owner: user,
       project: project,
       my_module: archived_module,
       message: I18n.t(
@@ -376,7 +376,7 @@ module FirstTimeDataGenerator
     )
     Activity.new(
       type_of: :assign_user_to_module,
-      user: user,
+      owner: user,
       project: project,
       my_module: archived_module,
       message: I18n.t(
@@ -682,7 +682,7 @@ module FirstTimeDataGenerator
       type_of: :add_result,
       project: project,
       my_module: my_modules[1],
-      user: user,
+      owner: user,
       created_at: temp_result.created_at,
       updated_at: temp_result.created_at,
       message: I18n.t(
@@ -771,7 +771,7 @@ module FirstTimeDataGenerator
       type_of: :add_result,
       project: project,
       my_module: my_modules[2],
-      user: user,
+      owner: user,
       created_at: temp_result.created_at,
       updated_at: temp_result.created_at,
       message: I18n.t(
@@ -1160,7 +1160,7 @@ module FirstTimeDataGenerator
       type_of: :add_result,
       project: project,
       my_module: my_modules[5],
-      user: user,
+      owner: user,
       created_at: temp_result.created_at,
       updated_at: temp_result.created_at,
       message: I18n.t(
@@ -1517,7 +1517,7 @@ module FirstTimeDataGenerator
         type_of: :create_step,
         project: my_module.experiment.project,
         my_module: my_module,
-        user: step.user,
+        owner: step.user,
         created_at: created_at,
         updated_at: created_at,
         message: I18n.t(
@@ -1532,7 +1532,7 @@ module FirstTimeDataGenerator
           type_of: :complete_step,
           project: my_module.experiment.project,
           my_module: my_module,
-          user: step.user,
+          owner: step.user,
           created_at: completed_on,
           updated_at: completed_on,
           message: I18n.t(
@@ -1576,7 +1576,7 @@ module FirstTimeDataGenerator
     )
     Activity.new(
       type_of: :add_comment_to_project,
-      user: user,
+      owner: user,
       project: project,
       created_at: created_at,
       updated_at: created_at,
@@ -1596,7 +1596,7 @@ module FirstTimeDataGenerator
     )
     Activity.new(
       type_of: :add_comment_to_module,
-      user: user,
+      owner: user,
       project: my_module.experiment.project,
       my_module: my_module,
       created_at: created_at,
@@ -1617,7 +1617,7 @@ module FirstTimeDataGenerator
     )
     Activity.new(
       type_of: :add_comment_to_result,
-      user: user,
+      owner: user,
       project: result.my_module.experiment.project,
       my_module: result.my_module,
       created_at: created_at,
@@ -1638,7 +1638,7 @@ module FirstTimeDataGenerator
     )
     Activity.new(
       type_of: :add_comment_to_step,
-      user: user,
+      owner: user,
       project: step.protocol.my_module.experiment.project,
       my_module: step.protocol.my_module,
       created_at: created_at,
