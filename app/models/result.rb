@@ -1,5 +1,7 @@
 class Result < ApplicationRecord
-  include ArchivableModel, SearchableModel
+  include ArchivableModel
+  include SearchableModel
+  include SearchableByNameModel
 
   auto_strip_attributes :name, nullify: false
   validates :user, :my_module, presence: true
@@ -62,6 +64,10 @@ class Result < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(user, teams)
+    where(my_module: MyModule.viewable_by_user(user, teams))
   end
 
   def space_taken

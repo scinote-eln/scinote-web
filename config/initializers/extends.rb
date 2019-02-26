@@ -83,4 +83,12 @@ class Extends
   # Hash used for mapping file extensions to custom font awesome icon classes,
   # 'extension' => 'fa class'
   FILE_FA_ICON_MAPPINGS = {}
+
+  ACTIVITY_SUBJECT_TYPES = %w(
+    Team Repository Project Experiment MyModule Result Protocol Step
+  )
+
+  SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
+    Repository Project Experiment MyModule Result Protocol Step
+  )
 end

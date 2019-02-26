@@ -1,6 +1,7 @@
 class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
+  include SearchableByNameModel
   extend TinyMceHelper
 
   after_save :update_linked_children
@@ -194,6 +195,14 @@ class Protocol < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(user, teams)
+    where(my_module: MyModule.viewable_by_user(user, teams))
+      .or(where(team: teams)
+            .where('protocol_type = 3 OR '\
+                   '(protocol_type = 2 AND added_by_id = :user_id)',
+                   user_id: user.id))
   end
 
   def linked_modules
