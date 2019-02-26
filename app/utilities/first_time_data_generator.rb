@@ -1,4 +1,7 @@
 module FirstTimeDataGenerator
+  # Default inventory repository
+  REPO_SAMPLES_NAME = 'Samples'.freeze
+
   # Create data for demo for new users
   def seed_demo_data(user, team, asset_queue = :demo)
     @user = user
@@ -8,28 +11,49 @@ module FirstTimeDataGenerator
     # Do nothing
     return unless team
 
-    # create custom repository samples
-    repository = Repository.create(
-      name: 'Samples',
-      team: team,
-      created_by: user
-    )
+    # check if samples repo already exist, then create custom repository samples
+    repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME)
+    repository =
+      if repository.blank?
+        if team.repositories.count < Rails.configuration.x.repositories_limit
+          Repository.create(
+            name: REPO_SAMPLES_NAME,
+            team: team,
+            created_by: user
+          )
+        else
+          # User first repo just as a placeholder, this call will fail anyhow
+          Repository.create(
+            name: team.repositories.first.name,
+            team: team,
+            created_by: user
+          )
+        end
+      else
+        repository.first
+      end
 
     # create list value column for sample types
-    repository_column_sample_types = RepositoryColumn.create(
-      repository: repository,
-      created_by: user,
-      data_type: :RepositoryListValue,
-      name: 'Sample Types'
-    )
+    repo_columns = []
+    ['Sample Types', 'Sample Groups'].each do |repo_name|
+      repo_column = repository.repository_columns.where(name: repo_name)
 
-    # create list value column for sample groups
-    repository_column_sample_groups = RepositoryColumn.create(
-      repository: repository,
-      created_by: user,
-      data_type: :RepositoryListValue,
-      name: 'Sample Groups'
-    )
+      repo_columns <<
+        if repo_column.blank?
+          RepositoryColumn.create(
+            repository: repository,
+            created_by: user,
+            data_type: :RepositoryListValue,
+            name: repo_name
+          )
+        else
+          repo_column.first
+        end
+    end
+
+    # Maintain old names
+    repository_column_sample_types, repository_column_sample_groups =
+      repo_columns
 
     # create few list items for sample types
     repository_items_sample_types = []
@@ -41,7 +65,15 @@ module FirstTimeDataGenerator
         repository_column: repository_column_sample_types,
         repository: repository
       )
-      repository_items_sample_types << item
+
+      # Check if it already exists
+      if item.persisted?
+        repository_items_sample_types << item
+      else
+        repository_items_sample_types << repository_column_sample_types
+                                         .repository_list_items
+                                         .where(data: name).first
+      end
     end
 
     # create few list items for sample groups
@@ -54,7 +86,15 @@ module FirstTimeDataGenerator
         repository_column: repository_column_sample_groups,
         repository: repository
       )
-      repository_items_sample_groups << item
+
+      # Check if it already exists
+      if item.persisted?
+        repository_items_sample_groups << item
+      else
+        repository_items_sample_groups << repository_column_sample_groups
+                                          .repository_list_items
+                                          .where(data: name).first
+      end
     end
 
     repository_rows_to_assign = []
@@ -585,19 +625,22 @@ module FirstTimeDataGenerator
       'Collection of potatoes'
     ]
 
+    second_rep_item = smart_annotate_rep_item(repository_rows_to_assign.second)
+    third_rep_item = smart_annotate_rep_item(repository_rows_to_assign.third)
+    fifth_rep_item = smart_annotate_rep_item(repository_rows_to_assign.fifth)
     module_step_descriptions = [
       '<html>
         <body>
           <p>50% of samples should be mock inoculated
           <span class=\"atwho-inserted\"contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '3~rep_item~3]</span>
+            data-atwho-at-query=\"#\">[#' + third_rep_item + ']</span>
           <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '5~rep_item~5]</span>
+            data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>
           while other 50% with PVY NTN virus
           <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '3~rep_item~3]</span>
+            data-atwho-at-query=\"#\">[#' + third_rep_item + ']</span>
           <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '5~rep_item~5]</span>.
+            data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>.
           </p>
         </body>
       </html>',
@@ -610,6 +653,9 @@ module FirstTimeDataGenerator
     generate_module_steps(my_modules[1],
                           module_step_names,
                           module_step_descriptions)
+
+    # Delete repository items, if we went over the limit
+    repository_rows_to_assign.map(&:destroy) unless repository.id
 
     # Add table to existig step
     step = my_modules[1].protocol.steps.where('position = 0').take
@@ -627,12 +673,11 @@ module FirstTimeDataGenerator
       file_name: 'PVY-inoculated_plant_symptoms.JPG'
     )
     # Add comment to step 1
-    user_annotation = '[@' + user.name + '~' + user.id.to_s + ']'
+    user_annotation = user.name
     generate_step_comment(
       step,
       user,
-      user_annotation + ' I have used different sample [#' + sample_name +
-      '2~rep_item~2]'
+      "#{user_annotation} I have used different sample [##{second_rep_item}]"
     )
     # Add comment to step 3
     step = my_modules[1].protocol.steps.where('position = 2').take
@@ -1665,5 +1710,9 @@ module FirstTimeDataGenerator
                  step: step.position + 1,
                  step_name: step.name)
     ).sneaky_save
+  end
+
+  def smart_annotate_rep_item(item)
+    "#{item.name}~rep_item~#{Base62.encode(item.id)}"
   end
 end
