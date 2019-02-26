@@ -597,7 +597,8 @@ en:
       start_date: "Start date:"
       due_date: "Due date:"
       tags: "Tags:"
-      no_tags: "No tags"
+      no_tags: "click here to add Task Tags (optional)"
+      manage_tags: Manage tags
       no_description: "No description"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
