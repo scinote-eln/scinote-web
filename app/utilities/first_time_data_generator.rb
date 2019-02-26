@@ -1,6 +1,6 @@
 module FirstTimeDataGenerator
   # Create data for demo for new users
-  def seed_demo_data(user, team)
+  def seed_demo_data(user, team, asset_queue = :demo)
     @user = user
 
     # If private private team does not exist,
@@ -152,7 +152,7 @@ module FirstTimeDataGenerator
       )
     end
 
-    name = 'Demo project'
+    name = '[NEW] Demo project by SciNote'
     exp_name = 'qPCR Experiment Version 01'
     # If there is an existing demo project, archive and rename it
     if team.projects.where(name: name).present?
@@ -620,7 +620,7 @@ module FirstTimeDataGenerator
       contents: tab_content['module2']['samples_table']
     )
     # Add file to existig step
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[1].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -642,7 +642,7 @@ module FirstTimeDataGenerator
       user_annotation + ' Please complete this by Monday.'
     )
     # Results
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
       current_team: team,
@@ -651,7 +651,7 @@ module FirstTimeDataGenerator
       file_name: 'mock-inoculated-plant.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
       current_team: team,
@@ -782,7 +782,7 @@ module FirstTimeDataGenerator
     ).sneaky_save
 
     # Second result
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[2],
       current_user: user,
       current_team: team,
@@ -879,7 +879,7 @@ module FirstTimeDataGenerator
     generate_module_steps(my_modules[3], module_step_names, module_step_descriptions)
 
     # Add file to existig step 1
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[3].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -978,7 +978,7 @@ module FirstTimeDataGenerator
     checklist.save
 
     # Results
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[3],
       current_user: user,
       current_team: team,
@@ -1100,35 +1100,35 @@ module FirstTimeDataGenerator
     checklist.save
 
     # Add file to existig steps
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'Mixes_Templats.xlsx'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 1').take,
       current_user: user,
       current_team: team,
       file_name: 'qPCR_template.jpg'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 1').take,
       current_user: user,
       current_team: team,
       file_name: '96plate.docx'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 2').take,
       current_user: user,
       current_team: team,
       file_name: 'cycling_conditions.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 2').take,
       current_user: user,
       current_team: team,
@@ -1171,7 +1171,7 @@ module FirstTimeDataGenerator
     ).sneaky_save
 
     # Results
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1180,7 +1180,7 @@ module FirstTimeDataGenerator
       file_name: '1505745387970-1058053257.jpg'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1189,7 +1189,7 @@ module FirstTimeDataGenerator
       file_name: 'chromatogram.png'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1198,7 +1198,7 @@ module FirstTimeDataGenerator
       file_name: 'curves.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1207,7 +1207,7 @@ module FirstTimeDataGenerator
       file_name: 'Bacterial_colonies.jpg'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1358,21 +1358,21 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Add file to existig steps
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[6].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'Native_SDS-PAGE_for_complex_analysis.jpg'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[6].protocol.steps.where('position = 4').take,
       current_user: user,
       current_team: team,
       file_name: 'Native-PAGE-Nature_protocols.pdf'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[6].protocol.steps.where('position = 5').take,
       current_user: user,
       current_team: team,
@@ -1423,14 +1423,14 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Add file to existig step
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[7].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'ddCq-quantification_diagnostics-template.xls'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[7].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -1446,7 +1446,7 @@ module FirstTimeDataGenerator
     )
 
     # Add result
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -1455,7 +1455,7 @@ module FirstTimeDataGenerator
       file_name: 'ddCq-quantification_diagnostics-results.xls'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -1464,7 +1464,7 @@ module FirstTimeDataGenerator
       file_name: 'dilution_curve-efficiency.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -1475,6 +1475,23 @@ module FirstTimeDataGenerator
 
     # create thumbnail
     experiment.delay.generate_workflow_img
+  end
+
+  # Used for delayed jobs
+  def self.seed_demo_data_with_id(user_id, team_id)
+    extend self
+    user = User.find(user_id)
+    team = Team.find(team_id)
+
+    unless user || team
+      Rails.logger.warning("Could not retrieve user or team in " \
+                           "seed_demo_data_with_id. " \
+                           "User #{user_id} was mapped to #{user.inspect}." \
+                           "Team #{team_id} was mapped to #{team.inspect}.")
+      return
+    end
+
+    seed_demo_data(user, team, :new_demo_project)
   end
 
   # WARNING: This only works on PostgreSQL

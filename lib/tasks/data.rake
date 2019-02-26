@@ -146,8 +146,21 @@ namespace :data do
 
     Rails.logger.info('Creating demo project on existing users')
 
-    User.find_each do |user|
-      seed_demo_data(user, user.teams.first)
+    Team.all.each_slice(200).with_index do |teams, i|
+      Rails.logger.info("Processing slice with index #{i}. " \
+                        "First team: #{teams.first.id}, " \
+                        "Last team: #{teams.last.id}.")
+
+      teams.each do |team|
+        owner_ut = team.user_teams.where(role: 2).first
+        next unless owner_ut
+
+        FirstTimeDataGenerator.delay(
+          run_at: i.hours.from_now,
+          queue: :new_demo_project,
+          priority: 1
+        ).seed_demo_data_with_id(owner_ut.user.id, team.id)
+      end
     end
   end
 end
