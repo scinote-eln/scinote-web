@@ -39,7 +39,7 @@ module DelayedUploaderDemo
       type_of: :add_result,
       project: my_module.experiment.project,
       my_module: my_module,
-      user: current_user,
+      owner: current_user,
       created_at: temp_result.created_at,
       updated_at: temp_result.created_at,
       message: I18n.t(
