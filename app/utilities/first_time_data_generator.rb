@@ -921,8 +921,8 @@ module FirstTimeDataGenerator
       'Perform all centrifugation steps at 20–25°C in a standard ' \
       'microcentrifuge. Ensure that the centrifuge does not cool below 20°C.'
     ]
-    module_checklist_items.each_with_index do |item, i|
-      checklist.checklist_items << ChecklistItem.new(text: item, position: i)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -946,8 +946,8 @@ module FirstTimeDataGenerator
       'If performing optional on-column DNase digestion, prepare DNase I ' \
       'stock solution as described in Appendix D (page 67).'
     ]
-    module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(text: item)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -972,8 +972,8 @@ module FirstTimeDataGenerator
       'genomic DNA contamination”, page 21), follow steps D1–D4 (page 67) ' \
       'after performing this step.'
     ]
-    module_checklist_items.each_with_index do |item, i|
-      checklist.checklist_items << ChecklistItem.new(text: item, position: i)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -1031,8 +1031,8 @@ module FirstTimeDataGenerator
       step: step
     )
 
-    module_checklist_items.each_with_index do |item, i|
-      checklist.checklist_items << ChecklistItem.new(text: item, position: i)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -1094,8 +1094,8 @@ module FirstTimeDataGenerator
       'Clean surfaces with 70% ethanol or RNA remover',
       'Turn on the UV light'
     ]
-    module_checklist_items.each_with_index do |item, i|
-      checklist.checklist_items << ChecklistItem.new(text: item, position: i)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -1390,8 +1390,8 @@ module FirstTimeDataGenerator
       'Check stock of reagents & order new stock if needed',
       'Use gloves at all times'
     ]
-    module_checklist_items.each_with_index do |item, i|
-      checklist.checklist_items << ChecklistItem.new(text: item, position: i)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
