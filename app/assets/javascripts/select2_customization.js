@@ -2,17 +2,33 @@
 $.fn.extend({
   select2Multiple: function(config = {}) {
     // Adding ID to each block
-    var templateSelection = (state) => {
+    var templateSelection = (state, parent) => {
+      if (config.colorField !== undefined) {
+        parent.css('background',state[config.colorField] || state.element.dataset[config.colorField])
+      }
       return $('<span class="select2-block-body" data-select-id="' + state.id + '">'
         + (config.customSelection !== undefined ? config.customSelection(state) : state.text)
       + '</span>');
     };
     var select2 = this.select2({
-      closeOnSelect: false,
+      closeOnSelect: config.closeOnSelect || false,
       multiple: true,
       ajax: config.ajax,
-      templateSelection: templateSelection
+      templateSelection: templateSelection,
+      tags: config.dynamicCreation || true,
+      tokenSeparators: config.dynamicCreationDelimiter || [',', ' '],
     });
+        // Add dynamic size
+    select2.next().css('width', '100%');
+
+     // unlimited size
+    if (config.unlimitedSize) {
+      this[0].dataset.unlimitedSize = true;
+      select2.next().find('.select2-selection').css('max-height', 'none');
+      select2.next().find('.select2-selection .select2-selection__rendered').css('width', '100%');
+    }
+
+
     // select all check
     this[0].dataset.singleDisplay = config.singleDisplay || false;
     if (this[0].dataset.selectAll === 'true') {
@@ -40,11 +56,6 @@ $.fn.extend({
       })
       // Prevent shake bug with multiple select
       .on('select2:open select2:close', function() {
-        if ($(this).val() != null && $(this).val().length > 3) {
-          $(this).next().find('.select2-search__field')[0].disabled = true;
-        } else {
-          $(this).next().find('.select2-search__field')[0].disabled = false;
-        }
         $('.select2-selection').scrollTo(0);
       })
       // Prevent opening window when deleteing selection

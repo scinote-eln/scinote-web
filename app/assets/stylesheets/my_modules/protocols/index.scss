@@ -41,4 +41,27 @@
       margin-left: 32px;
     }
   }
+
+  .module-tags{
+    .select-container{
+      width:calc(100% - 40px);
+      float:right;
+    }
+    .tags-title{
+      line-height:32px
+    }
+    .badge-icon{
+      padding: 9px 5px 9px 10px;
+      line-height:32px
+    }
+    .select2-selection{
+      .select2-selection__choice{
+        border:1px solid transparent;
+        color: $color-white;
+        .select2-selection__choice__remove{
+          color: $color-white;
+        }
+      }
+    }
+  }
 }

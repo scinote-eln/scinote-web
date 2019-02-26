@@ -1,3 +1,4 @@
+<!--
 <% tags = my_module.tags %>
   <% tags.each do |tag| %>
     <span class="fas fa-tag" style="color: <%= tag.color %>"></span>
@@ -6,3 +7,99 @@
 <% if tags.count == 0 %>
   <em><%=t "my_modules.module_header.no_tags" %></em>
 <% end %>
+-->
+
+
+<div class="select-container">
+  <%= select_tag "activity", 
+  options_for_select(tags.map{|i| 
+    [
+      i[:name], 
+      i[:id],
+     {'data-color'=> i[:color]}
+   ]
+  }),
+  {
+    'data-select-all': 'true',
+    id: 'module-tags-selector',
+    'data-module-id': my_module.id ,
+    'data-project-id': my_module.experiment.project_id ,
+    'data-tags-create-url': project_tags_path(project_id: my_module.experiment.project_id)
+  } %>
+</div>
+
+<script>
+
+var tagsAjaxQuery = {
+    url: '<%= search_tags_my_module_my_module_tags_path(@my_module) %>',
+    dataType: 'json',
+    data: function(params) {
+
+      return {
+        query: params.term // search term
+      };
+    },
+    // preparing results
+    processResults: function(data) {
+      var result=[]
+      $.each(data,(index,option) => {
+        option.text = option.name
+      })
+      return {
+        results: data
+      };
+    }
+  };
+
+$('#module-tags-selector').select2Multiple({
+  ajax: tagsAjaxQuery,
+  unlimitedSize: true,
+  colorField: 'color',
+  closeOnSelect: true,
+  dynamicCreation: true,
+  dynamicCreationDelimiter: ','
+}).on('select2:select',(e) => {
+  var params=e.params.data
+  var newTag=null
+  var selectElement=e.target
+  if (params.id > 0){
+    newTag={my_module_tag:{tag_id: e.params.data.id}}
+    $.post('<%= my_module_my_module_tags_path(@my_module) %>',newTag)
+  }else{
+    newTag={tag:{
+              name: params.text,
+              project_id: selectElement.dataset.projectId,
+              color: null
+            },
+            my_module_id: selectElement.dataset.moduleId,
+            simple_creation: true
+          }
+    $.post(selectElement.dataset.tagsCreateUrl,newTag,function(result){
+      var newOption='<option data-color="'+result.tag.color+'" value="'+result.tag.id+'">'+result.tag.name+'</option>'
+      var selectedValues=$(selectElement).val()
+      $(newOption).appendTo($(selectElement))
+      $(selectElement).find('option[value=0]').remove()
+      selectedValues.splice(-1,1)
+      selectedValues.push(result.tag.id)
+      $(selectElement).val(selectedValues).change()
+    })
+  }
+  
+}).on('select2:unselect', (e) => {
+  delete_tag=e.params.data.id
+  $.post('<%= my_module_my_module_tags_path(@my_module) %>/'+delete_tag+'/destroy_by_tag_id')
+}).prop("disabled", true)
+
+$(window).click( e => {
+  $('#module-tags-selector').prop("disabled", true);
+})
+
+$('#module-tags-selector').next().click(e => {
+  var inputLine=$('#module-tags-selector').next().find('input')
+  $('#module-tags-selector').prop("disabled", false)
+  e.stopPropagation()
+  inputLine[0].disabled=false
+  inputLine.focus()
+})
+
+</script>
