@@ -4,7 +4,7 @@
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane my-modules-protocols-index">
+<div class="content-pane">
   <%= render partial: "module_header" %>
 
   <div>
@@ -12,6 +12,7 @@
       <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
     </div>
     <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
+    <%= render partial: "my_modules/state_buttons.html.erb" %>
   </div>
 
   <div data-role="steps-container">
