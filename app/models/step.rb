@@ -1,5 +1,6 @@
 class Step < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -82,6 +83,10 @@ class Step < ApplicationRecord
     @t_ids = self.tables.collect { |t| t.id }
 
     super()
+  end
+
+  def self.viewable_by_user(user, teams)
+    where(protocol: Protocol.viewable_by_user(user, teams))
   end
 
   def can_destroy?

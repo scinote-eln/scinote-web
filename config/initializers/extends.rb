@@ -84,7 +84,14 @@ class Extends
   # 'extension' => 'fa class'
   FILE_FA_ICON_MAPPINGS = {}
 
-  ################### Activities ###################
+  ACTIVITY_SUBJECT_TYPES = %w(
+    Team Repository Project Experiment MyModule Result Protocol Step
+  )
+
+  SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
+    Repository Project Experiment MyModule Result Protocol Step
+  )
+
   ACTIVITY_TYPES = {
     create_project: 0,
     rename_project: 1,
@@ -143,8 +150,5 @@ class Extends
     uncomplete_task: 54,
     assign_repository_record: 55,
     unassign_repository_record: 56
-  }.freeze
-
-  ACTIVITY_SUBJECT_TYPES =
-    %w(User MyModule Experiment Project Report Protocol).freeze
+  }
 end
