@@ -1,0 +1,14 @@
+<%= render partial: "global_activities/references/team.html.erb",
+           locals: { subject: subject&.team } %>
+<div class="col-xs-2">
+  <%= image_tag 'icon_small/project.svg' %>
+  <% if subject %>
+    <%= link_to project_path(subject), title: subject.name do %>
+      <%= subject.name.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    <% end %>
+  <% else %>
+    <span title="<%= breadcrumbs[:project] %>">
+      <%= breadcrumbs[:project].truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  <% end %>
+</div>

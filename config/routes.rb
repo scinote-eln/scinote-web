@@ -649,6 +649,7 @@ Rails.application.routes.draw do
   end
 
   resources :global_activities, only: [:index]
+  post 'global_activities', to: 'global_activities#index'
   namespace :global_activities do
     get 'search_subjects', to: 'global_activities#search_subjects',
                            as: 'search_subjects'

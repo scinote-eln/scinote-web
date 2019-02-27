@@ -1,0 +1,28 @@
+<% @grouped_activities.each do |date, activities| %>
+  <div class="row">
+    <div class="col-sm-4 col-md-2">
+      <a class="activities-group-expand-button"
+         href="#"
+         id="activities-group-<%= date %>-button"
+         data-toggle="collapse"
+         data-turbolinks="false"
+         data-target="#activities-group-<%= date %>">
+        <span class="fas fa-caret-down"></span>
+        <%= l(Time.parse(date), format: :full_date) %>
+      </a>
+    </div>
+    <div class="col-sm-8 col-md-10">
+      <div class="activities-counter-label">
+        <strong><%= activities.length %></strong>
+        <%= t("activities.index.#{'activity'.pluralize(activities.length)}_counter_label") %>
+      </div>
+      <ul class="collapse in activities-group" id="activities-group-<%= date %>">
+          <% activities.each do |activity| %>
+            <li class="activity-card">
+              <%= render partial: 'activity.html.erb', locals: { activity: activity } %>
+            </li>
+          <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

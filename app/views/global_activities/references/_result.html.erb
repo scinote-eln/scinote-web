@@ -1,0 +1,14 @@
+<%= render partial: "global_activities/references/my_module.html.erb",
+           locals: { subject: subject&.my_module } %>
+<div class="col-xs-2">
+  <%= image_tag 'icon_small/result.png' %>
+  <% if subject %>
+    <%= link_to results_my_module_path(subject.my_module), title: subject.name do %>
+      <%= subject.name.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    <% end %>
+  <% else %>
+    <span title="<%= breadcrumbs[:result] %>">
+      <%= breadcrumbs[:result].truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  <% end %>
+</div>

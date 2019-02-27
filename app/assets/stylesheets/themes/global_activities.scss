@@ -34,10 +34,49 @@
   grid-area: activities;
   overflow-y: scroll;
   min-height: 600px;
+
+  .activities-counter-label {
+    margin-left: 10px;
+  }
+
+  .activities-group {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .activities-group-expand-button {
+    color: $color-emperor;
+  }
+
+  .activity-card {
+    border-radius: 5px;
+    margin-right: 10px;
+    padding: 5px;
+
+    &:hover {
+      background-color: $brand-primary-light;
+    }
+
+    .atwho-user-popover {
+      padding-left: 0;
+    }
+
+    .activity-timestamp {
+      color: $color-silver-chalice;
+    }
+
+    .navigational-breadcrumbs {
+      color: $color-silver-chalice;
+    }
+  }
 }
 
-.global-activities__top-actions{
+.global-activities__top-actions {
   grid-area: actions;
+
+  a {
+    color: $color-emperor;
+  }
 }
 
 .global-activities__search-container{

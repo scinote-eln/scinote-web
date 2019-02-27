@@ -1,3 +1,5 @@
+<% provide :head_title, t('nav.label.activities') %>
+
 <div class="global-activities__container">
   <br>
   <div class="global-activities__top">
@@ -6,9 +8,15 @@
 
   <div class="global-activities__main">
         <div class="global-activities__top-actions">
-          <span><i class="fas fa-caret-square-down"></i> Expand All</span>
+          <a id="global-activities-expand-all" href="#" data-turbolinks="false">
+            <i class="fas fa-caret-square-down"></i>
+            <%= t('activities.index.expand_all') %>
+          </a>
           &nbsp;&nbsp;
-          <span><i class="fas fa-caret-square-up"></i> Colapse All</span>
+          <a id="global-activities-colapse-all" href="#" data-turbolinks="false">
+            <i class="fas fa-caret-square-up"></i>
+            <%= t('activities.index.collapse_all') %>
+          </a>
         </div>
         <div class="global-activities__search-container">
           <div class="input-group">
@@ -18,10 +26,15 @@
             </span>
           </div>
         </div>
-    <div class="global-activities_activities-list">
-      <h2>list of activities</h2>
+    <div class="global-activities_activities-list" data-activities-url="<%= global_activities_path %>">
+      <%= render partial: "activity_list.html.erb" %>
     </div>
-
+    <div class="text-center">
+      <a class="btn btn-default btn-more-activities <%= 'hidden' unless @more_activities %>"
+         data-next-date="<%= @next_date %>">
+        <%= t'activities.index.more_activities' %>
+      </a>
+    </div>
   </div>
 
   <div class="global-activities__side">
@@ -29,3 +42,5 @@
   </div>
 
 </div>
+
+<%= javascript_include_tag 'global_activities/index.js' %>
