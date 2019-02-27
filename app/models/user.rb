@@ -488,7 +488,8 @@ class User < ApplicationRecord
 
   # This method must be overwriten for addons that will be installed
   def show_login_system_notification?
-    user_system_notifications.show_on_login.present?
+    user_system_notifications.show_on_login.present? &&
+      (ENV['ENABLE_TUTORIAL'] != 'true' || settings['tutorial_completed'])
   end
 
   # json friendly attributes
