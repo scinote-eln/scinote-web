@@ -146,7 +146,7 @@ namespace :data do
         TemplatesService.new.delay(
           run_at: i.hours.from_now,
           queue: :templates,
-          priority: 1
+          priority: 5
         ).update_team(team)
       end
     end
