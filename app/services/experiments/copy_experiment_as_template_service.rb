@@ -93,7 +93,7 @@ module Experiments
         user: @user,
         message: I18n.t(
           'activities.clone_experiment',
-          user: @user,
+          user: @user.full_name,
           experiment_new: @c_exp.name,
           experiment_original: @exp.name
         )
