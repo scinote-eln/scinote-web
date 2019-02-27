@@ -131,12 +131,25 @@ namespace :data do
   end
 
   desc 'Update all templates projects'
-  task update_all_templates: :environment do
+  task :update_all_templates,
+       %i(slice_size) => [:environment] do |_, args|
+    args.with_defaults(slice_size: 800)
+
     Rails.logger.info('Templates, syncing all templates projects')
-    updated, total = TemplatesService.new.update_all_templates
-    Rails.logger.info(
-      "Templates, total number of updated projects: #{updated} out of #{total}}"
-    )
+    Team.all.order(updated_at: :desc)
+        .each_slice(args[:slice_size].to_i).with_index do |teams, i|
+      Rails.logger.info("Processing slice with index #{i}. " \
+                        "First team: #{teams.first.id}, " \
+                        "Last team: #{teams.last.id}.")
+
+      teams.each do |team|
+        TemplatesService.new.delay(
+          run_at: i.hours.from_now,
+          queue: :templates,
+          priority: 5
+        ).update_team(team)
+      end
+    end
   end
 
   desc 'Create demo project on existing users'
