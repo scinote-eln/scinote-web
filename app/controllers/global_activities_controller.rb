@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GlobalActivitiesController < ApplicationController
-
   def index
     teams = activity_filters[:teams]
     teams = current_user.teams if teams.blank?

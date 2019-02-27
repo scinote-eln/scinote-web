@@ -14,19 +14,18 @@ class Activity < ApplicationRecord
   belongs_to :experiment, inverse_of: :activities, optional: true
   belongs_to :my_module, inverse_of: :activities, optional: true
 
-
   validate :activity_version
   validates :type_of, :owner, presence: true
   validates :subject_type, inclusion: { in: Extends::ACTIVITY_SUBJECT_TYPES,
                                         allow_blank: true }
 
   def self.activity_types_list
-    type_ofs.map{ |key, value|
-                  {
-                    id: value,
-                    name: key.tr('_', ' ').capitalize
-                  }
-            }.sort_by{ |a| a[:name] }
+    type_ofs.map  do |key, value|
+      {
+        id: value,
+        name: key.tr('_', ' ').capitalize
+      }
+    end.sort_by { |a| a[:name] }
   end
 
   def old_activity?

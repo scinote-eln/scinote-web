@@ -22,9 +22,11 @@ class UserTeam < ApplicationRecord
   end
 
   def self.my_employees(user)
-    users=where(:team_id => user.user_teams.my_teams.pluck(:team_id))
-          .joins(:user).select(:full_name, 'users.id as id').as_json.uniq
-    users=[user.as_json.select{|k| ["id","full_name"].include? k}] if users.length == 0
+    users = where(team_id: user.user_teams.my_teams.pluck(:team_id))
+            .joins(:user).select(:full_name, 'users.id as id').as_json.uniq
+    if users.empty?
+      users = [user.as_json.select { |k| %w(id full_name).include? k }]
+    end
     users
   end
 
