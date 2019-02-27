@@ -1667,6 +1667,7 @@ module FirstTimeDataGenerator
                  user: user.full_name,
                  module: my_module.name)
     ).sneaky_save
+
   end
 
   def generate_result_comment(result, user, message, created_at = nil)
