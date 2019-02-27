@@ -192,12 +192,12 @@ function bindEditTagsAjax() {
       url: tagsEl.attr("data-module-tags-url"),
       type: "GET",
       dataType: "json",
-      success: function (data) {
-       var newOptions=$(data.html_module_header).find('option')
-       $('#module-tags-selector').find('option').remove()
-       $(newOptions).appendTo('#module-tags-selector').change()
+      success: function(data) {
+        var newOptions = $(data.html_module_header).find('option');
+        $('#module-tags-selector').find('option').remove();
+        $(newOptions).appendTo('#module-tags-selector').change();
       },
-      error: function (data) {
+      error: function (data){
         // TODO
       }
     });
@@ -247,24 +247,20 @@ function applyTaskCompletedCallBack() {
     });
 }
 
-
-function initTagsSelector(){
-
+function initTagsSelector() {
   var tagsAjaxQuery = {
     url: $('#module-tags-selector')[0].dataset.searchTagUrl,
     dataType: 'json',
     data: function(params) {
-
       return {
         query: params.term // search term
       };
     },
     // preparing results
     processResults: function(data) {
-      var result=[]
-      $.each(data,(index,option) => {
-        option.text = option.name
-      })
+      $.each(data, (index, option) => {
+        option.text = option.name;
+      });
       return {
         results: data
       };
@@ -278,58 +274,59 @@ function initTagsSelector(){
     closeOnSelect: true,
     dynamicCreation: true,
     dynamicCreationDelimiter: ','
-  }).on('select2:select',(e) => {
-    var params=e.params.data
-    var newTag=null
-    var selectElement=e.target
-    if (params.id > 0){
-      newTag={my_module_tag:{tag_id: e.params.data.id}}
-      $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl,newTag)
-    }else{
-      newTag={tag:{
-              name: params.text,
-              project_id: selectElement.dataset.projectId,
-              color: null
-            },
-            my_module_id: selectElement.dataset.moduleId,
-            simple_creation: true
-          }
-      $.post(selectElement.dataset.tagsCreateUrl,newTag,function(result){
-        var newOption='<option data-color="'+result.tag.color+'" value="'+result.tag.id+'">'+result.tag.name+'</option>'
-        var selectedValues=$(selectElement).val()
-        $(newOption).appendTo($(selectElement))
-        $(selectElement).find('option[value=0]').remove()
-        selectedValues.splice(-1,1)
-        selectedValues.push(result.tag.id)
-        $(selectElement).val(selectedValues).change()
-      })
+  }).on('select2:select', (e) => {
+    var params = e.params.data;
+    var newTag = null;
+    var selectElement = e.target;
+    if (params.id > 0) {
+      newTag = { my_module_tag: { tag_id: e.params.data.id } };
+      $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl, newTag);
+    } else {
+      newTag = {
+        tag: {
+          name: params.text,
+          project_id: selectElement.dataset.projectId,
+          color: null
+        },
+        my_module_id: selectElement.dataset.moduleId,
+        simple_creation: true
+      };
+      $.post(selectElement.dataset.tagsCreateUrl, newTag, function(result) {
+        var newOption = '<option data-color="' + result.tag.color + '" value="' + result.tag.id + '">' + result.tag.name + '</option>';
+        var selectedValues = $(selectElement).val();
+        $(newOption).appendTo($(selectElement));
+        $(selectElement).find('option[value=0]').remove();
+        selectedValues.splice(-1, 1);
+        selectedValues.push(result.tag.id);
+        $(selectElement).val(selectedValues).change();
+      });
     }
-  
-  }).on('select2:unselect', (e) => {
-    delete_tag=e.params.data.id
-    $(e.target).find('option[value="'+delete_tag+'"]').remove()
-    $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl+'/'+delete_tag+'/destroy_by_tag_id')
-  }).prop("disabled", true)
-
-  $(window).click( e => {
-    $('#module-tags-selector').prop("disabled", true);
-    $('.select-container .edit-button-container').addClass('hidden')
+  }).on('select2:unselect', (e)=>{
+    var deleteTag = e.params.data.id;
+    $(e.target).find('option[value="' + deleteTag + '"]').remove();
+    $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl + '/' + deleteTag + '/destroy_by_tag_id');
   })
+    .prop('disabled', true);
+
+  $(window).click(()=>{
+    $('#module-tags-selector').prop('disabled', true);
+    $('.select-container .edit-button-container').addClass('hidden');
+  });
 
   $('#module-tags-selector').next().click(e => {
-    if ($('#module-tags-selector')[0].dataset.editable !== 'true') return false
-    var inputLine=$('#module-tags-selector').next().find('input')
-    $('#module-tags-selector').prop("disabled", false)
-    $('.select-container .edit-button-container').removeClass('hidden')
-    e.stopPropagation()
-    inputLine[0].disabled=false
-    inputLine.focus()
-  })
+    var inputLine = $('#module-tags-selector').next().find('input');
+    if ($('#module-tags-selector')[0].dataset.editable !== 'true') return false;
+    $('#module-tags-selector').prop('disabled', false);
+    $('.select-container .edit-button-container').removeClass('hidden');
+    e.stopPropagation();
+    inputLine[0].disabled = false;
+    inputLine.focus();
+    return true;
+  });
 }
 
 applyTaskCompletedCallBack();
 bindEditDueDateAjax();
 bindEditDescriptionAjax();
-initTagsSelector()
+initTagsSelector();
 bindEditTagsAjax();
-

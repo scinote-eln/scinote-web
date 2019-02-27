@@ -5,10 +5,10 @@
         <span><%= t("my_modules.module_header.manage_tags") %></span>
     </a>
   </div>
-  <%= select_tag "activity", 
-  options_for_select(my_module.tags.map{|i| 
+  <%= select_tag "activity",
+  options_for_select(my_module.tags.map{|i|
     [
-      i[:name], 
+      i[:name],
       i[:id],
      {'data-color'=> i[:color]}
    ]
@@ -26,4 +26,3 @@
 
   } %>
 </div>
-
