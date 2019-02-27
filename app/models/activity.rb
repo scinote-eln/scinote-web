@@ -32,6 +32,14 @@ class Activity < ApplicationRecord
     subject.nil?
   end
 
+  def message_items
+    values['message_items'].with_indifferent_access.merge(user: owner.id)
+  end
+
+  def html_message
+    I18n.t "activities.#{type_of}", message_items
+  end
+
   private
 
   def activity_version
