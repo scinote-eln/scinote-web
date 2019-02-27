@@ -3,13 +3,11 @@
 class ActivitiesService
   def self.load_activities(team_ids, filters = {})
     if filters[:subjects].present?
-      first_type, first_ids = filters[:subjects].first
-      query = Activity.where(subject_type: first_type, subject_id: first_ids)
-      if filters[:subjects].count > 1
-        filters[:subjects].except(first_type).each do |type, ids|
-          query = query.or(Activity.where(subject_type: type, subject_id: ids))
-        end
-      end
+      query = Activity.where(
+        filters[:subjects].map { '(subject_type = ? AND subject_id IN(?))' }
+                          .join(' OR '),
+        *filters[:subjects].flatten
+      )
     else
       query = Activity
     end
@@ -20,13 +18,13 @@ class ActivitiesService
 
     if filters[:from_date] && filters[:to_date]
       activities = query.where(
-        'created_at >= :from AND created_at <= :to',
+        'created_at <= :from AND created_at >= :to',
         from: Time.zone.parse(filters[:from_date]).beginning_of_day.utc,
         to: Time.zone.parse(filters[:to_date]).end_of_day.utc
       )
     elsif filters[:from_date] && !filters[:to_date]
       activities = query.where(
-        'created_at >= :from',
+        'created_at <= :from',
         from: Time.zone.parse(filters[:from_date]).beginning_of_day.utc
       )
     else
@@ -44,12 +42,12 @@ class ActivitiesService
 
     last_date = results.keys.last
     activities = query.where(
-      'created_at >= :from AND created_at <= :to',
+      'created_at <= :from AND created_at >= :to',
       from: Time.zone.parse(last_date).beginning_of_day.utc,
       to: Time.zone.parse(last_date).end_of_day.utc
     )
     more_left = query.where(
-      'created_at > :from',
+      'created_at < :from',
       from: Time.zone.parse(last_date).end_of_day.utc
     ).exists?
     results[last_date] = activities.to_a
