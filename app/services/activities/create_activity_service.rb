@@ -9,7 +9,7 @@ module Activities
     def initialize(activity_type:,
                    owner:,
                    team:,
-                   project:,
+                   project: nil,
                    subject:,
                    message_items: {})
       @activity = Activity.new
@@ -18,15 +18,14 @@ module Activities
       @activity.team = team
       @activity.subject = subject
       @activity.project = project if project
-      @activity.values = { message_items: message_items }
+      @message_items = message_items
 
       @errors = {}
     end
 
     def call
-      generate_breadcrumbs
-      @activity.save
-
+      enrich_message_items
+      @activity.save!
       self
     end
 
@@ -36,11 +35,45 @@ module Activities
 
     private
 
-    def generate_breadcrumbs
-      @activity.values[:breadcrumbs] = [
-        { team: { id: @activity.team.id, value: @activity.team.name } },
-        { project: { id: @activity.project.id, value: @activity.project.name } }
-      ]
+    def enrich_message_items
+      @message_items.each do |k, v|
+        const = try_to_constantize k
+        if const
+          if v.is_a?(Hash) # Value is array, so you have getter specified
+            id = v[:id]
+            getter_method = v[:value_for]
+          else
+            id = v
+            getter_method = 'name'
+          end
+
+          obj = const.find id
+          @activity.message_items[k] = {
+            type: const.to_s,
+            value: obj.public_send(getter_method).to_s,
+            id: id
+          }
+
+          @activity.message_items[k].merge!(value_for: getter_method)
+
+        else
+          @activity.message_items[k] = v.to_s
+        end
+      end
+    end
+
+    def try_to_constantize(key)
+      const_name = key.to_s.camelize
+      # Remove last part from and with '_xxx..x'
+      const_name_shorted = key.to_s.sub(/_[^_]*\z/, '').camelize
+
+      if Extends::ACTIVITY_MESSAGE_ITEMS_TYPES.include? const_name
+        const_name.constantize
+      elsif Extends::ACTIVITY_MESSAGE_ITEMS_TYPES.include? const_name_shorted
+        const_name_shorted.constantize
+      else
+        false
+      end
     end
   end
 end

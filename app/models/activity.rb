@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Activity < ApplicationRecord
+  include ActivityValuesModel
+
   enum type_of: Extends::ACTIVITY_TYPES
 
   belongs_to :owner, inverse_of: :activities, class_name: 'User'
@@ -19,6 +21,12 @@ class Activity < ApplicationRecord
   validates :subject_type, inclusion: { in: Extends::ACTIVITY_SUBJECT_TYPES,
                                         allow_blank: true }
 
+  store_accessor :values, :message_items
+
+  default_values(
+    message_items: {}
+  )
+
   def self.activity_types_list
     type_ofs.map  do |key, value|
       {
@@ -30,14 +38,6 @@ class Activity < ApplicationRecord
 
   def old_activity?
     subject.nil?
-  end
-
-  def message_items
-    values['message_items'].with_indifferent_access.merge(user: owner.id)
-  end
-
-  def html_message
-    I18n.t "activities.#{type_of}", message_items
   end
 
   private

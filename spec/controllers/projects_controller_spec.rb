@@ -119,7 +119,7 @@ describe ProjectsController, type: :controller do
       end
 
       it 'never calls create activity service' do
-        expect(Activities::CreateActivityService).not_to receive(:call)
+        expect(Activities::CreateActivityService).to receive(:call)
 
         post :create, params: params, format: :json
       end
