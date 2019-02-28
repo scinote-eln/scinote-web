@@ -1549,9 +1549,9 @@ module FirstTimeDataGenerator
         if rand < 0.3
           polite_comment = 'This looks well.'
         elsif rand < 0.4
-          polite_comment = 'Seems satisfactory.'
+          polite_comment = 'Great job!'
         elsif rand < 0.4
-          polite_comment = 'Try a bit harder next time.'
+          polite_comment = 'Thanks for getting this done.'
         end
         if polite_comment
           commented_on = generate_random_time(completed_on)
