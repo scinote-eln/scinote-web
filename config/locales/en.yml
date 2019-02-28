@@ -1292,6 +1292,8 @@ en:
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
   system_notifications:
+    navbar:
+      tooltip: 'What’s new notifications'
     emails:
       subject: "You've received a What's new notification"
       intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
@@ -1872,8 +1874,8 @@ en:
       assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
       recent_notification: 'Recent changes'
       recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
-      system_message: 'System message'
-      system_message_description: 'System message notifications are specifically sent by site maintainers to notify all users about a system update.'
+      system_message: "What's New in SciNote"
+      system_message_description: 'You will be notified about new SciNote features, releases and improvements you can benefit from.'
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."

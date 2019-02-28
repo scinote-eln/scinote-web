@@ -14,6 +14,7 @@ class UserTeam < ApplicationRecord
 
   before_destroy :destroy_associations
   after_create :create_samples_table_state
+  validates_uniqueness_of :user_id, scope: :team_id
 
   def role_str
     I18n.t("user_teams.enums.role.#{role}")
