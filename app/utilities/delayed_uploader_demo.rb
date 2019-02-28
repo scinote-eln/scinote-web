@@ -64,6 +64,7 @@ module DelayedUploaderDemo
   end
 
   def self.generate_result_comment(result, user, message, created_at = nil)
+    created_at ||= result.created_at
     ResultComment.create(
       user: user,
       message: message,

@@ -957,8 +957,8 @@ module FirstTimeDataGenerator
       'If desired, more than 30 mg tissue can be disrupted and homogenized ' \
       'at the start of the procedure (increase the volume of Buffer RLT ' \
       'proportionately). Use a portion of the homogenate corresponding to no ' \
-      'more than 30 mg tissue for RNA purification, and store the rest at –80',
-      '°C. Buffer RLT may form a precipitate upon storage. If necessary, ' \
+      'more than 30 mg tissue for RNA purification, and store the rest at –80°C.',
+      'Buffer RLT may form a precipitate upon storage. If necessary, ' \
       'redissolve by warming, and then place at room temperature (15–25°C).',
       'Buffer RLT and Buffer RW1 contain a guanidine salt and are therefore ' \
       'not compatible with disinfecting reagents containing bleach. See page ' \
