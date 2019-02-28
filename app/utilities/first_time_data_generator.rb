@@ -798,11 +798,12 @@ module FirstTimeDataGenerator
       user: user
     )
     qpcr_id = MyModule.where(name: 'qPCR').last.id.base62_encode
-    generate_result_comment(
+    DelayedUploaderDemo.generate_result_comment(
       temp_result,
       user,
       user_annotation + ' Please check if results match results in ' \
-      '[#qPCR~tsk~' + qpcr_id + ']'
+      '[#qPCR~tsk~' + qpcr_id + ']',
+      generate_random_time(temp_result.created_at, 1.days)
     )
     temp_result.table = Table.new(
       created_by: user,
@@ -833,7 +834,8 @@ module FirstTimeDataGenerator
       current_team: team,
       result_name: 'Agarose gel electrophoresis of totRNA samples',
       created_at: generate_random_time(my_modules[2].created_at, 3.days),
-      file_name: 'totRNA_gel.jpg'
+      file_name: 'totRNA_gel.jpg',
+      comment: user_annotation + ' Could you check if this is okay?'
     )
 
     # ----------------- Module 4 ------------------
@@ -955,8 +957,8 @@ module FirstTimeDataGenerator
       'If desired, more than 30 mg tissue can be disrupted and homogenized ' \
       'at the start of the procedure (increase the volume of Buffer RLT ' \
       'proportionately). Use a portion of the homogenate corresponding to no ' \
-      'more than 30 mg tissue for RNA purification, and store the rest at –80',
-      '°C. Buffer RLT may form a precipitate upon storage. If necessary, ' \
+      'more than 30 mg tissue for RNA purification, and store the rest at –80°C.',
+      'Buffer RLT may form a precipitate upon storage. If necessary, ' \
       'redissolve by warming, and then place at room temperature (15–25°C).',
       'Buffer RLT and Buffer RW1 contain a guanidine salt and are therefore ' \
       'not compatible with disinfecting reagents containing bleach. See page ' \
@@ -1249,7 +1251,11 @@ module FirstTimeDataGenerator
       current_team: team,
       result_name: 'Bacteria plates YPGA',
       created_at: generate_random_time(my_modules[5].created_at, 2.days),
-      file_name: 'Bacterial_colonies.jpg'
+      file_name: 'Bacterial_colonies.jpg',
+      comment: user_annotation + ' please check the results again. ' \
+          '<span class=\"atwho-inserted\" contenteditable=\"false\"' \
+          'data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>' \
+          ' seems to be acting strange?'
     )
 
     DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
@@ -1666,27 +1672,6 @@ module FirstTimeDataGenerator
       message: I18n.t('activities.add_comment_to_module',
                  user: user.full_name,
                  module: my_module.name)
-    ).sneaky_save
-  end
-
-  def generate_result_comment(result, user, message, created_at = nil)
-    created_at ||= generate_random_time(result.created_at, 1.days)
-    ResultComment.create(
-      user: user,
-      message: message,
-      created_at: created_at,
-      result: result
-    )
-    Activity.new(
-      type_of: :add_comment_to_result,
-      user: user,
-      project: result.my_module.experiment.project,
-      my_module: result.my_module,
-      created_at: created_at,
-      updated_at: created_at,
-      message: I18n.t('activities.add_comment_to_result',
-                 user: user.full_name,
-                 result: result.name)
     ).sneaky_save
   end
 
