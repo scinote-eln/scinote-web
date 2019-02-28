@@ -192,6 +192,7 @@ module FirstTimeDataGenerator
       )
     end
 
+    name = 'Demo project'
     name = '[NEW] Demo project by SciNote'
     exp_name = 'Polymerase chain reaction'
     # If there is an existing demo project, archive and rename it
@@ -359,75 +360,6 @@ module FirstTimeDataGenerator
         updated_at: generate_random_time(my_module.created_at, 2.minutes)
       ).sneaky_save
     end
-
-    # Create an archived module
-    archived_module = MyModule.create(
-      name: 'Data analysis - Pfaffl method',
-      created_by: user,
-      created_at: generate_random_time(6.days.ago),
-      due_date: Time.now + 1.week,
-      description: nil,
-      x: -1,
-      y: -1,
-      experiment: experiment,
-      workflow_order: -1,
-      my_module_group: nil,
-      archived: true,
-      archived_on: generate_random_time(3.days.ago),
-      archived_by: user
-    )
-
-    # Activity for creating archived module
-    Activity.new(
-      type_of: :create_module,
-      user: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.create_module',
-        user: user.full_name,
-        module: archived_module.name
-      ),
-      created_at: archived_module.created_at,
-      updated_at: archived_module.created_at
-    ).sneaky_save
-
-    # Activity for archiving archived module
-    Activity.new(
-      type_of: :archive_module,
-      user: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.archive_module',
-        user: user.full_name,
-        module: archived_module.name
-      ),
-      created_at: archived_module.archived_on,
-      updated_at: archived_module.archived_on
-    ).sneaky_save
-
-    # Assign new user to archived module
-    UserMyModule.create(
-      user: user,
-      my_module: archived_module,
-      assigned_by: user,
-      created_at: generate_random_time(archived_module.created_at, 2.minutes)
-    )
-    Activity.new(
-      type_of: :assign_user_to_module,
-      user: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.assign_user_to_module',
-        assigned_user: user.full_name,
-        module: archived_module.name,
-          assigned_by_user: user.full_name
-      ),
-      created_at: generate_random_time(archived_module.created_at, 2.minutes),
-      updated_at: generate_random_time(archived_module.created_at, 2.minutes)
-    ).sneaky_save
 
     # Assign 4 samples to modules
     samples_to_assign = []
