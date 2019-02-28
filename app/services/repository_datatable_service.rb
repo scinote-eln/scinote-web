@@ -25,39 +25,42 @@ class RepositoryDatatableService
   end
 
   def process_query
-    order_obj = build_conditions(@params)[:order_by_column]
     search_value = build_conditions(@params)[:search_value]
-    records = search_value.present? ? search(search_value) : fetch_records
-    @repository_rows = sort_rows(order_obj, records)
-  end
+    order_obj = build_conditions(@params)[:order_by_column]
 
-  def fetch_records
-    repository_rows = RepositoryRow.joins(:created_by)
-                                   .where(repository: @repository)
+    repository_rows = fetch_rows(search_value)
+    assigned_rows = repository_rows.joins(:my_module_repository_rows)
     if @my_module
-      @assigned_rows = @my_module.repository_rows
-                                 .joins(:created_by)
-                                 .where(repository: @repository)
-      return @assigned_rows if @params[:assigned] == 'assigned'
-    else
-      @assigned_rows = repository_rows.joins(:my_module_repository_rows)
+      assigned_rows = assigned_rows
+                      .where(my_module_repository_rows: {
+                               my_module_id: @my_module
+                             })
+      repository_rows = assigned_rows if @params[:assigned] == 'assigned'
     end
-    repository_rows
+
+    @assigned_rows = assigned_rows
+    @repository_rows = sort_rows(order_obj, repository_rows)
   end
 
-  def search(value)
-    includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
-    searchable_attributes = ['repository_rows.name',
-                             'users.full_name',
-                             'repository_rows.id'] +
-                            Extends::REPOSITORY_EXTRA_SEARCH_ATTR
-    ids = @repository.repository_rows
-                     .left_outer_joins(:created_by)
-                     .left_outer_joins(includes_json)
-                     .where_attributes_like(searchable_attributes, value)
-                     .pluck(:id)
-    # using distinct raises an error when combined with sort
-    RepositoryRow.where(id: ids.uniq)
+  def fetch_rows(search_value)
+    repository_rows = @repository.repository_rows
+                                 .left_outer_joins(:created_by)
+
+    if search_value.present?
+      includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
+      searchable_attributes = ['repository_rows.name',
+                               'users.full_name',
+                               'repository_rows.id'] +
+                              Extends::REPOSITORY_EXTRA_SEARCH_ATTR
+
+      repository_rows = repository_rows
+                        .left_outer_joins(includes_json)
+                        .where_attributes_like(searchable_attributes,
+                                               search_value)
+                        .distinct
+    end
+
+    repository_rows
   end
 
   def build_conditions(params)
