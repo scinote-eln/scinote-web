@@ -148,6 +148,7 @@ class TeamImporter
     # Remove callbacks that can cause problems when importing
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
     Protocol.skip_callback(:save, :after, :update_linked_children)
+    Step.skip_callback(:save, :before, :set_last_modified_by)
 
     @import_dir = import_dir
     @is_template = true
@@ -188,6 +189,7 @@ class TeamImporter
     # Reset callbacks
     MyModule.set_callback(:create, :before, :create_blank_protocol)
     Protocol.set_callback(:save, :after, :update_linked_children)
+    Step.set_callback(:save, :before, :set_last_modified_by)
   end
 
   private
@@ -217,14 +219,18 @@ class TeamImporter
     project.project_comments.each do |comment|
       comment.save! if update_annotation(comment.message)
     end
-    project.experiments.each do |exp|
+    project.experiments
+           .preload(my_modules: [{ protocols: { steps: :step_comments } },
+                                 { results: :result_comments },
+                                 :task_comments])
+           .each do |exp|
       exp.save! if update_annotation(exp.description)
       exp.my_modules.each do |task|
         task.task_comments.each do |comment|
           comment.save! if update_annotation(comment.message)
         end
         task.save! if update_annotation(task.description)
-        task.protocol.steps.each do |step|
+        task.protocols.first.steps.each do |step|
           step.step_comments.each do |comment|
             comment.save! if update_annotation(comment.message)
           end
@@ -278,13 +284,14 @@ class TeamImporter
   end
 
   def create_task_connections(connections_json)
+    connections = []
     connections_json.each do |connection_json|
-      connection = Connection.new(connection_json)
-      connection.id = nil
-      connection.input_id = @my_module_mappings[connection.input_id]
-      connection.output_id = @my_module_mappings[connection.output_id]
-      connection.save!
+      connections << {
+        input_id: @my_module_mappings[connection_json['input_id']],
+        output_id: @my_module_mappings[connection_json['output_id']]
+      }
     end
+    Connection.import!(connections, validate: false) if connections.any?
   end
 
   def create_activities(activities_json)
@@ -667,11 +674,12 @@ class TeamImporter
       step.user_id = user_id || find_user(step.user_id)
       step.last_modified_by_id =
         user_id || find_user(step.last_modified_by_id)
-      step.protocol_id = protocol.id
+      step.protocol = protocol
       step.save!
       @step_mappings[orig_step_id] = step.id
       @step_counter += 1
 
+      step_comments = []
       step_json['step_comments'].each do |step_comment_json|
         step_comment = StepComment.new(step_comment_json)
         step_comment.id = nil
@@ -679,7 +687,10 @@ class TeamImporter
         step_comment.last_modified_by_id =
           user_id || find_user(step_comment.last_modified_by_id)
         step_comment.step = step
-        step_comment.save!
+        step_comments << step_comment
+      end
+      unless step_comments.blank?
+        StepComment.import!(step_comments, validate: false)
       end
 
       step_json['tables'].each do |table_json|
@@ -781,7 +792,7 @@ class TeamImporter
       asset.team = team
       asset.file = file
       asset.in_template = true if @is_template
-      asset.save!
+      raise ActiveRecord::Rollback unless asset.save(validate: false)
       asset.post_process_file(team)
       @asset_mappings[orig_asset_id] = asset.id
       @asset_counter += 1
@@ -801,6 +812,7 @@ class TeamImporter
         user_id || find_user(checklist.last_modified_by_id)
       checklist.save!
       @checklist_mappings[orig_checklist_id] = checklist.id
+      checklist_items = []
       checklist_json['checklist_items'].each do |checklist_item_json|
         checklist_item = ChecklistItem.new(checklist_item_json)
         checklist_item.id = nil
@@ -809,7 +821,10 @@ class TeamImporter
           user_id || find_user(checklist_item.created_by_id)
         checklist_item.last_modified_by_id =
           user_id || find_user(checklist_item.last_modified_by_id)
-        checklist_item.save!
+        checklist_items << checklist_item
+      end
+      if checklist_items.any?
+        ChecklistItem.import!(checklist_items, validate: false)
       end
     end
   end
