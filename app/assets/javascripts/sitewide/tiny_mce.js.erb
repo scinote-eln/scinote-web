@@ -15,13 +15,19 @@ var TinyMCE = (function() {
 
   // returns a public API for TinyMCE editor
   return Object.freeze({
-    init : function() {
+    init : function(autosave) {
       if (typeof tinyMCE != 'undefined') {
+        var toolbar = "undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample";
+        var plugins = "autoresize,customimageuploader,link,advlist,codesample,autolink,lists,charmap,hr,anchor,searchreplace,wordcount,visualblocks,visualchars,insertdatetime,nonbreaking,save,contextmenu,directionality,paste,textcolor,colorpicker,textpattern";
+        if (autosave) {
+          toolbar += " | restoredraft";
+          plugins += ",autosave";
+        }
         tinyMCE.init({
           cache_suffix: '?v=4.7.13', // This suffix should be changed any time library is updated
           selector: 'textarea.tinymce',
-          toolbar: ["undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample"],
-          plugins: "autoresize,customimageuploader,link,advlist,codesample,autolink,lists,charmap,hr,anchor,searchreplace,wordcount,visualblocks,visualchars,insertdatetime,nonbreaking,save,contextmenu,directionality,paste,textcolor,colorpicker,textpattern",
+          toolbar: [toolbar],
+          plugins: plugins,
           codesample_languages: [{"text":"R","value":"r"},{"text":"MATLAB","value":"matlab"},{"text":"Python","value":"python"},{"text":"JSON","value":"javascript"},{"text":"HTML/XML","value":"markup"},{"text":"JavaScript","value":"javascript"},{"text":"CSS","value":"css"},{"text":"PHP","value":"php"},{"text":"Ruby","value":"ruby"},{"text":"Java","value":"java"},{"text":"C","value":"c"},{"text":"C#","value":"csharp"},{"text":"C++","value":"cpp"}],
           removed_menuitems: 'newdocument',
           object_resizing: false,
@@ -95,9 +101,10 @@ var TinyMCE = (function() {
         }
       });
     },
-    refresh: function() {
+    refresh: function(autosave) {
+      var autosave = (typeof autosave === 'undefined') ? false : autosave;
       this.destroyAll();
-      this.init();
+      this.init(autosave);
     },
     getContent: function() {
       return tinymce.editors[0].getContent();
