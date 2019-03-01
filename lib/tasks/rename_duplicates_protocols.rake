@@ -23,7 +23,7 @@ namespace :protocols do
     end
 
     # checking for private protocols
-    private_protocols = Protocol.select(:name, :team_id)
+    private_protocols = Protocol.select(:name, :team_id, :added_by_id)
                                 .where.not(name: nil).where(protocol_type: 2)
                                 .group(
                                   :name,
@@ -36,7 +36,8 @@ namespace :protocols do
       protocols_to_update = Protocol.where(
         name: dup_name.name,
         team_id: dup_name.team_id,
-        protocol_type: 2
+        protocol_type: 2,
+        added_by_id: dup_name.added_by_id
       )
       protocols_to_update.each_with_index do |protocol, index|
         next if index.zero?
@@ -46,7 +47,7 @@ namespace :protocols do
     end
 
     # checking for archived protocols
-    archived_protocols = Protocol.select(:name, :team_id)
+    archived_protocols = Protocol.select(:name, :team_id, :added_by_id)
                                  .where.not(name: nil).where(protocol_type: 4)
                                  .group(
                                    :name,
@@ -59,7 +60,8 @@ namespace :protocols do
       protocols_to_update = Protocol.where(
         name: dup_name.name,
         team_id: dup_name.team_id,
-        protocol_type: 4
+        protocol_type: 4,
+        added_by_id: dup_name.added_by_id
       )
       protocols_to_update.each_with_index do |protocol, index|
         next if index.zero?
