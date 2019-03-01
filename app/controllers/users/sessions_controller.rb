@@ -47,6 +47,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def after_sign_in
     flash[:system_notification_modal] = true
+    TemplatesService.new.schedule_creation_for_user(current_user)
   end
 
   protected

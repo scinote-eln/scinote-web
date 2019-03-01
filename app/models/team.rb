@@ -41,6 +41,8 @@ class Team < ApplicationRecord
   attr_accessor :without_intro_demo
   after_create :generate_intro_demo
 
+  scope :without_templates, -> { includes(:projects).where("projects.template": nil) }
+
   def default_view_state
     { 'projects' =>
       { 'cards' => { 'sort' => 'new' },

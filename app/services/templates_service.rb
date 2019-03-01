@@ -55,4 +55,14 @@ class TemplatesService
     end
     [updated_counter, processed_counter]
   end
+
+  def schedule_creation_for_user(user)
+    user.teams.each do |team|
+      unless team.projects.where(template: true).any?
+        TemplatesService.new.delay(
+          queue: :templates
+        ).update_team(team)
+      end
+    end
+  end
 end
