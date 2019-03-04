@@ -16,7 +16,9 @@
         <strong><%= activities.length %></strong>
         <%= t("activities.index.#{'activity'.pluralize(activities.length)}_counter_label") %>
       </div>
-      <ul class="collapse in activities-group" id="activities-group-<%= date %>">
+      <ul class="collapse in activities-group"
+          id="activities-group-<%= date %>"
+          data-button-link="<%= "#activities-group-#{date}-button" %>">
           <% activities.each do |activity| %>
             <li class="activity-card">
               <%= render partial: 'activity.html.erb', locals: { activity: activity } %>

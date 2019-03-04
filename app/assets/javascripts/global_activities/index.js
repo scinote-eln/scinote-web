@@ -14,16 +14,12 @@
 
   function initExpandCollapseButton() {
     $('.activities-group').on('hide.bs.collapse', function() {
-      $('#' + $(this)
-        .attr('id') + '-button').find('.fas').removeClass('fa-caret-down');
-      $('#' + $(this)
-        .attr('id') + '-button').find('.fas').addClass('fa-caret-right');
+      $(this.dataset.buttonLink)
+        .find('.fas').removeClass('fa-caret-down').addClass('fa-caret-right');
     });
     $('.activities-group').on('show.bs.collapse', function() {
-      $('#' + $(this)
-        .attr('id') + '-button').find('.fas').removeClass('fa-caret-right');
-      $('#' + $(this)
-        .attr('id') + '-button').find('.fas').addClass('fa-caret-down');
+      $(this.dataset.buttonLink)
+        .find('.fas').removeClass('fa-caret-right').addClass('fa-caret-down');
     });
   }
 
