@@ -11,6 +11,38 @@ module FirstTimeDataGenerator
     # Do nothing
     return unless team
 
+    # Skip this team if user already has a demo project
+    return if team.projects.where(demo: true).any?
+
+    name = '[NEW] Demo project by SciNote'
+    exp_name = 'Polymerase chain reaction'
+    # If there is an existing demo project, archive and rename it
+    if team.projects.where(name: name).present?
+      # TODO: check if we still need this code
+      # old = team.projects.where(name: 'Demo project - qPCR')[0]
+      # old.archive! user
+      i = 1
+      while team.projects.where(
+        name: name = "#{name} (#{i})"
+      ).present?
+        i += 1
+      end
+    end
+
+    project = Project.create(
+      visibility: 0,
+      name: name,
+      due_date: nil,
+      team: team,
+      created_by: user,
+      created_at: generate_random_time(1.week.ago),
+      last_modified_by: user,
+      archived: false,
+      template: false,
+      demo: true
+    )
+
+
     # check if samples repo already exist, then create custom repository samples
     repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME)
     repository =
@@ -191,33 +223,6 @@ module FirstTimeDataGenerator
         sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
       )
     end
-
-    name = 'Demo project'
-    name = '[NEW] Demo project by SciNote'
-    exp_name = 'Polymerase chain reaction'
-    # If there is an existing demo project, archive and rename it
-    if team.projects.where(name: name).present?
-      # TODO: check if we still need this code
-      # old = team.projects.where(name: 'Demo project - qPCR')[0]
-      # old.archive! user
-      i = 1
-      while team.projects.where(
-        name: name = "#{name} (#{i})"
-      ).present?
-        i += 1
-      end
-    end
-
-    project = Project.create(
-      visibility: 0,
-      name: name,
-      due_date: nil,
-      team: team,
-      created_by: user,
-      created_at: generate_random_time(1.week.ago),
-      last_modified_by: user,
-      archived: false
-    )
 
     experiment_description =
       'Polymerase chain reaction (PCR) monitors the amplification of DNA ' \
