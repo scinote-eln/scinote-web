@@ -42,7 +42,6 @@ module FirstTimeDataGenerator
       demo: true
     )
 
-
     # check if samples repo already exist, then create custom repository samples
     repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME)
     repository =
