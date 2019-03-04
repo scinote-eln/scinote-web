@@ -26,6 +26,9 @@ module ActivityValuesModel
   end
 
   def add_user
-    message_items.merge!(user: { id: owner.id, value: owner.full_name })
+    message_items.merge!(user: { id: owner.id,
+                                 value: owner.full_name,
+                                 type: 'User',
+                                 value_for: 'full_name' })
   end
 end
