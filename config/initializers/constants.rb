@@ -61,6 +61,9 @@ class Constants
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
 
+  # Maximum number of recent repositories to query/display
+  RECENT_REPOSITORIES_SEARH_LIMIT = 14
+
   #=============================================================================
   # File and data memory size
   #=============================================================================

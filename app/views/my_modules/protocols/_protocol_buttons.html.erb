@@ -26,18 +26,22 @@
       <% end %>
     </ul>
   </div>
-  <% if can_read_experiment?(@my_module.experiment) %>
-    <%= link_to raw("<span class=\"fas fa-upload\"></span><span class=\"hidden-xs-custom\">&nbsp;" + t('my_modules.protocols.buttons.export') + "</span>"), export_protocols_path(protocol_ids: @protocol.id), class: "btn btn-default", data: { turbolinks: false } %>
-  <% else %>
-    <a href="#" class="btn btn-default disabled"><span class="fas fa-upload"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
-  <% end %>
-  <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) %>
-    <span data-hook="protocol-copy-to-repository">
-      <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), id: "protocol-copy-to-repository", class: "btn btn-default", remote: true, data: { action: "copy-to-repository" } do %>
-        <span class="fas fa-copy"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
+</div>
+<div class="pull-right">
+  <div class="dropdown recent-repositories-dropdown">
+    <a href="#" title="<%=t "my_modules.protocols.buttons.load_protocol_from_recent_repository" %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="hidden-sm hidden-md"><%=t "my_modules.protocols.buttons.load_protocol_from_recent_repository" %></span>
+      <span class="hidden-xs hidden-lg fas fa-list-alt"></span>
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu pull-right">
+      <% Protocol.limit(Constants::RECENT_REPOSITORIES_SEARH_LIMIT).where.not(name: nil).all.each do |protocol| %>
+        <li>
+          <a class="dropdown-item">
+            <i class="fas fa-file-alt"></i><%= truncate(protocol.name) %>
+          </a>
+        </li>
       <% end %>
-    </span>
-  <% else %>
-    <a href="#" class="btn btn-default disabled"><span class="fas fa-copy"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span></a>
-  <% end %>
+    </ul>
+  </div>
 </div>

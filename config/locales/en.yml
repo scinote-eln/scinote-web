@@ -646,6 +646,7 @@ en:
         load_protocol_from_file: "from computer"
         export: "Export Protocol"
         copy_to_repository: "Copy To Protocol Repository"
+        load_protocol_from_recent_repository: "Recent protocols from the Repository"
       confirm_link_update_modal:
         unlink_title: "Unlink protocol"
         unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
@@ -1653,6 +1654,7 @@ en:
       authors: "Authors"
       no_authors: "No authors"
       description: "Description"
+      title: "Protocol"
       no_description: "No description"
       keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
       edit_name_modal:
@@ -2126,6 +2128,7 @@ en:
         due_date_specific: "Set a due date to a specific task."
         results: "You have three options to save your lab results: as classic text, created table or uploaded file from computer."
       protocol:
+        header: "<TODO>"
         step_edit: "You can edit the name and description of a protocol step, add checklists, tables or files."
         step_add_files: "Drag and drop your files here. SciNote supports all types of files and images."
         linking: "By linking the protocol in your task and the protocol in a repository you can see if any of the versions has been modified and decide to update either of them at any point."
@@ -2151,6 +2154,7 @@ en:
         due_date_specific: "https://support.scinote.net/hc/en-us/articles/360000527572"
         results: "https://support.scinote.net/hc/en-us/articles/360007238592"
       protocol:
+        header: "<TODO>"
         step_edit: "https://support.scinote.net/hc/en-us/articles/115001788051"
         step_add_files: "https://support.scinote.net/hc/en-us/articles/360007237252"
         linking: "https://support.scinote.net/hc/en-us/articles/115003680385"

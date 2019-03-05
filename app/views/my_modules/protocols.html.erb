@@ -16,16 +16,20 @@
 <div class="content-pane my-modules-protocols-index">
   <%= render partial: "module_header" %>
 
-  <h2>
-    <%= t('Protocol') %>
-  </h2>
+  <div class="row">
+    <div class="col-xs-4">
+      <h2 class="protocol-header">
+        <%= t("protocols.header.title") %>
+        <i class="fas fa-question-circle help_tooltips" data-tooltiplink="<%= I18n.t('tooltips.link.protocol.header') %>" data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.header') %>"></i>
+      </h2>
+    </div>
+  </div>
 
   <div>
     <div data-role="protocol-status-bar" style="display: inline;">
       <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
     </div>
     <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
-    <%= render partial: "my_modules/state_buttons.html.erb" %>
   </div>
 
   <div class="row">
