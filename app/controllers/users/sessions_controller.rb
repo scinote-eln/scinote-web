@@ -11,9 +11,20 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  def create
+    super
+
+    # Schedule templates creation for user
+    TemplatesService.new.schedule_creation_for_user(current_user)
+
+    # Schedule demo project creation for user
+    current_user.created_teams.each do |team|
+      FirstTimeDataGenerator.delay(
+        queue: :new_demo_project,
+        priority: 10
+      ).seed_demo_data_with_id(current_user.id, team.id)
+    end
+  end
 
   # DELETE /resource/sign_out
   # def destroy
@@ -42,21 +53,6 @@ class Users::SessionsController < Devise::SessionsController
       format.html do
         redirect_to redirect_url
       end
-    end
-  end
-
-  def create
-    super
-
-    # Schedule templates creation for user
-    TemplatesService.new.schedule_creation_for_user(current_user)
-
-    # Schedule demo project creation for user
-    current_user.created_teams.each do |team|
-      FirstTimeDataGenerator.delay(
-        queue: :new_demo_project,
-        priority: 10
-      ).seed_demo_data_with_id(current_user.id, team.id)
     end
   end
 
