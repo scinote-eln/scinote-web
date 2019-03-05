@@ -47,6 +47,17 @@ class Users::SessionsController < Devise::SessionsController
 
   def after_sign_in
     flash[:system_notification_modal] = true
+
+    # Schedule templates creation for user
+    TemplatesService.new.schedule_creation_for_user(current_user)
+
+    # Schedule demo project creation for user
+    current_user.created_teams.each do |team|
+      FirstTimeDataGenerator.delay(
+        queue: :new_demo_project,
+        priority: 10
+      ).seed_demo_data_with_id(current_user.id, team.id)
+    end
   end
 
   protected
