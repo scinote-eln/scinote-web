@@ -54,6 +54,13 @@ describe Experiments::MoveToProjectService do
     it 'adds Activity record' do
       expect { service_call }.to(change { Activity.all.count })
     end
+
+    it 'calls create activity service' do
+      expect(Activities::CreateActivityService).to receive(:call)
+        .with(hash_including(activity_type: :move_experiment))
+
+      service_call
+    end
   end
 
   context 'when call with invalid params' do

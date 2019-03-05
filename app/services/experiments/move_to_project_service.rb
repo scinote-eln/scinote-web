@@ -73,20 +73,15 @@ module Experiments
     end
 
     def track_activity
-      Activity.create(
-        type_of: :move_experiment,
-        project: @project,
-        team: @project.team,
-        subject: @exp,
-        owner: @user,
-        message: I18n.t(
-          'activities.move_experiment',
-          user: @user,
-          experiment: @exp.name,
-          project_new: @project.name,
-          project_original: @original_project.name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :move_experiment,
+              owner: @user,
+              team: @project.team,
+              project: @project,
+              subject: @exp,
+              message_items: { experiment: @exp.id,
+                               project_new: @project.id,
+                               project_original: @original_project.id })
     end
   end
 end
