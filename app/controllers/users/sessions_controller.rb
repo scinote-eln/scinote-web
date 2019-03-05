@@ -45,8 +45,8 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  def after_sign_in
-    flash[:system_notification_modal] = true
+  def create
+    super
 
     # Schedule templates creation for user
     TemplatesService.new.schedule_creation_for_user(current_user)
@@ -58,6 +58,10 @@ class Users::SessionsController < Devise::SessionsController
         priority: 10
       ).seed_demo_data_with_id(current_user.id, team.id)
     end
+  end
+
+  def after_sign_in
+    flash[:system_notification_modal] = true
   end
 
   protected
