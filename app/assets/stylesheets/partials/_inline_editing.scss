@@ -1,0 +1,94 @@
+@import "constants";
+@import "mixins";
+
+
+.inline-editing-container {
+  position: relative;
+
+  .button-container {
+    height: 44px;
+    line-height: 44px;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 72px;
+
+    span {
+      color: $color-silver;
+      cursor: pointer;
+      display: inline-block;
+      position: absolute;
+      text-align: center;
+      width: 36px;
+
+      &:nth-child(1) {left: 0;}
+
+      &:nth-child(2) {right: 0;}
+    }
+  }
+
+  .error-block {
+    bottom: 3px;
+    color: $brand-danger;
+    display: none;
+    font-size: $font-size-small;
+    left: 5px;
+    line-height: 12px;
+    position: absolute;
+
+  }
+
+  &[data-error="true"] {
+
+    .error-block {
+      display: block;
+    }
+
+    input {
+      padding-bottom: 16px;
+      padding-top: 0;
+    }
+  }
+
+  input {
+    border: 1px solid $color-silver;
+    border-radius: $border-radius-small;
+    cursor: pointer;
+    line-height: 20px;
+    padding: 8px 5px;
+    padding-right: 36px;
+    width: calc(100% - 36px);
+
+    &:focus {
+      outline: 0;
+    }
+
+    &:disabled {
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      user-select: none;
+
+      + .button-container {
+        display: none;
+
+      }
+
+      &:hover {
+        border: 1px solid $color-gainsboro;
+      }
+    }
+  }
+}
+
+.nav-name.editable {
+  margin: 0;
+
+  .inline-editing-container {
+
+    input {
+      line-height: 26px;
+    }
+  }
+}
