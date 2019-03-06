@@ -5,6 +5,8 @@ class GlobalActivitiesController < ApplicationController
     teams = activity_filters[:teams]
     teams = current_user.teams if teams.blank?
     @teams = teams
+    @activity_types = Activity.activity_types_list
+    @users = UserTeam.my_employees(current_user)
     @grouped_activities, more_activities =
       ActivitiesService.load_activities(teams, activity_filters)
     respond_to do |format|
