@@ -107,17 +107,22 @@ class ExperimentsController < ApplicationController
     if @experiment.save
 
       experiment_annotation_notification(old_text)
-      Activity.create(
-        type_of: :edit_experiment,
-        project: @experiment.project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.edit_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name
-        )
-      )
+
+      activity_type_of = if experiment_params[:archived] == 'false'
+                           :restore_experiment
+                         else
+                           :edit_experiment
+                         end
+      Activities::CreateActivityService
+        .call(activity_type: activity_type_of,
+              owner: current_user,
+              subject: @experiment,
+              project: @experiment.project,
+              team: @experiment.project.team,
+              message_items: {
+                experiment: @experiment.id
+              })
+
       @experiment.touch(:workflowimg_updated_at)
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
