@@ -2,8 +2,20 @@
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane">
+<div class="global-activities-container container-flex">
   <div class="row">
+    <div class="ga-top col-md-12">
+      <%= render partial: "my_modules/activities/top_pane" %>
+    </div>
+
+
+    <div class="ga-side col-lg-3 col-md-12 col-xl-2">
+      <%= render partial: "my_modules/activities/side_filters" %>
+    </div>
+
+    <div class="ga-main col-lg-9 col-md-12 col-xl-10">
+      <div class="ga-activities-list">
+        <div class="row">
     <% if @activities.length == 0 %>
       <div class="col-xs-12">
         <em><%= t 'my_modules.activities.no_activities' %></em>
@@ -24,4 +36,6 @@
   </div>
 </div>
 
+
 <%= javascript_include_tag("my_modules/activities") %>
+<%= javascript_include_tag("global_activities/side_pane") %>

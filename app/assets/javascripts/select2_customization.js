@@ -1,6 +1,7 @@
 
 $.fn.extend({
   select2Multiple: function(config = {}) {
+    if (this.length == 0) return this
     // Adding ID to each block
     var placeholder = this[0].dataset.placeholder || '';
     if (this.next().find('.select2-selection').length > 0) return this;

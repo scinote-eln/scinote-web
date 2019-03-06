@@ -76,6 +76,8 @@ class MyModulesController < ApplicationController
   end
 
   def activities
+    @activity_types = Activity.activity_types_list
+    @users = UserTeam.my_employees(current_user)
     @last_activity_id = params[:from].to_i || 0
     @per_page = 10
 
