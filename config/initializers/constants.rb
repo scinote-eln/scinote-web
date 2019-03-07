@@ -224,10 +224,10 @@ class Constants
     span u s blockquote pre col colgroup table thead tbody th tr td
   ).freeze
 
-  WHITELISTED_ATTRIBUTES = %w(
-    href src width height alt cite datetime title class name xml:lang abbr style
-    target data-*
-  ).freeze
+  WHITELISTED_ATTRIBUTES = [
+    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data
+  ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {
     allow_comments: false,

@@ -152,6 +152,7 @@ class TeamZipExport < ZipExport
       type_of: :deliver,
       title: I18n.t('zip_export.notification_title'),
       message:  "<a data-id='#{id}' " \
+                "data-turbolinks='false' " \
                 "href='#{Rails.application
                               .routes
                               .url_helpers
