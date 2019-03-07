@@ -319,6 +319,9 @@ en:
       users: "Users"
       experiments: "Experiments"
       tasks: "Tasks"
+    activity:
+      visibility_hidden: "Project members only"
+      visibility_visible: "All team members"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
     update:
@@ -1314,13 +1317,13 @@ en:
     modal:
       modal_title: "Activities"
     create_project: "<i>%{user}</i> created project <strong>%{project}</strong>."
-    rename_project: "<i>%{user}</i> renamed project <strong>%{project_old}</strong> to <strong>%{project_new}</strong>."
+    rename_project: "<i>%{user}</i> renamed project <strong>%{project}</strong>."
     change_project_visibility: "<i>%{user}</i> changed project <strong>%{project}</strong>'s visibility to %{visibility}."
     archive_project: "<i>%{user}</i> moved project <strong>%{project}</strong> to archive."
     restore_project: "<i>%{user}</i> restored project <strong>%{project}</strong> from archive."
-    assign_user_to_project: "<i>%{assigned_user}</i> was added as %{role} to project <strong>%{project}</strong> by <i>%{assigned_by_user}</i>."
-    change_user_role_on_project: "<i>%{actor}</i> changed <i>%{user}</i>'s role on project <strong>%{project}</strong> to %{role}."
-    unassign_user_from_project: "<i>%{unassigned_user}</i> was removed from project <strong>%{project}</strong> by <i>%{unassigned_by_user}</i>."
+    assign_user_to_project: "<i>%{user}</i> assigned user <i>%{user_target}</i> with user role %{role} to project <strong>%{project}</strong>."
+    change_user_role_on_project: "<i>%{user}</i> changed <i>%{user_target}</i>'s role on project <strong>%{project}</strong> to %{role}."
+    unassign_user_from_project: "<i>%{user}</i> removed user <i>%{user_target}</i> with user role %{role} from project <strong>%{project}</strong>."
     create_module: "<i>%{user}</i> created task <strong>%{module}</strong>."
     assign_user_to_module: "<i>%{assigned_user}</i> was added to task <strong>%{module}</strong> by <i>%{assigned_by_user}</i>."
     unassign_user_from_module: "<i>%{unassigned_user}</i> was removed from task <strong>%{module}</strong> by <i>%{unassigned_by_user}</i>."
