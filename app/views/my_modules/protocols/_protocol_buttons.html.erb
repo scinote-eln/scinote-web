@@ -35,7 +35,7 @@
       <span class="caret"></span>
     </a>
     <ul class="dropdown-menu pull-right">
-      <% Protocol.limit(Constants::RECENT_REPOSITORIES_SEARH_LIMIT).where.not(name: nil).all.each do |protocol| %>
+      <% @recent_protocols.each do |protocol| %>
         <li>
           <a class="dropdown-item">
             <i class="fas fa-file-alt"></i><%= truncate(protocol.name) %>

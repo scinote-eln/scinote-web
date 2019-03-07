@@ -299,6 +299,19 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
+    @recent_protocols = Protocol.where(
+      team: current_team,
+      protocol_type: Protocol.protocol_types[:in_repository_public]
+    ).or(
+      Protocol.where(
+        added_by: current_user,
+        protocol_type: Protocol.protocol_types.values_at(
+          :in_repository_private, :in_repository_archived
+        )
+      )
+    ).limit(
+      Constants::RECENT_REPOSITORIES_SEARH_LIMIT
+    )
     current_team_switch(@protocol.team)
   end
 
