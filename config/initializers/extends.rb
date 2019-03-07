@@ -93,7 +93,7 @@ class Extends
   ).freeze
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
-    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryRow RepositoryColumn)
+    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow)
     .freeze
 
   ACTIVITY_TYPES = {
