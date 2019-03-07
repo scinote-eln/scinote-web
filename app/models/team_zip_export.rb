@@ -137,7 +137,7 @@ class TeamZipExport < ZipExport
                        handsontable.formula.js big.min.js)
       required_js.each do |filename|
         filepath = File.join(Rails.root,
-                             "vendor/assets/javascripts/#{filename}/")
+                             "vendor/assets/javascripts/#{filename}")
         dest_folder = "#{project_path}/"
         FileUtils.cp(filepath, dest_folder)
       end
