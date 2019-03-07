@@ -11,19 +11,41 @@
                .html_safe %>
     </style>
 
-    <script src="handsontable.full.min.js"></script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['handsontable.full.min.js'].to_s %>
+    </script>
 
     <!-- Libraries for formulas -->
-    <script src="lodash.js"></script>
-    <script src="numeral.js"></script>
-    <script src="numeric.js"></script>
-    <script src="md5.js"></script>
-    <script src="jstat.js"></script>
-    <script src="formula.js"></script>
-    <script src="parser.js"></script>
-    <script src="ruleJS.js"></script>
-    <script src="handsontable.formula.js"></script>
-    <script src="big.min.js"></script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['lodash.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['numeral.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['numeric.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['md5.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['jstat.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['formula.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['parser.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['ruleJS.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['handsontable.formula.js'].to_s %>
+    </script>
+    <script type="text/javascript">
+      <%= raw Rails.application.assets['big.min.js'].to_s %>
+    </script>
 
     <!-- Init Handsontables -->
     <script>
