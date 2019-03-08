@@ -1303,6 +1303,7 @@ en:
       see_all: "show all"
   activities:
     index:
+      global_activities_title: "Global activities"
       today: "Today"
       more_activities: "Show more activities"
       no_activities: "No activities!"
