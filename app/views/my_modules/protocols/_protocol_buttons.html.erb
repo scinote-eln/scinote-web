@@ -27,21 +27,23 @@
     </ul>
   </div>
 </div>
-<div class="pull-right">
-  <div class="dropdown recent-repositories-dropdown">
-    <a href="#" title="<%=t "my_modules.protocols.buttons.load_protocol_from_recent_repository" %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="hidden-sm hidden-md"><%=t "my_modules.protocols.buttons.load_protocol_from_recent_repository" %></span>
-      <span class="hidden-xs hidden-lg fas fa-list-alt"></span>
-      <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu pull-right">
-      <% @recent_protocols.each do |repo_protocol| %>
-        <li>
-          <%= link_to load_from_repository_protocol_path(@protocol, source_id: repo_protocol.id, format: :json), method: :post, remote: true, data: { action: "load-recent-from-repository" }, title: t('my_modules.protocols.buttons.load_protocol_from_recent_repository_title', protocol_name: repo_protocol.name) do %>
-            <i class="fas fa-file-alt"></i><%= truncate(repo_protocol.name) %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+<% if @show_recent_protocols %>
+  <div class="pull-right">
+    <div class="dropdown recent-repositories-dropdown">
+      <a href="#" title="<%=t "my_modules.protocols.buttons.load_protocol_from_recent_repository" %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="hidden-sm hidden-md"><%=t "my_modules.protocols.buttons.load_protocol_from_recent_repository" %></span>
+        <span class="hidden-xs hidden-lg fas fa-list-alt"></span>
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu pull-right">
+        <% @recent_protocols.each do |repo_protocol| %>
+          <li>
+            <%= link_to load_from_repository_protocol_path(@protocol, source_id: repo_protocol.id, format: :json), method: :post, remote: true, data: { action: "load-recent-from-repository" }, title: t('my_modules.protocols.buttons.load_protocol_from_recent_repository_title', protocol_name: repo_protocol.name) do %>
+              <i class="fas fa-file-alt"></i><%= truncate(repo_protocol.name) %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
-</div>
+<% end %>

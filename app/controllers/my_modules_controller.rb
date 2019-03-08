@@ -312,6 +312,10 @@ class MyModulesController < ApplicationController
     ).limit(
       Constants::RECENT_REPOSITORIES_SEARH_LIMIT
     )
+    # Allow loading from recently used repository protocols only if protocol
+    # was unchanged and there are actually any such protocols available
+    @show_recent_protocols = @protocol.updated_at == @protocol.created_at and
+      @recent_protocols.present?
     current_team_switch(@protocol.team)
   end
 
