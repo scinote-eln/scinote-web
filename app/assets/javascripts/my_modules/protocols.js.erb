@@ -16,6 +16,7 @@ function init() {
   initCopyToRepository();
   initLinkUpdate();
   initLoadFromRepository();
+  initLoadRecentFromRepository();
   initRefreshStatusBar();
   initImport();
   setupAssetsLoading();
@@ -428,6 +429,13 @@ function loadFromRepository() {
       }
     });
   }
+}
+
+function initLoadRecentFromRepository() {
+  $("[data-action='load-recent-from-repository']")
+  .on("ajax:success", function(e, data) {
+    location.reload();
+  });
 }
 
 function initRefreshStatusBar() {

@@ -647,6 +647,7 @@ en:
         export: "Export Protocol"
         copy_to_repository: "Copy To Protocol Repository"
         load_protocol_from_recent_repository: "Recent protocols from the Repository"
+        load_protocol_from_recent_repository_title: "Load protocol %{protocol_name} into this task"
       confirm_link_update_modal:
         unlink_title: "Unlink protocol"
         unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
