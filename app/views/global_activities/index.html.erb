@@ -1,3 +1,4 @@
+<% provide :head_title, t('nav.label.activities') %>
 
 <div class="global-activities-container container-flex">
   <div class="row">
@@ -5,18 +6,24 @@
       <%= render partial: "top_pane" %>
     </div>
 
-
     <div class="ga-side col-lg-3 col-md-12 col-xl-2">
       <%= render partial: "side_filters" %>
     </div>
 
     <div class="ga-main col-lg-9 col-md-12 col-xl-10">
-      <div class="ga-activities-list">
-        <h2>list of activities</h2>
+      <div class="ga-activities-list" data-activities-url="<%= global_activities_path %>">
+        <%= render partial: "activity_list.html.erb" %>
+      </div>
+      <div class="text-center">
+        <a class="btn btn-default btn-more-activities <%= 'hidden' unless @more_activities %>"
+           data-next-date="<%= @next_date %>">
+          <%= t'activities.index.more_activities' %>
+        </a>
       </div>
     </div>
 
   </div>
 </div>
 
-<%= javascript_include_tag("global_activities/side_pane") %>
+<%= javascript_include_tag 'global_activities/index.js' %>
+<%= javascript_include_tag 'global_activities/side_pane.js' %>

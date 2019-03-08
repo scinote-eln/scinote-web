@@ -139,7 +139,10 @@ module ApplicationHelper
   end
 
   # Generate smart annotation link for one user object
-  def popover_for_user_name(user, team = nil, skip_user_status = false)
+  def popover_for_user_name(user,
+                            team = nil,
+                            skip_user_status = false,
+                            skip_avatar = false)
     user_still_in_team = user.teams.include?(team)
 
     user_description = %(<div class='col-xs-4'>
@@ -166,10 +169,16 @@ module ApplicationHelper
 
     user_name = user.full_name
 
+    html = if skip_avatar
+             ''
+           else
+             raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+             "alt='avatar' class='atwho-user-img-popover'" \
+             " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>")
+           end
+
     html =
-      raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
-        "alt='avatar' class='atwho-user-img-popover'" \
-        " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>") +
+      raw(html) +
       raw('<a onClick="$(this).popover(\'show\')" ' \
         'class="atwho-user-popover" data-container="body" ' \
         'data-html="true" tabindex="0" data-trigger="focus" ' \
