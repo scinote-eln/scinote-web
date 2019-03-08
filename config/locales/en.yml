@@ -1469,6 +1469,9 @@ en:
       change_users_role_on_team_html: "changed %{user}'s role in team %{team} to %{role}"
       export_projects_html: "exported project(s) %{projects} to .zip"
       export_inventory_items_html: "exported inventory item(s) from %{inventory}"
+    protocols:
+      my_to_team_message: 'My protocols to Team protocols'
+      team_to_my_message: 'Team protocols to My protocols'
 
   user_my_modules:
     new:
