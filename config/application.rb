@@ -25,6 +25,8 @@ module Scinote
     # Load all model concerns, including subfolders
     config.autoload_paths += Dir["#{Rails.root}/app/models/concerns/**/*.rb"]
 
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+
     config.encoding = 'utf-8'
 
     config.active_job.queue_adapter = :delayed_job

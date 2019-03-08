@@ -1,0 +1,22 @@
+en:
+  global_activities:
+    index:
+      teams: Team
+      activity: Actvity created
+      today: Today
+      yesterday: Yesterday
+      this_week: This week
+      last_week: Last week
+      this_month: This month
+      last_month: Last month
+      clear: clear
+      activity_type: Activity type
+      user: User
+      object: Object
+      all_teams: All teams
+      l_teams: teams
+      all_users: All users
+      l_users: users
+      all_activities: All activities
+      l_activities: activities
+      clear_filters: Clear filters

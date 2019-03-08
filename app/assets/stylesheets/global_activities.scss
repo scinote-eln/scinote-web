@@ -1,0 +1,225 @@
+@import "constants";
+@import "mixins";
+
+.global-activities-container {
+  background: $color-white;
+  margin-top: 2em;
+  padding: 1em;
+
+  .ga-main {
+
+    .ga-activities-list {
+      grid-area: activities;
+      min-height: 600px;
+    }
+  }
+}
+
+.ga-side {
+  border-left: 1px solid $gray-lighter;
+  float: right;
+
+  .filter-block {
+    padding: 10px 0;
+    width: 100%;
+
+    .title {
+      float: left;
+      line-height: 20px;
+    }
+
+    .clear {
+      cursor: pointer;
+      float: right;
+      line-height: 12px;
+      padding-top: 8px;
+    }
+
+    .select-container {
+      width: 100%;
+    }
+  }
+
+  .date-selector {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+
+    .hot-buttons {
+      display: inline-block;
+      margin-bottom: 10px;
+      width: 100%;
+
+      .hot-button {
+        border: 0;
+        cursor: pointer;
+        float: left;
+        margin: 5px;
+        text-align: left;
+        width: calc(50% - 25px);
+
+        &:nth-child(even) {
+          margin-left: 20px;
+        }
+
+        &:nth-child(odd) {
+          margin-right: 20px;
+        }
+
+      }
+    }
+
+    .from,
+    .to {
+      float: left;
+      position: relative;
+      width: calc(50% - 15px);
+    }
+
+    .separator {
+      background: $color-alto;
+      float: left;
+      height: 2px;
+      margin: 16px 10px;
+      position: relative;
+      width: 10px;
+    }
+  }
+}
+
+.ga-top {
+  border-bottom: 1px solid $gray-lighter;
+
+  .ga-title {
+    border-bottom: 1px solid $color-gainsboro;
+    left: -20px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    width: calc(100% + 40px);
+  }
+
+  .ga-top-actions {
+    float: left;
+    line-height: 34px;
+    margin: 5px;
+    position: relative;
+    width: 200px;
+
+    span {
+      display: inline-block;
+      text-align: center;
+      width: 95px;
+    }
+  }
+
+  .ga-search-container {
+    float: left;
+    margin: 5px;
+    max-width: 700px;
+    position: relative;
+    width: calc(100% - 220px);
+  }
+
+  .ga-tags-container {
+    display: inline-block;
+    margin: 5px 0;
+    width: 100%;
+
+    .clear-container {
+      float: right;
+      position: relative;
+      text-align: right;
+      width: 100px;
+
+      span {
+        cursor: pointer;
+        display: inline-block;
+        line-height: 18px;
+        margin-top: 5px;
+
+        i {
+          float: left;
+          font-size: 18px;
+          margin-right: 10px;
+          position: relative;
+        }
+      }
+    }
+
+    .ga-tags {
+      float: left;
+      margin: 0;
+      min-height: 50px;
+      padding-left: 0;
+      position: elative;
+      width: calc(100% - 100px);
+
+      li {
+        background: $color-concrete;
+        border: 1px solid $color-alto;
+        border-radius: 4px;
+        cursor: default;
+        float: left;
+        list-style: none;
+        margin-right: 5px;
+        margin-top: 5px;
+        padding: 0 5px;
+
+        .select2-selection__choice__remove {
+          color: $color-dove-gray;
+          cursor: pointer;
+          display: inline-block;
+          float: right;
+          font-weight: bold;
+          margin: 0;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1199px) {
+  .ga-side {
+
+    .filter-block {
+
+      &.small-left {
+        float: left;
+        width: calc(60% - 10px);
+
+        .title {
+          width: 120px;
+        }
+
+        .select-container {
+          float: left;
+          width: calc(100% - 200px);
+
+          .select2 {
+            margin: 4px 0;
+          }
+        }
+
+        .clear {
+          line-height: 20px;
+          padding: 0;
+          width: 70px;
+        }
+      }
+
+      &.small-right {
+        float: right;
+        width: 40%;
+      }
+    }
+  }
+}
+
+// Common code
+
+.datetime-picker-container {
+  position: relative;
+}
