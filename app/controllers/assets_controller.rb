@@ -47,6 +47,7 @@ class AssetsController < ApplicationController
     file.original_filename = 'test.docx'
     file.content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     asset = Asset.new(file: file, created_by: User.first)
+    asset.file_present = true
     step_asset = StepAsset.create!(step: Step.last, asset: asset)
 
     redirect_to edit_asset_url(step_asset.asset_id)
