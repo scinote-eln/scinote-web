@@ -85,11 +85,11 @@ class Extends
   FILE_FA_ICON_MAPPINGS = {}
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team Repository Project Experiment MyModule Result Protocol Step
+    Team Repository Project Experiment MyModule Result Protocol Step Report
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
-    Repository Project Experiment MyModule Result Protocol Step
+    Repository Project Experiment MyModule Result Protocol Step Report
   ).freeze
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =

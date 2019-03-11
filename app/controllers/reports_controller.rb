@@ -68,16 +68,13 @@ class ReportsController < ApplicationController
 
     if continue && @report.save_with_contents(report_contents)
       # record an activity
-      Activity.create(
-        type_of: :create_report,
-        project: @report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.create_report',
-          user: current_user.full_name,
-          report: @report.name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :create_report,
+              owner: current_user,
+              subject: @report,
+              team: @report.team,
+              project: @report.project,
+              message_items: { report: @report.id })
       respond_to do |format|
         format.json do
           render json: { url: reports_path }, status: :ok
@@ -113,16 +110,13 @@ class ReportsController < ApplicationController
 
     if continue && @report.save_with_contents(report_contents)
       # record an activity
-      Activity.create(
-        type_of: :edit_report,
-        project: @report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.edit_report',
-          user: current_user.full_name,
-          report: @report.name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :edit_report,
+              owner: current_user,
+              subject: @report,
+              team: @report.team,
+              project: @report.project,
+              message_items: { report: @report.id })
       respond_to do |format|
         format.json do
           render json: { url: reports_path }, status: :ok
@@ -149,16 +143,13 @@ class ReportsController < ApplicationController
       report = Report.find_by_id(report_id)
       next unless report.present? && can_manage_reports?(current_team)
       # record an activity
-      Activity.create(
-        type_of: :delete_report,
-        project: report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.delete_report',
-          user: current_user.full_name,
-          report: report.name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :delete_report,
+              owner: current_user,
+              subject: report,
+              team: report.team,
+              project: report.project,
+              message_items: { report: report.id })
       report.destroy
     end
 

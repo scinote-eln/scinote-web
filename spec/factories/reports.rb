@@ -6,5 +6,6 @@ FactoryBot.define do
     project
     team
     name { Faker::Name.unique.name }
+    description { Faker::Lorem.sentence }
   end
 end
