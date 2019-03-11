@@ -18,7 +18,6 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'sass-rails', '~> 5.0.6'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
-gem 'webpacker', '~> 2.0'
 gem 'yomu'
 
 # Gems for OAuth2 subsystem
