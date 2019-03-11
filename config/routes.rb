@@ -575,6 +575,8 @@ Rails.application.routes.draw do
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
+    get 'files/create_new_wopi_file',
+      to: 'assets#create_new_wopi_file'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'

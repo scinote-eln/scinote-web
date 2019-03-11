@@ -8,7 +8,7 @@ class AssetsController < ApplicationController
   include InputSanitizeHelper
   include FileIconsHelper
 
-  before_action :load_vars
+  before_action :load_vars, except: :create_new_wopi_file
   before_action :check_read_permission, except: :file_present
   before_action :check_edit_permission, only: :edit
 
@@ -40,6 +40,16 @@ class AssetsController < ApplicationController
         end
       end
     end
+  end
+
+  def create_new_wopi_file
+    file = Paperclip.io_adapters.for(StringIO.new())
+    file.original_filename = 'test.docx'
+    file.content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    asset = Asset.new(file: file, created_by: User.first)
+    step_asset = StepAsset.create!(step: Step.last, asset: asset)
+
+    redirect_to edit_asset_url(step_asset.asset_id)
   end
 
   def file_preview

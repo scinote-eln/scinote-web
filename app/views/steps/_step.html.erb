@@ -32,6 +32,7 @@
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
             <span class="fas fa-trash-alt">
           <% end %>
+          <%= link_to 'Create_new_file', files_create_new_wopi_file_path %>
         <% end %>
       </div>
       <a class="step-panel-collapse-link"
