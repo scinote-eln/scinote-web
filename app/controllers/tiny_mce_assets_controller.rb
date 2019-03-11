@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TinyMceAssetsController < ApplicationController
   before_action :find_object
 
@@ -5,7 +7,8 @@ class TinyMceAssetsController < ApplicationController
     image = params.fetch(:file) { render_404 }
     tiny_img = TinyMceAsset.new(image: image,
                                 reference: @obj,
-                                team_id: current_team.id)
+                                team_id: current_team.id,
+                                saved: false)
     if tiny_img.save
       render json: {
         image: {

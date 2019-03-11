@@ -19,6 +19,7 @@
             {type: 'iframe', url: 'javascript:void(0)'},
             {type: 'textbox',
              name: 'file',
+             classes: 'image-loader',
              label: "<%= I18n.t 'tiny_mce.upload_window_label' %>",
              subtype: 'file'},
             {type: 'container',
@@ -36,6 +37,20 @@
         }, {
           plugin_url: url
         });
+        // Let's make image selection looks fancy
+        $('<div class="image-selection-container">'
+          +'<div class="select_button btn btn-primary">Choose file</div>'
+          +'<input type="text" placeholder="No file chosen" disabled></input>'
+        +'</div>').insertAfter('.mce-image-loader')
+        .click(() => {$('.mce-image-loader').click()})
+        .parent().css('height','32px')
+
+        $('.mce-image-loader')
+        .change(e => {
+          $(e.target).next().find('input[type=text]')[0].value=e.target.value.split(/(\\|\/)/g).pop()
+        })
+        .parent().find('label').css('line-height','32px').css('height','32px')
+
 
         win.off('submit');
         win.on('submit', insertImage);
@@ -116,8 +131,7 @@
         }
 
         throbber = new top.tinymce.ui.Throbber(win.getEl());
-        throbber.show();
-
+        throbber.show(throbber);
         clearErrors();
 
         /* Add event listeners.
@@ -159,6 +173,7 @@
           } else {
             editor.execCommand('mceInsertContent', false, buildHTML(json));
             editor.windowManager.close();
+            updateActiveImages(ed)
           }
         } catch(e) {
           // hack that gets the server error message
@@ -192,7 +207,6 @@
             el[property] = attributes[property];
           }
         }
-
         return el;
       }
 
@@ -223,6 +237,18 @@
         return null;
       }
 
+      // Finding images in text
+      function updateActiveImages(editor) {
+        var iframe=$('#'+editor.id).prev().find('.mce-edit-area iframe').contents()
+        var images = $.map( $('img', iframe), e => { 
+          return e.dataset.token
+        })
+        $('#'+editor.id).next()[0].value=JSON.stringify(images)
+        return JSON.stringify(images)
+      }
+
+
+
       // Add a button that opens a window
       editor.addButton('customimageuploader', {
         tooltip: "<%= I18n.t 'tiny_mce.upload_window_label' %>",
@@ -237,9 +263,18 @@
         context: 'insert',
         onclick: showDialog
       });
-    }
-  });
 
+      ed.on('NodeChange', e => {
+        updateActiveImages(ed)
+      })
+      var textAreaElement=$('#'+ed.id)
+      textAreaElement.parent().find('input#tiny-mce-images').remove()
+      $('<input type="hidden" id="tiny-mce-images" name="'+textAreaElement[0].name.split('[')[0]+'[tiny_mce_images]" value="[]">').insertAfter(textAreaElement)
+      }
+
+
+  });
+  
   tinymce.PluginManager.add('customimageuploader',
                             tinymce.plugins.CustomImageUploader);
 })();

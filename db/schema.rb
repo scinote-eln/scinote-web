@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20190304153544) do
+=======
+ActiveRecord::Schema.define(version: 20190308092130) do
+>>>>>>> refactoring tinymce image uploading
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -744,6 +748,10 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.integer "result_text_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "saved", default: true
+    t.string "object_type"
+    t.bigint "object_id"
+    t.index ["object_type", "object_id"], name: "index_tiny_mce_assets_on_object_type_and_object_id"
     t.index ["result_text_id"], name: "index_tiny_mce_assets_on_result_text_id"
     t.index ["step_id"], name: "index_tiny_mce_assets_on_step_id"
     t.index ["team_id"], name: "index_tiny_mce_assets_on_team_id"
