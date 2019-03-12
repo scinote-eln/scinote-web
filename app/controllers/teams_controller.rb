@@ -233,6 +233,16 @@ class TeamsController < ApplicationController
 
       generate_export_projects_zip
 
+      Activities::CreateActivityService
+        .call(activity_type: :export_projects,
+              owner: current_user,
+              subject: @team,
+              team: @team,
+              message_items: {
+                team: @team.id,
+                projects: @exp_projects.map(&:name).join(', ')
+              })
+
       render json: {
         flash: t('projects.export_projects.success_flash')
       }, status: :ok

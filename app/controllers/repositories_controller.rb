@@ -272,6 +272,15 @@ class RepositoriesController < ApplicationController
   def export_repository
     if params[:row_ids] && params[:header_ids]
       RepositoryZipExport.generate_zip(params, @repository, current_user)
+
+      Activities::CreateActivityService
+        .call(activity_type: :export_inventory_items,
+              owner: current_user,
+              subject: current_team,
+              team: current_team,
+              message_items: {
+                repository: @repository.id
+              })
     else
       flash[:alert] = t('zip_export.export_error')
     end
