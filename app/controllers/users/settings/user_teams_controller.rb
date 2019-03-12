@@ -21,6 +21,18 @@ module Users
             # he/she should be redirected to teams page
             new_path = teams_path if @user_t.user == @current_user &&
                                      @user_t.role != 'admin'
+
+            Activities::CreateActivityService
+              .call(activity_type: :change_users_role_on_team,
+                    owner: current_user,
+                    subject: @user_t.team,
+                    team: @user_t.team,
+                    message_items: {
+                      team: @user_t.team.id,
+                      user_changed: @user_t.user.id,
+                      role: @user_t.role.to_s
+                    })
+
             format.json do
               render json: {
                 status: :ok,
@@ -107,6 +119,17 @@ module Users
                 new_owner = current_user
               end
               reset_user_current_team(@user_t)
+
+              Activities::CreateActivityService
+                .call(activity_type: :remove_user_from_team,
+                      owner: current_user,
+                      subject: @user_t.team,
+                      team: @user_t.team,
+                      message_items: {
+                        team: @user_t.team.id,
+                        user_removed: @user_t.user.id
+                      })
+
               @user_t.destroy(new_owner)
             end
           rescue Exception

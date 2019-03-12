@@ -128,6 +128,17 @@ module Users
               user_team.team
             )
 
+            Activities::CreateActivityService
+              .call(activity_type: :invite_user_to_team,
+                    owner: current_user,
+                    subject: current_team,
+                    team: current_team,
+                    message_items: {
+                      team: current_team.id,
+                      user_invited: user.id,
+                      role: user_team.role_str
+                    })
+
             if result[:status] == :user_exists && !user.confirmed?
               result[:status] = :user_exists_unconfirmed_invited_to_team
             elsif result[:status] == :user_exists
