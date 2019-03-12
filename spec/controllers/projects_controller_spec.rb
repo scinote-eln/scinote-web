@@ -117,6 +117,12 @@ describe ProjectsController, type: :controller do
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq 'application/json'
       end
+
+      it 'never calls create activity service' do
+        expect(Activities::CreateActivityService).to receive(:call)
+
+        post :create, params: params, format: :json
+      end
     end
   end
 

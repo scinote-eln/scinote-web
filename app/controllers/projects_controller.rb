@@ -103,17 +103,13 @@ class ProjectsController < ApplicationController
       )
       up.save
 
-      # Create "project created" activity
-      Activity.create(
-        type_of: :create_project,
-        owner: current_user,
-        project: @project,
-        message: t(
-          "activities.create_project",
-          user: current_user.full_name,
-          project: @project.name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :create_project,
+              owner: current_user,
+              subject: @project,
+              team: @project.team,
+              project: @project,
+              message_items: { project: @project.id })
 
       message = t('projects.create.success_flash', name: @project.name)
       respond_to do |format|

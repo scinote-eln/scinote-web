@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :report do
-    user
-    project
-    team
+  factory :protocol do
     name { Faker::Name.unique.name }
+    team
+    my_module
   end
 end

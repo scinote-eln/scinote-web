@@ -55,4 +55,12 @@ describe Activity, type: :model do
       expect(activity.old_activity?).to be_falsey
     end
   end
+
+  describe '.save' do
+    it 'adds user to message items' do
+      create :activity
+
+      expect(activity.message_items).to include(user: be_an(Hash))
+    end
+  end
 end

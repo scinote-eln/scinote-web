@@ -86,11 +86,15 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team Repository Project Experiment MyModule Result Protocol Step
-  )
+  ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
     Repository Project Experiment MyModule Result Protocol Step
-  )
+  ).freeze
+
+  ACTIVITY_MESSAGE_ITEMS_TYPES =
+    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryRow RepositoryColumn)
+    .freeze
 
   ACTIVITY_TYPES = {
     create_project: 0,
@@ -150,5 +154,5 @@ class Extends
     uncomplete_task: 54,
     assign_repository_record: 55,
     unassign_repository_record: 56
-  }
+  }.freeze
 end
