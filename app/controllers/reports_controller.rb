@@ -67,14 +67,8 @@ class ReportsController < ApplicationController
     @report.last_modified_by = current_user
 
     if continue && @report.save_with_contents(report_contents)
-      # record an activity
-      Activities::CreateActivityService
-        .call(activity_type: :create_report,
-              owner: current_user,
-              subject: @report,
-              team: @report.team,
-              project: @report.project,
-              message_items: { report: @report.id })
+      log_activity(:create_report)
+
       respond_to do |format|
         format.json do
           render json: { url: reports_path }, status: :ok
@@ -109,14 +103,8 @@ class ReportsController < ApplicationController
     @report.assign_attributes(report_params)
 
     if continue && @report.save_with_contents(report_contents)
-      # record an activity
-      Activities::CreateActivityService
-        .call(activity_type: :edit_report,
-              owner: current_user,
-              subject: @report,
-              team: @report.team,
-              project: @report.project,
-              message_items: { report: @report.id })
+      log_activity(:edit_report)
+
       respond_to do |format|
         format.json do
           render json: { url: reports_path }, status: :ok
@@ -503,5 +491,15 @@ class ReportsController < ApplicationController
                   :respository_column_id,
                   :repository_item_id,
                   :html)
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @report,
+            team: @report.team,
+            project: @report.project,
+            message_items: { report: @report.id })
   end
 end
