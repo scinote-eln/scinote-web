@@ -21,10 +21,14 @@ RSpec.describe RepositoryListValue, type: :model do
   describe '#formatted' do
     let!(:repository) { create :repository }
     let!(:repository_column) do
-      create :repository_column, name: 'My column',
-                                 data_type: :RepositoryListValue
+      create :repository_column,
+             name: 'My column',
+             data_type: :RepositoryListValue,
+             repository: repository
     end
-    let!(:repository_row) { create :repository_row, name: 'My row' }
+    let!(:repository_row) do
+      create :repository_row, name: 'My row', repository: repository
+    end
     let!(:repository_list_value) do
       build :repository_list_value, repository_cell_attributes: {
         repository_column: repository_column,
@@ -46,10 +50,14 @@ RSpec.describe RepositoryListValue, type: :model do
   describe '#data' do
     let!(:repository) { create :repository }
     let!(:repository_column) do
-      create :repository_column, name: 'My column',
-                                 data_type: :RepositoryListValue
+      create :repository_column,
+             name: 'My column',
+             data_type: :RepositoryListValue,
+             repository: repository
     end
-    let!(:repository_row) { create :repository_row, name: 'My row' }
+    let!(:repository_row) do
+      create :repository_row, name: 'My row', repository: repository
+    end
     let!(:repository_list_value) do
       build :repository_list_value, repository_cell_attributes: {
         repository_column: repository_column,

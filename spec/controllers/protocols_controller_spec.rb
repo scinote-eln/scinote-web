@@ -10,6 +10,7 @@ describe ProtocolsController, type: :controller do
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
 
   describe 'POST create' do
+    let(:action) { post :create, params: params, format: :json }
     let(:params) do
       {
         protocol: {
@@ -24,11 +25,11 @@ describe ProtocolsController, type: :controller do
               .with(hash_including(activity_type:
                                      :create_protocol_in_repository)))
 
-      post :create, params: params, format: :json
+      action
     end
 
     it 'adds activity in DB' do
-      expect { post :create, params: params, format: :json }
+      expect { action }
         .to(change { Activity.count })
     end
   end

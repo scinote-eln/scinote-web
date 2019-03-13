@@ -12,10 +12,10 @@ describe Users::Settings::UserTeamsController, type: :controller do
   let!(:another_user_team) do
     create :user_team, :normal_user, user: another_user, team: team
   end
-  describe 'POST invite_users' do
+  describe 'DELETE destroy' do
     let(:params) do
       {
-        id: another_user.id
+        id: another_user_team.id
       }
     end
     let(:action) { delete :destroy, params: params, format: :json }
@@ -44,7 +44,7 @@ describe Users::Settings::UserTeamsController, type: :controller do
   describe 'PUT update' do
     let(:params) do
       {
-        id: another_user.id,
+        id: another_user_team.id,
         user_team: {
           role: 'admin'
         }

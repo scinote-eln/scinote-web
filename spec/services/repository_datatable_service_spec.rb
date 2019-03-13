@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 describe RepositoryDatatableService do
   let!(:team) { create :team }
   let!(:user) { create :user, email: 'user_one@asdf.com' }
@@ -9,8 +11,10 @@ describe RepositoryDatatableService do
                         team: team
   end
   let!(:repository_column) do
-    create :repository_column, name: 'My column',
-                               data_type: :RepositoryListValue
+    create :repository_column,
+           name: 'My column',
+           data_type: :RepositoryListValue,
+           repository: repository
   end
   let!(:repository_state) do
     RepositoryTableStateService.new(user, repository).create_default_state

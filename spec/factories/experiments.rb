@@ -10,7 +10,7 @@ FactoryBot.define do
     created_by { user }
     last_modified_by { user }
     project { create :project, created_by: user }
-    trait :experiment_with_tasks do
+    trait :with_tasks do
       after(:create) do |e|
         create_list :my_module, 3, :with_tag, experiment: e
       end

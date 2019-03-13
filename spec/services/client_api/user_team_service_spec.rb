@@ -4,7 +4,7 @@ describe ClientApi::UserTeamService do
   let(:team_one) { create :team }
   let(:user_one) { create :user, email: Faker::Internet.email }
   let(:user_two) { create :user, email: Faker::Internet.email }
-  let(:user_team) { create :user_team, user: user_one, team: team_one }
+  let(:user_team) { create :user_team, :admin, user: user_one, team: team_one }
 
   it 'should raise ClientApi::CustomUserTeamError if user is not assigned' do
     expect {
@@ -42,7 +42,7 @@ describe ClientApi::UserTeamService do
     end
 
     it 'should destroy the user_team relation' do
-      create :user_team, team: team_one, user: user_one
+      create :user_team, :admin, team: team_one, user: user_one
       new_user_team = create :user_team, team: team_one, user: user_two
       ut_service = ClientApi::UserTeamService.new(
         team_id: team_one.id,
@@ -55,7 +55,7 @@ describe ClientApi::UserTeamService do
 
     it 'should assign a new owner to the team' do
       user_team_one = create :user_team, team: team_one, user: user_one
-      create :user_team, team: team_one, user: user_two
+      create :user_team, :admin, team: team_one, user: user_two
       ut_service = ClientApi::UserTeamService.new(
         team_id: team_one.id,
         user_team_id: user_team_one.id,
@@ -95,7 +95,7 @@ describe ClientApi::UserTeamService do
 
     it 'should raise ClientApi::CustomUserTeamError if is the last ' \
        'admin on the team' do
-      user_team = create :user_team, team: team_one, user: user_one
+      user_team = create :user_team, :admin, team: team_one, user: user_one
       ut_service = ClientApi::UserTeamService.new(
         user: user_one,
         team_id: team_one.id,

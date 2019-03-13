@@ -14,6 +14,7 @@ describe RepositoryColumnsController, type: :controller do
   end
 
   describe 'POST create' do
+    let(:action) { post :create, params: params, format: :json }
     let(:params) do
       {
         repository_id: repository.id,
@@ -29,11 +30,17 @@ describe RepositoryColumnsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type: :create_column_inventory)))
 
-      post :create, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 
   describe 'PUT update' do
+    let(:action) { put :update, params: params, format: :json }
     let(:params) do
       {
         id: repository_column.id,
@@ -49,11 +56,17 @@ describe RepositoryColumnsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type: :edit_column_inventory)))
 
-      post :update, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 
   describe 'DELETE destroy' do
+    let(:action) { delete :destroy, params: params, format: :json }
     let(:params) do
       { repository_id: repository.id, id: repository_column.id }
     end
@@ -63,7 +76,12 @@ describe RepositoryColumnsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type: :delete_column_inventory)))
 
-      delete :destroy, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

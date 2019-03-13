@@ -127,6 +127,7 @@ describe RepositoryRowsController, type: :controller do
   end
 
   describe 'POST create' do
+    let(:action) { post :create, params: params, format: :json }
     let(:params) do
       { repository_id: repository.id, repository_row_name: 'row_name' }
     end
@@ -136,11 +137,17 @@ describe RepositoryRowsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type: :create_item_inventory)))
 
-      post :create, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 
   describe 'PUT update' do
+    let(:action) { put :update, params: params, format: :json }
     let(:params) do
       {
         repository_id: repository.id,
@@ -154,11 +161,17 @@ describe RepositoryRowsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type: :edit_item_inventory)))
 
-      put :update, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 
   describe 'POST delete_records' do
+    let(:action) { post :delete_records, params: params, format: :json }
     let(:params) do
       { repository_id: repository.id, selected_rows: [repository_row.id] }
     end
@@ -168,7 +181,12 @@ describe RepositoryRowsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type: :delete_item_inventory)))
 
-      post :delete_records, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

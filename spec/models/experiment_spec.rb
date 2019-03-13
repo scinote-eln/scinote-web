@@ -86,7 +86,7 @@ describe Experiment, type: :model do
   end
 
   describe '.update_canvas' do
-    let(:experiment) { create :experiment, :experiment_with_tasks }
+    let(:experiment) { create :experiment, :with_tasks }
     let(:user) { experiment.created_by }
 
     context 'when renaming tasks' do

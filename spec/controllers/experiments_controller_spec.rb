@@ -5,7 +5,7 @@ require 'rails_helper'
 describe ExperimentsController, type: :controller do
   login_user
 
-  describe '#update' do
+  describe 'PUT update' do
     let!(:user) { controller.current_user }
     let!(:team) { create :team, created_by: user, users: [user] }
     let!(:project) { create :project, team: team }
@@ -13,6 +13,7 @@ describe ExperimentsController, type: :controller do
       create :user_project, :owner, user: user, project: project
     end
     let(:experiment) { create :experiment, project: project }
+    let(:action) { put :update, params: params }
 
     context 'when editing experiment' do
       let(:params) do
@@ -27,7 +28,12 @@ describe ExperimentsController, type: :controller do
           .to(receive(:call)
                 .with(hash_including(activity_type: :edit_experiment)))
 
-        put :update, params: params
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
 
@@ -40,7 +46,7 @@ describe ExperimentsController, type: :controller do
                project: project
       end
 
-      let(:archived_params) do
+      let(:params) do
         {
           id: archived_experiment.id,
           experiment: { archived: false }
@@ -52,7 +58,12 @@ describe ExperimentsController, type: :controller do
           .to(receive(:call)
             .with(hash_including(activity_type: :restore_experiment)))
 
-        put :update, params: archived_params
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end

@@ -28,16 +28,17 @@ describe Repository, type: :model do
     it do
       should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
     end
+    let(:team) { create :team }
 
     it 'should have uniq name scoped to team' do
-      create :repository, name: 'Repository One'
-      repo = build :repository, name: 'Repository One'
+      create :repository, name: 'Repository One', team: team
+      repo = build :repository, name: 'Repository One', team: team
       expect(repo).to_not be_valid
     end
 
     it 'should have uniq name scoped to team calse insensitive' do
-      create :repository, name: 'Repository One'
-      repo = build :repository, name: 'REPOSITORY ONE'
+      create :repository, name: 'Repository One', team: team
+      repo = build :repository, name: 'REPOSITORY ONE', team: team
       expect(repo).to_not be_valid
     end
   end
