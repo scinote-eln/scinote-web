@@ -11,7 +11,7 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 0.18'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '5.1.6'
+gem 'rails', '~> 5.1.6.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'sass-rails', '~> 5.0.6'
