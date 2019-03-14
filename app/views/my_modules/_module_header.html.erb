@@ -63,32 +63,20 @@
   </div>
 </div>
 
-<div>
-  <div class="badge-icon">
-     <% if can_manage_module?(@my_module) %>
-      <%= link_to description_my_module_path(@my_module, format: :json), remote: true, class: "description-link", style: "color: inherit" do %>
-        <span class="fas fa-info-circle"></span>
+<div class="row">
+  <div class="col-xs-12">
+    <h4>
+      <%= t('my_modules.module_header.description_label') %>
+    </h4>
+    <div class="my-module-description-content">
+      <% if can_manage_module?(@my_module) %>
+        <%= render partial: "description_form" %>
+      <% elsif @my_module.description.present? %>
+        <%= sanitize_input(@my_module.description) %>
+      <% else %>
+        <%= t('my_modules.module_header.no_description') %>
       <% end %>
-    <% else %>
-      <span class="fas fa-info-circle"></span>
-    <% end %>
-  </div>
-  <div class="well well-sm">
-    <% if can_manage_module?(@my_module) %>
-      <%= link_to description_my_module_path(@my_module, format: :json), remote: true, class: "description-label description-link description-refresh", style: "color: inherit" do %>
-        <% if @my_module.description.present? and not @my_module.description.empty? %>
-          <%= @my_module.description %>
-        <% else %>
-          <em><%=t "my_modules.module_header.no_description" %></em>
-        <% end %>
-      <% end %>
-    <% else %>
-      <% if @my_module.description.present? and not @my_module.description.empty? %>
-          <%= @my_module.description %>
-        <% else %>
-          <em><%=t "my_modules.module_header.no_description" %></em>
-        <% end %>
-      <% end %>
+    </div>
   </div>
 </div>
 

@@ -15,7 +15,7 @@ class MyModulesController < ApplicationController
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
                          assign_repository_records_modal
-                         repositories_dropdown)
+                         repositories_dropdown update_protocol_description)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -25,7 +25,8 @@ class MyModulesController < ApplicationController
   before_action :load_projects_tree, only: %i(protocols results activities
                                               samples repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
-  before_action :check_manage_permissions, only: %i(description due_date)
+  before_action :check_manage_permissions,
+                only: %i(description due_date update_protocol_description)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive repositories_dropdown)
@@ -250,6 +251,20 @@ class MyModulesController < ApplicationController
           render json: @my_module.errors,
             status: :unprocessable_entity
         }
+      end
+    end
+  end
+
+  def update_protocol_description
+    protocol = @my_module.protocol
+    return render_404 unless protocol
+    respond_to do |format|
+      format.json do
+        if protocol.update(description: params.require(:protocol)[:description])
+          render json: { data: protocol }
+        else
+          render json: protocol.errors, status: :unprocessable_entity
+        end
       end
     end
   end

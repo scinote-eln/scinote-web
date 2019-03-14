@@ -1,0 +1,12 @@
+<%= bootstrap_form_for @my_module.protocol, url: update_protocol_description_my_module_path(@my_module, format: :json), remote: :true do |f| %>
+  <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
+  <%= f.tiny_mce_editor(:description,
+                        id: :protocol_description_textarea,
+                        hide_label: true,
+                        value: sanitize_input(@my_module.protocol.description),
+                        placeholder: t('my_modules.protocols.protocol_status_bar.empty_description_edit_label'),
+                        data: {
+                          object_type: 'protocol',
+                          object_id: @my_module.protocol.id,
+                          highlightjs_path: asset_path('highlightjs-github-theme') } ) %>
+<% end %>
