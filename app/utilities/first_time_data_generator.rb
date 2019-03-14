@@ -11,6 +11,37 @@ module FirstTimeDataGenerator
     # Do nothing
     return unless team
 
+    # Skip this team if user already has a demo project
+    return if team.projects.where(demo: true).any?
+
+    name = '[NEW] Demo project by SciNote'
+    exp_name = 'Polymerase chain reaction'
+    # If there is an existing demo project, archive and rename it
+    if team.projects.where(name: name).present?
+      # TODO: check if we still need this code
+      # old = team.projects.where(name: 'Demo project - qPCR')[0]
+      # old.archive! user
+      i = 1
+      while team.projects.where(
+        name: name = "#{name} (#{i})"
+      ).present?
+        i += 1
+      end
+    end
+
+    project = Project.create(
+      visibility: 0,
+      name: name,
+      due_date: nil,
+      team: team,
+      created_by: user,
+      created_at: generate_random_time(1.week.ago),
+      last_modified_by: user,
+      archived: false,
+      template: false,
+      demo: true
+    )
+
     # check if samples repo already exist, then create custom repository samples
     repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME)
     repository =
@@ -192,32 +223,6 @@ module FirstTimeDataGenerator
       )
     end
 
-    name = '[NEW] Demo project by SciNote'
-    exp_name = 'Polymerase chain reaction'
-    # If there is an existing demo project, archive and rename it
-    if team.projects.where(name: name).present?
-      # TODO: check if we still need this code
-      # old = team.projects.where(name: 'Demo project - qPCR')[0]
-      # old.archive! user
-      i = 1
-      while team.projects.where(
-        name: name = "#{name} (#{i})"
-      ).present?
-        i += 1
-      end
-    end
-
-    project = Project.create(
-      visibility: 0,
-      name: name,
-      due_date: nil,
-      team: team,
-      created_by: user,
-      created_at: generate_random_time(1.week.ago),
-      last_modified_by: user,
-      archived: false
-    )
-
     experiment_description =
       'Polymerase chain reaction (PCR) monitors the amplification of DNA ' \
       'in real time (qPCR cyclers constantly scan qPCR plates). It is, in ' \
@@ -359,75 +364,6 @@ module FirstTimeDataGenerator
         updated_at: generate_random_time(my_module.created_at, 2.minutes)
       ).sneaky_save
     end
-
-    # Create an archived module
-    archived_module = MyModule.create(
-      name: 'Data analysis - Pfaffl method',
-      created_by: user,
-      created_at: generate_random_time(6.days.ago),
-      due_date: Time.now + 1.week,
-      description: nil,
-      x: -1,
-      y: -1,
-      experiment: experiment,
-      workflow_order: -1,
-      my_module_group: nil,
-      archived: true,
-      archived_on: generate_random_time(3.days.ago),
-      archived_by: user
-    )
-
-    # Activity for creating archived module
-    Activity.new(
-      type_of: :create_module,
-      user: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.create_module',
-        user: user.full_name,
-        module: archived_module.name
-      ),
-      created_at: archived_module.created_at,
-      updated_at: archived_module.created_at
-    ).sneaky_save
-
-    # Activity for archiving archived module
-    Activity.new(
-      type_of: :archive_module,
-      user: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.archive_module',
-        user: user.full_name,
-        module: archived_module.name
-      ),
-      created_at: archived_module.archived_on,
-      updated_at: archived_module.archived_on
-    ).sneaky_save
-
-    # Assign new user to archived module
-    UserMyModule.create(
-      user: user,
-      my_module: archived_module,
-      assigned_by: user,
-      created_at: generate_random_time(archived_module.created_at, 2.minutes)
-    )
-    Activity.new(
-      type_of: :assign_user_to_module,
-      user: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.assign_user_to_module',
-        assigned_user: user.full_name,
-        module: archived_module.name,
-          assigned_by_user: user.full_name
-      ),
-      created_at: generate_random_time(archived_module.created_at, 2.minutes),
-      updated_at: generate_random_time(archived_module.created_at, 2.minutes)
-    ).sneaky_save
 
     # Assign 4 samples to modules
     samples_to_assign = []
@@ -798,11 +734,12 @@ module FirstTimeDataGenerator
       user: user
     )
     qpcr_id = MyModule.where(name: 'qPCR').last.id.base62_encode
-    generate_result_comment(
+    DelayedUploaderDemo.generate_result_comment(
       temp_result,
       user,
       user_annotation + ' Please check if results match results in ' \
-      '[#qPCR~tsk~' + qpcr_id + ']'
+      '[#qPCR~tsk~' + qpcr_id + ']',
+      generate_random_time(temp_result.created_at, 1.days)
     )
     temp_result.table = Table.new(
       created_by: user,
@@ -833,7 +770,8 @@ module FirstTimeDataGenerator
       current_team: team,
       result_name: 'Agarose gel electrophoresis of totRNA samples',
       created_at: generate_random_time(my_modules[2].created_at, 3.days),
-      file_name: 'totRNA_gel.jpg'
+      file_name: 'totRNA_gel.jpg',
+      comment: user_annotation + ' Could you check if this is okay?'
     )
 
     # ----------------- Module 4 ------------------
@@ -955,8 +893,8 @@ module FirstTimeDataGenerator
       'If desired, more than 30 mg tissue can be disrupted and homogenized ' \
       'at the start of the procedure (increase the volume of Buffer RLT ' \
       'proportionately). Use a portion of the homogenate corresponding to no ' \
-      'more than 30 mg tissue for RNA purification, and store the rest at –80',
-      '°C. Buffer RLT may form a precipitate upon storage. If necessary, ' \
+      'more than 30 mg tissue for RNA purification, and store the rest at –80°C.',
+      'Buffer RLT may form a precipitate upon storage. If necessary, ' \
       'redissolve by warming, and then place at room temperature (15–25°C).',
       'Buffer RLT and Buffer RW1 contain a guanidine salt and are therefore ' \
       'not compatible with disinfecting reagents containing bleach. See page ' \
@@ -1249,7 +1187,11 @@ module FirstTimeDataGenerator
       current_team: team,
       result_name: 'Bacteria plates YPGA',
       created_at: generate_random_time(my_modules[5].created_at, 2.days),
-      file_name: 'Bacterial_colonies.jpg'
+      file_name: 'Bacterial_colonies.jpg',
+      comment: user_annotation + ' please check the results again. ' \
+          '<span class=\"atwho-inserted\" contenteditable=\"false\"' \
+          'data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>' \
+          ' seems to be acting strange?'
     )
 
     DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
@@ -1611,9 +1553,9 @@ module FirstTimeDataGenerator
         if rand < 0.3
           polite_comment = 'This looks well.'
         elsif rand < 0.4
-          polite_comment = 'Seems satisfactory.'
+          polite_comment = 'Great job!'
         elsif rand < 0.4
-          polite_comment = 'Try a bit harder next time.'
+          polite_comment = 'Thanks for getting this done.'
         end
         if polite_comment
           commented_on = generate_random_time(completed_on)
@@ -1666,27 +1608,6 @@ module FirstTimeDataGenerator
       message: I18n.t('activities.add_comment_to_module',
                  user: user.full_name,
                  module: my_module.name)
-    ).sneaky_save
-  end
-
-  def generate_result_comment(result, user, message, created_at = nil)
-    created_at ||= generate_random_time(result.created_at, 1.days)
-    ResultComment.create(
-      user: user,
-      message: message,
-      created_at: created_at,
-      result: result
-    )
-    Activity.new(
-      type_of: :add_comment_to_result,
-      user: user,
-      project: result.my_module.experiment.project,
-      my_module: result.my_module,
-      created_at: created_at,
-      updated_at: created_at,
-      message: I18n.t('activities.add_comment_to_result',
-                 user: user.full_name,
-                 result: result.name)
     ).sneaky_save
   end
 

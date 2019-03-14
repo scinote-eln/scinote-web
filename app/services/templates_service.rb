@@ -32,13 +32,16 @@ class TemplatesService
     return unless owner.present?
     updated = false
     exp_tmplt_dir_prefix = "#{@base_dir}/experiment_"
-    existing = tmpl_project.experiments.where.not(uuid: nil).pluck(:uuid)
-    @experiment_templates.except(*existing).each_value do |id|
-      importer_service = TeamImporter.new
-      importer_service.import_experiment_template_from_dir(
-        exp_tmplt_dir_prefix + id.to_s, tmpl_project.id, owner.id
-      )
-      updated = true
+    # Create lock in case another worker starts to update same team
+    tmpl_project.with_lock do
+      existing = tmpl_project.experiments.where.not(uuid: nil).pluck(:uuid)
+      @experiment_templates.except(*existing).each_value do |id|
+        importer_service = TeamImporter.new
+        importer_service.import_experiment_template_from_dir(
+          exp_tmplt_dir_prefix + id.to_s, tmpl_project.id, owner.id
+        )
+        updated = true
+      end
     end
     updated
   end
@@ -51,5 +54,15 @@ class TemplatesService
       updated_counter += 1 if update_team(team)
     end
     [updated_counter, processed_counter]
+  end
+
+  def schedule_creation_for_user(user)
+    user.teams.each do |team|
+      next if team.projects.where(template: true).any?
+
+      TemplatesService.new.delay(
+        queue: :templates
+      ).update_team(team)
+    end
   end
 end

@@ -68,7 +68,6 @@ describe ClientApi::UserTeamService do
 
   describe '#update_role!' do
     it 'should raise ClientApi::CustomUserTeamError if no role is set' do
-      create :user_team, team: team_one, user: user_one
       ut_service = ClientApi::UserTeamService.new(
         user: user_one,
         team_id: team_one.id,

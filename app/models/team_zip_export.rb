@@ -129,22 +129,10 @@ class TeamZipExport < ZipExport
       )
       file = FileUtils.touch("#{project_path}/#{html_name}").first
       File.open(file, 'wb') { |f| f.write(project_report_pdf) }
-
-      # Add Handsontable and dependent JS files (mimick frontend formula
-      # processing).
-      required_js = %w(handsontable.full.min.js lodash.js numeral.js numeric.js
-                       md5.js jstat.js formula.js parser.js ruleJS.js
-                       handsontable.formula.js big.min.js)
-      required_js.each do |filename|
-        filepath = File.join(Rails.root,
-                             "vendor/assets/javascripts/#{filename}/")
-        dest_folder = "#{project_path}/"
-        FileUtils.cp(filepath, dest_folder)
-      end
     end
-
+  ensure
     # Change current dir outside tmp_dir, since tmp_dir will be deleted
-    Dir.chdir(File.join(Rails.root, 'tmp'))
+    Dir.chdir(Rails.root)
   end
 
   def generate_notification(user)
@@ -152,6 +140,7 @@ class TeamZipExport < ZipExport
       type_of: :deliver,
       title: I18n.t('zip_export.notification_title'),
       message:  "<a data-id='#{id}' " \
+                "data-turbolinks='false' " \
                 "href='#{Rails.application
                               .routes
                               .url_helpers
