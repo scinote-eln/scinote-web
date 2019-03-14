@@ -144,8 +144,7 @@ var TinyMCE = (function() {
                   editor.save();
                   editor.setProgressState(0);
                   editorForm.find('.tinymce-status-badge').removeClass('hidden');
-                  $(editor.getContainer())
-                    .find('.tinymce-save-button').addClass('hidden');
+                  editor.remove();
                 }).on('ajax:error', function(ev, data) {
                   var model = editor.getElement().dataset.objectType;
                   $(this).renderFormErrors(model, data.responseJSON);
