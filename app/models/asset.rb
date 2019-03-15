@@ -10,7 +10,8 @@ class Asset < ApplicationRecord
 
   # Paperclip validation
   has_attached_file :file,
-                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
+                    styles: {   
+                              large: [Constants::LARGE_PIC_FORMAT, :jpg],
                               medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
                     convert_options: {
                       medium: '-quality 70 -strip',
@@ -461,6 +462,13 @@ class Asset < ApplicationRecord
     self.file = new_file
     self.version = version.nil? ? 1 : version + 1
     save
+  end
+
+  def editable?(user)
+    objects=['step','result']
+    asset=self
+    my_module=send(objects.find{|object| send(object)}).my_module
+    Canaid::PermissionsHolder.instance.eval(:manage_experiment,user,my_module.experiment) && !(locked?)
   end
 
   protected
