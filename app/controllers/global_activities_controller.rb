@@ -50,6 +50,7 @@ class GlobalActivitiesController < ApplicationController
                        .limit(Constants::SEARCH_LIMIT)
                        .pluck(:id, :name)
       next if matched.length.zero?
+
       results[subject] = matched.map { |pr| { id: pr[0], name: pr[1] } }
     end
     respond_to do |format|
@@ -62,12 +63,12 @@ class GlobalActivitiesController < ApplicationController
   private
 
   def activity_filters
-    begin 
-      params[:types]=JSON.parse(params[:types])
-      params[:users]=JSON.parse(params[:users])
-      params[:teams]=JSON.parse(params[:teams])
-      params[:subjects]=JSON.parse(params[:subjects])
-    rescue 
+    begin
+      params[:types] = JSON.parse(params[:types])
+      params[:users] = JSON.parse(params[:users])
+      params[:teams] = JSON.parse(params[:teams])
+      params[:subjects] = JSON.parse(params[:subjects])
+    rescue StandardError
     end
 
     params.permit(
