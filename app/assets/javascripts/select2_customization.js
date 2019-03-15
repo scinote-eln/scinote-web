@@ -2,6 +2,7 @@
 $.fn.extend({
   select2Multiple: function(config = {}) {
     // Adding ID to each block
+    if (this.next().find('.select2-selection').length > 0) return this;
     var templateSelection = (state) => {
       return $('<span class="select2-block-body" data-select-id="' + state.id + '">'
         + (config.customSelection !== undefined ? config.customSelection(state) : state.text)

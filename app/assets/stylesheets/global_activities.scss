@@ -7,10 +7,16 @@
   padding: 1em;
 
   .ga-main {
+    border-right: 1px solid $gray-lighter;
+    padding-top: 10px;
 
     .ga-activities-list {
       grid-area: activities;
       min-height: 600px;
+
+      .activities-day {
+        margin-bottom: 10px
+      }
     }
 
     .activities-counter-label {
@@ -24,6 +30,15 @@
 
     .activities-group-expand-button {
       color: $color-emperor;
+
+      .fas {
+        display: inline-block;
+        width: 10px;
+      }
+    }
+
+    .activities-group{
+      margin-bottom: 0px;
     }
 
     .activity-card {
@@ -51,7 +66,7 @@
 }
 
 .ga-side {
-  border-left: 1px solid $gray-lighter;
+  
   float: right;
 
   .filter-block {
