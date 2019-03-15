@@ -572,8 +572,9 @@ Rails.application.routes.draw do
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
-    get 'files/create_new_wopi_file',
-      to: 'assets#create_new_wopi_file'
+    post 'files/create_wopi_file',
+         to: 'assets#create_wopi_file',
+         as: 'create_wopi_file'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'

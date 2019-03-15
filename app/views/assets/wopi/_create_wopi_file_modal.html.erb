@@ -1,0 +1,45 @@
+<div class="modal"
+     id="new-office-file-modal"
+     role="dialog"
+     aria-labelledby="new-office-file-modal-label">
+    <%= bootstrap_form_tag url: create_wopi_file_path(),
+                          method: :post, remote: true do |f| %>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="new-office-file-modal-label">
+              <%= t('assets.create_wopi_file.modal_title') %>
+            </h4>
+          </div>
+          <div class="modal-body">
+            <%# Will be filled by the create_file button %>
+            <%= hidden_field_tag :element_id, '' %>
+            <%= hidden_field_tag :element_type, '' %>
+
+            <%= f.text_field :name,
+                             label: t('assets.create_wopi_file.text_field_label'),
+                             autofocus: true,
+                             placeholder: t('assets.create_wopi_file.text_field_placeholder'),
+                             id: 'new-wopi-file-name'%>
+
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Left</button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Middle</button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Right</button>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <%= f.submit t('assets.create_wopi_file.create_document_button'),
+                          class: 'btn btn-toggle' %>
+          </div>
+        </div>
+      </div>
+  <% end %>
+</div>
