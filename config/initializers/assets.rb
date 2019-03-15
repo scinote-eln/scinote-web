@@ -35,6 +35,7 @@ Rails.application.config.assets.precompile += %w(my_modules/protocols.js)
 Rails.application.config.assets.precompile +=
   %w(my_modules/protocols/protocol_status_bar.js)
 Rails.application.config.assets.precompile += %w(my_modules/results.js)
+Rails.application.config.assets.precompile += %w(assets/wopi/create_wopi_file.js)
 Rails.application.config.assets.precompile += %w(results/result_tables.js)
 Rails.application.config.assets.precompile += %w(results/result_assets.js)
 Rails.application.config.assets.precompile += %w(results/result_texts.js)
