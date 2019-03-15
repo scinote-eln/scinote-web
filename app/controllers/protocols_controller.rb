@@ -607,16 +607,16 @@ class ProtocolsController < ApplicationController
           render json: { name: p_name, status: :bad_request }, status: :bad_request
         end
       else
-        format.json do
-          Activities::CreateActivityService
-            .call(activity_type: :import_protocol_in_repository,
-                  owner: current_user,
-                  subject: protocol,
-                  team: current_team,
-                  message_items: {
-                    protocol: protocol.id
-                  })
+        Activities::CreateActivityService
+          .call(activity_type: :import_protocol_in_repository,
+                owner: current_user,
+                subject: protocol,
+                team: current_team,
+                message_items: {
+                  protocol: protocol.id
+                })
 
+        format.json do
           render json: {
             name: p_name, new_name: protocol.name, status: :ok
           },

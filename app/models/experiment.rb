@@ -143,7 +143,7 @@ class Experiment < ApplicationRecord
         cloned_modules = cloned_pairs.collect { |mn, _| mn }
 
         # Rename modules
-        rename_modules(to_rename, current_user)\
+        rename_modules(to_rename, current_user)
 
         # Add activities that modules were created
         originals.each do |m|
