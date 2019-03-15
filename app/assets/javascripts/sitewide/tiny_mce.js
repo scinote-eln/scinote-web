@@ -96,6 +96,54 @@ var TinyMCE = (function() {
             }
           ],
           init_instance_callback: function(editor) {
+            var editorForm = $(editor.getContainer()).closest('form');
+            var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
+
+            // Init saved status label
+            if (editor.getContent() !== '') {
+              editorForm.find('.tinymce-status-badge').removeClass('hidden');
+            }
+
+            // Init Save button
+            editorForm
+              .find('.tinymce-save-button')
+              .clone()
+              .appendTo(menuBar)
+              .on('click', function(event) {
+                event.preventDefault();
+                editorForm.clearFormErrors();
+                editor.setProgressState(1);
+                editor.save();
+                editorForm.submit();
+              });
+
+            // After save action
+            editorForm
+              .on('ajax:success', function() {
+                editor.save();
+                editor.setProgressState(0);
+                editorForm.find('.tinymce-status-badge').removeClass('hidden');
+                editor.remove();
+              }).on('ajax:error', function(ev, data) {
+                var model = editor.getElement().dataset.objectType;
+                $(this).renderFormErrors(model, data.responseJSON);
+                editor.setProgressState(0);
+              });
+
+            // Init Cancel button
+            editorForm
+              .find('.tinymce-cancel-button')
+              .clone()
+              .appendTo(menuBar)
+              .on('click', function(event) {
+                event.preventDefault();
+                if (editor.isDirty()) {
+                  editor.setContent($(selector).val());
+                }
+                editor.remove();
+              })
+              .removeClass('hidden');
+
             SmartAnnotation.init($(editor.contentDocument.activeElement));
             initHighlightjsIframe($(this.iframeElement).contents());
           },
@@ -114,56 +162,6 @@ var TinyMCE = (function() {
                   initHighlightjsIframe($(editor.iframeElement).contents());
                 }
               }, 200);
-            });
-
-            editor.on('init', function() {
-              var editorForm = $(editor.getContainer()).closest('form');
-              var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
-
-              // Init saved status label
-              if (editor.getContent() !== '') {
-                editorForm.find('.tinymce-status-badge').removeClass('hidden');
-              }
-
-              // Init Save button
-              editorForm
-                .find('.tinymce-save-button')
-                .clone()
-                .appendTo(menuBar)
-                .on('click', function(event) {
-                  event.preventDefault();
-                  editorForm.clearFormErrors();
-                  editor.setProgressState(1);
-                  editor.save();
-                  editorForm.submit();
-                });
-
-              // After save action
-              editorForm
-                .on('ajax:success', function() {
-                  editor.save();
-                  editor.setProgressState(0);
-                  editorForm.find('.tinymce-status-badge').removeClass('hidden');
-                  editor.remove();
-                }).on('ajax:error', function(ev, data) {
-                  var model = editor.getElement().dataset.objectType;
-                  $(this).renderFormErrors(model, data.responseJSON);
-                  editor.setProgressState(0);
-                });
-
-              // Init Cancel button
-              editorForm
-                .find('.tinymce-cancel-button')
-                .clone()
-                .appendTo(menuBar)
-                .on('click', function(event) {
-                  event.preventDefault();
-                  if (editor.isDirty()) {
-                    editor.setContent($(selector).val());
-                  }
-                  editor.remove();
-                })
-                .removeClass('hidden');
             });
 
             editor.on('Dirty', function() {
