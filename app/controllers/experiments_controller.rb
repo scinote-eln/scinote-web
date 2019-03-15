@@ -108,13 +108,13 @@ class ExperimentsController < ApplicationController
 
       experiment_annotation_notification(old_text)
 
-      activity_type_of = if experiment_params[:archived] == 'false'
-                           :restore_experiment
-                         else
-                           :edit_experiment
-                         end
+      activity_type = if experiment_params[:archived] == 'false'
+                        :restore_experiment
+                      else
+                        :edit_experiment
+                      end
       Activities::CreateActivityService
-        .call(activity_type: activity_type_of,
+        .call(activity_type: activity_type,
               owner: current_user,
               subject: @experiment,
               project: @experiment.project,
