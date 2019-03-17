@@ -16,24 +16,28 @@
             <%= hidden_field_tag :element_id, '' %>
             <%= hidden_field_tag :element_type, '' %>
 
-            <%= f.text_field :name,
+            <%= f.text_field :file_name,
                              label: t('assets.create_wopi_file.text_field_label'),
                              autofocus: true,
                              placeholder: t('assets.create_wopi_file.text_field_placeholder'),
                              id: 'new-wopi-file-name'%>
 
-            <div class="btn-group btn-group-justified" role="group" aria-label="...">
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">Left</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">Middle</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">Right</button>
-              </div>
-            </div>
+          <div class="btn-group btn-group-toggle btn-group-justified"
+               data-toggle="buttons">
+            <label class="btn btn-default active">
+              <%= image_tag 'office/Excel-xlsx_20x20x32.png' %>
+              <input type="radio" name="file_type" value='docx' checked> Active
+            </label>
+            <label class="btn btn-default">
+              <input type="radio" name="file_type" value='xlsx'> Radio
+            </label>
+            <label class="btn btn-default">
+              <input type="radio" name="file_type" value='pptx'> Radio
+            </label>
+          </div>
 
+          <div class='form-group' id='other-wopi-errors'>
+          </div>
           </div>
           <div class="modal-footer">
             <%= f.submit t('assets.create_wopi_file.create_document_button'),

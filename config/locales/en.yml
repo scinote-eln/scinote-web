@@ -1892,6 +1892,9 @@ en:
       text_field_label: 'Document name & type'
       text_field_placeholder: 'New Document'
       create_document_button: 'Create Document'
+      errors:
+        forbidden: 'You do not have permission to add files.'
+        not_found: 'Element not found.'
   atwho:
     no_results: "No results found"
     users:
