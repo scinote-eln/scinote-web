@@ -16,6 +16,7 @@
       initHandsOnTables($(document));
       _expandAllResults();
       applyCollapseLinkCallBack();
+      applyCreateWopiFileCallback();
 
       Comments.initialize();
 
@@ -185,6 +186,7 @@
               initFormSubmitLinks($(this));
               ResutlAssets.applyEditResultAssetCallback();
               applyCollapseLinkCallBack();
+              applyCreateWopiFileCallback();
               toggleResultEditButtons(true);
               initPreviewModal();
               Comments.initialize();

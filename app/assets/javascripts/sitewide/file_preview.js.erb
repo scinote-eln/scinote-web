@@ -12,13 +12,13 @@
       url = $(this).data('preview-url');
       downloadUrl = $(this).attr('href');
       openPreviewModal(name, url, downloadUrl);
-    });
-  }
+  });
+}
 
-  function openPreviewModal(name, url, downloadUrl) {
-    var modal = $('#filePreviewModal');
-    $.ajax({
-      url: url,
+function openPreviewModal(name, url, downloadUrl) {
+  var modal = $('#filePreviewModal');
+  $.ajax({
+    url: url,
       type: 'GET',
       dataType: 'json',
       success: function(data) {

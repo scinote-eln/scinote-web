@@ -149,23 +149,56 @@ class AssetsController < ApplicationController
     render layout: false
   end
 
+  # POST: create_wopi_file_path
   def create_wopi_file
-    # ASSOC: (stepasset, resultasset),
-    # ASSOC_ID: bla,
-    # TYPE OF DOC: PDF/DOC/XML
-    # name of file
-    # retrieve
-    #file = Paperclip.io_adapters.for(StringIO.new())
-    #file.original_filename = 'test.docx'
-    #file.content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    #asset = Asset.new(file: file, created_by: User.first, file_present: true)
-    #step_asset = StepAsset.create!(step: Step.last, asset: asset)
+    # Presence validation
+    create_wopi_params
 
-    #redirect_to edit_asset_url(step_asset.asset_id)
-    #
+    # File type validation
+    render_403 && return unless ['docx', 'xlsx', 'pptx'].include?(params[:file_type])
+
+    # Asset validation
+    file = Paperclip.io_adapters.for(StringIO.new())
+    file.original_filename = "#{params[:file_name]}.#{params[:file_type]}"
+    file.content_type = wopi_content_type(params[:file_type])
+    asset = Asset.new(file: file, created_by: current_user, file_present: true)
+
     respond_to do |format|
       format.json do
-        render json: { 'bla': 'he' }
+        render json: {
+          error: true,
+          message: asset.errors,
+        }, status: 400
+      end
+    end and return unless asset.valid?
+
+    if params[:element_type] == 'Step'
+      step = Step.find(params[:element_id].to_i)
+      render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
+        can_manage_protocol_in_repository?(step.protocol)
+      step_asset = StepAsset.create!(step: step, asset: asset)
+
+      edit_url = edit_asset_url(step_asset.asset_id)
+    elsif params[:element_type] == 'Result'
+      my_module = MyModule.find(params[:element_id].to_i)
+      render_403 and return unless can_manage_module?(my_module)
+
+      result = Result.create(name: file.original_filename,
+                             my_module: my_module,
+                             user: current_user)
+      result_asset = ResultAsset.create!(result: result, asset: asset)
+
+      edit_url = edit_asset_url(result_asset.asset_id)
+    else
+      render_404
+    end
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          success: true,
+          edit_url: edit_url
+        }
       end
     end
   end
@@ -221,6 +254,10 @@ class AssetsController < ApplicationController
       wd_params += "&#{wd}=#{params[wd]}"
     end
     url + wd_params
+  end
+
+  def create_wopi_params
+    params.require([:element_type, :element_id, :file_type])
   end
 
   def asset_params
