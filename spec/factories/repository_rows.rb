@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :repository_row do
-    name 'Custom row'
-    created_by { User.first || association(:user) }
-    repository { Repository.first || create(:repository) }
-    last_modified_by { User.first || association(:user) }
+    sequence(:name) { |n| "My row-#{n}" }
+    created_by { create :user }
+    repository
+    last_modified_by { created_by }
   end
 end

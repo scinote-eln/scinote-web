@@ -155,6 +155,7 @@ class MyModulesController < ApplicationController
     @my_module.assign_attributes(update_params)
     @my_module.last_modified_by = current_user
     description_changed = @my_module.description_changed?
+    due_date_changes = @my_module.changes[:due_date]
 
     if @my_module.archived_changed?(from: false, to: true)
 
@@ -193,21 +194,50 @@ class MyModulesController < ApplicationController
         )
       end
     else
-
       saved = @my_module.save
-      if saved and description_changed then
-        Activity.create(
-          type_of: :change_module_description,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            "activities.change_module_description",
-            user: current_user.full_name,
-            module: @my_module.name
+
+      if saved
+        if description_changed
+          Activity.create(
+            type_of: :change_module_description,
+            project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
+            my_module: @my_module,
+            user: current_user,
+            message: t(
+              'activities.change_module_description',
+              user: current_user.full_name,
+              module: @my_module.name
+            )
           )
-        )
+        end
+
+        if due_date_changes
+          # rubocop:disable Metrics/BlockNesting    # temporary solution
+          type_of = if due_date_changes[0].nil?     # set due_date
+                      :set_task_due_date
+                    elsif due_date_changes[1].nil?  # remove due_date
+                      :remove_task_due_date
+                    else                            # change due_date
+                      :change_task_due_date
+                    end
+          # rubocop:enable Metrics/BlockNesting
+          Activities::CreateActivityService
+            .call(activity_type: type_of,
+                  owner: current_user,
+                  subject: @my_module,
+                  project:
+                    @my_module.experiment.project,
+                  team: current_team,
+                  message_items: {
+                    my_module: @my_module.id,
+                    my_module_duedate:
+                      {
+                        id: @my_module.id,
+                        value_for: 'due_date'
+                      }
+                  })
+        end
       end
     end
 

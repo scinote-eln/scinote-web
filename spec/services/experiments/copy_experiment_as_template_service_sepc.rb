@@ -13,7 +13,7 @@ describe Experiments::CopyExperimentAsTemplateService do
     create :project, team: team, user_projects: [user_project]
   end
   let(:experiment) do
-    create :experiment_with_tasks, name: 'MyExp', project: project
+    create :experiment, :with_tasks, name: 'MyExp', project: project
   end
   let(:user) { create :user }
   let(:service_call) do

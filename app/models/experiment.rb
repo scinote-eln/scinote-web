@@ -143,7 +143,7 @@ class Experiment < ApplicationRecord
         cloned_modules = cloned_pairs.collect { |mn, _| mn }
 
         # Rename modules
-        rename_modules(to_rename)
+        rename_modules(to_rename, current_user)
 
         # Add activities that modules were created
         originals.each do |m|
@@ -209,7 +209,7 @@ class Experiment < ApplicationRecord
         update_module_groups(current_user)
 
         # Finally move any modules to another experiment
-        move_modules(updated_to_move)
+        move_modules(updated_to_move, current_user)
 
         # Everyhing is set, now we can move any module groups
         move_module_groups(updated_to_move_groups)
@@ -265,6 +265,15 @@ class Experiment < ApplicationRecord
   def archive_modules(module_ids, current_user)
     my_modules.where(id: module_ids).each do |m|
       m.archive!(current_user)
+
+      Activities::CreateActivityService.call(activity_type: :archive_task,
+                                             owner: current_user,
+                                             subject: m,
+                                             project: project,
+                                             team: project.team,
+                                             message_items: {
+                                               my_module: m.id
+                                             })
     end
     my_modules.reload
   end
@@ -306,12 +315,20 @@ class Experiment < ApplicationRecord
   # represent IDs of modules, and values new names for
   # such modules. If a module with given ID doesn't exist,
   # it's obviously not updated.
-  def rename_modules(to_rename)
+  def rename_modules(to_rename, current_user)
     to_rename.each do |id, new_name|
       my_module = MyModule.find_by_id(id)
       if my_module.present?
         my_module.name = new_name
         my_module.save!
+        Activities::CreateActivityService.call(activity_type: :rename_task,
+                                               owner: current_user,
+                                               subject: my_module,
+                                               project: project,
+                                               team: project.team,
+                                               message_items: {
+                                                 my_module: my_module.id
+                                               })
       end
     end
   end
@@ -321,10 +338,11 @@ class Experiment < ApplicationRecord
   # IDs of new names to which the given modules should be moved.
   # If a module with given ID doesn't exist (or experiment ID)
   # it's obviously not updated. Any connection on module is destroyed.
-  def move_modules(to_move)
+  def move_modules(to_move, current_user)
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by_id(id)
       experiment = project.experiments.find_by_id(experiment_id)
+      experiment_org = my_module.experiment
       next unless my_module.present? && experiment.present?
 
       my_module.experiment = experiment
@@ -338,7 +356,19 @@ class Experiment < ApplicationRecord
         raise ActiveRecord::ActiveRecordError
       end
 
-      my_module.save
+      next unless my_module.save
+
+      Activities::CreateActivityService.call(activity_type: :move_task,
+                                             owner: current_user,
+                                             subject: my_module,
+                                             project: project,
+                                             team: project.team,
+                                             message_items: {
+                                               my_module: my_module.id,
+                                               experiment_original:
+                                                 experiment_org.id,
+                                               experiment_new: experiment.id
+                                             })
     end
 
     # Generate workflow image for the experiment in which we moved the task

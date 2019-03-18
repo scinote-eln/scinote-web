@@ -108,6 +108,7 @@ describe ProjectsController, type: :controller do
         { project: { name: 'test project A1', team_id: team.id,
                      visibility: 'visible', archived: false } }
       end
+      let(:action) { post :create, params: params, format: :json }
 
       it 'returns success response, then unprocessable_entity on second run' do
         get :create, params: params, format: :json
@@ -118,10 +119,17 @@ describe ProjectsController, type: :controller do
         expect(response.content_type).to eq 'application/json'
       end
 
-      it 'never calls create activity service' do
-        expect(Activities::CreateActivityService).to receive(:call)
+      it 'calls create activity for creating project' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :create_project)))
 
-        post :create, params: params, format: :json
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end

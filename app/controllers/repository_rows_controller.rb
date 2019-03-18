@@ -56,6 +56,8 @@ class RepositoryRowsController < ApplicationController
     respond_to do |format|
       format.json do
         if errors[:default_fields].empty? && errors[:repository_cells].empty?
+          log_activity(:create_item_inventory, record)
+
           render json: { id: record.id,
                          flash: t('repositories.create.success_flash',
                                   record: escape_input(record.name),
@@ -180,6 +182,8 @@ class RepositoryRowsController < ApplicationController
       format.json do
         if errors[:default_fields].empty? && errors[:repository_cells].empty?
           # Row sucessfully updated, so sending response to client
+          log_activity(:edit_item_inventory, @record)
+
           render json: {
             id: @record.id,
             flash: t(
@@ -271,6 +275,8 @@ class RepositoryRowsController < ApplicationController
       selected_params.each do |row_id|
         row = @repository.repository_rows.find_by_id(row_id)
         if row && can_manage_repository_rows?(@repository.team)
+          log_activity(:delete_item_inventory, row)
+
           row.destroy && deleted_count += 1
         end
       end
@@ -439,5 +445,17 @@ class RepositoryRowsController < ApplicationController
       }
     end
     collection
+  end
+
+  def log_activity(type_of, repository_row)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @repository,
+            team: current_team,
+            message_items: {
+              repository_row: repository_row.id,
+              repository: @repository.id
+            })
   end
 end

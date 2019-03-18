@@ -81,8 +81,7 @@ class StepsController < ApplicationController
             )
           )
         else
-          # TODO: Activity for team if step
-          # created in protocol management??
+          log_activity(:add_step_to_protocol_repository)
         end
 
         # Update protocol timestamp
@@ -201,8 +200,7 @@ class StepsController < ApplicationController
             )
           )
         else
-          # TODO: Activity for team if step
-          # updated in protocol management??
+          log_activity(:edit_step_in_protocol_repository)
         end
 
         # Update protocol timestamp
@@ -235,6 +233,8 @@ class StepsController < ApplicationController
       # Calculate space taken by this step
       team = @protocol.team
       previous_size = @step.space_taken
+
+      log_activity(:delete_step_in_protocol_repository)
 
       # Destroy the step
       @step.destroy(current_user)
@@ -650,5 +650,17 @@ class StepsController < ApplicationController
         :_destroy
       ]
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @protocol,
+            team: current_team,
+            message_items: {
+              protocol: @protocol.id,
+              step: @step.id
+            })
   end
 end

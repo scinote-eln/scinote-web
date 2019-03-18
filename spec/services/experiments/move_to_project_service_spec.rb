@@ -11,7 +11,7 @@ describe Experiments::MoveToProjectService do
     create :project, team: team, user_projects: [user_project2]
   end
   let(:experiment) do
-    create :experiment_with_tasks, name: 'MyExp', project: project
+    create :experiment, :with_tasks, name: 'MyExp', project: project
   end
   let(:user) { create :user }
   let(:user_project2) { create :user_project, :normal_user, user: user }

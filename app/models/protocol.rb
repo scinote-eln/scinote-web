@@ -431,6 +431,16 @@ class Protocol < ApplicationRecord
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_private]
     save
+
+    Activities::CreateActivityService
+      .call(activity_type: :move_protocol_in_repository,
+            owner: user,
+            subject: self,
+            team: team,
+            message_items: {
+              protocol: id,
+              action: I18n.t('activities.protocols.team_to_my_message')
+            })
   end
 
   # This publish action simply moves the protocol from
@@ -448,6 +458,16 @@ class Protocol < ApplicationRecord
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_public]
     save
+
+    Activities::CreateActivityService
+      .call(activity_type: :move_protocol_in_repository,
+            owner: user,
+            subject: self,
+            team: team,
+            message_items: {
+              protocol: id,
+              action: I18n.t('activities.protocols.my_to_team_message')
+            })
   end
 
   def archive(user)
@@ -476,8 +496,16 @@ class Protocol < ApplicationRecord
           protocol_type: :unlinked
         )
       end
-    end
 
+      Activities::CreateActivityService
+        .call(activity_type: :archive_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id
+              })
+    end
     result
   end
 
@@ -496,6 +524,15 @@ class Protocol < ApplicationRecord
       self.protocol_type = Protocol.protocol_types[:in_repository_private]
     end
     save
+
+    Activities::CreateActivityService
+      .call(activity_type: :restore_protocol_in_repository,
+            owner: user,
+            subject: self,
+            team: team,
+            message_items: {
+              protocol: id
+            })
   end
 
   def update_keywords(keywords)

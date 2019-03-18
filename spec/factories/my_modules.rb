@@ -11,5 +11,8 @@ FactoryBot.define do
     trait :with_tag do
       tags { create_list :tag, 3, project: experiment.project }
     end
+    trait :with_due_date do
+      due_date { Faker::Time.between(Date.today, Date.today + 10.days) }
+    end
   end
 end

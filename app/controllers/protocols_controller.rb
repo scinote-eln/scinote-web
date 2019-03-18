@@ -152,8 +152,17 @@ class ProtocolsController < ApplicationController
     @protocol.record_timestamps = false
     @protocol.assign_attributes(metadata_params)
 
+    changes = @protocol.changes.keys
+
     respond_to do |format|
       if @protocol.save
+
+        changes.each do |key|
+          if %w(description authors keywords).include?(key)
+            log_activity("edit_#{key}_in_protocol_repository".to_sym)
+          end
+        end
+
         format.json do
           render json: {
             updated_at_label: render_to_string(
@@ -189,6 +198,8 @@ class ProtocolsController < ApplicationController
       end
       if @protocol.update_keywords(params[:keywords])
         format.json do
+          log_activity(:edit_keywords_in_protocol_repository)
+
           render json: {
             updated_at_label: render_to_string(
               partial: 'protocols/header/updated_at_label.html.erb'
@@ -220,6 +231,8 @@ class ProtocolsController < ApplicationController
 
     respond_to do |format|
       if @protocol.save
+        log_activity(:create_protocol_in_repository)
+
         format.json do
           render json: {
             url: edit_protocol_path(
@@ -594,6 +607,15 @@ class ProtocolsController < ApplicationController
           render json: { name: p_name, status: :bad_request }, status: :bad_request
         end
       else
+        Activities::CreateActivityService
+          .call(activity_type: :import_protocol_in_repository,
+                owner: current_user,
+                subject: protocol,
+                team: current_team,
+                message_items: {
+                  protocol: protocol.id
+                })
+
         format.json do
           render json: {
             name: p_name, new_name: protocol.name, status: :ok
@@ -796,6 +818,18 @@ class ProtocolsController < ApplicationController
         elsif @protocols.length > 1
           file_name = 'protocols.eln'
         end
+
+        @protocols.each do |p|
+          Activities::CreateActivityService
+            .call(activity_type: :export_protocol_in_repository,
+                  owner: current_user,
+                  subject: p,
+                  team: current_team,
+                  message_items: {
+                    protocol: p.id
+                  })
+        end
+
         send_data(z_output_stream.read, filename: file_name)
       end
     end
@@ -1188,5 +1222,16 @@ class ProtocolsController < ApplicationController
 
   def check_protocolsio_import_permissions
     render_403 unless can_create_protocols_in_repository?(current_team)
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @protocol,
+            team: current_team,
+            message_items: {
+              protocol: @protocol.id
+            })
   end
 end
