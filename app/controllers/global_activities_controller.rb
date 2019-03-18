@@ -6,9 +6,11 @@ class GlobalActivitiesController < ApplicationController
     teams = current_user.teams if teams.blank?
     @teams = teams
     @activity_types = Activity.activity_types_list
-    @users = UserTeam.my_employees(current_user)
+    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
+                     .distinct
+                     .pluck(:full_name, :id)
     @grouped_activities, more_activities =
-      ActivitiesService.load_activities(teams, activity_filters)
+      ActivitiesService.load_activities(current_user, teams, activity_filters)
     respond_to do |format|
       format.json do
         render json: {

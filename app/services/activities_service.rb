@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
 class ActivitiesService
-  def self.load_activities(team_ids, filters = {})
+  def self.load_activities(user, teams, filters = {})
+    # Create condition for view permissions checking first
+    visible_projects = Project.viewable_by_user(user, teams)
+    query = Activity.where('project_id IS NULL AND team_id IN (?)', teams.select(:id))
+                    .or(Activity.where(project: visible_projects))
+
     if filters[:subjects].present?
-      query = Activity.where(
+      query = query.where(
         filters[:subjects].map { '(subject_type = ? AND subject_id IN(?))' }
                           .join(' OR '),
         *filters[:subjects].flatten
       )
-    else
-      query = Activity
     end
 
-    query = query.where(team_id: team_ids)
     query = query.where(owner_id: filters[:users]) if filters[:users]
     query = query.where(type_of: filters[:types]) if filters[:types]
 
