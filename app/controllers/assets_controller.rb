@@ -148,7 +148,8 @@ class AssetsController < ApplicationController
     @asset = Asset.find(params[:id])
     return render_403 unless can_read_team?(@asset.team)
     image_file = Paperclip.io_adapters.for(params[:image])
-    image_file.original_filename = @asset.file_file_name
+    image_format = image_file.content_type.split('/')[1]
+    image_file.original_filename = @asset.file_file_name.ext(image_format)
     @asset.file = image_file
     @asset.save!
     # Post process file here
