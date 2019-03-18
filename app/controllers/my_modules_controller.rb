@@ -162,54 +162,21 @@ class MyModulesController < ApplicationController
       saved = @my_module.archive(current_user)
       if saved
         # Currently not in use
-        Activity.create(
-          type_of: :archive_module,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            'activities.archive_module',
-            user: current_user.full_name,
-            module: @my_module.name
-          )
-        )
+        log_activity(:archive_module)
       end
     elsif @my_module.archived_changed?(from: true, to: false)
 
       saved = @my_module.restore(current_user)
       if saved
         restored = true
-        Activity.create(
-          type_of: :restore_module,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            'activities.restore_module',
-            user: current_user.full_name,
-            module: @my_module.name
-          )
-        )
+        log_activity(:restore_module)
       end
     else
       saved = @my_module.save
 
       if saved
         if description_changed
-          Activity.create(
-            type_of: :change_module_description,
-            project: @my_module.experiment.project,
-            experiment: @my_module.experiment,
-            my_module: @my_module,
-            user: current_user,
-            message: t(
-              'activities.change_module_description',
-              user: current_user.full_name,
-              module: @my_module.name
-            )
-          )
+          log_activity(:change_module_description)
         end
 
         if due_date_changes
@@ -337,21 +304,6 @@ class MyModulesController < ApplicationController
         my_module.samples.push(*new_samples)
         task_names << my_module.name
       end
-      if new_samples.any?
-        Activity.create(
-          type_of: :assign_sample,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.assign_sample',
-            user: current_user.full_name,
-            tasks: task_names.join(', '),
-            samples: new_samples.map(&:name).join(', ')
-          )
-        )
-      end
     end
     redirect_to samples_my_module_path(@my_module)
   end
@@ -374,21 +326,6 @@ class MyModulesController < ApplicationController
       @my_module.downstream_modules.each do |my_module|
         task_names << my_module.name
         my_module.samples.destroy(samples & my_module.samples)
-      end
-      if samples.any?
-        Activity.create(
-          type_of: :unassign_sample,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.unassign_sample',
-            user: current_user.full_name,
-            tasks: task_names.join(', '),
-            samples: samples.map(&:name).join(', ')
-          )
-        )
       end
     end
     redirect_to samples_my_module_path(@my_module)
@@ -484,19 +421,8 @@ class MyModulesController < ApplicationController
 
       if records_names.any?
         records_names.uniq!
-        Activity.create(
-          type_of: :assign_repository_record,
-          project: @project,
-          experiment: @experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t('activities.assign_repository_records',
-                          user: current_user.full_name,
-                          task: @my_module.name,
-                          repository: @repository.name,
-                          records: records_names.join(', ')
-                        )
-        )
+        log_activity_assign_unassign_records(:assign_repository_record,
+                                             records_names)
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
         flash = I18n.t('repositories.assigned_records_downstream_flash',
@@ -542,20 +468,8 @@ class MyModulesController < ApplicationController
       records.update_all(last_modified_by_id: current_user.id)
 
       if records.any?
-        Activity.create(
-          type_of: :unassign_repository_record,
-          project: @project,
-          experiment: @experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.unassign_repository_records',
-            user: current_user.full_name,
-            task: @my_module.name,
-            repository: @repository.name,
-            records: records.map(&:name).join(', ')
-          )
-        )
+        log_activity_assign_unassign_records(:unassign_repository_record,
+                                             records.map(&:name))
         flash = I18n.t('repositories.unassigned_records_flash',
                        records: records.map(&:name).join(', '))
         respond_to do |format|
@@ -663,19 +577,7 @@ class MyModulesController < ApplicationController
 
   def task_completion_activity
     completed = @my_module.completed?
-    str = 'activities.uncomplete_module'
-    str = 'activities.complete_module' if completed
-    message = t(str,
-                user: current_user.full_name,
-                module: @my_module.name)
-    Activity.create(
-      user: current_user,
-      project: @project,
-      experiment: @experiment,
-      my_module: @my_module,
-      message: message,
-      type_of: completed ? :complete_task : :uncomplete_task
-    )
+    log_activity(completed ? :complete_task : :uncomplete_task)
     start_work_on_next_task_notification
   end
 
@@ -759,5 +661,27 @@ class MyModulesController < ApplicationController
   def my_module_params
     params.require(:my_module).permit(:name, :description, :due_date,
                                       :archived)
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @my_module.experiment.project.team,
+            project: @my_module.experiment.project,
+            subject: @my_module,
+            message_items: { my_module: @my_module.id })
+  end
+
+  def log_activity_assign_unassign_records(type_of, records_names)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @my_module.experiment.project.team,
+            project: @my_module.experiment.project,
+            subject: @my_module,
+            message_items: { my_module: @my_module.id,
+                             repository: @repository.id,
+                             record_names: records_names.join(', ') })
   end
 end

@@ -183,14 +183,13 @@ class CanvasController < ApplicationController
     to_archive.each do |module_id|
       my_module = MyModule.find_by_id(module_id)
       next if my_module.blank?
-      Activity.create(type_of: :archive_module,
-        project: my_module.experiment.project,
-        experiment: my_module.experiment,
-        my_module: my_module,
-        user: current_user,
-        message: t('activities.archive_module',
-                   user: current_user.full_name,
-                   module: my_module.name))
+      Activities::CreateActivityService
+        .call(activity_type: :archive_module,
+             owner: current_user,
+             team: my_module.experiment.project.team,
+             project: my_module.experiment.project,
+             subject: my_module,
+             message_items: { my_module: @my_module.id })
     end
 
     # Create workflow image
