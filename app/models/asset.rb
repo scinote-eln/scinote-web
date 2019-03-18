@@ -469,7 +469,7 @@ class Asset < ApplicationRecord
     my_module = send(objects.find { |object| send(object) }).my_module
     Canaid::PermissionsHolder.instance.eval(:manage_experiment, user, my_module.experiment) &&
       !locked? &&
-      file.content_type == %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}}
+      %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} === file.content_type
   end
 
   protected
