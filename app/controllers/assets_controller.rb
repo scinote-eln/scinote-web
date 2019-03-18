@@ -78,20 +78,7 @@ class AssetsController < ApplicationController
         elsif @assoc.class == RepositoryCell
           can_manage_repository_rows?(@repository.team)
         end
-      file_ext = @asset.file_file_name.split('.').last
-      if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
-        edit_supported = true
-        title = ''
-      else
-        edit_supported = false
-        title = if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-                  I18n.t('assets.wopi_supported_text_formats_title')
-                elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-                  I18n.t('assets.wopi_supported_table_formats_title')
-                else
-                  I18n.t('assets.wopi_supported_presentation_formats_title')
-                end
-      end
+      edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
         partial: 'shared/file_wopi_controlls.html.erb',
         locals: {
@@ -107,6 +94,25 @@ class AssetsController < ApplicationController
         render json: response_json
       end
     end
+  end
+
+  # Check whether the wopi file can be edited and return appropriate response
+  def wopi_file_edit_button_status
+    file_ext = @asset.file_file_name.split('.').last
+    if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
+      edit_supported = true
+      title = ''
+    else
+      edit_supported = false
+      title = if Constants::FILE_TEXT_FORMATS.include?(file_ext)
+                I18n.t('assets.wopi_supported_text_formats_title')
+              elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
+                I18n.t('assets.wopi_supported_table_formats_title')
+              else
+                I18n.t('assets.wopi_supported_presentation_formats_title')
+              end
+    end
+    return edit_supported, title
   end
 
   def download
