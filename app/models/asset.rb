@@ -465,12 +465,11 @@ class Asset < ApplicationRecord
   end
 
   def editable?(user)
-    objects=['step','result']
-    asset=self
-    my_module=send(objects.find{|object| send(object)}).my_module
-    Canaid::PermissionsHolder.instance.eval(:manage_experiment,user,my_module.experiment) && 
-    !(locked?) && 
-    is_image?
+    objects = %w(step result)
+    my_module = send(objects.find { |object| send(object) }).my_module
+    Canaid::PermissionsHolder.instance.eval(:manage_experiment, user, my_module.experiment) &&
+      !locked? &&
+      file.content_type == %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}}
   end
 
   protected
