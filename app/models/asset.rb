@@ -468,7 +468,9 @@ class Asset < ApplicationRecord
     objects=['step','result']
     asset=self
     my_module=send(objects.find{|object| send(object)}).my_module
-    Canaid::PermissionsHolder.instance.eval(:manage_experiment,user,my_module.experiment) && !(locked?)
+    Canaid::PermissionsHolder.instance.eval(:manage_experiment,user,my_module.experiment) && 
+    !(locked?) && 
+    is_image?
   end
 
   protected
