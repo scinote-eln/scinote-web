@@ -1,10 +1,10 @@
 <%= render partial: "global_activities/references/team.html.erb",
-           locals: { subject: subject&.team } %>
+           locals: { subject: subject&.team, breadcrumbs: breadcrumbs  } %>
 <div class="col-xs-2">
   <span class="fas fa-list-alt"></span>
   <% if subject %>
     <%= link_to repositories_path(subject), title: subject.name do %>
-      <%= subject.name.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+      <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     <% end %>
   <% else %>
     <span title="<%= breadcrumbs[:repository] %>">

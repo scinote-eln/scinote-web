@@ -9,9 +9,9 @@ class ActivitiesService
 
     if filters[:subjects].present?
       query = query.where(
-        filters[:subjects].map { '(subject_type = ? AND subject_id IN(?))' }
-                          .join(' OR '),
-        *filters[:subjects].flatten
+        filters[:subjects]
+          .to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),
+        *filters[:subjects].to_h.flatten
       )
     end
 

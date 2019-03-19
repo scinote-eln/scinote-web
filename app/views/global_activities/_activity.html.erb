@@ -2,14 +2,10 @@
   <div class="row">
     <div class="col-xs-12">
       <% if activity.old_activity?  %>
-              <%= activity.message.html_safe %>
+        <%= activity.message&.html_safe %>
       <% else %>
-              <% if activity.owner.present? %>
-                <%= popover_for_user_name(activity.owner, activity.team, false, true) %>
-              <% else %>
-                <strong><%= activity.owner_id %></strong>
-              <% end %>
-              <%= generate_activity_content(activity) %>
+        <%= activity.id %>
+        <%= generate_activity_content(activity).html_safe %>
       <% end %>
     </div>
   </div>
@@ -20,10 +16,7 @@
   <% unless activity.old_activity? %>
     <% if activity.subject_type.present? %>
       <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
-                 locals: { subject: activity.subject, breadcrumbs: activity.values[:breadcrumbs] } %>
-    <% else %>
-      <%= render partial: "global_activities/references/result.html.erb",
-                 locals: { subject: activity.subject, breadcrumbs: activity.values[:breadcrumbs] } %>
+                 locals: { subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
     <% end %>
   <% end %>
   </div>
