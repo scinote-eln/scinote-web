@@ -154,28 +154,42 @@ class AssetsController < ApplicationController
     # Presence validation
     create_wopi_params
 
+    unless params[:file_name].present?
+      respond_to do |format|
+        format.json do
+          render json: {
+            error: true,
+            message: { file: [t('general.text.not_blank')] }
+          }, status: 400
+        end
+      end and return
+    end
+
     # File type validation
-    render_403 && return unless ['docx', 'xlsx', 'pptx'].include?(params[:file_type])
+    render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
 
     # Asset validation
-    file = Paperclip.io_adapters.for(StringIO.new())
+    file = Paperclip.io_adapters.for(StringIO.new)
     file.original_filename = "#{params[:file_name]}.#{params[:file_type]}"
     file.content_type = wopi_content_type(params[:file_type])
     asset = Asset.new(file: file, created_by: current_user, file_present: true)
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          error: true,
-          message: asset.errors,
-        }, status: 400
-      end
-    end and return unless asset.valid?
+    unless asset.valid?
+      respond_to do |format|
+        format.json do
+          render json: {
+            error: true,
+            message: asset.errors
+          }, status: 400
+        end
+      end and return
+    end
 
+    # Create file depending on the type
     if params[:element_type] == 'Step'
       step = Step.find(params[:element_id].to_i)
       render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
-        can_manage_protocol_in_repository?(step.protocol)
+                                  can_manage_protocol_in_repository?(step.protocol)
       step_asset = StepAsset.create!(step: step, asset: asset)
 
       edit_url = edit_asset_url(step_asset.asset_id)
@@ -183,6 +197,7 @@ class AssetsController < ApplicationController
       my_module = MyModule.find(params[:element_id].to_i)
       render_403 and return unless can_manage_module?(my_module)
 
+      # First create result and then the asset
       result = Result.create(name: file.original_filename,
                              my_module: my_module,
                              user: current_user)
@@ -193,6 +208,7 @@ class AssetsController < ApplicationController
       render_404
     end
 
+    # Return edit url
     respond_to do |format|
       format.json do
         render json: {
