@@ -7,7 +7,7 @@
       <div class="panel-options pull-right">
         <% if can_manage_protocol_in_module?(@protocol) ||
               can_manage_protocol_in_repository?(@protocol) %>
-          <%= render partial: "assets/wopi/create_wopi_file_button",
+          <%= render partial: "/assets/wopi/create_wopi_file_button.html.erb",
                      locals: {  element_id: step.id, element_type: 'Step' } %>
           <a data-action="move-step"
              class="btn btn-link"
