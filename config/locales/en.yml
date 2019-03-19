@@ -1888,9 +1888,13 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
     create_wopi_file:
+      button_text: 'New Office file'
       modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name & type'
       text_field_placeholder: 'New Document'
+      ms_word: 'Word<br/>Online'
+      ms_excel: 'Excel<br/>Online'
+      ms_powerpoint: 'PowerPoint<br/>Online'
       create_document_button: 'Create Document'
       errors:
         forbidden: 'You do not have permission to add files.'

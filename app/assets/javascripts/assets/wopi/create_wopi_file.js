@@ -3,6 +3,7 @@ function applyCreateWopiFileCallback()  {
   $(".create-wopi-file-btn").off().on('click', function(e){
     var $modal = $('#new-office-file-modal');
     $($modal).find('form').clearFormErrors();
+    $($modal).find('#new-wopi-file-name').val('');
 
     // Append element info to which the new file will be attached
     $modal.find('#element_id').val($(this).data('id'));
@@ -19,6 +20,8 @@ function initCreateWopiFileModal() {
   $("#new-office-file-modal form")
     .on('ajax:success', function(ev, data) {
       window.open(data.edit_url, '_blank');
+      $('#new-office-file-modal').modal('hide');
+
       //location.reload();
     })
     .on('ajax:error', function(ev, response) {
@@ -39,6 +42,26 @@ function initCreateWopiFileModal() {
     });
 }
 
+// I couldn't make this work through CSS
+function applyImageChangeOnButtons() {
+  var resetToInActive = function (modal) {
+    modal.find('img.act').hide();
+    modal.find('img.inactive').show();
+  };
+
+  var modal = $('#new-office-file-modal');
+  modal.find('.btn-group label').off().click(function () {
+    resetToInActive(modal);
+
+    $(this).find('img.act').show();
+    $(this).find('img.inactive').hide();
+  })
+
+  // Set default value
+  modal.find('label#word-btn').click();
+}
+
 $(document).ready(function() {
   initCreateWopiFileModal();
+  applyImageChangeOnButtons();
 });

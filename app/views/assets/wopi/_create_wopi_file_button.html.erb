@@ -1,5 +1,5 @@
 <%= link_to create_wopi_file_path,
-    class: 'btn btn-link create-wopi-file-btn',
+    class: 'btn btn-default create-wopi-file-btn',
     target: '_blank',
     title: 'Create_new_file',
     style: 'display: inline-block',
@@ -7,5 +7,8 @@
         'id': element_id,
         'type': element_type,
         } do %>
-    'create file'
+    <svg>
+<polygon xmlns="http://www.w3.org/2000/svg" fill="#DA4127" points="29,29 29,2.4 20.2,0 3,6.4 3,6.4 3,25.7 9,23 9,7.4 20,5 20,28 3,25.7 20.2,32 20.2,32 29,29 29,29   29,29 " style="scroll-behavior: unset;"/>
+</svg>
+    <%= t('assets.create_wopi_file.button_text') %>
 <% end %>
