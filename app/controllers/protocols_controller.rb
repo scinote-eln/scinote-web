@@ -376,6 +376,7 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, display flash & render 200
+          log_activity_task_protocol(:update_protocol_in_task_from_repository)
           flash[:success] = t(
             'my_modules.protocols.revert_flash'
           )
@@ -415,18 +416,7 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          Activity.create(
-            type_of: :revert_protocol,
-            project: @protocol.my_module.experiment.project,
-            experiment: @protocol.my_module.experiment,
-            my_module: @protocol.my_module,
-            user: current_user,
-            message: I18n.t(
-              'activities.revert_protocol',
-              user: current_user.full_name,
-              protocol: @protocol.name
-            )
-          )
+          log_activity_task_protocol(:update_protocol_in_repository_from_task)
           flash[:success] = t(
             'my_modules.protocols.update_parent_flash'
           )
@@ -466,6 +456,7 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, display flash & render 200
+          log_activity_task_protocol(:update_protocol_in_task_from_repository)
           flash[:success] = t(
             'my_modules.protocols.update_from_parent_flash'
           )
@@ -505,18 +496,7 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          Activity.create(
-            type_of: :load_protocol_from_repository,
-            project: @protocol.my_module.experiment.project,
-            experiment: @protocol.my_module.experiment,
-            my_module: @protocol.my_module,
-            user: current_user,
-            message: I18n.t(
-              'activities.load_protocol_from_repository',
-              user: current_user.full_name,
-              protocol: @source.name
-            )
-          )
+          log_activity_task_protocol(:load_protocol_to_task_from_repository)
           flash[:success] = t('my_modules.protocols.load_from_repository_flash')
           flash.keep(:success)
           format.json { render json: {}, status: :ok }
@@ -553,18 +533,15 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          Activity.create(
-            type_of: :load_protocol_from_file,
-            project: @protocol.my_module.experiment.project,
-            experiment: @protocol.my_module.experiment,
-            my_module: @protocol.my_module,
-            user: current_user,
-            message: I18n.t(
-              'activities.load_protocol_from_file',
-              user: current_user.full_name,
-              protocol: @protocol_json[:name]
-            )
-          )
+          Activities::CreateActivityService
+            .call(activity_type: :load_protocol_to_task_from_file,
+                  owner: current_user,
+                  subject: @protocol,
+                  team: current_team,
+                  project: @protocol.my_module.experiment.project,
+                  message_items: {
+                    protocol: @protocol.id
+                  })
           flash[:success] = t(
             'my_modules.protocols.load_from_file_flash'
           )
@@ -1232,6 +1209,19 @@ class ProtocolsController < ApplicationController
             team: current_team,
             message_items: {
               protocol: @protocol.id
+            })
+  end
+
+  def log_activity_task_protocol(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @protocol,
+            team: current_team,
+            project: @protocol.my_module.experiment.project,
+            message_items: {
+              protocol_task: @protocol.id,
+              protocol_reporitory: @protocol.parent.id
             })
   end
 end

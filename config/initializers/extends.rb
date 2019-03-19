@@ -142,9 +142,9 @@ class Extends
     destroy_result: 42,
     start_edit_wopi_file: 43,
     unlock_wopi_file: 44,
-    load_protocol_from_file: 45,
-    load_protocol_from_repository: 46,
-    revert_protocol: 47,
+    load_protocol_to_task_from_file: 45,
+    load_protocol_to_task_from_repository: 46,
+    update_protocol_in_task_from_repository: 47,
     create_report: 48,
     delete_report: 49,
     edit_report: 50,
@@ -195,6 +195,8 @@ class Extends
     export_projects: 95,
     export_inventory_items: 96,
     export_audit_trails: 97,
-    export_system_logs: 98
+    export_system_logs: 98,
+    edit_wopi_file_on_result: 99,
+    edit_wopi_file_on_step: 100
   }.freeze
 end

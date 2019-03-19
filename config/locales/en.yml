@@ -1317,6 +1317,9 @@ en:
       text: "text"
       table: "table"
       asset: "file"
+    wupi_file_editing:
+      started: "editing started"
+      finished: "editing finished"
     create_project: "<i>%{user}</i> created project <strong>%{project}</strong>."
     rename_project: "<i>%{user}</i> renamed project <strong>%{project}</strong>."
     change_project_visibility: "<i>%{user}</i> changed project <strong>%{project}</strong>'s visibility to %{visibility}."
