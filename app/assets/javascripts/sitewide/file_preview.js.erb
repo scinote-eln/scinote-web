@@ -186,12 +186,17 @@
                 .click(function(ev) {
                   ev.stopPropagation();
                 }));
-            modal.find('.file-edit-link').off().click(function(ev) {
-              ev.preventDefault();
-              ev.stopPropagation();
-              modal.modal('hide');
-              initImageEditor(data);
-            });
+            if (data['editable']){
+              modal.find('.file-edit-link').css('display','');
+              modal.find('.file-edit-link').off().click(function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                modal.modal('hide');
+                initImageEditor(data);
+              });
+            }else{
+              modal.find('.file-edit-link').css('display','none');
+            }
           }
         } else {
           modal.find('.file-preview-container').html(data['preview-icon']);
