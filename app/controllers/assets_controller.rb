@@ -297,7 +297,7 @@ class AssetsController < ApplicationController
   end
 
   def create_wopi_params
-    params.require([:element_type, :element_id, :file_type])
+    params.require(%i(element_type element_id file_type))
   end
 
   def asset_params

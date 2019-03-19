@@ -60,21 +60,23 @@
 
 #new-office-file-modal {
   .modal-header {
-    border-bottom: none;
+    border-bottom: 0;
   }
+
   .modal-body {
     margin-bottom: 80px;
   }
+
   .modal-footer {
-    border-top: none;
+    border-top: 0;
   }
 
   label.btn {
-    text-align: left;
-    padding-left: 15px;
-
     background-color: $color-white;
     color: $color-emperor;
+
+    padding-left: 15px;
+    text-align: left;
 
     &#word-btn.active {
       background-color: $office-ms-word;
@@ -93,9 +95,9 @@
 
     span {
       display: inline-block;
-      vertical-align: middle;
-      text-align: left;
       margin-left: 15px;
+      text-align: left;
+      vertical-align: middle;
     }
   }
 
