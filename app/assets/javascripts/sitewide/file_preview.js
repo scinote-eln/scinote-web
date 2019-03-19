@@ -78,45 +78,77 @@
       this._setLineDash(ctx, this.cornerDashArray, null);
 
       // top-left
-      this._drawControl('tl', ctx, methodName,
+      this._drawControl(
+        'tl', 
+        ctx, 
+        methodName,
         left,
-        top);
+        top
+      );
 
       // top-right
-      this._drawControl('tr', ctx, methodName,
+      this._drawControl(
+        'tr', 
+        ctx, 
+        methodName,
         left + width,
-        top);
+        top
+      );
 
       // bottom-left
-      this._drawControl('bl', ctx, methodName,
+      this._drawControl(
+        'bl', 
+        ctx, 
+        methodName,
         left,
-        top + height);
+        top + height
+      );
 
       // bottom-right
-      this._drawControl('br', ctx, methodName,
+      this._drawControl(
+        'br', 
+        ctx, 
+        methodName,
         left + width,
-        top + height);
+        top + height
+      );
 
       if (!this.get('lockUniScaling')) {
         // middle-top
-        this._drawControl('mt', ctx, methodName,
+        this._drawControl(
+          'mt', 
+          ctx, 
+          methodName,
           left + width / 2,
-          top);
+          top
+        );
 
         // middle-bottom
-        this._drawControl('mb', ctx, methodName,
+        this._drawControl(
+          'mb', 
+          ctx, 
+          methodName,
           left + width / 2,
-          top + height);
+          top + height
+        );
 
         // middle-right
-        this._drawControl('mr', ctx, methodName,
+        this._drawControl(
+          'mr', 
+          ctx, 
+          methodName,
           left + width,
-          top + height / 2);
+          top + height / 2
+        );
 
         // middle-left
-        this._drawControl('ml', ctx, methodName,
+        this._drawControl(
+          'ml', 
+          ctx, 
+          methodName,
           left,
-          top + height / 2);
+          top + height / 2
+        );
       }
       // middle-top-rotate
       if (this.hasRotatingPoint) {
@@ -343,8 +375,10 @@
       if (data.processing) {
         $('.file-download-link')
           .addClass('disabled-with-click-events')
-          .attr('title',
-            I18n.t('general.file.processing'))
+          .attr(
+            'title',
+            I18n.t('general.file.processing')
+          )
           .click(function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
