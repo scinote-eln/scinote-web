@@ -4,7 +4,8 @@ class ActivitiesService
   def self.load_activities(user, teams, filters = {})
     # Create condition for view permissions checking first
     visible_projects = Project.viewable_by_user(user, teams)
-    query = Activity.where('project_id IS NULL AND team_id IN (?)', teams.select(:id))
+
+    query = Activity.where('project_id IS NULL AND team_id IN (?)', teams)
                     .or(Activity.where(project: visible_projects))
 
     if filters[:subjects].present?

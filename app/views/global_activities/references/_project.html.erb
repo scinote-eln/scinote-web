@@ -8,7 +8,7 @@
     <% end %>
   <% else %>
     <span title="<%= breadcrumbs[:project] %>">
-      <%= breadcrumbs[:project].truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+      <%= breadcrumbs[:project]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
   <% end %>
 </div>
