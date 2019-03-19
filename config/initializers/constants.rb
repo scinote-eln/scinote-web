@@ -219,9 +219,9 @@ class Constants
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
 
-  WHITELISTED_IMAGE_TYPES_EDITABLE = [
-    'gif', 'jpeg', 'pjpeg', 'png'
-  ].freeze
+  WHITELISTED_IMAGE_TYPES_EDITABLE = %w(
+    gif jpeg pjpeg png
+  ).freeze
 
   WHITELISTED_TAGS = %w(
     a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
