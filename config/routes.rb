@@ -363,6 +363,9 @@ Rails.application.routes.draw do
         get 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
+        patch 'protocol_description',
+              to: 'my_modules#update_protocol_description',
+              as: 'update_protocol_description'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         # get 'samples' # Samples view for single module
