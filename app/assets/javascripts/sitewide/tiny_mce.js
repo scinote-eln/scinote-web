@@ -184,7 +184,7 @@ var TinyMCE = (function() {
     destroyAll: function() {
       _.each(tinyMCE.editors, function(editor) {
         if (editor) {
-          editor.destroy();
+          editor.remove();
           initHighlightjs();
         }
       });
