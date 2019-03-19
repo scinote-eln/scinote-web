@@ -19,6 +19,9 @@ var TinyMCE = (function() {
   return Object.freeze({
     init: function(selector) {
       if (typeof tinyMCE !== 'undefined') {
+        // Hide element containing HTML view of RTE field
+        $(selector).closest('form').find('.tinymce-view').addClass('hidden');
+
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
@@ -140,6 +143,7 @@ var TinyMCE = (function() {
                 if (editor.isDirty()) {
                   editor.setContent($(selector).val());
                 }
+                editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editor.remove();
               })
               .removeClass('hidden');
@@ -172,9 +176,11 @@ var TinyMCE = (function() {
             });
 
             editor.on('remove', function() {
+              var editorForm = $(editor.getContainer()).closest('form');
               var menuBar = $(editor.getContainer()).find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
+              editorForm.find('.tinymce-view').html(editor.getContent()).removeClass('hidden');
             });
           },
           codesample_content_css: $(selector).data('highlightjs-path')

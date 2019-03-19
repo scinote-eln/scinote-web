@@ -1,5 +1,23 @@
 @import "constants";
 
+.tinymce-view {
+  border: solid 1px;
+  border-color: $color-white;
+  box-shadow: 1px 0 2px $color-alto;
+  min-height: 200px;
+  padding: 3px;
+
+  &:hover {
+    border-color: $color-alto;
+    cursor: pointer;
+  }
+
+  &:empty::before {
+    color: $color-silver-chalice;
+    content: attr(data-placeholder);
+  }
+}
+
 .tinymce-save-button,
 .tinymce-cancel-button {
   cursor: pointer;
