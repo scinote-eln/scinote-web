@@ -7,6 +7,10 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+
             <h4 class="modal-title" id="new-office-file-modal-label">
               <%= t('assets.create_wopi_file.modal_title') %>
             </h4>
@@ -24,15 +28,23 @@
 
           <div class="btn-group btn-group-toggle btn-group-justified"
                data-toggle="buttons">
-            <label class="btn btn-default active">
-              <%= image_tag 'office/Excel-xlsx_20x20x32.png' %>
-              <input type="radio" name="file_type" value='docx' checked> Word Online
+            <label class="btn btn-default active" id="word-btn">
+              <%= image_tag '/assets/office/ms-word-active.svg', class: 'act' %>
+              <%= image_tag '/assets/office/ms-word-inactive.svg', class: 'inactive' %>
+              <input type="radio" name="file_type" value='docx' checked>
+              <span><%= t('assets.create_wopi_file.ms_word').html_safe %></span>
             </label>
-            <label class="btn btn-default">
-              <input type="radio" name="file_type" value='xlsx'> Excel Online
+            <label class="btn btn-default" id="excel-btn">
+              <%= image_tag '/assets/office/ms-excel-active.svg', class: 'act' %>
+              <%= image_tag '/assets/office/ms-excel-inactive.svg', class: 'inactive' %>
+              <input type="radio" name="file_type" value='xlsx'>
+              <span><%= t('assets.create_wopi_file.ms_excel').html_safe %></span>
             </label>
-            <label class="btn btn-default">
-              <input type="radio" name="file_type" value='pptx'> PowerPoint Online
+            <label class="btn btn-default" id='powerpoint-btn'>
+              <%= image_tag '/assets/office/ms-pwrpt-active.svg', class: 'act' %>
+              <%= image_tag '/assets/office/ms-pwrpt-inactive.svg', class: 'inactive' %>
+              <input type="radio" name="file_type" value='pptx'>
+              <span><%= t('assets.create_wopi_file.ms_powerpoint').html_safe %></span>
             </label>
           </div>
 
@@ -40,8 +52,11 @@
           </div>
           </div>
           <div class="modal-footer">
-            <%= f.submit t('assets.create_wopi_file.create_document_button'),
-                          class: 'btn btn-toggle' %>
+            <div class='col-md-4'></div>
+            <div class='col-md-4' id='submit-btn-cont'>
+              <%= f.submit t('assets.create_wopi_file.create_document_button'),
+                class: 'btn btn-toggle' %>
+            </div>
           </div>
         </div>
       </div>
