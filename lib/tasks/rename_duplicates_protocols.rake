@@ -14,7 +14,7 @@ namespace :protocols do
         name: dup_name.name,
         team_id: dup_name.team_id,
         protocol_type: 3
-      )
+      ).order(created_at: :asc)
       protocols_to_update.each_with_index do |protocol, index|
         next if index.zero?
 
@@ -38,7 +38,7 @@ namespace :protocols do
         team_id: dup_name.team_id,
         protocol_type: 2,
         added_by_id: dup_name.added_by_id
-      )
+      ).order(created_at: :asc)
       protocols_to_update.each_with_index do |protocol, index|
         next if index.zero?
 
@@ -62,7 +62,7 @@ namespace :protocols do
         team_id: dup_name.team_id,
         protocol_type: 4,
         added_by_id: dup_name.added_by_id
-      )
+      ).order(created_at: :asc)
       protocols_to_update.each_with_index do |protocol, index|
         next if index.zero?
 
