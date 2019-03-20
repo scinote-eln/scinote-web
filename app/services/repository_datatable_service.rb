@@ -53,11 +53,14 @@ class RepositoryDatatableService
                                'repository_rows.id'] +
                               Extends::REPOSITORY_EXTRA_SEARCH_ATTR
 
-      repository_rows = repository_rows
-                        .left_outer_joins(includes_json)
-                        .where_attributes_like(searchable_attributes,
-                                               search_value)
-                        .distinct
+      # Using distinct raises error when combined with sort on a custom column
+      repository_row_ids = repository_rows
+                           .left_outer_joins(includes_json)
+                           .where_attributes_like(searchable_attributes,
+                                                  search_value)
+                           .pluck(:id)
+                           .uniq
+      repository_rows = RepositoryRow.where(id: repository_row_ids)
     end
 
     repository_rows
