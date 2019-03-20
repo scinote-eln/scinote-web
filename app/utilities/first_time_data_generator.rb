@@ -211,20 +211,6 @@ module FirstTimeDataGenerator
       created_at: generate_random_time(1.week.ago)
     )
 
-    # Activity for creating project
-    Activity.new(
-      type_of: :create_project,
-      owner: user,
-      project: project,
-      message: I18n.t(
-        'activities.create_project',
-        user: user.full_name,
-        project: project.name
-      ),
-      created_at: project.created_at,
-      updated_at: project.created_at
-    ).sneaky_save
-
     # Add a comment
     generate_project_comment(
       project,
@@ -283,41 +269,12 @@ module FirstTimeDataGenerator
         )
       end
 
-      # Create module activity
-      Activity.new(
-        type_of: :create_module,
-        owner: user,
-        project: project,
-        my_module: my_module,
-        message: I18n.t(
-          'activities.create_module',
-          user: user.full_name,
-          module: my_module.name
-        ),
-        created_at: my_module.created_at,
-        updated_at: my_module.created_at
-      ).sneaky_save
-
       UserMyModule.create(
         user: user,
         my_module: my_module,
         assigned_by: user,
         created_at: generate_random_time(my_module.created_at, 2.minutes)
       )
-      Activity.new(
-        type_of: :assign_user_to_module,
-        owner: user,
-        project: project,
-        my_module: my_module,
-        message: I18n.t(
-          'activities.assign_user_to_module',
-          assigned_user: user.full_name,
-          module: my_module.name,
-            assigned_by_user: user.full_name
-        ),
-        created_at: generate_random_time(my_module.created_at, 2.minutes),
-        updated_at: generate_random_time(my_module.created_at, 2.minutes)
-      ).sneaky_save
     end
 
     # Create an archived module
@@ -337,36 +294,6 @@ module FirstTimeDataGenerator
       archived_by: user
     )
 
-    # Activity for creating archived module
-    Activity.new(
-      type_of: :create_module,
-      owner: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.create_module',
-        user: user.full_name,
-        module: archived_module.name
-      ),
-      created_at: archived_module.created_at,
-      updated_at: archived_module.created_at
-    ).sneaky_save
-
-    # Activity for archiving archived module
-    Activity.new(
-      type_of: :archive_module,
-      owner: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.archive_module',
-        user: user.full_name,
-        module: archived_module.name
-      ),
-      created_at: archived_module.archived_on,
-      updated_at: archived_module.archived_on
-    ).sneaky_save
-
     # Assign new user to archived module
     UserMyModule.create(
       user: user,
@@ -374,20 +301,6 @@ module FirstTimeDataGenerator
       assigned_by: user,
       created_at: generate_random_time(archived_module.created_at, 2.minutes)
     )
-    Activity.new(
-      type_of: :assign_user_to_module,
-      owner: user,
-      project: project,
-      my_module: archived_module,
-      message: I18n.t(
-        'activities.assign_user_to_module',
-        assigned_user: user.full_name,
-        module: archived_module.name,
-          assigned_by_user: user.full_name
-      ),
-      created_at: generate_random_time(archived_module.created_at, 2.minutes),
-      updated_at: generate_random_time(archived_module.created_at, 2.minutes)
-    ).sneaky_save
 
     # Assign 4 samples to modules
     samples_to_assign = []
@@ -677,21 +590,6 @@ module FirstTimeDataGenerator
     )
     temp_result.save
 
-    # Create result activity
-    Activity.new(
-      type_of: :add_result,
-      project: project,
-      my_module: my_modules[1],
-      owner: user,
-      created_at: temp_result.created_at,
-      updated_at: temp_result.created_at,
-      message: I18n.t(
-        'activities.add_text_result',
-        user: user.full_name,
-        result: temp_result.name
-      )
-    ).sneaky_save
-
     # ----------------- Module 3 ------------------
     module_step_names = [
       'Homogenization of the material',
@@ -765,21 +663,6 @@ module FirstTimeDataGenerator
       contents: tab_content['module3']['nanodrop']
     )
     temp_result.save
-
-    # Create result activity
-    Activity.new(
-      type_of: :add_result,
-      project: project,
-      my_module: my_modules[2],
-      owner: user,
-      created_at: temp_result.created_at,
-      updated_at: temp_result.created_at,
-      message: I18n.t(
-        'activities.add_text_result',
-        user: user.full_name,
-        result: temp_result.name
-      )
-    ).sneaky_save
 
     # Second result
     DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
@@ -1155,21 +1038,6 @@ module FirstTimeDataGenerator
     )
     temp_result.save
 
-    # Create result activity
-    Activity.new(
-      type_of: :add_result,
-      project: project,
-      my_module: my_modules[5],
-      owner: user,
-      created_at: temp_result.created_at,
-      updated_at: temp_result.created_at,
-      message: I18n.t(
-        'activities.add_table_result',
-        user: user.full_name,
-        result: temp_result.name
-      )
-    ).sneaky_save
-
     # Results
     DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[5],
@@ -1512,39 +1380,7 @@ module FirstTimeDataGenerator
         completed_on: completed_on
       )
 
-      # Create activity
-      Activity.new(
-        type_of: :create_step,
-        project: my_module.experiment.project,
-        my_module: my_module,
-        owner: step.user,
-        created_at: created_at,
-        updated_at: created_at,
-        message: I18n.t(
-          'activities.create_step',
-          user: step.user.full_name,
-          step: i,
-          step_name: step.name
-        )
-      ).sneaky_save
       if completed
-        Activity.new(
-          type_of: :complete_step,
-          project: my_module.experiment.project,
-          my_module: my_module,
-          owner: step.user,
-          created_at: completed_on,
-          updated_at: completed_on,
-          message: I18n.t(
-            'activities.complete_step',
-            user: step.user.full_name,
-            step: i + 1,
-            step_name: step.name,
-            completed: my_module.protocol.completed_steps.count,
-            all: i + 1
-          )
-        ).sneaky_save
-
         # Also add random comments to completed steps
         if rand < 0.3
           polite_comment = 'This looks well.'
@@ -1574,16 +1410,6 @@ module FirstTimeDataGenerator
       created_at: created_at,
       project: project
     )
-    Activity.new(
-      type_of: :add_comment_to_project,
-      owner: user,
-      project: project,
-      created_at: created_at,
-      updated_at: created_at,
-      message: I18n.t('activities.add_comment_to_project',
-                 user: user.full_name,
-                 project: project.name)
-    ).sneaky_save
   end
 
   def generate_module_comment(my_module, user, message, created_at = nil)
@@ -1594,17 +1420,6 @@ module FirstTimeDataGenerator
       created_at: created_at,
       my_module: my_module
     )
-    Activity.new(
-      type_of: :add_comment_to_module,
-      owner: user,
-      project: my_module.experiment.project,
-      my_module: my_module,
-      created_at: created_at,
-      updated_at: created_at,
-      message: I18n.t('activities.add_comment_to_module',
-                 user: user.full_name,
-                 module: my_module.name)
-    ).sneaky_save
   end
 
   def generate_result_comment(result, user, message, created_at = nil)
@@ -1615,17 +1430,6 @@ module FirstTimeDataGenerator
       created_at: created_at,
       result: result
     )
-    Activity.new(
-      type_of: :add_comment_to_result,
-      owner: user,
-      project: result.my_module.experiment.project,
-      my_module: result.my_module,
-      created_at: created_at,
-      updated_at: created_at,
-      message: I18n.t('activities.add_comment_to_result',
-                 user: user.full_name,
-                 result: result.name)
-    ).sneaky_save
   end
 
   def generate_step_comment(step, user, message, created_at = nil)
@@ -1636,17 +1440,5 @@ module FirstTimeDataGenerator
       created_at: created_at,
       step: step
     )
-    Activity.new(
-      type_of: :add_comment_to_step,
-      owner: user,
-      project: step.protocol.my_module.experiment.project,
-      my_module: step.protocol.my_module,
-      created_at: created_at,
-      updated_at: created_at,
-      message: I18n.t('activities.add_comment_to_step',
-                 user: user.full_name,
-                 step: step.position + 1,
-                 step_name: step.name)
-    ).sneaky_save
   end
 end
