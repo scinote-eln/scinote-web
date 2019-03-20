@@ -19,28 +19,28 @@ describe SmartAnnotations::PermissionEval do
 
   describe '#validate_prj_permissions/2' do
     it 'returns a boolean' do
-      value = subject.send(:validate_prj_permissions, user, project)
+      value = subject.send(:validate_prj_permissions, user, team, project)
       expect(value).to be_in([true, false])
     end
   end
 
   describe '#validate_exp_permissions/2' do
     it 'returns a boolean' do
-      value = subject.send(:validate_exp_permissions, user, experiment)
+      value = subject.send(:validate_exp_permissions, user, team, experiment)
       expect(value).to be_in([true, false])
     end
   end
 
   describe '#validate_tsk_permissions/2' do
     it 'returns a boolean' do
-      value = subject.send(:validate_tsk_permissions, user, task)
+      value = subject.send(:validate_tsk_permissions, user, team, task)
       expect(value).to be_in([true, false])
     end
   end
 
   describe '#validate_rep_item_permissions/2' do
     it 'returns a boolean' do
-      value = subject.send(:validate_rep_item_permissions, user, repository_item)
+      value = subject.send(:validate_rep_item_permissions, user, team, repository_item)
       expect(value).to be_in([true, false])
     end
   end
