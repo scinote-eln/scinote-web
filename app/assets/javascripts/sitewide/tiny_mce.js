@@ -122,11 +122,12 @@ var TinyMCE = (function() {
 
             // After save action
             editorForm
-              .on('ajax:success', function() {
+              .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
+                editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
@@ -144,6 +145,7 @@ var TinyMCE = (function() {
                   editor.setContent($(selector).val());
                 }
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
+                editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
               })
               .removeClass('hidden');
@@ -176,11 +178,9 @@ var TinyMCE = (function() {
             });
 
             editor.on('remove', function() {
-              var editorForm = $(editor.getContainer()).closest('form');
               var menuBar = $(editor.getContainer()).find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
-              editorForm.find('.tinymce-view').html(editor.getContent()).removeClass('hidden');
             });
           },
           codesample_content_css: $(selector).data('highlightjs-path')

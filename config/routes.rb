@@ -340,10 +340,10 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
-        collection do 
+        collection do
           get :search_tags
         end
-        member do 
+        member do
           post :destroy_by_tag_id
         end
       end
@@ -363,6 +363,9 @@ Rails.application.routes.draw do
         get 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
+        patch 'description',
+              to: 'my_modules#update_description',
+              as: 'update_description'
         patch 'protocol_description',
               to: 'my_modules#update_protocol_description',
               as: 'update_protocol_description'

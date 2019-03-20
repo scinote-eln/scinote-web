@@ -1,4 +1,4 @@
-<%= bootstrap_form_for @my_module, url: my_module_path(@my_module, format: :json), remote: :true do |f| %>
+<%= bootstrap_form_for @my_module, url: update_description_my_module_path(@my_module, format: :json), remote: :true do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
   <% if @my_module.description.present? %>
     <div id="my_module_description_view"
