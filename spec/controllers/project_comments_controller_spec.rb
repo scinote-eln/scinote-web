@@ -5,7 +5,7 @@ require 'rails_helper'
 describe ProjectCommentsController, type: :controller do
   login_user
 
-  let(:user) { User.first }
+  let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
   let(:user_team) { create :user_team, team: team, user: user }
   let(:user_project) { create :user_project, :owner, user: user }

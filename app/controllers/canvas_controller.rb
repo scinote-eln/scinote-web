@@ -189,7 +189,7 @@ class CanvasController < ApplicationController
              team: my_module.experiment.project.team,
              project: my_module.experiment.project,
              subject: my_module,
-             message_items: { my_module: @my_module.id })
+             message_items: { my_module: my_module.id })
     end
 
     # Create workflow image

@@ -87,8 +87,7 @@ describe ExperimentsController, type: :controller do
   describe '#archive' do
     let(:params) do
       { id: experiment.id,
-        experiment: { name: 'test experiment A1',
-                      description: 'test description one' } }
+        experiment: { archived: false } }
     end
     it 'calls create activity service' do
       expect(Activities::CreateActivityService).to receive(:call)

@@ -189,21 +189,8 @@ class MyModulesController < ApplicationController
                       :change_task_due_date
                     end
           # rubocop:enable Metrics/BlockNesting
-          Activities::CreateActivityService
-            .call(activity_type: type_of,
-                  owner: current_user,
-                  subject: @my_module,
-                  project:
-                    @my_module.experiment.project,
-                  team: current_team,
-                  message_items: {
-                    my_module: @my_module.id,
-                    my_module_duedate:
-                      {
-                        id: @my_module.id,
-                        value_for: 'due_date'
-                      }
-                  })
+          log_activity(type_of, my_module_duedate: { id: @my_module.id,
+                                                     value_for: 'due_date' })
         end
       end
     end
@@ -421,8 +408,10 @@ class MyModulesController < ApplicationController
 
       if records_names.any?
         records_names.uniq!
-        log_activity_assign_unassign_records(:assign_repository_record,
-                                             records_names)
+        log_activity(:assign_repository_record,
+                     repository: @repository.id,
+                     record_names: records_names.join(', '))
+
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
         flash = I18n.t('repositories.assigned_records_downstream_flash',
@@ -468,8 +457,10 @@ class MyModulesController < ApplicationController
       records.update_all(last_modified_by_id: current_user.id)
 
       if records.any?
-        log_activity_assign_unassign_records(:unassign_repository_record,
-                                             records.map(&:name))
+        log_activity(:unassign_repository_record,
+                     repository: @repository.id,
+                     record_names: records.map(&:name).join(', '))
+
         flash = I18n.t('repositories.unassigned_records_flash',
                        records: records.map(&:name).join(', '))
         respond_to do |format|
@@ -663,25 +654,15 @@ class MyModulesController < ApplicationController
                                       :archived)
   end
 
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
-            subject: @my_module,
-            message_items: { my_module: @my_module.id })
-  end
+  def log_activity(type_of, message_items = {})
+    message_items = { my_module: @my_module.id }.merge(message_items)
 
-  def log_activity_assign_unassign_records(type_of, records_names)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             team: @my_module.experiment.project.team,
             project: @my_module.experiment.project,
             subject: @my_module,
-            message_items: { my_module: @my_module.id,
-                             repository: @repository.id,
-                             record_names: records_names.join(', ') })
+            message_items: message_items)
   end
 end

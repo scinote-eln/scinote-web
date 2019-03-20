@@ -5,7 +5,7 @@ require 'rails_helper'
 describe ResultsController, type: :controller do
   login_user
 
-  let(:user) { User.first }
+  let(:user) { subject.current_user }
   let!(:team) { create :team, :with_members }
   let!(:user_project) { create :user_project, :owner, user: user }
   let(:project) do

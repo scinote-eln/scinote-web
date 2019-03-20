@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :result_comment do
     user
+    result
     message { Faker::Lorem.sentence }
-    result { create(:result) }
   end
 end

@@ -172,14 +172,8 @@ class ProjectsController < ApplicationController
     if !return_error && @project.update(project_params)
       # Add activities if needed
       if message_visibility.present?
-        Activities::CreateActivityService
-          .call(activity_type: :change_project_visibility,
-                owner: current_user,
-                subject: @project,
-                team: @project.team,
-                project: @project,
-                message_items: { project: @project.id,
-                                 visibility: message_visibility })
+        log_activity(:change_project_visibility,
+                     visibility: message_visibility)
       end
       if message_renamed.present?
         log_activity(:rename_project)
@@ -349,13 +343,15 @@ class ProjectsController < ApplicationController
     render_403 unless can_manage_project?(@project)
   end
 
-  def log_activity(type_of)
+  def log_activity(type_of, message_items = {})
+    message_items = { project: @project.id }.merge(message_items)
+
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             subject: @project,
             team: @project.team,
             project: @project,
-            message_items: { project: @project.id })
+            message_items: message_items)
   end
 end

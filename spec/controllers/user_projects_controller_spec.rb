@@ -5,7 +5,7 @@ require 'rails_helper'
 describe UserProjectsController, type: :controller do
   login_user
 
-  let(:user) { User.first }
+  let(:user) { subject.current_user }
   let(:user_two) { create :user }
   let(:target_user) { create :user }
   let!(:team) { create :team, created_by: user }

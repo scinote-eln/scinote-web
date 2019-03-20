@@ -265,21 +265,14 @@ class StepsController < ApplicationController
           # This should always hold true (only in module can
           # check items be checked, but still check just in case)
           if @protocol.in_module?
-            Activities::CreateActivityService
-              .call(activity_type: type_of,
-                    owner: current_user,
-                    subject: @protocol,
-                    team: current_team,
-                    project: @protocol.my_module.experiment.project,
-                    message_items: {
-                      protocol: @protocol.id,
-                      step: @chk_item.checklist.step.id,
-                      step_position: { id: @chk_item.checklist.step.id,
-                                       value_for: 'position' },
-                      checkbox: text_activity,
-                      num_completed: completed_items.to_s,
-                      num_all: all_items.to_s
-                    })
+            log_activity(type_of,
+                         @protocol.my_module.experiment.project,
+                         step: @chk_item.checklist.step.id,
+                         step_position: { id: @chk_item.checklist.step.id,
+                                          value_for: 'position' },
+                         checkbox: text_activity,
+                         num_completed: completed_items.to_s,
+                         num_all: all_items.to_s)
           end
         end
       else
@@ -315,19 +308,10 @@ class StepsController < ApplicationController
           # module protocols, so my_module is always
           # not nil; nonetheless, check if my_module is present
           if @protocol.in_module?
-            Activities::CreateActivityService
-              .call(activity_type: type_of,
-                    owner: current_user,
-                    subject: @protocol,
-                    team: current_team,
-                    project: @protocol.my_module.experiment.project,
-                    message_items: {
-                      protocol: @protocol.id,
-                      step: @step.id,
-                      step_position: { id: @step.id, value_for: 'position' },
-                      num_completed: completed_steps.to_s,
-                      num_all: all_steps.to_s
-                    })
+            log_activity(type_of,
+                         @protocol.my_module.experiment.project,
+                         num_completed: completed_steps.to_s,
+                         num_all: all_steps.to_s)
           end
         end
 
@@ -616,17 +600,18 @@ class StepsController < ApplicationController
     )
   end
 
-  def log_activity(type_of, project = nil)
+  def log_activity(type_of, project = nil, message_items = {})
+    default_items = { protocol: @protocol.id,
+                      step: @step.id,
+                      step_position: { id: @step.id, value_for: 'position' } }
+    message_items = default_items.merge(message_items)
+
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
             team: current_team,
             project: project,
-            message_items: {
-              protocol: @protocol.id,
-              step: @step.id,
-              step_position: { id: @step.id, value_for: 'position' }
-            })
+            message_items: message_items)
   end
 end

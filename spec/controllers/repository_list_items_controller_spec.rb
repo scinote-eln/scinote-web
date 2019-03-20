@@ -3,7 +3,7 @@ require 'rails_helper'
 describe RepositoryListItemsController, type: :controller do
   login_user
   render_views
-  let(:user) { User.first }
+  let(:user) { subject.current_user }
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
   let!(:repository) { create :repository, team: team, created_by: user }

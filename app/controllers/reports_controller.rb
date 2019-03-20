@@ -131,13 +131,7 @@ class ReportsController < ApplicationController
       report = Report.find_by_id(report_id)
       next unless report.present? && can_manage_reports?(current_team)
       # record an activity
-      Activities::CreateActivityService
-        .call(activity_type: :delete_report,
-              owner: current_user,
-              subject: report,
-              team: report.team,
-              project: report.project,
-              message_items: { report: report.id })
+      log_activity(:delete_report, report)
       report.destroy
     end
 
@@ -493,13 +487,13 @@ class ReportsController < ApplicationController
                   :html)
   end
 
-  def log_activity(type_of)
+  def log_activity(type_of, report = @report)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            subject: @report,
-            team: @report.team,
-            project: @report.project,
-            message_items: { report: @report.id })
+            subject: report,
+            team: report.team,
+            project: report.project,
+            message_items: { report: report.id })
   end
 end

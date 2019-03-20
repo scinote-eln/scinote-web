@@ -208,17 +208,7 @@ class ResultAssetsController < ApplicationController
         # Post process file here
         asset.post_process_file(@my_module.experiment.project.team)
 
-        # Generate activity
-        Activities::CreateActivityService
-          .call(activity_type: :add_result,
-                owner: current_user,
-                subject: result,
-                team: @my_module.experiment.project.team,
-                project: @my_module.experiment.project,
-                message_items: {
-                  result: result.id,
-                  result_type: t('activities.result_type.asset')
-                })
+        log_activity(:add_result, result)
       else
         success = false
       end
@@ -226,15 +216,15 @@ class ResultAssetsController < ApplicationController
     { status: success, results: results }
   end
 
-  def log_activity(type_of)
+  def log_activity(type_of, result = @result)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            subject: @result,
+            subject: result,
             team: @my_module.experiment.project.team,
             project: @my_module.experiment.project,
             message_items: {
-              result: @result.id,
+              result: result.id,
               result_type: t('activities.result_type.asset')
             })
   end

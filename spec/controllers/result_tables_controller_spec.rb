@@ -5,8 +5,8 @@ require 'rails_helper'
 describe ResultTablesController, type: :controller do
   login_user
 
-  let(:user) { User.first }
-  let!(:team) { create :team, :with_members }
+  let(:user) { subject.current_user }
+  let!(:team) { create :team, created_by: user, users: [user] }
   let!(:user_project) { create :user_project, :owner, user: user }
   let(:project) do
     create :project, team: team, user_projects: [user_project]

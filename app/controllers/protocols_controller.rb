@@ -376,7 +376,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, display flash & render 200
-          log_activity_task_protocol(:update_protocol_in_task_from_repository)
+          log_activity(:update_protocol_in_task_from_repository,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.revert_flash'
           )
@@ -416,7 +418,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          log_activity_task_protocol(:update_protocol_in_repository_from_task)
+          log_activity(:update_protocol_in_repository_from_task,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.update_parent_flash'
           )
@@ -456,7 +460,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, display flash & render 200
-          log_activity_task_protocol(:update_protocol_in_task_from_repository)
+          log_activity(:update_protocol_in_task_from_repository,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.update_from_parent_flash'
           )
@@ -496,7 +502,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          log_activity_task_protocol(:load_protocol_to_task_from_repository)
+          log_activity(:load_protocol_to_task_from_repository,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t('my_modules.protocols.load_from_repository_flash')
           flash.keep(:success)
           format.json { render json: {}, status: :ok }
@@ -533,15 +541,8 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          Activities::CreateActivityService
-            .call(activity_type: :load_protocol_to_task_from_file,
-                  owner: current_user,
-                  subject: @protocol,
-                  team: current_team,
-                  project: @protocol.my_module.experiment.project,
-                  message_items: {
-                    protocol: @protocol.id
-                  })
+          log_activity(:load_protocol_to_task_from_file,
+                       @protocol.my_module.experiment.project)
           flash[:success] = t(
             'my_modules.protocols.load_from_file_flash'
           )
@@ -1201,27 +1202,15 @@ class ProtocolsController < ApplicationController
     render_403 unless can_create_protocols_in_repository?(current_team)
   end
 
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: @protocol,
-            team: current_team,
-            message_items: {
-              protocol: @protocol.id
-            })
-  end
+  def log_activity(type_of, project = nil, message_items = {})
+    message_items = { protocol: @protocol.id }.merge(message_items)
 
-  def log_activity_task_protocol(type_of)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
             team: current_team,
-            project: @protocol.my_module.experiment.project,
-            message_items: {
-              protocol_task: @protocol.id,
-              protocol_reporitory: @protocol.parent.id
-            })
+            project: project,
+            message_items: message_items)
   end
 end

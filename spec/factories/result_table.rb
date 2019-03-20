@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :result_table do
-    table { create(:table) }
-    result { create(:result) }
+    table
+    result
   end
 end
