@@ -88,7 +88,10 @@
       <% if can_manage_module?(@my_module) %>
         <%= render partial: "description_form" %>
       <% elsif @my_module.description.present? %>
-        <%= sanitize_input(@my_module.description) %>
+        <%= custom_auto_link(generate_image_tag_from_token(@my_module.description, @my_module),
+                             simple_format: false,
+                             tags: %w(img),
+                             team: current_team) %>
       <% else %>
         <%= t('my_modules.module_header.no_description') %>
       <% end %>

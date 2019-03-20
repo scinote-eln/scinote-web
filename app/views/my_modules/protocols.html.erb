@@ -2,7 +2,7 @@
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
-<%= render partial: "shared/secondary_navigation", locals: { 
+<%= render partial: "shared/secondary_navigation", locals: {
   editable: {
     name: 'title',
     active: true,
@@ -34,7 +34,10 @@
         <% if can_manage_module?(@my_module) %>
           <%= render partial: "my_modules/protocols/protocol_description_form" %>
         <% elsif @my_module.protocol.description.present? %>
-          <%= sanitize_input(@my_module.protocol.description) %>
+          <%= custom_auto_link(generate_image_tag_from_token(@my_module.protocol.description, @my_module.protocol),
+                               simple_format: false,
+                               tags: %w(img),
+                               team: current_team) %>
         <% else %>
           <%= t('my_modules.protocols.protocol_status_bar.no_description') %>
         <% end %>

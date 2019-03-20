@@ -19,6 +19,9 @@ var TinyMCE = (function() {
   return Object.freeze({
     init: function(selector) {
       if (typeof tinyMCE !== 'undefined') {
+        // Hide element containing HTML view of RTE field
+        $(selector).closest('form').find('.tinymce-view').addClass('hidden');
+
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
@@ -119,11 +122,12 @@ var TinyMCE = (function() {
 
             // After save action
             editorForm
-              .on('ajax:success', function() {
+              .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
+                editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
@@ -140,6 +144,8 @@ var TinyMCE = (function() {
                 if (editor.isDirty()) {
                   editor.setContent($(selector).val());
                 }
+                editorForm.find('.tinymce-status-badge').addClass('hidden');
+                editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
               })
               .removeClass('hidden');
@@ -184,7 +190,7 @@ var TinyMCE = (function() {
     destroyAll: function() {
       _.each(tinyMCE.editors, function(editor) {
         if (editor) {
-          editor.destroy();
+          editor.remove();
           initHighlightjs();
         }
       });

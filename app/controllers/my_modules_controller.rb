@@ -1,10 +1,12 @@
 class MyModulesController < ApplicationController
   include SampleActions
   include TeamsHelper
+  include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include TinyMceHelper
 
   before_action :load_vars,
                 only: %i(show update destroy description due_date protocols
@@ -15,7 +17,7 @@ class MyModulesController < ApplicationController
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
                          assign_repository_records_modal
-                         repositories_dropdown update_protocol_description)
+                         repositories_dropdown update_description update_protocol_description)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -26,7 +28,7 @@ class MyModulesController < ApplicationController
                                               samples repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions,
-                only: %i(description due_date update_protocol_description)
+                only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive repositories_dropdown)
@@ -255,13 +257,39 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def update_description
+    respond_to do |format|
+      format.json do
+        if @my_module.update(description: params.require(:my_module)[:description])
+          render json: {
+            html: custom_auto_link(
+              generate_image_tag_from_token(@my_module.description, @my_module),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
+        else
+          render json: @my_module.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   def update_protocol_description
     protocol = @my_module.protocol
     return render_404 unless protocol
     respond_to do |format|
       format.json do
         if protocol.update(description: params.require(:protocol)[:description])
-          render json: { data: protocol }
+          render json: {
+            html: custom_auto_link(
+              generate_image_tag_from_token(protocol.description, protocol),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
         else
           render json: protocol.errors, status: :unprocessable_entity
         end

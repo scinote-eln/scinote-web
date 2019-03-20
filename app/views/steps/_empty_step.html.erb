@@ -29,7 +29,14 @@
   <div class="tab-pane active" role="tabpanel" id="new-step-main">
     <%= f.text_field :name, label: t("protocols.steps.new.name"), placeholder: t("protocols.steps.new.name_placeholder") %>
     <div class="form-group">
-      <%= f.tiny_mce_editor(:description, data: { object_type: 'step', object_id: @step.id }) %>
+      <%= f.tiny_mce_editor(:description,
+                            id: :step_description_textarea,
+                            hide_label: false,
+                            value: sanitize_input(@step.description),
+                            data: {
+                              object_type: 'step',
+                              object_id: @step.id,
+                              highlightjs_path: asset_path('highlightjs-github-theme') } ) %>
     </div>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-checklists">
