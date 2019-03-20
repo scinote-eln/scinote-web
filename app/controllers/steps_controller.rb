@@ -31,7 +31,6 @@ class StepsController < ApplicationController
   def create
     @step = Step.new(step_params)
     # gerate a tag that replaces img tag in database
-    @step.description = @step.description
     @step.completed = false
     @step.position = @protocol.number_of_steps
     @step.protocol = @protocol

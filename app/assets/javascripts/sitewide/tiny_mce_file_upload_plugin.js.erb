@@ -39,8 +39,8 @@
         });
         // Let's make image selection looks fancy
         $('<div class="image-selection-container">'
-          +'<div class="select_button btn btn-primary">Choose file</div>'
-          +'<input type="text" placeholder="No file chosen" disabled></input>'
+          +'<div class="select_button btn btn-primary">' + I18n.t('tiny_mce.choose_file') + '</div>'
+          +'<input type="text" placeholder="' + I18n.t('tiny_mce.no_image_chosen') + '" disabled></input>'
         +'</div>').insertAfter('.mce-image-loader')
         .click(() => {$('.mce-image-loader').click()})
         .parent().css('height','32px')

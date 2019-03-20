@@ -1971,6 +1971,8 @@ en:
   tiny_mce:
     upload_window_title: 'Insert an image from your computer'
     upload_window_label: 'Choose an image'
+    choose_file: 'Choose file'
+    no_image_chosen: 'No image chosen'
     insert_btn: 'Insert'
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
