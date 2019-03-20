@@ -56,7 +56,7 @@
     </ul>
     <ul class="nav nav-bottom">
       <li class="<%= "active" if activities_are_selected? %>">
-        <%= link_to activities_path, id: "activities-link", title: t('left_menu_bar.activities') do %>
+        <%= link_to global_activities_path, id: "activities-link", title: t('left_menu_bar.activities') do %>
           <span class="fas fa-list"></span>
           <span><%= t('left_menu_bar.activities') %></span>
         <% end %>

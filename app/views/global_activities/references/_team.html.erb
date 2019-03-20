@@ -3,11 +3,11 @@
   <% if subject %>
     <%= route_to_other_team projects_path(team: subject.id),
                             subject,
-                            subject.name.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                            subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                             title: subject.name %>
   <% else %>
     <span title="<%= breadcrumbs[:team] %>">
-      <%= breadcrumbs[:team].truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+      <%= breadcrumbs[:team]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
   <% end %>
 </div>

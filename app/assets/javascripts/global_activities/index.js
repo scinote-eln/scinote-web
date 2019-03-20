@@ -2,7 +2,7 @@
 
 'use strict';
 
-(function() {
+function globalActivitiesInit() {
   function initExpandCollapseAllButtons() {
     $('#global-activities-colapse-all').on('click', function() {
       $('.activities-group').collapse('hide');
@@ -13,40 +13,49 @@
   }
 
   function initExpandCollapseButton() {
-    $('.activities-group').on('hide.bs.collapse', function() {
+    $('.activities-group').on('hidden.bs.collapse', function() {
       $(this.dataset.buttonLink)
         .find('.fas').removeClass('fa-caret-down').addClass('fa-caret-right');
     });
-    $('.activities-group').on('show.bs.collapse', function() {
+    $('.activities-group').on('shown.bs.collapse', function() {
       $(this.dataset.buttonLink)
         .find('.fas').removeClass('fa-caret-right').addClass('fa-caret-down');
     });
   }
-
   function initShowMoreButton() {
     var moreButton = $('.btn-more-activities');
     moreButton.on('click', function(ev) {
+      var filters = GlobalActivitiesFilterPrepareArray();
       ev.preventDefault();
       animateSpinner(null, true);
+      filters.to_date = moreButton.data('next-date');
       $.ajax({
-        url: $('.global-activities_activities-list').data('activities-url'),
-        data: { from_date: moreButton.data('next-date') },
+        url: $('.ga-activities-list').data('activities-url'),
+        data: filters,
         dataType: 'json',
         type: 'POST',
         success: function(json) {
-          $('.global-activities_activities-list').html(json.activities_html);
+          $(json.activities_html).appendTo('.ga-activities-list');
           if (json.more_activities === true) {
-            moreButton.data('next-date', json.next_date);
+            moreButton.data('next-date', json.from);
           } else {
             moreButton.addClass('hidden');
           }
+          (new globalActivitiesInit()).updateCollapseButton();
           animateSpinner(null, false);
         }
       });
     });
   }
+  if (this) {
+    this.updateCollapseButton = function() {
+      initExpandCollapseButton();
+    };
+  }
 
   initExpandCollapseAllButtons();
   initExpandCollapseButton();
   initShowMoreButton();
-}());
+}
+
+globalActivitiesInit();

@@ -85,7 +85,7 @@ class Extends
   FILE_FA_ICON_MAPPINGS = {}
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team Repository Project Experiment MyModule Result Protocol Step Report
+    Team Repository Project Experiment MyModule Result Protocol Report
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -93,7 +93,7 @@ class Extends
   ).freeze
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
-    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow)
+    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step)
     .freeze
 
   ACTIVITY_TYPES = {

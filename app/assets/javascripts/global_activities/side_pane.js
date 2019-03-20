@@ -64,6 +64,7 @@ function GlobalActivitiesUpdateTopPaneTags(event) {
 }
 
 $(function() {
+  var updateRunning = false;
   var selectors = ['team', 'activity', 'user'];
   // Ajax request for object search
   var subjectAjaxQuery = {
@@ -96,10 +97,46 @@ $(function() {
   var subjectCustomDisplay = (state) => {
     return state.label + ': ' + state.text;
   };
+
+  // update_filter
+  var reloadActivities = function() {
+    var moreButton = $('.btn-more-activities');
+    if (updateRunning) return false;
+    updateRunning = true;
+    $('.ga-activities-list .activities-day').remove();
+    animateSpinner(null, true);
+    $.ajax({
+      url: $('.ga-activities-list').data('activities-url'),
+      data: GlobalActivitiesFilterPrepareArray(),
+      dataType: 'json',
+      type: 'POST',
+      success: function(json) {
+        $(json.activities_html).appendTo('.ga-activities-list');
+        if (json.more_activities === true) {
+          moreButton.removeClass('hidden');
+          moreButton.data('next-date', json.from);
+        } else {
+          moreButton.addClass('hidden');
+        }
+        (new globalActivitiesInit()).updateCollapseButton();
+        updateRunning = false;
+        animateSpinner(null, false);
+      },
+      error: function() {
+        updateRunning = false;
+        animateSpinner(null, false);
+      }
+    });
+  };
+
+
   // Common selection intialize
   $.each(selectors, (index, e) => {
     $('.ga-side .' + e + '-selector select').select2Multiple({ singleDisplay: true })
-      .on('change', function() { GlobalActivitiesUpdateTopPaneTags(); });
+      .on('change', function() {
+        GlobalActivitiesUpdateTopPaneTags();
+        reloadActivities();
+      });
     $('.ga-side .' + e + '-selector .clear').click(function() {
       $('.ga-side .' + e + '-selector select').select2MultipleClearAll();
     });
@@ -110,14 +147,20 @@ $(function() {
     customSelection: subjectCustomDisplay,
     unlimitedSize: true
   })
-    .on('change select2:select', function(e) { GlobalActivitiesUpdateTopPaneTags(e); });
+    .on('change select2:select', function(e) {
+      GlobalActivitiesUpdateTopPaneTags(e);
+      reloadActivities();
+    });
   $('.ga-side .subject-selector .clear').click(function() {
     $('.ga-side .subject-selector select').select2MultipleClearAll();
   });
 
   $('.ga-tags-container .clear-container span').click(function() {
+    updateRunning = true;
     $.each(selectors, (index, e) => { $('.ga-side .' + e + '-selector select').select2MultipleClearAll(); });
     $('.ga-side .subject-selector select').select2MultipleClearAll();
+    updateRunning = false;
+    reloadActivities();
   });
 
   $('#calendar-from-date').on('dp.change', function(e) {
@@ -125,6 +168,7 @@ $(function() {
     $('#calendar-to-date').data('DateTimePicker').minDate(e.date);
     dateContainer[0].dataset.periodSelect = $('#calendar-from-date').val() + ' - ' + $('#calendar-to-date').val();
     GlobalActivitiesUpdateTopPaneTags();
+    reloadActivities();
   });
 
   $('#calendar-to-date').on('dp.change', function(e) {
@@ -132,44 +176,48 @@ $(function() {
     $('#calendar-from-date').data('DateTimePicker').maxDate(e.date);
     dateContainer[0].dataset.periodSelect = $('#calendar-from-date').val() + ' - ' + $('#calendar-to-date').val();
     GlobalActivitiesUpdateTopPaneTags();
+    reloadActivities();
   });
 
   GlobalActivitiesUpdateTopPaneTags();
-});
 
-$('.date-selector .hot-button').click(function() {
-  var selectPeriod = this.dataset.period;
-  var dateContainer = $('.ga-side .date-selector.filter-block');
-  var fromDate = $('#calendar-from-date').data('DateTimePicker');
-  var toDate = $('#calendar-to-date').data('DateTimePicker');
-  var today = new Date();
-  var yesterday = new Date(new Date().setDate(today.getDate() - 1));
-  var weekDay = today.getDay();
-  var monday = new Date(new Date().setDate(today.getDate() - weekDay + (weekDay === 0 ? -6 : 1)));
-  var sunday = new Date(new Date().setDate(new Date(monday).getDate() + 6));
-  var lastWeek = new Date(new Date().setDate(today.getDate() - 6));
-  var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-  var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  var lastMonth = new Date(new Date().setDate(today.getDate() - 30));
-  if (selectPeriod === 'today') {
-    toDate.date(today);
-    fromDate.date(today);
-  } else if (selectPeriod === 'yesterday') {
-    fromDate.date(yesterday);
-    toDate.date(yesterday);
-  } else if (selectPeriod === 'this_week') {
-    toDate.date(sunday);
-    fromDate.date(monday);
-  } else if (selectPeriod === 'last_week') {
-    toDate.date(today);
-    fromDate.date(lastWeek);
-  } else if (selectPeriod === 'this_month') {
-    toDate.date(lastDay);
-    fromDate.date(firstDay);
-  } else if (selectPeriod === 'last_month') {
-    toDate.date(today);
-    fromDate.date(lastMonth);
-  }
-  dateContainer[0].dataset.periodSelect = this.innerHTML;
-  GlobalActivitiesUpdateTopPaneTags();
+  $('.date-selector .hot-button').click(function() {
+    var selectPeriod = this.dataset.period;
+    var dateContainer = $('.ga-side .date-selector.filter-block');
+    var fromDate = $('#calendar-from-date').data('DateTimePicker');
+    var toDate = $('#calendar-to-date').data('DateTimePicker');
+    var today = new Date();
+    var yesterday = new Date(new Date().setDate(today.getDate() - 1));
+    var weekDay = today.getDay();
+    var monday = new Date(new Date().setDate(today.getDate() - weekDay + (weekDay === 0 ? -6 : 1)));
+    var sunday = new Date(new Date().setDate(new Date(monday).getDate() + 6));
+    var lastWeek = new Date(new Date().setDate(today.getDate() - 6));
+    var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    var lastMonth = new Date(new Date().setDate(today.getDate() - 30));
+    updateRunning = true;
+    if (selectPeriod === 'today') {
+      toDate.date(today);
+      fromDate.date(today);
+    } else if (selectPeriod === 'yesterday') {
+      toDate.date(yesterday);
+      fromDate.date(yesterday);
+    } else if (selectPeriod === 'this_week') {
+      toDate.date(sunday);
+      fromDate.date(monday);
+    } else if (selectPeriod === 'last_week') {
+      toDate.date(today);
+      fromDate.date(lastWeek);
+    } else if (selectPeriod === 'this_month') {
+      toDate.date(lastDay);
+      fromDate.date(firstDay);
+    } else if (selectPeriod === 'last_month') {
+      toDate.date(today);
+      fromDate.date(lastMonth);
+    }
+    updateRunning = false;
+    dateContainer[0].dataset.periodSelect = this.innerHTML;
+    GlobalActivitiesUpdateTopPaneTags();
+    reloadActivities();
+  });
 });

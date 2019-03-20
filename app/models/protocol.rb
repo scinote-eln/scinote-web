@@ -439,7 +439,7 @@ class Protocol < ApplicationRecord
             team: team,
             message_items: {
               protocol: id,
-              action: I18n.t('activities.protocols.team_to_my_message')
+              storage: I18n.t('activities.protocols.team_to_my_message')
             })
   end
 
@@ -466,7 +466,7 @@ class Protocol < ApplicationRecord
             team: team,
             message_items: {
               protocol: id,
-              action: I18n.t('activities.protocols.my_to_team_message')
+              storage: I18n.t('activities.protocols.my_to_team_message')
             })
   end
 
