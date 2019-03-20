@@ -28,14 +28,14 @@ function initCreateWopiFileModal() {
       $(this).clearFormErrors();
       var element, msg;
 
-      if (response.status == 400) {
+      if (response.status === 400) {
         element = $(this).find('#new-wopi-file-name');
         msg = response.responseJSON.message.file.toString();
-      } else if (response.status == 403) {
-        element = $(this).find('#other-wopi-errors'),
+      } else if (response.status === 403) {
+        element = $(this).find('#other-wopi-errors');
         msg = I18n.t('assets.create_wopi_file.errors.forbidden');
-      } else if (response.status == 404) {
-        element = $(this).find('#other-wopi-errors'),
+      } else if (response.status === 404) {
+        element = $(this).find('#other-wopi-errors');
         msg = I18n.t('assets.create_wopi_file.errors.not_found');
       }
       renderFormError(undefined, element, msg);
@@ -44,18 +44,18 @@ function initCreateWopiFileModal() {
 
 // I couldn't make this work through CSS
 function applyImageChangeOnButtons() {
-  var resetToInActive = function (modal) {
+  var resetToInActive = function(modal) {
     modal.find('img.act').hide();
     modal.find('img.inactive').show();
   };
 
   var modal = $('#new-office-file-modal');
-  modal.find('.btn-group label').off().click(function () {
+  modal.find('.btn-group label').off().click(function() {
     resetToInActive(modal);
 
     $(this).find('img.act').show();
     $(this).find('img.inactive').hide();
-  })
+  });
 
   // Set default value
   modal.find('label#word-btn').click();
