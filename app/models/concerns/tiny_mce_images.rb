@@ -16,10 +16,13 @@ module TinyMceImages
         begin
           tm_asset.image.copy_to_local_file(:large, tmp_f.path)
           encoded_tm_asset = Base64.strict_encode64(tmp_f.read)
-          new_tm_asset = "<img class='img-responsive' src='data:image/jpg;base64,#{encoded_tm_asset}'>"
+          new_tm_asset = "<img class='img-responsive'
+            src='data:image/jpg;base64,#{encoded_tm_asset}' >"
           html_description = Nokogiri::HTML(description)
-          tm_asset_to_update = html_description.css("img[data-token=\"#{Base62.encode(tm_asset.id)}\"]")[0]
-          tm_asset.replace new_tm_asset
+          tm_asset_to_update = html_description.css(
+            "img[data-token=\"#{Base62.encode(tm_asset.id)}\"]"
+          )[0]
+          tm_asset_to_update.replace new_tm_asset
           description = html_description.css('body').inner_html.to_s
         ensure
           tmp_f.close

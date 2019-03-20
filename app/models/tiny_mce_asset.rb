@@ -126,7 +126,7 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def self_destruct
-    delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
+    TinyMceAsset.delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
   end
 
   def update_estimated_size
