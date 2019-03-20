@@ -142,11 +142,13 @@ function initCopyToRepository() {
     });
 
     modal.modal("show");
+    submitBtn[0].disabled=false
   })
   .on("ajax:error", function() {} );
 
   submitBtn.on("click", function() {
     // Submit the embedded form
+    submitBtn[0].disabled=true
     modalBody.find("form").submit();
   });
 
