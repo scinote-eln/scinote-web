@@ -79,8 +79,8 @@
 
       // top-left
       this._drawControl(
-        'tl', 
-        ctx, 
+        'tl',
+        ctx,
         methodName,
         left,
         top
@@ -88,8 +88,8 @@
 
       // top-right
       this._drawControl(
-        'tr', 
-        ctx, 
+        'tr',
+        ctx,
         methodName,
         left + width,
         top
@@ -97,8 +97,8 @@
 
       // bottom-left
       this._drawControl(
-        'bl', 
-        ctx, 
+        'bl',
+        ctx,
         methodName,
         left,
         top + height
@@ -106,8 +106,8 @@
 
       // bottom-right
       this._drawControl(
-        'br', 
-        ctx, 
+        'br',
+        ctx,
         methodName,
         left + width,
         top + height
@@ -116,8 +116,8 @@
       if (!this.get('lockUniScaling')) {
         // middle-top
         this._drawControl(
-          'mt', 
-          ctx, 
+          'mt',
+          ctx,
           methodName,
           left + width / 2,
           top
@@ -125,8 +125,8 @@
 
         // middle-bottom
         this._drawControl(
-          'mb', 
-          ctx, 
+          'mb',
+          ctx,
           methodName,
           left + width / 2,
           top + height
@@ -134,8 +134,8 @@
 
         // middle-right
         this._drawControl(
-          'mr', 
-          ctx, 
+          'mr',
+          ctx,
           methodName,
           left + width,
           top + height / 2
@@ -143,8 +143,8 @@
 
         // middle-left
         this._drawControl(
-          'ml', 
-          ctx, 
+          'ml',
+          ctx,
           methodName,
           left,
           top + height / 2
@@ -336,16 +336,16 @@
                 .click(function(ev) {
                   ev.stopPropagation();
                 }));
-            if (data['editable']){
-              modal.find('.file-edit-link').css('display','');
+            if (data.editable) {
+              modal.find('.file-edit-link').css('display', '');
               modal.find('.file-edit-link').off().click(function(ev) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 modal.modal('hide');
                 initImageEditor(data);
               });
-            }else{
-              modal.find('.file-edit-link').css('display','none');
+            } else {
+              modal.find('.file-edit-link').css('display', 'none');
             }
           }
         } else {
