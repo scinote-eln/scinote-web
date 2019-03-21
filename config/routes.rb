@@ -340,10 +340,10 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
-        collection do
+        collection do 
           get :search_tags
         end
-        member do
+        member do 
           post :destroy_by_tag_id
         end
       end
