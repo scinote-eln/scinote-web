@@ -176,18 +176,7 @@ class AssetsController < ApplicationController
   # POST: create_wopi_file_path
   def create_wopi_file
     # Presence validation
-    create_wopi_params
-
-    unless params[:file_name].present?
-      respond_to do |format|
-        format.json do
-          render json: {
-            error: true,
-            message: { file: [t('general.text.not_blank')] }
-          }, status: 400
-        end
-      end and return
-    end
+    params.require(%i(element_type element_id file_type))
 
     # File type validation
     render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
@@ -198,15 +187,10 @@ class AssetsController < ApplicationController
     file.content_type = wopi_content_type(params[:file_type])
     asset = Asset.new(file: file, created_by: current_user, file_present: true)
 
-    unless asset.valid?
-      respond_to do |format|
-        format.json do
-          render json: {
-            error: true,
-            message: asset.errors
-          }, status: 400
-        end
-      end and return
+    unless asset.valid?(:wopi_file_creation)
+      render json: {
+        message: asset.errors
+      }, status: 400 and return
     end
 
     # Create file depending on the type
@@ -229,18 +213,14 @@ class AssetsController < ApplicationController
 
       edit_url = edit_asset_url(result_asset.asset_id)
     else
-      render_404
+      render_404 and return
     end
 
     # Return edit url
-    respond_to do |format|
-      format.json do
-        render json: {
-          success: true,
-          edit_url: edit_url
-        }
-      end
-    end
+    render json: {
+      success: true,
+      edit_url: edit_url
+    }, status: :ok
   end
 
   private
@@ -294,10 +274,6 @@ class AssetsController < ApplicationController
       wd_params += "&#{wd}=#{params[wd]}"
     end
     url + wd_params
-  end
-
-  def create_wopi_params
-    params.require(%i(element_type element_id file_type))
   end
 
   def asset_params

@@ -42,16 +42,11 @@ function initCreateWopiFileModal() {
     });
 }
 
-// I couldn't make this work through CSS
 function applyImageChangeOnButtons() {
-  var resetToInActive = function(modal) {
-    modal.find('img.act').hide();
-    modal.find('img.inactive').show();
-  };
-
   var modal = $('#new-office-file-modal');
   modal.find('.btn-group label').off().click(function() {
-    resetToInActive(modal);
+    modal.find('img.act').hide();
+    modal.find('img.inactive').show();
 
     $(this).find('img.act').show();
     $(this).find('img.inactive').hide();
