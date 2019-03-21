@@ -67,17 +67,8 @@ class ReportsController < ApplicationController
     @report.last_modified_by = current_user
 
     if continue && @report.save_with_contents(report_contents)
-      # record an activity
-      Activity.create(
-        type_of: :create_report,
-        project: @report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.create_report',
-          user: current_user.full_name,
-          report: @report.name
-        )
-      )
+      log_activity(:create_report)
+
       respond_to do |format|
         format.json do
           render json: { url: reports_path }, status: :ok
@@ -112,17 +103,8 @@ class ReportsController < ApplicationController
     @report.assign_attributes(report_params)
 
     if continue && @report.save_with_contents(report_contents)
-      # record an activity
-      Activity.create(
-        type_of: :edit_report,
-        project: @report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.edit_report',
-          user: current_user.full_name,
-          report: @report.name
-        )
-      )
+      log_activity(:edit_report)
+
       respond_to do |format|
         format.json do
           render json: { url: reports_path }, status: :ok
@@ -149,16 +131,7 @@ class ReportsController < ApplicationController
       report = Report.find_by_id(report_id)
       next unless report.present? && can_manage_reports?(current_team)
       # record an activity
-      Activity.create(
-        type_of: :delete_report,
-        project: report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.delete_report',
-          user: current_user.full_name,
-          report: report.name
-        )
-      )
+      log_activity(:delete_report, report)
       report.destroy
     end
 
@@ -512,5 +485,15 @@ class ReportsController < ApplicationController
                   :respository_column_id,
                   :repository_item_id,
                   :html)
+  end
+
+  def log_activity(type_of, report = @report)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: report,
+            team: report.team,
+            project: report.project,
+            message_items: { report: report.id })
   end
 end

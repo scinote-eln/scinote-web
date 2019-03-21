@@ -5,14 +5,30 @@ require 'rails_helper'
 describe ExperimentsController, type: :controller do
   login_user
 
-  describe 'PUT update' do
-    let!(:user) { controller.current_user }
-    let!(:team) { create :team, created_by: user, users: [user] }
-    let!(:project) { create :project, team: team }
-    let!(:user_project) do
-      create :user_project, :owner, user: user, project: project
+  let!(:user) { controller.current_user }
+  let!(:team) { create :team, created_by: user, users: [user] }
+  let!(:project) { create :project, team: team }
+  let!(:user_project) do
+    create :user_project, :owner, user: user, project: project
+  end
+  let(:experiment) { create :experiment, project: project }
+
+  describe '#create' do
+    let(:params) do
+      { project_id: project.id,
+        experiment: { name: 'test experiment A1',
+                      description: 'test description one' } }
     end
-    let(:experiment) { create :experiment, project: project }
+
+    it 'calls create activity service' do
+      expect(Activities::CreateActivityService).to receive(:call)
+        .with(hash_including(activity_type: :create_experiment))
+
+      post :create, params: params, format: :json
+    end
+  end
+
+  describe 'PUT update' do
     let(:action) { put :update, params: params }
 
     context 'when editing experiment' do
@@ -65,6 +81,19 @@ describe ExperimentsController, type: :controller do
         expect { action }
           .to(change { Activity.count })
       end
+    end
+  end
+
+  describe '#archive' do
+    let(:params) do
+      { id: experiment.id,
+        experiment: { archived: false } }
+    end
+    it 'calls create activity service' do
+      expect(Activities::CreateActivityService).to receive(:call)
+        .with(hash_including(activity_type: :archive_experiment))
+
+      get :archive, params: params, format: :json
     end
   end
 end

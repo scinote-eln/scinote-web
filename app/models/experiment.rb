@@ -146,28 +146,20 @@ class Experiment < ApplicationRecord
         rename_modules(to_rename, current_user)
 
         # Add activities that modules were created
-        originals.each do |m|
-          Activity.create(type_of: :create_module,
-            user: current_user,
-            project: project,
-            experiment: m.experiment,
-            my_module: m,
-            message: I18n.t('activities.create_module',
-                            user: current_user.full_name,
-                            module: m.name))
+        originals.each do |my_module|
+          log_activity(:create_module, current_user, my_module)
         end
 
         # Add activities that modules were cloned
         cloned_pairs.each do |mn, mo|
-          Activity.create(type_of: :clone_module,
-            project: mn.experiment.project,
-            experiment: mn.experiment,
-            my_module: mn,
-            user: current_user,
-            message: I18n.t('activities.clone_module',
-                            user: current_user.full_name,
-                            module_new: mn.name,
-                            module_original: mo.name))
+          Activities::CreateActivityService
+            .call(activity_type: :clone_module,
+                  owner: current_user,
+                  team: project.team,
+                  project: mn.experiment.project,
+                  subject: mn,
+                  message_items: { my_module_original: mo.id,
+                                   my_module_new: mn.id })
         end
 
         # Then, archive modules that need to be archived
@@ -263,17 +255,9 @@ class Experiment < ApplicationRecord
   # Archive all modules. Receives an array of module integer IDs
   # and current user.
   def archive_modules(module_ids, current_user)
-    my_modules.where(id: module_ids).each do |m|
-      m.archive!(current_user)
-
-      Activities::CreateActivityService.call(activity_type: :archive_task,
-                                             owner: current_user,
-                                             subject: m,
-                                             project: project,
-                                             team: project.team,
-                                             message_items: {
-                                               my_module: m.id
-                                             })
+    my_modules.where(id: module_ids).each do |my_module|
+      my_module.archive!(current_user)
+      log_activity(:archive_task, current_user, my_module)
     end
     my_modules.reload
   end
@@ -321,14 +305,7 @@ class Experiment < ApplicationRecord
       if my_module.present?
         my_module.name = new_name
         my_module.save!
-        Activities::CreateActivityService.call(activity_type: :rename_task,
-                                               owner: current_user,
-                                               subject: my_module,
-                                               project: project,
-                                               team: project.team,
-                                               message_items: {
-                                                 my_module: my_module.id
-                                               })
+        log_activity(:rename_task, current_user, my_module)
       end
     end
   end
@@ -617,5 +594,15 @@ class Experiment < ApplicationRecord
     workflowimg_content_type
   rescue
     false
+  end
+
+  def log_activity(type_of, current_user, my_module)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
+            message_items: { my_module: my_module.id })
   end
 end

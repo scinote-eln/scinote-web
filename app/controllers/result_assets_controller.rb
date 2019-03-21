@@ -93,18 +93,7 @@ class ResultAssetsController < ApplicationController
       success_flash = t('result_assets.archive.success_flash',
                         module: @my_module.name)
       if saved
-        Activity.create(
-          type_of: :archive_result,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            'activities.archive_asset_result',
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+        log_activity(:archive_result)
       end
     elsif @result.archived_changed?(from: true, to: false)
       render_403
@@ -135,16 +124,7 @@ class ResultAssetsController < ApplicationController
         # Post process new file if neccesary
         @result.asset.post_process_file(team) if @result.asset.present?
 
-        Activity.create(
-          type_of: :edit_result,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t('activities.edit_asset_result',
-                     user: current_user.full_name,
-                     result: @result.name)
-        )
+        log_activity(:edit_result)
       end
     end
 
@@ -228,21 +208,24 @@ class ResultAssetsController < ApplicationController
         # Post process file here
         asset.post_process_file(@my_module.experiment.project.team)
 
-        # Generate activity
-        Activity.create(
-          type_of: :add_result,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t('activities.add_asset_result',
-                     user: current_user.full_name,
-                     result: result.name)
-        )
+        log_activity(:add_result, result)
       else
         success = false
       end
     end
     { status: success, results: results }
+  end
+
+  def log_activity(type_of, result = @result)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: result,
+            team: @my_module.experiment.project.team,
+            project: @my_module.experiment.project,
+            message_items: {
+              result: result.id,
+              result_type: t('activities.result_type.asset')
+            })
   end
 end

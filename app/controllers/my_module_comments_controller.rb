@@ -51,21 +51,8 @@ class MyModuleCommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-
         my_module_comment_annotation_notification
-        # Generate activity
-        Activity.create(
-          type_of: :add_comment_to_module,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t(
-            'activities.add_comment_to_module',
-            user: current_user.full_name,
-            module: @my_module.name
-          )
-        )
+        log_activity(:add_comment_to_module)
 
         format.json do
           render json: {
@@ -112,21 +99,9 @@ class MyModuleCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.save
-
           my_module_comment_annotation_notification(old_text)
-          # Generate activity
-          Activity.create(
-            type_of: :edit_module_comment,
-            user: current_user,
-            project: @my_module.experiment.project,
-            experiment: @my_module.experiment,
-            my_module: @my_module,
-            message: t(
-              'activities.edit_module_comment',
-              user: current_user.full_name,
-              module: @my_module.name
-            )
-          )
+          log_activity(:edit_module_comment)
+
           message = custom_auto_link(@comment.message, team: current_team)
           render json: { comment: message }, status: :ok
         else
@@ -141,19 +116,8 @@ class MyModuleCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
-          # Generate activity
-          Activity.create(
-            type_of: :delete_module_comment,
-            user: current_user,
-            project: @my_module.experiment.project,
-            experiment: @my_module.experiment,
-            my_module: @my_module,
-            message: t(
-              'activities.delete_module_comment',
-              user: current_user.full_name,
-              module: @my_module.name
-            )
-          )
+          log_activity(:delete_module_comment)
+
           # 'counter' and 'linked_id' are used for counter badge
           render json: { linked_id: @my_module.id,
                          counter: @my_module.task_comments.count },
@@ -216,5 +180,15 @@ class MyModuleCommentsController < ApplicationController
                                       @my_module
                                     )))
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @my_module.experiment.project.team,
+            project: @my_module.experiment.project,
+            subject: @my_module,
+            message_items: { my_module: @my_module.id })
   end
 end

@@ -40,21 +40,8 @@ class UserMyModulesController < ApplicationController
     @um = UserMyModule.new(um_params.merge(my_module: @my_module))
     @um.assigned_by = current_user
     if @um.save
-      # Create activity
-      message = t(
-        'activities.assign_user_to_module',
-        assigned_user: @um.user.full_name,
-        module: @my_module.name,
-        assigned_by_user: current_user.full_name
-      )
-      Activity.create(
-        user: current_user,
-        project: @um.my_module.experiment.project,
-        experiment: @um.my_module.experiment,
-        my_module: @um.my_module,
-        message: message,
-        type_of: :assign_user_to_module
-      )
+      log_activity(:assign_user_to_module)
+
       respond_to do |format|
         format.json do
           redirect_to my_module_users_edit_path(format: :json),
@@ -75,22 +62,7 @@ class UserMyModulesController < ApplicationController
 
   def destroy
     if @um.destroy
-      # Create activity
-      message = t(
-        "activities.unassign_user_from_module",
-        unassigned_user: @um.user.full_name,
-        module: @my_module.name,
-        unassigned_by_user: current_user.full_name
-      )
-
-      Activity.create(
-        user: current_user,
-        project: @um.my_module.experiment.project,
-        experiment: @um.my_module.experiment,
-        my_module: @um.my_module,
-        message: message,
-        type_of: :unassign_user_from_module
-      )
+      log_activity(:unassign_user_from_module)
 
       respond_to do |format|
         format.json do
@@ -143,5 +115,16 @@ class UserMyModulesController < ApplicationController
 
   def um_params
     params.require(:user_my_module).permit(:user_id, :my_module_id)
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @um.my_module.experiment.project.team,
+            project: @um.my_module.experiment.project,
+            subject: @um.my_module,
+            message_items: { my_module: @my_module.id,
+                             user_target: @um.user.id })
   end
 end

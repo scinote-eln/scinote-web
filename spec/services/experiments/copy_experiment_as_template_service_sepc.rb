@@ -32,6 +32,13 @@ describe Experiments::CopyExperimentAsTemplateService do
       expect { service_call }.to(change { Activity.all.count })
     end
 
+    it 'calls create activity service' do
+      expect(Activities::CreateActivityService).to receive(:call)
+        .with(hash_including(activity_type: :clone_experiment))
+
+      service_call
+    end
+
     it 'copies all tasks to new experiment' do
       expect(service_call.cloned_experiment.my_modules.count)
         .to be == experiment.my_modules.count

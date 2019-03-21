@@ -5,7 +5,7 @@ require 'rails_helper'
 describe SystemNotificationsController, type: :controller do
   login_user
   render_views
-  let(:user) { User.first }
+  let(:user) { subject.current_user }
 
   describe 'Methods' do
     let(:notifcation_one) { create :system_notification }

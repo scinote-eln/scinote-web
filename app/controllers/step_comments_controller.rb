@@ -52,19 +52,7 @@ class StepCommentsController < ApplicationController
         step_comment_annotation_notification
         # Generate activity (this can only occur in module,
         # but nonetheless check if my module is not nil)
-        Activity.create(
-          type_of: :add_comment_to_step,
-          user: current_user,
-          project: @step.my_module.experiment.project,
-          experiment: @step.my_module.experiment,
-          my_module: @step.my_module,
-          message: t(
-            "activities.add_comment_to_step",
-            user: current_user.full_name,
-            step: @step.position + 1,
-            step_name: @step.name
-          )
-        )
+        log_activity(:add_comment_to_step)
 
         format.json {
           render json: {
@@ -111,19 +99,8 @@ class StepCommentsController < ApplicationController
 
           step_comment_annotation_notification(old_text)
           # Generate activity
-          Activity.create(
-            type_of: :edit_step_comment,
-            user: current_user,
-            project: @step.my_module.experiment.project,
-            experiment: @step.my_module.experiment,
-            my_module: @step.my_module,
-            message: t(
-              'activities.edit_step_comment',
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
-            )
-          )
+          log_activity(:edit_step_comment)
+
           message = custom_auto_link(@comment.message, team: current_team)
           render json: { comment: message }, status: :ok
         else
@@ -138,20 +115,7 @@ class StepCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
-          # Generate activity
-          Activity.create(
-            type_of: :delete_step_comment,
-            user: current_user,
-            project: @step.my_module.experiment.project,
-            experiment: @step.my_module.experiment,
-            my_module: @step.my_module,
-            message: t(
-              'activities.delete_step_comment',
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
-            )
-          )
+          log_activity(:delete_step_comment)
           render json: {}, status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },
@@ -214,5 +178,19 @@ class StepCommentsController < ApplicationController
                  step: link_to(@step.name,
                                protocols_my_module_url(@step.my_module)))
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @protocol,
+            team: current_team,
+            project: @step.my_module.experiment.project,
+            message_items: {
+              protocol: @protocol.id,
+              step: @step.id,
+              step_position: { id: @step.id, value_for: 'position' }
+            })
   end
 end

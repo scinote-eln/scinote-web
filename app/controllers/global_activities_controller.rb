@@ -12,7 +12,7 @@ class GlobalActivitiesController < ApplicationController
     @grouped_activities, @more_activities =
       ActivitiesService.load_activities(current_user, teams, activity_filters)
     last_day = @grouped_activities.keys.last
-    @next_date = (Date.parse(last_day) - 1.day).strftime("%Y-%m-%d") if last_day
+    @next_date = (Date.parse(last_day) - 1.day).strftime('%Y-%m-%d') if last_day
     respond_to do |format|
       format.json do
         render json: {
