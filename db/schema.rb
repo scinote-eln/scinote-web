@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190125123107) do
+ActiveRecord::Schema.define(version: 20190304153544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -298,6 +298,7 @@ ActiveRecord::Schema.define(version: 20190125123107) do
     t.datetime "restored_on"
     t.string "experiments_order"
     t.boolean "template"
+    t.boolean "demo", default: false, null: false
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index ["archived_by_id"], name: "index_projects_on_archived_by_id"
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"
@@ -796,6 +797,7 @@ ActiveRecord::Schema.define(version: 20190125123107) do
     t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_projects_on_assigned_by_id"
     t.index ["project_id"], name: "index_user_projects_on_project_id"
+    t.index ["user_id", "project_id"], name: "index_user_projects_on_user_id_and_project_id", unique: true
     t.index ["user_id"], name: "index_user_projects_on_user_id"
   end
 
@@ -821,6 +823,7 @@ ActiveRecord::Schema.define(version: 20190125123107) do
     t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_teams_on_assigned_by_id"
     t.index ["team_id"], name: "index_user_teams_on_team_id"
+    t.index ["user_id", "team_id"], name: "index_user_teams_on_user_id_and_team_id", unique: true
     t.index ["user_id"], name: "index_user_teams_on_user_id"
   end
 

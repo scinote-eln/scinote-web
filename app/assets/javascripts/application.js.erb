@@ -38,6 +38,7 @@
 //= require users/settings/teams/invite_users_modal
 //= require select2.min
 //= require select2_customization
+//= require shared/inline_editing
 //= require turbolinks
 
 
@@ -265,8 +266,11 @@ var HelperModule = (function(){
     $('.modal').off().modal('hide');
   });
 
-  /* Fix .selectpicker (bootstrap-select) to work with Turbolinks 5.x */
   $(document).on('turbolinks:load', function() {
+    /* Fix .selectpicker (bootstrap-select) to work with Turbolinks 5.x */
     $(window).trigger('load.bs.select.data-api');
+
+    /* Clean up TinyMCE */
+    tinymce.remove();
   });
 })();

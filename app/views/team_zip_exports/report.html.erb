@@ -11,19 +11,20 @@
                .html_safe %>
     </style>
 
-    <script src="handsontable.full.min.js"></script>
-
-    <!-- Libraries for formulas -->
-    <script src="lodash.js"></script>
-    <script src="numeral.js"></script>
-    <script src="numeric.js"></script>
-    <script src="md5.js"></script>
-    <script src="jstat.js"></script>
-    <script src="formula.js"></script>
-    <script src="parser.js"></script>
-    <script src="ruleJS.js"></script>
-    <script src="handsontable.formula.js"></script>
-    <script src="big.min.js"></script>
+    <!-- Libraries for tables and formulas -->
+    <% ['handsontable.full.min.js', 'lodash.js', 'numeral.js', 'numeric.js',
+        'md5.js', 'jstat.js', 'formula.js', 'parser.js', 'ruleJS.js',
+        'handsontable.formula.js', 'big.min.js' ].each do |js_asset| %>
+        <script type="text/javascript">
+          <%= Rails.application
+                   .assets_manifest
+                   .find_sources(js_asset)
+                   .first
+                   .to_s
+                   .force_encoding(Encoding::UTF_8)
+                   .html_safe %>
+        </script>
+    <% end %>
 
     <!-- Init Handsontables -->
     <script>

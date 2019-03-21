@@ -80,7 +80,7 @@ module Experiments
         user: @user,
         message: I18n.t(
           'activities.move_experiment',
-          user: @user,
+          user: @user.name,
           experiment: @exp.name,
           project_new: @project.name,
           project_original: @original_project.name

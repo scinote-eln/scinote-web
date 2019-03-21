@@ -119,24 +119,24 @@ class ExperimentsController < ApplicationController
         )
       )
       @experiment.touch(:workflowimg_updated_at)
-      flash[:success] = t('experiments.update.success_flash',
-                          experiment: @experiment.name)
 
       respond_to do |format|
         format.json do
           render json: {}, status: :ok
         end
         format.html do
+          flash[:success] = t('experiments.update.success_flash',
+                          experiment: @experiment.name)
           redirect_to project_path(@experiment.project)
         end
       end
     else
-      flash[:alert] = t('experiments.update.error_flash')
       respond_to do |format|
         format.json do
           render json: @experiment.errors, status: :unprocessable_entity
         end
         format.html do
+          flash[:alert] = t('experiments.update.error_flash')
           redirect_back(fallback_location: root_path)
         end
       end

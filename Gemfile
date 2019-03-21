@@ -11,7 +11,7 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 0.18'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '5.1.6'
+gem 'rails', '~> 5.1.6.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'sass-rails', '~> 5.0.6'
@@ -90,7 +90,7 @@ gem 'rufus-scheduler', '~> 3.5'
 gem 'discard', '~> 1.0'
 
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails', '~> 4.7.13' # Rich text editor - SEE BELOW
+gem 'tinymce-rails', '~> 4.9.3' # Rich text editor - SEE BELOW
 # Any time you update tinymce-rails Gem, also update the cache_suffix parameter
 # in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js
 # TinyMCE files which might cause errors

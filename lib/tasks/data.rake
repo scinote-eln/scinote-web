@@ -131,23 +131,53 @@ namespace :data do
   end
 
   desc 'Update all templates projects'
-  task update_all_templates: :environment do
+  task :update_all_templates,
+       %i(slice_size) => [:environment] do |_, args|
+    args.with_defaults(slice_size: 800)
+
     Rails.logger.info('Templates, syncing all templates projects')
-    updated, total = TemplatesService.new.update_all_templates
-    Rails.logger.info(
-      "Templates, total number of updated projects: #{updated} out of #{total}}"
-    )
+    Team.all.order(updated_at: :desc)
+        .each_slice(args[:slice_size].to_i).with_index do |teams, i|
+      Rails.logger.info("Processing slice with index #{i}. " \
+                        "First team: #{teams.first.id}, " \
+                        "Last team: #{teams.last.id}.")
+
+      teams.each do |team|
+        TemplatesService.new.delay(
+          run_at: i.hours.from_now,
+          queue: :templates,
+          priority: 5
+        ).update_team(team)
+      end
+    end
   end
 
   desc 'Create demo project on existing users'
-  task create_demo_project_on_existing_users: :environment do
+  task :create_demo_project_on_existing_users,
+       %i(slice_size) => [:environment] do |_, args|
+    args.with_defaults(slice_size: 800)
+
     require "#{Rails.root}/app/utilities/first_time_data_generator"
     include FirstTimeDataGenerator
 
     Rails.logger.info('Creating demo project on existing users')
 
-    User.find_each do |user|
-      seed_demo_data(user, user.teams.first)
+    Team.all.order(updated_at: :desc)
+        .each_slice(args[:slice_size]).with_index do |teams, i|
+      Rails.logger.info("Processing slice with index #{i}. " \
+                        "First team: #{teams.first.id}, " \
+                        "Last team: #{teams.last.id}.")
+
+      teams.each do |team|
+        owner_ut = team.user_teams.where(role: 2).first
+        next unless owner_ut
+
+        FirstTimeDataGenerator.delay(
+          run_at: i.hours.from_now,
+          queue: :new_demo_project,
+          priority: 10
+        ).seed_demo_data_with_id(owner_ut.user.id, team.id)
+      end
     end
   end
 end

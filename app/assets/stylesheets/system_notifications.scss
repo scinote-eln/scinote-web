@@ -13,16 +13,6 @@
   position: relative;
   width: 100%;
 
-  &[data-unread="0"] {
-
-    .body-block {
-
-      .title {
-        font-weight: normal;
-      }
-    }
-  }
-
   &:hover {
     background: $color-concrete;
     color: $color-emperor;

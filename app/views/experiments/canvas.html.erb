@@ -1,6 +1,15 @@
 <% provide(:head_title, t("experiments.canvas.head_title", project: h(@project.name)).html_safe) %>
 <%= render partial: "shared/sidebar", locals: { current_experiment: @experiment, page: 'canvas' } %>
-<%= render partial: "shared/secondary_navigation" %>
+<%= render partial: "shared/secondary_navigation" , locals: { 
+  editable: {
+    name: 'title',
+    active: true,
+    width: 'calc(100% - 500px)',
+    params_group: 'experiment',
+    field_to_udpate: 'name',
+    path_to_update: experiment_path(@experiment)
+  }
+}%>
 
 <div class="content-pane" id="experiment-canvas">
   <div class="row">

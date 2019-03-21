@@ -2,16 +2,47 @@
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
-<%= render partial: "shared/secondary_navigation" %>
+<%= render partial: "shared/secondary_navigation", locals: {
+  editable: {
+    name: 'title',
+    active: true,
+    width: 'calc(100% - 580px)',
+    params_group: 'my_module',
+    field_to_udpate: 'name',
+    path_to_update: my_module_path(@my_module)
+  }
+} %>
 
 <div class="content-pane my-modules-protocols-index">
   <%= render partial: "module_header" %>
+
+  <h2>
+    <%= t('Protocol') %>
+  </h2>
 
   <div>
     <div data-role="protocol-status-bar" style="display: inline;">
       <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
     </div>
     <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
+    <%= render partial: "my_modules/state_buttons.html.erb" %>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="protocol-description-content">
+        <% if can_manage_module?(@my_module) %>
+          <%= render partial: "my_modules/protocols/protocol_description_form" %>
+        <% elsif @my_module.protocol.description.present? %>
+          <%= custom_auto_link(generate_image_tag_from_token(@my_module.protocol.description, @my_module.protocol),
+                               simple_format: false,
+                               tags: %w(img),
+                               team: current_team) %>
+        <% else %>
+          <%= t('my_modules.protocols.protocol_status_bar.no_description') %>
+        <% end %>
+      </div>
+    </div>
   </div>
 
   <div data-role="steps-container">

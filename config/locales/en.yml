@@ -600,6 +600,8 @@ en:
       no_tags: "click here to add Task Tags (optional)"
       manage_tags: Manage tags
       no_description: "No description"
+      description_label: "Description"
+      empty_description_edit_label: "Click here to enter Task Description (optional)"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
@@ -611,6 +613,7 @@ en:
         added_by_tooltip: "Added at %{ts}"
         private_protocol_desc: "The parent protocol is private. Only its author can manage it."
         no_description: "no description"
+        empty_description_edit_label: "Click here to enter Protocol Description (optional)"
         keywords: "Keywords"
         no_keywords: "no keywords"
         btns:
@@ -1293,6 +1296,8 @@ en:
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
   system_notifications:
+    navbar:
+      tooltip: 'What’s new notifications'
     emails:
       subject: "You've received a What's new notification"
       intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
@@ -1969,6 +1974,7 @@ en:
     insert_btn: 'Insert'
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
+    saved_label: "Saved"
   general:
     save: "Save"
     update: "Update"
