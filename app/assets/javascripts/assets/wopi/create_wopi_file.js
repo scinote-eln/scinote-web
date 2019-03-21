@@ -1,6 +1,6 @@
 // Opens create wopi modal on the click of the button
-function applyCreateWopiFileCallback()  {
-  $(".create-wopi-file-btn").off().on('click', function(e){
+function applyCreateWopiFileCallback() {
+  $('.create-wopi-file-btn').off().on('click', function(e) {
     var $modal = $('#new-office-file-modal');
     $($modal).find('form').clearFormErrors();
     $($modal).find('#new-wopi-file-name').val('');
@@ -17,16 +17,18 @@ function applyCreateWopiFileCallback()  {
 // Show errors on create wopi modal
 function initCreateWopiFileModal() {
   // Ajax actions
-  $("#new-office-file-modal form")
+  $('#new-office-file-modal form')
     .on('ajax:success', function(ev, data) {
       window.open(data.edit_url, '_blank');
       $('#new-office-file-modal').modal('hide');
 
-      //location.reload();
+      // location.reload();
     })
     .on('ajax:error', function(ev, response) {
+      var element;
+      var msg;
+
       $(this).clearFormErrors();
-      var element, msg;
 
       if (response.status === 400) {
         element = $(this).find('#new-wopi-file-name');
