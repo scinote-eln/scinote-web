@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class TinyMceAssetsController < ApplicationController
-  before_action :find_object
 
   def create
     image = params.fetch(:file) { render_404 }
     tiny_img = TinyMceAsset.new(image: image,
-                                reference: @obj,
                                 team_id: current_team.id,
                                 saved: false)
     if tiny_img.save
@@ -23,12 +21,4 @@ class TinyMceAssetsController < ApplicationController
     end
   end
 
-  private
-
-  def find_object
-    obj_type = params.fetch(:object_type) { render_404 }
-    obj_id = params.fetch(:object_id) { render_404 }
-    render_404 unless %w(step result_text).include? obj_type
-    @obj = obj_type.classify.constantize.find_by_id(obj_id)
-  end
 end

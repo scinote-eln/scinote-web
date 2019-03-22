@@ -49,7 +49,7 @@ var TinyMCE = (function() {
           autosave_interval: '15s',
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
-          object_resizing: false,
+          object_resizing: true,
           elementpath: false,
           forced_root_block: false,
           default_link_target: '_blank',

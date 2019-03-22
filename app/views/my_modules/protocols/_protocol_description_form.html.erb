@@ -4,7 +4,7 @@
     <div id="protocol_description_view"
          class="ql-editor tinymce-view"
          data-placeholder="<%= t('my_modules.protocols.protocol_status_bar.empty_description_edit_label') %>">
-      <%= custom_auto_link(generate_image_tag_from_token(@my_module.protocol.description, @my_module.protocol),
+      <%= custom_auto_link(@my_module.protocol.tinymce_render(:description),
                            simple_format: false,
                            tags: %w(img),
                            team: current_team) %>
@@ -18,7 +18,7 @@
                         id: :protocol_description_textarea,
                         class: 'hidden',
                         hide_label: true,
-                        value: sanitize_input(@my_module.protocol.description),
+                        value: sanitize_input(@my_module.protocol.tinymce_render(:description)),
                         data: {
                           object_type: 'protocol',
                           object_id: @my_module.protocol.id,

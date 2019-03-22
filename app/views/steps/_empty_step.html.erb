@@ -32,7 +32,7 @@
       <%= f.tiny_mce_editor(:description,
                             id: :step_description_textarea,
                             hide_label: false,
-                            value: sanitize_input(@step.description),
+                            value: sanitize_input(@step.tinymce_render(:description)),
                             data: {
                               object_type: 'step',
                               object_id: @step.id,

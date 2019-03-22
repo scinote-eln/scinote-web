@@ -70,6 +70,20 @@ class TinyMceAsset < ApplicationRecord
     end
   end
 
+  def self.generate_url(description)
+    description = Nokogiri::HTML(description)
+    tm_assets = description.css('img')
+    tm_assets.each do |tm_asset|
+      asset_id = tm_asset.attr('data-token')
+      new_asset_url = find_by_id(Base62.decode(asset_id))
+      if new_asset_url
+        tm_asset.attributes['src'].value = new_asset_url.url
+        tm_asset['class'] = 'img-responsive'
+      end
+    end
+    description.css('body').inner_html.to_s
+  end
+
   def presigned_url(style = :large,
                     download: false,
                     timeout: Constants::URL_LONG_EXPIRE_TIME)
@@ -115,7 +129,9 @@ class TinyMceAsset < ApplicationRecord
   def self.data_fields
     {
       'Step' => :description,
-      'ResultText' => :text
+      'ResultText' => :text,
+      'Protocol' => :description,
+      'MyModule' => :description
     }
   end
 

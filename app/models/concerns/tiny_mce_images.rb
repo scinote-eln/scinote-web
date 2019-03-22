@@ -31,5 +31,9 @@ module TinyMceImages
       end
       description
     end
+
+    def tinymce_render(field)
+      TinyMceAsset.generate_url(self[field])
+    end
   end
 end

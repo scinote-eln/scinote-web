@@ -213,7 +213,7 @@
       function buildHTML(json) {
         var imgstr = "<img src='" + json['image']['url'] + "'";
         imgstr += " data-token='" + json['image']['token'] + "'"
-        imgstr += " alt='description-" + json['image']['token'] + "'/>";
+        imgstr += " alt='description-" + json['image']['token'] + "' />";
         return imgstr;
       }
 
@@ -269,7 +269,7 @@
       })
       var textAreaElement=$('#'+ed.id)
       textAreaElement.parent().find('input#tiny-mce-images').remove()
-      $('<input type="hidden" id="tiny-mce-images" name="'+textAreaElement[0].name.split('[')[0]+'[tiny_mce_images]" value="[]">').insertAfter(textAreaElement)
+      $('<input type="hidden" id="tiny-mce-images" name="tiny_mce_images" value="[]">').insertAfter(textAreaElement)
       }
 
 
