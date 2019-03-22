@@ -71,7 +71,7 @@
 
         $('.mce-image-loader')
           .change(e => {
-            $(e.target).next().find('input[type=text]')[0].value = e.target.value.split(/(\\|\/)/g).pop()
+            $(e.target).next().find('input[type=text]')[0].value = e.target.value.split(/(\\|\/)/g).pop();
           })
           .parent().find('label')
           .css('line-height', '32px')
@@ -86,8 +86,10 @@
 
         iframe = win.find('iframe')[0];
         form = createElement('form', {
-          action: editor.getParam('customimageuploader_form_url',
-            '/tinymce_assets'),
+          action: editor.getParam(
+            'customimageuploader_form_url',
+            '/tinymce_assets'
+          ),
           target: iframe._id,
           method: 'POST',
           enctype: 'multipart/form-data',
@@ -97,36 +99,56 @@
         iframe.getEl().name = iframe._id;
 
         // Create some needed hidden inputs
-        form.appendChild(createElement('input',
-          {
-            type: 'hidden',
-            name: 'utf8',
-            value: '✓'
-          }));
-        form.appendChild(createElement('input',
-          {
-            type: 'hidden',
-            name: 'authenticity_token',
-            value: getMetaContents('csrf-token')
-          }));
-        form.appendChild(createElement('input',
-          {
-            type: 'hidden',
-            name: 'object_type',
-            value: $(editor.getElement()).data('object-type')
-          }));
-        form.appendChild(createElement('input',
-          {
-            type: 'hidden',
-            name: 'object_id',
-            value: $(editor.getElement()).data('object-id')
-          }));
-        form.appendChild(createElement('input',
-          {
-            type: 'hidden',
-            name: 'hint',
-            value: editor.getParam('uploadimage_hint', '')
-          }));
+        form.appendChild(
+          createElement(
+            'input',
+            {
+              type: 'hidden',
+              name: 'utf8',
+              value: '✓'
+            }
+          )
+        );
+        form.appendChild(
+          createElement(
+            'input',
+            {
+              type: 'hidden',
+              name: 'authenticity_token',
+              value: getMetaContents('csrf-token')
+            }
+          )
+        );
+        form.appendChild(
+          createElement(
+            'input',
+            {
+              type: 'hidden',
+              name: 'object_type',
+              value: $(editor.getElement()).data('object-type')
+            }
+          )
+        );
+        form.appendChild(
+          createElement(
+            'input',
+            {
+              type: 'hidden',
+              name: 'object_id',
+              value: $(editor.getElement()).data('object-id')
+            }
+          )
+        );
+        form.appendChild(
+          createElement(
+            'input',
+            {
+              type: 'hidden',
+              name: 'hint',
+              value: editor.getParam('uploadimage_hint', '')
+            }
+          )
+        );
         for (cycle = 0; cycle < containers.length; cycle += 1) {
           form.appendChild(containers[cycle]);
         }
@@ -308,6 +330,8 @@
 
   });
 
-  tinymce.PluginManager.add('customimageuploader',
-    tinymce.plugins.CustomImageUploader);
+  tinymce.PluginManager.add(
+    'customimageuploader',
+    tinymce.plugins.CustomImageUploader
+  );
 })();
