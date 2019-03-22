@@ -96,7 +96,7 @@ module Api
         end
         file_tokens = prms.map { |p| p[:attributes][:file_token] }
         result_text_params[:text].scan(
-          /data-token="(\w+)\"/
+          /data-token="(\w+)"/
         ).flatten.each do |token|
           unless file_tokens.include?(token)
             raise ActiveRecord::RecordInvalid,
