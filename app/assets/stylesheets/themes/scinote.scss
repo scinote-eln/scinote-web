@@ -176,7 +176,7 @@ mark,.mark {
   color: $color-emperor;
 }
 
-.circle {
+.circle-icon {
   @extend .badge;
   background-color: $brand-primary;
   border-radius: 1em;
@@ -1513,6 +1513,68 @@ table.dataTable {
   }
 
   .file-download-link {
+    color: $color-white;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+
+  .file-edit-link {
+    color: $color-white;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+}
+
+// Image edit modal
+.modal-file-edit {
+  background: transparent;
+  font-size: $font-size-large;
+  padding: 0 !important;
+
+  .preview-close {
+    background: transparent;
+    border: 0;
+    color: $color-white;
+    display: inline-block;
+    float: right;
+  }
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+
+  .modal-content {
+    background: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: $color-white;
+    height: 100%;
+    width: auto;
+  }
+
+  .modal-header {
+    background: $color-black;
+    border: 0;
+    height: 60px;
+    text-align: center;
+
+    .file-name {
+      float: left;
+    }
+  }
+
+  .modal-body {
+    height: calc(100% - 60px);
+    padding: 0;
+  }
+
+  .file-save-link {
     color: $color-white;
     display: inline-block;
     float: right;

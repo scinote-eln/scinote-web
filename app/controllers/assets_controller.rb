@@ -44,12 +44,14 @@ class AssetsController < ApplicationController
 
   def file_preview
     response_json = {
+      'id' => @asset.id,
       'type' => (@asset.is_image? ? 'image' : 'file'),
 
       'filename' => truncate(@asset.file_file_name,
                              length:
                                Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => download_asset_path(@asset)
+      'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i),
+      'editable'     => @asset.editable?(current_user)
     }
 
     if @asset.is_image?
@@ -147,6 +149,30 @@ class AssetsController < ApplicationController
     @ttl = (tkn.ttl * 1000).to_s
 
     render layout: false
+  end
+
+  def update_image
+    @asset = Asset.find(params[:id])
+    return render_403 unless can_read_team?(@asset.team)
+    image_file = Paperclip.io_adapters.for(params[:image])
+    image_format = image_file.content_type.split('/')[1]
+    image_file.original_filename = @asset.file_file_name.ext(image_format)
+    @asset.file = image_file
+    @asset.save!
+    # Post process file here
+    @asset.post_process_file(@asset.team)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'shared/asset_link',
+            locals: { asset: @asset, display_image_tag: true },
+            formats: :html
+          )
+        }
+      end
+    end
   end
 
   private
