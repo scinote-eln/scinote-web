@@ -4,7 +4,6 @@
       <% if activity.old_activity?  %>
         <%= activity.message&.html_safe %>
       <% else %>
-        <%= activity.id %>
         <%= generate_activity_content(activity).html_safe %>
       <% end %>
     </div>

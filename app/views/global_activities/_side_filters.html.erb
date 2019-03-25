@@ -10,7 +10,9 @@
     </div>
 </div>
 
-<div class="date-selector filter-block small-right" data-period-select="Today">
+<div class="date-selector filter-block small-right"
+     data-period-label="<%= t('global_activities.index.period_label') %>"
+     data-period-select="">
   <h4 class="title"><strong><%= t('global_activities.index.activity') %></strong></h4>
 
   <div class="date-selector">
@@ -22,12 +24,15 @@
       <div class="hot-button btn btn-default" data-period="this_month"><%= t('global_activities.index.this_month') %></div>
       <div class="hot-button btn btn-default" data-period="last_month"><%= t('global_activities.index.last_month') %></div>
     </div>
-    <div class="from">
-      <%= render partial: "date_picker", locals: {id: 'from-date', label: false} %>
+    <h4>
+      <%= t('global_activities.index.custom_dates_label') %>
+    </h4>
+    <div class="to">
+      <%= render partial: "date_picker", locals: { id: 'to-date', use_current: 'false', label: t('global_activities.index.to_label') } %>
     </div>
     <div class="separator"></div>
-    <div class="to">
-      <%= render partial: "date_picker", locals: {id: 'to-date', label: false} %>
+    <div class="from">
+      <%= render partial: "date_picker", locals: { id: 'from-date', use_current: 'true', label: t('global_activities.index.from_label') } %>
     </div>
   </div>
 </div>

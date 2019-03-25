@@ -1,25 +1,29 @@
 en:
   global_activities:
     index:
-      teams: Team
-      activity: Actvity created
-      today: Today
-      yesterday: Yesterday
-      this_week: This week
-      last_week: Last week
-      this_month: This month
-      last_month: Last month
-      clear: clear
-      activity_type: Activity type
-      user: User
-      object: Object
-      all_teams: All teams
-      l_teams: teams
-      all_users: All users
-      l_users: users
-      all_activities: All activities
-      l_activities: activities
-      clear_filters: Clear filters
+      teams: "Team"
+      activity: "Activity created"
+      period_label: "Activity created: "
+      today: "Today"
+      yesterday: "Yesterday"
+      this_week: "This week"
+      last_week: "Last week"
+      this_month: "This month"
+      last_month: "Last month"
+      custom_dates_label: "Select custom dates"
+      from_label: "End date"
+      to_label: "Start date"
+      clear: "clear"
+      activity_type: "Activity type"
+      user: "User"
+      object: "Object"
+      all_teams: "All teams"
+      l_teams: "teams"
+      all_users: "All users"
+      l_users: "users"
+      all_activities: "All activities"
+      l_activities: "activities"
+      clear_filters: "Clear filters"
     content:
       create_project_html: "%{user} created project %{project}."
       rename_project_html: "%{user} renamed project %{project}."
@@ -108,6 +112,6 @@ en:
       export_protocol_in_repository_html: "%{user} exported protocol %{protocol} from Protocol repository"
       invite_user_to_team_html: "%{user} invited user %{user_invited} to team %{team} with user role %{role}"
       remove_user_from_team_html: "%{user} removed user %{user_removed} from team %{team}"
-      change_users_role_on_team_html: "%{user} changed %{user_changed}'s role in team %{team} to %{role}"
+      change_users_role_on_team_html: "%{user} changed user %{user_changed}'s role in team %{team} to %{role}"
       export_projects_html: "%{user} exported project(s) %{projects} to .zip"
       export_inventory_items_html: "%{user} exported inventory item(s) from %{repository}"
