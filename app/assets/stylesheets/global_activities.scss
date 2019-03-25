@@ -16,6 +16,14 @@
 
       .activities-day {
         margin-bottom: 10px;
+
+        .date-container {
+          max-width: 105px;
+          padding-right: 0;
+        }
+        .date-activities{
+          min-width: calc(100% - 105px);
+        }
       }
     }
 
