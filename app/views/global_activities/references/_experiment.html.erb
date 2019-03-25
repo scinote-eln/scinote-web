@@ -1,6 +1,6 @@
 <%= render partial: "global_activities/references/project.html.erb",
            locals: { subject: subject&.project, breadcrumbs: breadcrumbs  } %>
-<div class="col-xs-2">
+<div class="ga-breadcrumb">
   <%= image_tag 'icon_small/experiment.svg' %>
   <% if subject %>
     <%= link_to experiment_path(subject), title: subject.name do %>

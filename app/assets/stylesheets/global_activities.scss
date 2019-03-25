@@ -60,6 +60,12 @@
 
       .navigational-breadcrumbs {
         color: $color-silver-chalice;
+        display: flex;
+        flex-wrap: wrap;
+
+        .ga-breadcrumb {
+          margin-left: 15px;
+        }
       }
     }
   }
@@ -238,6 +244,7 @@
 
 @media (max-width: 1199px) {
   .ga-side {
+    border-bottom: 1px solid $gray-lighter;
 
     .filter-block {
 
