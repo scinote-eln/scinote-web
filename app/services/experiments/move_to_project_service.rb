@@ -82,6 +82,7 @@ module Experiments
               message_items: { experiment: @exp.id,
                                project_new: @project.id,
                                project_original: @original_project.id })
+
     end
   end
 end

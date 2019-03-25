@@ -12,8 +12,11 @@
         <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
         <span class="file-name"></span>
         <span class="file-wopi-controls"></span>
-        <a class="file-download-link" href='#'>
+        <a class="file-download-link" href="#" data-turbolinks="false">
           <p><span class="fas fa-download"></span> <%= t('Download')%></p>
+        </a>
+        <a class="file-edit-link" style="display:none" href='#'>
+          <p><span class="fas fa-pencil-alt"></span> <%= t('Edit')%></p>
         </a>
       </div>
       <div class="modal-body">

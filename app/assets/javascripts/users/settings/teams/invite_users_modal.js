@@ -158,8 +158,12 @@
         });
       });
     }).on('shown.bs.modal', function() {
+      var script = document.createElement('script');
       tagsInput.tagsinput('focus');
       recaptchaErrorMsgDiv.addClass('hidden');
+      script.type = 'text/javascript';
+      script.src = 'https://www.google.com/recaptcha/api.js?hl=en';
+      $(script).insertAfter('#recaptcha-service');
       // Remove 'data-invited="true"' status
       modal.removeAttr('data-invited');
     }).on('hide.bs.modal', function() {
@@ -171,6 +175,7 @@
       teamSelectorDropdown2.addClass('disabled');
       animateSpinner(modalDialog, false);
       recaptchaErrorMsgDiv.addClass('hidden');
+      $('#recaptcha-service').next().remove();
 
       // Unbind event listeners
       teamSelectorCheckbox.off('change');

@@ -363,7 +363,7 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 80
+  Max: 120
   AllowHeredoc: true
   AllowURI: true
   URISchemes:

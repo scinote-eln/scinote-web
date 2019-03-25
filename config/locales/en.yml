@@ -1292,6 +1292,8 @@ en:
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
   system_notifications:
+    navbar:
+      tooltip: 'What’s new notifications'
     emails:
       subject: "You've received a What's new notification"
       intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
@@ -2010,6 +2012,9 @@ en:
   Asset: "File"
   Assets: "Files"
   Download: "Download"
+  Edit: "Edit"
+  Save: "Save"
+  SaveClose: "Save & Close"
   Module: "Task"
   Modules: "Tasks"
   Project: "Project"

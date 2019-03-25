@@ -219,15 +219,19 @@ class Constants
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
 
+  WHITELISTED_IMAGE_TYPES_EDITABLE = %w(
+    gif jpeg pjpeg png
+  ).freeze
+
   WHITELISTED_TAGS = %w(
     a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
     span u s blockquote pre col colgroup table thead tbody th tr td
   ).freeze
 
-  WHITELISTED_ATTRIBUTES = %w(
-    href src width height alt cite datetime title class name xml:lang abbr style
-    target data-*
-  ).freeze
+  WHITELISTED_ATTRIBUTES = [
+    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data
+  ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {
     allow_comments: false,
