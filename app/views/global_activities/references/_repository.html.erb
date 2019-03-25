@@ -1,6 +1,6 @@
 <%= render partial: "global_activities/references/team.html.erb",
            locals: { subject: subject&.team, breadcrumbs: breadcrumbs  } %>
-<div class="col-xs-2">
+<div class="ga-breadcrumb">
   <span class="fas fa-list-alt"></span>
   <% if subject %>
     <%= link_to repositories_path(subject), title: subject.name do %>
