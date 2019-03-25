@@ -56,16 +56,5 @@ module DelayedUploaderDemo
       created_at: created_at,
       result: result
     )
-    Activity.new(
-      type_of: :add_comment_to_result,
-      user: user,
-      project: result.my_module.experiment.project,
-      my_module: result.my_module,
-      created_at: created_at,
-      updated_at: created_at,
-      message: I18n.t('activities.add_comment_to_result',
-                      user: user.full_name,
-                      result: result.name)
-    ).sneaky_save
   end
 end
