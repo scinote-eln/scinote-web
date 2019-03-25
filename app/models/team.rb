@@ -317,7 +317,7 @@ class Team < ApplicationRecord
 
   def generate_template_project
     return if without_templates
-    TemplatesService.new.update_team(self)
+    TemplatesService.new.delay(queue: :templates).update_team(self)
   end
 
   include FirstTimeDataGenerator

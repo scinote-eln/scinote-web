@@ -4,6 +4,8 @@ source 'http://rubygems.org'
 
 ruby '2.4.5'
 
+
+gem 'webpacker', '~> 3.5'
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form'
 gem 'devise', '~> 4.3.0'
@@ -11,12 +13,11 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 0.18'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '5.1.6'
+gem 'rails', '~> 5.1.6.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'sass-rails', '~> 5.0.6'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
-gem 'webpacker', '~> 2.0'
 gem 'yomu'
 
 # Gems for OAuth2 subsystem

@@ -72,6 +72,7 @@ class ProjectsOverviewService
               .joins('LEFT OUTER JOIN user_projects ON '\
                 'user_projects.project_id = projects.id')
               .left_outer_joins(:user_my_modules)
+              .where('projects.id': @team.projects)
               .where('user_my_modules.user_id = :user_id '\
                 'OR (user_projects.role = 0 '\
                 'AND user_projects.user_id = :user_id)', user_id: @user.id)

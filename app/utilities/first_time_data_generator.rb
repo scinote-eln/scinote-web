@@ -1,6 +1,9 @@
 module FirstTimeDataGenerator
+  # Default inventory repository
+  REPO_SAMPLES_NAME = 'Samples'.freeze
+
   # Create data for demo for new users
-  def seed_demo_data(user, team)
+  def seed_demo_data(user, team, asset_queue = :demo)
     @user = user
 
     # If private private team does not exist,
@@ -8,28 +11,80 @@ module FirstTimeDataGenerator
     # Do nothing
     return unless team
 
-    # create custom repository samples
-    repository = Repository.create(
-      name: 'Samples',
+    # Skip this team if user already has a demo project
+    return if team.projects.where(demo: true).any?
+
+    name = '[NEW] Demo project by SciNote'
+    exp_name = 'Polymerase chain reaction'
+    # If there is an existing demo project, archive and rename it
+    if team.projects.where(name: name).present?
+      # TODO: check if we still need this code
+      # old = team.projects.where(name: 'Demo project - qPCR')[0]
+      # old.archive! user
+      i = 1
+      while team.projects.where(
+        name: name = "#{name} (#{i})"
+      ).present?
+        i += 1
+      end
+    end
+
+    project = Project.create(
+      visibility: 0,
+      name: name,
+      due_date: nil,
       team: team,
-      created_by: user
+      created_by: user,
+      created_at: generate_random_time(1.week.ago),
+      last_modified_by: user,
+      archived: false,
+      template: false,
+      demo: true
     )
+
+    # check if samples repo already exist, then create custom repository samples
+    repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME)
+    repository =
+      if repository.blank?
+        if team.repositories.count < Rails.configuration.x.repositories_limit
+          Repository.create(
+            name: REPO_SAMPLES_NAME,
+            team: team,
+            created_by: user
+          )
+        else
+          # User first repo just as a placeholder, this call will fail anyhow
+          Repository.create(
+            name: team.repositories.first.name,
+            team: team,
+            created_by: user
+          )
+        end
+      else
+        repository.first
+      end
 
     # create list value column for sample types
-    repository_column_sample_types = RepositoryColumn.create(
-      repository: repository,
-      created_by: user,
-      data_type: :RepositoryListValue,
-      name: 'Sample Types'
-    )
+    repo_columns = []
+    ['Sample Types', 'Sample Groups'].each do |repo_name|
+      repo_column = repository.repository_columns.where(name: repo_name)
 
-    # create list value column for sample groups
-    repository_column_sample_groups = RepositoryColumn.create(
-      repository: repository,
-      created_by: user,
-      data_type: :RepositoryListValue,
-      name: 'Sample Groups'
-    )
+      repo_columns <<
+        if repo_column.blank?
+          RepositoryColumn.create(
+            repository: repository,
+            created_by: user,
+            data_type: :RepositoryListValue,
+            name: repo_name
+          )
+        else
+          repo_column.first
+        end
+    end
+
+    # Maintain old names
+    repository_column_sample_types, repository_column_sample_groups =
+      repo_columns
 
     # create few list items for sample types
     repository_items_sample_types = []
@@ -41,7 +96,15 @@ module FirstTimeDataGenerator
         repository_column: repository_column_sample_types,
         repository: repository
       )
-      repository_items_sample_types << item
+
+      # Check if it already exists
+      if item.persisted?
+        repository_items_sample_types << item
+      else
+        repository_items_sample_types << repository_column_sample_types
+                                         .repository_list_items
+                                         .where(data: name).first
+      end
     end
 
     # create few list items for sample groups
@@ -54,7 +117,15 @@ module FirstTimeDataGenerator
         repository_column: repository_column_sample_groups,
         repository: repository
       )
-      repository_items_sample_groups << item
+
+      # Check if it already exists
+      if item.persisted?
+        repository_items_sample_groups << item
+      else
+        repository_items_sample_groups << repository_column_sample_groups
+                                          .repository_list_items
+                                          .where(data: name).first
+      end
     end
 
     repository_rows_to_assign = []
@@ -151,32 +222,6 @@ module FirstTimeDataGenerator
         sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
       )
     end
-
-    name = 'Demo project'
-    exp_name = 'qPCR Experiment Version 01'
-    # If there is an existing demo project, archive and rename it
-    if team.projects.where(name: name).present?
-      # TODO: check if we still need this code
-      # old = team.projects.where(name: 'Demo project - qPCR')[0]
-      # old.archive! user
-      i = 1
-      while team.projects.where(
-        name: name = "#{name} (#{i})"
-      ).present?
-        i += 1
-      end
-    end
-
-    project = Project.create(
-      visibility: 0,
-      name: name,
-      due_date: nil,
-      team: team,
-      created_by: user,
-      created_at: generate_random_time(1.week.ago),
-      last_modified_by: user,
-      archived: false
-    )
 
     experiment_description =
       'Polymerase chain reaction (PCR) monitors the amplification of DNA ' \
@@ -498,19 +543,22 @@ module FirstTimeDataGenerator
       'Collection of potatoes'
     ]
 
+    second_rep_item = smart_annotate_rep_item(repository_rows_to_assign.second)
+    third_rep_item = smart_annotate_rep_item(repository_rows_to_assign.third)
+    fifth_rep_item = smart_annotate_rep_item(repository_rows_to_assign.fifth)
     module_step_descriptions = [
       '<html>
         <body>
           <p>50% of samples should be mock inoculated
           <span class=\"atwho-inserted\"contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '3~rep_item~3]</span>
+            data-atwho-at-query=\"#\">[#' + third_rep_item + ']</span>
           <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '5~rep_item~5]</span>
+            data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>
           while other 50% with PVY NTN virus
           <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '3~rep_item~3]</span>
+            data-atwho-at-query=\"#\">[#' + third_rep_item + ']</span>
           <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + sample_name + '5~rep_item~5]</span>.
+            data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>.
           </p>
         </body>
       </html>',
@@ -524,6 +572,9 @@ module FirstTimeDataGenerator
                           module_step_names,
                           module_step_descriptions)
 
+    # Delete repository items, if we went over the limit
+    repository_rows_to_assign.map(&:destroy) unless repository.id
+
     # Add table to existig step
     step = my_modules[1].protocol.steps.where('position = 0').take
     Table.create(
@@ -533,19 +584,18 @@ module FirstTimeDataGenerator
       contents: tab_content['module2']['samples_table']
     )
     # Add file to existig step
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[1].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'PVY-inoculated_plant_symptoms.JPG'
     )
     # Add comment to step 1
-    user_annotation = '[@' + user.name + '~' + user.id.to_s + ']'
+    user_annotation = user.name
     generate_step_comment(
       step,
       user,
-      user_annotation + ' I have used different sample [#' + sample_name +
-      '2~rep_item~2]'
+      "#{user_annotation} I have used different sample [##{second_rep_item}]"
     )
     # Add comment to step 3
     step = my_modules[1].protocol.steps.where('position = 2').take
@@ -555,7 +605,7 @@ module FirstTimeDataGenerator
       user_annotation + ' Please complete this by Monday.'
     )
     # Results
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
       current_team: team,
@@ -564,7 +614,7 @@ module FirstTimeDataGenerator
       file_name: 'mock-inoculated-plant.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
       current_team: team,
@@ -651,11 +701,12 @@ module FirstTimeDataGenerator
       user: user
     )
     qpcr_id = MyModule.where(name: 'qPCR').last.id.base62_encode
-    generate_result_comment(
+    DelayedUploaderDemo.generate_result_comment(
       temp_result,
       user,
       user_annotation + ' Please check if results match results in ' \
-      '[#qPCR~tsk~' + qpcr_id + ']'
+      '[#qPCR~tsk~' + qpcr_id + ']',
+      generate_random_time(temp_result.created_at, 1.days)
     )
     temp_result.table = Table.new(
       created_by: user,
@@ -665,13 +716,14 @@ module FirstTimeDataGenerator
     temp_result.save
 
     # Second result
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[2],
       current_user: user,
       current_team: team,
       result_name: 'Agarose gel electrophoresis of totRNA samples',
       created_at: generate_random_time(my_modules[2].created_at, 3.days),
-      file_name: 'totRNA_gel.jpg'
+      file_name: 'totRNA_gel.jpg',
+      comment: user_annotation + ' Could you check if this is okay?'
     )
 
     # ----------------- Module 4 ------------------
@@ -762,7 +814,7 @@ module FirstTimeDataGenerator
     generate_module_steps(my_modules[3], module_step_names, module_step_descriptions)
 
     # Add file to existig step 1
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[3].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -793,8 +845,8 @@ module FirstTimeDataGenerator
       'If desired, more than 30 mg tissue can be disrupted and homogenized ' \
       'at the start of the procedure (increase the volume of Buffer RLT ' \
       'proportionately). Use a portion of the homogenate corresponding to no ' \
-      'more than 30 mg tissue for RNA purification, and store the rest at –80',
-      '°C. Buffer RLT may form a precipitate upon storage. If necessary, ' \
+      'more than 30 mg tissue for RNA purification, and store the rest at –80°C.',
+      'Buffer RLT may form a precipitate upon storage. If necessary, ' \
       'redissolve by warming, and then place at room temperature (15–25°C).',
       'Buffer RLT and Buffer RW1 contain a guanidine salt and are therefore ' \
       'not compatible with disinfecting reagents containing bleach. See page ' \
@@ -804,8 +856,8 @@ module FirstTimeDataGenerator
       'Perform all centrifugation steps at 20–25°C in a standard ' \
       'microcentrifuge. Ensure that the centrifuge does not cool below 20°C.'
     ]
-    module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(text: item)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -829,8 +881,8 @@ module FirstTimeDataGenerator
       'If performing optional on-column DNase digestion, prepare DNase I ' \
       'stock solution as described in Appendix D (page 67).'
     ]
-    module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(text: item)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -855,13 +907,13 @@ module FirstTimeDataGenerator
       'genomic DNA contamination”, page 21), follow steps D1–D4 (page 67) ' \
       'after performing this step.'
     ]
-    module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(text: item)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
     # Results
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[3],
       current_user: user,
       current_team: team,
@@ -914,8 +966,8 @@ module FirstTimeDataGenerator
       step: step
     )
 
-    module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(text: item)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -977,41 +1029,41 @@ module FirstTimeDataGenerator
       'Clean surfaces with 70% ethanol or RNA remover',
       'Turn on the UV light'
     ]
-    module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(text: item)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
     # Add file to existig steps
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'Mixes_Templats.xlsx'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 1').take,
       current_user: user,
       current_team: team,
       file_name: 'qPCR_template.jpg'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 1').take,
       current_user: user,
       current_team: team,
       file_name: '96plate.docx'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 2').take,
       current_user: user,
       current_team: team,
       file_name: 'cycling_conditions.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 2').take,
       current_user: user,
       current_team: team,
@@ -1039,7 +1091,7 @@ module FirstTimeDataGenerator
     temp_result.save
 
     # Results
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1048,7 +1100,7 @@ module FirstTimeDataGenerator
       file_name: '1505745387970-1058053257.jpg'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1057,7 +1109,7 @@ module FirstTimeDataGenerator
       file_name: 'chromatogram.png'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1066,16 +1118,20 @@ module FirstTimeDataGenerator
       file_name: 'curves.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
       result_name: 'Bacteria plates YPGA',
       created_at: generate_random_time(my_modules[5].created_at, 2.days),
-      file_name: 'Bacterial_colonies.jpg'
+      file_name: 'Bacterial_colonies.jpg',
+      comment: user_annotation + ' please check the results again. ' \
+          '<span class=\"atwho-inserted\" contenteditable=\"false\"' \
+          'data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>' \
+          ' seems to be acting strange?'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -1226,21 +1282,21 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Add file to existig steps
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[6].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'Native_SDS-PAGE_for_complex_analysis.jpg'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[6].protocol.steps.where('position = 4').take,
       current_user: user,
       current_team: team,
       file_name: 'Native-PAGE-Nature_protocols.pdf'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[6].protocol.steps.where('position = 5').take,
       current_user: user,
       current_team: team,
@@ -1258,8 +1314,8 @@ module FirstTimeDataGenerator
       'Check stock of reagents & order new stock if needed',
       'Use gloves at all times'
     ]
-    module_checklist_items.each do |item|
-      checklist.checklist_items << ChecklistItem.new(text: item)
+    module_checklist_items.each_with_index do |item, ind|
+      checklist.checklist_items << ChecklistItem.new(text: item, position: ind)
     end
     checklist.save
 
@@ -1291,14 +1347,14 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Add file to existig step
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[7].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'ddCq-quantification_diagnostics-template.xls'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).add_step_asset(
       step: my_modules[7].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -1314,7 +1370,7 @@ module FirstTimeDataGenerator
     )
 
     # Add result
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -1323,7 +1379,7 @@ module FirstTimeDataGenerator
       file_name: 'ddCq-quantification_diagnostics-results.xls'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -1332,7 +1388,7 @@ module FirstTimeDataGenerator
       file_name: 'dilution_curve-efficiency.JPG'
     )
 
-    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -1343,6 +1399,23 @@ module FirstTimeDataGenerator
 
     # create thumbnail
     experiment.delay.generate_workflow_img
+  end
+
+  # Used for delayed jobs
+  def self.seed_demo_data_with_id(user_id, team_id)
+    extend self
+    user = User.find(user_id)
+    team = Team.find(team_id)
+
+    unless user || team
+      Rails.logger.warning("Could not retrieve user or team in " \
+                           "seed_demo_data_with_id. " \
+                           "User #{user_id} was mapped to #{user.inspect}." \
+                           "Team #{team_id} was mapped to #{team.inspect}.")
+      return
+    end
+
+    seed_demo_data(user, team, :new_demo_project)
   end
 
   # WARNING: This only works on PostgreSQL
@@ -1385,9 +1458,9 @@ module FirstTimeDataGenerator
         if rand < 0.3
           polite_comment = 'This looks well.'
         elsif rand < 0.4
-          polite_comment = 'Seems satisfactory.'
+          polite_comment = 'Great job!'
         elsif rand < 0.4
-          polite_comment = 'Try a bit harder next time.'
+          polite_comment = 'Thanks for getting this done.'
         end
         if polite_comment
           commented_on = generate_random_time(completed_on)
@@ -1440,5 +1513,9 @@ module FirstTimeDataGenerator
       created_at: created_at,
       step: step
     )
+  end
+
+  def smart_annotate_rep_item(item)
+    "#{item.name}~rep_item~#{Base62.encode(item.id)}"
   end
 end
