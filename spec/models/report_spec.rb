@@ -39,9 +39,13 @@ describe Report, type: :model do
     end
 
     it 'should have uniq name scoped to user, project' do
-      create :report, name: 'Same Name'
-      new_rep = build :report, name: 'Same Name'
-      expect(new_rep).to_not be_valid
+      r = create :report, name: 'Same Name'
+      new_report = build :report,
+                         name: 'Same Name',
+                         user: r.user,
+                         project: r.project
+
+      expect(new_report).to_not be_valid
     end
   end
 end

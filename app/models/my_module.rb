@@ -1,5 +1,7 @@
 class MyModule < ApplicationRecord
-  include ArchivableModel, SearchableModel
+  include ArchivableModel
+  include SearchableModel
+  include SearchableByNameModel
 
   enum state: Extends::TASKS_STATES
 
@@ -61,9 +63,10 @@ class MyModule < ApplicationRecord
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
-  has_many :activities, inverse_of: :my_module
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
+  # Associations for old activity type
+  has_many :activities, inverse_of: :my_module
 
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
   scope :active, -> { where(archived: false) }
@@ -132,6 +135,10 @@ class MyModule < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(user, teams)
+    where(experiment: Experiment.viewable_by_user(user, teams))
   end
 
   # Removes assigned samples from module and connections with other

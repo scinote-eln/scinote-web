@@ -1,0 +1,67 @@
+<div class="team-selector filter-block small-left">
+  <h4 class="title"><strong><%= t('global_activities.index.teams') %></strong></h4>
+  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="select-container">
+    <%= select_tag "team", options_from_collection_for_select(@teams, :id, :name, current_user.current_team_id),{
+        'data-select-all-button': t('global_activities.index.all_teams'),
+        'data-select-multiple-name': t('global_activities.index.l_teams'),
+        'data-select-multiple-all-selected': t('global_activities.index.all_teams')
+      } %>
+    </div>
+</div>
+
+<div class="date-selector filter-block small-right" data-period-select="Today">
+  <h4 class="title"><strong><%= t('global_activities.index.activity') %></strong></h4>
+
+  <div class="date-selector">
+    <div class="hot-buttons">
+      <div class="hot-button btn btn-default" data-period="today"><%= t('global_activities.index.today') %></div>
+      <div class="hot-button btn btn-default" data-period="yesterday"><%= t('global_activities.index.yesterday') %></div>
+      <div class="hot-button btn btn-default" data-period="this_week"><%= t('global_activities.index.this_week') %></div>
+      <div class="hot-button btn btn-default" data-period="last_week"><%= t('global_activities.index.last_week') %></div>
+      <div class="hot-button btn btn-default" data-period="this_month"><%= t('global_activities.index.this_month') %></div>
+      <div class="hot-button btn btn-default" data-period="last_month"><%= t('global_activities.index.last_month') %></div>
+    </div>
+    <div class="from">
+      <%= render partial: "date_picker", locals: {id: 'from-date', label: false} %>
+    </div>
+    <div class="separator"></div>
+    <div class="to">
+      <%= render partial: "date_picker", locals: {id: 'to-date', label: false} %>
+    </div>
+  </div>
+</div>
+
+<div class="activity-selector filter-block small-left">
+  <h4 class="title"><strong><%= t('global_activities.index.activity_type') %></strong></h4>
+  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="select-container">
+    <%= select_tag "activity", options_for_select(@activity_types.map{|i| [i[:name], i[:id]]}),{
+      'data-select-all-button': t('global_activities.index.all_activities'),
+      'data-select-all': 'true',
+      'data-select-multiple-name': t('global_activities.index.l_activities'),
+      'data-select-multiple-all-selected': t('global_activities.index.all_activities')
+    } %>
+  </div>
+</div>
+
+<div class="user-selector filter-block small-left">
+  <h4 class="title"><strong><%= t('global_activities.index.user') %></strong></h4>
+  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="select-container">
+    <%= select_tag "user", options_for_select(@user_list),{
+      'data-select-all-button': t('global_activities.index.all_users'),
+      'data-select-all': 'true',
+      'data-select-multiple-name': t('global_activities.index.l_users'),
+      'data-select-multiple-all-selected': t('global_activities.index.all_users')
+    } %>
+  </div>
+</div>
+
+<div class="subject-selector filter-block small-left">
+  <h4 class="title"><strong><%= t('global_activities.index.object') %></strong></h4>
+  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="select-container">
+    <select name="subject" data-select-all="false"></select>
+  </div>
+</div>

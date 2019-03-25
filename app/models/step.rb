@@ -1,5 +1,6 @@
 class Step < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -84,6 +85,10 @@ class Step < ApplicationRecord
     super()
   end
 
+  def self.viewable_by_user(user, teams)
+    where(protocol: Protocol.viewable_by_user(user, teams))
+  end
+
   def can_destroy?
     !assets.map(&:locked?).any?
   end
@@ -126,19 +131,17 @@ class Step < ApplicationRecord
     # Generate "delete" activity, but only if protocol is
     # located inside module
     if (protocol.my_module.present?) then
-      Activity.create(
-        type_of: :destroy_step,
-        project: protocol.my_module.experiment.project,
-        experiment: protocol.my_module.experiment,
-        my_module: protocol.my_module,
-        user: @current_user,
-        message: I18n.t(
-          "activities.destroy_step",
-          user: @current_user.full_name,
-          step: position + 1,
-          step_name: name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :destroy_step,
+              owner: @current_user,
+              subject: protocol,
+              team: protocol.my_module.experiment.project.team,
+              project: protocol.my_module.experiment.project,
+              message_items: {
+                protocol: protocol.id,
+                step: id,
+                step_position: { id: id, value_for: 'position' }
+              })
     end
   end
 

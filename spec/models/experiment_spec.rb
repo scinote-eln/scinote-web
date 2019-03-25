@@ -84,4 +84,80 @@ describe Experiment, type: :model do
       expect(new_exp).to_not be_valid
     end
   end
+
+  describe '.update_canvas' do
+    let(:experiment) { create :experiment, :with_tasks }
+    let(:user) { experiment.created_by }
+
+    context 'when renaming tasks' do
+      let(:to_rename) do
+        experiment
+          .my_modules
+          .map { |t| { t.id => t.name + '_new' } }.reduce({}, :merge)
+      end
+
+      let(:function_call) do
+        experiment.update_canvas([], [], to_rename, [], [], [], [], [], user)
+      end
+
+      it 'calls create activity for renaiming my_moudles' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :rename_task))).exactly(3).times
+
+        function_call
+      end
+
+      it 'creats 3 new activities in DB' do
+        expect { function_call }.to change { Activity.all.count }.by(3)
+      end
+    end
+
+    context 'when archiving tasks' do
+      let(:to_archive) { experiment.my_modules.pluck(:id) }
+
+      let(:function_call) do
+        experiment.update_canvas(to_archive, [], [], [], [], [], [], [], user)
+      end
+
+      it 'calls create activity for renaiming my_moudles' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :archive_task))).exactly(3).times
+
+        function_call
+      end
+
+      it 'creats 3 new activities in DB' do
+        expect { function_call }.to change { Activity.all.count }.by(3)
+      end
+    end
+
+    context 'when moving tasks to another experiment' do
+      let(:new_experiment) { create :experiment, project: experiment.project }
+      let(:to_move) do
+        experiment
+          .my_modules
+          .map { |t| { t.id => new_experiment.id } }.reduce({}, :merge)
+      end
+      let(:function_call) do
+        experiment.update_canvas([], [], [], to_move, [], [], [], [], user)
+      end
+
+      it 'calls create activity for renaiming my_moudles' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :move_task))).exactly(3).times
+
+        function_call
+      end
+
+      it 'creats 3 new activities in DB' do
+        expect { function_call }.to change { Activity.all.count }.by(3)
+      end
+    end
+  end
 end

@@ -1,5 +1,6 @@
 class Repository < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
   include RepositoryImportParser
   include Discard::Model
 
@@ -62,6 +63,10 @@ class Repository < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(_user, teams)
+    where(team: teams)
   end
 
   def self.name_like(query)

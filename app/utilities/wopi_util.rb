@@ -73,41 +73,40 @@ module WopiUtil
   end
 
   def create_wopi_file_activity(current_user, started_editing)
+    action = if started_editing
+               t('activities.wupi_file_editing.started')
+             else
+               t('activities.wupi_file_editing.finished')
+             end
     if @assoc.class == Step
-      activity = Activity.new(
-        type_of: :start_edit_wopi_file,
-        user: current_user,
-        message: t(
-          started_editing ? 'activities.start_edit_wopi_file_step' :
-                            'activities.unlock_wopi_file_step',
-          user: current_user.full_name,
-          file: @asset.file_file_name,
-          step: @asset.step.position + 1,
-          step_name: @asset.step.name
-        )
-      )
-
       if @protocol.in_module?
-        activity.my_module = @protocol.my_module
-        activity.project = @protocol.my_module.experiment.project
+        project = @protocol.my_module.experiment.project
       end
-
-      activity.save
+      Activities::CreateActivityService
+        .call(activity_type: :edit_wopi_file_on_step,
+              owner: current_user,
+              subject: @protocol,
+              team: current_team,
+              project: project,
+              message_items: {
+                protocol: @protocol.id,
+                step: @asset.step.id,
+                step_position: { id: @asset.step.id, value_for: 'position' },
+                asset_name: { id: @asset.id, value_for: 'file_file_name' },
+                action: action
+              })
     elsif @assoc.class == Result
-      Activity.create(
-        type_of: :start_edit_wopi_file,
-        user: current_user,
-        project: @my_module.experiment.project,
-        experiment: @my_module.experiment,
-        my_module: @my_module,
-        message: t(
-          started_editing ? 'activities.start_edit_wopi_file_result' :
-                            'activities.unlock_wopi_file_result',
-          user: current_user.full_name,
-          file: @asset.file_file_name,
-          result: @asset.result.name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :edit_wopi_file_on_result,
+              owner: current_user,
+              subject: @asset.result,
+              team: @my_module.experiment.project.team,
+              project: @my_module.experiment.project,
+              message_items: {
+                result: @asset.result.id,
+                asset_name: { id: @asset.id, value_for: 'file_file_name' },
+                action: action
+              })
     end
   end
 end

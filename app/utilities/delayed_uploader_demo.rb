@@ -38,21 +38,6 @@ module DelayedUploaderDemo
     generate_result_comment(temp_result, current_user, comment) if comment
 
     temp_asset.post_process_file(my_module.experiment.project.team)
-
-    # Create result activity
-    Activity.new(
-      type_of: :add_result,
-      project: my_module.experiment.project,
-      my_module: my_module,
-      user: current_user,
-      created_at: temp_result.created_at,
-      updated_at: temp_result.created_at,
-      message: I18n.t(
-        'activities.add_asset_result',
-        user: current_user.full_name,
-        result: temp_result.name
-      )
-    ).sneaky_save
   end
 
   # Adds asset to existing step

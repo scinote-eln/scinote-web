@@ -650,6 +650,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :global_activities, only: [:index] do
+    get :search_subjects, on: :collection
+  end
+
+  post 'global_activities', to: 'global_activities#index'
+
   constraints WopiSubdomain do
     # Office integration
     get 'wopi/files/:id/contents', to: 'wopi#file_contents_get_endpoint'

@@ -152,8 +152,17 @@ class ProtocolsController < ApplicationController
     @protocol.record_timestamps = false
     @protocol.assign_attributes(metadata_params)
 
+    changes = @protocol.changes.keys
+
     respond_to do |format|
       if @protocol.save
+
+        changes.each do |key|
+          if %w(description authors keywords).include?(key)
+            log_activity("edit_#{key}_in_protocol_repository".to_sym)
+          end
+        end
+
         format.json do
           render json: {
             updated_at_label: render_to_string(
@@ -189,6 +198,8 @@ class ProtocolsController < ApplicationController
       end
       if @protocol.update_keywords(params[:keywords])
         format.json do
+          log_activity(:edit_keywords_in_protocol_repository)
+
           render json: {
             updated_at_label: render_to_string(
               partial: 'protocols/header/updated_at_label.html.erb'
@@ -220,6 +231,8 @@ class ProtocolsController < ApplicationController
 
     respond_to do |format|
       if @protocol.save
+        log_activity(:create_protocol_in_repository)
+
         format.json do
           render json: {
             url: edit_protocol_path(
@@ -363,6 +376,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, display flash & render 200
+          log_activity(:update_protocol_in_task_from_repository,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.revert_flash'
           )
@@ -402,18 +418,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          Activity.create(
-            type_of: :revert_protocol,
-            project: @protocol.my_module.experiment.project,
-            experiment: @protocol.my_module.experiment,
-            my_module: @protocol.my_module,
-            user: current_user,
-            message: I18n.t(
-              'activities.revert_protocol',
-              user: current_user.full_name,
-              protocol: @protocol.name
-            )
-          )
+          log_activity(:update_protocol_in_repository_from_task,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.update_parent_flash'
           )
@@ -453,6 +460,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, display flash & render 200
+          log_activity(:update_protocol_in_task_from_repository,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.update_from_parent_flash'
           )
@@ -492,18 +502,9 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          Activity.create(
-            type_of: :load_protocol_from_repository,
-            project: @protocol.my_module.experiment.project,
-            experiment: @protocol.my_module.experiment,
-            my_module: @protocol.my_module,
-            user: current_user,
-            message: I18n.t(
-              'activities.load_protocol_from_repository',
-              user: current_user.full_name,
-              protocol: @source.name
-            )
-          )
+          log_activity(:load_protocol_to_task_from_repository,
+                       @protocol.my_module.experiment.project,
+                       protocol_repository: @protocol.parent.id)
           flash[:success] = t('my_modules.protocols.load_from_repository_flash')
           flash.keep(:success)
           format.json { render json: {}, status: :ok }
@@ -540,18 +541,8 @@ class ProtocolsController < ApplicationController
           end
         else
           # Everything good, record activity, display flash & render 200
-          Activity.create(
-            type_of: :load_protocol_from_file,
-            project: @protocol.my_module.experiment.project,
-            experiment: @protocol.my_module.experiment,
-            my_module: @protocol.my_module,
-            user: current_user,
-            message: I18n.t(
-              'activities.load_protocol_from_file',
-              user: current_user.full_name,
-              protocol: @protocol_json[:name]
-            )
-          )
+          log_activity(:load_protocol_to_task_from_file,
+                       @protocol.my_module.experiment.project)
           flash[:success] = t(
             'my_modules.protocols.load_from_file_flash'
           )
@@ -594,6 +585,15 @@ class ProtocolsController < ApplicationController
           render json: { name: p_name, status: :bad_request }, status: :bad_request
         end
       else
+        Activities::CreateActivityService
+          .call(activity_type: :import_protocol_in_repository,
+                owner: current_user,
+                subject: protocol,
+                team: current_team,
+                message_items: {
+                  protocol: protocol.id
+                })
+
         format.json do
           render json: {
             name: p_name, new_name: protocol.name, status: :ok
@@ -796,6 +796,18 @@ class ProtocolsController < ApplicationController
         elsif @protocols.length > 1
           file_name = 'protocols.eln'
         end
+
+        @protocols.each do |p|
+          Activities::CreateActivityService
+            .call(activity_type: :export_protocol_in_repository,
+                  owner: current_user,
+                  subject: p,
+                  team: current_team,
+                  message_items: {
+                    protocol: p.id
+                  })
+        end
+
         send_data(z_output_stream.read, filename: file_name)
       end
     end
@@ -1188,5 +1200,17 @@ class ProtocolsController < ApplicationController
 
   def check_protocolsio_import_permissions
     render_403 unless can_create_protocols_in_repository?(current_team)
+  end
+
+  def log_activity(type_of, project = nil, message_items = {})
+    message_items = { protocol: @protocol.id }.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @protocol,
+            team: current_team,
+            project: project,
+            message_items: message_items)
   end
 end

@@ -13,7 +13,7 @@ describe Experiments::CopyExperimentAsTemplateService do
     create :project, team: team, user_projects: [user_project]
   end
   let(:experiment) do
-    create :experiment_with_tasks, name: 'MyExp', project: project
+    create :experiment, :with_tasks, name: 'MyExp', project: project
   end
   let(:user) { create :user }
   let(:service_call) do
@@ -30,6 +30,13 @@ describe Experiments::CopyExperimentAsTemplateService do
 
     it 'adds Activity record' do
       expect { service_call }.to(change { Activity.all.count })
+    end
+
+    it 'calls create activity service' do
+      expect(Activities::CreateActivityService).to receive(:call)
+        .with(hash_including(activity_type: :clone_experiment))
+
+      service_call
     end
 
     it 'copies all tasks to new experiment' do

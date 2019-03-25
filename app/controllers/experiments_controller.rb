@@ -45,19 +45,8 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     @experiment.project = @project
     if @experiment.save
-
       experiment_annotation_notification
-      Activity.create(
-        type_of: :create_experiment,
-        project: @experiment.project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.create_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name
-        )
-      )
+      log_activity(:create_experiment)
       flash[:success] = t('experiments.create.success_flash',
                           experiment: @experiment.name)
       respond_to do |format|
@@ -105,19 +94,15 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
 
     if @experiment.save
-
       experiment_annotation_notification(old_text)
-      Activity.create(
-        type_of: :edit_experiment,
-        project: @experiment.project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.edit_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name
-        )
-      )
+
+      activity_type = if experiment_params[:archived] == 'false'
+                        :restore_experiment
+                      else
+                        :edit_experiment
+                      end
+      log_activity(activity_type)
+
       @experiment.touch(:workflowimg_updated_at)
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
@@ -148,17 +133,7 @@ class ExperimentsController < ApplicationController
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
     if @experiment.save
-      Activity.create(
-        type_of: :archive_experiment,
-        project: @experiment.project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.archive_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name
-        )
-      )
+      log_activity(:archive_experiment)
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)
 
@@ -345,5 +320,15 @@ class ExperimentsController < ApplicationController
                  experiment: link_to(@experiment.name,
                                      canvas_experiment_url(@experiment)))
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @experiment.project.team,
+            project: @experiment.project,
+            subject: @experiment,
+            message_items: { experiment: @experiment.id })
   end
 end

@@ -49,4 +49,75 @@ describe Protocol, type: :model do
               .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
   end
+  describe '.archive(user)' do
+    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
+    let(:user) { create :user }
+
+    it 'calls create activity for archiving protocol' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :archive_protocol_in_repository)))
+
+      protocol.archive user
+    end
+
+    it 'creats one new activity DB' do
+      expect { protocol.archive(user) }.to change { Activity.count }.by(1)
+    end
+  end
+
+  describe '.restore(user)' do
+    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
+    let(:user) { create :user }
+
+    it 'calls create activity for restoring protocol' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :restore_protocol_in_repository)))
+
+      protocol.restore user
+    end
+
+    it 'creats one new activity DB' do
+      expect { protocol.restore(user) }.to change { Activity.count }.by(1)
+    end
+  end
+
+  describe '.publish(user)' do
+    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
+    let(:user) { create :user }
+
+    it 'calls create activity for restoring protocol' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :move_protocol_in_repository)))
+
+      protocol.publish user
+    end
+
+    it 'creats one new activity DB' do
+      expect { protocol.publish(user) }.to change { Activity.count }.by(1)
+    end
+  end
+
+  describe '.make_private(user)' do
+    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
+    let(:user) { create :user }
+
+    it 'calls create activity for restoring protocol' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :move_protocol_in_repository)))
+
+      protocol.make_private user
+    end
+
+    it 'creats one new activity DB' do
+      expect { protocol.make_private(user) }.to change { Activity.count }.by(1)
+    end
+  end
 end

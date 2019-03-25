@@ -190,8 +190,8 @@ describe User, type: :model do
     let!(:user_projects) do
       create :user_project, :viewer, project: project, user: user
     end
-    let!(:activity_one) { create :activity, user: user, project: project }
-    let!(:activity_two) { create :activity, user: user, project: project }
+    let!(:activity_one) { create :activity, owner: user, project: project }
+    let!(:activity_two) { create :activity, owner: user, project: project }
 
     it 'is expected to return an array of user\'s activities' do
       activities = user.last_activities

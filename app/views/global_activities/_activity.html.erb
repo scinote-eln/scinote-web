@@ -1,0 +1,23 @@
+<div class="activity-card">
+  <div class="row">
+    <div class="col-xs-12">
+      <% if activity.old_activity?  %>
+        <%= activity.message&.html_safe %>
+      <% else %>
+        <%= activity.id %>
+        <%= generate_activity_content(activity).html_safe %>
+      <% end %>
+    </div>
+  </div>
+  <div class="pull-left activity-timestamp">
+    <%= activity.created_at.strftime('%H:%M') %>
+  </div>
+  <div class="row navigational-breadcrumbs">
+  <% unless activity.old_activity? %>
+    <% if activity.subject_type.present? %>
+      <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
+                 locals: { subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
+    <% end %>
+  <% end %>
+  </div>
+</div>
