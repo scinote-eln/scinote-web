@@ -30,6 +30,7 @@
 
   .select2-dropdown {
     border: 1px solid $color-alto;
+    z-index: 1000;
 
     .select2_select_all {
       border: 0;
@@ -83,6 +84,28 @@
 
       &:hover {
         background: $color-alto;
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .select2-container--open.left-position {
+    left: calc(75% - 280px) !important;
+    top: 60px  !important;
+
+    .select2-dropdown {
+      border-radius: 0px;
+      height: calc(100vh - 70px)  !important;
+      width: 300px !important;
+
+      .select2-results {
+        height: calc(100% - 31px);
+      }
+
+      .select2-results__options {
+        max-height: 100%;
       }
     }
   }
