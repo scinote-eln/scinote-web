@@ -1778,7 +1778,7 @@ en:
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New Step"
-      subtitle: "Protocol steps"
+      subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
       published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
       info_tab: "Info"
