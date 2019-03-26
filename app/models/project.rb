@@ -54,14 +54,15 @@ class Project < ApplicationRecord
   scope :templates, -> { where(template: true) }
 
   def self.visible_from_user_by_name(user, team, name)
-    if user.is_admin_of_team? team
-      return where('projects.archived IS FALSE AND projects.name ILIKE ?',
-                   "%#{name}%")
+    projects = where(team: team).distinct
+    if user.is_admin_of_team?(team)
+      projects.where('projects.archived IS FALSE AND projects.name ILIKE ?', "%#{name}%")
+    else
+      projects.joins(:user_projects)
+              .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
+              .where('projects.archived IS FALSE AND projects.name ILIKE ?',
+                     "%#{name}%")
     end
-    joins(:user_projects)
-      .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
-      .where('projects.archived IS FALSE AND projects.name ILIKE ?',
-             "%#{name}%")
   end
 
   def self.search(
