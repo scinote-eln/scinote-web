@@ -1,5 +1,5 @@
 <div class="team-selector filter-block small-left">
-  <h4 class="title"><strong><%= t('global_activities.index.teams') %></strong></h4>
+  <h4 class="title"><%= t('global_activities.index.teams') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <%= select_tag "team", options_from_collection_for_select(@teams, :id, :name, current_user.current_team_id),{
@@ -11,10 +11,11 @@
     </div>
 </div>
 
+
 <div class="date-selector filter-block small-right"
      data-period-label="<%= t('global_activities.index.period_label') %>"
      data-period-select="">
-  <h4 class="title"><strong><%= t('global_activities.index.activity') %></strong></h4>
+  <h4 class="title"><%= t('global_activities.index.activity') %></h4>
 
   <div class="date-selector">
     <div class="hot-buttons">
@@ -25,7 +26,7 @@
       <div class="hot-button btn btn-default" data-period="this_month"><%= t('global_activities.index.this_month') %></div>
       <div class="hot-button btn btn-default" data-period="last_month"><%= t('global_activities.index.last_month') %></div>
     </div>
-    <h4>
+    <h4 class="title">
       <%= t('global_activities.index.custom_dates_label') %>
     </h4>
     <div class="to">
@@ -39,7 +40,7 @@
 </div>
 
 <div class="activity-selector filter-block small-left">
-  <h4 class="title"><strong><%= t('global_activities.index.activity_type') %></strong></h4>
+  <h4 class="title"><%= t('global_activities.index.activity_type') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <%= select_tag "activity", grouped_options_for_select(@activity_types),{
@@ -54,7 +55,7 @@
 </div>
 
 <div class="user-selector filter-block small-left">
-  <h4 class="title"><strong><%= t('global_activities.index.user') %></strong></h4>
+  <h4 class="title"><%= t('global_activities.index.user') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <%= select_tag "user", options_for_select(@user_list),{
@@ -68,7 +69,7 @@
 </div>
 
 <div class="subject-selector filter-block small-left">
-  <h4 class="title"><strong><%= t('global_activities.index.object') %></strong></h4>
+  <h4 class="title"><%= t('global_activities.index.object') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <select name="subject" data-select-all="false" data-dropdown-position="left"></select>
