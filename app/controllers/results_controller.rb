@@ -17,7 +17,7 @@ class ResultsController < ApplicationController
             team: @my_module.experiment.project.team,
             project: @my_module.experiment.project,
             message_items: { result: @result.id,
-                             result_type: result_type })
+                             type_of_result: result_type })
     flash[:success] = t('my_modules.module_archive.delete_flash',
                         result: @result.name,
                         module: @my_module.name)

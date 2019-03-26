@@ -225,7 +225,7 @@ class ResultAssetsController < ApplicationController
             project: @my_module.experiment.project,
             message_items: {
               result: result.id,
-              result_type: t('activities.result_type.asset')
+              type_of_result: t('activities.result_type.asset')
             })
   end
 end
