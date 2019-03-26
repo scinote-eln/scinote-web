@@ -18,10 +18,13 @@ en:
       user: "User"
       object: "Object"
       all_teams: "All teams"
+      all_teams_btn: "Select All Teams"
       l_teams: "teams"
       all_users: "All users"
+      all_users_btn: "Select All Users"
       l_users: "users"
       all_activities: "All activities"
+      all_activities_btn: "Select All Activities"
       l_activities: "activities"
       clear_filters: "Clear filters"
     content:

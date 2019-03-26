@@ -3,7 +3,7 @@
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <%= select_tag "team", options_from_collection_for_select(@teams, :id, :name, current_user.current_team_id),{
-        'data-select-all-button': t('global_activities.index.all_teams'),
+        'data-select-all-button': t('global_activities.index.all_teams_btn'),
         'data-select-multiple-name': t('global_activities.index.l_teams'),
         'data-select-multiple-all-selected': t('global_activities.index.all_teams'),
         'data-dropdown-position': 'left'
@@ -44,7 +44,7 @@
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <%= select_tag "activity", grouped_options_for_select(@activity_types),{
-      'data-select-all-button': t('global_activities.index.all_activities'),
+      'data-select-all-button': t('global_activities.index.all_activities_btn'),
       'data-select-all': 'true',
       'data-select-multiple-name': t('global_activities.index.l_activities'),
       'data-select-multiple-all-selected': t('global_activities.index.all_activities'),
@@ -59,7 +59,7 @@
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <%= select_tag "user", options_for_select(@user_list),{
-      'data-select-all-button': t('global_activities.index.all_users'),
+      'data-select-all-button': t('global_activities.index.all_users_btn'),
       'data-select-all': 'true',
       'data-select-multiple-name': t('global_activities.index.l_users'),
       'data-select-multiple-all-selected': t('global_activities.index.all_users'),
