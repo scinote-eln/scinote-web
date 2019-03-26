@@ -24,7 +24,6 @@ $.fn.extend({
       select2.next().find('.select2-selection .select2-selection__rendered').css('width', '100%');
     }
 
-
     // select all check
     this[0].dataset.singleDisplay = config.singleDisplay || false;
     if (this[0].dataset.selectAll === 'true') {
@@ -48,6 +47,10 @@ $.fn.extend({
             $(selectElement).select2('close');
             $(selectElement).select2('open');
           });
+        }
+
+        if (selectElement.dataset.dropdownPosition === 'left') {
+          $('.select2-dropdown').parent().addClass('left-position');
         }
       })
       // Prevent shake bug with multiple select
