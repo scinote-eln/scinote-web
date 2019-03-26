@@ -34,11 +34,23 @@ function GlobalActivitiesFilterPrepareArray() {
     if (subjectFilter[splitObject[0]] === undefined) subjectFilter[splitObject[0]] = [];
     subjectFilter[splitObject[0]].push(parseInt(splitObject[1], 10));
   });
+
+  // Clear request parameters if all options are selected
+  if (teamFilter.length === $('.ga-side .team-selector option').length) {
+    teamFilter = [];
+  }
+  if (userFilter.length === $('.ga-side .user-selector option').length) {
+    userFilter = [];
+  }
+  if (activityFilter.length === $('.ga-side .activity-selector option').length) {
+    activityFilter = [];
+  }
+
   return {
-    teams: JSON.stringify(teamFilter),
-    users: JSON.stringify(userFilter),
-    types: JSON.stringify(activityFilter),
-    subjects: JSON.stringify(subjectFilter),
+    teams: teamFilter,
+    users: userFilter,
+    types: activityFilter,
+    subjects: subjectFilter,
     from_date: GlobalActivitiesFiltersGetDates().from,
     to_date: GlobalActivitiesFiltersGetDates().to
   };
@@ -171,6 +183,7 @@ $(function() {
     $('#calendar-from-date').data('DateTimePicker').clear();
     $('#calendar-to-date').data('DateTimePicker').clear();
     updateRunning = false;
+    GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
   });
 

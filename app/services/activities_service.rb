@@ -3,10 +3,10 @@
 class ActivitiesService
   def self.load_activities(user, teams, filters = {})
     # Create condition for view permissions checking first
-    visible_projects = Project.viewable_by_user(user, teams)
-    query = Activity.where('project_id IS NULL AND team_id IN (?)', teams)
-                    .or(Activity.where(project: visible_projects))
-
+    visible_teams = user.teams.where(id: teams)
+    visible_projects = Project.viewable_by_user(user, visible_teams)
+    query = Activity.where(project: visible_projects)
+                    .or(Activity.where(project: nil, team: visible_teams))
     if filters[:subjects].present?
       query = query.where(
         filters[:subjects]
@@ -18,20 +18,16 @@ class ActivitiesService
     query = query.where(owner_id: filters[:users]) if filters[:users]
     query = query.where(type_of: filters[:types]) if filters[:types]
 
-    if filters[:from_date].present? && filters[:to_date].present?
-      activities = query.where(
-        'created_at <= :from AND created_at >= :to',
-        from: Time.zone.parse(filters[:from_date]).beginning_of_day.utc,
-        to: Time.zone.parse(filters[:to_date]).end_of_day.utc
-      )
-    elsif filters[:from_date].present? && filters[:to_date].blank?
-      activities = query.where(
-        'created_at <= :from',
-        from: Time.zone.parse(filters[:from_date]).beginning_of_day.utc
-      )
-    else
-      activities = query
-    end
+    activities =
+      if filters[:from_date].present? && filters[:to_date].present?
+        query.where('created_at <= :from AND created_at >= :to',
+                    from: Time.zone.parse(filters[:from_date]).end_of_day.utc,
+                    to: Time.zone.parse(filters[:to_date]).beginning_of_day.utc)
+      elsif filters[:from_date].present? && filters[:to_date].blank?
+        query.where('created_at <= :from', from: Time.zone.parse(filters[:from_date]).end_of_day.utc)
+      else
+        query
+      end
 
     activities = activities.order(created_at: :desc)
                            .limit(Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
@@ -51,7 +47,7 @@ class ActivitiesService
 
     more_left = query.where(
       'created_at < :from',
-      from: Time.zone.parse(last_date).end_of_day.utc
+      from: Time.zone.parse(last_date).prev_day.end_of_day.utc
     ).exists?
 
     results[last_date] = activities.to_a
