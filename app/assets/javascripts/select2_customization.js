@@ -61,6 +61,9 @@ $.fn.extend({
 
         if (selectElement.dataset.dropdownPosition === 'left') {
           $('.select2-dropdown').parent().addClass('left-position');
+          if (selectElement.dataset.selectAllButton == undefined){
+            $('.select2-dropdown').parent().addClass('full');
+          }
         }
         // Adding select all group members event
         if (selectElement.dataset.selectByGroup === 'true') {

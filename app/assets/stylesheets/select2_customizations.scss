@@ -37,9 +37,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid transparent;
-    border-left: 1px solid $color-alto;
+    border: 1px solid $color-alto;
     cursor:pointer;
+    background: $color-white;
     border-radius: 0px 4px 4px 0px;
 
     &:hover {
@@ -163,6 +163,7 @@
   .select2-container--open.left-position {
     left: calc(75% - 280px) !important;
     top: 60px  !important;
+    position: fixed !important;
 
     .select2-dropdown {
       border-radius: 0px;
@@ -175,6 +176,13 @@
 
       .select2-results__options {
         max-height: 100%;
+      }
+    }
+
+    &.full {
+
+      .select2-results {
+        height: 100%;
       }
     }
   }
