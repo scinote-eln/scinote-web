@@ -24,6 +24,10 @@ $.fn.extend({
       select2.next().find('.select2-selection .select2-selection__rendered').css('width', '100%');
     }
 
+    // Create arrow
+    $('<div class="select2-arrow"><span class="caret"></span></div>').appendTo(select2.next())
+      .click(() => select2.next().find('.select2-selection').click());
+
     // select all check
     this[0].dataset.singleDisplay = config.singleDisplay || false;
     if (this[0].dataset.selectAll === 'true') {
@@ -39,7 +43,7 @@ $.fn.extend({
         var selectElement = this;
         var groups;
         var groupChildrens;
-        $('.select2-dropdown').removeClass('custom-group')
+        $('.select2-dropdown').removeClass('custom-group');
         $('.select2-selection').scrollTo(0);
         $('.select2_select_all').remove();
         // Adding select_all_button
@@ -57,10 +61,13 @@ $.fn.extend({
 
         if (selectElement.dataset.dropdownPosition === 'left') {
           $('.select2-dropdown').parent().addClass('left-position');
+          if (selectElement.dataset.selectAllButton === undefined) {
+            $('.select2-dropdown').parent().addClass('full');
+          }
         }
         // Adding select all group members event
         if (selectElement.dataset.selectByGroup === 'true') {
-          $('.select2-dropdown').addClass('custom-group')
+          $('.select2-dropdown').addClass('custom-group');
           setTimeout(() => {
             groups = $('.select2-dropdown').find('.select2-results__group');
             groups.click(e => {
