@@ -24,6 +24,10 @@ $.fn.extend({
       select2.next().find('.select2-selection .select2-selection__rendered').css('width', '100%');
     }
 
+    // Create arrow
+    $('<div class="select2-arrow"><span class="caret"></span></div>').appendTo(select2.next())
+      .click(() => select2.next().find('.select2-selection').click())
+
     // select all check
     this[0].dataset.singleDisplay = config.singleDisplay || false;
     if (this[0].dataset.selectAll === 'true') {

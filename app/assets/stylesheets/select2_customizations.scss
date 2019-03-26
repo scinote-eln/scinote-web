@@ -13,7 +13,7 @@
     }
 
     .select2-selection__rendered {
-      width: 200%;
+      width: calc(100% - 26px)
     }
 
     .select2-selection__choice {
@@ -25,6 +25,30 @@
         margin: 0;
         margin-left: 5px;
       }
+    }
+  }
+
+  .select2-arrow {
+    position: absolute;
+    top:0;
+    right:0;
+    width:26px;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid transparent;
+    border-left: 1px solid $color-alto;
+    cursor:pointer;
+    border-radius: 0px 4px 4px 0px;
+
+    &:hover {
+        background: $color-gainsboro;
+        border: 1px solid $color-silver-chalice;
+    }
+
+    .caret {
+      margin: 0;
     }
   }
 
