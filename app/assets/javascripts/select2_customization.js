@@ -39,16 +39,19 @@ $.fn.extend({
         var selectElement = this;
         var groups;
         var groupChildrens;
+        $('.select2-dropdown').removeClass('custom-group')
         $('.select2-selection').scrollTo(0);
         $('.select2_select_all').remove();
         // Adding select_all_button
         if (selectElement.dataset.selectAllButton !== undefined) {
           $('<div class="select2_select_all btn btn-default"><strong>' + selectElement.dataset.selectAllButton + '</strong></div>').prependTo('.select2-dropdown').on('click', function() {
+            var scrollTo = $('.select2-results__options').scrollTop();
             var elementsToSelect = $.map($(selectElement).find('option'), e => e.value);
             if ($(selectElement).find('option:selected').length === elementsToSelect.length) elementsToSelect = [];
             $(selectElement).val(elementsToSelect).trigger('change');
             $(selectElement).select2('close');
             $(selectElement).select2('open');
+            $('.select2-results__options').scrollTo(scrollTo);
           });
         }
 
@@ -57,11 +60,12 @@ $.fn.extend({
         }
         // Adding select all group members event
         if (selectElement.dataset.selectByGroup === 'true') {
+          $('.select2-dropdown').addClass('custom-group')
           setTimeout(() => {
             groups = $('.select2-dropdown').find('.select2-results__group');
             groups.click(e => {
               var newSelection = [];
-              var scrollTo;
+              var scrollTo = $('.select2-results__options').scrollTop();
               var group = e.currentTarget;
               var childrens = $(selectElement).find('optgroup[label="' + group.innerHTML + '"] option');
               childrens = $.map(childrens, act => act.value);
@@ -74,7 +78,6 @@ $.fn.extend({
                 newSelection = newSelection.concat(childrens);
               }
               $(selectElement).val(newSelection).trigger('change');
-              scrollTo = $('.select2-results__options').scrollTop();
               $(selectElement).select2('close');
               $(selectElement).select2('open');
               $('.select2-results__options').scrollTo(scrollTo);
