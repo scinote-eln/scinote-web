@@ -2,15 +2,20 @@
 
 class GlobalActivitiesController < ApplicationController
   def index
-    teams = activity_filters[:teams]
     @teams = current_user.teams
-    teams = current_team if teams.blank?
+    selected_teams = if request.format.html?
+                       current_team
+                     elsif activity_filters[:teams].present?
+                       @teams.where(id: activity_filters[:teams])
+                     else
+                       @teams
+                     end
     @activity_types = Activity.activity_types_list
     @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
                      .distinct
                      .pluck(:full_name, :id)
     @grouped_activities, @more_activities =
-      ActivitiesService.load_activities(current_user, teams, activity_filters)
+      ActivitiesService.load_activities(current_user, selected_teams, activity_filters)
     last_day = @grouped_activities.keys.last
     @next_date = (Date.parse(last_day) - 1.day).strftime('%Y-%m-%d') if last_day
     respond_to do |format|
@@ -63,14 +68,6 @@ class GlobalActivitiesController < ApplicationController
   private
 
   def activity_filters
-    begin
-      params[:types] = JSON.parse(params[:types])
-      params[:users] = JSON.parse(params[:users])
-      params[:teams] = JSON.parse(params[:teams])
-      params[:subjects] = JSON.parse(params[:subjects])
-    rescue StandardError
-    end
-
     params.permit(
       :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
     )
