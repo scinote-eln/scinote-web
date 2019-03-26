@@ -56,17 +56,13 @@
       position: relative;
 
       &::before {
-        background: $color-white;
-        border: 1px solid $color-emperor;
-        border-radius: 6px;
-        content: "";
-        height: 12px;
-        left: 0;
-        margin: 9px;
         position: absolute;
         top: 0;
-        transition: .3s;
-        width: 12px;
+        left: 0;
+        margin: 7px 0px 0px 12px;
+        font-family: "Font Awesome 5 Free";
+        content: "\f0c8";
+        font-weight: 400;
       }
 
       &.select2-results__option--highlighted {
@@ -78,7 +74,8 @@
         background: $color-concrete;
 
         &::before {
-          background: $color-emperor;
+          content: "\f14a";
+          font-weight: 400;
         }
       }
 
