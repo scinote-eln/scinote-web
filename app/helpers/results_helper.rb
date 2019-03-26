@@ -38,4 +38,16 @@ module ResultsHelper
       "edit-result-table"
     end
   end
+  def result_icon_class(result)
+    if result.is_asset
+      "fas fa-paperclip"
+    elsif result.is_text
+      "fas fa-font"
+    elsif result.is_table
+      "fas fa-table"
+    else
+      # just return table for any other result
+      "fas fa-table"
+    end
+  end
 end

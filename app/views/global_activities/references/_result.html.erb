@@ -1,7 +1,8 @@
 <%= render partial: "global_activities/references/my_module.html.erb",
            locals: { subject: subject&.my_module, breadcrumbs: breadcrumbs  } %>
 <div class="ga-breadcrumb">
-  <%= image_tag 'icon_small/result.png' %>
+
+  <span class="<%=result_icon_class(subject)%>"></span>
   <% if subject %>
     <%= link_to results_my_module_path(subject.my_module), title: subject.name do %>
       <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
