@@ -29,12 +29,25 @@ class Activity < ApplicationRecord
   )
 
   def self.activity_types_list
-    type_ofs.map  do |key, value|
-      {
-        id: value,
-        name: key.tr('_', ' ').capitalize
-      }
-    end.sort_by { |a| a[:name] }
+    activity_list = type_ofs.map do |key, value|
+      [
+        key.tr('_', ' ').capitalize,
+        value
+      ]
+    end.sort_by { |a| a[0] }
+    activity_groups = Extends::ACTIVITY_GROUPS
+
+    result = {}
+
+    activity_groups.each do |key, activities|
+      group_name = key.to_s.tr('_', ' ').capitalize
+      result[group_name] = []
+      activities.each do |activity_id|
+        activity_hash = activity_list.select { |activity| activity[1] == activity_id }[0]
+        result[group_name].push(activity_hash) if activity_hash
+      end
+    end
+    result
   end
 
   def old_activity?
@@ -78,8 +91,6 @@ class Activity < ApplicationRecord
   end
 
   def activity_version
-    if (experiment || my_module) && subject
-      errors.add(:activity, 'wrong combination of associations')
-    end
+    errors.add(:activity, 'wrong combination of associations') if (experiment || my_module) && subject
   end
 end

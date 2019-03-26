@@ -37,12 +37,13 @@
   <h4 class="title"><strong><%= t('global_activities.index.activity_type') %></strong></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
-    <%= select_tag "activity", options_for_select(@activity_types.map{|i| [i[:name], i[:id]]}),{
+    <%= select_tag "activity", grouped_options_for_select(@activity_types),{
       'data-select-all-button': t('global_activities.index.all_activities'),
       'data-select-all': 'true',
       'data-select-multiple-name': t('global_activities.index.l_activities'),
       'data-select-multiple-all-selected': t('global_activities.index.all_activities'),
-      'data-dropdown-position': 'left'
+      'data-dropdown-position': 'left',
+      'data-select-by-group': 'true'
     } %>
   </div>
 </div>
