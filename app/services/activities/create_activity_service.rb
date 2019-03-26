@@ -66,12 +66,12 @@ module Activities
     def try_to_constantize(key)
       const_name = key.to_s.camelize
       # Remove last part from and with '_xxx..x'
-      const_name_shorted = key.to_s.sub(/_[^_]*\z/, '').camelize
+      const_name_short = key.to_s.sub(/_[^_]*\z/, '').camelize
 
       if Extends::ACTIVITY_MESSAGE_ITEMS_TYPES.include? const_name
         const_name.constantize
-      elsif Extends::ACTIVITY_MESSAGE_ITEMS_TYPES.include? const_name_shorted
-        const_name_shorted.constantize
+      elsif Extends::ACTIVITY_MESSAGE_ITEMS_TYPES.include? const_name_short
+        const_name_short.constantize
       else
         false
       end
