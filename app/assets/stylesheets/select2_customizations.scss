@@ -43,12 +43,6 @@
       width: 100%;
     }
 
-    .select2-results__option[role="group"] {
-      strong {
-        font-size: $font-size-base;
-      }
-    }
-
     .select2-results__option[role="treeitem"] {
       background: $color-white;
       line-height: 18px;
@@ -83,6 +77,58 @@
         background: $color-alto;
       }
     }
+
+    .select2-results__option[role="group"] {
+
+      strong {
+        font-size: $font-size-base;
+      }
+    }
+
+    .select2-results__option[data-custom-group="true"] {
+
+      .select2-results__group {
+        cursor: pointer;
+        padding-left: 30px;
+        position: relative;
+
+
+        &::before {
+          position: absolute;
+          top: 0;
+          left: 0;
+          margin: 7px 0px 0px 12px;
+          font-family: "Font Awesome 5 Free";
+          content: "\f0c8";
+          font-weight: 400;
+        }
+
+        &:hover {
+          background: $color-alto;
+        }
+      }
+
+      &[data-toogle="all"] {
+
+        .select2-results__group {
+          background: $color-concrete;
+
+          &::before {
+            content: "\f14a";
+            font-weight: 400;
+          }
+        }
+      }
+
+      .select2-results__option[role="treeitem"] {
+        padding-left: 45px;
+
+        &::before {
+          left: 15px;
+        }
+      }
+    }
+
   }
 }
 

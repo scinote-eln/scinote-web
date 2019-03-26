@@ -37,8 +37,11 @@ $.fn.extend({
       // Adding select all button
       .on('select2:open', function() {
         var selectElement = this;
+        var groups;
+        var groupChildrens;
         $('.select2-selection').scrollTo(0);
         $('.select2_select_all').remove();
+        // Adding select_all_button
         if (selectElement.dataset.selectAllButton !== undefined) {
           $('<div class="select2_select_all btn btn-default"><strong>' + selectElement.dataset.selectAllButton + '</strong></div>').prependTo('.select2-dropdown').on('click', function() {
             var elementsToSelect = $.map($(selectElement).find('option'), e => e.value);
@@ -51,6 +54,41 @@ $.fn.extend({
 
         if (selectElement.dataset.dropdownPosition === 'left') {
           $('.select2-dropdown').parent().addClass('left-position');
+        }
+        // Adding select all group members event
+        if (selectElement.dataset.selectByGroup === 'true') {
+          setTimeout(() => {
+            groups = $('.select2-dropdown').find('.select2-results__group');
+            groups.click(e => {
+              var newSelection = [];
+              var scrollTo;
+              var group = e.currentTarget;
+              var childrens = $(selectElement).find('optgroup[label="' + group.innerHTML + '"] option');
+              childrens = $.map(childrens, act => act.value);
+              newSelection = $(selectElement).val().filter(function(i) {
+                return childrens.indexOf(i) < 0;
+              });
+              if ($(selectElement).find(
+                'optgroup[label="' + group.innerHTML + '"] option:selected'
+              ).length !== childrens.length) {
+                newSelection = newSelection.concat(childrens);
+              }
+              $(selectElement).val(newSelection).trigger('change');
+              scrollTo = $(group).parent()[0].offsetTop - 31;
+              $(selectElement).select2('close');
+              $(selectElement).select2('open');
+              $('.select2-results__options').scrollTo(scrollTo);
+            });
+
+            $.each(groups, (index, e) => {
+              groupChildrens = $(selectElement).find('optgroup[label="' + e.innerHTML + '"] option');
+              $(e).parent()[0].dataset.customGroup = 'true';
+              $(e).parent()[0].dataset.toogle = 'none';
+              if ($(selectElement).find('optgroup[label="' + e.innerHTML + '"] option:selected').length === groupChildrens.length) {
+                $(e).parent()[0].dataset.toogle = 'all';
+              }
+            });
+          }, 0);
         }
       })
       // Prevent shake bug with multiple select
@@ -80,10 +118,23 @@ $.fn.extend({
       })
       // Fxied scroll bug
       .on('select2:select select2:unselect change', function(e) {
+        var groups;
+        var groupChildrens;
         $('.select2-selection').scrollTo(0);
         $('.select2-results__options').scrollTop($(e.currentTarget).data('scrolltop'));
         if (this.dataset.singleDisplay === 'true') {
           $(this).updateSingleName();
+        }
+
+        if (this.dataset.selectByGroup === 'true') {
+          groups = $('.select2-dropdown').find('.select2-results__group');
+          $.each(groups, (index, act) => {
+            groupChildrens = $(this).find('optgroup[label="' + act.innerHTML + '"] option');
+            $(act).parent()[0].dataset.toogle = 'none';
+            if ($(this).find('optgroup[label="' + act.innerHTML + '"] option:selected').length === groupChildrens.length) {
+              $(act).parent()[0].dataset.toogle = 'all';
+            }
+          });
         }
       });
   },
