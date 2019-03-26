@@ -1,5 +1,10 @@
-<%= render partial: "global_activities/references/my_module.html.erb",
-           locals: { subject: subject&.my_module, breadcrumbs: breadcrumbs } %>
+<% if subject.in_repository? %>
+  <%= render partial: "global_activities/references/team.html.erb",
+             locals: { subject: subject&.team, breadcrumbs: breadcrumbs } %>
+<% else %>
+  <%= render partial: "global_activities/references/my_module.html.erb",
+             locals: { subject: subject&.my_module, breadcrumbs: breadcrumbs } %>
+<% end %>
 <div class="ga-breadcrumb">
   <span class="fas fa-edit"></span>
   <% if subject %>

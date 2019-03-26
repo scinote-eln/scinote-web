@@ -18,23 +18,19 @@ class ActivitiesService
     query = query.where(owner_id: filters[:users]) if filters[:users]
     query = query.where(type_of: filters[:types]) if filters[:types]
 
-    if filters[:from_date] && filters[:to_date]
+    if filters[:from_date].present? && filters[:to_date].present?
       activities = query.where(
-        'created_at >= :from AND created_at <= :to',
+        'created_at <= :from AND created_at >= :to',
         from: Time.zone.parse(filters[:from_date]).beginning_of_day.utc,
         to: Time.zone.parse(filters[:to_date]).end_of_day.utc
       )
-    elsif filters[:from_date] && !filters[:to_date]
+    elsif filters[:from_date].present? && filters[:to_date].blank?
       activities = query.where(
-        'created_at >= :from',
+        'created_at <= :from',
         from: Time.zone.parse(filters[:from_date]).beginning_of_day.utc
       )
     else
-      activities = query.where(
-        'created_at >= :from AND created_at <= :to',
-        from: Time.now.beginning_of_day.utc,
-        to: Time.now.end_of_day.utc
-      )
+      activities = query
     end
 
     activities = activities.order(created_at: :desc)
@@ -48,14 +44,16 @@ class ActivitiesService
 
     last_date = results.keys.last
     activities = query.where(
-      'created_at >= :from AND created_at <= :to',
-      from: Time.zone.parse(last_date).beginning_of_day.utc,
-      to: Time.zone.parse(last_date).end_of_day.utc
-    )
+      'created_at <= :from AND created_at >= :to',
+      from: Time.zone.parse(last_date).end_of_day.utc,
+      to: Time.zone.parse(last_date).beginning_of_day.utc
+    ).order(created_at: :desc)
+
     more_left = query.where(
-      'created_at > :from',
+      'created_at < :from',
       from: Time.zone.parse(last_date).end_of_day.utc
     ).exists?
+
     results[last_date] = activities.to_a
     [results, more_left]
   end

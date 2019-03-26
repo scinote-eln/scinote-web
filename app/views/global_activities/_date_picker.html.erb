@@ -16,8 +16,8 @@
   <script type="text/javascript">
     $(function () {
       var dt = $('#calendar-<%= id %>');
-      dt.datetimepicker({ ignoreReadonly: true, locale: '<%= I18n.locale %>', format: '<%= js_format %>' });
-      $('#calendar-<%= id %>').data('DateTimePicker').date(new Date);
+      dt.datetimepicker({ useCurrent: <%= use_current %>, ignoreReadonly: true, locale: '<%= I18n.locale %>', format: '<%= js_format %>' });
+      $('#calendar-<%= id %>').data('DateTimePicker').date(null);
     });
   </script>
 </div>

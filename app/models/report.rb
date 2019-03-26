@@ -1,5 +1,6 @@
 class Report < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -52,18 +53,8 @@ class Report < ApplicationRecord
     end
   end
 
-  def self.visible_by(user, team)
-    projects = team.projects.joins(
-      'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
-    ).where(archived: false)
-
-    # Only admins see all projects of the team
-    unless user.is_admin_of_team?(team)
-      projects = projects.where(
-        'visibility = 1 OR user_projects.user_id = :user_id', user_id: user.id
-      )
-    end
-    where(project: projects)
+  def self.viewable_by_user(user, teams)
+    where(project: Project.viewable_by_user(user, teams))
   end
 
   def root_elements

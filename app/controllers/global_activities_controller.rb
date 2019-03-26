@@ -4,7 +4,7 @@ class GlobalActivitiesController < ApplicationController
   def index
     teams = activity_filters[:teams]
     @teams = current_user.teams
-    teams = @teams.pluck(:id) if teams.blank?
+    teams = current_team if teams.blank?
     @activity_types = Activity.activity_types_list
     @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
                      .distinct
