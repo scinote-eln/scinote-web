@@ -65,7 +65,7 @@ $.fn.extend({
               var group = e.currentTarget;
               var childrens = $(selectElement).find('optgroup[label="' + group.innerHTML + '"] option');
               childrens = $.map(childrens, act => act.value);
-              newSelection = $(selectElement).val().filter(function(i) {
+              newSelection = ($(selectElement).val() || []).filter(function(i) {
                 return childrens.indexOf(i) < 0;
               });
               if ($(selectElement).find(
@@ -74,7 +74,7 @@ $.fn.extend({
                 newSelection = newSelection.concat(childrens);
               }
               $(selectElement).val(newSelection).trigger('change');
-              scrollTo = $(group).parent()[0].offsetTop - 31;
+              scrollTo = $('.select2-results__options').scrollTop();
               $(selectElement).select2('close');
               $(selectElement).select2('open');
               $('.select2-results__options').scrollTo(scrollTo);
