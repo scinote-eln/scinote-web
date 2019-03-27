@@ -451,7 +451,7 @@ class ReportsController < ApplicationController
 
   def load_visible_projects
     render_404 unless current_team
-    projects = current_team.projects.visible_from_user_by_name(
+    projects = Project.visible_from_user_by_name(
       current_user, current_team, search_params[:q]
     ).limit(Constants::SEARCH_LIMIT).select(:id, :name)
     @visible_projects = projects.collect do |project|
