@@ -49,6 +49,8 @@ class Experiment < ApplicationRecord
     experiment.validates :archived_on, presence: true
   end
 
+  after_touch { update_column(:workflowimg_updated_at, updated_at) }
+
   scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
 
   def self.search(
