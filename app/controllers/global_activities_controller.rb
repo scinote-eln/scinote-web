@@ -6,13 +6,14 @@ class GlobalActivitiesController < ApplicationController
     selected_teams = if request.format.html?
                        current_team
                      elsif activity_filters[:teams].present?
-                       @teams.where(id: activity_filters[:teams])
+                       @teams.where(id: activity_filters[:teams]).order(name: :asc)
                      else
-                       @teams
+                       @teams.order(name: :asc)
                      end
     @activity_types = Activity.activity_types_list
     @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
                      .distinct
+                     .order(full_name: :asc)
                      .pluck(:full_name, :id)
     @grouped_activities, @more_activities =
       ActivitiesService.load_activities(current_user, selected_teams, activity_filters)
