@@ -16,6 +16,10 @@
       width: calc(100% - 26px)
     }
 
+    .select2-search__field {
+      min-width: 150px;
+    }
+
     .select2-selection__choice {
       background: $color-concrete;
       border: 1px solid $color-alto;
