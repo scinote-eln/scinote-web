@@ -152,6 +152,12 @@ $(function() {
     return true;
   }
 
+  function resetHotButtonsBackgroundColor() {
+    $('.date-selector .hot-button').each(function() {
+      $(this).removeClass('selected');
+    })
+  }
+
   // Common selection intialize
   $.each(selectors, (index, e) => {
     $('.ga-side .' + e + '-selector select').select2Multiple({ singleDisplay: true })
@@ -196,6 +202,7 @@ $(function() {
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
     }
+    resetHotButtonsBackgroundColor();
   });
 
   $('#calendar-from-date').on('dp.change', function(e) {
@@ -206,6 +213,7 @@ $(function() {
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
     }
+    resetHotButtonsBackgroundColor();
   });
 
   GlobalActivitiesUpdateTopPaneTags();
@@ -248,5 +256,8 @@ $(function() {
     dateContainer[0].dataset.periodSelect = this.innerHTML;
     GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
+
+    resetHotButtonsBackgroundColor();
+    $(this).addClass('selected');
   });
 });
