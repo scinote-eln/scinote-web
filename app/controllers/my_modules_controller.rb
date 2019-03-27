@@ -160,10 +160,6 @@ class MyModulesController < ApplicationController
     if @my_module.archived_changed?(from: false, to: true)
 
       saved = @my_module.archive(current_user)
-      if saved
-        # Currently not in use
-        log_activity(:archive_module)
-      end
     elsif @my_module.archived_changed?(from: true, to: false)
 
       saved = @my_module.restore(current_user)

@@ -48,7 +48,6 @@ en:
       destroy_result_html: "%{user} deleted %{type_of_result} result %{result}."
       create_module_html: "%{user} created task %{my_module}."
       clone_module_html: "%{user} copied task %{my_module_new} from task %{my_module_original} as template."
-      archive_module_html: "%{user} archived task %{my_module}."
       restore_module_html: "%{user} restored task %{my_module} from archive."
       add_comment_to_module_html: "%{user} commented on task %{my_module}."
       edit_module_comment_html: "%{user} edited comment on task %{my_module}."

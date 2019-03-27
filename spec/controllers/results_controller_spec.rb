@@ -20,7 +20,8 @@ describe ResultsController, type: :controller do
     create :result_text, text: 'test text result', result: result
   end
 
-  describe '#destroy' do
+  describe 'DELETE destroy' do
+    let(:action) { delete :destroy, params: params }
     let(:params) do
       { id: result.id }
     end
@@ -28,8 +29,12 @@ describe ResultsController, type: :controller do
     it 'calls create activity service' do
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :destroy_result))
+      action
+    end
 
-      delete :destroy, params: params
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

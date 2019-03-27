@@ -89,6 +89,61 @@ describe Experiment, type: :model do
     let(:experiment) { create :experiment, :with_tasks }
     let(:user) { experiment.created_by }
 
+    context 'when creating tasks' do
+      let(:to_add) do
+        [{ id: 'n0', name: 'new task name', x: 50, y: 50 }]
+      end
+      let(:function_call) do
+        experiment.update_canvas([], to_add, [], [], [], [], [], [], user)
+      end
+
+      it 'calls create activity for creating tasks' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :create_module)))
+
+        function_call
+      end
+
+      it 'adds activity in DB' do
+        expect { function_call }.to(change { Activity.all.count })
+      end
+    end
+
+    context 'when cloning tasks' do
+      let(:to_add) do
+        experiment
+          .my_modules
+          .map.with_index do |t, i|
+            { id: 'n' + i.to_s,
+              name: t.name + '_new',
+              x: 50,
+              y: 50 }
+          end
+      end
+      let(:to_clone) do
+        experiment
+          .my_modules
+          .map.with_index { |t, i| { 'n' + i.to_s => t.id } }.reduce({}, :merge)
+      end
+      let(:function_call) do
+        experiment.update_canvas([], to_add, [], [], [], to_clone, [], [], user)
+      end
+
+      it 'calls create activity for cloning tasks' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :clone_module))).exactly(3).times
+
+        function_call
+      end
+
+      it 'creats 3 new activities in DB' do
+        expect { function_call }.to change { Activity.all.count }.by(3)
+      end
+    end
+
     context 'when renaming tasks' do
       let(:to_rename) do
         experiment
@@ -100,7 +155,7 @@ describe Experiment, type: :model do
         experiment.update_canvas([], [], to_rename, [], [], [], [], [], user)
       end
 
-      it 'calls create activity for renaiming my_moudles' do
+      it 'calls create activity for renaming my_moudles' do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type:
@@ -121,7 +176,7 @@ describe Experiment, type: :model do
         experiment.update_canvas(to_archive, [], [], [], [], [], [], [], user)
       end
 
-      it 'calls create activity for renaiming my_moudles' do
+      it 'calls create activity for archiving tasks' do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type:
@@ -146,7 +201,7 @@ describe Experiment, type: :model do
         experiment.update_canvas([], [], [], to_move, [], [], [], [], user)
       end
 
-      it 'calls create activity for renaiming my_moudles' do
+      it 'calls create activity for moving tasks to another experiment' do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type:

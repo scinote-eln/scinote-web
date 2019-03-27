@@ -127,22 +127,6 @@ class Step < ApplicationRecord
     @a_ids = nil
     Table.destroy(@t_ids)
     @t_ids = nil
-
-    # Generate "delete" activity, but only if protocol is
-    # located inside module
-    if (protocol.my_module.present?) then
-      Activities::CreateActivityService
-        .call(activity_type: :destroy_step,
-              owner: @current_user,
-              subject: protocol,
-              team: protocol.my_module.experiment.project.team,
-              project: protocol.my_module.experiment.project,
-              message_items: {
-                protocol: protocol.id,
-                step: id,
-                step_position: { id: id, value_for: 'position' }
-              })
-    end
   end
 
   def set_last_modified_by

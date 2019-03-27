@@ -20,7 +20,8 @@ describe ResultTextsController, type: :controller do
     create :result_text, text: 'test text result', result: result
   end
 
-  describe '#create' do
+  describe 'POST create' do
+    let(:action) { post :create, params: params, format: :json }
     let(:params) do
       { my_module_id: task.id,
         result: { name: 'result name created',
@@ -30,12 +31,17 @@ describe ResultTextsController, type: :controller do
     it 'calls create activity service' do
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :add_result))
+      action
+    end
 
-      post :create, params: params, format: :json
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 
   describe '#update' do
+    let(:action) { put :update, params: params, format: :json }
     let(:params) do
       { id: result_text.id,
         result: { name: result.name } }
@@ -44,16 +50,19 @@ describe ResultTextsController, type: :controller do
       params[:result][:name] = 'test result changed'
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :edit_result))
-
-      put :update, params: params, format: :json
+      action
     end
 
     it 'calls create activity service (archive_result)' do
       params[:result][:archived] = 'true'
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :archive_result))
+      action
+    end
 
-      put :update, params: params, format: :json
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

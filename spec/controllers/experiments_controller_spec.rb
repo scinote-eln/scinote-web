@@ -13,7 +13,8 @@ describe ExperimentsController, type: :controller do
   end
   let(:experiment) { create :experiment, project: project }
 
-  describe '#create' do
+  describe 'POST create' do
+    let(:action) { post :create, params: params, format: :json }
     let(:params) do
       { project_id: project.id,
         experiment: { name: 'test experiment A1',
@@ -24,7 +25,12 @@ describe ExperimentsController, type: :controller do
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :create_experiment))
 
-      post :create, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 
@@ -84,7 +90,8 @@ describe ExperimentsController, type: :controller do
     end
   end
 
-  describe '#archive' do
+  describe 'GET archive' do
+    let(:action) { get :archive, params: params, format: :json }
     let(:params) do
       { id: experiment.id,
         experiment: { archived: false } }
@@ -93,7 +100,12 @@ describe ExperimentsController, type: :controller do
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :archive_experiment))
 
-      get :archive, params: params, format: :json
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

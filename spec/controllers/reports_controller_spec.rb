@@ -17,8 +17,9 @@ describe ReportsController, type: :controller do
                     name: 'test repot A1', description: 'test description A1'
   end
 
-  describe '#create' do
+  describe 'POST create' do
     context 'in JSON format' do
+      let(:action) { post :create, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           report: { name: 'test report created',
@@ -30,14 +31,19 @@ describe ReportsController, type: :controller do
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :create_report))
+        action
+      end
 
-        post :create, params: params, format: :json
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#update' do
+  describe 'PUT update' do
     context 'in JSON format' do
+      let(:action) { put :update, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           id: report.id,
@@ -49,20 +55,29 @@ describe ReportsController, type: :controller do
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :edit_report))
+        action
+      end
 
-        put :update, params: params, format: :json
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#destroy' do
+  describe 'DELETE destroy' do
+    let(:action) { delete :destroy, params: params }
     let(:params) { { report_ids: "[#{report.id}]" } }
 
     it 'calls create activity service' do
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :delete_report))
+      action
+    end
 
-      delete :destroy, params: params
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

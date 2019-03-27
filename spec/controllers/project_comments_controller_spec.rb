@@ -16,8 +16,9 @@ describe ProjectCommentsController, type: :controller do
     create :project_comment, project: project, user: user
   end
 
-  describe '#create' do
+  describe 'POST create' do
     context 'in JSON format' do
+      let(:action) { post :create, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           comment: { message: 'test message' } }
@@ -27,13 +28,19 @@ describe ProjectCommentsController, type: :controller do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :add_comment_to_project))
 
-        post :create, params: params, format: :json
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#update' do
+  describe 'PUT update' do
     context 'in JSON format' do
+      let(:action) { put :update, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           id: project_comment.id,
@@ -44,13 +51,19 @@ describe ProjectCommentsController, type: :controller do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :edit_project_comment))
 
-        put :update, params: params, format: :json
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#destroy' do
+  describe 'DELETE destroy' do
     context 'in JSON format' do
+      let(:action) { delete :destroy, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           id: project_comment.id }
@@ -60,7 +73,12 @@ describe ProjectCommentsController, type: :controller do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :delete_project_comment))
 
-        delete :destroy, params: params, format: :json
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end

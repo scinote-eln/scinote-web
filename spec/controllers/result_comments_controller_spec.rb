@@ -25,8 +25,9 @@ describe ResultCommentsController, type: :controller do
                             user: user
   end
 
-  describe '#create' do
+  describe 'POST create' do
     context 'in JSON format' do
+      let(:action) { post :create, params: params, format: :json }
       let(:params) do
         { result_id: result.id,
           comment: { message: 'test comment' } }
@@ -35,14 +36,19 @@ describe ResultCommentsController, type: :controller do
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :add_comment_to_result))
+        action
+      end
 
-        post :create, params: params, format: :json
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#update' do
+  describe 'PUT update' do
     context 'in JSON format' do
+      let(:action) { put :update, params: params, format: :json }
       let(:params) do
         { result_id: result.id,
           id: result_comment.id,
@@ -52,13 +58,18 @@ describe ResultCommentsController, type: :controller do
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :edit_result_comment))
+        action
+      end
 
-        put :update, params: params, format: :json
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#destroy' do
+  describe 'DELETE destroy' do
+    let(:action) { delete :destroy, params: params, format: :json }
     let(:params) do
       { result_id: result.id,
         id: result_comment.id }
@@ -67,8 +78,12 @@ describe ResultCommentsController, type: :controller do
     it 'calls create activity service' do
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :delete_result_comment))
+      action
+    end
 
-      delete :destroy, params: params, format: :json
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end
