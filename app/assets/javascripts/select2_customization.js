@@ -2,6 +2,7 @@
 $.fn.extend({
   select2Multiple: function(config = {}) {
     // Adding ID to each block
+    var placeholder = this[0].dataset.placeholder || '';
     if (this.next().find('.select2-selection').length > 0) return this;
     var templateSelection = (state) => {
       return $('<span class="select2-block-body" data-select-id="' + state.id + '">'
@@ -12,6 +13,7 @@ $.fn.extend({
       closeOnSelect: false,
       multiple: true,
       ajax: config.ajax,
+      placeholder: placeholder,
       templateSelection: templateSelection,
       sorter: function(data) {
         return data.sort(function(a, b) {

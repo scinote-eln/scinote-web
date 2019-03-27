@@ -95,7 +95,7 @@ $(function() {
     var dateContainer = $('.ga-side .date-selector.filter-block');
     if (updateRunning) return false;
     $('.ga-top .ga-tags').children().remove();
-    if (dateContainer[0].dataset.periodSelect) {
+    if (dateContainer[0].dataset.periodSelect && dateContainer[0].dataset.periodSelect !== 'null') {
       $('<li class="select2-selection__choice">'
           + dateContainer[0].dataset.periodLabel
           + $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect
@@ -182,6 +182,7 @@ $(function() {
     $('.ga-side .subject-selector select').select2MultipleClearAll();
     $('#calendar-from-date').data('DateTimePicker').clear();
     $('#calendar-to-date').data('DateTimePicker').clear();
+    $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect = null;
     updateRunning = false;
     GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
