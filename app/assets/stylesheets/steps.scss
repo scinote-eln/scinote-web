@@ -1,7 +1,6 @@
 // Place all the styles related to the Steps controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-@import "constants";
 
 #new_step,
 .panel-step-attachment {
@@ -29,58 +28,4 @@
       }
     }
   }
-
-  .step {
-    .panel {
-      margin-left: 0;
-    }
-  }
-
-  .complete-step-btn {
-    display: inline-block;
-    line-height: 39px;
-
-    button {
-      display: block;
-      font-size: 12px;
-      margin: auto 0;
-      padding: 3px 10px;
-
-      span {
-        font-size: 15px;
-      }
-    }
-  }
-
-  .panel-heading {
-    padding-top: 0;
-    padding-bottom: 0;
-    background-color: $color-silver;
-    height: 39px;
-    border-bottom-width: 0 !important;
-
-    > * {
-      display: inline-block;
-      line-height: 39px;
-    }
-
-    .panel-options {
-      bottom: 0;
-    }
-
-    span.step-number {
-      font-size: 30px;
-      margin: 0 10px;
-    }
-
-    .left-floats {
-      float: left;
-
-      > * {
-        float: left;
-      }
-    }
-  }
 }
-
-

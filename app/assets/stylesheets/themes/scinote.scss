@@ -1020,6 +1020,12 @@ ul.content-activities {
     }
   }
 }
+/* Steps and Results */
+#steps {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAAIUlEQVQImWNgoD5gZGBgMILSjKRo/P//vwiSGQwMDAwMAEnaA0jgHoquAAAAAElFTkSuQmCC");
+  background-repeat: repeat-y;
+  background-position: -3px 0;
+}
 
 .badge-icon {
   background-color: $color-silver;
