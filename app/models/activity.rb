@@ -31,7 +31,7 @@ class Activity < ApplicationRecord
   def self.activity_types_list
     activity_list = type_ofs.map do |key, value|
       [
-        key.tr('_', ' ').capitalize,
+        I18n.t("global_activities.activity_name.#{key}"),
         value
       ]
     end.sort_by { |a| a[0] }
@@ -40,7 +40,7 @@ class Activity < ApplicationRecord
     result = {}
 
     activity_groups.each do |key, activities|
-      group_name = key.to_s.tr('_', ' ').capitalize
+      group_name = I18n.t("global_activities.activity_group.#{key}")
       result[group_name] = []
       activities.each do |activity_id|
         activity_hash = activity_list.select { |activity| activity[1] == activity_id }[0]

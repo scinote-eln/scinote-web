@@ -12,7 +12,20 @@ $.fn.extend({
       closeOnSelect: false,
       multiple: true,
       ajax: config.ajax,
-      templateSelection: templateSelection
+      templateSelection: templateSelection,
+      sorter: function(data) {
+        return data.sort(function(a, b) {
+          var from = a.text.toLowerCase();
+          var to = b.text.toLowerCase();
+          var result = 0;
+          if (from > to) {
+            result = 1;
+          } else if (from < to) {
+            result = -1;
+          }
+          return result;
+        });
+      }
     });
     // Add dynamic size
     select2.next().css('width', '100%');
