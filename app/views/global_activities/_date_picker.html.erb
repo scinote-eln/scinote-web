@@ -2,7 +2,7 @@
   <% if label %>
     <label class="control-label required" for="calendar-<%= id %>"><%= label %></label>
   <% end %>
-  <input type="datetime" class="form-control" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" />
+  <input type="datetime" class="form-control" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" />
   <%
     js_format = I18n.backend.date_format.dup
       js_format.gsub!(/%-d/, 'D')

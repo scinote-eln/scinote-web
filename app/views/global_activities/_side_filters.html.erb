@@ -31,11 +31,11 @@
       <%= t('global_activities.index.custom_dates_label') %>
     </h4>
     <div class="to">
-      <%= render partial: "date_picker", locals: { id: 'to-date', use_current: 'false', label: t('global_activities.index.to_label') } %>
+      <%= render partial: "date_picker", locals: { id: 'to-date', use_current: 'false', placeholder: t('global_activities.index.to_label'), label: nil } %>
     </div>
     <div class="separator"></div>
     <div class="from">
-      <%= render partial: "date_picker", locals: { id: 'from-date', use_current: 'true', label: t('global_activities.index.from_label') } %>
+      <%= render partial: "date_picker", locals: { id: 'from-date', use_current: 'true', placeholder: t('global_activities.index.from_label'), label: nil } %>
     </div>
   </div>
 </div>
