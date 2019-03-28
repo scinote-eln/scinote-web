@@ -11,6 +11,9 @@
     </div>
 
     <div class="ga-main col-lg-9 col-md-12 col-xl-10">
+      <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
+        <p><%= t('activities.index.no_activities_message') %></p>
+      </div>
       <div class="ga-activities-list" data-activities-url="<%= global_activities_path %>">
         <%= render partial: "activity_list.html.erb" %>
       </div>

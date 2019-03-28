@@ -124,6 +124,7 @@ $(function() {
   // update_filter
   function reloadActivities() {
     var moreButton = $('.btn-more-activities');
+    var noActivitiesMessage = $('.no-activities-message');
     if (updateRunning) return false;
     updateRunning = true;
     $('.ga-activities-list .activities-day').remove();
@@ -140,6 +141,11 @@ $(function() {
           moreButton.data('next-date', json.from);
         } else {
           moreButton.addClass('hidden');
+        }
+        if (json.activities_html === "") {
+          noActivitiesMessage.removeClass('hidden');
+        } else {
+          noActivitiesMessage.addClass('hidden');
         }
         updateRunning = false;
         animateSpinner(null, false);
