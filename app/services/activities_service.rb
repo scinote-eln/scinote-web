@@ -8,10 +8,10 @@ class ActivitiesService
     query = Activity.where(project: visible_projects)
                     .or(Activity.where(project: nil, team: visible_teams))
     if filters[:subjects].present?
+      subjects_with_childrens = load_subjects_children(filters[:subjects])
       query = query.where(
-        filters[:subjects]
-          .to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),
-        *filters[:subjects].to_h.flatten
+        subjects_with_childrens.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),
+        *subjects_with_childrens.flatten
       )
     end
 
@@ -52,5 +52,23 @@ class ActivitiesService
 
     results[last_date] = activities.to_a
     [results, more_left]
+  end
+
+  def self.load_subjects_children(subjects = {})
+    subject_types = Extends::ACTIVITY_SUBJECT_CHILDRENS
+    subject_types.each do |subject_name, childrens|
+      next unless childrens && subjects[subject_name]
+
+      childrens.each do |children|
+        parent_model = subject_name.to_s.constantize
+        child_model = parent_model.reflect_on_association(children).class_name.to_sym
+        childrens_id = parent_model.where(id: subjects[subject_name])
+                                   .joins(children)
+                                   .pluck("#{children}.id")
+        subjects[child_model] = (subjects[child_model] ||= []) + childrens_id
+      end
+    end
+
+    subjects.each { |_sub, childs| childs.uniq! }
   end
 end

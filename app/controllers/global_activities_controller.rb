@@ -57,8 +57,7 @@ class GlobalActivitiesController < ApplicationController
                        .pluck(:id, :name)
       next if matched.length.zero?
 
-      subject_name = t("global_activities.subject_name.#{subject.to_s.downcase}")
-      results[subject_name] = matched.map { |pr| { id: pr[0], name: pr[1] } }
+      results[subject] = matched.map { |pr| { id: pr[0], name: pr[1] } }
     end
     respond_to do |format|
       format.json do
