@@ -240,6 +240,8 @@ $(function() {
     var lastMonthEnd = new Date(new Date().setDate(firstDay.getDate() - 1));
     var lastMonthStart = new Date(lastMonthEnd.getFullYear(), lastMonthEnd.getMonth(), 1);
     updateRunning = true;
+    fromDate.minDate(new Date(1900, 1, 1));
+    toDate.maxDate(new Date(3000, 1, 1));
     if (selectPeriod === 'today') {
       fromDate.date(today);
       toDate.date(today);
