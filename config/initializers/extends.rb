@@ -107,7 +107,7 @@ class Extends
     unassign_user_from_project: 7,
     create_module: 8,
     clone_module: 9,
-    archive_module: 10,
+    archive_module: 10, # not in use
     restore_module: 11,
     change_module_description: 12,
     assign_user_to_module: 13,
@@ -140,16 +140,16 @@ class Extends
     edit_result_comment: 40,
     delete_result_comment: 41,
     destroy_result: 42,
-    start_edit_wopi_file: 43,
-    unlock_wopi_file: 44,
+    start_edit_wopi_file: 43, # not in use
+    unlock_wopi_file: 44, # not in use
     load_protocol_to_task_from_file: 45,
     load_protocol_to_task_from_repository: 46,
     update_protocol_in_task_from_repository: 47,
     create_report: 48,
     delete_report: 49,
     edit_report: 50,
-    assign_sample: 51,
-    unassign_sample: 52,
+    assign_sample: 51, # not in use
+    unassign_sample: 52, # not in use
     complete_task: 53,
     uncomplete_task: 54,
     assign_repository_record: 55,

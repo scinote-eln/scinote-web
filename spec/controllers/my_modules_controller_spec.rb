@@ -12,11 +12,54 @@ describe MyModulesController, type: :controller do
   let!(:user_project) do
     create :user_project, :normal_user, user: user, project: project
   end
+  let!(:repository) { create :repository, created_by: user, team: team }
+  let!(:repository_row) do
+    create :repository_row, created_by: user, repository: repository
+  end
   let(:experiment) { create :experiment, project: project }
+  let(:my_module) { create :my_module, experiment: experiment }
 
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
-    let(:my_module) { create :my_module, experiment: experiment }
+
+    context 'when restoring task from archive' do
+      let(:params) { { id: my_module.id, my_module: { archived: false } } }
+      let(:my_module) do
+        create :my_module, archived: true, experiment: experiment
+      end
+
+      it 'calls create activity for restoring task from archive' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :restore_module)))
+
+        put :update, params: params
+      end
+
+      it 'adds activity in DB' do
+        expect { put :update, params: params }
+          .to(change { Activity.count })
+      end
+    end
+
+    context 'when changing task description' do
+      let(:params) do
+        { id: my_module.id, my_module: { description: 'description changed' } }
+      end
+
+      it 'calls create activity for changing task description' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :change_module_description)))
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
+      end
+    end
 
     context 'when setting due_date' do
       let(:params) do
@@ -28,7 +71,6 @@ describe MyModulesController, type: :controller do
           .to(receive(:call)
                 .with(hash_including(activity_type:
                                        :set_task_due_date)))
-
         action
       end
 
@@ -49,7 +91,6 @@ describe MyModulesController, type: :controller do
           .to(receive(:call)
                 .with(hash_including(activity_type:
                                        :remove_task_due_date)))
-
         action
       end
 
@@ -72,7 +113,6 @@ describe MyModulesController, type: :controller do
           .to(receive(:call)
                 .with(hash_including(activity_type:
                                        :change_task_due_date)))
-
         action
       end
 
@@ -80,6 +120,97 @@ describe MyModulesController, type: :controller do
         expect { action }
           .to(change { Activity.count })
       end
+    end
+  end
+
+  describe 'POST assign_repository_records' do
+    let(:params) do
+      { id: my_module.id,
+        repository_id: repository.id,
+        selected_rows: [repository_row.id],
+        downstream: false }
+    end
+    let(:action) do
+      post :assign_repository_records, params: params, format: :json
+    end
+
+    it 'calls create activity for assign_repository_record' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :assign_repository_record)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST unassign_repository_records' do
+    let!(:mm_repository_row) do
+      create :mm_repository_row, repository_row: repository_row,
+                                 my_module: my_module,
+                                 assigned_by: user
+    end
+    let(:params) do
+      { id: my_module.id,
+        repository_id: repository.id,
+        selected_rows: [repository_row.id],
+        downstream: false }
+    end
+    let(:action) do
+      post :unassign_repository_records, params: params, format: :json
+    end
+
+    it 'calls create activity for unassign_repository_record' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :unassign_repository_record)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST toggle_task_state' do
+    let(:action) { post :toggle_task_state, params: params, format: :json }
+    let(:params) { { id: my_module.id } }
+
+    context 'when completing task' do
+      let(:my_module) do
+        create :my_module, state: 'uncompleted', experiment: experiment
+      end
+
+      it 'calls create activity for completing task' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :complete_task)))
+        action
+      end
+    end
+
+    context 'when uncompleting task' do
+      let(:my_module) do
+        create :my_module, state: 'completed', experiment: experiment
+      end
+
+      it 'calls create activity for uncompleting task' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :uncomplete_task)))
+        action
+      end
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

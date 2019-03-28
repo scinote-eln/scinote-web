@@ -28,11 +28,10 @@ describe TagsController, type: :controller do
       }
     end
 
-    it 'calls create activity for setting due date' do
+    it 'calls create activity for adding task tag' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :add_task_tag)))
-
       action
     end
 

@@ -19,8 +19,9 @@ describe UserProjectsController, type: :controller do
                                                  target_user_project]
   end
 
-  describe '#create' do
+  describe 'POST create' do
     context 'in JSON format' do
+      let(:action) { post :create, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           user_project: { user_id: user_two.id,
@@ -31,14 +32,19 @@ describe UserProjectsController, type: :controller do
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :assign_user_to_project))
+        action
+      end
 
-        post :create, params: params, format: :json
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#update' do
+  describe 'PUT update' do
     context 'in JSON format' do
+      let(:action) { put :update, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           id: target_user_project.id,
@@ -50,14 +56,19 @@ describe UserProjectsController, type: :controller do
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :change_user_role_on_project))
+        action
+      end
 
-        put :update, params: params, format: :json
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
 
-  describe '#destroy' do
+  describe 'DELETE destroy' do
     context 'in JSON format' do
+      let(:action) { delete :destroy, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
           id: target_user_project.id }
@@ -66,8 +77,12 @@ describe UserProjectsController, type: :controller do
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :unassign_user_from_project))
+        action
+      end
 
-        delete :destroy, params: params, format: :json
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end

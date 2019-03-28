@@ -275,7 +275,7 @@ class Experiment < ApplicationRecord
     cloned_pairs = {}
     ids_map = {}
     to_add.each do |m|
-      original = MyModule.find_by_id(to_clone.fetch(m[:id], nil))
+      original = MyModule.find_by_id(to_clone.fetch(m[:id], nil)) if to_clone.present?
       if original.present?
         my_module = original.deep_clone(current_user)
         cloned_pairs[my_module] = original

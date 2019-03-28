@@ -210,7 +210,12 @@ class StepsController < ApplicationController
       team = @protocol.team
       previous_size = @step.space_taken
 
-      log_activity(:delete_step_in_protocol_repository)
+      # Generate activity
+      if @protocol.in_module?
+        log_activity(:destroy_step, @my_module.experiment.project)
+      else
+        log_activity(:delete_step_in_protocol_repository)
+      end
 
       # Destroy the step
       @step.destroy(current_user)

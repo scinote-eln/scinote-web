@@ -8,23 +8,22 @@ describe ProtocolsController, type: :controller do
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
+  let(:project) { create :project, team: team, created_by: user }
+  let!(:user_project) do
+    create :user_project, :normal_user, user: user, project: project
+  end
+  let(:experiment) { create :experiment, project: project }
+  let(:my_module) { create :my_module, experiment: experiment }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
-    let(:params) do
-      {
-        protocol: {
-          name: 'protocol_name'
-        }
-      }
-    end
+    let(:params) { { protocol: { name: 'protocol_name' } } }
 
     it 'calls create activity for creating inventory column' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type:
                                      :create_protocol_in_repository)))
-
       action
     end
 
@@ -47,7 +46,6 @@ describe ProtocolsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type:
                                      :export_protocol_in_repository))).twice
-
       action
     end
 
@@ -79,7 +77,6 @@ describe ProtocolsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type:
                                      :import_protocol_in_repository)))
-
       action
     end
 
@@ -108,7 +105,129 @@ describe ProtocolsController, type: :controller do
         .to(receive(:call)
               .with(hash_including(activity_type:
                                      :edit_description_in_protocol_repository)))
+      action
+    end
 
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST update_keywords' do
+    let(:protocol) do
+      create :protocol, :in_public_repository, team: team, added_by: user
+    end
+    let(:action) { put :update_keywords, params: params, format: :json }
+    let(:params) do
+      { id: protocol.id, keywords: ['keyword-1', 'keyword-2'] }
+    end
+
+    it 'calls create activity for updating keywords' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :edit_keywords_in_protocol_repository)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  context 'update protocol' do
+    let(:protocol_repo) do
+      create :protocol, :in_public_repository, name: ' test protocol',
+                                               team: team,
+                                               added_by: user
+    end
+    let(:protocol) do
+      create :protocol, :linked_to_repository, name: ' test protocol',
+                                               my_module: my_module,
+                                               parent: protocol_repo,
+                                               team: team,
+                                               added_by: user
+    end
+    let(:params) { { id: protocol.id } }
+
+    describe 'POST revert' do
+      let(:action) { put :revert, params: params, format: :json }
+
+      it 'calls create activity for updating protocol in task from repository' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :update_protocol_in_task_from_repository)))
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
+      end
+    end
+
+    describe 'POST update_parent' do
+      let(:action) { put :update_parent, params: params, format: :json }
+
+      it 'calls create activity for updating protocol in repository from task' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :update_protocol_in_repository_from_task)))
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
+      end
+    end
+  end
+
+  describe 'POST load_from_repository' do
+    let(:protocol_source) do
+      create :protocol, :in_public_repository, team: team, added_by: user
+    end
+    let(:protocol) { create :protocol, team: team, added_by: user }
+    let(:action) { put :load_from_repository, params: params, format: :json }
+    let(:params) do
+      { source_id: protocol_source.id, id: protocol.id }
+    end
+
+    it 'calls create activity for loading protocol to task from repository' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :load_protocol_to_task_from_repository)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST load_from_file' do
+    let(:protocol) do
+      create :protocol, my_module: my_module, team: team, added_by: user
+    end
+    let(:action) { put :load_from_file, params: params, format: :json }
+    let(:params) do
+      { id: protocol.id,
+        protocol: { name: 'my_test_protocol',
+                    description: 'description',
+                    authors: 'authors' } }
+    end
+
+    it 'calls create activity for loading protocol to task from file' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :load_protocol_to_task_from_file)))
       action
     end
 

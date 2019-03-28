@@ -102,7 +102,7 @@ describe ProjectsController, type: :controller do
     end
   end
 
-  describe '#create' do
+  describe 'POST create' do
     context 'in JSON format' do
       let(:params) do
         { project: { name: 'test project A1', team_id: team.id,
@@ -146,8 +146,9 @@ describe ProjectsController, type: :controller do
     end
   end
 
-  describe '#update' do
+  describe 'PUT update' do
     context 'in HTML format' do
+      let(:action) { put :update, params: params }
       let(:params) do
         { id: project_1.id,
           project: { name: project_1.name, team_id: project_1.team.id,
@@ -155,7 +156,7 @@ describe ProjectsController, type: :controller do
       end
 
       it 'returns redirect response' do
-        put :update, params: params
+        action
         expect(response).to have_http_status(:redirect)
         expect(response.content_type).to eq 'text/html'
       end
@@ -164,16 +165,14 @@ describe ProjectsController, type: :controller do
         params[:project][:visibility] = 'hidden'
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :change_project_visibility))
-
-        put :update, params: params
+        action
       end
 
       it 'calls create activity service (rename_project)' do
         params[:project][:name] = 'test project changed'
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :rename_project))
-
-        put :update, params: params
+        action
       end
 
       it 'calls create activity service (restore_project)' do
@@ -181,16 +180,20 @@ describe ProjectsController, type: :controller do
         params[:project][:archived] = false
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :restore_project))
-
-        put :update, params: params
+        action
       end
 
       it 'calls create activity service (archive_project)' do
         params[:project][:archived] = true
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :archive_project))
+        action
+      end
 
-        put :update, params: params
+      it 'adds activity in DB' do
+        params[:project][:archived] = true
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
