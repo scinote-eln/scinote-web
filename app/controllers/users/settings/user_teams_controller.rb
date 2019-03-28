@@ -30,7 +30,7 @@ module Users
                     message_items: {
                       team: @user_t.team.id,
                       user_changed: @user_t.user.id,
-                      role: @user_t.role.to_s
+                      role: @user_t.role_str
                     })
 
             format.json do
