@@ -70,6 +70,10 @@ class Result < ApplicationRecord
     where(my_module: MyModule.viewable_by_user(user, teams))
   end
 
+  def navigable?
+    !my_module.archived? && my_module.navigable?
+  end
+
   def space_taken
     is_asset ? result_asset.space_taken : 0
   end

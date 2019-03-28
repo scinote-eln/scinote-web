@@ -13,9 +13,13 @@
                               subject.team,
                               subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                               title: subject.name %>
-    <% else %>
+    <% elsif subject.my_module.navigable? %>
       <%= link_to subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                   protocols_my_module_path(subject.my_module), title: subject.name %>
+    <% else %>
+      <span title="<%= subject.name %>">
+        <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+      </span>
     <% end %>
   <% else %>
     <span title="<%= breadcrumbs[:protocol] %>">

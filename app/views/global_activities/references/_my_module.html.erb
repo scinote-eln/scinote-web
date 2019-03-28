@@ -2,13 +2,15 @@
            locals: { subject: subject&.experiment, breadcrumbs: breadcrumbs  } %>
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/task.svg' %>
-  <% if subject %>
-    <%= link_to my_module_path(subject), title: subject.name do %>
+  <% if subject&.navigable? %>
+    <% path = subject.archived? ? module_archive_experiment_path(subject.experiment) : protocols_my_module_path(subject) %>
+    <%= link_to path, title: subject.name do %>
       <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     <% end %>
   <% else %>
-    <span title="<%= breadcrumbs[:my_module] %>">
-      <%= breadcrumbs[:my_module]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    <% name = subject&.name || breadcrumbs[:my_module] %>
+    <span title="<%= name %>">
+      <%= name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
   <% end %>
 </div>

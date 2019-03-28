@@ -25,8 +25,8 @@ module Activities
 
     def call
       enrich_message_items
-      @activity.save!
       @activity.generate_breadcrumbs
+      @activity.save!
       self
     end
 

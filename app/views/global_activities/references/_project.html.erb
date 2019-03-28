@@ -3,7 +3,8 @@
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/project.svg' %>
   <% if subject %>
-    <%= link_to project_path(subject), title: subject.name do %>
+    <% path = subject.archived? ? projects_path : project_path(subject) %>
+    <%= link_to path, title: subject.name do %>
       <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     <% end %>
   <% else %>

@@ -141,9 +141,13 @@ class MyModule < ApplicationRecord
     where(experiment: Experiment.viewable_by_user(user, teams))
   end
 
+  def navigable?
+    !experiment.archived? && experiment.navigable?
+  end
+
   # Removes assigned samples from module and connections with other
   # modules.
-  def archive (current_user)
+  def archive(current_user)
     self.x = 0
     self.y = 0
     # Remove association with module group.
