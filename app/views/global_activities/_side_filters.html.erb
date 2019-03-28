@@ -75,6 +75,8 @@
   <h4 class="title"><%= t('global_activities.index.object') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
-    <select name="subject" data-select-all="false" data-dropdown-position="left" data-placeholder="<%= t('global_activities.index.select_objects') %>"></select>
+    <select name="subject" data-select-all="false" data-dropdown-position="left"  data-placeholder="<%= t('global_activities.index.select_objects') %>"
+      data-select-all-button= "<%= t('global_activities.index.deselect_all_objects') %>"
+    ></select>
   </div>
 </div>
