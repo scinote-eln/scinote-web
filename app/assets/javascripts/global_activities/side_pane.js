@@ -95,7 +95,7 @@ $(function() {
     var dateContainer = $('.ga-side .date-selector.filter-block');
     if (updateRunning) return false;
     $('.ga-top .ga-tags').children().remove();
-    if (dateContainer[0].dataset.periodSelect && dateContainer[0].dataset.periodSelect !== 'null') {
+    if (dateContainer[0].dataset.periodSelect) {
       $('<li class="select2-selection__choice">'
           + dateContainer[0].dataset.periodLabel
           + $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect
@@ -152,6 +152,12 @@ $(function() {
     return true;
   }
 
+  function resetHotButtonsBackgroundColor() {
+    $('.date-selector .hot-button').each(function() {
+      $(this).removeClass('selected');
+    });
+  }
+
   // Common selection intialize
   $.each(selectors, (index, e) => {
     $('.ga-side .' + e + '-selector select').select2Multiple({ singleDisplay: true })
@@ -182,7 +188,8 @@ $(function() {
     $('.ga-side .subject-selector select').select2MultipleClearAll();
     $('#calendar-from-date').data('DateTimePicker').clear();
     $('#calendar-to-date').data('DateTimePicker').clear();
-    $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect = null;
+    $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect = '';
+
     updateRunning = false;
     GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
@@ -195,6 +202,7 @@ $(function() {
       dateContainer[0].dataset.periodSelect = $('#calendar-from-date').val() + ' - ' + $('#calendar-to-date').val();
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
+      resetHotButtonsBackgroundColor();
     }
   });
 
@@ -205,6 +213,7 @@ $(function() {
       dateContainer[0].dataset.periodSelect = $('#calendar-from-date').val() + ' - ' + $('#calendar-to-date').val();
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
+      resetHotButtonsBackgroundColor();
     }
   });
 
@@ -248,5 +257,8 @@ $(function() {
     dateContainer[0].dataset.periodSelect = this.innerHTML;
     GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
+
+    resetHotButtonsBackgroundColor();
+    $(this).addClass('selected');
   });
 });
