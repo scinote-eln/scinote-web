@@ -1310,6 +1310,7 @@ en:
       more_activities: "Show more activities"
       no_activities: "No activities!"
       no_activities_message: "No activities could be displayed. Update filters or start using SciNote to generate your first activities."
+      no_activities_task_message: "No activities could be displayed."
       activity_counter_label: " activity"
       activities_counter_label: " activities"
       expand_all: "Expand all"

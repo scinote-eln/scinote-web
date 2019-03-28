@@ -21,7 +21,7 @@
           data-button-link="<%= "#activities-group-#{date}-button" %>">
           <% activities.each do |activity| %>
             <li class="activity-card">
-              <%= render partial: 'activity.html.erb', locals: { activity: activity } %>
+              <%= render partial: 'global_activities/activity.html.erb', locals: { activity: activity } %>
             </li>
           <% end %>
       </ul>

@@ -76,39 +76,31 @@ class MyModulesController < ApplicationController
   end
 
   def activities
-    @last_activity_id = params[:from].to_i || 0
-    @per_page = 10
-
-    @activities = @my_module.last_activities(@last_activity_id, @per_page + 1)
-    @more_activities_url = ""
-
-    @overflown = @activities.length > @per_page
-
-    @activities = @my_module.last_activities(@last_activity_id, @per_page)
-
-    if @activities.count > 0
-      @more_activities_url =
-        activities_my_module_path(@my_module, from: @activities.last.id)
-    end
-
+    params[:subjects] = {
+      MyModule: [@my_module.id],
+      Result: @my_module.results.pluck(:id),
+      Protocol: @my_module.protocols.pluck(:id)
+    }
+    @activity_types = Activity.activity_types_list
+    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
+                     .distinct
+                     .pluck(:full_name, :id)
+    @grouped_activities, @more_activities =
+      ActivitiesService.load_activities(current_user, current_team, activity_filters)
+    last_day = @grouped_activities.keys.last
+    @next_date = (Date.parse(last_day) - 1.day).strftime('%Y-%m-%d') if last_day
     respond_to do |format|
-      format.json {
-        # 'activites' partial includes header and form for adding older
-        # activities. 'list' partial is used for showing more activities.
-        partial = "activities.html.erb"
-        if @activities.last.id > 0
-          partial = "my_modules/activities/list_activities.html.erb"
-        end
-        render :json => {
-          :per_page => @per_page,
-          :results_number => @activities.length,
-          :more_url => @more_activities_url,
-          :html => render_to_string({
-            :partial => partial
-          })
+      format.json do
+        render json: {
+          activities_html: render_to_string(
+            partial: 'global_activities/activity_list.html.erb'
+          ),
+          from: @next_date,
+          more_activities: @more_activities
         }
-      }
-      format.html
+      end
+      format.html do
+      end
     end
   end
 
@@ -665,4 +657,11 @@ class MyModulesController < ApplicationController
             subject: @my_module,
             message_items: message_items)
   end
+
+  def activity_filters
+    params.permit(
+      :from_date, :to_date, types: [], users: [], subjects: {}
+    )
+  end
+
 end
