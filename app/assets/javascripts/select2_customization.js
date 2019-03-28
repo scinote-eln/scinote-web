@@ -1,7 +1,7 @@
 
 $.fn.extend({
   select2Multiple: function(config = {}) {
-    if (this.length == 0) return this
+    if (this.length === 0) return this;
     // Adding ID to each block
     var placeholder = this[0].dataset.placeholder || '';
     if (this.next().find('.select2-selection').length > 0) return this;
@@ -59,6 +59,7 @@ $.fn.extend({
         var selectElement = this;
         var groups;
         var groupChildrens;
+        var leftPosition = -310;
         $('.select2-dropdown').removeClass('custom-group');
         $('.select2-selection').scrollTo(0);
         $('.select2_select_all').remove();
@@ -80,6 +81,18 @@ $.fn.extend({
           if (selectElement.dataset.selectAllButton === undefined) {
             $('.select2-dropdown').parent().addClass('full');
           }
+          if (window.innerWidth < 1200) {
+            $('.select2-dropdown').css('left', '');
+          } else {
+            $('.select2-dropdown').css('left', leftPosition);
+          }
+          $(window).on('resize', () => {
+            if (window.innerWidth < 1200) {
+              $('.select2-dropdown').css('left', '');
+            } else {
+              $('.select2-dropdown').css('left', leftPosition);
+            }
+          });
         }
         // Adding select all group members event
         if (selectElement.dataset.selectByGroup === 'true') {

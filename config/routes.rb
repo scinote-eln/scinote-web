@@ -354,6 +354,7 @@ Rails.application.routes.draw do
         # as well as full activities view (HTML) for single module
         get 'description'
         get 'activities'
+        post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
         get 'protocols' # Protocols view for single module

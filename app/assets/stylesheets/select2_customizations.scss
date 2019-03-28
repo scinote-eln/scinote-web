@@ -62,7 +62,7 @@
 
   .select2-dropdown {
     border: 1px solid $color-alto;
-    z-index: 1000;
+    z-index: 1500;
 
     .select2_select_all {
       border: 0;
@@ -169,9 +169,9 @@
 @media (min-width: 1200px) {
 
   .select2-container--open.left-position {
-    left: calc(75% - 280px) !important;
     top: 60px  !important;
     position: fixed !important;
+    z-index: 1500;
 
     .select2-dropdown {
       border-radius: 0px;
