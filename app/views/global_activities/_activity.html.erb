@@ -15,7 +15,7 @@
   <% unless activity.old_activity? %>
     <% if activity.subject_type.present? %>
       <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
-                 locals: { subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
+                 locals: { team: activity.team, subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
     <% end %>
   <% end %>
   </div>
