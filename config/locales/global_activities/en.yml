@@ -232,3 +232,12 @@ en:
       protocol_repository: "Protocol repository"
       team: "Team"
       exports: "Exports"
+    subject_name:
+      repository: "Repository"
+      project: "Project"
+      experiment: "Experiment"
+      mymodule: "Task"
+      result: "Result"
+      protocol: "Protocol"
+      step: "Step"
+      report: "Report"
