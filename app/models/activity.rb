@@ -87,7 +87,6 @@ class Activity < ApplicationRecord
     when Team
       breadcrumbs[:team] = subject.name
     end
-    save!
   end
 
   def activity_version

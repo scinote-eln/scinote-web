@@ -171,13 +171,11 @@ class ProjectsController < ApplicationController
     @project.last_modified_by = current_user
     if !return_error && @project.update(project_params)
       # Add activities if needed
-      if message_visibility.present?
-        log_activity(:change_project_visibility,
-                     visibility: message_visibility)
-      end
-      if message_renamed.present?
-        log_activity(:rename_project)
-      end
+
+      log_activity(:change_project_visibility, visibility: message_visibility) if message_visibility.present?
+      log_activity(:rename_project) if message_renamed.present?
+      log_activity(:archive_project) if project_params[:archived] == 'true'
+      log_activity(:restore_project) if project_params[:archived] == 'false'
 
       flash_success = t('projects.update.success_flash', name: @project.name)
       if project_params[:archived] == 'true'
@@ -192,12 +190,10 @@ class ProjectsController < ApplicationController
             # The project should be restored
             unless @project.archived
               @project.restore(current_user)
-              log_activity(:restore_project)
             end
           elsif @project.archived
             # The project should be archived
             @project.archive(current_user)
-            log_activity(:archive_project)
           end
           redirect_to projects_path
           flash[:success] = flash_success

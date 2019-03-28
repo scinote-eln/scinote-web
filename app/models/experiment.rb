@@ -108,6 +108,10 @@ class Experiment < ApplicationRecord
     where(project: Project.viewable_by_user(user, teams))
   end
 
+  def navigable?
+    !project.archived?
+  end
+
   def active_modules
     my_modules.where(archived: false)
   end

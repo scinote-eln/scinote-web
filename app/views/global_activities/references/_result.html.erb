@@ -1,15 +1,18 @@
 <%= render partial: "global_activities/references/my_module.html.erb",
-           locals: { subject: subject&.my_module, breadcrumbs: breadcrumbs  } %>
+           locals: { team: team, subject: subject&.my_module, breadcrumbs: breadcrumbs  } %>
 <div class="ga-breadcrumb">
 
   <span class="<%=result_icon_class(subject)%>"></span>
-  <% if subject %>
-    <%= link_to results_my_module_path(subject.my_module), title: subject.name do %>
-      <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
-    <% end %>
+  <% if subject&.navigable? %>
+    <% path = subject.archived? ? archive_my_module_path(subject.my_module) : results_my_module_path(subject.my_module) %>
+    <%= route_to_other_team(path,
+                            team,
+                            subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                            title: subject.name) %>
   <% else %>
-    <span title="<%= breadcrumbs[:result] %>">
-      <%= breadcrumbs[:result]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    <% name = subject&.name || breadcrumbs[:result] %>
+    <span title="<%= name %>">
+      <%= name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
   <% end %>
 </div>

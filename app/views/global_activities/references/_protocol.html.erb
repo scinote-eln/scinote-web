@@ -1,21 +1,23 @@
 <% if subject.in_repository? %>
   <%= render partial: "global_activities/references/team.html.erb",
-             locals: { subject: subject&.team, breadcrumbs: breadcrumbs } %>
+             locals: { team: team, subject: subject&.team, breadcrumbs: breadcrumbs } %>
 <% else %>
   <%= render partial: "global_activities/references/my_module.html.erb",
-             locals: { subject: subject&.my_module, breadcrumbs: breadcrumbs } %>
+             locals: { team: team, subject: subject&.my_module, breadcrumbs: breadcrumbs } %>
 <% end %>
 <div class="ga-breadcrumb">
   <span class="fas fa-edit"></span>
   <% if subject %>
-    <% if subject.in_repository? %>
-      <%= route_to_other_team protocols_path(team: subject.team),
-                              subject.team,
+    <% if subject.in_repository? || subject.my_module.navigable? %>
+      <% path = subject.in_repository? ? protocols_path(team: subject.team) : protocols_my_module_path(subject.my_module) %>
+      <%= route_to_other_team path,
+                              team,
                               subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                               title: subject.name %>
     <% else %>
-      <%= link_to subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
-                  protocols_my_module_path(subject.my_module), title: subject.name %>
+      <span title="<%= subject.name %>">
+        <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+      </span>
     <% end %>
   <% else %>
     <span title="<%= breadcrumbs[:protocol] %>">
