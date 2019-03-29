@@ -263,7 +263,7 @@ class Experiment < ApplicationRecord
   def archive_modules(module_ids, current_user)
     my_modules.where(id: module_ids).each do |my_module|
       my_module.archive!(current_user)
-      log_activity(:archive_task, current_user, my_module)
+      log_activity(:archive_module, current_user, my_module)
     end
     my_modules.reload
   end
