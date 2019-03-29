@@ -13,7 +13,7 @@ en:
       custom_dates_label: "Select custom dates"
       from_label: "Select end date"
       to_label: "Select start date"
-      clear: "clear"
+      clear: "Clear"
       activity_type: "Activity type"
       user: "User"
       object: "Object"
