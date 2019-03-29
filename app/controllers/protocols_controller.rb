@@ -262,6 +262,18 @@ class ProtocolsController < ApplicationController
     end
     respond_to do |format|
       if !cloned.nil?
+
+        Activities::CreateActivityService
+          .call(activity_type: :copy_protocol_in_repository,
+            owner: current_user,
+            subject: @original,
+            team: current_team,
+            project: nil,
+            message_items: {
+              protocol_new: cloned.id,
+              protocol_original: @original.id
+            })
+
         flash[:success] = t(
           'protocols.index.clone.success_flash',
           original: @original.name,
@@ -798,14 +810,25 @@ class ProtocolsController < ApplicationController
         end
 
         @protocols.each do |p|
-          Activities::CreateActivityService
-            .call(activity_type: :export_protocol_in_repository,
-                  owner: current_user,
-                  subject: p,
-                  team: current_team,
-                  message_items: {
-                    protocol: p.id
-                  })
+          if params[:my_module_id]
+            Activities::CreateActivityService
+              .call(activity_type: :export_protocol_from_task,
+                    owner: current_user,
+                    subject: MyModule.find(params[:my_module_id]),
+                    team: current_team,
+                    message_items: {
+                      my_module: params[:my_module_id].to_i
+                    })
+          else
+            Activities::CreateActivityService
+              .call(activity_type: :export_protocol_in_repository,
+                    owner: current_user,
+                    subject: p,
+                    team: current_team,
+                    message_items: {
+                      protocol: p.id
+                    })
+          end
         end
 
         send_data(z_output_stream.read, filename: file_name)
@@ -1203,7 +1226,7 @@ class ProtocolsController < ApplicationController
   end
 
   def log_activity(type_of, project = nil, message_items = {})
-    message_items = { protocol: @protocol.id }.merge(message_items)
+    message_items = { protocol: @protocol&.id }.merge(message_items)
 
     Activities::CreateActivityService
       .call(activity_type: type_of,
