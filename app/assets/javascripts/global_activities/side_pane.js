@@ -199,13 +199,14 @@ $(function() {
     updateRunning = false;
     GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
+    resetHotButtonsBackgroundColor();
   });
 
   $('#calendar-to-date').on('dp.change', function(e) {
     var dateContainer = $('.ga-side .date-selector.filter-block');
     if (!updateRunning) {
       $('#calendar-from-date').data('DateTimePicker').minDate(e.date);
-      dateContainer[0].dataset.periodSelect = $('#calendar-from-date').val() + ' - ' + $('#calendar-to-date').val();
+      dateContainer[0].dataset.periodSelect = $('#calendar-to-date').val() + ' - ' + $('#calendar-from-date').val();
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
       resetHotButtonsBackgroundColor();
@@ -216,7 +217,7 @@ $(function() {
     var dateContainer = $('.ga-side .date-selector.filter-block');
     if (!updateRunning) {
       $('#calendar-to-date').data('DateTimePicker').maxDate(e.date);
-      dateContainer[0].dataset.periodSelect = $('#calendar-from-date').val() + ' - ' + $('#calendar-to-date').val();
+      dateContainer[0].dataset.periodSelect = $('#calendar-to-date').val() + ' - ' + $('#calendar-from-date').val();
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
       resetHotButtonsBackgroundColor();
