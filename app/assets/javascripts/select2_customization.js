@@ -33,6 +33,11 @@ $.fn.extend({
     // Add dynamic size
     select2.next().css('width', '100%');
 
+    //Placeholder fix for ajax fields
+    if (config.ajax){
+      select2.next().find('.select2-search__field').css('min-width', '150px');
+    }
+
     // unlimited size
     if (config.unlimitedSize) {
       this[0].dataset.unlimitedSize = true;
@@ -68,7 +73,10 @@ $.fn.extend({
           $('<div class="select2_select_all btn btn-default"><strong>' + selectElement.dataset.selectAllButton + '</strong></div>').prependTo('.select2-dropdown').on('click', function() {
             var scrollTo = $('.select2-results__options').scrollTop();
             var elementsToSelect = $.map($(selectElement).find('option'), e => e.value);
-            if ($(selectElement).find('option:selected').length === elementsToSelect.length) elementsToSelect = [];
+            if (
+              $(selectElement).find('option:selected').length === elementsToSelect.length
+              || config.ajax
+            ) elementsToSelect = [];
             $(selectElement).val(elementsToSelect).trigger('change');
             $(selectElement).select2('close');
             $(selectElement).select2('open');
