@@ -32,6 +32,7 @@ en:
       select_users: "Select Users"
       select_objects: "Select Objects"
       deselect_all_objects: "Deselect All Objects"
+      no_name: "(unnamed)"
     content:
       create_project_html: "%{user} created project %{project}."
       rename_project_html: "%{user} renamed project %{project}."
