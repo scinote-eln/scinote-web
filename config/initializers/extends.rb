@@ -212,7 +212,7 @@ class Extends
   }.freeze
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7],
+    projects: [*0..7,32,33,34],
     task_results: [*23..26, 40, 41, 42, 99],
     task: [*8..14, 35, 36, 37, 53, 54, *58..69],
     task_protocol: [*15..22, 45, 46, 47, 38, 39, 100],
