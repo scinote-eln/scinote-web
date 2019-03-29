@@ -92,6 +92,17 @@ class Extends
     Repository Project Experiment MyModule Result Protocol Step Report
   ).freeze
 
+  ACTIVITY_SUBJECT_CHILDREN = {
+    Repository: nil,
+    Report: nil,
+    Project: nil,
+    Experiment: [:my_modules],
+    MyModule: [:results,:protocols],
+    Result: nil,
+    Protocol: [:steps],
+    Step: nil 
+  }.freeze
+
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step)
     .freeze

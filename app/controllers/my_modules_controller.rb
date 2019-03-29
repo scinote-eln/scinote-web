@@ -77,9 +77,7 @@ class MyModulesController < ApplicationController
 
   def activities
     params[:subjects] = {
-      MyModule: [@my_module.id],
-      Result: @my_module.results.pluck(:id),
-      Protocol: @my_module.protocols.pluck(:id)
+      MyModule: [@my_module.id]
     }
     @activity_types = Activity.activity_types_list
     @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))

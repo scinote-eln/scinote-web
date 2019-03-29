@@ -1,4 +1,4 @@
-/* global animateSpinner */
+/* global animateSpinner I18n */
 
 // Common code
 
@@ -79,7 +79,10 @@ $(function() {
             label: key
           };
         });
-        result.push({ text: key, children: updateItems });
+        result.push({
+          text: I18n.t('global_activities.subject_name.' + key.toLowerCase()),
+          children: updateItems
+        });
       });
       return {
         results: result
@@ -142,7 +145,7 @@ $(function() {
         } else {
           moreButton.addClass('hidden');
         }
-        if (json.activities_html === "") {
+        if (json.activities_html === '') {
           noActivitiesMessage.removeClass('hidden');
         } else {
           noActivitiesMessage.addClass('hidden');
