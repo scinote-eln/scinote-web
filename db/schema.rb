@@ -803,6 +803,7 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_projects_on_assigned_by_id"
     t.index ["project_id"], name: "index_user_projects_on_project_id"
+    t.index ["user_id", "project_id"], name: "index_user_projects_on_user_id_and_project_id", unique: true
     t.index ["user_id"], name: "index_user_projects_on_user_id"
   end
 
@@ -828,6 +829,7 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_teams_on_assigned_by_id"
     t.index ["team_id"], name: "index_user_teams_on_team_id"
+    t.index ["user_id", "team_id"], name: "index_user_teams_on_user_id_and_team_id", unique: true
     t.index ["user_id"], name: "index_user_teams_on_user_id"
   end
 
