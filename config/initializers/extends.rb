@@ -92,10 +92,10 @@ class Extends
     Repository Project Experiment MyModule Result Protocol Step Report
   ).freeze
 
-  ACTIVITY_SUBJECT_CHILDRENS = {
+  ACTIVITY_SUBJECT_CHILDREN = {
     Repository: nil,
     Report: nil,
-    Project: [:experiments],
+    Project: nil,
     Experiment: [:my_modules],
     MyModule: [:results,:protocols],
     Result: nil,
