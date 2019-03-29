@@ -119,14 +119,13 @@
 
     .hot-buttons {
       display: inline-block;
-      margin-bottom: 10px;
       width: 100%;
 
       .hot-button {
         border: 0;
         cursor: pointer;
         float: left;
-        margin: 5px;
+        margin: 0;
         opacity: 0.7;
         text-align: left;
         width: calc(50% - 25px);
