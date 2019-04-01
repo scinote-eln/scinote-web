@@ -71,6 +71,8 @@ module GlobalActivitiesHelper
       else
         return current_value
       end
+    when Report
+      path = reports_path
     else
       return current_value
     end
