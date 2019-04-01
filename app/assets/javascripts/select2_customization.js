@@ -1,4 +1,4 @@
-
+/* global  PerfectScrollbar */
 $.fn.extend({
   select2Multiple: function(config = {}) {
     if (this.length === 0) return this;
@@ -33,8 +33,8 @@ $.fn.extend({
     // Add dynamic size
     select2.next().css('width', '100%');
 
-    //Placeholder fix for ajax fields
-    if (config.ajax){
+    // Placeholder fix for ajax fields
+    if (config.ajax) {
       select2.next().find('.select2-search__field').css('min-width', '150px');
     }
 
@@ -65,9 +65,14 @@ $.fn.extend({
         var groups;
         var groupChildrens;
         var leftPosition = -310;
+        var perfectScroll = new PerfectScrollbar($('.select2-results__options')[0], { wheelSpeed: 0.5 });
+        setTimeout(() => {
+          perfectScroll.update();
+        }, 300);
         $('.select2-dropdown').removeClass('custom-group');
         $('.select2-selection').scrollTo(0);
         $('.select2_select_all').remove();
+
         // Adding select_all_button
         if (selectElement.dataset.selectAllButton !== undefined) {
           $('<div class="select2_select_all btn btn-default"><strong>' + selectElement.dataset.selectAllButton + '</strong></div>').prependTo('.select2-dropdown').on('click', function() {

@@ -10,8 +10,7 @@ class ActivitiesService
     if filters[:subjects].present?
       subjects_with_children = load_subjects_children(filters[:subjects])
       if subjects_with_children[:Project]
-        add_or = subjects_with_children.length > 1
-        query = query.where("project_id IN (?) #{add_or ? 'OR' : ''}", subjects_with_children[:Project])
+        query = query.where("project_id IN (?)", subjects_with_children[:Project])
         subjects_with_children.except!(:Project)
       end
       query = query.where(
