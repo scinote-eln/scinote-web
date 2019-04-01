@@ -118,8 +118,8 @@ module Users
                         subject: @user_t.team,
                         team: @user_t.team,
                         message_items: {
-                        team: @user_t.team.id
-                      })
+                          team: @user_t.team.id
+                        })
               else
                 # Otherwise, the new owner for projects is
                 # the current user (= an administrator removing
