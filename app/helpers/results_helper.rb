@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module ResultsHelper
   def published_text_for_result(result)
     if result.is_text
-      t("my_modules.results.published_text", timestamp: l(result.created_at, format: :full))
+      t('my_modules.results.published_text', timestamp: l(result.created_at, format: :full))
     elsif result.is_table
-      t("my_modules.results.published_table", timestamp: l(result.created_at, format: :full))
+      t('my_modules.results.published_table', timestamp: l(result.created_at, format: :full))
     elsif result.is_asset
-      t("my_modules.results.published_asset", timestamp: l(result.created_at, format: :full))
+      t('my_modules.results.published_asset', timestamp: l(result.created_at, format: :full))
     end
   end
 
@@ -31,23 +33,26 @@ module ResultsHelper
 
   def edit_result_button_class(result)
     if result.is_asset
-      "edit-result-asset"
+      'edit-result-asset'
     elsif result.is_text
-      "edit-result-text"
+      'edit-result-text'
     elsif result.is_table
-      "edit-result-table"
+      'edit-result-table'
     end
   end
+
   def result_icon_class(result)
+    return 'fas fa-table' unless result
+
     if result.is_asset
-      "fas fa-paperclip"
+      'fas fa-paperclip'
     elsif result.is_text
-      "fas fa-font"
+      'fas fa-font'
     elsif result.is_table
-      "fas fa-table"
+      'fas fa-table'
     else
       # just return table for any other result
-      "fas fa-table"
+      'fas fa-table'
     end
   end
 end
