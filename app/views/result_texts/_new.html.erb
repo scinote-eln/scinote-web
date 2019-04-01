@@ -3,8 +3,13 @@
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :result_text do |ff| %>
       <div class="form-group">
-        <%= ff.tiny_mce_editor(:text, data: { object_type: 'result_text',
-                                              object_id: @result.result_text.id }) %>
+        <%= ff.tiny_mce_editor(:text,
+                               id: :result_text_textarea,
+                               hide_label: false,
+                               data: {
+                                 object_type: 'result_text',
+                                 object_id: @result.result_text.id
+                               }) %>
       </div>
     <% end %><br />
     <div class="align-right">
