@@ -5,30 +5,25 @@ module GlobalActivitiesHelper
   include ActionView::Helpers::UrlHelper
   include InputSanitizeHelper
 
-  def generate_activity_content(activity)
+  def generate_activity_content(activity, no_links = false)
     parameters = {}
     activity.values[:message_items].each do |key, value|
       parameters[key] =
         if value.is_a? String
           value
         else
-          generate_link(value, activity)
+          no_links ? generate_name(value) : generate_link(value, activity)
         end
     end
-    I18n.t("global_activities.content.#{activity.type_of}_html",
-           parameters.symbolize_keys)
+    sanitize_input(I18n.t("global_activities.content.#{activity.type_of}_html",
+                          parameters.symbolize_keys))
   end
 
   def generate_link(message_item, activity)
-    type = message_item[:type]
-    id = message_item[:id]
-    getter = message_item[:getter]
-    value = message_item[:value]
+    obj = message_item[:type].constantize.find_by_id(message_item[:id])
+    return message_item[:value] unless obj
 
-    obj = type.constantize.find_by_id id
-    return value unless obj
-
-    current_value = obj.public_send(getter || 'name')
+    current_value = generate_name(message_item)
     team = activity.team
     path = ''
 
@@ -69,5 +64,11 @@ module GlobalActivitiesHelper
       return current_value
     end
     route_to_other_team(path, obj, current_value)
+  end
+
+  def generate_name(message_item)
+    obj = message_item[:type].constantize.find_by_id(message_item[:id])
+    return message_item[:value] unless obj
+    obj.public_send(message_item[:getter] || 'name')
   end
 end
