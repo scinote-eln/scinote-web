@@ -113,11 +113,11 @@ module Users
                   .first
                   .user
                 Activities::CreateActivityService
-                .call(activity_type: :user_leave_team,
-                      owner: current_user,
-                      subject: @user_t.team,
-                      team: @user_t.team,
-                      message_items: {
+                  .call(activity_type: :user_leave_team,
+                        owner: current_user,
+                        subject: @user_t.team,
+                        team: @user_t.team,
+                        message_items: {
                         team: @user_t.team.id
                       })
               else

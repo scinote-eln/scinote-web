@@ -55,6 +55,26 @@ describe ProtocolsController, type: :controller do
     end
   end
 
+  describe 'GET export from MyModule' do
+    let(:protocol) { create :protocol, :in_public_repository, team: team }
+    let(:params) { { protocol_ids: [protocol.id], my_module_id: my_module.id } }
+    let(:action) { get :export, params: params }
+
+    it 'calls create activity for exporting protocols' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :export_protocol_from_task)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count }.by(1))
+      expect(Activity.last.subject_type).to eq 'MyModule'
+    end
+  end
+
   describe 'POST import' do
     let(:params) do
       {

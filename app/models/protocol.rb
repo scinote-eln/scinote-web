@@ -683,7 +683,22 @@ class Protocol < ApplicationRecord
       published_on: self.in_repository_public? ? Time.now : nil,
     )
 
-    deep_clone(clone, current_user)
+    cloned = deep_clone(clone, current_user)
+
+    if cloned
+      Activities::CreateActivityService
+        .call(activity_type: :copy_protocol_in_repository,
+             owner: current_user,
+             subject: self,
+             team: team,
+             project: nil,
+             message_items: {
+               protocol_new: clone.id,
+               protocol_original: id
+             })
+    end
+
+    cloned
   end
 
   def destroy_contents(current_user)

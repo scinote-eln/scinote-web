@@ -262,18 +262,6 @@ class ProtocolsController < ApplicationController
     end
     respond_to do |format|
       if !cloned.nil?
-
-        Activities::CreateActivityService
-          .call(activity_type: :copy_protocol_in_repository,
-            owner: current_user,
-            subject: @original,
-            team: current_team,
-            project: nil,
-            message_items: {
-              protocol_new: cloned.id,
-              protocol_original: @original.id
-            })
-
         flash[:success] = t(
           'protocols.index.clone.success_flash',
           original: @original.name,

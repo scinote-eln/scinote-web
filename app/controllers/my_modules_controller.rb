@@ -657,7 +657,7 @@ class MyModulesController < ApplicationController
   end
 
   def log_activity(type_of, my_module = nil, message_items = {})
-    my_module = @my_module unless my_module
+    my_module ||= @my_module
     message_items = { my_module: my_module.id }.merge(message_items)
 
     Activities::CreateActivityService
