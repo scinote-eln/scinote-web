@@ -10,7 +10,7 @@
   margin-top: 2em;
   padding: 0 15px;
 
-  &.task_activities{
+  &.task_activities {
     height: calc(100vh - 126px);
   }
 
@@ -27,7 +27,7 @@
     padding-top: 10px;
     position: relative;
 
-    &.task_activities{
+    &.task_activities {
       height: calc(100% - 70px);
     }
 
@@ -107,7 +107,7 @@
   overflow: hidden;
   position: relative;
 
-  &.task_activities{
+  &.task_activities {
     height: calc(100% - 70px);
   }
 
@@ -196,7 +196,7 @@
   border-bottom: 1px solid $gray-lighter;
   height: 160px;
 
-  &.task_activities{
+  &.task_activities {
     height: 70px;
   }
 
