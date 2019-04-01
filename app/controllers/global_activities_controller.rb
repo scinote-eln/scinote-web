@@ -2,6 +2,34 @@
 
 class GlobalActivitiesController < ApplicationController
   def index
+    # Preload filter format
+    #   {
+    #     from_date: "YYYY-MM-DD",
+    #     to_date: "YYYY-MM-DD",
+    #     teams: [*team_ids],
+    #     types: [*activity_type_ids],
+    #     users: [*user_ids],
+    #     subjects: {
+    #       *Object_name: [*object_ids],
+    #       ...
+    #     }
+    #   }
+
+    # Example
+    #   {
+    #     from_date: "2019-03-29",
+    #     to_date: "2019-03-29",
+    #     teams: [1,2],
+    #     types: [32,33,34],
+    #     users: [1,2,3],
+    #     subjects: {
+    #       Project: [1]
+    #     }
+    #   }
+    #
+    # To prepare URL search query use - Activity.url_search_query(filter)
+    @filters = activity_filters
+    @filters[:subject_labels] = params[:subject_labels]
     @teams = current_user.teams
     selected_teams = if request.format.html?
                        current_team
