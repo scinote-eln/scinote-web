@@ -79,22 +79,26 @@ module WopiUtil
                t('activities.wupi_file_editing.finished')
              end
     if @assoc.class == Step
+      type_of = :edit_wopi_file_on_step_in_repository
+      default_step_items =
+        { step: @asset.step.id,
+          step_position: { id: @asset.step.id, value_for: 'position' },
+          asset_name: { id: @asset.id, value_for: 'file_file_name' },
+          action: action }
+      message_items = { protocol: @protocol.id }
       if @protocol.in_module?
         project = @protocol.my_module.experiment.project
+        type_of = :edit_wopi_file_on_step
+        message_items = { my_module: @protocol.my_module.id }
       end
+      message_items = default_step_items.merge(message_items)
       Activities::CreateActivityService
-        .call(activity_type: :edit_wopi_file_on_step,
+        .call(activity_type: type_of,
               owner: current_user,
               subject: @protocol,
               team: current_team,
               project: project,
-              message_items: {
-                protocol: @protocol.id,
-                step: @asset.step.id,
-                step_position: { id: @asset.step.id, value_for: 'position' },
-                asset_name: { id: @asset.id, value_for: 'file_file_name' },
-                action: action
-              })
+              message_items: message_items)
     elsif @assoc.class == Result
       Activities::CreateActivityService
         .call(activity_type: :edit_wopi_file_on_result,

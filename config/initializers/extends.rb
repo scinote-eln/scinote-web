@@ -208,7 +208,8 @@ class Extends
     export_audit_trails: 97,
     export_system_logs: 98,
     edit_wopi_file_on_result: 99,
-    edit_wopi_file_on_step: 100
+    edit_wopi_file_on_step: 100,
+    edit_wopi_file_on_step_in_repository: 101
   }.freeze
 
   ACTIVITY_GROUPS = {

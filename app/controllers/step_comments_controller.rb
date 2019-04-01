@@ -188,7 +188,7 @@ class StepCommentsController < ApplicationController
             team: current_team,
             project: @step.my_module.experiment.project,
             message_items: {
-              protocol: @protocol.id,
+              my_module: @step.my_module.id,
               step: @step.id,
               step_position: { id: @step.id, value_for: 'position' }
             })
