@@ -1,4 +1,4 @@
-/* global animateSpinner I18n */
+/* global animateSpinner I18n PerfectSb */
 
 // Common code
 
@@ -122,6 +122,7 @@ $(function() {
           }
         });
     });
+    PerfectSb().update_all();
   }
 
   // update_filter
@@ -152,6 +153,7 @@ $(function() {
         }
         updateRunning = false;
         animateSpinner(null, false);
+        PerfectSb().update_all();
       },
       error: function() {
         updateRunning = false;

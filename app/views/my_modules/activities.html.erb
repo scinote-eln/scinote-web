@@ -2,17 +2,17 @@
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="global-activities-container container-flex">
+<div class="global-activities-container container-flex  task_activities">
   <div class="row">
-    <div class="ga-top col-md-12">
+    <div class="ga-top col-md-12 task_activities">
       <%= render partial: "my_modules/activities/top_pane" %>
     </div>
 
-    <div class="ga-side col-lg-3 col-md-12 col-xl-2">
+    <div class="ga-side col-lg-3 col-md-12 col-xl-2  task_activities  perfect-scrollbar">
       <%= render partial: "my_modules/activities/side_filters" %>
     </div>
 
-    <div class="ga-main col-lg-9 col-md-12 col-xl-10">
+    <div class="ga-main col-lg-9 col-md-12 col-xl-10  task_activities  perfect-scrollbar">
       <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
         <p><%= t('activities.index.no_activities_task_message') %></p>
       </div>
