@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-xs-12">
       <% if activity.old_activity?  %>
-        <%= activity.message&.html_safe %>
+        <%= activity.message %>
       <% else %>
-        <%= generate_activity_content(activity).html_safe %>
+        <%= generate_activity_content(activity) %>
       <% end %>
     </div>
   </div>
