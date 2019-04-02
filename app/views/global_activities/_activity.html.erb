@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-xs-12">
       <% if activity.old_activity?  %>
-        <%= activity.message %>
+        <%= sanitize_input activity.message %>
       <% else %>
         <%= generate_activity_content(activity) %>
       <% end %>
