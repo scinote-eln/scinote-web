@@ -114,15 +114,15 @@ module ApplicationHelper
     # sometimes happens that the "team" param gets wrong data: "{nil, []}"
     # so we have to check if the "team" param is kind of Team object
     team = nil unless team.is_a? Team
-    new_text = smart_annotation_filter_resources(text)
+    new_text = smart_annotation_filter_resources(text, team)
     new_text = smart_annotation_filter_users(new_text, team)
     new_text
   end
 
   # Check if text have smart annotations of resources
   # and outputs a link to resource
-  def smart_annotation_filter_resources(text)
-    SmartAnnotations::TagToHtml.new(current_user, text).html
+  def smart_annotation_filter_resources(text, team)
+    SmartAnnotations::TagToHtml.new(current_user, team, text).html
   end
 
   # Check if text have smart annotations of users

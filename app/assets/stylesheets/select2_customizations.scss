@@ -1,3 +1,8 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
 @import "constants";
 @import "mixins";
 
@@ -13,12 +18,12 @@
     }
 
     .select2-selection__rendered {
-      width: calc(100% - 26px)
+      width: calc(100% - 26px);
     }
 
     .select2-search__field {
 
-      &::placeholder{
+      &::placeholder {
         color: $color-silver-chalice;
       }
     }
@@ -39,19 +44,19 @@
     align-items: center;
     background: $color-white;
     border: 1px solid $color-alto;
-    border-radius: 0px 4px 4px 0px;
+    border-radius: 0 4px 4px 0;
     cursor: pointer;
     display: flex;
     height: 100%;
     justify-content: center;
     position: absolute;
     right: 0;
-    top :0;
+    top: 0;
     width: 26px;
 
     &:hover {
-        background: $color-gainsboro;
-        border: 1px solid $color-silver-chalice;
+      background: $color-gainsboro;
+      border: 1px solid $color-silver-chalice;
     }
 
     .caret {
@@ -74,6 +79,10 @@
       width: 100%;
     }
 
+    .select2-results__options {
+      position: relative;
+    }
+
     .select2-results__option[role="treeitem"] {
       background: $color-white;
       line-height: 18px;
@@ -81,13 +90,13 @@
       position: relative;
 
       &::before {
+        content: "\f0c8";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 400;
+        left: 0;
+        margin: 7px 0 0 12px;
         position: absolute;
         top: 0;
-        left: 0;
-        margin: 7px 0px 0px 12px;
-        font-family: "Font Awesome 5 Free";
-        content: "\f0c8";
-        font-weight: 400;
       }
 
       &.select2-results__option--highlighted {
@@ -116,9 +125,7 @@
       }
     }
 
-      
-
-    &.custom-group{
+    &.custom-group {
       .select2-results__option[role="group"] {
 
         .select2-results__group {
@@ -127,13 +134,13 @@
           position: relative;
 
           &::before {
+            content: "\f0c8";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 400;
+            left: 0;
+            margin: 7px 0 0 12px;
             position: absolute;
             top: 0;
-            left: 0;
-            margin: 7px 0px 0px 12px;
-            font-family: "Font Awesome 5 Free";
-            content: "\f0c8";
-            font-weight: 400;
           }
 
           &:hover {
@@ -168,12 +175,12 @@
 @media (min-width: 1200px) {
 
   .select2-container--open.left-position {
-    top: 60px  !important;
     position: fixed !important;
+    top: 60px  !important;
     z-index: 1500;
 
     .select2-dropdown {
-      border-radius: 0px;
+      border-radius: 0;
       height: calc(100vh - 70px)  !important;
       width: 300px !important;
 
@@ -183,6 +190,7 @@
 
       .select2-results__options {
         max-height: 100%;
+        position: relative;
       }
     }
 

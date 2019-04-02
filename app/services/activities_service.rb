@@ -10,8 +10,7 @@ class ActivitiesService
     if filters[:subjects].present?
       subjects_with_children = load_subjects_children(filters[:subjects])
       if subjects_with_children[:Project]
-        add_or = subjects_with_children.length > 1
-        query = query.where("project_id IN (?) #{add_or ? 'OR' : ''}", subjects_with_children[:Project])
+        query = query.where('project_id IN (?)', subjects_with_children[:Project])
         subjects_with_children.except!(:Project)
       end
       query = query.where(
@@ -75,5 +74,14 @@ class ActivitiesService
     end
 
     subjects.each { |_sub, children| children.uniq! }
+  end
+
+  def self.my_module_activities(my_module)
+    subjects_with_children = load_subjects_children(MyModule: [my_module.id])
+    query = Activity.where(project: my_module.experiment.project)
+    query.where(
+      subjects_with_children.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),
+      *subjects_with_children.flatten
+    )
   end
 end

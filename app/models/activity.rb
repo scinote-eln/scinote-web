@@ -109,6 +109,6 @@ class Activity < ApplicationRecord
   end
 
   def activity_version
-    errors.add(:activity, 'wrong combination of associations') if (experiment || my_module) && subject
+    errors.add(:activity, 'wrong combination of associations') if (experiment_id || my_module_id) && subject
   end
 end

@@ -1,5 +1,4 @@
-/* global animateSpinner I18n gaUrlQueryParams */
-
+/* global animateSpinner I18n gaUrlQueryParams PerfectSb */
 // Common code
 
 
@@ -123,6 +122,7 @@ $(function() {
           }
         });
     });
+    PerfectSb().update_all();
   }
 
   function preloadFilters(filters) {
@@ -181,6 +181,7 @@ $(function() {
         }
         updateRunning = false;
         animateSpinner(null, false);
+        PerfectSb().update_all();
       },
       error: function() {
         updateRunning = false;

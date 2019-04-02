@@ -416,7 +416,7 @@ class RepositoryRowsController < ApplicationController
                user: current_user.full_name,
                column: cell.repository_column.name,
                record: record.name,
-               repository: record.repository),
+               repository: record.repository.name),
       message: t('notifications.repository_annotation_message_html',
                  record: link_to(record.name, table_url),
                  column: link_to(cell.repository_column.name, table_url))

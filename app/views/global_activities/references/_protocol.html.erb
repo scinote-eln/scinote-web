@@ -5,23 +5,21 @@
   <%= render partial: "global_activities/references/my_module.html.erb",
              locals: { team: team, subject: subject&.my_module, breadcrumbs: breadcrumbs } %>
 <% end %>
-<div class="ga-breadcrumb">
-  <span class="fas fa-edit"></span>
-  <% if subject %>
-    <% if subject.in_repository? || subject.my_module.navigable? %>
-      <% path = subject.in_repository? ? protocols_path(team: subject.team) : protocols_my_module_path(subject.my_module) %>
-      <%= route_to_other_team path,
-                              team,
-                              subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
-                              title: subject.name %>
-    <% else %>
-      <span title="<%= subject.name %>">
-        <%= subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
-      </span>
-    <% end %>
-  <% else %>
+<% if subject %>
+  <% if subject.in_repository? %>
+    <div class="ga-breadcrumb">
+      <span class="fas fa-edit"></span>
+        <%= route_to_other_team protocols_path(team: subject.team),
+                                team,
+                                subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                                title: subject.name %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="ga-breadcrumb">
+    <span class="fas fa-edit"></span>
     <span title="<%= breadcrumbs[:protocol] %>">
       <%= breadcrumbs[:protocol]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
-  <% end %>
-</div>
+  </div>
+<% end %>

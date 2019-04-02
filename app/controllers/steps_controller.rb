@@ -67,9 +67,9 @@ class StepsController < ApplicationController
 
         # Generate activity
         if @protocol.in_module?
-          log_activity(:create_step, @my_module.experiment.project)
+          log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
         else
-          log_activity(:add_step_to_protocol_repository)
+          log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
         end
 
         # Update protocol timestamp
@@ -174,9 +174,9 @@ class StepsController < ApplicationController
 
         # Generate activity
         if @protocol.in_module?
-          log_activity(:edit_step, @my_module.experiment.project)
+          log_activity(:edit_step, @my_module.experiment.project, my_module: @my_module.id)
         else
-          log_activity(:edit_step_in_protocol_repository)
+          log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
         end
 
         # Update protocol timestamp
@@ -212,9 +212,9 @@ class StepsController < ApplicationController
 
       # Generate activity
       if @protocol.in_module?
-        log_activity(:destroy_step, @my_module.experiment.project)
+        log_activity(:destroy_step, @my_module.experiment.project, my_module: @my_module.id)
       else
-        log_activity(:delete_step_in_protocol_repository)
+        log_activity(:delete_step_in_protocol_repository, nil, protocol: @protocol.id)
       end
 
       # Destroy the step
@@ -272,6 +272,7 @@ class StepsController < ApplicationController
           if @protocol.in_module?
             log_activity(type_of,
                          @protocol.my_module.experiment.project,
+                         my_module: @my_module.id,
                          step: @chk_item.checklist.step.id,
                          step_position: { id: @chk_item.checklist.step.id,
                                           value_for: 'position' },
@@ -315,6 +316,7 @@ class StepsController < ApplicationController
           if @protocol.in_module?
             log_activity(type_of,
                          @protocol.my_module.experiment.project,
+                         my_module: @my_module.id,
                          num_completed: completed_steps.to_s,
                          num_all: all_steps.to_s)
           end
@@ -606,8 +608,7 @@ class StepsController < ApplicationController
   end
 
   def log_activity(type_of, project = nil, message_items = {})
-    default_items = { protocol: @protocol.id,
-                      step: @step.id,
+    default_items = { step: @step.id,
                       step_position: { id: @step.id, value_for: 'position' } }
     message_items = default_items.merge(message_items)
 
