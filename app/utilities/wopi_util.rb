@@ -96,7 +96,7 @@ module WopiUtil
         .call(activity_type: type_of,
               owner: current_user,
               subject: @protocol,
-              team: current_team,
+              team: @protocol.my_module.experiment.project.team,
               project: project,
               message_items: message_items)
     elsif @assoc.class == Result
