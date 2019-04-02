@@ -59,14 +59,14 @@ class TinyMceAsset < ApplicationRecord
       next unless image_to_update.object
 
       old_description = Nokogiri::HTML(image_to_update.object[object_field])
-      descirption_image = old_description.css(
-        "img[data-token=\"#{Base62.encode(old_id)}\"]"
+      description_image = old_description.css(
+        "img[data-mce-token=\"#{Base62.encode(old_id)}\"]"
       )
-      descirption_image.attr('src').value = image_to_update.url
-      descirption_image.attr('data-token').value = Base62.encode(new_id)
-      descirption_image[0]['class'] = 'img-responsive'
-      new_descirption = old_description.css('body').inner_html.to_s
-      image_to_update.object.update(object_field => new_descirption)
+      description_image.attr('src').value = ''
+      description_image.attr('data-mce-token').value = Base62.encode(new_id)
+      description_image[0]['class'] = 'img-responsive'
+      new_description = old_description.css('body').inner_html.to_s
+      image_to_update.object.update(object_field => new_description)
     end
   end
 
@@ -74,7 +74,7 @@ class TinyMceAsset < ApplicationRecord
     description = Nokogiri::HTML(description)
     tm_assets = description.css('img')
     tm_assets.each do |tm_asset|
-      asset_id = tm_asset.attr('data-token')
+      asset_id = tm_asset.attr('data-mce-token')
       new_asset_url = find_by_id(Base62.decode(asset_id))
       if new_asset_url
         tm_asset.attributes['src'].value = new_asset_url.url

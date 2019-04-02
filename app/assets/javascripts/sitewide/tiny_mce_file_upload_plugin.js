@@ -263,7 +263,7 @@
 
       function buildHTML(json) {
         var imgstr = "<img src='" + json.image.url + "'";
-        imgstr += " data-token='" + json.image.token + "'";
+        imgstr += " data-mce-token='" + json.image.token + "'";
         imgstr += " alt='description-" + json.image.token + "' />";
         return imgstr;
       }
@@ -298,7 +298,7 @@
         var images;
         iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
         images = $.map($('img', iframe), e => {
-          return e.dataset.token;
+          return e.dataset.mceToken;
         });
         $('#' + editor.id).next()[0].value = JSON.stringify(images);
         return JSON.stringify(images);

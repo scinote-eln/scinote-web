@@ -50,7 +50,7 @@ module Api
             tiny_mce_asset_params.each do |t|
               image_params = t[:attributes]
               token = image_params[:file_token]
-              unless result_text.text["data-token=\"#{token}\""]
+              unless result_text.text["data-mce-token=\"#{token}\""]
                 raise ActiveRecord::RecordInvalid,
                       I18n.t('api.core.errors.result_wrong_tinymce.detail')
               end

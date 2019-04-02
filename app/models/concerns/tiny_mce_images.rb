@@ -20,7 +20,7 @@ module TinyMceImages
             src='data:image/jpg;base64,#{encoded_tm_asset}' >"
           html_description = Nokogiri::HTML(description)
           tm_asset_to_update = html_description.css(
-            "img[data-token=\"#{Base62.encode(tm_asset.id)}\"]"
+            "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
           )[0]
           tm_asset_to_update.replace new_tm_asset
           description = html_description.css('body').inner_html.to_s

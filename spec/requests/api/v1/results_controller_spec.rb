@@ -174,7 +174,6 @@ RSpec.describe "Api::V1::ResultsController", type: :request do
         experiment_id: @valid_experiment,
         task_id: @valid_task
       ), params: @valid_tinymce_hash_body.to_json, headers: @valid_headers
-      p response
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
