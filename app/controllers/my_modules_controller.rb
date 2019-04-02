@@ -176,7 +176,8 @@ class MyModulesController < ApplicationController
                     end
           # rubocop:enable Metrics/BlockNesting
           log_activity(type_of, @my_module, my_module_duedate: { id: @my_module.id,
-                                                     value_for: 'due_date' })
+                                                                 value_for: 'due_date',
+                                                                 value_type: 'time' })
         end
       end
     end

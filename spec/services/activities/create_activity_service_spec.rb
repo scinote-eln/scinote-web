@@ -113,13 +113,14 @@ describe Activities::CreateActivityService do
                            team: team,
                            message_items: {
                              project_duedate: { id: project.id,
-                                                value_for: 'due_date' }
+                                                value_for: 'due_date', value_type: 'time' }
                            }).activity
 
         expect(activity.message_items)
           .to include(project_duedate: { id: project.id,
                                          type: 'Project',
                                          value_for: 'due_date',
+                                         value_type: 'time',
                                          value: project.due_date.to_s })
       end
     end

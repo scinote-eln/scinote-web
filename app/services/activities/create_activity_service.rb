@@ -43,6 +43,7 @@ module Activities
           if v.is_a?(Hash) # Value is array, so you have getter specified
             id = v[:id]
             getter_method = v[:value_for]
+            value_type = v[:value_type]
           else
             id = v
             getter_method = 'name'
@@ -54,9 +55,8 @@ module Activities
             value: obj.public_send(getter_method).to_s,
             id: id
           }
-
-          @activity.message_items[k].merge!(value_for: getter_method)
-
+          @activity.message_items[k][:value_for] = getter_method
+          @activity.message_items[k][:value_type] = value_type unless value_type.nil?
         else
           @activity.message_items[k] = v.to_s
         end
