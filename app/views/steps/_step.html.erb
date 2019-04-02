@@ -53,7 +53,7 @@
               <em><%= t('protocols.steps.no_description') %></em>
             <% else %>
               <div class="ql-editor">
-                <%= custom_auto_link(step.description,
+                <%= custom_auto_link(step.tinymce_render(:description),
                                      simple_format: false,
                                      tags: %w(img),
                                      team: current_team) %>

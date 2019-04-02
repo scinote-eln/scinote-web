@@ -150,7 +150,7 @@
       animateSpinner(null, false);
       initPreviewModal();
       DragNDropSteps.clearFiles();
-      TinyMCE.refresh();
+      TinyMCE.init('#step_description_textarea');
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
         enableCheckboxSorting(this);
       });
@@ -253,7 +253,6 @@
       initEditableHandsOnTable($form);
       applyCancelCallBack();
 
-      TinyMCE.refresh();
       SmartAnnotation.preventPropagation('.atwho-user-popover');
 
       //Rerender tables
@@ -513,7 +512,7 @@
               $('#step_name').focus();
             });
 
-            TinyMCE.refresh();
+            TinyMCE.init('#step_description_textarea');
           });
 
         },

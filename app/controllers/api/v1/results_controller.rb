@@ -50,7 +50,7 @@ module Api
             tiny_mce_asset_params.each do |t|
               image_params = t[:attributes]
               token = image_params[:file_token]
-              unless result_text.text["data-token=\"#{token}\""]
+              unless result_text.text["data-mce-token=\"#{token}\""]
                 raise ActiveRecord::RecordInvalid,
                       I18n.t('api.core.errors.result_wrong_tinymce.detail')
               end
@@ -96,7 +96,11 @@ module Api
         end
         file_tokens = prms.map { |p| p[:attributes][:file_token] }
         result_text_params[:text].scan(
+<<<<<<< HEAD
           /data-token="(\w+)\"/
+=======
+          /data-token="(\w+)"/
+>>>>>>> ai-sci-3131-improve-image-file-upload
         ).flatten.each do |token|
           unless file_tokens.include?(token)
             raise ActiveRecord::RecordInvalid,

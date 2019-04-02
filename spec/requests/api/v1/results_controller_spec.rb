@@ -128,7 +128,8 @@ RSpec.describe "Api::V1::ResultsController", type: :request do
             attributes: {
               text: 'Result text 1 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
                          'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
-                         'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg==" data-token="a1">' 
+                         'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg==" data-token="a1">'
+
             } },
           { type: 'tiny_mce_assets',
             attributes: {

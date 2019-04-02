@@ -1,5 +1,6 @@
 class MyModule < ApplicationRecord
   include ArchivableModel, SearchableModel
+  include TinyMceImages
 
   enum state: Extends::TASKS_STATES
 

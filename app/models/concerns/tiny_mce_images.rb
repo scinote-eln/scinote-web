@@ -10,25 +10,30 @@ module TinyMceImages
              dependent: :destroy
 
     def prepare_for_report(field)
-      images = tiny_mce_assets
       description = self[field]
-      images.each do |image|
-        tmp_f = Tempfile.open(image.image_file_name, Rails.root.join('tmp'))
+      tiny_mce_assets.each do |tm_asset|
+        tmp_f = Tempfile.open(tm_asset.image_file_name, Rails.root.join('tmp'))
         begin
-          image.image.copy_to_local_file(:large, tmp_f.path)
-          encoded_image = Base64.strict_encode64(tmp_f.read)
-          new_image = "<img class='img-responsive' src='data:image/jpg;base64,#{encoded_image}'>"
+          tm_asset.image.copy_to_local_file(:large, tmp_f.path)
+          encoded_tm_asset = Base64.strict_encode64(tmp_f.read)
+          new_tm_asset = "<img class='img-responsive'
+            src='data:image/jpg;base64,#{encoded_tm_asset}' >"
           html_description = Nokogiri::HTML(description)
-          image_to_update = html_description.css("img[data-token=\"#{Base62.encode(image.id)}\"]")[0]
-          image_to_update.replace new_image
+          tm_asset_to_update = html_description.css(
+            "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
+          )[0]
+          tm_asset_to_update.replace new_tm_asset
           description = html_description.css('body').inner_html.to_s
         ensure
           tmp_f.close
           tmp_f.unlink
         end
       end
-
       description
+    end
+
+    def tinymce_render(field)
+      TinyMceAsset.generate_url(self[field])
     end
   end
 end

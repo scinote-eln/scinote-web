@@ -3,7 +3,7 @@
 class TinyMceAsset < ApplicationRecord
   attr_accessor :reference
   before_create :set_reference, optional: true
-  after_create :update_estimated_size, :self_destroyer
+  after_create :update_estimated_size, :self_destruct
   after_destroy :release_team_space
   after_save :update_description
 
@@ -14,7 +14,10 @@ class TinyMceAsset < ApplicationRecord
              touch: true,
              optional: true
 
-  belongs_to :object, polymorphic: true, optional: true, inverse_of: :tiny_mce_assets
+
+  belongs_to :object, polymorphic: true,
+                      optional: true,
+                      inverse_of: :tiny_mce_assets
   has_attached_file :image,
                     styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg] },
                     convert_options: { large: '-quality 100 -strip' }
@@ -26,21 +29,24 @@ class TinyMceAsset < ApplicationRecord
   validates_attachment :image,
                        presence: true,
                        size: {
-                         less_than: Rails.configuration.x.file_max_size_mb.megabytes
+                         less_than: Rails.configuration.x\
+                                         .file_max_size_mb.megabytes
                        }
   validates :estimated_size, presence: true
 
   def self.update_images(object, images)
     images = JSON.parse(images)
     current_images = object.tiny_mce_assets.pluck(:id)
-    images_to_delete = current_images.reject { |x| (images.include? Base62.encode(x)) }
+    images_to_delete = current_images.reject do |x|
+      (images.include? Base62.encode(x))
+    end
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
       image_to_update&.update(object: object, saved: true)
     end
     where(id: images_to_delete).destroy_all
-  rescue StandardError
-    false
+  rescue StandardError => e
+    Rails.logger.error e.message
   end
 
   def self.reload_images(images = [])
@@ -54,14 +60,29 @@ class TinyMceAsset < ApplicationRecord
       next unless image_to_update.object
 
       old_description = Nokogiri::HTML(image_to_update.object[object_field])
-      description_image = old_description.css("img[data-token=\"#{Base62.encode(old_id)}\"]")
-      return false unless description_image
-      description_image.attr('src').value = image_to_update.url
-      description_image.attr('data-token').value = Base62.encode(new_id)
+      description_image = old_description.css(
+        "img[data-mce-token=\"#{Base62.encode(old_id)}\"]"
+      )
+      description_image.attr('src').value = ''
+      description_image.attr('data-mce-token').value = Base62.encode(new_id)
       description_image[0]['class'] = 'img-responsive'
-      new_descirption = old_description.css('body').inner_html.to_s
-      image_to_update.object.update(object_field => new_descirption)
+      new_description = old_description.css('body').inner_html.to_s
+      image_to_update.object.update(object_field => new_description)
     end
+  end
+
+  def self.generate_url(description)
+    description = Nokogiri::HTML(description)
+    tm_assets = description.css('img')
+    tm_assets.each do |tm_asset|
+      asset_id = tm_asset.attr('data-mce-token')
+      new_asset_url = find_by_id(Base62.decode(asset_id))
+      if new_asset_url
+        tm_asset.attributes['src'].value = new_asset_url.url
+        tm_asset['class'] = 'img-responsive'
+      end
+    end
+    description.css('body').inner_html.to_s
   end
 
   def presigned_url(style = :large,
@@ -69,7 +90,7 @@ class TinyMceAsset < ApplicationRecord
                     timeout: Constants::URL_LONG_EXPIRE_TIME)
     if stored_on_s3?
       download_arg = if download
-                       'attachment; filename=' + URI.escape(image_file_name)
+                       'attachment; filename=' + CGI.escape(image_file_name)
                      end
 
       signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
@@ -101,8 +122,18 @@ class TinyMceAsset < ApplicationRecord
     end
   end
 
-  def delete_unsaved_image
-    destroy unless saved
+  def self.delete_unsaved_image(id)
+    asset = find_by_id(id)
+    asset.destroy if asset && !asset.saved
+  end
+
+  def self.data_fields
+    {
+      'Step' => :description,
+      'ResultText' => :text,
+      'Protocol' => :description,
+      'MyModule' => :description
+    }
   end
 
   private
@@ -111,15 +142,8 @@ class TinyMceAsset < ApplicationRecord
     TinyMceAsset.reload_images([id]) if object
   end
 
-  def self_destroyer
-    delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image
-  end
-
-  def self.data_fields
-    {
-      'Step' => :description,
-      'ResultText' => :text
-    }
+  def self_destruct
+    TinyMceAsset.delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
   end
 
   def update_estimated_size

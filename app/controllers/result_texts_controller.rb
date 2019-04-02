@@ -42,7 +42,7 @@ class ResultTextsController < ApplicationController
     respond_to do |format|
       if @result.save && @result_text.save
         # link tiny_mce_assets to the text result
-        TinyMceAsset.update_images(@result_text, params[:result][:tiny_mce_images])
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
 
         result_annotation_notification
         # Generate activity
@@ -108,7 +108,7 @@ class ResultTextsController < ApplicationController
       success_flash = t("result_texts.archive.success_flash",
             module: @my_module.name)
       if saved
-        TinyMceAsset.update_images(@result_text, params[:result][:tiny_mce_images])
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
         Activity.create(
           type_of: :archive_result,
           project: @my_module.experiment.project,
@@ -128,7 +128,7 @@ class ResultTextsController < ApplicationController
       saved = @result.save
 
       if saved then
-        TinyMceAsset.update_images(@result_text, params[:result][:tiny_mce_images])
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
         Activity.create(
           type_of: :edit_result,
           user: current_user,

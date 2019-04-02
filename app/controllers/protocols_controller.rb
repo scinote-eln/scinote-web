@@ -220,6 +220,7 @@ class ProtocolsController < ApplicationController
 
     respond_to do |format|
       if @protocol.save
+        TinyMceAsset.update_images(@protocol, params[:tiny_mce_images])
         format.json do
           render json: {
             url: edit_protocol_path(
