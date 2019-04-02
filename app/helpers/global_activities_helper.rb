@@ -11,8 +11,8 @@ module GlobalActivitiesHelper
       parameters[key] =
         if value.is_a? String
           value
-        elsif value[:value_type] == 'time' # use saved date for printing
-          l(Time.parse(value[:value]), format: :full_date)
+        elsif value[:type] == 'Time' # use saved date for printing
+          l(Time.at(value[:value]), format: :full_date)
         else
           no_links ? generate_name(value) : generate_link(value, activity)
         end

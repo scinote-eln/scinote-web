@@ -38,6 +38,14 @@ module Activities
 
     def enrich_message_items
       @message_items.each do |k, v|
+        if v.is_a? Time
+          @activity.message_items[k] = {
+            type: 'Time',
+            value: v.to_i
+          }
+          next
+        end
+
         const = try_to_constantize k
         if const
           if v.is_a?(Hash) # Value is array, so you have getter specified
@@ -50,11 +58,7 @@ module Activities
           end
 
           obj = const.find id
-          @activity.message_items[k] = {
-            type: const.to_s,
-            value: obj.public_send(getter_method).to_s,
-            id: id
-          }
+          @activity.message_items[k] = { type: const.to_s, value: obj.public_send(getter_method).to_s, id: id }
           @activity.message_items[k][:value_for] = getter_method
           @activity.message_items[k][:value_type] = value_type unless value_type.nil?
         else

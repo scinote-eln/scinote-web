@@ -168,16 +168,17 @@ class MyModulesController < ApplicationController
         if due_date_changes
           # rubocop:disable Metrics/BlockNesting    # temporary solution
           type_of = if due_date_changes[0].nil?     # set due_date
+                      message_items = { my_module_duedate: @my_module.due_date }
                       :set_task_due_date
                     elsif due_date_changes[1].nil?  # remove due_date
+                      message_items = { my_module_duedate: due_date_changes[0] }
                       :remove_task_due_date
                     else                            # change due_date
+                      message_items = { my_module_duedate: @my_module.due_date }
                       :change_task_due_date
                     end
           # rubocop:enable Metrics/BlockNesting
-          log_activity(type_of, @my_module, my_module_duedate: { id: @my_module.id,
-                                                                 value_for: 'due_date',
-                                                                 value_type: 'time' })
+          log_activity(type_of, @my_module, message_items)
         end
       end
     end

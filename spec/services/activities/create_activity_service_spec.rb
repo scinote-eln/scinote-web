@@ -103,8 +103,8 @@ describe Activities::CreateActivityService do
     end
 
     context 'when message item is an object with custom value getter' do
-      it 'adds project due date to message items as hash' do
-        project.update_attribute(:due_date, Date.tomorrow)
+      it 'adds project visibility to message items as hash' do
+        project.update_attribute(:visibility, 'hidden')
 
         activity = Activities::CreateActivityService
                    .call(activity_type: :create_project,
@@ -112,16 +112,31 @@ describe Activities::CreateActivityService do
                            subject: project,
                            team: team,
                            message_items: {
-                             project_duedate: { id: project.id,
-                                                value_for: 'due_date', value_type: 'time' }
+                             project_visibility: { id: project.id, value_for: 'visibility' }
                            }).activity
 
         expect(activity.message_items)
-          .to include(project_duedate: { id: project.id,
-                                         type: 'Project',
-                                         value_for: 'due_date',
-                                         value_type: 'time',
-                                         value: project.due_date.to_s })
+          .to include(project_visibility: { id: project.id,
+                                            type: 'Project',
+                                            value_for: 'visibility',
+                                            value: project.visibility })
+      end
+    end
+
+    context 'when message item is an Time object' do
+      it 'adds time value and type to message items as hash' do
+        project.update_attribute(:visibility, 'hidden')
+        project.update_attribute(:due_date, Time.now)
+
+        activity = Activities::CreateActivityService.call(activity_type: :create_project,
+                                                          owner: user,
+                                                          subject: project,
+                                                          team: team,
+                                                          message_items: {
+                                                            project_duedate: project.due_date
+                                                          }).activity
+
+        expect(activity.message_items).to include(project_duedate: { type: 'Time', value: project.due_date.to_i })
       end
     end
   end
