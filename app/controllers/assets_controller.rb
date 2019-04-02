@@ -52,15 +52,15 @@ class AssetsController < ApplicationController
       'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
     }
 
-    if @asset.is_image?
-      can_edit = if @assoc.class == Step
-                   can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
-                 elsif @assoc.class == Result
-                   can_manage_module?(@my_module)
-                 elsif @assoc.class == RepositoryCell
-                   can_manage_repository_rows?(@repository.team)
-                 end
+    can_edit = if @assoc.class == Step
+                 can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
+               elsif @assoc.class == Result
+                 can_manage_module?(@my_module)
+               elsif @assoc.class == RepositoryCell
+                 can_manage_repository_rows?(@repository.team)
+               end
 
+    if @asset.is_image?
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'processing' => @asset.file.processing?,
@@ -78,15 +78,6 @@ class AssetsController < ApplicationController
     end
 
     if wopi_file?(@asset)
-      can_edit =
-        if @assoc.class == Step
-          can_manage_protocol_in_module?(@protocol) ||
-            can_manage_protocol_in_repository?(@protocol)
-        elsif @assoc.class == Result
-          can_manage_module?(@my_module)
-        elsif @assoc.class == RepositoryCell
-          can_manage_repository_rows?(@repository.team)
-        end
       edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
         partial: 'shared/file_wopi_controlls.html.erb',

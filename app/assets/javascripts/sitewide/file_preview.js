@@ -353,7 +353,11 @@ var FilePreviewModal = (function() {
             }
           }
         } else {
+          modal.find('.file-edit-link').css('display', 'none');
           modal.find('.file-preview-container').html(data['preview-icon']);
+        }
+        if (readOnly) {
+          modal.find('#wopi_file_edit_button').remove();
         }
         if (data.processing) {
           checkFileReady(url, modal);
