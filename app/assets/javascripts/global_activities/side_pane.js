@@ -93,7 +93,7 @@ $(function() {
     return (state.label ? state.label + ': ' : '') + state.text;
   };
 
-  function GlobalActivitiesUpdateTopPaneTags(event) {
+  function GlobalActivitiesUpdateTopPaneTags() {
     var dateContainer = $('.ga-side .date-selector.filter-block');
     if (updateRunning) return false;
     $('.ga-top .ga-tags').children().remove();
@@ -111,7 +111,7 @@ $(function() {
       newTag.find('.select2-selection__choice__remove')
         .click(() => {
           var parentTag = $(tag).find('span.select2-block-body')[0];
-          if (event && event.type === 'select2:select' && parentTag) {
+          if (parentTag) {
             // Adding remove action for native blocks
             selectedValues = parentSelector.val();
             elementToDelete = parentTag.dataset.selectId;
@@ -150,7 +150,7 @@ $(function() {
       $('.ga-side .subject-selector select').trigger('change');
     }
     updateRunning = false;
-    GlobalActivitiesUpdateTopPaneTags({ type: 'select2:select' });
+    GlobalActivitiesUpdateTopPaneTags();
   }
 
   // update_filter
@@ -214,7 +214,7 @@ $(function() {
     customSelection: subjectCustomDisplay,
     unlimitedSize: true
   }).on('change select2:select', function(e) {
-    GlobalActivitiesUpdateTopPaneTags(e);
+    GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
   });
   $('.ga-side .subject-selector .clear').click(function() {
