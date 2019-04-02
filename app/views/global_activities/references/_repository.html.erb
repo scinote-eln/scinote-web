@@ -3,7 +3,7 @@
 <div class="ga-breadcrumb">
   <span class="fas fa-list-alt"></span>
   <% if subject %>
-    <%= route_to_other_team(repositories_path(subject),
+    <%= route_to_other_team(repository_path(subject.id),
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                             title: subject.name) %>
