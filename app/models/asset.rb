@@ -467,8 +467,13 @@ class Asset < ApplicationRecord
 
   def editable?(user)
     objects = %w(step result)
-    my_module = send(objects.find { |object| send(object) }).my_module
-    Canaid::PermissionsHolder.instance.eval(:manage_experiment, user, my_module.experiment) &&
+    parent_object = send(objects.find { |object| send(object) })
+    if parent_object.my_module
+      permission_check = Canaid::PermissionsHolder.instance.eval(:manage_experiment, user, parent_object.my_module.experiment)
+    else
+      permission_check = Canaid::PermissionsHolder.instance.eval(:manage_protocol_in_repository, user, parent_object.protocol)
+    end
+    permission_check &&
       !locked? &&
       %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} ===
         file.content_type
