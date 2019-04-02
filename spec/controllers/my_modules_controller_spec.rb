@@ -148,6 +148,22 @@ describe MyModulesController, type: :controller do
     end
   end
 
+  describe 'POST assign_repository_records_downstream' do
+    it 'adds activity id DB' do
+      parent_my_module = my_module
+      params_downstream = { id: parent_my_module.id,
+                            repository_id: repository.id,
+                            selected_rows: [repository_row.id],
+                            downstream: true }
+      3.times do |_i|
+        child_module = create :my_module, experiment: experiment
+        Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
+      end
+      expect { post :assign_repository_records, params: params_downstream, format: :json }
+        .to change { Activity.count }.by(4)
+    end
+  end
+
   describe 'POST unassign_repository_records' do
     let!(:mm_repository_row) do
       create :mm_repository_row, repository_row: repository_row,
@@ -175,6 +191,28 @@ describe MyModulesController, type: :controller do
     it 'adds activity in DB' do
       expect { action }
         .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST unassign_repository_records_downstream' do
+    it 'adds activity id DB' do
+      parent_my_module = my_module
+      create :mm_repository_row, repository_row: repository_row,
+                                 my_module: parent_my_module,
+                                 assigned_by: user
+      params_downstream = { id: parent_my_module.id,
+                            repository_id: repository.id,
+                            selected_rows: [repository_row.id],
+                            downstream: true }
+      3.times do |_i|
+        child_module = create :my_module, experiment: experiment
+        Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
+        create :mm_repository_row, repository_row: repository_row,
+                                 my_module: child_module,
+                                 assigned_by: user
+      end
+      post :unassign_repository_records, params: params_downstream, format: :json
+      expect(Activity.count).to eq 4
     end
   end
 

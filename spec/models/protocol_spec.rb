@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Protocol, type: :model do
@@ -46,7 +48,7 @@ describe Protocol, type: :model do
     end
     it do
       should validate_length_of(:description)
-              .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
   end
   describe '.archive(user)' do
@@ -118,6 +120,23 @@ describe Protocol, type: :model do
 
     it 'creats one new activity DB' do
       expect { protocol.make_private(user) }.to change { Activity.count }.by(1)
+    end
+  end
+
+  describe '.deep_clone_repository' do
+    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
+    let(:user) { create :user }
+
+    it 'calls create activity for protocol copy to repository' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :copy_protocol_in_repository)))
+      protocol.deep_clone_repository(user)
+    end
+
+    it 'creats one new activity DB' do
+      expect { protocol.deep_clone_repository(user) }.to change { Activity.count }.by(1)
     end
   end
 end

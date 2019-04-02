@@ -175,7 +175,7 @@ class MyModulesController < ApplicationController
                       :change_task_due_date
                     end
           # rubocop:enable Metrics/BlockNesting
-          log_activity(type_of, my_module_duedate: { id: @my_module.id,
+          log_activity(type_of, @my_module, my_module_duedate: { id: @my_module.id,
                                                      value_for: 'due_date' })
         end
       end
@@ -363,7 +363,8 @@ class MyModulesController < ApplicationController
     if params[:selected_rows].present? && params[:repository_id].present?
       records_names = []
       downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
-
+      downstream_my_modules = []
+      dowmstream_records = {}
       RepositoryRow
         .where(id: params[:selected_rows],
                repository_id: params[:repository_id])
@@ -383,21 +384,29 @@ class MyModulesController < ApplicationController
         next unless downstream
         @my_module.downstream_modules.each do |my_module|
           next if my_module.repository_rows.include?(record)
+          dowmstream_records[my_module.id] = [] unless dowmstream_records[my_module.id]
           MyModuleRepositoryRow.create!(
             my_module: my_module,
             repository_row: record,
             assigned_by: current_user
           )
-          records_names << record.name
+          dowmstream_records[my_module.id] << record.name
+          downstream_my_modules.push(my_module)
         end
       end
 
       if records_names.any?
         records_names.uniq!
         log_activity(:assign_repository_record,
+                     @my_module,
                      repository: @repository.id,
                      record_names: records_names.join(', '))
-
+        downstream_my_modules.uniq.each do |my_module|
+          log_activity(:assign_repository_record,
+                       my_module,
+                       repository: @repository.id,
+                       record_names: dowmstream_records[my_module.id].join(', '))
+        end
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
         flash = I18n.t('repositories.assigned_records_downstream_flash',
@@ -436,6 +445,12 @@ class MyModulesController < ApplicationController
             assigned_records & my_module.repository_rows
           )
           assigned_records.update_all(last_modified_by_id: current_user.id)
+          next unless assigned_records.any?
+
+          log_activity(:unassign_repository_record,
+                       my_module,
+                       repository: @repository.id,
+                       record_names: assigned_records.map(&:name).join(', '))
         end
       end
 
@@ -444,6 +459,7 @@ class MyModulesController < ApplicationController
 
       if records.any?
         log_activity(:unassign_repository_record,
+                     @my_module,
                      repository: @repository.id,
                      record_names: records.map(&:name).join(', '))
 
@@ -640,15 +656,16 @@ class MyModulesController < ApplicationController
                                       :archived)
   end
 
-  def log_activity(type_of, message_items = {})
-    message_items = { my_module: @my_module.id }.merge(message_items)
+  def log_activity(type_of, my_module = nil, message_items = {})
+    my_module ||= @my_module
+    message_items = { my_module: my_module.id }.merge(message_items)
 
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
-            subject: @my_module,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
             message_items: message_items)
   end
 

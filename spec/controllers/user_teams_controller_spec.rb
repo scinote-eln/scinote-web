@@ -39,6 +39,23 @@ describe Users::Settings::UserTeamsController, type: :controller do
           .to(change { UserTeam.count })
       end
     end
+
+    context 'when user leaving team by himself' do
+      it 'calls create activity for user leaving' do
+        params_leave = { id: another_user_team.id, leave: true }
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :user_leave_team)))
+
+        delete :destroy, params: params_leave, format: :json
+      end
+
+      it 'adds activity in DB' do
+        params_leave = { id: another_user_team.id, leave: true }
+        expect { delete :destroy, params: params_leave, format: :json }
+          .to(change { Activity.count })
+      end
+    end
   end
 
   describe 'PUT update' do

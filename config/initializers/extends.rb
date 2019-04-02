@@ -209,6 +209,9 @@ class Extends
     export_system_logs: 98,
     edit_wopi_file_on_result: 99,
     edit_wopi_file_on_step: 100,
+    copy_protocol_in_repository: 103,
+    user_leave_team: 104,
+    export_protocol_from_task: 106,
     edit_wopi_file_on_step_in_repository: 101,
     copy_inventory: 105,
     copy_inventory_item: 102
@@ -217,14 +220,14 @@ class Extends
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34],
     task_results: [*23..26, 40, 41, 42, 99],
-    task: [*8..14, 35, 36, 37, 53, 54, *58..69],
+    task: [*8..14, 35, 36, 37, 53, 54, *58..69, 106],
     task_protocol: [*15..22, 45, 46, 47, 38, 39, 100],
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
     reports: [48, 49, 50],
     inventories: [*70..78, 105, 102],
-    protocol_repository: [*79..91, 101],
-    team: [*92..96],
+    protocol_repository: [*79..91, 101, 103],
+    team: [*92..96, 104],
     exports: [*97..98]
   }.freeze
 end

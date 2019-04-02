@@ -112,15 +112,20 @@ module Users
                   .where.not(id: @user_t.id)
                   .first
                   .user
+                Activities::CreateActivityService
+                  .call(activity_type: :user_leave_team,
+                        owner: current_user,
+                        subject: @user_t.team,
+                        team: @user_t.team,
+                        message_items: {
+                          team: @user_t.team.id
+                        })
               else
                 # Otherwise, the new owner for projects is
                 # the current user (= an administrator removing
                 # the user from the team)
                 new_owner = current_user
-              end
-              reset_user_current_team(@user_t)
-
-              Activities::CreateActivityService
+                Activities::CreateActivityService
                 .call(activity_type: :remove_user_from_team,
                       owner: current_user,
                       subject: @user_t.team,
@@ -129,6 +134,8 @@ module Users
                         team: @user_t.team.id,
                         user_removed: @user_t.user.id
                       })
+              end
+              reset_user_current_team(@user_t)
 
               @user_t.destroy(new_owner)
             end
