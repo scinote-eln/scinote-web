@@ -180,7 +180,7 @@ describe Experiment, type: :model do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type:
-                                       :archive_task))).exactly(3).times
+                                       :archive_module))).exactly(3).times
 
         function_call
       end

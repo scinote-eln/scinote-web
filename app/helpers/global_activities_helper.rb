@@ -5,30 +5,25 @@ module GlobalActivitiesHelper
   include ActionView::Helpers::UrlHelper
   include InputSanitizeHelper
 
-  def generate_activity_content(activity)
+  def generate_activity_content(activity, no_links = false)
     parameters = {}
     activity.values[:message_items].each do |key, value|
       parameters[key] =
         if value.is_a? String
           value
         else
-          generate_link(value, activity)
+          no_links ? generate_name(value) : generate_link(value, activity)
         end
     end
-    I18n.t("global_activities.content.#{activity.type_of}_html",
-           parameters.symbolize_keys)
+    sanitize_input(I18n.t("global_activities.content.#{activity.type_of}_html",
+                          parameters.symbolize_keys))
   end
 
   def generate_link(message_item, activity)
-    type = message_item[:type]
-    id = message_item[:id]
-    getter = message_item[:getter]
-    value = message_item[:value]
+    obj = message_item[:type].constantize.find_by_id(message_item[:id])
+    return message_item[:value] unless obj
 
-    obj = type.constantize.find_by_id id
-    return value unless obj
-
-    current_value = obj.public_send(getter || 'name')
+    current_value = generate_name(message_item)
     team = activity.team
     path = ''
 
@@ -50,9 +45,11 @@ module GlobalActivitiesHelper
       path = obj.archived? ? projects_path : project_path(obj)
     when Experiment
       return current_value unless obj.navigable?
+
       path = obj.archived? ? experiment_archive_project_path(obj.project) : canvas_experiment_path(obj)
     when MyModule
       return current_value unless obj.navigable?
+
       path = obj.archived? ? module_archive_experiment_path(obj.experiment) : protocols_my_module_path(obj)
     when Protocol
       if obj.in_repository?
@@ -64,10 +61,28 @@ module GlobalActivitiesHelper
       end
     when Result
       return current_value unless obj.navigable?
+
       path = obj.archived? ? archive_my_module_path(obj.my_module) : results_my_module_path(obj.my_module)
+    when Step
+      return current_value
+    when Report
+      path = reports_path
     else
       return current_value
     end
-    route_to_other_team(path, obj, current_value)
+    route_to_other_team(path, team, current_value)
+  end
+
+  def generate_name(message_item)
+    obj = message_item[:type].constantize.find_by_id(message_item[:id])
+    return message_item[:value] unless obj
+
+    value = obj.public_send(message_item[:value_for] || 'name')
+    value = t('global_activities.index.no_name') if value.blank?
+
+    # format if is datetime format
+    value = l(value, format: :full_date) if value.methods.include? :strftime
+
+    value
   end
 end

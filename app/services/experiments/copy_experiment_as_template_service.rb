@@ -90,8 +90,8 @@ module Experiments
         .call(activity_type: :clone_experiment,
               owner: @user,
               team: @project.team,
-              project: @project,
-              subject: @exp,
+              project: @c_exp.project,
+              subject: @c_exp,
               message_items: { experiment_new: @c_exp.id,
                                experiment_original: @exp.id })
     end

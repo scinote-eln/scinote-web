@@ -210,7 +210,7 @@ class Experiment < ApplicationRecord
         move_modules(updated_to_move, current_user)
 
         # Everyhing is set, now we can move any module groups
-        move_module_groups(updated_to_move_groups)
+        move_module_groups(updated_to_move_groups, current_user)
       end
     rescue ActiveRecord::ActiveRecordError,
            ArgumentError,
@@ -263,7 +263,7 @@ class Experiment < ApplicationRecord
   def archive_modules(module_ids, current_user)
     my_modules.where(id: module_ids).each do |my_module|
       my_module.archive!(current_user)
-      log_activity(:archive_task, current_user, my_module)
+      log_activity(:archive_module, current_user, my_module)
     end
     my_modules.reload
   end
@@ -365,7 +365,7 @@ class Experiment < ApplicationRecord
   # If a module with given ID doesn't exist (or experiment ID)
   # it's obviously not updated. Position for entire module group is updated
   # to bottom left corner.
-  def move_module_groups(to_move)
+  def move_module_groups(to_move, current_user)
     to_move.each do |ids, experiment_id|
       modules = my_modules.find(ids)
       groups = Set.new(modules.map(&:my_module_group))
@@ -391,8 +391,23 @@ class Experiment < ApplicationRecord
         modules.each { |m| m.y += -curr_min_y + max_y }
 
         modules.each do |m|
+          experiment_org = m.experiment
           m.experiment = experiment
           m.save!
+
+          # Add activity
+          Activities::CreateActivityService.call(
+            activity_type: :move_task,
+            owner: current_user,
+            subject: m,
+            project: experiment.project,
+            team: experiment.project.team,
+            message_items: {
+              my_module: m.id,
+              experiment_original: experiment_org.id,
+              experiment_new: experiment.id
+            }
+          )
         end
 
         group.experiment = experiment

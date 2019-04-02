@@ -159,7 +159,7 @@ class ProtocolsController < ApplicationController
 
         changes.each do |key|
           if %w(description authors keywords).include?(key)
-            log_activity("edit_#{key}_in_protocol_repository".to_sym)
+            log_activity("edit_#{key}_in_protocol_repository".to_sym, nil, protocol: @protocol.id)
           end
         end
 
@@ -198,7 +198,7 @@ class ProtocolsController < ApplicationController
       end
       if @protocol.update_keywords(params[:keywords])
         format.json do
-          log_activity(:edit_keywords_in_protocol_repository)
+          log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
 
           render json: {
             updated_at_label: render_to_string(
@@ -231,7 +231,7 @@ class ProtocolsController < ApplicationController
 
     respond_to do |format|
       if @protocol.save
-        log_activity(:create_protocol_in_repository)
+        log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
 
         format.json do
           render json: {
@@ -378,6 +378,7 @@ class ProtocolsController < ApplicationController
           # Everything good, display flash & render 200
           log_activity(:update_protocol_in_task_from_repository,
                        @protocol.my_module.experiment.project,
+                       my_module: @protocol.my_module.id,
                        protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.revert_flash'
@@ -420,6 +421,7 @@ class ProtocolsController < ApplicationController
           # Everything good, record activity, display flash & render 200
           log_activity(:update_protocol_in_repository_from_task,
                        @protocol.my_module.experiment.project,
+                       my_module: @protocol.my_module.id,
                        protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.update_parent_flash'
@@ -462,6 +464,7 @@ class ProtocolsController < ApplicationController
           # Everything good, display flash & render 200
           log_activity(:update_protocol_in_task_from_repository,
                        @protocol.my_module.experiment.project,
+                       my_module: @my_module.id,
                        protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.update_from_parent_flash'
@@ -504,6 +507,7 @@ class ProtocolsController < ApplicationController
           # Everything good, record activity, display flash & render 200
           log_activity(:load_protocol_to_task_from_repository,
                        @protocol.my_module.experiment.project,
+                       my_module: @protocol.my_module.id,
                        protocol_repository: @protocol.parent.id)
           flash[:success] = t('my_modules.protocols.load_from_repository_flash')
           flash.keep(:success)
@@ -542,7 +546,8 @@ class ProtocolsController < ApplicationController
         else
           # Everything good, record activity, display flash & render 200
           log_activity(:load_protocol_to_task_from_file,
-                       @protocol.my_module.experiment.project)
+                       @protocol.my_module.experiment.project,
+                       my_module: @my_module.id)
           flash[:success] = t(
             'my_modules.protocols.load_from_file_flash'
           )
@@ -1215,7 +1220,6 @@ class ProtocolsController < ApplicationController
 
   def log_activity(type_of, project = nil, message_items = {})
     message_items = { protocol: @protocol&.id }.merge(message_items)
-
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,

@@ -52,7 +52,7 @@ class GlobalActivitiesController < ApplicationController
     results = {}
     subject_types.each do |subject|
       matched = subject.constantize
-                       .search_by_name(current_user, teams, query)
+                       .search_by_name(current_user, teams, query, whole_phrase: true)
                        .limit(Constants::SEARCH_LIMIT)
                        .pluck(:id, :name)
       next if matched.length.zero?

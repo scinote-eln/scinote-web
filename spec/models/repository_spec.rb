@@ -42,4 +42,21 @@ describe Repository, type: :model do
       expect(repo).to_not be_valid
     end
   end
+
+  describe '.copy' do
+    let(:created_by) { create :user }
+    let(:repository) { create :repository }
+
+    it 'calls create activity for copying inventory' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call).with(hash_including(activity_type: :copy_inventory)))
+
+      repository.copy(created_by, 'name for copied repo')
+    end
+
+    it 'adds activity in DB' do
+      expect { repository.copy(created_by, 'name for copied repo') }
+        .to(change { Activity.count })
+    end
+  end
 end
