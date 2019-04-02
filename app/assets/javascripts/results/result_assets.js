@@ -50,7 +50,7 @@
           $form.remove();
           applyEditResultAssetCallback();
           Results.toggleResultEditButtons(true);
-          initPreviewModal();
+          FilePreviewModal.init();
         });
 
         Results.toggleResultEditButtons(false);
@@ -72,7 +72,7 @@
 
         Results.toggleResultEditButtons(true);
         Results.expandResult($newResult);
-        initPreviewModal();
+        FilePreviewModal.init();
         Comments.initialize();
         initNewResultAsset();
       }).on('ajax:error', function(e, xhr) {
@@ -98,5 +98,5 @@
 
   ResutlAssets.initNewResultAsset();
   ResutlAssets.applyEditResultAssetCallback();
-  global.initPreviewModal();
+  FilePreviewModal.init();
 }(window));

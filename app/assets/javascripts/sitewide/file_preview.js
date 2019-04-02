@@ -3,13 +3,17 @@
 /* global fabric tui animateSpinner setupAssetsLoading I18n*/
 //= require assets
 
-(function(global) {
+var FilePreviewModal = (function() {
   'use strict';
 
-  global.initPreviewModal = function initPreviewModal() {
+  var readOnly = false;
+
+  function initPreviewModal(options = {}) {
     var name;
     var url;
     var downloadUrl;
+    readOnly = options.readOnly;
+
     $('.file-preview-link').off('click');
     $('.file-preview-link').click(function(e) {
       e.preventDefault();
@@ -18,7 +22,7 @@
       downloadUrl = $(this).attr('href');
       openPreviewModal(name, url, downloadUrl);
     });
-  };
+  }
 
   // Adding rotation icon
   function updateFabricControls() {
@@ -336,7 +340,7 @@
                 .click(function(ev) {
                   ev.stopPropagation();
                 }));
-            if (data.editable) {
+            if (!readOnly && data.editable) {
               modal.find('.file-edit-link').css('display', '');
               modal.find('.file-edit-link').off().click(function(ev) {
                 ev.preventDefault();
@@ -410,4 +414,8 @@
       }
     });
   }
+
+  return Object.freeze({
+    init: initPreviewModal
+  });
 }(window));
