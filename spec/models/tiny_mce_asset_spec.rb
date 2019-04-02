@@ -47,16 +47,34 @@ describe TinyMceAsset, type: :model do
         :result, user: @user, last_modified_by: @user, my_module: @valid_task
       ) 
     }
-    let(:image) { create :tiny_mce_asset }
+    let(:image) { create :tiny_mce_asset, id: 1 }
 
-    describe '#update_images'
+    describe '#update_images' do
       it 'save new image' do
          new_image=image
          new_result_text=result_text
          TinyMceAsset.update_images(new_result_text,[Base62.encode(new_image.id)].to_s)
          updated_image=TinyMceAsset.find(new_image.id)
-         expect(update_image.object_type).to eq 'ResultText'
-         expect(new_result_text.text).not_to include 'fake-path'
+         expect(updated_image.object_type).to eq 'ResultText'
+         expect(ResultText.find(new_result_text.id).text).not_to include 'fake-path'
       end
+    end
+
+    describe '#generate_url' do
+      it 'create new url' do 
+        image
+        expect(TinyMceAsset.generate_url(result_text.text)).to include 'sample_file.jpg'
+      end
+    end
+
+    describe '#reload_images' do
+      it 'change image token in description' do
+        new_result_text = result_text
+        TinyMceAsset.update_images(new_result_text,[Base62.encode(image.id)].to_s)
+        create :tiny_mce_asset, id: 2, object: new_result_text
+        TinyMceAsset.reload_images([[1,2]])
+        expect(ResultText.find(new_result_text.id).text).to include 'data-mce-token="2"'
+      end
+    end
   end
 end

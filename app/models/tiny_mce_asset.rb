@@ -63,6 +63,7 @@ class TinyMceAsset < ApplicationRecord
       description_image = old_description.css(
         "img[data-mce-token=\"#{Base62.encode(old_id)}\"]"
       )
+      next if description_image.empty?
       description_image.attr('src').value = ''
       description_image.attr('data-mce-token').value = Base62.encode(new_id)
       description_image[0]['class'] = 'img-responsive'
