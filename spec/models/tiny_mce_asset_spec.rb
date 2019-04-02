@@ -42,7 +42,7 @@ describe TinyMceAsset, type: :model do
   describe 'Methods' do
 
     let(:result_text) { create :result_text, 
-      text: '<img data-token=1  src="fake"/>',
+      text: '<img data-mce-token=1  src="fake-path"/>',
       result: create(
         :result, user: @user, last_modified_by: @user, my_module: @valid_task
       ) 
@@ -55,7 +55,8 @@ describe TinyMceAsset, type: :model do
          new_result_text=result_text
          TinyMceAsset.update_images(new_result_text,[Base62.encode(new_image.id)].to_s)
          updated_image=TinyMceAsset.find(new_image.id)
-         expect()
+         expect(update_image.object_type).to eq 'ResultText'
+         expect(new_result_text.text).not_to include 'fake-path'
       end
   end
 end

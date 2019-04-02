@@ -8,7 +8,7 @@ namespace :tinymce_assets do
     old_images = TinyMceAsset.where('step_id IS NOT NULL OR result_text_id IS NOT NULL')
     old_images.each do |old_image|
       old_format = /\[~tiny_mce_id:#{old_image.id}\]/
-      new_format = "<img src='#{old_image.url}' class='img-responsive' data-token='#{Base62.encode(old_image.id)}'/>"
+      new_format = "<img src='' class='img-responsive' data-mce-token='#{Base62.encode(old_image.id)}'/>"
       if old_image.step_id
         object = old_image.step
         object.description.sub!(old_format, new_format)
