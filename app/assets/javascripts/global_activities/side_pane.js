@@ -1,5 +1,4 @@
-/* global animateSpinner I18n PerfectSb */
-
+/* global animateSpinner I18n gaUrlQueryParams PerfectSb */
 // Common code
 
 
@@ -76,7 +75,7 @@ $(function() {
           return {
             id: key + '_' + item.id,
             text: item.name,
-            label: key
+            label: I18n.t('global_activities.subject_name.' + key.toLowerCase())
           };
         });
         result.push({
@@ -91,7 +90,7 @@ $(function() {
   };
   // custom display function
   var subjectCustomDisplay = (state) => {
-    return state.label + ': ' + state.text;
+    return (state.label ? state.label + ': ' : '') + state.text;
   };
 
   function GlobalActivitiesUpdateTopPaneTags(event) {
@@ -111,10 +110,11 @@ $(function() {
       var elementToDelete = null;
       newTag.find('.select2-selection__choice__remove')
         .click(() => {
-          if (event && event.type === 'select2:select') {
+          var parentTag = $(tag).find('span.select2-block-body')[0];
+          if (event && event.type === 'select2:select' && parentTag) {
             // Adding remove action for native blocks
             selectedValues = parentSelector.val();
-            elementToDelete = $(tag).find('span.select2-block-body')[0].dataset.selectId;
+            elementToDelete = parentTag.dataset.selectId;
             selectedValues = $.grep(selectedValues, v => { return v !== elementToDelete; });
             parentSelector.val(selectedValues).change();
           } else {
@@ -123,6 +123,34 @@ $(function() {
         });
     });
     PerfectSb().update_all();
+  }
+
+  function preloadFilters(filters) {
+    updateRunning = true;
+    if (filters.types) {
+      $('.ga-side .activity-selector select').val(filters.types).trigger('change');
+    }
+    if (filters.teams) {
+      $('.ga-side .team-selector select').val(filters.teams).trigger('change');
+    }
+    if (filters.users) {
+      $('.ga-side .user-selector select').val(filters.users).trigger('change');
+    }
+    if (filters.from_date) {
+      $('#calendar-from-date').data('DateTimePicker').date(new Date(filters.from_date));
+    }
+    if (filters.to_date) {
+      $('#calendar-to-date').data('DateTimePicker').date(new Date(filters.to_date));
+    }
+    if (filters.subject_labels) {
+      $.each(filters.subject_labels, function(index, subject) {
+        var subjectHash = JSON.parse(subject);
+        $('<option data-label="test" value="' + subjectHash.id + '" selected >' + subjectHash.label + '</option>').appendTo('.ga-side .subject-selector select');
+      });
+      $('.ga-side .subject-selector select').trigger('change');
+    }
+    updateRunning = false;
+    GlobalActivitiesUpdateTopPaneTags({ type: 'select2:select' });
   }
 
   // update_filter
@@ -230,6 +258,10 @@ $(function() {
   });
 
   GlobalActivitiesUpdateTopPaneTags();
+
+  if (typeof gaUrlQueryParams !== 'undefined' && gaUrlQueryParams) {
+    preloadFilters(gaUrlQueryParams);
+  }
 
   $('.date-selector .hot-button').click(function() {
     var selectPeriod = this.dataset.period;
