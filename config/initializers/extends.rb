@@ -211,7 +211,7 @@ class Extends
     edit_wopi_file_on_step: 100,
     copy_protocol_in_repository: 103,
     user_leave_team: 104,
-    export_protocol_from_task: 106
+    export_protocol_from_task: 106,
     edit_wopi_file_on_step_in_repository: 101,
     copy_inventory: 105,
     copy_inventory_item: 102
