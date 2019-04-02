@@ -13,10 +13,13 @@ class ActivitiesService
         query = query.where('project_id IN (?)', subjects_with_children[:Project])
         subjects_with_children.except!(:Project)
       end
-      query = query.where(
-        subjects_with_children.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),
-        *subjects_with_children.flatten
-      )
+      where_condition = subjects_with_children.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR ')
+      where_arguments = subjects_with_children.flatten
+      if subjects_with_children[:MyModule]
+        where_condition = where_condition.concat(' OR (my_module_id IN(?))')
+        where_arguments << subjects_with_children[:MyModule]
+      end
+      query = query.where(where_condition, *where_arguments)
     end
 
     query = query.where(owner_id: filters[:users]) if filters[:users]
