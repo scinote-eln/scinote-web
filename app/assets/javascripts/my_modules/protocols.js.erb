@@ -133,7 +133,7 @@ function initCopyToRepository() {
     })
     .on("ajax:error", function(e2, data2) {
       // Display errors in form
-      submitBtn[0].disabled=false
+      submitBtn[0].disabled = false;
       if (data2.status === 422) {
         $(this).renderFormErrors("protocol", data2.responseJSON);
       } else {
@@ -145,8 +145,7 @@ function initCopyToRepository() {
     modal.modal("show");
     submitBtn[0].disabled=false
   })
-  .on("ajax:error", function() {
-  } );
+  .on("ajax:error", function() {} );
 
   submitBtn.on("click", function() {
     // Submit the embedded form
