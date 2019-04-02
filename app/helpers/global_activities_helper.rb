@@ -64,13 +64,7 @@ module GlobalActivitiesHelper
 
       path = obj.archived? ? archive_my_module_path(obj.my_module) : results_my_module_path(obj.my_module)
     when Step
-      if obj.protocol.in_repository?
-        path = protocols_path
-      elsif obj.protocol.my_module.navigable?
-        path = protocols_my_module_path(obj.my_module)
-      else
-        return current_value
-      end
+      return current_value
     when Report
       path = reports_path
     else
@@ -83,8 +77,12 @@ module GlobalActivitiesHelper
     obj = message_item[:type].constantize.find_by_id(message_item[:id])
     return message_item[:value] unless obj
 
-    value = obj.public_send(message_item[:getter] || 'name')
+    value = obj.public_send(message_item[:value_for] || 'name')
     value = t('global_activities.index.no_name') if value.blank?
+
+    # format if is datetime format
+    value = l(value, format: :full_date) if value.methods.include? :strftime
+
     value
   end
 end
