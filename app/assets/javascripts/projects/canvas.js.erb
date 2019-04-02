@@ -317,9 +317,15 @@ function initializeFullZoom() {
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
 
   // Initialize comments
-  Comments.initCommentOptions("ul.content-comments", false);
+  Comments.initCommentOptions("ul.content-comments", true);
   Comments.initEditComments(".panel.module-large .tab-content");
   Comments.initDeleteComments(".panel.module-large .tab-content");
+
+  $('#diagram-container').on('shown.bs.dropdown', '.dropdown-comment', function() {
+    var commentMenu = $(this).find('.dropdown-menu-fixed');
+    commentMenu.position({ top: $(this).parent().position().top });
+    commentMenu.offset({ top: $(this).parent().offset().top + <%= Constants::DROPDOWN_TOP_OFFSET_PX %> });
+  });
 }
 
 function destroyFullZoom() {

@@ -209,6 +209,8 @@ var Comments = (function() {
       var offset = useParentOffset ? $el.offset().top : $el.position().top;
       $el.find('.dropdown-menu-fixed')
         .offset({ top: (offset + <%= Constants::DROPDOWN_TOP_OFFSET_PX %>) });
+      $el.find('.dropdown-menu-fixed')
+        .position({ top: $el.position().top });
     });
   }
 
