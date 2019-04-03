@@ -464,7 +464,7 @@ class ProtocolsController < ApplicationController
           # Everything good, display flash & render 200
           log_activity(:update_protocol_in_task_from_repository,
                        @protocol.my_module.experiment.project,
-                       my_module: @my_module.id,
+                       my_module: @protocol.my_module.id,
                        protocol_repository: @protocol.parent.id)
           flash[:success] = t(
             'my_modules.protocols.update_from_parent_flash'

@@ -704,7 +704,7 @@ class Protocol < ApplicationRecord
   def destroy_contents(current_user)
     # Calculate total space taken by the protocol
     st = self.space_taken
-    steps.pluck(:id) do |id|
+    steps.pluck(:id).each do |id|
       unless Step.find(id).destroy(current_user)
         raise ActiveRecord::RecordNotDestroyed
       end

@@ -133,6 +133,7 @@ function initCopyToRepository() {
     })
     .on("ajax:error", function(e2, data2) {
       // Display errors in form
+      submitBtn[0].disabled = false;
       if (data2.status === 422) {
         $(this).renderFormErrors("protocol", data2.responseJSON);
       } else {
