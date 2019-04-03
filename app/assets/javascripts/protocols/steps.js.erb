@@ -120,7 +120,7 @@
       setTimeout(function() {
         $.initTooltips();
         initStepsComments();
-        initPreviewModal();
+        FilePreviewModal.init();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
         TinyMCE.destroyAll();
         DragNDropSteps.clearFiles();
@@ -148,7 +148,7 @@
       toggleButtons(false);
       initializeCheckboxSorting();
       animateSpinner(null, false);
-      initPreviewModal();
+      FilePreviewModal.init();
       DragNDropSteps.clearFiles();
       TinyMCE.refresh();
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
@@ -233,7 +233,7 @@
       initCallBacks();
       initHandsOnTable($new_step);
       toggleButtons(true);
-      initPreviewModal();
+      FilePreviewModal.init();
 
       TinyMCE.destroyAll();
       SmartAnnotation.preventPropagation('.atwho-user-popover');
@@ -613,7 +613,7 @@
           animateSpinner(null, false);
           setupAssetsLoading();
           DragNDropSteps.clearFiles();
-          initPreviewModal();
+          FilePreviewModal.init();
           $.initTooltips();
         },
         error: function(xhr) {
@@ -676,7 +676,7 @@
   expandAllSteps();
   setupAssetsLoading();
   initStepsComments();
-  initPreviewModal();
+  FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');
   newStepHandler();

@@ -44,7 +44,7 @@ function setupAssetsLoading() {
             );
           }
           animateSpinner(null, false);
-          initPreviewModal();
+          FilePreviewModal.init();
         },
         error: function(data) {
           if (data.status == 403) {

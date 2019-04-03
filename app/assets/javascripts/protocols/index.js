@@ -215,7 +215,7 @@ function initProtocolPreviewModal() {
           initHandsOnTable(modalBody);
           modal.modal("show");
           initHandsOnTable(modalBody);
-          initPreviewModal();
+          FilePreviewModal.init({ readOnly: true });
         },
         error: function (error) {
           // TODO
