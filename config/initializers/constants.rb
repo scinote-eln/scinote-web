@@ -220,7 +220,7 @@ class Constants
   ].freeze
 
   WHITELISTED_IMAGE_TYPES_EDITABLE = %w(
-    gif jpeg pjpeg png
+    jpeg pjpeg png
   ).freeze
 
   WHITELISTED_TAGS = %w(
