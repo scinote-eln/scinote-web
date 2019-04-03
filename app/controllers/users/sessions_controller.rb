@@ -24,6 +24,11 @@ class Users::SessionsController < Devise::SessionsController
         priority: 10
       ).seed_demo_data_with_id(current_user.id, team.id)
     end
+  rescue StandardError => e
+    Rails.logger.fatal(
+      "User ID #{current_user.id}: Error creating inital projects on sign_in: "\
+      "#{e.message}"
+    )
   end
 
   # DELETE /resource/sign_out
