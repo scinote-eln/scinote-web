@@ -1,4 +1,5 @@
 <%= link_to view_asset_url(id: asset),
+        id: 'wopi_file_view_button',
         class: 'btn btn-default btn-sm',
         target: '_blank',
         style: 'display: inline-block' do %>
@@ -7,6 +8,7 @@
 <% end %>
 <% if can_edit && edit_supported %>
   <%= link_to edit_asset_url(id: asset),
+          id: 'wopi_file_edit_button',
           class: 'btn btn-default btn-sm',
           target: '_blank',
           style: 'display: inline-block' do %>
@@ -15,6 +17,7 @@
   <% end %>
 <% elsif can_edit %>
   <%= link_to edit_asset_url(id: asset),
+          id: 'wopi_file_edit_button',
           class: 'btn btn-default btn-sm',
           target: '_blank',
           title: title,
