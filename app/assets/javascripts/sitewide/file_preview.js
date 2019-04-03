@@ -1,6 +1,6 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
-/* global fabric tui animateSpinner setupAssetsLoading I18n*/
+/* global Uint8Array fabric tui animateSpinner setupAssetsLoading I18n*/
 //= require assets
 
 var FilePreviewModal = (function() {
@@ -282,10 +282,30 @@ var FilePreviewModal = (function() {
     $('.tui-image-editor-header').hide();
 
     $('.file-save-link').off().click(function(ev) {
+      var imageBlob;
+      var imageDataURL;
+      var imageFormat;
       var dataUpload = new FormData();
+      var blobArray;
+      var bytePosition;
+
       ev.preventDefault();
       ev.stopPropagation();
-      dataUpload.append('image', imageEditor.toDataURL());
+
+      imageFormat = (data['mime-type'] === 'image/png') ? 'png' : 'jpeg';
+
+      imageDataURL = imageEditor.toDataURL({ format: imageFormat });
+      imageDataURL = atob(imageDataURL.split(',')[1]);
+
+      blobArray = new Uint8Array(imageDataURL.length);
+
+      for (bytePosition = 0; bytePosition < imageDataURL.length; bytePosition += 1) {
+        blobArray[bytePosition] = imageDataURL.charCodeAt(bytePosition);
+      }
+
+      imageBlob = new Blob([blobArray]);
+
+      dataUpload.append('image', imageBlob);
       animateSpinner(null, true);
       $.ajax({
         type: 'POST',

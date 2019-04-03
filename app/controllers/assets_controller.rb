@@ -63,6 +63,7 @@ class AssetsController < ApplicationController
     if @asset.is_image?
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
+        'mime-type' => @asset.file.content_type,
         'processing' => @asset.file.processing?,
         'large-preview-url' => @asset.url(:large),
         'processing-url' => image_tag('medium/processing.gif')
@@ -151,11 +152,10 @@ class AssetsController < ApplicationController
 
   def update_image
     @asset = Asset.find(params[:id])
+    orig_file_name = @asset.file_file_name
     return render_403 unless can_read_team?(@asset.team)
-    image_file = Paperclip.io_adapters.for(params[:image])
-    image_format = image_file.content_type.split('/')[1]
-    image_file.original_filename = @asset.file_file_name.ext(image_format)
-    @asset.file = image_file
+    @asset.file = params[:image]
+    @asset.file_file_name = orig_file_name
     @asset.save!
     # Post process file here
     @asset.post_process_file(@asset.team)
