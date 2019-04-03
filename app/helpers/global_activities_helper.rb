@@ -21,6 +21,10 @@ module GlobalActivitiesHelper
       I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys),
       team: activity.team
     )
+  rescue StandardError => ex
+    Rails.logger.error(ex.message)
+    Rails.logger.error(ex.backtrace.join("\n"))
+    I18n.t('global_activities.index.content_generation_error', activity_id: activity.id)
   end
 
   def generate_link(message_item, activity)
@@ -42,8 +46,10 @@ module GlobalActivitiesHelper
     when Repository
       path = repository_path(obj)
     when RepositoryRow
+      return current_value unless obj.repository
       path = repository_path(obj.repository)
     when RepositoryColumn
+      return current_value unless obj.repository
       path = repository_path(obj.repository)
     when Project
       path = obj.archived? ? projects_path : project_path(obj)
