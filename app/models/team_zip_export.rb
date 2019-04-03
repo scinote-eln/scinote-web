@@ -189,7 +189,7 @@ class TeamZipExport < ZipExport
       if type == :step
         name = "#{directory}/" \
                "#{append_file_suffix(asset.file_file_name,
-                                     "_#{i}_Step#{element.step.position + 1}")}"
+                                     "_#{i}_Step#{element.step.position_plus_one}")}"
       elsif type == :result
         name = "#{directory}/#{append_file_suffix(asset.file_file_name,
                                                   "_#{i}")}"
@@ -212,7 +212,7 @@ class TeamZipExport < ZipExport
 
       if type == :step
         name = "#{directory}/#{to_filesystem_name(table_name)}" \
-               "_#{i}_Step#{element.step.position + 1}.csv"
+               "_#{i}_Step#{element.step.position_plus_one}.csv"
       elsif type == :result
         name = "#{directory}/#{to_filesystem_name(table_name)}.csv"
       end

@@ -229,12 +229,12 @@ class StepsController < ApplicationController
 
       flash[:success] = t(
         'protocols.steps.destroy.success_flash',
-        step: (@step.position + 1).to_s
+        step: (@step.position_plus_one).to_s
       )
     else
       flash[:error] = t(
         'protocols.steps.destroy.error_flash',
-        step: (@step.position + 1).to_s
+        step: (@step.position_plus_one).to_s
       )
     end
 
