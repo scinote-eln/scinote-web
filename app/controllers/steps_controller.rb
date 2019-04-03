@@ -275,7 +275,7 @@ class StepsController < ApplicationController
                          my_module: @my_module.id,
                          step: @chk_item.checklist.step.id,
                          step_position: { id: @chk_item.checklist.step.id,
-                                          value_for: 'position' },
+                                          value_for: 'position_plus_one' },
                          checkbox: text_activity,
                          num_completed: completed_items.to_s,
                          num_all: all_items.to_s)
@@ -609,7 +609,7 @@ class StepsController < ApplicationController
 
   def log_activity(type_of, project = nil, message_items = {})
     default_items = { step: @step.id,
-                      step_position: { id: @step.id, value_for: 'position' } }
+                      step_position: { id: @step.id, value_for: 'position_plus_one' } }
     message_items = default_items.merge(message_items)
 
     Activities::CreateActivityService

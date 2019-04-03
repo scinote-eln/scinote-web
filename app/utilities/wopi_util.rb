@@ -82,7 +82,7 @@ module WopiUtil
       type_of = :edit_wopi_file_on_step_in_repository
       default_step_items =
         { step: @asset.step.id,
-          step_position: { id: @asset.step.id, value_for: 'position' },
+          step_position: { id: @asset.step.id, value_for: 'position_plus_one' },
           asset_name: { id: @asset.id, value_for: 'file_file_name' },
           action: action }
       message_items = { protocol: @protocol.id }
