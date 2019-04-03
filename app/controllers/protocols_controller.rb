@@ -804,10 +804,12 @@ class ProtocolsController < ApplicationController
 
         @protocols.each do |p|
           if params[:my_module_id]
+            my_module = MyModule.find(params[:my_module_id])
             Activities::CreateActivityService
               .call(activity_type: :export_protocol_from_task,
                     owner: current_user,
-                    subject: MyModule.find(params[:my_module_id]),
+                    project: my_module.experiment.project,
+                    subject: my_module,
                     team: current_team,
                     message_items: {
                       my_module: params[:my_module_id].to_i
