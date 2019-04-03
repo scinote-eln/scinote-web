@@ -118,7 +118,7 @@ class Extends
     unassign_user_from_project: 7,
     create_module: 8,
     clone_module: 9,
-    archive_module: 10, # not in use
+    archive_module: 10,
     restore_module: 11,
     change_module_description: 12,
     assign_user_to_module: 13,
@@ -168,7 +168,6 @@ class Extends
     restore_experiment: 57,
     rename_task: 58,
     move_task: 59,
-    archive_task: 60,
     set_task_due_date: 61,
     change_task_due_date: 62,
     remove_task_due_date: 63,
