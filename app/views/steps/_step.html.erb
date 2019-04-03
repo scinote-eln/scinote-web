@@ -1,6 +1,6 @@
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="badge-num">
-    <span class="badge size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+    <span class="badge size-digit-<%= (step.position_plus_one).to_s.length %>"><%= step.position_plus_one %></span>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">

@@ -97,6 +97,10 @@ class Step < ApplicationRecord
     protocol.present? ? protocol.my_module : nil
   end
 
+  def position_plus_one
+    position + 1
+  end
+
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
     comments = StepComment.joins(:step)

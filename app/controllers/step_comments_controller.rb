@@ -190,7 +190,7 @@ class StepCommentsController < ApplicationController
             message_items: {
               my_module: @step.my_module.id,
               step: @step.id,
-              step_position: { id: @step.id, value_for: 'position' }
+              step_position: { id: @step.id, value_for: 'position_plus_one' }
             })
   end
 end
