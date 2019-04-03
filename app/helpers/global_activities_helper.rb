@@ -17,8 +17,10 @@ module GlobalActivitiesHelper
           no_links ? generate_name(value) : generate_link(value, activity)
         end
     end
-    sanitize_input(I18n.t("global_activities.content.#{activity.type_of}_html",
-                          parameters.symbolize_keys))
+    custom_auto_link(
+      I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys),
+      team: activity.team
+    )
   end
 
   def generate_link(message_item, activity)
@@ -31,7 +33,7 @@ module GlobalActivitiesHelper
 
     case obj
     when User
-      return popover_for_user_name(obj, team, false, true)
+      return "[@#{obj.full_name}~#{obj.id.base62_encode}]"
     when Tag
       # Not link for now
       return current_value
