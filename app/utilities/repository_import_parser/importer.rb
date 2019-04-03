@@ -108,7 +108,8 @@ module RepositoryImportParser
             raise ActiveRecord::Rollback
           end
 
-          log_activity(record_row)
+          # Disable per row activity logging
+          # log_activity(record_row)
           @new_rows_added += 1
         end
       end
