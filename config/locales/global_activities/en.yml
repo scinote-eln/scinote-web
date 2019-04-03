@@ -33,6 +33,7 @@ en:
       select_objects: "Select Objects"
       deselect_all_objects: "Deselect All Objects"
       no_name: "(unnamed)"
+      content_generation_error: "Failed to render activity content with id: %{activity_id}"
     content:
       create_project_html: "%{user} created project %{project}."
       rename_project_html: "%{user} renamed project %{project}."
@@ -129,7 +130,7 @@ en:
       remove_user_from_team_html: "%{user} removed user %{user_removed} from team %{team}."
       change_users_role_on_team_html: "%{user} changed user %{user_changed}'s role in team %{team} to %{role}."
       export_projects_html: "%{user} exported project(s) %{projects} to .zip."
-      export_inventory_items_html: "%{user} exported inventory item(s) from %{repository}." 
+      export_inventory_items_html: "%{user} exported inventory item(s) from %{repository}."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
