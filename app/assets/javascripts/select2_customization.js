@@ -1,16 +1,20 @@
 /* global  PerfectScrollbar */
 $.fn.extend({
   select2Multiple: function(config = {}) {
+    var placeholder;
+    var templateSelection;
+    var select2;
+
     if (this.length === 0) return this;
     // Adding ID to each block
-    var placeholder = this[0].dataset.placeholder || '';
+    placeholder = this[0].dataset.placeholder || '';
     if (this.next().find('.select2-selection').length > 0) return this;
-    var templateSelection = (state) => {
+    templateSelection = (state) => {
       return $('<span class="select2-block-body" data-select-id="' + state.id + '">'
         + (config.customSelection !== undefined ? config.customSelection(state) : state.text)
       + '</span>');
     };
-    var select2 = this.select2({
+    select2 = this.select2({
       closeOnSelect: false,
       multiple: true,
       ajax: config.ajax,
@@ -35,7 +39,7 @@ $.fn.extend({
 
     // Placeholder fix for ajax fields
     if (config.ajax) {
-      select2.next().find('.select2-search__field').css('min-width', '150px');
+      select2.next().find('.select2-search__field').css('width', 'auto');
     }
 
     // unlimited size
@@ -146,15 +150,6 @@ $.fn.extend({
       // Prevent shake bug with multiple select
       .on('select2:open select2:close', function() {
         $('.select2-selection').scrollTo(0);
-
-        /* if (
-          ($(this).val() != null && $(this).val().length > 3) ||
-          this.dataset.unlimitedSize !== 'true'
-        ) {
-          $(this).next().find('.select2-search__field')[0].disabled = true;
-        } else {
-          $(this).next().find('.select2-search__field')[0].disabled = false;
-        } */
       })
       // Prevent opening window when deleteing selection
       .on('select2:unselect', function() {

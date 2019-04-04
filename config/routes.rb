@@ -652,7 +652,11 @@ Rails.application.routes.draw do
   end
 
   resources :global_activities, only: [:index] do
-    get :search_subjects, on: :collection
+    collection do
+      get :search_subjects
+      get :team_filter
+      get :user_filter
+    end
   end
 
   post 'global_activities', to: 'global_activities#index'

@@ -4,6 +4,7 @@ class User < ApplicationRecord
   include VariablesModel
   include User::TeamRoles
   include User::ProjectRoles
+  include TeamBySubjectModel
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -522,6 +523,16 @@ class User < ApplicationRecord
       export_vars['num_of_export_all_last_24_hours'] = 1
     end
     save
+  end
+
+  def global_activity_filter(filters, search_query)
+    query_teams = teams.pluck(:id)
+    query_teams &= filters[:teams].map(&:to_i) if filters[:teams]
+    query_teams &= User.team_by_subject(filters[:subjects]) if filters[:subjects]
+    User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
+        .search(false, search_query)
+        .select(:full_name, :id)
+        .map { |i| { name: i[:full_name], id: i[:id] } }
   end
 
   protected
