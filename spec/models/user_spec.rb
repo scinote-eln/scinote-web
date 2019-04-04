@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe User, type: :model do
@@ -211,14 +213,14 @@ describe User, type: :model do
           }.from(0).to(1)
       end
 
-      it 'sets last_export_timestamp on today' do
+      it 'sets last_export_timestamp on today\'s timestamp' do
         user.export_vars['last_export_timestamp'] = Date.yesterday.to_time.to_i
         user.save
 
         expect { user.increase_daily_exports_counter! }
           .to change {
             user.reload.export_vars['last_export_timestamp']
-          }.to(Date.today.to_time.to_i)
+          }.to(Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i)
       end
 
       it 'sets new counter for today' do
@@ -236,14 +238,14 @@ describe User, type: :model do
     end
 
     context 'when last_export_timestamp not exists (existing users)' do
-      it 'sets last_export_timestamp on today' do
+      it 'sets last_export_timestamp on today\'s timestamp' do
         user.export_vars.delete('last_export_timestamp')
         user.save
 
         expect { user.increase_daily_exports_counter! }
           .to change {
             user.reload.export_vars['last_export_timestamp']
-          }.from(nil).to(Date.today.to_time.to_i)
+          }.from(nil).to(Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i)
       end
 
       it 'starts count reports with 1' do
@@ -256,6 +258,20 @@ describe User, type: :model do
             user.reload.export_vars['num_of_export_all_last_24_hours']
           }.from(2).to(1)
       end
+    end
+  end
+
+  describe 'has_available_exports?' do
+    let(:user) { create :user }
+
+    it 'returns true when user has avaiable export' do
+      expect(user.has_available_exports?).to be_truthy
+    end
+
+    it 'returns false when user has no avaiable export' do
+      user.export_vars['num_of_export_all_last_24_hours'] = 3
+
+      expect(user.has_available_exports?).to be_falsey
     end
   end
 
