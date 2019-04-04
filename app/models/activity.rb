@@ -105,6 +105,9 @@ class Activity < ApplicationRecord
       generate_breadcrumb(subject.my_module)
     when Team
       breadcrumbs[:team] = subject.name
+    when Report
+      breadcrumbs[:report] = subject.name
+      generate_breadcrumb(subject.team) if subject.team
     end
   end
 
