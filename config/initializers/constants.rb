@@ -165,8 +165,11 @@ class Constants
   #=============================================================================
 
   HTTP = 'http://'.freeze
+  # Tutorials should point to our HELP folder training.html.erb webpage
   TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
+  # Support should point to our HELP folder contact.html.erb webpage
   SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  # Wininars should point to our HELP folder about.html.erb webpage
   WEBINARS_URL = (HTTP + 'goo.gl/T2QYAd').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
