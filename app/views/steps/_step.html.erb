@@ -1,10 +1,29 @@
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
-  <div class="badge-num">
-    <span class="badge size-digit-<%= (step.position_plus_one).to_s.length %>"><%= step.position_plus_one %></span>
-  </div>
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-options pull-right">
+        <% if can_complete_or_checkbox_step?(@protocol) %>
+          <% if step.completed? %>
+            <div data-action="uncomplete-step"
+                 class="complete-step-btn"
+                 data-link-url="<%= toggle_step_state_step_path(step)%>">
+              <button class="btn btn-default">
+                <span class="fas fa-times"></span>
+                <%= t("protocols.steps.options.uncomplete_title") %>
+              </button>
+            </div>
+          <% else %>
+            <div data-action="complete-step"
+                 class="complete-step-btn"
+                 data-link-url="<%= toggle_step_state_step_path(step)%>">
+              <button class="btn btn-toggle">
+                <span class="fas fa-check"></span>
+                <%= t("protocols.steps.options.complete_title") %>
+              </button>
+            </div>
+          <% end %>
+        <% end %>
+
         <% if can_manage_protocol_in_module?(@protocol) ||
               can_manage_protocol_in_repository?(@protocol) %>
           <%= render partial: "/assets/wopi/create_wopi_file_button.html.erb",
@@ -36,16 +55,28 @@
           <% end %>
         <% end %>
       </div>
-      <a class="step-panel-collapse-link"
-         href="#step-panel-<%= step.id %>"
-         data-toggle="collapse"
-         data-remote="true">
-        <span class="fas fa-caret-square-down collapse-step-icon"></span>
-        <strong><%= step.name %></strong> |
-        <span><%= sanitize_input t('protocols.steps.published_on',
-                                   timestamp: l(step.created_at, format: :full),
-                                   user: h(step.user.full_name)) %></span>
-      </a>
+      <div class="left-floats">
+        <a class="step-panel-collapse-link"
+           href="#step-panel-<%= step.id %>"
+           data-toggle="collapse"
+           data-remote="true">
+          <span class="fas fa-caret-square-down collapse-step-icon"></span>
+        </a>
+
+        <span class="step-number"><%= step.position + 1 %></span>
+
+        <a class="step-panel-collapse-link"
+           href="#step-panel-<%= step.id %>"
+           data-toggle="collapse"
+           data-remote="true">
+          <strong><%= step.name %></strong> |
+
+          <span><%= sanitize_input t('protocols.steps.published_on',
+                                     timestamp: l(step.created_at, format: :full),
+                                     user: h(step.user.full_name)) %></span>
+        </a>
+      </div>
+
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
       <div class="panel-body">
@@ -124,28 +155,6 @@
                 <% end %>
               <% end %>
             </div>
-          <% end %>
-
-          <% if can_complete_or_checkbox_step?(@protocol) %>
-            <% if step.completed? %>
-              <div data-action="uncomplete-step"
-                   class="pull-right"
-                   data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-default">
-                  <span class="fas fa-times"></span>
-                  <%= t("protocols.steps.options.uncomplete_title") %>
-                </button>
-              </div>
-            <% else %>
-              <div data-action="complete-step"
-                   class="pull-right"
-                   data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-toggle">
-                  <span class="fas fa-check"></span>
-                  <%= t("protocols.steps.options.complete_title") %>
-                </button>
-              </div>
-            <% end %>
           <% end %>
         </div>
 
