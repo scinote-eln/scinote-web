@@ -113,8 +113,25 @@
         }
       }
 
+      &.arrow_pointer {
+        background: $color-alto;
+      }
+
       &:hover {
         background: $color-alto;
+      }
+
+      &.loading-results {
+        background: $color-white;
+        border-bottom: 1px solid $color-alto;
+        padding-left: 10px;
+        position: absolute;
+        top: 0px;
+        width: 100%;
+
+        &::before {
+          content: "";
+        }
       }
     }
 
@@ -157,6 +174,13 @@
               content: "\f14a";
               font-weight: 400;
             }
+          }
+        }
+
+        &.arrow_pointer {
+
+          .select2-results__group {
+            background: $color-alto;
           }
         }
 
