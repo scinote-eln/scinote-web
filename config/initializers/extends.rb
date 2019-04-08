@@ -100,7 +100,7 @@ class Extends
     MyModule: [:results,:protocols],
     Result: nil,
     Protocol: [:steps],
-    Step: nil 
+    Step: nil
   }.freeze
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
@@ -173,10 +173,7 @@ class Extends
     remove_task_due_date: 63,
     add_task_tag: 64,
     edit_task_tag: 65,
-    remove_task_tag: 66,
-    sign_and_lock_task: 67,
-    cosign_and_lock_task: 68,
-    unlock_task: 69,
+    remove_task_tag: 66, # 67, 68, 69 are in addons
     create_inventory: 70,
     rename_inventory: 71,
     delete_inventory: 72,
@@ -203,18 +200,16 @@ class Extends
     remove_user_from_team: 93,
     change_users_role_on_team: 94,
     export_projects: 95,
-    export_inventory_items: 96,
-    export_audit_trails: 97,
-    export_system_logs: 98,
+    export_inventory_items: 96, # 97 is in addon
     edit_wopi_file_on_result: 99,
     edit_wopi_file_on_step: 100,
+    edit_wopi_file_on_step_in_repository: 101,
+    copy_inventory_item: 102,
     copy_protocol_in_repository: 103,
     user_leave_team: 104,
-    export_protocol_from_task: 106,
-    edit_wopi_file_on_step_in_repository: 101,
     copy_inventory: 105,
-    copy_inventory_item: 102
-  }.freeze
+    export_protocol_from_task: 106
+  }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34],
@@ -226,7 +221,6 @@ class Extends
     reports: [48, 49, 50],
     inventories: [*70..78, 105, 102],
     protocol_repository: [*79..91, 101, 103],
-    team: [*92..96, 104],
-    exports: [*97..98]
+    team: [*92..97, 104]
   }.freeze
 end

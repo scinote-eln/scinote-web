@@ -198,9 +198,6 @@ en:
       add_task_tag: "Task tag added"
       edit_task_tag: "Task tag edited"
       remove_task_tag: "Task tag removed"
-      sign_and_lock_task: "Task signed and locked"
-      cosign_and_lock_task: "Task co-signed and locked"
-      unlock_task: "Task unlocked"
       create_inventory: "Inventory created"
       rename_inventory: "Inventory renamed"
       delete_inventory: "Inventory deleted"
@@ -232,8 +229,6 @@ en:
       user_leave_team: "User left team"
       export_projects: "Projects exported"
       export_inventory_items: "Inventory items exported"
-      export_audit_trails: "Audit trails exported"
-      export_system_logs: "System logs exported"
     activity_group:
       projects: "Projects"
       task_results: "Task results"
