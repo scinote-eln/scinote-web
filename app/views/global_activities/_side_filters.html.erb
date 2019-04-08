@@ -7,7 +7,7 @@
       data-dropdown-position = 'left'
       data-placeholder = "<%= t('global_activities.index.select_teams') %>"
       data-select-all = "false"
-      data-ajax-url = "/global_activities/team_filter"
+      data-ajax-url = "<%= team_filter_global_activities_path %>"
     ></select>
     </div>
 </div>
@@ -65,7 +65,7 @@
       data-dropdown-position = 'left'
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
       data-select-all = "false"
-      data-ajax-url = "/global_activities/user_filter"
+      data-ajax-url = "<%= user_filter_global_activities_path %>"
     ></select>
   </div>
 </div>

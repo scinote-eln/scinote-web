@@ -53,7 +53,7 @@
       data-dropdown-position = 'left'
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
       data-select-all = "false"
-      data-ajax-url = "/global_activities/user_filter?my_module_id=<%= @my_module.id %>"
+      data-ajax-url = "<%= user_filter_global_activities_path(my_module_id: @my_module.id) %>"
     ></select>
   </div>
 </div>
