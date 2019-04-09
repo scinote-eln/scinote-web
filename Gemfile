@@ -81,7 +81,7 @@ gem 'wkhtmltopdf-heroku'
 
 gem 'aws-sdk', '~> 2'
 gem 'paperclip', '~> 5.3' # File attachment, image attachment library
-
+gem 'mini_magick'
 gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',

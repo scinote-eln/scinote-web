@@ -262,8 +262,6 @@ var FilePreviewModal = (function() {
         initMenu: 'draw',
         menuBarPosition: 'bottom'
       },
-      cssMaxWidth: 700,
-      cssMaxHeight: 500,
       selectionStyle: {
         cornerSize: 20,
         rotatingPointOffset: 70,
@@ -278,6 +276,37 @@ var FilePreviewModal = (function() {
     imageEditor.on('image_loaded', () => {
       $('.file-save-link').css('display', '');
     });
+    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
+      var wDelta = e.originalEvent.wheelDelta;
+      var imageEditorWindow = e.currentTarget;
+      var initWidth = imageEditorWindow.style.width;
+      var initHeight = imageEditorWindow.style.height;
+      var newWidth;
+      var newHeight;
+      if (wDelta > 0) {
+        newWidth = parseInt(initWidth, 10) * 1.1 + 'px';
+        newHeight = parseInt(initHeight, 10) * 1.1 + 'px';
+      } else {
+        newWidth = parseInt(initWidth, 10) * 0.9 + 'px';
+        newHeight = parseInt(initHeight, 10) * 0.9 + 'px';
+        if (parseInt(imageEditorWindow.dataset.minWidth, 10) > parseInt(newWidth, 10)) {
+          newWidth = imageEditorWindow.dataset.minWidth;
+          newHeight = imageEditorWindow.dataset.minHeight;
+        }
+      }
+      imageEditorWindow.style.width = newWidth;
+      imageEditorWindow.style.height = newHeight;
+      $(imageEditorWindow).find('canvas, .tui-image-editor-canvas-container')
+        .css('max-width', imageEditorWindow.style.width)
+        .css('max-height', imageEditorWindow.style.height);
+      if (imageEditorWindow.dataset.minHeight === undefined) {
+        imageEditorWindow.dataset.minHeight = initHeight;
+        imageEditorWindow.dataset.minWidth = initWidth;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; };
 
     $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
     $('#fileEditModal').modal('show');

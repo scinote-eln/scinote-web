@@ -308,6 +308,7 @@ GEM
     method_source (0.9.0)
     mime-types (1.25.1)
     mimemagic (0.3.2)
+    mini_magick (4.9.3)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
@@ -616,6 +617,7 @@ DEPENDENCIES
   kaminari
   listen (~> 3.0)
   logging (~> 2.0.0)
+  mini_magick
   momentjs-rails (~> 2.17.1)
   nested_form_fields
   newrelic_rpm
