@@ -53,11 +53,11 @@
   }
 
   .panel-heading {
-    padding-top: 0;
-    padding-bottom: 0;
     background-color: $color-silver;
-    height: 39px;
     border-bottom-width: 0 !important;
+    height: 39px;
+    padding-bottom: 0;
+    padding-top: 0;
 
     > * {
       display: inline-block;
@@ -83,40 +83,45 @@
   }
 }
 
-.attacments{
+.attacments {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .attachment-placeholder {
-  height: 277px;
-  width: 216px;
-  border-radius: 5px;
   background-color: $color-white;
-  margin: 3px;
+  border-radius: 5px;
   color: $color-silver-chalice;
+  height: 277px;
+  margin: 3px;
+  width: 216px;
 
   a {
     color: inherit;
   }
 
-  &:hover{
+  &.new {
+    background-color: rgba(95, 95, 95, 0.1);
+  }
+
+  &:hover {
     box-shadow: 0 1px 5px 0 rgba(0,0,0,0.18);
   }
 
   .attachment-thumbnail {
-    height: 160px;;
-    width: 113px;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+    height: 160px;
     margin: 16px auto 5px auto;
-    text-align: center;
     overflow: hidden;
+    text-align: center;
+    width: 113px;
 
     img {
       max-height: 100%;
     }
 
-     i.fas{
+     i.fas {
       font-size: 100px;
       line-height: 160px;
     }
@@ -127,47 +132,53 @@
   }
 
   .attachment-label {
-    height: 39px;
-    width: 190px;
     color: #40A1D7;
     font-family: Lato;
     font-size: 16px;
+    height: 39px;
     line-height: 18px;
-    text-align: center;
     margin: 0 auto;
     overflow: hidden;
+    text-align: center;
+    width: 190px;
   }
 
   .spencer-bonnet-modif {
-    height: 45px;
-    width: 149px;
     color: $color-silver-chalice;
     font-family: Lato;
     font-size: 12px;
+    height: 45px;
     line-height: 15px;
-    text-align: center;
     margin: 0 auto;
+    text-align: center;
+    width: 149px;
+  }
+
+  .remove-icon {
+    bottom: 10px;
+    position: relative;
+    right: 10px;
   }
 }
 
-.attachments-order{
+.attachments-order {
   display: inline-block;
 }
 
-.attachments-actions{
+.attachments-actions {
   color: $color-silver-chalice;
 
-  .drag_n_drop_label{
+  .drag_n_drop_label {
     font-size: 14px;
     line-height: 32px;
   }
 
-  .btn-default{
+  .btn-default {
     border: 0;
-    margin-left: 10px;
     color: inherit;
+    margin-left: 10px;
 
-    &:hover{
+    &:hover {
       background: inherit;
     }
   }

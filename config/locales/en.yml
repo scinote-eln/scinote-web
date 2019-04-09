@@ -1753,6 +1753,7 @@ en:
         sort_old: "Oldest first &#8593;"
         sort_atoz: "Name &#8595;"
         sort_ztoa: "Name &#8593;"
+        modified_label: "Modified:"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"

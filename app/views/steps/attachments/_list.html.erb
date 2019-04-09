@@ -2,46 +2,37 @@
 <hr>
 <div class="col-xs-12">
   <h4>
-    <%= t("protocols.steps.files", count: assets.count) %>
+    <%= t('protocols.steps.files', count: assets.count) %>
   </h4>
 </div>
 <div class="col-xs-12 attachments-actions">
   <div class="col-md-4 drag_n_drop_label">
-    <%#=t 'assets.drag_n_drop.label_html' %>
   </div>
   <div class="col-md-8">
     <div class="attachemnts-header pull-right">
-      <%= render partial: "/assets/wopi/create_wopi_file_button.html.erb",
+      <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
                  locals: {  element_id: step.id, element_type: 'Step' } %>
-
-<!--      <span class="btn btn-default new-asset-upload-button">-->
-<!--        <span class="fas fa-file-upload new-asset-upload-icon"></span>-->
-        <%#=t 'assets.drag_n_drop.browse_label' %>
-<!--      </span>-->
-
       <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
         <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span id="dd-att-step-<%= step.id %>-label"><%= t('protocols.steps.attachments.sort_new').html_safe %></span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="sortMenu">
-          <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
+          <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
             <li>
               <a data-order="<%= sort %>" onClick="reorderAttachments('<%= step.id %>', '<%= sort %>')">
                 <%= t('protocols.steps.attachments.sort_' + sort ).html_safe %></a>
             </li>
-            <%#= t('protocols.steps.attachments.sorting.new') %>
           <% end %>
         </ul>
       </div>
-
     </div>
   </div>
 </div>
 
 <div class="col-xs-12 attacments" id="att-<%= step.id %>">
   <% assets.each_with_index do |asset, i| %>
-    <%= render partial: 'steps/attachments/item',
+    <%= render partial: 'steps/attachments/item.html.erb',
                locals: { asset: asset, i: i, assets_count: assets.count, step: step } %>
   <% end %>
 </div>

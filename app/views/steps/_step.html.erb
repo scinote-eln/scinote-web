@@ -110,26 +110,7 @@
             </div>
           <% end %>
 
-
-
-
-          <%# assets = ordered_assets(step) %>
-          <%# unless assets.blank? then %>
-<!--            <div class="col-xs-12">-->
-<!--              <strong><%#= t("protocols.steps.files", count: assets.count) %></strong>-->
-<!--              <ul>-->
-                <%# assets.each do |asset| %>
-<!--                  <li>-->
-                    <%#= render partial: "shared/asset_link", locals: { asset: asset, display_image_tag: true }, formats: :html %>
-<!--                  </li>-->
-                <%# end %>
-<!--              </ul>-->
-<!--            </div>-->
-          <%# end %>
-
-          <%= render partial: 'steps/attachments/list',
-                     locals: {  step: step } %>
-
+          <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step } %>
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
