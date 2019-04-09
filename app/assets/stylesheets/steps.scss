@@ -83,4 +83,95 @@
   }
 }
 
+.attacments{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.attachment-placeholder {
+  height: 277px;
+  width: 216px;
+  border-radius: 5px;
+  background-color: $color-white;
+  margin: 3px;
+  color: $color-silver-chalice;
+
+  a {
+    color: inherit;
+  }
+
+  &:hover{
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.18);
+  }
+
+  .attachment-thumbnail {
+    height: 160px;;
+    width: 113px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+    margin: 16px auto 5px auto;
+    text-align: center;
+    overflow: hidden;
+
+    img {
+      max-height: 100%;
+    }
+
+     i.fas{
+      font-size: 100px;
+      line-height: 160px;
+    }
+  }
+
+  .no-shadow {
+    box-shadow: 0 0 0 0 rgba(0,0,0,0.15);
+  }
+
+  .attachment-label {
+    height: 39px;
+    width: 190px;
+    color: #40A1D7;
+    font-family: Lato;
+    font-size: 16px;
+    line-height: 18px;
+    text-align: center;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .spencer-bonnet-modif {
+    height: 45px;
+    width: 149px;
+    color: $color-silver-chalice;
+    font-family: Lato;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+.attachments-order{
+  display: inline-block;
+}
+
+.attachments-actions{
+  color: $color-silver-chalice;
+
+  .drag_n_drop_label{
+    font-size: 14px;
+    line-height: 32px;
+  }
+
+  .btn-default{
+    border: 0;
+    margin-left: 10px;
+    color: inherit;
+
+    &:hover{
+      background: inherit;
+    }
+  }
+}
+
+
 

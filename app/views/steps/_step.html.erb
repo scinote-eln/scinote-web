@@ -26,8 +26,6 @@
 
         <% if can_manage_protocol_in_module?(@protocol) ||
               can_manage_protocol_in_repository?(@protocol) %>
-          <%= render partial: "/assets/wopi/create_wopi_file_button.html.erb",
-                     locals: {  element_id: step.id, element_type: 'Step' } %>
           <a data-action="move-step"
              class="btn btn-link"
              href="<%= move_up_step_path(step, format: :json) %>"
@@ -39,7 +37,7 @@
              href="<%= move_down_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.down_arrow_title") %>"
              data-remote="true">
-            <span class="fas fa-arrow-down"></a>
+            <span class="fas fa-arrow-down"></span></a>
           <a data-action="edit-step"
              class="btn btn-link help_tooltips"
              title="<%= t("protocols.steps.options.edit_title") %>"
@@ -47,11 +45,11 @@
              data-remote="true"
              data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_edit') %>"
              data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_edit') %>" >
-            <span class="fas fa-pencil-alt">
+            <span class="fas fa-pencil-alt"></span>
           </a>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
-            <span class="fas fa-trash-alt">
+            <span class="fas fa-trash-alt"></span>
           <% end %>
         <% end %>
       </div>
@@ -112,19 +110,26 @@
             </div>
           <% end %>
 
-          <% assets = ordered_assets(step) %>
-          <% unless assets.blank? then %>
-            <div class="col-xs-12">
-              <strong><%= t("protocols.steps.files") %></strong>
-              <ul>
-                <% assets.each do |asset| %>
-                  <li>
-                    <%= render partial: "shared/asset_link", locals: { asset: asset, display_image_tag: true }, formats: :html %>
-                  </li>
-                <% end %>
-              </ul>
-            </div>
-          <% end %>
+
+
+
+          <%# assets = ordered_assets(step) %>
+          <%# unless assets.blank? then %>
+<!--            <div class="col-xs-12">-->
+<!--              <strong><%#= t("protocols.steps.files", count: assets.count) %></strong>-->
+<!--              <ul>-->
+                <%# assets.each do |asset| %>
+<!--                  <li>-->
+                    <%#= render partial: "shared/asset_link", locals: { asset: asset, display_image_tag: true }, formats: :html %>
+<!--                  </li>-->
+                <%# end %>
+<!--              </ul>-->
+<!--            </div>-->
+          <%# end %>
+
+          <%= render partial: 'steps/attachments/list',
+                     locals: {  step: step } %>
+
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">

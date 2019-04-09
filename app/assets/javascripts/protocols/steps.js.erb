@@ -671,7 +671,17 @@
     Comments.initDeleteComments("#steps");
   }
 
-  // On init
+  // Reorder attachments
+  global.reorderAttachments = function reorderAtt(stepId, sortType) {
+    var label_value = $("#dd-att-step-" + stepId + "> .dropdown-menu > li > a[data-order=" + sortType + "]").html();
+    $("#dd-att-step-" + stepId + "-label").html(label_value);
+    $('#att-' + stepId + ' a.file-preview-link').each(function(){
+      var elm = $(this)
+      elm.css('order', elm.attr('data-order-' + sortType));
+    })
+  }
+
+    // On init
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();

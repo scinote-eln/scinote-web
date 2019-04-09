@@ -1734,7 +1734,7 @@ en:
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Files"
+      files: "Attachments (%{count})"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
       options:
@@ -1748,6 +1748,11 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
+      attachments:
+        sort_new: "Newest first &#8595;"
+        sort_old: "Oldest first &#8593;"
+        sort_atoz: "Name &#8595;"
+        sort_ztoa: "Name &#8593;"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
