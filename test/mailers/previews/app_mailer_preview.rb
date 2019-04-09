@@ -7,10 +7,6 @@ class AppMailerPreview < ActionMailer::Preview
     AppMailer.reset_password_instructions(fake_user, 'faketoken', {})
   end
 
-  def unlock_instructions
-    AppMailer.unlock_instructions(fake_user, 'faketoken', {})
-  end
-
   def invitation_instructions
     AppMailer.invitation_instructions(fake_user, 'faketoken', {})
   end
@@ -44,7 +40,7 @@ class AppMailerPreview < ActionMailer::Preview
       Notification.new(
         type_of: :recent_changes,
         title: I18n.t(
-          'activities.create_module',
+          'global_activities.activity_name.create_module',
           user: user.full_name,
           module: 'How to shred'
         ),
