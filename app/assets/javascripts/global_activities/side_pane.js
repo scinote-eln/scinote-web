@@ -1,4 +1,5 @@
 /* global animateSpinner I18n gaUrlQueryParams PerfectSb */
+/* eslint-disable no-extend-native, no-underscore-dangle */
 // Common code
 
 
@@ -35,12 +36,6 @@ function GlobalActivitiesFilterPrepareArray() {
   });
 
   // Clear request parameters if all options are selected
-  if (teamFilter.length === $('.ga-side .team-selector option').length) {
-    teamFilter = [];
-  }
-  if (userFilter.length === $('.ga-side .user-selector option').length) {
-    userFilter = [];
-  }
   if (activityFilter.length === $('.ga-side .activity-selector option').length) {
     activityFilter = [];
   }
@@ -57,15 +52,15 @@ function GlobalActivitiesFilterPrepareArray() {
 
 $(function() {
   var updateRunning = false;
-  var selectors = ['team', 'activity', 'user'];
+  var selectors = ['activity', 'user', 'team'];
   // Ajax request for object search
   var subjectAjaxQuery = {
     url: '/global_activities/search_subjects',
     dataType: 'json',
     data: function(params) {
-      return {
-        query: params.term // search term
-      };
+      var filter = GlobalActivitiesFilterPrepareArray();
+      filter.query = params.term;
+      return filter;
     },
     // preparing results
     processResults: function(data) {
@@ -88,11 +83,36 @@ $(function() {
       };
     }
   };
-  // custom display function
+    // custom display function
   var subjectCustomDisplay = (state) => {
     return (state.label ? state.label + ': ' : '') + state.text;
   };
 
+  var ajaxQuery = {};
+  $.each(selectors, (index, e) => {
+    var selector = $('.ga-side .' + e + '-selector select')[0];
+    if (e !== 'activity' && selector) {
+      ajaxQuery[e] = {
+        url: selector.dataset.ajaxUrl,
+        dataType: 'json',
+        data: function(params) {
+          var filter = GlobalActivitiesFilterPrepareArray();
+          filter.query = params.term;
+          return filter;
+        },
+        processResults: function(data) {
+          var result = [];
+          $.each(data, (key, obj) => {
+            result.push({
+              id: String(obj.id),
+              text: obj.name
+            });
+          });
+          return { results: result };
+        }
+      };
+    }
+  });
   function GlobalActivitiesUpdateTopPaneTags() {
     var dateContainer = $('.ga-side .date-selector.filter-block');
     if (updateRunning) return false;
@@ -199,7 +219,13 @@ $(function() {
 
   // Common selection intialize
   $.each(selectors, (index, e) => {
-    $('.ga-side .' + e + '-selector select').select2Multiple({ singleDisplay: true })
+    var selectorParams;
+    if (e === 'activity') {
+      selectorParams = { singleDisplay: true };
+    } else {
+      selectorParams = { ajax: ajaxQuery[e], unlimitedSize: true };
+    }
+    $('.ga-side .' + e + '-selector select').select2Multiple(selectorParams)
       .on('change', function() {
         GlobalActivitiesUpdateTopPaneTags();
         reloadActivities();
@@ -208,12 +234,13 @@ $(function() {
       $('.ga-side .' + e + '-selector select').select2MultipleClearAll();
     });
   });
+
   // Object selection intialize
   $('.ga-side .subject-selector select').select2Multiple({
     ajax: subjectAjaxQuery,
     customSelection: subjectCustomDisplay,
     unlimitedSize: true
-  }).on('change select2:select', function(e) {
+  }).on('change select2:select', function() {
     GlobalActivitiesUpdateTopPaneTags();
     reloadActivities();
   });

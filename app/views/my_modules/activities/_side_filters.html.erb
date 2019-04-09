@@ -48,13 +48,12 @@
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
-    <%= select_tag "user", options_for_select(@user_list),{
-      'data-select-all-button': t('global_activities.index.all_users_btn'),
-      'data-select-all': 'true',
-      'data-select-multiple-name': t('global_activities.index.l_users'),
-      'data-select-multiple-all-selected': t('global_activities.index.all_users'),
-      'data-dropdown-position': 'left',
-      'data-placeholder': t('global_activities.index.select_users')
-    } %>
+    <select name="user"
+      data-select-all-button= "<%= t('global_activities.index.all_users_btn') %>"
+      data-dropdown-position = 'left'
+      data-placeholder = "<%= t('global_activities.index.select_users') %>"
+      data-select-all = "false"
+      data-ajax-url = "<%= user_filter_global_activities_path(my_module_id: @my_module.id) %>"
+    ></select>
   </div>
 </div>
