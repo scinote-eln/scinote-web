@@ -151,7 +151,7 @@ class AssetsController < ApplicationController
   end
 
   def update_image
-    @asset = Asset.find(params[:id]) 
+    @asset = Asset.find(params[:id])
     orig_file_size = @asset.file_file_size
     orig_file_name = @asset.file_file_name
     return render_403 unless can_read_team?(@asset.team)
