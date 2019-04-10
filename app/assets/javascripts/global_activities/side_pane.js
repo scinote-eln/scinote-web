@@ -201,6 +201,8 @@ $(function() {
         }
         updateRunning = false;
         animateSpinner(null, false);
+
+        $('.ga-main').scrollTop(0);
         PerfectSb().update_all();
       },
       error: function() {
@@ -270,7 +272,6 @@ $(function() {
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
       resetHotButtonsBackgroundColor();
-      $('.ga-main').scrollTop(0);
     }
   });
 
@@ -282,7 +283,6 @@ $(function() {
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
       resetHotButtonsBackgroundColor();
-      $('.ga-main').scrollTop(0);
     }
   });
 
@@ -334,7 +334,6 @@ $(function() {
     reloadActivities();
 
     resetHotButtonsBackgroundColor();
-    $('.ga-main').scrollTop(0);
     $(this).addClass('selected');
   });
 });
