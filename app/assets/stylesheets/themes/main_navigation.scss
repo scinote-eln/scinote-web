@@ -250,6 +250,11 @@
     margin-left: 17px;
   }
 
+  .edit_user {
+    height: calc(100% - 35px);
+    position: relative;
+  }
+
   .fa-check-circle {
     color: $brand-primary;
     margin-left: -2px;
@@ -279,8 +284,15 @@
   .dropdown-menu {
     border-radius: 0;
     margin-top: 0;
+    max-height: calc(100vh - 50px);
+    padding-bottom: 0;
     padding-top: 0;
     width: 100%;
+
+    .team-container {
+      height: calc(100% - 35px);
+      position: relative;
+    }
   }
 
   i {
@@ -292,6 +304,17 @@
     text-align: left;
     word-wrap: break-word;
 
+    &.new-team {
+      border-top: 1px solid $color-alto;
+      height: 35px;
+      line-height: 30px;
+
+      a {
+        line-height: 30px;
+        padding: 0 20px;
+      }
+    }
+
     &:hover {
       background-color: $color-concrete;
     }
@@ -299,7 +322,6 @@
     a {
       color: $color-emperor;
       display: block;
-      line-height: 1.6em;
       padding: 3px 20px;
       text-align: left;
       text-decoration: none;
