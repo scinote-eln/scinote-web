@@ -230,6 +230,23 @@ class Asset < ApplicationRecord
       # Update asset's estimated size immediately
       update_estimated_size(team)
     end
+
+    if is_image?
+      Asset.delay(queue: :assets).calculate_quality(id) if file.content_type == 'image/jpeg'
+    end
+  end
+
+  def self.calculate_quality(id)
+    asset = find_by_id(id)
+    return unless asset.present? && asset.file.present?
+
+    image = if asset.file.is_stored_on_s3?
+              MiniMagick::Image.open(asset.presigned_url(download: true))
+            else
+              MiniMagick::Image.open(asset.file.path)
+            end
+    asset.quality = image.data['quality']
+    asset.save
   end
 
   def self.extract_asset_text(asset_id, in_template = false)

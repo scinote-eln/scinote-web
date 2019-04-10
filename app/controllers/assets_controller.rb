@@ -61,6 +61,7 @@ class AssetsController < ApplicationController
                end
 
     if @asset.is_image?
+      response_json['quality'] = @asset.quality || 90 if @asset.file.content_type == 'image/jpeg'
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'mime-type' => @asset.file.content_type,
@@ -152,16 +153,6 @@ class AssetsController < ApplicationController
 
   def update_image
     @asset = Asset.find(params[:id])
-    image = if @asset.file.is_stored_on_s3?
-              MiniMagick::Image.open(@asset.presigned_url(download: true))
-            else
-              MiniMagick::Image.open(@asset.file.path)
-            end
-    if image.data['mimeType'] == 'image/jpeg'
-      original_quality = image.data['quality']
-      new_image = MiniMagick::Image.new(params[:image].tempfile.path)
-      new_image.quality original_quality
-    end
     orig_file_name = @asset.file_file_name
     return render_403 unless can_read_team?(@asset.team)
 

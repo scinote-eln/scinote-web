@@ -317,7 +317,7 @@ var FilePreviewModal = (function() {
     $('.file-save-link').off().click(function(ev) {
       var imageBlob;
       var imageDataURL;
-      var imageFormat;
+      var imageParams;
       var dataUpload = new FormData();
       var blobArray;
       var bytePosition;
@@ -325,9 +325,13 @@ var FilePreviewModal = (function() {
       ev.preventDefault();
       ev.stopPropagation();
 
-      imageFormat = (data['mime-type'] === 'image/png') ? 'png' : 'jpeg';
+      if (data['mime-type'] === 'image/png') {
+        imageParams = { format: 'png' };
+      } else {
+        imageParams = { format: 'jpeg', quality: (data.quality / 100) };
+      }
 
-      imageDataURL = imageEditor.toDataURL({ format: imageFormat });
+      imageDataURL = imageEditor.toDataURL(imageParams);
       imageDataURL = atob(imageDataURL.split(',')[1]);
 
       blobArray = new Uint8Array(imageDataURL.length);
