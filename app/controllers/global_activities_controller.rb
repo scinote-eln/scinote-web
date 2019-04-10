@@ -62,6 +62,16 @@ class GlobalActivitiesController < ApplicationController
     end
   end
 
+  def team_filter
+    render json: current_user.teams.global_activity_filter(activity_filters, params[:query])
+  end
+
+  def user_filter
+    filter = activity_filters
+    filter = { subjects: { MyModule: [params[:my_module_id].to_i] } } if params[:my_module_id]
+    render json: current_user.global_activity_filter(filter, params[:query])
+  end
+
   def search_subjects
     query = subject_search_params[:query]
     teams =
@@ -77,11 +87,20 @@ class GlobalActivitiesController < ApplicationController
       else
         Extends::SEARCHABLE_ACTIVITY_SUBJECT_TYPES
       end
+    filter_teams =
+      if subject_search_params[:users].present?
+        User.where(id: subject_search_params[:users]).joins(:user_teams).group(:team_id).pluck(:team_id)
+      elsif subject_search_params[:teams].present?
+        subject_search_params[:teams]
+      else
+        []
+      end
     results = {}
     subject_types.each do |subject|
       matched = subject.constantize
                        .search_by_name(current_user, teams, query, whole_phrase: true)
                        .where.not(name: nil)
+                       .filter_by_teams(filter_teams)
                        .limit(Constants::SEARCH_LIMIT)
                        .pluck(:id, :name)
       next if matched.length.zero?
@@ -104,6 +123,6 @@ class GlobalActivitiesController < ApplicationController
   end
 
   def subject_search_params
-    params.permit(:query, teams: [], subject_types: [])
+    params.permit(:query, teams: [], subject_types: [], users: [])
   end
 end

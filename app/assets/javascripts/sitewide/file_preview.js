@@ -275,12 +275,16 @@ var FilePreviewModal = (function() {
       },
       usageStatistics: false
     });
+    imageEditor.on('image_loaded', () => {
+      $('.file-save-link').css('display', '');
+    });
 
     $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
     $('#fileEditModal').modal('show');
 
     $('.tui-image-editor-header').hide();
 
+    $('.file-save-link').css('display', 'none');
     $('.file-save-link').off().click(function(ev) {
       var imageBlob;
       var imageDataURL;
