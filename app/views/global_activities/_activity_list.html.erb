@@ -1,5 +1,5 @@
 <% @grouped_activities.each do |date, activities| %>
-  <div class="row activities-day">
+  <div class="row activities-day" data-date="<%= date %>">
     <div class="col-sm-4 col-md-2 date-container">
       <a class="activities-group-expand-button"
          href="javascript:void(0);"

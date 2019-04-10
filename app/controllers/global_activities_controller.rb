@@ -43,8 +43,9 @@ class GlobalActivitiesController < ApplicationController
                      .distinct
                      .order(full_name: :asc)
                      .pluck(:full_name, :id)
-    @grouped_activities, @more_activities =
+    @grouped_activities, @next_id =
       ActivitiesService.load_activities(current_user, selected_teams, activity_filters)
+    @more_activities = @next_id.present?
     last_day = @grouped_activities.keys.last
     @next_date = (Date.parse(last_day) - 1.day).strftime('%Y-%m-%d') if last_day
     respond_to do |format|
@@ -53,7 +54,7 @@ class GlobalActivitiesController < ApplicationController
           activities_html: render_to_string(
             partial: 'activity_list.html.erb'
           ),
-          from: @next_date,
+          next_id: @next_id,
           more_activities: @more_activities
         }
       end
@@ -98,7 +99,7 @@ class GlobalActivitiesController < ApplicationController
 
   def activity_filters
     params.permit(
-      :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
+      :from_id, :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
     )
   end
 
