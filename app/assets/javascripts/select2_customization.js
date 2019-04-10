@@ -62,6 +62,8 @@ $.fn.extend({
       var parent;
       var activeElementTopPosition;
       var parentActiveElementTopPosition;
+      var fullTopPosition;
+      var containerRealPosition;
       var containerScrollPosition = $('.select2-results__options').scrollTop();
       var containerHeight = $('.select2-results__options').height();
       if ($('.select2-results').length > 0 && $('.select2-results')[0].dataset.lastSelected !== 'false') {
@@ -73,13 +75,9 @@ $.fn.extend({
       if (parent.length === 0) return;
       activeElementTopPosition = $(activeElement).position().top;
       parentActiveElementTopPosition = parent.position().top;
-      $('.select2-results__options').scrollTop(
-        activeElementTopPosition
-        + parentActiveElementTopPosition
-        + containerScrollPosition
-        - containerHeight
-        + 130
-      );
+      fullTopPosition = activeElementTopPosition + parentActiveElementTopPosition;
+      containerRealPosition = containerScrollPosition - containerHeight;
+      $('.select2-results__options').scrollTop(fullTopPosition + containerRealPosition + 130);
     }
 
     // listen for keyups dropdown
