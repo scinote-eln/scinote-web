@@ -2,7 +2,6 @@ class ResultTextsController < ApplicationController
   include ResultsHelper
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
-  include TinyMceHelper
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
 
@@ -32,9 +31,6 @@ class ResultTextsController < ApplicationController
 
   def create
     @result_text = ResultText.new(result_params[:result_text_attributes])
-    # gerate a tag that replaces img tag in database
-    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text,
-                                                      @result_text)
     @result = Result.new(
       user: current_user,
       my_module: @my_module,
@@ -46,7 +42,7 @@ class ResultTextsController < ApplicationController
     respond_to do |format|
       if @result.save && @result_text.save
         # link tiny_mce_assets to the text result
-        link_tiny_mce_assets(@result_text.text, @result_text)
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
 
         result_annotation_notification
         # Generate activity
@@ -88,8 +84,6 @@ class ResultTextsController < ApplicationController
   end
 
   def edit
-    @result_text.text = generate_image_tag_from_token(@result_text.text,
-                                                      @result_text)
     respond_to do |format|
       format.json {
         render json: {
@@ -106,8 +100,7 @@ class ResultTextsController < ApplicationController
     update_params = result_params
     @result.last_modified_by = current_user
     @result.assign_attributes(update_params)
-    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text,
-                                                      @result_text)
+
     success_flash = t("result_texts.update.success_flash",
             module: @my_module.name)
     if @result.archived_changed?(from: false, to: true)
@@ -115,6 +108,7 @@ class ResultTextsController < ApplicationController
       success_flash = t("result_texts.archive.success_flash",
             module: @my_module.name)
       if saved
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
         Activity.create(
           type_of: :archive_result,
           project: @my_module.experiment.project,
@@ -134,6 +128,7 @@ class ResultTextsController < ApplicationController
       saved = @result.save
 
       if saved then
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
         Activity.create(
           type_of: :edit_result,
           user: current_user,

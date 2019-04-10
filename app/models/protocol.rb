@@ -1,7 +1,7 @@
 class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
-  extend TinyMceHelper
+  include TinyMceImages
 
   after_save :update_linked_children
   after_destroy :decrement_linked_children
@@ -333,13 +333,13 @@ class Protocol < ApplicationRecord
         step2.tables << table2
       end
 
-      # Copy tinyMce assets
+      # Copy steps tinyMce assets
       cloned_img_ids = []
       step.tiny_mce_assets.each do |tiny_img|
         tiny_img2 = TinyMceAsset.new(
           image: tiny_img.image,
           estimated_size: tiny_img.estimated_size,
-          step: step2,
+          object: step2,
           team: dest.team
         )
         tiny_img2.save
@@ -347,9 +347,7 @@ class Protocol < ApplicationRecord
         step2.tiny_mce_assets << tiny_img2
         cloned_img_ids << [tiny_img.id, tiny_img2.id]
       end
-      step2.update(
-        description: replace_tiny_mce_assets(step2.description, cloned_img_ids)
-      )
+      TinyMceAsset.reload_images(cloned_img_ids)
     end
 
     # Call clone helper

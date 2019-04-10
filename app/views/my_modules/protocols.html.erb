@@ -34,7 +34,7 @@
         <% if can_manage_module?(@my_module) %>
           <%= render partial: "my_modules/protocols/protocol_description_form" %>
         <% elsif @my_module.protocol.description.present? %>
-          <%= custom_auto_link(generate_image_tag_from_token(@my_module.protocol.description, @my_module.protocol),
+          <%= custom_auto_link(@my_module.protocol.description,
                                simple_format: false,
                                tags: %w(img),
                                team: current_team) %>

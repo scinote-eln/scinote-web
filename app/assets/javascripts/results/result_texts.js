@@ -35,7 +35,7 @@
             animateSpinner(null, false);
             initNewReslutText();
           }
-        })
+        });
       });
     }
 
@@ -59,6 +59,7 @@
         });
         Results.toggleResultEditButtons(false);
         TinyMCE.refresh();
+        TinyMCE.init('#result_result_text_attributes_text');
         $('#result_name').focus();
       });
     }

@@ -4,7 +4,7 @@
     <%= f.fields_for :result_text do |ff| %>
       <div class="form-group">
         <%= ff.tiny_mce_editor(:text,
-                               value: @result.result_text.text,
+                               value: @result.result_text.tinymce_render(:text),
                                data: { object_type: 'result_text',
                                        object_id: @result.result_text.id }) %>
       </div>

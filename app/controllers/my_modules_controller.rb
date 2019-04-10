@@ -6,7 +6,6 @@ class MyModulesController < ApplicationController
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
-  include TinyMceHelper
 
   before_action :load_vars,
                 only: %i(show update destroy description due_date protocols
@@ -158,7 +157,6 @@ class MyModulesController < ApplicationController
     @my_module.assign_attributes(update_params)
     @my_module.last_modified_by = current_user
     description_changed = @my_module.description_changed?
-
     if @my_module.archived_changed?(from: false, to: true)
 
       saved = @my_module.archive(current_user)
@@ -196,9 +194,9 @@ class MyModulesController < ApplicationController
         )
       end
     else
-
       saved = @my_module.save
       if saved and description_changed then
+        TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
         Activity.create(
           type_of: :change_module_description,
           project: @my_module.experiment.project,
@@ -213,7 +211,6 @@ class MyModulesController < ApplicationController
         )
       end
     end
-
     respond_to do |format|
       if restored
         format.html do
@@ -261,9 +258,10 @@ class MyModulesController < ApplicationController
     respond_to do |format|
       format.json do
         if @my_module.update(description: params.require(:my_module)[:description])
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
           render json: {
             html: custom_auto_link(
-              generate_image_tag_from_token(@my_module.description, @my_module),
+              @my_module.tinymce_render(:description),
               simple_format: false,
               tags: %w(img),
               team: current_team
@@ -282,9 +280,10 @@ class MyModulesController < ApplicationController
     respond_to do |format|
       format.json do
         if protocol.update(description: params.require(:protocol)[:description])
+          TinyMceAsset.update_images(protocol, params[:tiny_mce_images])
           render json: {
             html: custom_auto_link(
-              generate_image_tag_from_token(protocol.description, protocol),
+              protocol.tinymce_render(:description),
               simple_format: false,
               tags: %w(img),
               team: current_team

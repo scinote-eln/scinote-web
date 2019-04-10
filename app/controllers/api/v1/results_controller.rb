@@ -3,8 +3,6 @@
 module Api
   module V1
     class ResultsController < BaseController
-      include TinyMceHelper
-
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
@@ -52,15 +50,18 @@ module Api
             tiny_mce_asset_params.each do |t|
               image_params = t[:attributes]
               token = image_params[:file_token]
-              unless result_text.text["[~tiny_mce_id:#{token}]"]
+              unless result_text.text["data-mce-token=\"#{token}\""]
                 raise ActiveRecord::RecordInvalid,
                       I18n.t('api.core.errors.result_wrong_tinymce.detail')
               end
               image = Paperclip.io_adapters.for(image_params[:file_data])
               image.original_filename = image_params[:file_name]
-              tiny_img = TinyMceAsset.create!(image: image, team: @team)
-              result_text.text.sub!("[~tiny_mce_id:#{token}]",
-                                    "[~tiny_mce_id:#{tiny_img.id}]")
+              TinyMceAsset.create!(
+                image: image,
+                team: @team,
+                object: result_text,
+                saved: true
+              )
             end
           end
           @result = Result.new(user: current_user,
@@ -69,12 +70,12 @@ module Api
                                result_text: result_text,
                                last_modified_by: current_user)
           @result.save! && result_text.save!
-          link_tiny_mce_assets(result_text.text, result_text)
         end
       end
 
       def result_params
         raise TypeError unless params.require(:data).require(:type) == 'results'
+
         params.require(:data).require(:attributes).require(:name)
         params.permit(data: { attributes: :name })[:data][:attributes]
       end
@@ -95,7 +96,7 @@ module Api
         end
         file_tokens = prms.map { |p| p[:attributes][:file_token] }
         result_text_params[:text].scan(
-          /\[~tiny_mce_id:(\w+)\]/
+          /data-mce-token="(\w+)"/
         ).flatten.each do |token|
           unless file_tokens.include?(token)
             raise ActiveRecord::RecordInvalid,

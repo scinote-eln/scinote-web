@@ -4,7 +4,7 @@
     <div id="my_module_description_view"
          class="ql-editor tinymce-view"
          data-placeholder="<%= t('my_modules.module_header.empty_description_edit_label') %>">
-        <%= custom_auto_link(generate_image_tag_from_token(@my_module.description, @my_module),
+        <%= custom_auto_link(@my_module.tinymce_render(:description),
                              simple_format: false,
                              tags: %w(img),
                              team: current_team) %>
@@ -18,7 +18,7 @@
                         id: :my_module_description_textarea,
                         class: 'hidden',
                         hide_label: true,
-                        value: sanitize_input(@my_module.description),
+                        value: sanitize_input(@my_module.tinymce_render(:description)),
                         data: {
                           object_type: 'my_module',
                           object_id: @my_module.id,

@@ -1,7 +1,6 @@
 class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
-  include TinyMceHelper
   include StepsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state
@@ -32,7 +31,6 @@ class StepsController < ApplicationController
   def create
     @step = Step.new(step_params)
     # gerate a tag that replaces img tag in database
-    @step.description = parse_tiny_mce_asset_to_token(@step.description, @step)
     @step.completed = false
     @step.position = @protocol.number_of_steps
     @step.protocol = @protocol
@@ -61,7 +59,7 @@ class StepsController < ApplicationController
         end
 
         # link tiny_mce_assets to the step
-        link_tiny_mce_assets(@step.description, @step)
+        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
 
         create_annotation_notifications(@step)
 
@@ -120,7 +118,6 @@ class StepsController < ApplicationController
   end
 
   def edit
-    @step.description = generate_image_tag_from_token(@step.description, @step)
     respond_to do |format|
       format.json do
         render json: {
@@ -159,14 +156,9 @@ class StepsController < ApplicationController
         table.last_modified_by = current_user unless table.new_record?
         table.team = current_team
       end
-
-      # gerate a tag that replaces img tag in databases
-      @step.description = parse_tiny_mce_asset_to_token(
-        params[:step][:description],
-        @step
-      )
-
       if @step.save
+
+        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
         @step.reload
 
         # generates notification on step upadate
