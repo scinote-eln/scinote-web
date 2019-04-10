@@ -242,7 +242,7 @@ class Project < ApplicationRecord
   def notifications_count(user)
     res = 0
     assigned_modules(user).find_each do |t|
-      res += 1 if t.is_overdue? || t.is_one_day_prior?
+      res += 1 if (t.is_overdue? || t.is_one_day_prior?) && !t.completed?
     end
     res
   end
