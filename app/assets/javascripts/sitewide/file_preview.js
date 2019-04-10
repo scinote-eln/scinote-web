@@ -284,18 +284,18 @@ var FilePreviewModal = (function() {
       var newWidth;
       var newHeight;
       if (wDelta > 0) {
-        newWidth = parseInt(initWidth, 10) * 1.1 + 'px';
-        newHeight = parseInt(initHeight, 10) * 1.1 + 'px';
+        newWidth = parseInt(initWidth, 10) * 1.1;
+        newHeight = parseInt(initHeight, 10) * 1.1;
       } else {
-        newWidth = parseInt(initWidth, 10) * 0.9 + 'px';
-        newHeight = parseInt(initHeight, 10) * 0.9 + 'px';
+        newWidth = parseInt(initWidth, 10) * 0.9;
+        newHeight = parseInt(initHeight, 10) * 0.9;
         if (parseInt(imageEditorWindow.dataset.minWidth, 10) > parseInt(newWidth, 10)) {
-          newWidth = imageEditorWindow.dataset.minWidth;
-          newHeight = imageEditorWindow.dataset.minHeight;
+          newWidth = parseInt(imageEditorWindow.dataset.minWidth, 10);
+          newHeight = parseInt(imageEditorWindow.dataset.minHeight, 10);
         }
       }
-      imageEditorWindow.style.width = newWidth;
-      imageEditorWindow.style.height = newHeight;
+      imageEditorWindow.style.width = newWidth + 'px';
+      imageEditorWindow.style.height = newHeight + 'px';
       $(imageEditorWindow).find('canvas, .tui-image-editor-canvas-container')
         .css('max-width', imageEditorWindow.style.width)
         .css('max-height', imageEditorWindow.style.height);
