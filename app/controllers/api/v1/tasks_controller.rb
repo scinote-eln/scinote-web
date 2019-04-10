@@ -24,9 +24,9 @@ module Api
       end
 
       def activities
-        activities = @task.activities
-                          .page(params.dig(:page, :number))
-                          .per(params.dig(:page, :size))
+        activities = ActivitiesService.my_module_activities(@task)
+                                      .page(params.dig(:page, :number))
+                                      .per(params.dig(:page, :size))
 
         render jsonapi: activities,
           each_serializer: ActivitySerializer
