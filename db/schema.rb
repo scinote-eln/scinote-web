@@ -179,6 +179,15 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
   end
 
+  create_table "logs", force: :cascade do |t|
+    t.integer "action_type", null: false
+    t.string "user_name"
+    t.jsonb "details", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at", "action_type"], name: "index_logs_on_created_at_and_action_type"
+  end
+
   create_table "my_module_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -228,6 +237,8 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.bigint "experiment_id", default: 0, null: false
     t.integer "state", limit: 2, default: 0
     t.datetime "completed_on"
+    t.integer "electronic_signature_status", default: 1
+    t.datetime "electronic_signature_status_locked_at"
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_my_modules_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_my_modules_on_name", using: :gin
     t.index ["archived_by_id"], name: "index_my_modules_on_archived_by_id"
@@ -305,6 +316,7 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.datetime "restored_on"
     t.string "experiments_order"
     t.boolean "template"
+    t.boolean "demo", default: false, null: false
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index ["archived_by_id"], name: "index_projects_on_archived_by_id"
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"
@@ -631,6 +643,33 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.index ["user_id"], name: "index_samples_tables_on_user_id"
   end
 
+  create_table "scinote_ai_manuscripts", force: :cascade do |t|
+    t.bigint "user_id"
+    t.text "job_id", null: false
+    t.text "keywords", null: false
+    t.text "doi_numbers", null: false
+    t.jsonb "request_json", default: "{}", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_scinote_ai_manuscripts_on_user_id"
+  end
+
+  create_table "scinote_enterprise_electronic_signatures", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "user_full_name", null: false
+    t.string "user_role", null: false
+    t.string "user_email", null: false
+    t.text "comment"
+    t.integer "action"
+    t.integer "type_of_signature"
+    t.integer "reference_object_id"
+    t.integer "reference_object_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_scinote_enterprise_electronic_signatures_on_created_at"
+    t.index ["user_id"], name: "index_scinote_enterprise_electronic_signatures_on_user_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.text "type", null: false
     t.jsonb "values", default: {}, null: false
@@ -803,6 +842,7 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_projects_on_assigned_by_id"
     t.index ["project_id"], name: "index_user_projects_on_project_id"
+    t.index ["user_id", "project_id"], name: "index_user_projects_on_user_id_and_project_id", unique: true
     t.index ["user_id"], name: "index_user_projects_on_user_id"
   end
 
@@ -828,6 +868,7 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.bigint "assigned_by_id"
     t.index ["assigned_by_id"], name: "index_user_teams_on_assigned_by_id"
     t.index ["team_id"], name: "index_user_teams_on_team_id"
+    t.index ["user_id", "team_id"], name: "index_user_teams_on_user_id_and_team_id", unique: true
     t.index ["user_id"], name: "index_user_teams_on_user_id"
   end
 
@@ -864,7 +905,11 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.integer "invitations_count", default: 0
     t.bigint "current_team_id"
     t.string "authentication_token", limit: 30
+    t.integer "organization_role", limit: 2, default: 0
+    t.datetime "password_changed_at"
     t.jsonb "settings", default: {}, null: false
+    t.integer "ai_manuscripts_limit", default: 0
+    t.integer "subscription_status", default: 0
     t.jsonb "variables", default: {}, null: false
     t.index "trim_html_tags((full_name)::text) gin_trgm_ops", name: "index_users_on_full_name", using: :gin
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
@@ -873,7 +918,20 @@ ActiveRecord::Schema.define(version: 20190304153544) do
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.text "object_changes"
+    t.integer "team_id"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id", "team_id"], name: "index_versions_on_item_type_and_item_id_and_team_id"
   end
 
   create_table "view_states", force: :cascade do |t|
@@ -1027,6 +1085,7 @@ ActiveRecord::Schema.define(version: 20190304153544) do
   add_foreign_key "samples", "teams"
   add_foreign_key "samples", "users"
   add_foreign_key "samples", "users", column: "last_modified_by_id"
+  add_foreign_key "scinote_ai_manuscripts", "users"
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_tables", "steps"

@@ -2,6 +2,12 @@
  *= require highlightjs-github-theme
  *= require_self
  *= require_tree .
+
+ *= require scinote/common/application
+ *= require scinote/enterprise/organization_management/application
+ *= require scinote/enterprise/audit_trails/application
+ *= require scinote/enterprise/electronic_signatures/application
+ *= require scinote/ai/application
  *= require jquery-ui/draggable
  *= require rails_bootstrap_forms
  *= require bootstrap-select

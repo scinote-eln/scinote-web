@@ -4,6 +4,12 @@ source 'http://rubygems.org'
 
 ruby '2.4.5'
 
+gem 'scinote_common', path: 'addons/Common'
+gem 'scinote_enterprise_organization_management', path: 'addons/organization_management'
+gem 'scinote_enterprise_audit_trails', path: 'addons/audit_trails'
+gem 'scinote_enterprise_electronic_signatures', path: 'addons/electronic_signatures'
+gem 'scinote_ai', path: 'addons/ai'
+
 
 gem 'webpacker', '~> 3.5'
 gem 'bootstrap-sass', '~> 3.3.7'
