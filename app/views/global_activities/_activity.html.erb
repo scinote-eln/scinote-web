@@ -1,22 +1,20 @@
-<div class="activity-card">
-  <div class="row">
-    <div class="col-xs-12">
-      <% if activity.old_activity?  %>
-        <%= sanitize_input(activity.message) %>
-      <% else %>
-        <%= generate_activity_content(activity) %>
-      <% end %>
-    </div>
-  </div>
-  <div class="pull-left activity-timestamp">
-    <%= activity.created_at.strftime('%H:%M') %>
-  </div>
-  <div class="row navigational-breadcrumbs">
-  <% unless activity.old_activity? %>
-    <% if activity.subject_type.present? %>
-      <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
-                 locals: { team: activity.team, subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
+<div class="row">
+  <div class="col-xs-12">
+    <% if activity.old_activity?  %>
+      <%= sanitize_input(activity.message) %>
+    <% else %>
+      <%= generate_activity_content(activity) %>
     <% end %>
-  <% end %>
   </div>
+</div>
+<div class="pull-left activity-timestamp">
+  <%= activity.created_at.strftime('%H:%M') %>
+</div>
+<div class="row navigational-breadcrumbs">
+<% unless activity.old_activity? || !activity.subject_type.present?%>
+  <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
+             locals: { team: activity.team, subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
+<% else %>
+  <div class="row">&nbsp;</div>
+<% end %>
 </div>
