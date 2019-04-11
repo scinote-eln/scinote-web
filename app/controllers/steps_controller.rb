@@ -158,7 +158,6 @@ class StepsController < ApplicationController
       end
       if @step.save
 
-
         TinyMceAsset.update_images(@step, params[:tiny_mce_images])
         @step.reload
 

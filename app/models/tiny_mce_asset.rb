@@ -14,7 +14,6 @@ class TinyMceAsset < ApplicationRecord
              touch: true,
              optional: true
 
-
   belongs_to :object, polymorphic: true,
                       optional: true,
                       inverse_of: :tiny_mce_assets
