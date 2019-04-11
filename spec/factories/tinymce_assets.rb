@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :tiny_mce_asset do
     association :team, factory: :team

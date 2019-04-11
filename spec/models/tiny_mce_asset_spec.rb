@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TinyMceAsset, type: :model do
-
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -40,28 +41,28 @@ describe TinyMceAsset, type: :model do
   end
 
   describe 'Methods' do
-
-    let(:result_text) { create :result_text, 
-      text: '<img data-mce-token=1  src="fake-path"/>',
-      result: create(
-        :result, user: @user, last_modified_by: @user, my_module: @valid_task
-      ) 
-    }
+    let(:result_text) do
+      create :result_text,
+             text: '<img data-mce-token=1  src="fake-path"/>',
+             result: create(
+               :result, user: @user, last_modified_by: @user, my_module: @valid_task
+             )
+    end
     let(:image) { create :tiny_mce_asset, id: 1 }
 
     describe '#update_images' do
       it 'save new image' do
-         new_image=image
-         new_result_text=result_text
-         TinyMceAsset.update_images(new_result_text,[Base62.encode(new_image.id)].to_s)
-         updated_image=TinyMceAsset.find(new_image.id)
-         expect(updated_image.object_type).to eq 'ResultText'
-         expect(ResultText.find(new_result_text.id).text).not_to include 'fake-path'
+        new_image = image
+        new_result_text = result_text
+        TinyMceAsset.update_images(new_result_text, [Base62.encode(new_image.id)].to_s)
+        updated_image = TinyMceAsset.find(new_image.id)
+        expect(updated_image.object_type).to eq 'ResultText'
+        expect(ResultText.find(new_result_text.id).text).not_to include 'fake-path'
       end
     end
 
     describe '#generate_url' do
-      it 'create new url' do 
+      it 'create new url' do
         image
         expect(TinyMceAsset.generate_url(result_text.text)).to include 'sample_file.jpg'
       end
@@ -70,9 +71,9 @@ describe TinyMceAsset, type: :model do
     describe '#reload_images' do
       it 'change image token in description' do
         new_result_text = result_text
-        TinyMceAsset.update_images(new_result_text,[Base62.encode(image.id)].to_s)
+        TinyMceAsset.update_images(new_result_text, [Base62.encode(image.id)].to_s)
         create :tiny_mce_asset, id: 2, object: new_result_text
-        TinyMceAsset.reload_images([[1,2]])
+        TinyMceAsset.reload_images([[1, 2]])
         expect(ResultText.find(new_result_text.id).text).to include 'data-mce-token="2"'
       end
     end
