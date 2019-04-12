@@ -11,9 +11,9 @@ class Asset < ApplicationRecord
   # Paperclip validation
   has_attached_file :file,
                     styles: {
-                      large: [Constants::LARGE_PIC_FORMAT,:jpg],
+                      large: [Constants::LARGE_PIC_FORMAT, :jpg],
                       medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
-                      original: {processors: [:image_quality_calculate]}
+                      original: { processors: [:image_quality_calculate] }
                     },
                     convert_options: {
                       medium: '-quality 70 -strip',
@@ -38,7 +38,7 @@ class Asset < ApplicationRecord
                                            %r{^image/#{ Regexp.union(
                                              Constants::WHITELISTED_IMAGE_TYPES
                                            ) }}
-                                          [:large, :medium, :original]
+                                          %i(large medium original)
                                         else
                                           {}
                                         end
@@ -232,7 +232,6 @@ class Asset < ApplicationRecord
       # Update asset's estimated size immediately
       update_estimated_size(team)
     end
-
   end
 
   def self.extract_asset_text(asset_id, in_template = false)
