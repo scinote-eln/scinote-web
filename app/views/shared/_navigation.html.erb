@@ -70,23 +70,25 @@
                              method: :post) do |f| %>
                   <%= hidden_field(:user, :current_team_id) %>
                   <div class="dropdown-header"><%= t('nav.team_switch_title') %></div>
-                  <% current_user.teams.each do |team| %>
-                    <li class="team-name-item">
-                      <a href="#"
-                        data-id="<%= team.id %>"
-                        class="text-center change-team"
-                        data-turbolinks="false">
-                        <% if current_team == team %>
-                          <span class="fas fa-check-circle"></span> <strong><%= team.name %></strong>
-                        <% else %>
-                          <span class="team-name"><%= team.name %></span>
-                        <% end %>
-                      </a>
-                    </li>
-                  <% end %>
+                  <div class="team-container">
+                    <% current_user.teams.each do |team| %>
+                      <li class="team-name-item">
+                        <a href="#"
+                          data-id="<%= team.id %>"
+                          class="text-center change-team"
+                          data-turbolinks="false">
+                          <% if current_team == team %>
+                            <span class="fas fa-check-circle"></span> <strong><%= team.name %></strong>
+                          <% else %>
+                            <span class="team-name"><%= team.name %></span>
+                          <% end %>
+                        </a>
+                      </li>
+                    <% end %>
+                  </div>
                 <% end %>
                 <% if current_user.teams.length > 1 && can_create_teams? %>
-                  <li>
+                  <li class="new-team">
                     <%= link_to new_team_path do %>
                       <span class="fas fa-plus"></span>
                       <%= t('users.settings.teams.index.new_team') %>
