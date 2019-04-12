@@ -30,16 +30,35 @@
       var filters = GlobalActivitiesFilterPrepareArray();
       ev.preventDefault();
       animateSpinner(null, true);
-      filters.from_date = moreButton.data('next-date');
+      filters.from_id = moreButton.data('next-id');
       $.ajax({
         url: $('.ga-activities-list').data('activities-url'),
         data: filters,
         dataType: 'json',
         type: 'POST',
         success: function(json) {
-          $(json.activities_html).appendTo('.ga-activities-list');
+          var newFirstDay;
+          var existingLastDay;
+
+          // Attach newly fetched activities to temporary placeholder
+          $(json.activities_html).appendTo('#ga-more-activities-placeholder');
+
+          newFirstDay = $('#ga-more-activities-placeholder').find('.activities-day').first();
+          existingLastDay = $('.ga-activities-list').find('.activities-day').last();
+
+          if (newFirstDay.data('date') === existingLastDay.data('date')) {
+            let newNumber;
+            existingLastDay.find('.activities-group').append(newFirstDay.find('.activities-group').html());
+            newNumber = existingLastDay.find('.activity-card').length;
+            existingLastDay.find('.activities-counter-label strong').html(newNumber);
+            newFirstDay.remove();
+          }
+
+          $('.ga-activities-list').append($('#ga-more-activities-placeholder').html());
+          $('#ga-more-activities-placeholder').html('');
+
           if (json.more_activities === true) {
-            moreButton.data('next-date', json.from);
+            moreButton.data('next-id', json.next_id);
           } else {
             moreButton.addClass('hidden');
           }

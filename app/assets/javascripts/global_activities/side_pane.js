@@ -201,6 +201,8 @@ $(function() {
         }
         updateRunning = false;
         animateSpinner(null, false);
+
+        $('.ga-main').scrollTop(0);
         PerfectSb().update_all();
       },
       error: function() {

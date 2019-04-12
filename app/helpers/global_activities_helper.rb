@@ -88,7 +88,7 @@ module GlobalActivitiesHelper
     return message_item[:value] unless obj
 
     value = obj.public_send(message_item[:value_for] || 'name')
-    value = t('global_activities.index.no_name') if value.blank?
+    value = I18n.t('global_activities.index.no_name') if value.blank?
 
     value
   end

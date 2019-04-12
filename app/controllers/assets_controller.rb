@@ -152,11 +152,14 @@ class AssetsController < ApplicationController
 
   def update_image
     @asset = Asset.find(params[:id])
+    orig_file_size = @asset.file_file_size
     orig_file_name = @asset.file_file_name
     return render_403 unless can_read_team?(@asset.team)
     @asset.file = params[:image]
     @asset.file_file_name = orig_file_name
     @asset.save!
+    # release previous image space
+    @asset.team.release_space(orig_file_size)
     # Post process file here
     @asset.post_process_file(@asset.team)
 

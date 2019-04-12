@@ -11,10 +11,10 @@
   <%= activity.created_at.strftime('%H:%M') %>
 </div>
 <div class="row navigational-breadcrumbs">
-<% unless activity.old_activity? %>
-  <% if activity.subject_type.present? %>
-    <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
-               locals: { team: activity.team, subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
-  <% end %>
+<% unless activity.old_activity? || !activity.subject_type.present?%>
+  <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
+             locals: { team: activity.team, subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
+<% else %>
+  <div class="row">&nbsp;</div>
 <% end %>
 </div>
