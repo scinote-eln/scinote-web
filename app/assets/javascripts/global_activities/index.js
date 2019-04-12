@@ -30,7 +30,8 @@
       var filters = GlobalActivitiesFilterPrepareArray();
       ev.preventDefault();
       animateSpinner(null, true);
-      filters.from_id = moreButton.data('next-id');
+      filters.page = moreButton.data('next-page');
+      filters.starting_timestamp = $('.ga-activities-list').data('starting-timestamp');
       $.ajax({
         url: $('.ga-activities-list').data('activities-url'),
         data: filters,
@@ -57,8 +58,8 @@
           $('.ga-activities-list').append($('#ga-more-activities-placeholder').html());
           $('#ga-more-activities-placeholder').html('');
 
-          if (json.more_activities === true) {
-            moreButton.data('next-id', json.next_id);
+          if (json.next_page) {
+            moreButton.data('next-page', json.next_page);
           } else {
             moreButton.addClass('hidden');
           }

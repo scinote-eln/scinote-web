@@ -16,12 +16,14 @@
       <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
         <p><%= t('activities.index.no_activities_task_message') %></p>
       </div>
-      <div class="ga-activities-list" data-activities-url="<%= activities_my_module_path(@my_module) %>">
+      <div class="ga-activities-list"
+           data-activities-url="<%= activities_my_module_path(@my_module) %>"
+           data-starting-timestamp="<%= @starting_timestamp %>">
         <%= render partial: "global_activities/activity_list.html.erb" %>
       </div>
       <div class="text-center">
-        <a class="btn btn-default btn-more-activities <%= 'hidden' unless @more_activities %>"
-           data-next-date="<%= @next_date %>">
+        <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
+           data-next-page="<%= @next_page %>">
           <%= t'activities.index.more_activities' %>
         </a>
       </div>
@@ -32,4 +34,3 @@
 
 <%= javascript_include_tag 'global_activities/index.js' %>
 <%= javascript_include_tag 'global_activities/side_pane.js' %>
-
