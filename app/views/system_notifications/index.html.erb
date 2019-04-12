@@ -22,7 +22,7 @@
   </div>
   <div class="text-center">
   <% if @system_notifications[:more_notifications_url] && @system_notifications[:notifications].present? %>
-      <a class="btn btn-default btn-more-notifications"
+      <a class="btn btn-default btn-more-system-notifications"
           href="<%= @system_notifications[:more_notifications_url] %>"
           data-remote="true">
           <%= t("system_notifications.index.more_notifications") %></a>

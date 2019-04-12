@@ -33,7 +33,7 @@ function bindSystemNotificationAjax() {
 }
 
 function initSystemNotificationsButton() {
-  $('.btn-more-notifications')
+  $('.btn-more-system-notifications')
     .on('ajax:success', function(e, data) {
       $(data.html).insertAfter($('.system-notifications-container .system-notification').last());
       bindSystemNotificationAjax();
