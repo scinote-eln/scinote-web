@@ -325,7 +325,7 @@ class WopiController < ActionController::Base
       @breadcrumb_folder_url  = @close_url
     elsif @assoc.class == RepositoryCell
       @can_read = can_read_team?(@team)
-      @can_write = can_manage_repository_rows?(@team)
+      @can_write = can_edit_wopi_file_in_repository_rows?
 
       @close_url = repository_url(@repository,
                                   only_path: false,
@@ -363,5 +363,10 @@ class WopiController < ActionController::Base
   rescue => e
     logger.warn 'WOPI: proof verification: failed; ' + e.message
     render body: nil, status: 500 and return
+  end
+
+  # Overwrriten in electronic signature for locked inventory items
+  def can_edit_wopi_file_in_repository_rows?
+    can_manage_repository_rows?(@team)
   end
 end
