@@ -173,7 +173,7 @@
 
   function initManageUsersModal() {
     // Reload users tab HTML element when modal is closed
-    projectActionsModal.off().on('hide.bs.modal', function() {
+    projectActionsModal.off('hide.bs.modal').on('hide.bs.modal', function() {
       var projectEl = $('#' + $(this).attr('data-project-id'));
 
       // Load HTML to refresh users list
@@ -196,7 +196,7 @@
     });
 
     // Remove modal content when modal window is closed.
-    projectActionsModal.off().on('hidden.bs.modal', function() {
+    projectActionsModal.off('hidden.bs.modal').on('hidden.bs.modal', function() {
       projectActionsModalHeader.html('');
       projectActionsModalBody.html('');
       projectActionsModalFooter.html('');
