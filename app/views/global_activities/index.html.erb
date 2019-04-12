@@ -14,12 +14,14 @@
       <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
         <p><%= t('activities.index.no_activities_message') %></p>
       </div>
-      <div class="ga-activities-list" data-activities-url="<%= global_activities_path %>">
+      <div class="ga-activities-list"
+           data-activities-url="<%= global_activities_path %>"
+           data-starting-timestamp="<%= @starting_timestamp %>">
         <%= render partial: "activity_list.html.erb" %>
       </div>
       <div class="text-center">
-        <a class="btn btn-default btn-more-activities <%= 'hidden' unless @more_activities %>"
-           data-next-id="<%= @next_id %>">
+        <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
+           data-next-page="<%= @next_page %>">
           <%= t'activities.index.more_activities' %>
         </a>
       </div>

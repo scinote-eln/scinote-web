@@ -83,18 +83,23 @@ class MyModulesController < ApplicationController
     @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
                      .distinct
                      .pluck(:full_name, :id)
-    @grouped_activities, @more_activities =
-      ActivitiesService.load_activities(current_user, current_team, activity_filters)
-    last_day = @grouped_activities.keys.last
-    @next_date = (Date.parse(last_day) - 1.day).strftime('%Y-%m-%d') if last_day
+    activities = ActivitiesService.load_activities(current_user, current_team, activity_filters)
+
+    @grouped_activities = activities.group_by do |activity|
+      Time.zone.at(activity.created_at).to_date.to_s
+    end
+
+    @next_page = activities.next_page
+    @starting_timestamp = activities.first.created_at.to_i
+
     respond_to do |format|
       format.json do
         render json: {
           activities_html: render_to_string(
             partial: 'global_activities/activity_list.html.erb'
           ),
-          from: @next_date,
-          more_activities: @more_activities
+          next_page: @next_page,
+          starting_timestamp: @starting_timestamp
         }
       end
       format.html do
@@ -673,7 +678,7 @@ class MyModulesController < ApplicationController
 
   def activity_filters
     params.permit(
-      :from_date, :to_date, types: [], users: [], subjects: {}
+      :page, :starting_timestamp, :from_date, :to_date, types: [], users: [], subjects: {}
     )
   end
 

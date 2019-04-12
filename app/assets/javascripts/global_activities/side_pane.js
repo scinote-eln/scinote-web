@@ -188,9 +188,9 @@ $(function() {
       type: 'POST',
       success: function(json) {
         $(json.activities_html).appendTo('.ga-activities-list');
-        if (json.more_activities === true) {
+        if (json.next_page) {
           moreButton.removeClass('hidden');
-          moreButton.data('next-date', json.from);
+          moreButton.data('next-page', json.next_page);
         } else {
           moreButton.addClass('hidden');
         }
@@ -199,6 +199,7 @@ $(function() {
         } else {
           noActivitiesMessage.addClass('hidden');
         }
+        $('.ga-activities-list').data('starting-timestamp', json.starting_timestamp);
         updateRunning = false;
         animateSpinner(null, false);
 

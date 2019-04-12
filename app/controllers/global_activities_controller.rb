@@ -31,9 +31,7 @@ class GlobalActivitiesController < ApplicationController
     @filters = activity_filters
     @filters[:subject_labels] = params[:subject_labels]
     @teams = current_user.teams
-    selected_teams = if request.format.html?
-                       current_team
-                     elsif activity_filters[:teams].present?
+    selected_teams = if activity_filters[:teams].present?
                        @teams.where(id: activity_filters[:teams]).order(name: :asc)
                      else
                        @teams.order(name: :asc)
@@ -43,19 +41,24 @@ class GlobalActivitiesController < ApplicationController
                      .distinct
                      .order(full_name: :asc)
                      .pluck(:full_name, :id)
-    @grouped_activities, @next_id =
-      ActivitiesService.load_activities(current_user, selected_teams, activity_filters)
-    @more_activities = @next_id.present?
-    last_day = @grouped_activities.keys.last
-    @next_date = (Date.parse(last_day) - 1.day).strftime('%Y-%m-%d') if last_day
+
+    activities = ActivitiesService.load_activities(current_user, selected_teams, activity_filters)
+
+    @grouped_activities = activities.group_by do |activity|
+      Time.zone.at(activity.created_at).to_date.to_s
+    end
+
+    @next_page = activities.next_page
+    @starting_timestamp = activities.first.created_at.to_i
+
     respond_to do |format|
       format.json do
         render json: {
           activities_html: render_to_string(
             partial: 'activity_list.html.erb'
           ),
-          next_id: @next_id,
-          more_activities: @more_activities
+          next_page: @next_page,
+          starting_timestamp: @starting_timestamp
         }
       end
       format.html do
@@ -118,7 +121,7 @@ class GlobalActivitiesController < ApplicationController
 
   def activity_filters
     params.permit(
-      :from_id, :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
+      :page, :starting_timestamp, :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
     )
   end
 

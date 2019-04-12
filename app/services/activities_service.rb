@@ -7,6 +7,7 @@ class ActivitiesService
     visible_projects = Project.viewable_by_user(user, visible_teams)
     query = Activity.where(project: visible_projects)
                     .or(Activity.where(project: nil, team: visible_teams))
+
     if filters[:subjects].present?
       subjects_with_children = load_subjects_children(filters[:subjects])
       if subjects_with_children[:Project]
@@ -22,9 +23,9 @@ class ActivitiesService
       query = query.where(where_condition, *where_arguments)
     end
 
-    query = query.where('id <= ?', filters[:from_id].to_i) if filters[:from_id]
     query = query.where(owner_id: filters[:users]) if filters[:users]
     query = query.where(type_of: filters[:types]) if filters[:types]
+    query = query.where('created_at <= ?', Time.at(filters[:starting_timestamp].to_i)) if filters[:starting_timestamp]
 
     activities =
       if filters[:from_date].present? && filters[:to_date].present?
@@ -37,18 +38,10 @@ class ActivitiesService
         query
       end
 
-    activities = activities.order(id: :desc).limit(Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT + 1).to_a
-
-    if activities.length > Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT
-      next_id = activities.last.id
-      activities.pop
-    end
-
-    results = activities.group_by do |activity|
-      Time.zone.at(activity.created_at).to_date.to_s
-    end
-
-    [results, next_id]
+    activities.order(created_at: :desc)
+              .page(filters[:page])
+              .per(Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
+              .without_count
   end
 
   def self.load_subjects_children(subjects = {})
