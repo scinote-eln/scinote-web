@@ -69,8 +69,9 @@
 
     .activity-card {
       border-radius: 5px;
-      margin-right: 10px;
-      padding: 5px;
+      margin-right: 20px;
+      padding: 10px;
+      padding-left: 40px;
 
       &:hover {
         background-color: $brand-primary-light;
@@ -88,6 +89,15 @@
         .ga-breadcrumb {
           margin-left: 15px;
         }
+      }
+
+      p {
+        margin-bottom: 3px;
+        text-indent: -35px;
+      }
+
+      .atwho-user-img-popover {
+        margin: -5px 0;
       }
     }
 
