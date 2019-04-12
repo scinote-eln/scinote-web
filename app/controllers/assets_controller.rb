@@ -61,7 +61,7 @@ class AssetsController < ApplicationController
                end
 
     if @asset.is_image?
-      response_json['quality'] = @asset.quality || 90 if @asset.file.content_type == 'image/jpeg'
+      response_json['quality'] = @asset.file_image_quality || 90 if ['image/jpeg','image/pjpeg'].include? @asset.file.content_type
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'mime-type' => @asset.file.content_type,

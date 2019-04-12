@@ -2,6 +2,6 @@
 
 class AddColumnQualityToAsset < ActiveRecord::Migration[5.1]
   def change
-    add_column :assets, :quality, :integer
+    add_column :assets, :file_image_quality, :integer
   end
 end

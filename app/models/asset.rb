@@ -11,13 +11,15 @@ class Asset < ApplicationRecord
   # Paperclip validation
   has_attached_file :file,
                     styles: {
-                      large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                      medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
+                      large: [Constants::LARGE_PIC_FORMAT,:jpg],
+                      medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
+                      original: {processors: [:image_quality_calculate]}
                     },
                     convert_options: {
                       medium: '-quality 70 -strip',
                       all: '-background "#d2d2d2" -flatten +matte'
                     }
+
   validates_attachment :file,
                        presence: true,
                        size: {
@@ -36,7 +38,7 @@ class Asset < ApplicationRecord
                                            %r{^image/#{ Regexp.union(
                                              Constants::WHITELISTED_IMAGE_TYPES
                                            ) }}
-                                          [:large, :medium]
+                                          [:large, :medium, :original]
                                         else
                                           {}
                                         end
@@ -231,22 +233,6 @@ class Asset < ApplicationRecord
       update_estimated_size(team)
     end
 
-    if is_image?
-      Asset.delay(queue: :assets).calculate_quality(id) if file.content_type == 'image/jpeg'
-    end
-  end
-
-  def self.calculate_quality(id)
-    asset = find_by_id(id)
-    return unless asset.present? && asset.file.present?
-
-    image = if asset.file.is_stored_on_s3?
-              MiniMagick::Image.open(asset.presigned_url(download: true))
-            else
-              MiniMagick::Image.open(asset.file.path)
-            end
-    asset.quality = image.data['quality']
-    asset.save
   end
 
   def self.extract_asset_text(asset_id, in_template = false)

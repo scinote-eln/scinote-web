@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20190410110605) do
     t.integer "version", default: 1
     t.boolean "file_processing"
     t.integer "team_id"
-    t.integer "quality"
+    t.integer "file_image_quality"
     t.index "trim_html_tags((file_file_name)::text) gin_trgm_ops", name: "index_assets_on_file_file_name", using: :gin
     t.index ["created_at"], name: "index_assets_on_created_at"
     t.index ["created_by_id"], name: "index_assets_on_created_by_id"
