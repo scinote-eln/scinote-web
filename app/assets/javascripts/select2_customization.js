@@ -42,6 +42,112 @@ $.fn.extend({
       select2.next().find('.select2-search__field').css('width', 'auto');
     }
 
+    // Check that group select correctly
+    function select2CheckGroups() {
+      var select2Object = $('select[data-select-by-group="true"][data-open-dropdown="true"]');
+      var groups = $('.select2-dropdown').find('.select2-results__group');
+      $.each(groups, (i, e) => {
+        var groupChildrens = $(select2Object).find('optgroup[label="' + e.innerHTML + '"] option');
+        $(e).parent()[0].dataset.customGroup = 'true';
+        $(e).parent()[0].dataset.toogle = 'none';
+        if ($(select2Object).find('optgroup[label="' + e.innerHTML + '"] option:selected').length === groupChildrens.length) {
+          $(e).parent()[0].dataset.toogle = 'all';
+        }
+      });
+    }
+
+    function select2ScrollToSelectedElement() {
+      var activeElement;
+      var sel = $('.select2-results .select2-results__option[role="treeitem"]');
+      var parent;
+      var activeElementTopPosition;
+      var parentActiveElementTopPosition;
+      var fullTopPosition;
+      var containerRealPosition;
+      var containerScrollPosition = $('.select2-results__options').scrollTop();
+      var containerHeight = $('.select2-results__options').height();
+      if ($('.select2-results').length > 0 && $('.select2-results')[0].dataset.lastSelected !== 'false') {
+        activeElement = sel[parseInt($('.select2-results')[0].dataset.lastSelected, 10)];
+      } else {
+        return;
+      }
+      parent = $(activeElement).parents('.select2-results__option[role="group"]');
+      if (parent.length === 0) return;
+      activeElementTopPosition = $(activeElement).position().top;
+      parentActiveElementTopPosition = parent.position().top;
+      fullTopPosition = activeElementTopPosition + parentActiveElementTopPosition;
+      containerRealPosition = containerScrollPosition - containerHeight;
+      $('.select2-results__options').scrollTop(fullTopPosition + containerRealPosition + 130);
+    }
+
+    // listen for keyups dropdown
+    $('body').off('keyup', '.select2')
+      .on('keyup', '.select2', function(e) {
+        var keys = { up: 38, down: 40 };
+        var sel = $('.select2-results');
+        var childSelector = '.select2-results__option[role="treeitem"]';
+        var startElement = sel.find(childSelector + '.arrow_pointer');
+        var startPosition = 0;
+        var newPosition;
+        var newElement;
+        if (e.keyCode !== keys.up && e.keyCode !== keys.down) {
+          select2CheckGroups();
+          return;
+        }
+        sel.blur();
+
+        sel.find(childSelector).each((i, child) => {
+          if (child.className.includes('arrow_pointer')) startPosition = i;
+        });
+        if (startElement.length === 0) {
+          if ($('.select2-results')[0].dataset.lastSelected !== 'false') {
+            startPosition = parseInt($('.select2-results')[0].dataset.lastSelected, 10);
+          } else {
+            startElement = sel.find(childSelector).first().addClass('arrow_pointer');
+            $('.select2-results')[0].dataset.lastSelected = startPosition;
+            return;
+          }
+        }
+
+        if (e.keyCode === keys.down && !e.altKey) {
+          if ((startPosition + 1) === sel.find(childSelector).length) return;
+          newPosition = startPosition + 1;
+        } else if (e.keyCode === keys.up) {
+          if ((startPosition - 1) === -1) return;
+          newPosition = startPosition - 1;
+        }
+        newElement = sel.find(childSelector)[newPosition];
+        newElement.className += ' arrow_pointer';
+        $('.select2-results')[0].dataset.lastSelected = newPosition;
+        startElement.removeClass('arrow_pointer');
+        select2ScrollToSelectedElement();
+        select2CheckGroups();
+      });
+
+    $('.select2').find('input, .select2-selection__rendered').off('keydown').on('keydown', function(e) {
+      var activeElement = $('.select2-results .arrow_pointer');
+      var groupElement = activeElement.find('.select2-results__group');
+      if (e.keyCode === 13) {
+        if (groupElement.length > 0) {
+          groupElement.click();
+        } else {
+          activeElement.mouseup();
+        }
+
+        setTimeout(() => {
+          select2CheckGroups();
+        }, 0);
+
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        select2ScrollToSelectedElement();
+        e.preventDefault();
+      }
+    });
+
+
     // unlimited size
     if (config.unlimitedSize) {
       this[0].dataset.unlimitedSize = true;
@@ -69,14 +175,18 @@ $.fn.extend({
         var groups;
         var groupChildrens;
         var leftPosition = -310;
-        var perfectScroll = new PerfectScrollbar($('.select2-results__options')[0], { wheelSpeed: 0.5 });
+        var perfectScroll = new PerfectScrollbar($('.select2-results__options')[0], {
+          wheelSpeed: 0.5,
+          handlers: ['click-rail', 'drag-thumb', 'wheel', 'touch']
+        });
         setTimeout(() => {
           perfectScroll.update();
         }, 300);
+        $('.select2-results')[0].dataset.lastSelected = false;
+        selectElement.dataset.openDropdown = 'true';
         $('.select2-dropdown').removeClass('custom-group');
         $('.select2-selection').scrollTo(0);
         $('.select2_select_all').remove();
-
         // Adding select_all_button
         if (selectElement.dataset.selectAllButton !== undefined) {
           $('<div class="select2_select_all btn btn-default"><strong>' + selectElement.dataset.selectAllButton + '</strong></div>').prependTo('.select2-dropdown').on('click', function() {
@@ -116,7 +226,7 @@ $.fn.extend({
           $('.select2-dropdown').addClass('custom-group');
           setTimeout(() => {
             groups = $('.select2-dropdown').find('.select2-results__group');
-            groups.click(e => {
+            groups.off('click').click(e => {
               var newSelection = [];
               var scrollTo = $('.select2-results__options').scrollTop();
               var group = e.currentTarget;
@@ -147,6 +257,9 @@ $.fn.extend({
           }, 0);
         }
       })
+      .on('select2:close', function() {
+        this.dataset.openDropdown = 'false';
+      })
       // Prevent shake bug with multiple select
       .on('select2:open select2:close', function() {
         $('.select2-selection').scrollTo(0);
@@ -164,7 +277,7 @@ $.fn.extend({
         $('.select2-selection').scrollTo(0);
       })
       // Fxied scroll bug
-      .on('select2:select select2:unselect change', function(e) {
+      .on('change', function(e) {
         var groups;
         var groupChildrens;
         $('.select2-selection').scrollTo(0);
@@ -183,6 +296,9 @@ $.fn.extend({
             }
           });
         }
+        setTimeout(() => {
+          select2ScrollToSelectedElement();
+        }, 0);
       });
   },
   select2MultipleClearAll: function() {
