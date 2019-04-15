@@ -61,6 +61,9 @@ class AssetsController < ApplicationController
                end
 
     if @asset.is_image?
+      if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
+        response_json['quality'] = @asset.file_image_quality || 90
+      end
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'mime-type' => @asset.file.content_type,
@@ -155,6 +158,7 @@ class AssetsController < ApplicationController
     orig_file_size = @asset.file_file_size
     orig_file_name = @asset.file_file_name
     return render_403 unless can_read_team?(@asset.team)
+
     @asset.file = params[:image]
     @asset.file_file_name = orig_file_name
     @asset.save!

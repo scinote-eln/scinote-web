@@ -12,12 +12,14 @@ class Asset < ApplicationRecord
   has_attached_file :file,
                     styles: {
                       large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                      medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
+                      medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
+                      original: { processors: [:image_quality_calculate] }
                     },
                     convert_options: {
                       medium: '-quality 70 -strip',
                       all: '-background "#d2d2d2" -flatten +matte'
                     }
+
   validates_attachment :file,
                        presence: true,
                        size: {
@@ -36,7 +38,7 @@ class Asset < ApplicationRecord
                                            %r{^image/#{ Regexp.union(
                                              Constants::WHITELISTED_IMAGE_TYPES
                                            ) }}
-                                          [:large, :medium]
+                                          %i(large medium original)
                                         else
                                           {}
                                         end

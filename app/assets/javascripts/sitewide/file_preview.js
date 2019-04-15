@@ -262,8 +262,6 @@ var FilePreviewModal = (function() {
         initMenu: 'draw',
         menuBarPosition: 'bottom'
       },
-      cssMaxWidth: 700,
-      cssMaxHeight: 500,
       selectionStyle: {
         cornerSize: 20,
         rotatingPointOffset: 70,
@@ -278,6 +276,37 @@ var FilePreviewModal = (function() {
     imageEditor.on('image_loaded', () => {
       $('.file-save-link').css('display', '');
     });
+    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
+      var wDelta = e.originalEvent.wheelDelta;
+      var imageEditorWindow = e.currentTarget;
+      var initWidth = imageEditorWindow.style.width;
+      var initHeight = imageEditorWindow.style.height;
+      var newWidth;
+      var newHeight;
+      if (wDelta > 0) {
+        newWidth = parseInt(initWidth, 10) * 1.1;
+        newHeight = parseInt(initHeight, 10) * 1.1;
+      } else {
+        newWidth = parseInt(initWidth, 10) * 0.9;
+        newHeight = parseInt(initHeight, 10) * 0.9;
+        if (parseInt(imageEditorWindow.dataset.minWidth, 10) > parseInt(newWidth, 10)) {
+          newWidth = parseInt(imageEditorWindow.dataset.minWidth, 10);
+          newHeight = parseInt(imageEditorWindow.dataset.minHeight, 10);
+        }
+      }
+      imageEditorWindow.style.width = newWidth + 'px';
+      imageEditorWindow.style.height = newHeight + 'px';
+      $(imageEditorWindow).find('canvas, .tui-image-editor-canvas-container')
+        .css('max-width', imageEditorWindow.style.width)
+        .css('max-height', imageEditorWindow.style.height);
+      if (imageEditorWindow.dataset.minHeight === undefined) {
+        imageEditorWindow.dataset.minHeight = initHeight;
+        imageEditorWindow.dataset.minWidth = initWidth;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; };
 
     $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
     $('#fileEditModal').modal('show');
@@ -288,7 +317,7 @@ var FilePreviewModal = (function() {
     $('.file-save-link').off().click(function(ev) {
       var imageBlob;
       var imageDataURL;
-      var imageFormat;
+      var imageParams;
       var dataUpload = new FormData();
       var blobArray;
       var bytePosition;
@@ -296,9 +325,13 @@ var FilePreviewModal = (function() {
       ev.preventDefault();
       ev.stopPropagation();
 
-      imageFormat = (data['mime-type'] === 'image/png') ? 'png' : 'jpeg';
+      if (data['mime-type'] === 'image/png') {
+        imageParams = { format: 'png' };
+      } else {
+        imageParams = { format: 'jpeg', quality: (data.quality / 100) };
+      }
 
-      imageDataURL = imageEditor.toDataURL({ format: imageFormat });
+      imageDataURL = imageEditor.toDataURL(imageParams);
       imageDataURL = atob(imageDataURL.split(',')[1]);
 
       blobArray = new Uint8Array(imageDataURL.length);
