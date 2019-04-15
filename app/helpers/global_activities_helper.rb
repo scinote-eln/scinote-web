@@ -47,9 +47,11 @@ module GlobalActivitiesHelper
       path = repository_path(obj)
     when RepositoryRow
       return current_value unless obj.repository
+
       path = repository_path(obj.repository)
     when RepositoryColumn
       return current_value unless obj.repository
+
       path = repository_path(obj.repository)
     when Project
       path = obj.archived? ? projects_path : project_path(obj)
@@ -60,7 +62,15 @@ module GlobalActivitiesHelper
     when MyModule
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? module_archive_experiment_path(obj.experiment) : protocols_my_module_path(obj)
+      path = if obj.archived?
+               module_archive_experiment_path(obj.experiment)
+             else
+               path = if %w(assign_repository_record unassign_repository_record).include? activity.type_of
+                        repository_my_module_path(obj, activity.values['message_items']['repository']['id'])
+                      else
+                        protocols_my_module_path(obj)
+                      end
+             end
     when Protocol
       if obj.in_repository?
         path = protocols_path

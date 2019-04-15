@@ -1,9 +1,17 @@
 <%= render partial: "global_activities/references/experiment.html.erb",
-           locals: { team: team, subject: subject&.experiment, breadcrumbs: breadcrumbs  } %>
+           locals: { team: team, subject: subject&.experiment, breadcrumbs: breadcrumbs, values: values, type_of: type_of  } %>
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/task.svg' %>
   <% if subject&.navigable? %>
-    <% path = subject.archived? ? module_archive_experiment_path(subject.experiment) : protocols_my_module_path(subject) %>
+    <% if subject.archived?
+        path = module_archive_experiment_path(subject.experiment)
+      else
+        if (['assign_repository_record','unassign_repository_record'].include? type_of)
+          path = repository_my_module_path(subject,values["message_items"]["repository"]["id"])
+        else 
+          path = protocols_my_module_path(subject)
+        end
+      end %>
     <%= route_to_other_team(path,
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
