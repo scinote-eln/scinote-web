@@ -251,15 +251,13 @@ class TeamsController < ApplicationController
 
   def export_projects_modal
     if @exp_projects.present?
-      limit = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
-      curr_num = current_user.export_vars['num_of_export_all_last_24_hours']
       if current_user.has_available_exports?
         render json: {
           html: render_to_string(
             partial: 'projects/export/modal.html.erb',
             locals: { num_projects: @exp_projects.size,
-                      limit: limit,
-                      num_of_requests_left: limit - curr_num - 1 }
+                      limit: TeamZipExport.exports_limit,
+                      num_of_requests_left: current_user.exports_left }
           ),
           title: t('projects.export_projects.modal_title')
         }
@@ -267,7 +265,7 @@ class TeamsController < ApplicationController
         render json: {
           html: render_to_string(
             partial: 'projects/export/error.html.erb',
-            locals: { limit: limit }
+            locals: { limit: TeamZipExport.exports_limit }
           ),
           title: t('projects.export_projects.error_title'),
           status: 'error'

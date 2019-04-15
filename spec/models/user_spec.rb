@@ -259,19 +259,71 @@ describe User, type: :model do
           }.from(2).to(1)
       end
     end
+
+    context 'when num_of_export not exists' do
+      it 'starts count reports with 1' do
+        user.export_vars.delete('num_of_export_all_last_24_hours')
+        user.save
+
+        expect { user.increase_daily_exports_counter! }
+          .to change {
+            user.reload.export_vars['num_of_export_all_last_24_hours']
+          }.from(nil).to(1)
+      end
+    end
   end
 
-  describe 'has_available_exports?' do
+  describe '#has_available_exports?' do
     let(:user) { create :user }
 
-    it 'returns true when user has avaiable export' do
-      expect(user.has_available_exports?).to be_truthy
+    context 'when user have export_vars' do
+      it 'returns true when user has avaiable export' do
+        expect(user.has_available_exports?).to be_truthy
+      end
+
+      it 'returns false when user has no avaiable export' do
+        user.export_vars['num_of_export_all_last_24_hours'] = 3
+
+        expect(user.has_available_exports?).to be_falsey
+      end
     end
 
-    it 'returns false when user has no avaiable export' do
-      user.export_vars['num_of_export_all_last_24_hours'] = 3
+    context 'when user do not have export_vars' do
+      it 'returns false when user has no avaiable export' do
+        user.export_vars = {}
 
-      expect(user.has_available_exports?).to be_falsey
+        expect(user.has_available_exports?).to be_truthy
+      end
+    end
+  end
+
+  describe '#exports_left' do
+    let(:user) { create :user }
+    context 'when user do have export_vars' do
+      it 'returns 3 when user has all exports avaible' do
+        expect(user.exports_left).to be == 3
+      end
+
+      it 'returns 0 when user has no avaiable export' do
+        user.export_vars['num_of_export_all_last_24_hours'] = 3
+
+        expect(user.exports_left).to be == 0
+      end
+
+      it 'returns 3 when user has invalid number from the past' do
+        user.export_vars['num_of_export_all_last_24_hours'] = -4
+        user.export_vars['last_export_timestamp'] = Date.yesterday.to_time.utc.to_i
+
+        expect(user.exports_left).to be == 3
+      end
+    end
+
+    context 'when user do not have export_vars' do
+      it 'returns false when user has no avaiable export' do
+        user.export_vars = {}
+
+        expect(user.exports_left).to be == 3
+      end
     end
   end
 

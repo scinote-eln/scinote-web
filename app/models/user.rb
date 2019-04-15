@@ -518,24 +518,32 @@ class User < ApplicationRecord
   def increase_daily_exports_counter!
     range = Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i
     last_export = export_vars[:last_export_timestamp] || 0
+    export_vars[:num_of_export_all_last_24_hours] ||= 0
 
     if range.cover?(last_export)
       export_vars[:num_of_export_all_last_24_hours] += 1
     else
-      export_vars[:last_export_timestamp] = Time.now.utc.to_i
       export_vars[:num_of_export_all_last_24_hours] = 1
     end
+    export_vars[:last_export_timestamp] = Time.now.utc.to_i
     save
   end
 
   def has_available_exports?
-    limit = (Rails.application.secrets.export_all_limit_24h || 3).to_i
-    last_export = export_vars[:last_export_timestamp]
+    last_export_timestamp = export_vars[:last_export_timestamp] || 0
 
     # limit 0 means unlimited exports
-    return true if limit.zero? || last_export < Time.now.utc.beginning_of_day.to_i
+    return true if TeamZipExport.exports_limit.zero? || last_export_timestamp < Time.now.utc.beginning_of_day.to_i
 
-    export_vars[:num_of_export_all_last_24_hours] < limit
+    exports_left.positive?
+  end
+
+  def exports_left
+    if (export_vars[:last_export_timestamp] || 0) < Time.now.utc.beginning_of_day.to_i
+      return TeamZipExport.exports_limit
+    end
+
+    TeamZipExport.exports_limit - export_vars[:num_of_export_all_last_24_hours]
   end
 
   def global_activity_filter(filters, search_query)
