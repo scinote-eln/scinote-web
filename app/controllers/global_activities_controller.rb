@@ -97,7 +97,7 @@ class GlobalActivitiesController < ApplicationController
       elsif subject_search_params[:teams].present?
         subject_search_params[:teams]
       else
-        []
+        teams
       end
     results = {}
     subject_types.each do |subject|
