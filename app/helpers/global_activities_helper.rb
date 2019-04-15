@@ -72,8 +72,12 @@ module GlobalActivitiesHelper
                       end
              end
     when Protocol
-      if obj.in_repository?
-        path = protocols_path
+      if obj.in_repository_public?
+        path = protocols_path(type: :public)
+      elsif obj.in_repository_private?
+        path = protocols_path(type: :private)
+      elsif obj.in_repository_archived?
+        path = protocols_path(type: :archive)
       elsif obj.my_module.navigable?
         path = protocols_my_module_path(obj.my_module)
       else
