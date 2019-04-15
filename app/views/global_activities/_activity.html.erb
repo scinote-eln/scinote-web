@@ -13,7 +13,13 @@
 <div class="row navigational-breadcrumbs">
 <% unless activity.old_activity? || !activity.subject_type.present?%>
   <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
-             locals: { team: activity.team, subject: activity.subject, breadcrumbs: activity.breadcrumbs } %>
+             locals: { 
+                team: activity.team, 
+                subject: activity.subject, 
+                breadcrumbs: activity.breadcrumbs, 
+                values: activity.values, 
+                type_of: activity.type_of 
+              } %>
 <% else %>
   <div class="row">&nbsp;</div>
 <% end %>

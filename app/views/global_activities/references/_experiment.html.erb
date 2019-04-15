@@ -1,5 +1,5 @@
 <%= render partial: "global_activities/references/project.html.erb",
-           locals: { team: team, subject: subject&.project, breadcrumbs: breadcrumbs  } %>
+           locals: { team: team, subject: subject&.project, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/experiment.svg' %>
   <% if subject&.navigable? %>

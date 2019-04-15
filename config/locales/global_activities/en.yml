@@ -238,7 +238,7 @@ en:
       team: "Team"
       exports: "Exports"
     subject_name:
-      repository: "Repository"
+      repository: "Inventory"
       project: "Project"
       experiment: "Experiment"
       mymodule: "Task"
