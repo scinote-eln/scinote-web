@@ -8,11 +8,8 @@ module Paperclip
 
     def make
       if @file && (['image/jpeg', 'image/pjpeg'].include? @file.content_type)
-        quality = Paperclip::Processor.new(@file).identify(" -verbose #{@file.path} | grep Quality").split(':')
-        quality = (quality[1] || 90).to_f
-        # Check format quality
-        quality = (quality <= 1 ? quality * 100 : quality).to_i
-        @attachment.instance.file_image_quality = quality
+        quality = Paperclip::Processor.new(@file).identify(" -format '%Q' #{@file.path}")
+        @attachment.instance.file_image_quality = quality.to_i
         # Asset will be save after all processors finished
       end
       # We need again open file after read quality
