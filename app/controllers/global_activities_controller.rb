@@ -49,7 +49,7 @@ class GlobalActivitiesController < ApplicationController
     end
 
     @next_page = activities.next_page
-    @starting_timestamp = activities.first.created_at.to_i
+    @starting_timestamp = activities.first&.created_at.to_i
 
     respond_to do |format|
       format.json do
