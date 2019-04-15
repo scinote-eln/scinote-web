@@ -58,7 +58,8 @@ module ModelExporters
           protocol(pr)
         end,
         protocol_keywords: team.protocol_keywords,
-        projects: team.projects.map { |p| project(p) }
+        projects: team.projects.map { |p| project(p) },
+        activities: team.activities.where(project_id: nil)
       }
     end
 
