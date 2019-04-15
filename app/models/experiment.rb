@@ -221,6 +221,12 @@ class Experiment < ApplicationRecord
     true
   end
 
+  def update_workflow_img
+    Timeout.timeout(5) { generate_workflow_img }
+  rescue StandardError
+    delay.generate_workflow_img
+  end
+
   def generate_workflow_img
     Experiments::GenerateWorkflowImageService.call(experiment_id: id)
   end
@@ -423,7 +429,7 @@ class Experiment < ApplicationRecord
   # to other experiment
   def generate_workflow_img_for_moved_modules(to_move)
     Experiment.where(id: to_move.values.uniq).each do |exp|
-      exp.delay.generate_workflow_img
+      exp.update_workflow_img
     end
   end
 

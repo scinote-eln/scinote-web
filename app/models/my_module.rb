@@ -184,7 +184,7 @@ class MyModule < ApplicationRecord
         raise ActiveRecord::Rollback
       end
     end
-    experiment.delay.generate_workflow_img
+    experiment.update_workflow_img
     restored
   end
 

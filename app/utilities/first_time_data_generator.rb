@@ -1398,7 +1398,7 @@ module FirstTimeDataGenerator
     )
 
     # create thumbnail
-    experiment.delay.generate_workflow_img
+    experiment.update_workflow_img
   end
 
   # Used for delayed jobs
