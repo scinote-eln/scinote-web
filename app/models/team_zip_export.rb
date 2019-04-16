@@ -44,6 +44,10 @@ class TeamZipExport < ZipExport
   handle_asynchronously :generate_exportable_zip,
                         queue: :team_zip_export
 
+  def self.exports_limit
+    (Rails.application.secrets.export_all_limit_24h || 3).to_i
+  end
+
   private
 
   # Export all functionality
