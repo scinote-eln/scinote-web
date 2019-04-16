@@ -96,9 +96,6 @@ gem 'tinymce-rails', '~> 4.7.13' # Rich text editor - SEE BELOW
 # TinyMCE files which might cause errors
 
 gem 'base62' # Used for smart annotations
-gem 'devise_security_extension',
-    git: 'https://github.com/phatworx/devise_security_extension.git',
-    ref: 'b2ee978'
 gem 'newrelic_rpm'
 
 # Permission helper Gem
