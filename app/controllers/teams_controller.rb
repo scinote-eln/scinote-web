@@ -257,7 +257,7 @@ class TeamsController < ApplicationController
             partial: 'projects/export/modal.html.erb',
             locals: { num_projects: @exp_projects.size,
                       limit: TeamZipExport.exports_limit,
-                      num_of_requests_left: current_user.exports_left }
+                      num_of_requests_left: current_user.exports_left - 1 }
           ),
           title: t('projects.export_projects.modal_title')
         }
