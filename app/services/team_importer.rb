@@ -41,8 +41,9 @@ class TeamImporter
 
   def import_from_dir(import_dir)
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
-    Activity.skip_callback(:create, :after, :generate_notification)
     Protocol.skip_callback(:save, :after, :update_linked_children)
+    Activity.skip_callback(:create, :before, :add_user)
+    Activity.skip_callback(:initialize, :after, :init_default_values)
     @import_dir = import_dir
     team_json = JSON.parse(File.read("#{@import_dir}/team_export.json"))
     team = Team.new(team_json['team'].slice(*Team.column_names))
@@ -52,6 +53,8 @@ class TeamImporter
       team.created_by_id = nil
       team_last_modified_by = team.last_modified_by_id
       team.last_modified_by_id = nil
+      team.without_templates = true
+      team.without_intro_demo = true
       team.save!
 
       create_users(team_json['users'], team)
@@ -101,13 +104,13 @@ class TeamImporter
       end
 
       team_json['projects'].each do |project_json|
-        create_activities(project_json['activities'])
         create_reports(project_json['reports'], team)
         project_json['experiments'].each do |experiment_json|
           experiment_json['my_modules'].each do |my_module_json|
             create_task_connections(my_module_json['outputs'])
           end
         end
+        create_activities(project_json['activities'], team)
       end
 
       team_json['repositories'].each do |repository_json|
@@ -115,6 +118,8 @@ class TeamImporter
           create_repository_cells(repository_row_json['repository_cells'], team)
         end
       end
+
+      create_activities(team_json['activities'], team)
 
       create_tiny_mce_assets(team_json['tiny_mce_assets'], team)
       update_smart_annotations(team)
@@ -138,8 +143,9 @@ class TeamImporter
       puts "Imported tinyMCE assets: #{@mce_asset_counter}"
 
       MyModule.set_callback(:create, :before, :create_blank_protocol)
-      Activity.set_callback(:create, :after, :generate_notification)
       Protocol.set_callback(:save, :after, :update_linked_children)
+      Activity.set_callback(:create, :before, :add_user)
+      Activity.set_callback(:initialize, :after, :init_default_values)
     end
   end
 
@@ -287,14 +293,29 @@ class TeamImporter
     end
   end
 
-  def create_activities(activities_json)
+  def create_activities(activities_json, team)
     activities_json.each do |activity_json|
       activity = Activity.new(activity_json)
       activity.id = nil
-      activity.user_id = find_user(activity.user_id)
+      activity.owner_id = find_user(activity.owner_id)
+      activity.team_id = team.id
       activity.project_id = @project_mappings[activity.project_id]
       activity.experiment_id =
         @experiment_mappings[activity.experiment_id]
+      if activity.subject_id.present?
+        if activity.subject_type == 'Team'
+          activity.subject_id = team.id
+        else
+          mappings = instance_variable_get("@#{activity.subject_type.underscore}_mappings")
+          activity.subject_id = mappings[activity.subject_id]
+        end
+      end
+      unless activity.values['message_items'].blank?
+        activity.values['message_items'].each_value do |item|
+          mappings = instance_variable_get("@#{item['type'].underscore}_mappings")
+          item['id'] = mappings[item['id']]
+        end
+      end
       activity.my_module_id = @my_module_mappings[activity.my_module_id]
       activity.save!
     end
