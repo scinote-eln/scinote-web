@@ -89,7 +89,12 @@
     var teamSwitch = $('#team-switch');
     var dropDownMenu = teamSwitch.find('.dropdown-menu');
     var dropDownHeight;
-    var ps = new PerfectScrollbar(teamSwitch.find('.team-container')[0], { scrollYMarginOffset: 5 });
+    var teamContainter = teamSwitch.find('.team-container')[0];
+    var ps;
+
+    if (typeof teamContainter === 'undefined') return;
+
+    ps = new PerfectScrollbar(teamContainter, { scrollYMarginOffset: 5 });
     teamSwitch.click(() => {
       dropDownHeight = dropDownMenu.height();
       if (teamSwitch.find('.new-team').length === 0) {
