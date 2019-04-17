@@ -80,8 +80,6 @@ module Experiments
       file.close
       @exp.save
       @exp.touch(:workflowimg_updated_at)
-    rescue StandardError => ex
-      logger.error ex.message
     end
   end
 end

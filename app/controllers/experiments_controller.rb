@@ -237,10 +237,14 @@ class ExperimentsController < ApplicationController
   end
 
   def updated_img
+    if @experiment.workflowimg.present? && !@experiment.workflowimg.exists?
+      @experiment.workflowimg = nil
+      @experiment.save
+      @experiment.generate_workflow_img
+    end
     respond_to do |format|
       format.json do
-        if @experiment.workflowimg_updated_at.to_i >=
-           params[:timestamp].to_time.to_i
+        if @experiment.workflowimg.present?
           render json: {}, status: 200
         else
           render json: {}, status: 404

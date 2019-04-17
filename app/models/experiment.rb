@@ -49,8 +49,6 @@ class Experiment < ApplicationRecord
     experiment.validates :archived_on, presence: true
   end
 
-  after_touch { update_column(:workflowimg_updated_at, updated_at) }
-
   scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
 
   def self.search(
@@ -222,7 +220,11 @@ class Experiment < ApplicationRecord
   end
 
   def generate_workflow_img
-    Experiments::GenerateWorkflowImageService.call(experiment_id: id)
+    if workflowimg.present?
+      self.workflowimg = nil
+      save
+    end
+    Experiments::GenerateWorkflowImageService.delay.call(experiment_id: id)
   end
 
   # Get projects where user is either owner or user in the same team
@@ -423,7 +425,7 @@ class Experiment < ApplicationRecord
   # to other experiment
   def generate_workflow_img_for_moved_modules(to_move)
     Experiment.where(id: to_move.values.uniq).each do |exp|
-      exp.delay.generate_workflow_img
+      exp.generate_workflow_img
     end
   end
 
