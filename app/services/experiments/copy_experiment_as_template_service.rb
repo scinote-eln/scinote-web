@@ -43,7 +43,7 @@ module Experiments
       @errors.merge!(@c_exp.errors.to_hash) unless @c_exp.valid?
 
       @c_exp = nil unless succeed?
-      @c_exp.delay.generate_workflow_img if succeed?
+      @c_exp.generate_workflow_img if succeed?
       track_activity if succeed?
 
       self
