@@ -289,10 +289,6 @@ var FilePreviewModal = (function() {
       } else {
         newWidth = parseInt(initWidth, 10) * 0.9;
         newHeight = parseInt(initHeight, 10) * 0.9;
-        if (parseInt(imageEditorWindow.dataset.minWidth, 10) > parseInt(newWidth, 10)) {
-          newWidth = parseInt(imageEditorWindow.dataset.minWidth, 10);
-          newHeight = parseInt(imageEditorWindow.dataset.minHeight, 10);
-        }
       }
       imageEditorWindow.style.width = newWidth + 'px';
       imageEditorWindow.style.height = newHeight + 'px';
