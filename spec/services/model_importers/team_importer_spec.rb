@@ -29,10 +29,12 @@ describe TeamImporter do
         PROJECT_ID = @project.id
         USER_ID = @user.id
 
-        @team_importer =  TeamImporter.new
+        @team_importer = TeamImporter.new
         @exp = @team_importer.import_experiment_template_from_dir(TEMPLATE_DIR,
                                                                   PROJECT_ID,
                                                                   USER_ID)
+        Experiments::GenerateWorkflowImageService.call(experiment_id: @exp.id)
+        @exp.reload
       end
 
       describe 'Experiment variables' do
@@ -51,12 +53,7 @@ describe TeamImporter do
         it { expect(@exp.restored_by_id).to be_nil }
         it { expect(@exp.restored_on).to be_nil }
 
-        it do
-          expect(@exp.workflowimg_updated_at).to eq(
-            '2019-01-21T13:31:04.682Z'.to_time
-          )
-        end
-        it { expect(@exp.workflowimg_file_size).to eq 4581 }
+        it { expect(@exp.workflowimg.exists?).to eq(true) }
       end
 
       describe 'Module groups' do
