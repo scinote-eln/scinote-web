@@ -12,6 +12,9 @@
       </div>
       <div class="pull-left result-name">
         <%= name %>
+        <% if result.archived? %>
+          <span class="label label-warning"><%=t 'search.index.archived' %></span>
+        <% end %>
       </div>
       <div class="pull-left user-time">
         <%=t "projects.reports.elements.result_text.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full) %>

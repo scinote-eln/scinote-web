@@ -115,14 +115,27 @@ class TeamZipExport < ZipExport
           )
 
           # Export results
-          obj_filenames[:result_asset].merge!(
-            export_assets(ResultAsset.where(result: my_module.results),
-                          :result, result_path)
-          )
-          obj_filenames[:result_table].merge!(
-            export_tables(ResultTable.where(result: my_module.results),
-                          :result, result_path)
-          )
+          [false, true].each do |archived|
+            obj_filenames[:result_asset].merge!(
+              export_assets(
+                ResultAsset.where(result: my_module.results.where(archived: archived)),
+                :result,
+                result_path,
+                archived
+              )
+            )
+          end
+
+          [false, true].each do |archived|
+            obj_filenames[:result_table].merge!(
+              export_tables(
+                ResultTable.where(result: my_module.results.where(archived: archived)),
+                :result,
+                result_path,
+                archived
+              )
+            )
+          end
         end
       end
 
@@ -183,10 +196,17 @@ class TeamZipExport < ZipExport
     File.basename(file_name, ext) + suffix + ext
   end
 
-  # Helper method to extract given assets to the directory
-  def export_assets(elements, type, directory)
-    asset_indexes = {}
+  def create_archived_results_folder(result_path)
+    path = "#{result_path}/Archived attachments"
+    FileUtils.mkdir_p(path) unless File.directory?(path)
+    path
+  end
 
+  # Helper method to extract given assets to the directory
+  def export_assets(elements, type, directory, archived = false)
+    directory = create_archived_results_folder(directory) if archived && elements.present?
+
+    asset_indexes = {}
     elements.each_with_index do |element, i|
       asset = element.asset
 
@@ -206,9 +226,10 @@ class TeamZipExport < ZipExport
   end
 
   # Helper method to extract given tables to the directory
-  def export_tables(elements, type, directory)
-    table_indexes = {}
+  def export_tables(elements, type, directory, archived = false)
+    directory = create_archived_results_folder(directory) if archived && elements.present?
 
+    table_indexes = {}
     elements.each_with_index do |element, i|
       table = element.table
       table_name = table.name.presence || 'Table'
