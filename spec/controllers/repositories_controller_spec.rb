@@ -13,7 +13,7 @@ describe RepositoriesController, type: :controller do
   describe 'POST create' do
     let(:params) { { repository: { name: 'My Repository' } } }
 
-    it 'calls create activity for unarchiving experiment' do
+    it 'calls create activity for creating inventory' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :create_inventory)))
@@ -32,7 +32,7 @@ describe RepositoriesController, type: :controller do
     let(:params) { { id: repository.id, team_id: team.id } }
     let(:action) { delete :destroy, params: params }
 
-    it 'calls create activity for unarchiving experiment' do
+    it 'calls create activity for deleting inventory' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :delete_inventory)))
@@ -53,7 +53,7 @@ describe RepositoriesController, type: :controller do
     end
     let(:action) { put :update, params: params, format: :json }
 
-    it 'calls create activity for unarchiving experiment' do
+    it 'calls create activity for renaming inventory' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :rename_inventory)))
@@ -87,10 +87,38 @@ describe RepositoriesController, type: :controller do
     end
     let(:action) { post :export_repository, params: params, format: :json }
 
-    it 'calls create activity for unarchiving experiment' do
+    it 'calls create activity for exporting inventory items' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :export_inventory_items)))
+
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST import_records' do
+    let(:repository) { create :repository, team: team }
+    let(:temp_file) { create :temp_file, session_id: session.id }
+    let(:mappings) do
+      { '0': '-1', '1': '', '2': '', '3': '', '4': '', '5': '' }
+    end
+    let(:params) do
+      { id: repository.id,
+        team_id: team.id,
+        file_id: temp_file.id,
+        mappings: mappings }
+    end
+    let(:action) { post :import_records, params: params, format: :json }
+
+    it 'calls create activity for importing inventory items' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :import_inventory_items)))
 
       action
     end
