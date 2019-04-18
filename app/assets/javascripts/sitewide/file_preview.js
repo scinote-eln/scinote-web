@@ -262,6 +262,8 @@ var FilePreviewModal = (function() {
         initMenu: 'draw',
         menuBarPosition: 'bottom'
       },
+      cssMaxWidth: 700, 
+      cssMaxHeight: 500,
       selectionStyle: {
         cornerSize: 20,
         rotatingPointOffset: 70,
@@ -276,7 +278,7 @@ var FilePreviewModal = (function() {
     imageEditor.on('image_loaded', () => {
       $('.file-save-link').css('display', '');
     });
-    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
+/*    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
       var wDelta = e.originalEvent.wheelDelta;
       var imageEditorWindow = e.currentTarget;
       var initWidth = imageEditorWindow.style.width;
@@ -302,7 +304,7 @@ var FilePreviewModal = (function() {
       e.preventDefault();
       e.stopPropagation();
     });
-    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; };
+    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; }; */
 
     $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
     $('#fileEditModal').modal('show');
