@@ -1,4 +1,5 @@
 /* global _ hljs tinyMCE SmartAnnotation */
+/* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
   'use strict';
@@ -18,9 +19,16 @@ var TinyMCE = (function() {
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector) {
+      var tinyMceContainer;
+      var tinyMceInitSize;
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
-        $(selector).closest('form').find('.tinymce-view').addClass('hidden');
+        tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
+        tinyMceInitSize = tinyMceContainer.height();
+        $(selector).closest('form').find('.form-group')
+          .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
+        tinyMceContainer.addClass('hidden');
+
 
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
@@ -101,7 +109,11 @@ var TinyMCE = (function() {
           init_instance_callback: function(editor) {
             var editorForm = $(editor.getContainer()).closest('form');
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
-
+            $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
+            setTimeout(() => {
+              $(editor.editorContainer).addClass('show');
+              $('.tinymce-placeholder').remove();
+            }, 400);
             // Init saved status label
             if (editor.getContent() !== '') {
               editorForm.find('.tinymce-status-badge').removeClass('hidden');

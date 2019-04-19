@@ -1,3 +1,4 @@
+// scss-lint:disable ImportantRule
 @import "constants";
 
 .tinymce-view {
@@ -16,6 +17,23 @@
     color: $color-silver-chalice;
     content: attr(data-placeholder);
   }
+}
+
+.mce-tinymce {
+  opacity: 0;
+  position: absolute !important;
+
+  &.show {
+    opacity: 1;
+    position: static !important;
+  }
+}
+
+.tinymce-placeholder {
+  background: $color-concrete;
+  opacity: .7;
+  transition: .2s;
+  width: 100%;
 }
 
 .tinymce-save-button,
@@ -37,3 +55,4 @@
 .tinymce-placeholder-text {
   color: $color-silver-chalice;
 }
+// scss-lint:enable ImportantRule
