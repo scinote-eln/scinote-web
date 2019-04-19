@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 module Api
   module V1
     class ResultsController < BaseController
@@ -44,6 +45,7 @@ module Api
       end
 
       def create_text_result
+        result_text_params[:text] = convert_old_tiny_mce_format(result_text_params[:text])
         result_text = ResultText.new(text: result_text_params[:text])
         result_text.transaction do
           if tiny_mce_asset_params.present?
@@ -56,12 +58,13 @@ module Api
               end
               image = Paperclip.io_adapters.for(image_params[:file_data])
               image.original_filename = image_params[:file_name]
-              TinyMceAsset.create!(
+              tiny_image = TinyMceAsset.create!(
                 image: image,
                 team: @team,
                 object: result_text,
                 saved: true
               )
+              result_text.text.sub!("data-mce-token=\"#{token}\"", "data-mce-token=\"#{Base62.encode(tiny_image.id)}\"")
             end
           end
           @result = Result.new(user: current_user,
@@ -105,6 +108,16 @@ module Api
         end
         prms
       end
+
+      def convert_old_tiny_mce_format(text)
+        text.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
+          old_format = /\[~tiny_mce_id:#{token}\]/
+          new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{token}\"/>"
+          text.sub!(old_format, new_format)
+        end
+        text
+      end
     end
   end
 end
+# rubocop:enable Metrics/LineLength

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'zip'
 
 module ProtocolsExporter
@@ -14,11 +16,11 @@ module ProtocolsExporter
 
   def get_protocol_name(protocol)
     ## "Inject" module's name
-    if protocol.in_module? && protocol.name.blank?
-      protocol_name = protocol.my_module.name
-    else
-      protocol_name = protocol.name
-    end
+    protocol_name = if protocol.in_module? && protocol.name.blank?
+                      protocol.my_module.name
+                    else
+                      protocol.name
+                    end
     protocol_name
   end
 
@@ -35,18 +37,20 @@ module ProtocolsExporter
     envelope_xml
   end
 
-  def tiny_mce_asset_present?(step)
-    step.tiny_mce_assets.exists?
+  def tiny_mce_asset_present?(object)
+    object.tiny_mce_assets.exists?
   end
 
   def get_tiny_mce_assets(text)
     return unless text
+
     regex = Constants::TINY_MCE_ASSET_REGEX
     tiny_assets_xml = "<descriptionAssets>\n"
     text.gsub(regex) do |el|
       match = el.match(regex)
-      img = TinyMceAsset.find_by_id(match[1])
+      img = TinyMceAsset.find_by_id(Base62.decode(match[1]))
       next unless img
+
       img_guid = get_guid(img.id)
       asset_file_name = "rte-#{img_guid}" \
                         "#{File.extname(img.image_file_name)}"
@@ -68,7 +72,12 @@ module ProtocolsExporter
                     "guid=\"#{get_guid(protocol.id)}\">\n"
     protocol_xml << "<name>#{protocol_name}</name>\n"
     protocol_xml << "<authors>#{protocol.authors}</authors>\n"
-    protocol_xml << "<description>#{protocol.description}</description>\n"
+    protocol_xml << "<description>
+    <!--[CDATA[  #{Nokogiri::HTML::DocumentFragment.parse(protocol.description)}  ]]-->
+    </description>\n"
+    if tiny_mce_asset_present?(protocol) && protocol.description
+      protocol_xml << get_tiny_mce_assets(protocol.description)
+    end
     protocol_xml << "<created_at>#{protocol.created_at.as_json}</created_at>\n"
     protocol_xml << "<updated_at>#{protocol.updated_at.as_json}</updated_at>\n"
 
@@ -81,9 +90,7 @@ module ProtocolsExporter
                    "position=\"#{step.position}\">\n"
         step_xml << "<name>#{step.name}</name>\n"
         # uses 2 spaces to make more difficult to remove user data on import
-        step_xml << "<description><!--[CDATA[  #{
-        Nokogiri::HTML::DocumentFragment.parse(step.description).to_s
-        }  ]]--></description>\n"
+        step_xml << "<description><!--[CDATA[  #{Nokogiri::HTML::DocumentFragment.parse(step.description)}  ]]--></description>\n"
 
         if tiny_mce_asset_present?(step)
           step_xml << get_tiny_mce_assets(step.description)
@@ -111,7 +118,7 @@ module ProtocolsExporter
           step.tables.order(:id).each do |table|
             table_xml = "<elnTable id=\"#{table.id}\" " \
                         "guid=\"#{get_guid(table.id)}\">\n"
-            table_xml << "<contents>#{table.contents.unpack('H*')[0]}" \
+            table_xml << "<contents>#{table.contents.unpack1('H*')}" \
                          "</contents>\n"
             table_xml << "</elnTable>\n"
             step_xml << table_xml
