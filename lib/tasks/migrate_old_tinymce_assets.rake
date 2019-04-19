@@ -5,7 +5,7 @@ namespace :tinymce_assets do
   desc 'Migrate old TinyMCE images to new polymorphic format' \
        'IT SHOULD BE RUN ONE TIME ONLY'
   task migrate_tinymce_assets: :environment do
-    old_images = TinyMceAsset.where('step_id IS NOT NULL OR result_text_id IS NOT NULL')
+    old_images = TinyMceAsset.where('step_id IS NOT NULL OR result_text_id IS NOT NULL').where(object: nil)
     old_images.each do |old_image|
       old_format = /\[~tiny_mce_id:#{old_image.id}\]/
       new_format = "<img src='' class='img-responsive' data-mce-token='#{Base62.encode(old_image.id)}'/>"
