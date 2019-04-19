@@ -116,7 +116,7 @@ describe RepositoriesController, type: :controller do
 
     it 'calls create activity for importing inventory items' do
       ImportRepository::ImportRecords.any_instance.stub(:import!)
-                                     .and_return({status: :ok})
+                                     .and_return(status: :ok)
 
       expect(Activities::CreateActivityService)
         .to(receive(:call)
@@ -127,7 +127,7 @@ describe RepositoriesController, type: :controller do
 
     it 'adds activity in DB' do
       ImportRepository::ImportRecords.any_instance.stub(:import!)
-                                     .and_return({status: :ok})
+                                     .and_return(status: :ok)
 
       expect { action }
         .to(change { Activity.count })
