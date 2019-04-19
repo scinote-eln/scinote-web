@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TinyMceAsset < ApplicationRecord
+  extend ProtocolsExporter
   attr_accessor :reference
   before_create :set_reference, optional: true
   after_create :update_estimated_size, :self_destruct
@@ -56,13 +57,14 @@ class TinyMceAsset < ApplicationRecord
       next unless image_to_update
 
       object_field = data_fields[image_to_update.object_type]
-      next unless image_to_update.object
+      next unless image_to_update.object && image_to_update.object[object_field]
 
       old_description = Nokogiri::HTML(image_to_update.object[object_field])
       description_image = old_description.css(
         "img[data-mce-token=\"#{Base62.encode(old_id)}\"]"
       )
       next if description_image.empty?
+
       description_image.attr('src').value = ''
       description_image.attr('data-mce-token').value = Base62.encode(new_id)
       description_image[0]['class'] = 'img-responsive'
@@ -134,6 +136,31 @@ class TinyMceAsset < ApplicationRecord
       'Protocol' => :description,
       'MyModule' => :description
     }
+  end
+
+  def self.update_old_tinymce(description)
+    description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
+      old_format = /\[~tiny_mce_id:#{token}\]/
+      new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{token}\"/>"
+      description.sub!(old_format, new_format)
+    end
+    description
+  end
+
+  def self.save_to_eln(ostream, dir)
+    if exists?
+      order(:id).each do |tiny_mce_asset|
+        asset_guid = get_guid(tiny_mce_asset.id)
+        asset_file_name =
+          "rte-#{asset_guid.to_s +
+            File.extname(tiny_mce_asset.image_file_name).to_s}"
+        ostream.put_next_entry("#{dir}/#{asset_file_name}")
+        input_file = tiny_mce_asset.open
+        ostream.print(input_file.read)
+        input_file.close
+      end
+    end
+    ostream
   end
 
   private

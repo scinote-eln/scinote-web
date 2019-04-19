@@ -748,6 +748,7 @@ class ProtocolsController < ApplicationController
             protocol_dir = get_guid(protocol.id).to_s
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
+            ostream = protocol.tiny_mce_assets.save_to_eln(ostream, protocol_dir)
             # Add assets to protocol folder
             next if protocol.steps.count <= 0
             protocol.steps.order(:id).each do |step|
@@ -765,19 +766,7 @@ class ProtocolsController < ApplicationController
                   input_file.close
                 end
               end
-              if step.tiny_mce_assets.exists?
-                step.tiny_mce_assets.order(:id).each do |tiny_mce_asset|
-                  asset_guid = get_guid(tiny_mce_asset.id)
-                  asset_file_name =
-                  "rte-#{asset_guid.to_s +
-                         File.extname(tiny_mce_asset.image_file_name).to_s}"
-
-                  ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-                  input_file = tiny_mce_asset.open
-                  ostream.print(input_file.read)
-                  input_file.close
-                end
-              end
+              ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
             end
           end
         end
