@@ -15,9 +15,30 @@ var TinyMCE = (function() {
     });
   }
 
+  function moveToolbar(editor, editorToolbar, editorToolbaroffset) {
+    var scrollPosition = $(window).scrollTop();
+    var containerOffset;
+    var containerHeight;
+    var toolbarPosition;
+    var toolbarPositionLimit;
+    if (editor.getContainer() === null) return;
+    containerOffset = $(editor.getContainer()).offset().top;
+    containerHeight = $(editor.getContainer()).height();
+    toolbarPosition = scrollPosition - containerOffset + editorToolbaroffset;
+    toolbarPositionLimit = containerHeight - editorToolbaroffset;
+    if (toolbarPosition > 0 && toolbarPosition < toolbarPositionLimit) {
+      editorToolbar.css('top', toolbarPosition + 'px');
+    } else {
+      editorToolbar.css(
+        'top',
+        toolbarPosition < 0 ? '0px' : toolbarPositionLimit + 'px'
+      );
+    }
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
-    init: function(selector) {
+    init: function(selector, mceConfig = {}) {
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
         $(selector).closest('form').find('.tinymce-view').addClass('hidden');
@@ -101,11 +122,20 @@ var TinyMCE = (function() {
           init_instance_callback: function(editor) {
             var editorForm = $(editor.getContainer()).closest('form');
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
+            var editorToolbar = editorForm.find('.mce-top-part');
+            var editorToolbaroffset = mceConfig.toolbar_offset || 120;
 
             // Init saved status label
             if (editor.getContent() !== '') {
               editorForm.find('.tinymce-status-badge').removeClass('hidden');
             }
+
+            // Init Floating toolbar
+
+            moveToolbar(editor, editorToolbar, editorToolbaroffset);
+            $(window).on('scroll', function() {
+              moveToolbar(editor, editorToolbar, editorToolbaroffset);
+            });
 
             // Init Save button
             editorForm
