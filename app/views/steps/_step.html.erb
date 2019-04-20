@@ -143,17 +143,11 @@
             </div>
           <% end %>
         </div>
-
-        <% if can_read_protocol_in_module?(@protocol) %>
-          <div class="row">
-            <div class="step-comment"
-                 id="step-comments-<%= step.id %>"
-                 data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
-              <%= render partial: "step_comments/index.html.erb",
-                         locals: { step: step, comments: step.last_comments, per_page: Constants::COMMENTS_SEARCH_LIMIT } %>
-            </div>
-          </div>
-        <% end %>
+        <hr>
+        <br>
+        <%= render partial: 'steps/comments.html.erb', locals: {  comments: step.last_comments,
+                                                                       comments_count: step.step_comments.count,
+                                                                       step: step } %>
       </div>
     </div>
   </div>

@@ -184,5 +184,150 @@
   }
 }
 
+.step .textarea-sm {
+  border-radius: 0;
+}
 
+.comments-title {
+  color: $color-emperor;
+}
+
+.comment-container {
+  display: flex;
+  padding: 5px 0 5px 5px;
+
+  &:hover {
+    background-color: $brand-primary-light;
+
+    .comment-actions {
+      display: inline;
+
+      a {
+        color: $color-silver-chalice;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      a:active {
+        color: $color-dove-gray;
+      }
+    }
+  }
+
+  &.edit {
+    .comment-textarea {
+      display: block;
+    }
+
+    .comment-message {
+      display: none;
+    }
+
+    .edit-actions {
+      display: none;
+    }
+
+    .editing-actions {
+      display: inline-block;
+    }
+  }
+
+  .comment-textarea {
+    display: none;
+  }
+
+  .comment-message {
+    display: block;
+  }
+
+  .edit-actions {
+    display: inline-block;
+  }
+
+  .editing-actions {
+    display: none;
+  }
+}
+
+.avatar-placehodler {
+  height: 30px;
+  width: 30px;
+
+  img {
+    border-radius: 30px;
+    position: relative;
+    top: 7px;
+  }
+}
+
+.content-placeholder {
+  flex-grow: 1;
+
+  .row-content {
+    margin-left: -25px;
+  }
+}
+
+.comment-right {
+  line-height: 16px;
+}
+
+.comment-datetime {
+  font-size: 12px;
+}
+
+.comment-name {
+  color: $color-silver-chalice;
+  font-size: 16px;
+
+  p {
+    margin-bottom: 3px;
+  }
+}
+
+.comment-message {
+  font-size: 14px;
+  line-height: 17px;
+  margin-top: -4px;
+  padding-left: 10px;
+}
+
+.comment-actions {
+  display: none;
+  font-size: 16px;
+  margin-right: 20px;
+
+  .action-icon-delete {
+    margin-left: 20px;
+  }
+
+  .edit-label {
+    font-size: 14px;
+    margin-left: 3px;
+  }
+}
+
+.step-comments {
+  overflow: auto;
+}
+
+.new-comment-button {
+  cursor: pointer;
+  font-size: 18px;
+  left: calc(100% - 29px);
+  position: relative;
+  top: -41px;
+
+  &.has-error {
+    top: -64px;
+  }
+}
+
+.new-message-continer {
+  float: left;
+  margin-top: 20px;
+  width: 100%;
+}
 
