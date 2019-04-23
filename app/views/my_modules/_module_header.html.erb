@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col-xs-6 col-sm-6 col-md-4">
+<div class="row first-row">
+  <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4 date-block">
     <div class="badge-icon">
       <span class="fas fa-calendar-alt"></span>
     </div>
@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <div class="col-xs-6 col-sm-6 col-md-4 help_tooltips"
+  <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4 help_tooltips date-block"
        data-tooltiplink="<%= I18n.t('tooltips.link.task.due_date_specific') %>"
        data-tooltipcontent="<%= I18n.t('tooltips.text.task.due_date_specific') %>">
     <div class="badge-icon">
@@ -39,9 +39,13 @@
     </div>
   </div>
 
-  <div class="col-xs-6 col-sm-6 col-md-4">
+  <div class="col-xs-6 col-sm-6 col-md-3  complete-button-container">
+    <%= render partial: "my_modules/state_buttons.html.erb" %>
+  </div>
+
+  <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
     <div class="badge-icon">
-      <span class="fas fa-check"></span>
+      <span class="fas fa-tachometer-alt"></span>
     </div>
     <div class="well well-sm">
       <span class="task-state-label">
@@ -51,56 +55,35 @@
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row module-tags">
   <div class="col-xs-12 col-sm-12 col-md-12" id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
     <div class="badge-icon">
-      <% if can_manage_module?(@my_module) %>
-        <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_url(@my_module, format: :json) %>" style="color: inherit">
-          <span class="fas fa-tags"></span>
-        </a>
-      <% else %>
-        <span class="fas fa-tags"></span>
-      <% end %>
+      <span class="fas fa-tags"></span>
     </div>
     <div class="well well-sm">
-      <span class="hidden-xs hidden-sm"><%=t "my_modules.module_header.tags" %></span>
-      <% if can_manage_module?(@my_module) %>
-        <%= link_to my_module_tags_edit_url(@my_module, format: :json), remote: true, class: "edit-tags-link tags-refresh", style: "color: inherit" do %>
-          <%= render partial: "my_modules/tags", locals: { my_module: @my_module } %>
-        <% end %>
-      <% else %>
-        <%= render partial: "my_modules/tags", locals: { my_module: @my_module } %>
-      <% end %>
+      <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span>
+      <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: can_manage_module?(@my_module) } %>    
     </div>
   </div>
 </div>
 
-<div>
-  <div class="badge-icon">
-     <% if can_manage_module?(@my_module) %>
-      <%= link_to description_my_module_path(@my_module, format: :json), remote: true, class: "description-link", style: "color: inherit" do %>
-        <span class="fas fa-info-circle"></span>
+<div class="row">
+  <div class="col-xs-12">
+    <h4>
+      <%= t('my_modules.module_header.description_label') %>
+    </h4>
+    <div class="my-module-description-content">
+      <% if can_manage_module?(@my_module) %>
+        <%= render partial: "description_form" %>
+      <% elsif @my_module.description.present? %>
+        <%= custom_auto_link(@my_module.description,
+                             simple_format: false,
+                             tags: %w(img),
+                             team: current_team) %>
+      <% else %>
+        <%= t('my_modules.module_header.no_description') %>
       <% end %>
-    <% else %>
-      <span class="fas fa-info-circle"></span>
-    <% end %>
-  </div>
-  <div class="well well-sm">
-    <% if can_manage_module?(@my_module) %>
-      <%= link_to description_my_module_path(@my_module, format: :json), remote: true, class: "description-label description-link description-refresh", style: "color: inherit" do %>
-        <% if @my_module.description.present? and not @my_module.description.empty? %>
-          <%= @my_module.description %>
-        <% else %>
-          <em><%=t "my_modules.module_header.no_description" %></em>
-        <% end %>
-      <% end %>
-    <% else %>
-      <% if @my_module.description.present? and not @my_module.description.empty? %>
-          <%= @my_module.description %>
-        <% else %>
-          <em><%=t "my_modules.module_header.no_description" %></em>
-        <% end %>
-      <% end %>
+    </div>
   </div>
 </div>
 

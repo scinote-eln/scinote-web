@@ -81,11 +81,11 @@
             <div class="panel-body">
               <div class="row">
                 <div class="col-xs-12">
-                  <% if strip_tags(step.description).blank? %>
+                  <% if sanitize_input(step.description).blank? %>
                     <em><%= t("protocols.steps.no_description") %></em>
                   <% else %>
                     <div class="ql-editor">
-                      <%= sanitize_input(generate_image_tag_from_token(step.description, step), ['img']) %>
+                      <%= sanitize_input(step.tinymce_render(:description), ['img']) %>
                     </div>
                   <% end %>
                 </div>
@@ -152,10 +152,4 @@
       </div>
     <% end %>
   </div>
-
-  <% if protocol.steps.count == 0 %>
-    <div data-role="no-steps-text">
-      <em><%= t("protocols.steps.no_steps") %></em>
-    </div>
-  <% end %>
 </div>

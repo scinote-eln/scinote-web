@@ -9,6 +9,8 @@ var selectedRow = null;
  * Initializes page
  */
 function init() {
+  initEditMyModuleDescription();
+  initEditProtocolDescription();
   initEditDescription();
   initCopyToRepository();
   initLinkUpdate();
@@ -16,6 +18,18 @@ function init() {
   initRefreshStatusBar();
   initImport();
   setupAssetsLoading();
+}
+
+function initEditMyModuleDescription() {
+  $('#my_module_description_view').on('click', function(){
+    TinyMCE.init('#my_module_description_textarea');
+  });
+}
+
+function initEditProtocolDescription() {
+  $('#protocol_description_view').on('click', function(){
+    TinyMCE.init('#protocol_description_textarea');
+  });
 }
 
 // Initialize edit description modal window

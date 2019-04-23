@@ -1,0 +1,142 @@
+@import "constants";
+@import "mixins";
+
+#manage-module-tags-modal {
+
+  .well {
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+.my-modules-protocols-index {
+  padding-top: 15px !important;
+
+  .first-row {
+    max-height: 40px;
+
+    .date-block {
+      max-width: 250px;
+    }
+
+    div {
+      height: 45px;
+    }
+
+    .complete-button-container {
+      float: right;
+      max-width: 165px;
+
+      .my_module-state-buttons {
+        padding-top: 0;
+      }
+    }
+  }
+
+  .well {
+    border: 0;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .badge-icon {
+    background: transparent;
+    color: $color-silver;
+    padding-right: 5px;
+
+    + .well-sm {
+      margin-left: 32px;
+    }
+  }
+
+  .module-tags {
+
+    .tags-title {
+      line-height: 32px;
+    }
+
+    .badge-icon {
+      line-height: 32px;
+      padding: 9px 5px 9px 10px;
+    }
+
+    .select-container {
+      float: right;
+      position: relative;
+      width: calc(100% - 35px);
+
+      select {
+        display: none;
+      }
+
+      .edit-button-container {
+        height: 32px;
+        padding-right: 5px;
+        position: absolute;
+        right: 0;
+        text-align: right;
+        top: 0;
+        width: 120px;
+        z-index: 2;
+
+        &.hidden {
+          display: none;
+        }
+
+        a {
+          color: inherit;
+          display: inline-block;
+          line-height: 32px;
+          opacity: .7;
+          text-decoration: none;
+
+          i {
+            float: left;
+            font-size: 18px;
+            line-height: 32px;
+            margin-right: 5px;
+          }
+
+          span {
+            float: left;
+            line-height: 32px;
+          }
+
+        }
+      }
+
+      .select2-selection {
+
+        .select2-selection__rendered {
+          cursor: pointer;
+          float: left;
+          padding-left: 2px;
+          padding-right: 130px;
+
+          input {
+            cursor: pointer;
+            line-height: 30px;
+            margin-top: 0;
+          }
+        }
+
+        .select2-selection__choice {
+          border: 1px solid transparent;
+          color: $color-white;
+
+          .select2-selection__choice__remove {
+            color: $color-white;
+          }
+        }
+      }
+
+      .select2-container--disabled {
+
+        .select2-selection__rendered {
+          padding-right: 10px;
+        }
+      }
+    }
+  }
+}

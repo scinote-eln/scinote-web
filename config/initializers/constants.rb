@@ -225,7 +225,7 @@ class Constants
 
   WHITELISTED_TAGS = %w(
     a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
-    span u s blockquote pre col colgroup table thead tbody th tr td
+    span u s blockquote pre col colgroup table thead tbody th tr td img
   ).freeze
 
   WHITELISTED_ATTRIBUTES = [
@@ -907,7 +907,7 @@ class Constants
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
-  TINY_MCE_ASSET_REGEX = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
+  TINY_MCE_ASSET_REGEX = /data-mce-token="(\w+)"/
 
   # Team name for default admin user
   DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze

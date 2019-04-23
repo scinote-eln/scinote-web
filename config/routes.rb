@@ -339,7 +339,14 @@ Rails.application.routes.draw do
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
-      resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy]
+      resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
+        collection do 
+          get :search_tags
+        end
+        member do 
+          post :destroy_by_tag_id
+        end
+      end
       resources :user_my_modules, path: '/users',
                 only: [:index, :create, :destroy]
       resources :my_module_comments,
@@ -357,6 +364,12 @@ Rails.application.routes.draw do
         post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
+        patch 'description',
+              to: 'my_modules#update_description',
+              as: 'update_description'
+        patch 'protocol_description',
+              to: 'my_modules#update_protocol_description',
+              as: 'update_protocol_description'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         # get 'samples' # Samples view for single module

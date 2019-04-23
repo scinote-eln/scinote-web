@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <% provide :head_title, t('nav.label.activities') %>
 
 <div class="global-activities-container container-flex">
@@ -36,3 +37,36 @@
 </script>
 <%= javascript_include_tag 'global_activities/index.js' %>
 <%= javascript_include_tag 'global_activities/side_pane.js' %>
+=======
+<div class="global-activities__container">
+  <br>
+  <div class="global-activities__top">
+    <h2 class="global-activiteis__title">Global activities</h2>
+  </div>
+
+  <div class="global-activities__main">
+        <div class="global-activities__top-actions">
+          <span><i class="fas fa-caret-square-down"></i> Expand All</span>
+          &nbsp;&nbsp;
+          <span><i class="fas fa-caret-square-up"></i> Colapse All</span>
+        </div>
+        <div class="global-activities__search-container">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search..." aria-describedby="basic-addon1">
+            <span class="input-group-addon" id="basic-addon1">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+        </div>
+    <div class="global-activities_activities-list">
+      <h2>list of activities</h2>
+    </div>
+
+  </div>
+
+  <div class="global-activities__side">
+    <%= render "team_selection" %>
+  </div>
+
+</div>
+>>>>>>> features/note-section

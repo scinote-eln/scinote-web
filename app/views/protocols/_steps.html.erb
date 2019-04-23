@@ -28,11 +28,6 @@
     <%= render partial: "steps/step.html.erb", locals: { step: step } %>
   <% end %>
 </div>
-<% if @protocol.steps.count == 0 %>
-  <div data-role="no-steps-text">
-    <em><%= t("protocols.steps.no_steps") %></em>
-  </div>
-<% end %>
 
 <%= javascript_include_tag "handsontable.full.min" %>
 

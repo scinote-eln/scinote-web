@@ -9,7 +9,10 @@ $.fn.extend({
     // Adding ID to each block
     placeholder = this[0].dataset.placeholder || '';
     if (this.next().find('.select2-selection').length > 0) return this;
-    templateSelection = (state) => {
+    templateSelection = (state, parent) => {
+      if (config.colorField !== undefined) {
+        parent.css('background',state[config.colorField] || state.element.dataset[config.colorField])
+      }
       return $('<span class="select2-block-body" data-select-id="' + state.id + '">'
         + (config.customSelection !== undefined ? config.customSelection(state) : state.text)
       + '</span>');
@@ -149,6 +152,18 @@ $.fn.extend({
 
 
     // unlimited size
+    var select2 = this.select2({
+      closeOnSelect: config.closeOnSelect || false,
+      multiple: true,
+      ajax: config.ajax,
+      templateSelection: templateSelection,
+      tags: config.dynamicCreation || true,
+      tokenSeparators: config.dynamicCreationDelimiter || [',', ' '],
+    });
+        // Add dynamic size
+    select2.next().css('width', '100%');
+
+     // unlimited size
     if (config.unlimitedSize) {
       this[0].dataset.unlimitedSize = true;
       select2.next().find('.select2-selection').css('max-height', 'none');

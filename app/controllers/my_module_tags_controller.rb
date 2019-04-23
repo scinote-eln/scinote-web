@@ -27,7 +27,7 @@ class MyModuleTagsController < ApplicationController
         render json: {
           html_module_header: render_to_string(
             partial: 'my_modules/tags.html.erb',
-            locals: { my_module: @my_module }
+            locals: { my_module: @my_module, editable: can_manage_module?(@my_module) }
           )
         }
       end
@@ -103,6 +103,25 @@ class MyModuleTagsController < ApplicationController
                     status: 303
       end
     end
+  end
+
+  def search_tags
+    assigned_tags = @my_module.my_module_tags.pluck(:tag_id)
+    tags = @my_module.experiment.project.tags\
+                     .where.not(id: assigned_tags)
+                     .search(
+                       current_user,
+                       false,
+                       params[:query]
+                     ).select(:id, :name, :color).limit(6)
+    tags = [{ id: 0, name: params[:query], color: nil }] if tags.count.zero?
+    render json: tags
+  end
+
+  def destroy_by_tag_id
+    tag = @my_module.my_module_tags.find_by_tag_id(params[:id])
+    tag.destroy
+    render json: { result: tag }
   end
 
   private

@@ -957,6 +957,12 @@ ul.content-activities {
   width: 70%;
 }
 
+#import-protocol-modal #import_protocol_description {
+  border: 1px solid $color-silver;
+  border-radius: 4px;
+  padding: 10px;
+}
+
 .import-protocols-modal-preview-container {
   height: 300px;
   overflow-y: scroll;

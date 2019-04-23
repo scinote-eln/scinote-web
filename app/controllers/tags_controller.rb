@@ -13,7 +13,7 @@ class TagsController < ApplicationController
     end
 
     if @tag.color.blank?
-      @tag.color = Constants::TAG_COLORS[0]
+      @tag.color = Constants::TAG_COLORS.sample
     end
 
     if @tag.save
@@ -41,6 +41,12 @@ class TagsController < ApplicationController
       flash_success = t(
         "tags.create.success_flash",
         tag: @tag.name)
+
+      if params[:simple_creation] == 'true'
+        render json: {tag: @tag}
+        return true
+      end
+
       respond_to do |format|
         format.html {
           flash[:success] = flash_success
