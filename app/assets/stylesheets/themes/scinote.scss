@@ -1041,6 +1041,16 @@ ul.content-activities {
   margin-top: 20px;
   padding-bottom: 30px;
   padding-top: 30px;
+  background-color: $color-concrete;
+
+  .new-asset-upload-icon{
+    margin-right: 6px;
+  }
+
+  .new-asset-upload-button {
+    margin-left: 20px;
+    background-color: inherit;
+  }
 }
 
 .dnd-error,

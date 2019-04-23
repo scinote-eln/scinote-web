@@ -53,11 +53,11 @@
   }
 
   .panel-heading {
-    padding-top: 0;
-    padding-bottom: 0;
     background-color: $color-silver;
-    height: 39px;
     border-bottom-width: 0 !important;
+    height: 39px;
+    padding-bottom: 0;
+    padding-top: 0;
 
     > * {
       display: inline-block;
@@ -82,5 +82,107 @@
     }
   }
 }
+
+.attacments {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.attachment-placeholder {
+  background-color: $color-white;
+  border-radius: 5px;
+  color: $color-silver-chalice;
+  height: 277px;
+  margin: 3px;
+  width: 216px;
+
+  a {
+    color: inherit;
+  }
+
+  &.new {
+    background-color: rgba(95, 95, 95, 0.1);
+  }
+
+  &:hover {
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.18);
+  }
+
+  .attachment-thumbnail {
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+    height: 160px;
+    margin: 16px auto 5px auto;
+    overflow: hidden;
+    text-align: center;
+    width: 113px;
+
+    img {
+      max-height: 100%;
+    }
+
+     i.fas {
+      font-size: 100px;
+      line-height: 160px;
+    }
+  }
+
+  .no-shadow {
+    box-shadow: 0 0 0 0 rgba(0,0,0,0.15);
+  }
+
+  .attachment-label {
+    color: #40A1D7;
+    font-family: Lato;
+    font-size: 16px;
+    height: 39px;
+    line-height: 18px;
+    margin: 0 auto;
+    overflow: hidden;
+    text-align: center;
+    width: 190px;
+  }
+
+  .spencer-bonnet-modif {
+    color: $color-silver-chalice;
+    font-family: Lato;
+    font-size: 12px;
+    height: 45px;
+    line-height: 15px;
+    margin: 0 auto;
+    text-align: center;
+    width: 149px;
+  }
+
+  .remove-icon {
+    bottom: 10px;
+    position: relative;
+    right: 10px;
+  }
+}
+
+.attachments-order {
+  display: inline-block;
+}
+
+.attachments-actions {
+  color: $color-silver-chalice;
+
+  .drag_n_drop_label {
+    font-size: 14px;
+    line-height: 32px;
+  }
+
+  .btn-default {
+    border: 0;
+    color: inherit;
+    margin-left: 10px;
+
+    &:hover {
+      background: inherit;
+    }
+  }
+}
+
 
 

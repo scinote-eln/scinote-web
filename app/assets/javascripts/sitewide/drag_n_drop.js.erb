@@ -187,10 +187,10 @@
     function listItems() {
       totalSize = 0;
       _enableSubmitButton();
-      $('.panel-step-attachment-new').remove();
+      $('.attachment-placeholder.new').remove();
       _dragNdropAssetsOff();
       for(var i = 0; i < droppedFiles.length; i++) {
-        $('#new-step-assets-group')
+        $('.attacments.edit')
           .append(_uploadedAssetPreview(droppedFiles[i], i))
           .promise()
           .done(function() {
@@ -269,20 +269,21 @@
     }
 
     function _uploadedAssetPreview(asset, i) {
-      var html = '<div class="panel panel-default panel-step-attachment-new">';
-      html += '<div class="panel-heading">';
-      html += '<span class="fas fa-paperclip"></span>';
-      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>';
-      html += '<div class="pull-right">';
-      html += '<a data-item-id="' + i + '" href="#">';
-      html += '<span class="fas fa-times"></span></a></div></div>';
-      html += '<div class="panel-body">';
-      html += '<label class="control-label">';
-      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>:</label> ';
-      html += truncateLongString(asset.name,
-                                 <%= Constants::FILENAME_TRUNCATION_LENGTH %>);
+      var html = '<div class="attachment-placeholder pull-left new">';
+      html +='<div class="attachment-thumbnail no-shadow %>">';
+      html +='<i class="fas fa-image"></i>';
+      html +='</div>';
+      html +='<div class="attachment-label">' + truncateLongString(asset.name, <%= Constants::FILENAME_TRUNCATION_LENGTH %>);
+      html += '</div>';
+      html +='<div class="spencer-bonnet-modif">';
+      html +='</div>';
+      html +='<div class="remove-icon pull-right">';
+      html +='<a data-item-id="' + i + '" href="#">';
+      html +='<span class="fas fa-trash"></span>';
+      html +='</a>  </div>';
       html += _validateFilesSize(asset);
-      html += '</div></div>';
+      html +='</div>';
+
       return html;
     }
 
