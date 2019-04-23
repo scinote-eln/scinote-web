@@ -1,10 +1,10 @@
-<%= bootstrap_form_for @my_module.protocol, url: update_protocol_description_my_module_path(@my_module, format: :json), remote: :true do |f| %>
+<%= bootstrap_form_for protocol, url: update_url, remote: :true do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
-  <% if @my_module.protocol.description.present? %>
+  <% if protocol.description.present? %>
     <div id="protocol_description_view"
          class="ql-editor tinymce-view"
          data-placeholder="<%= t('my_modules.protocols.protocol_status_bar.empty_description_edit_label') %>">
-      <%= custom_auto_link(@my_module.protocol.tinymce_render(:description),
+      <%= custom_auto_link(protocol.tinymce_render(:description),
                            simple_format: false,
                            tags: %w(img),
                            team: current_team) %>
@@ -18,9 +18,9 @@
                         id: :protocol_description_textarea,
                         class: 'hidden',
                         hide_label: true,
-                        value: sanitize_input(@my_module.protocol.tinymce_render(:description)),
+                        value: sanitize_input(protocol.tinymce_render(:description)),
                         data: {
                           object_type: 'protocol',
-                          object_id: @my_module.protocol.id,
+                          object_id: protocol.id,
                           highlightjs_path: asset_path('highlightjs-github-theme') } ) %>
 <% end %>

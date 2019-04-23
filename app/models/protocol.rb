@@ -267,6 +267,8 @@ class Protocol < ApplicationRecord
   def self.clone_contents(src, dest, current_user, clone_keywords)
     assets_to_clone = []
 
+    TinyMceAsset.clone_assets(src, dest, dest.team)
+
     # Update keywords
     if clone_keywords then
       src.protocol_keywords.each do |keyword|
@@ -343,6 +345,7 @@ class Protocol < ApplicationRecord
       end
 
       # Copy steps tinyMce assets
+<<<<<<< HEAD
       cloned_img_ids = []
       step.tiny_mce_assets.each do |tiny_img|
         tiny_img2 = TinyMceAsset.new(
@@ -357,6 +360,9 @@ class Protocol < ApplicationRecord
         cloned_img_ids << [tiny_img.id, tiny_img2.id]
       end
       step2.reassign_tiny_mce_image_references(cloned_img_ids)
+=======
+      TinyMceAsset.clone_assets(step, step2, dest.team)
+>>>>>>> Update protocol repository for new description format
     end
 
     # Call clone helper
@@ -616,6 +622,7 @@ class Protocol < ApplicationRecord
   def copy_to_repository(new_name, new_protocol_type, link_protocols, current_user)
     clone = Protocol.new(
       name: new_name,
+      description: description,
       protocol_type: new_protocol_type,
       added_by: current_user,
       team: self.team

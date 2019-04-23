@@ -129,6 +129,23 @@ class TinyMceAsset < ApplicationRecord
     ostream
   end
 
+  def self.clone_assets(source, target, team)
+    cloned_img_ids = []
+    source.tiny_mce_assets.each do |tiny_img|
+      tiny_img_clone = TinyMceAsset.new(
+        image: tiny_img.image,
+        estimated_size: tiny_img.estimated_size,
+        object: target,
+        team: team
+      )
+      tiny_img_clone.save
+
+      target.tiny_mce_assets << tiny_img_clone
+      cloned_img_ids << [tiny_img.id, tiny_img_clone.id]
+    end
+    reload_images(cloned_img_ids)
+  end
+
   private
 
   def self_destruct
