@@ -1,4 +1,3 @@
-<% asset = ff.object %>
 <% image_preview = asset.is_image? ? asset.url(:medium) : nil %>
 
 <div class="attachment-placeholder pull-left">
@@ -6,20 +5,23 @@
     <% if image_preview %>
       <%= image_tag image_preview %>
     <% else %>
-      <i class="fas fa-image"></i>
+      <i class="fas <%= file_fa_icon_class_v2(asset) if asset.file_file_name %>"></i>
     <% end %>
   </div>
   <div class="attachment-label"><%= truncate(asset.file_file_name,
                                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></div>
   <div class="spencer-bonnet-modif">
-    Modified: <%= l(asset.updated_at, format: :full_date) if asset.updated_at %>  <br>
+    <%= t('protocols.steps.attachments.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %>  <br>
     <%= number_to_human_size(asset.file.size) %>
   </div>
-  <div class="remove-icon pull-right">
-    <% unless ff.object.file.exists? && ff.object.locked? %>
-      <%= ff.remove_nested_fields_link do %>
-        <span class="fas fa-trash"></span>
+
+  <% if edit_page %>
+    <div class="remove-icon pull-right">
+      <% unless ff.object.file.exists? && ff.object.locked? %>
+        <%= ff.remove_nested_fields_link do %>
+          <span class="fas fa-trash"></span>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+<% end %>
 </div>

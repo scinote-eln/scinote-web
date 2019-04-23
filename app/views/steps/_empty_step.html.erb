@@ -62,8 +62,9 @@
     <div id="new-step-assets-group" class="form-group">
       <div class="col-xs-12 attacments edit">
         <%= f.nested_fields_for :assets do |ff| %>
-          <%= render "form_assets.html.erb", ff: ff, step: step %>
-        <% end %>
+          <%= render partial: 'steps/attachments/placeholder.html.erb',
+                     locals: { edit_page: true, asset: ff.object, ff: ff } %>
+      <% end %>
       </div>
     </div>
   </div>
