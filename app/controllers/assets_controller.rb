@@ -8,7 +8,7 @@ class AssetsController < ApplicationController
   include InputSanitizeHelper
   include FileIconsHelper
 
-  before_action :load_vars
+  before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: :file_present
   before_action :check_edit_permission, only: :edit
 
@@ -44,19 +44,32 @@ class AssetsController < ApplicationController
 
   def file_preview
     response_json = {
+      'id' => @asset.id,
       'type' => (@asset.is_image? ? 'image' : 'file'),
 
       'filename' => truncate(@asset.file_file_name,
-                             length:
-                               Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => download_asset_path(@asset)
+                             length: Constants::FILENAME_TRUNCATION_LENGTH),
+      'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
     }
 
+    can_edit = if @assoc.class == Step
+                 can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
+               elsif @assoc.class == Result
+                 can_manage_module?(@my_module)
+               elsif @assoc.class == RepositoryCell
+                 can_manage_repository_rows?(@repository.team)
+               end
+
     if @asset.is_image?
+      if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
+        response_json['quality'] = @asset.file_image_quality || 90
+      end
       response_json.merge!(
-        'processing'        => @asset.file.processing?,
+        'editable' =>  @asset.editable_image? && can_edit,
+        'mime-type' => @asset.file.content_type,
+        'processing' => @asset.file.processing?,
         'large-preview-url' => @asset.url(:large),
-        'processing-url'    => image_tag('medium/processing.gif')
+        'processing-url' => image_tag('medium/processing.gif')
       )
     else
       response_json.merge!(
@@ -69,29 +82,7 @@ class AssetsController < ApplicationController
     end
 
     if wopi_file?(@asset)
-      can_edit =
-        if @assoc.class == Step
-          can_manage_protocol_in_module?(@protocol) ||
-            can_manage_protocol_in_repository?(@protocol)
-        elsif @assoc.class == Result
-          can_manage_module?(@my_module)
-        elsif @assoc.class == RepositoryCell
-          can_manage_repository_rows?(@repository.team)
-        end
-      file_ext = @asset.file_file_name.split('.').last
-      if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
-        edit_supported = true
-        title = ''
-      else
-        edit_supported = false
-        title = if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-                  I18n.t('assets.wopi_supported_text_formats_title')
-                elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-                  I18n.t('assets.wopi_supported_table_formats_title')
-                else
-                  I18n.t('assets.wopi_supported_presentation_formats_title')
-                end
-      end
+      edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
         partial: 'shared/file_wopi_controlls.html.erb',
         locals: {
@@ -107,6 +98,25 @@ class AssetsController < ApplicationController
         render json: response_json
       end
     end
+  end
+
+  # Check whether the wopi file can be edited and return appropriate response
+  def wopi_file_edit_button_status
+    file_ext = @asset.file_file_name.split('.').last
+    if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
+      edit_supported = true
+      title = ''
+    else
+      edit_supported = false
+      title = if Constants::FILE_TEXT_FORMATS.include?(file_ext)
+                I18n.t('assets.wopi_supported_text_formats_title')
+              elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
+                I18n.t('assets.wopi_supported_table_formats_title')
+              else
+                I18n.t('assets.wopi_supported_presentation_formats_title')
+              end
+    end
+    return edit_supported, title
   end
 
   def download
@@ -141,6 +151,83 @@ class AssetsController < ApplicationController
     @ttl = (tkn.ttl * 1000).to_s
 
     render layout: false
+  end
+
+  def update_image
+    @asset = Asset.find(params[:id])
+    orig_file_size = @asset.file_file_size
+    orig_file_name = @asset.file_file_name
+    return render_403 unless can_read_team?(@asset.team)
+
+    @asset.file = params[:image]
+    @asset.file_file_name = orig_file_name
+    @asset.save!
+    # release previous image space
+    @asset.team.release_space(orig_file_size)
+    # Post process file here
+    @asset.post_process_file(@asset.team)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'shared/asset_link',
+            locals: { asset: @asset, display_image_tag: true },
+            formats: :html
+          )
+        }
+      end
+    end
+  end
+
+  # POST: create_wopi_file_path
+  def create_wopi_file
+    # Presence validation
+    params.require(%i(element_type element_id file_type))
+
+    # File type validation
+    render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
+
+    # Asset validation
+    file = Paperclip.io_adapters.for(StringIO.new)
+    file.original_filename = "#{params[:file_name]}.#{params[:file_type]}"
+    file.content_type = wopi_content_type(params[:file_type])
+    asset = Asset.new(file: file, created_by: current_user, file_present: true)
+
+    unless asset.valid?(:wopi_file_creation)
+      render json: {
+        message: asset.errors
+      }, status: 400 and return
+    end
+
+    # Create file depending on the type
+    if params[:element_type] == 'Step'
+      step = Step.find(params[:element_id].to_i)
+      render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
+                                  can_manage_protocol_in_repository?(step.protocol)
+      step_asset = StepAsset.create!(step: step, asset: asset)
+
+      edit_url = edit_asset_url(step_asset.asset_id)
+    elsif params[:element_type] == 'Result'
+      my_module = MyModule.find(params[:element_id].to_i)
+      render_403 and return unless can_manage_module?(my_module)
+
+      # First create result and then the asset
+      result = Result.create(name: file.original_filename,
+                             my_module: my_module,
+                             user: current_user)
+      result_asset = ResultAsset.create!(result: result, asset: asset)
+
+      edit_url = edit_asset_url(result_asset.asset_id)
+    else
+      render_404 and return
+    end
+
+    # Return edit url
+    render json: {
+      success: true,
+      edit_url: edit_url
+    }, status: :ok
   end
 
   private

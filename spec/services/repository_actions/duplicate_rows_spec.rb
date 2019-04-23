@@ -79,5 +79,17 @@ describe RepositoryActions::DuplicateRows do
       service_obj.call
       expect(service_obj.number_of_duplicated_items).to eq 0
     end
+
+    it 'calls create activity for copying intentory items 3 times' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call).with(hash_including(activity_type: :copy_inventory_item))).exactly(3).times
+
+      described_class.new(user, repository, @rows_ids).call
+    end
+
+    it 'adds 3 activities in DB' do
+      expect { described_class.new(user, repository, @rows_ids).call }
+        .to(change { Activity.count }.by(3))
+    end
   end
 end

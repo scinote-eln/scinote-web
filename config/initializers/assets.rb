@@ -35,6 +35,7 @@ Rails.application.config.assets.precompile += %w(my_modules/protocols.js)
 Rails.application.config.assets.precompile +=
   %w(my_modules/protocols/protocol_status_bar.js)
 Rails.application.config.assets.precompile += %w(my_modules/results.js)
+Rails.application.config.assets.precompile += %w(assets/wopi/create_wopi_file.js)
 Rails.application.config.assets.precompile += %w(results/result_tables.js)
 Rails.application.config.assets.precompile += %w(results/result_assets.js)
 Rails.application.config.assets.precompile += %w(results/result_texts.js)
@@ -65,6 +66,7 @@ Rails.application.config.assets.precompile +=
   %w(protocols/import_export/export.js)
 Rails.application.config.assets.precompile += %w(datatables.js)
 Rails.application.config.assets.precompile += %w(search/index.js)
+Rails.application.config.assets.precompile += %w(global_activities/side_pane.js)
 Rails.application.config.assets.precompile += %w(navigation.js)
 Rails.application.config.assets.precompile += %w(secondary_navigation.js)
 Rails.application.config.assets.precompile += %w(datatables.css)
@@ -89,6 +91,7 @@ Rails.application.config.assets.precompile +=
 Rails.application.config.assets.precompile +=
   %w(repositories/my_module_repository.js)
 Rails.application.config.assets.precompile += %w(activities/index.js)
+Rails.application.config.assets.precompile += %w(global_activities/index.js)
 Rails.application.config.assets.precompile += %w(repository_columns/index.js)
 Rails.application.config.assets.precompile += %w(repositories/show.js)
 Rails.application.config.assets.precompile += %w(sidebar_toggle.js)

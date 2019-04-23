@@ -319,6 +319,9 @@ en:
       users: "Users"
       experiments: "Experiments"
       tasks: "Tasks"
+    activity:
+      visibility_hidden: "Project members only"
+      visibility_visible: "All team members"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
     update:
@@ -584,9 +587,6 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Sucessfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
-      table_log: "%{user} deleted table result <strong>%{result}</strong> on %{date}"
-      text_log: "%{user} deleted text result <strong>%{result}</strong> on %{date}"
-      asset_log: "%{user} deleted file result <strong>%{result}</strong> on %{date}"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
@@ -1309,75 +1309,28 @@ en:
       see_all: "show all"
   activities:
     index:
+      global_activities_title: "Global activities"
       today: "Today"
-      more_activities: "More Activities"
+      more_activities: "Show more activities"
       no_activities: "No activities!"
+      no_activities_message: "No activities could be displayed. Update filters or start using SciNote to generate your first activities."
+      no_activities_task_message: "No activities could be displayed."
+      activity_counter_label: " activity"
+      activities_counter_label: " activities"
+      expand_all: "Expand all"
+      collapse_all: "Collapse all"
     modal:
       modal_title: "Activities"
-    create_project: "<i>%{user}</i> created project <strong>%{project}</strong>."
-    rename_project: "<i>%{user}</i> renamed project <strong>%{project_old}</strong> to <strong>%{project_new}</strong>."
-    change_project_visibility: "<i>%{user}</i> changed project <strong>%{project}</strong>'s visibility to %{visibility}."
-    archive_project: "<i>%{user}</i> moved project <strong>%{project}</strong> to archive."
-    restore_project: "<i>%{user}</i> restored project <strong>%{project}</strong> from archive."
-    assign_user_to_project: "<i>%{assigned_user}</i> was added as %{role} to project <strong>%{project}</strong> by <i>%{assigned_by_user}</i>."
-    change_user_role_on_project: "<i>%{actor}</i> changed <i>%{user}</i>'s role on project <strong>%{project}</strong> to %{role}."
-    unassign_user_from_project: "<i>%{unassigned_user}</i> was removed from project <strong>%{project}</strong> by <i>%{unassigned_by_user}</i>."
-    create_module: "<i>%{user}</i> created task <strong>%{module}</strong>."
-    assign_user_to_module: "<i>%{assigned_user}</i> was added to task <strong>%{module}</strong> by <i>%{assigned_by_user}</i>."
-    unassign_user_from_module: "<i>%{unassigned_user}</i> was removed from task <strong>%{module}</strong> by <i>%{unassigned_by_user}</i>."
-    clone_module: "<i>%{user}</i> copied <strong>%{module_new}</strong> from <strong>%{module_original}</strong> as template."
-    archive_module: "<i>%{user}</i> moved task <strong>%{module}</strong> to archive."
-    restore_module: "<i>%{user}</i> restored task <strong>%{module}</strong> from archive."
-    change_module_description: "<i>%{user}</i> changed task <strong>%{module}</strong>'s description."
-    complete_module: "<i>%{user}</i> completed task <strong>%{module}</strong>."
-    uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
-    assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>"
-    unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>"
-    assign_repository_records: "<i>%{user}</i> assigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> inventory to task <strong>%{task}</strong>"
-    unassign_repository_records: "<i>%{user}</i> unassigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> inventory from task <strong>%{task}</strong>"
-    create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
-    destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
-    add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
-    complete_step: "<i>%{user}</i> completed Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
-    uncomplete_step: "<i>%{user}</i> uncompleted Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
-    check_step_checklist_item: "<i>%{user}</i> completed checklist item <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
-    uncheck_step_checklist_item: "<i>%{user}</i> uncompleted checklist item <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
-    edit_step: "<i>%{user}</i> edited Step %{step} <strong>%{step_name}</strong>."
-    add_asset_result: "<i>%{user}</i> added file result <strong>%{result}</strong>."
-    add_text_result: "<i>%{user}</i> added text result <strong>%{result}</strong>."
-    add_table_result: "<i>%{user}</i> added table result <strong>%{result}</strong>."
-    add_comment_to_result: "<i>%{user}</i> commented on result <strong>%{result}</strong>."
-    archive_asset_result: "<i>%{user}</i> archived file result <strong>%{result}</strong>."
-    archive_text_result: "<i>%{user}</i> archived text result <strong>%{result}</strong>."
-    archive_table_result: "<i>%{user}</i> archived table result <strong>%{result}</strong>."
-    edit_asset_result: "<i>%{user}</i> edited file result <strong>%{result}</strong>."
-    edit_text_result: "<i>%{user}</i> edited text result <strong>%{result}</strong>."
-    edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
-    archive_experiment: "<i>%{user}</i> archived experiment <strong>%{experiment}</strong>."
-    create_experiment: "<i>%{user}</i> created experiment <strong>%{experiment}</strong>."
-    edit_experiment: "<i>%{user}</i> edited experiment <strong>%{experiment}</strong>."
-    clone_experiment: "<i>%{user}</i> copied experiment <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong> as template."
-    move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from project <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
-    add_comment_to_project: "<i>%{user}</i> commented on project <strong>%{project}</strong>."
-    edit_project_comment: "<i>%{user}</i> edited comment on project <strong>%{project}</strong>."
-    delete_project_comment: "<i>%{user}</i> deleted comment on project <strong>%{project}</strong>."
-    add_comment_to_module: "<i>%{user}</i> commented on task <strong>%{module}</strong>."
-    edit_module_comment: "<i>%{user}</i> edited comment on task <strong>%{module}</strong>."
-    delete_module_comment: "<i>%{user}</i> deleted comment on task <strong>%{module}</strong>."
-    edit_step_comment: "<i>%{user}</i> edited comment on Step %{step} <strong>%{step_name}</strong>."
-    delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
-    edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
-    delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
-    start_edit_wopi_file_step: "<i>%{user}</i> started editing File %{file} on Step %{step} <strong>%{step_name}</strong>."
-    start_edit_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
-    unlock_wopi_file_step: "<i>%{user}</i>  closed File %{file} for editing on Step %{step} <strong>%{step_name}</strong>."
-    unlock_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
-    load_protocol_from_file: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from file."
-    load_protocol_from_repository: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from repository."
-    revert_protocol: "<i>%{user}</i> reverted protocol <strong>%{protocol}</strong> from repository."
-    create_report: "<i>%{user}</i> created report <strong>%{report}</strong>."
-    delete_report: "<i>%{user}</i> deleted report <strong>%{report}</strong>."
-    edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
+    result_type:
+      text: "text"
+      table: "table"
+      asset: "file"
+    wupi_file_editing:
+      started: "editing started"
+      finished: "editing finished"
+    protocols:
+      my_to_team_message: 'My protocols to Team protocols'
+      team_to_my_message: 'Team protocols to My protocols'
 
   user_my_modules:
     new:
@@ -1785,7 +1738,7 @@ en:
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Files"
+      files: "Attachments (%{count})"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
       options:
@@ -1799,6 +1752,12 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
+      attachments:
+        sort_new: "Newest first &#8595;"
+        sort_old: "Oldest first &#8593;"
+        sort_atoz: "Name &#8595;"
+        sort_ztoa: "Name &#8593;"
+        modified_label: "Modified:"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1925,8 +1884,8 @@ en:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"
     drag_n_drop:
-      label_html: 'Drag &amp; drop files here, CTRL+V (for images from clipboard) or '
-      browse_label: 'Browse to add'
+      label_html: 'Drag &amp; drop here. Copy &amp Paste images.'
+      browse_label: 'Select to Upload...'
       drop_label: 'Drop to add to Step'
       file_label: 'File'
     from_clipboard:
@@ -1938,6 +1897,18 @@ en:
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
+    create_wopi_file:
+      button_text: 'New Office file'
+      modal_title: 'Create new Microsoft Office Online document'
+      text_field_label: 'Document name & type'
+      text_field_placeholder: 'New Document'
+      ms_word: 'Word<br/>Online'
+      ms_excel: 'Excel<br/>Online'
+      ms_powerpoint: 'PowerPoint<br/>Online'
+      create_document_button: 'Create Document'
+      errors:
+        forbidden: 'You do not have permission to add files.'
+        not_found: 'Element not found.'
   atwho:
     no_results: "No results found"
     users:
@@ -2068,6 +2039,9 @@ en:
   Asset: "File"
   Assets: "Files"
   Download: "Download"
+  Edit: "Edit"
+  Save: "Save"
+  SaveClose: "Save & Close"
   Module: "Task"
   Modules: "Tasks"
   Project: "Project"

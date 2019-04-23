@@ -1,0 +1,28 @@
+<% if subject.in_repository? %>
+  <%= render partial: "global_activities/references/team.html.erb",
+             locals: { team: team, subject: subject&.team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<% else %>
+  <%= render partial: "global_activities/references/my_module.html.erb",
+             locals: { team: team, subject: subject&.my_module, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<% end %>
+<% if subject %>
+  <% if subject.in_repository? %>
+    <% type = :public if subject.in_repository_public? %>
+    <% type = :private if subject.in_repository_private? %>
+    <% type = :archive if subject.in_repository_archived? %>
+    <div class="ga-breadcrumb">
+      <span class="fas fa-edit"></span>
+        <%= route_to_other_team protocols_path(team: subject.team, type: type),
+                                team,
+                                subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                                title: subject.name %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="ga-breadcrumb">
+    <span class="fas fa-edit"></span>
+    <span title="<%= breadcrumbs[:protocol] %>">
+      <%= breadcrumbs[:protocol]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  </div>
+<% end %>

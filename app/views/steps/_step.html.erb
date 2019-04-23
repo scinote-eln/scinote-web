@@ -1,10 +1,29 @@
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
-  <div class="badge-num">
-    <span class="badge size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
-  </div>
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-options pull-right">
+        <% if can_complete_or_checkbox_step?(@protocol) %>
+          <% if step.completed? %>
+            <div data-action="uncomplete-step"
+                 class="complete-step-btn"
+                 data-link-url="<%= toggle_step_state_step_path(step)%>">
+              <button class="btn btn-default">
+                <span class="fas fa-times"></span>
+                <%= t("protocols.steps.options.uncomplete_title") %>
+              </button>
+            </div>
+          <% else %>
+            <div data-action="complete-step"
+                 class="complete-step-btn"
+                 data-link-url="<%= toggle_step_state_step_path(step)%>">
+              <button class="btn btn-toggle">
+                <span class="fas fa-check"></span>
+                <%= t("protocols.steps.options.complete_title") %>
+              </button>
+            </div>
+          <% end %>
+        <% end %>
+
         <% if can_manage_protocol_in_module?(@protocol) ||
               can_manage_protocol_in_repository?(@protocol) %>
           <a data-action="move-step"
@@ -18,7 +37,7 @@
              href="<%= move_down_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.down_arrow_title") %>"
              data-remote="true">
-            <span class="fas fa-arrow-down"></a>
+            <span class="fas fa-arrow-down"></span></a>
           <a data-action="edit-step"
              class="btn btn-link help_tooltips"
              title="<%= t("protocols.steps.options.edit_title") %>"
@@ -26,24 +45,36 @@
              data-remote="true"
              data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_edit') %>"
              data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_edit') %>" >
-            <span class="fas fa-pencil-alt">
+            <span class="fas fa-pencil-alt"></span>
           </a>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
-            <span class="fas fa-trash-alt">
+            <span class="fas fa-trash-alt"></span>
           <% end %>
         <% end %>
       </div>
-      <a class="step-panel-collapse-link"
-         href="#step-panel-<%= step.id %>"
-         data-toggle="collapse"
-         data-remote="true">
-        <span class="fas fa-caret-square-down collapse-step-icon"></span>
-        <strong><%= step.name %></strong> |
-        <span><%= sanitize_input t('protocols.steps.published_on',
-                                   timestamp: l(step.created_at, format: :full),
-                                   user: h(step.user.full_name)) %></span>
-      </a>
+      <div class="left-floats">
+        <a class="step-panel-collapse-link"
+           href="#step-panel-<%= step.id %>"
+           data-toggle="collapse"
+           data-remote="true">
+          <span class="fas fa-caret-square-down collapse-step-icon"></span>
+        </a>
+
+        <span class="step-number"><%= step.position + 1 %></span>
+
+        <a class="step-panel-collapse-link"
+           href="#step-panel-<%= step.id %>"
+           data-toggle="collapse"
+           data-remote="true">
+          <strong><%= step.name %></strong> |
+
+          <span><%= sanitize_input t('protocols.steps.published_on',
+                                     timestamp: l(step.created_at, format: :full),
+                                     user: h(step.user.full_name)) %></span>
+        </a>
+      </div>
+
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
       <div class="panel-body">
@@ -79,19 +110,7 @@
             </div>
           <% end %>
 
-          <% assets = ordered_assets(step) %>
-          <% unless assets.blank? then %>
-            <div class="col-xs-12">
-              <strong><%= t("protocols.steps.files") %></strong>
-              <ul>
-                <% assets.each do |asset| %>
-                  <li>
-                    <%= render partial: "shared/asset_link", locals: { asset: asset, display_image_tag: true }, formats: :html %>
-                  </li>
-                <% end %>
-              </ul>
-            </div>
-          <% end %>
+          <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step } %>
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
@@ -122,28 +141,6 @@
                 <% end %>
               <% end %>
             </div>
-          <% end %>
-
-          <% if can_complete_or_checkbox_step?(@protocol) %>
-            <% if step.completed? %>
-              <div data-action="uncomplete-step"
-                   class="pull-right"
-                   data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-default">
-                  <span class="fas fa-times"></span>
-                  <%= t("protocols.steps.options.uncomplete_title") %>
-                </button>
-              </div>
-            <% else %>
-              <div data-action="complete-step"
-                   class="pull-right"
-                   data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-toggle">
-                  <span class="fas fa-check"></span>
-                  <%= t("protocols.steps.options.complete_title") %>
-                </button>
-              </div>
-            <% end %>
           <% end %>
         </div>
 

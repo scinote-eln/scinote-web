@@ -1,5 +1,6 @@
 class Repository < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
   include RepositoryImportParser
   include Discard::Model
 
@@ -64,6 +65,10 @@ class Repository < ApplicationRecord
     end
   end
 
+  def self.viewable_by_user(_user, teams)
+    where(team: teams)
+  end
+
   def self.name_like(query)
     where('repositories.name ILIKE ?', "%#{query}%")
   end
@@ -108,6 +113,13 @@ class Repository < ApplicationRecord
     end
 
     # If everything is okay, return new_repo
+    Activities::CreateActivityService
+      .call(activity_type: :copy_inventory,
+            owner: created_by,
+            subject: new_repo,
+            team: new_repo.team,
+            message_items: { repository_new: new_repo.id, repository_original: id })
+
     new_repo
   end
 

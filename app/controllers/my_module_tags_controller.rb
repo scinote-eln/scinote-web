@@ -59,6 +59,19 @@ class MyModuleTagsController < ApplicationController
     @mt.created_by = current_user
     @mt.save
 
+    my_module = @mt.my_module
+    Activities::CreateActivityService
+      .call(activity_type: :add_task_tag,
+            owner: current_user,
+            subject: my_module,
+            project:
+              my_module.experiment.project,
+            team: current_team,
+            message_items: {
+              my_module: my_module.id,
+              tag: @mt.tag.id
+            })
+
     respond_to do |format|
       format.json do
         redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
@@ -69,6 +82,19 @@ class MyModuleTagsController < ApplicationController
 
   def destroy
     @mt = MyModuleTag.find_by_id(params[:id])
+
+    Activities::CreateActivityService
+      .call(activity_type: :remove_task_tag,
+            owner: current_user,
+            subject: @mt.my_module,
+            project:
+              @mt.my_module.experiment.project,
+            team: current_team,
+            message_items: {
+              my_module: @mt.my_module.id,
+              tag: @mt.tag.id
+            })
+
     @mt.destroy
 
     respond_to do |format|

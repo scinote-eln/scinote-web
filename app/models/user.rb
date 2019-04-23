@@ -4,6 +4,7 @@ class User < ApplicationRecord
   include VariablesModel
   include User::TeamRoles
   include User::ProjectRoles
+  include TeamBySubjectModel
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -57,7 +58,7 @@ class User < ApplicationRecord
   default_variables(
     export_vars: {
       num_of_export_all_last_24_hours: 0,
-      last_export_timestamp: Date.today.to_time.to_i
+      last_export_timestamp: Time.now.utc.beginning_of_day.to_i
     }
   )
 
@@ -70,7 +71,7 @@ class User < ApplicationRecord
   has_many :user_my_modules, inverse_of: :user
   has_many :my_modules, through: :user_my_modules
   has_many :comments, inverse_of: :user
-  has_many :activities, inverse_of: :user
+  has_many :activities, inverse_of: :owner
   has_many :results, inverse_of: :user
   has_many :samples, inverse_of: :user
   has_many :samples_tables, inverse_of: :user, dependent: :destroy
@@ -209,7 +210,7 @@ class User < ApplicationRecord
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
-  has_many :user_system_notifications
+  has_many :user_system_notifications, dependent: :destroy
   has_many :system_notifications, through: :user_system_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
@@ -515,13 +516,44 @@ class User < ApplicationRecord
   end
 
   def increase_daily_exports_counter!
-    if Time.at(export_vars['last_export_timestamp'] || 0).to_date == Date.today
-      export_vars['num_of_export_all_last_24_hours'] += 1
+    range = Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i
+    last_export = export_vars[:last_export_timestamp] || 0
+    export_vars[:num_of_export_all_last_24_hours] ||= 0
+
+    if range.cover?(last_export)
+      export_vars[:num_of_export_all_last_24_hours] += 1
     else
-      export_vars['last_export_timestamp'] = Date.today.to_time.to_i
-      export_vars['num_of_export_all_last_24_hours'] = 1
+      export_vars[:num_of_export_all_last_24_hours] = 1
     end
+    export_vars[:last_export_timestamp] = Time.now.utc.to_i
     save
+  end
+
+  def has_available_exports?
+    last_export_timestamp = export_vars[:last_export_timestamp] || 0
+
+    # limit 0 means unlimited exports
+    return true if TeamZipExport.exports_limit.zero? || last_export_timestamp < Time.now.utc.beginning_of_day.to_i
+
+    exports_left.positive?
+  end
+
+  def exports_left
+    if (export_vars[:last_export_timestamp] || 0) < Time.now.utc.beginning_of_day.to_i
+      return TeamZipExport.exports_limit
+    end
+
+    TeamZipExport.exports_limit - export_vars[:num_of_export_all_last_24_hours]
+  end
+
+  def global_activity_filter(filters, search_query)
+    query_teams = teams.pluck(:id)
+    query_teams &= filters[:teams].map(&:to_i) if filters[:teams]
+    query_teams &= User.team_by_subject(filters[:subjects]) if filters[:subjects]
+    User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
+        .search(false, search_query)
+        .select(:full_name, :id)
+        .map { |i| { name: i[:full_name], id: i[:id] } }
   end
 
   protected

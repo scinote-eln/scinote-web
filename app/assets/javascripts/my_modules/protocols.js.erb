@@ -9,7 +9,6 @@ var selectedRow = null;
  * Initializes page
  */
 function init() {
-  bindEditDueDateAjax();
   initEditMyModuleDescription();
   initEditProtocolDescription();
   initEditDescription();
@@ -74,57 +73,6 @@ function initEditDescription() {
   });
 }
 
-function bindEditDueDateAjax() {
-  var editDueDateModal = null;
-  var editDueDateModalBody = null;
-  var editDueDateModalTitle = null;
-  var editDueDateModalSubmitBtn = null;
-
-  editDueDateModal = $("#manage-module-due-date-modal");
-  editDueDateModalBody = editDueDateModal.find(".modal-body");
-  editDueDateModalTitle = editDueDateModal.find("#manage-module-due-date-modal-label");
-  editDueDateModalSubmitBtn = editDueDateModal.find("[data-action='submit']");
-
-  $(".due-date-link")
-  .on("ajax:success", function(ev, data, status) {
-    var dueDateLink = $(".task-due-date");
-
-    // Load contents
-    editDueDateModalBody.html(data.html);
-    editDueDateModalTitle.text(data.title);
-
-    // Add listener to form inside modal
-    editDueDateModalBody.find("form")
-    .on("ajax:success", function(ev2, data2, status2) {
-      // Update module's due date
-      dueDateLink.html(data2.module_header_due_date_label);
-
-      // Close modal
-      editDueDateModal.modal("hide");
-    })
-    .on("ajax:error", function(ev2, data2, status2) {
-      // Display errors if needed
-      $(this).renderFormErrors("my_module", data2.responseJSON);
-    });
-
-    // Open modal
-    editDueDateModal.modal("show");
-  })
-  .on("ajax:error", function(ev, data, status) {
-    // TODO
-  });
-
-  editDueDateModalSubmitBtn.on("click", function() {
-    // Submit the form inside the modal
-    editDueDateModalBody.find("form").submit();
-  });
-
-  editDueDateModal.on("hidden.bs.modal", function() {
-    editDueDateModalBody.find("form").off("ajax:success ajax:error");
-    editDueDateModalBody.html("");
-  });
-}
-
 function initCopyToRepository() {
   var link = $("[data-action='copy-to-repository']");
   var modal = $("#copy-to-repository-modal");
@@ -147,6 +95,7 @@ function initCopyToRepository() {
     })
     .on("ajax:error", function(e2, data2) {
       // Display errors in form
+      submitBtn[0].disabled = false;
       if (data2.status === 422) {
         $(this).renderFormErrors("protocol", data2.responseJSON);
       } else {
@@ -156,11 +105,13 @@ function initCopyToRepository() {
     });
 
     modal.modal("show");
+    submitBtn[0].disabled=false
   })
   .on("ajax:error", function() {} );
 
   submitBtn.on("click", function() {
     // Submit the embedded form
+    submitBtn[0].disabled=true
     modalBody.find("form").submit();
   });
 

@@ -65,6 +65,7 @@ class ProjectsOverviewService
   def fetch_records
     due_modules =
       MyModule.active
+              .uncomplete
               .overdue
               .or(MyModule.one_day_prior)
               .distinct

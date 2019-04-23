@@ -53,9 +53,9 @@ module RepositoryDatatableHelper
 
   def assigned_row(record, assigned_rows)
     if assigned_rows&.include?(record)
-      "<span class='circle'>&nbsp;</span>"
+      "<span class='circle-icon'>&nbsp;</span>"
     else
-      "<span class='circle disabled'>&nbsp;</span>"
+      "<span class='circle-icon disabled'>&nbsp;</span>"
     end
   end
 

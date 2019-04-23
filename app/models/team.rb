@@ -1,12 +1,14 @@
 class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
+  include TeamBySubjectModel
 
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
 
   after_create :generate_template_project
+  scope :teams_select, -> { select(:id, :name).order(name: :asc) }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -36,6 +38,7 @@ class Team < ApplicationRecord
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
+  has_many :activities, inverse_of: :team, dependent: :destroy
 
   attr_accessor :without_templates
   attr_accessor :without_intro_demo
@@ -309,6 +312,16 @@ class Team < ApplicationRecord
 
   def protocol_keywords_list
     ProtocolKeyword.where(team: self).pluck(:name)
+  end
+
+  def self.global_activity_filter(filters, search_query)
+    query = where('name ILIKE ?', "%#{search_query}%")
+    if filters[:users]
+      users_team = User.where(id: filters[:users]).joins(:user_teams).group(:team_id).pluck(:team_id)
+      query = query.where(id: users_team)
+    end
+    query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
+    query.select(:id, :name)
   end
 
   private

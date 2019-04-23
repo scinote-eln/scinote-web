@@ -228,10 +228,20 @@ class TeamsController < ApplicationController
   end
 
   def export_projects
-    unless export_proj_requests_exceeded?
+    if current_user.has_available_exports?
       current_user.increase_daily_exports_counter!
 
       generate_export_projects_zip
+
+      Activities::CreateActivityService
+        .call(activity_type: :export_projects,
+              owner: current_user,
+              subject: @team,
+              team: @team,
+              message_items: {
+                team: @team.id,
+                projects: @exp_projects.map(&:name).join(', ')
+              })
 
       render json: {
         flash: t('projects.export_projects.success_flash')
@@ -241,26 +251,24 @@ class TeamsController < ApplicationController
 
   def export_projects_modal
     if @exp_projects.present?
-      limit = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
-      curr_num = current_user.export_vars['num_of_export_all_last_24_hours']
-      if export_proj_requests_exceeded?
-        render json: {
-          html: render_to_string(
-            partial: 'projects/export/error.html.erb',
-            locals: { limit: limit }
-          ),
-          title: t('projects.export_projects.error_title'),
-          status: 'error'
-        }
-      else
+      if current_user.has_available_exports?
         render json: {
           html: render_to_string(
             partial: 'projects/export/modal.html.erb',
             locals: { num_projects: @exp_projects.size,
-                      limit: limit,
-                      num_of_requests_left: limit - curr_num - 1 }
+                      limit: TeamZipExport.exports_limit,
+                      num_of_requests_left: current_user.exports_left - 1 }
           ),
           title: t('projects.export_projects.modal_title')
+        }
+      else
+        render json: {
+          html: render_to_string(
+            partial: 'projects/export/error.html.erb',
+            locals: { limit: TeamZipExport.exports_limit }
+          ),
+          title: t('projects.export_projects.error_title'),
+          status: 'error'
         }
       end
     end
@@ -325,13 +333,6 @@ class TeamsController < ApplicationController
         render_403 unless can_export_project?(current_user, project)
       end
     end
-  end
-
-  def export_proj_requests_exceeded?
-    # Check if user has enough requests for the day
-    limit = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
-    !limit.zero? \
-      && current_user.export_vars['num_of_export_all_last_24_hours'] >= limit
   end
 
   def generate_samples_zip

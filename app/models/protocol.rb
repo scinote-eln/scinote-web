@@ -1,6 +1,7 @@
 class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
+  include SearchableByNameModel
   include TinyMceImages
 
   after_save :update_linked_children
@@ -194,6 +195,14 @@ class Protocol < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(user, teams)
+    where(my_module: MyModule.viewable_by_user(user, teams))
+      .or(where(team: teams)
+            .where('protocol_type = 3 OR '\
+                   '(protocol_type = 2 AND added_by_id = :user_id)',
+                   user_id: user.id))
   end
 
   def linked_modules
@@ -420,6 +429,16 @@ class Protocol < ApplicationRecord
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_private]
     save
+
+    Activities::CreateActivityService
+      .call(activity_type: :move_protocol_in_repository,
+            owner: user,
+            subject: self,
+            team: team,
+            message_items: {
+              protocol: id,
+              storage: I18n.t('activities.protocols.team_to_my_message')
+            })
   end
 
   # This publish action simply moves the protocol from
@@ -437,6 +456,16 @@ class Protocol < ApplicationRecord
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_public]
     save
+
+    Activities::CreateActivityService
+      .call(activity_type: :move_protocol_in_repository,
+            owner: user,
+            subject: self,
+            team: team,
+            message_items: {
+              protocol: id,
+              storage: I18n.t('activities.protocols.my_to_team_message')
+            })
   end
 
   def archive(user)
@@ -465,8 +494,16 @@ class Protocol < ApplicationRecord
           protocol_type: :unlinked
         )
       end
-    end
 
+      Activities::CreateActivityService
+        .call(activity_type: :archive_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id
+              })
+    end
     result
   end
 
@@ -485,6 +522,15 @@ class Protocol < ApplicationRecord
       self.protocol_type = Protocol.protocol_types[:in_repository_private]
     end
     save
+
+    Activities::CreateActivityService
+      .call(activity_type: :restore_protocol_in_repository,
+            owner: user,
+            subject: self,
+            team: team,
+            message_items: {
+              protocol: id
+            })
   end
 
   def update_keywords(keywords)
@@ -635,15 +681,29 @@ class Protocol < ApplicationRecord
       published_on: self.in_repository_public? ? Time.now : nil,
     )
 
-    deep_clone(clone, current_user)
+    cloned = deep_clone(clone, current_user)
+
+    if cloned
+      Activities::CreateActivityService
+        .call(activity_type: :copy_protocol_in_repository,
+             owner: current_user,
+             subject: self,
+             team: team,
+             project: nil,
+             message_items: {
+               protocol_new: clone.id,
+               protocol_original: id
+             })
+    end
+
+    cloned
   end
 
   def destroy_contents(current_user)
     # Calculate total space taken by the protocol
     st = self.space_taken
-
-    self.steps.find_each do |step|
-      unless step.destroy(current_user) then
+    steps.pluck(:id).each do |id|
+      unless Step.find(id).destroy(current_user)
         raise ActiveRecord::RecordNotDestroyed
       end
     end

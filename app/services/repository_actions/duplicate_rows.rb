@@ -36,6 +36,13 @@ module RepositoryActions
         row.repository_cells.each do |cell|
           duplicate_repository_cell(cell, new_row)
         end
+
+        Activities::CreateActivityService
+          .call(activity_type: :copy_inventory_item,
+                owner: @user,
+                subject: @repository,
+                team: @repository.team,
+                message_items: { repository_row_new: new_row.id, repository_row_original: row.id })
       end
     end
 

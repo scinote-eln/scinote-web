@@ -114,15 +114,15 @@ module ApplicationHelper
     # sometimes happens that the "team" param gets wrong data: "{nil, []}"
     # so we have to check if the "team" param is kind of Team object
     team = nil unless team.is_a? Team
-    new_text = smart_annotation_filter_resources(text)
+    new_text = smart_annotation_filter_resources(text, team)
     new_text = smart_annotation_filter_users(new_text, team)
     new_text
   end
 
   # Check if text have smart annotations of resources
   # and outputs a link to resource
-  def smart_annotation_filter_resources(text)
-    SmartAnnotations::TagToHtml.new(current_user, text).html
+  def smart_annotation_filter_resources(text, team)
+    SmartAnnotations::TagToHtml.new(current_user, team, text).html
   end
 
   # Check if text have smart annotations of users
@@ -139,7 +139,10 @@ module ApplicationHelper
   end
 
   # Generate smart annotation link for one user object
-  def popover_for_user_name(user, team = nil, skip_user_status = false)
+  def popover_for_user_name(user,
+                            team = nil,
+                            skip_user_status = false,
+                            skip_avatar = false)
     user_still_in_team = user.teams.include?(team)
 
     user_description = %(<div class='col-xs-4'>
@@ -166,10 +169,16 @@ module ApplicationHelper
 
     user_name = user.full_name
 
+    html = if skip_avatar
+             ''
+           else
+             raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+             "alt='avatar' class='atwho-user-img-popover'" \
+             " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>")
+           end
+
     html =
-      raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
-        "alt='avatar' class='atwho-user-img-popover'" \
-        " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>") +
+      raw(html) +
       raw('<a onClick="$(this).popover(\'show\')" ' \
         'class="atwho-user-popover" data-container="body" ' \
         'data-html="true" tabindex="0" data-trigger="focus" ' \

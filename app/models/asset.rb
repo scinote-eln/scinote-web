@@ -10,12 +10,16 @@ class Asset < ApplicationRecord
 
   # Paperclip validation
   has_attached_file :file,
-                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                              medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
+                    styles: {
+                      large: [Constants::LARGE_PIC_FORMAT, :jpg],
+                      medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
+                      original: { processors: [:image_quality_calculate] }
+                    },
                     convert_options: {
                       medium: '-quality 70 -strip',
                       all: '-background "#d2d2d2" -flatten +matte'
                     }
+
   validates_attachment :file,
                        presence: true,
                        size: {
@@ -34,7 +38,7 @@ class Asset < ApplicationRecord
                                            %r{^image/#{ Regexp.union(
                                              Constants::WHITELISTED_IMAGE_TYPES
                                            ) }}
-                                          [:large, :medium]
+                                          %i(large medium original)
                                         else
                                           {}
                                         end
@@ -45,6 +49,8 @@ class Asset < ApplicationRecord
   # This could cause some problems if you create empty asset and want to
   # assign it to result
   validate :step_or_result_or_repository_asset_value
+  validate :name_should_not_be_empty_without_extension,
+           on: :wopi_file_creation
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -463,6 +469,10 @@ class Asset < ApplicationRecord
     save
   end
 
+  def editable_image?
+    !locked? && %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type
+  end
+
   protected
 
   # Checks if attachments is an image (in post processing imagemagick will
@@ -507,6 +517,15 @@ class Asset < ApplicationRecord
       errors.add(
         :base,
         'Asset can only be result or step or repository cell, not ever.'
+      )
+    end
+  end
+
+  def name_should_not_be_empty_without_extension
+    unless file.original_filename[0..-6].present?
+      errors.add(
+        :file,
+        I18n.t('general.text.not_blank')
       )
     end
   end

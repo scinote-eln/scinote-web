@@ -23,6 +23,19 @@ class TagsController < ApplicationController
           my_module_id: params[:my_module_id],
           tag_id: @tag.id)
         new_mmt.save
+
+        my_module = new_mmt.my_module
+        Activities::CreateActivityService
+          .call(activity_type: :add_task_tag,
+                owner: current_user,
+                subject: my_module,
+                project:
+                  my_module.experiment.project,
+                team: current_team,
+                message_items: {
+                  my_module: my_module.id,
+                  tag: @tag.id
+                })
       end
 
       flash_success = t(

@@ -1,5 +1,6 @@
 class Step < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
   include TinyMceImages
 
   auto_strip_attributes :name, :description, nullify: false
@@ -84,12 +85,20 @@ class Step < ApplicationRecord
     super()
   end
 
+  def self.viewable_by_user(user, teams)
+    where(protocol: Protocol.viewable_by_user(user, teams))
+  end
+
   def can_destroy?
     !assets.map(&:locked?).any?
   end
 
   def my_module
     protocol.present? ? protocol.my_module : nil
+  end
+
+  def position_plus_one
+    position + 1
   end
 
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
@@ -122,24 +131,6 @@ class Step < ApplicationRecord
     @a_ids = nil
     Table.destroy(@t_ids)
     @t_ids = nil
-
-    # Generate "delete" activity, but only if protocol is
-    # located inside module
-    if (protocol.my_module.present?) then
-      Activity.create(
-        type_of: :destroy_step,
-        project: protocol.my_module.experiment.project,
-        experiment: protocol.my_module.experiment,
-        my_module: protocol.my_module,
-        user: @current_user,
-        message: I18n.t(
-          "activities.destroy_step",
-          user: @current_user.full_name,
-          step: position + 1,
-          step_name: name
-        )
-      )
-    end
   end
 
   def set_last_modified_by

@@ -12,6 +12,9 @@
       </div>
       <div class="pull-left result-name">
         <%= result.name %>
+        <% if result.archived? %>
+          <span class="label label-warning"><%=t 'search.index.archived' %></span>
+        <% end %>
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>

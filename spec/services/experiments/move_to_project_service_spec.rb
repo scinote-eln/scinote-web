@@ -11,7 +11,7 @@ describe Experiments::MoveToProjectService do
     create :project, team: team, user_projects: [user_project2]
   end
   let(:experiment) do
-    create :experiment_with_tasks, name: 'MyExp', project: project
+    create :experiment, :with_tasks, name: 'MyExp', project: project
   end
   let(:user) { create :user }
   let(:user_project2) { create :user_project, :normal_user, user: user }
@@ -53,6 +53,13 @@ describe Experiments::MoveToProjectService do
 
     it 'adds Activity record' do
       expect { service_call }.to(change { Activity.all.count })
+    end
+
+    it 'calls create activity service' do
+      expect(Activities::CreateActivityService).to receive(:call)
+        .with(hash_including(activity_type: :move_experiment))
+
+      service_call
     end
   end
 

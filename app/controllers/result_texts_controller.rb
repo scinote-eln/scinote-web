@@ -45,19 +45,7 @@ class ResultTextsController < ApplicationController
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
 
         result_annotation_notification
-        # Generate activity
-        Activity.create(
-          type_of: :add_result,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t(
-            "activities.add_text_result",
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+        log_activity(:add_result)
 
         format.html {
           flash[:success] = t(
@@ -108,19 +96,11 @@ class ResultTextsController < ApplicationController
       success_flash = t("result_texts.archive.success_flash",
             module: @my_module.name)
       if saved
+
+        log_activity(:archive_result)
+
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
-        Activity.create(
-          type_of: :archive_result,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            'activities.archive_text_result',
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+
       end
     elsif @result.archived_changed?(from: true, to: false)
       render_403
@@ -128,19 +108,11 @@ class ResultTextsController < ApplicationController
       saved = @result.save
 
       if saved then
+
+        log_activity(:edit_result)
+
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
-        Activity.create(
-          type_of: :edit_result,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t(
-            "activities.edit_text_result",
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+
       end
     end
 
@@ -236,5 +208,18 @@ class ResultTextsController < ApplicationController
                                       @result.my_module
                                     )))
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @result,
+            team: @my_module.experiment.project.team,
+            project: @my_module.experiment.project,
+            message_items: {
+              result: @result.id,
+              type_of_result: t('activities.result_type.text')
+            })
   end
 end

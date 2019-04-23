@@ -102,12 +102,13 @@ describe ProjectsController, type: :controller do
     end
   end
 
-  describe '#create' do
+  describe 'POST create' do
     context 'in JSON format' do
       let(:params) do
         { project: { name: 'test project A1', team_id: team.id,
                      visibility: 'visible', archived: false } }
       end
+      let(:action) { post :create, params: params, format: :json }
 
       it 'returns success response, then unprocessable_entity on second run' do
         get :create, params: params, format: :json
@@ -116,6 +117,19 @@ describe ProjectsController, type: :controller do
         get :create, params: params, format: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq 'application/json'
+      end
+
+      it 'calls create activity for creating project' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :create_project)))
+
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end
@@ -132,18 +146,54 @@ describe ProjectsController, type: :controller do
     end
   end
 
-  describe '#update' do
+  describe 'PUT update' do
     context 'in HTML format' do
+      let(:action) { put :update, params: params }
       let(:params) do
         { id: project_1.id,
-          project: { name: 'test project A1', team_id: team.id,
-                     visibility: 'visible' } }
+          project: { name: project_1.name, team_id: project_1.team.id,
+                     visibility: project_1.visibility } }
       end
 
       it 'returns redirect response' do
-        put :update, params: params
+        action
         expect(response).to have_http_status(:redirect)
         expect(response.content_type).to eq 'text/html'
+      end
+
+      it 'calls create activity service (change_project_visibility)' do
+        params[:project][:visibility] = 'hidden'
+        expect(Activities::CreateActivityService).to receive(:call)
+          .with(hash_including(activity_type: :change_project_visibility))
+        action
+      end
+
+      it 'calls create activity service (rename_project)' do
+        params[:project][:name] = 'test project changed'
+        expect(Activities::CreateActivityService).to receive(:call)
+          .with(hash_including(activity_type: :rename_project))
+        action
+      end
+
+      it 'calls create activity service (restore_project)' do
+        project_1.update(archived: true)
+        params[:project][:archived] = false
+        expect(Activities::CreateActivityService).to receive(:call)
+          .with(hash_including(activity_type: :restore_project))
+        action
+      end
+
+      it 'calls create activity service (archive_project)' do
+        params[:project][:archived] = true
+        expect(Activities::CreateActivityService).to receive(:call)
+          .with(hash_including(activity_type: :archive_project))
+        action
+      end
+
+      it 'adds activity in DB' do
+        params[:project][:archived] = true
+        expect { action }
+          .to(change { Activity.count })
       end
     end
   end

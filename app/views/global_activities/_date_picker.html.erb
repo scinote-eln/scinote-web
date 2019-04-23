@@ -1,0 +1,23 @@
+<div class="datetime-picker-container" id="<%= id %>">
+  <% if label %>
+    <label class="control-label required" for="calendar-<%= id %>"><%= label %></label>
+  <% end %>
+  <input type="datetime" class="form-control" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" />
+  <%
+    js_format = I18n.backend.date_format.dup
+      js_format.gsub!(/%-d/, 'D')
+      js_format.gsub!(/%d/, 'DD')
+      js_format.gsub!(/%-m/, 'M')
+      js_format.gsub!(/%m/, 'MM')
+      js_format.gsub!(/%b/, 'MMM')
+      js_format.gsub!(/%B/, 'MMMM')
+      js_format.gsub!('%Y', 'YYYY')
+  %>
+  <script type="text/javascript">
+    $(function () {
+      var dt = $('#calendar-<%= id %>');
+      dt.datetimepicker({ useCurrent: <%= use_current %>, ignoreReadonly: true, locale: '<%= I18n.locale %>', format: '<%= js_format %>' });
+      $('#calendar-<%= id %>').data('DateTimePicker').date(null);
+    });
+  </script>
+</div>

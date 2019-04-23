@@ -43,7 +43,7 @@ module Experiments
       @errors.merge!(@c_exp.errors.to_hash) unless @c_exp.valid?
 
       @c_exp = nil unless succeed?
-      @c_exp.delay.generate_workflow_img if succeed?
+      @c_exp.generate_workflow_img if succeed?
       track_activity if succeed?
 
       self
@@ -86,18 +86,14 @@ module Experiments
     end
 
     def track_activity
-      Activity.create(
-        type_of: :clone_experiment,
-        project: @project,
-        experiment: @exp,
-        user: @user,
-        message: I18n.t(
-          'activities.clone_experiment',
-          user: @user.full_name,
-          experiment_new: @c_exp.name,
-          experiment_original: @exp.name
-        )
-      )
+      Activities::CreateActivityService
+        .call(activity_type: :clone_experiment,
+              owner: @user,
+              team: @project.team,
+              project: @c_exp.project,
+              subject: @c_exp,
+              message_items: { experiment_new: @c_exp.id,
+                               experiment_original: @exp.id })
     end
   end
 end

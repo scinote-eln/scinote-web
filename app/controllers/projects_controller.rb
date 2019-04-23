@@ -102,18 +102,7 @@ class ProjectsController < ApplicationController
         project: @project
       )
       up.save
-
-      # Create "project created" activity
-      Activity.create(
-        type_of: :create_project,
-        user: current_user,
-        project: @project,
-        message: t(
-          "activities.create_project",
-          user: current_user.full_name,
-          project: @project.name
-        )
-      )
+      log_activity(:create_project)
 
       message = t('projects.create.success_flash', name: @project.name)
       respond_to do |format|
@@ -168,44 +157,25 @@ class ProjectsController < ApplicationController
     message_visibility = nil
     if (project_params.include? :name) &&
        (project_params[:name] != @project.name)
-      message_renamed = t(
-        'activities.rename_project',
-        user: current_user.full_name,
-        project_old: @project.name,
-        project_new: project_params[:name]
-      )
+      message_renamed = true
     end
     if (project_params.include? :visibility) &&
        (project_params[:visibility] != @project.visibility)
-      message_visibility = t(
-        'activities.change_project_visibility',
-        user: current_user.full_name,
-        project: @project.name,
-        visibility: project_params[:visibility] == "visible" ?
-          t("general.public") :
-          t("general.private")
-      )
+      message_visibility = if project_params[:visibility] == 'visible'
+                             t('projects.activity.visibility_visible')
+                           else
+                             t('projects.activity.visibility_hidden')
+                           end
     end
 
     @project.last_modified_by = current_user
     if !return_error && @project.update(project_params)
       # Add activities if needed
-      if message_visibility.present?
-        Activity.create(
-          type_of: :change_project_visibility,
-          user: current_user,
-          project: @project,
-          message: message_visibility
-        )
-      end
-      if message_renamed.present?
-        Activity.create(
-          type_of: :rename_project,
-          user: current_user,
-          project: @project,
-          message: message_renamed
-        )
-      end
+
+      log_activity(:change_project_visibility, visibility: message_visibility) if message_visibility.present?
+      log_activity(:rename_project) if message_renamed.present?
+      log_activity(:archive_project) if project_params[:archived] == 'true'
+      log_activity(:restore_project) if project_params[:archived] == 'false'
 
       flash_success = t('projects.update.success_flash', name: @project.name)
       if project_params[:archived] == 'true'
@@ -220,34 +190,10 @@ class ProjectsController < ApplicationController
             # The project should be restored
             unless @project.archived
               @project.restore(current_user)
-
-              # "Restore project" activity
-              Activity.create(
-                type_of: :restore_project,
-                user: current_user,
-                project: @project,
-                message: t(
-                  'activities.restore_project',
-                  user: current_user.full_name,
-                  project: @project.name
-                )
-              )
             end
           elsif @project.archived
             # The project should be archived
             @project.archive(current_user)
-
-            # "Archive project" activity
-            Activity.create(
-              type_of: :archive_project,
-              user: current_user,
-              project: @project,
-              message: t(
-                'activities.archive_project',
-                user: current_user.full_name,
-                project: @project.name
-              )
-            )
           end
           redirect_to projects_path
           flash[:success] = flash_success
@@ -391,5 +337,17 @@ class ProjectsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_project?(@project)
+  end
+
+  def log_activity(type_of, message_items = {})
+    message_items = { project: @project.id }.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @project,
+            team: @project.team,
+            project: @project,
+            message_items: message_items)
   end
 end

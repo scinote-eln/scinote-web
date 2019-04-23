@@ -48,7 +48,7 @@
    * Initialize the JS for new project modal to work.
    */
   function initNewProjectModal() {
-    newProjectModal.on('hidden.bs.modal', function() {
+    newProjectModal.off().on('hidden.bs.modal', function() {
       var teamSelect = newProjectModalForm.find('select#project_team_id');
       var teamHidden = newProjectModalForm.find('input#project_visibility_hidden');
       var teamVisible = newProjectModalForm.find('input#project_visibility_visible');
@@ -71,7 +71,7 @@
       teamSelect.selectpicker('refresh');
     });
 
-    newProjectModalForm
+    newProjectModalForm.off()
       .on('ajax:beforeSend', function() {
         animateSpinner(newProjectModalBody);
       })
@@ -88,16 +88,17 @@
         animateSpinner(newProjectModalBody, false);
       });
 
-    newProjectBtn.click(function() {
+    newProjectBtn.off().click(function() {
       // Show the modal
       newProjectModal.modal('show');
+
       return false;
     });
   }
 
   // init project archive/restore function
   function initArchiveRestoreButton(el) {
-    el.find('form.edit_project')
+    el.find('form.edit_project').off()
       .on('ajax:beforeSend', function() {
         animateSpinner($('#projects-cards-view').closest('.tab-content'));
       })
@@ -116,7 +117,7 @@
   }
 
   function initEditProjectButton(el) {
-    el.find(".dropdown-menu a[data-action='edit']")
+    el.find(".dropdown-menu a[data-action='edit']").off()
       .on('ajax:success', function(ev, data) {
         // Update modal title
         editProjectModalTitle.html(data.title);
@@ -125,7 +126,7 @@
         editProjectModalBody.html(data.html);
 
         // Add modal body's submit handler
-        editProjectModal.find('form')
+        editProjectModal.find('form').off()
           .on('ajax:beforeSend', function() {
             animateSpinner(this);
           })
@@ -159,20 +160,20 @@
    */
   function initEditProjectModal() {
     // Edit button click handler
-    editProjectBtn.click(function() {
+    editProjectBtn.off().click(function() {
       // Submit the modal body's form
       editProjectModalBody.find('form').submit();
     });
 
     // On hide modal handler
-    editProjectModal.on('hidden.bs.modal', function() {
+    editProjectModal.off().on('hidden.bs.modal', function() {
       editProjectModalBody.html('');
     });
   }
 
   function initManageUsersModal() {
     // Reload users tab HTML element when modal is closed
-    projectActionsModal.on('hide.bs.modal', function() {
+    projectActionsModal.off('hide.bs.modal').on('hide.bs.modal', function() {
       var projectEl = $('#' + $(this).attr('data-project-id'));
 
       // Load HTML to refresh users list
@@ -195,7 +196,7 @@
     });
 
     // Remove modal content when modal window is closed.
-    projectActionsModal.on('hidden.bs.modal', function() {
+    projectActionsModal.off('hidden.bs.modal').on('hidden.bs.modal', function() {
       projectActionsModalHeader.html('');
       projectActionsModalBody.html('');
       projectActionsModalFooter.html('');
@@ -204,7 +205,7 @@
 
   // Initialize users editing modal remote loading.
   global.initUsersEditLink = function($el) {
-    $el.find('.manage-users-link')
+    $el.find('.manage-users-link').off()
       .on('ajax:before', function() {
         var projectId = $(this).closest('.panel-default').attr('id');
         projectActionsModal.attr('data-project-id', projectId);
@@ -256,7 +257,7 @@
     });
 
     // Remove modal content when modal window is closed.
-    exportProjectsModal.on('hidden.bs.modal', function() {
+    exportProjectsModal.off().on('hidden.bs.modal', function() {
       exportProjectsModalHeader.html('');
       exportProjectsModalBody.html('');
     });
@@ -288,7 +289,7 @@
   // user.
 
   function initAddUserForm() {
-    projectActionsModalBody.find('.add-user-form')
+    projectActionsModalBody.find('.add-user-form').off()
       .on('ajax:success', function(e, data) {
         var errorBlock;
         initUsersModalBody(data);
@@ -306,7 +307,7 @@
 
   // Initialize remove user from project links.
   function initRemoveUserLinks() {
-    projectActionsModalBody.find('.remove-user-link')
+    projectActionsModalBody.find('.remove-user-link').off()
       .on('ajax:success', function(e, data) {
         initUsersModalBody(data);
       });
@@ -314,12 +315,12 @@
 
   //
   function initUserRoleForms() {
-    projectActionsModalBody.find('.update-user-form select')
+    projectActionsModalBody.find('.update-user-form select').off()
       .on('change', function() {
         $(this).parents('form').submit();
       });
 
-    projectActionsModalBody.find('.update-user-form')
+    projectActionsModalBody.find('.update-user-form').off()
       .on('ajax:success', function(e, data) {
         initUsersModalBody(data);
       })
@@ -411,7 +412,7 @@
 
     // initialize project tab remote loading
     $('.panel-project .active').removeClass('active');
-    $('.panel-project .panel-footer [role=tab]')
+    $('.panel-project .panel-footer [role=tab]').off()
       .on('ajax:before', function() {
         var $this = $(this);
         var parentNode = $this.parents('li');
@@ -517,7 +518,7 @@
   }
 
   function initProjectsViewModeSwitch() {
-    $('input[name=projects-view-mode-selector]').on('change', function() {
+    $('input[name=projects-view-mode-selector]').off().on('change', function() {
       if ($(this).val() === projectsViewMode) {
         return;
       }
@@ -685,14 +686,14 @@
         initEditProjectButton($(row));
         initArchiveRestoreButton($(row));
 
-        dropdown.on('show.bs.dropdown', function() {
+        dropdown.off().on('show.bs.dropdown', function() {
           $('body').append(dropdown.css({
             left: dropdown.offset().left,
             position: 'absolute',
             top: dropdown.offset().top
           }).detach());
         });
-        dropdown.on('hidden.bs.dropdown', function() {
+        dropdown.off().on('hidden.bs.dropdown', function() {
           dropdownCell.append(dropdown.removeAttr('style').detach());
         });
       },
@@ -730,7 +731,7 @@
     });
 
     // Handle click on table cells with checkboxes
-    $(TABLE_ID).on('click', 'tbody td', function(e) {
+    $(TABLE_ID).off().on('click', 'tbody td', function(e) {
       if ($(e.target).is(
         '.project-row-selector, .active-project-link, button, span'
       )) {
@@ -743,7 +744,7 @@
     return TABLE;
   }
 
-  $('.projects-view-mode-switch a').on('shown.bs.tab', function(event) {
+  $('.projects-view-mode-switch a').off().on('shown.bs.tab', function(event) {
     if ($(event.target).data('mode') === 'table') {
       // table tab
       $('#sortMenu').hide();

@@ -361,6 +361,7 @@ Rails.application.routes.draw do
         # as well as full activities view (HTML) for single module
         get 'description'
         get 'activities'
+        post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
         patch 'description',
@@ -585,6 +586,11 @@ Rails.application.routes.draw do
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
+    post 'files/:id/update_image', to: 'assets#update_image',
+                                   as: 'update_asset_image'
+    post 'files/create_wopi_file',
+         to: 'assets#create_wopi_file',
+         as: 'create_wopi_file'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
@@ -660,6 +666,16 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :global_activities, only: [:index] do
+    collection do
+      get :search_subjects
+      get :team_filter
+      get :user_filter
+    end
+  end
+
+  post 'global_activities', to: 'global_activities#index'
 
   constraints WopiSubdomain do
     # Office integration

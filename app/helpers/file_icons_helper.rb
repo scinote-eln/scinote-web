@@ -28,6 +28,18 @@ module FileIconsHelper
     fa_class
   end
 
+  def file_fa_icon_class_v2(asset)
+    file_ext = asset.file_file_name.split('.').last
+
+    if Constants::FILE_TEXT_FORMATS.include?(file_ext)
+      return 'fa-file-alt'
+    elsif Constants::WHITELISTED_IMAGE_TYPES.include?(file_ext)
+      return 'fa-image'
+    else
+      return 'fa-paperclip'
+    end
+  end
+
   # For showing next to file
   def file_extension_icon(asset)
     file_ext = asset.file_file_name.split('.').last
@@ -84,6 +96,18 @@ module FileIconsHelper
       t('result_assets.wopi_open_file', app: app)
     elsif action == 'edit'
       t('result_assets.wopi_edit_file', app: app)
+    end
+  end
+
+  # Returns correct content type for given extension
+  def wopi_content_type(extension)
+    case extension
+    when 'docx'
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    when 'xlsx'
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    when 'pptx'
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     end
   end
 end

@@ -46,6 +46,8 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.json do
         if @repository.save
+          log_activity(:create_inventory)
+
           flash[:success] = t('repositories.index.modal_create.success_flash',
                               name: @repository.name)
           render json: { url: repository_path(@repository) },
@@ -73,6 +75,9 @@ class RepositoriesController < ApplicationController
   def destroy
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
+
+    log_activity(:delete_inventory) # Log before delete id
+
     @repository.discard
     @repository.destroy_discarded(current_user.id)
     redirect_to team_repositories_path
@@ -99,6 +104,9 @@ class RepositoriesController < ApplicationController
         if @repository.save
           flash[:success] = t('repositories.index.rename_flash',
                               old_name: old_name, new_name: @repository.name)
+
+          log_activity(:rename_inventory) # Acton only for renaming
+
           render json: {
             url: team_repositories_path(repository: @repository)
           }, status: :ok
@@ -264,6 +272,15 @@ class RepositoriesController < ApplicationController
   def export_repository
     if params[:row_ids] && params[:header_ids]
       RepositoryZipExport.generate_zip(params, @repository, current_user)
+
+      Activities::CreateActivityService
+        .call(activity_type: :export_inventory_items,
+              owner: current_user,
+              subject: current_team,
+              team: current_team,
+              message_items: {
+                repository: @repository.id
+              })
     else
       flash[:alert] = t('zip_export.export_error')
     end
@@ -336,5 +353,14 @@ class RepositoriesController < ApplicationController
           status: :unprocessable_entity
       end
     end
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @repository,
+            team: @team,
+            message_items: { repository: @repository.id })
   end
 end

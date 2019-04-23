@@ -1,27 +1,36 @@
-<% provide(:head_title, t("my_modules.activities.head_title", project: h(@my_module.experiment.project.name), module: h(@my_module.name)).html_safe) %>
+<% provide(:head_title, t("my_modules.activities.head_title", project: h(@my_module.experiment.project.name), module: h(@my_module.name))) %>
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane">
+<div class="global-activities-container container-flex  task_activities">
   <div class="row">
-    <% if @activities.length == 0 %>
-      <div class="col-xs-12">
-        <em><%= t 'my_modules.activities.no_activities' %></em>
+    <div class="ga-top col-md-12 task_activities">
+      <%= render partial: "my_modules/activities/top_pane" %>
+    </div>
+
+    <div class="ga-side col-lg-3 col-md-12 col-xl-2  task_activities  perfect-scrollbar">
+      <%= render partial: "my_modules/activities/side_filters" %>
+    </div>
+
+    <div class="ga-main col-lg-9 col-md-12 col-xl-10  task_activities  perfect-scrollbar">
+      <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
+        <p><%= t('activities.index.no_activities_task_message') %></p>
       </div>
-    <% else %>
-      <div class="col-xs-12">
-        <%= render partial: "my_modules/activities/list_activities.html.erb" %>
-        <!-- Load more activities -->
-        <% if @overflown %>
-          <div class="col-sm-8 fluid-content text-center">
-            <a class="btn btn-default btn-more-activities" href="<%= @more_activities_url %>" data-remote="true">
-              <%= t('my_modules.activities.more_activities') %></a>
-          </div>
-        <% end %>
+      <div class="ga-activities-list"
+           data-activities-url="<%= activities_my_module_path(@my_module) %>"
+           data-starting-timestamp="<%= @starting_timestamp %>">
+        <%= render partial: "global_activities/activity_list.html.erb" %>
+      </div>
+      <div class="text-center">
+        <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
+           data-next-page="<%= @next_page %>">
+          <%= t'activities.index.more_activities' %>
+        </a>
       </div>
     </div>
-  <% end %>
+
   </div>
 </div>
 
-<%= javascript_include_tag("my_modules/activities") %>
+<%= javascript_include_tag 'global_activities/index.js' %>
+<%= javascript_include_tag 'global_activities/side_pane.js' %>

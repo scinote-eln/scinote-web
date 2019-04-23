@@ -51,17 +51,7 @@ class ProjectCommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         project_comment_annotation_notification
-        # Generate activity
-        Activity.create(
-          type_of: :add_comment_to_project,
-          user: current_user,
-          project: @project,
-          message: t(
-            'activities.add_comment_to_project',
-            user: current_user.full_name,
-            project: @project.name
-          )
-        )
+        log_activity(:add_comment_to_project)
 
         format.json {
           render json: {
@@ -107,19 +97,9 @@ class ProjectCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.save
-
           project_comment_annotation_notification(old_text)
-          # Generate activity
-          Activity.create(
-            type_of: :edit_project_comment,
-            user: current_user,
-            project: @project,
-            message: t(
-              'activities.edit_project_comment',
-              user: current_user.full_name,
-              project: @project.name
-            )
-          )
+          log_activity(:edit_project_comment)
+
           message = custom_auto_link(@comment.message, team: current_team)
           render json: { comment: message }, status: :ok
         else
@@ -134,17 +114,8 @@ class ProjectCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
-          # Generate activity
-          Activity.create(
-            type_of: :delete_project_comment,
-            user: current_user,
-            project: @project,
-            message: t(
-              'activities.delete_project_comment',
-              user: current_user.full_name,
-              project: @project.name
-            )
-          )
+          log_activity(:delete_project_comment)
+
           # 'counter' and 'linked_id' are used for counter badge
           render json: { linked_id: @project.id,
                          counter: @project.project_comments.count },
@@ -197,5 +168,15 @@ class ProjectCommentsController < ApplicationController
       message: t('notifications.project_annotation_message_html',
                  project: link_to(@project.name, project_url(@project)))
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @project,
+            team: @project.team,
+            project: @project,
+            message_items: { project: @project.id })
   end
 end

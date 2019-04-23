@@ -134,7 +134,7 @@ var RepositoryDatatable = (function(global) {
         changeToViewMode();
         updateButtons();
         updateDataTableSelectAllCtrl();
-        initPreviewModal();
+        FilePreviewModal.init();
         // Prevent row toggling when selecting user smart annotation link
         SmartAnnotation.preventPropagation('.atwho-user-popover');
 
@@ -222,7 +222,7 @@ var RepositoryDatatable = (function(global) {
         initRowSelection();
         bindExportActions();
         disableCheckboxToggleOnAssetDownload();
-        initPreviewModal();
+        FilePreviewModal.init();
         initHeaderTooltip();
       }
     });
@@ -1135,7 +1135,7 @@ var RepositoryDatatable = (function(global) {
     currentMode = 'viewMode';
     // Table specific stuff
     TABLE.button(0).enable(true);
-    initPreviewModal();
+    FilePreviewModal.init();
   }
 
   function changeToEditMode() {
@@ -1265,7 +1265,7 @@ var RepositoryDatatable = (function(global) {
         TABLE.search(searchText).draw();
       }
       initRowSelection();
-      initPreviewModal();
+      FilePreviewModal.init();
     });
   }
 

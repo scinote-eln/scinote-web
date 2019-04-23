@@ -54,8 +54,10 @@
     <ul class="nav nav-tabs nav-tabs-less" role="tablist" data-hook="project-footer-icons">
       <li role="presentation">
         <a class="btn btn-link <%= 'disabled' unless active %>"
-           href="<%= url_for project_project_activities_path(project_id: project.id, format: :json) %>"
-           aria-controls="activities-<%= project.id %>" role="tab" data-remote="true">
+           href="/global_activities?<%= Activity.url_search_query(
+              {subjects: {Project: [project.id]}} 
+           ) %>"
+           aria-controls="activities-<%= project.id %>" role="tab" >
           <span class="fas fa-list"></span>
         </a>
       </li>

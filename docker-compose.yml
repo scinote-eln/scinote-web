@@ -24,6 +24,7 @@ services:
                bundle exec rails s -b 0.0.0.0"
     environment:
       - RAILS_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=webpack
     volumes:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/
@@ -38,13 +39,15 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "8080:8080"
+      - "3035:3035"
     command: >
       bash -c "./bin/webpack-dev-server"
     environment:
       - RAILS_ENV=development
     volumes:
       - .:/usr/src/app
+      - scinote_development_bundler:/usr/local/bundle/
+      - scinote_development_files:/usr/src/app/public/system
 
 volumes:
   scinote_development_postgres:

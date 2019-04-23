@@ -3,7 +3,7 @@
 <ul class="no-style double-line content-notifications">
   <% nr_of_notifications = 0 %>
   <% @modules.each do |mod| %>
-    <% if mod.is_overdue? %>
+    <% if mod.is_overdue? && !mod.completed? %>
       <% nr_of_notifications += 1 %>
       <% days = t("projects.index.module_overdue_days", count: mod.overdue_for_days) %>
       <li class="notification alert-red">
@@ -13,7 +13,7 @@
         </div>
         <%=t "projects.index.module_overdue_html", module: mod.name, days: days %>
       </li>
-    <% elsif mod.is_one_day_prior? %>
+    <% elsif mod.is_one_day_prior? && !mod.completed? %>
       <% nr_of_notifications += 1 %>
       <li class="notification alert-yellow">
         <div class="date-time">

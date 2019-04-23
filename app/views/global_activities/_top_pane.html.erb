@@ -1,0 +1,30 @@
+<h3 class="ga-title">
+  <%= t('activities.index.global_activities_title') %>
+</h3>
+<div class="ga-top-actions">
+  <a id="global-activities-expand-all" href="#" data-turbolinks="false">
+    <i class="fas fa-caret-square-down"></i>
+    <%= t('activities.index.expand_all') %>
+  </a>
+  <a id="global-activities-colapse-all" href="#" data-turbolinks="false">
+    <i class="fas fa-caret-square-up"></i>
+    <%= t('activities.index.collapse_all') %>
+  </a>
+</div>
+<!--<div class="ga-search-container">-->
+<!--  <div class="input-group">-->
+<!--    <input type="text" class="form-control" placeholder="Search..." aria-describedby="basic-addon1">-->
+<!--    <span class="input-group-addon" id="basic-addon1">-->
+<!--      <i class="fas fa-search"></i>-->
+<!--    </span>-->
+<!--  </div>-->
+<!--</div>-->
+<div class="ga-tags-container">
+  <ul class="ga-tags perfect-scrollbar"></ul>
+  <div class="clear-container">
+    <span>
+      <i class="fas fa-times"></i>
+      <%= t('global_activities.index.clear_filters') %>
+    </span>
+  </div>
+</div>

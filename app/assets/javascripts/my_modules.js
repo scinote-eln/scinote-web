@@ -273,7 +273,8 @@ function initTagsSelector() {
     colorField: 'color',
     closeOnSelect: true,
     dynamicCreation: true,
-    dynamicCreationDelimiter: ','
+    dynamicCreationDelimiter: ',',
+    withoutArrow: true
   }).on('select2:select', (e) => {
     var params = e.params.data;
     var newTag = null;

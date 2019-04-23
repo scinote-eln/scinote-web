@@ -1,4 +1,4 @@
-/* globals animateSpinner */
+/* globals animateSpinner PerfectScrollbar */
 
 (function() {
   'use strict';
@@ -87,6 +87,28 @@
 
   function initGlobalSwitchForm() {
     var teamSwitch = $('#team-switch');
+    var dropDownMenu = teamSwitch.find('.dropdown-menu');
+    var dropDownHeight;
+    var teamContainter = teamSwitch.find('.team-container')[0];
+    var ps;
+
+    if (typeof teamContainter === 'undefined') return;
+
+    ps = new PerfectScrollbar(teamContainter, { scrollYMarginOffset: 5 });
+    teamSwitch.click(() => {
+      dropDownHeight = dropDownMenu.height();
+      if (teamSwitch.find('.new-team').length === 0) {
+        teamSwitch.find('.edit_user').css('height', '100%');
+      }
+      dropDownMenu.css('height', (dropDownHeight + 'px'));
+      setTimeout(() => {
+        ps.update();
+      }, 0);
+    });
+    teamSwitch.find('.ps__rail-y').click((e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
     teamSwitch
       .find('.dropdown-menu .change-team')
       .on('click', function() {

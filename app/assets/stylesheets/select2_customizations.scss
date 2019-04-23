@@ -1,3 +1,8 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
 @import "constants";
 @import "mixins";
 
@@ -12,7 +17,14 @@
     }
 
     .select2-selection__rendered {
-      width: 200%;
+      width: calc(100% - 26px);
+    }
+
+    .select2-search__field {
+
+      &::placeholder {
+        color: $color-silver-chalice;
+      }
     }
 
     .select2-selection__choice {
@@ -27,8 +39,33 @@
     }
   }
 
+  .select2-arrow {
+    align-items: center;
+    background: $color-white;
+    border: 1px solid $color-alto;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 26px;
+
+    &:hover {
+      background: $color-gainsboro;
+      border: 1px solid $color-silver-chalice;
+    }
+
+    .caret {
+      margin: 0;
+    }
+  }
+
   .select2-dropdown {
     border: 1px solid $color-alto;
+    z-index: 1500;
 
     .select2_select_all {
       border: 0;
@@ -41,10 +78,8 @@
       width: 100%;
     }
 
-    .select2-results__option[role="group"] {
-      strong {
-        font-size: $font-size-base;
-      }
+    .select2-results__options {
+      position: relative;
     }
 
     .select2-results__option[role="treeitem"] {
@@ -54,17 +89,13 @@
       position: relative;
 
       &::before {
-        background: $color-white;
-        border: 1px solid $color-emperor;
-        border-radius: 6px;
-        content: "";
-        height: 12px;
+        content: "\f0c8";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 400;
         left: 0;
-        margin: 9px;
+        margin: 7px 0 0 12px;
         position: absolute;
         top: 0;
-        transition: .3s;
-        width: 12px;
       }
 
       &.select2-results__option--highlighted {
@@ -76,12 +107,89 @@
         background: $color-concrete;
 
         &::before {
-          background: $color-emperor;
+          content: "\f14a";
+          font-weight: 400;
         }
+      }
+
+      &.arrow_pointer {
+        background: $color-alto;
       }
 
       &:hover {
         background: $color-alto;
+      }
+
+      &.loading-results {
+        background: $color-white;
+        border-bottom: 1px solid $color-alto;
+        padding-left: 10px;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        &::before {
+          content: "";
+        }
+      }
+    }
+
+    .select2-results__option[role="group"] {
+
+      strong {
+        font-size: $font-size-base;
+      }
+    }
+
+    &.custom-group {
+      .select2-results__option[role="group"] {
+
+        .select2-results__group {
+          cursor: pointer;
+          padding-left: 30px;
+          position: relative;
+
+          &::before {
+            content: "\f0c8";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 400;
+            left: 0;
+            margin: 7px 0 0 12px;
+            position: absolute;
+            top: 0;
+          }
+
+          &:hover {
+            background: $color-alto;
+          }
+        }
+
+        &[data-toogle="all"] {
+
+          .select2-results__group {
+            background: $color-concrete;
+
+            &::before {
+              content: "\f14a";
+              font-weight: 400;
+            }
+          }
+        }
+
+        &.arrow_pointer {
+
+          .select2-results__group {
+            background: $color-alto;
+          }
+        }
+
+        .select2-results__option[role="treeitem"] {
+          padding-left: 45px;
+
+          &::before {
+            left: 15px;
+          }
+        }
       }
     }
   }
@@ -97,6 +205,37 @@
       }
       .select2-selection__choice {
         cursor:pointer;
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .select2-container--open.left-position {
+    position: fixed !important;
+    top: 60px  !important;
+    z-index: 1500;
+
+    .select2-dropdown {
+      border-radius: 0;
+      height: calc(100vh - 70px)  !important;
+      width: 300px !important;
+
+      .select2-results {
+        height: calc(100% - 31px);
+      }
+
+      .select2-results__options {
+        max-height: 100%;
+        position: relative;
+      }
+    }
+
+    &.full {
+
+      .select2-results {
+        height: 100%;
       }
     }
   }

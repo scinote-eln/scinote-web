@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe User, type: :model do
@@ -190,8 +192,8 @@ describe User, type: :model do
     let!(:user_projects) do
       create :user_project, :viewer, project: project, user: user
     end
-    let!(:activity_one) { create :activity, user: user, project: project }
-    let!(:activity_two) { create :activity, user: user, project: project }
+    let!(:activity_one) { create :activity, owner: user, project: project }
+    let!(:activity_two) { create :activity, owner: user, project: project }
 
     it 'is expected to return an array of user\'s activities' do
       activities = user.last_activities
@@ -211,14 +213,14 @@ describe User, type: :model do
           }.from(0).to(1)
       end
 
-      it 'sets last_export_timestamp on today' do
+      it 'sets last_export_timestamp on today\'s timestamp' do
         user.export_vars['last_export_timestamp'] = Date.yesterday.to_time.to_i
         user.save
 
         expect { user.increase_daily_exports_counter! }
           .to change {
             user.reload.export_vars['last_export_timestamp']
-          }.to(Date.today.to_time.to_i)
+          }.to(Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i)
       end
 
       it 'sets new counter for today' do
@@ -236,14 +238,14 @@ describe User, type: :model do
     end
 
     context 'when last_export_timestamp not exists (existing users)' do
-      it 'sets last_export_timestamp on today' do
+      it 'sets last_export_timestamp on today\'s timestamp' do
         user.export_vars.delete('last_export_timestamp')
         user.save
 
         expect { user.increase_daily_exports_counter! }
           .to change {
             user.reload.export_vars['last_export_timestamp']
-          }.from(nil).to(Date.today.to_time.to_i)
+          }.from(nil).to(Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i)
       end
 
       it 'starts count reports with 1' do
@@ -255,6 +257,72 @@ describe User, type: :model do
           .to change {
             user.reload.export_vars['num_of_export_all_last_24_hours']
           }.from(2).to(1)
+      end
+    end
+
+    context 'when num_of_export not exists' do
+      it 'starts count reports with 1' do
+        user.export_vars.delete('num_of_export_all_last_24_hours')
+        user.save
+
+        expect { user.increase_daily_exports_counter! }
+          .to change {
+            user.reload.export_vars['num_of_export_all_last_24_hours']
+          }.from(nil).to(1)
+      end
+    end
+  end
+
+  describe '#has_available_exports?' do
+    let(:user) { create :user }
+
+    context 'when user have export_vars' do
+      it 'returns true when user has avaiable export' do
+        expect(user.has_available_exports?).to be_truthy
+      end
+
+      it 'returns false when user has no avaiable export' do
+        user.export_vars['num_of_export_all_last_24_hours'] = 3
+
+        expect(user.has_available_exports?).to be_falsey
+      end
+    end
+
+    context 'when user do not have export_vars' do
+      it 'returns false when user has no avaiable export' do
+        user.export_vars = {}
+
+        expect(user.has_available_exports?).to be_truthy
+      end
+    end
+  end
+
+  describe '#exports_left' do
+    let(:user) { create :user }
+    context 'when user do have export_vars' do
+      it 'returns 3 when user has all exports avaible' do
+        expect(user.exports_left).to be == 3
+      end
+
+      it 'returns 0 when user has no avaiable export' do
+        user.export_vars['num_of_export_all_last_24_hours'] = 3
+
+        expect(user.exports_left).to be == 0
+      end
+
+      it 'returns 3 when user has invalid number from the past' do
+        user.export_vars['num_of_export_all_last_24_hours'] = -4
+        user.export_vars['last_export_timestamp'] = Date.yesterday.to_time.utc.to_i
+
+        expect(user.exports_left).to be == 3
+      end
+    end
+
+    context 'when user do not have export_vars' do
+      it 'returns false when user has no avaiable export' do
+        user.export_vars = {}
+
+        expect(user.exports_left).to be == 3
       end
     end
   end

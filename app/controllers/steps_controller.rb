@@ -65,22 +65,9 @@ class StepsController < ApplicationController
 
         # Generate activity
         if @protocol.in_module?
-          Activity.create(
-            type_of: :create_step,
-            user: current_user,
-            project: @my_module.experiment.project,
-            experiment: @my_module.experiment,
-            my_module: @my_module,
-            message: t(
-              "activities.create_step",
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
-            )
-          )
+          log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
         else
-          # TODO: Activity for team if step
-          # created in protocol management??
+          log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
         end
 
         # Update protocol timestamp
@@ -179,22 +166,9 @@ class StepsController < ApplicationController
 
         # Generate activity
         if @protocol.in_module?
-          Activity.create(
-            type_of: :edit_step,
-            user: current_user,
-            project: @my_module.experiment.project,
-            experiment: @my_module.experiment,
-            my_module: @my_module,
-            message: t(
-              "activities.edit_step",
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
-            )
-          )
+          log_activity(:edit_step, @my_module.experiment.project, my_module: @my_module.id)
         else
-          # TODO: Activity for team if step
-          # updated in protocol management??
+          log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
         end
 
         # Update protocol timestamp
@@ -228,6 +202,13 @@ class StepsController < ApplicationController
       team = @protocol.team
       previous_size = @step.space_taken
 
+      # Generate activity
+      if @protocol.in_module?
+        log_activity(:destroy_step, @my_module.experiment.project, my_module: @my_module.id)
+      else
+        log_activity(:delete_step_in_protocol_repository, nil, protocol: @protocol.id)
+      end
+
       # Destroy the step
       @step.destroy(current_user)
 
@@ -240,12 +221,12 @@ class StepsController < ApplicationController
 
       flash[:success] = t(
         'protocols.steps.destroy.success_flash',
-        step: (@step.position + 1).to_s
+        step: (@step.position_plus_one).to_s
       )
     else
       flash[:error] = t(
         'protocols.steps.destroy.error_flash',
-        step: (@step.position + 1).to_s
+        step: (@step.position_plus_one).to_s
       )
     end
 
@@ -268,41 +249,28 @@ class StepsController < ApplicationController
 
         # Create activity
         if changed
-          str = if checked
-                  'activities.check_step_checklist_item'
-                else
-                  'activities.uncheck_step_checklist_item'
-                end
           completed_items = @chk_item.checklist.checklist_items
                                      .where(checked: true).count
           all_items = @chk_item.checklist.checklist_items.count
           text_activity = smart_annotation_parser(@chk_item.text)
                           .gsub(/\s+/, ' ')
-          message = t(
-            str,
-            user: current_user.full_name,
-            checkbox: text_activity,
-            step: @chk_item.checklist.step.position + 1,
-            step_name: @chk_item.checklist.step.name,
-            completed: completed_items,
-            all: all_items
-          )
-
+          type_of = if checked
+                      :check_step_checklist_item
+                    else
+                      :uncheck_step_checklist_item
+                    end
           # This should always hold true (only in module can
           # check items be checked, but still check just in case)
           if @protocol.in_module?
-            Activity.create(
-              user: current_user,
-              project: @protocol.my_module.experiment.project,
-              experiment: @protocol.my_module.experiment,
-              my_module: @protocol.my_module,
-              message: message,
-              type_of: if checked
-                         :check_step_checklist_item
-                       else
-                         :uncheck_step_checklist_item
-                       end
-            )
+            log_activity(type_of,
+                         @protocol.my_module.experiment.project,
+                         my_module: @my_module.id,
+                         step: @chk_item.checklist.step.id,
+                         step_position: { id: @chk_item.checklist.step.id,
+                                          value_for: 'position_plus_one' },
+                         checkbox: text_activity,
+                         num_completed: completed_items.to_s,
+                         num_all: all_items.to_s)
           end
         end
       else
@@ -332,30 +300,17 @@ class StepsController < ApplicationController
         if changed
           completed_steps = @protocol.steps.where(completed: true).count
           all_steps = @protocol.steps.count
-          str = 'activities.uncomplete_step'
-          str = 'activities.complete_step' if completed
 
-          message = t(
-            str,
-            user: current_user.full_name,
-            step: @step.position + 1,
-            step_name: @step.name,
-            completed: completed_steps,
-            all: all_steps
-          )
-
+          type_of = completed ? :complete_step : :uncomplete_step
           # Toggling step state can only occur in
           # module protocols, so my_module is always
           # not nil; nonetheless, check if my_module is present
           if @protocol.in_module?
-            Activity.create(
-              user: current_user,
-              project: @protocol.my_module.experiment.project,
-              experiment: @protocol.my_module.experiment,
-              my_module: @protocol.my_module,
-              message: message,
-              type_of: completed ? :complete_step : :uncomplete_step
-            )
+            log_activity(type_of,
+                         @protocol.my_module.experiment.project,
+                         my_module: @my_module.id,
+                         num_completed: completed_steps.to_s,
+                         num_all: all_steps.to_s)
           end
         end
 
@@ -642,5 +597,19 @@ class StepsController < ApplicationController
         :_destroy
       ]
     )
+  end
+
+  def log_activity(type_of, project = nil, message_items = {})
+    default_items = { step: @step.id,
+                      step_position: { id: @step.id, value_for: 'position_plus_one' } }
+    message_items = default_items.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @protocol,
+            team: current_team,
+            project: project,
+            message_items: message_items)
   end
 end

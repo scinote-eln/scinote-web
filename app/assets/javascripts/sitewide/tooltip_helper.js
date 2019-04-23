@@ -16,6 +16,7 @@
         var link = $(obj).data('tooltiplink');
         var textData = $(obj).data('tooltipcontent');
         var customStyle = $(obj).data('tooltipstyle');
+        obj.dataset.tooltipId = i;
 
         $(obj)
           .popover({
@@ -26,7 +27,7 @@
             content: 'popovers will not display if empty',
             template:
               '<div class="popover tooltip_' + i + '_window tooltip-open" '
-              + 'role="tooltip" style="' + customStyle + '">'
+              + 'role="tooltip" style="' + customStyle + '" data-popover-id="' + i + '">'
               + '<div class="popover-body" >' + textData + '</div>'
               + '<br><br><br>'
               + '<div class="popover-footer">'
@@ -59,7 +60,6 @@
             clearTimeout(leaveTimeout);
             enterTimeout = setTimeout(function() {
               var top;
-
               if ($(obj).hover().length > 0) {
                 $(obj).popover('show');
                 $('.tooltip_' + i + '_window').removeClass('tooltip-enter');
@@ -83,6 +83,33 @@
     $(document.body).on('click', function() {
       $('.help_tooltips').each(function(i, obj) {
         $(obj).popover('hide');
+      });
+      $('.popover.tooltip-open').each(function(i, obj) {
+        if ($('*[data-tooltip-id="' + obj.dataset.popoverId + '"]').length === 0) {
+          $(obj).remove();
+        }
+      });
+    });
+    $(document.body).on('mousemove', function(e) {
+      var mouse = { x: e.clientX, y: e.clientY };
+      $('.popover.tooltip-open').each(function(i, obj) {
+        var tooltipObj = '*[data-tooltip-id="' + obj.dataset.popoverId + '"]';
+        var objHeight = $(tooltipObj)[0].clientHeight;
+        var objWidth = $(tooltipObj)[0].clientWidth;
+        var objLeft = $(tooltipObj)[0].offsetLeft;
+        var objTop = $(tooltipObj)[0].offsetTop;
+        var objCorners = {
+          tl: { x: objLeft, y: objTop },
+          tr: { x: (objLeft + objWidth), y: objTop },
+          bl: { x: objLeft, y: (objTop + objHeight) },
+          br: { x: (objLeft + objWidth), y: (objTop + objHeight) }
+        };
+        if (
+          !(mouse.x > objCorners.tl.x && mouse.x < objCorners.br.x)
+          || !(mouse.y > objCorners.tl.y && mouse.y < objCorners.br.y)
+        ) {
+          $(tooltipObj).popover('hide');
+        }
       });
     });
   };

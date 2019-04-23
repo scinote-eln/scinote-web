@@ -1,0 +1,17 @@
+<%= render partial: "global_activities/references/project.html.erb",
+           locals: { team: team, subject: subject&.project, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<div class="ga-breadcrumb">
+  <%= image_tag 'icon_small/experiment.svg' %>
+  <% if subject&.navigable? %>
+    <% path = subject.archived? ? experiment_archive_project_path(subject.project) : canvas_experiment_path(subject) %>
+    <%= route_to_other_team(path,
+                            team,
+                            subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                            title: subject.name) %>
+  <% else %>
+    <% name = subject&.name || breadcrumbs[:experiment] %>
+    <span title="<%= name %>">
+      <%= name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  <% end %>
+</div>

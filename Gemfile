@@ -4,6 +4,8 @@ source 'http://rubygems.org'
 
 ruby '2.4.5'
 
+
+gem 'webpacker', '~> 3.5'
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form'
 gem 'devise', '~> 4.3.0'
@@ -16,7 +18,6 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'sass-rails', '~> 5.0.6'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
-gem 'webpacker', '~> 2.0'
 gem 'yomu'
 
 # Gems for OAuth2 subsystem
@@ -80,7 +81,6 @@ gem 'wkhtmltopdf-heroku'
 
 gem 'aws-sdk', '~> 2'
 gem 'paperclip', '~> 5.3' # File attachment, image attachment library
-
 gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
@@ -96,9 +96,6 @@ gem 'tinymce-rails', '~> 4.9.3' # Rich text editor - SEE BELOW
 # TinyMCE files which might cause errors
 
 gem 'base62' # Used for smart annotations
-gem 'devise_security_extension',
-    git: 'https://github.com/phatworx/devise_security_extension.git',
-    ref: 'b2ee978'
 gem 'newrelic_rpm'
 
 # Permission helper Gem

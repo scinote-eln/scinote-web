@@ -1,0 +1,386 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+@import "constants";
+@import "mixins";
+
+.global-activities-container {
+  background: $color-white;
+  height: calc(100vh - 89px);
+  margin-top: 2em;
+  padding: 0 15px;
+
+  &.task_activities {
+    height: calc(100vh - 126px);
+  }
+
+  > .row {
+    height: 100%;
+    position: relative;
+  }
+
+  .ga-main {
+    border-right: 1px solid $gray-lighter;
+    float: right;
+    height: calc(100% - 160px);
+    overflow: hidden;
+    padding-top: 10px;
+    position: relative;
+
+    &.task_activities {
+      height: calc(100% - 70px);
+    }
+
+    .ga-activities-list {
+      grid-area: activities;
+
+      .activities-day {
+        margin-bottom: 10px;
+
+        .date-container {
+          max-width: 105px;
+          padding-right: 0;
+        }
+
+        .date-activities {
+          min-width: calc(100% - 105px);
+        }
+      }
+    }
+
+    .activities-counter-label {
+      margin-left: 10px;
+    }
+
+    .activities-group {
+      list-style: none;
+      margin-bottom: 0;
+      padding-left: 0;
+    }
+
+    .activities-group-expand-button {
+      color: $color-emperor;
+
+      .fas {
+        display: inline-block;
+        width: 10px;
+      }
+    }
+
+    .activity-card {
+      border-radius: 5px;
+      margin-right: 20px;
+      padding: 10px;
+      padding-left: 40px;
+
+      &:hover {
+        background-color: $brand-primary-light;
+      }
+
+      .activity-timestamp {
+        color: $color-silver-chalice;
+      }
+
+      .navigational-breadcrumbs {
+        color: $color-silver-chalice;
+        display: flex;
+        flex-wrap: wrap;
+
+        .ga-breadcrumb {
+          margin-left: 15px;
+        }
+      }
+
+      p {
+        margin-bottom: 3px;
+        text-indent: -35px;
+      }
+
+      .atwho-user-img-popover {
+        margin: -5px 0;
+      }
+    }
+
+    .no-activities-message {
+      margin-top: 20px;
+    }
+  }
+}
+
+.ga-side {
+  float: right;
+  height: calc(100% - 160px);
+  overflow: hidden;
+  position: relative;
+
+  &.task_activities {
+    height: calc(100% - 70px);
+  }
+
+  .filter-block {
+    padding: 10px 0;
+    width: 100%;
+
+    .title {
+      float: left;
+      font-size: 16px;
+      line-height: 20px;
+      margin-bottom: 5px;
+      width: calc(100% - 50px);
+
+      &.sub {
+        font-size: 12px;
+      }
+    }
+
+    .clear {
+      cursor: pointer;
+      float: right;
+      line-height: 12px;
+      margin-bottom: 5px;
+      padding-top: 8px;
+    }
+
+    .select-container {
+      width: 100%;
+    }
+  }
+
+  .date-selector {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+
+    .hot-buttons {
+      display: inline-block;
+      width: 100%;
+
+      .hot-button {
+        border: 0;
+        cursor: pointer;
+        float: left;
+        margin: 0;
+        opacity: .7;
+        text-align: left;
+        width: calc(50% - 25px);
+
+        &.selected {
+          background: $brand-light-blue;
+          opacity: 1;
+        }
+
+        &:nth-child(even) {
+          margin-left: 20px;
+        }
+
+        &:nth-child(odd) {
+          margin-right: 20px;
+        }
+
+      }
+    }
+
+    .title {
+      margin-top: 0;
+    }
+
+    .from,
+    .to {
+      float: left;
+      position: relative;
+      width: calc(50% - 15px);
+    }
+
+    .separator {
+      background: $color-alto;
+      float: left;
+      height: 2px;
+      margin: 16px 10px;
+      position: relative;
+      width: 10px;
+    }
+  }
+}
+
+.ga-top {
+  border-bottom: 1px solid $gray-lighter;
+  height: 160px;
+
+  &.task_activities {
+    height: 70px;
+  }
+
+  .ga-title {
+    border-bottom: 1px solid $color-gainsboro;
+    height: 35px;
+    left: -15px;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    width: calc(100% + 30px);
+  }
+
+  .ga-top-actions {
+    float: left;
+    line-height: 20px;
+    margin: 5px 0;
+    position: relative;
+    width: 200px;
+
+    a {
+      color: $color-emperor;
+      margin: 0 5px;
+    }
+
+    span {
+      display: inline-block;
+      text-align: center;
+      width: 95px;
+    }
+  }
+
+  .ga-search-container {
+    float: left;
+    margin: 5px;
+    max-width: 700px;
+    position: relative;
+    width: calc(100% - 220px);
+  }
+
+  .ga-tags-container {
+    display: inline-block;
+    margin-top: 5px;
+    width: 100%;
+
+    .clear-container {
+      float: right;
+      position: relative;
+      text-align: right;
+      width: 100px;
+
+      span {
+        cursor: pointer;
+        display: inline-block;
+        line-height: 18px;
+        margin-top: 5px;
+
+        i {
+          float: left;
+          font-size: 18px;
+          margin-right: 10px;
+          position: relative;
+        }
+      }
+    }
+
+    .ga-tags {
+      float: left;
+      height: 64px;
+      margin: 0;
+      overflow: hidden;
+      padding-left: 0;
+      position: relative;
+      width: calc(100% - 100px);
+
+      li {
+        background: $color-concrete;
+        border: 1px solid $color-alto;
+        border-radius: 4px;
+        cursor: default;
+        float: left;
+        list-style: none;
+        margin-right: 5px;
+        margin-top: 5px;
+        padding: 0 5px;
+
+        .select2-selection__choice__remove {
+          color: $color-dove-gray;
+          cursor: pointer;
+          display: inline-block;
+          float: right;
+          font-weight: bold;
+          margin: 0;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1199px) {
+  .global-activities-container {
+    height: auto;
+
+    > .row {
+      height: auto;
+    }
+  }
+
+  .ga-main {
+    width: 100%;
+  }
+
+  .ga-top {
+
+    .ga-tags {
+      height: auto;
+      min-height: 60px;
+    }
+  }
+
+  .ga-side {
+    border-bottom: 1px solid $gray-lighter;
+    height: auto;
+
+    .filter-block {
+
+      &.small-left {
+        float: left;
+        width: calc(60% - 10px);
+
+        .title {
+          width: 120px;
+        }
+
+        .select-container {
+          float: left;
+          width: calc(100% - 200px);
+
+          .select2 {
+            margin: 4px 0;
+          }
+        }
+
+        .clear {
+          line-height: 20px;
+          padding: 0;
+          width: 70px;
+        }
+      }
+
+      &.small-right {
+        float: right;
+        width: 40%;
+      }
+    }
+  }
+}
+
+// Common code
+
+.datetime-picker-container {
+  position: relative;
+
+  input {
+    background-color: transparent !important;
+    box-shadow: none;
+    color: inherit;
+    font-size: 13px;
+    padding-left: 5px;
+
+    &::placeholder {
+      color: $color-silver-chalice;
+    }
+  }
+}

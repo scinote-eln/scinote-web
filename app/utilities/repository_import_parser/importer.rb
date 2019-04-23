@@ -107,6 +107,9 @@ module RepositoryImportParser
             errors = true
             raise ActiveRecord::Rollback
           end
+
+          # Disable per row activity logging
+          # log_activity(record_row)
           @new_rows_added += 1
         end
       end
@@ -154,6 +157,19 @@ module RepositoryImportParser
         return new_column
       end
       current_column
+    end
+
+    def log_activity(repository_row)
+      Activities::CreateActivityService.call(
+        activity_type: :create_item_inventory,
+        owner: @user,
+        subject: @repository,
+        team: @repository.team,
+        message_items: {
+          repository_row: repository_row.id,
+          repository: @repository.id
+        }
+      )
     end
   end
 end

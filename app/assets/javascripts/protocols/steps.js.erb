@@ -120,7 +120,7 @@
       setTimeout(function() {
         $.initTooltips();
         initStepsComments();
-        initPreviewModal();
+        FilePreviewModal.init();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
         TinyMCE.destroyAll();
         DragNDropSteps.clearFiles();
@@ -148,7 +148,7 @@
       toggleButtons(false);
       initializeCheckboxSorting();
       animateSpinner(null, false);
-      initPreviewModal();
+      FilePreviewModal.init();
       DragNDropSteps.clearFiles();
       TinyMCE.init('#step_description_textarea');
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
@@ -233,7 +233,7 @@
       initCallBacks();
       initHandsOnTable($new_step);
       toggleButtons(true);
-      initPreviewModal();
+      FilePreviewModal.init();
 
       TinyMCE.destroyAll();
       SmartAnnotation.preventPropagation('.atwho-user-popover');
@@ -373,6 +373,7 @@
   }
 
   function initCallBacks() {
+    applyCreateWopiFileCallback();
     applyCheckboxCallBack();
     applyStepCompletedCallBack();
     applyEditCallBack();
@@ -601,7 +602,7 @@
           animateSpinner(null, false);
           setupAssetsLoading();
           DragNDropSteps.clearFiles();
-          initPreviewModal();
+          FilePreviewModal.init();
           $.initTooltips();
         },
         error: function(xhr) {
@@ -658,13 +659,23 @@
     Comments.initDeleteComments("#steps");
   }
 
-  // On init
+  // Reorder attachments
+  global.reorderAttachments = function reorderAtt(stepId, sortType) {
+    var label_value = $("#dd-att-step-" + stepId + "> .dropdown-menu > li > a[data-order=" + sortType + "]").html();
+    $("#dd-att-step-" + stepId + "-label").html(label_value);
+    $('#att-' + stepId + ' a.file-preview-link').each(function(){
+      var elm = $(this)
+      elm.css('order', elm.attr('data-order-' + sortType));
+    })
+  }
+
+    // On init
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();
   setupAssetsLoading();
   initStepsComments();
-  initPreviewModal();
+  FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');
   newStepHandler();
