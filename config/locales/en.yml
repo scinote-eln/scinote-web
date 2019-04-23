@@ -476,6 +476,8 @@ en:
           no_description: "No description"
           tags_header: "Task tags:"
           no_tags: "No tags"
+          protocol:
+            user_time: "Protocol created on %{timestamp}."
         experiment:
           user_time: "Experiment created on %{timestamp}."
           no_description: "No description"
