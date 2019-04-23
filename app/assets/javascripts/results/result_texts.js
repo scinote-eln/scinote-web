@@ -27,7 +27,7 @@
             formAjaxResultText($form);
             Results.initCancelFormButton($form, initNewReslutText);
             Results.toggleResultEditButtons(false);
-            TinyMCE.init('#result_text_textarea');
+            TinyMCE.init('#result_result_text_attributes_text');
             TinyMCE.highlight();
             $('#result_name').focus();
           },
@@ -58,7 +58,7 @@
           Results.toggleResultEditButtons(true);
         });
         Results.toggleResultEditButtons(false);
-        TinyMCE.init('#result_text_textarea');
+        TinyMCE.init('#result_result_text_attributes_text');
         $('#result_name').focus();
       });
     }
