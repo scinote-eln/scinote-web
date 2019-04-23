@@ -461,6 +461,7 @@ var Comments = (function() {
     var cancelBtnSelector = '[data-action=cancel-comment-new]';
     var saveBtnSelector = '[data-action=save-comment-new]';
     var commentMessageSelector = '.comment-message';
+    var textareaSelector = '.comment-textarea'
 
     var parents = $el.find('.comments-list')
 
@@ -484,45 +485,63 @@ var Comments = (function() {
       resetAllEditingModes();
     })
 
+     $(parents).on('focusout', textareaSelector, function(e) {
+       var $this = $(this);
+       var $comment = $this.closest('.comment-row')
+       var commentId = $comment.data('comment-id');
+
+       if($this[0].dataset.editing == 0) return;
+
+       updateComment(commentId);
+      })
+
+
     $(parents).on('click', saveBtnSelector, function(e) {
       e.preventDefault();
-      var $this = $(this);
-      var $comment = $this.closest('.comment-row');
-      var commentId = $comment.data('comment-id');
-      var $form = $comment.find('form');
-      var $textarea = $form.find('textarea');
-      var $commentMessage = $('#comment-message-' + commentId);
-
-      $form
-        .on('ajax:send', function() {
-          $textarea.attr('readonly', true);
-          $this.addClass('hidden');
-        })
-        .on('ajax:success', function(ev, data) {
-          $commentMessage.html(data.comment);
-          $textarea.data('message', $textarea.val());
-          resetAllEditingModes();
-        })
-        .on('ajax:error', function(ev, xhr) {
-          if (xhr.status === 422) {
-            alert(xhr.responseJSON.errors.message)
-          }
-          else{
-            alert('Error. Cannot update comment!')
-          }
-        })
-        .on('ajax:complete', function() {
-          $textarea.attr('readonly', false).focus();
-          $this.removeClass('hidden');
-        });
-      $form.submit();
+      var commentId = $(this).closest('.comment-row').data('comment-id');
+      updateComment(commentId);
     });
+  }
+
+  function updateComment(commentId){
+    var $comment = $('#comment-' + commentId);
+    var $form = $comment.find('form');
+    var $textarea = $form.find('textarea');
+    var $commentMessage = $('#comment-message-' + commentId);
+    var $saveBtn = $comment.find('.save-comment-new');
+
+    $form
+      .off('ajax:send').on('ajax:send', function() {
+        $textarea.attr('readonly', true);
+        $saveBtn.addClass('hidden');
+        $textarea[0].dataset.editing = 0;
+      })
+      .off('ajax:success').on('ajax:success', function(ev, data) {
+        $commentMessage.html(data.comment);
+        $textarea.data('message', $textarea.val());
+        resetAllEditingModes();
+      })
+      .off('ajax:error').on('ajax:error', function(ev, xhr) {
+        if (xhr.status === 422) {
+          alert(xhr.responseJSON.errors.message)
+        }
+        else{
+          alert('Error. Cannot update comment!')
+        }
+      })
+      .off('ajax:complete').on('ajax:complete', function() {
+        $textarea.attr('readonly', false).focus();
+        $saveBtn.removeClass('hidden');
+      });
+
+    $form.submit();
   }
 
   function startEditingMode(commentId){
     resetAllEditingModes();
     var $commentTextArea = $('#comment-textarea-' + commentId);
     var tempContent = $commentTextArea.val();
+    $commentTextArea[0].dataset.editing = 1;
 
     $('#comment-'+commentId + ' > .comment-container').addClass('edit');
     $commentTextArea.focus().val('').val(tempContent);
