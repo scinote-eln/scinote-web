@@ -1738,7 +1738,7 @@ en:
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Files"
+      files: "Attachments (%{count})"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
       options:
@@ -1752,6 +1752,12 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
+      attachments:
+        sort_new: "Newest first &#8595;"
+        sort_old: "Oldest first &#8593;"
+        sort_atoz: "Name &#8595;"
+        sort_ztoa: "Name &#8593;"
+        modified_label: "Modified:"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1878,8 +1884,8 @@ en:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"
     drag_n_drop:
-      label_html: 'Drag &amp; drop files here, CTRL+V (for images from clipboard) or '
-      browse_label: 'Browse to add'
+      label_html: 'Drag &amp; drop here. Copy &amp Paste images.'
+      browse_label: 'Select to Upload...'
       drop_label: 'Drop to add to Step'
       file_label: 'File'
     from_clipboard:
@@ -1891,6 +1897,18 @@ en:
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
+    create_wopi_file:
+      button_text: 'New Office file'
+      modal_title: 'Create new Microsoft Office Online document'
+      text_field_label: 'Document name & type'
+      text_field_placeholder: 'New Document'
+      ms_word: 'Word<br/>Online'
+      ms_excel: 'Excel<br/>Online'
+      ms_powerpoint: 'PowerPoint<br/>Online'
+      create_document_button: 'Create Document'
+      errors:
+        forbidden: 'You do not have permission to add files.'
+        not_found: 'Element not found.'
   atwho:
     no_results: "No results found"
     users:
