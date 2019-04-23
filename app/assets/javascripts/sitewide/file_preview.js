@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
-/* global Uint8Array fabric tui animateSpinner setupAssetsLoading I18n*/
+/* eslint-disable no-underscore-dangle */
+/* global Uint8Array fabric tui animateSpinner setupAssetsLoading I18n PerfectScrollbar*/
 //= require assets
 
 var FilePreviewModal = (function() {
@@ -169,6 +170,7 @@ var FilePreviewModal = (function() {
 
   function initImageEditor(data) {
     var imageEditor;
+    var ps;
     var blackTheme = {
       'common.bi.image': '',
       'common.bisize.width': '0',
@@ -262,7 +264,7 @@ var FilePreviewModal = (function() {
         initMenu: 'draw',
         menuBarPosition: 'bottom'
       },
-      cssMaxWidth: 700, 
+      cssMaxWidth: 700,
       cssMaxHeight: 500,
       selectionStyle: {
         cornerSize: 20,
@@ -275,22 +277,54 @@ var FilePreviewModal = (function() {
       },
       usageStatistics: false
     });
+
     imageEditor.on('image_loaded', () => {
       $('.file-save-link').css('display', '');
     });
-/*    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
-      var wDelta = e.originalEvent.wheelDelta;
+
+    ps = new PerfectScrollbar($('.tui-image-editor-wrap')[0], { wheelSpeed: 0.5 });
+    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
+      var imageOriginalSize = {
+        width: imageEditor._graphics.canvasImage.width,
+        height: imageEditor._graphics.canvasImage.height
+      };
+      var wDelta = e.originalEvent.wheelDelta || e.originalEvent.deltaY;
       var imageEditorWindow = e.currentTarget;
+      var scrollContainer = $('.tui-image-editor-wrap');
       var initWidth = imageEditorWindow.style.width;
       var initHeight = imageEditorWindow.style.height;
+
+      var scrollContainerInitial = {
+        top: scrollContainer.scrollTop(),
+        left: scrollContainer.scrollLeft(),
+        height: scrollContainer[0].scrollHeight,
+        width: scrollContainer[0].scrollWidth
+      };
+
+      var mousePosition = {
+        top: e.clientY - $(imageEditorWindow).offset().top,
+        left: e.clientX - $(imageEditorWindow).offset().left
+      };
+
+
       var newWidth;
       var newHeight;
+      var offsetY;
+      var offsetX;
       if (wDelta > 0) {
         newWidth = parseInt(initWidth, 10) * 1.1;
         newHeight = parseInt(initHeight, 10) * 1.1;
+        if (newWidth > imageOriginalSize.width || newHeight > imageOriginalSize.height) {
+          newWidth = imageOriginalSize.width;
+          newHeight = imageOriginalSize.height;
+        }
       } else {
         newWidth = parseInt(initWidth, 10) * 0.9;
         newHeight = parseInt(initHeight, 10) * 0.9;
+        if (parseInt(imageEditorWindow.dataset.minWidth, 10) * 0.5 > parseInt(newWidth, 10)) {
+          newWidth = parseInt(imageEditorWindow.dataset.minWidth, 10) * 0.5;
+          newHeight = parseInt(imageEditorWindow.dataset.minHeight, 10) * 0.5;
+        }
       }
       imageEditorWindow.style.width = newWidth + 'px';
       imageEditorWindow.style.height = newHeight + 'px';
@@ -301,10 +335,22 @@ var FilePreviewModal = (function() {
         imageEditorWindow.dataset.minHeight = initHeight;
         imageEditorWindow.dataset.minWidth = initWidth;
       }
+
+      offsetY = (scrollContainer[0].scrollHeight - scrollContainerInitial.height)
+      * (mousePosition.top / scrollContainerInitial.height);
+      offsetX = (scrollContainer[0].scrollWidth - scrollContainerInitial.width)
+      * (mousePosition.left / scrollContainerInitial.width);
+
+      scrollContainer.scrollTop(scrollContainerInitial.top + offsetY);
+      scrollContainer.scrollLeft(scrollContainerInitial.left + offsetX);
+
+      ps.update();
+
       e.preventDefault();
       e.stopPropagation();
     });
-    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; }; */
+    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; };
+    $('.tui-image-editor-wrap').css('height', 'calc(100% - 150px)');
 
     $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
     $('#fileEditModal').modal('show');
