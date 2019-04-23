@@ -193,6 +193,21 @@
       }
     }
   }
+
+  &.select2-container--disabled{
+    cursor:pointer;
+    .select2-selection{
+      border:1px solid transparent;
+      background: transparent;
+      cursor:pointer;
+      &:hover{
+        border:1px solid $color-gainsboro;
+      }
+      .select2-selection__choice {
+        cursor:pointer;
+      }
+    }
+  }
 }
 
 @media (min-width: 1200px) {
@@ -221,21 +236,6 @@
 
       .select2-results {
         height: 100%;
-      }
-    }
-  }
-
-  &.select2-container--disabled{
-    cursor:pointer;
-    .select2-selection{
-      border:1px solid transparent;
-      background: transparent;
-      cursor:pointer;
-      &:hover{
-        border:1px solid $color-gainsboro;
-      }
-      .select2-selection__choice {
-        cursor:pointer;
       }
     }
   }

@@ -11,7 +11,7 @@ $.fn.extend({
     if (this.next().find('.select2-selection').length > 0) return this;
     templateSelection = (state, parent) => {
       if (config.colorField !== undefined) {
-        parent.css('background',state[config.colorField] || state.element.dataset[config.colorField])
+        parent.css('background', state[config.colorField] || state.element.dataset[config.colorField]);
       }
       return $('<span class="select2-block-body" data-select-id="' + state.id + '">'
         + (config.customSelection !== undefined ? config.customSelection(state) : state.text)
@@ -42,7 +42,9 @@ $.fn.extend({
 
     // Placeholder fix for ajax fields
     if (config.ajax) {
-      select2.next().find('.select2-search__field').css('width', 'auto');
+      setTimeout(() => {
+        select2.next().find('.select2-search__field').css('width', 'auto');
+      }, 0);
     }
 
     // Check that group select correctly
@@ -152,18 +154,18 @@ $.fn.extend({
 
 
     // unlimited size
-    var select2 = this.select2({
+    select2 = this.select2({
       closeOnSelect: config.closeOnSelect || false,
       multiple: true,
       ajax: config.ajax,
       templateSelection: templateSelection,
       tags: config.dynamicCreation || true,
-      tokenSeparators: config.dynamicCreationDelimiter || [',', ' '],
+      tokenSeparators: config.dynamicCreationDelimiter || [',', ' ']
     });
-        // Add dynamic size
+    // Add dynamic size
     select2.next().css('width', '100%');
 
-     // unlimited size
+    // unlimited size
     if (config.unlimitedSize) {
       this[0].dataset.unlimitedSize = true;
       select2.next().find('.select2-selection').css('max-height', 'none');
@@ -171,9 +173,10 @@ $.fn.extend({
     }
 
     // Create arrow
-    $('<div class="select2-arrow"><span class="caret"></span></div>').appendTo(select2.next())
-      .click(() => select2.next().find('.select2-selection').click());
-
+    if (!(config.withoutArrow)) {
+      $('<div class="select2-arrow"><span class="caret"></span></div>').appendTo(select2.next())
+        .click(() => select2.next().find('.select2-selection').click());
+    }
     // select all check
     this[0].dataset.singleDisplay = config.singleDisplay || false;
     if (this[0].dataset.selectAll === 'true') {

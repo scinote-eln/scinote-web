@@ -170,6 +170,7 @@ class MyModulesController < ApplicationController
       if saved
         if description_changed
           log_activity(:change_module_description)
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
         end
 
         if due_date_changes
@@ -187,9 +188,6 @@ class MyModulesController < ApplicationController
           # rubocop:enable Metrics/BlockNesting
           log_activity(type_of, @my_module, message_items)
         end
-
-      if saved and description_changed then
-        TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
       end
     end
     respond_to do |format|
