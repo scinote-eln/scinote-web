@@ -83,4 +83,10 @@ class Extends
   # Hash used for mapping file extensions to custom font awesome icon classes,
   # 'extension' => 'fa class'
   FILE_FA_ICON_MAPPINGS = {}
+
+  # Mapping of rich text fileds to specific model
+  RICH_TEXT_FIELD_MAPPINGS = { 'Step' => :description,
+                               'ResultText' => :text,
+                               'Protocol' => :description,
+                               'MyModule' => :description }
 end

@@ -347,7 +347,7 @@ class Protocol < ApplicationRecord
         step2.tiny_mce_assets << tiny_img2
         cloned_img_ids << [tiny_img.id, tiny_img2.id]
       end
-      TinyMceAsset.reload_images(cloned_img_ids)
+      step2.reassign_tiny_mce_image_references(cloned_img_ids)
     end
 
     # Call clone helper
