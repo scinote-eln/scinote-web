@@ -233,7 +233,6 @@ class ProtocolsController < ApplicationController
     end
   end
 
-
   def create
     @protocol = Protocol.new(
       team: @current_team,

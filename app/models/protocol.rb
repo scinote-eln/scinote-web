@@ -267,7 +267,7 @@ class Protocol < ApplicationRecord
   def self.clone_contents(src, dest, current_user, clone_keywords)
     assets_to_clone = []
 
-    TinyMceAsset.clone_assets(src, dest, dest.team)
+    src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
     if clone_keywords then
@@ -345,26 +345,8 @@ class Protocol < ApplicationRecord
       end
 
       # Copy steps tinyMce assets
-<<<<<<< HEAD
-      cloned_img_ids = []
-      step.tiny_mce_assets.each do |tiny_img|
-        tiny_img2 = TinyMceAsset.new(
-          image: tiny_img.image,
-          estimated_size: tiny_img.estimated_size,
-          object: step2,
-          team: dest.team
-        )
-        tiny_img2.save
-
-        step2.tiny_mce_assets << tiny_img2
-        cloned_img_ids << [tiny_img.id, tiny_img2.id]
-      end
-      step2.reassign_tiny_mce_image_references(cloned_img_ids)
-=======
-      TinyMceAsset.clone_assets(step, step2, dest.team)
->>>>>>> Update protocol repository for new description format
+      step.clone_tinymce_assets(step2, dest.team)
     end
-
     # Call clone helper
     Protocol.delay(queue: :assets).deep_clone_assets(
       assets_to_clone,

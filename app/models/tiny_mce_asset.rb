@@ -66,9 +66,7 @@ class TinyMceAsset < ApplicationRecord
                     download: false,
                     timeout: Constants::URL_LONG_EXPIRE_TIME)
     if stored_on_s3?
-      download_arg = if download
-                       'attachment; filename=' + CGI.escape(image_file_name)
-                     end
+      download_arg = ('attachment; filename=' + CGI.escape(image_file_name) if download)
 
       signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
       signer.presigned_url(:get_object,
@@ -127,23 +125,6 @@ class TinyMceAsset < ApplicationRecord
       end
     end
     ostream
-  end
-
-  def self.clone_assets(source, target, team)
-    cloned_img_ids = []
-    source.tiny_mce_assets.each do |tiny_img|
-      tiny_img_clone = TinyMceAsset.new(
-        image: tiny_img.image,
-        estimated_size: tiny_img.estimated_size,
-        object: target,
-        team: team
-      )
-      tiny_img_clone.save
-
-      target.tiny_mce_assets << tiny_img_clone
-      cloned_img_ids << [tiny_img.id, tiny_img_clone.id]
-    end
-    reload_images(cloned_img_ids)
   end
 
   private
