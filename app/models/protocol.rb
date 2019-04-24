@@ -18,7 +18,7 @@ class Protocol < ApplicationRecord
   auto_strip_attributes :name, :description, nullify: false
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
-  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :team, presence: true
   validates :protocol_type, presence: true
 
