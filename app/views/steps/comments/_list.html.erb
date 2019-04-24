@@ -1,0 +1,4 @@
+<% comments.each do |comment| %>
+  <%= render partial: 'steps/comments/item.html.erb',
+             locals: { comment: comment } %>
+<% end %>

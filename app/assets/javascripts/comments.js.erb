@@ -28,8 +28,17 @@ var Comments = (function() {
             });
         }
         initCommentForm(that);
+        initCommentFormNew(that);
         initCommentsLink(that);
-        scrollBottom(that.find('.content-comments'));
+        initCommentsLinkNew(that);
+        initDeleteCommentNew(that);
+        initEditCommentNew(that);
+
+        var scrollItem = that.find('.content-comments'); // Check for new version of comments
+        if (that.hasClass('content-comments')) {
+          scrollItem = that
+        }
+        scrollBottom(scrollItem);
       });
     }
   }
@@ -82,6 +91,29 @@ var Comments = (function() {
         $('.btn-more-comments').remove();
       }
     });
+  }
+
+  function initCommentsLinkNew($el) {
+    $el.find('.btn-more-comments-new').off()
+      .on('ajax:success', function (e, data) {
+        if (data.html) {
+
+          var stepId = $(this).data('step-id')
+          var list = $('#comments-list-' + stepId);
+          var moreBtn = $(this);
+
+          list.prepend(data.html);
+
+          if (data.resultsNumber < data.perPage) {
+            moreBtn.remove();
+          } else {
+            moreBtn.attr('href', data.moreUrl);
+            moreBtn.trigger('blur');
+          }
+        } else {
+          $('.btn-more-comments').remove();
+        }
+      });
   }
 
   // Initialize comment form.
@@ -161,6 +193,55 @@ var Comments = (function() {
         .attr('readonly', false)
         .focus();
     });
+  }
+
+  function initCommentFormNew($el) {
+    var stepId = $el.data('step-id');
+    var $form = $('#new-message-' + stepId).find('form');
+    var $list = $el.find('.comments-list');
+    var $submitBtn = $form.find('.new-comment-button')
+
+    $submitBtn.on('click', function() {
+      $form.submit();
+    });
+
+    $('.help-block', $form).addClass('hide');
+
+    $form.off().on('ajax:send', function () {
+      $('#comment_message', $form).attr('readonly', true);
+      $submitBtn.off('click');
+    })
+      .on('ajax:success', function (e, data) {
+        if (data.html) {
+          $list.append(data.html).scrollTop(0);
+          scrollBottom($el);
+          $('#comment_message', $form).val('');
+          $('.form-group', $form).removeClass('has-error');
+          $('.help-block', $form).html('').addClass('hide');
+          $submitBtn.removeClass('has-error');
+
+          var currnetCount = $('#counter-' + stepId).html()
+          $('#counter-' + stepId).html(parseInt(currnetCount) + 1)
+        }
+      })
+      .on('ajax:error', function (ev, xhr) {
+        if (xhr.status === 400) {
+          var messageError = xhr.responseJSON.errors.message;
+
+          if (messageError) {
+            $('.form-group', $form).addClass('has-error');
+            $('.help-block', $form).html(messageError[0]).removeClass('hide');
+            $submitBtn.addClass('has-error');
+          }
+        }
+      })
+      .on('ajax:complete', function () {
+        scrollBottom($('#comment_message', $form));
+        $('#comment_message', $form).attr('readonly', false).focus();
+        $submitBtn.on('click', function() {
+          $form.submit();
+        });
+      });
   }
 
   function initCommentOptions(scrollableContainer, useParentOffset) {
@@ -260,6 +341,35 @@ var Comments = (function() {
     });
   }
 
+  function initDeleteCommentNew($el) {
+    var parents = $el.find('.comments-list')
+
+    $(parents).unbind('click').on('click', '[data-action=delete-comment-new]', function(e) {
+      e.preventDefault();
+      var $this = $(this)
+
+      if (confirm($this.attr('data-confirm-message'))) {
+        $.ajax({
+          url: $this.attr('data-url'),
+          type: 'DELETE',
+          dataType: 'json',
+          success: function(data) {
+            var commentEl = $this.closest('.comment-row').hide()
+            commentEl.remove();
+
+            var stepID = $this.attr('data-step-id')
+            var currnetCount = $('#counter-' + stepID).html()
+            $('#counter-' + stepID).html(parseInt(currnetCount) - 1)
+          },
+          error: function(data) {
+            // Display alert
+            alert(data.responseJSON.message);
+          }
+        });
+      }
+    });
+  }
+
   function initEditComments(parent) {
     $(parent).unbind('click').on('click', '[data-action=edit-comment]', function() {
 
@@ -346,10 +456,110 @@ var Comments = (function() {
     });
   }
 
+  function initEditCommentNew($el) {
+    var editBtnSelector = '[data-action=edit-comment-new]';
+    var cancelBtnSelector = '[data-action=cancel-comment-new]';
+    var saveBtnSelector = '[data-action=save-comment-new]';
+    var commentMessageSelector = '.comment-message';
+    var textareaSelector = '.comment-textarea'
+
+    var parents = $el.find('.comments-list')
+
+    $(parents).on('click', commentMessageSelector, function(e) {
+      var $this = $(this);
+      startEditingMode($this.data('comment-id'))
+    })
+
+    $(parents).on('click', editBtnSelector, function(e) {
+      e.preventDefault();
+      var $this = $(this);
+      startEditingMode($this.closest('.comment-row').data('comment-id'))
+    })
+
+    $(parents).on('click', cancelBtnSelector, function(e) {
+      e.preventDefault();
+      var $this = $(this);
+      var commentId = $this.closest('.comment-row').data('comment-id')
+      var $commentTextArea = $('#comment-textarea-' + commentId);
+      $commentTextArea.val($commentTextArea.data('message'));
+      resetAllEditingModes();
+    })
+
+     $(parents).on('focusout', textareaSelector, function(e) {
+       var $this = $(this);
+       var $comment = $this.closest('.comment-row')
+       var commentId = $comment.data('comment-id');
+
+       if($this[0].dataset.editing == 0) return;
+
+       updateComment(commentId);
+      })
+
+
+    $(parents).on('click', saveBtnSelector, function(e) {
+      e.preventDefault();
+      var commentId = $(this).closest('.comment-row').data('comment-id');
+      updateComment(commentId);
+    });
+  }
+
+  function updateComment(commentId){
+    var $comment = $('#comment-' + commentId);
+    var $form = $comment.find('form');
+    var $textarea = $form.find('textarea');
+    var $commentMessage = $('#comment-message-' + commentId);
+    var $saveBtn = $comment.find('.save-comment-new');
+
+    $form
+      .off('ajax:send').on('ajax:send', function() {
+        $textarea.attr('readonly', true);
+        $saveBtn.addClass('hidden');
+        $textarea[0].dataset.editing = 0;
+      })
+      .off('ajax:success').on('ajax:success', function(ev, data) {
+        $commentMessage.html(data.comment);
+        $textarea.data('message', $textarea.val());
+        resetAllEditingModes();
+      })
+      .off('ajax:error').on('ajax:error', function(ev, xhr) {
+        if (xhr.status === 422) {
+          alert(xhr.responseJSON.errors.message)
+        }
+        else{
+          alert('Error. Cannot update comment!')
+        }
+      })
+      .off('ajax:complete').on('ajax:complete', function() {
+        $textarea.attr('readonly', false).focus();
+        $saveBtn.removeClass('hidden');
+      });
+
+    $form.submit();
+  }
+
+  function startEditingMode(commentId){
+    resetAllEditingModes();
+    var $commentTextArea = $('#comment-textarea-' + commentId);
+    var tempContent = $commentTextArea.val();
+    $commentTextArea[0].dataset.editing = 1;
+
+    $('#comment-'+commentId + ' > .comment-container').addClass('edit');
+    $commentTextArea.focus().val('').val(tempContent);
+  }
+
+  function resetAllEditingModes() {
+    $('.comment-container').removeClass('edit');
+  }
+
+
   return {
     initialize: initializeComments,
     scrollBottom: scrollBottom,
     moreComments: initCommentsLink,
+    initCommentsLinkNew: initCommentsLinkNew,
+    initCommentFormNew: initCommentFormNew,
+    initDeleteCommentNew: initDeleteCommentNew,
+    initEditCommentNew: initEditCommentNew,
     form: initCommentForm,
     initCommentOptions: initCommentOptions,
     initDeleteComments: initDeleteComments,

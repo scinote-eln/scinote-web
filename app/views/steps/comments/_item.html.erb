@@ -1,0 +1,70 @@
+<div class="row comment-row" id="comment-<%= comment.id %>" data-comment-id="<%= comment.id %>">
+  <div class="comment-container">
+    <div class="avatar-placehodler">
+      <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+    </div>
+    <div class="content-placeholder">
+      <div class="row row-content">
+        <div class="col-xs-4 comment-name"><p><%= comment.user.full_name %></p></div>
+        <div class="col-xs-8">
+          <div class="comment-right pull-right">
+            <div class="comment-datetime pull-right">
+              <p><%= l(comment.created_at, format: :full) %></p>
+            </div>
+            <% if comment.user == current_user %>
+              <div class="comment-actions pull-right">
+                <a href="#"
+                   data-action="save-comment-new"
+                   data-url="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
+                   data-turbolinks="false"
+                   class="editing-actions">
+                  <span class="fas fa-save action-icon"></span><span class="edit-label"><%= t('general.save') %></span>
+                </a>
+                <a href="#"
+                   data-action="cancel-comment-new"
+                   data-turbolinks="false"
+                   class="editing-actions">
+                  <span class="fas fa-times action-icon-delete"></span>
+                </a>
+
+                <a href="#"
+                   class="edit-actions"
+                   data-action="edit-comment-new"
+                   data-turbolinks="false">
+                  <span class="fas fa-pen action-icon"></span><span class="edit-label"><%= t('general.edit') %></span>
+                </a>
+
+                <a href="#"
+                   class="edit-actions"
+                   data-action="delete-comment-new"
+                   data-url="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
+                   data-confirm-message="<%= t('comments.delete_confirm') %>"
+                   data-step-id="<%= comment.step.id %>"
+                   data-turbolinks="false">
+                  <span class="fas fa-trash action-icon-delete"></span>
+                </a>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 comment-message" id="comment-message-<%= comment.id %>" data-comment-id="<%= comment.id %>">
+            <%= custom_auto_link(comment.message, team: current_team) %>
+          </div>
+          <%= bootstrap_form_for( :comment, url: step_step_comment_path(comment.step, comment, format: :json),
+                                  html: { method: :put }, remote: true) do |f| %>
+            <%= f.smart_text_area :message,
+                                  single_line: true,
+                                  hide_label: true,
+                                  value: comment.message,
+                                  data: { 'atwho-edit': '', message: comment.message },
+                                  class: 'comment-textarea',
+                                  id: 'comment-textarea-' + comment.id.to_s %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

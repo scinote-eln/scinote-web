@@ -19,7 +19,7 @@ class StepCommentsController < ApplicationController
         # messages. 'list' partial is used for showing more
         # comments.
         partial = 'index.html.erb'
-        partial = 'list.html.erb' if @last_comment_id.positive?
+        partial = 'steps/comments/list.html.erb' if @last_comment_id.positive?
         more_url = ''
         if @comments.size.positive?
           more_url = url_for(step_step_comments_path(@step,
@@ -57,7 +57,7 @@ class StepCommentsController < ApplicationController
         format.json {
           render json: {
             html: render_to_string(
-              partial: "comment.html.erb",
+              partial: 'steps/comments/item.html.erb',
               locals: {
                 comment: @comment
               }
