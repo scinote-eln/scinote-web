@@ -67,7 +67,7 @@ describe MyModule, type: :model do
     end
     it do
       should validate_length_of(:description)
-        .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
     end
   end
 end
