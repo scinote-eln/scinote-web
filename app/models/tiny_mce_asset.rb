@@ -66,9 +66,7 @@ class TinyMceAsset < ApplicationRecord
                     download: false,
                     timeout: Constants::URL_LONG_EXPIRE_TIME)
     if stored_on_s3?
-      download_arg = if download
-                       'attachment; filename=' + CGI.escape(image_file_name)
-                     end
+      download_arg = ('attachment; filename=' + CGI.escape(image_file_name) if download)
 
       signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
       signer.presigned_url(:get_object,

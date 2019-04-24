@@ -51,11 +51,29 @@ module TinyMceImages
       update(object_field => parsed_description.to_html)
     end
 
+    def clone_tinymce_assets(target, team)
+      cloned_img_ids = []
+      tiny_mce_assets.each do |tiny_img|
+        tiny_img_clone = TinyMceAsset.new(
+          image: tiny_img.image,
+          estimated_size: tiny_img.estimated_size,
+          object: target,
+          team: team
+        )
+        tiny_img_clone.save!
+
+        target.tiny_mce_assets << tiny_img_clone
+        cloned_img_ids << [tiny_img.id, tiny_img_clone.id]
+      end
+      target.reassign_tiny_mce_image_references(cloned_img_ids)
+    end
+
     private
 
     def clean_tiny_mce_image_urls
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
       return unless changed.include?(object_field.to_s)
+
       image_changed = false
       parsed_description = Nokogiri::HTML(read_attribute(object_field))
       parsed_description.css('img[data-mce-token]').each do |image|

@@ -29,6 +29,7 @@ class ProtocolsController < ApplicationController
     edit
     update_metadata
     update_keywords
+    update_description
     edit_name_modal
     edit_keywords_modal
     edit_authors_modal
@@ -211,6 +212,23 @@ class ProtocolsController < ApplicationController
         end
       else
         format.json { render json: {}, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update_description
+    respond_to do |format|
+      format.json do
+        if @protocol.update(description: params.require(:protocol)[:description])
+          TinyMceAsset.update_images(@protocol, params[:tiny_mce_images])
+          render json: {
+            html: sanitize_input(
+              @protocol.tinymce_render(:description)
+            )
+          }
+        else
+          render json: @protocol.errors, status: :unprocessable_entity
+        end
       end
     end
   end

@@ -84,25 +84,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="badge-icon">
-      <% if can_manage_protocol_in_repository?(@protocol) %>
-        <a data-action="edit-description" data-remote="true" href="<%= edit_description_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
-          <span class="fas fa-info-circle"></span>
-        </a>
-      <% else %>
-        <span class="fas fa-info-circle"></span>
-      <% end %>
-    </div>
-    <div class="well well-sm">
-      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.description" %>:</span>
-      <% if can_manage_protocol_in_repository?(@protocol) %>
-        <%= link_to edit_description_modal_protocol_path(@protocol, format: :json), remote: true, style: "color: inherit;", data: { action: "edit-description", role: "description-refresh" } do %>
-          <%= render partial: "protocols/header/description_label.html.erb" %>
-        <% end %>
-      <% else %>
-        <%= render partial: "protocols/header/description_label.html.erb" %>
-      <% end %>
-    </div>
+    <%= render partial: "protocols/header/description_label.html.erb", locals: {edit_mode: true} %>
   </div>
 </div>
 

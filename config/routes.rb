@@ -478,6 +478,7 @@ Rails.application.routes.draw do
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'
         get 'preview', to: 'protocols#preview'
+        patch 'description', to: 'protocols#update_description'
         patch 'metadata', to: 'protocols#update_metadata'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
