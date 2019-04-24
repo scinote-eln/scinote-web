@@ -24,14 +24,15 @@ class UserSystemNotification < ApplicationRecord
     # for notification check leave update_read_time empty
     notification = joins(:system_notification)
                    .where('system_notifications.show_on_login = true')
-                   .order('system_notifications.last_time_changed_at DESC')
+                   .order('system_notifications.created_at DESC')
                    .select(
                      :modal_title,
                      :modal_body,
                      'user_system_notifications.id',
                      :read_at,
                      :user_id,
-                     :system_notification_id
+                     :system_notification_id,
+                     :created_at
                    )
                    .first
     if notification && notification.read_at.nil?

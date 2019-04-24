@@ -30,7 +30,7 @@ class SystemNotification < ApplicationRecord
     user,
     query = nil
   )
-    notifications = order(last_time_changed_at: :DESC)
+    notifications = order(created_at: :DESC)
     notifications = notifications.search_notifications(query) if query.present?
     notifications.joins(:user_system_notifications)
                  .where('user_system_notifications.user_id = ?', user.id)
@@ -39,6 +39,7 @@ class SystemNotification < ApplicationRecord
                    :title,
                    :description,
                    :last_time_changed_at,
+                   :created_at,
                    'user_system_notifications.seen_at',
                    'user_system_notifications.read_at'
                  )
