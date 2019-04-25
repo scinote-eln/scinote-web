@@ -5,6 +5,7 @@ var Comments = (function() {
     * Initializes the comments
     *
     */
+
   function initializeComments(){
     var comments;
     if ( $('.step-comment') && $('.step-comment').length > 0 ) {
@@ -32,7 +33,6 @@ var Comments = (function() {
         initCommentsLink(that);
         initCommentsLinkNew(that);
         initDeleteCommentNew(that);
-        initEditCommentNew(that);
 
         var scrollItem = that.find('.content-comments'); // Check for new version of comments
         if (that.hasClass('content-comments')) {
@@ -41,6 +41,7 @@ var Comments = (function() {
         scrollBottom(scrollItem);
       });
     }
+    initInlineEditing('comment')
   }
 
   // scroll to the botttom
@@ -222,6 +223,8 @@ var Comments = (function() {
 
           var currnetCount = $('#counter-' + stepId).html()
           $('#counter-' + stepId).html(parseInt(currnetCount) + 1)
+          initInlineEditing('comment')
+          initDeleteCommentNew($el)
         }
       })
       .on('ajax:error', function (ev, xhr) {
@@ -344,8 +347,7 @@ var Comments = (function() {
   function initDeleteCommentNew($el) {
     var parents = $el.find('.comments-list')
 
-    $(parents).unbind('click').on('click', '[data-action=delete-comment-new]', function(e) {
-      e.preventDefault();
+    $(parents).find('.delete-button').off('click').on('click', function(e) {
       var $this = $(this)
 
       if (confirm($this.attr('data-confirm-message'))) {
@@ -354,7 +356,7 @@ var Comments = (function() {
           type: 'DELETE',
           dataType: 'json',
           success: function(data) {
-            var commentEl = $this.closest('.comment-row').hide()
+            var commentEl = $this.closest('.comment-container').hide()
             commentEl.remove();
 
             var stepID = $this.attr('data-step-id')
@@ -367,6 +369,8 @@ var Comments = (function() {
           }
         });
       }
+      e.preventDefault();
+      e.stopPropagation();
     });
   }
 
@@ -456,110 +460,12 @@ var Comments = (function() {
     });
   }
 
-  function initEditCommentNew($el) {
-    var editBtnSelector = '[data-action=edit-comment-new]';
-    var cancelBtnSelector = '[data-action=cancel-comment-new]';
-    var saveBtnSelector = '[data-action=save-comment-new]';
-    var commentMessageSelector = '.comment-message';
-    var textareaSelector = '.comment-textarea'
-
-    var parents = $el.find('.comments-list')
-
-    $(parents).on('click', commentMessageSelector, function(e) {
-      var $this = $(this);
-      startEditingMode($this.data('comment-id'))
-    })
-
-    $(parents).on('click', editBtnSelector, function(e) {
-      e.preventDefault();
-      var $this = $(this);
-      startEditingMode($this.closest('.comment-row').data('comment-id'))
-    })
-
-    $(parents).on('click', cancelBtnSelector, function(e) {
-      e.preventDefault();
-      var $this = $(this);
-      var commentId = $this.closest('.comment-row').data('comment-id')
-      var $commentTextArea = $('#comment-textarea-' + commentId);
-      $commentTextArea.val($commentTextArea.data('message'));
-      resetAllEditingModes();
-    })
-
-     $(parents).on('focusout', textareaSelector, function(e) {
-       var $this = $(this);
-       var $comment = $this.closest('.comment-row')
-       var commentId = $comment.data('comment-id');
-
-       if($this[0].dataset.editing == 0) return;
-
-       updateComment(commentId);
-      })
-
-
-    $(parents).on('click', saveBtnSelector, function(e) {
-      e.preventDefault();
-      var commentId = $(this).closest('.comment-row').data('comment-id');
-      updateComment(commentId);
-    });
-  }
-
-  function updateComment(commentId){
-    var $comment = $('#comment-' + commentId);
-    var $form = $comment.find('form');
-    var $textarea = $form.find('textarea');
-    var $commentMessage = $('#comment-message-' + commentId);
-    var $saveBtn = $comment.find('.save-comment-new');
-
-    $form
-      .off('ajax:send').on('ajax:send', function() {
-        $textarea.attr('readonly', true);
-        $saveBtn.addClass('hidden');
-        $textarea[0].dataset.editing = 0;
-      })
-      .off('ajax:success').on('ajax:success', function(ev, data) {
-        $commentMessage.html(data.comment);
-        $textarea.data('message', $textarea.val());
-        resetAllEditingModes();
-      })
-      .off('ajax:error').on('ajax:error', function(ev, xhr) {
-        if (xhr.status === 422) {
-          alert(xhr.responseJSON.errors.message)
-        }
-        else{
-          alert('Error. Cannot update comment!')
-        }
-      })
-      .off('ajax:complete').on('ajax:complete', function() {
-        $textarea.attr('readonly', false).focus();
-        $saveBtn.removeClass('hidden');
-      });
-
-    $form.submit();
-  }
-
-  function startEditingMode(commentId){
-    resetAllEditingModes();
-    var $commentTextArea = $('#comment-textarea-' + commentId);
-    var tempContent = $commentTextArea.val();
-    $commentTextArea[0].dataset.editing = 1;
-
-    $('#comment-'+commentId + ' > .comment-container').addClass('edit');
-    $commentTextArea.focus().val('').val(tempContent);
-  }
-
-  function resetAllEditingModes() {
-    $('.comment-container').removeClass('edit');
-  }
-
-
   return {
     initialize: initializeComments,
     scrollBottom: scrollBottom,
     moreComments: initCommentsLink,
     initCommentsLinkNew: initCommentsLinkNew,
-    initCommentFormNew: initCommentFormNew,
     initDeleteCommentNew: initDeleteCommentNew,
-    initEditCommentNew: initEditCommentNew,
     form: initCommentForm,
     initCommentOptions: initCommentOptions,
     initDeleteComments: initDeleteComments,

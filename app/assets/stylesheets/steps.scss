@@ -1,6 +1,11 @@
 // Place all the styles related to the Steps controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
 @import "constants";
 
 #new_step,
@@ -102,17 +107,17 @@
   }
 
   &.new {
-    background-color: rgba(95, 95, 95, 0.1);
+    background-color: rgba(95, 95, 95, .1);
   }
 
   &:hover {
-    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.18);
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .18);
   }
 
   .attachment-thumbnail {
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .15);
     height: 160px;
-    margin: 16px auto 5px auto;
+    margin: 16px auto 5px;
     overflow: hidden;
     text-align: center;
     width: 113px;
@@ -121,18 +126,18 @@
       max-height: 100%;
     }
 
-     i.fas {
+    i.fas {
       font-size: 100px;
       line-height: 160px;
     }
   }
 
   .no-shadow {
-    box-shadow: 0 0 0 0 rgba(0,0,0,0.15);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, .15);
   }
 
   .attachment-label {
-    color: #40A1D7;
+    color: #40a1d7;
     font-family: Lato;
     font-size: 16px;
     height: 39px;
@@ -192,120 +197,163 @@
   color: $color-emperor;
 }
 
+// Comment item
+
 .comment-container {
   display: flex;
   padding: 5px 0 5px 5px;
 
-  &:hover {
-    background-color: $brand-primary-light;
+  .avatar-placehodler {
+    height: 30px;
+    width: 30px;
 
-    .comment-actions {
-      display: inline;
-
-      a {
-        color: $color-silver-chalice;
-
-        &:hover {
-          text-decoration: none;
-        }
-      }
-
-      a:active {
-        color: $color-dove-gray;
-      }
+    img {
+      border-radius: 30px;
+      position: relative;
+      top: 7px;
     }
   }
 
-  &.edit {
-    .comment-textarea {
-      display: block;
+  .content-placeholder {
+    padding-left: 10px;
+    width: calc(100% - 30px);
+
+    .comment-name {
+      color: $color-silver-chalice;
+      float: left;
+      font-size: 16px;
+      line-height: 30px;
+      padding-left: 5px;
+      width: 50%;
     }
 
     .comment-message {
+      float: left;
+      width: 100%;
+
+      textarea {
+        border: 1px solid $color-silver;
+        border-radius: $border-radius-small;
+        height: 22px;
+        line-height: 16px;
+        overflow: hidden;
+        padding: 2px 5px;
+        width: 100%;
+
+        &:focus {
+          outline: 0;
+        }
+
+        &:disabled {
+          background: transparent;
+          border: 1px solid transparent;
+          user-select: none;
+        }
+      }
+    }
+
+    .error-block {
+      color: $brand-danger;
       display: none;
+      float: left;
     }
 
-    .edit-actions {
-      display: none;
+    .comment-right {
+      color: $color-silver-chalice;
+      float: right;
+      height: 30px;
+      line-height: 30px;
+      overflow: hidden;
+      position: relative;
+      transition: .3s;
+      width: 120px;
+
+      .comment-datetime {
+        float: left;
+        font-size: 12px;
+        line-height: 30px;
+        width: 120px;
+      }
+
+      .comment-actions {
+        left: 120px;
+        position: absolute;
+        width: 100px;
+
+        .view-buttons,
+        .edit-buttons {
+          display: none;
+          font-size: 16px;
+
+          * {
+            cursor: pointer;
+          }
+
+          .edit-button,
+          .save-button {
+            display: inline-block;
+            width: 80px;
+          }
+
+          .delete-button,
+          .cancel-button {
+            float: right;
+            padding-right: 5px;
+            width: 20px;
+          }
+
+          a {
+            color: inherit;
+          }
+
+          span {
+            .fas {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &[data-edit-mode="0"]:hover,
+  &[data-edit-mode="1"] {
+    .comment-right {
+      width: 220px;
     }
 
-    .editing-actions {
-      display: inline-block;
+    textarea:disabled {
+      border: 1px solid $color-gainsboro;
+      cursor: pointer;
     }
   }
 
-  .comment-textarea {
-    display: none;
+  &[data-edit-mode="0"]:hover {
+    cursor: pointer;
+
+    .comment-actions {
+
+      .view-buttons {
+        display: inline;
+      }
+    }
   }
 
-  .comment-message {
-    display: block;
+  &[data-edit-mode="1"] {
+
+    .comment-actions {
+
+      .edit-buttons {
+        display: inline !important;
+      }
+    }
   }
 
-  .edit-actions {
-    display: inline-block;
-  }
+  &[data-error="true"] {
 
-  .editing-actions {
-    display: none;
-  }
-}
-
-.avatar-placehodler {
-  height: 30px;
-  width: 30px;
-
-  img {
-    border-radius: 30px;
-    position: relative;
-    top: 7px;
-  }
-}
-
-.content-placeholder {
-  flex-grow: 1;
-
-  .row-content {
-    margin-left: -25px;
-  }
-}
-
-.comment-right {
-  line-height: 16px;
-}
-
-.comment-datetime {
-  font-size: 12px;
-}
-
-.comment-name {
-  color: $color-silver-chalice;
-  font-size: 16px;
-
-  p {
-    margin-bottom: 3px;
-  }
-}
-
-.comment-message {
-  font-size: 14px;
-  line-height: 17px;
-  margin-top: -4px;
-  padding-left: 10px;
-}
-
-.comment-actions {
-  display: none;
-  font-size: 16px;
-  margin-right: 20px;
-
-  .action-icon-delete {
-    margin-left: 20px;
-  }
-
-  .edit-label {
-    font-size: 14px;
-    margin-left: 3px;
+    .error-block {
+      display: block;
+    }
   }
 }
 
