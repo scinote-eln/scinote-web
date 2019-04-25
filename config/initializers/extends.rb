@@ -84,6 +84,12 @@ class Extends
   # 'extension' => 'fa class'
   FILE_FA_ICON_MAPPINGS = {}
 
+  # Mapping of rich text fileds to specific model
+  RICH_TEXT_FIELD_MAPPINGS = { 'Step' => :description,
+                               'ResultText' => :text,
+                               'Protocol' => :description,
+                               'MyModule' => :description }
+
   ACTIVITY_SUBJECT_TYPES = %w(
     Team Repository Project Experiment MyModule Result Protocol Report
   ).freeze
