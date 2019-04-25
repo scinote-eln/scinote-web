@@ -51,6 +51,6 @@ class SystemNotification < ApplicationRecord
     SystemNotification
       .order(last_time_changed_at: :desc)
       .first&.last_time_changed_at&.to_i ||
-      User.order(created_at: :desc).first&.created_at&.to_i
+      User.order(created_at: :asc).first&.created_at&.to_i
   end
 end
