@@ -4,8 +4,7 @@ class UserSystemNotification < ApplicationRecord
   belongs_to :user
   belongs_to :system_notification
 
-  after_create :send_email,
-               if: proc { |sn| sn.user.system_message_email_notification }
+  validates :system_notification, uniqueness: { scope: :user }
 
   scope :unseen, -> { where(seen_at: nil) }
 
@@ -15,9 +14,7 @@ class UserSystemNotification < ApplicationRecord
 
   def self.mark_as_read(notification_id)
     notification = find_by_system_notification_id(notification_id)
-    if notification && notification.read_at.nil?
-      notification.update(read_at: Time.now)
-    end
+    notification.update(read_at: Time.now) if notification && notification.read_at.nil?
   end
 
   def self.show_on_login(update_read_time = false)
@@ -44,11 +41,5 @@ class UserSystemNotification < ApplicationRecord
       end
       notification
     end
-  end
-
-  private
-
-  def send_email
-    AppMailer.delay.system_notification(user, system_notification)
   end
 end
