@@ -46,7 +46,7 @@ var TinyMCE = (function() {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
         tinyMceInitSize = tinyMceContainer.height();
-        $(selector).closest('form').find('.form-group')
+        $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
 
