@@ -115,8 +115,8 @@ describe RepositoriesController, type: :controller do
     let(:action) { post :import_records, params: params, format: :json }
 
     it 'calls create activity for importing inventory items' do
-      ImportRepository::ImportRecords.any_instance.stub(:import!)
-                                     .and_return(status: :ok)
+      allow_any_instance_of(ImportRepository::ImportRecords)
+        .to receive(:import!).and_return(status: :ok)
 
       expect(Activities::CreateActivityService)
         .to(receive(:call)

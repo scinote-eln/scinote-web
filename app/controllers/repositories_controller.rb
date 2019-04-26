@@ -242,10 +242,10 @@ class RepositoriesController < ApplicationController
           import_records = repostiory_import_actions
           status = import_records.import!
 
-          log_activity(:import_inventory_items,
-                       num_of_items: status[:nr_of_added])
-
           if status[:status] == :ok
+            log_activity(:import_inventory_items,
+                         num_of_items: status[:nr_of_added])
+
             flash[:success] = t('repositories.import_records.success_flash',
                                 number_of_rows: status[:nr_of_added],
                                 total_nr: status[:total_nr])
