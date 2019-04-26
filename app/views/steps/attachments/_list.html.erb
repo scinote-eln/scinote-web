@@ -10,6 +10,8 @@
   </div>
   <div class="col-md-8">
     <div class="attachemnts-header pull-right">
+      <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
+                 locals: {  element_id: step.id, element_type: 'Step' } %>
       <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
                  locals: {  element_id: step.id, element_type: 'Step' } %>
       <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">

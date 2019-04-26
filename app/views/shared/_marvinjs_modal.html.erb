@@ -1,0 +1,26 @@
+<div id="MarvinJsModal"
+     class="modal modal-marvin-js"
+     role="dialog"
+     aria-labelledby="marvinJsModal"
+     aria-hidden="true"
+     data-backdrop="static"
+     data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
+        <span class="file-name"></span>
+        <a class="file-save-link" href='#'>
+          <p><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
+        </a>
+      </div>
+      <div class="modal-body">
+        <div id="marvinjs-editor">
+          <iframe id="marvinjs-sketch" src="https://marvinjs-demo.chemaxon.com/latest/editor.html" 
+  style="overflow: hidden; min-width: 500px; min-height: 450px"  ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_include_tag("sitewide/marvinjs_editor") %>
