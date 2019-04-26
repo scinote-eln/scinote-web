@@ -5,7 +5,7 @@
     <% if image_preview %>
       <%= image_tag image_preview %>
     <% else %>
-      <i class="fas <%= file_fa_icon_class_v2(asset) if asset.file_file_name %>"></i>
+      <i class="fas <%= file_fa_icon_class(asset) if asset.file_file_name %>"></i>
     <% end %>
   </div>
   <div class="attachment-label"><%= truncate(asset.file_file_name,
