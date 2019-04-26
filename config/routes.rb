@@ -676,6 +676,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :marvin_js_assets, only: [:create, :update, :destroy]
+
   post 'global_activities', to: 'global_activities#index'
 
   constraints WopiSubdomain do

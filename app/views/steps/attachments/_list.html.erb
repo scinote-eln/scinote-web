@@ -37,5 +37,10 @@
     <%= render partial: 'steps/attachments/item.html.erb',
                locals: { asset: asset, i: i, assets_count: assets.count, step: step } %>
   <% end %>
+
+  <% step.marvin_js_assets.each_with_index do |sketch, i| %>
+    <%= render partial: 'assets/marvinjs/marvin_sketch_card.html.erb',
+               locals: { sketch: sketch} %>
+  <% end %>
 </div>
 <hr>

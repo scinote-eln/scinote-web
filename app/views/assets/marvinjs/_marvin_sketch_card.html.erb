@@ -1,0 +1,27 @@
+<div class="pseudo-attachment-container">
+    <%= link_to '',
+            class: 'file-preview-link',
+            id: "modal_link_sketch_#{sketch.id}",
+            style: "order: 0",
+            data: { no_turbolink: true, id: true, status: 'asset-present',
+                    'preview-url': '',
+                    'order-atoz': 0,
+                    'order-ztoa': 0,
+                    'order-old': 0,
+                    'order-new': 0,
+            } do %>
+
+        <div class="attachment-placeholder pull-left">
+          <div class="attachment-thumbnail">
+              <img src>
+              <%= hidden_field_tag :description, sketch.description %>
+          </div>
+          <div class="attachment-label"><%= truncate('Empty name',
+                                             length: Constants::FILENAME_TRUNCATION_LENGTH) %></div>
+          <div class="spencer-bonnet-modif">
+            <%= t('protocols.steps.attachments.modified_label') %> <%= l(sketch.updated_at, format: :full_date) if sketch.updated_at %>
+          </div>
+        </div>
+    <% end %>
+    <script>MarvinJsEditor().create_preview('#modal_link_sketch_<%= sketch.id %>')</script>
+</div>
