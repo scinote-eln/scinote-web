@@ -68,17 +68,18 @@
       background: transparent;
       border: 1px solid transparent;
       cursor: pointer;
+      pointer-events: none;
       user-select: none;
 
       + .button-container {
         display: none;
 
       }
-
-      &:hover {
-        border: 1px solid $color-gainsboro;
-      }
     }
+  }
+
+  &:hover input {
+    border: 1px solid $color-gainsboro;
   }
 }
 
