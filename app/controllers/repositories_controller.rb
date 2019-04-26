@@ -1,8 +1,8 @@
 class RepositoriesController < ApplicationController
   before_action :load_vars,
-                except: %i(index create create_modal parse_sheet import_records)
+                except: %i(index create create_modal parse_sheet)
   before_action :load_parent_vars, except:
-    %i(repository_table_index export_repository parse_sheet import_records)
+    %i(repository_table_index parse_sheet)
   before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: %i(export_repository show)
@@ -243,6 +243,9 @@ class RepositoriesController < ApplicationController
           status = import_records.import!
 
           if status[:status] == :ok
+            log_activity(:import_inventory_items,
+                         num_of_items: status[:nr_of_added])
+
             flash[:success] = t('repositories.import_records.success_flash',
                                 number_of_rows: status[:nr_of_added],
                                 total_nr: status[:total_nr])
@@ -272,15 +275,7 @@ class RepositoriesController < ApplicationController
   def export_repository
     if params[:row_ids] && params[:header_ids]
       RepositoryZipExport.generate_zip(params, @repository, current_user)
-
-      Activities::CreateActivityService
-        .call(activity_type: :export_inventory_items,
-              owner: current_user,
-              subject: current_team,
-              team: current_team,
-              message_items: {
-                repository: @repository.id
-              })
+      log_activity(:export_inventory_items)
     else
       flash[:alert] = t('zip_export.export_error')
     end
@@ -355,12 +350,14 @@ class RepositoriesController < ApplicationController
     end
   end
 
-  def log_activity(type_of)
+  def log_activity(type_of, message_items = {})
+    message_items = { repository: @repository.id }.merge(message_items)
+
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             subject: @repository,
             team: @team,
-            message_items: { repository: @repository.id })
+            message_items: message_items)
   end
 end
