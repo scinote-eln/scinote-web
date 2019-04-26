@@ -12,6 +12,7 @@
     max-height: 23px;
     overflow: hidden;
     position: relative;
+
     &.select2-selection--multiple {
       border: 1px solid $color-alto;
     }
@@ -30,6 +31,7 @@
     .select2-selection__choice {
       background: $color-concrete;
       border: 1px solid $color-alto;
+      padding-bottom: 2px;
 
       .select2-selection__choice__remove {
         float: right;
@@ -194,17 +196,20 @@
     }
   }
 
-  &.select2-container--disabled{
-    cursor:pointer;
-    .select2-selection{
-      border:1px solid transparent;
+  &.select2-container--disabled {
+    cursor: pointer;
+
+    .select2-selection {
       background: transparent;
-      cursor:pointer;
-      &:hover{
-        border:1px solid $color-gainsboro;
+      border: 1px solid transparent;
+      cursor: pointer;
+
+      &:hover {
+        border: 1px solid $color-gainsboro;
       }
+
       .select2-selection__choice {
-        cursor:pointer;
+        cursor: pointer;
       }
     }
   }
