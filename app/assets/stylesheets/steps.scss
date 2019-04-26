@@ -245,6 +245,7 @@
         overflow: hidden;
         padding: 2px 5px;
         width: 100%;
+        pointer-events: none;
 
         &:focus {
           outline: 0;
