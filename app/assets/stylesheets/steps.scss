@@ -7,6 +7,7 @@
 // scss-lint:disable ImportantRule
 
 @import "constants";
+@import "mixins";
 
 #new_step,
 .panel-step-attachment {
@@ -89,18 +90,22 @@
 }
 
 .attacments {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+  .pseudo-attachment-container {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .attachment-placeholder {
-  background-color: $color-white;
-  border-radius: 5px;
+  @include md-card-style;
   color: $color-silver-chalice;
-  height: 277px;
-  margin: 3px;
-  width: 216px;
+  height: 280px;
+  margin: 8px;
+  text-align: center;
+  width: 220px;
 
   a {
     color: inherit;
@@ -111,19 +116,20 @@
   }
 
   &:hover {
-    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .18);
+    box-shadow: $md-shadow-hover;
   }
 
   .attachment-thumbnail {
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .15);
+    display: inline-block;
     height: 160px;
-    margin: 16px auto 5px;
+    margin: 16px 10px 5px;
     overflow: hidden;
     text-align: center;
-    width: 113px;
 
     img {
+      border-radius: 5px;
       max-height: 100%;
+      max-width: 100%;
     }
 
     i.fas {
@@ -160,7 +166,7 @@
   }
 
   .remove-icon {
-    bottom: 10px;
+    bottom: 15px;
     position: relative;
     right: 10px;
   }
