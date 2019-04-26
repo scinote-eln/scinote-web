@@ -1,3 +1,8 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
 @import "constants";
 @import "mixins";
 
@@ -93,9 +98,10 @@
 
           i {
             float: left;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 32px;
             margin-right: 5px;
+            padding-top: 1px;
           }
 
           span {
@@ -107,6 +113,10 @@
       }
 
       .select2-selection {
+
+        input[disabled] {
+          pointer-events: none;
+        }
 
         .select2-selection__rendered {
           cursor: pointer;
@@ -123,6 +133,7 @@
 
         .select2-selection__choice {
           border: 1px solid transparent;
+          border-radius: 3px;
           color: $color-white;
 
           .select2-selection__choice__remove {
@@ -137,6 +148,40 @@
           padding-right: 10px;
         }
       }
+    }
+  }
+}
+
+
+.select2-dropdown.module-tags-selector-dropdown {
+
+  .loading-results {
+    display: none;
+  }
+
+  .select2-results__option {
+    padding-left: 5px !important;
+
+    .add-tags {
+      align-items: center;
+      display: flex;
+    }
+
+    .create-new {
+      opacity: .6;
+    }
+
+    .tag-color {
+      border-radius: 3px;
+      display: inline-block;
+      height: 14px;
+      margin-right: 5px;
+      margin-top: 3px;
+      width: 14px;
+    }
+
+    &::before {
+      display: none;
     }
   }
 }

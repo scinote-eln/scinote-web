@@ -600,7 +600,8 @@ en:
       due_date: "Due date:"
       tags: "Tags:"
       no_tags: "click here to add Task Tags (optional)"
-      manage_tags: Manage tags
+      manage_tags: "Manage tags"
+      create_new_tag: "create new"
       no_description: "No description"
       description_label: "Description"
       empty_description_edit_label: "Click here to enter Task Description (optional)"
