@@ -10,6 +10,14 @@ class MarvinJsAssetsController < ApplicationController
                locals: { sketch: new_asset, i:0, assets_count: 0, step: new_asset.object}
           )
       }
+    elsif new_asset.object_type == 'TinyMceAsset'
+      tiny_img = TinyMceAsset.find(new_asset.object_id)
+      render json: {
+        image: {
+          url: view_context.image_url(tiny_img.url(:large)),
+          token: Base62.encode(tiny_img.id)
+        }
+      }, content_type: 'text/html'
     else
       render json: new_asset
     end
@@ -30,7 +38,7 @@ class MarvinJsAssetsController < ApplicationController
   private
 
   def marvin_params
-    params.permit(:description, :object_id, :object_type, :name)
+    params.permit(:description, :object_id, :object_type, :name, :image)
   end
 
 end

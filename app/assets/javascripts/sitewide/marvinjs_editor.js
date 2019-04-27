@@ -15,7 +15,7 @@ var MarvinJsEditor = (function() {
   }
 
   function preloadActions(config) {
-    if (config.mode === 'new'){
+    if (config.mode === 'new' || config.mode === 'new-tinymce'){
       loadEditor().then(function(sketcherInstance) {
         sketcherInstance.importStructure("mrv",emptySketch)
         sketchName.val(I18n.t('marvinjs.new_sketch'))
@@ -48,6 +48,13 @@ var MarvinJsEditor = (function() {
     return data
   }
 
+  function TinyMceBuildHTML(json) {
+    var imgstr = "<img src='" + json.image.url + "'";
+    imgstr += " data-mce-token='" + json.image.token + "'";
+    imgstr += " alt='description-" + json.image.token + "' />";
+    return imgstr;
+  }
+
   return Object.freeze({
     open: function(config) {
       preloadActions(config)
@@ -60,6 +67,9 @@ var MarvinJsEditor = (function() {
           MarvinJsEditor().save(config)
         } else if (config.mode === 'edit'){
           MarvinJsEditor().update(config)
+        } else if (config.mode === 'new-tinymce'){
+          config.objectType = 'TinyMceAsset'
+          MarvinJsEditor().save_with_image(config)
         }
       })
 
@@ -101,6 +111,32 @@ var MarvinJsEditor = (function() {
             }
             $(marvinJsModal).modal('hide');
           })
+        });
+      })
+    },
+
+    save_with_image: function(config){
+      loadEditor().then(function(sketcherInstance) {
+        sketcherInstance.exportStructure("mrv").then(function(mrv_description) {
+          loadPackages().then(function (sketcherPackage) {
+            sketcherPackage.onReady(function() {
+              exporter = createExporter(sketcherPackage,'image/jpeg')
+              exporter.render(mrv_description).then(function(image){
+                $.post(config.marvinUrl,{
+                  description: mrv_description,
+                  object_id: config.objectId,
+                  object_type: config.objectType,
+                  name: sketchName.val(),
+                  image: image
+                }, function(result){
+                  var json = tinymce.util.JSON.parse(result);
+                  config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
+                  TinyMCE.updateImages(config.editor)
+                  $(marvinJsModal).modal('hide');
+                })
+              });
+            });
+          });
         });
       })
     },
@@ -167,3 +203,42 @@ var MarvinJsEditor = (function() {
     }
   });
 });
+
+(function() {
+  'use strict';
+
+  tinymce.PluginManager.requireLangPack('MarvinJsPlugin');
+
+  tinymce.create('tinymce.plugins.MarvinJsPlugin', {
+    MarvinJsPlugin: function(ed, url) {
+      var editor = ed;
+
+      function openMarvinJs(){
+        MarvinJsEditor().open({
+          mode: 'new-tinymce',
+          marvinUrl: '/marvin_js_assets',
+          editor: editor
+        })
+      }
+      // Add a button that opens a window
+      editor.addButton('marvinjsplugin', {
+        tooltip: I18n.t('marvinjs.new_button'),
+        icon: 'file-invoice',
+        onclick: openMarvinJs
+      });
+
+      // Adds a menu item to the tools menu
+      editor.addMenuItem('marvinjsplugin', {
+        text: I18n.t('marvinjs.new_button'),
+        icon: 'file-invoice',
+        context: 'insert',
+        onclick: openMarvinJs
+      });
+    }
+  });
+
+  tinymce.PluginManager.add(
+    'marvinjsplugin',
+    tinymce.plugins.MarvinJsPlugin
+  );
+})();

@@ -14,6 +14,11 @@ class TinyMceAsset < ApplicationRecord
              touch: true,
              optional: true
 
+  has_one :source,
+             as: :object,
+             class_name: :MarvinJsAsset,
+             dependent: :destroy
+
   belongs_to :object, polymorphic: true,
                       optional: true,
                       inverse_of: :tiny_mce_assets

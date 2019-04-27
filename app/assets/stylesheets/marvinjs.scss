@@ -90,3 +90,11 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
 }
+
+ i.mce-i-file-invoice:before {
+    content: "\F570";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    line-height: 16px
+ }

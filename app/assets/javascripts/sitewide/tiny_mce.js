@@ -55,8 +55,8 @@ var TinyMCE = (function() {
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
           menubar: 'file edit view insert format',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
-          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          plugins: 'autosave autoresize marvinjsplugin customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern',
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -245,6 +245,16 @@ var TinyMCE = (function() {
     getContent: function() {
       return tinyMCE.editors[0].getContent();
     },
+    updateImages(editor) {
+      var images;
+      var iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
+      images = $.map($('img', iframe), e => {
+        return e.dataset.mceToken;
+      });
+      $('#' + editor.id).next()[0].value = JSON.stringify(images);
+      return JSON.stringify(images);
+    },
+
     highlight: initHighlightjs
   });
 }());
