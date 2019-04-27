@@ -11,24 +11,7 @@
                     'asset-type': 'marvin-sketch',
                     'asset-id': sketch.id
             } do %>
-
-        <div class="attachment-placeholder pull-left">
-          <div class="attachment-thumbnail">
-              <img src>
-              <%= hidden_field_tag :description, sketch.description %>
-          </div>
-          <div class="attachment-label"><%= truncate(sketch.name,
-                                             length: Constants::FILENAME_TRUNCATION_LENGTH) %></div>
-          <div class="spencer-bonnet-modif">
-            <%= t('protocols.steps.attachments.modified_label') %> <%= l(sketch.updated_at, format: :full_date) if sketch.updated_at %>
-          </div>
-        </div>
+        <%= render partial: 'assets/marvinjs/marvin_sketch_card_placeholder.html.erb',
+             locals: { edit_page: false, sketch: sketch } %>
     <% end %>
-    <script>
-        (function(){
-            src=$('#marvin_js_sketch_<%= sketch.id %>').find('#description')
-            target=$('#marvin_js_sketch_<%= sketch.id %>').find('img')
-            MarvinJsEditor().create_preview(src,target)
-        })()
-    </script>
 </div>

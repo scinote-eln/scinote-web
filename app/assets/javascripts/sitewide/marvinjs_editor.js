@@ -4,6 +4,7 @@ var MarvinJsEditor = (function() {
   var marvinJsContainer = $('#marvinjs-editor');
   var marvinJsObject = $('#marvinjs-sketch');
   var emptySketch = "<cml><MDocument></MDocument></cml>"
+  var sketchName = marvinJsModal.find('.file-name input')
 
   var loadEditor = () => {
     return MarvinJSUtil.getEditor('#marvinjs-sketch')
@@ -14,7 +15,6 @@ var MarvinJsEditor = (function() {
   }
 
   function preloadActions(config) {
-    var sketchName = marvinJsModal.find('.file-name input')
     if (config.mode === 'new'){
       loadEditor().then(function(sketcherInstance) {
         sketcherInstance.importStructure("mrv",emptySketch)
@@ -75,7 +75,8 @@ var MarvinJsEditor = (function() {
           $.post(config.marvinUrl,{
             description: source,
             object_id: config.objectId,
-            object_type: config.objectType
+            object_type: config.objectType,
+            name: sketchName.val()
           }, function(result){
             console.log(result)
             $(marvinJsModal).modal('hide');
@@ -93,6 +94,17 @@ var MarvinJsEditor = (function() {
             assignImage(target,result)
           });
         });
+      });
+    },
+
+    delete_sketch: function(url,object){
+      $.ajax({
+        url: url,
+        dataType: 'json',
+        type: 'DELETE',
+        success: function(json) {
+          $(object).remove()
+        }
       });
     }
   });

@@ -24,6 +24,12 @@
       <%= t("protocols.steps.new.tab_tables") %>
     </a>
   </li>
+  <li role="presentation" id="new-step-sketch-tab">
+    <a href="#new-step-sketch" data-toggle="tab" data-no-turbolink="true">
+      <span class="fas fa-file-invoice"></span>
+      <%= t('marvinjs.checmical_drawing') %>
+    </a>
+  </li>
 </ul>
 <div class="tab-content">
   <div class="tab-pane active" role="tabpanel" id="new-step-main">
@@ -84,4 +90,12 @@
       <%= t("protocols.steps.new.add_table") %>
     <% end %>
   </div>
+  <div class="tab-pane" role="tabpanel" id="new-step-sketch">
+    <div class="sketch-container">
+      <% @step.marvin_js_assets.each do |sketch| %>
+            <%= render partial: 'assets/marvinjs/marvin_sketch_card_placeholder.html.erb',
+               locals: { sketch: sketch, edit_page: true} %>
+      <% end %>
+    </div>
   </div>
+</div>

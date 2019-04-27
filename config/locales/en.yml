@@ -2142,3 +2142,7 @@ en:
         new: "https://support.scinote.net/hc/en-us/articles/360004627792"
         visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
         manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
+  marvinjs:
+    new_sketch: "New sketch"
+    new_button: "New chemical drawing"
+    checmical_drawing: "Chemical drawings"
