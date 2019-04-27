@@ -8,11 +8,21 @@ module MyModulesHelper
   end
 
   def ordered_assets(step)
-    step.assets.order(:file_updated_at)
+    assets=[]
+    assets += step.assets
+    assets += step.marvin_js_assets
+    assets.sort! { |a, b| 
+      a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)] 
+    }
   end
 
   def az_ordered_assets_index(step, asset_id)
-    step.assets.order('LOWER(file_file_name)').pluck(:id).index(asset_id)
+    assets=[]
+    assets += step.assets
+    assets += step.marvin_js_assets
+    assets.sort! { |a, b| 
+      (a[asset_name_sort_field(a)] || '').downcase <=> (b[asset_name_sort_field(b)] || '').downcase
+    }.pluck(:id).index(asset_id)
   end
 
   def number_of_samples(my_module)
@@ -40,6 +50,24 @@ module MyModulesHelper
 
   def is_results_page?
     action_name == "results"
+  end
+
+  private
+
+  def asset_date_sort_field(el)
+    result = {
+      'Asset' => :file_updated_at,
+      'MarvinJsAsset' => :updated_at
+    }
+    result[el.class.name]
+  end
+
+  def asset_name_sort_field(el)
+    result = {
+      'Asset' => :file_file_name,
+      'MarvinJsAsset' => :name
+    }
+    result[el.class.name]
   end
 
 end

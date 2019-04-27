@@ -40,6 +40,18 @@
 
     .file-name {
       float: left;
+
+      input {
+        border-radius: 5px;
+        box-shadow: none;
+        color: $color-black;
+        height: 40px;
+        outline: 0;
+        padding: 5px 10px;
+        position:relative;
+        top: -5px;
+        width: 350px;
+      }
     }
   }
 

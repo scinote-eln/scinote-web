@@ -34,13 +34,13 @@
 
 <div class="col-xs-12 attacments" id="att-<%= step.id %>">
   <% assets.each_with_index do |asset, i| %>
-    <%= render partial: 'steps/attachments/item.html.erb',
+    <% if asset.class.name == 'Asset' %>
+      <%= render partial: 'steps/attachments/item.html.erb',
                locals: { asset: asset, i: i, assets_count: assets.count, step: step } %>
-  <% end %>
-
-  <% step.marvin_js_assets.each_with_index do |sketch, i| %>
-    <%= render partial: 'assets/marvinjs/marvin_sketch_card.html.erb',
-               locals: { sketch: sketch} %>
+    <% elsif asset.class.name == 'MarvinJsAsset' %>
+      <%= render partial: 'assets/marvinjs/marvin_sketch_card.html.erb',
+               locals: { sketch: asset, i:i, assets_count: assets.count, step: step} %>
+    <% end %>
   <% end %>
 </div>
 <hr>

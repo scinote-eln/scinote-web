@@ -14,25 +14,32 @@ var MarvinJsEditor = (function() {
   }
 
   function preloadActions(config) {
+    var sketchName = marvinJsModal.find('.file-name input')
     if (config.mode === 'new'){
       loadEditor().then(function(sketcherInstance) {
         sketcherInstance.importStructure("mrv",emptySketch)
+        sketchName.val(I18n.t('marvinjs.new_sketch'))
       })
     }
   }
 
   function createExporter(marvin,imageType) {
     var inputFormat = "mrv";
+    var settings = {
+      'width' : 900,
+      'height' : 900
+    };
+
     var params = {
       'imageType': imageType,
+      'settings': settings,
       'inputFormat': inputFormat
     }
     return new marvin.ImageExporter(params);
   }
 
   function assignImage(target,data){
-    console.log(data)
-    $(target).find('img').attr('src',data)
+    target.attr('src',data)
   }
 
   return Object.freeze({
@@ -77,11 +84,11 @@ var MarvinJsEditor = (function() {
       })
     },
 
-    create_preview: function(target){
+    create_preview: function(source,target){
       loadPackages().then(function (sketcherInstance) {
         sketcherInstance.onReady(function() {
           exporter = createExporter(sketcherInstance,'image/jpeg')
-          sketch_config = $(target).find('#description').val();
+          sketch_config = source.val();
           exporter.render(sketch_config).then(function(result){
             assignImage(target,result)
           });
