@@ -20,6 +20,11 @@ var MarvinJsEditor = (function() {
         sketcherInstance.importStructure("mrv",emptySketch)
         sketchName.val(I18n.t('marvinjs.new_sketch'))
       })
+    }else if (config.mode === 'edit'){
+      loadEditor().then(function(sketcherInstance) {
+        sketcherInstance.importStructure("mrv",config.data)
+        sketchName.val(config.name)
+      })
     }
   }
 
@@ -40,6 +45,7 @@ var MarvinJsEditor = (function() {
 
   function assignImage(target,data){
     target.attr('src',data)
+    return data
   }
 
   return Object.freeze({
@@ -50,7 +56,11 @@ var MarvinJsEditor = (function() {
         .css('width', marvinJsContainer.width() + 'px')
         .css('height', marvinJsContainer.height() + 'px')
       marvinJsModal.find('.file-save-link').off('click').on('click', () => {
-        MarvinJsEditor().save(config)
+        if (config.mode === 'new'){
+          MarvinJsEditor().save(config)
+        } else if (config.mode === 'edit'){
+          MarvinJsEditor().update(config)
+        }
       })
 
     },
@@ -60,11 +70,13 @@ var MarvinJsEditor = (function() {
         var objectId = this.dataset.objectId;
         var objectType = this.dataset.objectType;
         var marvinUrl = this.dataset.marvinUrl;
+        var container = this.dataset.sketchContainer
         MarvinJsEditor().open({
           mode: 'new',
           objectId: objectId,
           objectType: objectType,
-          marvinUrl: marvinUrl
+          marvinUrl: marvinUrl,
+          container: container
         })
       })
     },
@@ -78,9 +90,42 @@ var MarvinJsEditor = (function() {
             object_type: config.objectType,
             name: sketchName.val()
           }, function(result){
-            console.log(result)
+            if (config.objectType === 'Step'){
+              new_asset = $(result.html)
+              new_asset.find('.file-preview-link').css('top','-300px')
+              new_asset.addClass('new').prependTo($(config.container))
+              setTimeout(function(){
+                new_asset.find('.file-preview-link').css('top','0px')
+              },200)
+              FilePreviewModal.init()
+            }
             $(marvinJsModal).modal('hide');
           })
+        });
+      })
+    },
+
+    update: function(config){
+      loadEditor().then(function(sketcherInstance) {
+        sketcherInstance.exportStructure("mrv").then(function(source) {
+          $.ajax({
+            url: config.marvinUrl,
+            data: {
+              description: source,
+              name: sketchName.val()
+            },
+            dataType: 'json',
+            type: 'PUT',
+            success: function(json) {
+              $(marvinJsModal).modal('hide');
+              config.reloadImage.src.val(json.description)
+              $(config.reloadImage.sketch).find('.attachment-label').text(json.name)
+              MarvinJsEditor().create_preview(
+                config.reloadImage.src, 
+                $(config.reloadImage.sketch).find('img')
+              )
+            }
+          });
         });
       })
     },
@@ -92,6 +137,19 @@ var MarvinJsEditor = (function() {
           sketch_config = source.val();
           exporter.render(sketch_config).then(function(result){
             assignImage(target,result)
+          });
+        });
+      });
+    },
+
+    create_download_link: function(source,link,filename){
+      loadPackages().then(function (sketcherInstance) {
+        sketcherInstance.onReady(function() {
+          exporter = createExporter(sketcherInstance,'image/jpeg')
+          sketch_config = source.val();
+          exporter.render(sketch_config).then(function(result){
+            link.attr('href', result);
+            link.attr('download', filename);
           });
         });
       });

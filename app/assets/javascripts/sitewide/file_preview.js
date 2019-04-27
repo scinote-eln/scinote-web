@@ -22,7 +22,7 @@ var FilePreviewModal = (function() {
       url = $(this).data('preview-url');
       downloadUrl = $(this).attr('href');
       if ($(this).data('asset-type') === 'marvin-sketch'){
-        openMarvinPrevieModal(name,$(this).find('#description'))
+        openMarvinPrevieModal(name,$(this).find('#description'),this)
         return true
       }
       openPreviewModal(name, url, downloadUrl);
@@ -530,8 +530,9 @@ var FilePreviewModal = (function() {
     modal.find('.file-edit-link').css('display', 'none');
   }
 
-  function openMarvinPrevieModal(name,src){
+  function openMarvinPrevieModal(name,src,sketch){
     var modal = $('#filePreviewModal');
+    var link = modal.find('.file-download-link');
     clearPrevieModal()
 
     modal.modal('show')
@@ -539,7 +540,29 @@ var FilePreviewModal = (function() {
             .append($('<img>').attr('src', '').attr('alt', ''));
     target=modal.find('.file-preview-container').find('img')
     MarvinJsEditor().create_preview(src,target)
+    MarvinJsEditor().create_download_link(src,link,name)
     modal.find('.file-name').text(name);
+
+    if (!readOnly) {
+      modal.find('.file-edit-link').css('display', '');
+      modal.find('.file-edit-link').off().click(function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        modal.modal('hide');
+        MarvinJsEditor().open({
+          mode: 'edit',
+          data: src.val(),
+          name: name,
+          marvinUrl: sketch.dataset.updateUrl,
+          reloadImage: {
+            src: src,
+            sketch: sketch
+          }
+        })
+      });
+    } else {
+      modal.find('.file-edit-link').css('display', 'none');
+    }
   }
 
   return Object.freeze({

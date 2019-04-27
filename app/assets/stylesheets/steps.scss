@@ -96,6 +96,35 @@
   .pseudo-attachment-container {
     display: flex;
     justify-content: center;
+    overflow: hidden;
+
+    .file-preview-link {
+      position: relative;
+    }
+
+    &.new {
+      order: 0 !important;
+
+      .file-preview-link {
+        transition: 0.5s;
+      }
+
+      .attachment-placeholder {
+        border: 1px solid $brand-primary;
+
+        &::before {
+          background: $brand-primary;
+          border-radius: 0px 5px 0px 5px;
+          bottom: 16px;
+          color: $color-white;
+          content: 'NEW';
+          left: 8px;
+          line-height: 20px;
+          position: absolute;
+          width: 50px;
+        }
+      }
+    }
   }
 }
 
@@ -103,7 +132,7 @@
   @include md-card-style;
   color: $color-silver-chalice;
   height: 280px;
-  margin: 8px;
+  margin: 4px 8px 16px;
   text-align: center;
   width: 220px;
 

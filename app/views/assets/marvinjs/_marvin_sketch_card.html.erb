@@ -9,7 +9,8 @@
                     'order-old': i,
                     'order-new': assets_count - i,
                     'asset-type': 'marvin-sketch',
-                    'asset-id': sketch.id
+                    'asset-id': sketch.id,
+                    'update_url': marvin_js_asset_path(sketch.id)
             } do %>
         <%= render partial: 'assets/marvinjs/marvin_sketch_card_placeholder.html.erb',
              locals: { edit_page: false, sketch: sketch } %>

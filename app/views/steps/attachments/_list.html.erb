@@ -11,7 +11,7 @@
   <div class="col-xl-8 col-md-12">
     <div class="attachemnts-header pull-right">
       <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
-                 locals: {  element_id: step.id, element_type: 'Step' } %>
+                 locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attacments#att-#{step.id}" } %>
       <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
                  locals: {  element_id: step.id, element_type: 'Step' } %>
       <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
