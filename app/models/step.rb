@@ -34,9 +34,9 @@ class Step < ApplicationRecord
     dependent: :destroy
 
   has_many :marvin_js_assets,
-             as: :object,
-             class_name: :MarvinJsAsset,
-             dependent: :destroy
+           as: :object,
+           class_name: :MarvinJsAsset,
+           dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,

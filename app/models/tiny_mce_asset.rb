@@ -15,9 +15,9 @@ class TinyMceAsset < ApplicationRecord
              optional: true
 
   has_one :marvin_js_asset,
-             as: :object,
-             class_name: :MarvinJsAsset,
-             dependent: :destroy
+          as: :object,
+          class_name: :MarvinJsAsset,
+          dependent: :destroy
 
   belongs_to :object, polymorphic: true,
                       optional: true,
@@ -63,15 +63,15 @@ class TinyMceAsset < ApplicationRecord
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset_url = find_by_id(Base62.decode(asset_id))
-      if new_asset_url
-        assets_source = new_asset_url.source
-        if assets_source
-          tm_asset.set_attribute('data-source-id', assets_source.id)
-          tm_asset.set_attribute('data-source-type', assets_source.class.name)
-        end
-        tm_asset.attributes['src'].value = new_asset_url.url
-        tm_asset['class'] = 'img-responsive'
+      next unless new_asset_url
+
+      assets_source = new_asset_url.source
+      if assets_source
+        tm_asset.set_attribute('data-source-id', assets_source.id)
+        tm_asset.set_attribute('data-source-type', assets_source.class.name)
       end
+      tm_asset.attributes['src'].value = new_asset_url.url
+      tm_asset['class'] = 'img-responsive'
     end
     description.css('body').inner_html.to_s
   end

@@ -17,7 +17,7 @@
     li {
       margin-bottom: 10px;
 
-      & > div > span.pull-left {
+      > div > span.pull-left {
         margin-top: 10px;
       }
     }
@@ -106,7 +106,7 @@
       order: 0 !important;
 
       .file-preview-link {
-        transition: 0.5s;
+        transition: .5s;
       }
 
       .attachment-placeholder {
@@ -114,10 +114,10 @@
 
         &::before {
           background: $brand-primary;
-          border-radius: 0px 5px 0px 5px;
+          border-radius: 0 5px;
           bottom: 16px;
           color: $color-white;
-          content: 'NEW';
+          content: "NEW";
           left: 8px;
           line-height: 20px;
           position: absolute;
@@ -274,8 +274,8 @@
         line-height: 16px;
         overflow: hidden;
         padding: 2px 5px;
-        width: 100%;
         pointer-events: none;
+        width: 100%;
 
         &:focus {
           outline: 0;

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateMarvinJsAssets < ActiveRecord::Migration[5.1]
   def change
     create_table :marvin_js_assets do |t|

@@ -1,5 +1,6 @@
-class MarvinJsAsset < ApplicationRecord
+# frozen_string_literal: true
 
+class MarvinJsAsset < ApplicationRecord
   belongs_to :object, polymorphic: true,
                       optional: true,
                       inverse_of: :marvin_js_assets
@@ -14,7 +15,7 @@ class MarvinJsAsset < ApplicationRecord
     ENV['MARVINJS_URL'] != nil
   end
 
-  def self.add_sketch(values,team)
+  def self.add_sketch(values, team)
     if values[:object_type] == 'TinyMceAsset'
       tiny_mce_img = TinyMceAsset.new(
         object: nil,
@@ -27,18 +28,17 @@ class MarvinJsAsset < ApplicationRecord
 
       values[:object_id] = tiny_mce_img.id
     end
-    create(values.merge({team_id: team.id}).except(:image))
+    create(values.merge(team_id: team.id).except(:image))
   end
 
   def self.update_sketch(values)
-    sketch=MarvinJsAsset.find(values[:id])
-    sketch.update(values.except(:image,:object_type,:id))
+    sketch = MarvinJsAsset.find(values[:id])
+    sketch.update(values.except(:image, :object_type, :id))
     if values[:object_type] == 'TinyMceAsset'
       image = TinyMceAsset.find(sketch.object_id)
       image.update(image: values[:image])
-      return {url: image.url(:large)}
+      return { url: image.url(:large) }
     end
-    return sketch
+    sketch
   end
-
 end
