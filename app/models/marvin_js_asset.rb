@@ -6,6 +6,14 @@ class MarvinJsAsset < ApplicationRecord
 
   belongs_to :team, inverse_of: :marvin_js_assets, optional: true
 
+  def self.url
+    ENV['MARVINJS_URL']
+  end
+
+  def self.enabled?
+    ENV['MARVINJS_URL'] != nil
+  end
+
   def self.add_sketch(values,team)
     if values[:object_type] == 'TinyMceAsset'
       tiny_mce_img = TinyMceAsset.new(

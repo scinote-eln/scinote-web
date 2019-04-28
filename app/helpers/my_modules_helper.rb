@@ -10,7 +10,7 @@ module MyModulesHelper
   def ordered_assets(step)
     assets=[]
     assets += step.assets
-    assets += step.marvin_js_assets
+    assets += step.marvin_js_assets if MarvinJsAsset.enabled?
     assets.sort! { |a, b| 
       a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)] 
     }
@@ -19,7 +19,7 @@ module MyModulesHelper
   def az_ordered_assets_index(step, asset_id)
     assets=[]
     assets += step.assets
-    assets += step.marvin_js_assets
+    assets += step.marvin_js_assets if MarvinJsAsset.enabled?
     assets.sort! { |a, b| 
       (a[asset_name_sort_field(a)] || '').downcase <=> (b[asset_name_sort_field(b)] || '').downcase
     }.pluck(:id).index(asset_id)

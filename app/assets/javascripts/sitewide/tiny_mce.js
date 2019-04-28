@@ -42,6 +42,7 @@ var TinyMCE = (function() {
     init: function(selector, mceConfig = {}) {
       var tinyMceContainer;
       var tinyMceInitSize;
+      var plugins;
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
@@ -49,14 +50,14 @@ var TinyMCE = (function() {
         $(selector).closest('form').find('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-
-
+        plugins = 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern'
+        if (typeof(MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin'
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
           menubar: 'file edit view insert format',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
-          plugins: 'autosave autoresize marvinjsplugin customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern',
+          plugins: plugins,
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -183,8 +184,10 @@ var TinyMCE = (function() {
                   editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link')
                   if (image[0].dataset.sourceId) {
                     editLink.css('display','inline-block')
+                    var marvinJsEdit = (image[0].dataset.sourceType === 'MarvinJsAsset' && typeof(MarvinJsEditor) !== 'undefined')
+                    if (!marvinJsEdit) editLink.css('display','none')
                     editLink.on('click', function(){
-                      if (image[0].dataset.sourceType === 'MarvinJsAsset'){
+                      if (marvinJsEdit){
                         MarvinJsEditor().open({
                           mode: 'edit-tinymce',
                           marvinUrl: '/marvin_js_assets/'+image[0].dataset.sourceId,
