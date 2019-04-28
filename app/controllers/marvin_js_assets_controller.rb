@@ -23,6 +23,10 @@ class MarvinJsAssetsController < ApplicationController
     end
   end
 
+  def show
+    render json: (MarvinJsAsset.find_by_id(params[:id]) || {})
+  end
+
   def destroy
     sketch=MarvinJsAsset.find(params[:id])
     sketch.destroy
@@ -30,15 +34,13 @@ class MarvinJsAssetsController < ApplicationController
   end
 
   def update
-    sketch=MarvinJsAsset.find(params[:id])
-    sketch.update(marvin_params)
-    render json: sketch
+    render json: MarvinJsAsset.update_sketch(marvin_params)
   end
 
   private
 
   def marvin_params
-    params.permit(:description, :object_id, :object_type, :name, :image)
+    params.permit(:id,:description, :object_id, :object_type, :name, :image)
   end
 
 end

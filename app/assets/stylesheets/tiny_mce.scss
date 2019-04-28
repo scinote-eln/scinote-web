@@ -59,4 +59,42 @@
 .mce-toolbar {
   background: $color-white !important;
 }
+
+.mce-stack-layout {
+  .tinymce-active-object-handler {
+    border-top: 1px solid rgb(226, 228, 231);
+    height: 33px;
+    width: 100%;
+
+    .tool-button {
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-block;
+      margin: 2px;
+      line-height: 27px;
+      text-align: center;
+      width: 30px;
+
+      &:hover {
+        border: 1px solid rgb(226, 228, 231);
+      }
+    }
+
+    i.mce-i-donwload:before {
+      content: "\F019";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      position: absolute;
+      line-height: 16px
+    }
+
+    i.mce-i-pencil:before {
+      content: "\F303";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      position: absolute;
+      line-height: 16px
+    }
+  }
+}
 // scss-lint:enable ImportantRule

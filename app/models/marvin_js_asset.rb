@@ -15,17 +15,22 @@ class MarvinJsAsset < ApplicationRecord
         image: values[:image],
         image_file_name: "#{name}.jpg"
       )
-      # Decode the file bytes
-      #image = values[:image].split(';')
-      #tiny_mce_img.image = StringIO.new(
-      #  Base64.decode64(image[1])
-      #)
-      #tiny_mce_img.image_content_type = image[0].split(':')[1]
       tiny_mce_img.save!
 
       values[:object_id] = tiny_mce_img.id
     end
     create(values.merge({team_id: team.id}).except(:image))
+  end
+
+  def self.update_sketch(values)
+    sketch=MarvinJsAsset.find(values[:id])
+    sketch.update(values.except(:image,:object_type,:id))
+    if values[:object_type] == 'TinyMceAsset'
+      image = TinyMceAsset.find(sketch.object_id)
+      image.update(image: values[:image])
+      return {url: image.url(:large)}
+    end
+    return sketch
   end
 
 end

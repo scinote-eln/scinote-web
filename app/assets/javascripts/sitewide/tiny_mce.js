@@ -129,9 +129,11 @@ var TinyMCE = (function() {
           ],
           init_instance_callback: function(editor) {
             var editorForm = $(editor.getContainer()).closest('form');
+            var editorContainer = $(editor.getContainer())
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
             var editorToolbaroffset = mceConfig.toolbar_offset || 120;
+            var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe')
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
             setTimeout(() => {
@@ -162,6 +164,44 @@ var TinyMCE = (function() {
                 editor.save();
                 editorForm.submit();
               });
+
+            // Init image helpers
+            $('<div class="tinymce-active-object-handler" style="display:none">'
+                +'<a class="file-download-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-donwload"></i></a>'
+                +'<span class="file-edit-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-pencil"></i></span>'
+              +'</div>').appendTo(editorToolbar.find('.mce-stack-layout'))
+            editorIframe.contents().click(function(){
+              setTimeout(() => {
+                var image = editorIframe.contents().find('img[data-mce-selected="1"]')
+                var editLink;
+                if (image.length > 0){
+                  editorContainer.find('.tinymce-active-object-handler').css('display', 'block')
+                  editorContainer.find('.tinymce-active-object-handler .file-download-link')
+                    .attr('href', image[0].src)
+                    .attr('download', 'tinymce-image');
+
+                  editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link')
+                  if (image[0].dataset.sourceId) {
+                    editLink.css('display','inline-block')
+                    editLink.on('click', function(){
+                      if (image[0].dataset.sourceType === 'MarvinJsAsset'){
+                        MarvinJsEditor().open({
+                          mode: 'edit-tinymce',
+                          marvinUrl: '/marvin_js_assets/'+image[0].dataset.sourceId,
+                          image: image,
+                          saveButton: editorContainer.find('.tinymce-save-button')
+                        })
+                      }
+                    })
+                  } else {
+                    editLink.css('display','none')
+                    editLink.off('click')
+                  }
+                }else{
+                  editorContainer.find('.tinymce-active-object-handler').css('display', 'none')
+                }
+              },100)
+            })
 
             // After save action
             editorForm

@@ -25,6 +25,13 @@ var MarvinJsEditor = (function() {
         sketcherInstance.importStructure("mrv",config.data)
         sketchName.val(config.name)
       })
+    }else if (config.mode === 'edit-tinymce'){
+      loadEditor().then(function(sketcherInstance) {
+        $.get(config.marvinUrl,function(result){
+          sketcherInstance.importStructure("mrv",result.description)
+          sketchName.val(result.name)
+        })
+      })
     }
   }
 
@@ -70,6 +77,8 @@ var MarvinJsEditor = (function() {
         } else if (config.mode === 'new-tinymce'){
           config.objectType = 'TinyMceAsset'
           MarvinJsEditor().save_with_image(config)
+        } else if (config.mode === 'edit-tinymce'){
+          MarvinJsEditor().update_tinymce(config)
         }
       })
 
@@ -161,6 +170,37 @@ var MarvinJsEditor = (function() {
                 $(config.reloadImage.sketch).find('img')
               )
             }
+          });
+        });
+      })
+    },
+
+    update_tinymce: function(config){
+      loadEditor().then(function(sketcherInstance) {
+        sketcherInstance.exportStructure("mrv").then(function(mrv_description) {
+          loadPackages().then(function (sketcherPackage) {
+            sketcherPackage.onReady(function() {
+              exporter = createExporter(sketcherPackage,'image/jpeg')
+              exporter.render(mrv_description).then(function(image){
+                $.ajax({
+                  url: config.marvinUrl,
+                  data: {
+                    description: mrv_description,
+                    name: sketchName.val(),
+                    object_type: 'TinyMceAsset',
+                    image: image
+                  },
+                  dataType: 'json',
+                  type: 'PUT',
+                  success: function(json) {
+                    config.image[0].src = json.url
+                    config.saveButton.removeClass('hidden')
+                    console.log(config.saveButton)
+                    $(marvinJsModal).modal('hide');
+                  }
+                });
+              });
+            });
           });
         });
       })
