@@ -117,6 +117,10 @@
 
   &:hover {
     box-shadow: $md-shadow-hover;
+
+    .remove-icon {
+      display: inline-block;
+    }
   }
 
   .attachment-thumbnail {
@@ -167,6 +171,7 @@
 
   .remove-icon {
     bottom: 15px;
+    display: none;
     position: relative;
     right: 10px;
   }
