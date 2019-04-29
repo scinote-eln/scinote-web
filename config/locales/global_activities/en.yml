@@ -127,6 +127,10 @@ en:
       change_users_role_on_team_html: "%{user} changed user %{user_changed}'s role in team %{team} to %{role}."
       export_projects_html: "%{user} exported project(s) %{projects} to .zip."
       export_inventory_items_html: "%{user} exported inventory item(s) from %{repository}."
+      create_tag_html: "%{user} created tag <strong>%{tag}</strong> in project %{project}."
+      edit_tag_html: "%{user} edited tag <strong>%{tag}</strong> in project %{project}."
+      delete_tag_html: "%{user} deleted tag <strong>%{tag}</strong> in project %{project}."
+
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -192,7 +196,6 @@ en:
       change_task_due_date: "Task due date changed"
       remove_task_due_date: "Task due date removed"
       add_task_tag: "Task tag added"
-      edit_task_tag: "Task tag edited"
       remove_task_tag: "Task tag removed"
       create_inventory: "Inventory created"
       rename_inventory: "Inventory renamed"
@@ -225,6 +228,10 @@ en:
       user_leave_team: "User left team"
       export_projects: "Projects exported"
       export_inventory_items: "Inventory items exported"
+      create_tag: "Tag created"
+      edit_tag: "Tag edited"
+      delete_tag: "Tag deleted"
+
     activity_group:
       projects: "Projects"
       task_results: "Task results"
