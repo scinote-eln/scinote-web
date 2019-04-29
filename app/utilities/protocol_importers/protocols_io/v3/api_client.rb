@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ProtocolImporters
   module ProtocolsIO
     module V3
@@ -6,6 +8,7 @@ module ProtocolImporters
 
         base_uri 'https://www.protocols.io/api/v3/'
         default_timeout 10
+        logger Rails.logger, :debug
 
         def initialize(token = nil)
           # Currently we support public tokens only (no token needed for public data)
@@ -61,7 +64,6 @@ module ProtocolImporters
           self.class.get("https://www.protocols.io/view/#{uri}.html", headers: {})
         end
       end
-
     end
   end
 end
