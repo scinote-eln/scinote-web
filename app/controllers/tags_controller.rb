@@ -17,6 +17,7 @@ class TagsController < ApplicationController
     end
 
     if @tag.save
+      log_activity(:create_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
       if params.include? "my_module_id"
         # Assign the tag to the specified module
         new_mmt = MyModuleTag.new(
@@ -26,7 +27,6 @@ class TagsController < ApplicationController
 
         my_module = new_mmt.my_module
 
-        log_activity(:create_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
         log_activity(:add_task_tag, my_module, tag: @tag.id, my_module: my_module.id)
       end
 
