@@ -79,12 +79,7 @@ class UserTeam < ApplicationRecord
 
     # Make new owner author of all inventory items that were added
     # by departing user and belong to this team.
-    repository_rows =
-      RepositoryRow.joins(:repository)
-                   .where('repositories.team_id = ? and repository_rows.created_by_id = ?', team, user)
-    repository_rows.find_each do |repository_row|
-      repository_row.update(created_by: new_owner)
-    end
+    RepositoryRow.change_owner(team, user, new_owner)
 
     super()
   end
