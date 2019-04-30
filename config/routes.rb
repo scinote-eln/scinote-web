@@ -676,7 +676,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :marvin_js_assets, only: %i(create update destroy show)
+  resources :marvin_js_assets, only: %i(create update destroy show) do
+    collection do
+      get :team_sketches
+    end
+  end
 
   post 'global_activities', to: 'global_activities#index'
 

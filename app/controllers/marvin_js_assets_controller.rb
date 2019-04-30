@@ -39,6 +39,19 @@ class MarvinJsAssetsController < ApplicationController
     render json: MarvinJsAsset.update_sketch(marvin_params)
   end
 
+  def team_sketches
+    result = ''
+    sketches = current_team.marvin_js_assets.where.not(object_type: 'TinyMceAsset')
+    sketches.each do |sketch|
+      result += render_to_string(
+        partial: 'shared/marvinjs_modal_sketch.html.erb',
+           locals: { sketch: sketch }
+      )
+    end
+
+    render json: { html: result, sketches: sketches.pluck(:id) }
+  end
+
   private
 
   def marvin_params

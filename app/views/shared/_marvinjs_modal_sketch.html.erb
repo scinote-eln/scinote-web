@@ -1,0 +1,9 @@
+<div class="sketch-container" data-sketch-id="<%= sketch.id %>" >
+  <img src class="sketch-image">
+  <%= hidden_field_tag :description, sketch.description %>
+  <div class="sketch-name"><%= truncate(sketch.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %></div>
+  <div class="sketch-object">
+    <%= t('marvinjs.task') %>: <%= truncate(sketch.object.protocol.my_module.name,
+      length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+  </div>
+</div>

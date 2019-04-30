@@ -71,9 +71,65 @@
       width: 100%;
 
       #marvinjs-sketch {
+        border-right: 1px solid $color-gainsboro;
+        float: left;
         min-height: 450px;
         min-width: 500px;
         overflow: hidden;
+      }
+
+      .marvinjs-team-sketch {
+        background: $color-white;
+        float: right;
+        height: calc(100% - 40px);
+        overflow-y: scroll;
+        position: relative;
+        width: 200px;
+      }
+
+      .marvinjs-team-sketch-header {
+        background: $color-white;
+        border-bottom: 1px solid $color-gainsboro;
+        color: $color-emperor;
+        float: right;
+        font-size: 16px;
+        height: 40px;
+        line-height: 39px;
+        text-align: center;
+        width: 200px;
+      }
+
+    }
+
+    .sketch-container {
+      @include md-card-style;
+      cursor: pointer;
+      margin: 10px;
+      overflow: hidden;
+      padding: 10px;
+      position: relative;
+
+      .sketch-image {
+        height: 100%;
+        width: 100%;
+      }
+
+      .sketch-name {
+        color: $brand-primary;
+        font-family: Lato;
+        font-size: 16px;
+        line-height: 18px;
+        margin: 10px auto;
+        overflow: hidden;
+        text-align: center;
+        width: 160px;
+      }
+
+      .sketch-object {
+        color: $color-emperor;
+        font-size: 12px;
+        opacity: .6;
+        text-align: center;
       }
     }
   }

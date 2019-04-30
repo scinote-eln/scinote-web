@@ -16,8 +16,9 @@
       </div>
       <div class="modal-body">
         <div id="marvinjs-editor">
-          <iframe id="marvinjs-sketch" src="<%= MarvinJsAsset.url %>" 
-  style="overflow: hidden; min-width: 500px; min-height: 450px"  ></iframe>
+          <iframe id="marvinjs-sketch" src="<%= MarvinJsAsset.url %>" frameBorder="0"></iframe>
+          <div class="marvinjs-team-sketch-header"><%= t('marvinjs.team_drawings') %></div>
+          <div class="marvinjs-team-sketch"></div>
         </div>
       </div>
     </div>

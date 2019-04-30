@@ -1,4 +1,4 @@
-/* global MarvinJSUtil, I18n, FilePreviewModal, tinymce, TinyMCE */
+/* global MarvinJSUtil, I18n, FilePreviewModal, tinymce, TinyMCE PerfectScrollbar */
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
 
@@ -69,10 +69,11 @@ var MarvinJsEditor = (function() {
 
   return Object.freeze({
     open: function(config) {
+      MarvinJsEditor().team_sketches();
       preloadActions(config);
       $(marvinJsModal).modal('show');
       $(marvinJsObject)
-        .css('width', marvinJsContainer.width() + 'px')
+        .css('width', (marvinJsContainer.width() - 200) + 'px')
         .css('height', marvinJsContainer.height() + 'px');
       marvinJsModal.find('.file-save-link').off('click').on('click', () => {
         if (config.mode === 'new') {
@@ -243,6 +244,28 @@ var MarvinJsEditor = (function() {
         success: function() {
           $(object).remove();
         }
+      });
+    },
+
+    team_sketches: function() {
+      var ps = new PerfectScrollbar(marvinJsContainer.find('.marvinjs-team-sketch')[0]);
+      marvinJsContainer.find('.sketch-container').remove();
+      $.get('/marvin_js_assets/team_sketches', function(result) {
+        $(result.html).appendTo(marvinJsContainer.find('.marvinjs-team-sketch'));
+
+        $.each(result.sketches, function(i, sketch) {
+          var sketchObj = marvinJsContainer.find('.marvinjs-team-sketch .sketch-container[data-sketch-id="' + sketch + '"]');
+          var src = sketchObj.find('#description');
+          var dest = sketchObj.find('img');
+          MarvinJsEditor().create_preview(src, dest);
+          setTimeout(() => { ps.update(); }, 500);
+          marvinJsContainer.find('.sketch-container').click(function() {
+            var sketchContainer = $(this);
+            loadEditor().then(function(sketcherInstance) {
+              sketcherInstance.importStructure('mrv', sketchContainer.find('#description').val());
+            });
+          });
+        });
       });
     }
   });
