@@ -17,6 +17,7 @@ class TagsController < ApplicationController
     end
 
     if @tag.save
+      log_activity(:create_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
       if params.include? "my_module_id"
         # Assign the tag to the specified module
         new_mmt = MyModuleTag.new(
@@ -25,17 +26,8 @@ class TagsController < ApplicationController
         new_mmt.save
 
         my_module = new_mmt.my_module
-        Activities::CreateActivityService
-          .call(activity_type: :add_task_tag,
-                owner: current_user,
-                subject: my_module,
-                project:
-                  my_module.experiment.project,
-                team: current_team,
-                message_items: {
-                  my_module: my_module.id,
-                  tag: @tag.id
-                })
+
+        log_activity(:add_task_tag, my_module, tag: @tag.id, my_module: my_module.id)
       end
 
       flash_success = t(
@@ -82,6 +74,7 @@ class TagsController < ApplicationController
   def update
     @tag.last_modified_by = current_user
     if @tag.update_attributes(tag_params)
+      log_activity(:edit_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
       respond_to do |format|
         format.html
         format.json do
@@ -103,6 +96,7 @@ class TagsController < ApplicationController
   end
 
   def destroy
+    log_activity(:delete_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
     if @tag.destroy
       flash_success = t(
         "tags.destroy.success_flash",
@@ -165,5 +159,15 @@ class TagsController < ApplicationController
 
   def tag_params
     params.require(:tag).permit(:name, :color, :project_id)
+  end
+
+  def log_activity(type_of, subject = nil, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: subject,
+            team: current_team,
+            project: @tag.project,
+            message_items: message_items)
   end
 end

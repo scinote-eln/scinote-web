@@ -14,10 +14,10 @@ describe TagsController, type: :controller do
   end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, experiment: experiment }
+  let(:tag) { create :tag, project: project }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
-    let(:tag) { create :tag, project: project }
     let(:params) do
       {
         my_module_id: my_module.id,
@@ -28,10 +28,59 @@ describe TagsController, type: :controller do
       }
     end
 
-    it 'calls create activity for adding task tag' do
+    it 'calls create activity for create tag' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :create_tag)))
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :add_task_tag)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'PUT update' do
+    let(:action) do
+      put :update, params: {
+        project_id: tag.project.id,
+        id: tag.id,
+        my_module_id: my_module.id,
+        tag: { name: 'Name2' }
+      }, format: :json
+    end
+
+    it 'calls create activity for edit tag' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :edit_tag)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'DELETE destroy' do
+    let(:action) do
+      delete :destroy, params: {
+        project_id: tag.project.id,
+        id: tag.id,
+        my_module_id: my_module.id,
+        format: :json
+      }
+    end
+
+    it 'calls create activity for delete tag' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :delete_tag)))
       action
     end
 
