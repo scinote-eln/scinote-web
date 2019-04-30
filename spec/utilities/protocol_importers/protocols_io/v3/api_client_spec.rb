@@ -3,24 +3,18 @@
 require 'rails_helper'
 
 describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
+  CONSTANTS = Constants::PROTOCOLS_IO_V3_API
   TOKEN = 'test_token'
 
   describe '#protocol_list' do
-    URL = 'https://www.protocols.io/api/v3/protocols'
+    URL = "#{CONSTANTS[:base_uri]}protocols"
 
     let(:stub_protocols) do
       stub_request(:get, URL).with(query: hash_including({}))
     end
 
     let(:default_query_params) do
-      {
-        filter: :public,
-        key: '',
-        order_dir: :desc,
-        order_field: :activity,
-        page_id: 1,
-        page_size: 10
-      }
+      CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
     end
 
     it 'returns 200 on successfull call' do
@@ -69,7 +63,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
 
   describe '#single_protocol' do
     PROTOCOL_ID = 15
-    SINGLE_PROTOCOL_URL = "https://www.protocols.io/api/v3/protocols/#{PROTOCOL_ID}"
+    SINGLE_PROTOCOL_URL = "#{CONSTANTS[:base_uri]}protocols/#{PROTOCOL_ID}"
 
     let(:stub_single_protocol) do
       stub_request(:get, SINGLE_PROTOCOL_URL)

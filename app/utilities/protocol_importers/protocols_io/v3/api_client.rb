@@ -6,9 +6,11 @@ module ProtocolImporters
       class ApiClient
         include HTTParty
 
-        base_uri 'https://www.protocols.io/api/v3/'
-        default_timeout 10
-        logger Rails.logger, :debug
+        CONSTANTS = Constants::PROTOCOLS_IO_V3_API
+
+        base_uri CONSTANTS[:base_uri]
+        default_timeout CONSTANTS[:default_timeout]
+        logger Rails.logger, CONSTANTS[:debug_level]
 
         def initialize(token = nil)
           # Currently we support public tokens only (no token needed for public data)
@@ -40,14 +42,8 @@ module ProtocolImporters
         #     id of page.
         #     Default is 1.
         def protocol_list(query_params = {})
-          query = {
-            filter: :public,
-            key: '',
-            order_field: :activity,
-            order_dir: :desc,
-            page_size: 10,
-            page_id: 1
-          }.merge!(query_params)
+          query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
+                           .merge(query_params)
 
           self.class.get('/protocols', query: query)
         end
