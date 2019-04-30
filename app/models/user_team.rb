@@ -77,6 +77,10 @@ class UserTeam < ApplicationRecord
       protocol.save
     end
 
+    # Make new owner author of all inventory items that were added
+    # by departing user and belong to this team.
+    RepositoryRow.change_owner(team, user, new_owner)
+
     super()
   end
 
