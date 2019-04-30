@@ -1,7 +1,7 @@
 version: '2'
 services:
   db:
-    container_name: scinote_db_production
+    container_name: scinote_db_production1
     image: postgres:9.4
     volumes:
       - scinote_production_postgres:/var/lib/postgresql/data
