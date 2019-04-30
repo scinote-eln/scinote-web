@@ -131,8 +131,9 @@ class AssetsController < ApplicationController
   end
 
   def edit
+    action = @asset.file_file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
     @action_url = append_wd_params(@asset
-                                   .get_action_url(current_user, 'edit', false))
+                                  .get_action_url(current_user, action, false))
     @favicon_url = @asset.favicon_url('edit')
     tkn = current_user.get_wopi_token
     @token = tkn.token
