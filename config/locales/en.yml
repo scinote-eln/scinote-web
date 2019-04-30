@@ -246,7 +246,7 @@ en:
       no_comments: "No comments!"
       no_users: "No users!"
       manage_users: "Manage users"
-      no_notifications: "No notifications!"
+      no_notifications: "There are no overdue tasks at the moment"
       module_overdue_html: "Task <em>%{module}</em> is overdue (%{days})."
       module_overdue_days:
         one: "1 day"
@@ -267,7 +267,7 @@ en:
       start_date: "Start date:"
       activity_tab: "Activity"
       users_tab: "Users"
-      notifications_tab: "Notifications"
+      notifications_tab: "Due dates"
       comment_tab: "Comments"
       new_comment: "New comment"
       content_loading: "Loading..."

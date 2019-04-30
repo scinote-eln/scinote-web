@@ -1,3 +1,5 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
 @import 'constants';
 @import "mixins";
 
@@ -591,5 +593,55 @@ li.module-hover {
 
   &:focus {
     color: $color-alto;
+  }
+}
+
+/// icon override
+
+.panel-project {
+
+  .nav-tabs[data-hook="project-footer-icons"] {
+
+    .btn-link {
+      display: inline-block;
+      min-width: 30px;
+    }
+
+    .badge-indicator {
+      background: transparent;
+      color: $color-silver-chalice;
+      font-size: 12px;
+      margin-left: 0;
+      padding: 0;
+      top: 0;
+    }
+  }
+
+  .tab-content[data-hook="project-dropdown-panel"] {
+
+    .over-due {
+
+      .title {
+        border-top: 1px solid $color-concrete;
+        font-size: 14px;
+        line-height: 15px;
+        padding: 10px 15px 0;
+      }
+
+      .notification {
+        padding-left: 35px;
+
+        .date-time {
+          position: relative;
+
+          .fas {
+            font-size: 14px;
+            left: -20px;
+            position: absolute;
+            top: 2px;
+          }
+        }
+      }
+    }
   }
 }
