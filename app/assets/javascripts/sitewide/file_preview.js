@@ -394,23 +394,39 @@ var FilePreviewModal = (function() {
 
       dataUpload.append('image', imageBlob);
       animateSpinner(null, true);
-      $.ajax({
-        type: 'POST',
-        url: '/files/' + data.id + '/update_image',
-        data: dataUpload,
-        contentType: false,
-        processData: false,
-        success: function(res) {
-          $('#modal_link' + data.id).parent().html(res.html);
-          setupAssetsLoading();
-        }
-      }).done(function() {
+
+      function closeEditor() {
         animateSpinner(null, false);
         imageEditor.destroy();
         imageEditor = {};
         $('#tui-image-editor').html('');
         $('#fileEditModal').modal('hide');
-      });
+      }
+
+      if (data.mode === 'tinymce') {
+        $.ajax({
+          type: 'PUT',
+          url: data.url,
+          data: dataUpload,
+          contentType: false,
+          processData: false,
+          success: function(res) {
+            data.image.src = res.url;
+          }
+        }).done(function() { closeEditor(); });
+      } else {
+        $.ajax({
+          type: 'POST',
+          url: '/files/' + data.id + '/update_image',
+          data: dataUpload,
+          contentType: false,
+          processData: false,
+          success: function(res) {
+            $('#modal_link' + data.id).parent().html(res.html);
+            setupAssetsLoading();
+          }
+        }).done(function() { closeEditor(); });
+      }
     });
 
     window.onresize = function() {
@@ -569,6 +585,7 @@ var FilePreviewModal = (function() {
   }
 
   return Object.freeze({
-    init: initPreviewModal
+    init: initPreviewModal,
+    imageEditor: initImageEditor,
   });
 }(window));

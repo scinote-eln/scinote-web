@@ -95,6 +95,14 @@
       line-height: 16px;
       position: absolute;
     }
+
+    .mce-i-image::before {
+      content: "\F03E";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      line-height: 16px;
+      position: absolute;
+    }
   }
 }
 // scss-lint:enable ImportantRule
