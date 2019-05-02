@@ -37,6 +37,78 @@ var TinyMCE = (function() {
     }
   }
 
+  function initImageToolBar(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    var editorContainer = $(editor.getContainer());
+    var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
+    var editorToolbar = editorForm.find('.mce-top-part');
+    var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
+    $('<div class="tinymce-active-object-handler" style="display:none">'
+                + '<a class="file-download-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-donwload"></i></a>'
+                + '<span class="file-edit-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-pencil"></i></span>'
+                + '<span class="file-image-editor-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-image"></i></span>'
+              + '</div>').appendTo(editorToolbar.find('.mce-stack-layout'));
+    editorIframe.contents().click(function() {
+      var marvinJsEdit;
+      setTimeout(() => {
+        var image = editorIframe.contents().find('img[data-mce-selected="1"]');
+        var editLink;
+        var imageEditorLink;
+        if (image.length > 0) {
+          image.on('load', function() {
+            editorContainer.find('.tinymce-save-button').removeClass('hidden');
+          });
+          editorContainer.find('.tinymce-active-object-handler').css('display', 'block');
+          editorContainer.find('.tinymce-active-object-handler .file-download-link')
+            .attr('href', image[0].src)
+            .attr('download', 'tinymce-image');
+
+          // Edit link
+          editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link');
+          if (image[0].dataset.sourceId) {
+            editLink.css('display', 'inline-block');
+            marvinJsEdit = (image[0].dataset.sourceType === 'MarvinJsAsset' && typeof (MarvinJsEditor) !== 'undefined');
+            if (!marvinJsEdit) editLink.css('display', 'none');
+            editLink.on('click', function() {
+              if (marvinJsEdit) {
+                MarvinJsEditor().open({
+                  mode: 'edit-tinymce',
+                  marvinUrl: '/marvin_js_assets/' + image[0].dataset.sourceId,
+                  image: image
+                });
+              }
+            });
+          } else {
+            editLink.css('display', 'none');
+            editLink.off('click');
+          }
+
+          // imaged editor Link
+          imageEditorLink = editorContainer.find('.tinymce-active-object-handler .file-image-editor-link');
+          if (image[0].dataset.mceToken && image[0].dataset.sourceId) {
+            imageEditorLink.css('display', 'inline-block');
+            imageEditorLink.on('click', function() {
+              FilePreviewModal.imageEditor({
+                'download-url': image[0].src,
+                filename: 'tinymce-image.jpg',
+                mode: 'tinymce',
+                url: '/tiny_mce_assets/' + image[0].dataset.mceToken,
+                quality: 100,
+                'mime-type': 'image/jpeg',
+                image: image[0]
+              });
+            });
+          } else {
+            imageEditorLink.css('display', 'none');
+            imageEditorLink.off('click');
+          }
+        } else {
+          editorContainer.find('.tinymce-active-object-handler').css('display', 'none');
+        }
+      }, 100);
+    });
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, mceConfig = {}) {
@@ -153,6 +225,9 @@ var TinyMCE = (function() {
               moveToolbar(editor, editorToolbar, editorToolbaroffset);
             });
 
+            // Init image toolbar
+            initImageToolBar(editor);
+
             // Init Save button
             editorForm
               .find('.tinymce-save-button')
@@ -165,70 +240,6 @@ var TinyMCE = (function() {
                 editor.save();
                 editorForm.submit();
               });
-
-            // Init image helpers
-            $('<div class="tinymce-active-object-handler" style="display:none">'
-                + '<a class="file-download-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-donwload"></i></a>'
-                + '<span class="file-edit-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-pencil"></i></span>'
-                + '<span class="file-image-editor-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-image"></i></span>'
-              + '</div>').appendTo(editorToolbar.find('.mce-stack-layout'));
-            editorIframe.contents().click(function() {
-              var marvinJsEdit;
-              setTimeout(() => {
-                var image = editorIframe.contents().find('img[data-mce-selected="1"]');
-                var editLink;
-                var imageEditorLink;
-                if (image.length > 0) {
-                  editorContainer.find('.tinymce-active-object-handler').css('display', 'block');
-                  editorContainer.find('.tinymce-active-object-handler .file-download-link')
-                    .attr('href', image[0].src)
-                    .attr('download', 'tinymce-image');
-
-                  // Edit link
-                  editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link');
-                  if (image[0].dataset.sourceId) {
-                    editLink.css('display', 'inline-block');
-                    marvinJsEdit = (image[0].dataset.sourceType === 'MarvinJsAsset' && typeof (MarvinJsEditor) !== 'undefined');
-                    if (!marvinJsEdit) editLink.css('display', 'none');
-                    editLink.on('click', function() {
-                      if (marvinJsEdit) {
-                        MarvinJsEditor().open({
-                          mode: 'edit-tinymce',
-                          marvinUrl: '/marvin_js_assets/' + image[0].dataset.sourceId,
-                          image: image,
-                          saveButton: editorContainer.find('.tinymce-save-button')
-                        });
-                      }
-                    });
-                  } else {
-                    editLink.css('display', 'none');
-                    editLink.off('click');
-                  }
-
-                  // imaged editor Link
-                  imageEditorLink = editorContainer.find('.tinymce-active-object-handler .file-image-editor-link');
-                  if (image[0].dataset.mceToken && image[0].dataset.sourceId) {
-                    imageEditorLink.css('display', 'inline-block');
-                    imageEditorLink.on('click', function() {
-                      FilePreviewModal.imageEditor({
-                        'download-url': image[0].src,
-                        filename: 'tinymce-image.jpg',
-                        mode: 'tinymce',
-                        url: '/tiny_mce_assets/' + image[0].dataset.mceToken,
-                        quality: 100,
-                        'mime-type': 'image/jpeg',
-                        image: image[0]
-                      });
-                    });
-                  } else {
-                    imageEditorLink.css('display', 'none');
-                    imageEditorLink.off('click');
-                  }
-                } else {
-                  editorContainer.find('.tinymce-active-object-handler').css('display', 'none');
-                }
-              }, 100);
-            });
 
             // After save action
             editorForm

@@ -20,23 +20,47 @@ class MarvinJsAssetsController < ApplicationController
           source_type: new_asset.class.name
         }
       }, content_type: 'text/html'
-    else
+    elsif new_asset
       render json: new_asset
+    else
+      render json: new_asset.errors, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: (MarvinJsAsset.find_by_id(params[:id]) || {})
+    sketch = current_team.marvin_js_assets.find_by_id(params[:id])
+    if sketch
+      if sketch.object_type == 'Step'
+        editable = can_manage_protocol_in_module?(sketch.object.protocol) ||
+                   can_manage_protocol_in_repository?(sketch.object.protocol)
+        render json: {
+          sketch: sketch,
+          editable: editable
+        }
+      else
+        render json: sketch
+      end
+    else
+      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
+    end
   end
 
   def destroy
-    sketch = MarvinJsAsset.find(params[:id])
-    sketch.destroy
-    render json: sketch
+    sketch = current_team.marvin_js_assets.find_by_id(params[:id])
+    if sketch.destroy
+      render json: sketch
+    else
+      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
+    end
   end
 
   def update
-    render json: MarvinJsAsset.update_sketch(marvin_params)
+    sketch = MarvinJsAsset.update_sketch(marvin_params, current_team)
+    if sketch
+      render json: sketch
+    else
+      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
+    end
   end
 
   def team_sketches

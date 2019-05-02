@@ -561,31 +561,32 @@ var FilePreviewModal = (function() {
     MarvinJsEditor().create_preview(src, target);
     MarvinJsEditor().create_download_link(src, link, name);
     modal.find('.file-name').text(name);
-
-    if (!readOnly) {
-      modal.find('.file-edit-link').css('display', '');
-      modal.find('.file-edit-link').off().click(function(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        modal.modal('hide');
-        MarvinJsEditor().open({
-          mode: 'edit',
-          data: src.val(),
-          name: name,
-          marvinUrl: sketch.dataset.updateUrl,
-          reloadImage: {
-            src: src,
-            sketch: sketch
-          }
+    $.get(sketch.dataset.updateUrl, function(result) {
+      if (!readOnly && result.editable) {
+        modal.find('.file-edit-link').css('display', '');
+        modal.find('.file-edit-link').off().click(function(ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          modal.modal('hide');
+          MarvinJsEditor().open({
+            mode: 'edit',
+            data: src.val(),
+            name: name,
+            marvinUrl: sketch.dataset.updateUrl,
+            reloadImage: {
+              src: src,
+              sketch: sketch
+            }
+          });
         });
-      });
-    } else {
-      modal.find('.file-edit-link').css('display', 'none');
-    }
+      } else {
+        modal.find('.file-edit-link').css('display', 'none');
+      }
+    });
   }
 
   return Object.freeze({
     init: initPreviewModal,
-    imageEditor: initImageEditor,
+    imageEditor: initImageEditor
   });
 }(window));

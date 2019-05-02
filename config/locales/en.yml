@@ -2146,5 +2146,6 @@ en:
     new_sketch: "New sketch"
     new_button: "New chemical drawing"
     checmical_drawing: "Chemical drawings"
-    team_drawings: Team drawings
-    task:  Task
+    team_drawings: "Team drawings"
+    task:  "Task"
+    no_sketches_found: "No sketches found"

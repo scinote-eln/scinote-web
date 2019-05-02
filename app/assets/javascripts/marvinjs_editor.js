@@ -200,7 +200,6 @@ var MarvinJsEditor = (function() {
                   type: 'PUT',
                   success: function(json) {
                     config.image[0].src = json.url;
-                    config.saveButton.removeClass('hidden');
                     $(marvinJsModal).modal('hide');
                   }
                 });
