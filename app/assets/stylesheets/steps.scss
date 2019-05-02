@@ -59,8 +59,6 @@
   }
 
   .panel-heading {
-    background-color: $color-silver;
-    border-bottom-width: 0 !important;
     height: 39px;
     padding-bottom: 0;
     padding-top: 0;
@@ -146,6 +144,10 @@
 
   &:hover {
     box-shadow: $md-shadow-hover;
+
+    .remove-icon {
+      display: inline-block;
+    }
   }
 
   .attachment-thumbnail {
@@ -197,6 +199,7 @@
   .remove-icon {
     bottom: 15px;
     cursor: pointer;
+    display: none;
     position: relative;
     right: 10px;
   }
