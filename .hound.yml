@@ -3,7 +3,7 @@ ruby:
 
 eslint:
   enabled: true
-  config_file: .eslintrc.json
+  config_file: app/assets/.eslintrc.json
 
 scss:
   config_file: .scss-lint.yml

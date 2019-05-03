@@ -1,5 +1,3 @@
-/* globals animateSpinner GLOBAL_CONSTANTS dropdownSelector HelperModule */
-
 var REPORT_CONTENT = '#report-content';
 var ADD_CONTENTS_FORM_ID = '#add-contents-form';
 var SAVE_REPORT_FORM_ID = '#save-report-form';
@@ -31,10 +29,10 @@ function initializeHandsonTable(el) {
   var inputObj = JSON.parse(input.attr("value"));
   var data = inputObj.data;
 
-  // Special handling if this is a repository table
-  if (input.hasClass("hot-repository-items")) {
+  // Special handling if this is a samples table
+  if (input.hasClass("hot-samples")) {
     var headers = inputObj.headers;
-    var parentEl = el.closest(".report-module-repository-element");
+    var parentEl = el.closest(".report-module-samples-element");
     var order = parentEl.attr("data-order") === "asc";
 
     el.handsontable({
@@ -44,13 +42,10 @@ function initializeHandsonTable(el) {
       columnSorting: true,
       editor: false,
       copyPaste: false,
-      formulas: true,
-      afterChange: function() {
-        el.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
-      }
+      formulas: true
     });
-    el.handsontable('getInstance').loadData(data);
-    el.handsontable('getInstance').getPlugin('columnSorting').sort(3, order);
+    el.handsontable("getInstance").loadData(data);
+    el.handsontable("getInstance").sort(3, order);
 
     // "Hack" to disable user sorting rows by clicking on
     // header elements
@@ -66,10 +61,7 @@ function initializeHandsonTable(el) {
       colHeaders: true,
       editor: false,
       copyPaste: false,
-      formulas: true,
-      afterChange: function() {
-        el.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
-      }
+      formulas: true
     });
     el.handsontable("getInstance").loadData(data);
   }
@@ -147,7 +139,6 @@ function initializeReportElements(parentElement) {
   // Initialize handsontable containers
   _.each(parentElement.findWithSelf(".hot-table-container"), function(el) {
     initializeHandsonTable($(el));
-    reportHandsonTableConverter();
   });
 
   // Add event listeners element to controls
@@ -189,7 +180,7 @@ function initializeNewElement(newEl) {
       switch (parent.data("type")) {
         case "experiment":
           url = dh.data("add-experiment-contents-url"); break;
-        case 'my_module':
+        case "my_module":
           url = dh.data("add-module-contents-url"); break;
         case "step":
           url = dh.data("add-step-contents-url"); break;
@@ -418,28 +409,31 @@ function initializePrintPopup() {
 }
 
 /**
- * Initialize the save to File functionality.
+ * Initialize the save to PDF functionality.
  */
-function initializeSaveToFile(format) {
-  var saveToFileBtn = $('#get-report-' + format);
+function initializeSaveToPdf() {
+  var saveToPdfForm = $(".get-report-pdf-form");
+  var hiddenInput = saveToPdfForm.find("input[type='hidden']");
+  var saveToPdfBtn = saveToPdfForm.find("#get-report-pdf");
 
-  saveToFileBtn.click(function(e) {
-    var content;
-    var $form = $('<form target="_blank" action="' + saveToFileBtn[0].href + '" accept-charset="UTF-8" method="post"></form>');
-    if (format === 'pdf') {
-      content = $(REPORT_CONTENT).html();
-    } else if (format === 'docx') {
-      content = JSON.stringify(constructReportContentsJson());
-    }
-    $form.append('<input type="hidden" name="data" value="">');
-    $form.find('input').attr('value', content);
-    $form.appendTo('body').submit().remove();
+  saveToPdfBtn.click(function(e) {
+    var content = $(REPORT_CONTENT);
+
+    // Fill hidden input element
+    hiddenInput.attr("value", content.html());
+
+    // Fire form submission
+    saveToPdfForm.submit();
+
+    // Clear form
+    hiddenInput.attr("value", "");
+
+    // Prevent page reload
     e.preventDefault();
     e.stopPropagation();
     return false;
   });
 }
-
 
 function initializeUnsavedWorkDialog() {
   var dh = $('#data-holder');
@@ -474,8 +468,7 @@ function init() {
   initializeReportElements($(REPORT_CONTENT));
   initializeGlobalReportSort();
   initializePrintPopup();
-  initializeSaveToFile('pdf');
-  initializeSaveToFile('docx');
+  initializeSaveToPdf();
   initializeSaveReport();
   initializeAddContentsModal();
   initializeUnsavedWorkDialog();
@@ -953,499 +946,3 @@ function constructElementContentsJson(el) {
 if ($(REPORT_CONTENT).length) {
   init();
 }
-
-/** Convert Handsone table to normal table **/
-function reportHandsonTableConverter() {
-  setTimeout(() => {
-    $.each($('.hot-table-container'), function(index, value) {
-      var table = $(value);
-      var header = table.find('.ht_master thead');
-      var body = table.find('.ht_master tbody');
-      table.next().append(header).append(body);
-      table.remove();
-    });
-  }, 0);
-}
-
-(function() {
-  function getReportData() {
-    var reportData = {};
-
-    // Report name
-    reportData.report = {
-      name: $('.report-name').val(),
-      description: $('#projectDescription').val(),
-      settings: { task: { protocol: {} } }
-    };
-    // Project
-    reportData.project_id = dropdownSelector.getValues('#projectSelector');
-
-    // Template values
-    reportData.template_values = {};
-    $.each($('.report-template-values-container').find('.sci-input-field'), function(i, field) {
-      if (field.value.length === 0) return;
-
-      reportData.template_values[field.name] = {
-        value: field.value,
-        view_component: field.dataset.type
-      };
-    });
-
-    $.each($('.report-template-values-container').find('select'), function(i, field) {
-      if (dropdownSelector.getValues(field).length === 0) return;
-
-      reportData.template_values[field.name] = {
-        value: dropdownSelector.getValues(field),
-        view_component: field.dataset.type
-      };
-    });
-
-    $.each($('.report-template-values-container .sci-checkbox'), function(i, checkbox) {
-      if (checkbox.name.includes('[]')) {
-        let name = checkbox.name.replace('[]', '');
-        if (!reportData.template_values[name]) {
-          reportData.template_values[name] = {
-            value: {},
-            view_component: checkbox.dataset.type
-          };
-        }
-        reportData
-          .template_values[name].value[checkbox.value] = checkbox.checked;
-      } else {
-        reportData.template_values[checkbox.name] = {
-          value: checkbox.checked,
-          view_component: checkbox.dataset.type
-        };
-      }
-    });
-
-    // Project content
-    reportData.project_content = { experiments: [], repositories: [] };
-    $.each($('.project-contents-container .experiment-element'), function(i, experiment) {
-      let expCheckbox = $(experiment).find('.report-experiment-checkbox');
-      if (!expCheckbox.prop('checked') && !expCheckbox.prop('indeterminate')) return;
-
-      let experimentData = {};
-      experimentData.id = parseInt($(experiment).find('.report-experiment-checkbox').val(), 10);
-      experimentData.my_module_ids = [];
-      $.each($(experiment).find('.report-my-module-checkbox:checked'), function(j, myModule) {
-        experimentData.my_module_ids.push(parseInt(myModule.value, 10));
-      });
-      reportData.project_content.experiments.push(experimentData);
-    });
-
-    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), function(i, e) {
-      reportData.project_content.repositories.push(parseInt(e.value, 10));
-    });
-
-    // Settings
-    reportData.report.settings.template = dropdownSelector.getValues('#templateSelector');
-    reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
-      .prop('checked');
-    $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
-      reportData.report.settings.task.protocol[e.value] = e.checked;
-    });
-    $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
-      reportData.report.settings.task[e.value] = e.checked;
-    });
-
-    reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
-
-    return reportData;
-  }
-
-  function initGenerateButton() {
-    $('.reports-new').on('click', '.generate-button', function() {
-      $.ajax({
-        url: this.dataset.createUrl,
-        type: 'POST',
-        data: JSON.stringify(getReportData()),
-        contentType: 'application/json; charset=utf-8',
-        success: function() {},
-        error: function(jqxhr) {
-          HelperModule.flashAlertMsg(jqxhr.responseJSON.join(' '), 'danger');
-        }
-      });
-    });
-
-    $('.reports-new').on('click', '#saveAsNewReport', function(e) {
-      e.preventDefault();
-      $.ajax({
-        url: this.dataset.createUrl,
-        type: 'POST',
-        data: JSON.stringify(getReportData()),
-        contentType: 'application/json; charset=utf-8',
-        success: function() {},
-        error: function(jqxhr) {
-          HelperModule.flashAlertMsg(jqxhr.responseJSON.join(' '), 'danger');
-        }
-      });
-    });
-
-
-    $('.reports-new').on('click', '#UpdateReport', function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: 'PUT',
-        url: this.dataset.updateUrl,
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(getReportData()),
-        success: function() {},
-        error: function(jqxhr) {
-          HelperModule.flashAlertMsg(jqxhr.responseJSON.join(' '), 'danger');
-        }
-      });
-    });
-  }
-
-  function initReportWizard() {
-    function nextStep() {
-      var currentStep = parseInt($('.reports-new-footer').attr('data-step'), 10);
-      $(`[href="#new-report-step-${currentStep + 1}"]`).tab('show');
-      $('.reports-new-footer').attr('data-step', currentStep + 1);
-    }
-
-    function previousStep() {
-      var currentStep = parseInt($('.reports-new-footer').attr('data-step'), 10);
-      $(`[href="#new-report-step-${currentStep - 1}"]`).tab('show');
-      $('.reports-new-footer').attr('data-step', currentStep - 1);
-    }
-
-    function allCheckboxesSelected(container) {
-      let checked = container.find('.sci-checkbox:not(.skip-select-all):checked');
-      let all = container.find('.sci-checkbox:not(.skip-select-all)');
-      return checked.length === all.length;
-    }
-
-    function validateGenerateButtons() {
-      var validName = ($('.report-name').val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH);
-      var validContent = Object.keys(getReportData().project_content.experiments).length > 0;
-      if (validName && validContent) {
-        $('.generate-button').prop('disabled', false);
-        $(' #saveAsNewReport, #UpdateReport').removeClass('disabled');
-      } else {
-        $('.generate-button').prop('disabled', true);
-        $(' #saveAsNewReport, #UpdateReport').addClass('disabled');
-      }
-    }
-
-    $('.continue-button').on('click', function() {
-      nextStep();
-    });
-
-    $('.back-button').on('click', function() {
-      previousStep();
-    });
-
-    $('.change-step').on('click', function() {
-      $(`[href="#new-report-step-${this.dataset.stepId}"]`).tab('show');
-      $('.reports-new-footer').attr('data-step', this.dataset.stepId);
-    });
-
-    $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
-      var projectContents = $('#new-report-step-2').find('.project-contents');
-      var projectId = dropdownSelector.getValues('#projectSelector');
-      if (parseInt(projectContents.attr('data-project-id'), 10) !== parseInt(projectId, 10)) {
-        animateSpinner('.reports-new-body');
-        $.get(projectContents.data('project-content-url'), { project_id: projectId }, function(data) {
-          animateSpinner('.reports-new-body', false);
-          projectContents.attr('data-project-id', projectId);
-          projectContents.html(data.html);
-          if ($('.select-all-my-modules-checkbox').prop('checked')) {
-            $('.select-all-my-modules-checkbox').trigger('change');
-          }
-          $('.experiment-contents').sortable();
-        });
-      }
-    });
-
-    $('.reports-new-body [href="#new-report-step-3"]').on('show.bs.tab', function() {
-      $('.protocol-steps-checkbox').prop('checked', allCheckboxesSelected($('.report-protocol-settings')));
-      $('.all-results-checkbox').prop('checked', allCheckboxesSelected($('.report-result-settings')));
-      $('.select-all-task-contents').prop('checked', allCheckboxesSelected($('.report-task-settings')));
-      validateGenerateButtons();
-    });
-
-    $('.report-name').on('keyup', function() {
-      validateGenerateButtons();
-    });
-  }
-
-  function initProjectContents() {
-    function hideUnchekedElements(hide) {
-      $('.report-experiment-checkbox,.report-my-module-checkbox')
-        .closest('li').css('display', '');
-      if (hide) {
-        $(`.report-experiment-checkbox:not(:checked):not(:indeterminate),
-           .report-my-module-checkbox:not(:checked):not(:indeterminate)`)
-          .closest('li').css('display', 'none');
-      }
-    }
-
-    function selectAllState() {
-      var selectAll = $('.select-all-my-modules-checkbox');
-      var all = $('.report-my-module-checkbox').length;
-      var checked = $('.report-my-module-checkbox:checked').length;
-      selectAll.prop('indeterminate', false);
-      if (all === checked) {
-        selectAll.prop('checked', true);
-      } else {
-        selectAll.prop('checked', false);
-        if (checked > 0) selectAll.prop('indeterminate', true);
-      }
-    }
-
-    $('.project-contents-container').on('change', '.report-experiment-checkbox', function() {
-      $(this).closest('li').find('.report-my-module-checkbox').prop('checked', this.checked);
-      selectAllState();
-      hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
-    })
-      .on('change', '.select-all-my-modules-checkbox', function() {
-        $('.report-experiment-checkbox, .report-my-module-checkbox')
-          .prop('checked', this.checked)
-          .prop('indeterminate', false);
-        hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
-      })
-      .on('change', '.report-my-module-checkbox', function() {
-        var experimentElement = $(this).closest('.experiment-element');
-        var experiment = experimentElement.find('.report-experiment-checkbox');
-        var all = experimentElement.find('.report-my-module-checkbox').length;
-        var checked = experimentElement.find('.report-my-module-checkbox:checked').length;
-
-        experiment.prop('indeterminate', false);
-        if (all === checked) {
-          experiment.prop('checked', true);
-        } else {
-          experiment.prop('checked', false);
-          if (checked > 0) experiment.prop('indeterminate', true);
-        }
-
-        selectAllState();
-        hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
-      })
-      .on('click', '.experiment-element .move-up', function() {
-        var experiment = $(this).closest('.experiment-element');
-        experiment.insertBefore(experiment.prev());
-      })
-      .on('click', '.experiment-element .move-down', function() {
-        var experiment = $(this).closest('.experiment-element');
-        experiment.insertAfter(experiment.next());
-      })
-      .on('change', '.hide-unchecked-checkbox', function() {
-        hideUnchekedElements(this.checked);
-      })
-      .on('click', '.collapse-all', function() {
-        $('.experiment-contents').collapse('hide');
-      })
-      .on('click', '.expand-all', function() {
-        $('.experiment-contents').collapse('show');
-      });
-  }
-
-  function reCheckContinueButton() {
-    if (dropdownSelector.getValues('#projectSelector').length > 0
-          && dropdownSelector.getValues('#templateSelector').length > 0) {
-      $('.continue-button').attr('disabled', false);
-    } else {
-      $('.continue-button').attr('disabled', true);
-    }
-  }
-
-  function initDropdowns() {
-    dropdownSelector.init('#projectSelector', {
-      singleSelect: true,
-      closeOnSelect: true,
-      noEmptyOption: true,
-      selectAppearance: 'simple',
-      onSelect: function() {
-        let projectContents = $('#new-report-step-2').find('.project-contents');
-        let loadedProjectId = parseInt(projectContents.attr('data-project-id'), 10);
-        let projectId = parseInt(dropdownSelector.getValues('#projectSelector'), 10);
-        if (!Number.isNaN(loadedProjectId) && loadedProjectId !== projectId) {
-          $('#projectReportWarningModal').modal('show');
-        }
-        if (dropdownSelector.getValues('#projectSelector').length > 0) {
-          dropdownSelector.enableSelector('#templateSelector');
-        } else {
-          dropdownSelector.selectValues('#templateSelector', '');
-          dropdownSelector.disableSelector('#templateSelector');
-        }
-        reCheckContinueButton();
-      }
-    });
-
-    dropdownSelector.init('#templateSelector', {
-      singleSelect: true,
-      closeOnSelect: true,
-      noEmptyOption: true,
-      selectAppearance: 'simple',
-      disableSearch: true,
-      onSelect: function() {
-        if (dropdownSelector.getValues('#templateSelector').length === 0) {
-          $('.report-template-values-container').html('').addClass('hidden');
-          reCheckContinueButton();
-          return;
-        }
-
-        let filledFieldsCount = $('.report-template-values-container')
-          .find('input.sci-input-field, textarea.sci-input-field').filter(function() {
-            return !!this.value;
-          }).length;
-
-        if (filledFieldsCount === 0) {
-          loadTemplate();
-        } else {
-          $('#templateReportWarningModal').modal('show');
-        }
-        reCheckContinueButton();
-      }
-    });
-
-    if (dropdownSelector.getValues('#templateSelector').length > 0) {
-      loadTemplate();
-    }
-  }
-
-  function loadTemplate() {
-    let template = $('#templateSelector').val();
-    let params = {
-      project_id: dropdownSelector.getValues('#projectSelector'),
-      template: template
-    };
-
-    $('#templateSelector').data('selected-template', template);
-    $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
-      $('.report-template-values-container').removeClass('hidden');
-      $('.report-template-values-container').html(result.html);
-      $('.report-template-value-dropdown').each(function() {
-        dropdownSelector.init($(this), {
-          noEmptyOption: true
-        });
-      });
-    });
-  }
-
-  function initTaskContents() {
-    dropdownSelector.init('.task-contents-container .order-results', {
-      singleSelect: true,
-      closeOnSelect: true,
-      noEmptyOption: true,
-      selectAppearance: 'simple',
-      disableSearch: true
-    });
-
-    function selectAllCheckboxState(selectAll, all, checked) {
-      selectAll.prop('indeterminate', false);
-      if (all === checked) {
-        selectAll.prop('checked', true);
-      } else {
-        selectAll.prop('checked', false);
-        if (checked > 0) selectAll.prop('indeterminate', true);
-      }
-    }
-
-    function SelectAllRepositoriesStatus() {
-      var selectAll = $('.task-contents-container .select-all-repositories');
-      var all = $('.repositories-contents .sci-checkbox').length;
-      var checked = $('.repositories-contents .sci-checkbox:checked').length;
-      selectAllCheckboxState(selectAll, all, checked);
-    }
-
-    function SelectAllProtocolStatus() {
-      var selectAll = $('.task-contents-container .protocol-steps-checkbox');
-      var all = $('.step-contents .sci-checkbox').length;
-      var checked = $('.step-contents .sci-checkbox:checked').length;
-      selectAllCheckboxState(selectAll, all, checked);
-    }
-
-    function SelectAllResultsStatus() {
-      var selectAll = $('.task-contents-container .all-results-checkbox');
-      var all = $('.results-type-contents .sci-checkbox:not(.skip-select-all)').length;
-      var checked = $('.results-type-contents .sci-checkbox:not(.skip-select-all):checked').length;
-      selectAllCheckboxState(selectAll, all, checked);
-    }
-
-    function SelectAllTaskContentStatus() {
-      var selectAll = $('.task-contents-container .select-all-task-contents');
-      var all = $('.report-task-settings .sci-checkbox:not(.skip-select-all)').length;
-      var checked = $('.report-task-settings .sci-checkbox:not(.skip-select-all):checked').length;
-      selectAllCheckboxState(selectAll, all, checked);
-    }
-
-
-    $('.task-contents-container')
-      .on('change', '.select-all-task-contents', function() {
-        $('.content-element .sci-checkbox:not(.skip-select-all)')
-          .prop('checked', this.checked);
-      })
-      .on('change', '.protocol-steps-checkbox', function() {
-        $('.step-contents .sci-checkbox')
-          .prop('checked', this.checked);
-      })
-      .on('change', '.all-results-checkbox', function() {
-        $('.results-type-contents .sci-checkbox:not(.skip-select-all)')
-          .prop('checked', this.checked);
-      })
-      .on('change', '.select-all-repositories', function() {
-        $('.repositories-contents .sci-checkbox')
-          .prop('checked', this.checked);
-      })
-      .on('change', '.repositories-contents .sci-checkbox', function() {
-        SelectAllRepositoriesStatus();
-      })
-      .on('change', '.step-contents .sci-checkbox', function() {
-        SelectAllProtocolStatus();
-      })
-      .on('change', '.results-type-contents .sci-checkbox:not(.skip-select-all)', function() {
-        SelectAllResultsStatus();
-      })
-      .on('change', '.report-task-settings .sci-checkbox:not(.skip-select-all)', function() {
-        SelectAllTaskContentStatus();
-      });
-
-    SelectAllRepositoriesStatus();
-  }
-
-  function initTemplateValuesContainer() {
-    $('.report-template-values-container').on('click', '.collapse-all', function() {
-      $('.report-template-values-container .values-container').collapse('hide');
-    })
-      .on('click', '.expand-all', function() {
-        $('.report-template-values-container .values-container').collapse('show');
-      });
-  }
-
-  $('#templateReportWarningModal')
-    .on('click', '#loadSelectedTemplate', function() {
-      loadTemplate();
-      $('#templateReportWarningModal').addClass('skip-hide-event');
-      $('#templateReportWarningModal').modal('hide');
-    })
-    .on('click', '#cancelTemplateChange', function() {
-      $('#templateReportWarningModal').modal('hide');
-    })
-    .on('hide.bs.modal', function() {
-      if (!$('#templateReportWarningModal').hasClass('skip-hide-event')) {
-        let previousTemplate = $('#templateSelector').data('selected-template');
-        dropdownSelector.selectValues('#templateSelector', previousTemplate);
-      }
-      $('#templateReportWarningModal').removeClass('skip-hide-event');
-    });
-
-  $('#projectReportWarningModal').on('click', '#cancelProjectChange', function() {
-    let loadedProjectId = $('#new-report-step-2').find('.project-contents').attr('data-project-id');
-    dropdownSelector.selectValues('#projectSelector', loadedProjectId);
-    $('#projectReportWarningModal').modal('hide');
-  });
-
-  $('#reportWizardEditWarning').modal('show');
-  $('.experiment-contents').sortable();
-
-  initGenerateButton();
-  initReportWizard();
-  initDropdowns();
-  initTaskContents();
-  initProjectContents();
-  initTemplateValuesContainer();
-  reCheckContinueButton();
-}());

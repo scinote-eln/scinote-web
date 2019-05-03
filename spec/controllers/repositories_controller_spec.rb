@@ -10,20 +10,6 @@ describe RepositoriesController, type: :controller do
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:action) { post :create, params: params, format: :json }
 
-  describe 'index' do
-    let(:repository) { create :repository, team: team }
-    let(:action) { get :index, format: :json }
-
-    it 'correct JSON format' do
-      repository
-      action
-      parsed_response = JSON.parse(response.body)
-      expect(parsed_response[0].keys).to contain_exactly(
-        'DT_RowId', '1', '2', '3', '4', '5', '6', '7', '8', 'repositoryUrl', 'DT_RowAttr'
-      )
-    end
-  end
-
   describe 'POST create' do
     let(:params) { { repository: { name: 'My Repository' } } }
 
@@ -140,7 +126,8 @@ describe RepositoriesController, type: :controller do
     end
 
     it 'adds activity in DB' do
-      allow_any_instance_of(ImportRepository::ImportRecords).to receive(:import!).and_return(status: :ok)
+      ImportRepository::ImportRecords.any_instance.stub(:import!)
+                                     .and_return(status: :ok)
 
       expect { action }
         .to(change { Activity.count })

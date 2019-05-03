@@ -1,8 +1,8 @@
 class RepositoriesController < ApplicationController
   before_action :load_vars,
-                except: %i(index create create_modal parse_sheet import_records)
+                except: %i(index create create_modal parse_sheet)
   before_action :load_parent_vars, except:
-    %i(repository_table_index export_repository parse_sheet import_records)
+    %i(repository_table_index parse_sheet)
   before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: %i(export_repository show)
@@ -46,6 +46,8 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.json do
         if @repository.save
+          log_activity(:create_inventory)
+
           flash[:success] = t('repositories.index.modal_create.success_flash',
                               name: @repository.name)
           render json: { url: repository_path(@repository) },
@@ -73,6 +75,9 @@ class RepositoriesController < ApplicationController
   def destroy
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
+
+    log_activity(:delete_inventory) # Log before delete id
+
     @repository.discard
     @repository.destroy_discarded(current_user.id)
     redirect_to team_repositories_path
@@ -99,6 +104,9 @@ class RepositoriesController < ApplicationController
         if @repository.save
           flash[:success] = t('repositories.index.rename_flash',
                               old_name: old_name, new_name: @repository.name)
+
+          log_activity(:rename_inventory) # Acton only for renaming
+
           render json: {
             url: team_repositories_path(repository: @repository)
           }, status: :ok
@@ -191,7 +199,7 @@ class RepositoriesController < ApplicationController
       )
       if parsed_file.too_large?
         repository_response(t('general.file.size_exceeded',
-                              file_size: Constants::FILE_MAX_SIZE_MB))
+                              file_size: Rails.configuration.x.file_max_size_mb))
       elsif parsed_file.has_too_many_rows?
         repository_response(
           t('repositories.import_records.error_message.items_limit',
@@ -235,6 +243,9 @@ class RepositoriesController < ApplicationController
           status = import_records.import!
 
           if status[:status] == :ok
+            log_activity(:import_inventory_items,
+                         num_of_items: status[:nr_of_added])
+
             flash[:success] = t('repositories.import_records.success_flash',
                                 number_of_rows: status[:nr_of_added],
                                 total_nr: status[:total_nr])
@@ -264,6 +275,7 @@ class RepositoriesController < ApplicationController
   def export_repository
     if params[:row_ids] && params[:header_ids]
       RepositoryZipExport.generate_zip(params, @repository, current_user)
+      log_activity(:export_inventory_items)
     else
       flash[:alert] = t('zip_export.export_error')
     end
@@ -336,5 +348,16 @@ class RepositoriesController < ApplicationController
           status: :unprocessable_entity
       end
     end
+  end
+
+  def log_activity(type_of, message_items = {})
+    message_items = { repository: @repository.id }.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @repository,
+            team: @team,
+            message_items: message_items)
   end
 end

@@ -1,15 +1,35 @@
 class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
-
+  after_action :after_sign_in, only: :create
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  def new
+    # If user was redirected here from OAuth's authorize/new page (Doorkeeper
+    # endpoint for authorizing an OAuth client), 3rd party sign-in buttons
+    # (e.g. LinkedIn) should be hidden. See config/initializers/devise.rb.
+    @oauth_authorize = session['oauth_authorize'] == true
+    super
+  end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  def create
+    super
+
+    # Schedule templates creation for user
+    TemplatesService.new.schedule_creation_for_user(current_user)
+
+    # Schedule demo project creation for user
+    current_user.created_teams.each do |team|
+      FirstTimeDataGenerator.delay(
+        queue: :new_demo_project,
+        priority: 10
+      ).seed_demo_data_with_id(current_user.id, team.id)
+    end
+  rescue StandardError => e
+    Rails.logger.fatal(
+      "User ID #{current_user.id}: Error creating inital projects on sign_in: "\
+      "#{e.message}"
+    )
+  end
 
   # DELETE /resource/sign_out
   # def destroy
@@ -28,7 +48,6 @@ class Users::SessionsController < Devise::SessionsController
       sign_in(:user, user)
       # This will cause new token to be generated
       user.update(authentication_token: nil)
-
       redirect_url = root_path
     else
       flash[:error] = t('devise.sessions.auth_token_create.wrong_credentials')
@@ -40,6 +59,10 @@ class Users::SessionsController < Devise::SessionsController
         redirect_to redirect_url
       end
     end
+  end
+
+  def after_sign_in
+    flash[:system_notification_modal] = true
   end
 
   protected

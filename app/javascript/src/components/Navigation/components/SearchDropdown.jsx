@@ -63,7 +63,7 @@ class SearchDropdown extends Component {
         noCaret
         title={
           <span>
-            <span className="glyphicon glyphicon-search" />&nbsp;
+            <span className="fas fa-search" />&nbsp;
             <span className="visible-xs-inline visible-sm-inline">
               <FormattedMessage id="navbar.search_label" />
             </span>

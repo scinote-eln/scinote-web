@@ -2,14 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::TasksController', type: :request do
+RSpec.describe "Api::V1::TasksController", type: :request do
   before :all do
-    MyModuleStatusFlow.ensure_default
-
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
-    @owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+
     @valid_project = create(:project, name: Faker::Name.unique.name,
                             created_by: @user, team: @teams.first)
 
@@ -20,9 +18,10 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       last_modified_by: @user, project: @valid_project)
     @unaccessible_experiment = create(:experiment, created_by: @user,
       last_modified_by: @user, project: @unaccessible_project)
-    create_list(:my_module, 3, :with_due_date, created_by: @user,
+
+    create_list(:my_module, 3, created_by: @user,
                 last_modified_by: @user, experiment: @valid_experiment)
-    create_list(:my_module, 3, :with_due_date, created_by: @user,
+    create_list(:my_module, 3, created_by: @user,
                 last_modified_by: @user, experiment: @unaccessible_experiment)
 
     @valid_headers =
@@ -39,11 +38,10 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_experiment.my_modules, each_serializer: Api::V1::TaskSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_experiment.my_modules,
+               each_serializer: Api::V1::TaskSerializer)
+          .as_json[:data]
       )
     end
 
@@ -95,11 +93,10 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_experiment.my_modules.first, serializer: Api::V1::TaskSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_experiment.my_modules.first,
+               serializer: Api::V1::TaskSerializer)
+          .as_json[:data]
       )
     end
 
@@ -140,200 +137,6 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
-    end
-  end
-
-  describe 'POST tasks, #create' do
-    before :all do
-      create :user_project, user: @user, project: @valid_project
-      create :user_assignment,
-             assignable: @valid_project,
-             user: @user,
-             user_role: @owner_role,
-             assigned_by: @user
-      @valid_headers['Content-Type'] = 'application/json'
-    end
-
-    let(:request_body) do
-      {
-        data: {
-          type: 'tasks',
-          attributes: {
-            name: 'task name',
-            x: 1,
-            y: 4
-          }
-        }
-      }
-    end
-
-    context 'when has valid params' do
-      let(:action) do
-        post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.first.id,
-               project_id: @valid_project.id,
-               experiment_id: @valid_experiment.id
-             ),
-             params: request_body.to_json,
-             headers: @valid_headers)
-      end
-
-      it 'creates new my module' do
-        expect { action }.to change { MyModule.count }.by(1)
-      end
-
-      it 'returns status 201' do
-        action
-
-        expect(response).to have_http_status 201
-      end
-
-      it 'returns well formated response' do
-        action
-
-        expect(json).to match(
-          hash_including(
-            data: hash_including(
-              type: 'tasks',
-              attributes: hash_including(name: 'task name'),
-              relationships: hash_including(outputs: { data: [] }, inputs: { data: [] })
-            )
-          )
-        )
-      end
-    end
-
-    context 'when has not valid params' do
-      it 'renders 404 when project not found' do
-        post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.first.id,
-               project_id: -1,
-               experiment_id: @valid_experiment.id
-             ),
-             params: request_body.to_json,
-             headers: @valid_headers)
-
-        expect(response).to have_http_status(404)
-      end
-
-      it 'renders 403 when user is not member of the team' do
-        post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.second.id,
-               project_id: @valid_project.id,
-               experiment_id: @valid_experiment.id
-             ),
-             params: request_body.to_json,
-             headers: @valid_headers)
-
-        expect(response).to have_http_status(403)
-      end
-
-      it 'renders 403 for use with view permissions' do
-        user_assignment = UserAssignment.where(user: @user, assignable: @valid_experiment)
-                                        .first
-        user_assignment.update!(user_role: create(:viewer_role))
-
-        post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.first.id,
-               project_id: @valid_project.id,
-               experiment_id: @valid_experiment.id
-             ),
-             params: request_body.to_json,
-             headers: @valid_headers)
-
-        expect(response).to have_http_status(403)
-      end
-    end
-  end
-
-  describe 'PATCH task, #update' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-    end
-
-    let(:task) { @valid_experiment.my_modules.take }
-
-    let(:action) do
-      patch(
-        api_v1_team_project_experiment_task_path(
-          team_id: @valid_project.team.id,
-          project_id: @valid_project.id,
-          experiment_id: @valid_experiment.id,
-          id: task.id
-        ),
-        params: request_body.to_json,
-        headers: @valid_headers
-      )
-    end
-
-    context 'when has valid params' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'tasks',
-            attributes: {
-              name: 'New task name',
-              description: 'New description about task'
-            }
-          }
-        }
-      end
-
-      it 'returns status 200' do
-        action
-
-        expect(response).to have_http_status 200
-      end
-
-      it 'returns well formated response' do
-        action
-
-        expect(json).to match(
-          hash_including(
-            data: hash_including(
-              type: 'tasks',
-              attributes: hash_including(name: 'New task name', description: 'New description about task')
-            )
-          )
-        )
-      end
-    end
-
-    context 'direct task completion disabled, when has valid params' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'tasks',
-            attributes: {
-              state: 'completed'
-            }
-          }
-        }
-      end
-
-      it 'returns status 204, no changes to task' do
-        action
-
-        expect(response).to have_http_status 204
-      end
-    end
-
-    context 'when has missing param' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'tasks',
-            attributes: {
-            }
-          }
-        }
-      end
-
-      it 'renders 400' do
-        action
-
-        expect(response).to have_http_status(400)
-      end
     end
   end
 end

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  use_doorkeeper do
+    skip_controllers :applications, :authorized_applications, :token_info
+  end
   require 'subdomain'
 
   def draw(routes_name)
@@ -13,7 +16,15 @@ Rails.application.routes.draw do
                               confirmations: 'users/confirmations',
                               omniauth_callbacks: 'users/omniauth_callbacks' }
 
-    root 'projects#index'
+    devise_scope :user do
+      authenticated :user do
+        root 'projects#index'
+      end
+
+      unauthenticated do
+        root 'users/sessions#new'
+      end
+    end
 
     # EPA Help routes: about, contact, and training pages
     get 'help/about', to: 'help#about', as: 'about'
@@ -38,7 +49,7 @@ Rails.application.routes.draw do
         as: 'rap_task_level'
 
 
-    # # Client APP endpoints
+# # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
     # get '/settings/*all', to: 'client_api/settings#index'
     #
@@ -65,6 +76,12 @@ Rails.application.routes.draw do
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
+    # JS backend helpers
+    get 'helpers/to_user_date_format',
+        to: 'application#to_user_date_format',
+        as: 'to_user_date_format',
+        defaults: { format: 'json' }
+
     # Settings
     resources :users, only: :index # needed for testing signup
     # needed for testing edit passowrd
@@ -79,15 +96,9 @@ Rails.application.routes.draw do
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
-#    get 'users/settings/account/preferences/tutorial',
-#        to: 'users/settings/account/preferences#tutorial',
-#        as: 'tutorial'
-#    post 'users/settings/account/preferences/reset_tutorial/',
-#         to: 'users/settings/account/preferences#reset_tutorial',
-#         as: 'reset_tutorial'
-    post 'users/settings/account/preferences/notifications_settings',
-         to: 'users/settings/account/preferences#notifications_settings',
-         as: 'notifications_settings',
+    post 'users/settings/account/preferences/togglable_settings',
+         to: 'users/settings/account/preferences#update_togglable_settings',
+         as: 'update_togglable_settings',
          defaults: { format: 'json' }
 
     # Change user's current team
@@ -166,6 +177,11 @@ Rails.application.routes.draw do
         to: 'zip_exports#download',
         as: 'zip_exports_download'
 
+    # Get Team Zip Export
+    get 'zip_exports/download_export_all_zip/:id',
+        to: 'zip_exports#download_export_all_zip',
+        as: 'zip_exports_download_export_all'
+
     get 'zip_exports/file_expired',
         to: 'zip_exports#file_expired',
         as: 'file_expired'
@@ -176,8 +192,6 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end
-        #get 'show_tab', to: 'repositories#show_tab',
-        #    defaults: { format: 'json' }
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
         get 'rename_modal', to: 'repositories#rename_modal',
@@ -187,23 +201,25 @@ Rails.application.routes.draw do
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
       end
-      #resources :samples, only: [:new, :create]
-      #resources :sample_types, except: [:show, :new] do
-      #  get 'sample_type_element', to: 'sample_types#sample_type_element'
-      #  get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
-      #end
-      #resources :sample_groups, except: [:show, :new] do
-      #  get 'sample_group_element', to: 'sample_groups#sample_group_element'
-      #  get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
-      #end
-      #resources :custom_fields, only: [:create, :edit, :update, :destroy] do
-      #  get 'destroy_html'
-      #end
+      # resources :samples, only: [:new, :create]
+      # resources :sample_types, except: [:show, :new] do
+      #   get 'sample_type_element', to: 'sample_types#sample_type_element'
+      #   get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
+      # end
+      # resources :sample_groups, except: [:show, :new] do
+      #   get 'sample_group_element', to: 'sample_groups#sample_group_element'
+      #   get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
+      # end
+      # resources :custom_fields, only: [:create, :edit, :update, :destroy] do
+      #   get 'destroy_html'
+      # end
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         # post 'import_samples'
         # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
+        post 'export_projects'
+        get 'export_projects_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_repositories', to: 'at_who#repositories'
@@ -219,6 +235,10 @@ Rails.application.routes.draw do
     end
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
+    post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
+    get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
+    get 'projects/dt_state_load', to: 'projects#dt_state_load',
+                                  as: 'projects_dt_state_load'
 
     resources :reports, only: :index
     get 'reports/datatable', to: 'reports#datatable'
@@ -233,7 +253,7 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
-	
+
     resources :projects, except: [:new, :destroy] do
       resources :user_projects, path: '/users',
                 only: [:create, :index, :update, :destroy]
@@ -285,7 +305,6 @@ Rails.application.routes.draw do
           post '_save',
                to: 'reports#save_modal',
                as: :save_modal
-          #post 'destroy', as: :destroy # Destroy multiple entries at once
         end
       end
       resources :experiments,
@@ -321,21 +340,22 @@ Rails.application.routes.draw do
         get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
         post 'canvas', to: 'canvas#update' # Save updated canvas action
         get 'module_archive' # Module archive for single experiment
+        get 'my_module_tags', to: 'my_module_tags#canvas_index'
         get 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
-        #get 'samples' # Samples for single project
+        # get 'samples' # Samples for single project
         get 'updated_img' # Checks if the workflow image is updated
         get 'fetch_workflow_img' # Get udated workflow img
         # Renders sample datatable for single project (ajax action)
-        #post 'samples_index'
-        #post :delete_samples,
-        #     constraints: CommitParamRouting.new(
-        #       ExperimentsController::DELETE_SAMPLES
-        #     ),
-        #     action: :delete_samples
+      #   post 'samples_index'
+      #   post :delete_samples,
+      #        constraints: CommitParamRouting.new(
+      #          ExperimentsController::DELETE_SAMPLES
+      #        ),
+      #        action: :delete_samples
       end
     end
 
@@ -348,7 +368,7 @@ Rails.application.routes.draw do
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
-      #resources :sample_my_modules, path: '/samples_index', only: [:index]
+      # resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]
       resources :result_assets, only: [:new, :create]
       resources :result_tables, only: [:new, :create]
@@ -357,11 +377,12 @@ Rails.application.routes.draw do
         # as well as full activities view (HTML) for single module
         get 'description'
         get 'activities'
+        post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
-        #get 'samples' # Samples view for single module
+        # get 'samples' # Samples view for single module
         # Repository view for single module
         get 'repository/:repository_id',
             to: 'my_modules#repository',
@@ -384,23 +405,29 @@ Rails.application.routes.draw do
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
+        get 'repositories_dropdown',
+            to: 'my_modules#repositories_dropdown',
+            as: :repositories_dropdown
+        get 'repositories_dropdown/:repository_id',
+            to: 'my_modules#repositories_dropdown',
+            as: :repositories_dropdown_repository_tab
         # Renders sample datatable for single module (ajax action)
-        #post 'samples_index'
-        #post :assign_samples,
-        #     constraints: CommitParamRouting.new(
-        #       MyModulesController::ASSIGN_SAMPLES
-        #     ),
-        #     action: :assign_samples
-        #post :assign_samples,
-        #     constraints: CommitParamRouting.new(
-        #       MyModulesController::UNASSIGN_SAMPLES
-        #     ),
-        #     action: :unassign_samples
-        #post :assign_samples,
-        #     constraints: CommitParamRouting.new(
-        #       MyModulesController::DELETE_SAMPLES
-        #     ),
-        #     action: :delete_samples
+        # post 'samples_index'
+        # post :assign_samples,
+        #      constraints: CommitParamRouting.new(
+        #        MyModulesController::ASSIGN_SAMPLES
+        #      ),
+        #      action: :assign_samples
+        # post :assign_samples,
+        #      constraints: CommitParamRouting.new(
+        #        MyModulesController::UNASSIGN_SAMPLES
+        #      ),
+        #      action: :unassign_samples
+        # post :assign_samples,
+        #      constraints: CommitParamRouting.new(
+        #        MyModulesController::DELETE_SAMPLES
+        #      ),
+        #      action: :delete_samples
       end
 
       # Those routes are defined outside of member block
@@ -418,6 +445,17 @@ Rails.application.routes.draw do
         post 'toggle_step_state'
         get 'move_down'
         get 'move_up'
+      end
+    end
+
+    # System notifications routes
+    resources :system_notifications, only: %i(index show) do
+      collection do
+        post 'mark_as_seen'
+        get 'unseen_counter'
+      end
+      member do
+        post 'mark_as_read'
       end
     end
 
@@ -516,9 +554,8 @@ Rails.application.routes.draw do
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
-           to: 'repository_columns#destroy_html',
-           as: 'columns_destroy_html'
-      #resources :repository_columns, only: %i(create edit update destroy)
+          to: 'repository_columns#destroy_html',
+          as: 'columns_destroy_html'
       get 'create_html',
           to: 'repository_columns#create_html',
           as: 'columns_create_html',
@@ -559,6 +596,8 @@ Rails.application.routes.draw do
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
+    post 'files/:id/update_image', to: 'assets#update_image',
+                                   as: 'update_asset_image'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
@@ -572,13 +611,78 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      post 'auth/token', to: 'api#authenticate'
-      scope '20170715', module: 'v20170715' do
-        get 'tasks/tree', to: 'core_api#tasks_tree'
-        # get 'tasks/:task_id/samples', to: 'core_api#task_samples'
+      if Api.configuration.core_api_v1_enabled
+        namespace :v1 do
+          resources :teams, only: %i(index show) do
+            resources :inventories,
+                      only: %i(index create show update destroy) do
+              resources :inventory_columns,
+                        only: %i(index create show update destroy),
+                        path: 'columns',
+                        as: :columns do
+                resources :inventory_list_items,
+                          only: %i(index create show update destroy),
+                          path: 'list_items',
+                          as: :list_items
+              end
+              resources :inventory_items,
+                        only: %i(index create show update destroy),
+                        path: 'items',
+                        as: :items do
+                resources :inventory_cells,
+                          only: %i(index create show update destroy),
+                          path: 'cells',
+                          as: :cells
+              end
+            end
+            resources :projects, only: %i(index show) do
+              resources :user_projects, only: %i(index show),
+                path: 'users', as: :users
+              resources :project_comments, only: %i(index show),
+                path: 'comments', as: :comments
+              get 'activities', to: 'projects#activities'
+              resources :reports, only: %i(index show),
+                path: 'reports', as: :reports
+              resources :experiments, only: %i(index show) do
+                resources :task_groups, only: %i(index show)
+                resources :connections, only: %i(index show)
+                resources :tasks, only: %i(index show) do
+                  resources :task_inventory_items, only: %i(index show),
+                            path: 'items',
+                            as: :items
+                  resources :task_users, only: %i(index show),
+                            path: 'users',
+                            as: :users
+                  resources :task_tags, only: %i(index show),
+                            path: 'tags',
+                            as: :tags
+                  resources :protocols, only: %i(index)
+                  resources :results, only: %i(index create show)
+                  get 'activities', to: 'tasks#activities'
+                end
+              end
+            end
+          end
+          resources :users, only: %i(show) do
+            resources :user_identities,
+                      only: %i(index create show update destroy),
+                      path: 'identities',
+                      as: :identities
+          end
+        end
       end
     end
   end
+
+  resources :global_activities, only: [:index] do
+    collection do
+      get :search_subjects
+      get :team_filter
+      get :user_filter
+    end
+  end
+
+  post 'global_activities', to: 'global_activities#index'
 
   constraints WopiSubdomain do
     # Office integration

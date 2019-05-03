@@ -2,19 +2,19 @@
   <%= t("my_modules.states.completed") %>
   <span class="due-date-label">
     <%= l(my_module.completed_on, format: :full_date) %>
-    <span class="glyphicon glyphicon-ok"></span>
+    <span class="fas fa-check"></span>
   </span>
 <% elsif my_module.is_one_day_prior? %>
   <%= t("my_modules.states.due_soon") %>
   <span class="due-date-label">
     <%=l my_module.due_date, format: :full_date %>
-    <span class="glyphicon glyphicon-alert"></span>
+    <span class="fas fa-exclamation-triangle"></span>
   </span>
 <% elsif my_module.is_overdue? %>
   <%= t("my_modules.states.overdue") %>
   <span class="due-date-label">
     <%=l my_module.due_date, format: :full_date %>
-    <span class="glyphicon glyphicon-alert"></span>
+    <span class="fas fa-exclamation-triangle"></span>
   </span>
 <% elsif my_module.due_date %>
   <%= t("experiments.canvas.full_zoom.due_date") %>

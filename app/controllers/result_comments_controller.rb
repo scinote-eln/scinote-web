@@ -18,9 +18,9 @@ class ResultCommentsController < ApplicationController
         # messages. 'list' partial is used for showing more
         # comments.
         partial = 'index.html.erb'
-        partial = 'list.html.erb' if @last_comment_id > 0
+        partial = 'list.html.erb' if @last_comment_id.positive?
         more_url = ''
-        if @comments.count > 0
+        if @comments.size.positive?
           more_url = url_for(result_result_comments_path(@result,
                                                          format: :json,
                                                          from: @comments
@@ -28,11 +28,14 @@ class ResultCommentsController < ApplicationController
         end
         render json: {
           perPage: @per_page,
-          resultsNumber: @comments.length,
+          resultsNumber: @comments.size,
           moreUrl: more_url,
-          html: render_to_string(partial: partial,
-                                 locals: { comments: @comments,
-                                           more_comments_url: more_url })
+          html: render_to_string(
+            partial: partial,
+            locals: {
+              result: @result, comments: @comments, per_page: @per_page
+            }
+          )
         }
       end
     end
@@ -47,21 +50,8 @@ class ResultCommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-
         result_comment_annotation_notification
-        # Generate activity
-        Activity.create(
-          type_of: :add_comment_to_result,
-          user: current_user,
-          project: @result.my_module.experiment.project,
-          experiment: @result.my_module.experiment,
-          my_module: @result.my_module,
-          message: t(
-            'activities.add_comment_to_result',
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+        log_activity(:add_comment_to_result)
 
         format.json {
           render json: {
@@ -71,7 +61,7 @@ class ResultCommentsController < ApplicationController
                 comment: @comment
               }
             ),
-            date: @comment.created_at.strftime('%d.%m.%Y')
+            date: I18n.l(@comment.created_at, format: :full_date)
           },
           status: :created
         }
@@ -106,22 +96,9 @@ class ResultCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.save
-
           result_comment_annotation_notification(old_text)
-          # Generate activity
-          Activity.create(
-            type_of: :edit_result_comment,
-            user: current_user,
-            project: @result.my_module.experiment.project,
-            experiment: @result.my_module.experiment,
-            my_module: @result.my_module,
-            message: t(
-              'activities.edit_result_comment',
-              user: current_user.full_name,
-              result: @result.name
-            )
-          )
-          message = custom_auto_link(@comment.message)
+          log_activity(:edit_result_comment)
+          message = custom_auto_link(@comment.message, team: current_team)
           render json: { comment: message }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
@@ -135,19 +112,7 @@ class ResultCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
-          # Generate activity
-          Activity.create(
-            type_of: :delete_result_comment,
-            user: current_user,
-            project: @result.my_module.experiment.project,
-            experiment: @result.my_module.experiment,
-            my_module: @result.my_module,
-            message: t(
-              'activities.delete_result_comment',
-              user: current_user.full_name,
-              result: @result.name
-            )
-          )
+          log_activity(:delete_result_comment)
           render json: {}, status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },
@@ -208,5 +173,15 @@ class ResultCommentsController < ApplicationController
                                       @result.my_module
                                     )))
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @result,
+            team: @result.my_module.experiment.project.team,
+            project: @result.my_module.experiment.project,
+            message_items: { result: @result.id })
   end
 end

@@ -160,4 +160,18 @@ div.print-report {
       }
     }
   }
+
+  .report-module-repository-element {
+    & > .report-element-header {
+      .repository-icon,.repository-name {
+        color: $color-black !important;
+      }
+    }
+
+    &:hover > .report-element-header {
+      .repository-icon,.repository-name {
+        color: $color-black !important;
+      }
+    }
+  }
 }

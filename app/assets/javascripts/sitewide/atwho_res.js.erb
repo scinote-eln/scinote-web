@@ -172,7 +172,7 @@ var SmartAnnotation = (function() {
        '">Tasks</button>' +
        rep_buttons +
        '<div class="dismiss">' +
-       '<span class="glyphicon glyphicon-remove"></span>' +
+       '<span class="fas fa-times"></span>' +
        '</div>' +
        '<div class="help">' +
        '<div>' +
@@ -352,7 +352,23 @@ var SmartAnnotation = (function() {
           },
           beforeInsert: function(value, li) {
             return _generateInputTag(value, li);
-          }
+          },
+          matcher:function(flag, subtext, should_startWithSpace, acceptSpaceBar) {
+            var _a, _y, match, regexp, space;
+            flag = flag.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            if (should_startWithSpace) {
+              flag = '(?:^|\\s)' + flag;
+            }
+            _a = decodeURI("%C3%80");
+            _y = decodeURI("%C3%BF");
+            regexp = new RegExp(flag + "([A-Za-z" + _a + "-" + _y + "0-9_\\s\+\-\]*)$|" + flag + "([^\\x00-\\xff]*)$", 'gi');
+            match = regexp.exec(subtext);
+            if (match) {
+              return match[2] || match[1];
+            } else {
+              return null;
+            }
+          },
         },
         headerTpl: generateFilterMenu(defaultFilterType),
         limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
@@ -442,7 +458,7 @@ var SmartAnnotation = (function() {
           '</div>' +
           '</div>' +
           '<div class="dismiss">' +
-          '<span class="glyphicon glyphicon-remove"></span>' +
+          '<span class="fas fa-times"></span>' +
           '</div>' +
           '</div>',
         limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
@@ -464,7 +480,7 @@ var SmartAnnotation = (function() {
   // Closes the atwho popup * needed in repositories to close the popup
   // if nothing is selected and the user leaves the form *
   function closePopup() {
-    $('.atwho-header-res').find('.glyphicon-remove').click();
+    $('.atwho-header-res').find('.fa-times').click();
   }
 
   function initialize(field) {

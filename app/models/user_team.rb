@@ -5,7 +5,7 @@ class UserTeam < ApplicationRecord
   validates :user, presence: true
   validates :team, presence: true
 
-  belongs_to :user, inverse_of: :user_teams, optional: true
+  belongs_to :user, inverse_of: :user_teams, touch: true, optional: true
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',
              class_name: 'User',
@@ -14,10 +14,7 @@ class UserTeam < ApplicationRecord
 
   before_destroy :destroy_associations
   after_create :create_samples_table_state
-
-  after_commit do
-    Views::Datatables::DatatablesReport.refresh_materialized_view
-  end
+  validates_uniqueness_of :user_id, scope: :team_id
 
   def role_str
     I18n.t("user_teams.enums.role.#{role}")
@@ -79,6 +76,10 @@ class UserTeam < ApplicationRecord
       end
       protocol.save
     end
+
+    # Make new owner author of all inventory items that were added
+    # by departing user and belong to this team.
+    RepositoryRow.change_owner(team, user, new_owner)
 
     super()
   end

@@ -3,13 +3,13 @@
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/experiment.svg' %>
   <% if subject&.navigable? %>
-    <% path = subject.archived? ? project_path(subject.project, view_mode: :archived) : canvas_experiment_path(subject) %>
+    <% path = subject.archived? ? experiment_archive_project_path(subject.project) : canvas_experiment_path(subject) %>
     <%= route_to_other_team(path,
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                             title: subject.name) %>
   <% else %>
-    <% name = subject&.name || breadcrumbs['experiment'] %>
+    <% name = subject&.name || breadcrumbs[:experiment] %>
     <span title="<%= name %>">
       <%= name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>

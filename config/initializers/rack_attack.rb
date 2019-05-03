@@ -2,10 +2,10 @@
 
 return unless Rails.env.production?
 
-return if Rails.configuration.x.core_api_rate_limit.zero?
+return if Api.configuration.core_api_rate_limit.zero?
 
 Rack::Attack.throttle('api requests by ip',
-                      limit: Rails.configuration.x.core_api_rate_limit,
+                      limit: Api.configuration.core_api_rate_limit,
                       period: 60) do |request|
   request.ip if request.path.match?(%r{^\/api\/})
 end

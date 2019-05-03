@@ -36,6 +36,8 @@ class RepositoryColumnsController < ApplicationController
     respond_to do |format|
       format.json do
         if @repository_column.save
+          log_activity(:create_column_inventory)
+
           if generate_repository_list_items(params[:list_items])
             render json: {
               id: @repository_column.id,
@@ -87,6 +89,8 @@ class RepositoryColumnsController < ApplicationController
       format.json do
         @repository_column.update_attributes(repository_column_params)
         if @repository_column.save
+          log_activity(:edit_column_inventory)
+
           if update_repository_list_items(params[:list_items])
             render json: {
               id: @repository_column.id,
@@ -126,6 +130,8 @@ class RepositoryColumnsController < ApplicationController
   def destroy
     column_id = @repository_column.id
     column_name = @repository_column.name
+
+    log_activity(:delete_column_inventory) # Should we move this call somewhere?
     respond_to do |format|
       format.json do
         if @repository_column.destroy
@@ -272,5 +278,17 @@ class RepositoryColumnsController < ApplicationController
       column_items += 1
     end
     success
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @repository,
+            team: current_team,
+            message_items: {
+              repository_column: @repository_column.id,
+              repository: @repository.id
+            })
   end
 end

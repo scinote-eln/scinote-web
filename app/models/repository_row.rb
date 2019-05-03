@@ -10,7 +10,7 @@ class RepositoryRow < ApplicationRecord
              foreign_key: :last_modified_by_id,
              class_name: 'User',
              optional: true
-  has_many :repository_cells, dependent: :destroy
+  has_many :repository_cells, -> { order(:id) }, dependent: :destroy
   has_many :repository_columns, through: :repository_cells
   has_many :my_module_repository_rows,
            inverse_of: :repository_row, dependent: :destroy
@@ -29,5 +29,11 @@ class RepositoryRow < ApplicationRecord
 
   def self.name_like(query)
     where('repository_rows.name ILIKE ?', "%#{query}%")
+  end
+
+  def self.change_owner(team, user, new_owner)
+    joins(:repository)
+      .where('repositories.team_id = ? and repository_rows.created_by_id = ?', team, user)
+      .update_all(created_by_id: new_owner.id)
   end
 end

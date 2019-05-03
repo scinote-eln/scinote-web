@@ -14,7 +14,7 @@
       id="new-step-assets-tab"
       onClick="dragNdropAssetsInit('steps')">
     <a href="#new-step-assets" data-toggle="tab" data-no-turbolink="true">
-      <span class="glyphicon glyphicon-file"></span>
+      <span class="fas fa-paperclip"></span>
       <%= t("protocols.steps.new.tab_assets") %>
     </a>
   </li>
@@ -37,16 +37,19 @@
       <%= render "form_checklists.html.erb", ff: ff %>
     <% end %>
     <%= f.add_nested_fields_link :checklists do %>
-      <span class="glyphicon glyphicon-plus"></span>
+      <span class="fas fa-plus"></span>
       <%= t("protocols.steps.new.add_checklist") %>
     <% end %>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-assets">
     <div class="text-center new-asset-box">
+      <span class="help_tooltips"
+            data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_add_files') %>"
+            data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_add_files') %>">
       <%=t 'assets.drag_n_drop.label_html' %>
       <label>
         <span class="btn btn-primary">
-          <span class="glyphicon glyphicon-plus"></span>
+          <span class="fas fa-plus"></span>
           <%=t 'assets.drag_n_drop.browse_label' %>
         </span>
         <input type="file"
@@ -54,6 +57,7 @@
                id="drag-n-drop-assets"
                style="display: none" multiple>
       </label>
+      </span>
     </div>
     <div id="new-step-assets-group" class="form-group">
       <%= f.nested_fields_for :assets do |ff| %>
@@ -66,7 +70,7 @@
       <%= render "form_tables.html.erb", ff: ff %>
     <% end %>
     <%= f.add_nested_fields_link :tables, id: "add-table" do %>
-      <span class="glyphicon glyphicon-plus"></span>
+      <span class="fas fa-plus"></span>
       <%= t("protocols.steps.new.add_table") %>
     <% end %>
   </div>

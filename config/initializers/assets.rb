@@ -17,6 +17,8 @@ Rails.application.config.assets.precompile += %w(underscore.js)
 Rails.application.config.assets.precompile += %w(jsPlumb-2.0.4-min.js)
 Rails.application.config.assets.precompile += %w(jsnetworkx.js)
 Rails.application.config.assets.precompile += %w(handsontable.full.min.js)
+Rails.application.config.assets.precompile +=
+  %w(sugar.min.js jquerymy-1.2.14.min.js)
 Rails.application.config.assets.precompile += %w(users/settings/list_toggle.js.erb)
 Rails.application.config.assets.precompile +=
   %w(users/settings/account/preferences/index.js)
@@ -26,6 +28,8 @@ Rails.application.config.assets.precompile +=
 Rails.application.config.assets.precompile +=
   %w(users/settings/teams/add_user_modal.js)
 Rails.application.config.assets.precompile += %w(users/settings/teams/show.js)
+Rails.application.config.assets.precompile +=
+  %w(users/settings/teams/invite_users_modal.js)
 Rails.application.config.assets.precompile += %w(my_modules/activities.js)
 Rails.application.config.assets.precompile += %w(my_modules/protocols.js)
 Rails.application.config.assets.precompile +=
@@ -61,7 +65,9 @@ Rails.application.config.assets.precompile +=
   %w(protocols/import_export/export.js)
 Rails.application.config.assets.precompile += %w(datatables.js)
 Rails.application.config.assets.precompile += %w(search/index.js)
+Rails.application.config.assets.precompile += %w(global_activities/side_pane.js)
 Rails.application.config.assets.precompile += %w(navigation.js)
+Rails.application.config.assets.precompile += %w(secondary_navigation.js)
 Rails.application.config.assets.precompile += %w(datatables.css)
 Rails.application.config.assets.precompile += %w(my_modules.js)
 Rails.application.config.assets.precompile += %w(canvas-to-blob.min.js)
@@ -72,6 +78,7 @@ Rails.application.config.assets.precompile += %w(assets.js)
 Rails.application.config.assets.precompile += %w(comments.js)
 Rails.application.config.assets.precompile += %w(projects/show.js)
 Rails.application.config.assets.precompile += %w(notifications.js)
+Rails.application.config.assets.precompile += %w(system_notifications/index.js)
 Rails.application.config.assets.precompile += %w(users/invite_users_modal.js)
 # Rails.application.config.assets.precompile += %w(samples/sample_types_groups.js)
 Rails.application.config.assets.precompile += %w(highlightjs-github-theme.css)
@@ -83,6 +90,7 @@ Rails.application.config.assets.precompile +=
 Rails.application.config.assets.precompile +=
   %w(repositories/my_module_repository.js)
 Rails.application.config.assets.precompile += %w(activities/index.js)
+Rails.application.config.assets.precompile += %w(global_activities/index.js)
 Rails.application.config.assets.precompile += %w(repository_columns/index.js)
 Rails.application.config.assets.precompile += %w(repositories/show.js)
 Rails.application.config.assets.precompile += %w(sidebar_toggle.js)

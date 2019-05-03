@@ -12,7 +12,7 @@ module Api
 
       def index
         cells = @inventory_item.repository_cells
-                               .preload(:repository_column, value: @inventory.cell_preload_includes)
+                               .includes(Extends::REPOSITORY_SEARCH_INCLUDES)
                                .page(params.dig(:page, :number))
                                .per(params.dig(:page, :size))
         render jsonapi: cells, each_serializer: InventoryCellSerializer
@@ -34,7 +34,7 @@ module Api
 
       def update
         value = update_inventory_cell_params[:value]
-        if @inventory_cell.value.data_different?(value)
+        if @inventory_cell.value.data_changed?(value)
           @inventory_cell.value.update_data!(value, current_user)
           render jsonapi: @inventory_cell, serializer: InventoryCellSerializer
         else
@@ -60,7 +60,9 @@ module Api
       end
 
       def check_manage_permissions
-        raise PermissionError.new(RepositoryRow, :manage) unless can_manage_repository_rows?(@inventory)
+        unless can_manage_repository_rows?(@team)
+          raise PermissionError.new(RepositoryRow, :manage)
+        end
       end
 
       def inventory_cell_params

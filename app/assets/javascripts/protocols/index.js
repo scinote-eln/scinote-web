@@ -97,6 +97,7 @@ function initProtocolsTable() {
     },
     fnDrawCallback: function(settings, json) {
       animateSpinner(this, false);
+      $.initTooltips();
     },
     preDrawCallback: function(settings) {
       animateSpinner(this);
@@ -214,7 +215,7 @@ function initProtocolPreviewModal() {
           initHandsOnTable(modalBody);
           modal.modal("show");
           initHandsOnTable(modalBody);
-          initPreviewModal();
+          FilePreviewModal.init({ readOnly: true });
         },
         error: function (error) {
           // TODO
@@ -248,6 +249,7 @@ function initLinkedChildrenModal() {
           if (childrenTableEl) {
             // Only initialize table if it's present
             var childrenDatatable = childrenTableEl.DataTable({
+              autoWidth: false,
               dom: "RBltpi",
               stateSave: false,
               buttons: [],

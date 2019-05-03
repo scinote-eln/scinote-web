@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExperimentsController < ApplicationController
   include SampleActions
   include TeamsHelper
@@ -43,19 +45,8 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     @experiment.project = @project
     if @experiment.save
-
       experiment_annotation_notification
-      Activity.create(
-        type_of: :create_experiment,
-        project: @experiment.project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.create_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name
-        )
-      )
+      log_activity(:create_experiment)
       flash[:success] = t('experiments.create.success_flash',
                           experiment: @experiment.name)
       respond_to do |format|
@@ -103,19 +94,15 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
 
     if @experiment.save
-
       experiment_annotation_notification(old_text)
-      Activity.create(
-        type_of: :edit_experiment,
-        project: @experiment.project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.edit_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name
-        )
-      )
+
+      activity_type = if experiment_params[:archived] == 'false'
+                        :restore_experiment
+                      else
+                        :edit_experiment
+                      end
+      log_activity(activity_type)
+
       @experiment.touch(:workflowimg_updated_at)
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
@@ -146,17 +133,7 @@ class ExperimentsController < ApplicationController
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
     if @experiment.save
-      Activity.create(
-        type_of: :archive_experiment,
-        project: @experiment.project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.archive_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name
-        )
-      )
+      log_activity(:archive_experiment)
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)
 
@@ -183,37 +160,15 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
+    service = Experiments::CopyExperimentAsTemplateService
+              .call(experiment_id: @experiment.id,
+                    project_id: move_experiment_param,
+                    user_id: current_user.id)
 
-    # Try to clone the experiment
-    success = true
-    if @experiment.projects_with_role_above_user(current_user).include?(project)
-      cloned_experiment = @experiment.deep_clone_to_project(current_user,
-                                                            project)
-      success = cloned_experiment.valid?
-      # Create workflow image
-      cloned_experiment.delay.generate_workflow_img if success
-    else
-      success = false
-    end
-
-    if success
-      Activity.create(
-        type_of: :clone_experiment,
-        project: project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.clone_experiment',
-          user: current_user.full_name,
-          experiment_new: cloned_experiment.name,
-          experiment_original: @experiment.name
-        )
-      )
-
+    if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(cloned_experiment)
+      redirect_to canvas_experiment_path(service.cloned_experiment)
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
@@ -237,49 +192,23 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
-    old_project = @experiment.project
+    service = Experiments::MoveToProjectService
+              .call(experiment_id: @experiment.id,
+                    project_id: move_experiment_param,
+                    user_id: current_user.id)
 
-    # Try to move the experiment
-    success = true
-    if @experiment.moveable_projects(current_user).include?(project)
-      success = @experiment.move_to_project(project)
-    else
-      success = false
-    end
-
-    if success
-      Activity.create(
-        type_of: :move_experiment,
-        project: project,
-        experiment: @experiment,
-        user: current_user,
-        message: I18n.t(
-          'activities.move_experiment',
-          user: current_user.full_name,
-          experiment: @experiment.name,
-          project_new: project.name,
-          project_original: old_project.name
-        )
-      )
-
+    if service.succeed?
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
-      respond_to do |format|
-        format.json do
-          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
-        end
-      end
+      path = canvas_experiment_url(@experiment)
+      status = :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: { message: t('experiments.move.error_flash',
-                                    experiment:
-                                      escape_input(@experiment.name)) },
-                                    status: :unprocessable_entity
-        end
-      end
+      message = t('experiments.move.error_flash',
+                  experiment: escape_input(@experiment.name))
+      status = :unprocessable_entity
     end
+
+    render json: { message: message, path: path }, status: status
   end
 
   def module_archive
@@ -308,10 +237,14 @@ class ExperimentsController < ApplicationController
   end
 
   def updated_img
+    if @experiment.workflowimg.present? && !@experiment.workflowimg.exists?
+      @experiment.workflowimg = nil
+      @experiment.save
+      @experiment.generate_workflow_img
+    end
     respond_to do |format|
       format.json do
-        if @experiment.workflowimg_updated_at.to_i >=
-           params[:timestamp].to_time.to_i
+        if @experiment.workflowimg.present?
           render json: {}, status: 200
         else
           render json: {}, status: 404
@@ -348,7 +281,13 @@ class ExperimentsController < ApplicationController
     params.require(:experiment).permit(:name, :description, :archived)
   end
 
+  def move_experiment_param
+    params.require(:experiment).require(:project_id)
+  end
+
   def load_projects_tree
+    # Switch to correct team
+    current_team_switch(@experiment.project.team) unless @experiment.project.nil?
     @projects_tree = current_user.projects_tree(current_team, nil)
   end
 
@@ -385,5 +324,15 @@ class ExperimentsController < ApplicationController
                  experiment: link_to(@experiment.name,
                                      canvas_experiment_url(@experiment)))
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @experiment.project.team,
+            project: @experiment.project,
+            subject: @experiment,
+            message_items: { experiment: @experiment.id })
   end
 end

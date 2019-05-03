@@ -2,24 +2,17 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::ProjectsController', type: :request do
+RSpec.describe "Api::V1::ProjectsController", type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
-    owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+
     # valid_projects
-    2.times do
-      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first)
-      create :user_project, :owner,
-             user: @user,
-             project: project
-      create :user_assignment,
-             assignable: project,
-             user: @user,
-             user_role: owner_role,
-             assigned_by: @user
-    end
+    create(:project, name: Faker::Name.unique.name,
+            created_by: @user, team: @teams.first)
+    create(:project, name: Faker::Name.unique.name,
+            created_by: @user, team: @teams.first)
 
     # unaccessable_projects
     create(:project, name: Faker::Name.unique.name,
@@ -38,11 +31,10 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@teams.first.projects, each_serializer: Api::V1::ProjectSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@teams.first.projects,
+               each_serializer: Api::V1::ProjectSerializer)
+          .as_json[:data]
       )
     end
 
@@ -72,11 +64,10 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@teams.first.projects.first, serializer: Api::V1::ProjectSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@teams.first.projects.first,
+               serializer: Api::V1::ProjectSerializer)
+          .as_json[:data]
       )
     end
 
@@ -107,196 +98,6 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
-    end
-  end
-
-  describe 'POST project, #create' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-    end
-
-    let(:action) do
-      post(api_v1_team_projects_path(team_id: @teams.first.id), params: request_body.to_json, headers: @valid_headers)
-    end
-
-    context 'when has valid params' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'projects',
-            attributes: {
-              name: 'Project name',
-              visibility: 'hidden'
-            }
-          }
-        }
-      end
-
-      it 'creates new project' do
-        expect { action }.to change { Project.count }.by(1)
-      end
-
-      it 'returns status 201' do
-        action
-
-        expect(response).to have_http_status 201
-      end
-
-      it 'returns well formated response' do
-        action
-
-        expect(json).to match(
-          hash_including(
-            data: hash_including(
-              type: 'projects',
-              attributes: hash_including(name: 'Project name', visibility: 'hidden')
-            )
-          )
-        )
-      end
-
-      context 'when includes project_folder relation' do
-        let(:request_body) do
-          {
-            data: {
-              type: 'projects',
-              attributes: {
-                name: 'Project name',
-                visibility: 'hidden',
-                project_folder_id: project_folder.id
-              }
-            }
-          }
-        end
-        let(:project_folder) { create :project_folder, team: @teams.first }
-
-        it 'renders 201' do
-          action
-
-          expect(response).to have_http_status(201)
-          expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
-        end
-
-        context 'when folder from a different team' do
-          let(:project_folder) { create :project_folder, team: @teams.last }
-
-          it do
-            action
-
-            expect(JSON.parse(response.body)['errors'].first['title']).to be_eql 'Validation error'
-            expect(response).to have_http_status 400
-          end
-        end
-      end
-    end
-
-    context 'when has missing param' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'projects',
-            attributes: {
-            }
-          }
-        }
-      end
-
-      it 'renders 400' do
-        action
-
-        expect(response).to have_http_status(400)
-      end
-    end
-  end
-
-  describe 'PATCH project, #update' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-      @project = @user.teams.first.projects.first
-    end
-
-    let(:action) do
-      patch(
-        api_v1_team_project_path(
-          team_id: @project.team.id,
-          id: @project.id
-        ),
-        params: request_body.to_json,
-        headers: @valid_headers
-      )
-    end
-
-    context 'when has valid params' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'projects',
-            attributes: {
-              name: 'New project name',
-              visibility: 'hidden',
-              archived: true
-            }
-          }
-        }
-      end
-
-      it 'returns status 200' do
-        action
-
-        expect(response).to have_http_status 200
-      end
-
-      it 'returns well formated response' do
-        action
-
-        expect(json).to match(
-          hash_including(
-            data: hash_including(
-              type: 'projects',
-              attributes: hash_including(name: 'New project name', visibility: 'hidden', archived: true)
-            )
-          )
-        )
-      end
-
-      context 'when includes project_folder relation' do
-        let(:request_body) do
-          {
-            data: {
-              type: 'projects',
-              attributes: {
-                project_folder_id: project_folder.id
-              }
-            }
-          }
-        end
-        let(:project_folder) { create :project_folder, team: @teams.first }
-
-        it 'renders 201' do
-          action
-
-          expect(response).to have_http_status(200)
-          expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
-        end
-      end
-    end
-
-    context 'when has missing param' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'projects',
-            attributes: {
-            }
-          }
-        }
-      end
-
-      it 'renders 400' do
-        action
-
-        expect(response).to have_http_status(400)
-      end
     end
   end
 end

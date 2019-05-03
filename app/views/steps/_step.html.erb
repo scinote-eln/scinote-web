@@ -1,6 +1,6 @@
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="badge-num">
-    <span class="badge size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+    <span class="badge size-digit-<%= (step.position_plus_one).to_s.length %>"><%= step.position_plus_one %></span>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -12,23 +12,25 @@
              href="<%= move_up_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.up_arrow_title") %>"
              data-remote="true">
-              <span class="glyphicon glyphicon-arrow-up"></span></a>
+              <span class="fas fa-arrow-up"></span></a>
           <a data-action="move-step"
              class="btn btn-link"
              href="<%= move_down_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.down_arrow_title") %>"
              data-remote="true">
-            <span class="glyphicon glyphicon-arrow-down"></a>
+            <span class="fas fa-arrow-down"></a>
           <a data-action="edit-step"
-             class="btn btn-link"
+             class="btn btn-link help_tooltips"
              title="<%= t("protocols.steps.options.edit_title") %>"
              href="<%= edit_step_path(step, format: :json) %>"
-             data-remote="true">
+             data-remote="true"
+             data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_edit') %>"
+             data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_edit') %>" >
             <span class="fas fa-pencil-alt">
           </a>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
-            <span class="glyphicon glyphicon-trash">
+            <span class="fas fa-trash-alt">
           <% end %>
         <% end %>
       </div>
@@ -36,7 +38,7 @@
          href="#step-panel-<%= step.id %>"
          data-toggle="collapse"
          data-remote="true">
-        <span class="glyphicon glyphicon-collapse-down collapse-step-icon"></span>
+        <span class="fas fa-caret-square-down collapse-step-icon"></span>
         <strong><%= step.name %></strong> |
         <span><%= sanitize_input t('protocols.steps.published_on',
                                    timestamp: l(step.created_at, format: :full),
@@ -53,7 +55,8 @@
               <div class="ql-editor">
                 <%= custom_auto_link(generate_image_tag_from_token(step.description, step),
                                      simple_format: false,
-                                     tags: %w(img)) %>
+                                     tags: %w(img),
+                                     team: current_team) %>
               </div>
             <% end %>
           </div>
@@ -93,7 +96,7 @@
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
               <% step.checklists.asc.each do |checklist| %>
-                <strong><%= custom_auto_link(checklist.name) %></strong>
+                <strong><%= custom_auto_link(checklist.name, team: current_team) %></strong>
                 <% if checklist.checklist_items.empty? %>
                   </br>
                   <%= t("protocols.steps.empty_checklist") %>
@@ -112,7 +115,7 @@
                                  value=""
                                  disabled="disabled" />
                         <% end %>
-                        <%= custom_auto_link(checklist_item.text) %>
+                        <%= custom_auto_link(checklist_item.text, team: current_team) %>
                       </label>
                     </div>
                   <% end %>
@@ -127,7 +130,7 @@
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
                 <button class="btn btn-default">
-                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="fas fa-times"></span>
                   <%= t("protocols.steps.options.uncomplete_title") %>
                 </button>
               </div>
@@ -136,7 +139,7 @@
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
                 <button class="btn btn-toggle">
-                  <span class="glyphicon glyphicon-ok"></span>
+                  <span class="fas fa-check"></span>
                   <%= t("protocols.steps.options.complete_title") %>
                 </button>
               </div>
@@ -149,6 +152,8 @@
             <div class="step-comment"
                  id="step-comments-<%= step.id %>"
                  data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
+              <%= render partial: "step_comments/index.html.erb",
+                         locals: { step: step, comments: step.last_comments, per_page: Constants::COMMENTS_SEARCH_LIMIT } %>
             </div>
           </div>
         <% end %>

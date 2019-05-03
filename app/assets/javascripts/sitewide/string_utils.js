@@ -10,7 +10,7 @@ function truncateLongString( el, chars ) {
 
   var html = "";
   if( $.type(el) !== 'string' &&
-      el.children().hasClass("glyphicon")) {
+      el.children().hasClass('fas')) {
     html = el.children()[0];
   }
 

@@ -1,5 +1,5 @@
 <div class="pull-right">
-  <span class="text-muted"><%= l comment.created_at, format: '%H:%M' %></span>
+  <span class="text-muted"><%= l comment.created_at, format: :time %></span>
   <% if can_manage_comment_in_project?(comment) %>
     <div class="dropdown dropdown-comment">
       <a href="#"
@@ -36,5 +36,5 @@
 </div>
 <strong><%= comment.user.full_name %>:</strong>
 <div data-role="comment-message-container">
-  <div data-role="comment-message"><%= custom_auto_link(comment.message) %></div>
+  <div data-role="comment-message"><%= custom_auto_link(comment.message, team: current_team) %></div>
 </div>

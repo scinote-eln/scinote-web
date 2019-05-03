@@ -26,8 +26,6 @@ module Api
                  serializer: ResultSerializer,
                  if: -> { object.class == ResultComment &&
                           !instance_options[:hide_result] }
-
-      include TimestampableModel
     end
   end
 end

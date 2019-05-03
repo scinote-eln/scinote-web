@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 describe SystemNotification do
-  let(:system_notification) { build :system_notification }
+  let(:user) { create :user }
+  subject(:system_notification) { build :system_notification }
 
   it 'is valid' do
     expect(system_notification).to be_valid
@@ -22,7 +23,7 @@ describe SystemNotification do
 
     describe '#modal_body' do
       it { is_expected.to validate_presence_of(:modal_body) }
-      it { is_expected.to validate_length_of(:modal_body).is_at_most(100000) }
+      it { is_expected.to validate_length_of(:modal_body).is_at_most(50000) }
     end
 
     describe '#description' do
@@ -55,12 +56,11 @@ describe SystemNotification do
     end
 
     context 'when there is no system notifications in db' do
-      it 'returns first users created_at' do
+      it 'returns last user created_at' do
         create :user
-        create :user, created_at: Time.now + 5.seconds
 
         expect(described_class.last_sync_timestamp)
-          .to be == User.first.created_at.to_i
+          .to be == User.last.created_at.to_i
       end
     end
 
@@ -76,7 +76,6 @@ describe SystemNotification do
   end
 
   describe 'Methods' do
-    let(:user) { create :user }
     let(:notifcation_one) { create :system_notification }
     let(:notifcation_two) { create :system_notification, title: 'Special one' }
     before do

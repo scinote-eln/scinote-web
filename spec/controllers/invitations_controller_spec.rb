@@ -14,7 +14,7 @@ describe Users::InvitationsController, type: :controller do
     let(:team) { create :team }
     let(:params) do
       {
-        team_ids: [team.id],
+        teamId: team.id,
         emails: [invited_user.email],
         role: 'guest'
       }

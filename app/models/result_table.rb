@@ -5,5 +5,6 @@ class ResultTable < ApplicationRecord
   belongs_to :table,
              inverse_of: :result_table,
              dependent: :destroy,
+             touch: true,
              optional: true
 end

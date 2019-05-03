@@ -15,12 +15,12 @@
                 <span class="fas fa-pencil-alt"></span>
               <% end %>
               <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name) do %>
-                <span class="glyphicon glyphicon-remove"></span>
+                <span class="fas fa-times"></span>
               <% end %>
               <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :delete, html: { class: "delete-tag-form"} do |f| %>
                 <%= hidden_field_tag :my_module_id, @my_module.id %>
                 <%= f.button class: 'btn btn-link delete-tag-link', title: t("experiments.canvas.modal_manage_tags.delete_tag") do %>
-                  <span class="glyphicon glyphicon-trash"></span>
+                  <span class="fas fa-trash-alt"></span>
                 <% end %>
               <% end %>
             </div>
@@ -35,10 +35,10 @@
             <div class="pull-right">
               <%= f.color_picker_select :color, Constants::TAG_COLORS, class: "edit-tag-color" %>
               <%= f.button class: "btn btn-link save-tag-link", title: t("experiments.canvas.modal_manage_tags.save_tag") do %>
-                <span class="glyphicon glyphicon-ok"></span>
+                <span class="fas fa-check"></span>
               <% end %>
               <%= link_to "", remote: true, class: 'btn btn-link cancel-tag-link', title: t("experiments.canvas.modal_manage_tags.cancel_tag") do %>
-                <span class="glyphicon glyphicon-remove"></span>
+                <span class="fas fa-times"></span>
               <% end %>
             </div>
           <% end %>
@@ -74,7 +74,7 @@
         <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
         <%= f.hidden_field :color, :value => Constants::TAG_COLORS[0] %>
         <%= f.button class: "btn btn-primary" do %>
-          <span class="glyphicon glyphicon-plus"></span>
+          <span class="fas fa-plus"></span>
           <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
         <% end %>
       <% end %>

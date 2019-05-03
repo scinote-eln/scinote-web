@@ -1,5 +1,7 @@
 class MyModule < ApplicationRecord
-  include ArchivableModel, SearchableModel
+  include ArchivableModel
+  include SearchableModel
+  include SearchableByNameModel
 
   enum state: Extends::TASKS_STATES
 
@@ -31,7 +33,7 @@ class MyModule < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :experiment, inverse_of: :my_modules, optional: true
+  belongs_to :experiment, inverse_of: :my_modules, touch: true, optional: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
@@ -61,11 +63,22 @@ class MyModule < ApplicationRecord
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
-  has_many :activities, inverse_of: :my_module
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
+  # Associations for old activity type
+  has_many :activities, inverse_of: :my_module
 
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
+  scope :active, -> { where(archived: false) }
+  scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
+  scope :without_group, -> { active.where(my_module_group: nil) }
+  scope :one_day_prior, (lambda do
+    where('my_modules.due_date > ? AND my_modules.due_date < ?',
+          Time.current.utc,
+          Time.current.utc + 1.day)
+  end)
+  scope :workflow_ordered, -> { order(workflow_order: :asc) }
+  scope :uncomplete, -> { where(state: 'uncompleted') }
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
@@ -125,9 +138,17 @@ class MyModule < ApplicationRecord
     end
   end
 
+  def self.viewable_by_user(user, teams)
+    where(experiment: Experiment.viewable_by_user(user, teams))
+  end
+
+  def navigable?
+    !experiment.archived? && experiment.navigable?
+  end
+
   # Removes assigned samples from module and connections with other
   # modules.
-  def archive (current_user)
+  def archive(current_user)
     self.x = 0
     self.y = 0
     # Remove association with module group.
@@ -163,8 +184,14 @@ class MyModule < ApplicationRecord
         raise ActiveRecord::Rollback
       end
     end
-    experiment.delay.generate_workflow_img
+    experiment.generate_workflow_img
     restored
+  end
+
+  def repository_rows_count(repository)
+    my_module_repository_rows.joins(repository_row: :repository)
+                             .where('repositories.id': repository.id)
+                             .count
   end
 
   def unassigned_users
@@ -233,14 +260,14 @@ class MyModule < ApplicationRecord
   end
 
   def is_overdue?(datetime = DateTime.current)
-    due_date.present? and datetime.utc > due_date.utc
+    due_date.present? && datetime.utc > due_date.end_of_day.utc
   end
 
   def overdue_for_days(datetime = DateTime.current)
-    if due_date.blank? or due_date.utc > datetime.utc
-      return 0
+    if due_date.blank? || due_date.end_of_day.utc > datetime.utc
+      0
     else
-      return ((datetime.utc.to_i - due_date.utc.to_i) / (60*60*24).to_f).ceil
+      ((datetime.utc.to_i - due_date.end_of_day.utc.to_i) / 1.day.to_f).ceil
     end
   end
 
@@ -249,7 +276,9 @@ class MyModule < ApplicationRecord
   end
 
   def is_due_in?(datetime, diff)
-    due_date.present? and datetime.utc < due_date.utc and datetime.utc > (due_date.utc - diff)
+    due_date.present? &&
+      datetime.utc < due_date.end_of_day.utc &&
+      datetime.utc > (due_date.end_of_day.utc - diff)
   end
 
   def space_taken

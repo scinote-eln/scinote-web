@@ -14,7 +14,8 @@ class MyModulesController < ApplicationController
                          complete_my_module repository repository_index
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
-                         assign_repository_records_modal)
+                         assign_repository_records_modal
+                         repositories_dropdown)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -27,7 +28,7 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions, only: %i(description due_date)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
-       archive)
+       archive repositories_dropdown)
   before_action :check_complete_module_permission, only: :complete_my_module
   before_action :check_assign_repository_records_permissions,
                 only: %i(unassign_repository_records_modal
@@ -75,39 +76,34 @@ class MyModulesController < ApplicationController
   end
 
   def activities
-    @last_activity_id = params[:from].to_i || 0
-    @per_page = 10
+    params[:subjects] = {
+      MyModule: [@my_module.id]
+    }
+    @activity_types = Activity.activity_types_list
+    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
+                     .distinct
+                     .pluck(:full_name, :id)
+    activities = ActivitiesService.load_activities(current_user, current_team, activity_filters)
 
-    @activities = @my_module.last_activities(@last_activity_id, @per_page + 1)
-    @more_activities_url = ""
-
-    @overflown = @activities.length > @per_page
-
-    @activities = @my_module.last_activities(@last_activity_id, @per_page)
-
-    if @activities.count > 0
-      @more_activities_url =
-        activities_my_module_path(@my_module, from: @activities.last.id)
+    @grouped_activities = activities.group_by do |activity|
+      Time.zone.at(activity.created_at).to_date.to_s
     end
 
+    @next_page = activities.next_page
+    @starting_timestamp = activities.first&.created_at.to_i
+
     respond_to do |format|
-      format.json {
-        # 'activites' partial includes header and form for adding older
-        # activities. 'list' partial is used for showing more activities.
-        partial = "activities.html.erb"
-        if @activities.last.id > 0
-          partial = "my_modules/activities/list_activities.html.erb"
-        end
-        render :json => {
-          :per_page => @per_page,
-          :results_number => @activities.length,
-          :more_url => @more_activities_url,
-          :html => render_to_string({
-            :partial => partial
-          })
+      format.json do
+        render json: {
+          activities_html: render_to_string(
+            partial: 'global_activities/activity_list.html.erb'
+          ),
+          next_page: @next_page,
+          starting_timestamp: @starting_timestamp
         }
-      }
-      format.html
+      end
+      format.html do
+      end
     end
   end
 
@@ -144,62 +140,51 @@ class MyModulesController < ApplicationController
   end
 
   def update
-    @my_module.assign_attributes(my_module_params)
+    update_params = my_module_params
+    if update_params[:due_date].present?
+      update_params[:due_date] = Time.strptime(
+        update_params[:due_date].delete('-'),
+        I18n.backend.date_format.dup.delete('-')
+      )
+    end
+    @my_module.assign_attributes(update_params)
     @my_module.last_modified_by = current_user
     description_changed = @my_module.description_changed?
+    due_date_changes = @my_module.changes[:due_date]
 
     if @my_module.archived_changed?(from: false, to: true)
 
       saved = @my_module.archive(current_user)
-      if saved
-        # Currently not in use
-        Activity.create(
-          type_of: :archive_module,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            'activities.archive_module',
-            user: current_user.full_name,
-            module: @my_module.name
-          )
-        )
-      end
     elsif @my_module.archived_changed?(from: true, to: false)
 
       saved = @my_module.restore(current_user)
       if saved
         restored = true
-        Activity.create(
-          type_of: :restore_module,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            'activities.restore_module',
-            user: current_user.full_name,
-            module: @my_module.name
-          )
-        )
+        log_activity(:restore_module)
       end
     else
-
       saved = @my_module.save
-      if saved and description_changed then
-        Activity.create(
-          type_of: :change_module_description,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            "activities.change_module_description",
-            user: current_user.full_name,
-            module: @my_module.name
-          )
-        )
+
+      if saved
+        if description_changed
+          log_activity(:change_module_description)
+        end
+
+        if due_date_changes
+          # rubocop:disable Metrics/BlockNesting    # temporary solution
+          type_of = if due_date_changes[0].nil?     # set due_date
+                      message_items = { my_module_duedate: @my_module.due_date }
+                      :set_task_due_date
+                    elsif due_date_changes[1].nil?  # remove due_date
+                      message_items = { my_module_duedate: due_date_changes[0] }
+                      :remove_task_due_date
+                    else                            # change due_date
+                      message_items = { my_module_duedate: @my_module.due_date }
+                      :change_task_due_date
+                    end
+          # rubocop:enable Metrics/BlockNesting
+          log_activity(type_of, @my_module, message_items)
+        end
       end
     end
 
@@ -266,6 +251,7 @@ class MyModulesController < ApplicationController
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_403 if @repository.nil? || !can_read_team?(@repository.team)
+    current_team_switch(@repository.team)
   end
 
   def archive
@@ -298,21 +284,6 @@ class MyModulesController < ApplicationController
         my_module.samples.push(*new_samples)
         task_names << my_module.name
       end
-      if new_samples.any?
-        Activity.create(
-          type_of: :assign_sample,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.assign_sample',
-            user: current_user.full_name,
-            tasks: task_names.join(', '),
-            samples: new_samples.map(&:name).join(', ')
-          )
-        )
-      end
     end
     redirect_to samples_my_module_path(@my_module)
   end
@@ -335,21 +306,6 @@ class MyModulesController < ApplicationController
       @my_module.downstream_modules.each do |my_module|
         task_names << my_module.name
         my_module.samples.destroy(samples & my_module.samples)
-      end
-      if samples.any?
-        Activity.create(
-          type_of: :unassign_sample,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.unassign_sample',
-            user: current_user.full_name,
-            tasks: task_names.join(', '),
-            samples: samples.map(&:name).join(', ')
-          )
-        )
       end
     end
     redirect_to samples_my_module_path(@my_module)
@@ -382,10 +338,31 @@ class MyModulesController < ApplicationController
                                              current_user,
                                              @my_module)
     @assigned_rows = records.assigned_rows
-    @repository_row_count = records.repository_rows.count
+    @repository_row_count = records.repository_rows.length
     @columns_mappings = records.mappings
-    @repository_rows = records.repository_rows.page(page).per(per_page)
+    @repository_rows = records.repository_rows
+                              .page(page)
+                              .per(per_page)
+                              .preload(
+                                :repository_columns,
+                                :created_by,
+                                repository_cells: :value
+                              )
     render 'repository_rows/index.json'
+  end
+
+  def repositories_dropdown
+    load_repository if params[:repository_id].present?
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'repositories_dropdown.html.erb',
+            locals: { enable_counters: true }
+          )
+        }
+      end
+    end
   end
 
   # Submit actions
@@ -393,7 +370,8 @@ class MyModulesController < ApplicationController
     if params[:selected_rows].present? && params[:repository_id].present?
       records_names = []
       downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
-
+      downstream_my_modules = []
+      dowmstream_records = {}
       RepositoryRow
         .where(id: params[:selected_rows],
                repository_id: params[:repository_id])
@@ -413,30 +391,29 @@ class MyModulesController < ApplicationController
         next unless downstream
         @my_module.downstream_modules.each do |my_module|
           next if my_module.repository_rows.include?(record)
+          dowmstream_records[my_module.id] = [] unless dowmstream_records[my_module.id]
           MyModuleRepositoryRow.create!(
             my_module: my_module,
             repository_row: record,
             assigned_by: current_user
           )
-          records_names << record.name
+          dowmstream_records[my_module.id] << record.name
+          downstream_my_modules.push(my_module)
         end
       end
 
       if records_names.any?
         records_names.uniq!
-        Activity.create(
-          type_of: :assign_repository_record,
-          project: @project,
-          experiment: @experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t('activities.assign_repository_records',
-                          user: current_user.full_name,
-                          task: @my_module.name,
-                          repository: @repository.name,
-                          records: records_names.join(', ')
-                        )
-        )
+        log_activity(:assign_repository_record,
+                     @my_module,
+                     repository: @repository.id,
+                     record_names: records_names.join(', '))
+        downstream_my_modules.uniq.each do |my_module|
+          log_activity(:assign_repository_record,
+                       my_module,
+                       repository: @repository.id,
+                       record_names: dowmstream_records[my_module.id].join(', '))
+        end
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
         flash = I18n.t('repositories.assigned_records_downstream_flash',
@@ -475,6 +452,12 @@ class MyModulesController < ApplicationController
             assigned_records & my_module.repository_rows
           )
           assigned_records.update_all(last_modified_by_id: current_user.id)
+          next unless assigned_records.any?
+
+          log_activity(:unassign_repository_record,
+                       my_module,
+                       repository: @repository.id,
+                       record_names: assigned_records.map(&:name).join(', '))
         end
       end
 
@@ -482,20 +465,11 @@ class MyModulesController < ApplicationController
       records.update_all(last_modified_by_id: current_user.id)
 
       if records.any?
-        Activity.create(
-          type_of: :unassign_repository_record,
-          project: @project,
-          experiment: @experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.unassign_repository_records',
-            user: current_user.full_name,
-            task: @my_module.name,
-            repository: @repository.name,
-            records: records.map(&:name).join(', ')
-          )
-        )
+        log_activity(:unassign_repository_record,
+                     @my_module,
+                     repository: @repository.id,
+                     record_names: records.map(&:name).join(', '))
+
         flash = I18n.t('repositories.unassigned_records_flash',
                        records: records.map(&:name).join(', '))
         respond_to do |format|
@@ -603,19 +577,7 @@ class MyModulesController < ApplicationController
 
   def task_completion_activity
     completed = @my_module.completed?
-    str = 'activities.uncomplete_module'
-    str = 'activities.complete_module' if completed
-    message = t(str,
-                user: current_user.full_name,
-                module: @my_module.name)
-    Activity.create(
-      user: current_user,
-      project: @project,
-      experiment: @experiment,
-      my_module: @my_module,
-      message: message,
-      type_of: completed ? :complete_task : :uncomplete_task
-    )
+    log_activity(completed ? :complete_task : :uncomplete_task)
     start_work_on_next_task_notification
   end
 
@@ -661,6 +623,8 @@ class MyModulesController < ApplicationController
   end
 
   def load_projects_tree
+    # Switch to correct team
+    current_team_switch(@project.team) unless @project.nil?
     @projects_tree = current_user.projects_tree(current_team, nil)
   end
 
@@ -698,4 +662,24 @@ class MyModulesController < ApplicationController
     params.require(:my_module).permit(:name, :description, :due_date,
                                       :archived)
   end
+
+  def log_activity(type_of, my_module = nil, message_items = {})
+    my_module ||= @my_module
+    message_items = { my_module: my_module.id }.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
+            message_items: message_items)
+  end
+
+  def activity_filters
+    params.permit(
+      :page, :starting_timestamp, :from_date, :to_date, types: [], users: [], subjects: {}
+    )
+  end
+
 end

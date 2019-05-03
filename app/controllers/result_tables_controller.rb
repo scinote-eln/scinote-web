@@ -43,19 +43,7 @@ class ResultTablesController < ApplicationController
 
     respond_to do |format|
       if (@result.save and @table.save) then
-        # Generate activity
-        Activity.create(
-          type_of: :add_result,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t(
-            "activities.add_table_result",
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+        log_activity(:add_result)
 
         format.html {
           flash[:success] = t(
@@ -103,18 +91,7 @@ class ResultTablesController < ApplicationController
       flash_success = t("result_tables.archive.success_flash",
         module: @my_module.name)
       if saved
-        Activity.create(
-          type_of: :archive_result,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          user: current_user,
-          message: t(
-            'activities.archive_table_result',
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+        log_activity(:archive_result)
       end
     elsif @result.archived_changed?(from: true, to: false)
       render_403
@@ -122,18 +99,7 @@ class ResultTablesController < ApplicationController
       saved = @result.save
 
       if saved then
-        Activity.create(
-          type_of: :edit_result,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t(
-            "activities.edit_table_result",
-            user: current_user.full_name,
-            result: @result.name
-          )
-        )
+        log_activity(:edit_result)
       end
     end
     respond_to do |format|
@@ -213,5 +179,18 @@ class ResultTablesController < ApplicationController
         :contents
       ]
     )
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @result,
+            team: @my_module.experiment.project.team,
+            project: @my_module.experiment.project,
+            message_items: {
+              result: @result.id,
+              type_of_result: t('activities.result_type.table')
+            })
   end
 end

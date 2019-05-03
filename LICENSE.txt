@@ -1,6 +1,6 @@
 Copyright (c) 2016 BioSistemika USA, LLC <info@biosistemika.com>
 
-sciNote is licensed under the following license:
+SciNote is licensed under the following license:
 
 Mozilla Public License Version 2.0
 ==================================

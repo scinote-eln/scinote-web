@@ -21,7 +21,7 @@ module ImportRepository
     end
 
     def too_large?
-      @file.size > Constants::FILE_MAX_SIZE_MB.megabytes
+      @file.size > Rails.configuration.x.file_max_size_mb.megabytes
     end
 
     def has_too_many_rows?
@@ -36,7 +36,7 @@ module ImportRepository
       )
 
       if temp_file.save
-        temp_file.destroy_obsolete
+        TempFile.destroy_obsolete(temp_file.id)
         return temp_file
       end
     end

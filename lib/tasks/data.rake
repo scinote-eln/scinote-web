@@ -73,7 +73,7 @@ namespace :data do
     # Remove users who didn't finish signup with LinkedIn
     users = User.joins(:user_identities)
                 .where(confirmed_at: nil)
-                .where('created_at < ?', Devise.confirm_within.ago)
+                .where('users.created_at < ?', Devise.confirm_within.ago)
     destroy_users(users)
   end
 
@@ -85,8 +85,8 @@ namespace :data do
     Rails.logger.info(
       "Exporting team with ID:#{args[:team_id]} to directory in tmp"
     )
-    te = TeamExporter.new(args[:team_id])
-    te.export_to_dir if te
+    te = ModelExporters::TeamExporter.new(args[:team_id])
+    te&.export_to_dir
   end
 
   desc 'Import team from directory'
@@ -95,5 +95,89 @@ namespace :data do
       "Importing team from directory #{args[:dir_path]}"
     )
     TeamImporter.new.import_from_dir(args[:dir_path])
+  end
+
+  desc 'Delete team and all data inside the team'
+  task :team_delete, [:team_id] => [:environment] do |_, args|
+    Rails.logger.info(
+      "Deleting team with ID:#{args[:team_id]} and all data inside the team"
+    )
+    team = Team.find_by_id(args[:team_id])
+    raise StandardError, 'Can not load team' unless team
+
+    UserDataDeletion.delete_team_data(team) if team
+  end
+
+  desc 'Export experiment to directory'
+  task :experiment_template_export,
+       [:experiment_id] => [:environment] do |_, args|
+    Rails.logger.info(
+      "Exporting experiment template with ID:#{args[:experiment_id]} "\
+      "to directory in tmp"
+    )
+    ee = ModelExporters::ExperimentExporter.new(args[:experiment_id])
+    ee&.export_template_to_dir
+  end
+
+  desc 'Import experiment from directory to given project'
+  task :experiment_template_import,
+       %i(dir_path project_id user_id) => [:environment] do |_, args|
+    Rails.logger.info(
+      "Importing experiment from directory #{args[:dir_path]}"
+    )
+    TeamImporter.new.import_experiment_template_from_dir(args[:dir_path],
+                                                         args[:project_id],
+                                                         args[:user_id])
+  end
+
+  desc 'Update all templates projects'
+  task :update_all_templates,
+       %i(slice_size) => [:environment] do |_, args|
+    args.with_defaults(slice_size: 800)
+
+    Rails.logger.info('Templates, syncing all templates projects')
+    Team.all.order(updated_at: :desc)
+        .each_slice(args[:slice_size].to_i).with_index do |teams, i|
+      Rails.logger.info("Processing slice with index #{i}. " \
+                        "First team: #{teams.first.id}, " \
+                        "Last team: #{teams.last.id}.")
+
+      teams.each do |team|
+        TemplatesService.new.delay(
+          run_at: i.hours.from_now,
+          queue: :templates,
+          priority: 5
+        ).update_team(team)
+      end
+    end
+  end
+
+  desc 'Create demo project on existing users'
+  task :create_demo_project_on_existing_users,
+       %i(slice_size) => [:environment] do |_, args|
+    args.with_defaults(slice_size: 800)
+
+    require "#{Rails.root}/app/utilities/first_time_data_generator"
+    include FirstTimeDataGenerator
+
+    Rails.logger.info('Creating demo project on existing users')
+
+    Team.all.order(updated_at: :desc)
+        .each_slice(args[:slice_size]).with_index do |teams, i|
+      Rails.logger.info("Processing slice with index #{i}. " \
+                        "First team: #{teams.first.id}, " \
+                        "Last team: #{teams.last.id}.")
+
+      teams.each do |team|
+        owner_ut = team.user_teams.where(role: 2).first
+        next unless owner_ut
+
+        FirstTimeDataGenerator.delay(
+          run_at: i.hours.from_now,
+          queue: :new_demo_project,
+          priority: 10
+        ).seed_demo_data_with_id(owner_ut.user.id, team.id)
+      end
+    end
   end
 end

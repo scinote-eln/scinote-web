@@ -1035,13 +1035,44 @@ var ruleJS = (function (root) {
 
       switch (type) {
         case '+':
-          result = number1 + number2;
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.plus(number2);
+            result = parseFloat(result_big);
+          } catch(e) {
+            result = number1 + number2;
+          }
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 + number2;
           break;
         case '-':
-          result = number1 - number2;
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.minus(number2);
+            result = parseFloat(result_big);
+          } catch(e) {
+            result = number1 - number2;
+          }
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 - number2;
           break;
         case '/':
-          result = number1 / number2;
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.div(number2);
+            result = parseFloat(result_big);
+          } catch(e){
+            result = number1 / number2;
+          }
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 / number2;
+
           if (result == Infinity) {
             throw Error('DIV_ZERO');
           } else if (isNaN(result)) {
@@ -1049,7 +1080,17 @@ var ruleJS = (function (root) {
           }
           break;
         case '*':
-          result = number1 * number2;
+          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
+          try{
+            var number1_big = new Big(number1);
+            var result_big = number1_big.times(number2);
+            result = parseFloat(result_big);
+          } catch(e) {
+            result = number1 * number2;
+          }
+          //MODIFICATION END
+
+          //ORIGINAL: result = number1 * number2;
           break;
         case '^':
           result = Math.pow(number1, number2);

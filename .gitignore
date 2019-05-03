@@ -4,10 +4,6 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore files related to VS, or EPA sciNote specifically
-.vs/
-.vscode/
-
 # Ignore bundler config.
 /.bundle
 
@@ -42,6 +38,9 @@ public/system/*
 # Ignore robots.txt
 public/robots.txt
 
+$ Ignore compiled assets
+public/packs-test/*
+
 tags
 *.orig
 *.swp
@@ -72,3 +71,6 @@ features/addons
 spec/addons
 !features/addons/.gitkeep
 !spec/addons/.gitkeep
+
+# RVM/rbenv ruby version for local development
+.ruby-version

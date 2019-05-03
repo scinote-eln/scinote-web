@@ -58,6 +58,8 @@ module Users
                             reason: I18n.t('devise.linkedin.failed_to_save'))
           redirect_to after_omniauth_failure_path_for(resource_name) and return
         end
+        # Confirm user
+        @user.update_column(:confirmed_at, @user.created_at)
         redirect_to users_sign_up_provider_path(user: @user)
       end
     end

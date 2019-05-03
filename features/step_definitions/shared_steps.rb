@@ -70,8 +70,7 @@ Then(/^I click on "([^"]*)"$/) do |button|
 end
 
 Then(/^I click on image within "([^"]*)" element$/) do |container|
-  #@@@20180927JS - Up this from 0.5 to 10.5 to make sure the page has enough time to load.
-  sleep 10.5
+  sleep 0.5
   within(container) do
     find('img').click
   end
@@ -127,6 +126,11 @@ Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" textarea field$/) do |old_
   textarea = page.find_by_id(textarea_id)
   expect(textarea).to have_content(old_text)
   textarea.set(new_text)
+end
+
+Then(/^I should not see "([^"]*)" on "([^"]*)" element$/) do |text, element|
+  wait_for_ajax
+  expect(find(element)).not_to have_content(text)
 end
 
 Then(/^I should see "([^"]*)" on "([^"]*)" element$/) do |text, element|

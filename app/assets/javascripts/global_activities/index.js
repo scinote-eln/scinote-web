@@ -1,4 +1,4 @@
-/* global animateSpinner globalActivities HelperModule */
+/* global animateSpinner GlobalActivitiesFilterPrepareArray */
 
 'use strict';
 
@@ -14,10 +14,20 @@
     });
   }
 
+  function initExpandCollapseButton() {
+    $('.ga-activities-list').on('hidden.bs.collapse', function(ev) {
+      $(ev.target.dataset.buttonLink)
+        .find('.fas').removeClass('fa-caret-down').addClass('fa-caret-right');
+    });
+    $('.ga-activities-list').on('shown.bs.collapse', function(ev) {
+      $(ev.target.dataset.buttonLink)
+        .find('.fas').removeClass('fa-caret-right').addClass('fa-caret-down');
+    });
+  }
   function initShowMoreButton() {
     var moreButton = $('.btn-more-activities');
     moreButton.on('click', function(ev) {
-      var filters = globalActivities.getFilters();
+      var filters = GlobalActivitiesFilterPrepareArray();
       ev.preventDefault();
       animateSpinner(null, true);
       filters.page = moreButton.data('next-page');
@@ -59,37 +69,7 @@
     });
   }
 
-  function validateActivityFilterName() {
-    let filterName = $('#saveFilterModal .activity-filter-name-input').val();
-    $('#saveFilterModal .btn-confirm').prop('disabled', filterName.length === 0);
-  }
-
-  $('#saveFilterModal')
-    .on('keyup', '.activity-filter-name-input', function() {
-      validateActivityFilterName();
-    })
-    .on('click', '.btn-confirm', function() {
-      $.ajax({
-        url: this.dataset.saveFilterUrl,
-        type: 'POST',
-        global: false,
-        dataType: 'json',
-        data: {
-          name: $('#saveFilterModal .activity-filter-name-input').val(),
-          filter: globalActivities.getFilters()
-        },
-        success: function(data) {
-          HelperModule.flashAlertMsg(data.message, 'success');
-          $('#saveFilterModal .activity-filter-name-input').val('');
-          validateActivityFilterName();
-          $('#saveFilterModal').modal('hide');
-        },
-        error: function(response) {
-          HelperModule.flashAlertMsg(response.responseJSON.errors.join(','), 'danger');
-        }
-      });
-    });
-
   initExpandCollapseAllButtons();
+  initExpandCollapseButton();
   initShowMoreButton();
 }());

@@ -5,6 +5,9 @@ require 'database_cleaner'
 require 'devise'
 require_relative 'support/controller_macros'
 ENV['RAILS_ENV'] = 'test'
+
+ENV['CORE_API_V1_ENABLED'] = 'true'
+
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
@@ -59,6 +62,18 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.before(:all) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:all) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean
+  end
+
   config.around(:each, type: :background_job) do |example|
     run_background_jobs_immediately do
       example.run
@@ -91,6 +106,7 @@ RSpec.configure do |config|
   # Devise
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ApiHelper, type: :controller
+  config.include ApiHelper, type: :request
   config.extend ControllerMacros, type: :controller
 
   config.filter_run_excluding broken: true

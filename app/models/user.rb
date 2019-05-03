@@ -1,6 +1,10 @@
 class User < ApplicationRecord
-  include SearchableModel, SettingsModel
-  include User::TeamRoles, User::ProjectRoles
+  include SearchableModel
+  include SettingsModel
+  include VariablesModel
+  include User::TeamRoles
+  include User::ProjectRoles
+  include TeamBySubjectModel
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -38,12 +42,23 @@ class User < ApplicationRecord
 
   default_settings(
     time_zone: 'UTC',
+    date_format: Constants::DEFAULT_DATE_FORMAT,
     notifications_settings: {
       assignments: true,
       assignments_email: false,
       recent: true,
       recent_email: false,
       system_message_email: false
+    },
+    tooltips_enabled: true
+  )
+
+  store_accessor :variables, :export_vars
+
+  default_variables(
+    export_vars: {
+      num_of_export_all_last_24_hours: 0,
+      last_export_timestamp: Time.now.utc.beginning_of_day.to_i
     }
   )
 
@@ -56,7 +71,7 @@ class User < ApplicationRecord
   has_many :user_my_modules, inverse_of: :user
   has_many :my_modules, through: :user_my_modules
   has_many :comments, inverse_of: :user
-  has_many :activities, inverse_of: :user
+  has_many :activities, inverse_of: :owner
   has_many :results, inverse_of: :user
   has_many :samples, inverse_of: :user
   has_many :samples_tables, inverse_of: :user, dependent: :destroy
@@ -195,8 +210,18 @@ class User < ApplicationRecord
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
+  has_many :user_system_notifications, dependent: :destroy
+  has_many :system_notifications, through: :user_system_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
+  has_many :view_states, dependent: :destroy
+
+  has_many :access_grants, class_name: 'Doorkeeper::AccessGrant',
+                           foreign_key: :resource_owner_id,
+                           dependent: :delete_all
+  has_many :access_tokens, class_name: 'Doorkeeper::AccessToken',
+                           foreign_key: :resource_owner_id,
+                           dependent: :delete_all
 
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
@@ -219,6 +244,18 @@ class User < ApplicationRecord
     # avatar_file_name == "face.png"
     # avatar_content_type == "image/png"
     @avatar_remote_url = url_value
+  end
+
+  def date_format
+    settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
+  end
+
+  def date_format=(date_format)
+    return if settings[:date_format] == date_format
+    if Constants::SUPPORTED_DATE_FORMATS.include?(date_format)
+      settings[:date_format] = date_format
+      clear_view_cache
+    end
   end
 
   def current_team
@@ -347,18 +384,16 @@ class User < ApplicationRecord
       )
     end
 
-    sort =
-      case sort_by
-      when 'old'
-        { created_at: :asc }
-      when 'atoz'
-        { name: :asc }
-      when 'ztoa'
-        { name: :desc }
-      else
-        { created_at: :desc }
-      end
-
+    sort = case sort_by
+           when 'old'
+             { created_at: :asc }
+           when 'atoz'
+             { name: :asc }
+           when 'ztoa'
+             { name: :desc }
+           else
+             { created_at: :desc }
+           end
     result.where(archived: false).distinct.order(sort)
   end
 
@@ -437,11 +472,33 @@ class User < ApplicationRecord
     statistics
   end
 
+  def self.from_azure_jwt_token(token_payload)
+    includes(:user_identities)
+      .where(
+        'user_identities.provider=? AND user_identities.uid=?',
+        Api.configuration.azure_ad_apps[token_payload[:aud]][:provider],
+        token_payload[:sub]
+      )
+      .references(:user_identities)
+      .take
+  end
+
+  def has_linked_account?(provider)
+    user_identities.where(provider: provider).exists?
+  end
+
+  # This method must be overwriten for addons that will be installed
+  def show_login_system_notification?
+    user_system_notifications.show_on_login.present? &&
+      (ENV['ENABLE_TUTORIAL'] != 'true' || settings['tutorial_completed'])
+  end
+
   # json friendly attributes
   NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
                            assignments_email_notification
                            recent_email_notification
                            system_message_email_notification)
+
   # declare notifications getters
   NOTIFICATIONS_TYPES.each do |name|
     define_method(name) do
@@ -456,6 +513,47 @@ class User < ApplicationRecord
       attr_name = name.gsub('_notification', '').to_sym
       notifications_settings[attr_name] = value
     end
+  end
+
+  def increase_daily_exports_counter!
+    range = Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i
+    last_export = export_vars[:last_export_timestamp] || 0
+    export_vars[:num_of_export_all_last_24_hours] ||= 0
+
+    if range.cover?(last_export)
+      export_vars[:num_of_export_all_last_24_hours] += 1
+    else
+      export_vars[:num_of_export_all_last_24_hours] = 1
+    end
+    export_vars[:last_export_timestamp] = Time.now.utc.to_i
+    save
+  end
+
+  def has_available_exports?
+    last_export_timestamp = export_vars[:last_export_timestamp] || 0
+
+    # limit 0 means unlimited exports
+    return true if TeamZipExport.exports_limit.zero? || last_export_timestamp < Time.now.utc.beginning_of_day.to_i
+
+    exports_left.positive?
+  end
+
+  def exports_left
+    if (export_vars[:last_export_timestamp] || 0) < Time.now.utc.beginning_of_day.to_i
+      return TeamZipExport.exports_limit
+    end
+
+    TeamZipExport.exports_limit - export_vars[:num_of_export_all_last_24_hours]
+  end
+
+  def global_activity_filter(filters, search_query)
+    query_teams = teams.pluck(:id)
+    query_teams &= filters[:teams].map(&:to_i) if filters[:teams]
+    query_teams &= User.team_by_subject(filters[:subjects]) if filters[:subjects]
+    User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
+        .search(false, search_query)
+        .select(:full_name, :id)
+        .map { |i| { name: i[:full_name], id: i[:id] } }
   end
 
   protected
@@ -490,5 +588,9 @@ class User < ApplicationRecord
 
     # Now, simply destroy all user notification relations left
     user_notifications.destroy_all
+  end
+
+  def clear_view_cache
+    Rails.cache.delete_matched(%r{^views\/users\/#{id}-})
   end
 end

@@ -1,12 +1,25 @@
 module ReportsHelper
+  include StringUtility
+
   def render_new_element(hide)
     render partial: 'reports/elements/new_element.html.erb',
           locals: { hide: hide }
   end
 
   def render_report_element(element, provided_locals = nil)
-    children_html = ''.html_safe
+    # Determine partial
 
+    file_name = element.type_of
+    if element.type_of.in? ReportExtends::MY_MODULE_CHILDREN_ELEMENTS
+      file_name = "my_module_#{element.type_of.singularize}"
+    end
+    view = "reports/elements/#{file_name}_element.html.erb"
+
+    # Set locals
+
+    locals = provided_locals.nil? ? {} : provided_locals.clone
+
+    children_html = ''.html_safe
     # First, recursively render element's children
     if element.comments? || element.project_header?
       # Render no children
@@ -31,25 +44,54 @@ module ReportsHelper
       end
       children_html.safe_concat render_new_element(false)
     end
-
-    file_name = element.type_of
-    if element.type_of.in? ReportExtends::MY_MODULE_CHILDREN_ELEMENTS
-      file_name = "my_module_#{element.type_of.singularize}"
-    end
-    view = "reports/elements/#{file_name}_element.html.erb"
-
-    locals = provided_locals.nil? ? {} : provided_locals.clone
     locals[:children] = children_html
 
-    # ReportExtends is located in config/initializers/extends/report_extends.rb
+    if provided_locals[:export_all]
+      # Set path and filename locals for files and tables in export all ZIP
 
+      if element['type_of'] == 'my_module_repository'
+        obj_id = element[:repository_id]
+      elsif element['type_of'].in? %w(step_asset step_table result_asset
+                                      result_table)
+
+        parent_el = ReportElement.find(element['parent_id'])
+        parent_type = parent_el[:type_of]
+        parent = parent_type.singularize.classify.constantize
+                            .find(parent_el["#{parent_type}_id"])
+
+        if parent.class == Step
+          obj_id = if element['type_of'] == 'step_asset'
+                     element[:asset_id]
+                   elsif element['type_of'] == 'step_table'
+                     element[:table_id]
+                   end
+        elsif parent.class == MyModule
+          result = Result.find(element[:result_id])
+          obj_id = if element['type_of'] == 'result_asset'
+                     result.asset.id
+                   elsif element['type_of'] == 'result_table'
+                     result.table.id
+                   end
+        end
+      end
+
+      if obj_id
+        locals[:path] =
+          provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
+          .sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
+        locals[:filename] = locals[:path].split('/').last
+      end
+    end
+
+    # ReportExtends is located in config/initializers/extends/report_extends.rb
     ReportElement.type_ofs.keys.each do |type|
       next unless element.public_send("#{type}?")
       element.element_references.each do |el_ref|
         locals[el_ref.class.name.underscore.to_sym] = el_ref
       end
-      locals[:order] = element
-                       .sort_order if type.in? ReportExtends::SORTED_ELEMENTS
+      if type.in? ReportExtends::SORTED_ELEMENTS
+        locals[:order] = element.sort_order
+      end
     end
 
     (render partial: view, locals: locals).html_safe
@@ -113,5 +155,20 @@ module ReportsHelper
       el.replace(tag)
     end
     html_doc.to_s
+  end
+
+  private
+
+  def obj_name_to_filename(obj, filename_suffix = '')
+    obj_name = if obj.class == Asset
+                 obj_name, extension = obj.file_file_name.split('.')
+                 extension&.prepend('.')
+                 obj_name
+               elsif obj.class.in? [Table, Result, Repository]
+                 extension = '.csv'
+                 obj.name.present? ? obj.name : obj.class.name
+               end
+    obj_name = to_filesystem_name(obj_name)
+    obj_name + "#{filename_suffix}#{extension}"
   end
 end

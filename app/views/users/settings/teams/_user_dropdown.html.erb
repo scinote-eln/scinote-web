@@ -28,33 +28,33 @@
       <% end %>
       <li class="user-team-role <%= 'disabled' if user_team.guest? %>">
         <% if user_team.guest? %>
-          <span class="glyphicon glyphicon-ok"></span>
+          <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 0).role_str %>
         <% else %>
           <a href="#" data-action="submit-role" data-value="guest">
-            <span class="glyphicon glyphicon-ok"></span>
+            <span class="fas fa-check"></span>
             <%= UserTeam.new(role: 0).role_str %>
           </a>
         <% end %>
       </li>
       <li class="user-team-role <%= 'disabled' if user_team.normal_user? %>">
         <% if user_team.normal_user? %>
-          <span class="glyphicon glyphicon-ok"></span>
+          <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 1).role_str %>
         <% else %>
           <a href="#" data-action="submit-role" data-value="normal_user">
-            <span class="glyphicon glyphicon-ok"></span>
+            <span class="fas fa-check"></span>
             <%= UserTeam.new(role: 1).role_str %>
           </a>
         <% end %>
       </li>
       <li class="user-team-role <%= 'disabled' if user_team.admin? %>">
         <% if user_team.admin? %>
-          <span class="glyphicon glyphicon-ok"></span>
+          <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 2).role_str %>
         <% else %>
           <a href="#" data-action="submit-role" data-value="admin">
-            <span class="glyphicon glyphicon-ok"></span>
+            <span class="fas fa-check"></span>
             <%= UserTeam.new(role: 2).role_str %>
           </a>
         <% end %>

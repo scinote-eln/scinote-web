@@ -14,7 +14,6 @@ module Api
       def index
         columns = @inventory.repository_columns
                             .includes(:repository_list_items)
-                            .includes(:repository_status_items)
                             .page(params.dig(:page, :number))
                             .per(params.dig(:page, :size))
         render jsonapi: columns,
@@ -56,19 +55,24 @@ module Api
       private
 
       def check_manage_permissions
-        raise PermissionError.new(RepositoryColumn, :manage) unless can_manage_repository_column?(@inventory_column)
+        unless can_manage_repository_column?(@inventory_column)
+          raise PermissionError.new(RepositoryColumn, :manage)
+        end
       end
 
       def check_create_permissions
-        raise PermissionError.new(RepositoryColumn, :create) unless can_create_repository_columns?(@inventory)
+        unless can_create_repository_columns?(@inventory.team)
+          raise PermissionError.new(RepositoryColumn, :create)
+        end
       end
 
       def inventory_column_params
-        raise TypeError unless params.require(:data).require(:type) == 'inventory_columns'
-
+        unless params.require(:data).require(:type) == 'inventory_columns'
+          raise TypeError
+        end
         params.require(:data).require(:attributes)
         new_params = params
-                     .permit(data: { attributes: [:name, :data_type, metadata: {}] })[:data]
+                     .permit(data: { attributes: %i(name data_type) })[:data]
                      .merge(created_by: @current_user)
         if new_params[:attributes][:data_type].present?
           new_params[:attributes][:data_type] =
@@ -79,8 +83,9 @@ module Api
       end
 
       def update_inventory_column_params
-        raise IDMismatchError unless params.require(:data).require(:id).to_i == params[:id].to_i
-
+        unless params.require(:data).require(:id).to_i == params[:id].to_i
+          raise IDMismatchError
+        end
         if inventory_column_params[:attributes].include?(:data_type)
           raise ActiveRecord::RecordInvalid,
                 I18n.t('api.core.errors.inventory_column_type.detail')

@@ -25,6 +25,7 @@ class Table < ApplicationRecord
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
+  after_save { result&.touch; step&.touch }
   #accepts_nested_attributes_for :table
 
   def self.search(user,
@@ -126,6 +127,17 @@ class Table < ApplicationRecord
             "to_tsvector(substring(encode(contents::bytea, 'escape'), 9)) " +
             "WHERE id = " + Integer(id).to_s
       Table.connection.execute(sql)
+    end
+  end
+
+  def to_csv
+    require 'csv'
+
+    data = JSON.parse(contents)['data']
+    CSV.generate do |csv|
+     data.each do |row|
+       csv << row
+     end
     end
   end
 end

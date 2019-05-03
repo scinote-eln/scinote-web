@@ -7,20 +7,35 @@ require 'csv'
 class TeamZipExport < ZipExport
   include StringUtility
 
+  # Override path only for S3
+  if ENV['PAPERCLIP_STORAGE'] == 's3'
+    s3_path =
+      if ENV['S3_SUBFOLDER']
+        "/#{ENV['S3_SUBFOLDER']}/zip_exports/:attachment/"\
+        ":id_partition/:hash/:style/:filename"
+      else
+        '/zip_exports/:attachment/:id_partition/:hash/:style/:filename'
+      end
+
+    has_attached_file :zip_file, path: s3_path
+    validates_attachment :zip_file,
+                         content_type: { content_type: 'application/zip' }
+  end
+
   def generate_exportable_zip(user, data, type, options = {})
     @user = user
     zip_input_dir = FileUtils.mkdir_p(
       File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")
     ).first
     zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
-
-    zip_name = "projects_export_#{Time.now.strftime('%F_%H-%M-%S_UTC')}.zip"
-    full_zip_name = File.join(zip_dir, zip_name)
-    zip_file = File.new(full_zip_name, 'w+')
-
+    zip_file = File.new(
+      File.join(zip_dir,
+                "projects_export_#{Time.now.strftime('%F_%H-%M-%S_UTC')}.zip"),
+      'w+'
+    )
     fill_content(zip_input_dir, data, type, options)
     zip!(zip_input_dir, zip_file)
-    self.zip_file.attach(io: File.open(zip_file), filename: zip_name)
+    self.zip_file = File.open(zip_file)
     generate_notification(user) if save
   ensure
     FileUtils.rm_rf([zip_input_dir, zip_file], secure: true)
@@ -49,7 +64,8 @@ class TeamZipExport < ZipExport
       project_path = make_model_dir(team_path, p, idx)
       project_name = project_path.split('/')[-1]
 
-      obj_filenames = { repositories: {}, assets: {}, tables: {} }
+      obj_filenames = { my_module_repository: {}, step_asset: {},
+                        step_table: {}, result_asset: {}, result_table: {} }
 
       # Change current dir for correct generation of relative links
       Dir.chdir(project_path)
@@ -58,15 +74,17 @@ class TeamZipExport < ZipExport
       inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
-      repositories = p.assigned_repositories_and_snapshots
+      # Find all assigned inventories through all tasks in the project
+      task_ids = p.project_my_modules
+      repo_rows = RepositoryRow.joins(:my_modules)
+                               .where(my_modules: { id: task_ids })
+                               .distinct
 
       # Iterate through every inventory repo and save it to CSV
-      repositories.each_with_index do |repo, repo_idx|
-        next if obj_filenames[:repositories][repo.id].present?
-
-        obj_filenames[:repositories][repo.id] = {
-          file: save_inventories_to_csv(inventories, repo, repo_idx)
-        }
+      repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_idx|
+        curr_repo_rows = repo_rows.select { |x| x.repository_id == repo.id }
+        obj_filenames[:my_module_repository][repo.id] =
+          save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
       end
 
       # Include all experiments
@@ -89,16 +107,16 @@ class TeamZipExport < ZipExport
 
           # Export protocols
           steps = my_module.protocols.map(&:steps).flatten
-          obj_filenames[:assets].merge!(
+          obj_filenames[:step_asset].merge!(
             export_assets(StepAsset.where(step: steps), :step, protocol_path)
           )
-          obj_filenames[:tables].merge!(
+          obj_filenames[:step_table].merge!(
             export_tables(StepTable.where(step: steps), :step, protocol_path)
           )
 
           # Export results
           [false, true].each do |archived|
-            obj_filenames[:assets].merge!(
+            obj_filenames[:result_asset].merge!(
               export_assets(
                 ResultAsset.where(result: my_module.results.where(archived: archived)),
                 :result,
@@ -109,7 +127,7 @@ class TeamZipExport < ZipExport
           end
 
           [false, true].each do |archived|
-            obj_filenames[:tables].merge!(
+            obj_filenames[:result_table].merge!(
               export_tables(
                 ResultTable.where(result: my_module.results.where(archived: archived)),
                 :result,
@@ -144,7 +162,7 @@ class TeamZipExport < ZipExport
                               .routes
                               .url_helpers
                               .zip_exports_download_export_all_path(self)}'>" \
-                "#{zip_file_name}</a>"
+                "#{zip_file_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
   end
@@ -191,60 +209,20 @@ class TeamZipExport < ZipExport
     asset_indexes = {}
     elements.each_with_index do |element, i|
       asset = element.asset
-      preview = prepare_preview(asset)
-      bio_eddie = asset.file.metadata[:asset_type] == 'bio_eddie'
+
       if type == :step
         name = "#{directory}/" \
-               "#{append_file_suffix(asset.file_name, "_#{i}_Step#{element.step.position_plus_one}")}"
-        if preview
-          preview_name = "#{directory}/" \
-                         "#{append_file_suffix(preview[:file_name], "_#{i}_Step#{element.step.position_plus_one}_preview")}"
-        end
-        if bio_eddie
-          bio_eddie_name = "#{directory}/" \
-                           "#{append_file_suffix("#{asset.file.metadata[:name]}.heml", "_#{i}_Step#{element.step.position_plus_one}")}"
-        end
+               "#{append_file_suffix(asset.file_file_name,
+                                     "_#{i}_Step#{element.step.position_plus_one}")}"
       elsif type == :result
-        name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{i}")}"
-        preview_name = "#{directory}/#{append_file_suffix(preview[:file_name], "_#{i}_preview")}" if preview
-        bio_eddie_name = "#{directory}/#{append_file_suffix("#{asset.file.metadata[:name]}.heml", "_#{i}_preview")}" if bio_eddie
+        name = "#{directory}/#{append_file_suffix(asset.file_file_name,
+                                                  "_#{i}")}"
       end
-
-      if asset.file.attached?
-        File.open(name, 'wb') { |f| f.write(asset.file.download) }
-        File.open(preview_name, 'wb') { |f| f.write(preview[:file_data]) } if preview
-
-        if bio_eddie
-          File.open(bio_eddie_name, 'wb') { |f| f.write(asset.file.metadata[:description]) }
-        end
-      end
-      asset_indexes[asset.id] = {
-        file: name,
-        preview: preview_name,
-        bio_eddie: bio_eddie_name
-      }
+      asset.file.copy_to_local_file(:original, name) if asset.file.exists?
+      asset_indexes[asset.id] = name
     end
+
     asset_indexes
-  end
-
-  def prepare_preview(asset)
-    if asset.previewable? && !asset.list?
-      preview = asset.inline? ? asset.large_preview : asset.medium_preview
-      if preview.is_a?(ActiveStorage::Preview)
-        return unless preview.image.attached?
-
-        file_name = preview.image.filename.to_s
-        file_data = preview.image.download
-      else
-        file_name = preview.filename.to_s
-        file_data = preview.processed.service.download(preview.key)
-      end
-
-      {
-        file_name: file_name,
-        file_data: file_data
-      }
-    end
   end
 
   # Helper method to extract given tables to the directory
@@ -265,16 +243,14 @@ class TeamZipExport < ZipExport
       end
       file = FileUtils.touch(name).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
-      table_indexes[table.id] = {
-        file: name
-      }
+      table_indexes[table.id] = name
     end
 
     table_indexes
   end
 
   # Helper method for saving inventories to CSV
-  def save_inventories_to_csv(path, repo, idx)
+  def save_inventories_to_csv(path, repo, repo_rows, idx)
     repo_name = "#{to_filesystem_name(repo.name)} (#{idx})"
 
     # Attachment folder
@@ -293,7 +269,8 @@ class TeamZipExport < ZipExport
     assets = {}
     asset_counter = 0
     handle_name_func = lambda do |asset|
-      file_name = append_file_suffix(asset.file_name, "_#{asset_counter}").to_s
+      file_name = append_file_suffix(asset.file_file_name,
+                                     "_#{asset_counter}").to_s
 
       # Save pair for downloading it later
       assets[asset] = "#{attach_path}/#{file_name}"
@@ -304,14 +281,13 @@ class TeamZipExport < ZipExport
     end
 
     # Generate CSV
-    csv_data = RepositoryZipExport.to_csv(repo.repository_rows, col_ids, @user, @team, handle_name_func)
+    csv_data = RepositoryZipExport.to_csv(repo_rows, col_ids, @user, @team,
+                                          handle_name_func)
     File.open(csv_file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
-      asset.file.open do |file|
-        FileUtils.cp(file.path, asset_path)
-      end
+      asset.file.copy_to_local_file(:original, asset_path)
     end
 
     csv_file_path

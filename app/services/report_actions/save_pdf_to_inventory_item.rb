@@ -17,6 +17,7 @@ module ReportActions
       cell.destroy if cell
       @new_cell_value = create_new_cell_value(asset)
       @new_cell_value.save
+      log_activity
     end
 
     def error_messages
@@ -106,6 +107,18 @@ module ReportActions
     def prepare_pdf_content(content)
       return content unless content.blank?
       I18n.t('projects.reports.new.no_content_for_PDF_html')
+    end
+
+    def log_activity
+      Activities::CreateActivityService
+        .call(activity_type: :edit_item_inventory,
+              owner: @user,
+              subject: @repository,
+              team: @team,
+              message_items: {
+                repository_row: @repository_item.id,
+                repository: @repository.id
+              })
     end
   end
 

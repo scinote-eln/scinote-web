@@ -1,9 +1,14 @@
 class Team < ApplicationRecord
   include SearchableModel
+  include ViewableModel
+  include TeamBySubjectModel
 
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
+
+  after_create :generate_template_project
+  scope :teams_select, -> { select(:id, :name).order(name: :asc) }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -33,11 +38,21 @@ class Team < ApplicationRecord
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
-  has_many :datatables_reports,
-           class_name: 'Views::Datatables::DatatablesReport'
+  has_many :activities, inverse_of: :team, dependent: :destroy
 
-  after_commit do
-    Views::Datatables::DatatablesReport.refresh_materialized_view
+  attr_accessor :without_templates
+  attr_accessor :without_intro_demo
+  after_create :generate_intro_demo
+
+  def default_view_state
+    { 'projects' =>
+      { 'cards' => { 'sort' => 'new' },
+        'table' =>
+          { 'time' => Time.now.to_i,
+            'order' => [[2, 'asc']],
+            'start' => 0,
+            'length' => 10 },
+        'filter' => 'active' } }
   end
 
   def search_users(query = nil)
@@ -297,5 +312,33 @@ class Team < ApplicationRecord
 
   def protocol_keywords_list
     ProtocolKeyword.where(team: self).pluck(:name)
+  end
+
+  def self.global_activity_filter(filters, search_query)
+    query = where('name ILIKE ?', "%#{search_query}%")
+    if filters[:users]
+      users_team = User.where(id: filters[:users]).joins(:user_teams).group(:team_id).pluck(:team_id)
+      query = query.where(id: users_team)
+    end
+    query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
+    query.select(:id, :name)
+  end
+
+  private
+
+  def generate_template_project
+    return if without_templates
+    TemplatesService.new.delay(queue: :templates).update_team(self)
+  end
+
+  include FirstTimeDataGenerator
+
+  def generate_intro_demo
+    return if without_intro_demo
+
+    user = User.find(created_by_id)
+    if user.created_teams.order(:created_at).first == self
+      seed_demo_data(user, self)
+    end
   end
 end

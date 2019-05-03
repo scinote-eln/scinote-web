@@ -9,7 +9,8 @@
     <% if Rails.configuration.x.new_team_on_signup %>
       <div class="form-group" id="team_name_form">
         <%= f.label :name, t('users.registrations.new.team_name_label') %>
-        <%= f.text_field :name, autofocus: true, class: 'form-control' %>
+        <%= f.text_field :name, autofocus: true, class: 'form-control',
+            placeholder: t('users.registrations.new.team_name_placeholder') %>
         <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
       </div>
     <% end %>

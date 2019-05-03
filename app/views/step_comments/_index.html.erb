@@ -4,24 +4,30 @@
 </div>
 <hr>
 <ul class="no-style double-line content-comments">
-  <% if @comments.length == @per_page %>
-  <li class="comment-more text-center">
-    <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
-      <%=t "general.more_comments" %>
-    </a>
-  </li>
+  <% if comments.size == per_page %>
+    <li class="comment-more text-center">
+      <a class="btn btn-default btn-more-comments"
+         href="<%= url_for(step_step_comments_path(step, format: :json, from: comments.first.id)) %>"
+         data-remote="true">
+        <%=t "general.more_comments" %>
+      </a>
+    </li>
   <% end %>
-  <% if @comments.size == 0 then %>
+  <% if comments.size == 0 %>
     <li class="no-comments"><em><%= t 'general.no_comments' %></em></li>
   <% else %>
-    <%= render 'step_comments/list.html.erb', comments: @comments %>
+    <%= render 'step_comments/list.html.erb', comments: comments %>
   <% end %>
 </ul>
 <% if can_create_comments_in_module?(@protocol.my_module) %>
   <ul class="no-style double-line">
     <li>
       <hr>
-      <%= bootstrap_form_for :comment, url: { format: :json }, html: { class: 'comment-form', id: "step-comment-#{@step.id}" }, method: :post, remote: true do |f| %>
+      <%= bootstrap_form_for :comment,
+                             url: step_step_comments_path(step, format: :json),
+                             html: { class: 'comment-form', id: "step-comment-#{step.id}" },
+                             method: :post,
+                             remote: true do |f| %>
         <%= f.smart_text_area :message,
                               single_line: true,
                               hide_label: true,

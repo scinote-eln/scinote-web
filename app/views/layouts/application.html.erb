@@ -4,16 +4,23 @@
     <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
-    <% # <%= stylesheet_pack_tag 'fontawesome' %>
+    <%= stylesheet_pack_tag 'fontawesome' %>
 
     <%= csrf_meta_tags %>
+    <% if content_for?(:head) %>
+      <%= yield(:head) %>
+    <% end %>
+
+    <%= javascript_pack_tag 'tui_image_editor' %>
+    <%= stylesheet_pack_tag 'tui_image_editor_styles' %>
+
   </head>
   <body
     class="<%= yield :body_class %>"
@@ -25,6 +32,8 @@
     data-atwho-repositories-url="<%= atwho_repositories_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
+    data-file-max-size-mb="<%= Rails.configuration.x.file_max_size_mb %>"
+    data-tooltips-enabled="<%= current_user.settings[:tooltips_enabled] %>"
     <% end %>
   >
 
@@ -34,19 +43,26 @@
     <!-- About us modal -->
     <%= render "shared/about_modal" %>
     <%= render "shared/file_preview_modal.html.erb" %>
+    <%= render "shared/file_edit_modal.html.erb" %>
     <%= render "shared/navigation" %>
+    
+    <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
+      <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: current_user.user_system_notifications.show_on_login(true) } %>
+    <% else %>
+      <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: nil} %>
+    <% end %>
 
     <% unless user_signed_in? %>
       <%= render partial: 'shared/flash_alerts',
                  locals: { flash: flash, notice: notice, alert: alert } %>
     <% end %>
 
-    <%= render "shared/left_menu_bar" if user_signed_in? && current_user.teams.exists? %>
+    <%= render "shared/left_menu_bar" if user_signed_in? %>
 
     <div id="content-wrapper">
-      <% if user_signed_in? && current_user.teams.empty? %>
+      <% if user_signed_in? && current_user.teams.empty? && !(activities_are_selected? || settings_are_selected?) %>
         <!-- If member of no teams -->
-        <div class="jumbotron">
+        <div id="no-teams-jumbotron" class="jumbotron">
           <h2><%=t 'general.no_teams.title' %></h2>
           <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
         </div>

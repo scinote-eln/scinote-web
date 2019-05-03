@@ -1,4 +1,3 @@
-//= require handsontable.full.min
 //= require Sortable.min
 //= require canvas-to-blob.min
 //= require assets
@@ -9,7 +8,7 @@
 
   // Sets callbacks for toggling checkboxes
   function applyCheckboxCallBack()  {
-    $("[data-action='check-item']").on('click', function(e){
+    $("[data-action='check-item']").off().on('click', function(e){
       var checkboxitem = $(this).find("input");
       var checked = checkboxitem.is(":checked");
       $.ajax({
@@ -48,7 +47,7 @@
             $('.task-state-label').html(data.module_state_label);
             task_button
               .find('button')
-              .html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' +
+              .html('<span class="fas fa-times"></span>&nbsp;' +
                     data.task_button_title);
             modal.modal('hide');
           },
@@ -81,7 +80,7 @@
             button = step.find("[data-action='complete-step']");
             button.attr("data-action", "uncomplete-step");
             button.find(".btn").removeClass("btn-toggle").addClass("btn-default");
-            button.find("button").html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' + data.new_title);
+            button.find("button").html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
 
             if (data.task_ready_to_complete) {
               $('#completed-task-modal').modal('show');
@@ -94,7 +93,7 @@
             button = step.find("[data-action='uncomplete-step']");
             button.attr("data-action", "complete-step");
             button.find(".btn").removeClass("btn-default").addClass("btn-toggle");
-            button.find("button").html('<span class="glyphicon glyphicon-ok"></span>&nbsp;' + data.new_title);
+            button.find("button").html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
           }
         },
         error: function (data) {
@@ -119,8 +118,9 @@
       toggleButtons(true);
 
       setTimeout(function() {
+        $.initTooltips();
         initStepsComments();
-        initPreviewModal();
+        FilePreviewModal.init();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
         TinyMCE.destroyAll();
         DragNDropSteps.clearFiles();
@@ -148,7 +148,7 @@
       toggleButtons(false);
       initializeCheckboxSorting();
       animateSpinner(null, false);
-      initPreviewModal();
+      FilePreviewModal.init();
       DragNDropSteps.clearFiles();
       TinyMCE.refresh();
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
@@ -196,8 +196,8 @@
         var collapseIcon = $(this).find(".collapse-step-icon");
         var collapsed = $(this).hasClass("collapsed");
         // Toggle collapse button
-        collapseIcon.toggleClass("glyphicon-collapse-up", !collapsed);
-        collapseIcon.toggleClass("glyphicon-collapse-down", collapsed);
+        collapseIcon.toggleClass("fa-caret-square-up", !collapsed);
+        collapseIcon.toggleClass("fa-caret-square-down", collapsed);
 
       });
   }
@@ -233,7 +233,7 @@
       initCallBacks();
       initHandsOnTable($new_step);
       toggleButtons(true);
-      initPreviewModal();
+      FilePreviewModal.init();
 
       TinyMCE.destroyAll();
       SmartAnnotation.preventPropagation('.atwho-user-popover');
@@ -544,12 +544,30 @@
     var $descrTextarea = $form.find("#step_description");
     var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
-      <%= Constants::TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
-
+      <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
+    var tableNamesValidArray = [];
+    // iterate over table titles and validate their length
+    $form.find(".table_name").each(function(index , tableName) {
+      if (tableName.value.length > 0) {
+        tableNamesValidArray[index] = textValidator(ev, tableName, 1,
+          <%= Constants::NAME_MAX_LENGTH %> );
+      } else {
+        tableNamesValidArray[index] = true;
+      }
+    });
+    var tableNamesValid = true;
+    // passes if all table names are valid
+    for (var i=0;i<tableNamesValidArray.length;i++){
+      if(tableNamesValidArray[i] !== true){
+        tableNamesValid = false;
+        break;
+      }
+    }
     if (DragNDropSteps.filesStatus() &&
         checklistsValid &&
         nameValid &&
-        descriptionValid) {
+        descriptionValid &&
+        tableNamesValid ) {
 
       $form.find("[data-role='editable-table']").each(function() {
         var hot = $(this).find(".hot").handsontable('getInstance');
@@ -595,7 +613,8 @@
           animateSpinner(null, false);
           setupAssetsLoading();
           DragNDropSteps.clearFiles();
-          initPreviewModal();
+          FilePreviewModal.init();
+          $.initTooltips();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {
@@ -620,16 +639,16 @@
       renderTable($(this));
     });
     $(document).find("span.collapse-step-icon").each(function()  {
-      $(this).addClass("glyphicon-collapse-up");
-      $(this).removeClass("glyphicon-collapse-down");
+      $(this).addClass("fa-caret-square-up");
+      $(this).removeClass("fa-caret-square-down");
     });
   }
 
   function expandStep(step) {
     $('.panel-collapse', step).collapse('show');
     $(step).find("span.collapse-step-icon")
-      .addClass("glyphicon-collapse-up")
-      .removeClass("glyphicon-collapse-down");
+      .addClass("fa-caret-square-up")
+      .removeClass("fa-caret-square-down");
     $(step).find("div.step-result-hot-table").each(function()  {
       renderTable($(this));
     });
@@ -651,30 +670,27 @@
     Comments.initDeleteComments("#steps");
   }
 
-  $(document).ready(function() {
-    // On init
-    initCallBacks();
-    initHandsOnTable($(document));
-    expandAllSteps();
-    setupAssetsLoading();
-    initStepsComments();
-    initPreviewModal();
-    TinyMCE.highlight();
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
-    newStepHandler();
-    $(function () {
+  // On init
+  initCallBacks();
+  initHandsOnTable($(document));
+  expandAllSteps();
+  setupAssetsLoading();
+  initStepsComments();
+  FilePreviewModal.init();
+  TinyMCE.highlight();
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
+  newStepHandler();
 
-      $("[data-action='collapse-steps']").click(function () {
-        $('.step .panel-collapse').collapse('hide');
-        $(document).find("span.collapse-step-icon").each(function()  {
-          $(this).addClass("glyphicon-collapse-down");
-          $(this).removeClass("glyphicon-collapse-up");
-        });
+  $(function () {
+    $("[data-action='collapse-steps']").click(function () {
+      $('.step .panel-collapse').collapse('hide');
+      $(document).find("span.collapse-step-icon").each(function()  {
+        $(this).addClass("fa-caret-square-down");
+        $(this).removeClass("fa-caret-square-up");
       });
-
-      $("[data-action='expand-steps']").click(expandAllSteps);
     });
-  })
+    $("[data-action='expand-steps']").click(expandAllSteps);
+  });
 
   global.initHandsOnTable = initHandsOnTable;
 })(window);

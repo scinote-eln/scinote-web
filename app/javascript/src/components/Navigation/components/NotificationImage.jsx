@@ -20,7 +20,7 @@ const NotificationImage = ({className, type, avatar}: Props) => {
       ),
       system_message: (
           <span className="system-message">
-              <i className="glyphicon glyphicon-tower" />
+              <i className="fas fa-chess-rook" />
           </span>
       ),
       deliver: (

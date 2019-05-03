@@ -7,7 +7,7 @@ class TemplatesService
     @experiment_templates = {}
     Dir.glob(templates_dir_pattern).each do |tmplt_dir|
       id = /[0-9]+/.match(tmplt_dir.split('/').last)[0]
-      uuid = /\"uuid\": \"([a-fA-F0-9\-]{36})\"/
+      uuid = /\"uuid\":\"([a-fA-F0-9\-]{36})\"/
              .match(File.read(tmplt_dir + 'experiment.json'))[1]
       @experiment_templates[uuid] = id.to_i
     end
@@ -20,15 +20,13 @@ class TemplatesService
         tmpl_project = team.projects.create!(
           name: Constants::TEMPLATES_PROJECT_NAME,
           visibility: :visible,
-          template: true,
-          default_public_user_role: UserRole.predefined.find_by(name: I18n.t('user_roles.predefined.viewer')),
-          created_by: team.created_by
+          template: true
         )
+        tmpl_project.user_projects.create!(user: team.created_by, role: 'owner')
       end
     end
-    owner_role_id = UserRole.find_by(name: I18n.t('user_roles.predefined.owner')).id
-    owner = tmpl_project.user_assignments
-                        .where(user_role_id: owner_role_id)
+    owner = tmpl_project.user_projects
+                        .where(role: 'owner')
                         .order(:created_at)
                         .first&.user
     return unless owner.present?

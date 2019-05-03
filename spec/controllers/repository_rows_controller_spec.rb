@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryRowsController, type: :controller do
   login_user
   render_views
-  let(:user) { User.first }
+  let!(:user) { controller.current_user }
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
   let!(:repository) { create :repository, team: team, created_by: user }
@@ -34,7 +36,7 @@ describe RepositoryRowsController, type: :controller do
 
   describe '#show' do
     it 'unsuccessful response with non existing id' do
-      get :show, format: :json, params: { id: 999999 }
+      get :show, format: :json, params: { id: -1 }
       expect(response).to have_http_status(:not_found)
     end
 
@@ -121,6 +123,70 @@ describe RepositoryRowsController, type: :controller do
       post :copy_records, params: { repository_id: repository.id,
                                     selected_rows: [repository_row.id] }
       expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'POST create' do
+    let(:action) { post :create, params: params, format: :json }
+    let(:params) do
+      { repository_id: repository.id, repository_row_name: 'row_name' }
+    end
+
+    it 'calls create activity for creating inventory item' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :create_item_inventory)))
+
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'PUT update' do
+    let(:action) { put :update, params: params, format: :json }
+    let(:params) do
+      {
+        repository_id: repository.id,
+        id: repository_row.id,
+        repository_row_name: 'row_name'
+      }
+    end
+
+    it 'calls create activity for editing intentory item' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :edit_item_inventory)))
+
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST delete_records' do
+    let(:action) { post :delete_records, params: params, format: :json }
+    let(:params) do
+      { repository_id: repository.id, selected_rows: [repository_row.id] }
+    end
+
+    it 'calls create activity for deleting inventory items' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :delete_item_inventory)))
+
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
     end
   end
 end

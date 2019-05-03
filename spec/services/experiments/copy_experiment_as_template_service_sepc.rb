@@ -17,7 +17,10 @@ describe Experiments::CopyExperimentAsTemplateService do
   end
   let(:user) { create :user }
   let(:service_call) do
-    Experiments::CopyExperimentAsTemplateService.call(experiment: experiment, project: new_project, user: user)
+    Experiments::CopyExperimentAsTemplateService
+      .call(experiment_id: experiment.id,
+           project_id: new_project.id,
+           user_id: user.id)
   end
 
   context 'when service call is successful' do

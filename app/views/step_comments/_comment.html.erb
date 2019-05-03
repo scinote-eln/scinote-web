@@ -19,6 +19,7 @@
           <li>
             <a href="#"
                data-action="edit-comment"
+               data-remote="true"
                data-url="<%= edit_step_step_comment_path(comment.step, comment, format: :json) %>">
               <%= t('comments.options_dropdown.edit') %>
             </a>
@@ -27,7 +28,8 @@
             <a href="#"
                data-action="delete-comment"
                data-url="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
-               data-confirm-message="<%= t('comments.delete_confirm') %>">
+               data-confirm-message="<%= t('comments.delete_confirm') %>"
+               data-turbolinks="false">
               <%= t('comments.options_dropdown.delete') %>
             </a>
           </li>
@@ -36,5 +38,5 @@
   <% end %>
 </div>
 <div data-role="comment-message-container">
-  <div data-role="comment-message"><%= custom_auto_link(comment.message)%></div>
+  <div data-role="comment-message"><%= custom_auto_link(comment.message, team: current_team)%></div>
 </div>

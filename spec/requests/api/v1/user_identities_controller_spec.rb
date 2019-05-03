@@ -19,11 +19,10 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@user1.user_identities, each_serializer: Api::V1::UserIdentitySerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@user1.user_identities,
+               each_serializer: Api::V1::UserIdentitySerializer)
+          .as_json[:data]
       )
     end
 
@@ -58,11 +57,10 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
            headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@user1.user_identities.order(:id).last, serializer: Api::V1::UserIdentitySerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@user1.user_identities.order(:id).last,
+               serializer: Api::V1::UserIdentitySerializer)
+          .as_json[:data]
       )
     end
   end
@@ -75,11 +73,10 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@user1.user_identities.order(:id).last, serializer: Api::V1::UserIdentitySerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@user1.user_identities.order(:id).last,
+               serializer: Api::V1::UserIdentitySerializer)
+          .as_json[:data]
       )
     end
   end
@@ -97,11 +94,10 @@ RSpec.describe 'Api::V1::UsersIdentitiesController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@user1.user_identities.order(:id).last, serializer: Api::V1::UserIdentitySerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@user1.user_identities.order(:id).last,
+               serializer: Api::V1::UserIdentitySerializer)
+          .as_json[:data]
       )
     end
   end

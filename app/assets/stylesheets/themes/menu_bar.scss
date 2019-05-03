@@ -6,7 +6,7 @@
   box-shadow: 1px 3px 6px 0 $color-alto;
   height: 100%;
   left: 0;
-  overflow-x: hidden;
+  padding-bottom: 50px;
   position: fixed;
   width: 83px;
   z-index: 1001;
@@ -23,7 +23,8 @@
 
   ul.nav > li {
 
-    & > a {
+    & > a,
+    & > span {
       color: $color-silver-chalice;
       display: grid;
       font-size: $font-size-h6;
@@ -46,6 +47,12 @@
       & > a {
         color: $color-emperor;
       }
+    }
+
+    &.disabled {
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: .65;
     }
   }
 
@@ -74,4 +81,8 @@
     position: relative;
     width: auto;
   }
+}
+
+.all-teams-navigation-link {
+  color: $color-white !important;
 }

@@ -6,13 +6,14 @@
   <%= hidden_field_tag :leave, true %>
   <p><%= t("users.settings.user_teams.leave_uo_message", team: user_team.team.name) %></p>
   <div class="alert alert-danger" role="alert">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    <span class="fas fa-exclamation-circle"></span>
     &nbsp;
     <%= t("users.settings.user_teams.leave_uo_alert_heading") %>
     <ul>
       <li><%= t("users.settings.user_teams.leave_uo_alert_line_1") %></li>
       <li><%= t("users.settings.user_teams.leave_uo_alert_line_2").html_safe %></li>
       <li><%= t("users.settings.user_teams.leave_uo_alert_line_3")%></li>
+      <li><%= t("users.settings.user_teams.leave_uo_alert_line_4")%></li>
     </ul>
   </div>
 <% end %>

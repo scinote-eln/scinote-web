@@ -244,6 +244,7 @@ function initializeEdit() {
       { color: 'white', shadow: true }
     );
   });
+  $.initTooltips();
 }
 
 function destroyEdit() {
@@ -316,9 +317,15 @@ function initializeFullZoom() {
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
 
   // Initialize comments
-  Comments.initCommentOptions("ul.content-comments", false);
+  Comments.initCommentOptions("ul.content-comments", true);
   Comments.initEditComments(".panel.module-large .tab-content");
   Comments.initDeleteComments(".panel.module-large .tab-content");
+
+  $('#diagram-container').on('shown.bs.dropdown', '.dropdown-comment', function() {
+    var commentMenu = $(this).find('.dropdown-menu-fixed');
+    commentMenu.position({ top: $(this).parent().position().top });
+    commentMenu.offset({ top: $(this).parent().offset().top + <%= Constants::DROPDOWN_TOP_OFFSET_PX %> });
+  });
 }
 
 function destroyFullZoom() {
@@ -861,6 +868,7 @@ function bindEditTagsAjax(elements) {
   // Initialize ajax listeners and elements style on modal body. This
   // function must be called when modal body is changed.
   function initTagsModalBody(data) {
+    manageTagsModal.data('module-id', data.my_module.id)
     manageTagsModalBody.html(data.html);
     manageTagsModalBody.find(".selectpicker").selectpicker();
     initAddTagForm();
@@ -871,24 +879,27 @@ function bindEditTagsAjax(elements) {
   manageTagsModalBody = manageTagsModal.find(".modal-body");
 
   // Reload tags HTML element when modal is closed
-  manageTagsModal.on("hide.bs.modal", function(){
-    var tasks = $("div.panel");
+  manageTagsModal.off().on("hide.bs.modal", function(){
+    var task = $("div.panel[data-module-id='" +
+                 manageTagsModal.data('module-id') + "']");
 
-    tasks.each(function(){
-      var task = $(this);
-      // Load HTML
-      $.ajax({
-        url: task.attr("data-module-tags-url"),
-        type: "GET",
-        dataType: "json",
-        success: function(data){
-          task.find(".edit-tags-link")
-          .html(data.html_canvas);
-        },
-        error: function(data){
-          // TODO
-        }
-      })
+    // Load HTML
+    $.ajax({
+      url: $('#canvas-container').attr('data-module-tags-url'),
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        $.each(data.my_modules, function(index, my_module){
+          $('div.panel[data-module-id=' + my_module.id + ']')
+            .find(".edit-tags-link")
+            .html(my_module.tags_html);
+        });
+        // initialize tooltips again
+        $.initTooltips();
+      },
+      error: function(data){
+        // TODO
+      }
     });
   });
 
@@ -1119,8 +1130,8 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
 
   var toggleIcon = document.createElement("span");
   $(toggleIcon)
-  .addClass("glyphicon")
-  .addClass("glyphicon-triangle-bottom")
+  .addClass("fas")
+  .addClass("fa-caret-down")
   .attr("aria-hidden", "true")
   .appendTo(dropdownToggle);
 

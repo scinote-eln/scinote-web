@@ -58,7 +58,7 @@
                         <%= render partial: 'search/results/partials/experiment_text.html.erb',
                                   locals: { experiment: element.my_module.experiment } %>
                       </li>
-                      <li><span class='glyphicon glyphicon-credit-card'></span>&nbsp;
+                      <li><span class='fas fa-credit-card'></span>&nbsp;
                         <%= render partial: 'search/results/partials/my_module_text.html.erb',
                                   locals: { my_module: element.my_module,
                                             link_to_page: :repositories,
@@ -80,7 +80,7 @@
         <em><%=t "repository_row.modal_info.no_tasks" %></em>
       <% end %>
       </div>
-      <script>window.initPreviewModal()</script>
+      <script>FilePreviewModal.init()</script>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.close")%></button>
       </div>

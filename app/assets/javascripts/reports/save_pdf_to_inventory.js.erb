@@ -278,5 +278,5 @@
     });
   }
 
-  $(document).ready(initializeSavePDFtoInventoryModal);
+  initializeSavePDFtoInventoryModal();
 })();

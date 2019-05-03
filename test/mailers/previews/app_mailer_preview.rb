@@ -69,6 +69,25 @@ class AppMailerPreview < ActionMailer::Preview
     )
   end
 
+  def delivery_notification
+    AppMailer.notification(
+      fake_user,
+      Notification.new(
+        type_of: :deliver,
+        title: 'Your requested export package is ready!',
+        message: '<a href="/zip_exports/download/1" target="_blank" ' \
+                 'data-id="1">export_YYYY-MM-DD_HH-mm-ss.zip</a>',
+        created_at: Time.now
+      )
+    )
+  end
+
+  def system_notification
+    sn = FactoryBot.build(:system_notification)
+    user = FactoryBot.build(:user)
+    AppMailer.system_notification(user, sn)
+  end
+
   private
 
   def fake_user

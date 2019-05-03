@@ -16,18 +16,20 @@ var Comments = (function() {
       $.each(comments, function(){
         var that = $(this);
         var link = that.attr('data-href');
-        $.ajax({ method: 'GET',
-                 url: link,
-                 beforeSend: animateSpinner(that, true) })
-          .done(function(data) {
-            that.html(data.html);
-            initCommentForm(that);
-            initCommentsLink(that);
-            scrollBottom(that.find('.content-comments'));
-          })
-          .always(function() {
-            animateSpinner(that, false);
-          });
+        if(that.html().length === 0) {
+          $.ajax({ method: 'GET',
+                   url: link,
+                   beforeSend: animateSpinner(that, true) })
+            .done(function(data) {
+              that.html(data.html);
+            })
+            .always(function() {
+              animateSpinner(that, false);
+            });
+        }
+        initCommentForm(that);
+        initCommentsLink(that);
+        scrollBottom(that.find('.content-comments'));
       });
     }
   }
@@ -48,7 +50,7 @@ var Comments = (function() {
   // Initialize show more comments link.
   function initCommentsLink($el) {
 
-    $el.find('.btn-more-comments')
+    $el.find('.btn-more-comments').off()
     .on('ajax:success', function (e, data) {
       if (data.html) {
         var list = $(this).parents('ul');
@@ -89,7 +91,7 @@ var Comments = (function() {
 
     $('.help-block', $form).addClass('hide');
 
-    $form.on('ajax:send', function () {
+    $form.off().on('ajax:send', function () {
       $('#comment_message', $form).attr('readonly', true);
     })
     .on('ajax:success', function (e, data) {
@@ -161,36 +163,6 @@ var Comments = (function() {
     });
   }
 
-  // restore comments after update or when new element is created
-  function bindCommentInitializerToNewElement() {
-    $(document)
-      .ready(function() {
-        if( document.getElementById('steps') !== null ) {
-          $('#steps')
-            .change(function() {
-              $('.step-save')
-                .on('click', function() {
-                  $(document)
-                    .on('ajax:success', function(){
-                      initializeComments();
-                    });
-                });
-            });
-        } else if ( document.getElementById('results') !== null ) {
-          $('#results')
-            .change(function() {
-              $('.save-result')
-                .on('click', function() {
-                  $(document)
-                    .on('ajax:success', function(){
-                      initializeComments();
-                    });
-                });
-            });
-          }
-    });
-  }
-
   function initCommentOptions(scrollableContainer, useParentOffset) {
     if ( ! _.isUndefined(useParentOffset) ) {
       useParentOffset = useParentOffset;
@@ -237,11 +209,14 @@ var Comments = (function() {
       var offset = useParentOffset ? $el.offset().top : $el.position().top;
       $el.find('.dropdown-menu-fixed')
         .offset({ top: (offset + <%= Constants::DROPDOWN_TOP_OFFSET_PX %>) });
+      $el.find('.dropdown-menu-fixed')
+        .position({ top: $el.position().top });
     });
   }
 
   function initDeleteComments(parent) {
-    $(parent).on('click', '[data-action=delete-comment]', function() {
+    $(parent).on('click', '[data-action=delete-comment]', function(ev) {
+      ev.preventDefault();
       var $this = $(this);
       if (confirm($this.attr('data-confirm-message'))) {
         $.ajax({
@@ -376,7 +351,6 @@ var Comments = (function() {
     scrollBottom: scrollBottom,
     moreComments: initCommentsLink,
     form: initCommentForm,
-    bindNewElement: bindCommentInitializerToNewElement,
     initCommentOptions: initCommentOptions,
     initDeleteComments: initDeleteComments,
     initEditComments: initEditComments

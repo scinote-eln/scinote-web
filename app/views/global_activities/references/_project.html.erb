@@ -1,5 +1,5 @@
 <%= render partial: "global_activities/references/team.html.erb",
-           locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+           locals: { team: team, subject: subject&.team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/project.svg' %>
   <% if subject %>
@@ -9,8 +9,8 @@
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                             title: subject.name) %>
   <% else %>
-    <span title="<%= breadcrumbs['project'] %>">
-      <%= breadcrumbs['project']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    <span title="<%= breadcrumbs[:project] %>">
+      <%= breadcrumbs[:project]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
   <% end %>
 </div>

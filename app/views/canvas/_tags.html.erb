@@ -1,7 +1,13 @@
-<div class="tags-container pull-right">
+<div
+  class="tags-container pull-right help_tooltips"
+  data-tooltiplink="<%= I18n.t('tooltips.link.task.color_tag') %>"
+  data-tooltipcontent="<%= I18n.t('tooltips.text.task.color_tag') %>"
+>
   <% tags2 = my_module.tags[0..3] %>
   <% tags2.each do |tag| %>
-    <div style="color: <%= tag.color %>" class="<%= "last" if tag == tags2[-1] %>" title="<%= tag.name %>">
+    <div style="color: <%= tag.color %>"
+         class="<%= "last" if tag == tags2[-1] %>"
+         title="<%= tag.name %>">
       <span class="fas fa-tag"></span>
     </div>
   <% end %>

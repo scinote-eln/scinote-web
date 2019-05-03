@@ -29,6 +29,10 @@ table {
   @include button-variant($btn-toggle-color, $btn-toggle-bg, $btn-toggle-border);
 }
 
+#no-teams-jumbotron {
+  padding-left: 50px;
+}
+
 #alert-container {
   margin-bottom: 20px;
 }
@@ -83,6 +87,7 @@ table {
 }
 
 .notifications-dropdown-header,
+.system-notifications-dropdown-header,
 .dropdown-header {
   background-color: $brand-primary;
   color: $color-concrete;
@@ -149,6 +154,15 @@ body {
   width: 100% !important;
 }
 
+// Makes blue selected element line fill parent (as it should, fixes sci-2672)
+.repository-dropdown {
+  .selected {
+    a {
+      display: block !important;
+    }
+  }
+}
+
 mark,.mark {
   background-color: $brand-warning;
 }
@@ -162,7 +176,7 @@ mark,.mark {
   color: $color-emperor;
 }
 
-.circle {
+.circle-icon {
   @extend .badge;
   background-color: $brand-primary;
   border-radius: 1em;
@@ -407,7 +421,7 @@ a[data-toggle="tooltip"] {
 #help-link {
   padding: 13px;
 
-  .glyphicon.glyphicon-info-sign {
+  .fas.fa-info-circle {
     font-size: $font-size-large;
     margin-top: 4px;
   }
@@ -457,7 +471,7 @@ a[data-toggle="tooltip"] {
         padding-left: 10px;
       }
 
-      &:not(.disabled) span.glyphicon {
+      &:not(.disabled) span.fas {
         color: transparent !important;
       }
     }
@@ -590,6 +604,11 @@ a.edit-name-link:hover small {
   }
 }
 
+.bootstrap-tagsinput {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 ul.no-style {
   list-style: none;
   margin: 0;
@@ -619,8 +638,6 @@ ul.double-line > li {
   color: $brand-primary;
 }
 
-#projects-index,
-#project-archive,
 #project-show,
 #experiment-archive,
 #module-archive,
@@ -637,9 +654,10 @@ ul.double-line > li {
 }
 
 .panel-default > .panel-heading {
-  background-color: $color-gainsboro;
+  background-color: $color-white;
 
   &>.panel-title {
+    color: $brand-primary;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -647,9 +665,80 @@ ul.double-line > li {
 }
 
 .panel-project {
+  box-shadow: 0 3px 6px $color-alto;
+  color: $color-silver-chalice;
+
+  &:not(.selected) .panel-heading .project-card-selector,
+  &:not(.selected) .panel-heading .dropdown {
+    display: none;
+  }
+
+  &:not(.selected):hover .project-card-selector,
+  &:not(.selected):hover .dropdown {
+    display: block;
+  }
+
+  .nav .btn-link {
+    padding: 10px 5px;
+  }
+
+  &.selected {
+    border-color: $brand-primary;
+    box-shadow: 0 3px 10px $brand-primary;
+  }
+
+  &.archived {
+    &,
+    .panel-heading,
+    .panel-body,
+    .panel-footer-scinote {
+      background-color: $color-concrete;
+      background-image: none;
+    }
+  }
+
   .panel-heading {
-    background-color: $brand-primary;
-    color: $color-white;
+    background-color: $color-white;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    color: $color-silver-chalice;
+
+    .fas {
+      margin-right: 10px;
+    }
+  }
+
+  .panel-title {
+    color: $brand-primary;
+
+    .fas {
+      color: $color-silver-chalice;
+    }
+  }
+
+  .panel-body {
+    padding: 10px 15px;
+
+    .row {
+      padding: 2px;
+    }
+  }
+
+  .panel-footer {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+
+    .nav {
+      padding: 0 10px;
+    }
+
+    .nav-tabs {
+      border-bottom: 0;
+    }
+  }
+
+  .tab-pane {
+    color: $color-emperor;
   }
 }
 
@@ -697,7 +786,9 @@ ul.double-line > li {
     }
 
     .manage-users-link {
+      display: block;
       padding-left: 15px;
+      margin-bottom: 10px;
     }
   }
 
@@ -1317,6 +1408,10 @@ table.dataTable {
       margin: 0;
     }
   }
+
+  .g-recaptcha {
+    margin-top: 20px;
+  }
 }
 
 // Image preview modal
@@ -1419,6 +1514,68 @@ table.dataTable {
   }
 
   .file-download-link {
+    color: $color-white;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+
+  .file-edit-link {
+    color: $color-white;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+}
+
+// Image edit modal
+.modal-file-edit {
+  background: transparent;
+  font-size: $font-size-large;
+  padding: 0 !important;
+
+  .preview-close {
+    background: transparent;
+    border: 0;
+    color: $color-white;
+    display: inline-block;
+    float: right;
+  }
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+
+  .modal-content {
+    background: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: $color-white;
+    height: 100%;
+    width: auto;
+  }
+
+  .modal-header {
+    background: $color-black;
+    border: 0;
+    height: 60px;
+    text-align: center;
+
+    .file-name {
+      float: left;
+    }
+  }
+
+  .modal-body {
+    height: calc(100% - 60px);
+    padding: 0;
+  }
+
+  .file-save-link {
     color: $color-white;
     display: inline-block;
     float: right;
@@ -1711,7 +1868,7 @@ th.custom-field .modal-tooltiptext {
 
 .atwho-li-res {
 
-  .glyphicon-tint {
+  .fa-tint {
     margin-left: 5px;
     margin-right: 5px;
   }
@@ -1788,6 +1945,28 @@ th.custom-field .modal-tooltiptext {
   cursor: pointer;
 }
 
+.tooltip-open {
+  background-color: $color-concrete;
+  color: $color-black;
+  font-size: $font-size-base;
+
+  .popover-footer {
+    background-color: $color-gainsboro;
+    border-radius: 3px;
+    bottom: 5px;
+    position: absolute;
+    right: 5px;
+
+    a {
+      color: $color-dove-gray;
+    }
+  }
+}
+
+.tooltip-enter {
+  background-color: $color-alto;
+}
+
 .my_module-state-buttons {
   padding-top: 6px;
 }
@@ -1813,7 +1992,7 @@ a.disabled-with-click-events {
     margin-right: 400px;
   }
 
-  .glyphicon {
+  .fas {
     margin-left: 100px;
   }
 
@@ -1823,7 +2002,7 @@ a.disabled-with-click-events {
       display: none;
     }
 
-    .glyphicon {
+    .fas {
       margin-left: 10px;
     }
   }
@@ -1833,8 +2012,29 @@ a.disabled-with-click-events {
   margin: 15px 0;
 }
 
-.tiny-mce-pdf-ready {
-  max-width: 100%;
+.sign-in-up-links {
+  padding-bottom: 60px;
+}
+
+.doorkeeper-authorization {
+
+  margin-bottom: 45px;
+
+  .doorkeeper-scinote-logo {
+    background-image: asset-url("/images/scinote_icon.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 180px;
+  }
+
+  .doorkeeper-actions-left {
+    padding-right: 3px;
+  }
+
+  .doorkeeper-actions-right {
+    padding-left: 3px;
+  }
 }
 
 /* 2018JS Add this to overwrite default bootstrap behavior */

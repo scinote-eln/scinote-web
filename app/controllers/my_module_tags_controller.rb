@@ -1,5 +1,5 @@
 class MyModuleTagsController < ApplicationController
-  before_action :load_vars
+  before_action :load_vars, except: :canvas_index
   before_action :check_view_permissions, only: :index
   before_action :check_manage_permissions, only: %i(create index_edit destroy)
 
@@ -25,10 +25,6 @@ class MyModuleTagsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html_canvas: render_to_string(
-            partial: 'canvas/tags.html.erb',
-            locals: { my_module: @my_module }
-          ),
           html_module_header: render_to_string(
             partial: 'my_modules/tags.html.erb',
             locals: { my_module: @my_module }
@@ -38,10 +34,43 @@ class MyModuleTagsController < ApplicationController
     end
   end
 
+  def canvas_index
+    experiment = Experiment.find(params[:id])
+    render_403 unless can_read_experiment?(experiment)
+    res = []
+    experiment.active_my_modules.each do |my_module|
+      res << {
+        id: my_module.id,
+        tags_html: render_to_string(
+          partial: 'canvas/tags.html.erb',
+          locals: { my_module: my_module }
+        )
+      }
+    end
+    respond_to do |format|
+      format.json do
+        render json: { my_modules: res }
+      end
+    end
+  end
+
   def create
     @mt = MyModuleTag.new(mt_params.merge(my_module: @my_module))
     @mt.created_by = current_user
     @mt.save
+
+    my_module = @mt.my_module
+    Activities::CreateActivityService
+      .call(activity_type: :add_task_tag,
+            owner: current_user,
+            subject: my_module,
+            project:
+              my_module.experiment.project,
+            team: current_team,
+            message_items: {
+              my_module: my_module.id,
+              tag: @mt.tag.id
+            })
 
     respond_to do |format|
       format.json do
@@ -53,6 +82,19 @@ class MyModuleTagsController < ApplicationController
 
   def destroy
     @mt = MyModuleTag.find_by_id(params[:id])
+
+    Activities::CreateActivityService
+      .call(activity_type: :remove_task_tag,
+            owner: current_user,
+            subject: @mt.my_module,
+            project:
+              @mt.my_module.experiment.project,
+            team: current_team,
+            message_items: {
+              my_module: @mt.my_module.id,
+              tag: @mt.tag.id
+            })
+
     @mt.destroy
 
     respond_to do |format|

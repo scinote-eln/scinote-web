@@ -1,5 +1,5 @@
 <div class="panel panel-default module-large
-  <%= get_task_alert_color(my_module) %>
+  <%= get_task_alert_color(my_module) %>"
   id="<%= my_module.id %>"
   data-module-id="<%= my_module.id %>"
   data-module-name="<%= my_module.name %>"
@@ -9,8 +9,8 @@
   data-module-x="<%= my_module.x %>"
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>"
-  data-module-tags-url="<%= my_module_my_module_tags_url(my_module, format: :json) %>"
-  data-module-users-tab-url="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>">
+  data-module-users-tab-url="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
+  data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
 
   <% if can_manage_module?(my_module) %>
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
@@ -30,7 +30,12 @@
 
   <div class="panel-body">
     <% if can_manage_module?(my_module) %>
-      <%= link_to due_date_my_module_path(my_module, format: :json), remote: true, class: "due-date-link due-date-refresh" do %>
+      <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
+                  class: "due-date-link due-date-refresh help_tooltips",
+                  data: {
+                    tooltiplink: I18n.t('tooltips.link.task.due_date'),
+                    tooltipcontent: I18n.t('tooltips.text.task.due_date')
+                  } do %>
         <%= render partial: "my_modules/due_date_label.html.erb", locals: { my_module: my_module } %>
       <% end %>
     <% else %>
@@ -51,7 +56,7 @@
           </a>
         </li>
         <li role="presentation">
-          <a class="btn btn-link task-card-view-activities" href="<%= activities_tab_my_module_url(id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_activities" role="tab" data-remote="true">
+          <a class="btn btn-link task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id) %>" aria-controls="<%= my_module.id %>_activities" role="tab">
             <span class="fas fa-list" aria-hidden="true"></span>
           </a>
         </li>

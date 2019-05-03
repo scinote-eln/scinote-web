@@ -115,8 +115,29 @@ function importProtocolFromFile(
         $("#protocol_authors").val($(this).children("authors").text());
         $("#import_protocol_description").val($(this).children("description").text());
       }
-      $("#protocol_created_at").val($(this).children("created_at").text());
-      $("#protocol_updated_at").val($(this).children("updated_at").text());
+
+      $.ajax({
+        url: "/helpers/to_user_date_format.json",
+        type: "GET",
+        data: { "timestamp": $(this).children("created_at").text(),
+                "ts_format": "full" },
+        dataType: "json",
+        async: false,
+        success: function (data) {
+          $("#protocol_created_at").val(data.ts);
+        }
+      });
+      $.ajax({
+        url: "/helpers/to_user_date_format.json",
+        type: "GET",
+        data: { "timestamp": $(this).children("updated_at").text(),
+                "ts_format": "full" },
+        dataType: "json",
+        async: false,
+        success: function (data) {
+          $("#protocol_updated_at").val(data.ts);
+        }
+      });
     });
 
     // PREVIEW
@@ -249,7 +270,7 @@ function importProtocolFromFile(
                                      element.getAttribute('fileref'));
       var image_tag = "<img style='max-width:300px; max-height:300px;' src='data:" + element.children[1].innerHTML + ";base64," + assetBytes + "' />"
       description = description.replace(match, image_tag); // replace the token with image
-    }).bind(this);
+    });
     // I know is crazy but is the only way I found to pass valid HTML
     return $('<div></div>').html(
       description.replace('<!--[CDATA[  ', '')
@@ -261,13 +282,15 @@ function importProtocolFromFile(
 
   /* Navigation functions */
 
-  function navigationJumpToFirstProtocol() {
+  function navigationJumpToFirstProtocol(ev) {
+    ev.preventDefault();
     currentProtocol = 0;
     previewProtocol(currentProtocol, true);
     updateNavigationButtons();
   }
 
-  function navigationJumpToPreviousProtocol() {
+  function navigationJumpToPreviousProtocol(ev) {
+    ev.preventDefault();
     if (currentProtocol > 0) {
       currentProtocol--;
     }
@@ -275,7 +298,8 @@ function importProtocolFromFile(
     updateNavigationButtons();
   }
 
-  function navigationJumpToNextProtocol() {
+  function navigationJumpToNextProtocol(ev) {
+    ev.preventDefault();
     if (currentProtocol < (nrOfProtocols - 1)) {
       currentProtocol++;
     }
@@ -283,7 +307,8 @@ function importProtocolFromFile(
     updateNavigationButtons();
   }
 
-  function navigationJumpToLastProtocol() {
+  function navigationJumpToLastProtocol(ev) {
+    ev.preventDefault();
     currentProtocol = nrOfProtocols - 1;
     previewProtocol(currentProtocol, true);
     updateNavigationButtons();
@@ -344,34 +369,34 @@ function importProtocolFromFile(
     // Bind on "Import" buttons
     $("[data-action='import-current']")
     .off("click")
-    .on("click", function() { importCurrentProtocol(); });
+    .on("click", function(ev) { importCurrentProtocol(ev); });
     $("[data-action='import-all']")
     .off("click")
-    .on("click", function() { importAllProtocols(); });
+    .on("click", function(ev) { importAllProtocols(ev); });
 
     // Bind on navigation buttons
     $("[data-action='jump-to-first-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToFirstProtocol(); });
+    .on("click", function(ev) { navigationJumpToFirstProtocol(ev); });
     $("[data-action='jump-to-previous-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToPreviousProtocol(); });
+    .on("click", function(ev) { navigationJumpToPreviousProtocol(ev); });
     $("[data-action='jump-to-next-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToNextProtocol(); });
+    .on("click", function(ev) { navigationJumpToNextProtocol(ev); });
     $("[data-action='jump-to-last-protocol']")
     .off("click")
-    .on("click", function() { navigationJumpToLastProtocol(); });
+    .on("click", function(ev) { navigationJumpToLastProtocol(ev); });
     updateNavigationButtons();
   }
 
   /* Actual import */
 
-  function importCurrentProtocol() {
-
+  function importCurrentProtocol(ev) {
     var check_linked = $("[data-role='protocol-status-bar']")
                         .text();
     var confirm_message = "";
+    ev.preventDefault();
     if( check_linked.trim() !== '(unlinked)' ){
       confirm_message = I18n.t("protocols.import_export.import_modal.import_to_linked_task_file");
     } else {
@@ -403,9 +428,11 @@ function importProtocolFromFile(
     }
   }
 
-  function importAllProtocols() {
+  function importAllProtocols(ev) {
     var nrOfImportedProtocols = 0;
     var datas = [];
+
+    ev.preventDefault();
 
     // Show spinner
     animateSpinner(importModal);
@@ -557,7 +584,7 @@ function importProtocolFromFile(
     $.extend(data_json, params);
 
     var rough_size = roughSizeOfObject(data_json);
-    if (rough_size > <%= Constants::FILE_MAX_SIZE_MB.megabytes %>) {
+    if (rough_size > ($(document.body).data('file-max-size-mb') * 1024 * 1024)) {
       // Call the callback function
       resultCallback({ name: protocolJson["name"], new_name: null, status: "size_too_large" });
       return;

@@ -5,7 +5,7 @@
     <li><em><%= t 'experiments.canvas.popups.no_samples' %></em></li>
   <% else %>
     <% @samples.each do |sample| %>
-      <li><span class="text-muted glyphicon glyphicon-triangle-right"></span><span><%= sample.name %></span></li>
+      <li><span class="text-muted fas fa-caret-right"></span><span><%= sample.name %></span></li>
     <% end %>
   <% end %>
   <hr>

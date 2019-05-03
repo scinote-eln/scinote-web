@@ -921,11 +921,11 @@ function createSampleGroupSelect(data, selected) {
 
   $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_group'))
-    .attr('data-icon', 'glyphicon glyphicon-asterisk');
+    .attr('data-icon', 'fas fa-asterisk');
   $selectGroup.append($option);
 
   $.each(data, function(i, val) {
-    var $span = $('<span></span>').addClass('glyphicon glyphicon-asterisk')
+    var $span = $('<span></span>').addClass('fas fa-asterisk')
       .css('color', val.color);
     var $option = $('<option></option>')
       .attr('value', val.id).text(val.name)
@@ -1077,7 +1077,7 @@ function changeToEditMode() {
         var editable = $(el).is('[data-editable]');
         var deletable = $(el).is('[data-deletable]');
 
-        var visClass = (visible) ? 'fas fa-eye' : 'glyphicon-eye-close';
+        var visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
         var visLi = (visible) ? '' : 'col-invisible';
         var editClass = (editable) ? '' : 'disabled';
         var delClass = (deletable) ? '' : 'disabled';
@@ -1102,11 +1102,11 @@ function changeToEditMode() {
           '<span class="text">' + generateColumnNameTooltip(thederName) + '</span> ' +
           '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
-          '<span class="ok glyphicon glyphicon-ok" style="display: none;" title="<%= I18n.t("general.save") %>"></span>' +
-          '<span class="cancel glyphicon glyphicon-remove" style="display: none;" title="<%= I18n.t("general.cancel") %>"></span>' +
-          '<span class="vis glyphicon ' + visClass + '" title="<%= I18n.t("samples.columns_visibility") %>"></span> ' +
+          '<span class="ok fas fa-check" style="display: none;" title="<%= I18n.t("general.save") %>"></span>' +
+          '<span class="cancel fas fa-times" style="display: none;" title="<%= I18n.t("general.cancel") %>"></span>' +
+          '<span class="vis fas' + visClass + '" title="<%= I18n.t("samples.columns_visibility") %>"></span> ' +
           '<span class="edit fas fa-pencil-alt ' + editClass + '" title="<%= I18n.t("general.edit") %>"></span>' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass + '" title="<%= I18n.t("samples.columns_delete") %>"></span>' +
+          '<span class="del fas fa-trash-alt ' + delClass + '" title="<%= I18n.t("samples.columns_delete") %>"></span>' +
           '</span><br></span></li>';
         dropdownList.append(html);
       }
@@ -1140,14 +1140,14 @@ function changeToEditMode() {
       var column = table.column(li.attr('data-position'));
 
       if (column.visible()) {
-        self.addClass('glyphicon-eye-close');
+        self.addClass('fa-eye-slash');
         self.removeClass('fas fa-eye');
         li.addClass('col-invisible');
         column.visible(false);
         table.setColumnSearchable(column.index(), false);
       } else {
         self.addClass('fas fa-eye');
-        self.removeClass('glyphicon-eye-close');
+        self.removeClass('fa-eye-slash');
         li.removeClass('col-invisible');
         column.visible(true);
         table.setColumnSearchable(column.index(), true);

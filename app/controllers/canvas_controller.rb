@@ -183,18 +183,10 @@ class CanvasController < ApplicationController
     to_archive.each do |module_id|
       my_module = MyModule.find_by_id(module_id)
       next if my_module.blank?
-      Activity.create(type_of: :archive_module,
-        project: my_module.experiment.project,
-        experiment: my_module.experiment,
-        my_module: my_module,
-        user: current_user,
-        message: t('activities.archive_module',
-                   user: current_user.full_name,
-                   module: my_module.name))
     end
 
     # Create workflow image
-    @experiment.delay.generate_workflow_img
+    @experiment.generate_workflow_img
 
     flash[:success] = t('experiments.canvas.update.success_flash')
     redirect_to canvas_experiment_path(@experiment)

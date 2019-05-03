@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::ResultsController', type: :request do
+RSpec.describe "Api::V1::ResultsController", type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -11,12 +11,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     @valid_project = create(:project, name: Faker::Name.unique.name,
                             created_by: @user, team: @teams.first)
 
-    create(:user_project, user: @user, project: @valid_project)
-    create :user_assignment,
-           assignable: @valid_project,
-           user: @user,
-           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
-           assigned_by: @user
+    create(:user_project, user: @user, project: @valid_project, role: 0)
 
     @unaccessible_project = create(:project, name: Faker::Name.unique.name,
                                    created_by: @user, team: @teams.second)
@@ -51,10 +46,10 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
           attributes: {
             name: Faker::Name.unique.name
           } },
-        included: [
+        included:  [
           { type: 'result_texts',
             attributes: {
-              text: Faker::Lorem.sentence(word_count: 25)
+              text: Faker::Lorem.sentence(25)
             } }
         ] }
 
@@ -74,11 +69,9 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_task.results, each_serializer: Api::V1::ResultSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_task.results, each_serializer: Api::V1::ResultSerializer)
+          .as_json[:data]
       )
     end
 
@@ -133,9 +126,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
         included: [
           { type: 'result_texts',
             attributes: {
-              text: 'Result text 1 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
-                         'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
-                         'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg==" data-mce-token="a1">'
+              text: 'Result text 1 [~tiny_mce_id:a1]'
             } },
           { type: 'tiny_mce_assets',
             attributes: {
@@ -160,18 +151,16 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(Result.last, serializer: Api::V1::ResultSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(Result.last,
+               serializer: Api::V1::ResultSerializer)
+          .as_json[:data]
       )
       expect(hash_body[:included]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(Result.last, serializer: Api::V1::ResultSerializer, include: :text)
-            .to_json
-        )['included']
+        ActiveModelSerializers::SerializableResource
+          .new(Result.last, serializer: Api::V1::ResultSerializer,
+               include: :text)
+          .as_json[:included]
       )
     end
 
@@ -186,34 +175,16 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(Result.last, serializer: Api::V1::ResultSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(Result.last, serializer: Api::V1::ResultSerializer)
+          .as_json[:data]
       )
       expect(hash_body[:included]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(Result.last, serializer: Api::V1::ResultSerializer, include: :text)
-            .to_json
-        )['included']
+        ActiveModelSerializers::SerializableResource
+          .new(Result.last, serializer: Api::V1::ResultSerializer,
+               include: :text)
+          .as_json[:included]
       )
-      expect(ResultText.last.text).to include "data-mce-token=\"#{Base62.encode(TinyMceAsset.last.id)}\""
-    end
-
-    it 'Response correct with old TinyMCE images' do
-      hash_body = nil
-      @valid_tinymce_hash_body[:included][0][:attributes][:text] = 'Result text 1 [~tiny_mce_id:a1]'
-      post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
-        project_id: @valid_project,
-        experiment_id: @valid_experiment,
-        task_id: @valid_task
-      ), params: @valid_tinymce_hash_body.to_json, headers: @valid_headers
-      expect(response).to have_http_status 201
-      expect { hash_body = json }.not_to raise_exception
-      expect(ResultText.last.text).to include "data-mce-token=\"#{Base62.encode(TinyMceAsset.last.id)}\""
     end
 
     it 'When invalid request, mismatching file token' do
@@ -278,69 +249,6 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
     end
-
-    context 'when resultType is File' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'results',
-            attributes: {
-              name: 'my result'
-            }
-          },
-          included: [{ type: 'result_files', attributes: attributes }]
-        }
-      end
-
-      let(:action) do
-        post(api_v1_team_project_experiment_task_results_path(
-          team_id: @teams.first.id,
-          project_id: @valid_project,
-          experiment_id: @valid_experiment,
-          task_id: @valid_task
-        ), params: request_body, headers: @valid_headers)
-      end
-
-      context 'when sending base64' do
-        let(:filedata_base64) do
-          'iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
-          'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
-          'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg=='
-        end
-        let(:attributes) do
-          {
-            file_data: filedata_base64,
-            file_name: 'file.png',
-            file_type: 'image/png'
-          }
-        end
-        let(:request_body) { super().to_json }
-
-        it 'creates new asset' do
-          expect { action }.to change { ResultAsset.count }.by(1)
-        end
-
-        it 'returns status 201' do
-          action
-
-          expect(response).to have_http_status 201
-        end
-      end
-
-      context 'when sending multipart form' do
-        let(:attributes) { { file: Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) } }
-
-        it 'creates new asset' do
-          expect { action }.to change { ResultAsset.count }.by(1)
-        end
-
-        it 'returns status 201' do
-          action
-
-          expect(response).to have_http_status 201
-        end
-      end
-    end
   end
 
   describe 'GET result, #show' do
@@ -355,11 +263,9 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_task.results.first, serializer: Api::V1::ResultSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_task.results.first, serializer: Api::V1::ResultSerializer)
+          .as_json[:data]
       )
     end
 
@@ -404,148 +310,5 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
     end
-  end
-
-  describe 'PUT result, #update' do
-    context 'when resultType is file' do
-      let(:result_file) { @valid_task.results.last }
-      let(:file) { Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) }
-      let(:request_body) do
-        {
-          data: {
-            type: 'results',
-            attributes: {
-              name: 'my result'
-            }
-          },
-          included: [
-            { type: 'result_files',
-              attributes: {
-                file: file
-              } }
-          ]
-        }
-      end
-      let(:action) do
-        put(api_v1_team_project_experiment_task_result_path(
-          team_id: @teams.first.id,
-          project_id: @valid_project,
-          experiment_id: @valid_experiment,
-          task_id: @valid_task,
-          id: result_file.id
-        ), params: request_body, headers: @valid_headers)
-      end
-
-      context 'when has attributes for update' do
-        it 'updates tasks name' do
-          action
-
-          expect(result_file.reload.name).to eq('my result')
-        end
-
-        it 'returns status 200' do
-          action
-
-          expect(response).to have_http_status 200
-        end
-      end
-
-      context 'when has new image for update' do
-        let(:action) do
-          put(api_v1_team_project_experiment_task_result_path(
-            team_id: @teams.first.id,
-            project_id: @valid_project,
-            experiment_id: @valid_experiment,
-            task_id: @valid_task,
-            id: result_file.id
-          ), params: request_body, headers: @valid_headers)
-        end
-
-        let(:request_body) do
-          {
-            data: { type: 'results', attributes: { name: result_file.reload.name } },
-            included: [{ type: 'result_files', attributes: attributes }]
-          }
-        end
-
-        context 'when sending base64' do
-          let(:filedata_base64) do
-            'iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
-          'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
-          'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg=='
-          end
-          let(:attributes) do
-            {
-              file_data: filedata_base64,
-              file_name: 'file.png',
-              file_type: 'image/png'
-            }
-          end
-          let(:request_body) { super().to_json }
-
-          it 'returns status 200' do
-            action
-
-            expect(response).to have_http_status 200
-          end
-        end
-
-        context 'when sending multipart form' do
-          let(:attributes) { { file: Rack::Test::UploadedFile.new(file_fixture('apple.jpg').open) } }
-
-          it 'returns status 200' do
-            action
-
-            expect(response).to have_http_status 200
-          end
-        end
-      end
-
-      context 'when there is nothing to update' do
-        let(:request_body_with_same_name) do
-          {
-            data: {
-              type: 'results',
-              attributes: {
-                name: result_file.reload.name
-              }
-            }
-          }
-        end
-
-        it 'returns 204' do
-          put(api_v1_team_project_experiment_task_result_path(
-            team_id: @teams.first.id,
-            project_id: @valid_project,
-            experiment_id: @valid_experiment,
-            task_id: @valid_task,
-            id: result_file.id
-          ), params: request_body_with_same_name.to_json, headers: @valid_headers)
-
-          expect(response).to have_http_status 204
-        end
-      end
-    end
-
-    # ### Refactor without instance variables
-    #
-    # context 'when resultType is text' do
-    #   let(:result_text) { @valid_task.results.first }
-    #   let(:action) do
-    #     put(api_v1_team_project_experiment_task_result_path(
-    #           team_id: @teams.first.id,
-    #           project_id: @valid_project,
-    #           experiment_id: @valid_experiment,
-    #           task_id: @valid_task,
-    #           id: result_text.id
-    #         ), params: @valid_text_hash_body.to_json, headers: @valid_headers)
-    #   end
-    #
-    #   it 'returns status 500' do
-    #     action
-    #
-    #     expect(response).to have_http_status 500
-    #   end
-    # end
   end
 end

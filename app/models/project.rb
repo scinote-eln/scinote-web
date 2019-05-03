@@ -1,5 +1,7 @@
 class Project < ApplicationRecord
-  include ArchivableModel, SearchableModel
+  include ArchivableModel
+  include SearchableModel
+  include SearchableByNameModel
 
   enum visibility: { hidden: 0, visible: 1 }
 
@@ -28,10 +30,10 @@ class Project < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :rap_task_level,
-             foreign_key: 'rap_task_level_id',
-             class_name: 'RapTaskLevel',
-             optional: false
-  belongs_to :team, inverse_of: :projects, optional: true
+            foreign_key: 'rap_task_level_id',
+            class_name: 'RapTaskLevel',
+            optional: false
+  belongs_to :team, inverse_of: :projects, touch: true, optional: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
@@ -43,19 +45,28 @@ class Project < ApplicationRecord
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
 
-  after_commit do
-    Views::Datatables::DatatablesReport.refresh_materialized_view
-  end
+  scope :visible_to, (lambda do |user, team|
+                        unless user.is_admin_of_team?(team)
+                          left_outer_joins(:user_projects)
+                          .where(
+                            'visibility = 1 OR user_projects.user_id = :id',
+                            id: user.id
+                          )
+                        end
+                      end)
+
+  scope :templates, -> { where(template: true) }
 
   def self.visible_from_user_by_name(user, team, name)
-    if user.is_admin_of_team? team
-      return where('projects.archived IS FALSE AND projects.name ILIKE ?',
-                   "%#{name}%")
+    projects = where(team: team).distinct
+    if user.is_admin_of_team?(team)
+      projects.where('projects.archived IS FALSE AND projects.name ILIKE ?', "%#{name}%")
+    else
+      projects.joins(:user_projects)
+              .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
+              .where('projects.archived IS FALSE AND projects.name ILIKE ?',
+                     "%#{name}%")
     end
-    joins(:user_projects)
-      .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
-      .where('projects.archived IS FALSE AND projects.name ILIKE ?',
-             "%#{name}%")
   end
 
   def self.search(
@@ -128,6 +139,20 @@ class Project < ApplicationRecord
     end
   end
 
+  def self.viewable_by_user(user, teams)
+    # Admins see all projects in the team
+    # Member of the projects can view
+    # If project is visible everyone from the team can view it
+    Project.where(team: teams)
+           .left_outer_joins(team: :user_teams)
+           .left_outer_joins(:user_projects)
+           .where('projects.visibility = 1 OR '\
+                  'user_projects.user_id = :user_id OR '\
+                  '(user_teams.user_id = :user_id AND user_teams.role = 2)',
+                  user_id: user.id)
+           .distinct
+  end
+
   def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     activities.order(created_at: :desc).first(count)
   end
@@ -154,11 +179,7 @@ class Project < ApplicationRecord
   end
 
   def user_role(user)
-    unless self.users.include? user
-      return nil
-    end
-
-    return (self.user_projects.select { |up| up.user == user }).first.role
+    user_projects.find_by_user_id(user)&.role
   end
 
   def sorted_active_experiments(sort_by = :new)
@@ -225,8 +246,78 @@ class Project < ApplicationRecord
   def notifications_count(user)
     res = 0
     assigned_modules(user).find_each do |t|
-      res += 1 if t.is_overdue? || t.is_one_day_prior?
+      res += 1 if (t.is_overdue? || t.is_one_day_prior?) && !t.completed?
     end
     res
+  end
+
+  def generate_teams_export_report_html(
+    user, team, html_title, obj_filenames = nil
+  )
+    ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
+    proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
+    proxy.set_user(user, scope: :user, store: false)
+    renderer = ApplicationController.renderer.new(warden: proxy)
+
+    report = Report.generate_whole_project_report(self, user, team)
+
+    page_html_string =
+      renderer.render 'reports/new.html.erb',
+                      locals: { export_all: true,
+                                obj_filenames: obj_filenames },
+                      assigns: { project: self, report: report }
+    parsed_page_html = Nokogiri::HTML(page_html_string)
+    parsed_html = parsed_page_html.at_css('#report-content')
+
+    # Style tables (mimick frontend processing)
+
+    tables = parsed_html.css('.hot-table-contents')
+                        .zip(parsed_html.css('.hot-table-container'))
+    tables.each do |table_input, table_container|
+      table_vals = JSON.parse(table_input['value'])
+      table_data = table_vals['data']
+      table_headers = table_vals['headers']
+      table_headers ||= ('A'..'Z').first(table_data[0].count)
+
+      table_el = table_container
+                 .add_child('<table class="handsontable"></table>').first
+
+      # Add header row
+      header_cell = '<th>'\
+                      '<div class="relative">'\
+                        '<span>%s</span>'\
+                      '</div>'\
+                    '</th>'
+      header_el = table_el.add_child('<thead></thead>').first
+      row_el = header_el.add_child('<tr></tr>').first
+      row_el.add_child(format(header_cell, '')).first
+      table_headers.each do |col|
+        row_el.add_child(format(header_cell, col)).first
+      end
+
+      # Add body rows
+      body_cell = '<td>%s</td>'
+      body_el = table_el.add_child('<tbody></tbody>').first
+      table_data.each.with_index(1) do |row, idx|
+        row_el = body_el.add_child('<tr></tr>').first
+        row_el.add_child(format(header_cell, idx)).first
+        row.each do |col|
+          row_el.add_child(format(body_cell, col)).first
+        end
+      end
+    end
+
+    ApplicationController.render(
+      layout: false,
+      locals: {
+        title: html_title,
+        content: parsed_html.children.map(&:to_s).join
+      },
+      template: 'team_zip_exports/report',
+      current_user: user,
+      current_team: team
+    )
+  ensure
+    report.destroy if report.present?
   end
 end

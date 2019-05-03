@@ -12,7 +12,11 @@
         "project_id": 1,
         "restored_by_id": null,
         "restored_on": null,
-        "updated_at": "2019-01-21T13:32:46.473Z"
+        "updated_at": "2019-01-21T13:32:46.473Z",
+        "workflowimg_content_type": "image/png",
+        "workflowimg_file_name": "wimg20190121-1-111oj8z.png",
+        "workflowimg_file_size": 4581,
+        "workflowimg_updated_at": "2019-01-21T13:31:04.682Z"
     },
     "my_module_groups": [
         {
@@ -46,13 +50,14 @@
                 "last_modified_by_id": 1,
                 "my_module_group_id": null,
                 "name": "Data analysis - Pfaffl method",
+                "nr_of_assigned_samples": 0,
                 "restored_by_id": 1,
                 "restored_on": "2019-01-21T13:31:37.000Z",
                 "state": "uncompleted",
                 "updated_at": "2019-01-21T13:32:46.278Z",
                 "workflow_order": -1,
                 "x": 64,
-                "y": 22
+                "y": 46
             },
             "my_module_repository_rows": [],
             "my_module_tags": [],
@@ -133,6 +138,7 @@
                 "last_modified_by_id": 1,
                 "my_module_group_id": null,
                 "name": "Lonely task",
+                "nr_of_assigned_samples": 0,
                 "restored_by_id": null,
                 "restored_on": null,
                 "state": "uncompleted",
@@ -258,6 +264,7 @@
                 "last_modified_by_id": 1,
                 "my_module_group_id": 13,
                 "name": "Workflow 2 - task 2",
+                "nr_of_assigned_samples": 0,
                 "restored_by_id": null,
                 "restored_on": null,
                 "state": "uncompleted",
@@ -296,24 +303,22 @@
                         {
                             "assets": [
                                 {
-                                    "asset": {
-                                        "created_at": "2019-01-21T13:09:35.615Z",
-                                        "created_by_id": 1,
-                                        "estimated_size": 17799,
-                                        "file_processing": null,
-                                        "id": 21,
-                                        "last_modified_by_id": null,
-                                        "lock": null,
-                                        "lock_ttl": null,
-                                        "team_id": 1,
-                                        "updated_at": "2019-01-21T13:10:06.290Z",
-                                        "version": 1
-                                    },
-                                    "asset_blob": {
-                                        "filename": "100gen_line_bending.png",
-                                        "content_type": "image/png",
-                                        "byte_size": 16181
-                                    }
+                                    "created_at": "2019-01-21T13:09:35.615Z",
+                                    "created_by_id": 1,
+                                    "estimated_size": 17799,
+                                    "file_content_type": "image/png",
+                                    "file_file_name": "100gen_line_bending.png",
+                                    "file_file_size": 16181,
+                                    "file_present": true,
+                                    "file_processing": false,
+                                    "file_updated_at": "2019-01-21T13:10:05.392Z",
+                                    "id": 21,
+                                    "last_modified_by_id": null,
+                                    "lock": null,
+                                    "lock_ttl": null,
+                                    "team_id": 1,
+                                    "updated_at": "2019-01-21T13:10:06.290Z",
+                                    "version": 1
                                 }
                             ],
                             "checklists": [],
@@ -363,6 +368,7 @@
                 "last_modified_by_id": 1,
                 "my_module_group_id": 13,
                 "name": "Workflow 2 - task 1",
+                "nr_of_assigned_samples": 0,
                 "restored_by_id": null,
                 "restored_on": null,
                 "state": "uncompleted",
@@ -475,6 +481,7 @@
                 "last_modified_by_id": null,
                 "my_module_group_id": 14,
                 "name": "Experiment design",
+                "nr_of_assigned_samples": 0,
                 "restored_by_id": null,
                 "restored_on": null,
                 "state": "uncompleted",
@@ -590,24 +597,22 @@
                 },
                 {
                     "asset": {
-                        "asset": {
-                            "created_at": "2019-01-21T12:45:29.138Z",
-                            "created_by_id": 1,
-                            "estimated_size": 232,
-                            "file_processing": null,
-                            "id": 1,
-                            "last_modified_by_id": 1,
-                            "lock": null,
-                            "lock_ttl": null,
-                            "team_id": 1,
-                            "updated_at": "2019-01-21T13:06:01.610Z",
-                            "version": 1
-                        },
-                        "asset_blob": {
-                            "filename": "samples.txt",
-                            "content_type": "text/plain",
-                            "byte_size": 69
-                        }
+                        "created_at": "2019-01-21T12:45:29.138Z",
+                        "created_by_id": 1,
+                        "estimated_size": 232,
+                        "file_content_type": "text/plain",
+                        "file_file_name": "samples.txt",
+                        "file_file_size": 69,
+                        "file_present": true,
+                        "file_processing": false,
+                        "file_updated_at": "2019-01-21T12:45:28.889Z",
+                        "id": 1,
+                        "last_modified_by_id": 1,
+                        "lock": null,
+                        "lock_ttl": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T13:06:01.610Z",
+                        "version": 1
                     },
                     "result": {
                         "archived": true,
@@ -674,6 +679,7 @@
                 "last_modified_by_id": null,
                 "my_module_group_id": 14,
                 "name": "Reverse transcription",
+                "nr_of_assigned_samples": 4,
                 "restored_by_id": null,
                 "restored_on": null,
                 "state": "uncompleted",
@@ -970,6 +976,7 @@
                 "last_modified_by_id": null,
                 "my_module_group_id": 14,
                 "name": "RNA quality & quantity - BIOANALYSER",
+                "nr_of_assigned_samples": 4,
                 "restored_by_id": null,
                 "restored_on": null,
                 "state": "uncompleted",
@@ -1062,24 +1069,22 @@
                         {
                             "assets": [
                                 {
-                                    "asset": {
-                                        "created_at": "2019-01-21T12:45:32.296Z",
-                                        "created_by_id": 1,
-                                        "estimated_size": 1129370,
-                                        "file_processing": null,
-                                        "id": 8,
-                                        "last_modified_by_id": 1,
-                                        "lock": null,
-                                        "lock_ttl": null,
-                                        "team_id": 1,
-                                        "updated_at": "2019-01-21T13:06:04.590Z",
-                                        "version": 1
-                                    },
-                                    "asset_blob": {
-                                        "filename": "G2938-90034_KitRNA6000Nano_ebook.pdf",
-                                        "content_type": "application/pdf",
-                                        "byte_size": 974068
-                                    }
+                                    "created_at": "2019-01-21T12:45:32.296Z",
+                                    "created_by_id": 1,
+                                    "estimated_size": 1129370,
+                                    "file_content_type": "application/pdf",
+                                    "file_file_name": "G2938-90034_KitRNA6000Nano_ebook.pdf",
+                                    "file_file_size": 974068,
+                                    "file_present": true,
+                                    "file_processing": false,
+                                    "file_updated_at": "2019-01-21T12:45:32.237Z",
+                                    "id": 8,
+                                    "last_modified_by_id": 1,
+                                    "lock": null,
+                                    "lock_ttl": null,
+                                    "team_id": 1,
+                                    "updated_at": "2019-01-21T13:06:04.590Z",
+                                    "version": 1
                                 }
                             ],
                             "checklists": [],
@@ -1113,24 +1118,22 @@
             "results": [
                 {
                     "asset": {
-                        "asset": {
-                            "created_at": "2019-01-21T12:45:32.847Z",
-                            "created_by_id": 1,
-                            "estimated_size": 46131,
-                            "file_processing": null,
-                            "id": 9,
-                            "last_modified_by_id": 1,
-                            "lock": null,
-                            "lock_ttl": null,
-                            "team_id": 1,
-                            "updated_at": "2019-01-21T12:45:44.269Z",
-                            "version": 1
-                        },
-                        "asset_blob": {
-                            "filename": "Bioanalyser_result.JPG",
-                            "content_type": "image/jpeg",
-                            "byte_size": 41938
-                        }
+                        "created_at": "2019-01-21T12:45:32.847Z",
+                        "created_by_id": 1,
+                        "estimated_size": 46131,
+                        "file_content_type": "image/jpeg",
+                        "file_file_name": "Bioanalyser_result.JPG",
+                        "file_file_size": 41938,
+                        "file_present": true,
+                        "file_processing": false,
+                        "file_updated_at": "2019-01-21T12:45:43.655Z",
+                        "id": 9,
+                        "last_modified_by_id": 1,
+                        "lock": null,
+                        "lock_ttl": null,
+                        "team_id": 1,
+                        "updated_at": "2019-01-21T12:45:44.269Z",
+                        "version": 1
                     },
                     "result": {
                         "archived": true,

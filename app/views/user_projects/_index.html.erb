@@ -1,6 +1,6 @@
 <h5 class="text-center"><%= t("projects.index.users_tab") %></h5>
 <hr>
-<ul class="no-style content-users">
+<ul class="no-style content-users" data-hook="project-users-tab-list">
   <% if @users.size == 0 then %>
     <li><em><%= t 'projects.index.no_users' %></em></li>
   <% else %>

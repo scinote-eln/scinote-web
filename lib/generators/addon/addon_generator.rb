@@ -149,33 +149,6 @@ class AddonGenerator < Rails::Generators::NamedBase
     end
   end
 
-  def create_test
-    # test/fixtures
-    create_file("addons/#{@addon_name}/test/fixtures/#{@folders_path}/.keep")
-
-    # test/integrations
-    create_file("addons/#{@addon_name}/test/integrations/.keep")
-
-    # test/models
-    create_file("addons/#{@addon_name}/test/models/#{@folders_path}/.keep")
-
-    # test/engine_test
-    create_file(
-      "addons/#{@addon_name}/test/" \
-      "#{@folders_path}/#{@addon_name}_test.rb"
-    ) do
-      "require 'test_helper'\n\n" \
-      "class #{name}::Test < ActiveSupport::TestCase\n" \
-      "  test 'truth' do\n" \
-      "    assert_kind_of Module, #{name}\n" \
-      "  end\n" \
-      "end\n"
-    end
-
-    # test/test_helper.rb
-    copy_file('test_helper.rb', "addons/#{@addon_name}/test/test_helper.rb")
-  end
-
   def create_root
     copy_file('.gitignore', "addons/#{@addon_name}/.gitignore")
     copy_file('Gemfile', "addons/#{@addon_name}/Gemfile")

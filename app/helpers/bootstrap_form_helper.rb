@@ -24,7 +24,14 @@ module BootstrapFormHelper
       input_name = "#{@object_name}[#{name.to_s}]"
       timestamp = @object[name] ? "#{@object[name].to_i}000" : ""
       js_locale = I18n.locale.to_s
-      js_format = I18n.t("time.formats.full_js")
+      js_format = I18n.backend.date_format.dup
+      js_format.gsub!(/%-d/, 'D')
+      js_format.gsub!(/%d/, 'DD')
+      js_format.gsub!(/%-m/, 'M')
+      js_format.gsub!(/%m/, 'MM')
+      js_format.gsub!(/%b/, 'MMM')
+      js_format.gsub!(/%B/, 'MMMM')
+      js_format.gsub!('%Y', 'YYYY')
 
       label = name.to_s.humanize
       if options[:label] then
@@ -48,7 +55,7 @@ module BootstrapFormHelper
       end
       res << "<input type='datetime' class='form-control' name='#{input_name}' id='#{id}' readonly data-ts='#{timestamp}' />"
       if options[:clear] then
-        res << "<span class='input-group-addon' id='#{id}_clear'><span class='glyphicon glyphicon-remove'></span></span></div>"
+        res << "<span class='input-group-addon' id='#{id}_clear'><span class='fas fa-times'></span></span></div>"
       end
       res << "</div></div></div></div><script type='text/javascript'>$(function () { var dt = $('##{id}'); dt.datetimepicker({ #{jsOpts}ignoreReadonly: true, locale: '#{js_locale}', format: '#{js_format}' }); if (dt.length > 0 && dt.data['ts'] != '') { $('##{id}').data('DateTimePicker').date(moment($('##{id}').data('ts'))); }"
       if options[:clear] then
@@ -181,8 +188,8 @@ module BootstrapFormHelper
       id = "#{@object_name}_#{name.to_s}"
       input_name = "#{@object_name}[#{name.to_s}]"
 
-      icon_str = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>'
-      icon_str_hidden = '<span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none;"></span>'
+      icon_str = '<span class="fas fa-check" aria-hidden="true"></span>'
+      icon_str_hidden = '<span class="fas fa-check" aria-hidden="true" style="display: none;"></span>'
 
       label = name.to_s.humanize
       if options[:label] then

@@ -12,13 +12,14 @@ module Api
         items =
           @task.repository_rows
                .includes(repository_cells: :repository_column)
-               .preload(repository_cells: :value)
+               .includes(repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES)
                .page(params.dig(:page, :number))
                .per(params.dig(:page, :size))
+        incl = params[:include] == 'inventory_cells' ? :inventory_cells : nil
         render jsonapi: items,
                each_serializer: InventoryItemSerializer,
                show_repository: true,
-               include: include_params
+               include: incl
       end
 
       def show
@@ -26,12 +27,6 @@ module Api
                serializer: InventoryItemSerializer,
                show_repository: true,
                include: %i(inventory_cells inventory)
-      end
-
-      private
-
-      def permitted_includes
-        %w(inventory_cells)
       end
     end
   end

@@ -127,9 +127,6 @@
       return publicAPI;
     })();
 
-    $(document).ready(function() {
-      ResultTables.initNewResultTable();
-      ResultTables.applyEditResultTableCallback();
-    });
-
+    ResultTables.initNewResultTable();
+    ResultTables.applyEditResultTableCallback();
 })();

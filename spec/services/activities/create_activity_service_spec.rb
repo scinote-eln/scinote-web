@@ -71,7 +71,7 @@ describe Activities::CreateActivityService do
         a = service_call.activity
 
         expect(a.message_items[:project].keys)
-          .to contain_exactly(:type, :value, :id, :value_for)
+          .to contain_exactly('type', 'value', 'id', 'value_for')
       end
 
       it 'adds object project to message items as hash' do
@@ -138,21 +138,6 @@ describe Activities::CreateActivityService do
 
         expect(activity.message_items).to include(project_duedate: { type: 'Time', value: project.due_date.to_i })
       end
-    end
-  end
-
-  context 'when message item is nil' do
-    it 'adds project_folder_from to message items with value nil' do
-      activity = Activities::CreateActivityService.call(activity_type: :move_project_folder,
-                                                        owner: user,
-                                                        subject: project,
-                                                        team: team,
-                                                        message_items: {
-                                                          project_folder_from: nil
-                                                        }).activity
-
-      expect(activity.message_items['project_folder_from'].symbolize_keys)
-        .to(include({ type: 'ProjectFolder', value: nil }))
     end
   end
 end

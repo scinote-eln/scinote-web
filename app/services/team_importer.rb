@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
+require 'digest'
+
 class TeamImporter
   def initialize
     @user_mappings = {}
     @notification_mappings = {}
     @repository_mappings = {}
-    @sample_group_mappings = {}
-    @sample_type_mappings = {}
     @custom_field_mappings = {}
-    @sample_mappings = {}
     @project_mappings = {}
     @repository_column_mappings = {}
     @experiment_mappings = {}
@@ -29,7 +30,6 @@ class TeamImporter
     @repository_row_counter = 0
     @protocol_counter = 0
     @step_counter = 0
-    @sample_counter = 0
     @report_counter = 0
     @my_module_counter = 0
     @notification_counter = 0
@@ -41,8 +41,9 @@ class TeamImporter
 
   def import_from_dir(import_dir)
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
-    Activity.skip_callback(:create, :after, :generate_notification)
     Protocol.skip_callback(:save, :after, :update_linked_children)
+    Activity.skip_callback(:create, :before, :add_user)
+    Activity.skip_callback(:initialize, :after, :init_default_values)
     @import_dir = import_dir
     team_json = JSON.parse(File.read("#{@import_dir}/team_export.json"))
     team = Team.new(team_json['team'].slice(*Team.column_names))
@@ -52,6 +53,8 @@ class TeamImporter
       team.created_by_id = nil
       team_last_modified_by = team.last_modified_by_id
       team.last_modified_by_id = nil
+      team.without_templates = true
+      team.without_intro_demo = true
       team.save!
 
       create_users(team_json['users'], team)
@@ -71,10 +74,7 @@ class TeamImporter
         user_team.save!
       end
 
-      create_sample_groups(team_json['sample_groups'], team)
-      create_sample_types(team_json['sample_types'], team)
       create_custom_fields(team_json['custom_fields'], team)
-      create_samples(team_json['samples'], team)
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
       create_projects(team_json['projects'], team)
@@ -104,20 +104,22 @@ class TeamImporter
       end
 
       team_json['projects'].each do |project_json|
-        create_activities(project_json['activities'])
-        create_reports(project_json['reports'])
+        create_reports(project_json['reports'], team)
         project_json['experiments'].each do |experiment_json|
           experiment_json['my_modules'].each do |my_module_json|
             create_task_connections(my_module_json['outputs'])
           end
         end
+        create_activities(project_json['activities'], team)
       end
 
       team_json['repositories'].each do |repository_json|
         repository_json['repository_rows'].each do |repository_row_json|
-          create_repository_cells(repository_row_json['repository_cells'])
+          create_repository_cells(repository_row_json['repository_cells'], team)
         end
       end
+
+      create_activities(team_json['activities'], team)
 
       create_tiny_mce_assets(team_json['tiny_mce_assets'], team)
       update_smart_annotations(team)
@@ -133,7 +135,6 @@ class TeamImporter
       puts "Imported reports: #{@report_counter}"
       puts "Imported repositories: #{@repository_counter}"
       puts "Imported repository rows: #{@repository_row_counter}"
-      puts "Imported samples: #{@sample_counter}"
       puts "Imported tasks: #{@my_module_counter}"
       puts "Imported protocols: #{@protocol_counter}"
       puts "Imported steps: #{@step_counter}"
@@ -142,40 +143,64 @@ class TeamImporter
       puts "Imported tinyMCE assets: #{@mce_asset_counter}"
 
       MyModule.set_callback(:create, :before, :create_blank_protocol)
-      Activity.set_callback(:create, :after, :generate_notification)
       Protocol.set_callback(:save, :after, :update_linked_children)
+      Activity.set_callback(:create, :before, :add_user)
+      Activity.set_callback(:initialize, :after, :init_default_values)
     end
+  end
+
+  def import_experiment_template_from_dir(import_dir, project_id,
+                                          user_id)
+    # Remove callbacks that can cause problems when importing
+    MyModule.skip_callback(:create, :before, :create_blank_protocol)
+    Protocol.skip_callback(:save, :after, :update_linked_children)
+
+    @import_dir = import_dir
+    @is_template = true
+
+    # Parse the experiment file and save it to DB
+    project = Project.find_by_id(project_id)
+    experiment_json = JSON.parse(File.read("#{@import_dir}/experiment.json"))
+
+    # Handle situation when experiment with same name already exists
+    exp_name = experiment_json.dig('experiment', 'name')
+    if project.experiments.where(name: exp_name).present?
+      experiment_names = project.experiments.map(&:name)
+      i = 1
+      i += 1 while experiment_names.include?("#{exp_name} (#{i})")
+      experiment_json['experiment']['name'] = "#{exp_name} (#{i})"
+    end
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.no_touching do
+        experiment = create_experiment(experiment_json, project, user_id)
+
+        experiment.my_modules.each do |my_module|
+          my_module.nr_of_assigned_samples = 0
+          my_module.save(touch: false)
+        end
+
+        # Create connections for modules
+        experiment_json['my_modules'].each do |my_module_json|
+          create_task_connections(my_module_json['outputs'])
+        end
+
+        update_smart_annotations_in_project(project)
+
+        puts "Imported experiment: #{experiment.id}"
+        return experiment
+      end
+    end
+  ensure
+    # Reset callbacks
+    MyModule.set_callback(:create, :before, :create_blank_protocol)
+    Protocol.set_callback(:save, :after, :update_linked_children)
   end
 
   private
 
   def update_smart_annotations(team)
     team.projects.each do |pr|
-      pr.project_comments.each do |comment|
-        comment.save! if update_annotation(comment.message)
-      end
-      pr.experiments.each do |exp|
-        exp.save! if update_annotation(exp.description)
-        exp.my_modules.each do |task|
-          task.task_comments.each do |comment|
-            comment.save! if update_annotation(comment.message)
-          end
-          task.save! if update_annotation(task.description)
-          task.protocol.steps.each do |step|
-            step.step_comments.each do |comment|
-              comment.save! if update_annotation(comment.message)
-            end
-            step.save! if update_annotation(step.description)
-          end
-          task.results.each do |res|
-            res.result_comments.each do |comment|
-              comment.save! if update_annotation(comment.message)
-            end
-            next unless res.result_text
-            res.save! if update_annotation(res.result_text.text)
-          end
-        end
-      end
+      update_smart_annotations_in_project(pr)
     end
     team.protocols.where(my_module: nil).each do |protocol|
       protocol.steps.each do |step|
@@ -183,11 +208,6 @@ class TeamImporter
           comment.save! if update_annotation(comment.message)
         end
         step.save! if update_annotation(step.description)
-      end
-    end
-    team.samples.each do |sample|
-      sample.sample_custom_fields.find_each do |cf|
-        cf.save! if update_annotation(cf.value)
       end
     end
     team.repositories.each do |rep|
@@ -199,11 +219,39 @@ class TeamImporter
     end
   end
 
+  def update_smart_annotations_in_project(project)
+    project.project_comments.each do |comment|
+      comment.save! if update_annotation(comment.message)
+    end
+    project.experiments.each do |exp|
+      exp.save! if update_annotation(exp.description)
+      exp.my_modules.each do |task|
+        task.task_comments.each do |comment|
+          comment.save! if update_annotation(comment.message)
+        end
+        task.save! if update_annotation(task.description)
+        task.protocol.steps.each do |step|
+          step.step_comments.each do |comment|
+            comment.save! if update_annotation(comment.message)
+          end
+          step.save! if update_annotation(step.description)
+        end
+        task.results.each do |res|
+          res.result_comments.each do |comment|
+            comment.save! if update_annotation(comment.message)
+          end
+          next unless res.result_text
+          res.save! if update_annotation(res.result_text.text)
+        end
+      end
+    end
+  end
+
   # Returns true if text was updated
   def update_annotation(text)
     return false if text.nil?
     updated = false
-    %w(prj exp tsk sam).each do |name|
+    %w(prj exp tsk rep_item).each do |name|
       text.scan(/~#{name}~\w+\]/).each do |text_match|
         orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
         orig_id = orig_id_encoded.base62_decode
@@ -215,8 +263,8 @@ class TeamImporter
             @experiment_mappings[orig_id]
           when 'tsk'
             @my_module_mappings[orig_id]
-          when 'sam'
-            @sample_mappings[orig_id]
+          when 'rep_item'
+            @repository_row_mappings[orig_id]
           end
         next unless new_id
         new_id_encoded = new_id.base62_encode
@@ -245,14 +293,29 @@ class TeamImporter
     end
   end
 
-  def create_activities(activities_json)
+  def create_activities(activities_json, team)
     activities_json.each do |activity_json|
       activity = Activity.new(activity_json)
       activity.id = nil
-      activity.user_id = find_user(activity.user_id)
+      activity.owner_id = find_user(activity.owner_id)
+      activity.team_id = team.id
       activity.project_id = @project_mappings[activity.project_id]
       activity.experiment_id =
         @experiment_mappings[activity.experiment_id]
+      if activity.subject_id.present?
+        if activity.subject_type == 'Team'
+          activity.subject_id = team.id
+        else
+          mappings = instance_variable_get("@#{activity.subject_type.underscore}_mappings")
+          activity.subject_id = mappings[activity.subject_id]
+        end
+      end
+      unless activity.values['message_items'].blank?
+        activity.values['message_items'].each_value do |item|
+          mappings = instance_variable_get("@#{item['type'].underscore}_mappings")
+          item['id'] = mappings[item['id']]
+        end
+      end
       activity.my_module_id = @my_module_mappings[activity.my_module_id]
       activity.save!
     end
@@ -262,33 +325,34 @@ class TeamImporter
     tmce_assets_json.each do |tiny_mce_asset_json|
       tiny_mce_asset = TinyMceAsset.new(tiny_mce_asset_json)
       # Try to find and load file
-      tiny_mce_file = File.open(
+      File.open(
         File.join(@import_dir, 'tiny_mce_assets', tiny_mce_asset.id.to_s,
                   tiny_mce_asset.image_file_name)
-      )
-      orig_tmce_id = tiny_mce_asset.id
-      tiny_mce_asset.id = nil
-      if tiny_mce_asset.step_id.present?
-        tiny_mce_asset.step_id = @step_mappings[tiny_mce_asset.step_id]
-      end
-      if tiny_mce_asset.result_text_id.present?
-        tiny_mce_asset.result_text_id =
-          @result_text_mappings[tiny_mce_asset.result_text_id]
-      end
-      tiny_mce_asset.team = team
-      tiny_mce_asset.image = tiny_mce_file
-      tiny_mce_asset.save!
-      @mce_asset_counter += 1
-      if tiny_mce_asset.step_id.present?
-        step = Step.find_by_id(tiny_mce_asset.step_id)
-        step.description.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                              "[~tiny_mce_id:#{tiny_mce_asset.id}]")
-        step.save!
-      end
-      if tiny_mce_asset.result_text_id.present?
-        result_text = ResultText.find_by_id(tiny_mce_asset.result_text_id)
-        result_text.text.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                              "[~tiny_mce_id:#{tiny_mce_asset.id}]")
+      ) do |tiny_mce_file|
+        orig_tmce_id = tiny_mce_asset.id
+        tiny_mce_asset.id = nil
+        if tiny_mce_asset.step_id.present?
+          tiny_mce_asset.step_id = @step_mappings[tiny_mce_asset.step_id]
+        end
+        if tiny_mce_asset.result_text_id.present?
+          tiny_mce_asset.result_text_id =
+            @result_text_mappings[tiny_mce_asset.result_text_id]
+        end
+        tiny_mce_asset.team = team
+        tiny_mce_asset.image = tiny_mce_file
+        tiny_mce_asset.save!
+        @mce_asset_counter += 1
+        if tiny_mce_asset.step_id.present?
+          step = Step.find_by_id(tiny_mce_asset.step_id)
+          step.description.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                "[~tiny_mce_id:#{tiny_mce_asset.id}]")
+          step.save!
+        end
+        if tiny_mce_asset.result_text_id.present?
+          result_text = ResultText.find_by_id(tiny_mce_asset.result_text_id)
+          result_text.text.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                "[~tiny_mce_id:#{tiny_mce_asset.id}]")
+        end
       end
     end
   end
@@ -305,7 +369,9 @@ class TeamImporter
       if user.avatar.present?
         avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s,
                                 user.avatar_file_name)
-        user.avatar = File.open(avatar_path) if File.exist?(avatar_path)
+        if File.exist?(avatar_path)
+          File.open(avatar_path) { |f| user.avatar = f }
+        end
       end
       user.save!
       @user_counter += 1
@@ -317,13 +383,6 @@ class TeamImporter
         user_identity.id = nil
         user_identity.user_id = user.id
         user_identity.save!
-      end
-      user_json['samples_tables'].each do |samples_table_json|
-        samples_table = SamplesTable.new(samples_table_json)
-        samples_table.id = nil
-        samples_table.user_id = user.id
-        samples_table.team_id = team.id
-        samples_table.save!
       end
     end
   end
@@ -357,7 +416,7 @@ class TeamImporter
 
         repository_column = RepositoryColumn.new(
           repository_column_json['repository_column']
-        )							 
+        )
         orig_rep_col_id = repository_column.id
         repository_column.id = nil
         repository_column.repository = repository
@@ -406,7 +465,7 @@ class TeamImporter
     end
   end
 
-  def create_repository_cells(repository_cells_json)
+  def create_repository_cells(repository_cells_json, team)
     repository_cells_json.each do |repository_cell_json|
       repository_cell =
         RepositoryCell.new(repository_cell_json['repository_cell'])
@@ -415,44 +474,9 @@ class TeamImporter
         @repository_column_mappings[repository_cell.repository_column_id]
       repository_cell.repository_row_id =
         @repository_row_mappings[repository_cell.repository_row_id]
-      repository_value =
-        RepositoryTextValue.new(repository_cell_json['repository_value'])
-      repository_value.id = nil
-      repository_value.created_by_id = find_user(repository_value.created_by_id)
-      repository_value.last_modified_by_id =
-        find_user(repository_value.last_modified_by_id)
-      repository_value.repository_cell = repository_cell
-      repository_value.save!
-    end
-  end
-
-  def create_sample_groups(sample_groups_json, team)
-    puts 'Creating sample groups...'
-    sample_groups_json.each do |sample_group_json|
-      sample_group = SampleGroup.new(sample_group_json)
-      orig_group_id = sample_group.id
-      sample_group.id = nil
-      sample_group.team = team
-      sample_group.created_by_id = find_user(sample_group.created_by_id)
-      sample_group.last_modified_by_id =
-        find_user(sample_group.last_modified_by_id)
-      sample_group.save!
-      @sample_group_mappings[orig_group_id] = sample_group.id
-    end
-  end
-
-  def create_sample_types(sample_types_json, team)
-    puts 'Creating sample types...'
-    sample_types_json.each do |sample_type_json|
-      sample_type = SampleType.new(sample_type_json)
-      orig_type_id = sample_type.id
-      sample_type.id = nil
-      sample_type.team = team
-      sample_type.created_by_id = find_user(sample_type.created_by_id)
-      sample_type.last_modified_by_id =
-        find_user(sample_type.last_modified_by_id)
-      sample_type.save!
-      @sample_type_mappings[orig_type_id] = sample_type.id
+      create_cell_value(repository_cell,
+                        repository_cell_json,
+                        team)
     end
   end
 
@@ -468,31 +492,6 @@ class TeamImporter
         find_user(custom_field.last_modified_by_id)
       custom_field.save!
       @custom_field_mappings[orig_custom_field_id] = custom_field.id
-    end
-  end
-
-  def create_samples(samples_json, team)
-    puts 'Creating samples...'
-    samples_json.each do |sample_json|
-      sample = Sample.new(sample_json['sample'])
-      orig_sample_id = sample.id
-      sample.id = nil
-      sample.team = team
-      sample.user_id = find_user(sample.user_id)
-      sample.sample_group_id = @sample_group_mappings[sample.sample_group_id]
-      sample.sample_type_id = @sample_type_mappings[sample.sample_type_id]
-      sample.last_modified_by_id = find_user(sample.last_modified_by_id)
-      sample.save!
-      @sample_mappings[orig_sample_id] = sample.id
-      @sample_counter += 1
-      sample_json['sample_custom_fields'].each do |s_custom_field_json|
-        s_custom_field = SampleCustomField.new(s_custom_field_json)
-        s_custom_field.id = nil
-        s_custom_field.sample = sample
-        s_custom_field.custom_field_id =
-          @custom_field_mappings[s_custom_field.custom_field_id]
-        s_custom_field.save!
-      end
     end
   end
 
@@ -560,32 +559,39 @@ class TeamImporter
   def create_experiments(experiments_json, project)
     puts('Creating experiments...')
     experiments_json.each do |experiment_json|
-      experiment = Experiment.new(experiment_json['experiment'])
-      orig_experiment_id = experiment.id
-      experiment.id = nil
-      experiment.project = project
-      experiment.created_by_id = find_user(experiment.created_by_id)
-      experiment.last_modified_by_id = find_user(experiment.last_modified_by_id)
-      experiment.archived_by_id = find_user(experiment.archived_by_id)
-      experiment.restored_by_id = find_user(experiment.restored_by_id)
-      experiment.save!
-      @experiment_mappings[orig_experiment_id] = experiment.id
-      experiment_json['my_module_groups'].each do |my_module_group_json|
-        my_module_group = MyModuleGroup.new(my_module_group_json)
-        orig_module_group_id = my_module_group.id
-        my_module_group.id = nil
-        my_module_group.experiment = experiment
-        my_module_group.created_by_id =
-          find_user(my_module_group.created_by_id)
-        my_module_group.save!
-        @my_module_group_mappings[orig_module_group_id] = my_module_group.id
-      end
-      experiment.delay.generate_workflow_img
-      create_my_modules(experiment_json['my_modules'], experiment)
+      create_experiment(experiment_json, project)
     end
   end
 
-  def create_my_modules(my_modules_json, experiment)
+  def create_experiment(experiment_json, project, user_id = nil)
+    experiment = Experiment.new(experiment_json['experiment'])
+    orig_experiment_id = experiment.id
+    experiment.id = nil
+    experiment.project = project
+    experiment.created_by_id =
+      user_id || find_user(experiment.created_by_id)
+    experiment.last_modified_by_id =
+      user_id || find_user(experiment.last_modified_by_id)
+    experiment.archived_by_id = find_user(experiment.archived_by_id)
+    experiment.restored_by_id = find_user(experiment.restored_by_id)
+    experiment.save!
+    @experiment_mappings[orig_experiment_id] = experiment.id
+    experiment_json['my_module_groups'].each do |my_module_group_json|
+      my_module_group = MyModuleGroup.new(my_module_group_json)
+      orig_module_group_id = my_module_group.id
+      my_module_group.id = nil
+      my_module_group.experiment = experiment
+      my_module_group.created_by_id =
+        user_id || find_user(my_module_group.created_by_id)
+      my_module_group.save!
+      @my_module_group_mappings[orig_module_group_id] = my_module_group.id
+    end
+    experiment.generate_workflow_img
+    create_my_modules(experiment_json['my_modules'], experiment, user_id)
+    experiment
+  end
+
+  def create_my_modules(my_modules_json, experiment, user_id = nil)
     puts('Creating my_modules...')
     my_modules_json.each do |my_module_json|
       my_module = MyModule.new(my_module_json['my_module'])
@@ -593,9 +599,10 @@ class TeamImporter
       my_module.id = nil
       my_module.my_module_group_id =
         @my_module_group_mappings[my_module.my_module_group_id]
-      my_module.created_by_id = find_user(my_module.created_by_id)
+      my_module.created_by_id =
+        user_id || find_user(my_module.created_by_id)
       my_module.last_modified_by_id =
-        find_user(my_module.last_modified_by_id)
+        user_id || find_user(my_module.last_modified_by_id)
       my_module.archived_by_id = find_user(my_module.archived_by_id)
       my_module.restored_by_id = find_user(my_module.restored_by_id)
       my_module.experiment = experiment
@@ -603,60 +610,53 @@ class TeamImporter
       @my_module_mappings[orig_my_module_id] = my_module.id
       @my_module_counter += 1
 
-      my_module_json['my_module_tags'].each do |my_module_tag_json|
-        my_module_tag = MyModuleTag.new(my_module_tag_json)
-        my_module_tag.id = nil
-        my_module_tag.my_module = my_module
-        my_module_tag.tag_id = @tag_mappings[my_module_tag.tag_id]
-        my_module_tag.created_by_id =
-          find_user(my_module_tag.created_by_id)
-        my_module_tag.save!
+      unless @is_template
+        my_module_json['my_module_tags'].each do |my_module_tag_json|
+          my_module_tag = MyModuleTag.new(my_module_tag_json)
+          my_module_tag.id = nil
+          my_module_tag.my_module = my_module
+          my_module_tag.tag_id = @tag_mappings[my_module_tag.tag_id]
+          my_module_tag.created_by_id =
+            user_id || find_user(my_module_tag.created_by_id)
+          my_module_tag.save!
+        end
       end
 
       my_module_json['task_comments'].each do |task_comment_json|
         task_comment = TaskComment.new(task_comment_json)
         task_comment.id = nil
-        task_comment.user_id = find_user(task_comment.user_id)
+        task_comment.user_id = user_id || find_user(task_comment.user_id)
         task_comment.last_modified_by_id =
-          find_user(task_comment.last_modified_by_id)
+          user_id || find_user(task_comment.last_modified_by_id)
         task_comment.my_module = my_module
         task_comment.save!
-      end
-
-      my_module_json['sample_my_modules'].each do |sample_module_json|
-        sample_module = SampleMyModule.new(sample_module_json)
-        sample_module.id = nil
-        sample_module.sample_id =
-          @sample_mappings[sample_module.sample_id]
-        sample_module.my_module = my_module
-        sample_module.assigned_by_id =
-          find_user(sample_module.assigned_by_id)
-        sample_module.save!
       end
 
       my_module_json['user_my_modules'].each do |user_module_json|
         user_module = UserMyModule.new(user_module_json)
         user_module.id = nil
         user_module.my_module = my_module
-        user_module.user_id = find_user(user_module.user_id)
+        user_module.user_id = user_id || find_user(user_module.user_id)
         user_module.assigned_by_id =
-          find_user(user_module.assigned_by_id)
+          user_id || find_user(user_module.assigned_by_id)
         user_module.save!
       end
-      create_protocols(my_module_json['protocols'], my_module)
+      create_protocols(my_module_json['protocols'],
+                       my_module, nil, user_id)
 
-      create_results(my_module_json['results'], my_module)
+      create_results(my_module_json['results'], my_module, user_id)
     end
   end
 
-  def create_protocols(protocols_json, my_module = nil, team = nil)
+  def create_protocols(protocols_json, my_module = nil, team = nil,
+                       user_id = nil)
     puts 'Creating protocols...'
     protocols_json.each do |protocol_json|
       protocol = Protocol.new(protocol_json['protocol'])
       orig_protocol_id = protocol.id
       protocol.id = nil
       protocol.added_by_id = find_user(protocol.added_by_id)
-      protocol.team = team ? team : my_module.experiment.project.team
+      protocol.team = team || my_module.experiment.project.team
       protocol.archived_by_id = find_user(protocol.archived_by_id)
       protocol.restored_by_id = find_user(protocol.restored_by_id)
       protocol.my_module = my_module unless protocol.my_module_id.nil?
@@ -675,18 +675,19 @@ class TeamImporter
           @protocol_keyword_mappings[pp_keyword.protocol_keyword_id]
         pp_keyword.save!
       end
-      create_steps(protocol_json['steps'], protocol)
+      create_steps(protocol_json['steps'], protocol, user_id)
     end
   end
 
-  def create_steps(steps_json, protocol)
+  def create_steps(steps_json, protocol, user_id = nil)
     puts('Creating steps...')
     steps_json.each do |step_json|
       step = Step.new(step_json['step'])
       orig_step_id = step.id
       step.id = nil
-      step.user_id = find_user(step.user_id)
-      step.last_modified_by_id = find_user(step.last_modified_by_id)
+      step.user_id = user_id || find_user(step.user_id)
+      step.last_modified_by_id =
+        user_id || find_user(step.last_modified_by_id)
       step.protocol_id = protocol.id
       step.save!
       @step_mappings[orig_step_id] = step.id
@@ -695,9 +696,9 @@ class TeamImporter
       step_json['step_comments'].each do |step_comment_json|
         step_comment = StepComment.new(step_comment_json)
         step_comment.id = nil
-        step_comment.user_id = find_user(step_comment.user_id)
+        step_comment.user_id = user_id || find_user(step_comment.user_id)
         step_comment.last_modified_by_id =
-          find_user(step_comment.last_modified_by_id)
+          user_id || find_user(step_comment.last_modified_by_id)
         step_comment.step = step
         step_comment.save!
       end
@@ -706,9 +707,9 @@ class TeamImporter
         table = Table.new(table_json)
         orig_table_id = table.id
         table.id = nil
-        table.created_by_id = find_user(table.created_by_id)
+        table.created_by_id = user_id || find_user(table.created_by_id)
         table.last_modified_by_id =
-          find_user(table.last_modified_by_id)
+          user_id || find_user(table.last_modified_by_id)
         table.team = protocol.team
         table.contents = Base64.decode64(table.contents)
         table.data_vector = Base64.decode64(table.data_vector)
@@ -718,23 +719,24 @@ class TeamImporter
       end
 
       step_json['assets'].each do |asset_json|
-        asset = create_asset(asset_json, protocol.team)
+        asset = create_asset(asset_json, protocol.team, user_id)
         StepAsset.create!(step: step, asset: asset)
       end
 
-      create_step_checklists(step_json['checklists'], step)
+      create_step_checklists(step_json['checklists'], step, user_id)
     end
   end
 
-  def create_results(results_json, my_module)
+  def create_results(results_json, my_module, user_id = nil)
     puts('Creating results...')
     results_json.each do |result_json|
       result = Result.new(result_json['result'])
       orig_result_id = result.id
       result.id = nil
       result.my_module = my_module
-      result.user_id = find_user(result.user_id)
-      result.last_modified_by_id = find_user(result.last_modified_by_id)
+      result.user_id = user_id || find_user(result.user_id)
+      result.last_modified_by_id =
+        user_id || find_user(result.last_modified_by_id)
       result.archived_by_id = find_user(result.archived_by_id)
       result.restored_by_id = find_user(result.restored_by_id)
 
@@ -742,9 +744,9 @@ class TeamImporter
         table = Table.new(result_json['table'])
         orig_table_id = table.id
         table.id = nil
-        table.created_by_id = find_user(table.created_by_id)
+        table.created_by_id = user_id || find_user(table.created_by_id)
         table.last_modified_by_id =
-          find_user(table.last_modified_by_id)
+          user_id || find_user(table.last_modified_by_id)
         table.team = my_module.experiment.project.team
         table.contents = Base64.decode64(table.contents)
         table.data_vector = Base64.decode64(table.data_vector)
@@ -755,7 +757,8 @@ class TeamImporter
 
       if result_json['asset'].present?
         asset = create_asset(result_json['asset'],
-                             my_module.experiment.project.team)
+                             my_module.experiment.project.team,
+                             user_id)
         result.asset = asset
       end
 
@@ -775,9 +778,10 @@ class TeamImporter
       result_json['result_comments'].each do |result_comment_json|
         result_comment = ResultComment.new(result_comment_json)
         result_comment.id = nil
-        result_comment.user_id = find_user(result_comment.user_id)
+        result_comment.user_id =
+          user_id || find_user(result_comment.user_id)
         result_comment.last_modified_by_id =
-          find_user(result_comment.last_modified_by_id)
+          user_id || find_user(result_comment.last_modified_by_id)
         result_comment.result = result
         result_comment.save!
       end
@@ -785,47 +789,53 @@ class TeamImporter
   end
 
   # returns asset object
-  def create_asset(asset_json, team)
+  def create_asset(asset_json, team, user_id = nil)
     asset = Asset.new(asset_json)
-    orig_asset_id = asset.id
-    file =
-      File.open("#{@import_dir}/assets/#{asset.id}/#{asset.file_file_name}")
-    asset.id = nil
-    asset.created_by_id = find_user(asset.created_by_id)
-    asset.last_modified_by_id =
-      find_user(asset.last_modified_by_id)
-    asset.team = team
-    asset.file = file
-    asset.save!
-    @asset_mappings[orig_asset_id] = asset.id
-    @asset_counter += 1
+    File.open(
+      "#{@import_dir}/assets/#{asset.id}/#{asset.file_file_name}"
+    ) do |file|
+      orig_asset_id = asset.id
+      asset.id = nil
+      asset.created_by_id = user_id || find_user(asset.created_by_id)
+      asset.last_modified_by_id =
+        user_id || find_user(asset.last_modified_by_id)
+      asset.team = team
+      asset.file = file
+      asset.in_template = true if @is_template
+      asset.save!
+      asset.post_process_file(team)
+      @asset_mappings[orig_asset_id] = asset.id
+      @asset_counter += 1
+    end
     asset
   end
 
-  def create_step_checklists(step_checklists_json, step)
+  def create_step_checklists(step_checklists_json, step, user_id = nil)
     step_checklists_json.each do |checklist_json|
       checklist = Checklist.new(checklist_json['checklist'])
       orig_checklist_id = checklist.id
       checklist.id = nil
       checklist.step = step
-      checklist.created_by_id = find_user(checklist.created_by_id)
+      checklist.created_by_id =
+        user_id || find_user(checklist.created_by_id)
       checklist.last_modified_by_id =
-        find_user(checklist.last_modified_by_id)
+        user_id || find_user(checklist.last_modified_by_id)
       checklist.save!
       @checklist_mappings[orig_checklist_id] = checklist.id
       checklist_json['checklist_items'].each do |checklist_item_json|
         checklist_item = ChecklistItem.new(checklist_item_json)
         checklist_item.id = nil
         checklist_item.checklist = checklist
-        checklist_item.created_by_id = find_user(checklist_item.created_by_id)
+        checklist_item.created_by_id =
+          user_id || find_user(checklist_item.created_by_id)
         checklist_item.last_modified_by_id =
-          find_user(checklist_item.last_modified_by_id)
+          user_id || find_user(checklist_item.last_modified_by_id)
         checklist_item.save!
       end
     end
   end
 
-  def create_reports(reports_json)
+  def create_reports(reports_json, team)
     reports_json.each do |report_json|
       report_el_parent_mappings = {}
       report_element_mappings = {}
@@ -834,6 +844,7 @@ class TeamImporter
       report.project_id = @project_mappings[report.project_id]
       report.user_id = find_user(report.user_id)
       report.last_modified_by_id = find_user(report.last_modified_by_id)
+      report.team_id = team.id
       report.save!
       @report_counter += 1
       report_json['report_elements'].each do |report_element_json|

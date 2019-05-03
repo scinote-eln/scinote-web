@@ -1,9 +1,12 @@
 <div class="well">
   <div id="new-result-assets-select" class="text-center new-asset-box">
+    <span class="help_tooltips"
+          data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_add_files') %>"
+          data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_add_files') %>">
     <%=t 'assets.drag_n_drop.label_html' %>
     <label>
       <span class="btn btn-primary">
-        <span class="glyphicon glyphicon-plus"></span>
+        <span class="fas fa-plus"></span>
         <%=t 'assets.drag_n_drop.browse_label' %>
       </span>
       <input type="file"
@@ -11,6 +14,7 @@
              id="drag-n-drop-assets"
              style="display: none" multiple>
     </label>
+    </span>
   </div>
   <br />
   <div class="align-right">

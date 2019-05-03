@@ -1,5 +1,6 @@
 class ZipExportsController < ApplicationController
   before_action :load_var, only: :download
+  before_action :load_var_export_all, only: :download_export_all_zip
   before_action :check_edit_permissions, only: :download
 
   def download
@@ -12,12 +13,21 @@ class ZipExportsController < ApplicationController
     end
   end
 
+  def download_export_all_zip
+    download
+  end
+
   def file_expired; end
 
   private
 
   def load_var
     @zip_export = ZipExport.find_by_id(params[:id])
+    redirect_to(file_expired_url, status: 301) and return unless @zip_export
+  end
+
+  def load_var_export_all
+    @zip_export = TeamZipExport.find_by_id(params[:id])
     redirect_to(file_expired_url, status: 301) and return unless @zip_export
   end
 

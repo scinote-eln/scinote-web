@@ -10,16 +10,20 @@ class Asset < ApplicationRecord
 
   # Paperclip validation
   has_attached_file :file,
-                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                              medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
+                    styles: {
+                      large: [Constants::LARGE_PIC_FORMAT, :jpg],
+                      medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
+                      original: { processors: [:image_quality_calculate] }
+                    },
                     convert_options: {
                       medium: '-quality 70 -strip',
                       all: '-background "#d2d2d2" -flatten +matte'
                     }
+
   validates_attachment :file,
                        presence: true,
                        size: {
-                         less_than: Constants::FILE_MAX_SIZE_MB.megabytes
+                         less_than: Rails.configuration.x.file_max_size_mb.megabytes
                        }
   validates :estimated_size, presence: true
   validates :file_present, inclusion: { in: [true, false] }
@@ -34,7 +38,7 @@ class Asset < ApplicationRecord
                                            %r{^image/#{ Regexp.union(
                                              Constants::WHITELISTED_IMAGE_TYPES
                                            ) }}
-                                          [:large, :medium]
+                                          %i(large medium original)
                                         else
                                           {}
                                         end
@@ -71,8 +75,9 @@ class Asset < ApplicationRecord
   # Needed because Paperclip validatates on creation
   after_initialize :filter_paperclip_errors, if: :new_record?
   before_destroy :paperclip_delete, prepend: true
+  after_save { result&.touch; step&.touch }
 
-  attr_accessor :file_content, :file_info, :preview_cached
+  attr_accessor :file_content, :file_info, :preview_cached, :in_template
 
   def file_empty(name, size)
     file_ext = name.split(".").last
@@ -91,19 +96,38 @@ class Asset < ApplicationRecord
 
   def self.search(
     user,
-    _include_archived,
+    include_archived,
     query = nil,
     page = 1,
     _current_team = nil,
     options = {}
   )
 
-    new_query =
-      Asset
-      .distinct
-      .select('assets.*')
-      .left_outer_joins(:asset_text_datum)
-      .where(team: user.teams)
+    teams = user.teams.select(:id)
+
+    assets_in_steps = Asset.joins(:step).where(
+      'steps.id IN (?)',
+      Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+          .select(:id)
+    ).pluck(:id)
+
+    assets_in_results = Asset.joins(:result).where(
+      'results.id IN (?)',
+      Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+            .select(:id)
+    ).pluck(:id)
+
+    assets_in_inventories = Asset.joins(
+      repository_cell: { repository_column: :repository }
+    ).where('repositories.team_id IN (?)', teams).pluck(:id)
+
+    assets =
+      Asset.distinct
+           .where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
+                  assets_in_steps, assets_in_results, assets_in_inventories)
+
+    new_query = Asset.left_outer_joins(:asset_text_datum)
+                     .from(assets, 'assets')
 
     a_query = s_query = ''
 
@@ -157,11 +181,14 @@ class Asset < ApplicationRecord
 
     # Show all results if needed
     if page != Constants::SEARCH_NO_LIMIT
-      new_query.select("ts_headline(data, to_tsquery('" +
-                       sanitize_sql_for_conditions(s_query) +
-                       "'), 'StartSel=<mark>, StopSel=</mark>') headline")
-               .limit(Constants::SEARCH_LIMIT)
-               .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query = new_query.select('assets.*, asset_text_data.data AS data')
+                           .limit(Constants::SEARCH_LIMIT)
+                           .offset((page - 1) * Constants::SEARCH_LIMIT)
+      Asset.select(
+        "assets_search.*, ts_headline(assets_search.data, to_tsquery('" +
+        sanitize_sql_for_conditions(s_query) +
+        "'), 'StartSel=<mark>, StopSel=</mark>') AS headline"
+      ).from(new_query, 'assets_search')
     else
       new_query
     end
@@ -199,48 +226,53 @@ class Asset < ApplicationRecord
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      delay(queue: :assets, run_at: 20.minutes.from_now)
-        .extract_asset_text(team)
+      Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
+           .extract_asset_text(id, in_template)
     else
       # Update asset's estimated size immediately
       update_estimated_size(team)
     end
   end
 
-  def extract_asset_text(team = nil)
-    return if file.blank?
+  def self.extract_asset_text(asset_id, in_template = false)
+    asset = find_by_id(asset_id)
+    return unless asset.present? && asset.file.present?
+    asset.in_template = in_template
 
     begin
-      file_path = file.path
+      file_path = asset.file.path
 
-      if file.is_stored_on_s3?
-        fa = file.fetch
+      if asset.file.is_stored_on_s3?
+        fa = asset.file.fetch
         file_path = fa.path
       end
 
-      if (!Yomu.class_eval('@@server_pid'))
-        Yomu.server(:text,nil)
-        sleep(5)
+      # Start Tika as a server
+      if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
+        Yomu.server(:text)
       end
-      y = Yomu.new file_path
 
+      y = Yomu.new file_path
       text_data = y.text
 
-      if asset_text_datum.present?
+      if asset.asset_text_datum.present?
         # Update existing text datum if it exists
-        asset_text_datum.update(data: text_data)
+        asset.asset_text_datum.update(data: text_data)
       else
         # Create new text datum
-        AssetTextDatum.create(data: text_data, asset: self)
+        AssetTextDatum.create(data: text_data, asset: asset)
       end
 
-      Rails.logger.info "Asset #{id}: Asset file successfully extracted"
+      Rails.logger.info "Asset #{asset.id}: Asset file successfully extracted"
 
       # Finally, update asset's estimated size to include
       # the data vector
-      update_estimated_size(team)
-    rescue Exception => e
-      Rails.logger.fatal "Asset #{id}: Error extracting contents from asset file #{file.path}: " + e.message
+      asset.update_estimated_size(asset.team)
+    rescue StandardError => e
+      Rails.logger.fatal(
+        "Asset #{asset.id}: Error extracting contents from asset "\
+        "file #{asset.file.path}: #{e.message}"
+      )
     ensure
       File.delete file_path if fa
     end
@@ -266,12 +298,10 @@ class Asset < ApplicationRecord
   # If team is provided, its space_taken
   # is updated as well
   def update_estimated_size(team = nil)
-    if file_file_size.blank?
-      return
-    end
+    return if file_file_size.blank? || in_template
 
     es = file_file_size
-    if asset_text_datum.present? and asset_text_datum.persisted? then
+    if asset_text_datum.present? && asset_text_datum.persisted?
       asset_text_datum.reload
       es += get_octet_length_record(asset_text_datum, :data)
       es += get_octet_length_record(asset_text_datum, :data_vector)
@@ -435,6 +465,10 @@ class Asset < ApplicationRecord
     self.file = new_file
     self.version = version.nil? ? 1 : version + 1
     save
+  end
+
+  def editable_image?
+    !locked? && %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type
   end
 
   protected

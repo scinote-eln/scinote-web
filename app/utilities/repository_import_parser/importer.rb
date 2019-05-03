@@ -107,6 +107,7 @@ module RepositoryImportParser
             errors = true
             raise ActiveRecord::Rollback
           end
+
           @new_rows_added += 1
         end
       end

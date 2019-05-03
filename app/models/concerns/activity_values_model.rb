@@ -8,6 +8,7 @@ module ActivityValuesModel
   # rubocop:enable Style/ClassVars
 
   included do
+    serialize :values, JsonbHashSerializer
     after_initialize :init_default_values, if: :new_record?
     before_create :add_user
   end

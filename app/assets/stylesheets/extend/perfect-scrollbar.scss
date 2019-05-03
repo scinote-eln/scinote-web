@@ -14,10 +14,10 @@
  */
 .ps__rail-x {
   display: none;
+  opacity: 0;
   transition: background-color .2s linear, opacity .2s linear;
   -webkit-transition: background-color .2s linear, opacity .2s linear;
   height: 16px;
-  opacity: 0.6;
   /* there must be 'bottom' or 'top' for ps__rail-x */
   bottom: 0px;
   /* please don't change 'position' */
@@ -26,16 +26,15 @@
 
 .ps__rail-y {
   display: none;
+  opacity: 0;
   transition: background-color .2s linear, opacity .2s linear;
   -webkit-transition: background-color .2s linear, opacity .2s linear;
   width: 16px;
-  opacity: 0.6;
   /* there must be 'right' or 'left' for ps__rail-y */
   right: 0;
   /* please don't change 'position' */
   position: absolute;
   cursor: pointer;
-  z-index: 5;
 }
 
 .ps--active-x > .ps__rail-x,
@@ -67,7 +66,7 @@
  * Scrollbar thumb styles
  */
 .ps__thumb-x {
-  background-color: $color-black;
+  background-color: $color-silver-chalice;
   border-radius: 4px;
   transition: background-color .2s linear, height .2s ease-in-out;
   -webkit-transition: background-color .2s linear, height .2s ease-in-out;
@@ -75,33 +74,33 @@
   /* there must be 'bottom' for ps__thumb-x */
   bottom: 2px;
   /* please don't change 'position' */
-  opacity: .5;
   position: absolute;
 }
 
 .ps__thumb-y {
-  background-color: $color-black;
-  border-radius: 3px;
+  background-color: $color-silver-chalice;
+  border-radius: 4px;
   transition: background-color .2s linear, width .2s ease-in-out;
   -webkit-transition: background-color .2s linear, width .2s ease-in-out;
-  width: 6px;
+  width: 4px;
   /* there must be 'right' for ps__thumb-y */
   right: 2px;
   /* please don't change 'position' */
-  opacity: .5;
   position: absolute;
 }
 
 .ps__rail-x:hover > .ps__thumb-x,
 .ps__rail-x:focus > .ps__thumb-x,
 .ps__rail-x.ps--clicking .ps__thumb-x {
-  height: 10px;
+  background-color: $brand-primary;
+  height: 12px;
 }
 
 .ps__rail-y:hover > .ps__thumb-y,
 .ps__rail-y:focus > .ps__thumb-y,
 .ps__rail-y.ps--clicking .ps__thumb-y {
-  width: 10px;
+  background-color: $brand-primary;
+  width: 12px;
 }
 
 /* MS supports */

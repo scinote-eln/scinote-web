@@ -1,4 +1,7 @@
 Rails.application.configure do
+  # Verifies that versions and hashed value of the package contents in the project's package.json
+  config.webpacker.check_yarn_integrity = false
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -33,13 +36,12 @@ Rails.application.configure do
     address: Rails.application.secrets.mailer_address,
     port: Rails.application.secrets.mailer_port,
     domain: Rails.application.secrets.mailer_domain,
-    authentication: "plain",
+    authentication: Rails.application.secrets.mailer_authentication,
     enable_starttls_auto: true,
-    ssl: true,
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
-  config.action_mailer.perform_deliveries = true
+  #config.action_mailer.perform_deliveries = false
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
@@ -48,7 +50,7 @@ Rails.application.configure do
   # config.action_dispatch.rack_cache = true
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = Uglifier.new(harmony: true)
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -65,7 +67,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true #ENV['RAILS_FORCE_SSL'].present?
+  config.force_ssl = ENV['RAILS_FORCE_SSL'].present?
 
   # Display info and higher on production.
   config.log_level = :info
@@ -84,7 +86,7 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-   config.action_mailer.raise_delivery_errors = true
+  # config.action_mailer.raise_delivery_errors = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -102,10 +104,6 @@ Rails.application.configure do
   # Enable/disable Deface
   config.deface.enabled = ENV['DEFACE_ENABLED'] != 'false'
 
-  # Enable first-time tutorial for users signing in the sciNote for
-  # the first time.
-  config.x.enable_tutorial = ENV['ENABLE_TUTORIAL'] != 'false'
-
   # Enable reCAPTCHA
   config.x.enable_recaptcha = ENV['ENABLE_RECAPTCHA'] == 'true'
 
@@ -116,6 +114,9 @@ Rails.application.configure do
   # Enable user registrations
   config.x.enable_user_registration =
     ENV['ENABLE_USER_REGISTRATION'] == 'false' ? false : true
+
+  # Enable sign in with LinkedIn account
+  config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'false'
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
@@ -141,7 +142,7 @@ Rails.application.configure do
   # config.action_controller.asset_host = 'http://assets.example.com'
 
   # Specifies the header that your server uses for sending files.
-   config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
+  # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Mount Action Cable outside main process or domain
@@ -164,6 +165,5 @@ Rails.application.configure do
     config.x.new_team_on_signup = true
   else
     config.x.new_team_on_signup = false
-    config.x.enable_tutorial = false
   end
 end

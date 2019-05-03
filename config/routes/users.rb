@@ -2,7 +2,6 @@
 get '/current_user_info', to: 'users/users#current_user_info'
 
 namespace :users do
-  get '/sign_out', to: 'users#sign_out_user'
   get '/sign_out_user', to: 'users#sign_out_user'
   delete '/remove_user', to: 'user_teams#remove_user'
   delete '/leave_team', to: 'user_teams#leave_team'

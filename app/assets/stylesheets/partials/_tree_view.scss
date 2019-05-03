@@ -41,7 +41,7 @@
         padding: 0;
       }
 
-      &.glyphicon-map-marker {
+      &.fa-map-marker-alt {
         border: 0;
         display: inline-block;
         padding: 0;
@@ -65,7 +65,7 @@
       padding-left: 15px;
     }
 
-    i.glyphicon {
+    i.fas {
       cursor: pointer;
       font-size: 9pt;
 
@@ -77,6 +77,10 @@
     // Links are recolored
     a {
       color: $color-emperor;
+
+      &.disabled {
+        color: $color-white;
+      }
 
       &:hover {
         color: $brand-primary;
@@ -90,7 +94,7 @@
   }
 
   #settings {
-    .glyphicon-triangle-right {
+    .fa-caret-right {
       margin-left: -15px;
     }
 

@@ -24,8 +24,10 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       name: Faker::Name.unique.name,
       repository: @wrong_inventory,
       data_type: :RepositoryListValue)
-    create_list(:repository_list_item, 10, repository_column: @list_column)
-    create(:repository_list_item, repository_column: @wrong_list_column)
+    create_list(:repository_list_item, 10, repository: @valid_inventory,
+                repository_column: @list_column)
+    create(:repository_list_item, repository: @wrong_inventory,
+           repository_column: @wrong_list_column)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
@@ -41,11 +43,10 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@list_column.repository_list_items.limit(10), each_serializer: Api::V1::InventoryListItemSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@list_column.repository_list_items.limit(10),
+               each_serializer: Api::V1::InventoryListItemSerializer)
+          .as_json[:data]
       )
     end
 
@@ -109,11 +110,10 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@list_column.repository_list_items.first, serializer: Api::V1::InventoryListItemSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@list_column.repository_list_items.first,
+               serializer: Api::V1::InventoryListItemSerializer)
+          .as_json[:data]
       )
     end
 
@@ -165,11 +165,10 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(RepositoryListItem.last, serializer: Api::V1::InventoryListItemSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryListItem.last,
+               serializer: Api::V1::InventoryListItemSerializer)
+          .as_json[:data]
       )
     end
 
@@ -266,9 +265,8 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
 
     it 'Response with correct inventory list item' do
       hash_body = nil
-      item_id = @list_column.repository_list_items.first.id
       put api_v1_team_inventory_column_list_item_path(
-        id: item_id,
+        id: @list_column.repository_list_items.first.id,
         team_id: @teams.first.id,
         inventory_id: @valid_inventory.id,
         column_id: @list_column
@@ -276,13 +274,12 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@list_column.repository_list_items.find(item_id), serializer: Api::V1::InventoryListItemSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@list_column.repository_list_items.first,
+               serializer: Api::V1::InventoryListItemSerializer)
+          .as_json[:data]
       )
-      expect(@list_column.repository_list_items.find(item_id).data).to match('Updated')
+      expect(@list_column.repository_list_items.first.data).to match('Updated')
     end
 
     it 'When invalid request, incorrect type' do
@@ -331,8 +328,8 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
     end
   end
 
-  describe 'DELETE inventory_list_item, #destroy' do
-    it 'Destroys inventory list item' do
+  describe 'DELETE inventory_columns, #destroy' do
+    it 'Destroys inventory column' do
       deleted_id = @list_column.repository_list_items.last.id
       delete api_v1_team_inventory_column_list_item_path(
         id: deleted_id,

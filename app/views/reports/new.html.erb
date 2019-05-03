@@ -1,3 +1,8 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <meta name="turbolinks-visit-control" content="reload">
+<% end %>
+
 <% provide(:head_title, t("projects.reports.new.head_title", project: h(@project.name)).html_safe) %>
 
 <div id="notifications"></div>
@@ -9,15 +14,15 @@
       id="data-holder"
       class="hidden"
       data-project-modal-title="<%=t "projects.reports.elements.modals.project_contents.head_title" %>"
-      data-add-project-contents-url="<%= project_contents_modal_project_reports_url %>"
-      data-add-experiment-contents-url="<%= experiment_contents_modal_project_reports_url %>"
-      data-add-module-contents-url="<%= module_contents_modal_project_reports_url %>"
-      data-add-step-contents-url="<%= step_contents_modal_project_reports_url %>"
-      data-add-result-contents-url="<%= result_contents_modal_project_reports_url %>"
+      data-add-project-contents-url="<%= project_contents_modal_project_reports_url(@project) %>"
+      data-add-experiment-contents-url="<%= experiment_contents_modal_project_reports_url(@project) %>"
+      data-add-module-contents-url="<%= module_contents_modal_project_reports_url(@project) %>"
+      data-add-step-contents-url="<%= step_contents_modal_project_reports_url(@project) %>"
+      data-add-result-contents-url="<%= result_contents_modal_project_reports_url(@project) %>"
       data-stylesheet-url="<%= stylesheet_path "application" %>"
       data-print-title="<%=t "projects.reports.print_title", project: @project.name %>"
       data-project-id="<%= @project.id %>"
-      data-save-report-url="<%= save_modal_project_reports_url %>"
+      data-save-report-url="<%= save_modal_project_reports_url(@project) %>"
       data-report-id="<%= @report.present? ? @report.id : "" %>"
       data-unsaved-work-text="<%=t "projects.reports.new.unsaved_work" %>"
       data-global-sort-text="<%=t "projects.reports.new.global_sort" %>"></div>
@@ -27,7 +32,7 @@
 
     <% if @report.present? %>
       <% @report.root_elements.each do |el| %>
-        <%= render_report_element(el) %>
+        <%= render_report_element(el, local_assigns) %>
         <%= render_new_element(false) %>
       <% end %>
     <% else %>
@@ -76,8 +81,6 @@
 <%= render partial: 'reports/new/save_PDF_to_inventory_modal' %>
 
 <%= javascript_include_tag "handsontable.full.min" %>
-<%= javascript_include_tag("reports/new") %>
-<%= javascript_include_tag 'reports/save_pdf_to_inventory' %>
 
 <!-- Libraries for formulas -->
 <%= javascript_include_tag "lodash" %>
@@ -91,3 +94,6 @@
 <%= javascript_include_tag "handsontable.formula" %>
 <%= javascript_include_tag "big.min" %>
 <%= stylesheet_link_tag "handsontable.formula" %>
+
+<%= javascript_include_tag("reports/new") %>
+<%= javascript_include_tag 'reports/save_pdf_to_inventory' %>

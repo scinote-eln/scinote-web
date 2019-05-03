@@ -12,13 +12,27 @@ Canaid::Permissions.register_for(Project) do
     end
   end
 
+  %i(read_project
+     export_project)
+    .each do |perm|
+    can perm do |user, project|
+      user.is_member_of_project?(project) ||
+        user.is_admin_of_team?(project.team) ||
+        (project.visible? && user.is_member_of_team?(project.team))
+    end
+  end
   # project: read, read activities, read comments, read users, read archive,
   #          read notifications
   # reports: read
-  can :read_project do |user, project|
-    user.is_member_of_project?(project) ||
-      user.is_admin_of_team?(project.team) ||
-      (project.visible? && user.is_member_of_team?(project.team))
+  can :read_project do |_, _|
+    # Already checked by the wrapper
+    true
+  end
+
+  # team: export projects
+  can :export_project do |_, _|
+    # Already checked by the wrapper
+    true
   end
 
   # project: update/delete, assign/reassign/unassign users

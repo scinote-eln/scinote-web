@@ -28,12 +28,12 @@ describe RepositoryAssetValue, type: :model do
 
   describe '#data' do
     let!(:repository) { create :repository }
+    let!(:repository_row) { create :repository_row, repository: repository }
     let!(:repository_column) do
       create :repository_column,
-             name: 'My column',
-             data_type: :RepositoryAssetValue
+             data_type: :RepositoryAssetValue,
+             repository: repository
     end
-    let!(:repository_row) { create :repository_row, name: 'My row' }
 
     it 'returns the asset' do
       asset = create :asset, file_file_name: 'my file'

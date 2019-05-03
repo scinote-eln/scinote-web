@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <% provide(:head_title, t("libraries.show.head_title", library: @repository.name)) %>
 <%= stylesheet_link_tag 'datatables' %>
 <% provide(:container_class, "no-second-nav-container") %>
@@ -9,8 +13,11 @@
   <div id="repository-toolbar">
 
     <% if can_create_repository_rows?(@repository.team) %>
-      <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
-        <span class="glyphicon glyphicon-plus"></span>
+      <button type="button" class="btn btn-primary editAdd help_tooltips"
+              id="addRepositoryRecord" onclick="onClickAddRecord()"
+              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.new') %>"
+              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.new') %>">
+        <span class="fas fa-plus"></span>
         <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
       </button>
     <% end %>
@@ -90,7 +97,7 @@
              id="create-new-repository"
              data-remote="true"
              href="<%= create_modal_team_repositories_path(@repository.team) %>">
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="fas fa-plus"></span>
             <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
           </a>
         <% end %>
@@ -101,11 +108,11 @@
 
   <div class="btn-group inline" id="saveCancel" data-toggle="buttons" style="display:none">
     <button type="button" class="btn btn-success" id="saveRecord" onclick="onClickSave()">
-      <span class="glyphicon glyphicon-save"></span>
+      <span class="fas fa-save"></span>
       <%= t("repositories.save_record") %>
     </button>
     <button type="button" class="btn btn-default" id="cancelSave" onclick="onClickCancel()">
-      <span class="glyphicon glyphicon-remove visible-xs-inline"></span>
+      <span class="fas fa-times visible-xs-inline"></span>
       <span class="hidden-xs"><%= t("repositories.cancel_save") %></span>
     </button>
   </div>
@@ -118,14 +125,14 @@
         <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
       </button>
       <button type="button" class="btn btn-default"
-        id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
-        <span class="glyphicon glyphicon-trash"></span>
+        id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
+        <span class="fas fa-trash-alt"></span>
         <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
           <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
           delete_repository_records_submit" %>
       </button>
       <button type="button" class="btn btn-default copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
-        <span class="glyphicon glyphicon-duplicate"></span>
+        <span class="fas fa-copy"></span>
         <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
       </button>
     <% end %>
@@ -146,7 +153,7 @@
 <%= render partial: 'repositories/export_repository_modal.html.erb',
            locals: { repository: @repository } %>
 
-<%= javascript_include_tag 'repositories/edit', 'data-turbolinks-track' => true %>
+<%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
-<%= javascript_include_tag "repositories/show", "data-turbolinks-track" => true %>
-<%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "repositories/show" %>
+<%= javascript_include_tag "repositories/index" %>

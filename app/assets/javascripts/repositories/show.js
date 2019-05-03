@@ -1,20 +1,13 @@
 (function() {
   'use strict';
 
-  function initImportRecordsModal() {
-    $('#importRecordsButton').off().on('click', function() {
-      $('#modal-import-records').modal('show');
-      _initParseRecordsModal();
-    });
-  }
-
   function initTable() {
     RepositoryDatatable.destroy();
     RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
     RepositoryDatatable.redrawTableOnSidebarToggle();
   }
 
-  function _initParseRecordsModal() {
+  function initParseRecordsModal() {
     $('#form-records-file').on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
       $(data.html).appendTo('body').promise().done(function() {
@@ -34,10 +27,13 @@
     });
   }
 
-  function initialzerRepositoryTable() {
-    initImportRecordsModal();
-    initTable();
+  function initImportRecordsModal() {
+    $('#importRecordsButton').off().on('click', function() {
+      $('#modal-import-records').modal('show');
+      initParseRecordsModal();
+    });
   }
 
-  $(document).ready(initialzerRepositoryTable);
-})()
+  initImportRecordsModal();
+  initTable();
+}());

@@ -23,9 +23,16 @@ class RepositoryRowsController < ApplicationController
                                              params,
                                              current_user)
     @assigned_rows = records.assigned_rows
-    @repository_row_count = records.repository_rows.count
+    @repository_row_count = records.repository_rows.length
     @columns_mappings = records.mappings
-    @repository_rows = records.repository_rows.page(page).per(per_page)
+    @repository_rows = records.repository_rows
+                              .page(page)
+                              .per(per_page)
+                              .preload(
+                                :repository_columns,
+                                :created_by,
+                                repository_cells: :value
+                              )
   end
 
   def create
@@ -49,6 +56,8 @@ class RepositoryRowsController < ApplicationController
     respond_to do |format|
       format.json do
         if errors[:default_fields].empty? && errors[:repository_cells].empty?
+          log_activity(:create_item_inventory, record)
+
           render json: { id: record.id,
                          flash: t('repositories.create.success_flash',
                                   record: escape_input(record.name),
@@ -86,13 +95,14 @@ class RepositoryRowsController < ApplicationController
     # Add custom cells ids as key (easier lookup on js side)
     @record.repository_cells.each do |cell|
       if cell.value_type == 'RepositoryAssetValue'
-        cell_value = cell.value.asset if cell.value_type == 'RepositoryAssetValue'
+        cell_value = cell.value.asset
       else
         cell_value = escape_input(cell.value.data)
       end
 
       json[:repository_row][:repository_cells][cell.repository_column_id] = {
         repository_cell_id: cell.id,
+        cell_column_id: cell.repository_column.id, # needed for mappings
         value: cell_value,
         type: cell.value_type,
         list_items: fetch_list_items(cell)
@@ -133,7 +143,7 @@ class RepositoryRowsController < ApplicationController
                 existing.delete
               end
             elsif existing.value_type == 'RepositoryAssetValue'
-              next if value.blank?
+              existing.value.destroy && next if remove_file_columns_params.include?(key)
               if existing.value.asset.update(file: value)
                 existing.value.asset.created_by = current_user
                 existing.value.asset.last_modified_by = current_user
@@ -144,6 +154,7 @@ class RepositoryRowsController < ApplicationController
                 }
               end
             else
+              existing.value.destroy && next if value == ''
               existing.value.data = value
               if existing.value.save
                 record_annotation_notification(@record, existing)
@@ -155,16 +166,11 @@ class RepositoryRowsController < ApplicationController
               end
             end
           else
+            next if value == ''
             # Looks like it is a new cell, so we need to create new value, cell
             # will be created automatically
             next if create_cell_value(@record, key, value, errors).nil?
           end
-        end
-        # Clean up empty cells, not present in updated record
-        @record.repository_cells.each do |cell|
-          next if cell.value_type == 'RepositoryListValue'
-          cell.value.destroy unless cell_params
-                                    .key?(cell.repository_column_id.to_s)
         end
       else
         @record.repository_cells.each { |c| c.value.destroy }
@@ -176,6 +182,8 @@ class RepositoryRowsController < ApplicationController
       format.json do
         if errors[:default_fields].empty? && errors[:repository_cells].empty?
           # Row sucessfully updated, so sending response to client
+          log_activity(:edit_item_inventory, @record)
+
           render json: {
             id: @record.id,
             flash: t(
@@ -198,6 +206,7 @@ class RepositoryRowsController < ApplicationController
     column = @repository.repository_columns.detect do |c|
       c.id == key.to_i
     end
+
     save_successful = false
     if column.data_type == 'RepositoryListValue'
       return if value == '-1'
@@ -266,6 +275,8 @@ class RepositoryRowsController < ApplicationController
       selected_params.each do |row_id|
         row = @repository.repository_rows.find_by_id(row_id)
         if row && can_manage_repository_rows?(@repository.team)
+          log_activity(:delete_item_inventory, row)
+
           row.destroy && deleted_count += 1
         end
       end
@@ -367,6 +378,10 @@ class RepositoryRowsController < ApplicationController
     params.permit(repository_cells: {}).to_h[:repository_cells]
   end
 
+  def remove_file_columns_params
+    JSON.parse(params.fetch(:remove_file_columns) { '[]' })
+  end
+
   def selected_params
     params.permit(selected_rows: []).to_h[:selected_rows]
   end
@@ -401,7 +416,7 @@ class RepositoryRowsController < ApplicationController
                user: current_user.full_name,
                column: cell.repository_column.name,
                record: record.name,
-               repository: record.repository),
+               repository: record.repository.name),
       message: t('notifications.repository_annotation_message_html',
                  record: link_to(record.name, table_url),
                  column: link_to(cell.repository_column.name, table_url))
@@ -430,5 +445,17 @@ class RepositoryRowsController < ApplicationController
       }
     end
     collection
+  end
+
+  def log_activity(type_of, repository_row)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @repository,
+            team: current_team,
+            message_items: {
+              repository_row: repository_row.id,
+              repository: @repository.id
+            })
   end
 end

@@ -11,7 +11,7 @@ describe SmartAnnotations::TagToHtml do
   let(:text) do
     "My annotation of [#my project~prj~#{project.id.base62_encode}]"
   end
-  let(:subject) { described_class.new(user, text) }
+  let(:subject) { described_class.new(user, team, text) }
   describe 'Parsed text' do
     it 'returns a existing string with smart annotation' do
       expect(subject.html).to eq(

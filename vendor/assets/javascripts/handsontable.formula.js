@@ -1,6 +1,9 @@
 (function(Handsontable) {
   'use strict';
 
+  // [MODIFICATION] (sci 2588)
+  var formulasResults = {};
+  // _!_MODIFICATION
   function HandsontableFormula() {
 
     var isFormula = function(value) {
@@ -12,6 +15,22 @@
 
       return false;
     };
+
+    // [MODIFICATION] (sci 2588)
+    var beforeRender = function (isForced) {
+          formulasResults = {};
+          var data = this.getData();
+          for (var i = 0; i < data.length; ++i) {
+              for (var j = 0; j < data[i].length; ++j) {
+                  var value = data[i][j];
+                  if (value && value[0] === '=') {
+                      var cellId = this.plugin.utils.translateCellCoords({row: i, col: j});
+                      this.plugin.matrix.removeItem(cellId);
+                  }
+              }
+          }
+    };
+    // _!_MODIFICATION
 
     var formulaRenderer = function(instance, TD, row, col, prop, value, cellProperties) {
       if (instance.formulasEnabled && isFormula(value)) {
@@ -49,50 +68,63 @@
         // check if typed formula or cell value should be recalculated
         if ((value && value[0] === '=') || needUpdate) {
 
-          formula = value.substr(1).toUpperCase();
+          // [MODIFICATION] (sci 2588)
+          if (formulasResults[cellId] === undefined) {
+          // _!_MODIFICATION
 
-          if (!error || formula !== prevFormula) {
+            formula = value.substr(1).toUpperCase();
 
-            var currentItem = item;
+            if (!error || formula !== prevFormula) {
 
-            if (!currentItem) {
+              var currentItem = item;
 
-              // define item to rulesJS matrix if not exists
-              item = {
-                id: cellId,
-                formula: formula
-              };
+              if (!currentItem) {
 
-              // add item to matrix
-              currentItem = instance.plugin.matrix.addItem(item);
+                // define item to rulesJS matrix if not exists
+                item = {
+                  id: cellId,
+                  formula: formula
+                };
+
+                // add item to matrix
+                currentItem = instance.plugin.matrix.addItem(item);
+              }
+
+              // parse formula
+              var newValue = instance.plugin.parse(formula, {
+                row: row,
+                col: col,
+                id: cellId
+              });
+
+              // check if update needed
+              needUpdate = (newValue.error === '#NEED_UPDATE');
+
+              // update item value and error
+              instance.plugin.matrix.updateItem(currentItem, {
+                formula: formula,
+                value: newValue.result,
+                error: newValue.error,
+                needUpdate: needUpdate
+              });
+
+              error = newValue.error;
+              result = newValue.result;
+
+              // update cell value in hot
+              value = error || result;
             }
+        // [MODIFICATION] (sci 2588)
+        } else {
+          var newValue = formulasResults[cellId];
 
-            // parse formula
-            var newValue = instance.plugin.parse(formula, {
-              row: row,
-              col: col,
-              id: cellId
-            });
+          error = newValue.error;
+          result = newValue.result;
 
-            // check if update needed
-            needUpdate = (newValue.error === '#NEED_UPDATE');
-
-            // update item value and error
-            instance.plugin.matrix.updateItem(currentItem, {
-              formula: formula,
-              value: newValue.result,
-              error: newValue.error,
-              needUpdate: needUpdate
-            });
-
-            error = newValue.error;
-            result = newValue.result;
-
-            // update cell value in hot
-            value = error || result;
-          }
+          value = error || result;
         }
-
+        // _!_MODIFICATION
+      }
         if (error) {
           // clear cell value
           if (!value) {
@@ -379,7 +411,34 @@
       if (instance.formulasEnabled) {
 
         var custom = {
-          cellValue: instance.getDataAtCell
+          //
+          // [MODIFICATION] (sci 2588)
+          // Previously: "cellValue: instance.getDataAtCell"
+          //
+          cellValue: function(row, col){
+              var value = instance.getDataAtCell(row, col);
+              if (value && value[0] === '=') {
+                  var formula = value.substr(1).toUpperCase();
+                  var cellId = instance.plugin.utils.translateCellCoords({row: row, col: col});
+                  var item = instance.plugin.matrix.getItem(cellId);
+
+                  if (!item) {
+                      item = instance.plugin.matrix.addItem({id: cellId, formula: formula});
+                  } else {
+                      item = instance.plugin.matrix.updateItem({id: cellId, formula: formula});
+                  }
+                  // parse formula
+                  var newValue = instance.plugin.parse(formula, {row: row, col: col, id: cellId});
+                  // cache result
+                  formulasResults[cellId] = newValue;
+                  // update item value and error
+                  instance.plugin.matrix.updateItem(item, {formula: formula, value: newValue.result, error: newValue.error});
+
+                  value = newValue.error || newValue.result;
+              }
+              return value;
+          }
+          // _!_MODIFICATION
         };
 
         instance.plugin = new ruleJS();
@@ -391,6 +450,10 @@
         Handsontable.TextCell.renderer = formulaRenderer;
         Handsontable.NumericCell.renderer = formulaRenderer;
 
+        // [MODIFICATION] (sci 2588)
+        // This hook is new
+        instance.addHook('beforeRender', beforeRender);
+        // _!_MODIFICATION
         instance.addHook('afterChange', afterChange);
         instance.addHook('beforeAutofillInsidePopulate', beforeAutofillInsidePopulate);
 
@@ -398,6 +461,10 @@
         instance.addHook('afterCreateCol', afterCreateCol);
 
       } else {
+        // [MODIFICATION] (sci 2588)
+        // This hook is new
+        instance.removeHook('beforeRender', beforeRender);
+        // _!_MODIFICATION
         instance.removeHook('afterChange', afterChange);
         instance.removeHook('beforeAutofillInsidePopulate', beforeAutofillInsidePopulate);
 

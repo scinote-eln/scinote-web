@@ -88,22 +88,8 @@ module RepositoryActions
         new_asset.file.reprocess!(:medium)
       end
 
-      # Clone extracted text data if it exists
-      if old_asset.asset_text_datum
-        AssetTextDatum.create(data: new_asset.data, asset: new_asset)
-      end
+      new_asset.post_process_file(new_asset.team)
 
-      # Update estimated size of cloned asset
-      # (& file_present flag)
-      new_asset.update(
-        estimated_size: old_asset.estimated_size,
-        file_present: true
-      )
-
-      # Update team's space taken
-      @team.reload
-      @team.take_space(new_asset.estimated_size)
-      @team.save!
       new_asset
     end
   end

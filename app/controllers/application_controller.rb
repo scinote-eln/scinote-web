@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::Base
-  include FirstTimeDataGenerator
-
   acts_as_token_authentication_handler_for User
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -8,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   helper_method :current_team
   before_action :update_current_team, if: :user_signed_in?
+  before_action :set_date_format, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
 
@@ -35,6 +34,16 @@ class ApplicationController < ActionController::Base
   # Sets current team for all controllers
   def current_team
     Team.find_by_id(current_user.current_team_id)
+  end
+
+  def to_user_date_format
+    ts = I18n.l(Time.parse(params[:timestamp]),
+                format: params[:ts_format].to_sym)
+    respond_to do |format|
+      format.json do
+        render json: { ts: ts }, status: :ok
+      end
+    end
   end
 
   protected
@@ -66,8 +75,10 @@ class ApplicationController < ActionController::Base
   private
 
   def update_current_team
-    if current_user.current_team_id.blank? &&
-       current_user.teams.count > 0
+    current_team = Team.find_by_id(current_user.current_team_id)
+    if (current_team.nil? || !current_user.is_member_of_team?(current_team)) &&
+       current_user.teams.count.positive?
+
       current_user.update(
         current_team_id: current_user.teams.first.id
       )
@@ -82,5 +93,10 @@ class ApplicationController < ActionController::Base
 
   def set_time_zone(&block)
     Time.use_zone(current_user.settings[:time_zone], &block)
+  end
+
+  def set_date_format
+    I18n.backend.date_format =
+      current_user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
   end
 end

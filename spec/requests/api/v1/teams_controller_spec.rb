@@ -18,11 +18,9 @@ RSpec.describe 'Api::V1::TeamsController', type: :request do
       get api_v1_teams_path, headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@user.teams, each_serializer: Api::V1::TeamSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@user.teams, each_serializer: Api::V1::TeamSerializer)
+          .as_json[:data]
       )
     end
   end
@@ -33,11 +31,9 @@ RSpec.describe 'Api::V1::TeamsController', type: :request do
       get api_v1_team_path(id: @teams.second.id), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@teams.second, serializer: Api::V1::TeamSerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@teams.second, serializer: Api::V1::TeamSerializer)
+          .as_json[:data]
       )
     end
 

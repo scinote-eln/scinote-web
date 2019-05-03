@@ -31,9 +31,11 @@
     <div class="form-group" id="team_name_form">
       <%= label :team, :name, t('users.registrations.new.team_name_label') %>
       <% if @team %>
-      <%= text_field :team, :name, class: 'form-control', value: @team.name %>
+      <%= text_field :team, :name, class: 'form-control', value: @team.name,
+          placeholder: t('users.registrations.new.team_name_placeholder') %>
       <% else %>
-      <%= text_field :team, :name, class: 'form-control' %>
+      <%= text_field :team, :name, class: 'form-control',
+          placeholder: t('users.registrations.new.team_name_placeholder') %>
       <% end %>
       <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
     </div>

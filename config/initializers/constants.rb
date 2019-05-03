@@ -25,6 +25,9 @@ class Constants
   DROPDOWN_TEXT_MAX_LENGTH = 15
   # Max characters for filenames, after which they get truncated
   FILENAME_TRUNCATION_LENGTH = 50
+  # Max characters for names of exported files and folders, after which they get
+  # truncated
+  EXPORTED_FILENAME_TRUNCATION_LENGTH = 20
 
   USER_INITIALS_MAX_LENGTH = 4
   # Password 'key stretching' factor
@@ -64,8 +67,6 @@ class Constants
 
   # Max table JSON size in MB
   TABLE_JSON_MAX_SIZE_MB = 20
-  # Max uploaded file size in MB
-  FILE_MAX_SIZE_MB = 50
   # Max uploaded user picture avatar size in MB
   AVATAR_MAX_SIZE_MB = 0.2
 
@@ -114,7 +115,18 @@ class Constants
   # URL); it expires in exactly one day
   URL_LONG_EXPIRE_TIME = 86_400
 
-  DATE_FORMAT = '%B %d, %Y %H:%M'.freeze
+  DEFAULT_DATE_FORMAT = '%m/%d/%Y'.freeze
+
+  SUPPORTED_DATE_FORMATS = [
+    # US formats
+    '%m/%d/%Y', '%m.%d.%Y', '%m. %d. %Y', '%m-%d-%Y', '%-m/%-d/%Y',
+    '%-m.%-d.%Y', '%-m. %-d. %Y', '%-m-%-d-%Y',
+    # European formats
+    '%d/%m/%Y', '%d.%m.%Y', '%d. %m. %Y', '%d-%b-%Y', '%Y-%m-%d',
+    '%d.%b.%Y', '%Y/%b/%d', '%d, %B, %Y', '%B, %d, %Y', '%-d/%-m/%Y',
+    '%-d.%-m.%Y', '%-d. %-m. %Y', '%d-%m-%Y', '%Y-%-m-%-d', '%-d-%b-%Y',
+    '%Y-%b-%-d', '%-d, %B, %Y', '%B, %d, %Y'
+  ].freeze
 
   #=============================================================================
   # Application colors
@@ -159,26 +171,32 @@ class Constants
   COLOR_EMPEROR = '#555555'.freeze # $color-emperor
   COLOR_BLACK = '#000000'.freeze # $color-black
 
-  
+
   #=============================================================================
   # External URLs
   #=============================================================================
 
   HTTP = 'http://'.freeze
-  # Tutorials should point to our HELP folder training.html.erb webpage
-  #TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
-  
-   TUTORIALS_URL = (HTTP + 'www.google.com')
-# Support should point to our HELP folder contact.html.erb webpage
-  #SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
-  # Webinars should point to our HELP folder about.html.erb webpage
-  #WEBINARS_URL = (HTTP + 'goo.gl/T2QYAd').freeze
+  TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
+  SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  WEBINARS_URL = (HTTP + 'goo.gl/T2QYAd').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
   #=============================================================================
   # Other
   #=============================================================================
+
+  FILE_TEXT_FORMATS = %w(doc docm docx dot dotm dotx odt rtf).freeze
+
+  FILE_TABLE_FORMATS = %w(csv ods xls xlsb xlsm xlsx).freeze
+
+  FILE_PRESENTATION_FORMATS =
+    %w(odp pot potm potx pps ppsm ppsx ppt pptm pptx).freeze
+
+  WOPI_EDITABLE_FORMATS = %w(
+    docx docm odt xlsx xlsm xlsb ods pptx ppsx odp
+  ).freeze
 
   TEXT_EXTRACT_FILE_TYPES = [
     'application/msword',
@@ -201,15 +219,19 @@ class Constants
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
 
+  WHITELISTED_IMAGE_TYPES_EDITABLE = %w(
+    jpeg pjpeg png
+  ).freeze
+
   WHITELISTED_TAGS = %w(
     a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
     span u s blockquote pre col colgroup table thead tbody th tr td
   ).freeze
 
-  WHITELISTED_ATTRIBUTES = %w(
-    href src width height alt cite datetime title class name xml:lang abbr style
-    target data-*
-  ).freeze
+  WHITELISTED_ATTRIBUTES = [
+    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data
+  ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {
     allow_comments: false,
@@ -888,7 +910,9 @@ class Constants
   TINY_MCE_ASSET_REGEX = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
 
   # Team name for default admin user
-  DEFAULT_PRIVATE_TEAM_NAME = 'My Team'.freeze
+  DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
+
+  TEMPLATES_PROJECT_NAME = 'Templates'.freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

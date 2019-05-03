@@ -1,5 +1,5 @@
 <div class="pull-right">
-  <span class="text-muted"><%= l comment.created_at, format: '%H:%M' %></span>
+  <span class="text-muted"><%= l comment.created_at, format: :time %></span>
   <% if can_manage_comment_in_module?(comment.becomes(Comment)) %>
     <div class="dropdown dropdown-comment">
       <a href="#"
@@ -17,6 +17,7 @@
           <li>
             <a href="#"
                data-action="edit-comment"
+               data-remote="true"
                data-url="<%= edit_my_module_my_module_comment_path(comment.my_module, comment, format: :json) %>">
               <%= t('comments.options_dropdown.edit') %>
             </a>
@@ -35,5 +36,5 @@
 </div>
 <strong><%= comment.user.full_name %>:</strong>
 <div data-role="comment-message-container">
-  <div data-role="comment-message"><%= custom_auto_link(comment.message) %></div>
+  <div data-role="comment-message"><%= custom_auto_link(comment.message, team: current_team) %></div>
 </div>

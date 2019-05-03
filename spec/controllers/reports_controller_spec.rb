@@ -5,9 +5,13 @@ require 'rails_helper'
 describe ReportsController, type: :controller do
   login_user
 
-  include_context 'reference_project_structure'
-
-  let(:my_module2) { create :my_module, experiment: experiment, created_by: experiment.created_by }
+  let(:user) { subject.current_user }
+  let!(:team) { create :team, created_by: user }
+  let!(:user_team) { create :user_team, team: team, user: user }
+  let(:user_project) { create :user_project, :owner, user: user }
+  let(:project) do
+    create :project, team: team, user_projects: [user_project]
+  end
   let(:report) do
     create :report, user: user, project: project, team: team,
                     name: 'test repot A1', description: 'test description A1'
@@ -19,17 +23,14 @@ describe ReportsController, type: :controller do
       let(:params) do
         { project_id: project.id,
           report: { name: 'test report created',
-                    description: 'test description created',
-                    settings: Report::DEFAULT_SETTINGS },
-          project_content: { experiments: [{ id: experiment.id, my_module_ids: [my_module.id] }] },
-          template_values: [] }
+                    description: 'test description created' },
+          report_contents: '[{"type_of":"project_header","id":{"project_id":' +
+            project.id.to_s + '},"sort_order":null,"children":[]}]' }
       end
 
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
-          .once.with(hash_including(activity_type: :create_report)).ordered
-        expect(Activities::CreateActivityService).to receive(:call)
-          .once.with(hash_including(activity_type: :generate_pdf_report)).ordered
+          .with(hash_including(activity_type: :create_report))
         action
       end
 
@@ -48,14 +49,12 @@ describe ReportsController, type: :controller do
           id: report.id,
           report: { name: 'test report update',
                     description: 'test description update' },
-          project_content: { experiments: [{ id: experiment.id, my_module_ids: [my_module2.id] }] },
-          template_values: [] }
+          report_contents: '[{"type_of":"project_header","id":{"project_id":' +
+            project.id.to_s + '},"sort_order":null,"children":[]}]' }
       end
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
-          .once.with(hash_including(activity_type: :edit_report)).ordered
-        expect(Activities::CreateActivityService).to receive(:call)
-          .once.with(hash_including(activity_type: :generate_pdf_report)).ordered
+          .with(hash_including(activity_type: :edit_report))
         action
       end
 

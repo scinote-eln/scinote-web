@@ -8,6 +8,7 @@
    */
   function toggleFormVisibility(form, edit) {
     if (edit) {
+      form.find('.selectpicker').selectpicker();
       form.find("[data-part='view']").hide();
       form.find("[data-part='edit']").show();
       form.find("[data-part='edit'] input:not([type='file']):not([type='submit']):first").focus();
@@ -65,7 +66,8 @@
   });
 
   notificationsSettings();
-  initNotificationSettingsForm();
+  tooltipSettings();
+  initTogglableSettingsForm();
 
   // Setup notification checkbox buttons
   function notificationsSettings() {
@@ -140,9 +142,22 @@
     );
   }
 
+// Initialize tooltips settings form
+  function tooltipSettings() {
+    var toggleInput = $('[name="tooltips_enabled"]');
+    toggleInput
+      .checkboxpicker({ onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle' });
+
+    if (toggleInput.attr('value') === 'true') {
+      toggleInput.prop('checked', true);
+    } else {
+      toggleInput.prop('checked', false);
+    }
+  }
+
   // triggers submit action when the user clicks
-  function initNotificationSettingsForm() {
-    $('#notifications-settings-panel')
+  function initTogglableSettingsForm() {
+    $('#togglable-settings-panel')
       .find('.btn-group')
       .on('click', function() {
         $(this).submit();

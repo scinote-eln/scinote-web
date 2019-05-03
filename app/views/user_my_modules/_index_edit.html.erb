@@ -22,7 +22,7 @@
       <% if can_manage_users_in_module?(@my_module) %>
         <div class="col-xs-2">
           <%= link_to my_module_user_my_module_path(@my_module, umm, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
-          <span class="glyphicon glyphicon-remove"></span>
+          <span class="fas fa-times"></span>
           <% end %>
         </div>
       <% end %>
@@ -42,7 +42,7 @@
       </div>
       <div class="col-xs-2">
         <%= f.button class: 'btn btn-primary' do %>
-          <span class="glyphicon glyphicon-plus"></span>
+          <span class="fas fa-plus"></span>
           <span class="hidden-xs"><%= t("experiments.canvas.full_zoom.modal_manage_users.create") %></span>
         <% end %>
       </div>

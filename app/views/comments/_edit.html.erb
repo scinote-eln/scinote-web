@@ -9,11 +9,11 @@
                             value: @comment.message %>
       <span class="input-group-btn">
         <a class="btn btn-default" data-action="save">
-          <span class="glyphicon glyphicon-ok"></span>
+          <span class="fas fa-check"></span>
         </a>
       </span>
     </div>
     <span class="help-block hide"></span>
-    <a data-action="cancel" href="#"><%= t('general.cancel') %></a>
+    <a data-action="cancel" data-turbolinks="false" href="#"><%= t('general.cancel') %></a>
   </div>
 <% end %>

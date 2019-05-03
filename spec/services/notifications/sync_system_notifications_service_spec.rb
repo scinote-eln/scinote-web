@@ -6,8 +6,6 @@ describe Notifications::SyncSystemNotificationsService do
   url = 'http://system-notifications-service.test/api/system_notifications'
   let!(:user) { create :user }
   let(:service_call) do
-    allow_any_instance_of(Notifications::PushToCommunicationChannelService).to receive(:call).and_return(nil)
-
     Notifications::SyncSystemNotificationsService.call
   end
 
@@ -82,12 +80,6 @@ describe Notifications::SyncSystemNotificationsService do
 
       expect { service_call }.to change { UserSystemNotification.count }.by(20)
     end
-
-    it 'calls service to notify users about notification' do
-      expect(Notifications::PushToCommunicationChannelService).to receive(:call).exactly(10)
-
-      service_call
-    end
   end
 
   context 'when request is unsuccessful' do
@@ -108,12 +100,6 @@ describe Notifications::SyncSystemNotificationsService do
         .to receive(:get).and_raise(SocketError)
 
       expect(service_call.errors).to have_key(:socketerror)
-    end
-
-    it 'does not call service to notify users about notification' do
-      expect(Notifications::PushToCommunicationChannelService).to_not receive(:call)
-
-      service_call
     end
   end
 end

@@ -5,7 +5,15 @@ require 'rails_helper'
 describe ProtocolsController, type: :controller do
   login_user
 
-  include_context 'reference_project_structure'
+  let(:user) { subject.current_user }
+  let(:team) { create :team, created_by: user }
+  let!(:user_team) { create :user_team, :admin, user: user, team: team }
+  let(:project) { create :project, team: team, created_by: user }
+  let!(:user_project) do
+    create :user_project, :normal_user, user: user, project: project
+  end
+  let(:experiment) { create :experiment, project: project }
+  let(:my_module) { create :my_module, experiment: experiment }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -72,7 +80,7 @@ describe ProtocolsController, type: :controller do
       {
         team_id: team.id,
         type: 'public',
-        # protocol: file_fixture('files/my_test_protocol.eln',
+        # protocol: fixture_file_upload('files/my_test_protocol.eln',
         #   'application/json'),
         # Not sure where should I attache file?
         protocol: {
@@ -98,7 +106,7 @@ describe ProtocolsController, type: :controller do
     end
   end
 
-  describe 'PUT description' do
+  describe 'POST metadata' do
     let(:protocol) do
       create :protocol, :in_public_repository, team: team, added_by: user
     end
@@ -110,7 +118,7 @@ describe ProtocolsController, type: :controller do
         }
       }
     end
-    let(:action) { put :update_description, params: params, format: :json }
+    let(:action) { put :update_metadata, params: params, format: :json }
 
     it 'calls create activity for updating description' do
       expect(Activities::CreateActivityService)
@@ -203,7 +211,7 @@ describe ProtocolsController, type: :controller do
     let(:protocol_source) do
       create :protocol, :in_public_repository, team: team, added_by: user
     end
-    let(:protocol) { create :protocol, team: team, added_by: user, my_module: my_module }
+    let(:protocol) { create :protocol, team: team, added_by: user }
     let(:action) { put :load_from_repository, params: params, format: :json }
     let(:params) do
       { source_id: protocol_source.id, id: protocol.id }

@@ -12,11 +12,11 @@
     </style>
 
     <!-- Libraries for tables and formulas -->
-    <% ['handsontable.full.js', 'lodash.js', 'numeral.js', 'numeric.js',
+    <% ['handsontable.full.min.js', 'lodash.js', 'numeral.js', 'numeric.js',
         'md5.js', 'jstat.js', 'formula.js', 'parser.js', 'ruleJS.js',
         'handsontable.formula.js', 'big.min.js' ].each do |js_asset| %>
         <script type="text/javascript">
-          <%= j Rails.application
+          <%= Rails.application
                    .assets_manifest
                    .find_sources(js_asset)
                    .first

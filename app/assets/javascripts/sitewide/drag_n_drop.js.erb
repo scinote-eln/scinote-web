@@ -7,6 +7,7 @@
     function init(location) {
       LOCATION = location;
       global.addEventListener('paste', _listener, false);
+      $.initTooltips();
     };
 
     function destroy() {
@@ -161,8 +162,12 @@
     var droppedFiles = [];
     var filesValid = true;
     var totalSize = 0;
+    var fileMaxSizeMb;
+    var fileMaxSize;
 
     function init(files) {
+      fileMaxSizeMb = $(document.body).data('file-max-size-mb');
+      fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for(var i = 0; i < files.length; i++) {
         droppedFiles.push(files[i]);
       }
@@ -235,23 +240,23 @@
     function _validateFilesSize(file) {
       var fileSize = file.size;
       totalSize += parseInt(fileSize);
-      if(fileSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
+      if(fileSize > fileMaxSize) {
         file.isValid = false;
         _disableSubmitButton();
-        return "<p class='dnd-error'><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+        return "<p class='dnd-error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
       }
       return '';
     }
 
     function _validateTotalSize() {
-      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
+      if(totalSize > fileMaxSize) {
         filesValid = false;
         _disableSubmitButton();
         $.each($('.panel-step-attachment-new'), function() {
           if(!$(this).find('p').hasClass('dnd-total-error')) {
             $(this)
               .find('.panel-body')
-              .append("<p class='dnd-total-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
           }
         });
       } else {
@@ -266,11 +271,11 @@
     function _uploadedAssetPreview(asset, i) {
       var html = '<div class="panel panel-default panel-step-attachment-new">';
       html += '<div class="panel-heading">';
-      html += '<span class="glyphicon glyphicon-file"></span>';
+      html += '<span class="fas fa-paperclip"></span>';
       html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>';
       html += '<div class="pull-right">';
       html += '<a data-item-id="' + i + '" href="#">';
-      html += '<span class="glyphicon glyphicon-remove"></span></a></div></div>';
+      html += '<span class="fas fa-times"></span></a></div></div>';
       html += '<div class="panel-body">';
       html += '<label class="control-label">';
       html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>:</label> ';
@@ -315,8 +320,12 @@
     var droppedFiles = [];
     var isValid = true;
     var totalSize = 0;
+    var fileMaxSizeMb;
+    var fileMaxSize;
 
     function init(files) {
+      fileMaxSizeMb = $(document.body).data('file-max-size-mb');
+      fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for(var i = 0; i < files.length; i++) {
         droppedFiles.push(files[i]);
       }
@@ -392,23 +401,23 @@
     function _validateFilesSize(file) {
       var fileSize = file.size;
       totalSize += parseInt(fileSize);
-      if(fileSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
+      if(fileSize > fileMaxSize) {
         file.isValid = false;
         _disableSubmitButton();
-        return "<p class='dnd-error'><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+        return "<p class='dnd-error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
       }
       return '';
     }
 
     function _validateTotalSize() {
-      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
+      if(totalSize > fileMaxSize) {
         isValid = false;
         _disableSubmitButton();
         $.each($('.panel-result-attachment-new'), function() {
           if(!$(this).find('p').hasClass('dnd-total-error')) {
             $(this)
               .find('.panel-body')
-              .append("<p class='dnd-total-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
             }
         });
       } else {
@@ -434,11 +443,11 @@
     function _uploadedAssetPreview(asset, i) {
       var html = '<div class="panel panel-default panel-result-attachment-new">';
       html += '<div class="panel-heading">';
-      html += '<span class="glyphicon glyphicon-file"></span>';
+      html += '<span class="fas fa-paperclip"></span>';
       html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>';
       html += '<div class="pull-right">';
       html += '<a data-item-id="' + i + '" href="#">';
-      html += '<span class="glyphicon glyphicon-remove"></span></a></div></div>';
+      html += '<span class="fas fa-times"></span></a></div></div>';
       html += '<div class="panel-body"><div class="form-group">';
       html += '<label class="control-label">Name</label>';
       html += '<input type="text" class="form-control" ';
@@ -485,7 +494,7 @@
                 ResutlAssets.applyEditResultAssetCallback();
                 Results.applyCollapseLinkCallBack();
                 Results.toggleResultEditButtons(true);
-                initPreviewModal();
+                FilePreviewModal.init();
                 Comments.initialize();
                 ResutlAssets.initNewResultAsset();
                 Results.expandResult($(this));

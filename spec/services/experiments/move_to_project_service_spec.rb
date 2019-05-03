@@ -4,16 +4,17 @@ require 'rails_helper'
 
 describe Experiments::MoveToProjectService do
   let(:team) { create :team, :with_members }
-  let(:user) { create :user }
   let(:project) do
-    create :project, team: team, created_by: user
+    create :project, team: team, user_projects: []
   end
   let(:new_project) do
-    create :project, team: team, created_by: user
+    create :project, team: team, user_projects: [user_project2]
   end
   let(:experiment) do
     create :experiment, :with_tasks, name: 'MyExp', project: project
   end
+  let(:user) { create :user }
+  let(:user_project2) { create :user_project, :normal_user, user: user }
   let(:service_call) do
     Experiments::MoveToProjectService.call(experiment_id: experiment.id,
                                     project_id: new_project.id,
@@ -71,21 +72,25 @@ describe Experiments::MoveToProjectService do
     end
 
     it 'returns an error on validate' do
-      allow_any_instance_of(Experiment).to(receive(:movable_projects).and_return([]))
-
+      FactoryBot.create :experiment, project: new_project, name: 'MyExp'
       expect(service_call.succeed?).to be_falsey
     end
 
     it 'returns an error on saving' do
-      experiment.name = Faker::Lorem.characters(number: 300)
-      experiment.save(validate: false)
+      expect_any_instance_of(Experiments::MoveToProjectService)
+        .to receive(:valid?)
+        .and_return(true)
+      FactoryBot.create :experiment, project: new_project, name: 'MyExp'
 
       expect(service_call.succeed?).to be_falsey
     end
 
     it 'rollbacks cloned tags after unsucessful save' do
-      experiment.name = Faker::Lorem.characters(number: 300)
-      experiment.save(validate: false)
+      expect_any_instance_of(Experiments::MoveToProjectService)
+        .to receive(:valid?)
+        .and_return(true)
+      FactoryBot.create :experiment, project: new_project, name: 'MyExp'
+      experiment
 
       expect { service_call }.not_to(change { Tag.count })
     end

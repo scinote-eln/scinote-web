@@ -3,10 +3,11 @@ class UserProjectsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_vars
+  before_action :load_up_var, only: %i(update destroy)
   before_action :check_view_permissions, only: :index
   before_action :check_manage_users_permissions, only: :index_edit
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permisisons, only: %i(update destroy)
+  before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
     @users = @project.user_projects
@@ -51,19 +52,7 @@ class UserProjectsController < ApplicationController
     @up.assigned_by = current_user
 
     if @up.save
-      # Generate activity
-      Activity.create(
-        type_of: :assign_user_to_project,
-        user: current_user,
-        project: @project,
-        message: t(
-          "activities.assign_user_to_project",
-          assigned_user: @up.user.full_name,
-          role: @up.role_str,
-          project: @project.name,
-          assigned_by_user: current_user.full_name
-        )
-      )
+      log_activity(:assign_user_to_project)
 
       respond_to do |format|
         format.json do
@@ -86,28 +75,10 @@ class UserProjectsController < ApplicationController
   end
 
   def update
-    @up = UserProject.find(params[:id])
-
-    unless @up
-      render_404
-    end
-
     @up.role = up_params[:role]
 
     if @up.save
-      # Generate activity
-      Activity.create(
-        type_of: :change_user_role_on_project,
-        user: current_user,
-        project: @project,
-        message: t(
-          "activities.change_user_role_on_project",
-          actor: current_user.full_name,
-          user: @up.user.full_name,
-          project: @project.name,
-          role: @up.role_str
-        )
-      )
+      log_activity(:change_user_role_on_project)
 
       respond_to do |format|
         format.json do
@@ -116,34 +87,24 @@ class UserProjectsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json {
-          render :json => {
+        format.json do
+          render json: {
             status: 'error',
-            :errors => [
-              flash_error
-            ]
+            errors: @up.errors
           }
-        }
+        end
       end
     end
   end
 
   def destroy
     if @up.destroy
-      # Generate activity
-      Activity.create(
-        type_of: :unassign_user_from_project,
-        user: current_user,
-        project: @project,
-        message: t(
-          "activities.unassign_user_from_project",
-          unassigned_user: @up.user.full_name,
-          project: @project.name,
-          unassigned_by_user: current_user.full_name
-        )
-      )
-      generate_notification(current_user, @up.user, false, false, @project)
-
+      log_activity(:unassign_user_from_project)
+      generate_notification(current_user,
+                            @up.user,
+                            false,
+                            @up.role_str,
+                            @project)
       respond_to do |format|
         format.json do
           redirect_to project_users_edit_path(format: :json),
@@ -153,13 +114,11 @@ class UserProjectsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json {
-          render :json => {
-            :errors => [
-              flash_error
-            ]
+        format.json do
+          render json: {
+            errors: @up.errors
           }
-        }
+        end
       end
     end
   end
@@ -168,16 +127,12 @@ class UserProjectsController < ApplicationController
 
   def load_vars
     @project = Project.find_by_id(params[:project_id])
-    unless @project
-      render_404
-    end
+    render_404 unless @project
+  end
 
-    if action_name == "destroy"
-      @up = UserProject.find(params[:id])
-      unless @up
-        render_404
-      end
-    end
+  def load_up_var
+    @up = UserProject.find(params[:id])
+    render_404 unless @up
   end
 
   def check_view_permissions
@@ -192,9 +147,9 @@ class UserProjectsController < ApplicationController
     render_403 unless can_create_projects?(current_team)
   end
 
-  def check_manage_permisisons
-    render_403 unless can_manage_project?(@project) ||
-                      params[:id] != current_user.id
+  def check_manage_permissions
+    render_403 unless can_manage_project?(@project) &&
+                      @up.user_id != current_user.id
   end
 
   def init_gui
@@ -203,5 +158,17 @@ class UserProjectsController < ApplicationController
 
   def up_params
     params.require(:user_project).permit(:user_id, :project_id, :role)
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @project,
+            team: @project.team,
+            project: @project,
+            message_items: { project: @project.id,
+                             user_target: @up.user.id,
+                             role: @up.role_str })
   end
 end

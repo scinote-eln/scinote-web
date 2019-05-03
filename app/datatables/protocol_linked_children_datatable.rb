@@ -67,7 +67,7 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
       locals: { experiment: record.my_module.experiment }
     )
     res += '</li>'
-    res += "<li><span class='glyphicon glyphicon-credit-card'></span>&nbsp;"
+    res += "<li><span class='fas fa-credit-card'></span>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/my_module_text.html.erb',
       locals: { my_module: record.my_module, link_to_page: :protocols }

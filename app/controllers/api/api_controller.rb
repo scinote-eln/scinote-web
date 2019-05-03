@@ -1,21 +1,30 @@
+# frozen_string_literal: true
+
 module Api
   class ApiController < ActionController::API
     attr_reader :iss
     attr_reader :token
     attr_reader :current_user
 
-    before_action :load_token, except: %i(authenticate status health)
-    before_action :load_iss, except: %i(authenticate status health)
-    before_action :authenticate_request!, except: %i(authenticate status health)
+    before_action :authenticate_request!, except: %i(status health)
 
     rescue_from StandardError do |e|
       logger.error e.message
+      logger.error e.backtrace.join("\n")
       render json: {}, status: :bad_request
     end
 
-    rescue_from JWT::InvalidPayload, JWT::DecodeError do |e|
+    rescue_from JWT::DecodeError,
+                JWT::InvalidPayload,
+                JWT::VerificationError do |e|
       logger.error e.message
       render json: { message: I18n.t('api.core.invalid_token') },
+             status: :unauthorized
+    end
+
+    rescue_from JWT::ExpiredSignature do |e|
+      logger.error e.message
+      render json: { message: I18n.t('api.core.expired_token') },
              status: :unauthorized
     end
 
@@ -25,6 +34,8 @@ module Api
     end
 
     def health
+      User.new && Team.new && Project.new
+      User.first if params[:db]
       render plain: 'RUNNING'
     end
 
@@ -38,53 +49,40 @@ module Api
       render json: response, status: :ok
     end
 
-    def authenticate
-      if auth_params[:grant_type] == 'password'
-        user = User.find_by_email(auth_params[:email])
-        unless user && user.valid_password?(auth_params[:password])
-          raise StandardError, 'Wrong user password'
-        end
-        payload = { user_id: user.id }
-        token = CoreJwt.encode(payload)
-        render json: { token_type: 'bearer', access_token: token }
-      else
-        raise StandardError, 'Wrong grant type in request'
-      end
-    end
-
     private
 
-    def load_token
-      if request.headers['Authorization']
-        @token =
-          request.headers['Authorization'].scan(/Bearer (.*)$/).flatten.last
+    def azure_jwt_auth
+      return unless iss =~ %r{windows.net/|microsoftonline.com/}
+      token_payload, = Api::AzureJwt.decode(token)
+      @current_user = User.from_azure_jwt_token(token_payload)
+      unless current_user
+        raise JWT::InvalidPayload, I18n.t('api.core.no_azure_user_mapping')
       end
-      raise StandardError, 'No token in the header' unless @token
     end
 
     def authenticate_request!
+      @token = request.headers['Authorization']&.sub('Bearer ', '')
+      unless @token
+        raise JWT::VerificationError, I18n.t('api.core.missing_token')
+      end
+
+      @iss = CoreJwt.read_iss(token)
+      raise JWT::InvalidPayload, I18n.t('api.core.no_iss') unless @iss
+
       Extends::API_PLUGABLE_AUTH_METHODS.each do |auth_method|
         method(auth_method).call
         return true if current_user
       end
-      # Check request header for proper auth token
-      payload = CoreJwt.decode(token)
-      @current_user = User.find_by_id(payload['user_id'])
-      # Implement sliding sessions, i.e send new token in case of successful
-      # authorization and when tokens TTL reached specific value (to avoid token
-      # generation on each request)
-      if CoreJwt.refresh_needed?(payload)
-        new_token = CoreJwt.encode(user_id: @current_user.id)
-        response.headers['X-Access-Token'] = new_token
-      end
-    rescue JWT::ExpiredSignature
-      render json: { message: I18n.t('api.core.expired_token') },
-             status: :unauthorized
-    end
 
-    def load_iss
-      @iss = CoreJwt.read_iss(token)
-      raise JWT::InvalidPayload, 'Wrong ISS in the token' unless @iss
+      # Default token implementation
+      unless iss == Api.configuration.core_api_token_iss
+        raise JWT::InvalidPayload, I18n.t('api.core.wrong_iss')
+      end
+      payload = CoreJwt.decode(token)
+      @current_user = User.find_by_id(payload['sub'])
+      unless current_user
+        raise JWT::InvalidPayload, I18n.t('api.core.no_user_mapping')
+      end
     end
 
     def auth_params

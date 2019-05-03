@@ -42,9 +42,9 @@ class SpreadsheetParser
     header = []
     columns = []
     i = 1
-    rows.each do |row|
+    rows.each do |row_values|
       # Creek XLSX parser returns Hash of the row, Roo - Array
-      row = row.is_a?(Hash) ? row.values.map(&:to_s) : row.map(&:to_s)
+      row = parse_row(row_values, sheet)
       header = row if i == 1 && row
       columns = row if i == 2 && row
       i += 1

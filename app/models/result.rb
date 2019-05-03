@@ -1,5 +1,7 @@
 class Result < ApplicationRecord
-  include ArchivableModel, SearchableModel
+  include ArchivableModel
+  include SearchableModel
+  include SearchableByNameModel
 
   auto_strip_attributes :name, nullify: false
   validates :user, :my_module, presence: true
@@ -19,17 +21,11 @@ class Result < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :my_module, inverse_of: :results, optional: true
-  has_one :result_asset,
-    inverse_of: :result,
-    dependent: :destroy
+  has_one :result_asset, inverse_of: :result, dependent: :destroy
   has_one :asset, through: :result_asset
-  has_one :result_table,
-    inverse_of: :result,
-    dependent: :destroy
+  has_one :result_table, inverse_of: :result, dependent: :destroy
   has_one :table, through: :result_table
-  has_one :result_text,
-    inverse_of: :result,
-    dependent: :destroy
+  has_one :result_text, inverse_of: :result, dependent: :destroy
   has_many :result_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
 
@@ -68,6 +64,14 @@ class Result < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.viewable_by_user(user, teams)
+    where(my_module: MyModule.viewable_by_user(user, teams))
+  end
+
+  def navigable?
+    !my_module.archived? && my_module.navigable?
   end
 
   def space_taken

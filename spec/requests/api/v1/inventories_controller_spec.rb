@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::InventoriesController', type: :request do
+RSpec.describe "Api::V1::InventoriesController", type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -31,11 +31,10 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@teams.first.repositories, each_serializer: Api::V1::InventorySerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@teams.first.repositories,
+               each_serializer: Api::V1::InventorySerializer)
+          .as_json[:data]
       )
     end
 
@@ -47,21 +46,6 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 403)
     end
-
-    context 'when have some archived inventories' do
-      before do
-        create(:repository, :archived, name: Faker::Name.unique.name, created_by: @user, team: @teams.first)
-      end
-
-      it 'will ignore them' do
-        hash_body = nil
-
-        get api_v1_team_inventories_path(team_id: @teams.first.id), headers: @valid_headers
-
-        expect { hash_body = json }.not_to raise_exception
-        expect(hash_body['data'].count).to be_eql 2
-      end
-    end
   end
 
   describe 'GET inventory, #show' do
@@ -71,13 +55,11 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
                                 id: @teams.first.repositories.first.id),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
-
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@teams.first.repositories.first, serializer: Api::V1::InventorySerializer)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@teams.first.repositories.first,
+               serializer: Api::V1::InventorySerializer)
+          .as_json[:data]
       )
     end
 
@@ -93,7 +75,7 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
 
     it 'When invalid request, non existing inventory' do
       hash_body = nil
-      get api_v1_team_inventory_path(team_id: @teams.first.id, id: -1),
+      get api_v1_team_inventory_path(team_id: @teams.first.id, id: 123),
           headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
@@ -129,10 +111,10 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource.new(Repository.last, serializer: Api::V1::InventorySerializer)
-          .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(Repository.last,
+               serializer: Api::V1::InventorySerializer)
+          .as_json[:data]
       )
     end
 
@@ -149,7 +131,7 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
     it 'When invalid request, non-existent team' do
       hash_body = nil
       post api_v1_team_inventories_path(
-        team_id: -1
+        team_id: 123
       ), params: @request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status 404
       expect { hash_body = json }.not_to raise_exception
@@ -218,13 +200,13 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       updated_inventory[:data][:attributes][:name] =
         Faker::Name.unique.name
       patch api_v1_team_inventory_path(
-        id: updated_inventory[:data][:id],
+        id: @teams.first.repositories.first.id,
         team_id: @teams.first.id
       ), params: updated_inventory.to_json,
       headers: @valid_headers
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body['data']['attributes']['name']).to match(updated_inventory[:data][:attributes][:name])
+      expect(hash_body.to_json).to match(updated_inventory.to_json)
     end
 
     it 'When invalid request, inventory does not belong to team' do
@@ -248,7 +230,7 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       updated_inventory[:data][:attributes][:name] =
         Faker::Name.unique.name
       patch api_v1_team_inventory_path(
-        id: -1,
+        id: 123,
         team_id: @teams.first.id
       ), params: updated_inventory.to_json,
       headers: @valid_headers
@@ -288,7 +270,7 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
 
     it 'Invalid request, non existing inventory' do
       delete api_v1_team_inventory_path(
-        id: -1,
+        id: 123,
         team_id: @teams.first.id
       ), headers: @valid_headers
       expect(response).to have_http_status(404)

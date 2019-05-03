@@ -21,7 +21,8 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
     list_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryListValue)
     list_item =
-      create(:repository_list_item, repository_column: list_column, data: Faker::Name.unique.name)
+      create(:repository_list_item, repository: @valid_inventory,
+             repository_column: list_column, data: Faker::Name.unique.name)
     file_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryAssetValue)
     asset = create(:asset)
@@ -50,7 +51,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                            attributes: {
                              name: Faker::Name.unique.name
                            } },
-                         included: [
+                         included:  [
                            { type: 'inventory_cells',
                              attributes: {
                                column_id: text_column.id,
@@ -68,13 +69,11 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(10),
-                 each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_rows.limit(10),
+               each_serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:data]
       )
       expect(hash_body).not_to include('included')
     end
@@ -88,22 +87,18 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(10),
-                 each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_rows.limit(10),
+               each_serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:data]
       )
       expect(hash_body[:included]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(10),
-                 each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
-            .to_json
-        )['included']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_rows.limit(10),
+               each_serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:included]
       )
     end
 
@@ -115,13 +110,11 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       ), params: { page: { size: 100 } }, headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(100),
-                 each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_rows.limit(100),
+               each_serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:data]
       )
       expect(hash_body).not_to include('included')
     end
@@ -157,25 +150,6 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
-    end
-
-    context 'when have some archived rows' do
-      before do
-        create(:repository_row, :archived,
-               name: Faker::Name.unique.name, created_by: @user, repository: @teams.first.repositories.first)
-      end
-
-      it 'will ignore them' do
-        hash_body = nil
-
-        get api_v1_team_inventory_items_path(
-          team_id: @teams.first.id,
-          inventory_id: @teams.first.repositories.first.id
-        ), params: { page: { size: 200 } }, headers: @valid_headers
-
-        expect { hash_body = json }.not_to raise_exception
-        expect(hash_body['data'].count).to be_eql 100
-      end
     end
   end
 
@@ -235,18 +209,18 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(RepositoryRow.last, serializer: Api::V1::InventoryItemSerializer, include: :inventory_cells)
-            .to_json
-        )['data']
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryRow.last,
+               serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:data]
       )
       expect(hash_body[:included]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(RepositoryRow.last, serializer: Api::V1::InventoryItemSerializer, include: :inventory_cells)
-            .to_json
-        )['included']
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryRow.last,
+               serializer: Api::V1::InventoryItemSerializer,
+               include: :inventory_cells)
+          .as_json[:included]
       )
     end
 
@@ -296,8 +270,8 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
 
     it 'Response with correctly updated inventory item for name field' do
       hash_body = nil
-      updated_inventory_item = JSON.parse(@inventory_item.to_json)['data']
-      updated_inventory_item['attributes']['name'] = Faker::Name.unique.name
+      updated_inventory_item = @inventory_item.as_json[:data]
+      updated_inventory_item[:attributes][:name] = Faker::Name.unique.name
       patch api_v1_team_inventory_item_path(
         id: RepositoryRow.last.id,
         team_id: @teams.first.id,
@@ -306,7 +280,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       headers: @valid_headers
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body['data']['attributes']['name']).to match(updated_inventory_item['attributes']['name'])
+      expect(hash_body[:data].to_json).to match(updated_inventory_item.to_json)
     end
   end
 end

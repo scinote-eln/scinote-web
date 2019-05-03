@@ -114,15 +114,15 @@ module ApplicationHelper
     # sometimes happens that the "team" param gets wrong data: "{nil, []}"
     # so we have to check if the "team" param is kind of Team object
     team = nil unless team.is_a? Team
-    new_text = smart_annotation_filter_resources(text)
+    new_text = smart_annotation_filter_resources(text, team)
     new_text = smart_annotation_filter_users(new_text, team)
     new_text
   end
 
   # Check if text have smart annotations of resources
   # and outputs a link to resource
-  def smart_annotation_filter_resources(text)
-    SmartAnnotations::TagToHtml.new(current_user, text).html
+  def smart_annotation_filter_resources(text, team)
+    SmartAnnotations::TagToHtml.new(current_user, team, text).html
   end
 
   # Check if text have smart annotations of users
@@ -133,14 +133,16 @@ module ApplicationHelper
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       next unless user
-      team ||= current_team
       popover_for_user_name(user, team)
     end
     new_text
   end
 
   # Generate smart annotation link for one user object
-  def popover_for_user_name(user, team = nil)
+  def popover_for_user_name(user,
+                            team = nil,
+                            skip_user_status = false,
+                            skip_avatar = false)
     user_still_in_team = user.teams.include?(team)
 
     user_description = %(<div class='col-xs-4'>
@@ -148,7 +150,7 @@ module ApplicationHelper
        alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
       #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
-      <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+      <span class='fas fa-times' aria-hidden='true'></span>
       </div></div><div class='row'><div class='col-xs-12'>
       <p class='silver'>#{user.email}</p>)
     if user_still_in_team
@@ -159,23 +161,34 @@ module ApplicationHelper
         #{I18n.t('atwho.users.popover_html',
                  role: user_t.role.capitalize,
                  team: user_t.team.name,
-                 time: user_t.created_at.strftime('%B %Y'))}
+                 time: I18n.l(user_t.created_at, format: :full_date))}
         </p></div></div></div>)
     else
       user_description += %(<p></p></div></div></div>)
     end
 
     user_name = user.full_name
-    user_name << ' ' + I18n.t('atwho.res.removed') if !user_still_in_team
 
-    raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
-        "alt='avatar' class='atwho-user-img-popover'" \
-        " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>") +
+    html = if skip_avatar
+             ''
+           else
+             raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+             "alt='avatar' class='atwho-user-img-popover'" \
+             " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>")
+           end
+
+    html =
+      raw(html) +
       raw('<a onClick="$(this).popover(\'show\')" ' \
-          'class="atwho-user-popover" data-container="body" ' \
-          'data-html="true" tabindex="0" data-trigger="focus" ' \
-          'data-placement="top" data-toggle="popover" data-content="') +
+        'class="atwho-user-popover" data-container="body" ' \
+        'data-html="true" tabindex="0" data-trigger="focus" ' \
+        'data-placement="top" data-toggle="popover" data-content="') +
       raw(user_description) + raw('" >') + user_name + raw('</a>')
+
+    unless skip_user_status || user_still_in_team
+      html << " #{I18n.t('atwho.res.removed')}"
+    end
+    html
   end
 
   # Dirty, dirty hack for displaying images in reports

@@ -32,9 +32,10 @@ module NotificationsHelper
       message = "#{I18n.t('search.index.team')} #{team.name}"
     elsif project
       title = I18n.t('activities.unassign_user_from_project',
-                     unassigned_user: target_user.full_name,
+                     user_target: target_user.full_name,
                      project: project.name,
-                     unassigned_by_user: user.full_name)
+                     user: user.full_name,
+                     role: role)
       message = "#{I18n.t('search.index.project')} #{@project.name}"
     end
 

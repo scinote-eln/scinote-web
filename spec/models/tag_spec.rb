@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Tag, type: :model do
@@ -23,15 +25,46 @@ describe Tag, type: :model do
     it { should have_many :my_modules }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :name }
-    it { should validate_presence_of :color }
-    it { should validate_presence_of :project }
-    it do
-      should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  describe 'Validations' do
+    describe '#name' do
+      it { should validate_presence_of :name }
+      it do
+        should validate_length_of(:name)
+          .is_at_most(Constants::NAME_MAX_LENGTH)
+      end
     end
-    it do
-      should validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH)
+
+    describe '#color' do
+      it { should validate_presence_of :color }
+      it do
+        should validate_length_of(:color)
+          .is_at_most(Constants::COLOR_MAX_LENGTH)
+      end
+    end
+    describe '#projects' do
+      it { should validate_presence_of :project }
+    end
+  end
+  describe '.clone_to_project_or_return_existing' do
+    let(:project) { create :project }
+    let(:tag) { create :tag }
+
+    context 'when tag does not exits' do
+      it 'does create new tag for project' do
+        expect do
+          tag.clone_to_project_or_return_existing(project)
+        end.to(change { Tag.where(project_id: project.id).count })
+      end
+    end
+
+    context 'when tag already exists' do
+      it 'return existing tag for project' do
+        Tag.create(name: tag.name, color: tag.color, project: project)
+
+        expect do
+          tag.clone_to_project_or_return_existing(project)
+        end.to_not(change { Tag.where(project_id: project.id).count })
+      end
     end
   end
 end

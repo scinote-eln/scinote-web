@@ -7,19 +7,17 @@ module Api
       attributes :id, :value_type, :value
       attribute :repository_column_id, key: :column_id
 
-      include TimestampableModel
-
       def value
         ActiveModelSerializers::SerializableResource.new(
           object.value,
-          class_name: object.repository_column.data_type,
+          class_name: object.value_type,
           namespace: Api::V1,
           adapter: :attribute
         ).as_json
       end
 
       def value_type
-        Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS[object.repository_column.data_type]
+        Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS[object.value_type]
       end
     end
   end

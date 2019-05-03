@@ -182,21 +182,14 @@
 
   function initNewReportModal() {
     $('#new-report-btn').on('click', function() {
-      $('#new-report-modal').modal('show').promise().done(function() {
-        initSelectPicker();
-        initRedirectToNewReportPage();
-      });
+      $('#new-report-modal').modal('show');
+      initSelectPicker();
+      initRedirectToNewReportPage();
     });
   }
 
-  function init() {
-    $(document).ready(function() {
-      initDatatable();
-      initEditReport();
-      initDeleteReports();
-      initNewReportModal();
-    });
-  }
-
-  init();
+  initDatatable();
+  initEditReport();
+  initDeleteReports();
+  initNewReportModal();
 })(window);

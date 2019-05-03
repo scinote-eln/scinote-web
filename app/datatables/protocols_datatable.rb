@@ -58,7 +58,6 @@ class ProtocolsDatatable < CustomDatatable
   def new_search_condition(column, value)
     model, column = column.split('.')
     model = model.constantize
-    formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
     case column
     when 'published_on'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
@@ -199,10 +198,14 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def modules_html(record)
-    "<a href='#' data-action='load-linked-children'" +
-    " data-url='#{linked_children_protocol_path(record)}'>" +
-    "#{record.nr_of_linked_children}" +
-    "</a>"
+    "<a href='#' data-action='load-linked-children' class='help_tooltips' " \
+    "data-tooltiplink='" +
+      I18n.t('tooltips.link.protocol.num_linked') +
+      "' data-tooltipcontent='" +
+      I18n.t('tooltips.text.protocol.num_linked') +
+      "' data-url='#{linked_children_protocol_path(record)}'>" \
+      "#{record.nr_of_linked_children}"  \
+      "</a>"
   end
 
   def timestamp_column_html(record)
