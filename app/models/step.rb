@@ -49,6 +49,9 @@ class Step < ApplicationRecord
                                   attributes['contents'].blank?
                                 },
                                 allow_destroy: true
+  accepts_nested_attributes_for :marvin_js_assets,
+                                reject_if: :all_blank,
+                                allow_destroy: true
 
   after_destroy :cascade_after_destroy
   before_save :set_last_modified_by

@@ -39,13 +39,14 @@ class MarvinJsAsset < ApplicationRecord
     sketch = team.marvin_js_assets.find(values[:id])
     return false unless sketch
 
-    if values[:object_type] == 'TinyMceAsset'
-      image = TinyMceAsset.find(sketch.object_id)
-      image.update(image: values[:image])
-      return { url: image.url(:large) }
-    end
     values[:name] = I18n.t('marvinjs.new_sketch') if values[:name].empty?
     sketch.update(values.except(:image, :object_type, :id))
+
+    if values[:object_type] == 'TinyMceAsset'
+      image = TinyMceAsset.find(sketch.object_id)
+      image.update(image: values[:image], image_file_name: "#{name}.jpg")
+      return { url: image.url(:large), description: sketch.description }
+    end
     sketch
   end
 end

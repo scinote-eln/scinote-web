@@ -17,16 +17,9 @@
           </div>
           <% if edit_page %>
             <div class="remove-icon pull-right">
-              <span class="fas fa-trash"></span>
+              <%= ff.remove_nested_fields_link do %>
+                <span class="fas fa-trash"></span>
+              <% end %>
             </div>
-            <script>
-              $('.attachment-placeholder[data-marvinjs-sketch="<%= sketch.id %>"]').find('.remove-icon')
-                .click(function() {
-                  MarvinJsEditor().delete_sketch(
-                    '<%= marvin_js_asset_path(sketch.id) %>',
-                    '.attachment-placeholder[data-marvinjs-sketch="<%= sketch.id %>"]'
-                  )
-                })
-            </script>
           <% end %>
         </div>

@@ -94,10 +94,11 @@
   </div>
 <% if MarvinJsAsset.enabled? %>
   <div class="tab-pane" role="tabpanel" id="new-step-sketch">
-    <div class="sketch-container">
-      <% @step.marvin_js_assets.each do |sketch| %>
-            <%= render partial: 'assets/marvinjs/marvin_sketch_card_placeholder.html.erb',
-               locals: { sketch: sketch, edit_page: true} %>
+   <div class="sketch-container">
+      <%= f.nested_fields_for :marvin_js_assets do |ff| %>
+        <% next unless ff.object.description %>
+        <%= render partial: 'assets/marvinjs/marvin_sketch_card_placeholder.html.erb',
+                   locals: { sketch: ff.object, edit_page: true, ff: ff} %>
       <% end %>
     </div>
   </div>

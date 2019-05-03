@@ -56,7 +56,7 @@ var TinyMCE = (function() {
         var imageEditorLink;
         if (image.length > 0) {
           image.on('load', function() {
-            editorContainer.find('.tinymce-save-button').removeClass('hidden');
+            editor.fire('Dirty');
           });
           editorContainer.find('.tinymce-active-object-handler').css('display', 'block');
           editorContainer.find('.tinymce-active-object-handler .file-download-link')
