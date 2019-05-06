@@ -300,7 +300,9 @@
         images = $.map($('img', iframe), e => {
           return e.dataset.mceToken;
         });
-        $('#' + editor.id).next()[0].value = JSON.stringify(images);
+        if ($('#' + editor.id).next()[0]) {
+          $('#' + editor.id).next()[0].value = JSON.stringify(images);
+        }
         return JSON.stringify(images);
       }
 
@@ -334,4 +336,4 @@
     'customimageuploader',
     tinymce.plugins.CustomImageUploader
   );
-})();
+}());
