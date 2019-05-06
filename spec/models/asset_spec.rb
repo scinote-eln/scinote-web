@@ -1,8 +1,16 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Asset, type: :model do
+  let(:asset) { build :asset }
+
   it 'should be of class Asset' do
     expect(subject.class).to eq Asset
+  end
+
+  it 'is valid' do
+    expect(asset).to be_valid
   end
 
   describe 'Database table' do
@@ -38,13 +46,13 @@ describe Asset, type: :model do
     it { should have_one :repository_cell }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :file }
-    it 'should validate the presence of estimated size' do
-      asset = build :asset, estimated_size: nil
-      expect(asset).to_not be_valid
+  describe 'Validations' do
+    describe '#file' do
+      it { is_expected.to validate_presence_of(:file) }
     end
-    #  should validate_presence_of :estimated_size }
-    it { should validate_inclusion_of(:file_present).in_array([true, false]) }
+
+    describe '#estimated_size' do
+      it { expect(asset).to validate_presence_of(:estimated_size) }
+    end
   end
 end
