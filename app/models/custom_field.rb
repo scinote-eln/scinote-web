@@ -3,7 +3,7 @@ class CustomField < ApplicationRecord
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :team, case_sensitive: true },
+            uniqueness: { scope: :team_id, case_sensitive: true },
             exclusion: { in: ['Assigned', 'Sample name', 'Sample type',
                               'Sample group', 'Added on', 'Added by'] }
   validates :user, :team, presence: true
