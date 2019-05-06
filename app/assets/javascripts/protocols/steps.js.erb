@@ -665,7 +665,7 @@
     $("#dd-att-step-" + stepId + "-label").html(label_value);
     $('#att-' + stepId + ' a.file-preview-link').each(function(){
       var elm = $(this)
-      elm.css('order', elm.attr('data-order-' + sortType));
+      elm.parent().css('order', elm.attr('data-order-' + sortType));
     })
   }
 
