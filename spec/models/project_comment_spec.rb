@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe Comment::ProjectComment, type: :model do
+describe ProjectComment, type: :model do
   it 'should be of class MyModuleTag' do
-    expect(subject.class).to eq Comment::ProjectComment
+    expect(subject.class).to eq ProjectComment
   end
 
   describe 'Database table' do

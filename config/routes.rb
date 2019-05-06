@@ -49,7 +49,7 @@ Rails.application.routes.draw do
         as: 'rap_task_level'
 
 
-# # Client APP endpoints
+    # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
     # get '/settings/*all', to: 'client_api/settings#index'
     #

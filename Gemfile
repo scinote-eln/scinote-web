@@ -2,21 +2,21 @@
 
 source 'http://rubygems.org'
 
-ruby '2.4.5'
+ruby '2.5.5'
 
 
 gem 'webpacker', '~> 3.5'
-gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap-sass', '~> 3.4'
 gem 'bootstrap_form'
-gem 'devise', '~> 4.3.0'
+gem 'devise', '~> 4.6.2'
 gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 0.18'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 5.1.6.2'
+gem 'rails', '~> 5.1.7'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
-gem 'sass-rails', '~> 5.0.6'
+gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
 gem 'yomu'
 
@@ -35,9 +35,9 @@ gem 'rack-attack'
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
-gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
 # Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.12.4'
+gem 'bootstrap-select-rails', '~> 1.13.8'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'autosize-rails' # jQuery autosize plugin
@@ -68,7 +68,7 @@ gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.8.1' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
-gem 'roo', '~> 2.7.1' # Spreadsheet parser
+gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rubyzip'
 gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
@@ -116,8 +116,6 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'rubocop', '>= 0.59.0', require: false
-  gem 'scss_lint', require: false
-  gem 'starscope', require: false
   gem 'timecop'
 end
 
