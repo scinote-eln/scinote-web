@@ -293,16 +293,24 @@
         return null;
       }
 
+      // Create hidden field for images
+      function createImageHiddenField() {
+        textAreaElement.parent().find('input#tiny-mce-images').remove();
+        $('<input type="hidden" id="tiny-mce-images" name="tiny_mce_images" value="[]">').insertAfter(textAreaElement);
+      }
+
       // Finding images in text
       function updateActiveImages() {
         var images;
+        var imageContainer = $('#' + editor.id).next()[0];
         iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
         images = $.map($('img', iframe), e => {
           return e.dataset.mceToken;
         });
-        if ($('#' + editor.id).next()[0]) {
-          $('#' + editor.id).next()[0].value = JSON.stringify(images);
+        if (imageContainer === undefined) {
+          createImageHiddenField();
         }
+        imageContainer.value = JSON.stringify(images);
         return JSON.stringify(images);
       }
 
@@ -321,12 +329,14 @@
         onclick: showDialog
       });
 
-      ed.on('NodeChange', () => {
-        updateActiveImages(ed);
+      ed.on('NodeChange', function() {
+        // Check editor status
+        if (this.initialized) {
+          updateActiveImages(ed);
+        }
       });
 
-      textAreaElement.parent().find('input#tiny-mce-images').remove();
-      $('<input type="hidden" id="tiny-mce-images" name="tiny_mce_images" value="[]">').insertAfter(textAreaElement);
+      createImageHiddenField();
     }
 
 
