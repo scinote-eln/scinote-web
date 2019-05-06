@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Notification, type: :model do
+  let(:notification) { build :notification }
+
+  it 'is valid' do
+    expect(notification).to be_valid
+  end
+
   it 'should be of class Notification' do
     expect(subject.class).to eq Notification
   end
