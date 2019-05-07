@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Repository, type: :model do
+  let(:repository) { build :repository }
+
+  it 'is valid' do
+    expect(repository).to be_valid
+  end
+
   it 'should be of class Repository' do
     expect(subject.class).to eq Repository
   end
@@ -22,24 +30,18 @@ describe Repository, type: :model do
     it { should have_many(:repository_list_items).dependent(:destroy) }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :team }
-    it { should validate_presence_of :created_by }
-    it do
-      should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
-    end
-    let(:team) { create :team }
-
-    it 'should have uniq name scoped to team' do
-      create :repository, name: 'Repository One', team: team
-      repo = build :repository, name: 'Repository One', team: team
-      expect(repo).to_not be_valid
+  describe 'Validations' do
+    describe '#created_by' do
+      it { is_expected.to validate_presence_of :created_by }
     end
 
-    it 'should have uniq name scoped to team calse insensitive' do
-      create :repository, name: 'Repository One', team: team
-      repo = build :repository, name: 'REPOSITORY ONE', team: team
-      expect(repo).to_not be_valid
+    describe '#name' do
+      it { is_expected.to validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH) }
+      it { expect(repository).to validate_uniqueness_of(:name).scoped_to(:team_id).case_insensitive }
+    end
+
+    describe '#team' do
+      it { is_expected.to validate_presence_of :team }
     end
   end
 
