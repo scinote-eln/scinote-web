@@ -137,6 +137,7 @@ var TinyMCE = (function() {
             setTimeout(() => {
               $(editor.editorContainer).addClass('show');
               $('.tinymce-placeholder').remove();
+              moveToolbar(editor, editorToolbar, editorToolbaroffset);
             }, 400);
             // Init saved status label
             if (editor.getContent() !== '') {
@@ -144,11 +145,17 @@ var TinyMCE = (function() {
             }
 
             // Init Floating toolbar
-
-            moveToolbar(editor, editorToolbar, editorToolbaroffset);
             $(window).on('scroll', function() {
               moveToolbar(editor, editorToolbar, editorToolbaroffset);
             });
+
+
+            // Update scroll position after exit
+            function updateScrollPosition() {
+              if (editorForm.offset().top < $(window).scrollTop()) {
+                $(window).scrollTop(editorForm.offset().top - 150);
+              }
+            }
 
             // Init Save button
             editorForm
@@ -161,6 +168,7 @@ var TinyMCE = (function() {
                 editor.setProgressState(1);
                 editor.save();
                 editorForm.submit();
+                updateScrollPosition();
               });
 
             // After save action
@@ -190,6 +198,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+                updateScrollPosition();
               })
               .removeClass('hidden');
 
