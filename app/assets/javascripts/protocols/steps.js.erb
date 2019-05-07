@@ -530,7 +530,7 @@
     var $nameInput = $form.find("#step_name");
     var nameValid = textValidator(ev, $nameInput, 1,
       <%= Constants::NAME_MAX_LENGTH %>);
-    var $descrTextarea = $form.find("#step_description");
+    var $descrTextarea = $form.find("#step_description_textarea");
     var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
