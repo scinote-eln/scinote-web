@@ -150,6 +150,7 @@
       animateSpinner(null, false);
       FilePreviewModal.init();
       DragNDropSteps.clearFiles();
+      if (tinyMCE.editors.step_description_textarea) tinyMCE.editors.step_description_textarea.remove();
       TinyMCE.init('#step_description_textarea');
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
         enableCheckboxSorting(this);
