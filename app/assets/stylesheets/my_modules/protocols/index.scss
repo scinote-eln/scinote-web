@@ -15,26 +15,28 @@
 }
 
 .module-header {
-  padding-top: 15px !important;
+  display: inline-block;
+  position: relative;
+  width: 100%;
 
-  .first-row {
-    max-height: 40px;
+  .header-container {
+    display: flex;
+    flex-wrap: wrap;
+    float: left;
+    width: calc(100% - 180px);
 
-    .date-block {
-      max-width: 250px;
+    .flex-block {
+      display: flex;
+      flex-grow: 1;
     }
+  }
 
-    div {
-      height: 45px;
-    }
+  .complete-button-container {
+    float: right;
+    width: 165px;
 
-    .complete-button-container {
-      float: right;
-      max-width: 165px;
-
-      .my_module-state-buttons {
-        padding-top: 0;
-      }
+    .my_module-state-buttons {
+      padding-top: 0;
     }
   }
 
@@ -51,25 +53,42 @@
     padding-right: 5px;
 
     + .well-sm {
-      margin-left: 32px;
+      margin-bottom: 10px;
+      margin-left: 0;
     }
   }
 
+  .module-description {
+    float: left;
+    padding-left: 10px;
+    width: 100%;
+  }
+
   .module-tags {
+    float: left;
+    width: 100%;
+
+    #module-tags {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .badge-icon {
+      line-height: 32px;
+      padding: 0 5px 0 10px;
+    }
 
     .tags-title {
       line-height: 32px;
     }
 
-    .badge-icon {
-      line-height: 32px;
-      padding: 9px 5px 9px 10px;
-    }
-
     .select-container {
-      float: right;
+      display: flex;
+      flex-basis: 100px;
+      flex-grow: 1;
+      flex-shrink: 1;
       position: relative;
-      width: calc(100% - 40px);
 
       select {
         display: none;
