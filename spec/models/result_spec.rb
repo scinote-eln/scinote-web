@@ -1,6 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Result, type: :model do
+  let(:result) { build :result }
+
+  it 'is valid' do
+    expect(result).to be_valid
+  end
   it 'should be of class Result' do
     expect(subject.class).to eq Result
   end
@@ -34,7 +41,7 @@ describe Result, type: :model do
     it { should have_many :report_elements }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :user }
     it do
       should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
