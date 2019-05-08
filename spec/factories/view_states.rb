@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :view_state do
     state {}
-    user { User.first || create(:user) }
-    viewable { Team.first || create(:team) }
+    user
+    viewable { create :team }
   end
 end
