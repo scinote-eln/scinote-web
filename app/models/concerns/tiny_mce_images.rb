@@ -13,6 +13,10 @@ module TinyMceImages
 
     def prepare_for_report(field)
       description = self[field]
+
+      # Check tinymce for old format
+      description = TinyMceAsset.update_old_tinymce(description)
+
       tiny_mce_assets.each do |tm_asset|
         tmp_f = Tempfile.open(tm_asset.image_file_name, Rails.root.join('tmp'))
         begin
@@ -41,7 +45,11 @@ module TinyMceImages
     # and updates references in assosiated object's description
     def reassign_tiny_mce_image_references(images = [])
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
-      parsed_description = Nokogiri::HTML(read_attribute(object_field))
+      description = read_attribute(object_field)
+      # Check tinymce for old format
+      description = TinyMceAsset.update_old_tinymce(description)
+
+      parsed_description = Nokogiri::HTML(description)
       images.each do |image|
         old_id = image[0]
         new_id = image[1]
