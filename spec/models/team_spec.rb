@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Team, type: :model do
+  let(:team) { build :team }
+
+  it 'is valid' do
+    expect(team).to be_valid
+  end
+
   it 'should be of class Team' do
     expect(subject.class).to eq Team
   end
@@ -33,7 +41,7 @@ describe Team, type: :model do
     it { should have_many :reports }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :space_taken }
     it do
       should validate_length_of(:name)
