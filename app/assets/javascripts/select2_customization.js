@@ -57,7 +57,9 @@ $.fn.extend({
     // Placeholder fix for ajax fields
     if (config.ajax) {
       setTimeout(() => {
-        select2.next().find('.select2-search__field').css('width', 'auto');
+        select2.next().find('.select2-search__field').css(
+          'width', config.placeholderSize || 'auto'
+        );
       }, 0);
     }
 
