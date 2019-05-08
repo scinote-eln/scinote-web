@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TinyMceAssetsController < ApplicationController
-
   def create
     image = params.fetch(:file) { render_404 }
     tiny_img = TinyMceAsset.new(image: image,
@@ -21,4 +20,9 @@ class TinyMceAssetsController < ApplicationController
     end
   end
 
+  def update
+    image = TinyMceAsset.find_by_id(Base62.decode(params[:id]))
+    image.update(image: params[:image], image_file_name: image.image_file_name)
+    render json: { url: view_context.image_url(image.url) }
+  end
 end

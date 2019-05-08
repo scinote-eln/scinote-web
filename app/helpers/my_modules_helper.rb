@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MyModulesHelper
   def ordered_step_of(my_module)
     my_module.protocol.steps.order(:position)
@@ -8,11 +10,21 @@ module MyModulesHelper
   end
 
   def ordered_assets(step)
-    step.assets.order(:file_updated_at)
+    assets = []
+    assets += step.assets
+    assets += step.marvin_js_assets if MarvinJsAsset.enabled?
+    assets.sort! do |a, b|
+      a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)]
+    end
   end
 
   def az_ordered_assets_index(step, asset_id)
-    step.assets.order('LOWER(file_file_name)').pluck(:id).index(asset_id)
+    assets = []
+    assets += step.assets
+    assets += step.marvin_js_assets if MarvinJsAsset.enabled?
+    assets.sort! do |a, b|
+      (a[asset_name_sort_field(a)] || '').downcase <=> (b[asset_name_sort_field(b)] || '').downcase
+    end.pluck(:id).index(asset_id)
   end
 
   def number_of_samples(my_module)
@@ -35,11 +47,28 @@ module MyModulesHelper
   end
 
   def is_steps_page?
-    action_name == "steps"
+    action_name == 'steps'
   end
 
   def is_results_page?
-    action_name == "results"
+    action_name == 'results'
   end
 
+  private
+
+  def asset_date_sort_field(element)
+    result = {
+      'Asset' => :file_updated_at,
+      'MarvinJsAsset' => :updated_at
+    }
+    result[element.class.name]
+  end
+
+  def asset_name_sort_field(element)
+    result = {
+      'Asset' => :file_file_name,
+      'MarvinJsAsset' => :name
+    }
+    result[element.class.name]
+  end
 end

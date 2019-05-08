@@ -1,0 +1,162 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+// scss-lint:disable IdSelector
+
+@import "constants";
+@import "mixins";
+
+// MarvinJs modal
+.modal-marvin-js {
+  background: transparent;
+  font-size: $font-size-large;
+  padding: 0 !important;
+
+  .preview-close {
+    background: transparent;
+    border: 0;
+    color: $color-white;
+    display: inline-block;
+    float: right;
+  }
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+
+  .modal-content {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: $color-white;
+    height: 100%;
+    width: auto;
+  }
+
+  .modal-header {
+    background: $color-black;
+    border: 0;
+    height: 60px;
+    text-align: center;
+
+    .file-name {
+      float: left;
+
+      input {
+        border-radius: 5px;
+        box-shadow: none;
+        color: $color-black;
+        height: 40px;
+        outline: 0;
+        padding: 5px 10px;
+        position: relative;
+        top: -5px;
+        width: 350px;
+      }
+    }
+  }
+
+  .modal-body {
+    height: calc(100% - 60px);
+    padding: 0;
+
+    #marvinjs-editor {
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+
+      #marvinjs-sketch {
+        border-right: 1px solid $color-gainsboro;
+        float: left;
+        min-height: 450px;
+        min-width: 500px;
+        overflow: hidden;
+      }
+
+      .marvinjs-team-sketch {
+        background: $color-white;
+        float: right;
+        height: calc(100% - 40px);
+        overflow-y: scroll;
+        position: relative;
+        width: 200px;
+      }
+
+      .marvinjs-team-sketch-header {
+        background: $color-white;
+        border-bottom: 1px solid $color-gainsboro;
+        color: $color-emperor;
+        float: right;
+        font-size: 16px;
+        height: 40px;
+        line-height: 39px;
+        text-align: center;
+        width: 200px;
+      }
+
+    }
+
+    .sketch-container {
+      @include md-card-style;
+      cursor: pointer;
+      margin: 10px;
+      overflow: hidden;
+      padding: 10px;
+      position: relative;
+
+      .sketch-image {
+        height: 100%;
+        width: 100%;
+      }
+
+      .sketch-name {
+        color: $brand-primary;
+        font-family: Lato;
+        font-size: 16px;
+        line-height: 18px;
+        margin: 10px auto;
+        overflow: hidden;
+        text-align: center;
+        width: 160px;
+      }
+
+      .sketch-object {
+        color: $color-emperor;
+        font-size: 12px;
+        opacity: .6;
+        text-align: center;
+      }
+    }
+  }
+
+  .file-save-link {
+    color: $color-white;
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+}
+
+#new-step-sketch {
+
+  .sketch-container {
+    display: grid;
+    float: left;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    width: 100%;
+  }
+}
+
+.mce-i-file-invoice::before {
+  content: "\F570";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 16px;
+  position: absolute;
+}

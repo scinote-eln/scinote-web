@@ -1,0 +1,25 @@
+        <div class="attachment-placeholder pull-left" data-marvinjs-sketch="<%= sketch.id %>">
+          <div class="attachment-thumbnail">
+              <img src>
+              <%= hidden_field_tag :description, sketch.description %>
+          </div>
+          <script>
+            (function(){
+                src=$('.attachment-placeholder[data-marvinjs-sketch="<%= sketch.id %>"]').find('#description')
+                target=$('.attachment-placeholder[data-marvinjs-sketch="<%= sketch.id %>"]').find('img')
+                MarvinJsEditor().create_preview(src,target)
+            })()
+          </script>
+          <div class="attachment-label"><%= truncate(sketch.name,
+                                             length: Constants::FILENAME_TRUNCATION_LENGTH) %></div>
+          <div class="spencer-bonnet-modif">
+            <%= t('protocols.steps.attachments.modified_label') %> <%= l(sketch.updated_at, format: :full_date) if sketch.updated_at %>
+          </div>
+          <% if edit_page %>
+            <div class="remove-icon pull-right">
+              <%= ff.remove_nested_fields_link do %>
+                <span class="fas fa-trash"></span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>

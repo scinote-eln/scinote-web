@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190410110605) do
+ActiveRecord::Schema.define(version: 20190427115413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,17 @@ ActiveRecord::Schema.define(version: 20190410110605) do
     t.index ["name"], name: "index_experiments_on_name"
     t.index ["project_id"], name: "index_experiments_on_project_id"
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
+  end
+
+  create_table "marvin_js_assets", force: :cascade do |t|
+    t.bigint "team_id"
+    t.string "description"
+    t.string "object_type"
+    t.bigint "object_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["object_type", "object_id"], name: "index_marvin_js_assets_on_object_type_and_object_id"
   end
 
   create_table "my_module_groups", force: :cascade do |t|

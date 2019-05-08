@@ -74,3 +74,8 @@ spec/addons
 
 # RVM/rbenv ruby version for local development
 .ruby-version
+
+#ignore marvinJs
+
+public/marvinjs
+public/marvin4js-license.cxl

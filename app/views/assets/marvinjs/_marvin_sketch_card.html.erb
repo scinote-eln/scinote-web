@@ -1,0 +1,18 @@
+<div class="pseudo-attachment-container" style="order: <%= assets_count - i %>">
+    <%= link_to '',
+            class: 'file-preview-link',
+            id: "marvin_js_sketch_#{sketch.id}",
+            data: { no_turbolink: true, id: true, status: 'asset-present',
+                    'preview-url': '',
+                    'order-atoz': az_ordered_assets_index(step, sketch.id),
+                    'order-ztoa': assets_count - az_ordered_assets_index(step, sketch.id),
+                    'order-old': i,
+                    'order-new': assets_count - i,
+                    'asset-type': 'marvin-sketch',
+                    'asset-id': sketch.id,
+                    'update_url': marvin_js_asset_path(sketch.id)
+            } do %>
+        <%= render partial: 'assets/marvinjs/marvin_sketch_card_placeholder.html.erb',
+             locals: { edit_page: false, sketch: sketch } %>
+    <% end %>
+</div>

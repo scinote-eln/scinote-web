@@ -450,6 +450,7 @@ Rails.application.routes.draw do
     end
 
     # tinyMCE image uploader endpoint
+    resources :tiny_mce_assets, only: [:update]
     post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
 
     resources :results, only: [:update, :destroy] do
@@ -673,6 +674,12 @@ Rails.application.routes.draw do
       get :search_subjects
       get :team_filter
       get :user_filter
+    end
+  end
+
+  resources :marvin_js_assets, only: %i(create update destroy show) do
+    collection do
+      get :team_sketches
     end
   end
 

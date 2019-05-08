@@ -595,7 +595,11 @@ class StepsController < ApplicationController
         :name,
         :contents,
         :_destroy
-      ]
+      ],
+      marvin_js_assets_attributes: %i(
+        id
+        _destroy
+      )
     )
   end
 
