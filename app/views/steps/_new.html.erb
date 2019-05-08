@@ -1,9 +1,7 @@
 <div class="well">
   <%= bootstrap_form_for(@step, url: protocol_steps_path(@protocol, format: :json), authenticity_token: true, multipart: true, data: { role: "new-step-form", type: :json }) do |f| %>
     <h4><%= t("protocols.steps.new.add_step_title") %></h4>
-    <hr>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
-    <hr>
     <div class="align-right">
       <button type="button" data-action="cancel-new" class="btn btn-default">
         <%= t("general.cancel")%>

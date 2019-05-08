@@ -119,7 +119,7 @@ var TinyMCE = (function() {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
         tinyMceInitSize = tinyMceContainer.height();
-        $(selector).closest('form').find('.form-group')
+        $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
         plugins = 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern';
@@ -212,6 +212,7 @@ var TinyMCE = (function() {
             setTimeout(() => {
               $(editor.editorContainer).addClass('show');
               $('.tinymce-placeholder').remove();
+              moveToolbar(editor, editorToolbar, editorToolbaroffset);
             }, 400);
             // Init saved status label
             if (editor.getContent() !== '') {
@@ -219,14 +220,20 @@ var TinyMCE = (function() {
             }
 
             // Init Floating toolbar
-
-            moveToolbar(editor, editorToolbar, editorToolbaroffset);
             $(window).on('scroll', function() {
               moveToolbar(editor, editorToolbar, editorToolbaroffset);
             });
 
             // Init image toolbar
             initImageToolBar(editor);
+
+
+            // Update scroll position after exit
+            function updateScrollPosition() {
+              if (editorForm.offset().top < $(window).scrollTop()) {
+                $(window).scrollTop(editorForm.offset().top - 150);
+              }
+            }
 
             // Init Save button
             editorForm
@@ -239,6 +246,7 @@ var TinyMCE = (function() {
                 editor.setProgressState(1);
                 editor.save();
                 editorForm.submit();
+                updateScrollPosition();
               });
 
             // After save action
@@ -268,6 +276,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+                updateScrollPosition();
               })
               .removeClass('hidden');
 
