@@ -49,6 +49,9 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def self.generate_url(description)
+    # Check tinymce for old format
+    description = update_old_tinymce(description)
+
     description = Nokogiri::HTML(description)
     tm_assets = description.css('img')
     tm_assets.each do |tm_asset|
@@ -105,7 +108,7 @@ class TinyMceAsset < ApplicationRecord
   def self.update_old_tinymce(description)
     description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
       old_format = /\[~tiny_mce_id:#{token}\]/
-      new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token)}\"/>"
+      new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
       description.sub!(old_format, new_format)
     end
     description
