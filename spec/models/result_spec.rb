@@ -8,6 +8,7 @@ describe Result, type: :model do
   it 'is valid' do
     expect(result).to be_valid
   end
+
   it 'should be of class Result' do
     expect(subject.class).to eq Result
   end

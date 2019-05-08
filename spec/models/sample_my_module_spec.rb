@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SampleMyModule, type: :model do
+  let(:sample_my_module) { build :sample_my_module }
+
+  it 'is valid' do
+    expect(sample_my_module).to be_valid
+  end
+
   it 'should be of class SampleMyModule' do
     expect(subject.class).to eq SampleMyModule
   end
@@ -18,16 +26,14 @@ describe SampleMyModule, type: :model do
     it { should belong_to :my_module }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :sample }
-    it { should validate_presence_of :my_module }
+  describe 'Validations' do
+    describe '#sample' do
+      it { should validate_presence_of :sample }
+      it { expect(sample_my_module).to validate_uniqueness_of(:sample_id).scoped_to(:my_module_id) }
+    end
 
-    it 'should have one sample assigned per model' do
-      sample = create :sample
-      my_module = create :my_module, name: 'Module one'
-      create :sample_my_module, sample: sample, my_module: my_module
-      new_smm = build :sample_my_module, sample: sample, my_module: my_module
-      expect(new_smm).to_not be_valid
+    describe '#my_module' do
+      it { should validate_presence_of :my_module }
     end
   end
 end
