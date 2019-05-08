@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Step, type: :model do
+  let(:step) { build :step }
+
+  it 'is valid' do
+    expect(step).to be_valid
+  end
+
   it 'should be of class Step' do
     expect(subject.class).to eq Step
   end
@@ -32,7 +40,7 @@ describe Step, type: :model do
     it { should have_many :tiny_mce_assets }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :name }
     it { should validate_presence_of :position }
     it { should validate_presence_of :user }
