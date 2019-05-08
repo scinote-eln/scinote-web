@@ -1,8 +1,12 @@
-/* global MarvinJSUtil, I18n, FilePreviewModal, tinymce, TinyMCE PerfectScrollbar */
+/* global MarvinJSUtil, I18n, FilePreviewModal, tinymce */
+/* global TinyMCE, PerfectScrollbar, ChemicalizeMarvinJs */
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
-
-var MarvinJsEditor = (function() {
+var MarvinJsEditor;
+if (typeof ChemicalizeMarvinJs !== 'undefined') {
+  ChemicalizeMarvinJs.createEditor('#marvinjs-sketch');
+}
+MarvinJsEditor = (function() {
   var marvinJsModal = $('#MarvinJsModal');
   var marvinJsContainer = $('#marvinjs-editor');
   var marvinJsObject = $('#marvinjs-sketch');
@@ -10,10 +14,16 @@ var MarvinJsEditor = (function() {
   var sketchName = marvinJsModal.find('.file-name input');
 
   var loadEditor = () => {
+    if (marvinJsObject[0].nodeName === 'DIV') {
+      return MarvinJSUtil.getEditor('#' + marvinJsObject.children()[0].id);
+    }
     return MarvinJSUtil.getEditor('#marvinjs-sketch');
   };
 
   var loadPackages = () => {
+    if (marvinJsObject[0].nodeName === 'DIV') {
+      return MarvinJSUtil.getPackage('#' + marvinJsObject.children()[0].id);
+    }
     return MarvinJSUtil.getPackage('#marvinjs-sketch');
   };
 

@@ -17,7 +17,7 @@ class MarvinJsAsset < ApplicationRecord
   end
 
   def self.enabled?
-    ENV['MARVINJS_URL'] != nil
+    ENV['MARVINJS_URL'] != nil || ENV['MARVINJS_API_KEY'] != nil
   end
 
   def self.add_sketch(values, team)
