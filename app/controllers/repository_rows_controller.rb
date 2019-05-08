@@ -429,6 +429,7 @@ class RepositoryRowsController < ApplicationController
                       .where(repository_column: cell.repository_column)
                       .limit(Constants::SEARCH_LIMIT)
                       .pluck(:id, :data)
+                      .map { |li| [li[0], escape_input(li[1])] }
   end
 
   def fetch_columns_list_items
@@ -442,6 +443,7 @@ class RepositoryRowsController < ApplicationController
         list_items: column.repository_list_items
                           .limit(Constants::SEARCH_LIMIT)
                           .pluck(:id, :data)
+                          .map { |li| [li[0], escape_input(li[1])] }
       }
     end
     collection

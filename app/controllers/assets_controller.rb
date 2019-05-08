@@ -31,9 +31,8 @@ class AssetsController < ApplicationController
             'asset-id' => @asset.id,
             'image-tag-url' => @asset.url(:medium),
             'preview-url' => asset_file_preview_path(@asset),
-            'filename' => truncate(@asset.file_file_name,
-                                   length:
-                                     Constants::FILENAME_TRUNCATION_LENGTH),
+            'filename' => truncate(escape_input(@asset.file_file_name),
+                                   length: Constants::FILENAME_TRUNCATION_LENGTH),
             'download-url' => download_asset_path(@asset),
             'type' => asset_data_type(@asset)
           }, status: 200
@@ -47,7 +46,7 @@ class AssetsController < ApplicationController
       'id' => @asset.id,
       'type' => (@asset.is_image? ? 'image' : 'file'),
 
-      'filename' => truncate(@asset.file_file_name,
+      'filename' => truncate(escape_input(@asset.file_file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
       'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
     }
