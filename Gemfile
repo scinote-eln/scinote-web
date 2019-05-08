@@ -6,8 +6,8 @@ ruby '2.5.5'
 
 
 gem 'webpacker', '~> 3.5'
-gem 'bootstrap-sass', '~> 3.4'
-gem 'bootstrap_form'
+gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.6.2'
 gem 'devise_invitable'
 gem 'figaro'
@@ -35,9 +35,9 @@ gem 'rack-attack'
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
-gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.13.8'
+gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'autosize-rails' # jQuery autosize plugin

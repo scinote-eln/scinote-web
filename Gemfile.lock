@@ -96,7 +96,7 @@ GEM
     ast (2.4.0)
     auto_strip_attributes (2.5.0)
       activerecord (>= 4.0)
-    autoprefixer-rails (9.5.1)
+    autoprefixer-rails (9.5.1.1)
       execjs
     autosize-rails (1.18.17)
       rails (>= 3.1)
@@ -121,15 +121,13 @@ GEM
     bindata (2.4.4)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
-    bootstrap-sass (3.4.1)
+    bootstrap-sass (3.3.7)
       autoprefixer-rails (>= 5.2.1)
-      sassc (>= 2.0.0)
-    bootstrap-select-rails (1.13.8)
-    bootstrap3-datetimepicker-rails (4.17.47)
+      sass (>= 3.3.4)
+    bootstrap-select-rails (1.12.4)
+    bootstrap3-datetimepicker-rails (4.15.35)
       momentjs-rails (>= 2.8.1)
-    bootstrap_form (4.2.0)
-      actionpack (>= 5.0)
-      activemodel (>= 5.0)
+    bootstrap_form (2.7.0)
     builder (3.2.3)
     bullet (6.0.0)
       activesupport (>= 3.0.0)
@@ -460,6 +458,11 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4)
+    sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
@@ -552,10 +555,10 @@ DEPENDENCIES
   bcrypt (~> 3.1.10)
   better_errors
   binding_of_caller
-  bootstrap-sass (~> 3.4)
-  bootstrap-select-rails (~> 1.13.8)
-  bootstrap3-datetimepicker-rails (~> 4.17.47)
-  bootstrap_form
+  bootstrap-sass (~> 3.3.7)
+  bootstrap-select-rails (~> 1.12.4)
+  bootstrap3-datetimepicker-rails (~> 4.15.35)
+  bootstrap_form (~> 2.7.0)
   bullet
   byebug
   canaid!

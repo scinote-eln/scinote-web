@@ -76,10 +76,36 @@
     }
 
     .left-floats {
-      float: left;
+      align-items: center;
+      display: flex;
+      height: 39px;
 
-      > * {
-        float: left;
+      .step-name-link {
+        display: flex;
+        flex-shrink: 1;
+        overflow: hidden;
+
+        .name-block {
+          display: inline-block;
+          height: 39px;
+          max-width: calc(100% - 300px);
+          overflow: hidden;
+
+          strong {
+            white-space: nowrap;
+          }
+        }
+
+        .delimiter {
+          padding: 0 5px;
+        }
+
+        .author-block {
+          overflow: hidden;
+          padding-right: 10px;
+          white-space: nowrap;
+          width: 300px;
+        }
       }
     }
   }
