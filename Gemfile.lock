@@ -114,6 +114,9 @@ GEM
     backports (3.14.0)
     base62 (1.0.0)
     bcrypt (3.1.12)
+    bcrypt (3.1.12-java)
+    bcrypt (3.1.12-x64-mingw32)
+    bcrypt (3.1.12-x86-mingw32)
     better_errors (2.5.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -228,6 +231,9 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
+    ffi (1.10.0-java)
+    ffi (1.10.0-x64-mingw32)
+    ffi (1.10.0-x86-mingw32)
     figaro (1.1.1)
       thor (~> 0.14)
     fugit (1.2.0)
@@ -248,6 +254,7 @@ GEM
       i18n (>= 0.6.6)
     iniparse (1.4.4)
     jaro_winkler (1.5.2)
+    jaro_winkler (1.5.2-java)
     jbuilder (2.8.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -261,6 +268,7 @@ GEM
     js_cookie_rails (2.2.0)
       railties (>= 3.1)
     json (1.8.6)
+    json (1.8.6-java)
     json-jwt (1.10.0)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -314,7 +322,13 @@ GEM
       rails (>= 3.2.0)
     newrelic_rpm (6.2.0.354)
     nio4r (2.3.1)
+    nio4r (2.3.1-java)
     nokogiri (1.8.5)
+      mini_portile2 (~> 2.3.0)
+    nokogiri (1.8.5-java)
+    nokogiri (1.8.5-x64-mingw32)
+      mini_portile2 (~> 2.3.0)
+    nokogiri (1.8.5-x86-mingw32)
       mini_portile2 (~> 2.3.0)
     nokogumbo (1.5.0)
       nokogiri
@@ -346,6 +360,8 @@ GEM
     parser (2.6.3.0)
       ast (~> 2.4.0)
     pg (0.21.0)
+    pg (0.21.0-x64-mingw32)
+    pg (0.21.0-x86-mingw32)
     pg_search (2.1.7)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
@@ -358,6 +374,10 @@ GEM
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
+    pry (0.12.2-java)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+      spoon (~> 0.0)
     pry-byebug (3.7.0)
       byebug (~> 11.0)
       pry (~> 0.10)
@@ -365,6 +385,7 @@ GEM
       pry (>= 0.10.4)
     public_suffix (3.0.3)
     puma (3.12.1)
+    puma (3.12.1-java)
     raabro (1.1.6)
     rack (2.0.7)
     rack-attack (6.0.0)
@@ -489,6 +510,8 @@ GEM
     simplecov-html (0.10.2)
     spinjs-rails (1.4)
       rails (>= 3.1)
+    spoon (0.0.6)
+      ffi
     spreadsheet (1.2.3)
       ruby-ole (>= 1.0)
     sprockets (3.7.2)
@@ -503,6 +526,7 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     thor (0.20.3)
     thread_safe (0.3.6)
+    thread_safe (0.3.6-java)
     tilt (2.0.9)
     timecop (0.9.1)
     tinymce-rails (4.7.13)
@@ -512,6 +536,8 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2019.1)
+      tzinfo (>= 1.0.0)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     underscore-rails (1.8.3)
@@ -529,6 +555,8 @@ GEM
       railties (>= 4.2)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
+    websocket-driver (0.6.5-java)
+      websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
     whacamole (1.2.0)
     wicked_pdf (1.1.0)
@@ -540,7 +568,11 @@ GEM
       mime-types (~> 1.23)
 
 PLATFORMS
+  java
   ruby
+  x64-mingw32
+  x86-mingw32
+  x86-mswin32
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.7)
