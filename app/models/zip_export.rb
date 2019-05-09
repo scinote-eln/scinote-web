@@ -24,6 +24,8 @@ class ZipExport < ApplicationRecord
   validates_attachment :zip_file,
                        content_type: { content_type: 'application/zip' }
 
+  after_create :self_destruct
+
   # When using S3 file upload, we can limit file accessibility with url signing
   def presigned_url(style = :original,
                     download: false,
@@ -48,6 +50,11 @@ class ZipExport < ApplicationRecord
     zip_file.options[:storage].to_sym == :s3
   end
 
+  def self.delete_expired_export(id)
+    export = find_by_id(id)
+    export.destroy if export
+  end
+
   def generate_exportable_zip(user, data, type, options = {})
     I18n.backend.date_format =
       user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
@@ -70,6 +77,11 @@ class ZipExport < ApplicationRecord
   handle_asynchronously :generate_exportable_zip
 
   private
+
+  def self_destruct
+    ZipExport.delay(run_at: Constants::EXPORTABLE_ZIP_EXPIRATION_DAYS.days.from_now)
+             .delete_expired_export(id)
+  end
 
   def method_missing(m, *args, &block)
     puts 'Method is missing! To use this zip_export you have to ' \
