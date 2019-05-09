@@ -5,6 +5,7 @@ class User < ApplicationRecord
   include User::TeamRoles
   include User::ProjectRoles
   include TeamBySubjectModel
+  include InputSanitizeHelper
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -553,7 +554,7 @@ class User < ApplicationRecord
     User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
-        .map { |i| { name: i[:full_name], id: i[:id] } }
+        .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
   end
 
   protected

@@ -104,7 +104,7 @@ class ProjectsController < ApplicationController
       up.save
       log_activity(:create_project)
 
-      message = t('projects.create.success_flash', name: @project.name)
+      message = t('projects.create.success_flash', name: escape_input(@project.name))
       respond_to do |format|
         format.json {
           render json: { message: message }, status: :ok
@@ -136,7 +136,7 @@ class ProjectsController < ApplicationController
 
   def update
     return_error = false
-    flash_error = t('projects.update.error_flash', name: @project.name)
+    flash_error = t('projects.update.error_flash', name: escape_input(@project.name))
 
     # Check archive permissions if archiving/restoring
     if project_params.include? :archived
@@ -147,7 +147,7 @@ class ProjectsController < ApplicationController
         return_error = true
         is_archive = project_params[:archived] == 'true' ? 'archive' : 'restore'
         flash_error =
-          t("projects.#{is_archive}.error_flash", name: @project.name)
+          t("projects.#{is_archive}.error_flash", name: escape_input(@project.name))
       end
     elsif !can_manage_project?(@project)
       render_403 && return
@@ -177,11 +177,11 @@ class ProjectsController < ApplicationController
       log_activity(:archive_project) if project_params[:archived] == 'true'
       log_activity(:restore_project) if project_params[:archived] == 'false'
 
-      flash_success = t('projects.update.success_flash', name: @project.name)
+      flash_success = t('projects.update.success_flash', name: escape_input(@project.name))
       if project_params[:archived] == 'true'
-        flash_success = t('projects.archive.success_flash', name: @project.name)
+        flash_success = t('projects.archive.success_flash', name: escape_input(@project.name))
       elsif project_params[:archived] == 'false'
-        flash_success = t('projects.restore.success_flash', name: @project.name)
+        flash_success = t('projects.restore.success_flash', name: escape_input(@project.name))
       end
       respond_to do |format|
         format.html do

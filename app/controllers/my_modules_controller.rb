@@ -414,6 +414,7 @@ class MyModulesController < ApplicationController
                        repository: @repository.id,
                        record_names: dowmstream_records[my_module.id].join(', '))
         end
+        records_names.map! { |n| escape_input(n) }
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
         flash = I18n.t('repositories.assigned_records_downstream_flash',
@@ -471,7 +472,7 @@ class MyModulesController < ApplicationController
                      record_names: records.map(&:name).join(', '))
 
         flash = I18n.t('repositories.unassigned_records_flash',
-                       records: records.map(&:name).join(', '))
+                       records: records.map { |r| escape_input(r.name) }.join(', '))
         respond_to do |format|
           format.json { render json: { flash: flash }, status: :ok }
         end

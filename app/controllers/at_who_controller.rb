@@ -1,4 +1,6 @@
 class AtWhoController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars
   before_action :check_users_permissions
 
@@ -55,7 +57,7 @@ class AtWhoController < ApplicationController
       format.json do
         render json: {
           repositories: repositories.map do |r|
-            [r.id, r.name.truncate(Constants::ATWHO_REP_NAME_LIMIT)]
+            [r.id, escape_input(r.name.truncate(Constants::ATWHO_REP_NAME_LIMIT))]
           end.to_h,
           status: :ok
         }
@@ -122,9 +124,8 @@ class AtWhoController < ApplicationController
     res.each do |obj|
       tmp = {}
       tmp['id'] = obj[0].base62_encode
-      tmp['full_name'] =
-        obj[1].truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
-      tmp['email'] = obj[2]
+      tmp['full_name'] = escape_input(obj[1].truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN))
+      tmp['email'] = escape_input(obj[2])
       tmp['img_url'] = avatar_path(obj[0], :icon_small)
       data << tmp
     end
