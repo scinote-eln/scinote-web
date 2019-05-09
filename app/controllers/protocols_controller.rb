@@ -3,6 +3,9 @@ class ProtocolsController < ApplicationController
   include RenamingUtil
   include ProtocolsImporter
   include ProtocolsExporter
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
   include InputSanitizeHelper
   include ProtocolsIoHelper
   include TeamsHelper
@@ -222,9 +225,11 @@ class ProtocolsController < ApplicationController
         if @protocol.update(description: params.require(:protocol)[:description])
           TinyMceAsset.update_images(@protocol, params[:tiny_mce_images])
           render json: {
-            html: sanitize_input(
-              @protocol.tinymce_render(:description)
-            )
+            html: custom_auto_link(
+              @protocol.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team)
           }
         else
           render json: @protocol.errors, status: :unprocessable_entity
