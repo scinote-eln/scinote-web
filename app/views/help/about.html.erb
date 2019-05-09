@@ -15,10 +15,23 @@
   <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6">
       <p>
-        SciNote is an open-source Electronic Lab & Field Notebook (ELFN) application for
-        use in managing laboratory work and storing experimental data securely on an EPA
-        private server. SciNote is available for all ORD researchers’ use (user registration
-        is required) via https://intranet.ord.epa.gov/nrmrl/electronic-research-notebook.
+         SciNote is an open-source Electronic Lab & Field Notebook (ELFN) application for
+         use in managing laboratory work and storing experimental data securely on an EPA
+         private server. SciNote is available for all ORD researchers’ use (user registration
+         is required) via https://intranet.ord.epa.gov/nrmrl/electronic-research-notebook.
+
+         Platform and Code Style
+         SciNote is securely maintained on an EPA private Intranet Red Hat Enterprise Linux server.
+         SciNote is developed in Ruby on Rails. It makes use of Docker technology, which is platform
+         independent and runs inside Docker containers on an RTP RHEL server assigned by OSIM. These
+         Docker containers contain an OS and all software modules and services required to run an
+         application and is portable. SciNote's codebase follows code styling conventions. All
+         ontributions should follow the below code styling rules provided by various linter configuration
+         files:
+           •	Ruby - RuboCop -.rubocop.yml.
+           •	JavaScript - ESLint -. eslintrc.json, .jsbeautifyrc.
+           •	Sass - scss-lint -.scss-lint.yml.
+
       </p>
     </div>
   </div>
