@@ -10,8 +10,8 @@ FactoryBot.define do
                                                       :list_value,
                                                       repository_list_value: repository_list_value)
 
-      repository_list_value.repository_cell.repository_column.repository_list_items =
-        [repository_list_value.repository_list_item]
+      repository_list_value.repository_cell.repository_column.repository_list_items <<
+        repository_list_value.repository_list_item
     end
   end
 end
