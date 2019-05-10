@@ -57,6 +57,7 @@ var TinyMCE = (function() {
           menubar: 'file edit view insert format',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
           plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern',
+          autoresize_bottom_margin: 20,
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -139,6 +140,7 @@ var TinyMCE = (function() {
               $('.tinymce-placeholder').remove();
               moveToolbar(editor, editorToolbar, editorToolbaroffset);
             }, 400);
+
             // Init saved status label
             if (editor.getContent() !== '') {
               editorForm.find('.tinymce-status-badge').removeClass('hidden');
@@ -149,13 +151,22 @@ var TinyMCE = (function() {
               moveToolbar(editor, editorToolbar, editorToolbaroffset);
             });
 
-
             // Update scroll position after exit
             function updateScrollPosition() {
               if (editorForm.offset().top < $(window).scrollTop()) {
                 $(window).scrollTop(editorForm.offset().top - 150);
               }
             }
+
+            // Saving at clicking anywhere outside of the editor
+            editor.on('blur', function(event) {
+              event.preventDefault();
+              editorForm.clearFormErrors();
+              editor.setProgressState(1);
+              editor.save();
+              editorForm.submit();
+              updateScrollPosition();
+            });
 
             // Init Save button
             editorForm
@@ -201,6 +212,11 @@ var TinyMCE = (function() {
                 updateScrollPosition();
               })
               .removeClass('hidden');
+
+            // Set cursor to the end of the content
+            editor.focus();
+            editor.selection.select(editor.getBody(), true);
+            editor.selection.collapse(false);
 
             SmartAnnotation.init($(editor.contentDocument.activeElement));
             initHighlightjsIframe($(this.iframeElement).contents());
