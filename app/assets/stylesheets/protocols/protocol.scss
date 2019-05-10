@@ -5,27 +5,7 @@
 @import "mixins";
 
 .protocol-info {
-
-  .well {
-    border: 0;
-    box-shadow: none;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .badge-icon {
-    background: transparent;
-    color: $color-silver;
-    padding-right: 5px;
-    text-align: center;
-    width: 37px;
-
-    + .well-sm {
-      margin-bottom: 10px;
-      margin-left: 32px;
-    }
-  }
-
+  
   .protocol-description {
     padding: 0 48px;
   }
