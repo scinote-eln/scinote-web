@@ -602,7 +602,7 @@ en:
       no_tags: "click here to add Task Tags (optional)"
       manage_tags: "Manage tags"
       create_new_tag: "create new"
-      no_description: "No description"
+      no_description: "No task description"
       description_label: "Description"
       empty_description_edit_label: "Click here to enter Task Description (optional)"
     protocols:
@@ -615,7 +615,7 @@ en:
         added_by: "Added by"
         added_by_tooltip: "Added at %{ts}"
         private_protocol_desc: "The parent protocol is private. Only its author can manage it."
-        no_description: "no description"
+        no_description: "No protocol description"
         empty_description_edit_label: "Click here to enter Protocol Description (optional)"
         keywords: "Keywords"
         no_keywords: "no keywords"
