@@ -305,14 +305,14 @@ ActiveRecord::Schema.define(version: 20190410110605) do
     t.bigint "restored_by_id"
     t.datetime "restored_on"
     t.string "experiments_order"
-    t.integer "rap_task_level_id", null: true
+    t.integer "rap_task_level_id", null: false
     t.boolean "template"
     t.boolean "demo", default: false, null: false
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index ["archived_by_id"], name: "index_projects_on_archived_by_id"
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_projects_on_last_modified_by_id"
-    t.index ["rap_task_level_id"], name: "index_projects_on_rap_task_level_id"    
+    t.index ["rap_task_level_id"], name: "index_projects_on_rap_task_level_id"
     t.index ["restored_by_id"], name: "index_projects_on_restored_by_id"
     t.index ["team_id"], name: "index_projects_on_team_id"
   end
@@ -397,7 +397,6 @@ ActiveRecord::Schema.define(version: 20190410110605) do
     t.index ["name"], name: "index_rap_topic_levels_on_name", unique: true
     t.index ["rap_program_level_id"], name: "index_rap_topic_levels_on_rap_program_level_id"
   end
-
 
   create_table "report_elements", force: :cascade do |t|
     t.integer "position", null: false
@@ -996,11 +995,11 @@ ActiveRecord::Schema.define(version: 20190410110605) do
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
   add_foreign_key "notifications", "users", column: "generator_user_id"
-  add_foreign_key "projects", "rap_task_levels"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
+  add_foreign_key "projects", "rap_task_levels"
   add_foreign_key "projects", "teams"
   add_foreign_key "projects", "users", column: "archived_by_id"
   add_foreign_key "projects", "users", column: "created_by_id"
@@ -1106,7 +1105,7 @@ ActiveRecord::Schema.define(version: 20190410110605) do
   add_foreign_key "wopi_apps", "wopi_discoveries"
   add_foreign_key "zip_exports", "users"
 
-  create_view "datatables_teams",  sql_definition: <<-SQL
+  create_view "datatables_teams", sql_definition: <<-SQL
       SELECT teams.id,
       teams.name,
       user_teams.role,
@@ -1122,5 +1121,4 @@ ActiveRecord::Schema.define(version: 20190410110605) do
      FROM (teams
        JOIN user_teams ON ((teams.id = user_teams.team_id)));
   SQL
-
 end

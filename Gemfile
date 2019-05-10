@@ -68,12 +68,6 @@ gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.8.1' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
-
-# new gems for importing excel (EPA RAP Information)
-gem 'ruby-ole', '~> 1.2.12.2'
-gem 'spreadsheet', '~> 1.2.2' # Spreadsheet required before roo?
-# End new gems for importing excel.
-
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rubyzip'
 gem 'scenic', '~> 1.4'
