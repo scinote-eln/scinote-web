@@ -5,6 +5,7 @@ class AssetsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Context
+  include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
 
@@ -81,7 +82,7 @@ class AssetsController < ApplicationController
       )
     end
 
-    if wopi_file?(@asset)
+    if wopi_enabled? && wopi_file?(@asset)
       edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
         partial: 'shared/file_wopi_controlls.html.erb',
@@ -293,6 +294,7 @@ class AssetsController < ApplicationController
   def asset_data_type(asset)
     return 'wopi' if wopi_file?(asset)
     return 'image' if asset.is_image?
+
     'file'
   end
 end
