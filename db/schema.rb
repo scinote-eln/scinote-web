@@ -1106,7 +1106,7 @@ ActiveRecord::Schema.define(version: 20190424113216) do
   add_foreign_key "wopi_apps", "wopi_discoveries"
   add_foreign_key "zip_exports", "users"
 
-  create_view "datatables_teams",  sql_definition: <<-SQL
+  create_view "datatables_teams", sql_definition: <<-SQL
       SELECT teams.id,
       teams.name,
       user_teams.role,
@@ -1122,5 +1122,4 @@ ActiveRecord::Schema.define(version: 20190424113216) do
      FROM (teams
        JOIN user_teams ON ((teams.id = user_teams.team_id)));
   SQL
-
 end

@@ -101,6 +101,14 @@ en:
       settings: "Settings"
       logout: "Log out"
       about: "About SciNote"
+    help:
+      tutorials: "Tutorials"
+      release_notes: "Release notes"
+      support: "Customer support"
+      premium: "Premium"
+      contact: "Contact us"
+      about: "About SciNote"
+      training: "Training"
     activities:
       none: "No activities!"
     label:
@@ -224,14 +232,6 @@ en:
       delete: "Delete"
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occured while deleting comment."
-    
-  help:
-    contact:
-      head_title: "Contact"
-    about:
-      head_title: "About"
-    training:
-      head_title: "Training"
 
   projects:
     index:
@@ -332,6 +332,7 @@ en:
       visibility_visible: "All team members"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
+      name_taken: "This Project name has to be unique inside a team (this includes the archive)."
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
@@ -344,6 +345,7 @@ en:
       error_flash: "Project <strong>%{name}</strong> not restored."
     show:
       head_title: "%{project}"
+      page_title: "Project's experiments"
     samples:
       head_title: "%{project} | Sample inventory"
     reports:
@@ -595,6 +597,9 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Sucessfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      table_log: "%{user} deleted table result <strong>%{result}</strong> on %{date}"
+      text_log: "%{user} deleted text result <strong>%{result}</strong> on %{date}"
+      asset_log: "%{user} deleted file result <strong>%{result}</strong> on %{date}"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
