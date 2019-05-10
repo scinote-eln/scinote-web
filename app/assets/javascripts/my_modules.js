@@ -290,7 +290,8 @@ function initTagsSelector() {
     closeOnSelect: true,
     withoutArrow: true,
     dynamicCreation: true,
-    dynamicCreationDelimiter: [',']
+    dynamicCreationDelimiter: [','],
+    placeholderSize: '250px'
   }).on('select2:select', (e) => {
     var params = e.params.data;
     var newTag = null;

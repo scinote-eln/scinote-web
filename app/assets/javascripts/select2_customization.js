@@ -57,7 +57,9 @@ $.fn.extend({
     // Placeholder fix for ajax fields
     if (config.ajax) {
       setTimeout(() => {
-        select2.next().find('.select2-search__field').css('width', 'auto');
+        select2.next().find('.select2-search__field').css(
+          'width', config.placeholderSize || 'auto'
+        );
       }, 0);
     }
 
@@ -145,12 +147,15 @@ $.fn.extend({
 
     $('.select2').find('input, .select2-selection__rendered').off('keydown').on('keydown', function(e) {
       var activeElement = $('.select2-results .arrow_pointer');
+      var firstElement = $('.select2-results .select2-results__option').first();
       var groupElement = activeElement.find('.select2-results__group');
       if (e.keyCode === 13) {
         if (groupElement.length > 0) {
           groupElement.click();
-        } else {
+        } else if (activeElement.length > 0) {
           activeElement.mouseup();
+        } else {
+          firstElement.mouseup();
         }
 
         setTimeout(() => {

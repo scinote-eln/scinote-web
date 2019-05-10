@@ -27,8 +27,7 @@
             formAjaxResultText($form);
             Results.initCancelFormButton($form, initNewReslutText);
             Results.toggleResultEditButtons(false);
-            TinyMCE.refresh();
-            TinyMCE.highlight();
+            TinyMCE.init('#result_text_attributes_textarea');
             $('#result_name').focus();
           },
           error: function() {
@@ -55,11 +54,11 @@
           $form.after($prevResult);
           $form.remove();
           applyEditResultTextCallback();
+          TinyMCE.destroyAll();
           Results.toggleResultEditButtons(true);
         });
         Results.toggleResultEditButtons(false);
-        TinyMCE.refresh();
-        TinyMCE.init('#result_result_text_attributes_text');
+        TinyMCE.init('#result_text_attributes_textarea');
         $('#result_name').focus();
       });
     }

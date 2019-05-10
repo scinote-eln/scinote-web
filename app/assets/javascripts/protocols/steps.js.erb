@@ -150,6 +150,7 @@
       animateSpinner(null, false);
       FilePreviewModal.init();
       DragNDropSteps.clearFiles();
+      if (tinyMCE.editors.step_description_textarea) tinyMCE.editors.step_description_textarea.remove();
       TinyMCE.init('#step_description_textarea');
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
         enableCheckboxSorting(this);
@@ -530,7 +531,7 @@
     var $nameInput = $form.find("#step_name");
     var nameValid = textValidator(ev, $nameInput, 1,
       <%= Constants::NAME_MAX_LENGTH %>);
-    var $descrTextarea = $form.find("#step_description");
+    var $descrTextarea = $form.find("#step_description_textarea");
     var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
@@ -665,7 +666,7 @@
     $("#dd-att-step-" + stepId + "-label").html(label_value);
     $('#att-' + stepId + ' a.file-preview-link').each(function(){
       var elm = $(this)
-      elm.css('order', elm.attr('data-order-' + sortType));
+      elm.parent().css('order', elm.attr('data-order-' + sortType));
     })
   }
 

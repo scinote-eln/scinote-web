@@ -1,8 +1,7 @@
-<div class="pseudo-attachment-container">
+<div class="pseudo-attachment-container" style="order: <%= assets_count - i %>">
     <%= link_to download_asset_path(asset),
             class: 'file-preview-link',
             id: "modal_link#{asset.id}",
-            style: "order: #{ assets_count - i }",
             data: { no_turbolink: true, id: true, status: 'asset-present',
                     'preview-url': asset_file_preview_path(asset),
                     'order-atoz': az_ordered_assets_index(step, asset.id),

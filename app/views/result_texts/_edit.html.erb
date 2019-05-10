@@ -2,12 +2,12 @@
   <%= bootstrap_form_for(@result, url: result_text_path(format: :json), remote: :true) do |f| %>
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :result_text do |ff| %>
-      <div class="form-group">
-        <%= ff.tiny_mce_editor(:text,
-                               value: @result.result_text.tinymce_render(:text),
-                               data: { object_type: 'result_text',
-                                       object_id: @result.result_text.id }) %>
-      </div>
+      <%= ff.tiny_mce_editor(:text,
+                             id: :result_text_attributes_textarea,
+                             value: @result.result_text.tinymce_render(:text),
+                             data: { object_type: 'result_text',
+                                     object_id: @result.result_text.id,
+                                     highlightjs_path: asset_path('highlightjs-github-theme.css') }) %>
     <% end %><br />
     <div class="align-right">
       <button type="button" class="btn btn-default cancel-edit">
