@@ -158,14 +158,17 @@ var TinyMCE = (function() {
               }
             }
 
-            // Saving at clicking anywhere outside of the editor
+            // Saving at clicking anywhere outside of the editor ("inline style")
             editor.on('blur', function(event) {
-              event.preventDefault();
-              editorForm.clearFormErrors();
-              editor.setProgressState(1);
-              editor.save();
-              editorForm.submit();
-              updateScrollPosition();
+              if (this.id === 'my_module_description_textarea'
+                  || this.id === 'protocol_description_textarea') {
+                event.preventDefault();
+                editorForm.clearFormErrors();
+                editor.setProgressState(1);
+                editor.save();
+                editorForm.submit();
+                updateScrollPosition();
+              }
             });
 
             // Init Save button
