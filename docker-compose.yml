@@ -39,16 +39,15 @@ services:
     stdin_open: true
     tty: true
     ports:
-      # - "3035:3035"
-      - "8080:8080"
+      - "3035:3035"
     command: >
       bash -c "./bin/webpack-dev-server"
     environment:
       - RAILS_ENV=development
     volumes:
       - .:/usr/src/app
-      # - scinote_development_bundler:/usr/local/bundle/
-      # - scinote_development_files:/usr/src/app/public/system
+      - scinote_development_bundler:/usr/local/bundle/
+      - scinote_development_files:/usr/src/app/public/system
 
 volumes:
   scinote_development_postgres:

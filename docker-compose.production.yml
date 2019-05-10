@@ -19,10 +19,7 @@ services:
       - db
     ports:
       - "3000:3000"
-      - "2525:25"
-      - "5433:5432"
-    command: bash -c "rm -f tmp/pids/server.pid && rails s -b 0.0.0.0"
-    # command: bash -c "rm -f /usr/src/app/tmp/pids/server.pid && rails s -b 0.0.0.0"
+    command: bash -c "rm -f /usr/src/app/tmp/pids/server.pid && rails s -b 0.0.0.0"
     environment:
       - RAILS_ENV=production
     volumes:
