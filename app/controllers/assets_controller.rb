@@ -85,7 +85,7 @@ class AssetsController < ApplicationController
     if wopi_enabled? && wopi_file?(@asset)
       edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
-        partial: 'shared/file_wopi_controlls.html.erb',
+        partial: 'assets/wopi/file_wopi_controls.html.erb',
         locals: {
           asset: @asset,
           can_edit: can_edit,
