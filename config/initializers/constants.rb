@@ -23,6 +23,9 @@ class Constants
   COLOR_MAX_LENGTH = 7
   # Max characters for text in dropdown list element
   DROPDOWN_TEXT_MAX_LENGTH = 15
+  # Max characters limit for (on most operating systems, it's ~255 characters,
+  # but this is with a bit more safety margin)
+  FILENAME_MAX_LENGTH = 100
   # Max characters for filenames, after which they get truncated
   FILENAME_TRUNCATION_LENGTH = 50
   # Max characters for names of exported files and folders, after which they get
