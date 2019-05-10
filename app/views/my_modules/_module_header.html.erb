@@ -63,8 +63,8 @@
     <div class="badge-icon">
       <span class="fas fa-tags"></span>
     </div>
-    <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span> 
-    <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: can_manage_module?(@my_module) } %>   
+    <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span>
+    <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: can_manage_module?(@my_module) } %>
   </div>
 </div>
 
@@ -77,7 +77,7 @@
       <% if can_manage_module?(@my_module) %>
         <%= render partial: "description_form" %>
       <% elsif @my_module.description.present? %>
-        <%= custom_auto_link(@my_module.description,
+        <%= custom_auto_link(@my_module.tinymce_render(:description),
                              simple_format: false,
                              tags: %w(img),
                              team: current_team) %>
