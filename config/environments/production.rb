@@ -113,7 +113,7 @@ Rails.application.configure do
     ENV['ENABLE_USER_REGISTRATION'] == 'false' ? false : true
 
   # Enable sign in with LinkedIn account
-  config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'false'
+  config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'true'
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'

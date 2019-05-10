@@ -81,12 +81,27 @@ module Notifications
             .where(source_id: attrs[:source_id]).first_or_initialize(attrs)
 
         if n.new_record?
-          n.users = User.all
-          n.save!
+          save_notification n
         elsif n.last_time_changed_at < attrs[:last_time_changed_at]
           n.update_attributes!(attrs)
         end
       end
+    end
+
+    def save_notification(notification)
+      ActiveRecord::Base.transaction do
+        notification.save!
+
+        User.find_in_batches do |user_ids|
+          user_system_notifications = user_ids.pluck(:id).collect do |item|
+            Hash[:user_id, item, :system_notification_id, notification.id]
+          end
+          UserSystemNotification.import user_system_notifications, validate: false
+        end
+      end
+
+      Notifications::PushToCommunicationChannelService.delay.call(item_id: notification.id,
+                                                            item_type: notification.class.name)
     end
   end
 end

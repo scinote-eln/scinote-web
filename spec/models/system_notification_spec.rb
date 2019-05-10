@@ -56,11 +56,12 @@ describe SystemNotification do
     end
 
     context 'when there is no system notifications in db' do
-      it 'returns last user created_at' do
+      it 'returns first users created_at' do
         create :user
+        create :user, created_at: Time.now + 5.seconds
 
         expect(described_class.last_sync_timestamp)
-          .to be == User.last.created_at.to_i
+          .to be == User.first.created_at.to_i
       end
     end
 
