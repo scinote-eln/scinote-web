@@ -9,8 +9,14 @@ module TinyMceImages
              class_name: :TinyMceAsset,
              dependent: :destroy
 
+    before_save :clean_tiny_mce_image_urls
+
     def prepare_for_report(field)
       description = self[field]
+
+      # Check tinymce for old format
+      description = TinyMceAsset.update_old_tinymce(description)
+
       tiny_mce_assets.each do |tm_asset|
         tmp_f = Tempfile.open(tm_asset.image_file_name, Rails.root.join('tmp'))
         begin
@@ -33,6 +39,58 @@ module TinyMceImages
 
     def tinymce_render(field)
       TinyMceAsset.generate_url(self[field])
+    end
+
+    # Takes array of old/new TinyMCE asset ID pairs
+    # and updates references in assosiated object's description
+    def reassign_tiny_mce_image_references(images = [])
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
+      description = read_attribute(object_field)
+
+      # Check tinymce for old format
+      description = TinyMceAsset.update_old_tinymce(description)
+
+      parsed_description = Nokogiri::HTML(description)
+      images.each do |image|
+        old_id = image[0]
+        new_id = image[1]
+        image = parsed_description.at_css("img[data-mce-token=\"#{Base62.encode(old_id)}\"]")
+        image['data-mce-token'] = Base62.encode(new_id)
+      end
+      update(object_field => parsed_description.to_html)
+    end
+
+    def clone_tinymce_assets(target, team)
+      cloned_img_ids = []
+      tiny_mce_assets.each do |tiny_img|
+        tiny_img_clone = TinyMceAsset.new(
+          image: tiny_img.image,
+          estimated_size: tiny_img.estimated_size,
+          object: target,
+          team: team
+        )
+        tiny_img_clone.save!
+
+        target.tiny_mce_assets << tiny_img_clone
+        cloned_img_ids << [tiny_img.id, tiny_img_clone.id]
+      end
+      target.reassign_tiny_mce_image_references(cloned_img_ids)
+    end
+
+    private
+
+    def clean_tiny_mce_image_urls
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
+      return unless changed.include?(object_field.to_s)
+
+      image_changed = false
+      parsed_description = Nokogiri::HTML(read_attribute(object_field))
+      parsed_description.css('img[data-mce-token]').each do |image|
+        image['src'] = ''
+        image['class'] = 'img-responsive'
+        image_changed = true
+      end
+      self[object_field] = parsed_description.to_html if image_changed
     end
   end
 end

@@ -60,7 +60,8 @@ class RepositoryDatatableService
                                                   search_value)
                            .pluck(:id)
                            .uniq
-      repository_rows = RepositoryRow.where(id: repository_row_ids)
+      repository_rows = RepositoryRow.left_outer_joins(:created_by)
+                                     .where(id: repository_row_ids)
     end
 
     repository_rows

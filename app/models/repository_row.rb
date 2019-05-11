@@ -30,4 +30,10 @@ class RepositoryRow < ApplicationRecord
   def self.name_like(query)
     where('repository_rows.name ILIKE ?', "%#{query}%")
   end
+
+  def self.change_owner(team, user, new_owner)
+    joins(:repository)
+      .where('repositories.team_id = ? and repository_rows.created_by_id = ?', team, user)
+      .update_all(created_by_id: new_owner.id)
+  end
 end

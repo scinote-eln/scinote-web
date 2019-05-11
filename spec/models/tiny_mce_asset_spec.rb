@@ -32,7 +32,7 @@ describe TinyMceAsset, type: :model do
   describe 'Methods' do
     let(:result_text) do
       create :result_text,
-             text: '<img data-mce-token=1  src="fake-path"/>'
+             text: '<img data-mce-token=1  src=""/>'
     end
     let(:image) { create :tiny_mce_asset, id: 1 }
 
@@ -54,12 +54,12 @@ describe TinyMceAsset, type: :model do
       end
     end
 
-    describe '#reload_images' do
-      it 'change image token in description' do
+    describe '#reassign_tiny_mce_image_references' do
+      it 'change image token in rich text field' do
         new_result_text = result_text
         TinyMceAsset.update_images(new_result_text, [Base62.encode(image.id)].to_s)
         create :tiny_mce_asset, id: 2, object: new_result_text
-        TinyMceAsset.reload_images([[1, 2]])
+        new_result_text.reassign_tiny_mce_image_references([[1, 2]])
         expect(ResultText.find(new_result_text.id).text).to include 'data-mce-token="2"'
       end
     end

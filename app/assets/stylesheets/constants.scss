@@ -31,6 +31,10 @@ $brand-warning-light: #fcf7e4;
 $brand-danger-light: #efdfdf;
 $brand-light-blue: #e3f1f9;
 
+// MS Office colors:
+$office-ms-word: #2b579a;
+$office-ms-excel: #217346;
+$office-ms-powerpoint: #d24726;
 
 //==============================================================================
 // Other
@@ -490,3 +494,16 @@ $state-danger-border: adjust-hue(darken($state-danger-bg, 5%), -10);
 // $dl-horizontal-offset: $component-offset-horizontal;
 // $dl-horizontal-breakpoint: $grid-float-breakpoint;
 // $hr-border: $gray-lighter;
+//
+//
+//
+// // Material design - https://material.io/design/
+//
+// Card style
+$md-color-shadow-light: rgba(0, 0, 0, .12);
+$md-color-shadow-dark: rgba(0, 0, 0, .18);
+
+$md-shadow: 0 1px 5px 0 $md-color-shadow-dark;
+$md-shadow-hover: 0 14px 28px $md-color-shadow-dark, 0 10px 10px $md-color-shadow-dark;
+
+$md-transaction: all .4s cubic-bezier(.25, .8, .25, 1);

@@ -1,0 +1,43 @@
+  <% user_comment = comment.user == current_user %>
+  <div 
+    class="comment-container <%= user_comment ? 'comment-editable-field' : '' %>"
+    data-field-to-update="message"
+    data-params-group="comment"
+    data-path-to-update="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
+    data-original-name="<%= comment.message %>"
+    error="false"
+  >
+    <div class="avatar-placehodler">
+      <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+    </div>
+    <div class="content-placeholder">
+      <div class="comment-name"><%= comment.user.full_name %></div>
+      <div class="comment-right">
+        <div class="comment-datetime"><%= l(comment.created_at, format: :full) %></div>
+        <% if user_comment %>
+          <div class="comment-actions">
+            <div class="edit-buttons">
+              <span class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
+              <span class="cancel-button"><i class="fas fa-times"></i></span>
+            </div>
+            <div class="view-buttons">
+              <span class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
+              <a href="#"
+                class="delete-button"
+                data-url="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
+                data-confirm-message="<%= t('comments.delete_confirm') %>"
+                data-turbolinks="false">
+                <span class="fas fa-trash action-icon-delete"></span>
+              </a>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="comment-message">
+            <%= text_area_tag 'message', comment.message, disabled: true %>
+      </div>
+      <div class="error-block"></div>
+    </div>
+  </div>
+
+

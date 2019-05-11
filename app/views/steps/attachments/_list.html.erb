@@ -1,0 +1,40 @@
+<% assets = ordered_assets step %>
+<div class="col-xs-12">
+<hr>
+</div>
+<div class="col-xs-12 attachments-actions">
+  
+  <div class="title">
+    <h4>
+      <%= t('protocols.steps.files', count: assets.count) %>
+    </h4>
+  </div>
+  <div>
+    <div class="attachemnts-header pull-right">
+      <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
+                 locals: {  element_id: step.id, element_type: 'Step' } %>
+      <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
+        <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span id="dd-att-step-<%= step.id %>-label"><%= t('protocols.steps.attachments.sort_new').html_safe %></span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="sortMenu">
+          <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
+            <li>
+              <a data-order="<%= sort %>" onClick="reorderAttachments('<%= step.id %>', '<%= sort %>')">
+                <%= t('protocols.steps.attachments.sort_' + sort ).html_safe %></a>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xs-12 attacments" id="att-<%= step.id %>">
+  <% assets.each_with_index do |asset, i| %>
+    <%= render partial: 'steps/attachments/item.html.erb',
+               locals: { asset: asset, i: i, assets_count: assets.count, step: step } %>
+  <% end %>
+</div>
+<hr>

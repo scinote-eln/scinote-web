@@ -16,6 +16,7 @@
       initHandsOnTables($(document));
       _expandAllResults();
       applyCollapseLinkCallBack();
+      applyCreateWopiFileCallback();
 
       Comments.initialize();
 
@@ -145,8 +146,8 @@
           var $nameInput = $form.find('#result_name');
           var nameValid = textValidator(ev, $nameInput, 0,
             <%= Constants::NAME_MAX_LENGTH %>);
-          var $descrTextarea = $form.find("#result_result_text_attributes_text");
-          var $tinyMCEInput = TinyMCE.init('#result_result_text_attributes_text');;
+          var $descrTextarea = $form.find("#result_text_attributes_textarea");
+          var $tinyMCEInput = TinyMCE.getContent();
           textValidator(ev, $descrTextarea, 1, <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
           break;
         case ResultTypeEnum.COMMENT:
@@ -185,6 +186,7 @@
               initFormSubmitLinks($(this));
               ResutlAssets.applyEditResultAssetCallback();
               applyCollapseLinkCallBack();
+              applyCreateWopiFileCallback();
               toggleResultEditButtons(true);
               FilePreviewModal.init();
               Comments.initialize();
@@ -214,6 +216,7 @@
         event.stopImmediatePropagation();
         $(form).remove();
         toggleResultEditButtons(true);
+        TinyMCE.destroyAll();
         callback();
       });
     }

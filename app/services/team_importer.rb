@@ -312,7 +312,11 @@ class TeamImporter
       end
       unless activity.values['message_items'].blank?
         activity.values['message_items'].each_value do |item|
+          next unless item['type']
+
           mappings = instance_variable_get("@#{item['type'].underscore}_mappings")
+          next unless mappings
+
           item['id'] = mappings[item['id']]
         end
       end
@@ -331,27 +335,25 @@ class TeamImporter
       ) do |tiny_mce_file|
         orig_tmce_id = tiny_mce_asset.id
         tiny_mce_asset.id = nil
-        if tiny_mce_asset.step_id.present?
-          tiny_mce_asset.step_id = @step_mappings[tiny_mce_asset.step_id]
-        end
-        if tiny_mce_asset.result_text_id.present?
-          tiny_mce_asset.result_text_id =
-            @result_text_mappings[tiny_mce_asset.result_text_id]
+        if tiny_mce_asset.object_id.present?
+          mappings = instance_variable_get("@#{tiny_mce_asset.object_type.underscore}_mappings")
+          tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
         end
         tiny_mce_asset.team = team
         tiny_mce_asset.image = tiny_mce_file
         tiny_mce_asset.save!
         @mce_asset_counter += 1
-        if tiny_mce_asset.step_id.present?
-          step = Step.find_by_id(tiny_mce_asset.step_id)
-          step.description.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                                "[~tiny_mce_id:#{tiny_mce_asset.id}]")
-          step.save!
-        end
-        if tiny_mce_asset.result_text_id.present?
-          result_text = ResultText.find_by_id(tiny_mce_asset.result_text_id)
-          result_text.text.sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                                "[~tiny_mce_id:#{tiny_mce_asset.id}]")
+        if tiny_mce_asset.object_id.present?
+          object = tiny_mce_asset.object
+          object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
+          encoded_id = Base62.encode(tiny_mce_asset.id)
+          object.public_send(object_field).sub!("data-mce-token=\"#{Base62.encode(orig_tmce_id)}\"",
+                                                "data-mce-token=\"#{encoded_id}\"")
+          # Check for old fields
+          new_asset_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{encoded_id}\"/>"
+          object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                                new_asset_format)
+          object.save!
         end
       end
     end

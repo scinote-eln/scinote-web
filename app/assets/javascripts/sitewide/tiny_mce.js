@@ -46,7 +46,7 @@ var TinyMCE = (function() {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
         tinyMceInitSize = tinyMceContainer.height();
-        $(selector).closest('form').find('.form-group')
+        $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
 
@@ -57,6 +57,7 @@ var TinyMCE = (function() {
           menubar: 'file edit view insert format',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
           plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern',
+          autoresize_bottom_margin: 20,
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -137,18 +138,25 @@ var TinyMCE = (function() {
             setTimeout(() => {
               $(editor.editorContainer).addClass('show');
               $('.tinymce-placeholder').remove();
+              moveToolbar(editor, editorToolbar, editorToolbaroffset);
             }, 400);
+
             // Init saved status label
             if (editor.getContent() !== '') {
               editorForm.find('.tinymce-status-badge').removeClass('hidden');
             }
 
             // Init Floating toolbar
-
-            moveToolbar(editor, editorToolbar, editorToolbaroffset);
             $(window).on('scroll', function() {
               moveToolbar(editor, editorToolbar, editorToolbaroffset);
             });
+
+            // Update scroll position after exit
+            function updateScrollPosition() {
+              if (editorForm.offset().top < $(window).scrollTop()) {
+                $(window).scrollTop(editorForm.offset().top - 150);
+              }
+            }
 
             // Init Save button
             editorForm
@@ -161,6 +169,7 @@ var TinyMCE = (function() {
                 editor.setProgressState(1);
                 editor.save();
                 editorForm.submit();
+                updateScrollPosition();
               });
 
             // After save action
@@ -190,8 +199,14 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+                updateScrollPosition();
               })
               .removeClass('hidden');
+
+            // Set cursor to the end of the content
+            editor.focus();
+            editor.selection.select(editor.getBody(), true);
+            editor.selection.collapse(false);
 
             SmartAnnotation.init($(editor.contentDocument.activeElement));
             initHighlightjsIframe($(this.iframeElement).contents());

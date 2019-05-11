@@ -1,5 +1,5 @@
-<div class="row first-row">
-  <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4 date-block">
+<div class="header-container">
+  <div class="flex-block date-block">
     <div class="badge-icon">
       <span class="fas fa-calendar-alt"></span>
     </div>
@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4 help_tooltips date-block"
+  <div class="flex-block help_tooltips date-block"
        data-tooltiplink="<%= I18n.t('tooltips.link.task.due_date_specific') %>"
        data-tooltipcontent="<%= I18n.t('tooltips.text.task.due_date_specific') %>">
     <div class="badge-icon">
@@ -39,11 +39,9 @@
     </div>
   </div>
 
-  <div class="col-xs-6 col-sm-6 col-md-3  complete-button-container">
-    <%= render partial: "my_modules/state_buttons.html.erb" %>
-  </div>
 
-  <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+
+  <div class="flex-block">
     <div class="badge-icon">
       <span class="fas fa-tachometer-alt"></span>
     </div>
@@ -55,23 +53,26 @@
     </div>
   </div>
 </div>
-<div class="row module-tags">
-  <div class="col-xs-12 col-sm-12 col-md-12" id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
+
+<div class="complete-button-container">
+  <%= render partial: "my_modules/state_buttons.html.erb" %>
+</div>
+
+<div class="module-tags">
+  <div id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
     <div class="badge-icon">
       <span class="fas fa-tags"></span>
     </div>
-    <div class="well well-sm">
-      <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span>
-      <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: can_manage_module?(@my_module) } %>    
-    </div>
+    <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span> 
+    <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: can_manage_module?(@my_module) } %>   
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <h4>
+
+<div class="module-description">
+    <div class="title">
       <%= t('my_modules.module_header.description_label') %>
-    </h4>
+    </div>
     <div class="my-module-description-content">
       <% if can_manage_module?(@my_module) %>
         <%= render partial: "description_form" %>
@@ -81,10 +82,9 @@
                              tags: %w(img),
                              team: current_team) %>
       <% else %>
-        <%= t('my_modules.module_header.no_description') %>
+        <span class="no-description"><%= t('my_modules.module_header.no_description') %></span>
       <% end %>
     </div>
-  </div>
 </div>
 
 <!-- Edit description modal -->

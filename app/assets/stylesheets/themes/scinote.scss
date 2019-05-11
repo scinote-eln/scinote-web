@@ -1026,12 +1026,6 @@ ul.content-activities {
     }
   }
 }
-/* Steps and Results */
-#steps {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAAIUlEQVQImWNgoD5gZGBgMILSjKRo/P//vwiSGQwMDAwMAEnaA0jgHoquAAAAAElFTkSuQmCC");
-  background-repeat: repeat-y;
-  background-position: -3px 0;
-}
 
 .badge-icon {
   background-color: $color-silver;
@@ -1053,6 +1047,16 @@ ul.content-activities {
   margin-top: 20px;
   padding-bottom: 30px;
   padding-top: 30px;
+  background-color: $color-concrete;
+
+  .new-asset-upload-icon{
+    margin-right: 6px;
+  }
+
+  .new-asset-upload-button {
+    margin-left: 20px;
+    background-color: inherit;
+  }
 }
 
 .dnd-error,

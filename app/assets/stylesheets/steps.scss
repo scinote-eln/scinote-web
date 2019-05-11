@@ -1,6 +1,13 @@
 // Place all the styles related to the Steps controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
+@import "constants";
+@import "mixins";
 
 #new_step,
 .panel-step-attachment {
@@ -8,9 +15,7 @@
     list-style: none;
 
     li {
-      margin-bottom: 10px;
-
-      & > div > span.pull-left {
+      > div > span.pull-left {
         margin-top: 10px;
       }
     }
@@ -26,6 +31,450 @@
       a > p:first-child {
         margin-top: -17px;
       }
+    }
+  }
+
+  .step {
+    .panel {
+      margin-left: 0;
+    }
+  }
+
+  .complete-step-btn {
+    display: inline-block;
+    line-height: 39px;
+
+    button {
+      display: block;
+      font-size: 12px;
+      margin: auto 0;
+      padding: 3px 10px;
+
+      span {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .panel-heading {
+    height: 39px;
+    padding-bottom: 0;
+    padding-top: 0;
+
+    > * {
+      display: inline-block;
+      line-height: 39px;
+    }
+
+    .panel-options {
+      bottom: 0;
+    }
+
+    span.step-number {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 10px;
+    }
+
+    .left-floats {
+      align-items: center;
+      display: flex;
+      height: 39px;
+
+      .step-name-link {
+        display: flex;
+        flex-shrink: 1;
+        overflow: hidden;
+
+        .name-block {
+          display: inline-block;
+          height: 39px;
+          max-width: calc(100% - 300px);
+          overflow: hidden;
+
+          strong {
+            font-size: 14px;
+            white-space: nowrap;
+          }
+        }
+
+        .delimiter {
+          padding: 0 5px;
+        }
+
+        .author-block {
+          overflow: hidden;
+          padding-right: 10px;
+          white-space: nowrap;
+          width: 300px;
+        }
+      }
+    }
+  }
+}
+
+.attacments {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+  .pseudo-attachment-container {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.attachment-placeholder {
+  @include md-card-style;
+  color: $color-silver-chalice;
+  height: 280px;
+  margin: 8px;
+  text-align: center;
+  width: 220px;
+
+  a {
+    color: inherit;
+  }
+
+  &.new {
+    background-color: rgba(95, 95, 95, .1);
+  }
+
+  .attachment-thumbnail {
+    display: inline-block;
+    height: 160px;
+    margin: 16px 10px 5px;
+    overflow: hidden;
+    text-align: center;
+
+    img {
+      border-radius: 5px;
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    i.fas {
+      font-size: 100px;
+      line-height: 160px;
+    }
+  }
+
+  .no-shadow {
+    box-shadow: none;
+  }
+
+  .attachment-label {
+    background: $color-white;
+    color: $brand-primary;
+    font-family: Lato;
+    font-size: 16px;
+    height: 40px;
+    line-height: 18px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    top: 20px;
+    transition: $md-transaction;
+    width: 190px;
+    z-index: 2;
+  }
+
+  .spencer-bonnet-modif {
+    align-items: center;
+    color: $color-silver-chalice;
+    display: flex;
+    font-family: Lato;
+    font-size: 12px;
+    height: 40px;
+    justify-content: center;
+    line-height: 15px;
+    margin: 0 auto 5px;
+    position: relative;
+    text-align: center;
+    top: -20px;
+    transition: $md-transaction;
+    width: 149px;
+  }
+
+  .remove-icon {
+    bottom: 15px;
+    display: none;
+    position: relative;
+    right: 10px;
+  }
+
+  &:hover {
+    box-shadow: $md-shadow;
+
+    .remove-icon {
+      display: inline-block;
+    }
+
+    .attachment-label {
+      top: 0;
+    }
+
+    .spencer-bonnet-modif {
+      top: 0;
+    }
+  }
+}
+
+.attachments-order {
+  display: inline-block;
+}
+
+.attachments-actions {
+  align-items: center;
+  display: flex;
+
+  .title {
+    flex-grow: 1;
+  }
+
+  .attachments-order {
+    color: $color-silver-chalice;
+    min-width: 140px;
+  }
+
+  .btn-default {
+    border: 0;
+    color: inherit;
+    margin-left: 10px;
+
+    &:hover {
+      background: inherit;
+    }
+  }
+}
+
+.step .textarea-sm {
+  border-radius: 0;
+}
+
+.comments-title {
+  color: $color-emperor;
+}
+
+// Comment item
+
+.comment-container {
+  display: flex;
+  padding: 5px 0 5px 5px;
+
+  .avatar-placehodler {
+    height: 30px;
+    width: 30px;
+
+    img {
+      border-radius: 30px;
+      position: relative;
+      top: 7px;
+    }
+  }
+
+  .content-placeholder {
+    padding-left: 10px;
+    width: calc(100% - 30px);
+
+    .comment-name {
+      color: $color-silver-chalice;
+      float: left;
+      font-size: 16px;
+      line-height: 30px;
+      padding-left: 5px;
+      width: 50%;
+    }
+
+    .comment-message {
+      float: left;
+      width: 100%;
+
+      textarea {
+        border: 1px solid $color-silver;
+        border-radius: $border-radius-small;
+        height: 22px;
+        line-height: 16px;
+        overflow: hidden;
+        padding: 2px 5px;
+        pointer-events: none;
+        width: 100%;
+
+        &:focus {
+          outline: 0;
+        }
+
+        &:disabled {
+          background: transparent;
+          border: 1px solid transparent;
+          user-select: none;
+        }
+      }
+    }
+
+    .error-block {
+      color: $brand-danger;
+      display: none;
+      float: left;
+    }
+
+    .comment-right {
+      color: $color-silver-chalice;
+      float: right;
+      height: 30px;
+      line-height: 30px;
+      overflow: hidden;
+      position: relative;
+      transition: .3s;
+      width: 120px;
+
+      .comment-datetime {
+        float: left;
+        font-size: 12px;
+        line-height: 30px;
+        width: 120px;
+      }
+
+      .comment-actions {
+        left: 120px;
+        position: absolute;
+        width: 100px;
+
+        .view-buttons,
+        .edit-buttons {
+          display: none;
+          font-size: 16px;
+
+          * {
+            cursor: pointer;
+          }
+
+          .edit-button,
+          .save-button {
+            display: inline-block;
+            width: 80px;
+          }
+
+          .delete-button,
+          .cancel-button {
+            float: right;
+            padding-right: 5px;
+            width: 20px;
+          }
+
+          a {
+            color: inherit;
+          }
+
+          span {
+            .fas {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &[data-edit-mode="0"]:hover,
+  &[data-edit-mode="1"] {
+    .comment-right {
+      width: 220px;
+    }
+
+    textarea:disabled {
+      border: 1px solid $color-gainsboro;
+      cursor: pointer;
+    }
+  }
+
+  &[data-edit-mode="0"]:hover {
+    cursor: pointer;
+
+    .comment-actions {
+
+      .view-buttons {
+        display: inline;
+      }
+    }
+  }
+
+  &[data-edit-mode="1"] {
+
+    .comment-actions {
+
+      .edit-buttons {
+        display: inline !important;
+      }
+    }
+  }
+
+  &[data-error="true"] {
+
+    .error-block {
+      display: block;
+    }
+  }
+}
+
+.step-comments {
+  overflow: auto;
+}
+
+.new-message-continer {
+  float: left;
+  margin-left: 15px;
+  margin-top: 10px;
+  overflow: hidden;
+  position: relative;
+  width: calc(100% - 15px);
+
+  .form-group {
+    display: inline-block;
+    float: left;
+    margin-bottom: 0;
+    min-height: 36px;
+    width: 100%;
+  }
+
+  textarea {
+    border: 1px solid transparent;
+    box-shadow: none;
+    outline: none;
+
+    &:focus {
+      border: 1px solid $color-silver;
+      box-shadow: none;
+      outline: none;
+    }
+
+    &:hover {
+      border: 1px solid $color-silver;
+    }
+  }
+
+  .new-comment-button {
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 18px;
+    margin: 8px;
+    position: absolute;
+    right: -36px;
+    transition: $md-transaction;
+
+    &.has-error {
+      top: -64px;
+    }
+  }
+
+  &:hover {
+
+    textarea {
+      border: 1px solid $color-silver;
+    }
+
+    .new-comment-button {
+      right: 0;
     }
   }
 }

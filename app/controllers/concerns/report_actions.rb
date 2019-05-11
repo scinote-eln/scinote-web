@@ -69,6 +69,14 @@ module ReportActions
 
   def generate_module_contents_json(my_module)
     res = []
+
+    res << generate_new_el(false)
+    el = generate_el(
+      'reports/elements/my_module_protocol_element.html.erb',
+      protocol: my_module.protocol
+    )
+    res << el
+
     ReportExtends::MODULE_CONTENTS.each do |contents|
       elements = []
       contents.values.each do |element|

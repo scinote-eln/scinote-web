@@ -18,7 +18,7 @@ class Protocol < ApplicationRecord
   auto_strip_attributes :name, :description, nullify: false
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
-  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :team, presence: true
   validates :protocol_type, presence: true
 
@@ -266,6 +266,8 @@ class Protocol < ApplicationRecord
 
   def self.clone_contents(src, dest, current_user, clone_keywords)
     assets_to_clone = []
+    dest.update(description: src.description)
+    src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
     if clone_keywords then
@@ -343,22 +345,8 @@ class Protocol < ApplicationRecord
       end
 
       # Copy steps tinyMce assets
-      cloned_img_ids = []
-      step.tiny_mce_assets.each do |tiny_img|
-        tiny_img2 = TinyMceAsset.new(
-          image: tiny_img.image,
-          estimated_size: tiny_img.estimated_size,
-          object: step2,
-          team: dest.team
-        )
-        tiny_img2.save
-
-        step2.tiny_mce_assets << tiny_img2
-        cloned_img_ids << [tiny_img.id, tiny_img2.id]
-      end
-      TinyMceAsset.reload_images(cloned_img_ids)
+      step.clone_tinymce_assets(step2, dest.team)
     end
-
     # Call clone helper
     Protocol.delay(queue: :assets).deep_clone_assets(
       assets_to_clone,
@@ -616,6 +604,7 @@ class Protocol < ApplicationRecord
   def copy_to_repository(new_name, new_protocol_type, link_protocols, current_user)
     clone = Protocol.new(
       name: new_name,
+      description: description,
       protocol_type: new_protocol_type,
       added_by: current_user,
       team: self.team

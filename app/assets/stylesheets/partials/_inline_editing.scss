@@ -3,6 +3,9 @@
 
 
 .inline-editing-container {
+  display: flex;
+  flex-grow: 1;
+  max-width: 500px;
   position: relative;
 
   .button-container {
@@ -51,6 +54,14 @@
     }
   }
 
+  &:hover input {
+    border: 1px solid $color-silver;
+
+    &:disabled {
+      border: 1px solid $color-gainsboro;
+    }
+  }
+
   input {
     border: 1px solid $color-silver;
     border-radius: $border-radius-small;
@@ -68,15 +79,12 @@
       background: transparent;
       border: 1px solid transparent;
       cursor: pointer;
+      pointer-events: none;
       user-select: none;
 
       + .button-container {
         display: none;
 
-      }
-
-      &:hover {
-        border: 1px solid $color-gainsboro;
       }
     }
   }

@@ -5,6 +5,7 @@ var Comments = (function() {
     * Initializes the comments
     *
     */
+
   function initializeComments(){
     var comments;
     if ( $('.step-comment') && $('.step-comment').length > 0 ) {
@@ -28,10 +29,19 @@ var Comments = (function() {
             });
         }
         initCommentForm(that);
+        initCommentFormNew(that);
         initCommentsLink(that);
-        scrollBottom(that.find('.content-comments'));
+        initCommentsLinkNew(that);
+        initDeleteCommentNew(that);
+
+        var scrollItem = that.find('.content-comments'); // Check for new version of comments
+        if (that.hasClass('content-comments')) {
+          scrollItem = that
+        }
+        scrollBottom(scrollItem);
       });
     }
+    initInlineEditing('comment')
   }
 
   // scroll to the botttom
@@ -82,6 +92,29 @@ var Comments = (function() {
         $('.btn-more-comments').remove();
       }
     });
+  }
+
+  function initCommentsLinkNew($el) {
+    $el.find('.btn-more-comments-new').off()
+      .on('ajax:success', function (e, data) {
+        if (data.html) {
+
+          var stepId = $(this).data('step-id')
+          var list = $('#comments-list-' + stepId);
+          var moreBtn = $(this);
+
+          list.prepend(data.html);
+
+          if (data.resultsNumber < data.perPage) {
+            moreBtn.remove();
+          } else {
+            moreBtn.attr('href', data.moreUrl);
+            moreBtn.trigger('blur');
+          }
+        } else {
+          $('.btn-more-comments').remove();
+        }
+      });
   }
 
   // Initialize comment form.
@@ -161,6 +194,57 @@ var Comments = (function() {
         .attr('readonly', false)
         .focus();
     });
+  }
+
+  function initCommentFormNew($el) {
+    var stepId = $el.data('step-id');
+    var $form = $('#new-message-' + stepId).find('form');
+    var $list = $el.find('.comments-list');
+    var $submitBtn = $form.find('.new-comment-button')
+
+    $submitBtn.on('click', function() {
+      $form.submit();
+    });
+
+    $('.help-block', $form).addClass('hide');
+
+    $form.off().on('ajax:send', function () {
+      $('#comment_message', $form).attr('readonly', true);
+      $submitBtn.off('click');
+    })
+      .on('ajax:success', function (e, data) {
+        if (data.html) {
+          $list.append(data.html).scrollTop(0);
+          scrollBottom($el);
+          $('#comment_message', $form).val('');
+          $('.form-group', $form).removeClass('has-error');
+          $('.help-block', $form).html('').addClass('hide');
+          $submitBtn.removeClass('has-error');
+
+          var currnetCount = $('#counter-' + stepId).html()
+          $('#counter-' + stepId).html(parseInt(currnetCount) + 1)
+          initInlineEditing('comment')
+          initDeleteCommentNew($el)
+        }
+      })
+      .on('ajax:error', function (ev, xhr) {
+        if (xhr.status === 400) {
+          var messageError = xhr.responseJSON.errors.message;
+
+          if (messageError) {
+            $('.form-group', $form).addClass('has-error');
+            $('.help-block', $form).html(messageError[0]).removeClass('hide');
+            $submitBtn.addClass('has-error');
+          }
+        }
+      })
+      .on('ajax:complete', function () {
+        scrollBottom($('#comment_message', $form));
+        $('#comment_message', $form).attr('readonly', false).focus();
+        $submitBtn.on('click', function() {
+          $form.submit();
+        });
+      });
   }
 
   function initCommentOptions(scrollableContainer, useParentOffset) {
@@ -260,6 +344,36 @@ var Comments = (function() {
     });
   }
 
+  function initDeleteCommentNew($el) {
+    var parents = $el.find('.comments-list')
+
+    $(parents).find('.delete-button').off('click').on('click', function(e) {
+      var $this = $(this)
+
+      if (confirm($this.attr('data-confirm-message'))) {
+        $.ajax({
+          url: $this.attr('data-url'),
+          type: 'DELETE',
+          dataType: 'json',
+          success: function(data) {
+            var commentEl = $this.closest('.comment-container').hide()
+            commentEl.remove();
+
+            var stepID = $this.attr('data-step-id')
+            var currnetCount = $('#counter-' + stepID).html()
+            $('#counter-' + stepID).html(parseInt(currnetCount) - 1)
+          },
+          error: function(data) {
+            // Display alert
+            alert(data.responseJSON.message);
+          }
+        });
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  }
+
   function initEditComments(parent) {
     $(parent).unbind('click').on('click', '[data-action=edit-comment]', function() {
 
@@ -350,6 +464,8 @@ var Comments = (function() {
     initialize: initializeComments,
     scrollBottom: scrollBottom,
     moreComments: initCommentsLink,
+    initCommentsLinkNew: initCommentsLinkNew,
+    initDeleteCommentNew: initDeleteCommentNew,
     form: initCommentForm,
     initCommentOptions: initCommentOptions,
     initDeleteComments: initDeleteComments,

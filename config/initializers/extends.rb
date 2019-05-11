@@ -84,6 +84,12 @@ class Extends
   # 'extension' => 'fa class'
   FILE_FA_ICON_MAPPINGS = {}
 
+  # Mapping of rich text fileds to specific model
+  RICH_TEXT_FIELD_MAPPINGS = { 'Step' => :description,
+                               'ResultText' => :text,
+                               'Protocol' => :description,
+                               'MyModule' => :description }
+
   ACTIVITY_SUBJECT_TYPES = %w(
     Team Repository Project Experiment MyModule Result Protocol Report
   ).freeze
@@ -172,7 +178,7 @@ class Extends
     change_task_due_date: 62,
     remove_task_due_date: 63,
     add_task_tag: 64,
-    edit_task_tag: 65,
+    edit_tag: 65,
     remove_task_tag: 66, # 67, 68, 69 are in addons
     create_inventory: 70,
     rename_inventory: 71,
@@ -208,18 +214,21 @@ class Extends
     copy_protocol_in_repository: 103,
     user_leave_team: 104,
     copy_inventory: 105,
-    export_protocol_from_task: 106
+    export_protocol_from_task: 106,
+    import_inventory_items: 107,
+    create_tag: 108,
+    delete_tag: 109
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99],
-    task: [8, 58, 9, 59, 10, 11, 12, 13, 14, 35, 36, 37, 53, 54, *60..69, 106],
+    task: [8, 58, 9, 59, 10, 11, 12, 13, 14, 35, 36, 37, 53, 54, *60..64, *66..69, 106],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 45, 46, 47],
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
     reports: [48, 50, 49],
-    inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96],
+    inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101],
     team: [92, 94, 93, 97, 104]
   }.freeze

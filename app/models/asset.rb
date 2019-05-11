@@ -49,6 +49,8 @@ class Asset < ApplicationRecord
   # This could cause some problems if you create empty asset and want to
   # assign it to result
   validate :step_or_result_or_repository_asset_value
+  validate :name_should_not_be_empty_without_extension,
+           on: :wopi_file_creation
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -515,6 +517,15 @@ class Asset < ApplicationRecord
       errors.add(
         :base,
         'Asset can only be result or step or repository cell, not ever.'
+      )
+    end
+  end
+
+  def name_should_not_be_empty_without_extension
+    unless file.original_filename[0..-6].present?
+      errors.add(
+        :file,
+        I18n.t('general.text.not_blank')
       )
     end
   end

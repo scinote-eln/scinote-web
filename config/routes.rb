@@ -478,6 +478,7 @@ Rails.application.routes.draw do
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'
         get 'preview', to: 'protocols#preview'
+        patch 'description', to: 'protocols#update_description'
         patch 'metadata', to: 'protocols#update_metadata'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
@@ -588,6 +589,9 @@ Rails.application.routes.draw do
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
+    post 'files/create_wopi_file',
+         to: 'assets#create_wopi_file',
+         as: 'create_wopi_file'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'

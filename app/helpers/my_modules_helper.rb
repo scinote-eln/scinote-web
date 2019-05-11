@@ -11,6 +11,10 @@ module MyModulesHelper
     step.assets.order(:file_updated_at)
   end
 
+  def az_ordered_assets_index(step, asset_id)
+    step.assets.order('LOWER(file_file_name)').pluck(:id).index(asset_id)
+  end
+
   def number_of_samples(my_module)
     my_module.samples.count
   end

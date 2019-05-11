@@ -5,12 +5,15 @@
 @import "constants";
 
 .protocol-description-content {
-  margin-top: 20px;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
   // Protocols index page
 .task-due-date,
 .task-state-label {
+  font-size: 14px;
+
   .alert-green {
     color: $brand-success;
   }
@@ -48,5 +51,69 @@
   .comment {
     word-break: break-all;
     word-wrap: break-word;
+  }
+}
+
+// Create wopi file
+.create-wopi-file-btn {
+  border: 0;
+  display: contents;
+
+  img {
+    margin-right: 5px;
+    width: 23px;
+  }
+}
+
+#new-office-file-modal {
+  .modal-header {
+    border-bottom: 0;
+  }
+
+  .modal-body {
+    margin-bottom: 80px;
+  }
+
+  .modal-footer {
+    border-top: 0;
+  }
+
+  label.btn {
+    background-color: $color-white;
+    color: $color-emperor;
+
+    padding-left: 15px;
+    text-align: left;
+
+    &#word-btn.active {
+      background-color: $office-ms-word;
+      color: $color-white;
+    }
+
+    &#excel-btn.active {
+      background-color: $office-ms-excel;
+      color: $color-white;
+    }
+
+    &#powerpoint-btn.active {
+      background-color: $office-ms-powerpoint;
+      color: $color-white;
+    }
+
+    span {
+      display: inline-block;
+      margin-left: 15px;
+      text-align: left;
+      vertical-align: middle;
+    }
+  }
+
+  #submit-btn-cont {
+    padding: 0;
+
+    // Stretch button
+    .btn {
+      width: 100%;
+    }
   }
 }
