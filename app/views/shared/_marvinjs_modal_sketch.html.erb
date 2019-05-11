@@ -3,7 +3,7 @@
   <%= hidden_field_tag :description, sketch.description %>
   <div class="sketch-name"><%= truncate(sketch.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %></div>
   <div class="sketch-object">
-  <% if sketch.object.protocol.my_module %>
+  <% if sketch.object&.protocol&.my_module %>
     <%= t('marvinjs.task') %>: <%= truncate(sketch.object.protocol.my_module.name,
       length: Constants::FILENAME_TRUNCATION_LENGTH) %>
   <% end %>

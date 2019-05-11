@@ -15,8 +15,6 @@
     list-style: none;
 
     li {
-      margin-bottom: 10px;
-
       > div > span.pull-left {
         margin-top: 10px;
       }
@@ -73,15 +71,43 @@
     }
 
     span.step-number {
-      font-size: 30px;
+      font-size: 24px;
+      font-weight: bold;
       margin: 0 10px;
     }
 
     .left-floats {
-      float: left;
+      align-items: center;
+      display: flex;
+      height: 39px;
 
-      > * {
-        float: left;
+      .step-name-link {
+        display: flex;
+        flex-shrink: 1;
+        overflow: hidden;
+
+        .name-block {
+          display: inline-block;
+          height: 39px;
+          max-width: calc(100% - 300px);
+          overflow: hidden;
+
+          strong {
+            font-size: 14px;
+            white-space: nowrap;
+          }
+        }
+
+        .delimiter {
+          padding: 0 5px;
+        }
+
+        .author-block {
+          overflow: hidden;
+          padding-right: 10px;
+          white-space: nowrap;
+          width: 300px;
+        }
       }
     }
   }
@@ -142,14 +168,6 @@
     background-color: rgba(95, 95, 95, .1);
   }
 
-  &:hover {
-    box-shadow: $md-shadow-hover;
-
-    .remove-icon {
-      display: inline-block;
-    }
-  }
-
   .attachment-thumbnail {
     display: inline-block;
     height: 160px;
@@ -170,29 +188,40 @@
   }
 
   .no-shadow {
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, .15);
+    box-shadow: none;
   }
 
   .attachment-label {
-    color: #40a1d7;
+    background: $color-white;
+    color: $brand-primary;
     font-family: Lato;
     font-size: 16px;
-    height: 39px;
+    height: 40px;
     line-height: 18px;
     margin: 0 auto;
     overflow: hidden;
+    position: relative;
     text-align: center;
+    top: 20px;
+    transition: $md-transaction;
     width: 190px;
+    z-index: 2;
   }
 
   .spencer-bonnet-modif {
+    align-items: center;
     color: $color-silver-chalice;
+    display: flex;
     font-family: Lato;
     font-size: 12px;
-    height: 45px;
+    height: 40px;
+    justify-content: center;
     line-height: 15px;
-    margin: 0 auto;
+    margin: 0 auto 5px;
+    position: relative;
     text-align: center;
+    top: -20px;
+    transition: $md-transaction;
     width: 149px;
   }
 
@@ -203,6 +232,22 @@
     position: relative;
     right: 10px;
   }
+
+  &:hover {
+    box-shadow: $md-shadow;
+
+    .remove-icon {
+      display: inline-block;
+    }
+
+    .attachment-label {
+      top: 0;
+    }
+
+    .spencer-bonnet-modif {
+      top: 0;
+    }
+  }
 }
 
 .attachments-order {
@@ -210,11 +255,16 @@
 }
 
 .attachments-actions {
-  color: $color-silver-chalice;
+  align-items: center;
+  display: flex;
 
-  .drag_n_drop_label {
-    font-size: 14px;
-    line-height: 32px;
+  .title {
+    flex-grow: 1;
+  }
+
+  .attachments-order {
+    color: $color-silver-chalice;
+    min-width: 140px;
   }
 
   .btn-default {
@@ -401,20 +451,60 @@
   overflow: auto;
 }
 
-.new-comment-button {
-  cursor: pointer;
-  font-size: 18px;
-  left: calc(100% - 29px);
-  position: relative;
-  top: -41px;
-
-  &.has-error {
-    top: -64px;
-  }
-}
-
 .new-message-continer {
   float: left;
-  margin-top: 20px;
-  width: 100%;
+  margin-left: 15px;
+  margin-top: 10px;
+  overflow: hidden;
+  position: relative;
+  width: calc(100% - 15px);
+
+  .form-group {
+    display: inline-block;
+    float: left;
+    margin-bottom: 0;
+    min-height: 36px;
+    width: 100%;
+  }
+
+  textarea {
+    border: 1px solid transparent;
+    box-shadow: none;
+    outline: none;
+
+    &:focus {
+      border: 1px solid $color-silver;
+      box-shadow: none;
+      outline: none;
+    }
+
+    &:hover {
+      border: 1px solid $color-silver;
+    }
+  }
+
+  .new-comment-button {
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 18px;
+    margin: 8px;
+    position: absolute;
+    right: -36px;
+    transition: $md-transaction;
+
+    &.has-error {
+      top: -64px;
+    }
+  }
+
+  &:hover {
+
+    textarea {
+      border: 1px solid $color-silver;
+    }
+
+    .new-comment-button {
+      right: 0;
+    }
+  }
 }

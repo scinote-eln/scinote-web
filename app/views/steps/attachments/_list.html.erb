@@ -1,14 +1,16 @@
 <% assets = ordered_assets step %>
-<hr>
 <div class="col-xs-12">
-  <h4>
-    <%= t('protocols.steps.files', count: assets.count) %>
-  </h4>
+<hr>
 </div>
 <div class="col-xs-12 attachments-actions">
-  <div class="col-md-4 drag_n_drop_label">
+  
+  <div class="title">
+    <h4>
+      <%= t('protocols.steps.files', count: assets.count) %>
+    </h4>
   </div>
-  <div class="col-xl-8 col-md-12">
+
+  <div>
     <div class="attachemnts-header pull-right">
       <% if MarvinJsAsset.enabled? && (can_manage_protocol_in_module?(step.protocol) || can_manage_protocol_in_repository?(step.protocol)) %>
         <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
