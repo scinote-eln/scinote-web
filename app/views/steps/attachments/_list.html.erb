@@ -1,14 +1,15 @@
 <% assets = ordered_assets step %>
-<hr>
 <div class="col-xs-12">
-  <h4>
-    <%= t('protocols.steps.files', count: assets.count) %>
-  </h4>
+<hr>
 </div>
 <div class="col-xs-12 attachments-actions">
-  <div class="col-md-4 drag_n_drop_label">
+  
+  <div class="title">
+    <h4>
+      <%= t('protocols.steps.files', count: assets.count) %>
+    </h4>
   </div>
-  <div class="col-md-8">
+  <div>
     <div class="attachemnts-header pull-right">
       <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
                  locals: {  element_id: step.id, element_type: 'Step' } %>

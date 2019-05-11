@@ -70,9 +70,9 @@
 
 
 <div class="module-description">
-    <h4>
+    <div class="title">
       <%= t('my_modules.module_header.description_label') %>
-    </h4>
+    </div>
     <div class="my-module-description-content">
       <% if can_manage_module?(@my_module) %>
         <%= render partial: "description_form" %>
@@ -82,7 +82,7 @@
                              tags: %w(img),
                              team: current_team) %>
       <% else %>
-        <%= t('my_modules.module_header.no_description') %>
+        <span class="no-description"><%= t('my_modules.module_header.no_description') %></span>
       <% end %>
     </div>
 </div>
