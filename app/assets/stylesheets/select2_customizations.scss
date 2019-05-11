@@ -115,11 +115,13 @@
       }
 
       &.arrow_pointer {
-        background: $color-alto;
+        background: $brand-primary;
+        color: $color-white;
       }
 
       &:hover {
-        background: $color-alto;
+        background: $brand-primary;
+        color: $color-white;
       }
 
       &.loading-results {
