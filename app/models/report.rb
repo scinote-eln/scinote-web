@@ -100,6 +100,7 @@ class Report < ApplicationRecord
       exp.my_modules.each do |my_module|
         module_children = []
 
+        module_children += gen_element_content(my_module.protocol, nil, 'my_module_protocol')
         my_module.protocol.steps.each do |step|
           step_children =
             gen_element_content(step, step.assets, 'step_asset')

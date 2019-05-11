@@ -84,7 +84,7 @@ class ReportElement < ApplicationRecord
 
     if parent_model == 'experiment'
       destroy unless send(parent_model).project == report.project
-    else
+    elsif parent_model != ''
       destroy unless (send(parent_model).active? rescue send(parent_model))
     end
   end
