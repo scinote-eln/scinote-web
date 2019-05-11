@@ -227,13 +227,9 @@ var TinyMCE = (function() {
               moveToolbar(editor, editorToolbar, editorToolbaroffset);
             });
 
-<<<<<<< HEAD
             // Init image toolbar
             initImageToolBar(editor);
 
-
-=======
->>>>>>> master-with-note-section
             // Update scroll position after exit
             function updateScrollPosition() {
               if (editorForm.offset().top < $(window).scrollTop()) {
