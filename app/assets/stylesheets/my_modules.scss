@@ -5,12 +5,15 @@
 @import "constants";
 
 .protocol-description-content {
-  margin-top: 20px;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
   // Protocols index page
 .task-due-date,
 .task-state-label {
+  font-size: 14px;
+
   .alert-green {
     color: $brand-success;
   }

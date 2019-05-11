@@ -54,6 +54,14 @@
     }
   }
 
+  &:hover input {
+    border: 1px solid $color-silver;
+
+    &:disabled {
+      border: 1px solid $color-gainsboro;
+    }
+  }
+
   input {
     border: 1px solid $color-silver;
     border-radius: $border-radius-small;
@@ -79,10 +87,6 @@
 
       }
     }
-  }
-
-  &:hover input {
-    border: 1px solid $color-gainsboro;
   }
 }
 

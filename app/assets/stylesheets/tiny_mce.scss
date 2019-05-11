@@ -4,12 +4,12 @@
 .tinymce-view {
   border: solid 1px;
   border-color: $color-white;
-  box-shadow: 1px 0 2px $color-alto;
-  min-height: 200px;
+  border-radius: 3px;
+  min-height: 100px;
   padding: 3px;
 
   &:hover {
-    border-color: $color-alto;
+    border-color: $color-gainsboro;
     cursor: pointer;
   }
 

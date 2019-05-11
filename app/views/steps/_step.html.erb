@@ -94,9 +94,9 @@
           </div>
         </div>
         <div class="row">
-          <hr>
           <% unless step.tables.blank? then %>
             <div class="col-xs-12">
+              <hr>
               <% step.tables.each do |table| %>
                 <strong>
                   <%= auto_link(simple_format(table.name),
@@ -115,6 +115,7 @@
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
+              <hr>
               <% step.checklists.asc.each do |checklist| %>
                 <strong><%= custom_auto_link(checklist.name, team: current_team) %></strong>
                 <% if checklist.checklist_items.empty? %>
@@ -145,7 +146,6 @@
           <% end %>
         </div>
         <hr>
-        <br>
         <%= render partial: 'steps/comments.html.erb', locals: {  comments: step.last_comments,
                                                                        comments_count: step.step_comments.count,
                                                                        step: step } %>
