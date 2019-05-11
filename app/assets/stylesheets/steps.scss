@@ -297,7 +297,6 @@
         line-height: 16px;
         overflow: hidden;
         padding: 2px 5px;
-        pointer-events: none;
         width: 100%;
 
         &:focus {
@@ -307,6 +306,7 @@
         &:disabled {
           background: transparent;
           border: 1px solid transparent;
+          pointer-events: none;
           user-select: none;
         }
       }
@@ -448,7 +448,7 @@
       outline: none;
     }
 
-    &:hover {
+    &.border {
       border: 1px solid $color-silver;
     }
   }
@@ -462,8 +462,8 @@
     right: -36px;
     transition: $md-transaction;
 
-    &.has-error {
-      top: -64px;
+    &.show {
+      right: 0;
     }
   }
 
@@ -471,10 +471,6 @@
 
     textarea {
       border: 1px solid $color-silver;
-    }
-
-    .new-comment-button {
-      right: 0;
     }
   }
 }
