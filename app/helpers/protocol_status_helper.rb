@@ -3,7 +3,7 @@ module ProtocolStatusHelper
   def protocol_status_href(protocol)
     parent = protocol.parent
     res = ''
-    res << '<a href="#" data-toggle="popover" data-html="true" '
+    res << '<a href="#" data-toggle="popover" data-html="true" class="preview-protocol"'
     res << 'data-trigger="focus" data-placement="bottom" title="'
     res << protocol_status_popover_title(parent) +
            '" data-content="' + protocol_status_popover_content(parent) +
@@ -53,7 +53,7 @@ module ProtocolStatusHelper
     else
       res = "<p>"
       if protocol.description.present?
-        res << protocol.description
+        res << protocol.tinymce_render(:description)
       else
         res << "<em>" + I18n.t("my_modules.protocols.protocol_status_bar.no_description") + "</em>"
       end
@@ -69,6 +69,6 @@ module ProtocolStatusHelper
       end
       res << "</p>"
     end
-    sanitize_input(res)
+    escape_input(res)
   end
 end
