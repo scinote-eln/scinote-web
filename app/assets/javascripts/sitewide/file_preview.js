@@ -302,7 +302,7 @@ var FilePreviewModal = (function() {
       };
 
       var mousePosition = {
-        top: e.clientY - $(imageEditorWindow).offset().top,
+        top: e.clientY - (imageEditorWindow.offsetTop - scrollContainerInitial.top),
         left: e.clientX - $(imageEditorWindow).offset().left
       };
 
