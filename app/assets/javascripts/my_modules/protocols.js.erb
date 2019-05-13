@@ -170,6 +170,10 @@ function initLinkUpdate() {
       });
     });
   }
+
+  $('[data-role="protocol-status-bar"] .preview-protocol').click(function(e) {
+    e.preventDefault();
+  });
 }
 
 function initLoadFromRepository() {
