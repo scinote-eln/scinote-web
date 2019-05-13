@@ -38,7 +38,8 @@ class Extends
                            project_samples: 14, # TODO
                            experiment: 15,
                            # Higher number because of addons
-                           my_module_repository: 17 }
+                           my_module_repository: 17,
+                           my_module_protocol: 18 }
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
