@@ -206,6 +206,24 @@ var Comments = (function() {
       $form.submit();
     });
 
+    $form.find('textarea').on('focus', function(){
+      $(this).addClass('border');
+      if (this.value.length > 0) {
+        $submitBtn.addClass('show');
+      }
+    }).on('blur',function(){
+      if (this.value.length == 0) {
+        $(this).removeClass('border');
+        $submitBtn.removeClass('show');
+      }
+    }).on('keyup',function(){
+      if (this.value.length > 0) {
+        $submitBtn.addClass('show');
+      } else {
+        $submitBtn.removeClass('show');
+      }
+    })
+
     $('.help-block', $form).addClass('hide');
 
     $form.off().on('ajax:send', function () {
