@@ -27,8 +27,6 @@ module TinyMceImages
           tm_asset_to_update = html_description.css(
             "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
           )[0]
-          next unless tm_asset_to_update
-
           tm_asset_to_update.attributes['src'].value = new_tm_asset_src
           description = html_description.css('body').inner_html.to_s
         ensure
