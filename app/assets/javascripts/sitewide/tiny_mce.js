@@ -16,27 +16,6 @@ var TinyMCE = (function() {
     });
   }
 
-  function moveToolbar(editor, editorToolbar, editorToolbaroffset) {
-    var scrollPosition = $(window).scrollTop();
-    var containerOffset;
-    var containerHeight;
-    var toolbarPosition;
-    var toolbarPositionLimit;
-    if (editor.getContainer() === null) return;
-    containerOffset = $(editor.getContainer()).offset().top;
-    containerHeight = $(editor.getContainer()).height();
-    toolbarPosition = scrollPosition - containerOffset + editorToolbaroffset;
-    toolbarPositionLimit = containerHeight - editorToolbaroffset;
-    if (toolbarPosition > 0 && toolbarPosition < toolbarPositionLimit) {
-      editorToolbar.css('top', toolbarPosition + 'px');
-    } else {
-      editorToolbar.css(
-        'top',
-        toolbarPosition < 0 ? '0px' : toolbarPositionLimit + 'px'
-      );
-    }
-  }
-
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, mceConfig = {}) {
@@ -132,13 +111,12 @@ var TinyMCE = (function() {
             var editorForm = $(editor.getContainer()).closest('form');
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
-            var editorToolbaroffset = mceConfig.toolbar_offset || 120;
+            var editorToolbaroffset;
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
             setTimeout(() => {
               $(editor.editorContainer).addClass('show');
               $('.tinymce-placeholder').remove();
-              moveToolbar(editor, editorToolbar, editorToolbaroffset);
             }, 400);
 
             // Init saved status label
@@ -146,10 +124,16 @@ var TinyMCE = (function() {
               editorForm.find('.tinymce-status-badge').removeClass('hidden');
             }
 
-            // Init Floating toolbar
-            $(window).on('scroll', function() {
-              moveToolbar(editor, editorToolbar, editorToolbaroffset);
-            });
+            if ($('.navbar-secondary').length) {
+              editorToolbaroffset = $('.navbar-secondary').position().top + $('.navbar-secondary').height();
+            } else if ($('#main-nav').length) {
+              editorToolbaroffset = $('#main-nav').height();
+            } else {
+              editorToolbaroffset = 0;
+            }
+
+            editorToolbar.css('position', 'sticky');
+            editorToolbar.css('top', editorToolbaroffset + 'px');
 
             // Update scroll position after exit
             function updateScrollPosition() {
