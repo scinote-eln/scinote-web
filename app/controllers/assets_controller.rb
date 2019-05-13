@@ -168,15 +168,29 @@ class AssetsController < ApplicationController
     # Post process file here
     @asset.post_process_file(@asset.team)
 
+    render_html = if @asset.step
+                    asset_position = @asset.step.asset_position(@asset)
+                    render_to_string(
+                      partial: 'steps/attachments/item.html.erb',
+                      locals: {
+                        asset: @asset,
+                        i: asset_position[:pos],
+                        assets_count: asset_position[:count],
+                        step: @asset.step
+                      },
+                      formats: :html
+                    )
+                  else
+                    render_to_string(
+                      partial: 'shared/asset_link',
+                      locals: { asset: @asset, display_image_tag: true },
+                      formats: :html
+                    )
+                  end
+
     respond_to do |format|
       format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'shared/asset_link',
-            locals: { asset: @asset, display_image_tag: true },
-            formats: :html
-          )
-        }
+        render json: { html: render_html }
       end
     end
   end
