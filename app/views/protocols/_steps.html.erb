@@ -1,7 +1,7 @@
+<% if can_manage_protocol_in_module?(@protocol) ||
+      can_manage_protocol_in_repository?(@protocol) %>
 <div class="row">
-  <div class="pull-right" style="margin: 20px 15px 0 0;">
-    <% if can_manage_protocol_in_module?(@protocol) ||
-          can_manage_protocol_in_repository?(@protocol) %>
+  <div class="pull-left" style="margin: 20px 0 20px 15px;">
       <a href="#"
          class="btn btn-primary"
          data-action="new-step"
@@ -9,7 +9,9 @@
         <span class="fas fa-plus" aria-hidden="true"></span>
         <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
       </a>
-    <% end %>
+  </div>
+  <% unless @protocol.steps.empty? %>
+  <div class="pull-right" style="margin: 20px 15px 20px 0;">
     <a class="btn btn-default" data-action="collapse-steps">
       <span class="fas fa-caret-square-up"></span>
       <span class="hidden-xs"><%= t("protocols.steps.collapse_label") %></a></span>
@@ -17,36 +19,19 @@
       <span class="fas fa-caret-square-down"></span>
       <span class="hidden-xs"><%= t("protocols.steps.expand_label") %></a></span>
   </div>
-
-  <div class="col-xs-4">
-    <h2><%= t("protocols.steps.subtitle") %></h2>
-  </div>
+  <% end %>
 </div>
-
+<% end %>
 <div id="steps">
   <% @protocol.steps.order(:position).each do |step| %>
     <%= render partial: "steps/step.html.erb", locals: { step: step } %>
   <% end %>
 </div>
-<% if @protocol.steps.count == 0 %>
-  <div data-role="no-steps-text">
-    <em><%= t("protocols.steps.no_steps") %></em>
-  </div>
-<% end %>
 
 <%= javascript_include_tag "handsontable.full.min" %>
 
 <!-- Libraries for formulas -->
-<%= javascript_include_tag "lodash" %>
-<%= javascript_include_tag "numeral" %>
-<%= javascript_include_tag "numeric" %>
-<%= javascript_include_tag "md5" %>
-<%= javascript_include_tag "jstat" %>
-<%= javascript_include_tag "formula" %>
-<%= javascript_include_tag "parser" %>
-<%= javascript_include_tag "ruleJS" %>
-<%= javascript_include_tag "handsontable.formula" %>
-<%= javascript_include_tag "big.min" %>
-<%= stylesheet_link_tag "handsontable.formula" %>
+<%= render partial: "shared/formulas_libraries.html.erb" %>
 
+<%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "protocols/steps" %>

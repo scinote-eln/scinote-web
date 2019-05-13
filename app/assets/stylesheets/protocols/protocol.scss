@@ -1,0 +1,12 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+@import "constants";
+@import "mixins";
+
+.protocol-info {
+  
+  .protocol-description {
+    padding: 0 48px;
+  }
+}

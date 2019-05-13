@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 class TinyMceAsset < ApplicationRecord
+  extend ProtocolsExporter
   attr_accessor :reference
   before_create :set_reference, optional: true
-  after_create :update_estimated_size
+  after_create :update_estimated_size, :self_destruct
   after_destroy :release_team_space
 
   belongs_to :team, inverse_of: :tiny_mce_assets, optional: true
@@ -10,6 +13,10 @@ class TinyMceAsset < ApplicationRecord
              inverse_of: :tiny_mce_assets,
              touch: true,
              optional: true
+
+  belongs_to :object, polymorphic: true,
+                      optional: true,
+                      inverse_of: :tiny_mce_assets
   has_attached_file :image,
                     styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg] },
                     convert_options: { large: '-quality 100 -strip' }
@@ -21,20 +28,48 @@ class TinyMceAsset < ApplicationRecord
   validates_attachment :image,
                        presence: true,
                        size: {
-                         less_than: Rails.configuration.x.file_max_size_mb.megabytes
+                         less_than: Rails.configuration.x\
+                                         .file_max_size_mb.megabytes
                        }
   validates :estimated_size, presence: true
 
-  # When using S3 file upload, we can limit file accessibility with url signing
+  def self.update_images(object, images)
+    images = JSON.parse(images)
+    current_images = object.tiny_mce_assets.pluck(:id)
+    images_to_delete = current_images.reject do |x|
+      (images.include? Base62.encode(x))
+    end
+    images.each do |image|
+      image_to_update = find_by_id(Base62.decode(image))
+      image_to_update&.update(object: object, saved: true)
+    end
+    where(id: images_to_delete).destroy_all
+  rescue StandardError => e
+    Rails.logger.error e.message
+  end
+
+  def self.generate_url(description)
+    # Check tinymce for old format
+    description = update_old_tinymce(description)
+
+    description = Nokogiri::HTML(description)
+    tm_assets = description.css('img')
+    tm_assets.each do |tm_asset|
+      asset_id = tm_asset.attr('data-mce-token')
+      new_asset_url = find_by_id(Base62.decode(asset_id))
+      if new_asset_url
+        tm_asset.attributes['src'].value = new_asset_url.url
+        tm_asset['class'] = 'img-responsive'
+      end
+    end
+    description.css('body').inner_html.to_s
+  end
+
   def presigned_url(style = :large,
                     download: false,
                     timeout: Constants::URL_LONG_EXPIRE_TIME)
     if stored_on_s3?
-      if download
-        download_arg = 'attachment; filename=' + URI.escape(image_file_name)
-      else
-        download_arg = nil
-      end
+      download_arg = ('attachment; filename=' + CGI.escape(image_file_name) if download)
 
       signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
       signer.presigned_url(:get_object,
@@ -65,21 +100,58 @@ class TinyMceAsset < ApplicationRecord
     end
   end
 
+  def self.delete_unsaved_image(id)
+    asset = find_by_id(id)
+    asset.destroy if asset && !asset.saved
+  end
+
+  def self.update_old_tinymce(description)
+    return description unless description
+
+    description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
+      old_format = /\[~tiny_mce_id:#{token}\]/
+      new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
+      description.sub!(old_format, new_format)
+    end
+    description
+  end
+
+  def self.save_to_eln(ostream, dir)
+    if exists?
+      order(:id).each do |tiny_mce_asset|
+        asset_guid = get_guid(tiny_mce_asset.id)
+        asset_file_name =
+          "rte-#{asset_guid.to_s +
+            File.extname(tiny_mce_asset.image_file_name).to_s}"
+        ostream.put_next_entry("#{dir}/#{asset_file_name}")
+        input_file = tiny_mce_asset.open
+        ostream.print(input_file.read)
+        input_file.close
+      end
+    end
+    ostream
+  end
+
   private
+
+  def self_destruct
+    TinyMceAsset.delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
+  end
 
   def update_estimated_size
     return if image_file_size.blank?
+
     es = image_file_size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
     update(estimated_size: es)
     Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
     # update team space taken
-    self.team.take_space(es)
-    self.team.save
+    team.take_space(es)
+    team.save
   end
 
   def release_team_space
-    self.team.release_space(estimated_size)
-    self.team.save
+    team.release_space(estimated_size)
+    team.save
   end
 
   def set_reference

@@ -38,7 +38,8 @@ class Extends
                            project_samples: 14, # TODO
                            experiment: 15,
                            # Higher number because of addons
-                           my_module_repository: 17 }
+                           my_module_repository: 17,
+                           my_module_protocol: 18 }
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
@@ -83,6 +84,12 @@ class Extends
   # Hash used for mapping file extensions to custom font awesome icon classes,
   # 'extension' => 'fa class'
   FILE_FA_ICON_MAPPINGS = {}
+
+  # Mapping of rich text fileds to specific model
+  RICH_TEXT_FIELD_MAPPINGS = { 'Step' => :description,
+                               'ResultText' => :text,
+                               'Protocol' => :description,
+                               'MyModule' => :description }
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team Repository Project Experiment MyModule Result Protocol Report
@@ -172,7 +179,7 @@ class Extends
     change_task_due_date: 62,
     remove_task_due_date: 63,
     add_task_tag: 64,
-    edit_task_tag: 65,
+    edit_tag: 65,
     remove_task_tag: 66, # 67, 68, 69 are in addons
     create_inventory: 70,
     rename_inventory: 71,
@@ -209,13 +216,15 @@ class Extends
     user_leave_team: 104,
     copy_inventory: 105,
     export_protocol_from_task: 106,
-    import_inventory_items: 107
+    import_inventory_items: 107,
+    create_tag: 108,
+    delete_tag: 109
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99],
-    task: [8, 58, 9, 59, 10, 11, 12, 13, 14, 35, 36, 37, 53, 54, *60..69, 106],
+    task: [8, 58, 9, 59, 10, 11, 12, 13, 14, 35, 36, 37, 53, 54, *60..64, *66..69, 106],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 45, 46, 47],
     task_inventory: [55, 56],
     experiment: [*27..31, 57],

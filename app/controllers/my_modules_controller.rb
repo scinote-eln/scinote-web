@@ -1,6 +1,7 @@
 class MyModulesController < ApplicationController
   include SampleActions
   include TeamsHelper
+  include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
@@ -15,7 +16,7 @@ class MyModulesController < ApplicationController
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
                          assign_repository_records_modal
-                         repositories_dropdown)
+                         repositories_dropdown update_description update_protocol_description)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -25,7 +26,8 @@ class MyModulesController < ApplicationController
   before_action :load_projects_tree, only: %i(protocols results activities
                                               samples repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
-  before_action :check_manage_permissions, only: %i(description due_date)
+  before_action :check_manage_permissions,
+                only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive repositories_dropdown)
@@ -168,6 +170,7 @@ class MyModulesController < ApplicationController
       if saved
         if description_changed
           log_activity(:change_module_description)
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
         end
 
         if due_date_changes
@@ -187,7 +190,6 @@ class MyModulesController < ApplicationController
         end
       end
     end
-
     respond_to do |format|
       if restored
         format.html do
@@ -227,6 +229,48 @@ class MyModulesController < ApplicationController
           render json: @my_module.errors,
             status: :unprocessable_entity
         }
+      end
+    end
+  end
+
+  def update_description
+    respond_to do |format|
+      format.json do
+        if @my_module.update(description: params.require(:my_module)[:description])
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
+          render json: {
+            html: custom_auto_link(
+              @my_module.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
+        else
+          render json: @my_module.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def update_protocol_description
+    protocol = @my_module.protocol
+    return render_404 unless protocol
+    respond_to do |format|
+      format.json do
+        if protocol.update(description: params.require(:protocol)[:description])
+          TinyMceAsset.update_images(protocol, params[:tiny_mce_images])
+          render json: {
+            html: custom_auto_link(
+              protocol.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
+        else
+          render json: protocol.errors, status: :unprocessable_entity
+        end
       end
     end
   end

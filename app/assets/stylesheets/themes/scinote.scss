@@ -940,21 +940,15 @@ ul.content-activities {
   }
 }
 
-#protocol-preview-modal .modal-dialog {
-  .modal-body {
-    max-height: 75vh;
-    overflow-y: auto;
-    width: 100%;
-
-    .ql-editor {
-      min-height: initial;
-    }
-  }
-}
-
 /* Import protocol/s modal */
 #import-protocol-modal .modal-dialog {
   width: 70%;
+}
+
+#import-protocol-modal #import_protocol_description {
+  border: 1px solid $color-silver;
+  border-radius: 4px;
+  padding: 10px;
 }
 
 .import-protocols-modal-preview-container {
@@ -1020,12 +1014,6 @@ ul.content-activities {
     }
   }
 }
-/* Steps and Results */
-#steps {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAAIUlEQVQImWNgoD5gZGBgMILSjKRo/P//vwiSGQwMDAwMAEnaA0jgHoquAAAAAElFTkSuQmCC");
-  background-repeat: repeat-y;
-  background-position: -3px 0;
-}
 
 .badge-icon {
   background-color: $color-silver;
@@ -1047,6 +1035,16 @@ ul.content-activities {
   margin-top: 20px;
   padding-bottom: 30px;
   padding-top: 30px;
+  background-color: $color-concrete;
+
+  .new-asset-upload-icon{
+    margin-right: 6px;
+  }
+
+  .new-asset-upload-button {
+    margin-left: 20px;
+    background-color: inherit;
+  }
 }
 
 .dnd-error,

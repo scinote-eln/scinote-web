@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 module ProtocolsImporter
   include RenamingUtil
 
   def import_new_protocol(protocol_json, team, type, user)
     remove_empty_inputs(protocol_json)
     protocol = Protocol.new(
-      name: protocol_json["name"],
-      description: protocol_json["description"],
-      authors: protocol_json["authors"],
+      name: protocol_json['name'],
+      authors: protocol_json['authors'],
       protocol_type: (type == :public ? :in_repository_public : :in_repository_private),
       published_on: (type == :public ? Time.now : nil),
       added_by: user,
@@ -14,9 +15,7 @@ module ProtocolsImporter
     )
 
     # Try to rename record
-    if protocol.invalid? then
-      rename_record(protocol, :name)
-    end
+    rename_record(protocol, :name) if protocol.invalid?
 
     # Okay, now save the protocol
     protocol.save!
@@ -24,11 +23,12 @@ module ProtocolsImporter
     # Protocol is saved, populate it
     populate_protocol(protocol, protocol_json, user, team)
 
-    return protocol
+    protocol
   end
 
   def import_into_existing(protocol, protocol_json, user, team)
     # Firstly, destroy existing protocol's contents
+    protocol.tiny_mce_assets.destroy_all
     protocol.destroy_contents(user)
     protocol.reload
 
@@ -45,86 +45,82 @@ module ProtocolsImporter
 
   def populate_protocol(protocol, protocol_json, user, team)
     protocol.reload
+    protocol.description = populate_rte(protocol_json, protocol, team)
+    protocol.save!
     asset_ids = []
     step_pos = 0
     # Check if protocol has steps
-    if protocol_json['steps']
-      protocol_json['steps'].values.each do |step_json|
-        step = Step.create!(
-          name: step_json['name'],
-          position: step_pos,
-          completed: false,
-          user: user,
-          last_modified_by: user,
-          protocol: protocol
+    protocol_json['steps']&.values&.each do |step_json|
+      step = Step.create!(
+        name: step_json['name'],
+        position: step_pos,
+        completed: false,
+        user: user,
+        last_modified_by: user,
+        protocol: protocol
+      )
+      # need step id to link image to step
+      step.description = populate_rte(step_json, step, team)
+      step.save!
+      step_pos += 1
+
+      step_json['checklists']&.values&.each do |checklist_json|
+        checklist = Checklist.create!(
+          name: checklist_json['name'],
+          step: step,
+          created_by: user,
+          last_modified_by: user
         )
-        # need step id to link image to step
-        step.description = populate_rte(step_json, step, team)
-        step.save!
-        step_pos += 1
+        next unless checklist_json['items']
 
-        if step_json["checklists"]
-          step_json["checklists"].values.each do |checklist_json|
-            checklist = Checklist.create!(
-              name: checklist_json["name"],
-              step: step,
-              created_by: user,
-              last_modified_by: user
-            )
-            if checklist_json["items"]
-              item_pos = 0
-              checklist_json["items"].values.each do |item_json|
-                item = ChecklistItem.create!(
-                  text: item_json["text"],
-                  checked: false,
-                  position: item_pos,
-                  created_by: user,
-                  last_modified_by: user,
-                  checklist: checklist
-                )
-                item_pos += 1
-              end
-            end
-          end
+        item_pos = 0
+        checklist_json['items'].values.each do |item_json|
+          ChecklistItem.create!(
+            text: item_json['text'],
+            checked: false,
+            position: item_pos,
+            created_by: user,
+            last_modified_by: user,
+            checklist: checklist
+          )
+          item_pos += 1
         end
+      end
 
-        if step_json['tables']
-          step_json['tables'].values.each do |table_json|
-            table = Table.create!(
-              name: table_json['name'],
-              contents: Base64.decode64(table_json['contents']),
-              created_by: user,
-              last_modified_by: user,
-              team: team
-            )
-            StepTable.create!(
-              step: step,
-              table: table
-            )
-          end
-        end
+      step_json['tables']&.values&.each do |table_json|
+        table = Table.create!(
+          name: table_json['name'],
+          contents: Base64.decode64(table_json['contents']),
+          created_by: user,
+          last_modified_by: user,
+          team: team
+        )
+        StepTable.create!(
+          step: step,
+          table: table
+        )
+      end
 
-        if step_json["assets"]
-          step_json["assets"].values.each do |asset_json|
-            asset = Asset.new(
-              created_by: user,
-              last_modified_by: user,
-              team: team
-            )
+      next unless step_json['assets']
 
-            # Decode the file bytes
-            asset.file = StringIO.new(Base64.decode64(asset_json["bytes"]))
-            asset.file_file_name = asset_json["fileName"]
-            asset.file_content_type = asset_json["fileType"]
-            asset.save!
-            asset_ids << asset.id
+      step_json['assets']&.values&.each do |asset_json|
+        asset = Asset.new(
+          created_by: user,
+          last_modified_by: user,
+          team: team
+        )
 
-            StepAsset.create!(
-              step: step,
-              asset: asset
-            )
-          end
-        end
+        # Decode the file bytes
+        asset.file = StringIO.new(Base64.decode64(asset_json['bytes']))
+        asset.file_file_name = asset_json['fileName']
+        asset.file_content_type = asset_json['fileType']
+        asset.save!
+        asset_ids << asset.id
+
+        StepAsset.create!(
+          step: step,
+          asset: asset
+        )
       end
     end
 
@@ -136,9 +132,9 @@ module ProtocolsImporter
 
   def remove_empty_inputs(obj)
     obj.keys.each do |key|
-      if obj[key] == ""
+      if obj[key] == ''
         obj[key] = nil
-      elsif obj[key].kind_of? Hash
+      elsif obj[key].is_a? Hash
         # Recursive call
         remove_empty_inputs(obj[key])
       end
@@ -146,13 +142,15 @@ module ProtocolsImporter
   end
 
   # create tiny_mce assets and change the inport tokens
-  def populate_rte(step_json, step, team)
-    return populate_rte_legacy(step_json) unless step_json['descriptionAssets']
-    description = step_json['description']
-    step_json['descriptionAssets'].values.each do |tiny_mce_img_json|
+  def populate_rte(object_json, object, team)
+    return populate_rte_legacy(object_json) unless object_json['descriptionAssets']
+
+    description = TinyMceAsset.update_old_tinymce(object_json['description'])
+    object_json['descriptionAssets'].values.each do |tiny_mce_img_json|
       tiny_mce_img = TinyMceAsset.new(
-        reference: step,
-        team_id: team.id
+        object: object,
+        team_id: team.id,
+        saved: true
       )
       # Decode the file bytes
       tiny_mce_img.image = StringIO.new(
@@ -160,18 +158,23 @@ module ProtocolsImporter
       )
       tiny_mce_img.image_content_type = tiny_mce_img_json['fileType']
       tiny_mce_img.save!
-      description.gsub!("[~tiny_mce_id:#{tiny_mce_img_json['tokenId']}]",
-                        "[~tiny_mce_id:#{tiny_mce_img.id}]")
-                 .gsub!('  ]]--&gt;', '')
+      if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
+                           "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
+        description.gsub!('  ]]--&gt;', '')
 
+      else
+        description.gsub!("data-mce-token=\"#{Base62.encode(tiny_mce_img_json['tokenId'].to_i)}\"",
+                          "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"").gsub!('  ]]--&gt;', '')
+      end
     end
     description
   end
 
   # handle import from legacy exports
-  def populate_rte_legacy(step_json)
-    return unless step_json['description'] && step_json['description'].present?
-    step_json['description'].gsub(Constants::TINY_MCE_ASSET_REGEX, '')
-                            .gsub('  ]]--&gt;', '')
+  def populate_rte_legacy(object_json)
+    return unless object_json['description']&.present?
+
+    object_json['description'].gsub(Constants::TINY_MCE_ASSET_REGEX, '')
+                              .gsub('  ]]--&gt;', '')
   end
 end

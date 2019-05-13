@@ -38,12 +38,12 @@
     <div class="row">
       <div class="col-xs-12 ql-editor">
         <% if strip_tags(step.description).present? %>
-          <%= custom_auto_link(generate_image_tag_from_token(step.description, step, pdf_export_ready),
+          <%= custom_auto_link(step.prepare_for_report(:description),
                                team: current_team,
                                simple_format: false,
                                tags: %w(img)) %>
         <% else %>
-           <em><%=t "projects.reports.elements.step.no_description" %></em>
+          <em><%=t "projects.reports.elements.step.no_description" %></em>
         <% end %>
       </div>
     </div>

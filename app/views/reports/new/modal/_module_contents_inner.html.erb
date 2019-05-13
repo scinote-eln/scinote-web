@@ -1,5 +1,4 @@
 <% my_module_undefined = !defined? my_module or my_module.blank? %>
-
 <div>
   <em>
     <%= t("projects.reports.elements.modals.module_contents_inner.instructions") %>
@@ -11,6 +10,10 @@
     <li>
       <%= form.check_box :module_all, label: t("projects.reports.elements.modals.module_contents_inner.check_all") %>
       <ul>
+
+        <li>
+          <%= form.check_box :module_protocol, label: t("projects.reports.elements.modals.module_contents_inner.protocol") %>
+        </li>
 
         <% if my_module_undefined or my_module.protocol.steps.exists? %>
           <li>

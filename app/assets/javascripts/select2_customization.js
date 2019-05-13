@@ -4,23 +4,40 @@ $.fn.extend({
     var placeholder;
     var templateSelection;
     var select2;
+    var templateResult;
 
     if (this.length === 0) return this;
     // Adding ID to each block
     placeholder = this[0].dataset.placeholder || '';
     if (this.next().find('.select2-selection').length > 0) return this;
-    templateSelection = (state) => {
+    templateSelection = (state, parent) => {
+      if (config.colorField !== undefined) {
+        parent.css('background', state[config.colorField] || state.element.dataset[config.colorField]);
+      }
       return $('<span class="select2-block-body" data-select-id="' + state.id + '">'
         + (config.customSelection !== undefined ? config.customSelection(state) : state.text)
       + '</span>');
     };
+
+    templateResult = (state) => {
+      if (config.templateResult) {
+        return config.templateResult(state);
+      }
+      return state.text;
+    };
+
+
     select2 = this.select2({
-      closeOnSelect: false,
       multiple: true,
       ajax: config.ajax,
       placeholder: placeholder,
       templateSelection: templateSelection,
+      templateResult: templateResult,
+      closeOnSelect: config.closeOnSelect || false,
+      tags: config.dynamicCreation || false,
+      tokenSeparators: config.dynamicCreationDelimiter || [','],
       sorter: function(data) {
+        if (data.length === 0) return data;
         return data.sort(function(a, b) {
           var from = a.text.toLowerCase();
           var to = b.text.toLowerCase();
@@ -39,7 +56,11 @@ $.fn.extend({
 
     // Placeholder fix for ajax fields
     if (config.ajax) {
-      select2.next().find('.select2-search__field').css('width', 'auto');
+      setTimeout(() => {
+        select2.next().find('.select2-search__field').css(
+          'width', config.placeholderSize || 'auto'
+        );
+      }, 0);
     }
 
     // Check that group select correctly
@@ -126,12 +147,15 @@ $.fn.extend({
 
     $('.select2').find('input, .select2-selection__rendered').off('keydown').on('keydown', function(e) {
       var activeElement = $('.select2-results .arrow_pointer');
+      var firstElement = $('.select2-results .select2-results__option').first();
       var groupElement = activeElement.find('.select2-results__group');
       if (e.keyCode === 13) {
         if (groupElement.length > 0) {
           groupElement.click();
-        } else {
+        } else if (activeElement.length > 0) {
           activeElement.mouseup();
+        } else {
+          firstElement.mouseup();
         }
 
         setTimeout(() => {
@@ -141,12 +165,14 @@ $.fn.extend({
         e.preventDefault();
         e.stopPropagation();
       }
-      if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
         select2ScrollToSelectedElement();
         e.preventDefault();
       }
     });
 
+    // Add dynamic size
+    select2.next().css('width', '100%');
 
     // unlimited size
     if (config.unlimitedSize) {
@@ -156,9 +182,10 @@ $.fn.extend({
     }
 
     // Create arrow
-    $('<div class="select2-arrow"><span class="caret"></span></div>').appendTo(select2.next())
-      .click(() => select2.next().find('.select2-selection').click());
-
+    if (!(config.withoutArrow)) {
+      $('<div class="select2-arrow"><span class="caret"></span></div>').appendTo(select2.next())
+        .click(() => select2.next().find('.select2-selection').click());
+    }
     // select all check
     this[0].dataset.singleDisplay = config.singleDisplay || false;
     if (this[0].dataset.selectAll === 'true') {
@@ -184,7 +211,7 @@ $.fn.extend({
         }, 300);
         $('.select2-results')[0].dataset.lastSelected = false;
         selectElement.dataset.openDropdown = 'true';
-        $('.select2-dropdown').removeClass('custom-group');
+        $('.select2-dropdown').removeClass('custom-group').addClass(selectElement.id + '-dropdown');
         $('.select2-selection').scrollTo(0);
         $('.select2_select_all').remove();
         // Adding select_all_button

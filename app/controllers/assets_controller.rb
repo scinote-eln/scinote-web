@@ -5,10 +5,11 @@ class AssetsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Context
+  include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
 
-  before_action :load_vars
+  before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: :file_present
   before_action :check_edit_permission, only: :edit
 
@@ -80,10 +81,10 @@ class AssetsController < ApplicationController
       )
     end
 
-    if wopi_file?(@asset)
+    if wopi_enabled? && wopi_file?(@asset)
       edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
-        partial: 'shared/file_wopi_controlls.html.erb',
+        partial: 'assets/wopi/file_wopi_controls.html.erb',
         locals: {
           asset: @asset,
           can_edit: can_edit,
@@ -130,8 +131,9 @@ class AssetsController < ApplicationController
   end
 
   def edit
+    action = @asset.file_file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
     @action_url = append_wd_params(@asset
-                                   .get_action_url(current_user, 'edit', false))
+                                  .get_action_url(current_user, action, false))
     @favicon_url = @asset.favicon_url('edit')
     tkn = current_user.get_wopi_token
     @token = tkn.token
@@ -166,17 +168,95 @@ class AssetsController < ApplicationController
     # Post process file here
     @asset.post_process_file(@asset.team)
 
+    render_html = if @asset.step
+                    asset_position = @asset.step.asset_position(@asset)
+                    render_to_string(
+                      partial: 'steps/attachments/item.html.erb',
+                      locals: {
+                        asset: @asset,
+                        i: asset_position[:pos],
+                        assets_count: asset_position[:count],
+                        step: @asset.step
+                      },
+                      formats: :html
+                    )
+                  else
+                    render_to_string(
+                      partial: 'shared/asset_link',
+                      locals: { asset: @asset, display_image_tag: true },
+                      formats: :html
+                    )
+                  end
+
     respond_to do |format|
       format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'shared/asset_link',
-            locals: { asset: @asset, display_image_tag: true },
-            formats: :html
-          )
-        }
+        render json: { html: render_html }
       end
     end
+  end
+
+  # POST: create_wopi_file_path
+  def create_wopi_file
+    # Presence validation
+    params.require(%i(element_type element_id file_type))
+
+    # File type validation
+    render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
+
+    # Asset validation
+    original_filename = "#{params[:file_name]}.#{params[:file_type]}"
+    file = Paperclip.io_adapters.for(StringIO.new)
+    file.original_filename = original_filename
+    file.content_type = wopi_content_type(params[:file_type])
+    asset = Asset.new(file: file, created_by: current_user, file_present: true)
+
+    # Filename length validation (this cannot be checked by Paperclip,
+    # as it depends on OS)
+    if original_filename.length > Constants::FILENAME_MAX_LENGTH
+      render json: {
+        message: {
+          file: I18n.t(
+            'assets.create_wopi_file.errors.file_name_too_long',
+            limit: Constants::FILENAME_MAX_LENGTH
+          )
+        }
+      }, status: 400 and return
+    end
+
+    unless asset.valid?(:wopi_file_creation)
+      render json: {
+        message: asset.errors
+      }, status: 400 and return
+    end
+
+    # Create file depending on the type
+    if params[:element_type] == 'Step'
+      step = Step.find(params[:element_id].to_i)
+      render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
+                                  can_manage_protocol_in_repository?(step.protocol)
+      step_asset = StepAsset.create!(step: step, asset: asset)
+
+      edit_url = edit_asset_url(step_asset.asset_id)
+    elsif params[:element_type] == 'Result'
+      my_module = MyModule.find(params[:element_id].to_i)
+      render_403 and return unless can_manage_module?(my_module)
+
+      # First create result and then the asset
+      result = Result.create(name: file.original_filename,
+                             my_module: my_module,
+                             user: current_user)
+      result_asset = ResultAsset.create!(result: result, asset: asset)
+
+      edit_url = edit_asset_url(result_asset.asset_id)
+    else
+      render_404 and return
+    end
+
+    # Return edit url
+    render json: {
+      success: true,
+      edit_url: edit_url
+    }, status: :ok
   end
 
   private
@@ -241,6 +321,7 @@ class AssetsController < ApplicationController
   def asset_data_type(asset)
     return 'wopi' if wopi_file?(asset)
     return 'image' if asset.is_image?
+
     'file'
   end
 end

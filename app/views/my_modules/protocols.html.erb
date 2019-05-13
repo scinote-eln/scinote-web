@@ -2,17 +2,53 @@
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
-<%= render partial: "shared/secondary_navigation" %>
+<%= render partial: "shared/secondary_navigation", locals: {
+  editable: {
+    name: 'title',
+    active: true,
+    width: 'calc(100% - 580px)',
+    params_group: 'my_module',
+    field_to_udpate: 'name',
+    path_to_update: my_module_path(@my_module)
+  }
+} %>
 
-<div class="content-pane">
-  <%= render partial: "module_header" %>
+<div class="content-pane my-modules-protocols-index">
+  <span class="module-header">
+    <%= render partial: "module_header" %>
+  </span>
+
+  <div class="protocol-title">
+    <%= t('Protocol') %>
+  </div>
 
   <div>
     <div data-role="protocol-status-bar" style="display: inline;">
       <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
     </div>
     <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
-    <%= render partial: "my_modules/state_buttons.html.erb" %>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="protocol-description-content">
+        <% if can_manage_module?(@my_module) %>
+          <%= render partial: "my_modules/protocols/protocol_description_form", locals:
+            {
+              protocol: @my_module.protocol,
+              update_url: update_protocol_description_my_module_path(@my_module, format: :json)
+            }
+          %>
+        <% elsif @my_module.protocol.description.present? %>
+          <%= custom_auto_link(@my_module.protocol.tinymce_render(:description),
+                               simple_format: false,
+                               tags: %w(img),
+                               team: current_team) %>
+        <% else %>
+          <span style="font-size: 16px"><%= t('my_modules.protocols.protocol_status_bar.no_description') %></span>
+        <% end %>
+      </div>
+    </div>
   </div>
 
   <div data-role="steps-container">
@@ -43,6 +79,9 @@
 
 <!-- Complete task modal -->
 <%= render partial: 'my_modules/complete_task_modal.html.erb' %>
+
+<!-- Create new office file modal -->
+<%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
 
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag("my_modules/protocols") %>

@@ -1,0 +1,41 @@
+@import "constants";
+@import "mixins";
+
+.mce-image-loader {
+  display: none !important;
+
+  + .image-selection-container {
+    height: 28px;
+    left: 140px;
+    position: absolute;
+    top: 0;
+    width: 338px;
+
+    .select_button {
+      background-color: $brand-success;
+      border-color: $brand-success;
+      color: $color-white;
+      cursor: pointer;
+      line-height: 20px;
+      padding: 6px 12px;
+      position: relative;
+      text-align: center;
+      width: 76px;
+      z-index: 2;
+    }
+
+    input[type=text] {
+      border: 1px solid $color-gainsboro;
+      border-radius: 4px;
+      height: 30px;
+      left: -5px;
+      padding-left: 10px;
+      position: relative;
+      width: calc(100% - 100px);
+    }
+  }
+}
+
+.ql-editor {
+  font-size: 16px;
+}

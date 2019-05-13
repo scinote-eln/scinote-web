@@ -2,6 +2,7 @@ class MyModule < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include TinyMceImages
 
   enum state: Extends::TASKS_STATES
 
@@ -11,7 +12,7 @@ class MyModule < ApplicationRecord
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
-  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true,

@@ -6,8 +6,8 @@ ruby '2.5.5'
 
 
 gem 'webpacker', '~> 3.5'
-gem 'bootstrap-sass', '~> 3.4'
-gem 'bootstrap_form'
+gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.6.2'
 gem 'devise_invitable'
 gem 'figaro'
@@ -35,9 +35,9 @@ gem 'rack-attack'
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
-gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.13.8'
+gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'autosize-rails' # jQuery autosize plugin
@@ -90,7 +90,7 @@ gem 'rufus-scheduler', '~> 3.5'
 gem 'discard', '~> 1.0'
 
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails', '~> 4.7.13' # Rich text editor - SEE BELOW
+gem 'tinymce-rails', '~> 4.9.3' # Rich text editor - SEE BELOW
 # Any time you update tinymce-rails Gem, also update the cache_suffix parameter
 # in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js
 # TinyMCE files which might cause errors

@@ -1,0 +1,22 @@
+<% protocol ||= my_module.protocol %>
+<div class="report-element report-module-protocol-element" data-ts="<%= protocol.created_at %>" data-type="my_module_protocol" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= protocol.id %>">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left user-time">
+        <%=t "projects.reports.elements.module.protocol.user_time", timestamp: l(protocol.created_at, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-body">
+    <div class="row module-protocol-description">
+      <% if protocol.description.present? %>
+        <%= custom_auto_link(protocol.prepare_for_report(:description), team: current_team) %>
+      <% else %>
+        <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
+      <% end %>
+    </div>
+  </div>
+</div>

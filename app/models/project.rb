@@ -47,7 +47,7 @@ class Project < ApplicationRecord
                           .where(
                             'visibility = 1 OR user_projects.user_id = :id',
                             id: user.id
-                          )
+                          ).distinct
                         end
                       end)
 

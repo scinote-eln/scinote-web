@@ -23,6 +23,9 @@ class Constants
   COLOR_MAX_LENGTH = 7
   # Max characters for text in dropdown list element
   DROPDOWN_TEXT_MAX_LENGTH = 15
+  # Max characters limit for (on most operating systems, it's ~255 characters,
+  # but this is with a bit more safety margin)
+  FILENAME_MAX_LENGTH = 100
   # Max characters for filenames, after which they get truncated
   FILENAME_TRUNCATION_LENGTH = 50
   # Max characters for names of exported files and folders, after which they get
@@ -141,13 +144,13 @@ class Constants
     '#FF4500',
     '#008B8B',
     '#757575',
-    '#32CD32',
-    '#FFD700',
-    '#48D1CC',
+    '#2CB72C',
+    '#F5AD00',
+    '#0ECDC0',
     '#15369E',
     '#FF69B4',
     '#CD5C5C',
-    '#C9C9C9',
+    '#ADADAD',
     '#6495ED',
     '#DC143C',
     '#FF8C00',
@@ -225,7 +228,7 @@ class Constants
 
   WHITELISTED_TAGS = %w(
     a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
-    span u s blockquote pre col colgroup table thead tbody th tr td
+    span u s blockquote pre col colgroup table thead tbody th tr td img
   ).freeze
 
   WHITELISTED_ATTRIBUTES = [
@@ -907,7 +910,7 @@ class Constants
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
-  TINY_MCE_ASSET_REGEX = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
+  TINY_MCE_ASSET_REGEX = /data-mce-token="(\w+)"/
 
   # Team name for default admin user
   DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze

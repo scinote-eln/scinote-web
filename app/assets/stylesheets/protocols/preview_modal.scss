@@ -1,0 +1,17 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+@import "constants";
+@import "mixins";
+
+#protocol-preview-modal .modal-dialog {
+  .modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
+    width: 100%;
+
+    .ql-editor {
+      min-height: initial;
+    }
+  }
+}

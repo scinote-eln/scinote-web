@@ -76,7 +76,7 @@
         <a class="btn btn-link <%= 'disabled' unless active %>"
            href="<%= url_for notifications_project_path(id: project.id, format: :json) %>"
            aria-controls="notifications-<%= project.id %>" role="tab" data-remote="true">
-          <span class="fas fa-bell"></span>
+          <span class="fas fa-calendar-check"></span>
           <% if project.notification_count.positive? %>
             <span class="badge badge-indicator"><%= project.notification_count %></span>
           <% end %>
@@ -99,7 +99,7 @@
     <div class="tab-content" data-hook="project-dropdown-panel">
       <div role="tabpanel" class="tab-pane" id="activities-<%= project.id %>"></div>
       <div role="tabpanel" class="tab-pane" id="users-<%= project.id %>"></div>
-      <div role="tabpanel" class="tab-pane" id="notifications-<%= project.id %>"></div>
+      <div role="tabpanel" class="tab-pane over-due" id="notifications-<%= project.id %>"></div>
       <div role="tabpanel" class="tab-pane" id="comments-<%= project.id %>"></div>
     </div>
 

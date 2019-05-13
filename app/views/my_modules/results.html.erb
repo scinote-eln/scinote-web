@@ -2,6 +2,7 @@
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
 <%= render partial: "shared/secondary_navigation" %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
+<%= render partial: 'assets/wopi/create_wopi_file_modal' %>
 
 <div class="content-pane">
   <div id="results-toolbar">
@@ -40,6 +41,8 @@
         <span class="fas fa-paperclip"></span>
         <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
       </a>
+      <%= render partial: "assets/wopi/create_wopi_file_button",
+                 locals: {  element_id: @my_module.id, element_type: 'Result' } %>
     </div>
     <% end %>
   </div>
@@ -56,19 +59,10 @@
 <%= javascript_include_tag "handsontable.full.min" %>
 
 <!-- Libraries for formulas -->
-<%= javascript_include_tag "lodash" %>
-<%= javascript_include_tag "numeral" %>
-<%= javascript_include_tag "numeric" %>
-<%= javascript_include_tag "md5" %>
-<%= javascript_include_tag "jstat" %>
-<%= javascript_include_tag "formula" %>
-<%= javascript_include_tag "parser" %>
-<%= javascript_include_tag "ruleJS" %>
-<%= javascript_include_tag "handsontable.formula" %>
-<%= javascript_include_tag "big.min" %>
-<%= stylesheet_link_tag "handsontable.formula" %>
+<%= render partial: "shared/formulas_libraries.html.erb" %>
 
 <%= javascript_include_tag("canvas-to-blob.min") %>
+<%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "my_modules/results" %>
 <%= javascript_include_tag "results/result_texts" %>
 <%= javascript_include_tag "results/result_tables" %>

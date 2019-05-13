@@ -1,6 +1,15 @@
 <% provide(:head_title, t("projects.show.head_title", project: h(@project.name)).html_safe) %>
 <%= render partial: "shared/sidebar", locals: { current_project: @project, page: 'project' } %>
-<%= render partial: "shared/secondary_navigation" %>
+<%= render partial: "shared/secondary_navigation", locals: { 
+  editable: {
+    name: 'title',
+    active: true,
+    width: 'calc(100% - 500px)',
+    params_group: 'project',
+    field_to_udpate: 'name',
+    path_to_update: project_path(@project)
+  }
+}%>
 
 <div class="content-pane" id="project-show">
   <div class="row">

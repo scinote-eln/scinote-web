@@ -1,6 +1,7 @@
 class Step < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
+  include TinyMceImages
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -31,7 +32,6 @@ class Step < ApplicationRecord
   has_many :tables, through: :step_tables
   has_many :report_elements, inverse_of: :step,
     dependent: :destroy
-  has_many :tiny_mce_assets, inverse_of: :step, dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
@@ -122,6 +122,12 @@ class Step < ApplicationRecord
       st += asset.estimated_size
     end
     st
+  end
+
+  def asset_position(asset)
+    assets.order(:file_updated_at).each_with_index do |step_asset, i|
+      return { count: assets.count, pos: i } if asset.id == step_asset.id
+    end
   end
 
   protected

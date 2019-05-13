@@ -246,7 +246,7 @@ en:
       no_comments: "No comments!"
       no_users: "No users!"
       manage_users: "Manage users"
-      no_notifications: "No notifications!"
+      no_notifications: "There are no overdue tasks at the moment"
       module_overdue_html: "Task <em>%{module}</em> is overdue (%{days})."
       module_overdue_days:
         one: "1 day"
@@ -267,7 +267,7 @@ en:
       start_date: "Start date:"
       activity_tab: "Activity"
       users_tab: "Users"
-      notifications_tab: "Notifications"
+      notifications_tab: "Due dates"
       comment_tab: "Comments"
       new_comment: "New comment"
       content_loading: "Loading..."
@@ -410,6 +410,7 @@ en:
           module_contents_inner:
             instructions: "Select the information from your task that you would like to include to your report."
             check_all: "All tasks content"
+            protocol: "Protocol"
             steps: "Steps"
             completed_steps: "Completed"
             uncompleted_steps: "Uncompleted"
@@ -476,6 +477,8 @@ en:
           no_description: "No description"
           tags_header: "Task tags:"
           no_tags: "No tags"
+          protocol:
+            user_time: "Protocol created on %{timestamp}."
         experiment:
           user_time: "Experiment created on %{timestamp}."
           no_description: "No description"
@@ -597,8 +600,12 @@ en:
       start_date: "Start date:"
       due_date: "Due date:"
       tags: "Tags:"
-      no_tags: "No tags"
-      no_description: "No description"
+      no_tags: "click here to add Task Tags (optional)"
+      manage_tags: "Manage tags"
+      create_new_tag: "create new"
+      no_description: "No task description"
+      description_label: "Description"
+      empty_description_edit_label: "Click here to enter Task Description (optional)"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
@@ -609,7 +616,8 @@ en:
         added_by: "Added by"
         added_by_tooltip: "Added at %{ts}"
         private_protocol_desc: "The parent protocol is private. Only its author can manage it."
-        no_description: "no description"
+        no_description: "No protocol description"
+        empty_description_edit_label: "Click here to enter Protocol Description (optional)"
         keywords: "Keywords"
         no_keywords: "no keywords"
         btns:
@@ -1729,14 +1737,15 @@ en:
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New Step"
-      subtitle: "Protocol steps"
+      subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
       published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
       info_tab: "Info"
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Files"
+      files: "Attachments (%{count})"
+      comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
       options:
@@ -1750,6 +1759,12 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
+      attachments:
+        sort_new: "Newest first &#8595;"
+        sort_old: "Oldest first &#8593;"
+        sort_atoz: "Name &#8595;"
+        sort_ztoa: "Name &#8593;"
+        modified_label: "Modified:"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1876,8 +1891,8 @@ en:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"
     drag_n_drop:
-      label_html: 'Drag &amp; drop files here, CTRL+V (for images from clipboard) or '
-      browse_label: 'Browse to add'
+      label_html: 'Drag &amp; drop here. Copy &amp Paste images.'
+      browse_label: 'Select to Upload...'
       drop_label: 'Drop to add to Step'
       file_label: 'File'
     from_clipboard:
@@ -1889,6 +1904,19 @@ en:
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
+    create_wopi_file:
+      button_text: 'New Office file'
+      modal_title: 'Create new Microsoft Office Online document'
+      text_field_label: 'Document name & type'
+      text_field_placeholder: 'New Document'
+      ms_word: 'Word<br/>Online'
+      ms_excel: 'Excel<br/>Online'
+      ms_powerpoint: 'PowerPoint<br/>Online'
+      create_document_button: 'Create Document'
+      errors:
+        forbidden: 'You do not have permission to add files.'
+        not_found: 'Element not found.'
+        file_name_too_long: 'is too long (maximum is %{limit} characters, with extension)'
   atwho:
     no_results: "No results found"
     users:
@@ -1922,9 +1950,12 @@ en:
   tiny_mce:
     upload_window_title: 'Insert an image from your computer'
     upload_window_label: 'Choose an image'
+    choose_file: 'Choose file'
+    no_image_chosen: 'No image chosen'
     insert_btn: 'Insert'
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
+    saved_label: "Saved"
   general:
     save: "Save"
     update: "Update"
@@ -1936,6 +1967,7 @@ en:
     no_comments: "No comments!"
     more_comments: "More comments"
     comment_placeholder: "Your Message"
+    comment_placeholder_new: "Add new comment…"
     module:
       one: "task"
       other: "tasks"

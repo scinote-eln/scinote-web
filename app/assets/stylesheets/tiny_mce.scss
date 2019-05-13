@@ -1,0 +1,62 @@
+// scss-lint:disable ImportantRule
+@import "constants";
+
+.tinymce-view {
+  border: solid 1px;
+  border-color: $color-white;
+  border-radius: 3px;
+  min-height: 100px;
+  padding: 3px;
+
+  &:hover {
+    border-color: $color-gainsboro;
+    cursor: pointer;
+  }
+
+  &:empty::before {
+    color: $color-silver-chalice;
+    content: attr(data-placeholder);
+  }
+}
+
+.mce-tinymce {
+  opacity: 0;
+  position: absolute !important;
+
+  &.show {
+    opacity: 1;
+    position: static !important;
+  }
+}
+
+.tinymce-placeholder {
+  background: $color-concrete;
+  opacity: .7;
+  transition: .2s;
+  width: 100%;
+}
+
+.tinymce-save-button,
+.tinymce-cancel-button {
+  cursor: pointer;
+
+  .fas {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-top: 3px;
+  }
+}
+
+.tinymce-status-badge {
+  color: $color-silver-chalice;
+  margin-top: -20px;
+}
+
+.tinymce-placeholder-text {
+  color: $color-silver-chalice;
+}
+
+.mce-toolbar {
+  background: $color-white !important;
+}
+// scss-lint:enable ImportantRule
