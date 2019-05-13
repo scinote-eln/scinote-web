@@ -180,7 +180,7 @@ function initializeNewElement(newEl) {
       switch (parent.data("type")) {
         case "experiment":
           url = dh.data("add-experiment-contents-url"); break;
-        case 'my_module' || 'protocol':
+        case 'my_module':
           url = dh.data("add-module-contents-url"); break;
         case "step":
           url = dh.data("add-step-contents-url"); break;

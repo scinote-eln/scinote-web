@@ -410,6 +410,7 @@ en:
           module_contents_inner:
             instructions: "Select the information from your task that you would like to include to your report."
             check_all: "All tasks content"
+            protocol: "Protocol"
             steps: "Steps"
             completed_steps: "Completed"
             uncompleted_steps: "Uncompleted"

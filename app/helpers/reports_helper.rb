@@ -82,8 +82,6 @@ module ReportsHelper
       end
     end
 
-    locals[:protocol] = element.parent.my_module.protocol if element.type_of == 'my_module_protocol'
-
     # ReportExtends is located in config/initializers/extends/report_extends.rb
     ReportElement.type_ofs.keys.each do |type|
       next unless element.public_send("#{type}?")
