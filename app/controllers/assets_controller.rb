@@ -204,24 +204,10 @@ class AssetsController < ApplicationController
     render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
 
     # Asset validation
-    original_filename = "#{params[:file_name]}.#{params[:file_type]}"
     file = Paperclip.io_adapters.for(StringIO.new)
-    file.original_filename = original_filename
+    file.original_filename = "#{params[:file_name]}.#{params[:file_type]}"
     file.content_type = wopi_content_type(params[:file_type])
     asset = Asset.new(file: file, created_by: current_user, file_present: true)
-
-    # Filename length validation (this cannot be checked by Paperclip,
-    # as it depends on OS)
-    if original_filename.length > Constants::FILENAME_MAX_LENGTH
-      render json: {
-        message: {
-          file: I18n.t(
-            'assets.create_wopi_file.errors.file_name_too_long',
-            limit: Constants::FILENAME_MAX_LENGTH
-          )
-        }
-      }, status: 400 and return
-    end
 
     unless asset.valid?(:wopi_file_creation)
       render json: {

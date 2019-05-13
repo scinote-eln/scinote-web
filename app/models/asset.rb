@@ -49,7 +49,7 @@ class Asset < ApplicationRecord
   # This could cause some problems if you create empty asset and want to
   # assign it to result
   validate :step_or_result_or_repository_asset_value
-  validate :name_should_not_be_empty_without_extension,
+  validate :wopi_filename_valid,
            on: :wopi_file_creation
 
   belongs_to :created_by,
@@ -521,11 +521,22 @@ class Asset < ApplicationRecord
     end
   end
 
-  def name_should_not_be_empty_without_extension
+  def wopi_filename_valid
+    # Check that filename without extension is not blank
     unless file.original_filename[0..-6].present?
       errors.add(
         :file,
         I18n.t('general.text.not_blank')
+      )
+    end
+    # Check maximum filename length
+    if file.original_filename.length > Constants::FILENAME_MAX_LENGTH
+      errors.add(
+        :file,
+        I18n.t(
+          'general.file.file_name_too_long',
+          limit: Constants::FILENAME_MAX_LENGTH
+        )
       )
     end
   end
