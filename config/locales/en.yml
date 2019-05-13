@@ -1916,6 +1916,7 @@ en:
       errors:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
+        file_name_too_long: 'is too long (maximum is %{limit} characters, with extension)'
   atwho:
     no_results: "No results found"
     users:

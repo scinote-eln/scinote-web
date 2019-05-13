@@ -5,6 +5,7 @@ class AssetsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Context
+  include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
 
@@ -81,10 +82,10 @@ class AssetsController < ApplicationController
       )
     end
 
-    if wopi_file?(@asset)
+    if wopi_enabled? && wopi_file?(@asset)
       edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
-        partial: 'shared/file_wopi_controlls.html.erb',
+        partial: 'assets/wopi/file_wopi_controls.html.erb',
         locals: {
           asset: @asset,
           can_edit: can_edit,
@@ -204,10 +205,24 @@ class AssetsController < ApplicationController
     render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
 
     # Asset validation
+    original_filename = "#{params[:file_name]}.#{params[:file_type]}"
     file = Paperclip.io_adapters.for(StringIO.new)
-    file.original_filename = "#{params[:file_name]}.#{params[:file_type]}"
+    file.original_filename = original_filename
     file.content_type = wopi_content_type(params[:file_type])
     asset = Asset.new(file: file, created_by: current_user, file_present: true)
+
+    # Filename length validation (this cannot be checked by Paperclip,
+    # as it depends on OS)
+    if original_filename.length > Constants::FILENAME_MAX_LENGTH
+      render json: {
+        message: {
+          file: I18n.t(
+            'assets.create_wopi_file.errors.file_name_too_long',
+            limit: Constants::FILENAME_MAX_LENGTH
+          )
+        }
+      }, status: 400 and return
+    end
 
     unless asset.valid?(:wopi_file_creation)
       render json: {
@@ -307,6 +322,7 @@ class AssetsController < ApplicationController
   def asset_data_type(asset)
     return 'wopi' if wopi_file?(asset)
     return 'image' if asset.is_image?
+
     'file'
   end
 end

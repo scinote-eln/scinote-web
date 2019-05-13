@@ -20,9 +20,8 @@ function initCreateWopiFileModal() {
   $('#new-office-file-modal form')
     .on('ajax:success', function(ev, data) {
       window.open(data.edit_url, '_blank');
-      $('#new-office-file-modal').modal('hide');
-
-      // location.reload();
+      window.focus();
+      location.reload(); // Reload current page, to display the new element
     })
     .on('ajax:error', function(ev, response) {
       var element;
