@@ -8,7 +8,7 @@
   <% end %>
 </div>
 
-<div class="row">
+<div class="row protocol-info">
   <div class="col-xs-6 col-sm-4 col-md-4">
     <div class="badge-icon">
       <span class="fas fa-calendar-alt"></span>
@@ -31,7 +31,7 @@
 
   <div class="col-xs-12 col-sm-4 col-md-4">
     <div class="badge-icon">
-      <span class="fas fa-user fa-lg"></span>
+      <span class="fas fa-user"></span>
     </div>
     <div class="well well-sm">
       <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.added_by" %>:</span>
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <div class="col-xs-12 col-sm-6 col-md-6">
+  <div class="col-xs-12 col-sm-8 col-md-8">
     <div class="badge-icon">
       <% if can_manage_protocol_in_repository?(@protocol) %>
         <a data-action="edit-keywords" data-remote="true" href="<%= edit_keywords_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  <div class="col-xs-12 col-sm-6 col-md-6">
+  <div class="col-xs-12 col-sm-4 col-md-4">
     <div class="badge-icon">
       <% if can_manage_protocol_in_repository?(@protocol) %>
         <a data-action="edit-authors" data-remote="true" href="<%= edit_authors_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="col-xs-12 col-sm-12 col-md-12 protocol-description">
     <%= render partial: "protocols/header/description_label.html.erb", locals: {edit_mode: true} %>
   </div>
 </div>

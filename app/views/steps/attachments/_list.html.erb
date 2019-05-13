@@ -11,8 +11,10 @@
   </div>
   <div>
     <div class="attachemnts-header pull-right">
-      <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
-                 locals: {  element_id: step.id, element_type: 'Step' } %>
+      <% if !(preview) %>
+        <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
+                   locals: {  element_id: step.id, element_type: 'Step' } %>
+      <% end %>
       <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
         <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span id="dd-att-step-<%= step.id %>-label"><%= t('protocols.steps.attachments.sort_new').html_safe %></span>

@@ -14,6 +14,28 @@
   }
 }
 
+.protocol-info,
+.module-header {
+    .well {
+    border: 0;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .badge-icon {
+    background: transparent;
+    color: $color-silver;
+    padding-left: 0;
+    padding-right: 5px;
+
+    + .well-sm {
+      margin-bottom: 10px;
+      margin-left: 0;
+    }
+  }
+}
+
 .module-header {
   display: inline-block;
   position: relative;
@@ -43,25 +65,6 @@
 
     .my_module-state-buttons {
       padding-top: 0;
-    }
-  }
-
-  .well {
-    border: 0;
-    box-shadow: none;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .badge-icon {
-    background: transparent;
-    color: $color-silver;
-    padding-left: 0;
-    padding-right: 5px;
-
-    + .well-sm {
-      margin-bottom: 10px;
-      margin-left: 0;
     }
   }
 
