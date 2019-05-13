@@ -8,7 +8,6 @@ module ReportsHelper
 
   def render_report_element(element, provided_locals = nil)
     # Determine partial
-
     file_name = element.type_of
     if element.type_of.in? ReportExtends::MY_MODULE_CHILDREN_ELEMENTS
       file_name = "my_module_#{element.type_of.singularize}"
@@ -82,6 +81,8 @@ module ReportsHelper
         locals[:filename] = locals[:path].split('/').last
       end
     end
+
+    locals[:protocol] = element.parent.my_module.protocol if element.type_of == 'my_module_protocol'
 
     # ReportExtends is located in config/initializers/extends/report_extends.rb
     ReportElement.type_ofs.keys.each do |type|
