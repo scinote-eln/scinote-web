@@ -8,7 +8,6 @@ module ReportsHelper
 
   def render_report_element(element, provided_locals = nil)
     # Determine partial
-
     file_name = element.type_of
     if element.type_of.in? ReportExtends::MY_MODULE_CHILDREN_ELEMENTS
       file_name = "my_module_#{element.type_of.singularize}"
