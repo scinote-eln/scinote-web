@@ -190,7 +190,7 @@
       $('.attachment-placeholder.new').remove();
       _dragNdropAssetsOff();
       for(var i = 0; i < droppedFiles.length; i++) {
-        $('.attacments.edit')
+        $('.attachments.edit')
           .append(_uploadedAssetPreview(droppedFiles[i], i))
           .promise()
           .done(function() {

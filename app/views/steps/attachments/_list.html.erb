@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<div class="col-xs-12 attacments" id="att-<%= step.id %>">
+<div class="col-xs-12 attachments" id="att-<%= step.id %>">
   <% assets.each_with_index do |asset, i| %>
     <%= render partial: 'steps/attachments/item.html.erb',
                locals: { asset: asset, i: i, assets_count: assets.count, step: step } %>

@@ -431,7 +431,7 @@ var FilePreviewModal = (function() {
         link.attr('data-status', 'asset-present');
         if (data.type === 'image') {
           if (data.processing) {
-            animateSpinner('.file-preview-container', true);
+            modal.find('.file-preview-container').append(data['processing-img']);
           } else {
             animateSpinner('.file-preview-container', false);
             modal.find('.file-preview-container')
