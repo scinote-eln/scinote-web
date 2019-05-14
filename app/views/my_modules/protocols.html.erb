@@ -22,8 +22,8 @@
     <%= t('Protocol') %>
   </div>
 
-  <div>
-    <div data-role="protocol-status-bar" style="display: inline;">
+  <div class="protocol-status-container">
+    <div class="protocol-status-bar" data-role="protocol-status-bar">
       <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
     </div>
     <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>

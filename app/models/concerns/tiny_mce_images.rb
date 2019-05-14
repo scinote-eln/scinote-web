@@ -15,7 +15,7 @@ module TinyMceImages
       description = self[field]
 
       # Check tinymce for old format
-      description = TinyMceAsset.update_old_tinymce(description)
+      description = TinyMceAsset.update_old_tinymce(description, self)
 
       tiny_mce_assets.each do |tm_asset|
         tmp_f = Tempfile.open(tm_asset.image_file_name, Rails.root.join('tmp'))
@@ -40,7 +40,7 @@ module TinyMceImages
     end
 
     def tinymce_render(field)
-      TinyMceAsset.generate_url(self[field])
+      TinyMceAsset.generate_url(self[field], self)
     end
 
     # Takes array of old/new TinyMCE asset ID pairs
@@ -50,7 +50,7 @@ module TinyMceImages
       description = read_attribute(object_field)
 
       # Check tinymce for old format
-      description = TinyMceAsset.update_old_tinymce(description)
+      description = TinyMceAsset.update_old_tinymce(description, self)
 
       parsed_description = Nokogiri::HTML(description)
       images.each do |image|

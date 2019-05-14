@@ -193,6 +193,7 @@ var TinyMCE = (function() {
             editor.selection.collapse(false);
 
             SmartAnnotation.init($(editor.contentDocument.activeElement));
+            SmartAnnotation.preventPropagation('.atwho-user-popover');
             initHighlightjsIframe($(this.iframeElement).contents());
           },
           setup: function(editor) {

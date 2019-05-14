@@ -42,6 +42,24 @@ class AssetsController < ApplicationController
     end
   end
 
+  def step_file_present
+    respond_to do |format|
+      format.json do
+        if @asset.file.processing?
+          render json: { processing: true }
+        else
+          render json: {
+            placeholder_html: render_to_string(
+              partial: 'steps/attachments/placeholder.html.erb',
+              locals: { asset: @asset, edit_page: false }
+            ),
+            processing: false
+          }
+        end
+      end
+    end
+  end
+
   def file_preview
     response_json = {
       'id' => @asset.id,
@@ -69,7 +87,7 @@ class AssetsController < ApplicationController
         'mime-type' => @asset.file.content_type,
         'processing' => @asset.file.processing?,
         'large-preview-url' => @asset.url(:large),
-        'processing-url' => image_tag('medium/processing.gif')
+        'processing-img' => image_tag('medium/processing.gif')
       )
     else
       response_json.merge!(
@@ -204,24 +222,10 @@ class AssetsController < ApplicationController
     render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
 
     # Asset validation
-    original_filename = "#{params[:file_name]}.#{params[:file_type]}"
     file = Paperclip.io_adapters.for(StringIO.new)
-    file.original_filename = original_filename
+    file.original_filename = "#{params[:file_name]}.#{params[:file_type]}"
     file.content_type = wopi_content_type(params[:file_type])
     asset = Asset.new(file: file, created_by: current_user, file_present: true)
-
-    # Filename length validation (this cannot be checked by Paperclip,
-    # as it depends on OS)
-    if original_filename.length > Constants::FILENAME_MAX_LENGTH
-      render json: {
-        message: {
-          file: I18n.t(
-            'assets.create_wopi_file.errors.file_name_too_long',
-            limit: Constants::FILENAME_MAX_LENGTH
-          )
-        }
-      }, status: 400 and return
-    end
 
     unless asset.valid?(:wopi_file_creation)
       render json: {
@@ -265,12 +269,9 @@ class AssetsController < ApplicationController
     @asset = Asset.find_by_id(params[:id])
     return render_404 unless @asset
 
-    step_assoc = @asset.step
-    result_assoc = @asset.result
-    repository_cell_assoc = @asset.repository_cell
-    @assoc = step_assoc unless step_assoc.nil?
-    @assoc = result_assoc unless result_assoc.nil?
-    @assoc = repository_cell_assoc unless repository_cell_assoc.nil?
+    @assoc ||= @asset.step
+    @assoc ||= @asset.result
+    @assoc ||= @asset.repository_cell
 
     if @assoc.class == Step
       @protocol = @asset.step.protocol
