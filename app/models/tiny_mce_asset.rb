@@ -48,9 +48,9 @@ class TinyMceAsset < ApplicationRecord
     Rails.logger.error e.message
   end
 
-  def self.generate_url(description)
+  def self.generate_url(description, obj = nil)
     # Check tinymce for old format
-    description = update_old_tinymce(description)
+    description = update_old_tinymce(description, obj)
 
     description = Nokogiri::HTML(description)
     tm_assets = description.css('img')
@@ -105,12 +105,16 @@ class TinyMceAsset < ApplicationRecord
     asset.destroy if asset && !asset.saved
   end
 
-  def self.update_old_tinymce(description)
+  def self.update_old_tinymce(description, obj = nil)
     return description unless description
 
     description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
       old_format = /\[~tiny_mce_id:#{token}\]/
       new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
+
+      asset = find_by_id(token)
+      asset.delay(queue: :assets).clone_tinymce_asset(obj) if obj && obj != asset.object
+
       description.sub!(old_format, new_format)
     end
     description
@@ -157,5 +161,33 @@ class TinyMceAsset < ApplicationRecord
   def set_reference
     obj_type = "#{@reference.class.to_s.underscore}=".to_sym
     public_send(obj_type, @reference) if @reference
+  end
+
+  def clone_tinymce_asset(obj)
+    team_id = obj&.protocol&.team_id
+
+    team_id ||= obj&.result&.my_module&.protocol&.team_id
+
+    return false unless team_id
+
+    tiny_img_clone = TinyMceAsset.new(
+      image: image,
+      estimated_size: estimated_size,
+      object: obj,
+      team_id: team_id
+    )
+    tiny_img_clone.save!
+
+    obj.tiny_mce_assets << tiny_img_clone
+    # Prepare array of image to update
+    cloned_img_ids = [[id, tiny_img_clone.id]]
+
+    obj_field = Extends::RICH_TEXT_FIELD_MAPPINGS[obj.class.name]
+
+    # Update description with new format
+    obj.update(obj_field => TinyMceAsset.update_old_tinymce(obj[obj_field]))
+
+    # reassign images
+    obj.reassign_tiny_mce_image_references(cloned_img_ids)
   end
 end
