@@ -253,7 +253,7 @@ $(document).on('turbolinks:before-visit', function(e) {
   _.each(tinyMCE.editors, function(editor) {
     if (editor.isNotDirty === false) {
       if (confirm(I18n.t('tiny_mce.leaving_warning'))) {
-        return true;
+        return false;
       }
       e.preventDefault();
       return false;
