@@ -21,10 +21,10 @@ function initInlineEditing(title) {
       });
       $inputString.keydown();
     }
-    inputString = $inputString[0]
+    inputString = $inputString[0];
 
-    function cancelAllEditFields() {
-      $('.inline-edit-active').find('.cancel-button').click();
+    function saveAllEditFields() {
+      $('.inline-edit-active').find('.save-button').click();
     }
 
     function updateField() {
@@ -64,8 +64,8 @@ function initInlineEditing(title) {
     }
 
     $editBlock.click(e => {
-      cancelAllEditFields();
       if (inputString.disabled) {
+        saveAllEditFields();
         editBlock.dataset.editMode = 1;
         inputString.disabled = false;
         $inputString.focus();
