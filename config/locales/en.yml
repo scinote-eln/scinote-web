@@ -1956,7 +1956,7 @@ en:
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
     saved_label: "Saved"
-    leaving_warning: 'You have made some changes, are you sure you wan't to leave this page?'
+    leaving_warning: "You have made some changes, are you sure you want to leave this page?"
   general:
     save: "Save"
     update: "Update"
