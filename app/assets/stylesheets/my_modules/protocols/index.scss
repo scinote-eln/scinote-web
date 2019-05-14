@@ -19,6 +19,7 @@
     .well {
     border: 0;
     box-shadow: none;
+    font-size: 14px;
     padding-left: 0;
     padding-right: 0;
   }
@@ -30,7 +31,7 @@
     padding-right: 5px;
 
     + .well-sm {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       margin-left: 0;
     }
   }
@@ -79,7 +80,7 @@
     .title {
       font-size: 22px;
       font-weight: bold;
-      padding: 10px 0 5px;
+      padding: 20px 0 5px;
     }
 
     .my-module-description-content {
@@ -100,14 +101,15 @@
       display: inline-block;
       line-height: 32px;
       padding: 0 5px 0 0;
-      width: 38px;
+      width: 28px;
     }
 
     .tags-title {
       display: inline-block;
+      font-size: 14px;
       line-height: 32px;
       padding-right: 3px;
-      width: 35px;
+      width: 37px;
     }
 
     .select-container {
@@ -115,7 +117,7 @@
       flex-basis: 100px;
       flex-grow: 1;
       flex-shrink: 1;
-      max-width: calc(100% - 73px);
+      max-width: calc(100% - 65px);
       position: relative;
 
       select {
