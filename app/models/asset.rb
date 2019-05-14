@@ -320,7 +320,7 @@ class Asset < ApplicationRecord
   end
 
   def url(style = :original, timeout: Constants::URL_SHORT_EXPIRE_TIME)
-    if file.is_stored_on_s3?
+    if file.is_stored_on_s3? && !file.processing?
       presigned_url(style, timeout: timeout)
     else
       file.url(style)
