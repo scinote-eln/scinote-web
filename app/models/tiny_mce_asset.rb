@@ -113,7 +113,8 @@ class TinyMceAsset < ApplicationRecord
       new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
 
       asset = find_by_id(token)
-      asset.delay(queue: :assets).clone_tinymce_asset(obj) if obj && obj != asset.object
+      # If object (step or result text) don't have direct assciation to tinyMCE image, we need copy it.
+      asset.clone_tinymce_asset(obj) if obj && obj != asset.object
 
       description.sub!(old_format, new_format)
     end
@@ -134,33 +135,6 @@ class TinyMceAsset < ApplicationRecord
       end
     end
     ostream
-  end
-
-  private
-
-  def self_destruct
-    TinyMceAsset.delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
-  end
-
-  def update_estimated_size
-    return if image_file_size.blank?
-
-    es = image_file_size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
-    update(estimated_size: es)
-    Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
-    # update team space taken
-    team.take_space(es)
-    team.save
-  end
-
-  def release_team_space
-    team.release_space(estimated_size)
-    team.save
-  end
-
-  def set_reference
-    obj_type = "#{@reference.class.to_s.underscore}=".to_sym
-    public_send(obj_type, @reference) if @reference
   end
 
   def clone_tinymce_asset(obj)
@@ -189,5 +163,32 @@ class TinyMceAsset < ApplicationRecord
 
     # reassign images
     obj.reassign_tiny_mce_image_references(cloned_img_ids)
+  end
+
+  private
+
+  def self_destruct
+    TinyMceAsset.delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
+  end
+
+  def update_estimated_size
+    return if image_file_size.blank?
+
+    es = image_file_size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
+    update(estimated_size: es)
+    Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
+    # update team space taken
+    team.take_space(es)
+    team.save
+  end
+
+  def release_team_space
+    team.release_space(estimated_size)
+    team.save
+  end
+
+  def set_reference
+    obj_type = "#{@reference.class.to_s.underscore}=".to_sym
+    public_send(obj_type, @reference) if @reference
   end
 end
