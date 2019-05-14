@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation */
+/* global _ hljs tinyMCE SmartAnnotation I18n */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -247,3 +247,16 @@ var TinyMCE = (function() {
     highlight: initHighlightjs
   });
 }());
+
+$(document).on('turbolinks:before-visit', function(e) {
+  _.each(tinyMCE.editors, function(editor) {
+    if (editor.isNotDirty === false) {
+      if (confirm(I18n.t('tiny_mce.leaving_warning'))) {
+        return true;
+      }
+      e.preventDefault();
+      return false;
+    }
+    return false;
+  });
+});
