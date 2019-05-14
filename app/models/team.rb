@@ -2,7 +2,6 @@ class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
   include TeamBySubjectModel
-  include InputSanitizeHelper
 
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
@@ -322,7 +321,7 @@ class Team < ApplicationRecord
       query = query.where(id: users_team)
     end
     query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
-    query.select(:id, :name).map { |res| [res[0], escape_input(res[1])] }
+    query.select(:id, :name).map { |i| { id: i[:id], name: ApplicationController.helpers.escape_input(i[:name]) } }
   end
 
   private
