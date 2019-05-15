@@ -238,6 +238,7 @@ var Comments = (function() {
           $('.form-group', $form).removeClass('has-error');
           $('.help-block', $form).html('').addClass('hide');
           $submitBtn.removeClass('has-error');
+          $submitBtn.removeClass('show');
 
           var currnetCount = $('#counter-' + stepId).html()
           $('#counter-' + stepId).html(parseInt(currnetCount) + 1)

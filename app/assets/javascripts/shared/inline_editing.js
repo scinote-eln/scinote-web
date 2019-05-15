@@ -25,7 +25,6 @@ function initInlineEditing(title) {
       SmartAnnotation.init($inputString);
     }
 
-
     function saveAllEditFields() {
       $('.inline-edit-active').find('.save-button').click();
     }
