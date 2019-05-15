@@ -427,6 +427,13 @@
     .error-block {
       display: block;
     }
+
+    .comment-actions {
+
+      .edit-buttons {
+        display: inline !important;
+      }
+    }
   }
 }
 

@@ -35,7 +35,8 @@ function initInlineEditing(title) {
       if (inputString.value === editBlock.dataset.originalName) {
         inputString.disabled = true;
         editBlock.dataset.editMode = 0;
-        $inputString.addClass('hidden').prev().removeClass('hidden');
+        $inputString.addClass('hidden');
+        $editBlock.find('.view-mode').removeClass('hidden');
         return false;
       }
       params[editBlock.dataset.paramsGroup] = {};
@@ -48,13 +49,17 @@ function initInlineEditing(title) {
         success: function(result) {
           var viewData;
           if (editBlock.dataset.responseField) {
+            // If we want to modify preview element on backend
+            // we can use this data field and we will take string from response
             viewData = result[editBlock.dataset.responseField];
           } else {
+            // By default we just copy value from input string
             viewData = inputString.value;
           }
           editBlock.dataset.originalName = inputString.value;
           editBlock.dataset.error = false;
-          $inputString.addClass('hidden').prev().html(prepareText(viewData)).removeClass('hidden');
+          $inputString.addClass('hidden');
+          $editBlock.find('.view-mode').html(prepareText(viewData)).removeClass('hidden');
 
           inputString.disabled = true;
           editBlock.dataset.editMode = 0;
@@ -75,12 +80,14 @@ function initInlineEditing(title) {
     }
 
     $editBlock.click((e) => {
+      // 'A' mean that, if we click on <a></a> element we will not go in edit mode
       if (e.target.tagName === 'A') return true;
       if (inputString.disabled) {
         saveAllEditFields();
         editBlock.dataset.editMode = 1;
         inputString.disabled = false;
-        $inputString.removeClass('hidden').prev().addClass('hidden');
+        $inputString.removeClass('hidden');
+        $editBlock.find('.view-mode').addClass('hidden');
         $inputString.focus();
       }
       e.stopPropagation();
@@ -106,7 +113,8 @@ function initInlineEditing(title) {
       editBlock.dataset.editMode = 0;
       editBlock.dataset.error = false;
       inputString.value = editBlock.dataset.originalName;
-      $inputString.addClass('hidden').prev().removeClass('hidden');
+      $inputString.addClass('hidden');
+      $editBlock.find('.view-mode').removeClass('hidden');
       $inputString.keydown();
       e.stopPropagation();
     });
