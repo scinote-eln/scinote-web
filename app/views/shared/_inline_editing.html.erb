@@ -6,7 +6,8 @@
   data-original-name="<%= initial_value %>"
   error="false"
 >
-  <input type="text" value="<%= initial_value %>" disabled/>
+  <div class="view-mode"><%= initial_value %></div>
+  <input class="hidden" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container">
     <span class="save-button"><i class="fas fa-check"></i></span>
     <span class="cancel-button"><i class="fas fa-times"></i></span>
