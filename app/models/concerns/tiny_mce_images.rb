@@ -59,7 +59,7 @@ module TinyMceImages
         image = parsed_description.at_css("img[data-mce-token=\"#{Base62.encode(old_id)}\"]")
         image['data-mce-token'] = Base62.encode(new_id)
       end
-      update(object_field => parsed_description.to_html)
+      update(object_field => parsed_description.css('body').inner_html.to_s)
     end
 
     def clone_tinymce_assets(target, team)
