@@ -151,7 +151,8 @@ class TinyMceAsset < ApplicationRecord
                 else
                   obj.result.my_module.protocol.team_id
                 end
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.error e.message
       team_id = nil
     end
 
