@@ -5,7 +5,7 @@
 <%= render partial: "shared/secondary_navigation", locals: {
   editable: {
     name: 'title',
-    active: true,
+    active: can_manage_module?(@my_module),
     width: 'calc(100% - 580px)',
     params_group: 'my_module',
     field_to_udpate: 'name',

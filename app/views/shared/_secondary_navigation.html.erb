@@ -152,7 +152,7 @@
       <% editable = false if local_assigns[:editable].nil? %>
       <h4 class="nav-name <%= (editable && editable[:active]) ? 'editable' : '' %>">
         <% if editable && editable[:active] %>
-          <%= render partial: "shared/inline_editing", locals: { 
+          <%= render partial: "shared/inline_editing", locals: {
             initial_value: truncate(title_element.name, length: Constants::MAX_EDGE_LENGTH),
             width: editable[:width] || '100%',
             name: editable[:name],
