@@ -113,6 +113,12 @@ class TinyMceAsset < ApplicationRecord
       new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
 
       asset = find_by_id(token)
+      unless asset
+        # remove tag if asset deleted
+        description.sub!(old_format, '')
+        next
+      end
+
       # If object (step or result text) don't have direct assciation to tinyMCE image, we need copy it.
       asset.clone_tinymce_asset(obj) if obj && obj != asset.object
 
@@ -138,9 +144,17 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def clone_tinymce_asset(obj)
-    team_id = obj&.protocol&.team_id
-
-    team_id ||= obj&.result&.my_module&.protocol&.team_id
+    begin
+      # It will trigger only for Step or ResultText
+      team_id = if obj.class.name == 'Step'
+                  obj.protocol.team_id
+                else
+                  obj.result.my_module.protocol.team_id
+                end
+    rescue StandardError => e
+      Rails.logger.error e.message
+      team_id = nil
+    end
 
     return false unless team_id
 
