@@ -1,6 +1,11 @@
 class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
   after_action :after_sign_in, only: :create
+
+  rescue_from ActionController::InvalidAuthenticityToken do
+    redirect_to new_user_session_path
+  end
+
   # GET /resource/sign_in
   def new
     # If user was redirected here from OAuth's authorize/new page (Doorkeeper
