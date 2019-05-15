@@ -291,6 +291,17 @@
       float: left;
       width: 100%;
 
+      .view-mode {
+        border: 1px solid transparent;
+        border-radius: $border-radius-small;
+        display: inline-block;
+        line-height: 16px;
+        min-height: 20px;
+        overflow: hidden;
+        padding: 2px 5px;
+        width: 100%;
+      }
+
       textarea {
         border: 1px solid $color-silver;
         border-radius: $border-radius-small;
@@ -383,7 +394,8 @@
       width: 220px;
     }
 
-    textarea:disabled {
+    textarea:disabled,
+    .view-mode {
       border: 1px solid $color-gainsboro;
       cursor: pointer;
     }

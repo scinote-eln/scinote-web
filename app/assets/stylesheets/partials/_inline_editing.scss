@@ -54,12 +54,22 @@
     }
   }
 
-  &:hover input {
+  &:hover input,
+  &:hover .view-mode {
     border: 1px solid $color-silver;
 
     &:disabled {
       border: 1px solid $color-gainsboro;
     }
+  }
+
+  .view-mode {
+    border: 1px solid transparent;
+    cursor: pointer;
+    line-height: 26px;
+    padding: 8px 5px;
+    padding-right: 36px;
+    width: calc(100% - 36px);
   }
 
   input {
