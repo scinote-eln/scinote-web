@@ -1,9 +1,9 @@
 <% if can_manage_protocol_in_repository?(@protocol) && edit_mode %>
-  <%= render partial: "my_modules/protocols/protocol_description_form", locals: 
+  <%= render partial: "my_modules/protocols/protocol_description_form.html.erb", locals:
     {
       protocol: @protocol,
       update_url: description_protocol_path(@protocol, format: :json)
-    } 
+    }
   %>
 <% elsif @protocol.description.present? %>
   <%= custom_auto_link(@protocol.tinymce_render(:description),
