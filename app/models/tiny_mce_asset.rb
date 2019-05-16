@@ -53,7 +53,7 @@ class TinyMceAsset < ApplicationRecord
     description = update_old_tinymce(description, obj)
 
     description = Nokogiri::HTML(description)
-    tm_assets = description.css('img')
+    tm_assets = description.css('img[data-mce-token]')
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset_url = find_by_id(Base62.decode(asset_id))
