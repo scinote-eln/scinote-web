@@ -206,6 +206,24 @@ var Comments = (function() {
       $form.submit();
     });
 
+    $form.find('textarea').on('focus', function(){
+      $(this).addClass('border');
+      if (this.value.length > 0) {
+        $submitBtn.addClass('show');
+      }
+    }).on('blur',function(){
+      if (this.value.length == 0) {
+        $(this).removeClass('border');
+        $submitBtn.removeClass('show');
+      }
+    }).on('keyup',function(){
+      if (this.value.length > 0) {
+        $submitBtn.addClass('show');
+      } else {
+        $submitBtn.removeClass('show');
+      }
+    })
+
     $('.help-block', $form).addClass('hide');
 
     $form.off().on('ajax:send', function () {
@@ -220,6 +238,7 @@ var Comments = (function() {
           $('.form-group', $form).removeClass('has-error');
           $('.help-block', $form).html('').addClass('hide');
           $submitBtn.removeClass('has-error');
+          $submitBtn.removeClass('show');
 
           var currnetCount = $('#counter-' + stepId).html()
           $('#counter-' + stepId).html(parseInt(currnetCount) + 1)

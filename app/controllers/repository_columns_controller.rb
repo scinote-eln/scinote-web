@@ -96,7 +96,7 @@ class RepositoryColumnsController < ApplicationController
               id: @repository_column.id,
               name: escape_input(@repository_column.name),
               message: t('libraries.repository_columns.update.success_flash',
-                         name: @repository_column.name)
+                         name: escape_input(@repository_column.name))
             }, status: :ok
           else
             render json: {
@@ -137,7 +137,7 @@ class RepositoryColumnsController < ApplicationController
         if @repository_column.destroy
           render json: {
             message: t('libraries.repository_columns.destroy.success_flash',
-                       name: column_name),
+                       name: escape_input(column_name)),
             id: column_id,
             status: :ok
           }

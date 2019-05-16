@@ -221,4 +221,8 @@ module ApplicationHelper
     user.avatar(style) == '/images/icon_small/missing.png' ||
       user.avatar(style) == '/images/thumb/missing.png'
   end
+
+  def wopi_enabled?
+    ENV['WOPI_ENABLED'] == 'true'
+  end
 end

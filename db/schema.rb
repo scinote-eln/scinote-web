@@ -10,7 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20190427115413) do
+
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -695,7 +697,7 @@ ActiveRecord::Schema.define(version: 20190427115413) do
     t.datetime "updated_at", null: false
     t.index ["last_time_changed_at"], name: "index_system_notifications_on_last_time_changed_at"
     t.index ["source_created_at"], name: "index_system_notifications_on_source_created_at"
-    t.index ["source_id"], name: "index_system_notifications_on_source_id"
+    t.index ["source_id"], name: "index_system_notifications_on_source_id", unique: true
   end
 
   create_table "tables", force: :cascade do |t|
@@ -834,6 +836,7 @@ ActiveRecord::Schema.define(version: 20190427115413) do
     t.index ["read_at"], name: "index_user_system_notifications_on_read_at"
     t.index ["seen_at"], name: "index_user_system_notifications_on_seen_at"
     t.index ["system_notification_id"], name: "index_user_system_notifications_on_system_notification_id"
+    t.index ["user_id", "system_notification_id"], name: "index_user_system_notifications_on_user_and_notification_id", unique: true
     t.index ["user_id"], name: "index_user_system_notifications_on_user_id"
   end
 

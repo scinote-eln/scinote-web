@@ -4,20 +4,20 @@
   <strong>
     <% if my_module.completed? %>
       <span class="alert-green">
-        <%= l(my_module.due_date, format: :full) %>
+        <%= l(my_module.due_date.utc, format: :full) %>
       </span>
     <% elsif my_module.is_one_day_prior? %>
       <span class="alert-yellow">
-        <%= l(my_module.due_date, format: :full) %>
+        <%= l(my_module.due_date.utc, format: :full) %>
         (<%= t('my_modules.states.due_soon') %>)
       </span>
     <% elsif my_module.is_overdue? %>
       <span class="alert-red">
-        <%= l(my_module.due_date, format: :full) %>
+        <%= l(my_module.due_date.utc, format: :full) %>
         (<%= t('my_modules.states.overdue') %>)
       </span>
     <% else %>
-      <%= l(my_module.due_date, format: :full) %>
+      <%= l(my_module.due_date.utc, format: :full) %>
     <% end %>
   </strong>
 <% end %>

@@ -15,7 +15,7 @@ module TinyMceImages
       description = self[field]
 
       # Check tinymce for old format
-      description = TinyMceAsset.update_old_tinymce(description)
+      description = TinyMceAsset.update_old_tinymce(description, self)
 
       tiny_mce_assets.each do |tm_asset|
         tmp_f = Tempfile.open(tm_asset.image_file_name, Rails.root.join('tmp'))
@@ -27,6 +27,8 @@ module TinyMceImages
           tm_asset_to_update = html_description.css(
             "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
           )[0]
+          next unless tm_asset_to_update
+
           tm_asset_to_update.attributes['src'].value = new_tm_asset_src
           description = html_description.css('body').inner_html.to_s
         ensure
@@ -38,7 +40,7 @@ module TinyMceImages
     end
 
     def tinymce_render(field)
-      TinyMceAsset.generate_url(self[field])
+      TinyMceAsset.generate_url(self[field], self)
     end
 
     # Takes array of old/new TinyMCE asset ID pairs
@@ -48,7 +50,7 @@ module TinyMceImages
       description = read_attribute(object_field)
 
       # Check tinymce for old format
-      description = TinyMceAsset.update_old_tinymce(description)
+      description = TinyMceAsset.update_old_tinymce(description, self)
 
       parsed_description = Nokogiri::HTML(description)
       images.each do |image|
@@ -57,7 +59,7 @@ module TinyMceImages
         image = parsed_description.at_css("img[data-mce-token=\"#{Base62.encode(old_id)}\"]")
         image['data-mce-token'] = Base62.encode(new_id)
       end
-      update(object_field => parsed_description.to_html)
+      update(object_field => parsed_description.css('body').inner_html.to_s)
     end
 
     def clone_tinymce_assets(target, team)

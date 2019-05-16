@@ -16,8 +16,11 @@
         <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
                    locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attacments#att-#{step.id}" } %>
       <% end %>
-      <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
-                 locals: {  element_id: step.id, element_type: 'Step' } %>
+
+      <% if !(preview) %>
+        <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
+                   locals: {  element_id: step.id, element_type: 'Step' } %>
+      <% end %>
       <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
         <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span id="dd-att-step-<%= step.id %>-label"><%= t('protocols.steps.attachments.sort_new').html_safe %></span>
@@ -36,7 +39,7 @@
   </div>
 </div>
 
-<div class="col-xs-12 attacments" id="att-<%= step.id %>">
+<div class="col-xs-12 attachments" id="att-<%= step.id %>">
   <% assets.each_with_index do |asset, i| %>
     <% if asset.class.name == 'Asset' %>
       <%= render partial: 'steps/attachments/item.html.erb',

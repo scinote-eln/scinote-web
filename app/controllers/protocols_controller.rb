@@ -626,7 +626,7 @@ class ProtocolsController < ApplicationController
 
         format.json do
           render json: {
-            name: p_name, new_name: protocol.name, status: :ok
+            name: escape_input(p_name), new_name: escape_input(protocol.name), status: :ok
           },
           status: :ok
         end

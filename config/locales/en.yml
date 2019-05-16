@@ -410,6 +410,7 @@ en:
           module_contents_inner:
             instructions: "Select the information from your task that you would like to include to your report."
             check_all: "All tasks content"
+            protocol: "Protocol"
             steps: "Steps"
             completed_steps: "Completed"
             uncompleted_steps: "Uncompleted"
@@ -599,7 +600,7 @@ en:
       start_date: "Start date:"
       due_date: "Due date:"
       tags: "Tags:"
-      no_tags: "click here to add Task Tags (optional)"
+      no_tags: "Add new Task Tags (optional)"
       manage_tags: "Manage tags"
       create_new_tag: "create new"
       no_description: "No task description"
@@ -1954,6 +1955,7 @@ en:
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
     saved_label: "Saved"
+    leaving_warning: "You have made some changes, are you sure you want to leave this page?"
   general:
     save: "Save"
     update: "Update"
@@ -1981,6 +1983,7 @@ en:
       blank: "You didn't select any file"
       uploading: "If you leave this page, the file(s) that is/are currently uploading will not be saved! Are you sure you want to continue?"
       upload_failure: "Upload connection error. Try again or contact the administrator."
+      file_name_too_long: 'is too long (maximum is %{limit} characters, with extension)'
     text:
       not_blank: "can't be blank"
       length_too_long_general: "is too long"

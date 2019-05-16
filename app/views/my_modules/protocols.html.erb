@@ -5,7 +5,7 @@
 <%= render partial: "shared/secondary_navigation", locals: {
   editable: {
     name: 'title',
-    active: true,
+    active: can_manage_module?(@my_module),
     width: 'calc(100% - 580px)',
     params_group: 'my_module',
     field_to_udpate: 'name',
@@ -22,8 +22,8 @@
     <%= t('Protocol') %>
   </div>
 
-  <div>
-    <div data-role="protocol-status-bar" style="display: inline;">
+  <div class="protocol-status-container">
+    <div class="protocol-status-bar" data-role="protocol-status-bar">
       <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
     </div>
     <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
@@ -40,7 +40,7 @@
             }
           %>
         <% elsif @my_module.protocol.description.present? %>
-          <%= custom_auto_link(@my_module.protocol.description,
+          <%= custom_auto_link(@my_module.protocol.tinymce_render(:description),
                                simple_format: false,
                                tags: %w(img),
                                team: current_team) %>

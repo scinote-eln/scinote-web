@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GlobalActivitiesController < ApplicationController
+  include InputSanitizeHelper
+
   def index
     # Preload filter format
     #   {
@@ -109,7 +111,7 @@ class GlobalActivitiesController < ApplicationController
                        .pluck(:id, :name)
       next if matched.length.zero?
 
-      results[subject] = matched.map { |pr| { id: pr[0], name: pr[1] } }
+      results[subject] = matched.map { |pr| { id: pr[0], name: escape_input(pr[1]) } }
     end
     respond_to do |format|
       format.json do

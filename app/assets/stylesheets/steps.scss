@@ -93,7 +93,7 @@
           overflow: hidden;
 
           strong {
-            font-size: 14px;
+            font-size: 16px;
             white-space: nowrap;
           }
         }
@@ -103,17 +103,18 @@
         }
 
         .author-block {
+          display: inline-block;
+          font-size: 16px;
           overflow: hidden;
-          padding-right: 10px;
+          margin-right: 20px;
           white-space: nowrap;
-          width: 300px;
         }
       }
     }
   }
 }
 
-.attacments {
+.attachments {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
@@ -320,6 +321,17 @@
       float: left;
       width: 100%;
 
+      .view-mode {
+        border: 1px solid transparent;
+        border-radius: $border-radius-small;
+        display: inline-block;
+        line-height: 16px;
+        min-height: 20px;
+        overflow: hidden;
+        padding: 2px 5px;
+        width: 100%;
+      }
+
       textarea {
         border: 1px solid $color-silver;
         border-radius: $border-radius-small;
@@ -327,7 +339,6 @@
         line-height: 16px;
         overflow: hidden;
         padding: 2px 5px;
-        pointer-events: none;
         width: 100%;
 
         &:focus {
@@ -337,6 +348,7 @@
         &:disabled {
           background: transparent;
           border: 1px solid transparent;
+          pointer-events: none;
           user-select: none;
         }
       }
@@ -412,7 +424,8 @@
       width: 220px;
     }
 
-    textarea:disabled {
+    textarea:disabled,
+    .view-mode {
       border: 1px solid $color-gainsboro;
       cursor: pointer;
     }
@@ -443,6 +456,13 @@
 
     .error-block {
       display: block;
+    }
+
+    .comment-actions {
+
+      .edit-buttons {
+        display: inline !important;
+      }
     }
   }
 }
@@ -478,7 +498,7 @@
       outline: none;
     }
 
-    &:hover {
+    &.border {
       border: 1px solid $color-silver;
     }
   }
@@ -492,8 +512,8 @@
     right: -36px;
     transition: $md-transaction;
 
-    &.has-error {
-      top: -64px;
+    &.show {
+      right: 0;
     }
   }
 
@@ -501,10 +521,6 @@
 
     textarea {
       border: 1px solid $color-silver;
-    }
-
-    .new-comment-button {
-      right: 0;
     }
   }
 }

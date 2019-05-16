@@ -158,10 +158,14 @@ module ProtocolsImporter
       )
       tiny_mce_img.image_content_type = tiny_mce_img_json['fileType']
       tiny_mce_img.save!
+      if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
+                           "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
+        description.gsub!('  ]]--&gt;', '')
 
-      description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
-                        "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
-                 .gsub!('  ]]--&gt;', '')
+      else
+        description.gsub!("data-mce-token=\"#{Base62.encode(tiny_mce_img_json['tokenId'].to_i)}\"",
+                          "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"").gsub!('  ]]--&gt;', '')
+      end
     end
     description
   end

@@ -5,6 +5,7 @@ class AssetsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Context
+  include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
 
@@ -31,12 +32,29 @@ class AssetsController < ApplicationController
             'asset-id' => @asset.id,
             'image-tag-url' => @asset.url(:medium),
             'preview-url' => asset_file_preview_path(@asset),
-            'filename' => truncate(@asset.file_file_name,
-                                   length:
-                                     Constants::FILENAME_TRUNCATION_LENGTH),
+            'filename' => truncate(escape_input(@asset.file_file_name),
+                                   length: Constants::FILENAME_TRUNCATION_LENGTH),
             'download-url' => download_asset_path(@asset),
             'type' => asset_data_type(@asset)
           }, status: 200
+        end
+      end
+    end
+  end
+
+  def step_file_present
+    respond_to do |format|
+      format.json do
+        if @asset.file.processing?
+          render json: { processing: true }
+        else
+          render json: {
+            placeholder_html: render_to_string(
+              partial: 'steps/attachments/placeholder.html.erb',
+              locals: { asset: @asset, edit_page: false }
+            ),
+            processing: false
+          }
         end
       end
     end
@@ -47,7 +65,7 @@ class AssetsController < ApplicationController
       'id' => @asset.id,
       'type' => (@asset.is_image? ? 'image' : 'file'),
 
-      'filename' => truncate(@asset.file_file_name,
+      'filename' => truncate(escape_input(@asset.file_file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
       'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
     }
@@ -69,7 +87,7 @@ class AssetsController < ApplicationController
         'mime-type' => @asset.file.content_type,
         'processing' => @asset.file.processing?,
         'large-preview-url' => @asset.url(:large),
-        'processing-url' => image_tag('medium/processing.gif')
+        'processing-img' => image_tag('medium/processing.gif')
       )
     else
       response_json.merge!(
@@ -81,10 +99,10 @@ class AssetsController < ApplicationController
       )
     end
 
-    if wopi_file?(@asset)
+    if wopi_enabled? && wopi_file?(@asset)
       edit_supported, title = wopi_file_edit_button_status
       response_json['wopi-controls'] = render_to_string(
-        partial: 'shared/file_wopi_controlls.html.erb',
+        partial: 'assets/wopi/file_wopi_controls.html.erb',
         locals: {
           asset: @asset,
           can_edit: can_edit,
@@ -168,15 +186,29 @@ class AssetsController < ApplicationController
     # Post process file here
     @asset.post_process_file(@asset.team)
 
+    render_html = if @asset.step
+                    asset_position = @asset.step.asset_position(@asset)
+                    render_to_string(
+                      partial: 'steps/attachments/item.html.erb',
+                      locals: {
+                        asset: @asset,
+                        i: asset_position[:pos],
+                        assets_count: asset_position[:count],
+                        step: @asset.step
+                      },
+                      formats: :html
+                    )
+                  else
+                    render_to_string(
+                      partial: 'shared/asset_link',
+                      locals: { asset: @asset, display_image_tag: true },
+                      formats: :html
+                    )
+                  end
+
     respond_to do |format|
       format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'shared/asset_link',
-            locals: { asset: @asset, display_image_tag: true },
-            formats: :html
-          )
-        }
+        render json: { html: render_html }
       end
     end
   end
@@ -237,12 +269,9 @@ class AssetsController < ApplicationController
     @asset = Asset.find_by_id(params[:id])
     return render_404 unless @asset
 
-    step_assoc = @asset.step
-    result_assoc = @asset.result
-    repository_cell_assoc = @asset.repository_cell
-    @assoc = step_assoc unless step_assoc.nil?
-    @assoc = result_assoc unless result_assoc.nil?
-    @assoc = repository_cell_assoc unless repository_cell_assoc.nil?
+    @assoc ||= @asset.step
+    @assoc ||= @asset.result
+    @assoc ||= @asset.repository_cell
 
     if @assoc.class == Step
       @protocol = @asset.step.protocol
@@ -293,6 +322,7 @@ class AssetsController < ApplicationController
   def asset_data_type(asset)
     return 'wopi' if wopi_file?(asset)
     return 'image' if asset.is_image?
+
     'file'
   end
 end

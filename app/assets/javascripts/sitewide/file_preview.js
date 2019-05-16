@@ -308,7 +308,7 @@ var FilePreviewModal = (function() {
       };
 
       var mousePosition = {
-        top: e.clientY - $(imageEditorWindow).offset().top,
+        top: e.clientY - (imageEditorWindow.offsetTop - scrollContainerInitial.top),
         left: e.clientX - $(imageEditorWindow).offset().left
       };
 
@@ -452,7 +452,7 @@ var FilePreviewModal = (function() {
         link.attr('data-status', 'asset-present');
         if (data.type === 'image') {
           if (data.processing) {
-            animateSpinner('.file-preview-container', true);
+            modal.find('.file-preview-container').append(data['processing-img']);
           } else {
             animateSpinner('.file-preview-container', false);
             modal.find('.file-preview-container')

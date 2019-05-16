@@ -132,6 +132,12 @@ class Step < ApplicationRecord
     st
   end
 
+  def asset_position(asset)
+    assets.order(:file_updated_at).each_with_index do |step_asset, i|
+      return { count: assets.count, pos: i } if asset.id == step_asset.id
+    end
+  end
+
   protected
 
   def cascade_after_destroy

@@ -293,17 +293,16 @@ function importProtocolFromFile(
         stepGuid,
         element.getAttribute('fileref'));
 
-      if (description.includes('[~tiny_mce_id')) {
-        // old format load
-        imageTag = '<img style="max-width:300px; max-height:300px;" src="data:' + element.children[1].innerHTML + ';base64,' + assetBytes + '" />';
-        description = description.replace(match, imageTag);
-      } else {
-        // new format load
-        description = $('<div>' + description + '</div>').find('img[data-mce-token="' + element.getAttribute('tokenId') + '"]')
-          .attr('src', 'data:' + element.children[1].innerHTML + ';base64,' + assetBytes).prop('outerHTML');
-      }
-    });
+      // new format load
+      description = $('<div>' + description + '</div>');
+      description.find('img[data-mce-token="' + element.getAttribute('tokenId') + '"]')
+        .attr('src', 'data:' + element.children[1].innerHTML + ';base64,' + assetBytes);
+      description = description.prop('outerHTML');
 
+      // old format load
+      imageTag = '<img style="max-width:300px; max-height:300px;" src="data:' + element.children[1].innerHTML + ';base64,' + assetBytes + '" />';
+      description = description.replace(match, imageTag);
+    });
     // I know is crazy but is the only way I found to pass valid HTML
     return $('<div></div>').html(description).html();
   }

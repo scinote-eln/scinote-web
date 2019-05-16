@@ -1,8 +1,9 @@
+<% preview = (defined?(preview) ? preview : false) %>
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-options pull-right">
-        <% if can_complete_or_checkbox_step?(@protocol) %>
+        <% if can_complete_or_checkbox_step?(@protocol) && !(preview) %>
           <% if step.completed? %>
             <div data-action="uncomplete-step"
                  class="complete-step-btn"
@@ -24,8 +25,8 @@
           <% end %>
         <% end %>
 
-        <% if can_manage_protocol_in_module?(@protocol) ||
-              can_manage_protocol_in_repository?(@protocol) %>
+        <% if (can_manage_protocol_in_module?(@protocol) ||
+                      can_manage_protocol_in_repository?(@protocol)) && !(preview) %>
           <a data-action="move-step"
              class="btn btn-link"
              href="<%= move_up_step_path(step, format: :json) %>"
@@ -110,7 +111,7 @@
             </div>
           <% end %>
 
-          <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step } %>
+          <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step, preview: preview } %>
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">

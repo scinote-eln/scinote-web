@@ -5,6 +5,8 @@
     data-params-group="comment"
     data-path-to-update="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
     data-original-name="<%= comment.message %>"
+    data-response-field="comment"
+    data-smart-annotation="true"
     error="false"
   >
     <div class="avatar-placehodler">
@@ -34,7 +36,13 @@
         <% end %>
       </div>
       <div class="comment-message">
-            <%= text_area_tag 'message', comment.message, disabled: true %>
+           <div class="view-mode"><%= custom_auto_link(comment.message,
+                                                          simple_format: false,
+                                                          tags: %w(img br), 
+                                                          team: current_team).gsub(/\n/, '<br/>').html_safe %></div>
+            <% if user_comment %>
+              <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
+            <% end %>
       </div>
       <div class="error-block"></div>
     </div>
