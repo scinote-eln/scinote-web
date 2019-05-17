@@ -305,12 +305,9 @@ class AssetsController < ApplicationController
   end
 
   def append_wd_params(url)
-    wd_params = ''
-    params.keys.select { |i| i[/^wd.*/] }.each do |wd|
-      next if wd == 'wdPreviousSession' || wd == 'wdPreviousCorrelation'
-      wd_params += "&#{wd}=#{params[wd]}"
-    end
-    url + wd_params
+    exclude_params = %i(wdPreviousSession wdPreviousCorrelation)
+    wd_params = params.select { |key, _value| key[/^wd.*/] && !(exclude_params.include? key) }.to_query
+    url + '&' + wd_params
   end
 
   def asset_params

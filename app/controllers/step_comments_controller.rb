@@ -132,9 +132,9 @@ class StepCommentsController < ApplicationController
     @last_comment_id = params[:from].to_i
     @per_page = Constants::COMMENTS_SEARCH_LIMIT
     @step = Step.find_by_id(params[:step_id])
-    @protocol = @step.protocol
+    @protocol = @step&.protocol
 
-    unless @step
+    unless @step && @protocol
       render_404
     end
   end

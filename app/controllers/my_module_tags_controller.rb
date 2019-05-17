@@ -55,11 +55,17 @@ class MyModuleTagsController < ApplicationController
   end
 
   def create
+    unless mt_params[:tag_id]
+      render_403
+      return false
+    end
+
     @mt = MyModuleTag.new(mt_params.merge(my_module: @my_module))
     @mt.created_by = current_user
     @mt.save
 
     my_module = @mt.my_module
+
     Activities::CreateActivityService
       .call(activity_type: :add_task_tag,
             owner: current_user,
@@ -82,6 +88,11 @@ class MyModuleTagsController < ApplicationController
 
   def destroy
     @mt = MyModuleTag.find_by_id(params[:id])
+
+    unless @mt
+      render_404
+      return false
+    end
 
     Activities::CreateActivityService
       .call(activity_type: :remove_task_tag,
