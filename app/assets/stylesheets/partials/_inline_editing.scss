@@ -66,9 +66,12 @@
   .view-mode {
     border: 1px solid transparent;
     cursor: pointer;
+    flex-wrap: nowrap;
     line-height: 26px;
+    overflow: hidden;
     padding: 8px 5px;
     padding-right: 36px;
+    white-space: nowrap;
     width: calc(100% - 36px);
   }
 
