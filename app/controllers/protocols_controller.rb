@@ -179,7 +179,7 @@ class ProtocolsController < ApplicationController
               partial: 'protocols/header/authors_label.html.erb'
             ),
             description_label: render_to_string(
-              partial: 'protocols/header/description_label.html.erb'
+              partial: 'protocols/header/description_label.html.erb', locals: { edit_mode: true }
             )
           }
         end
