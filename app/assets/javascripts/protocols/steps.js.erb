@@ -219,48 +219,48 @@
   }
 
     // Init ajax success/error for edit form  
-  function formEditAjax($form) {  
-    $form 
-    .on("ajax:beforeSend", function () {  
-      $(".nested_step_checklists ul").each(function () {  
-        reorderCheckboxData(this);  
+  function formEditAjax($form) {
+    $form
+    .on("ajax:beforeSend", function () {
+      $(".nested_step_checklists ul").each(function () {
+        reorderCheckboxData(this);
+      });
+    })
+    .on("ajax:success", function(e, data) {
+      $(this).after(data.html);
+      var $new_step = $(this).next();
+      $(this).remove();
+
+      initCallBacks();
+      initHandsOnTable($new_step);
+      toggleButtons(true);
+      FilePreviewModal.init();
+
+      TinyMCE.destroyAll();
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
+      // Show the edited step
+      $new_step.find(".panel-collapse:first").addClass("collapse in");
+
+      //Rerender tables
+      $new_step.find("[data-role='step-hot-table']").each(function() {
+        renderTable($(this));
       }); 
-    })  
-    .on("ajax:success", function(e, data) { 
-      $(this).after(data.html); 
-      var $new_step = $(this).next(); 
-      $(this).remove(); 
-
-       initCallBacks(); 
-      initHandsOnTable($new_step);  
-      toggleButtons(true);  
-      FilePreviewModal.init();  
-
-       TinyMCE.destroyAll();  
-      SmartAnnotation.preventPropagation('.atwho-user-popover');  
-      // Show the edited step 
-      $new_step.find(".panel-collapse:first").addClass("collapse in");  
-
-       //Rerender tables  
-      $new_step.find("[data-role='step-hot-table']").each(function()  { 
-        renderTable($(this)); 
-      }); 
-      setupAssetsLoading(); 
+      setupAssetsLoading();
     })  
     .on("ajax:error", function(e, xhr, status, error) { 
-      $form.renderFormErrors('step', xhr.responseJSON, true, e);  
+      $form.renderFormErrors('step', xhr.responseJSON, true, e);
 
-       formCallback($form); 
-      initEditableHandsOnTable($form);  
-      applyCancelCallBack();  
+      formCallback($form);
+      initEditableHandsOnTable($form);
+      applyCancelCallBack();
 
-       SmartAnnotation.preventPropagation('.atwho-user-popover'); 
+       SmartAnnotation.preventPropagation('.atwho-user-popover');
 
-       //Rerender tables  
-      $form.find("[data-role='step-hot-table']").each(function()  { 
-        renderTable($(this)); 
-      }); 
-    }); 
+      //Rerender tables
+      $form.find("[data-role='step-hot-table']").each(function() {
+        renderTable($(this));
+      });
+    });
   }
 
   function toggleButtons(show) {
@@ -521,7 +521,7 @@
     ev.stopPropagation();
     ev.preventDefault();
     ev.stopImmediatePropagation();
-    
+
     var $form = $(ev.target.form);
     $form.clearFormErrors();
     $form.removeBlankFileForms();
