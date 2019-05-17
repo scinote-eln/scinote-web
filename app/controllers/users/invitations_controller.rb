@@ -69,15 +69,11 @@ module Users
         end
 
         result = { email: email }
-
-        if !(Constants::BASIC_EMAIL_REGEX === email) ||
-           validate_user(email, email, generate_user_password).count.positive?
-
+        unless Constants::BASIC_EMAIL_REGEX === email
           result[:status] = :user_invalid
           @invite_results << result
           next
         end
-
         # Check if user already exists
         user = User.find_by_email(email)
 
@@ -121,7 +117,6 @@ module Users
               user_team.role_str,
               user_team.team
             )
-
             Activities::CreateActivityService
               .call(activity_type: :invite_user_to_team,
                     owner: current_user,
