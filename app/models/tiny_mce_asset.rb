@@ -41,9 +41,11 @@ class TinyMceAsset < ApplicationRecord
     end
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
-      image_to_update&.update(object: object, saved: true)
+      image_to_update&.update(object: object, saved: true) unless image_to_update.object
     end
     where(id: images_to_delete).destroy_all
+
+    object.delay(queue: :assets).copy_unknown_tiny_mce_images
   rescue StandardError => e
     Rails.logger.error e.message
   end
