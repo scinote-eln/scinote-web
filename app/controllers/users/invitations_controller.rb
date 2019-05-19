@@ -62,14 +62,15 @@ module Users
       @invite_results = []
       @too_many_emails = false
 
-      @emails.each_with_index do |email, count|
-        if (count + 1) > Constants::INVITE_USERS_LIMIT
+      @emails.each_with_index do |email, email_counter|
+        # email_counter starts with 0
+        if email_counter >= Constants::INVITE_USERS_LIMIT
           @too_many_emails = true
           break
         end
 
         result = { email: email }
-        unless Constants::BASIC_EMAIL_REGEX === email
+        unless Constants::BASIC_EMAIL_REGEX.match?(email)
           result[:status] = :user_invalid
           @invite_results << result
           next
@@ -203,10 +204,10 @@ module Users
       @team = Team.find_by_id(params['teamId'])
       @role = params['role']
 
-      render_403 unless @emails && @team && @role
-      render_403 if @emails.empty?
-      render_403 unless can_manage_team_users?(@team)
-      render_403 unless UserTeam.roles.key?(@role)
+      return render_403 unless @emails && @team && @role
+      return render_403 if @emails.empty?
+      return render_403 unless can_manage_team_users?(@team)
+      return render_403 unless UserTeam.roles.key?(@role)
     end
   end
 end
