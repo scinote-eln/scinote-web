@@ -1883,17 +1883,6 @@ th.custom-field .modal-tooltiptext {
   }
 }
 
-.atwho-li-user {
-
-  .avatar {
-    border-radius: 50%;
-    margin-left: 5px;
-    margin-right: 10px;
-    height: 20px;
-    width: 20px;
-  }
-}
-
 .atwho-li-res {
 
   .fa-tint {
@@ -1935,9 +1924,24 @@ th.custom-field .modal-tooltiptext {
   }
 }
 
+.atwho-inserted {
+  align-items: center;
+  display: inline-flex;
+  
+  .global-avatar-container {
+    line-height: 30px;
+    margin: 0 5px;
+
+    img {
+      position: relative;
+      top: -2px;
+    }
+  }
+}
+
 .atwho-user-popover {
   cursor: pointer;
-  padding-left: 5px;
+  display: inline-block;
 }
 
 .atwho-user-img-popover {

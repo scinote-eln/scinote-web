@@ -10,7 +10,9 @@
     error="false"
   >
     <div class="avatar-placehodler">
-      <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+      <span class='global-avatar-container'> 
+        <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+      </span>
     </div>
     <div class="content-placeholder">
       <div class="comment-name"><%= comment.user.full_name %></div>

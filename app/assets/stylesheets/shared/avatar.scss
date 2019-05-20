@@ -1,0 +1,18 @@
+@import 'constants';
+@import "mixins";
+
+.global-avatar-container {
+  border-radius: 15px;
+  display: inline-block;
+  height: 30px;
+  overflow: hidden;
+  position: relative;
+  width: 30px;
+
+  img {
+    border-radius: 15px;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+}
