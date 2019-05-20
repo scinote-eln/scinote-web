@@ -39,6 +39,7 @@ class MyModulesController < ApplicationController
                          unassign_repository_records
                          assign_samples
                          unassign_samples)
+  before_action :set_inline_name_editing, only: %i(protocols results activities repository archive)
 
   layout 'fluid'.freeze
 
@@ -701,6 +702,16 @@ class MyModulesController < ApplicationController
 
   def check_complete_module_permission
     render_403 unless can_complete_module?(@my_module)
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_module?(@my_module)
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'my_module',
+      field_to_udpate: 'name',
+      path_to_update: my_module_path(@my_module)
+    }
   end
 
   def my_module_params
