@@ -79,6 +79,41 @@ module TinyMceImages
       target.reassign_tiny_mce_image_references(cloned_img_ids)
     end
 
+    def copy_unknown_tiny_mce_images
+      asset_team_id = Team.find_by_object(self)
+      return unless asset_team_id
+
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
+
+      image_changed = false
+      parsed_description = Nokogiri::HTML(read_attribute(object_field))
+      parsed_description.css('img').each do |image|
+        if image['data-mce-token']
+          asset = TinyMceAsset.find_by_id(Base62.decode(image['data-mce-token']))
+
+          next if asset && asset.object == self
+
+          new_image = asset.image
+        else
+          new_image = URI.parse(image['src'])
+        end
+
+        new_asset = TinyMceAsset.create(
+          image: new_image,
+          object: self,
+          team_id: asset_team_id
+        )
+
+        image['src'] = ''
+        image['class'] = 'img-responsive'
+        image['data-mce-token'] = Base62.encode(new_asset.id)
+        image_changed = true
+      end
+      update(object_field => parsed_description.css('body').inner_html.to_s) if image_changed
+    rescue StandardError => e
+      Rails.logger.error "Object: #{self.class.name}, id: #{id}, error: #{e.message}"
+    end
+
     private
 
     def clean_tiny_mce_image_urls
