@@ -162,7 +162,7 @@
     });
   }
 
-  // Set callback for click on edit button
+  // Set callback for click on move step
   function applyMoveStepCallBack() {
     $("[data-action='move-step']").off("ajax:success");
     $("[data-action='move-step']")
@@ -188,6 +188,8 @@
         $stepUp.find(".badge").html(stepUpPosition+1);
         $("html, body").animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
       }
+
+      refreshProtocolStatusBar();
     });
   }
 
@@ -605,6 +607,7 @@
           DragNDropSteps.clearFiles();
           FilePreviewModal.init();
           $.initTooltips();
+          refreshProtocolStatusBar();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {

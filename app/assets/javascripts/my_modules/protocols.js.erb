@@ -15,7 +15,7 @@ function init() {
   initCopyToRepository();
   initLinkUpdate();
   initLoadFromRepository();
-  initRefreshStatusBar();
+  refreshProtocolStatusBar();
   initImport();
 }
 
@@ -382,20 +382,6 @@ function loadFromRepository() {
       }
     });
   }
-}
-
-function initRefreshStatusBar() {
-  // The following actions need a refresh of status bar:
-  // - Edit protocol description
-  // - Create new step
-  // - Edit existing step
-  // - Move steps up/down
-  // - Delete step
-  // - New Office file
-  // - Edit image
-  // - Office Online edit file (???)
-
-  // TODO - this function will probably become reduntant
 }
 
 function refreshProtocolStatusBar() {
