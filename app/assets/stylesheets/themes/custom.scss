@@ -6,6 +6,11 @@
 //   margin-top: -8em;
 // }
 
+.shift-down{
+  margin-top: 8em;
+  z-index: 1;
+}
+
 /** Overwrite css from epa.scss **/
 @media screen and (min-width: 35em), print and (min-width: 35em) {
   .main-nav > .nav__inner,
@@ -33,10 +38,19 @@
   color: #FFF;
 }
 
+.custom-fixed-top{
+  position: fixed;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1) !important;
+  z-index: 1002;
+  top: 0px;
+}
+
 .custom-navbar-fixed-top{
   // @extend .navbar-fixed-top;
   border-width: 0 0 1px;
-  top: 0px;
+  // top: 0px;
+
 }
 
 .navbar-fixed-top{
@@ -53,7 +67,11 @@
 }
 
 #content-wrapper{
-  margin-top: 10px !important;
+  margin-top: 5px !important;
+}
+
+.container{
+  padding-top: 9em;
 }
 
 #alert-flash{
