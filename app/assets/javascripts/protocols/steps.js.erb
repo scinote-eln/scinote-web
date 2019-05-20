@@ -244,9 +244,9 @@
       //Rerender tables
       $new_step.find("[data-role='step-hot-table']").each(function() {
         renderTable($(this));
-      }); 
+      });
       setupAssetsLoading();
-    })  
+    })
     .on("ajax:error", function(e, xhr, status, error) { 
       $form.renderFormErrors('step', xhr.responseJSON, true, e);
 
@@ -254,7 +254,7 @@
       initEditableHandsOnTable($form);
       applyCancelCallBack();
 
-       SmartAnnotation.preventPropagation('.atwho-user-popover');
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
 
       //Rerender tables
       $form.find("[data-role='step-hot-table']").each(function() {
