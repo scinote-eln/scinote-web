@@ -2,6 +2,10 @@
 @import 'partials/_sidebar.scss';
 @import 'epa.scss';
 
+// .shift-up{
+//   margin-top: -8em;
+// }
+
 /** Overwrite css from epa.scss **/
 @media screen and (min-width: 35em), print and (min-width: 35em) {
   .main-nav > .nav__inner,
@@ -49,7 +53,7 @@
 }
 
 #content-wrapper{
-  margin-top: 120px !important;
+  margin-top: 10px !important;
 }
 
 #alert-flash{
