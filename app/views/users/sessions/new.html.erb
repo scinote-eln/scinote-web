@@ -29,6 +29,14 @@
       <%= f.submit t("devise.sessions.new.submit"), class: "btn btn-primary" %>
     </div>
   <% end %>
-
   <%= render "users/shared/links" %>
+  <h3>
+    <!-- # NOTE: data-turbolinks is set to false, otherwise the file will open in another window instead of downloading -->
+    <a href="/users/download_factsheet" data-turbolinks="false">Download the Fact Sheet</a>
+    <!-- # TODO: Try downloading w/ link_to ? -->
+    <!-- # TODO: Also try downloading with shared/asset_link ? -->
+  </h3>
 </div>
+
+<h3 class="center-block center-block-narrow">
+</h3>

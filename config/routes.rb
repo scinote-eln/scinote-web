@@ -30,6 +30,9 @@ Rails.application.routes.draw do
     get 'help/about', to: 'help#about', as: 'about'
     get 'help/contact', to: 'help#contact', as: 'contact'
     get 'help/training', to: 'help#training', as: 'training'
+    # Routes to methods for downloading the Fact Sheet and Manual
+    get 'resource/download_factsheet'
+    get 'help/download_manual'
 
     # EPA RAP Information JSON results
     get '/rap_program_level/',
@@ -603,6 +606,10 @@ Rails.application.routes.draw do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
+      # @@@20190520JS - Sessions controller doesn't require pre-authentication,
+      #                 so we will do the factsheet download here:
+      get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
+
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       post 'users/complete_sign_up_provider' =>
            'users/registrations#create_with_provider'

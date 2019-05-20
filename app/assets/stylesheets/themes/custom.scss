@@ -76,13 +76,18 @@
   // margin-top: 8em !important;
 }
 
+
 .content-pane{
   padding-top: 70px !important; // Override the padding defined in scinote.scss
 }
 
-// .container{
-//   padding-top: 9em;
-// }
+.container{
+  padding-top: 70px;
+  // If content-pane is nested inside container, then get rid of the padding.
+  .content-pane{
+    padding-top: 0 !important; // Override the padding defined in scinote.scss
+  }
+}
 
 // .container-fluid{
 //   // padding-top: 9em;

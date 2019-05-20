@@ -1,12 +1,23 @@
 class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
   after_action :after_sign_in, only: :create
+
+  # GET /Users/download_factsheet
+  def download_factsheet
+    send_file(
+      "#{Rails.root}/public/downloads/G-LMMD-0031316-FS-1-0.docx",
+      filename: "SciNote Fact Sheet.docx",
+      type: "application/docx"
+    )
+  end
+
   # GET /resource/sign_in
   def new
     # If user was redirected here from OAuth's authorize/new page (Doorkeeper
     # endpoint for authorizing an OAuth client), 3rd party sign-in buttons
     # (e.g. LinkedIn) should be hidden. See config/initializers/devise.rb.
     @oauth_authorize = session['oauth_authorize'] == true
+    # @pdf = ActionController::Base.helpers.asset_path("testdownload.pdf")
     super
   end
 
