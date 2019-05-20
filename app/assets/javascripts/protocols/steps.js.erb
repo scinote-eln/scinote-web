@@ -218,7 +218,7 @@
     });
   }
 
-  // Init ajax success/error for edit form
+    // Init ajax success/error for edit form  
   function formEditAjax($form) {
     $form
     .on("ajax:beforeSend", function () {
@@ -242,12 +242,12 @@
       $new_step.find(".panel-collapse:first").addClass("collapse in");
 
       //Rerender tables
-      $new_step.find("[data-role='step-hot-table']").each(function()  {
+      $new_step.find("[data-role='step-hot-table']").each(function() {
         renderTable($(this));
       });
       setupAssetsLoading();
     })
-    .on("ajax:error", function(e, xhr, status, error) {
+    .on("ajax:error", function(e, xhr, status, error) { 
       $form.renderFormErrors('step', xhr.responseJSON, true, e);
 
       formCallback($form);
@@ -257,7 +257,7 @@
       SmartAnnotation.preventPropagation('.atwho-user-popover');
 
       //Rerender tables
-      $form.find("[data-role='step-hot-table']").each(function()  {
+      $form.find("[data-role='step-hot-table']").each(function() {
         renderTable($(this));
       });
     });
@@ -595,6 +595,8 @@
           expandStep($new_step);
           toggleButtons(true);
           SmartAnnotation.preventPropagation('.atwho-user-popover');
+
+          tinyMCE.editors.step_description_textarea.remove();
 
           //Rerender tables
           $new_step.find("div.step-result-hot-table").each(function()  {
