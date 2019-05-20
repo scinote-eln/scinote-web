@@ -49,25 +49,18 @@ module ProtocolStatusHelper
 
   def protocol_status_popover_content(protocol)
     if protocol_private_for_current_user?(protocol)
-      res = "<p><em>" + I18n.t("my_modules.protocols.protocol_status_bar.private_protocol_desc") + "</em></p>"
+      res = '<p><em>' + I18n.t('my_modules.protocols.protocol_status_bar.private_protocol_desc') + '</em></p>'
     else
-      res = "<p>"
-      if protocol.description.present?
-        res << protocol.tinymce_render(:description)
-      else
-        res << "<em>" + I18n.t("my_modules.protocols.protocol_status_bar.no_description") + "</em>"
-      end
-      res << "</p>"
-      res << "<p><b>" + I18n.t("my_modules.protocols.protocol_status_bar.keywords") + ":</b>&nbsp;"
-      if protocol.protocol_keywords.size > 0
+      res = '<p><b>' + I18n.t('my_modules.protocols.protocol_status_bar.keywords') + ':</b>&nbsp;'
+      if protocol.protocol_keywords.size.positive?
         protocol.protocol_keywords.each do |kw|
-          res << kw.name + ", "
+          res << kw.name + ', '
         end
         res = res[0..-3]
       else
-        res << "<em>" + I18n.t("my_modules.protocols.protocol_status_bar.no_keywords") + "</em>"
+        res << '<em>' + I18n.t('my_modules.protocols.protocol_status_bar.no_keywords') + '</em>'
       end
-      res << "</p>"
+      res << '</p>'
     end
     escape_input(res)
   end
