@@ -1,96 +1,129 @@
 <% provide(:head_title, t("help.about.head_title")) %>
 
-<h1>
-  About SciNote (ELFN)</br>
-  <small>
-    <a href='https://intranet.ord.epa.gov/sites/default/files/Dec%202017/13.06_scientific_recordkeeping_electronic-approved.pdf'>
-      Electronic Laboratory & Field Notebook. (ELFN)
-    </a>
-  </small>
-</h1>
+<div class="shift-up content-pane container">
+  <h1>
+    About SciNote (ELFN)</br>
+    <small>
+      <a href="https://intranet.ord.epa.gov/sites/default/files/Dec%202017/13.06_scientific_recordkeeping_electronic-approved.pdf">
+        Electronic Laboratory & Field Notebook. (ELFN)
+      </a>
+    </small>
+  </h1>
 
-<div class="row">
-  <div class="col-xs-12 col-sm-8 col-md-6">
-    <p>
-        SciNote is an open-source Electronic Lab & Field Notebook (ELFN) application for
-        use in managing laboratory work and storing experimental data securely on an EPA
-        private server. SciNote is available for all ORD researchers� use (user registration
-        is required) via https://intranet.ord.epa.gov/nrmrl/electronic-research-notebook.
+  <div id="about-main-info">
+    <div class="row">
+      <p class="col-lg-7">
+          SciNote is an open-source Electronic Lab & Field Notebook (ELFN) application for
+          use in managing laboratory work and storing experimental data securely on an EPA
+          private server. SciNote is available for all ORD researchers&lsquo; use (user registration
+          is required) via https://intranet.ord.epa.gov/nrmrl/electronic-research-notebook.
+      </p>
+    </div>
 
-        Platform and Code Style
+    </br>
+
+    <div class="row">
+      <h3 class="col-lg-7">Platform and Code Style</h3>
+    </div>
+
+    <div class="row">
+      <p class="col-lg-7">
         SciNote is securely maintained on an EPA private Intranet Red Hat Enterprise Linux server.
         SciNote is developed in Ruby on Rails. It makes use of Docker technology, which is platform
         independent and runs inside Docker containers on an RTP RHEL server assigned by OSIM. These
         Docker containers contain an OS and all software modules and services required to run an
-        application and is portable. SciNote's codebase follows code styling conventions. All
-        ontributions should follow the below code styling rules provided by various linter configuration
+        application and is portable. SciNote&lsquo;s codebase follows code styling conventions. All
+        contributions should follow the below code styling rules provided by various linter configuration
         files:
-          Ruby - RuboCop -.rubocop.yml.
-          JavaScript - ESLint -. eslintrc.json, .jsbeautifyrc.
-          Sass - scss-lint -.scss-lint.yml.
-
-    </p>
-  </div>
-</div>
-
-</br>
-
-<div class="row">
-  <div class="col-xs-12 col-sm-8 col-md-6">
-    <p>
-      <i>Uses</i> SciNote was developed and deployed to support both research and EPA
-      requirements for electronic record keeping, as well as improve current record
-      keeping requirements through tools that are 21 CFR Part 11 � electronic signatures
-      and audit trails compliant. This tool is helping to reduce paper waste within
-      ORD. ORD guidance for implementing research notebooks is provided in Section 13.2
-      and Section 13.6 of the ORD Policies and Procedures Manual.
-    </p>
-  </div>
-</div>
-
-</br>
-
-<div class="row">
-  <div class="col-xs-12 col-sm-8 col-md-6">
-    <h3>Webinars Registartion</h3>
+      </p>
+    </div>
+    
     <ul>
-      <li><a href="https://scinote.net/webinars/">Free online webinars are available to users.</a></li>
-
-    <h3>Scholarly Articles</h3>
-    Electronic lab notebooks: can they replace paper? Willoughby, Cerys; Gibbins, Nicholas; Whitby, Richard; Frey, Jeremy Graham;
-    Erjavec, Jana; Zupan?i?, Klemen; Hren, Matja�; Kova?, Katarina 2017 Journal of Cheminformatics. DOI: 10.1186/s13321-017-0221-3
-    ISSN: 1758-2946 Volume: 9 PMID: 29086051 PMID:29086051. Accessed 05/09/2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5443717/?tool=pmcentrez&report=abstract
-
-    Cloud-based relational database for multimodal animal data. Niklas Pallast, Frederique Wieters, Marieke Nill, Gereon R Fink,
-    Markus Aswendt. Database (Oxford) 2018; 2018: bay124. Published online 2018 Dec 14. doi: 10.1093/database/bay124. PMCID: PMC6301331.
-    Accessed 05/09/2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6301331/
-
-    <h3>Additional information</h3>
-      <li><a href="https://www.youtube.com/watch?v=4Fm5ri2uw00">Top Digital Agency (TDA) Testimonials | SciNote - Electronic Lab Notebook</a></li>
-      <li><a href="https://www.limswiki.org/index.php/SciNote">sciNote - LIMSWiki.</a></li>
-      <li><a href="https://library.medicine.yale.edu/research-data/data-tools.../scinote">sciNote | Harvey Cushing/John Hay Whitney Medical Library.</a></li>
-      <li><a href="https://www.zavodpark.org/when-gilson-met-scinote">Zavod Park | When Gilson Met SciNote.</a></li>
-      <li><a href="http://openscience.org/scinote/">sciNote | The OpenScience Project</a></li>
-      <li><a href="https://www.youtube.com/watch?v=SCGOfGUyoIA">SciNote ELN Webinar: From Beginner to Pro</a></li>
-      <li><a href="https://www.youtube.com/watch?v=_q77XR412QU">Image Annotations & Activities Filtering</a></li>
-      <li><a href="https://www.oit.va.gov/Services/TRM/ToolPage.aspx?tid=10885#">US Department of Veteran Affairs.</a></li>
-      <li><a href="https://datamanagement.hms.harvard.edu/electronic-lab-notebooks-sciNote">Harvard Biomedical Data Management.</a></li>
-      <li><a href="http://www.gilsonuk.com/sciNote">Gilson.</a></li>
-      <li><a href="https://twitter.com/sciNoteELN">Twitter feed with verified user testimonies...</a></li>
-      <li><a href="https://www.facebook.com/sciNote.eln/">Facebook contact...</a></li>
-      <li><a href="https://www.scientific-computing.com/news/sciNote-adds-ai-capabilities">sciNote adds AI capabilities.</a></li>
-      <li><a href="https://www.scientific-computing.com/company/sciNote">Electronic Lab Notebook saves scientists up to 9 hours per week.</a></li>
-      <li><a href="https://www.limsforum.com/sciNote/">LiMS forum...</a></li>
+      <li>Ruby - RuboCop -.rubocop.yml.</li>
+      <li>JavaScript - ESLint -. eslintrc.json, .jsbeautifyrc.</li>
+      <li>Sass - scss-lint -.scss-lint.yml.</li>
     </ul>
+
+    </br>
+
+    <div class="row">
+      <p class="col-lg-7">
+        <i>Uses</i> SciNote was developed and deployed to support both research and EPA
+        requirements for electronic record keeping, as well as improve current record
+        keeping requirements through tools that are 21 CFR Part 11 � electronic signatures
+        and audit trails compliant. This tool is helping to reduce paper waste within
+        ORD. ORD guidance for implementing research notebooks is provided in Section 13.2
+        and Section 13.6 of the ORD Policies and Procedures Manual.
+      </p>
+    </div>
   </div>
-</div>
 
-</br>
+  </br>
 
-<div class="row">
-  <div class="col-xs-12 col-sm-8 col-md-6">
-    <h3>
-      <a href='https://intranet.ord.epa.gov/nrmrl/staff/daniel-young'>Contact for this software...</a>
-    </h3>
+  <div class="row">
+    <div class="col-lg-7">
+      <h3>Webinars Registartion</h3>
+      <a href="https://scinote.net/webinars/">Free online webinars are available to users.</a>
+    </div>
+  </div>
+
+  </br>
+
+  <div class="row">
+    <div class="col-lg-7">
+      <h3>Scholarly Articles</h3>
+      <p>
+        <cite>Electronic lab notebooks: can they replace paper?</cite>
+        </br>
+        Willoughby, Cerys; Gibbins, Nicholas; Whitby, Richard; Frey, Jeremy Graham;
+        Erjavec, Jana; Zupan?i?, Klemen; Hren, Matja�; Kova?,
+        </br>
+        Katarina 2017 Journal of Cheminformatics. DOI: 10.1186/s13321-017-0221-3
+        </br>
+        ISSN: 1758-2946 Volume: 9 PMID: 29086051 PMID:29086051. Accessed 05/09/2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5443717/?tool=pmcentrez&report=abstract
+      </p>
+      </br>
+      <p>
+        <cite>Cloud-based relational database for multimodal animal data.</cite>
+        </br>
+        Niklas Pallast, Frederique Wieters, Marieke Nill, Gereon R Fink,
+        Markus Aswendt. Database (Oxford) 2018; 2018: bay124.
+        </br>
+        Published online 2018 Dec 14. doi: 10.1093/database/bay124. PMCID: PMC6301331.
+        </br>
+        Accessed 05/09/2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6301331/
+      </p>
+      
+      </br>
+      
+      <h3>Additional information</h3>
+      <ul>
+        <li><a href="https://www.youtube.com/watch?v=4Fm5ri2uw00">Top Digital Agency (TDA) Testimonials | SciNote - Electronic Lab Notebook</a></li>
+        <li><a href="https://www.limswiki.org/index.php/SciNote">sciNote - LIMSWiki.</a></li>
+        <li><a href="https://library.medicine.yale.edu/research-data/data-tools.../scinote">sciNote | Harvey Cushing/John Hay Whitney Medical Library.</a></li>
+        <li><a href="https://www.zavodpark.org/when-gilson-met-scinote">Zavod Park | When Gilson Met SciNote.</a></li>
+        <li><a href="http://openscience.org/scinote/">sciNote | The OpenScience Project</a></li>
+        <li><a href="https://www.youtube.com/watch?v=SCGOfGUyoIA">SciNote ELN Webinar: From Beginner to Pro</a></li>
+        <li><a href="https://www.youtube.com/watch?v=_q77XR412QU">Image Annotations & Activities Filtering</a></li>
+        <li><a href="https://www.oit.va.gov/Services/TRM/ToolPage.aspx?tid=10885#">US Department of Veteran Affairs.</a></li>
+        <li><a href="https://datamanagement.hms.harvard.edu/electronic-lab-notebooks-sciNote">Harvard Biomedical Data Management.</a></li>
+        <li><a href="http://www.gilsonuk.com/sciNote">Gilson.</a></li>
+        <li><a href="https://twitter.com/sciNoteELN">Twitter feed with verified user testimonies...</a></li>
+        <li><a href="https://www.facebook.com/sciNote.eln/">Facebook contact...</a></li>
+        <li><a href="https://www.scientific-computing.com/news/sciNote-adds-ai-capabilities">sciNote adds AI capabilities.</a></li>
+        <li><a href="https://www.scientific-computing.com/company/sciNote">Electronic Lab Notebook saves scientists up to 9 hours per week.</a></li>
+        <li><a href="https://www.limsforum.com/sciNote/">LiMS forum...</a></li>
+      </ul>
+    </div>
+  </div>
+
+  </br>
+
+  <div class="row">
+    <div class="col-lg-7">
+      <h3>
+        <a href="https://intranet.ord.epa.gov/nrmrl/staff/daniel-young">Contact for this software...</a>
+      </h3>
+    </div>
   </div>
 </div>

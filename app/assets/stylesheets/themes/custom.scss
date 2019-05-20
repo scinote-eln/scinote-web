@@ -7,8 +7,13 @@
 // }
 
 .shift-down{
-  margin-top: 8em;
+  // margin-top: 5em;
+  margin-top: 65px;
   z-index: 1;
+}
+
+.list-no-bullets{
+  list-style-type: none;
 }
 
 /** Overwrite css from epa.scss **/
@@ -61,18 +66,31 @@
 .navbar-secondary {
   padding-right: 80px !important;
   padding-left: 280px;
+  padding-top: 70px;
   #secondary-menu {
     margin-top: 0 !important;
   }
 }
 
 #content-wrapper{
-  margin-top: 5px !important;
+  // margin-top: 8em !important;
 }
 
-.container{
-  padding-top: 9em;
+.content-pane{
+  padding-top: 70px !important; // Override the padding defined in scinote.scss
 }
+
+// .container{
+//   padding-top: 9em;
+// }
+
+// .container-fluid{
+//   // padding-top: 9em;
+// }
+
+// #fluid-content{
+//   padding-top: 70px;
+// }
 
 #alert-flash{
   z-index: 5000;
