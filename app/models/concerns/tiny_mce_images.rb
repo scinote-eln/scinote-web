@@ -80,15 +80,7 @@ module TinyMceImages
     end
 
     def copy_unknown_tiny_mce_images
-      asset_team_id = case self.class.name
-                      when 'Protocol'
-                        team_id
-                      when 'Step' || 'MyModule'
-                        protocol.team_id
-                      when 'ResultText'
-                        result.my_module.protocol.team_id
-                      end
-
+      asset_team_id = Team.find_by_object(self)
       return unless asset_team_id
 
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
