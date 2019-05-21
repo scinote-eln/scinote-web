@@ -17,6 +17,7 @@
   <%= f.tiny_mce_editor(:description,
                         id: :my_module_description_textarea,
                         class: 'hidden',
+                        placeholder:  t('my_modules.module_header.empty_description_edit_label'),
                         hide_label: true,
                         value: sanitize_input(@my_module.tinymce_render(:description)),
                         data: {
