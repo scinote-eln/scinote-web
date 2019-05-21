@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190424113216) do
+ActiveRecord::Schema.define(version: 20190520135317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -926,6 +926,7 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.string "zip_file_content_type"
     t.integer "zip_file_file_size"
     t.datetime "zip_file_updated_at"
+    t.string "type"
     t.index ["user_id"], name: "index_zip_exports_on_user_id"
   end
 
@@ -1070,7 +1071,7 @@ ActiveRecord::Schema.define(version: 20190424113216) do
   add_foreign_key "wopi_apps", "wopi_discoveries"
   add_foreign_key "zip_exports", "users"
 
-  create_view "datatables_teams",  sql_definition: <<-SQL
+  create_view "datatables_teams", sql_definition: <<-SQL
       SELECT teams.id,
       teams.name,
       user_teams.role,
@@ -1086,5 +1087,4 @@ ActiveRecord::Schema.define(version: 20190424113216) do
      FROM (teams
        JOIN user_teams ON ((teams.id = user_teams.team_id)));
   SQL
-
 end

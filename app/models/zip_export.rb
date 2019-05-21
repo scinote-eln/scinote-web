@@ -20,7 +20,22 @@ require 'csv'
 
 class ZipExport < ApplicationRecord
   belongs_to :user, optional: true
-  has_attached_file :zip_file
+
+  # Override path only for S3
+  if ENV['PAPERCLIP_STORAGE'] == 's3'
+    s3_path =
+      if ENV['S3_SUBFOLDER']
+        "/#{ENV['S3_SUBFOLDER']}/zip_exports/:attachment/"\
+        ":id_partition/:hash/:style/:filename"
+      else
+        '/zip_exports/:attachment/:id_partition/:hash/:style/:filename'
+      end
+
+    has_attached_file :zip_file, path: s3_path
+  else
+    has_attached_file :zip_file
+  end
+
   validates_attachment :zip_file,
                        content_type: { content_type: 'application/zip' }
 
