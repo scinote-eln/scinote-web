@@ -908,7 +908,7 @@ class Constants
   IMPORT_REPOSITORY_ITEMS_LIMIT = 2000
 
   # Very basic regex to check for validity of emails
-  BASIC_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
   TINY_MCE_ASSET_REGEX = /data-mce-token="(\w+)"/
 
