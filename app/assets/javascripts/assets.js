@@ -1,11 +1,6 @@
 /* global animateSpinner FilePreviewModal */
 
-function setupAssetsLoading() {
-  var DELAY = 2500;
-  var REPETITIONS = 60;
-  var cntr = 0;
-  var intervalId;
-
+var Assets = (function() {
   function refreshAssets() {
     var elements = $("[data-status='asset-loading']");
 
@@ -30,49 +25,12 @@ function setupAssetsLoading() {
           if (data.processing === false) {
             $el.html(data.placeholder_html);
             $el.attr('data-status', 'asset-loaded');
-            return;
-          }
-
-          $el.attr('data-status', 'asset-loaded');
-          $el.find('img').hide();
-          $el.next().hide();
-          $el.html('');
-
-          if (data.type === 'image') {
-            $el.html(
-              "<a class='file-preview-link' id='modal_link"
-              + data['asset-id'] + "' data-status='asset-present' "
-              + "href='" + data['download-url'] + "' data-preview-url='" + data['preview-url'] + "'>"
-              + "<img src='" + data['image-tag-url'] + "'><p>" + data.filename + '</p></a>'
-            );
-          } else {
-            $el.html(
-              "<a class='file-preview-link' id='modal_link"
-              + data['asset-id'] + "' data-status='asset-present' "
-              + "href='" + data['download-url'] + "' data-preview-url='"
-              + data['preview-url'] + "'><p>" + data.filename + '</p></a>'
-            );
-          }
-          animateSpinner(null, false);
-          FilePreviewModal.init();
-        },
-        error: function(data) {
-          if (data.status === 403) {
-            $el.find('img').hide();
-            $el.next().hide();
-            // Image/file exists, but user doesn't have
-            // rights to download it
-            if (data.type === 'image') {
-              $el.html(
-                "<img src='" + data['image-tag-url'] + "'><p>" + data.filename + '</p>'
-              );
-            } else {
-              $el.html('<p>' + data.filename + '</p>');
-            }
-          } else {
-            // Do nothing, file is not yet present
             animateSpinner(null, false);
+            FilePreviewModal.init();
           }
+        },
+        error: function() {
+          animateSpinner(null, false);
         }
       });
     });
@@ -92,11 +50,27 @@ function setupAssetsLoading() {
     });
   }
 
-  intervalId = window.setInterval(function() {
-    cntr += 1;
-    if (cntr >= REPETITIONS || !refreshAssets()) {
-      finalizeAssets();
-      window.clearInterval(intervalId);
-    }
-  }, DELAY);
-}
+  function setupAssetsLoading() {
+    var DELAY = 5000;
+    var REPETITIONS = 60;
+    var cntr = 0;
+    var intervalId;
+
+    if (window.assetsPollingIsRunning) return;
+
+    intervalId = window.setInterval(function() {
+      cntr += 1;
+      if (cntr >= REPETITIONS || !refreshAssets()) {
+        finalizeAssets();
+        window.clearInterval(intervalId);
+        window.assetsPollingIsRunning = false;
+      }
+    }, DELAY);
+
+    window.assetsPollingIsRunning = true;
+  }
+
+  return Object.freeze({
+    setupAssetsLoading: setupAssetsLoading
+  });
+}());

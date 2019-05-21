@@ -14,47 +14,28 @@ class AssetsController < ApplicationController
   before_action :check_edit_permission, only: :edit
 
   def file_present
-    respond_to do |format|
-      format.json do
-        if @asset.file.processing?
-          render json: {}, status: 404
-        else
-          # Only if file is present,
-          # check_read_permission
-          check_read_permission
+    return render_403 unless @asset.team == current_team
 
-          # If check_read_permission already rendered error,
-          # stop execution
-          return if performed?
-
-          # If check permission passes, return :ok
-          render json: {
-            'asset-id' => @asset.id,
-            'image-tag-url' => @asset.url(:medium),
-            'preview-url' => asset_file_preview_path(@asset),
-            'filename' => truncate(escape_input(@asset.file_file_name),
-                                   length: Constants::FILENAME_TRUNCATION_LENGTH),
-            'download-url' => download_asset_path(@asset),
-            'type' => asset_data_type(@asset)
-          }, status: 200
-        end
-      end
-    end
-  end
-
-  def step_file_present
     respond_to do |format|
       format.json do
         if @asset.file.processing?
           render json: { processing: true }
         else
-          render json: {
-            placeholder_html: render_to_string(
-              partial: 'steps/attachments/placeholder.html.erb',
-              locals: { asset: @asset, edit_page: false }
-            ),
-            processing: false
-          }
+          # Only if file is ready, check_read_permission
+          check_read_permission
+          # If check_read_permission already rendered error, stop execution
+          return if performed?
+
+          placeholder_html =
+            if @assoc.class == Step
+              render_to_string(partial: 'steps/attachments/placeholder.html.erb',
+                               locals: { asset: @asset, edit_page: false })
+            else
+              render_to_string(partial: 'shared/asset_link_placeholder.html.erb',
+                               locals: { asset: @asset, display_image_tag: true })
+            end
+
+          render json: { placeholder_html: placeholder_html, processing: false }
         end
       end
     end
