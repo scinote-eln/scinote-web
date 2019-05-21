@@ -10,7 +10,9 @@
     error="false"
   >
     <div class="avatar-placehodler">
-      <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+      <span class='global-avatar-container'> 
+        <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+      </span>
     </div>
     <div class="content-placeholder">
       <div class="comment-name"><%= comment.user.full_name %></div>
@@ -36,10 +38,7 @@
         <% end %>
       </div>
       <div class="comment-message">
-           <div class="view-mode"><%= custom_auto_link(comment.message,
-                                                          simple_format: false,
-                                                          tags: %w(img br), 
-                                                          team: current_team).gsub(/\n/, '<br/>').html_safe %></div>
+           <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team).html_safe %></div>
             <% if user_comment %>
               <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
             <% end %>
