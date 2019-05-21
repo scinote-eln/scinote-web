@@ -1822,10 +1822,15 @@ th.custom-field .modal-tooltiptext {
     margin: auto;
 
     li {
-      display: block;
-      padding: 5px 10px;
+      align-items: center;
       border-bottom: 1px solid $color-emperor;
       cursor: pointer;
+      display: flex;
+      padding: 5px 10px;
+
+      .global-avatar-container {
+        margin-right: 5px;
+      }
     }
   }
 }
@@ -1882,6 +1887,7 @@ th.custom-field .modal-tooltiptext {
     cursor: pointer;
   }
 }
+
 
 .atwho-li-res {
 
