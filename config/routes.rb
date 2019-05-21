@@ -31,8 +31,10 @@ Rails.application.routes.draw do
     get 'help/contact', to: 'help#contact', as: 'contact'
     get 'help/training', to: 'help#training', as: 'training'
     # Routes to methods for downloading the Fact Sheet and Manual
-    get 'resource/download_factsheet'
+    # get 'help/download_manual', to: 'help#download_manual', as 'manual'
+    # get 'help/download_manual' => 'help#download_manual', as 'manual'
     get 'help/download_manual'
+    # get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
 
     # EPA RAP Information JSON results
     get '/rap_program_level/',
