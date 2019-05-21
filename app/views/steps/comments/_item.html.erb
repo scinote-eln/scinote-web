@@ -38,10 +38,7 @@
         <% end %>
       </div>
       <div class="comment-message">
-           <div class="view-mode"><%= custom_auto_link(comment.message,
-                                                          simple_format: false,
-                                                          tags: %w(img br), 
-                                                          team: current_team).gsub(/\n/, '<br/>').html_safe %></div>
+           <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team).html_safe %></div>
             <% if user_comment %>
               <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
             <% end %>
