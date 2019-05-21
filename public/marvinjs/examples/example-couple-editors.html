@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Couple of Editors</title>
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var caffeineStr = "\n\n\n"+
+			" 14 15  0  0  0  0  0  0  0  0999 V2000\n"+
+			"    0.5089    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    1.2234    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    1.2234    7.4191    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"   -0.2055    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"   -0.9200    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    0.5089    5.3566    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"   -0.2055    7.4191    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    0.5089    6.1816    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"   -0.9200    6.1816    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    0.5089    8.6566    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    2.4929    7.0066    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    2.0080    7.6740    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    2.0080    6.3391    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"    2.2630    8.4586    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+			"  1  7  1  0  0  0  0\n"+
+			"  8  2  1  0  0  0  0\n"+
+			"  1  3  1  0  0  0  0\n"+
+			"  2  3  2  0  0  0  0\n"+
+			"  7  4  1  0  0  0  0\n"+
+			"  4  8  1  0  0  0  0\n"+
+			"  4  9  2  0  0  0  0\n"+
+			"  7  5  1  0  0  0  0\n"+
+			"  8  6  1  0  0  0  0\n"+
+			"  1 10  2  0  0  0  0\n"+
+			"  3 12  1  0  0  0  0\n"+
+			"  2 13  1  0  0  0  0\n"+
+			" 13 11  2  0  0  0  0\n"+
+			" 12 11  1  0  0  0  0\n"+
+			" 12 14  1  0  0  0  0\n"+
+			"M  END\n";
+
+		var sk1Controller,
+			sk2Controller;
+
+		$(document).ready(function handleDocumentReady (e) {
+
+			MarvinJSUtil.getEditor("#box1_sketch").then(function (sketcherInstance) {
+				sk1Controller = new SketcherControllerClass(
+					sketcherInstance,
+					$("#box1_chbx-carbonVis"),
+					$("#box1_chbx-coloring"),
+					$("#box1_btn-setmol")
+				);
+			}, function () {
+				alert("Failed to retrieve sketcher in box 1");
+			});
+
+			MarvinJSUtil.getEditor("#box2_sketch").then(function (sketcherInstance) {
+				sk2Controller = new SketcherControllerClass(
+					sketcherInstance,
+					$("#box2_chbx-carbonVis"),
+					$("#box2_chbx-coloring"),
+					$("#box2_btn-setmol")
+				);
+			}, function () {
+				alert("Failed to retrieve sketcher in box 2");
+			});
+
+		});
+
+		var SketcherControllerClass = (function () {
+
+			function SketcherControllerClass (sketcherInstance, carbonCheckbox, cpkCheckbox, importButton) {
+				this.sketcherInstance 	= sketcherInstance;
+				this.carbonCheckbox 	= carbonCheckbox;
+				this.cpkCheckbox 		= cpkCheckbox;
+				this.importButton 		= importButton;
+
+				this.init();
+			}
+
+			SketcherControllerClass.prototype.init = function init () {
+				this.carbonCheckbox.on("change", $.proxy(this.handleCarbonCheckBoxChange, this));
+				this.cpkCheckbox.on("change", $.proxy(this.handleCpkCheckBoxChange, this));
+				this.importButton.on("click", $.proxy(this.handleImportButtonClick, this));
+			};
+
+			SketcherControllerClass.prototype.handleCarbonCheckBoxChange = function handleCarbonCheckBoxChange (e) {
+				this.updateDisplaySettings("carbonLabelVisible", this.carbonCheckbox.is(':checked'));
+			};
+
+			SketcherControllerClass.prototype.handleCpkCheckBoxChange = function handleCpkCheckBoxChange (e) {
+				this.updateDisplaySettings("cpkColoring", this.cpkCheckbox.is(':checked'));
+			};
+
+			SketcherControllerClass.prototype.handleImportButtonClick = function handleImportButtonClick (e) {
+				this.sketcherInstance.importStructure("mol", caffeineStr);
+			};
+
+			SketcherControllerClass.prototype.updateDisplaySettings = function updateDisplaySettings (key, value) {
+				var settings = this.sketcherInstance.getDisplaySettings();
+				settings[key] = value;
+				this.sketcherInstance.setDisplaySettings(settings);
+			};
+
+			return SketcherControllerClass;
+
+		}());
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Couple of Editors</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<p>This example demonstrates that you can embed several editors into the same page without any conflict.</p>
+	<noscript>
+		<div>
+			<p>Your web browser must have JavaScript enabled in order for this
+			application to display correctly.</p>
+		</div>
+	</noscript>
+
+	<div class="editorheader" id="box1">
+		<ul class="horizontalmenu">
+			<li><label for="box1_chbx-carbonVis">Carbon labels</label><input type="checkbox" id="box1_chbx-carbonVis" /></li>
+			<li><label for="box1_chbx-coloring">CPK coloring</label><input type="checkbox" id="box1_chbx-coloring" checked="checked" /></li>
+			<li><input type="button" id="box1_btn-setmol" value="Import Caffeine" /></li>
+		</ul>
+		<div class="resizable">
+			<iframe src="../editor.html" id="box1_sketch" class="sketcher-frame"></iframe>
+		</div>
+	</div>
+
+	<div class="editorheader" id="box2">
+		<ul class="horizontalmenu">
+			<li><label for="box2_chbx-carbonVis">Carbon labels</label><input type="checkbox" id="box2_chbx-carbonVis" /></li>
+			<li><label for="box2_chbx-coloring">CPK coloring</label><input type="checkbox" id="box2_chbx-coloring" checked="checked" /></li>
+			<li><input type="button" id="box2_btn-setmol" value="Import Caffeine" /></li>
+		</ul>
+		<div class="resizable">
+			<iframe src="../editor.html" id="box2_sketch" class="sketcher-frame"></iframe>
+		</div>
+	</div>
+	<div style="float: left;">
+	Identify each IFRAME to be able to distinguish the sketcher instances.
+	<pre>
+		<code data-language="html">&lt;iframe src=&quot;../editor.html&quot; id=&quot;box1_sketch&quot; class=&quot;sketcher-frame&quot;&gt;&lt;/iframe&gt;</code>
+	</pre>
+	<pre>
+		<code data-language="html">&lt;iframe src=&quot;../editor.html&quot; id=&quot;box2_sketch&quot; class=&quot;sketcher-frame&quot;&gt;&lt;/iframe&gt;</code>
+	</pre>
+	Create SketchControlClass for each sketcher object. Bind controller to the sketcher when it is ready. The controller also manages checkboxes for display settings.
+	<pre>
+		<code data-language="javascript">
+		var sk1Controller,
+			sk2Controller;
+
+		$(document).ready(function handleDocumentReady (e) {
+
+			MarvinJSUtil.getEditor(&quot;#box1_sketch&quot;).then(function (sketcherInstance) {
+				sk1Controller = new SketcherControllerClass(
+					sketcherInstance,
+					$(&quot;#box1_chbx-carbonVis&quot;),
+					$(&quot;#box1_chbx-coloring&quot;),
+					$(&quot;#box1_btn-setmol&quot;)
+				);
+			}, function () {
+				alert(&quot;Failed to retrieve sketcher in box 1&quot;);
+			});;
+
+			MarvinJSUtil.getEditor(&quot;#box2_sketch&quot;).then(function (sketcherInstance) {
+				sk2Controller = new SketcherControllerClass(
+					sketcherInstance,
+					$(&quot;#box2_chbx-carbonVis&quot;),
+					$(&quot;#box2_chbx-coloring&quot;),
+					$(&quot;#box2_btn-setmol&quot;)
+				);
+			}, function () {
+				alert(&quot;Failed to retrieve sketcher in box 2&quot;);
+			});
+
+		});
+
+		var SketcherControllerClass = (function () {
+
+			function SketcherControllerClass (sketcherInstance, carbonCheckbox, cpkCheckbox, importButton) {
+				this.sketcherInstance 	= sketcherInstance;
+				this.carbonCheckbox 	= carbonCheckbox;
+				this.cpkCheckbox 		= cpkCheckbox;
+				this.importButton 		= importButton;
+
+				this.init();
+			}
+
+			SketcherControllerClass.prototype.init = function init () {
+				this.carbonCheckbox.on(&quot;change&quot;, $.proxy(this.handleCarbonCheckBoxChange, this));
+				this.cpkCheckbox.on(&quot;change&quot;, $.proxy(this.handleCpkCheckBoxChange, this));
+				this.importButton.on(&quot;click&quot;, $.proxy(this.handleImportButtonClick, this));
+			};
+
+			SketcherControllerClass.prototype.handleCarbonCheckBoxChange = function handleCarbonCheckBoxChange (e) {
+				this.updateDisplaySettings(&quot;carbonLabelVisible&quot;, this.carbonCheckbox.is(':checked'));
+			};
+
+			SketcherControllerClass.prototype.handleCpkCheckBoxChange = function handleCpkCheckBoxChange (e) {
+				this.updateDisplaySettings(&quot;cpkColoring&quot;, this.cpkCheckbox.is(':checked'));
+			};
+
+			SketcherControllerClass.prototype.handleImportButtonClick = function handleImportButtonClick (e) {
+				this.sketcherInstance.importStructure("mol", caffeineStr);
+			};
+
+			SketcherControllerClass.prototype.updateDisplaySettings = function updateDisplaySettings (key, value) {
+				var settings = this.sketcherInstance.getDisplaySettings();
+				settings[key] = value;
+				this.sketcherInstance.setDisplaySettings(settings);
+			};
+
+			return SketcherControllerClass;
+
+		}());		
+		</code>
+	</pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

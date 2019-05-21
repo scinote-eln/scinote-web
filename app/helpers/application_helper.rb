@@ -175,7 +175,7 @@ module ApplicationHelper
     html = if skip_avatar
              ''
            else
-             raw("<span class=\"global-avatar-container\"><img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+             raw("<span class=\"global-avatar-container smart-annotation\"><img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
              "alt='avatar' class='atwho-user-img-popover'" \
              " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'></span>")
            end
@@ -189,6 +189,7 @@ module ApplicationHelper
       raw(user_description) + raw('" >') + user_name + raw('</a>')
 
     html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user_still_in_team
+    html = '<span class="atwho-user-container">' + html + '</span>'
     html
   end
 

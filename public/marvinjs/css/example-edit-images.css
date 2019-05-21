@@ -1,0 +1,105 @@
+  .image-container {
+  	margin-top: 10px;
+  	margin-bottom: 30px;
+  	display: inline-table;
+  }
+  .mol-cell {
+  	display: inline;
+  	float: left;
+  	margin-top: 4px;
+  	margin-bottom: 4px;
+  	margin-left: 4px;
+  	margin-right: 24px;
+  }
+  .mol-cell span {
+  	font-weight: bold;
+  	padding-top: 2px;
+  	padding-left: 2px;
+  	padding-right: 2px;
+  	background: lightgrey;
+  }
+  .mol-cell img, .mol-cell iframe {
+    display: block;
+  	border: none;
+  }
+
+  div.table-bottom {
+  	clear: both;
+  	height: 20px;
+  	width: 100%;
+  }
+
+  .close-button {
+  	float: right;
+  	font-weight: bold;
+	font-size: 25px;
+  	color: rgb(250, 250, 240);
+  	visibility: inherit;
+  	background: inherit;
+  	border: none;
+  	z-index: inherit;
+  }
+
+  #popup iframe {
+  	width: 500px;
+  	height: 510px;
+  	margin: 0px;
+  	padding: 0px;
+  	border:none;
+    box-shadow: 2px 2px 8px #888;
+  }
+  
+    #popup .wrapper {
+  	width: 500px;
+  	height: 550px;
+  	margin: 0px;
+  	padding: 0px;
+  	position: fixed;
+  	top: 50%;
+  	left: 50%;
+  	margin-left: -250px;
+  	margin-top: -300px;
+  	z-index: 102;
+  }
+  
+   #sketchContainer{
+   	clear:both;
+  	margin: 0px;
+  	padding: 0px;
+  }
+
+  #popup {
+  	width:100%;
+  	height:100%;
+  	background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .image-container img{
+  	background-color: transparent;
+  	box-shadow: 2px 2px 8px #444;
+	transform:rotate(0deg);
+	-ms-transform:rotate(0deg); /* Internet Explorer */
+	-moz-transform:rotate(0deg); /* Firefox */
+	-webkit-transform:rotate(0deg); /* Safari and Chrome */
+	-o-transform:rotate(0deg); /* Opera */
+
+	-webkit-transition: -webkit-transform 0.2s linear 0s;
+	-moz-transition: -moz-transform 0.2s linear 0s;
+	-o-transition: -o-transform 0.2s linear 0s;
+	transition: transform 0.2s linear 0s;
+  }
+
+  .image-container img:hover{
+   	background-color: white;
+   	box-shadow: 2px 2px 8px #444;
+	transform:scale(1.05) rotate(3deg);
+	-ms-transform:scale(1.05) rotate(3deg); /* Internet Explorer */
+	-moz-transform:scale(1.05) rotate(3deg); /* Firefox */
+	-webkit-transform:scale(1.05) rotate(3deg); /* Safari and Chrome */
+	-o-transform:scale(1.05) rotate(3deg); /* Opera */
+
+	-webkit-transition: -webkit-transform 0.2s linear 0s;
+	-moz-transition: -moz-transform 0.2s linear 0s;
+	-o-transition: -o-transform 0.2s linear 0s;
+	transition: transform 0.2s linear 0s;
+  }

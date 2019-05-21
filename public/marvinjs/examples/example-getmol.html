@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Get The Molecule</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControl () {
+
+			// get mol button
+			$("#btn-getmol").on("click", function (e) {
+				marvinSketcherInstance.exportStructure("mrv").then(function(source) {
+					$("#molsource").text(source);
+				}, function(error) {
+					alert("Molecule export failed:"+error);	
+				});
+			});
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Get The Molecule</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		
+		<div class="resizable">
+			<iframe src="../editorws.html" id="sketch" class="sketcher-frame"></iframe>
+		</div>
+		<ul style="-moz-padding-start: 0px; -webkit-padding-start: 0px; padding-start: 0px padding-0px;">
+			<li><input type="button" id="btn-getmol" value="Get mol" /></li>
+			<li><textarea id="molsource" rows=10 cols=80></textarea></li>
+		</ul>
+	<div>
+		<p>This example demonstrates how to retrieve the molecule from the sketcher. When you push the <strong>Get mol</strong>
+		button, the current molecule is retrieved from the editor in MRV format and the result is displayed in the textbox.</p>
+		<p>First of all, you need a reference for the editor. <code>MarvinJSUtil.getEditor(String)</code> provides a Promise object for you to get it
+		when the editor is ready.</p>
+		<p>After the editor is loaded, run the <code>initcontrol()</code> function to bind action the the <strong>Get mol</strong> button.</p>
+		<p>When the button is clicked, the <code>exportStructure(String)</code> function of the editor is called. Its provides a Promise object to access the result
+		of the export process. Call its <code>then(...)</code> function with the callback function that describes what you would like to do with the export result.
+		In this case, it is displayed in the <em>molsource</em> textbox.</p>
+		<pre><code data-language="javascript">var marvinSketcherInstance;
+
+$(document).ready(function handleDocumentReady (e) {
+	var p = MarvinJSUtil.getEditor("#sketch");
+	p.then(function (sketcherInstance) {
+		marvinSketcherInstance = sketcherInstance;
+		initControl();
+	}, function (error) {
+		alert("Cannot retrieve sketcher instance from iframe:"+error);
+	});
+});
+
+function initControl () {
+
+	// get mol button
+	$("#btn-getmol").on("click", function (e) {
+		marvinSketcherInstance.exportStructure("mrv").then(function(source) {
+			$("#molsource").text(source);
+		}, function(error) {
+			alert("Molecule export failed:"+error);	
+		});
+	});
+}
+
+</code>
+	</pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

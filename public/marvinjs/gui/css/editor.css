@@ -1,0 +1,61 @@
+@charset "utf-8";
+/* CSS Document */
+
+.mjs-body{
+  	color: black;
+	margin: 0px;
+    border: 0px;
+	padding: 0px;
+	overflow: hidden;
+	background-color: white;
+	height:100vh;
+	width: 100vw;
+    direction: ltr;
+}
+
+.mjs-body noscript > div {
+	width: 442px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -40px 0 0 -246px;
+	background-color: white;
+	border: 1px solid red;
+	padding: 20px;
+}
+
+.mjs-body noscript > div > p {
+	font-family: sans-serif;
+	color: red;
+	margin: 0;
+}
+
+.mjs-top, 
+.mjs-top table td, 
+.mjs-top select, 
+.mjs-top button {
+  font-family: Arial Unicode MS, Arial, sans-serif;
+  font-size: small;
+}
+
+.mjs-top a, 
+.mjs-top a:visited {
+  color: #0066cc;
+  text-decoration:none;
+}
+
+.mjs-top a:hover {
+  color: #0066cc;
+  text-decoration:underline;
+}
+
+.mjs-top select {
+  background: white;
+}
+
+/* UIBinder:InlineBar */
+.mjs-toolbar div.horizontal, .mjs-touchToolbar div.horizontal {
+	display: -webkit-inline-flex;
+	display: -ms-inline-flex;
+	display: inline-flex;
+}

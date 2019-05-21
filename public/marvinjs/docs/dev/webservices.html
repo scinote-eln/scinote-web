@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Marvin JS - Webservices</title>
+<link type="text/css" rel="stylesheet" href="../../css/doc.css" />
+</head>
+<body>
+<h1>Marvin JS - Webservices</h1>
+<div style="clear: both; width: 100%; text-align: right;"><a href="../index.html">Back to index</a></div>
+
+<h2>Extended functionalities</h2>
+<p>Extended functionalities means those features that are only available when web services are setup.</p>
+<ul>
+	<li><em>Clean 2D</em> button is visible on the toolbar if Clean2D web service is available.</li>
+	<li>Importing molecule in any Marvin supported text based chemical format (SMILES, InChi, naming, ...) via the import dialog, if MolConvert web service is available.
+	Without the desired service, only MDL molfile and MRV format are available.</li>
+	<li>Exporting molecule into any Marvin supported text based chemical format (SMILES, InChi, naming, ...) via the save dialog, if MolConvert web service is available.
+	Without the desired service, only MDL molfile and MRV format are available.</li>
+	<li><em>Calculate Stereo</em> button is visible on the toolbar if stereoinfo web service is available.</li>
+</ul>
+<h2>Refer web services</h2>
+<p>By default, those functionalities in the editor that require live connection to existing web services are disabled.
+To activate them, you have to set up address of these web services for the editor.</p>
+<p>Use the <code>setServices</code> method of the editor to apply its webservice settings. See 
+the <a href="../../jsdoc.html">Sketch apidoc</a> for more details. If you want to activate all web services, please, see
+the <a href="embed.html">How To Embed</a> section in the documentation that describes how you can insert an editor into a web page where all available web services are preset.</p>
+<p>The default address of these services is defined in the <code>webservices.js</code>. By default, it points to a copy of
+<em>JChem Webservices</em>.</p>
+<p>If you have your own implementation for these services or your copy of <em>JChem Webservices</em> are located on a different URL,
+you may have to overwrite default settings.</p>
+  
+<h2>Specification of Webservices</h2>
+<p>Those web services that are referred by Marvin JS have to complete the following specifications.</p>
+<h3>Clean 2D / 3D</h3>
+<ul>
+<li><strong>Request:</strong>
+	<ul>
+		<li>Type: application/json</li>
+		<li>Method: POST</li>
+		<li>Posted JSON object: <pre>{ 
+	&quot;structure&quot;: &lt;molecule source&gt;, 
+	&quot;parameters&quot;: { &quot;dim&quot;: 2, &quot;opts&quot;: &lt;optional clean options&gt; }
+}</pre>
+		<strong>Parameters</strong>
+		<table>
+		<tr><th>Option</th><th>Type</th><th>Description</th></tr>
+		<tr><td>dim</td><td>integer</td><td>clean dimension: 2 or 3</td></tr>
+		<tr><td>opts</td><td>string</td><td>further clean options (optional)</td></tr>
+		</table>
+	</ul>
+	</li>
+<li><strong>Response:</strong>
+	<ul>
+		<li>Response-type: plain/text</li>
+		<li>Response text: result in MRV format</li>
+	</ul></li>
+</ul>
+
+<h3>MolConvert</h3>
+<ul>
+<li><strong>Request:</strong>
+	<ul>
+		<li>Type: application/json</li>
+		<li>Method: POST</li>
+		<li>Posted JSON object: <pre>{
+	&quot;structure&quot;: &lt;molecule source&gt;, 
+	&quot;inputFormat&quot;: &lt;input format&gt;, 
+	&quot;parameters&quot;: &lt;output format&gt;
+}</pre>
+	</ul></li>
+<li><strong>Response:</strong>
+	<ul>
+		<li>Response-type: application/json</li>
+		<li>Response text: <pre>{ 
+	&quot;structure&quot; : &lt;output structure&gt;, 
+	&quot;format&quot; : &lt;output format&gt;, 
+	&quot;contentUrl&quot; : &lt;download link&gt; 
+}</pre></li>
+	</ul></li>
+</ul>
+
+<h3><strong>Stereo info</strong></h3>
+<ul>
+<li><strong>Request</strong>
+	<ul>
+		<li>Type: application/json</li>
+		<li>Method: POST</li>
+		<li>Posted JSON object: <pre>{ 
+	&quot;structure&quot; : &lt;molecule source&gt; 
+}</pre></li>
+	</ul>
+</li>
+<li><strong>Response</strong>
+	<ul>
+		<li>Response-type: application/json</li>
+		<li>Response text: <pre>{
+	&quot;tetraHedral&quot; : [ 
+	{ 
+		&quot;atomIndex&quot; : &lt; 0 based index of atom&gt;,
+		&quot;chirality&quot; : &lt; chirality flag (&quot;R&quot;, &quot;S&quot;, &quot;R/S&quot; )&gt; 
+	}, 
+	...
+	],
+	&quot;doubleBond&quot; : [
+	{
+		&quot;atomIndex1&quot; : &lt;0 based index of first atom of the bond&gt;,
+		&quot;atomIndex2&quot; : &lt;0 based index of second atom of the bond&gt;,
+		&quot;cistrans&quot; : &lt;cistrans info (&quot;E&quot;, &quot;Z&quot;, &quot;E/Z&quot;)&gt;
+	},
+	...
+	]
+}</pre></li>
+	</ul>
+</li>
+</ul>
+
+<h3>reactionExport</h3>
+<ul>
+<li><strong>Request:</strong>
+	<ul>
+		<li>Type: application/json</li>
+		<li>Method: POST</li>
+		<li>Posted JSON object: <pre>{
+	&quot;structure&quot;: &lt;molecule source&gt;, 
+	&quot;inputFormat&quot;: &lt;input format&gt;, 
+	&quot;parameters&quot;: &lt;output format&gt;
+}</pre>
+	</ul></li>
+<li><strong>Response:</strong>
+	<ul>
+		<li>Response-type: application/json</li>
+		<li>Response text: <pre>{ 
+	&quot;structure&quot; : &lt;output structure&gt;, 
+	&quot;format&quot; : &lt;output format&gt;, 
+	&quot;contentUrl&quot; : &lt;download link&gt; 
+}</pre></li>
+	</ul></li>
+</ul>
+
+<h3>Hydrogenize</h3>
+<ul>
+<li><strong>Request:</strong>
+	<ul>
+		<li>Type: application/json</li>
+		<li>Method: POST</li>
+		<li>Posted JSON object: <pre>{
+	&quot;structure&quot;: &lt;molecule source&gt;, 
+	&quot;inputFormat&quot;: &lt;input format&gt;, 
+	&quot;parameters&quot;: { &quot;method&quot;: &quot;HYDROGENIZE&quot; }
+}</pre>
+		<table>
+		<tr><th>Option</th><th>Type</th><th>Description</th></tr>
+		<tr><td>method</td><td>string</td><td>command to perform: HYDROGENIZE or DEHYDROGENIZE</td></tr>
+		<tr><td>atoms</td><td>array of integer</td><td>subset of atom indeces to include or null for all</td></tr> 
+		</table>
+	</ul></li>
+<li><strong>Response:</strong>
+	<ul>
+		<li>Response-type: plain/text</li>
+		<li>Response text: result in MRV format</li>
+	</ul></li>
+</ul>
+
+<h3>AutoMapper</h3>
+<ul>
+<li><strong>Request:</strong>
+	<ul>
+		<li>Type: application/json</li>
+		<li>Method: POST</li>
+		<li>Posted JSON object: <pre>{
+	&quot;structure&quot;: &lt;molecule source&gt;, 
+	&quot;inputFormat&quot;: &lt;input format&gt;, 
+	&quot;parameters&quot;: { &quot;autoMappingStyle&quot;: &quot;COMPLETE&quot; }
+}</pre>
+	</ul></li>
+<li><strong>Response:</strong>
+	<ul>
+		<li>Response-type: plain/text</li>
+		<li>Response text: result in MRV format</li>
+	</ul></li>
+</ul>
+
+<h3>Aromatize/dearomatize</h3>
+<ul>
+<li><strong>Request:</strong>
+	<ul>
+		<li>Type: application/json</li>
+		<li>Method: POST</li>
+		<li>Posted JSON object: <pre>{
+	&quot;structure&quot;: &lt;molecule source&gt;, 
+	&quot;inputFormat&quot;: &lt;input format&gt;, 
+	&quot;parameters&quot;: &lt;output format&gt,
+	&quot;filterChain&quot;: [
+				{
+					&quot;filter&quot;: &quot;standardizer&quot;,
+					&quot;parameters&quot;: {
+						&quot;standardizerDefinition&quot;: &lt;&quot;aromatize&quot; or &quot;dearomatize&quot;&gt;
+					}
+				}
+			]
+}</pre>
+	</ul></li>
+<li><strong>Response:</strong>
+	<ul>
+		<li>Response-type: application/json</li>
+		<li>Response text: <pre>{ 
+	&quot;structure&quot; : &lt;output structure&gt;, 
+	&quot;format&quot; : &lt;output format&gt;, 
+	&quot;contentUrl&quot; : &lt;download link&gt; 
+}</pre></li>
+	</ul></li>
+</ul>
+<div style="clear: both; width: 100%; text-align: right;"><a href="../index.html">Back to index</a></div>
+
+</body>
+</html>

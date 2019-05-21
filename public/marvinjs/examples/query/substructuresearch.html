@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Marvin JS Substructure Search</title>
+<link type="text/css" rel="stylesheet" href="../../css/doc.css" />
+<link type="text/css" rel="stylesheet" href="../../css/substructuresearch.css" />
+<script src="../../js/lib/jquery-1.9.1.min.js"></script>
+<script src="../../js/webservices.js"></script>
+<script src="../../gui/gui.nocache.js"></script>
+<script src="../../gui/lib/promise-1.0.0.min.js"></script>
+<script src="../../js/marvinjslauncher.js"></script>
+<script>
+var marvinSketcherInstance;
+
+$(document).ready(function handleDocumentReady (e) {
+	
+	MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+		marvinSketcherInstance = sketcherInstance;
+		var buttonAttributes = {
+				'name' : "custom",
+				'image-url' : "examples/images/search.png",
+				'toolbar' : "W"
+		};
+		sketcherInstance.addButton(buttonAttributes, function() {
+			tableControl.subStructureSearch();
+		});
+	}, function () {
+		alert("Cannot retrieve sketcher instance from iframe");
+	});
+});
+
+var responseConsole = (function () {
+	var controlObject = {
+		"reset" : function() {
+			$("#result").empty();
+			$("#error").empty();
+		}
+		,"print" : function(txt) {
+			$("#error").html(txt);
+		}
+	};
+
+	return controlObject;
+
+}());
+
+var tableView = (function () {
+	var width = "200";
+	var height = "200";
+	
+	var controlObject = {
+			"render" : function(data) {
+				if(data.length > 0) {
+					$("#result").append('<h2>Query result ('+data.length+')</h2>');
+				} else {
+					$("#result").append('<h2>Query result is empty</h2>');
+				}
+				$.each(data, function (index, value) {
+					var structure = value.cd_structure.structureData.structure;
+					var link = marvin.ImageExporter.mrvToDataUrl(structure,"image/png");
+					$("#result").append($('<div class="mol-cell"><span>cd_id: '+value['cd_id']+'</span><img width="'+width+'" height="'+height+'" src="'+link+'" ></img></div>'));
+			    });
+			}
+	};
+	
+	return controlObject;
+	
+}());
+
+var tableControl = (function () {
+	
+	var wsBase = getDefaultServicesPrefix();
+
+	function handleRequestError (qXHR, textStatus, errorThrown) {
+		if (qXHR.status == 0) { // UNSENT request
+			var errMsg = "ERROR: SubStructureSearch failed.\nThe request has not been sent.\nThe request may violate the cross domain policy.";
+			responseConsole.print(errMsg);
+		} else {
+			responseConsole.print("ERROR: SubStructureSearch failed (status code "+ qXHR.status + ")\n" + qXHR.responseText);
+		}
+	};
+
+	var controlObject = {
+		
+		
+		"subStructureSearch": function createTable () {
+			responseConsole.reset();
+			var mrv = marvinSketcherInstance.exportAsMrv();
+			var tableName = $("#tableNameText").val();
+			var data = JSON.stringify({
+				"searchOptions": {
+					"queryStructure": mrv,
+					"searchMode": "SUBSTRUCTURE"
+				},
+				"paging": {
+					"offset": 0,
+					"limit": 20
+				},
+				"display": {
+
+					"include": ["cd_id", "cd_structure"]
+
+				}
+			});
+			$.ajax({
+				"url": wsBase + "/rest-v0/data/sample/table/"+tableName+"/search"
+				,"type": "POST"
+				,"dataType": "json"
+				,"contentType": "application/json"
+				,"data": data
+			}).done(function (data, textStatus, jqXHR) {
+				tableView.render(data['data']);
+			}).fail(handleRequestError);
+		}
+	}
+
+	return controlObject;
+
+}());
+</script>
+</head>
+<body>
+
+<h1>Marvin JS Substructure Search</h1>
+<p>Draw a query and perform a substructure search with JChem Webservices on an example data base, the target hints will be displayed on the bottom of the page. 
+Please, take care that Complex Query Search Webservice with valid license is required for this example.</p>
+<p><input id="tableNameText" type="text" value="ChEBI_lite_3star"/></p>
+
+<div class="resizable">
+	<iframe src="../../editor.html" id="sketch" class="sketcher-frame"></iframe>
+</div>
+
+
+<div id="error" class="error-container"></div>
+<div id="result" class="image-container"></div>
+</body>
+</html>

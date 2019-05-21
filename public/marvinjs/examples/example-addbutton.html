@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Add custom button to the toolbar</title>
+    <link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+		var marvinSketcherInstance;
+
+		var buttonAttributes;
+
+		
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				buttonAttributes = {
+						"name" : "custom",
+						"image-url" : "examples/images/custom-icon.png",
+						"toolbar" : "W"
+				};
+				marvinSketcherInstance.addButton(buttonAttributes, function() {
+					alert('The custom button has been pushed.');
+				});
+			}, function () {
+				alert("Cannot retrieve sketcher instance from iframe");
+			});
+		});
+	</script>
+</head>
+<body>
+  	<h1>Marvin JS Example - Add custom button to the toolbar</h1>
+    <div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+    <div class="darkbox">
+		<div class="resizable">
+	    <iframe src="../editor.html" style="width: 100%; height:100%;" id="sketch" class="sketcher-frame"></iframe>
+		</div>
+	</div>
+	<div>
+		<p>Append a custom button to the toolbar at startup (the icon URL is relative to the editor.html document):</p>
+		<pre><code data-language="javascript">
+	var marvinSketcherInstance;
+	var buttonAttributes;
+		
+	$(document).ready(function handleDocumentReady (e) {
+
+	
+	MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+		marvinSketcherInstance = sketcherInstance;
+		buttonAttributes = {
+			"name" : "custom",
+			"image-url" : "examples/images/custom-icon.png",
+			"toolbar" : "W"
+		};
+		marvinSketcherInstance.addButton(buttonAttributes, function() {
+			alert('The custom button has been pushed.');
+		});
+	}, function () {
+		alert("Cannot retrieve sketcher instance from iframe");
+	});
+});</code>
+		</pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+  </body>
+</html>

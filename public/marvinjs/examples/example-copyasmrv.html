@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Copy As MRV</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControl () {
+			$("#chbx-copyasmrv").on("change", function (e) {
+				var settings = {}
+				settings.copyasmrv = e.target.checked;
+				settings.toolbars = "reporting";
+				marvinSketcherInstance.setDisplaySettings(settings);
+			});
+			$("#btn-reset").on("click", function (e) {
+				$("#txt").val("");
+			});
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Copy As MRV</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		<div class="resizable" style="display: inline-block;">
+			<iframe src="../editorws.html" id="sketch" class="sketcher-frame" data-toolbars="reporting" data-copyasmrv=true></iframe>
+		</div>
+		<ul style="display: inline-block; -moz-padding-start: 0px; -webkit-padding-start: 0px; padding-start: 0px padding-0px;">
+			<li>
+				<input type="checkbox" id="chbx-copyasmrv" checked></input>MRV as copy format
+				<input type="button" id="btn-reset" value="Reset textbox"/>
+			</li>
+			<li><textarea id="txt" rows=28 cols=80></textarea></li>
+		</ul>
+	<div>
+		<p>This example demonstrates how to control what is placed to the clipboard at copy. 
+		When <strong>MRV as copy format</strong> checkbox is checked, the structure is placed as <em>MRV</em> to the clipboard at copy.
+		When the checkbox is unchecked, the default copy format is <em>MDL molfile</em>.
+		To see the difference, draw something into the editor, select it and press <em>CTR+C</em> shortcut to copy the structure to the clipboard.
+		After that, click into the textbox and press <em>CTRL+V</em> to paste the clipboard content into the editor.
+		The format of the pasted content (<em>MRV</em> or <em>MDL molfile</em>) depend on the state of the above checkbox.</p>
+		<p>If you would like to clear the textbox content, press apply the <strong>Reset textbox</strong> button.
+		
+		<p>At startup, the <strong>copyasmrv</strong> parameter of Marvin JS editor is setup.</p>
+		<pre><code data-language="html">&lt;iframe src="../editorws.html" id="sketch" class="sketcher-frame" data-toolbars="reporting" data-copyasmrv=true&gt;&lt;/iframe&gt;</code></pre>
+		<p>First of all, you need a reference for the editor. <code>MarvinJSUtil.getEditor(String)</code> provides a Promise object for you to get it
+		when the editor is ready.</p>
+		<p>After the editor is loaded, run the <code>initcontrol()</code> function to bind actions to the <em>MRV as copy format</em> checkbox and to 
+		the <em>Reset textbox</em> button.</p> 
+		<pre><code data-language="javascript">		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});</code></pre>
+		<p>Changing of the checkbox value, trigger update settings of the editor.
+		In the change event handler, the <code>target</code> of the change event is the checkbox. If the checkbox is checked, setup <code>copyasmrv</code> property to <code>true</code> else <code>false</code>.
+		You can update settings of the editor with its <em>setDisplaySettings(settings)</em> function. At update, specify also the <em>toolbars</em> property 
+		to preserve current toolbar layout.</p>
+		<pre><code data-language="javascript">		function initControl () {
+			$("#chbx-copyasmrv").on("change", function (e) {
+				var settings = {}
+				settings.copyasmrv = e.target.checked;
+				settings.toolbars = "reporting";
+				marvinSketcherInstance.setDisplaySettings(settings);
+			});
+			$("#btn-reset").on("click", function (e) {
+				$("#txt").val("");
+			});
+		}</code></pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - No reaction</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script src="../js/webservices.js"></script>
+</head>
+<body>
+	<h1>Marvin JS Example - Reaction handling</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		
+		<div id="panel-create">
+			Create editor where reaction is: 
+			<select id="select-reaction">
+				<option>OFF</option>
+				<option selected>BASIC</option>
+				<option>EXTERNAL</option>
+			</select>
+			and ReactionConverter WS is
+			<input id="chbx-WS" type="checkbox">enabled.</input>
+			<input id="btn-create" type="button" value="Create"/>
+		</div>
+		<div id="panel-delete">
+			<input id="btn-delete" type="button" value="Delete"/>
+		</div>
+		<div id="content" class="resizable">
+		</div>
+		
+		<style>
+		#panel-delete {
+			display: none;
+		}
+		</style>	
+		<script>
+		$(document).ready(function handleDocumentReady(e) {
+			$("#btn-create").click(function(e) {
+				var val = $("#select-reaction")[0].selectedOptions[0].value;
+				var enableWS = $("#chbx-WS")[0].checked; 
+				create(val, enableWS);
+			});
+			$("#btn-delete").click(function(e) {
+				$("#content").empty();
+				$("#panel-create").show();
+				$("#panel-delete").hide();
+			});
+		});
+		
+		function create(reaction, enableWS) {
+			var sketch = $("<iframe>", {id: "sketch", src: "../editor.html"});
+			sketch.addClass("sketcher-frame");
+			sketch.attr("data-toolbars", "reaction");
+			sketch.attr("data-reaction", reaction);
+			$("#panel-create").hide();
+			$("#panel-delete").show();
+			$("#content").append(sketch);
+			MarvinJSUtil.getEditor("sketch").then(function(sketcherInstance) {
+				var services = getDefaultServices();
+				if(!enableWS) {
+					services['reactionconvertws'] = null;
+				}
+				sketcherInstance.setServices(services);
+			}, function(error) {
+				$("#content").empty();
+				$("#content").append(error);
+			});
+		}
+
+		</script>
+	<div>To control how to handle reactions, specify the <strong>data-reaction</strong> attribute 
+	in the <strong>iframe</strong> of the sketcher.
+	It accepts the following values:
+	<ul>
+		<dl><strong>OFF</strong></dl>
+		<dd>Canvas content is never applied as reaction.
+		<p>Example:<pre><code data-language="html">&lt;iframe src="../editor.html" data-reaction="OFF" id="sketch" class="sketcher-frame"&gt;&lt;/iframe&gt;</code></pre></p></dd>
+
+		<dl><strong>BASIC</strong></dl>
+		<dd>Built-in (native) mechanism to resolve single-step reactions at molecule export.
+		<p>Example:<pre><code data-language="html">&lt;iframe src="../editor.html" data-reaction="BASIC" id="sketch" class="sketcher-frame"&gt;&lt;/iframe&gt;</code></pre></p></dd>
+
+		<dl><strong>EXTERNAL</strong></dl>
+		<dd>Legacy behavior. The <strong>reactionconvertws</strong> webservice is responsible for
+		resolving reactions. If the webservice is not available, the behavior of the editor is similar than in OFF mode.
+		If the service is available, the service attempts to convert canvas content to a single step reaction at molecule export.
+		<p>Example:<pre><code data-language="html">&lt;iframe src="../editor.html" data-reaction="EXTERNAL" id="sketch" class="sketcher-frame"&gt;&lt;/iframe&gt;</code></pre></p></dd>
+	</ul>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Marvin JS - Compatibility</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+
+</head>
+
+<body>
+<h1>Marvin JS - Compatibility</h1>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+<h2>Current browser</h2>
+<p>If every field is green in the table below, it means that Marvin JS editor can run in your browser 
+(compatibility mode of IE excluded).</p>
+<table>
+<tr><td><strong>JavaScript enabled</strong></td>
+<td>
+<noscript><img alt="NO" src="images/no.png"/></noscript>
+<script type="text/javascript">
+document.writeln("<img alt='YES' src='images/yes.png'/>");
+</script>
+</td>
+</tr>
+<tr>
+<td><strong>HTML5 canvas</strong>
+</td>
+<td>
+<noscript><img alt="NO" src="images/no.png"/></noscript>
+<script type="text/javascript">
+var canvasSupported = !!window.HTMLCanvasElement;
+if(canvasSupported) {
+	document.writeln("<img alt='YES' src='images/yes.png'/>");
+} else {
+	document.writeln("<img alt='NO' src='images/no.png'/>");
+}
+</script>
+</td>
+</tr>
+<tr>
+<td><strong>Web support</strong>
+</td>
+<td>
+<noscript><img alt="NO" src="images/no.png"/></noscript>
+<script type="text/javascript">
+var isWeb = (document.location.protocol == 'http:' || document.location.protocol == 'https:')
+if(isWeb) {
+	document.writeln("<img alt='YES' src='images/yes.png'/>");
+} else {
+	document.writeln("<img alt='NO' src='images/no.png'/>");
+}
+</script>
+</td>
+</tr>
+</table>
+<h2>Note for <code>Internet Explorer</code>  users</h2>
+<p><strong>Marvin JS does not support <a href="https://en.wikipedia.org/wiki/Compatibility_mode">compatibility mode</a> in Internet Explorer.</strong></p> 
+
+<p>In most cases, you can switch on/off compatibility mode in your IE. 
+For IE 8, 9 and 10 these settings can be reached from the Tools menu (<code>ALT+T</code>).
+For other IE version, please, visit the appropriate website.</p>
+<p>Note that all intranet sites are set to run in compatibility mode by default. 
+In this case, please, consult with your system administrator.</p>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+
+</body>
+</html>

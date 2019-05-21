@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Marvin JS Examples - Edit images</title>
+  <link type="text/css" rel="stylesheet" href="../css/example-edit-images.css" />
+  <link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+  <link type="text/css" rel="stylesheet" href="../css/doc.css" />
+  
+  <script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+  <script src="../js/lib/jquery-1.9.1.min.js"></script>
+  <script src="../gui/lib/promise-1.0.0.min.js"></script>
+  <script src="../js/marvinjslauncher.js"></script> 
+  <script type="text/javascript">
+
+    var marvin;
+	var marvinSketcherInstance;
+	
+	$(document).ready(function handleDocumentReady (e) {
+		$("#close").bind("click", function() {
+			editorControl.close();
+		});
+		MarvinJSUtil.getPackage("sketchImg").then(function (marvinNameSpace) {
+			marvinNameSpace.onReady(function () {
+				marvin = marvinNameSpace;
+				exportImages();
+			});
+		}, function () {
+			alert("Cannot retrieve marvin instance from iframe");
+		});
+		MarvinJSUtil.getEditor("sketchImg").then(function (sketcherInstance) {
+			marvinSketcherInstance = sketcherInstance;
+			// open editor if any image is selected
+			editorControl.open();
+	  	}, function () {
+			alert("Cannot retrieve sketcher instance from iframe");
+		});
+	});
+	
+	function exportImages() {
+		var docFrag = document.createDocumentFragment();
+		for(i=0; i<molecules.length;i++) {
+		  var imgData = marvin.ImageExporter.mrvToDataUrl(molecules[i]);
+		  if(imgData != null) {
+			var dv = $('<div>', { class: "mol-cell" });
+			$('<span>', { text: ("Compound #" + (i+1))}).appendTo(dv);
+			$('<img>', { name: "pict", src: imgData, alt: escape(molecules[i]), onclick:"clickOnImage(this)"}).appendTo(dv);
+			dv.appendTo(docFrag);
+		  }
+	  	}
+		$('<div>', { class: "table-bottom" }).appendTo(docFrag);
+	  	$("#imageContainer").append(docFrag);
+	}
+
+	var editorControl = (function() {
+		
+		var currentPict = null;
+		
+		var controlObject = {
+			"picture" : function picture(pict) {
+				currentPict = pict;
+			}
+			,"open" : function openEditor() {
+				if(currentPict != null) {
+					marvinSketcherInstance.importStructure("mrv", unescape(currentPict.alt));
+					$("#popup").css("visibility", "visible");
+					$("#popup").css("opacity", 1);
+				}
+			}
+			,"close" : function closeEditor() {
+				if(marvinSketcherInstance != null) {
+					var cp = currentPict;
+					marvinSketcherInstance.exportStructure("mrv").then(function(s) {
+						cp.alt = escape(s);
+						cp.src = marvin.ImageExporter.mrvToDataUrl(s);	
+					}, function(error) {
+						alert(error);
+					});
+				}
+				$("#popup").css("visibility", "hidden");
+				$("#popup").css("opacity", 0);
+			}
+		};
+		return controlObject;
+	}());
+	
+	function clickOnImage(pict) {
+		editorControl.picture(pict);
+		editorControl.open();
+	}
+
+	var molecules = new Array(
+			'<cml><MDocument><MChemicalStruct><molecule molID="m1"><atomArray><atom id="a1" elementType="O" x2="-0.4166666666666667" y2="5.666666666666667"/><atom id="a2" elementType="C" x2="-0.4166666666666666" y2="4.126666666666667"/><atom id="a3" elementType="R" x2="-1.750345788494702" y2="3.3566666666666665" rgroupRef="1"/><atom id="a4" elementType="C" x2="0.9170124551613692" y2="3.3566666666666674"/><atom id="a5" elementType="C" x2="2.250691576989405" y2="4.126666666666667"/></atomArray><bondArray><bond atomRefs2="a2 a3" order="1"/><bond atomRefs2="a1 a2" order="2"/><bond atomRefs2="a2 a4" order="1"/><bond atomRefs2="a4 a5" order="1"/></bondArray></molecule><Rgroup rgroupID="1"><molecule molID="m2"><atomArray><atom id="a1" elementType="C" x2="7.000306666666667" y2="-4.634999999999999"/><atom id="a2" elementType="C" x2="7.000306666666667" y2="-3.094999999999999"/><atom id="a3" elementType="C" x2="4.333026666666667" y2="-3.094999999999999"/><atom id="a4" elementType="C" x2="4.333026666666667" y2="-4.634999999999999"/><atom id="a5" elementType="C" x2="5.666666666666667" y2="-5.404999999999999"/><atom id="a6" elementType="C" x2="0.6625329956836948" y2="-3.5120012459627215"/><atom id="a7" elementType="C" x2="0.18667057829647382" y2="-4.976548685882615"/><atom id="a8" elementType="C" x2="-1.3533372449631407" y2="-4.976548685882615"/><atom id="a9" elementType="C" x2="-1.82919966235036" y2="-3.5120012459627215"/><atom id="a10" elementType="C" x2="-0.5833333333333334" y2="-2.6067846474507204"/><atom id="a11" elementType="C" x2="-5.4163306589517415" y2="-2.9383163927742935"/><atom id="a12" elementType="C" x2="-5.4163306589517415" y2="-4.478350273892374"/><atom id="a13" elementType="C" x2="-6.75" y2="-5.248367214451415"/><atom id="a14" elementType="C" x2="-8.083669341048259" y2="-4.478350273892374"/><atom id="a15" elementType="C" x2="-8.083669341048259" y2="-2.9383163927742935"/><atom id="a16" elementType="C" x2="-6.75" y2="-2.168299452215253"/><atom id="a17" elementType="*" x2="8.08925110969395" y2="-2.006055556972716" attachmentOrder="1"/><atom id="a18" elementType="*" x2="2.1271655562561276" y2="-3.0361320806335947" attachmentOrder="1"/><atom id="a19" elementType="*" x2="-4.082646646814511" y2="-2.168324863100402" attachmentOrder="1"/></atomArray><bondArray><bond atomRefs2="a5 a1" order="1"/><bond atomRefs2="a2 a1" order="1"/><bond atomRefs2="a3 a2" order="1"/><bond atomRefs2="a4 a3" order="1"/><bond atomRefs2="a5 a4" order="1"/><bond atomRefs2="a10 a6" order="1"/><bond atomRefs2="a7 a6" order="1"/><bond atomRefs2="a8 a7" order="1"/><bond atomRefs2="a9 a8" order="1"/><bond atomRefs2="a10 a9" order="1"/><bond atomRefs2="a16 a11" order="1"/><bond atomRefs2="a12 a11" order="1"/><bond atomRefs2="a13 a12" order="1"/><bond atomRefs2="a14 a13" order="1"/><bond atomRefs2="a15 a14" order="1"/><bond atomRefs2="a16 a15" order="1"/><bond atomRefs2="a2 a17" order="1"/><bond atomRefs2="a6 a18" order="1"/><bond atomRefs2="a11 a19" order="1"/></bondArray></molecule></Rgroup></MChemicalStruct></MDocument></cml>'
+			,'<cml><MDocument><MChemicalStruct><molecule molID="m1"><atomArray><atom id="a1" elementType="O" x2="-4.666666666666667" y2="2.7916666666666665"/><atom id="a2" elementType="C" x2="-3.3329875448386312" y2="2.0216666666666665"/><atom id="a3" elementType="O" x2="-2.087101373501212" y2="2.926855955197075"/><atom id="a4" elementType="R" x2="-4.23817683336904" y2="0.7757804953292473" rgroupRef="1"/><atom id="a5" elementType="R" x2="-2.3025264110459895" y2="0.8772236354314795" rgroupRef="2"/><atom id="a6" elementType="C" x2="-0.7534222516731761" y2="2.156855955197075"/><atom id="a7" elementType="C" x2="0.6534377530964293" y2="2.783230385533807"/><atom id="a8" elementType="C" x2="0.8144115865286162" y2="4.314794104400948"/><atom id="a9" elementType="C" x2="1.899323924433848" y2="1.8780410970033983"/></atomArray><bondArray><bond atomRefs2="a6 a7" order="1"/><bond atomRefs2="a7 a8" order="2"/><bond atomRefs2="a7 a9" order="1"/><bond atomRefs2="a2 a3" order="1"/><bond atomRefs2="a3 a6" order="1"/><bond atomRefs2="a1 a2" order="1"/><bond atomRefs2="a2 a4" order="1"/><bond atomRefs2="a2 a5" order="1"/></bondArray></molecule><Rgroup rgroupID="1"><molecule molID="m2"><atomArray><atom id="a1" elementType="C" x2="10.083669341048259" y2="4.8950169405590405"/><atom id="a2" elementType="C" x2="10.083669341048259" y2="3.3549830594409595"/><atom id="a3" elementType="C" x2="8.75" y2="2.584966118881919"/><atom id="a4" elementType="C" x2="7.4163306589517415" y2="3.3549830594409595"/><atom id="a5" elementType="C" x2="7.4163306589517415" y2="4.8950169405590405"/><atom id="a6" elementType="C" x2="8.75" y2="5.665033881118081"/><atom id="a7" elementType="*" x2="11.41735335318549" y2="5.665008470232932" attachmentOrder="1"/></atomArray><bondArray><bond atomRefs2="a6 a1" order="1"/><bond atomRefs2="a2 a1" order="1"/><bond atomRefs2="a3 a2" order="1"/><bond atomRefs2="a4 a3" order="1"/><bond atomRefs2="a5 a4" order="1"/><bond atomRefs2="a6 a5" order="1"/><bond atomRefs2="a1 a7" order="1"/></bondArray></molecule></Rgroup><Rgroup rgroupID="2"><molecule molID="m3"><atomArray><atom id="a1" elementType="C" x2="10.079565293165455" y2="-0.05185595519707542"/><atom id="a2" elementType="C" x2="8.74588617133742" y2="-0.8218559551970753"/><atom id="a3" elementType="*" x2="7.412207049509384" y2="-0.051855955197074755" attachmentOrder="1"/></atomArray><bondArray><bond atomRefs2="a2 a1" order="1"/><bond atomRefs2="a2 a3" order="1"/></bondArray></molecule></Rgroup></MChemicalStruct></MDocument></cml>'
+			,'<cml><MDocument><MChemicalStruct><molecule molID="m1"><atomArray><atom id="a1" elementType="O" x2="-4.583333333333333" y2="5"/><atom id="a2" elementType="C" x2="-4.583333333333333" y2="3.46"/><atom id="a3" elementType="R" x2="-5.917012455161369" y2="2.6900000000000004" rgroupRef="1"/><atom id="a4" elementType="O" x2="-3.2496542115052978" y2="2.6899999999999995"/><atom id="a5" elementType="R" x2="-1.915975089677262" y2="3.459999999999999" rgroupRef="2"/><atom id="a6" elementType="C" x2="2.3333333333333335" y2="5.25"/><atom id="a7" elementType="C" x2="2.3333333333333335" y2="3.71"/><atom id="a8" elementType="C" x2="3.738794467125975" y2="3.0238903020981467"/><atom id="a9" elementType="O" x2="0.7957804953292479" y2="3.054810711469591"/></atomArray><bondArray><bond atomRefs2="a2 a4" order="1"/><bond atomRefs2="a1 a2" order="1"/><bond atomRefs2="a4 a5" order="1"/><bond atomRefs2="a2 a3" order="1"/><bond atomRefs2="a6 a7" order="2"/><bond atomRefs2="a7 a8" order="1"/><bond atomRefs2="a7 a9" order="1"/></bondArray></molecule><Rgroup rgroupID="1"><molecule molID="m2"><atomArray><atom id="a1" elementType="C" x2="-6.2913306589517415" y2="-1.396649726107626"/><atom id="a2" elementType="C" x2="-6.2913306589517415" y2="-2.936683607225707"/><atom id="a3" elementType="C" x2="-7.625" y2="-3.706700547784748"/><atom id="a4" elementType="C" x2="-8.958669341048259" y2="-2.936683607225707"/><atom id="a5" elementType="C" x2="-8.958669341048259" y2="-1.396649726107626"/><atom id="a6" elementType="C" x2="-7.625" y2="-0.6266327855485856"/><atom id="a7" elementType="*" x2="-4.957646646814511" y2="-0.6266581964337348" attachmentOrder="1"/></atomArray><bondArray><bond atomRefs2="a6 a1" order="1"/><bond atomRefs2="a2 a1" order="1"/><bond atomRefs2="a3 a2" order="1"/><bond atomRefs2="a4 a3" order="1"/><bond atomRefs2="a5 a4" order="1"/><bond atomRefs2="a6 a5" order="1"/><bond atomRefs2="a1 a7" order="1"/></bondArray></molecule></Rgroup><Rgroup rgroupID="2"><molecule molID="m3"><atomArray><atom id="a1" elementType="C" x2="2.2503457884947022" y2="-2.6883333333333335"/><atom id="a2" elementType="C" x2="0.9166666666666666" y2="-3.4583333333333335"/><atom id="a3" elementType="*" x2="-0.41701245516136864" y2="-2.688333333333333" attachmentOrder="1"/></atomArray><bondArray><bond atomRefs2="a2 a1" order="1"/><bond atomRefs2="a2 a3" order="1"/></bondArray></molecule></Rgroup></MChemicalStruct></MDocument></cml>'
+			);
+  </script>
+</head>
+
+<body>
+<div id="popup" class="popup-window" style="position: fixed; left:0px; top:0px; z-index:100; visibility: hidden; opacity: 0;">
+	<div class="wrapper">
+		<div id="title-bar"><input id="close" type="button" class="close-button" value="Done &times;"></div>
+		<div id="sketchContainer">
+			<iframe id="sketchImg" src="../editor.html" ></iframe>
+		</div>
+	</div>
+</div>
+
+<h1>Marvin JS Examples - Edit images</h1>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+<p>A molecule table should be displayed as the loading of the page is finished. See below the <a href="#technical-details">commented code</a></p>
+
+<noscript>
+  <div
+	style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+	Your web browser must have JavaScript enabled in order for this
+	application to display correctly.</div>
+</noscript>
+<div id="imageContainer" class="image-container">
+<p>Preparation of the page is in progress ...</p>
+</div>
+
+
+<div><a name="technical-details"></a>
+
+<p>There is a DIV where generated images will appear.
+<pre><code data-language="html">&lt;div id=&quot;imageContainer&quot; class=&quot;image-container&quot;&gt;
+&lt;p&gt;Preparation of the page is in progress ...&lt;/p&gt;
+&lt;/div&gt;</code></pre></p>
+
+<p>We need a hidden DIV with the highest z-index. It is the popup window with a close button and with the editor iframe. This popup window appears when a picture is edited.
+<pre><code data-language="html">&lt;div id=&quot;popup&quot; class=&quot;popup-window&quot; style=&quot;position: fixed; left:0px; top:0px; z-index:100; visibility: hidden; opacity: 0;&quot;&gt;
+	&lt;div class=&quot;wrapper&quot;&gt;
+		&lt;div id=&quot;title-bar&quot;&gt;&lt;input id=&quot;close&quot; type=&quot;button&quot; class=&quot;close-button&quot; value=&quot;Done &times;&quot;&gt;&lt;/div&gt;
+		&lt;div id=&quot;sketchContainer&quot;&gt;
+			&lt;iframe id=&quot;sketchImg&quot; src=&quot;../editor.html&quot; &gt;&lt;/iframe&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;</code></pre></p>
+<p>You will need the following JS libraries for this example. They are bundled to the header of the example page. 
+The first one is a <em>promise</em> implementation, the second loads <code>MarvinJSUtil</code>.
+<pre><code data-language="html">  &lt;script src="../gui/lib/promise-1.0.0.min.js"&gt;&lt;/script&gt;
+  &lt;script src="../js/marvinjslauncher.js"&gt;&lt;/script&gt;</code></pre></p>
+<p>These global variables are also defined in this example:
+<ul>
+<li><code>marvin</code> - reference to the Marvin JS API</li>
+<li><code>marvinSketcherInstance</code> - reference to the editor in the iframe</li>
+<li><code>editorControl</code> - controller to open / close the editor and modify images</li>
+<li><code>molecules</code> - molecule sources</li>
+</ul></p>
+<p>Below you can see the code that is embedded into the <code>$(document).ready(function handleDocumentReady (e) { ... });</code> block.</p>
+<p>To hide the editor when the close button is submit, bind an event handler to the close button.
+<pre><code data-language="javascript">		$(&quot;#close&quot;).bind(&quot;click&quot;, function() {
+			editorControl.close();
+		});</code>
+</pre></p>
+<p>For the image export, <strong>marvin</strong> object is required that encapsulates the whole Marvin JS API into a common namespace.<br/>
+Since you have an editor in an iframe where <code>marvin</code> is already available, you can use this instance.<br/>
+The <strong>MarvinJSUtil.getPackage(String)</strong> helps to receive its reference.
+When <code>marvin</code> is ready, the <code>exportImages()</code> function creates initial molecule images.
+<pre><code data-language="javascript">		MarvinJSUtil.getPackage("sketchImg").then(function (marvinNameSpace) {
+			marvinNameSpace.onReady(function () {
+				marvin = marvinNameSpace;
+				exportImages();
+			});
+		}, function () {
+			alert("Cannot retrieve marvin instance from iframe");
+		});
+</code></pre></p>
+<p>Meanwhile, you can get the reference to the editor with the help of <strong>MarvinJSUtil.getEditor(String)</strong>.
+When you received it, save it for later usage and attempt to open the editor with the selected image.
+<pre><code data-language="javascript">		MarvinJSUtil.getEditor("sketchImg").then(function (sketcherInstance) {
+			marvinSketcherInstance = sketcherInstance;
+			// open editor if any image is selected
+			editorControl.open();
+	  	}, function () {
+			alert("Cannot retrieve sketcher instance from iframe");
+		});</code></pre></p>
+
+<p>Thus, that has happened in the <code>document.ready</code> block. 		
+<p>As above mentioned, <code>exportImages()</code> function creates inital molecule images and insert them into the proper DIV element on the page. 		
+This function creates a new image tag for each molecule.
+The <code>marvin.ImageExporter.mrvToDataUrl(String)</code> function creates a image data URI from an MRV source.
+The MRV source is also inserted into the new image tag as the <code>alt</code> attribute.
+<pre><code data-language="javascript">	function exportImages() {
+		var docFrag = document.createDocumentFragment();
+		for(i=0; i&lt;molecules.length;i++) {
+		  var imgData = marvin.ImageExporter.mrvToDataUrl(molecules[i]);
+		  if(imgData != null) {
+			var dv = $('&lt;div&gt;', { class: "mol-cell" });
+			$('&lt;span&gt;', { text: ("Compound #" + (i+1))}).appendTo(dv);
+			$('&lt;img&gt;', { name: "pict", src: imgData, alt: escape(molecules[i]), onclick:"clickOnImage(this)"}).appendTo(dv);
+			dv.appendTo(docFrag);
+		  }
+	  	}
+		$('&lt;div&gt;', { class: "table-bottom" }).appendTo(docFrag);
+	  	$("#imageContainer").append(docFrag);
+	}</code></pre></p>
+
+<p>The <code>editorControl</code> is responsible to show the editor with the proper structure or hide it and refresh its image.
+The <code>currentPict</code> is a reference to the <code>&lt;img&gt;</code> from the DOM that you would like to edit.<br/>
+If it is null, it means that no image has been selected yet to edit.
+The molecule source for an image is stored in its <code>alt</code> attribute.</p>
+<pre><code data-language="javascript">	var editorControl = (function() {
+		
+		var currentPict = null;
+		
+		var controlObject = {
+			&quot;picture&quot; : function picture(pict) {
+				currentPict = pict;
+			}
+			,&quot;open&quot; : function openEditor() {
+				if(currentPict != null) {
+					marvinSketcherInstance.importStructure("mrv", unescape(currentPict.alt));
+					$(&quot;#popup&quot;).css(&quot;visibility&quot;, &quot;visible&quot;);
+					$(&quot;#popup&quot;).css(&quot;opacity&quot;, 1);
+				}
+			}
+			,&quot;close&quot; : function closeEditor() {
+				if(marvinSketcherInstance != null) {
+					var cp = currentPict;
+					marvinSketcherInstance.exportStructure("mrv").then(function(s) {
+						cp.alt = escape(s);
+						cp.src = marvin.ImageExporter.mrvToDataUrl(s);	
+					}, function(error) {
+						alert(error);
+					});
+				}
+				$(&quot;#popup&quot;).css(&quot;visibility&quot;, &quot;hidden&quot;);
+				$(&quot;#popup&quot;).css(&quot;opacity&quot;, 0);
+			}
+		};
+		return controlObject;
+	}());
+	</code></pre>
+<p>When a click event is invoked on an <code>&lt;img&gt;</code> tag, the <code>clickOnImage</code> function is performed. 
+It passes the reference of the current image to the <code>editorControl</code>
+and ask it to open the editor.</p>
+</div>
+<pre><code data-language="javascript">	function clickOnImage(pict) {
+		editorControl.picture(pict);
+		editorControl.open();
+	}</code></pre>
+	
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

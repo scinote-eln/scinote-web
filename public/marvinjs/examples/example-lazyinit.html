@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Lazy init</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getPackage("#sketch").then(function (marvin) {
+				marvin.onReady(function() {
+					if(marvin.Sketch.isSupported()) {
+						marvin.sketcherInstance = new marvin.Sketch("sketch");
+					} else {
+						alert("Browser cannot load sketcher because HTML5 canvas is not supported");
+					}
+				});	
+			}, function () {
+				alert("Cannot retrieve sketcher instance from iframe");
+			});
+		});
+
+		
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Lazy init</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		<div>
+			<iframe src="../marvinpack.html" id="sketch" class="sketcher-frame"></iframe>
+		</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

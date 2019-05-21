@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Examples - Highlight By Index</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css">
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script type="text/javascript">
+	var marvinSketcherInstance;
+	var highlights = [];
+
+	$(document).ready(function handleDocumentReady (e) {
+		MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+			// initalize sketcher
+			marvinSketcherInstance = sketcherInstance;
+			$('#overwriteButton').click(onButtonClick);
+			$('#appendButton').click(onButtonClick);
+		});
+	});
+	
+	function onButtonClick(e) {
+		var b = (e.target.id =='overwriteButton');
+		var selection = marvinSketcherInstance.getSelection();
+		if(b) {
+			highlights = [];
+		}
+		highlights.push(createHighlight(selection));
+		marvinSketcherInstance.setHighlight(highlights);
+	}
+	
+	function createHighlight(selection) {
+		var highlight = {};
+		highlight.indexes = {}
+		highlight.indexes.atoms = (selection.atoms.length == 0)? [] : selection.atoms.split(',');
+		highlight.indexes.bonds = (selection.bonds.length == 0)? [] : selection.bonds.split(','); 
+		highlight.style = {}
+		highlight.style.color = $('#colorValue').val();
+		var opacity = $('#opacityValue').val()/100;
+		highlight.style.opacity = opacity;
+		var size = $('#sizeValue').val()/100;
+		highlight.style.size = size;
+		return highlight;
+	}
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Examples - Highlight By Index</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<div class="resizable">
+		<iframe src="../editor.html?uid" id="sketch" class="sketcher-frame" data-reaction="off"></iframe>
+	</div>
+	<div>
+		Color: <input type="color" id="colorValue" value="#FF7F50"/>
+		Opacity (0-100%): <input type="number" min="10" max="100" step="10" id="opacityValue" value="60"></input>
+		Size (40-200%): <input type="number" min="40" max="200" step="10" id="sizeValue" value="100"></input>
+		<input type="button" id="overwriteButton" value="Overwrite highlight"/>
+		<input type="button" id="appendButton" value="Append highlight"/>
+	</div>
+	<p>This example demonstrates how to paint a custom patch for atom and bonds.</p>
+	<p>How to try it:</p>
+	<p>Draw a structure and select those atoms and bonds that you would like to highlight with colored patch.</p>
+	<p>After that, specify the style: select color, setup opacity value between 0.0 and 1.0 
+	(0 is full transparent, 1 is total opaque).
+	Then, set the relative size of the patch (relative to the selection feedback).
+	Finally, apply settings. If you push the <strong>Overwrite highlight</strong> button, the previously set patches will be deleted.
+	If you choose <strong>Append highlight</strong>, the current patches are preserved and new settings are appended to them.
+	<p>Notes:
+	<ul>
+		<li>If several styles are applied to the editor, the patches may overlaps each other.</li>
+		<li>Reaction converter is switched off to avoid atom index collision (among reaction compounds).</li>
+	</ul>
+	</p>
+	
+	<p>You can see the code comment below.</p>
+	<p>First of all, we request a reference to the loaded editor.
+	Then, we bind click handler for the submit buttons.
+	We will need an array (<code>highlights</code>)where we cache applied styles.
+	<pre><code data-language="javascript">	var marvinSketcherInstance;
+	var highlights = [];
+
+	$(document).ready(function handleDocumentReady (e) {
+		MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+			// initalize sketcher
+			marvinSketcherInstance = sketcherInstance;
+			$('#overwriteButton').click(onButtonClick);
+			$('#appendButton').click(onButtonClick);
+		});
+	});</code></pre>
+	
+	<p>The <code>onButtonClick</code> function, determines the current behaviour: append or overwrite the current style with the new one.
+	After that, we retrieve the selection from the editor to apply the new style to the desired atoms/bonds.
+	In the selection, the atoms and bonds are referred by atom indexes.</p>
+	<p>If we choose overwrite option, we reset the previously stored highlight history (<code>highlights</code>).</p>
+	<p>The <code>createHighlight</code> function is responsible to create the new highlight style from the given data.
+	The new highlight object is added to the <code>highlights</code> array.
+	This array is applied to the <code>setHighlight</code> function of the editor.</p> 
+	<pre><code data-language="javascript">	function onButtonClick(e) {
+		var b = (e.target.id =='overwriteButton');
+		var selection = marvinSketcherInstance.getSelection();
+		if(b) {
+			highlights = [];
+		}
+		highlights.push(createHighlight(selection));
+		marvinSketcherInstance.setHighlight(highlights);
+	}</code></pre>
+	<p>The <code>createHighlight</code> function expects the selection object.
+	The <code>highlight</code> object has an <code>indexes</code> property. It is an object with an atom and a bond list.
+	The atom index list of selection object is a string that represents a comma separated list of indexes. Convert it to string array before assign it to the <code>highlight.indexes</code>. 
+	Do the same with the bond index list.
+	<p>After that, you can create <code>highlight.style</code> object. Retrieve the value of the color input field.
+	Convert value of the <code>opacity</code> field into the 0 - 1 range. Do the same with the <code>size</code> value.</p>
+	<p>The created highlight objects defines atoms and bonds by UID and specify style with color, opacity and size properties.</p>
+	<pre><code data-language="javascript">	function createHighlight(selection) {
+		var highlight = {};
+		highlight.indexes = {}
+		highlight.indexes.atoms = (selection.atoms.length == 0)? [] : selection.atoms.split(',');
+		highlight.indexes.bonds = (selection.bonds.length == 0)? [] : selection.bonds.split(','); 
+		highlight.style = {}
+		highlight.style.color = $('#colorValue').val();
+		var opacity = $('#opacityValue').val()/100;
+		highlight.style.opacity = opacity;
+		var size = $('#sizeValue').val()/100;
+		highlight.style.size = size;
+		return highlight;
+	}</code></pre>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+  </body>
+</html>

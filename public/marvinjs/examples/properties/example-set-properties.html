@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Molecule property</title>
+	<link type="text/css" rel="stylesheet" href="../../css/doc.css" />
+	<script src="../../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../../js/marvinjslauncher.js"></script>
+	<script src="xmlindent.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+		var parser;
+		var doc = (new DOMParser()).parseFromString("", "text/xml");
+		
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				//marvinSketcherInstance.importStructure("mrv", source);
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function error(err) {
+			alert(err);
+		}
+		
+		function initControl () {
+			parser = new DOMParser();
+			//showSource(source);
+			// get mol button
+			$("#btn-getmol").on("click", function (e) {
+				marvinSketcherInstance.exportStructure("mrv").then(function(mrv) {
+					readProperties(mrv);
+					showSource(mrv);
+				}, error);
+			});
+			$("#btn-setmol").on("click", function(e) {
+				marvinSketcherInstance.exportStructure("mrv").then(function(mrv) {
+					var s = writeProperties(mrv);
+					showSource(s);
+					marvinSketcherInstance.importStructure("mrv", s);
+				}, error);
+			});
+		}
+
+		function getMainMolecule(xml) {
+			var molecules = xml.getElementsByTagName('molecule');
+			if(molecules.length > 0) { // has structure
+				if(molecules[0].parentNode.nodeName == "MChemicalStruct") {
+					return molecules[0]
+				}
+			}
+			return null;
+		}
+
+		function readProperties(mrv) {
+			var xml = parser.parseFromString(mrv, "text/xml");
+			var mainMol = getMainMolecule(xml);
+			if(mainMol) {
+				var properties = PropertyList.getProperties(mainMol);
+				var dict = properties.save();
+				var result = "";
+				for(var i in dict) {
+					result += i + '=' + dict[i] + '\n';
+				}
+				$("#properties").text(result);
+			}
+		}
+		
+		function writeProperties(mrv) {
+			var xml = parser.parseFromString(mrv, "text/xml");
+			var mainMol = getMainMolecule(xml);
+			if(mainMol) {
+				var properties = new MolProperties();
+				var lines = $("#properties").val().trim().split("\n");
+				for(var i = 0; i < lines.length; i++) {
+					var tokens = lines[i].split("=");
+					if(tokens.length == 2) {
+						properties.set(tokens[0], tokens[1]);
+					}
+				}
+				PropertyList.setProperties(mainMol, properties);
+				return serialize(xml);
+			}
+			return mrv;
+		}
+
+		function appendProperty(key, value, mrv) {
+			var xml = parser.parseFromString(mrv, "text/xml");
+			var mainMol = getMainMolecule(xml);
+			if(mainMol) {
+				var properties = new MolProperties();
+				properties.set(key, value);
+				PropertyList.setProperties(mainMol, properties);
+				return serialize(xml);
+			}
+			return mrv;
+		}
+		
+		function serialize(xml) {
+			var s = new XMLSerializer();
+			return s.serializeToString(xml);
+		}
+		
+		function showSource(source) {
+			if(source) {
+				var mrv = xmlindent(source);
+				$("#molsource").text(mrv);
+			} else {
+				$("#molsource").text("");
+			}
+		}
+
+		PropertyList = (function() {
+
+			function appendPropertyList(molecule) {
+				var propertyList = doc.createElement('propertyList');
+				if (molecule.childNodes
+						&& molecule.childNodes.length > 1) {
+					molecule.insertBefore(propertyList,
+							molecule.childNodes[0]);
+				} else {
+					molecule.appendChild(propertyList);
+				}
+				return propertyList;
+			}
+
+			function getPropertyList(molecule) {
+				var propertyList = molecule
+						.getElementsByTagName("propertyList");
+				if (propertyList) {
+					return propertyList[0];
+				}
+				return null;
+			}
+
+			function addProperty(propertyList, key, value) {
+				var property = doc.createElement('property');
+				property.setAttribute('dictRef', key);
+				property.setAttribute('title', key);
+				var s = doc.createElement('scalar');
+				s.textContent = value;
+				property.appendChild(s);
+				propertyList.appendChild(property);
+			}
+
+			function getProperties(propertyList) {
+				var result = new MolProperties();
+				if (propertyList) {
+					var properties = propertyList
+							.getElementsByTagName("property");
+					
+					for (var i = 0; i < properties.length; i++) {
+						var key = properties[i].getAttribute("dictRef");
+						var value = properties[i].firstElementChild.textContent;
+						result.set(key, value);
+					}
+				}
+				return result;
+			}
+			
+			function appendToPropertyList(propertyList, properties) {
+				var p = properties.save();
+				for(f in p) {
+					addProperty(propertyList, f, p[f]);
+				}
+			}
+
+			return {
+				getProperties : function(molecule) {
+					var propertyList = getPropertyList(molecule);
+					if (propertyList) {
+						return getProperties(propertyList);
+					}
+					return new MolProperties();
+				},
+				setProperties : function(molecule, newProperties) {
+					var propertyList = getPropertyList(molecule);
+					if(propertyList) {
+						molecule.removeChild(propertyList);
+					}
+					if(!newProperties.isEmpty()) {
+						propertyList = appendPropertyList(molecule);
+						appendToPropertyList(propertyList, newProperties);
+					}
+				}
+			}
+		}());
+
+		MolProperties = (function() {
+			function MolProperties() {
+				this.dict = {};
+				this.size = 0;
+			}
+			return MolProperties;
+		}());
+		
+		MolProperties.prototype.set = function set(key, value) {
+			if(typeof value != 'undefined' && value != null) {
+				if(!this.dict.hasOwnProperty(key)) {
+					this.size++;
+				}
+				this.dict[key] = value;	
+			} else {
+				this.size--;
+				delete this.dict[key];
+			}
+				
+		}
+
+		MolProperties.prototype.isEmpty = function() {
+			return this.size == 0;
+		}
+		
+		MolProperties.prototype.save = function() {
+			var result = {};
+			for(var i in this.dict) {
+				result[i] = this.dict[i];
+			}
+			return result;
+		}
+		
+		MolProperties.prototype.load = function(properties) {
+			for(var i in properties) {
+				if(properties.hasOwnProperty(i)) {
+					this.set(i, properties[i]);
+				}
+			}
+		}
+
+	</script>
+	<style>
+	input[type=button] {
+		margin-right: 1em;
+	}
+	#molsource {
+		margin-top: 0.5em;
+	}
+	.inline {
+		display: inline-block;
+	}
+	</style>
+</head>
+<body>
+	<h1>Marvin JS Example - Molecule property</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		
+		<div class="resizable" style="height: 510px; width: 780px">
+			<iframe src="../../editorws.html" id="sketch" class="sketcher-frame" 
+			data-toolbars="education"></iframe>
+		</div>
+		
+		<ul style="-moz-padding-start: 0px; -webkit-padding-start: 0px; padding-start: 0px padding-0px;">
+			
+			<li><p>Properties (key=value)</p><textarea id="properties" rows="5" cols="40">comment=not emtpy
+more comment=draw something</textarea></li>
+			<li>
+			<input type="button" id="btn-getmol" value="Get properties"/>
+			<input type="button" id="btn-setmol" value="Set properties">
+			</li>
+			<li><p>Feadback:</p><textarea id="molsource" rows=30 cols=134 readonly></textarea></li>
+		</ul>
+	<div>
+		<p>This example demonstrates how to insert molecule properties into MRV source.<p>
+		<p>Marvin JS can parse molecule properties if they has been bound to the scaffold:
+		<pre>		&lt;cml&gt;
+		  &lt;MDocument&gt;
+		  	&lt;MChemicalStruct&gt;
+		  	  &lt;molecule molID="m1"&gt;
+		  	  	&lt;propertyList&gt;
+		  	  		&lt;property dictRef="my property" title="my property" &gt;
+		  	  			&lt;scalar&gt;value of my property&lt;/scalar&gt;
+		  	  		&lt;/property&gt;
+		  	  	&lt;propertyList&gt;
+		  	  	&lt;atomArray&gt; ... &lt;/atomArray&gt;
+		  	  	&lt;bondArray&gt; ... &lt;/bondArray&gt;
+		  	    ...
+		  	  &lt;/molecule&gt;
+		  	&lt;/MChemicalStruct&gt;
+		  &lt;/MDocument&gt;
+		&lt;/cml&gt;  
+		</pre>
+		At single step reaction the canvas content is separated to identical reaction compounds. In this case, molecule properties
+		does not supported.</p>
+		<p>About the example: Draw something and submit the <em>Get properties</em> button. It retrieves the canvas content. The MRV source appears
+		in the <em>Feadback</em> box. If the scaffold contained molecule properties, they also appears in the <em>Properties</em> box.</p>
+		<p>Setup properties: Type key-value pairs (separated by "=" sign) into the <em>Properties</em> box. Each line represents a property (key-value pair).
+		Pressing the <em>Set properties</em> button trigger a request to retrieve the canvas content (as MRV).
+		When the mrv export is finished, the content of the <em>Properties</em> box is evaluated. Insert defined molecule properties into 
+		the given MRV source then update the editor with the modified MRV. In the <em>Feadback</em> box, the modified MRV also appears.</p>
+		</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

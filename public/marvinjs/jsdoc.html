@@ -1,0 +1,348 @@
+<HTML lang="en">
+<HEAD>
+<link type="text/css" rel="stylesheet" href="css/doc.css" />
+</HEAD>
+<BODY BGCOLOR="white">
+<h1>Marvin JS API Reference</h1>
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#index-of-static-functions">Static functions</a></li><li><a href="#index-of-classes">Classes</a><ul>
+<li>marvin.<a href=#marvin.ImageExporter><b>ImageExporter</b></a>
+<li>marvin.<a href=#marvin.Sketch><b>Sketch</b></a>
+</ul>
+</li>
+</ul><A NAME="index-of-static-functions"><!-- --></A><h2>Static functions</h2><div class="table"><div class="api-header"><A NAME="marvin.Sketch.addRequestInterceptor(RequestInterceptor)"><!-- --></A><span class="api-method-name">marvin.Sketch.addRequestInterceptor</span>(<span class="parameter-type"><a href=#com.chemaxon.marvin.gui.client.request.RequestInterceptor>RequestInterceptor</a></span> <span class="parameter-name">interceptor</span>)</div>
+<div class="api-body">&nbsp;</div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.isSupported()"><!-- --></A><span class="api-method-name">marvin.Sketch.isSupported</span>()<span class="rightSide api-method-returntype">boolean</span></div>
+<div class="api-body">Returns true if HTML5 canvas is supported, false otherwise.<p><strong>Returns:</strong> true if HTML5 canvas is supported, false otherwise.</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.license(String)"><!-- --></A><span class="api-method-name">marvin.Sketch.license</span>(<span class="parameter-type">String</span> <span class="parameter-name">licenseURL</span>)</div>
+<div class="api-body">Applies a license for the sketcher.<p><strong>Parameters:</strong><ul><li><code>licenseURL</code> -  the URL of the license file</li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.ImageExporter.molToDataUrl(String,String,JavaScriptObject)"><!-- --></A><span class="api-method-name">marvin.ImageExporter.molToDataUrl</span>(<span class="parameter-type">String</span> <span class="parameter-name">source</span>, <span class="parameter-type">String</span> <span class="parameter-name">imageType</span>, <span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">optionalSettings</span>)<span class="rightSide api-method-returntype">String</span></div>
+<div class="api-body">Creates image data stream from the given molecule source.<p><strong>Parameters:</strong><ul><li><code>source</code> -  molecule source in MDL molfile or null to apply an empty molecule</li><li><code>imageType</code> -  output image data stream MIME type (default value is "image/png").</li><li><code>optionalSettings</code> -  JavaScript object that describes display settings. 
+ The object contains key - value pairs.
+ <br><br><table border="1">
+ <tr><th>Key</th><th>Type</th><th>Values</th><th>Default value</th><th>Notes</th></tr>
+ <tr><td>"carbonLabelVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>does not apply in "BALLSTICK" displaymode</td></tr>
+ <tr><td>"chiralFlagVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"valenceErrorVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"lonePairsVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>show lone pairs if MRV source contains proper info or auto lone pair calculation is enabled</td></tr>
+ <tr><td>"lonepaircalculationenabled"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>Set it to true to calculate lone pair on the current structure. </td></tr>
+ <tr><td>"circledsign"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>Draw circle around positive and negative sign at charge or not.</td></tr>
+ <tr><td>"atomIndicesVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>-</td></tr>
+ <tr><td>"atomMapsVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"cpkColoring"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"displayMode"</td><td>String</td><td>{"WIREFRAME", "BALLSTICK", "STICK", "SPACEFILL"}</td><td>"WIREFRAME"</td><td>-</td></tr>
+ <tr><td>"implicitHydrogen"</td><td>String</td><td>{"ALL", "OFF", "HETERO", "TERMINAL_AND_HETERO"}</td><td>"TERMINAL_AND_HETERO"</td><td>If "carbonLabelVisible" value is <i>true</i>, "HETERO" and "TERMINAL_AND_HETERO" values will be considered as "ALL".</td></tr>
+ <tr><td>"backgroundColor"</td><td>String</td><td>css color</td><td>-</td><td>do not set this to leave it transparent (png) or white</td></tr>
+ <tr><td>"zoomMode"</td><td>String</td><td>{"fit", "autoshrink"}</td><td>"fit"</td><td>"fit" will expand every molecule to the given size, "autoshrink" scales down large molecules only.</td></tr>
+ <tr><td>"width"</td><td>Number</td><td>positive integer</td><td>200</td><td>-</td></tr>
+ <tr><td>"height"</td><td>Number</td><td>positive integer</td><td>200</td><td>-</td></tr>
+ </table><br>
+ E.g.:
+ <pre>
+ {
+ 'carbonLabelVisible' : false,
+ 'atomMapsVisible' : true,
+ 'chiralFlagVisible' : true,
+ 'valenceErrorVisible' : true,
+ 'lonePairsVisible' : false,
+ 'implicitHydrogen' : "TERMINAL_AND_HETERO",
+ 'displayMode' : "WIREFRAME",
+ 'backgroundColor' : "#ff00ff",
+ 'width' : 300,
+ 'height' : 350
+ }
+ </pre></li></ul></p><p><strong>Returns:</strong> image stream encoded as an image data URL if image width/height is greater than zero</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.ImageExporter.mrvToDataUrl(String,String,JavaScriptObject)"><!-- --></A><span class="api-method-name">marvin.ImageExporter.mrvToDataUrl</span>(<span class="parameter-type">String</span> <span class="parameter-name">source</span>, <span class="parameter-type">String</span> <span class="parameter-name">imageType</span>, <span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">optionalSettings</span>)<span class="rightSide api-method-returntype">String</span></div>
+<div class="api-body">Creates image data stream from the given molecule source.<p><strong>Parameters:</strong><ul><li><code>source</code> -  molecule source in MRV or null to apply an empty molecule</li><li><code>imagType</code> -  output image data stream MIME type (default value is "image/png").</li><li><code>optionalSettings</code> -  JavaScript object that describes display settings. 
+ The object contains key - value pairs.
+ <br><br><table border="1">
+ <tr><th>Key</th><th>Type</th><th>Values</th><th>Default value</th><th>Notes</th></tr>
+ <tr><td>"carbonLabelVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>does not apply in "BALLSTICK" displaymode</td></tr>
+ <tr><td>"chiralFlagVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"valenceErrorVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"lonePairsVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>show lone pairs if MRV source contains proper info or auto lone pair calculation is enabled</td></tr>
+ <tr><td>"lonepaircalculationenabled"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>Set it to true to calculate lone pair on the current structure. </td></tr>
+ <tr><td>"circledsign"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>Draw circle around positive and negative sign at charge or not.</td></tr>
+ <tr><td>"atomIndicesVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>-</td></tr>
+ <tr><td>"atomMapsVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"cpkColoring"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"displayMode"</td><td>String</td><td>{"WIREFRAME", "BALLSTICK", "STICK", "SPACEFILL"}</td><td>"WIREFRAME"</td><td>-</td></tr>
+ <tr><td>"implicitHydrogen"</td><td>String</td><td>{"ALL", "OFF", "HETERO", "TERMINAL_AND_HETERO"}</td><td>"TERMINAL_AND_HETERO"</td><td>If "carbonLabelVisible" value is <i>true</i>, "HETERO" and "TERMINAL_AND_HETERO" values will be considered as "ALL".</td></tr>
+ <tr><td>"backgroundColor"</td><td>String</td><td>css color</td><td>-</td><td>do not set this to leave it transparent (png) or white</td></tr>
+ <tr><td>"zoomMode"</td><td>String</td><td>{"fit", "autoshrink"}</td><td>"fit"</td><td>"fit" will expand every molecule to the given size, "autoshrink" scales down large molecules only.</td></tr>
+ <tr><td>"width"</td><td>Number</td><td>positive integer</td><td>200</td><td>-</td></tr>
+ <tr><td>"height"</td><td>Number</td><td>positive integer</td><td>200</td><td>-</td></tr>
+ </table><br>	 
+ E.g.:
+ <pre>
+ {
+ "carbonLabelVisible" : false,
+ "atomMapsVisible" : true,
+ "chiralFlagVisible" : true,
+ "valenceErrorVisible" : true,
+ "lonePairsVisible" : false,
+ "implicitHydrogen" : "TERMINAL_AND_HETERO",
+ "displayMode" : "WIREFRAME",
+ "backgroundColor" : "#ff00ff",
+ "zoomMode" : autoshrink,
+ "width" : 300,
+ "height" : 350
+ }
+ </pre></li></ul></p><p><strong>Returns:</strong> image stream encoded as an image data URL if image width/height is greater than zero</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.removeRequestInterceptor(RequestInterceptor)"><!-- --></A><span class="api-method-name">marvin.Sketch.removeRequestInterceptor</span>(<span class="parameter-type"><a href=#com.chemaxon.marvin.gui.client.request.RequestInterceptor>RequestInterceptor</a></span> <span class="parameter-name">interceptor</span>)</div>
+<div class="api-body">&nbsp;</div>
+</div>
+<A NAME="index-of-classes"><!-- --></A><h2>Classes</h2><h3 id="marvin.ImageExporter" >marvin.ImageExporter</h3>
+<div class="table"><div class="api-header"><span class="api-method-name">marvin.ImageExporter</span>(<span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">params</span>)</div>
+<div class="api-body"><p>Constructor with predefine parameters for the rendering.</p><p><strong>Parameters:</strong><ul><li><code>params</code> -  parameters enclosed into a JavaScript Objects.
+ <table border="1">
+ <tr><td>imageType</td><td>the format of the generated image (<code>image/png</code>, <code>image/jpeg</code>, <code>image/svg</code>)</td><td>"image/png"</td></tr>
+ <tr><td>settings</td><td>display settings. Applies the same values than <a href="#marvin.ImageExporter.mrvToDataUrl(String,String,JavaScriptObject)">marvin.ImageExporter.mrvToDataUrl(String,String,JavaScriptObject)</a>. </td>
+ <td>{ width: 200, height: 200 }</td></tr>
+ <tr><td>inputFormat</td><td>predefine the format of the molecule source to be converted (or null to auto recognize)
+ (If webservices are not specified, only "mol" and "mrv" are accepted, if it presents any format are accepted that molconverter service supports.)</td><td>null</td></tr>
+ <tr><td>services</td><td>Optinally, you can specify webservice settings to inject molconverter and stereo calculation functionality. See <a href="#marvin.Sketch.setServices(JavaScriptObject)">marvin.Sketch.setServices(JavaScriptObject)</a>.</td><td>null</td></tr>
+ </table></li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><span class="api-method-name">marvin.ImageExporter</span>()</div>
+<div class="api-body"><p>Constructor with default parameters.</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.ImageExporter.render(String)"><!-- --></A><span class="api-method-name">render</span>(<span class="parameter-type">String</span> <span class="parameter-name">source</span>)<span class="rightSide api-method-returntype">JavaScriptObject</span></div>
+<div class="api-body">Generate image from the given molecule source.
+  Returns a Promise object to get a notification when image conversion is ready.<p><strong>Parameters:</strong><ul><li><code>source</code> -  the source of the molecule to render (the input format is determined by the creation of the ImageExporter instance).</li></ul></p><p><strong>Returns:</strong> a Promise object</p></div>
+</div>
+<h3 id="marvin.Sketch" >marvin.Sketch</h3>
+<div class="table"><div class="api-header"><span class="api-method-name">marvin.Sketch</span>()</div>
+<div class="api-body"><p>Creates a new editor widget and inserts it into the body of the current page.</p></div>
+</div>
+<div class="table"><div class="api-header"><span class="api-method-name">marvin.Sketch</span>(<span class="parameter-type">String</span> <span class="parameter-name">id</span>)</div>
+<div class="api-body"><p>Creates a new editor widget and inserts it into the specified DOM element.</p><p><strong>Parameters:</strong><ul><li><code>id</code> -  the ID of the DOM element whose child will be the editor widget.</li><li><code>config</code> -  initial parameters.</li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.getDisplaySettings()"><!-- --></A><span class="api-method-name">getDisplaySettings</span>()<span class="rightSide api-method-returntype">JavaScriptObject</span></div>
+<div class="api-body">Retrieves the current display settings of the editor wrapped into a JavaScript object.<p><strong>Returns:</strong> map of display setting is wrapped into a JavaScript object.
+ <br><br><table border="1">
+ <tr><th>Key</th><th>Type</th><th>Values</th><th>Default value</th><th>Notes</th></tr>
+ <tr><td>"carbonLabelVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>does not apply in "BALLSTICK" displaymode</td></tr>
+ <tr><td>"chiralFlagVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"atomIndicesVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>-</td></tr>
+ <tr><td>"atomMapsVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"cpkColoring"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"valenceErrorVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"lonePairsVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>-</td></tr>
+ <tr><td>"displayMode"</td><td>String</td><td>{"WIREFRAME", "BALLSTICK", "STICK", "SPACEFILL"}</td><td>"WIREFRAME"</td><td>-</td></tr>
+ <tr><td>"implicitHydrogen"</td><td>String</td><td>{"ALL", "OFF", "HETERO", "TERMINAL_AND_HETERO"}</td><td>"TERMINAL_AND_HETERO"</td><td>If "carbonLabelVisible" value is <i>true</i>, "HETERO" and "TERMINAL_AND_HETERO" values will be considered as "ALL".</td></tr>
+ <tr><td>"backgroundColor"</td><td>String</td><td>css color</td><td>-</td><td>custom non-transparent color</td></tr>
+ <tr><td>"circledsign"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>Draw circle around positive and negative sign at charge or not.</td></tr>
+ </table><br>
+ E.g.:
+ <pre>
+ {
+  "carbonLabelVisible" : false,
+  "atomIndicesVisible" : false,
+  "atomMapsVisible" : true,
+  "chiralFlagVisible"  : true,
+  "valenceErrorVisible"  : true,
+  "lonePairsVisible" : false,
+  "cpkColoring" : true,
+  "implicitHydrogen" : "TERMINAL_AND_HETERO",
+  "displayMode" : "WIREFRAME",
+  "backgroundColor" : "#ffffff"
+ }
+ </pre></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.setDisplaySettings(JavaScriptObject)"><!-- --></A><span class="api-method-name">setDisplaySettings</span>(<span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">jso</span>)</div>
+<div class="api-body">Applies a map of settings for the editor.
+ Check the return value of the <a href="#marvin.Sketch.getDisplaySettings()">getDisplaySettings()</a> function to look up the full display settings map.<p><strong>Parameters:</strong><ul><li><code>jso</code> -  map of display setting is wrapped into a JavaScript object.
+ <br><br><table border="1">
+ <tr><th>Key</th><th>Type</th><th>Values</th><th>Default value</th><th>Notes</th></tr>
+ <tr><td>"carbonLabelVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>does not apply in "BALLSTICK" displaymode</td></tr>
+ <tr><td>"chiralFlagVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"atomIndicesVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>-</td></tr>
+ <tr><td>"atomMapsVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"cpkColoring"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"valenceErrorVisible"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>-</td></tr>
+ <tr><td>"lonePairsVisible"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>-</td></tr>
+ <tr><td>"displayMode"</td><td>String</td><td>{"WIREFRAME", "BALLSTICK", "STICK", "SPACEFILL"}</td><td>"WIREFRAME"</td><td>-</td></tr>
+ <tr><td>"implicitHydrogen"</td><td>String</td><td>{"ALL", "OFF", "HETERO", "TERMINAL_AND_HETERO"}</td><td>"TERMINAL_AND_HETERO"</td><td>If "carbonLabelVisible" value is <i>true</i>, "HETERO" and "TERMINAL_AND_HETERO" values will be considered as "ALL".</td></tr>
+ <tr><td>"backgroundColor"</td><td>String</td><td>css color</td><td>-</td><td>-</td></tr>
+ <tr><td>"defaultTool"</td><td>String</td><td>{"rectangleSelection", "lassoSelection", "rotate3d"}</td><td>"rectangleSelection"</td><td>set default tool</td></tr>
+ <tr><td>"toolbars"</td><td>String</td><td>{"standard", "education", "reaction", "markush", "search", "basicSearch", "reporting", "view3d"}</td><td>"standard"</td><td>to render toolbars by the given predefined layout</td></tr>
+ <tr><td>"copyasmrv"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>To prefer MRV instead of MDL molfile format at copy</td></tr>
+ <tr><td>"lonepaircalculationenabled"</td><td>Boolean</td><td>{true, false}</td><td>true</td><td>Enable automatic lone pair calculation</td></tr>
+ <tr><td>"circledsign"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>Draw circle around positive and negative sign at charge or not.</td></tr>
+ <tr><td>"disableContextMenu"</td><td>Boolean</td><td>{true, false}</td><td>false</td><td>Set <i>true</i> to disable the context menu</td></tr> 
+ </table><br>
+ E.g.:
+ <pre>
+ {
+  "carbonLabelVisible" : false,
+  "atomIndicesVisible" : false,
+  "atomMapsVisible" : true,
+  "chiralFlagVisible"  : true,
+  "valenceErrorVisible"  : true,
+  "lonePairsVisible" : false,
+  "cpkColoring" : true,
+  "implicitHydrogen" : "TERMINAL_AND_HETERO",
+  "displayMode" : "WIREFRAME",
+  "backgroundColor" : "#ffffff",
+  "defaultTool" : "lassoSelection",
+  "toolbars": "standard"
+ }
+ </pre></li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.clear()"><!-- --></A><span class="api-method-name">clear</span>()</div>
+<div class="api-body">Remove the canvas content.</div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.isEmpty()"><!-- --></A><span class="api-method-name">isEmpty</span>()<span class="rightSide api-method-returntype">boolean</span></div>
+<div class="api-body">Determines whether the canvas is empty or not.<p><strong>Returns:</strong> True if nothing on the canvas, else false.</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.pasteStructure(String,String)"><!-- --></A><span class="api-method-name">pasteStructure</span>(<span class="parameter-type">String</span> <span class="parameter-name">format</span>, <span class="parameter-type">String</span> <span class="parameter-name">source</span>)<span class="rightSide api-method-returntype">JavaScriptObject</span></div>
+<div class="api-body">Returns a Promise object to paste a molecule source. If the paste operation is successful, the new structure will be added to the old one at the center of the current viewport. See also: <a href="#marvin.Sketch.importStructure(String,String)">importStructure(String,String)</a>.<p><strong>Parameters:</strong><ul><li><code>format</code> -  the input format <a href="#marvin.Sketch.getSupportedFormats()">getSupportedFormats()</a>  or <i>null</i> to recognize the format automatically.</li><li><code>source</code> -  the molecule source</li></ul></p><p><strong>Returns:</strong> the Promise object</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.getSupportedFormats()"><!-- --></A><span class="api-method-name">getSupportedFormats</span>()<span class="rightSide api-method-returntype">JavaScriptObject</span></div>
+<div class="api-body">Returns an object which describes the available import and export formats with the following properties: "importFormats", "exportFormats". 
+ The number of the available formats depend on whether the default webservices are set or not.<p><strong>Returns:</strong> the JavaScript object.</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.setServices(JavaScriptObject)"><!-- --></A><span class="api-method-name">setServices</span>(<span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">jso</span>)</div>
+<div class="api-body">Sets up services for the editor.
+ See the <code>webservices.js</code> for the list of supported services.<p><strong>Parameters:</strong><ul><li><code>jso</code> -  map of services wrapped into a JavaScript object
+ <pre>
+ {
+ "clean2dws" : &lt;url of Clean2D webservice&gt;
+ "clean3dws" : &lt;url of Clean3D webservice&gt;
+ "molconvertws" : &lt;url of MolConvert webservice&gt;
+ "stereoinfows" : &lt;url of CIP Stereo Info webservice&gt;
+ "reactionconvertws" : &lt;url of Reaction converter webservice&gt;
+ "hydrogenizews" : &lt;url of hydrogenize webservice&gt;
+ "automapperws" : &lt;url of auto mapper webservice&gt;
+ "aromatizews" : &lt;url of (de)aromatize webservice&gt;
+ }
+ </pre></li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.addButton(JavaScriptObject,function())"><!-- --></A><span class="api-method-name">addButton</span>(<span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">jso</span>, <span class="parameter-type">function()</span> <span class="parameter-name"></span>)</div>
+<div class="api-body">Appends a new button to the specified toolbar and binds its onClick event with the given function.<p><strong>Parameters:</strong><ul><li><code>jso</code> -  attributes of button is wrapped into a JavaScript object. E.g.: 
+ <pre>
+ {
+  "name": "customButton", // JS String
+  "image-url": "images/custom-button.png" // JS String
+  "toolbar": "W" // JS String: "W" as West, "E" as East, "N" as North, "S" as South toolbar
+ }
+ </pre></li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.addTemplate(JavaScriptObject)"><!-- --></A><span class="api-method-name">addTemplate</span>(<span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">jso</span>)</div>
+<div class="api-body">Append a new button to the template toolbar with the specified template structure.<p><strong>Parameters:</strong><ul><li><code>jso</code> -  a JavaScript object that describes the template. It has to contains the following properties:
+ <table border="1">
+ <tr><th>Name</th><th>Type</th><th>Description</th></tr>
+ <tr><td>structure</td><td>String</td><td>MRV source of the template structure</td></tr>
+ <tr><td>name</td><td>String</td><td>title of the template button (optional, auto generated)</td></tr>
+ <tr><td>icon</td><td>String</td><td>24x24 pixel size icon for the button as base64 encoded data image (optional, auto generated)</tr>
+ </table>
+ E.g.:<pre>{
+ "structure": "&lt;cml&gt;&lt;MDocument&gt;&lt;MChemicalStruct&gt;&lt;molecule molID=\"m1\"&gt;&lt;atomArray&gt;&lt;atom id=\"a1\" elementType=\"C\" x2=\"-12.5625\" y2=\"6.539048685882614\"/&gt;&lt;atom id=\"a2\" elementType=\"C\" x2=\"-13.808366329017026\" y2=\"5.633832087370612\"/&gt;&lt;atom id=\"a3\" elementType=\"C\" x2=\"-13.332503911629807\" y2=\"4.169284647450719\"/&gt;&lt;atom id=\"a4\" elementType=\"C\" x2=\"-11.792496088370193\" y2=\"4.169284647450719\"/&gt;&lt;atom id=\"a5\" elementType=\"C\" x2=\"-11.316633670982972\" y2=\"5.633832087370612\"/&gt;&lt;/atomArray&gt;&lt;bondArray&gt;&lt;bond atomRefs2=\"a1 a2\" order=\"1\"/&gt;&lt;bond atomRefs2=\"a1 a5\" order=\"1\"/&gt;&lt;bond atomRefs2=\"a2 a3\" order=\"1\"/&gt;&lt;bond atomRefs2=\"a3 a4\" order=\"1\"/&gt;&lt;bond atomRefs2=\"a4 a5\" order=\"1\"/&gt;&lt;/bondArray&gt;&lt;/molecule&gt;&lt;/MChemicalStruct&gt;&lt;/MDocument&gt;&lt;/cml&gt;",
+ "name": "CycloPentane",
+ "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABBElEQVRIie3UK08DQRiF4UdW1q4CfgISW7kSRYIrihBEJQkKi0OiCKJQSVAEtRJD0CgkqYGAIhjEzCYFlr1Mi+ubfMlezpyZPd/ssGTBHOPwP4z7uME9HnCNbFHmG3jCSbzv4TQ+G8xrfoBX5BXvcjziKMV4DQXu4nWT7rZB940tTDFqqe9F7RTbTeJLIdv1tquZYRDHXtSt5B0rCeYlq3iLXpWcYW+OCXajx5/kQtNSKTRs3Z7QrH6CeYZnNfGUTKTF1BhPyaZwLHSlUP1D/iIlpgwfWsRTMsFOhwmGuOqg7xxTIfSgNX28YF/4kp81nKkRPiXsvHOMhZ1RV2M1x8OSRr4A1pQ2FuhcylgAAAAASUVORK5CYII="
+ }</pre></li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.getSelection()"><!-- --></A><span class="api-method-name">getSelection</span>()<span class="rightSide api-method-returntype">JavaScriptObject</span></div>
+<div class="api-body">Returns the indexes of the selected atoms and bonds. Atoms are indexed from 1.<p><strong>Returns:</strong> JavaScript object with indices of selected atoms and bonds. E.g.:
+ <pre>
+ {
+   "atoms" : "1,2,3",
+   "bonds" : "1-2,2-3"
+ }
+ </pre></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.setSelection(JavaScriptObject)"><!-- --></A><span class="api-method-name">setSelection</span>(<span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">jso</span>)</div>
+<div class="api-body">Selects bonds and atoms of the specified indices (assuming the indices start from 1). 
+ Bonds are identified by their atoms' indices (separate indices with '-').<p><strong>Parameters:</strong><ul><li><code>selection</code> -  JavaScript object that describes atoms and bonds to select. E.g.:
+ <pre>
+ {
+   "atoms" : "1,2,3",
+   "bonds" : "1-2,2-3"
+ }
+ </pre></li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.setHighlight(JavaScriptObject[])"><!-- --></A><span class="api-method-name">setHighlight</span>(<span class="parameter-type">JavaScriptObject[]</span> <span class="parameter-name">jsoArray</span>)</div>
+<div class="api-body">Overwrites the highlight definitions in the editor.
+ You can specify multiple definitions if you would like to use various highlight style in the same time.
+ The definition should contains information about the style (color, opacity, size) and the scope (which atoms/bonds should be painted with this style).
+ You can specify atoms and bonds to highlight by unique ID (UID) or by atom indeces.
+ If an atom or bond is given in several definitions, each patch is applied for the desired atom/bond. So the patch may overlap each other.<p><strong>Parameters:</strong><ul><li><code>jsoArray</code> -  array of JavaScriptObject that describes highlight in the following format:
+ <pre>{
+   // give uids or indexes field (depend on how you would like to specify atoms/bonds to highlight)
+   uids: {
+     // string array with UIDs of atom
+     atoms: [], 
+     // string array with UIDs of bond
+     bonds: [] 
+   }, 
+   indexes: { 
+     // string array of indeces of atom
+     atoms: [],
+     // string array of pair of atom indeces to describe bond 
+     bonds: [] 
+   }, 
+   style: { 
+     // CSS color (rgb, rgba, hsl, hsla, hexa or web-safe color name)
+     color: &lt;string&gt;, 
+     // value between 0.0 and 1.0 (default value is 1.0), if color has alpha value (rgb, rgba) this field is ignored.
+     opacity: &lt;number&gt;
+      // size of the patch that is relative to the selection patch, 1.0 means the same patch than the selection.
+     size: &lt;double&gt; 
+   }
+ }</pre>
+ In the following example, there are two definitions, at the first one atoms and bonds are specified by UIDs, at the second atom indeces are used.
+ In the first case, color contains alpha value, so the opacity property is needless in this case.
+ At the second case, the pink color is defined and specified the desired opacity explicitly.
+ <pre>sketch.setHighlight( [
+   { 
+     uids: { atoms: ["e2ff0039baee12e2", "be3f1024c1f5e3f1"], bonds: ["3e1a21c74df9ae81"] },
+     style: { color: "rgba(20,230,50, 0.5)", size: 0.8 } 
+   },
+   { 
+     indexes: { atoms: ["1","2","3"], bonds: ["1-2","1-3"] },
+     style: { color: "pink", opacity: 0.6, size: 0.8 } 
+   }
+ ] );</pre></li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.on(String,function())"><!-- --></A><span class="api-method-name">on</span>(<span class="parameter-type">String</span> <span class="parameter-name">eventType</span>, <span class="parameter-type">function()</span> <span class="parameter-name"></span>)</div>
+<div class="api-body">Attaches an event handler function for the specified event to the editor.
+ Supported events:
+ <ul>
+ <li>"molchange": molecule change events</li>
+ <li>"selectionchange": selection change events</li>
+ <li>"undo": events when undo is performed</li>
+ <li>"redo": events when redo is performed</li>
+ </ul><p><strong>Parameters:</strong><ul><li><code>type</code> -  the event type ("molchange" or "selectionchange")</li><li><code>callback</code> -  this function is performed after the specified event is invoked.</li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.off(String,function())"><!-- --></A><span class="api-method-name">off</span>(<span class="parameter-type">String</span> <span class="parameter-name">eventType</span>, <span class="parameter-type">function()</span> <span class="parameter-name"></span>)</div>
+<div class="api-body">Removes one or more event handlers for the specified event to the editor.<p><strong>Parameters:</strong><ul><li><code>type</code> -  the event type (accept same types as <a href="#marvin.Sketch.on(String,function())">on(String,function())</a>)</li><li><code>callback</code> -  the reference of a previously attached event handler function to remove or null 
+ to remove all event handlers for the specified event.</li></ul></p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.exportStructure(String,JavaScriptObject)"><!-- --></A><span class="api-method-name">exportStructure</span>(<span class="parameter-type">String</span> <span class="parameter-name">format</span>, <span class="parameter-type">JavaScriptObject</span> <span class="parameter-name">options</span>)<span class="rightSide api-method-returntype">JavaScriptObject</span></div>
+<div class="api-body">Returns a Promise object to access the molecule source.<p><strong>Parameters:</strong><ul><li><code>format</code> -  the output molecule format <a href="#marvin.Sketch.getSupportedFormats()">getSupportedFormats()</a>.</li><li><code>options</code> -  a JavaScript object that describes further options for export (optional).
+ <ul>
+ <li>-- <strong>png</strong> or <strong>jpeg</strong>: same as optionalSettings parameter of 
+ <a href="#marvin.ImageExporter.mrvToDataUrl(String,String,JavaScriptObject)">marvin.ImageExporter.mrvToDataUrl(String,String,JavaScriptObject)</a></li>
+ <li>-- <strong>any chemical format</strong>: Defines the <strong>extra</strong> property to force 
+ conversion with web services and assigns the value of this property as a parameter of the output 
+ format. E.g., exportStructure('mrv', { 'extra': '+H'}) will appear in the web service request 
+ as { 'parameters': 'mrv:+H', ...}. Please consult with the web service documentation which options are accepted by the web service.</li>
+ <li>-- <strong>mrv</strong>: Accept only <code>hasUID</code> property. If it is true, export atom/bond UIDs as atom/bond properties (<code>_mjs::uid</code>). Its default value is false.</li>
+ </ul></li></ul></p><p><strong>Returns:</strong> the Promise object</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.importStructure(String,String)"><!-- --></A><span class="api-method-name">importStructure</span>(<span class="parameter-type">String</span> <span class="parameter-name">format</span>, <span class="parameter-type">String</span> <span class="parameter-name">source</span>)<span class="rightSide api-method-returntype">JavaScriptObject</span></div>
+<div class="api-body">Returns a Promise object to import a molecule source. If the import operation is successful, the old structure will be replaced by the new one. See also: <a href="#marvin.Sketch.pasteStructure(String,String)">pasteStructure(String,String)</a>.<p><strong>Parameters:</strong><ul><li><code>format</code> -  the input format <a href="#marvin.Sketch.getSupportedFormats()">getSupportedFormats()</a> or <i>null</i> to recognize the format automatically.</li><li><code>source</code> -  the molecule source</li></ul></p><p><strong>Returns:</strong> the Promise object</p></div>
+</div>
+<div class="table"><div class="api-header"><A NAME="marvin.Sketch.setAutoChirality(boolean)"><!-- --></A><span class="api-method-name">setAutoChirality</span>(<span class="parameter-type">boolean</span> <span class="parameter-name">enable</span>)</div>
+<div class="api-body">Setup auto chirality mode. When you activate it, setup chiral flag on current structure and force
+ it on every imported structure later.<p><strong>Parameters:</strong><ul><li><code>enable</code> -  True to activate this feature, false to deactivate it (default behaviour).</li></ul></p></div>
+</div>
+</BODY>
+</HTML>

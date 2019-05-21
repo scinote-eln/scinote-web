@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Marvin JS - Installation Guide</title>
+<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+</head>
+<body>
+<h1>Marvin JS - Installation Guide</h1>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+
+<h2>Software requirement</h2>
+<p>Marvin JS is a web based editor. Please, upload it to a web server and 
+refer to its URL in your browser.</p>
+<h3>Server side</h3>
+<ul>
+	<li><a href="https://docs.chemaxon.com/display/docs/Marvin+JS+Web+Services">Marvin JS Web Services</a>
+which can be <a href="https://chemaxon.com/products/marvin-js/download">downloaded</a> as a platform dependent bundled package with Marvin JS.</li>
+</ul>
+OR
+<ul>
+	<li>Web server</li>
+	<li>JChem Webservices (v14.7.21 or above) is optional (if you need <a href="dev/webservices.html">extended functionalities</a>)</li>
+</ul>
+<p>Please, consider that JChem Webservices (under version 15.10.26) requires Standardizer licence for the auto mapper functionality. From version 15.10.26 this web service is available with Marvin JS license.</p>
+<p>We only recommend the usage of JChem WebServices if you use additional search, calculation or structure checker functions, which are not included in Marvin JS Web Services.</p>
+<h3>Client side</h3>
+<ul>
+	<li>JavaScript enabled web browser, see <a href="compatibility.html">browser compatibility</a></li>
+</ul>
+
+<h2>License requirement</h2>
+<p>Marvin JS requires Marvin JS license. Consult with the sales team where you have to place the license file where your copy
+of Marvin JS package can access.</p>
+<p>JChem Webservices also accepts Marvin JS license, it is used by only Marvin JS. Consult with its manual how to setup its license.</p>
+
+<h2>Installation</h2>
+
+<h3>Deploy Marvin JS</h3>
+
+<p>Download the <a href="https://chemaxon.com/products/marvin-js/download">Marvin JS zip package</a> from the ChemAxon site.</p>
+
+<h4>Deploy Marvin JS into an Apache Tomcat Container</h4>
+<p>JChem Webservice requires a servlet container like Apache Tomcat. If you would like to install both Marvin JS and JChem Webservices, it worths
+to install both of them into the Tomcat Container. In this case, the web root can be an ideal place where you can deploy Marvin JS:
+<ul>
+	<li>Navigate into the <strong>webapps</strong> folder of Tomcat and enter its <strong>ROOT</strong> subdirectory.</li>
+	<li>Create a new folder in this directory (e.g. <em>marvinjs</em>).
+	<li>Extract the Marvin JS zip file into this new directory.</li>
+</ul>
+
+<h4>Deploy Marvin JS under any web server</h4>
+<p>Extract the zip file into a new empty directory (e.g. <code>marvinjs</code>) and deploy it under your web server.<br/>
+(Consult with the manual of the server or its administrator how to deploy new content there.)</p>
+
+<h3>Install web services for Marvin JS</h3>
+<p>If you need extended functionalities, ChemAxon JChem Webservices is required.</p>
+<p>Marvin JS can communicate with other web service implementations that are compatible with the ChemAxon provided version.
+See the <a href="dev/webservices.html">required web service specifications</a></p>
+<ul>
+<li><a href="https://chemaxon.com/products/jchem-engines/download">Download ChemAxon JChem Webservices</a> (v14.7.21 or above).<li>
+<li>Install the required web services under the same domain as the web server hosts.<br/>
+Please consult with the appropriate installation guide of JChem Webservices. You can find the download link for the recommended webservice version on the Marvin JS download site.</li>
+<li>Marvin JS searches web services on the following URL: <code>/webservices2</code>.<br/> If your web service copy is available on a different URL,
+please, modify settings in Marvin JS.
+	<ul>
+		<li>Modify web service location in the <strong>webservices.js</strong> file, which you can find in the root of the Marvin JS package.</li>
+	</ul>
+</li>
+</ul>
+
+<p><strong>Note:</strong> If web services and Marvin JS are located on different domains, the browser can block the access of web services at runtime 
+since the request may harm the <a href="https://en.wikipedia.org/wiki/Same-origin_policy">same origin policy</a> of the browser.</p>
+
+<h3>Try the deployed version</h3>
+<p>Open examples of Marvin JS package from your web server in your browser to check whether the deployment was successful:</p>
+<p><code>http://&lt;web server url&gt;/&lt;marvinjs directory path&gt;/examples/</code></p>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+
+</body>
+</html>
