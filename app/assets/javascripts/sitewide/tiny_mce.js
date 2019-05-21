@@ -18,7 +18,7 @@ var TinyMCE = (function() {
 
   // returns a public API for TinyMCE editor
   return Object.freeze({
-    init: function(selector, mceConfig = {}) {
+    init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
       if (typeof tinyMCE !== 'undefined') {
@@ -164,6 +164,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+                if (onSaveCallback) { onSaveCallback(); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
