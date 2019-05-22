@@ -57,6 +57,13 @@ module TinyMceImages
         old_id = image[0]
         new_id = image[1]
         image = parsed_description.at_css("img[data-mce-token=\"#{Base62.encode(old_id)}\"]")
+
+        unless image
+          Rails.logger.error "TinyMCE Asset with id #{old_id} not in text"
+          next
+        end
+          
+        end
         image['data-mce-token'] = Base62.encode(new_id)
       end
       update(object_field => parsed_description.css('body').inner_html.to_s)
