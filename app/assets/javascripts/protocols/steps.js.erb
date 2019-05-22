@@ -189,7 +189,7 @@
         $("html, body").animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
       }
 
-      refreshProtocolStatusBar();
+      if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
   }
 
@@ -609,7 +609,7 @@
           DragNDropSteps.clearFiles();
           FilePreviewModal.init();
           $.initTooltips();
-          refreshProtocolStatusBar();
+          if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {
