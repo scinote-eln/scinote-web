@@ -2,7 +2,7 @@
 
 # Only check if connection works when server starts, and if WOPI is
 # enabled
-if defined? Rails::Server && ENV['WOPI_ENABLED'] == 'true'
+if defined?(Rails::Server).present? && ENV['WOPI_ENABLED'] == 'true'
   missing_vars = []
   %w(
     WOPI_TEST_ENABLED WOPI_DISCOVERY_URL WOPI_ENDPOINT_URL USER_SUBDOMAIN
