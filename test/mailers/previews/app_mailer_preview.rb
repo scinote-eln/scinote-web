@@ -53,6 +53,7 @@ class AppMailerPreview < ActionMailer::Preview
     )
   end
 
+  # <b>DEPRECATED:</b> Please use <tt>system_notification</tt> instead.
   def system_message_notification
     AppMailer.notification(
       fake_user,
