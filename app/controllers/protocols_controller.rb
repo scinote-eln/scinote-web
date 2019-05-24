@@ -105,6 +105,10 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def recent_protocols
+    render json: Protocol.recent_protocols(current_user, current_team, 14).select(:id, :name)
+  end
+
   def linked_children
     respond_to do |format|
       format.json do

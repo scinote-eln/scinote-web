@@ -18,6 +18,7 @@
       <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
     </div>
     <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
+    <%= render partial: "my_modules/recent_protocol_dropdown.html.erb", locals: {protocol: @my_module.protocol}%>
   </div>
 
   <div class="row">
