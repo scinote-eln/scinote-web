@@ -36,11 +36,7 @@ describe RepositoryTableStateService do
 
   describe '#create_default_state' do
     let!(:initial_state) do
-      RepositoryTableState.create(
-        user: user,
-        repository: repository,
-        state: {}
-      )
+      RepositoryTableStateService.new(user, repository).create_default_state
     end
 
     context('record counts') do
@@ -75,12 +71,7 @@ describe RepositoryTableStateService do
 
   describe '#load_state' do
     it 'should load initial state if it exists' do
-      initial_state = RepositoryTableState.create(
-        user: user,
-        repository: repository,
-        state: {}
-      )
-
+      initial_state = RepositoryTableStateService.new(user, repository).create_default_state
       record = service.load_state
       expect(record).to eq initial_state
     end
