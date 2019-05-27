@@ -361,6 +361,10 @@
 
 #search-bar {
   padding-right: 0;
+
+  .btn-default[type="submit"] {
+    height: 34px;
+  }
 }
 
 @media (max-width: 768px) {
