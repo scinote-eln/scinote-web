@@ -3,6 +3,7 @@ class StepCommentsController < ApplicationController
   include InputSanitizeHelper
   include ApplicationHelper
   include Rails.application.routes.url_helpers
+  include CommentHelper
 
   before_action :load_vars
 
@@ -11,83 +12,18 @@ class StepCommentsController < ApplicationController
   before_action :check_manage_permissions, only: %i(edit update destroy)
 
   def index
-    @comments = @step.last_comments(@last_comment_id, @per_page)
-
-    respond_to do |format|
-      format.json do
-        # 'index' partial includes header and form for adding new
-        # messages. 'list' partial is used for showing more
-        # comments.
-        partial = 'index.html.erb'
-        partial = 'steps/comments/list.html.erb' if @last_comment_id.positive?
-        more_url = ''
-        if @comments.size.positive?
-          more_url = url_for(step_step_comments_path(@step,
-                                                     format: :json,
-                                                     from: @comments.first.id))
-        end
-        render json: {
-          perPage: @per_page,
-          resultsNumber: @comments.size,
-          moreUrl: more_url,
-          html: render_to_string(
-            partial: partial,
-            locals: { step: @step, comments: @comments, per_page: @per_page }
-          )
-        }
-      end
-    end
+    comments = @step.last_comments(@last_comment_id, @per_page)
+    more_url = step_step_comments_path(@step, format: :json, from: @comments.first.id) unless comments.empty? 
+    comment_index_helper(comments, more_url)
   end
 
   def create
-    @comment = StepComment.new(
+    comment = StepComment.new(
       message: comment_params[:message],
       user: current_user,
       step: @step
     )
-
-    respond_to do |format|
-      if @comment.save
-
-        step_comment_annotation_notification
-        # Generate activity (this can only occur in module,
-        # but nonetheless check if my module is not nil)
-        log_activity(:add_comment_to_step)
-
-        format.json {
-          render json: {
-            html: render_to_string(
-              partial: 'steps/comments/item.html.erb',
-              locals: {
-                comment: @comment
-              }
-            ),
-            date: I18n.l(@comment.created_at, format: :full_date)
-          },
-          status: :created
-        }
-      else
-        response.status = 400
-        format.json {
-          render json: {
-            errors: @comment.errors.to_hash(true)
-          }
-        }
-      end
-    end
-  end
-
-  def edit
-    @update_url = step_step_comment_path(@step, @comment, format: :json)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: '/comments/edit.html.erb'
-          )
-        }
-      end
-    end
+    comment_create_helper(comment)
   end
 
   def update

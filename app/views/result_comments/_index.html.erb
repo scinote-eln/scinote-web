@@ -1,42 +1,16 @@
 <hr>
-<div class="col-xs-12">
-  <strong><%= t('my_modules.results.comments_tab') %></strong>
-</div>
-<hr>
-<ul class="no-style double-line content-comments">
-  <% if comments.size == per_page %>
-    <li class="comment-more text-center">
-      <a class="btn btn-default btn-more-comments"
-         href="<%= url_for(result_result_comments_path(result, format: :json, from: comments.first.id)) %>"
-         data-remote="true">
-        <%=t "general.more_comments" %>
-      </a>
-    </li>
-  <% end %>
-  <% if comments.size == 0 then %>
-    <li class="no-comments"><em><%= t 'general.no_comments' %></em></li>
-  <% else %>
-    <%= render 'result_comments/list.html.erb', comments: comments %>
-  <% end %>
-</ul>
-<% if can_create_comments_in_module?(@my_module) then %>
-  <ul class="no-style double-line">
-    <li>
-      <hr>
-      <%= bootstrap_form_for :comment,
-                             url: result_result_comments_path(result, format: :json),
-                             method: :post,
-                             remote: true,
-                             html: { class: 'comment-form' } do |f| %>
-        <%= f.smart_text_area :message,
-                              single_line: true,
-                              hide_label: true,
-                              placeholder: t("general.comment_placeholder"),
-                              append: f.submit("+",
-                                               onclick: "Results.processResult(event, Results.ResultTypeEnum.COMMENT, false);"),
-                              help: '.',
-                              data: { 'atwho-edit' => '' } %>
-      <% end %>
-    </li>
-  </ul>
-<% end %>
+
+  <div class="col-xs-12 comments-title">
+    <h4>
+      <%=t('my_modules.results.comments_tab') %>
+      (<span id="comment-counter-<%= result.id %>"><%= comments.count %></span>)
+    </h4>
+  </div>
+
+  <%= render partial: 'shared/comments/comments.html.erb', locals: {
+    object: result,
+    comments: comments, 
+    can_create_comments: can_create_comments_in_module?(@my_module), 
+    create_url: result_result_comments_path(result, format: :json),
+    more_url: result_result_comments_path(result, format: :json, from: comments.first.id)
+  } %>

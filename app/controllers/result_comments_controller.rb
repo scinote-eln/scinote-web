@@ -14,12 +14,6 @@ class ResultCommentsController < ApplicationController
 
     respond_to do |format|
       format.json do
-        # 'index' partial includes header and form for adding new
-        # messages. 'list' partial is used for showing more
-        # comments.
-        partial = 'index.html.erb'
-        partial = 'list.html.erb' if @last_comment_id.positive?
-        more_url = ''
         if @comments.size.positive?
           more_url = url_for(result_result_comments_path(@result,
                                                          format: :json,
@@ -33,7 +27,7 @@ class ResultCommentsController < ApplicationController
           html: render_to_string(
             partial: partial,
             locals: {
-              result: @result, comments: @comments, per_page: @per_page
+              partial: 'shared/comments/list.html.erb', locals: { comments: @comments}
             }
           )
         }

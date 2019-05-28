@@ -1,42 +1,17 @@
-<% per_page = Constants::COMMENTS_SEARCH_LIMIT %>
 <% if can_read_protocol_in_module?(@protocol) %>
 
   <div class="col-xs-12 comments-title">
     <h4>
       <%=t('protocols.steps.comments') %>
-      (<span id="counter-<%= step.id %>"><%= comments_count %></span>)
+      (<span id="comment-counter-<%= step.id %>"><%= comments_count %></span>)
     </h4>
   </div>
 
-  <div class="col-xs-12 step-comment content-comments"
-       id="new-step-comments-<%= step.id %>"
-       data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>"
-       data-step-id="<%= step.id %>">
-    <% if comments.size == per_page %>
-      <div class="comment-more text-center">
-        <a class="btn btn-default btn-more-comments-new" id="more-btn-<%=step.id %>"
-           href="<%= url_for(step_step_comments_path(step, format: :json, from: comments.first.id)) %>"
-           data-remote="true",
-           data-step-id="<%= step.id %>">
-          <%=t "general.more_comments" %>
-        </a>
-      </div>
-    <% end %>
-    <div class="comments-list" id="comments-list-<%= step.id %>">
-      <%= render partial: 'steps/comments/list.html.erb', locals: { comments: comments} %>
-    </div>
-  </div>
-  <div class="new-message-continer" id="new-message-<%= step.id %>">
-    <% if can_create_comments_in_module?(@protocol.my_module) %>
-      <%= bootstrap_form_for( :comment, url: step_step_comments_path(step, format: :json), html: { method: :post }, remote: true) do |f| %>
-        <%= f.smart_text_area :message,
-                              single_line: true,
-                              hide_label: true,
-                              placeholder: t('general.comment_placeholder_new'),
-                              help: '.',
-                              data: { 'atwho-edit' => '' } %>
-        <i class="fas fa-paper-plane new-comment-button"></i>
-      <% end %>
-    <% end %>
-  </div>
+  <%= render partial: 'shared/comments/comments.html.erb', locals: {
+    object: step,
+    comments: comments, 
+    can_create_comments: can_create_comments_in_module?(@protocol.my_module), 
+    create_url: step_step_comments_path(step, format: :json),
+    more_url: step_step_comments_path(step, format: :json, from: comments.first&.id)
+  } %>
 <% end %>

@@ -9,6 +9,7 @@ class ProtocolsController < ApplicationController
   include InputSanitizeHelper
   include ProtocolsIoHelper
   include TeamsHelper
+  include CommentHelper
 
   before_action :check_create_permissions, only: %i(
     create_new_modal
