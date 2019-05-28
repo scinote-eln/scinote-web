@@ -7,6 +7,10 @@ class AppMailerPreview < ActionMailer::Preview
     AppMailer.reset_password_instructions(fake_user, 'faketoken', {})
   end
 
+  def unlock_instructions
+    AppMailer.unlock_instructions(fake_user, 'faketoken', {})
+  end
+
   def invitation_instructions
     AppMailer.invitation_instructions(fake_user, 'faketoken', {})
   end
@@ -40,7 +44,7 @@ class AppMailerPreview < ActionMailer::Preview
       Notification.new(
         type_of: :recent_changes,
         title: I18n.t(
-          'global_activities.activity_name.create_module',
+          'activities.create_module',
           user: user.full_name,
           module: 'How to shred'
         ),
@@ -53,7 +57,6 @@ class AppMailerPreview < ActionMailer::Preview
     )
   end
 
-  # <b>DEPRECATED:</b> Please use <tt>system_notification</tt> instead.
   def system_message_notification
     AppMailer.notification(
       fake_user,
