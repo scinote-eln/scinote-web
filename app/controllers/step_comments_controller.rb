@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 class StepCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include ApplicationHelper
-  include Rails.application.routes.url_helpers
   include CommentHelper
 
   before_action :load_vars
@@ -13,52 +14,27 @@ class StepCommentsController < ApplicationController
 
   def index
     comments = @step.last_comments(@last_comment_id, @per_page)
-    more_url = step_step_comments_path(@step, format: :json, from: @comments.first.id) unless comments.empty? 
+    more_url = step_step_comments_path(@step, format: :json, from: comments.first.id) unless comments.empty?
     comment_index_helper(comments, more_url)
   end
 
   def create
-    comment = StepComment.new(
+    @comment = StepComment.new(
       message: comment_params[:message],
       user: current_user,
       step: @step
     )
-    comment_create_helper(comment)
+    comment_create_helper(@comment)
   end
 
   def update
     old_text = @comment.message
     @comment.message = comment_params[:message]
-    respond_to do |format|
-      format.json do
-        if @comment.save
-
-          step_comment_annotation_notification(old_text)
-          # Generate activity
-          log_activity(:edit_step_comment)
-
-          message = custom_auto_link(@comment.message, team: current_team)
-          render json: { comment: message }, status: :ok
-        else
-          render json: { errors: @comment.errors.to_hash(true) },
-                 status: :unprocessable_entity
-        end
-      end
-    end
+    comment_update_helper(@comment, old_text)
   end
 
   def destroy
-    respond_to do |format|
-      format.json do
-        if @comment.destroy
-          log_activity(:delete_step_comment)
-          render json: {}, status: :ok
-        else
-          render json: { message: I18n.t('comments.delete_error') },
-                 status: :unprocessable_entity
-        end
-      end
-    end
+    comment_destroy_helper(@comment)
   end
 
   private
@@ -69,9 +45,7 @@ class StepCommentsController < ApplicationController
     @step = Step.find_by_id(params[:step_id])
     @protocol = @step&.protocol
 
-    unless @step && @protocol
-      render_404
-    end
+    render_404 unless @step && @protocol
   end
 
   def check_view_permissions
@@ -94,7 +68,7 @@ class StepCommentsController < ApplicationController
 
   def step_comment_annotation_notification(old_text = nil)
     smart_annotation_notification(
-      old_text: (old_text if old_text),
+      old_text: old_text,
       new_text: comment_params[:message],
       title: t('notifications.step_comment_annotation_title',
                step: @step.name,
