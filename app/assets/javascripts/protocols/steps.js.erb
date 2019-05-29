@@ -220,7 +220,7 @@
     });
   }
 
-    // Init ajax success/error for edit form  
+    // Init ajax success/error for edit form
   function formEditAjax($form) {
     $form
     .on("ajax:beforeSend", function () {
@@ -249,7 +249,7 @@
       });
       setupAssetsLoading();
     })
-    .on("ajax:error", function(e, xhr, status, error) { 
+    .on("ajax:error", function(e, xhr, status, error) {
       $form.renderFormErrors('step', xhr.responseJSON, true, e);
 
       formCallback($form);
@@ -364,6 +364,7 @@
       });
       toggleButtons(true);
       DragNDropSteps.clearFiles();
+      tinyMCE.editors.step_description_textarea.remove();
     });
   }
 
@@ -501,9 +502,13 @@
             initializeCheckboxSorting();
 
             $('#step_name').focus();
-            $('#new-step-main-tab a').on('shown.bs.tab', function() {
-              $('#step_name').focus();
-            });
+            $('#new-step-main-tab a')
+              .on('shown.bs.tab', function() {
+                $('#step_name').focus();
+                TinyMCE.init('#step_description_textarea');
+              }).on('hidden.bs.tab', function() {
+                tinyMCE.editors.step_description_textarea.remove();
+              });
 
             TinyMCE.init('#step_description_textarea');
           });
