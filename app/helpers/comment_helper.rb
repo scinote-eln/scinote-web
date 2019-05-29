@@ -83,7 +83,16 @@ module CommentHelper
 
   def comment_destroy_helper(comment)
     if comment.destroy
-      log_activity(:delete_step_comment)
+      case comment.type
+      when 'StepComment'
+        log_activity(:delete_step_comment)
+      when 'ResultComment'
+        log_activity(:delete_result_comment)
+      when 'ProjectComment'
+        log_activity(:delete_project_comment)
+      when 'TaskComment'
+        log_activity(:delete_module_comment)
+      end
       render json: {}, status: :ok
     else
       render json: { message: I18n.t('comments.delete_error') },
