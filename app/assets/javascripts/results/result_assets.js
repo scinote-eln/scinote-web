@@ -73,7 +73,7 @@
         Results.toggleResultEditButtons(true);
         Results.expandResult($newResult);
         FilePreviewModal.init();
-        Comments.initialize();
+        Comments.init();
         initNewResultAsset();
       }).on('ajax:error', function(e, xhr) {
         var errors = xhr.responseJSON.errors;

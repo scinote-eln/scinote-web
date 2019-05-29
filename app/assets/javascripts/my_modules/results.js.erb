@@ -17,11 +17,7 @@
       applyCollapseLinkCallBack();
       applyCreateWopiFileCallback();
 
-      //Comments.initialize();
 
-      //Comments.initCommentOptions('ul.content-comments');
-      //Comments.initEditComments('#results');
-      //Comments.initDeleteComments('#results');
 
       $(function () {
         $('#results-collapse-btn').click(function () {
@@ -188,7 +184,7 @@
               applyCreateWopiFileCallback();
               toggleResultEditButtons(true);
               FilePreviewModal.init();
-              Comments.initialize();
+              Comments.init();
               ResutlAssets.initNewResultAsset();
               expandResult($(this));
             });

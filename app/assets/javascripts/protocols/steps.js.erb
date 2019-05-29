@@ -658,10 +658,7 @@
   }
 
   function initStepsComments() {
-    Comments.initialize();
-    Comments.initCommentOptions("ul.content-comments");
-    Comments.initEditComments("#steps");
-    Comments.initDeleteComments("#steps");
+    Comments.init();
   }
 
   // Reorder attachments
@@ -679,7 +676,6 @@
   initHandsOnTable($(document));
   expandAllSteps();
   setupAssetsLoading();
- // initStepsComments();
   FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');
