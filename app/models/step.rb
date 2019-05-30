@@ -131,7 +131,7 @@ class Step < ApplicationRecord
   end
 
   def set_last_modified_by
-    if @current_user
+    if @current_user&.is_a?(User)
       self.tables.each do |t|
         t.created_by ||= @current_user
         t.last_modified_by = @current_user if t.changed?

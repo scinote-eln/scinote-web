@@ -1,0 +1,18 @@
+{
+  "source_id": 601564,
+  "name": "Binding cells to beads",
+  "position": 0,
+  "description": {
+    "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min 600 x g at room temperature and withdraw liquid.\u003c/div\u003e\u003c/div\u003e"
+  },
+  "attachments": [
+    {
+      "url": "https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg",
+      "name": "First file"
+    },
+    {
+      "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
+      "name": "Second file"
+    }
+  ]
+}
