@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ProtocolImporters::AttachmentsBuilder do
   let(:step) do
-    JSON.parse(file_fixture('protocols_importer/step_with_attachments.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocol_importers/step_with_attachments.json').read).to_h.with_indifferent_access
   end
   let(:generate_files_from_step) { described_class.generate(step) }
   let(:first_file_in_result) { generate_files_from_step.first }

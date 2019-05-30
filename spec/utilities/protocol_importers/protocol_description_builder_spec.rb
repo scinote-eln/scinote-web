@@ -4,16 +4,16 @@ require 'rails_helper'
 
 RSpec.describe ProtocolImporters::ProtocolDescriptionBuilder do
   let(:description_only) do
-    JSON.parse(file_fixture('protocols_importer/description_with_body.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocol_importers/description_with_body.json').read).to_h.with_indifferent_access
   end
   let(:description_with_image) do
-    JSON.parse(file_fixture('protocols_importer/description_with_image.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocol_importers/description_with_image.json').read).to_h.with_indifferent_access
   end
   let(:description_with_extra_content) do
-    JSON.parse(file_fixture('protocols_importer/description_with_extra_content.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocol_importers/description_with_extra_content.json').read).to_h.with_indifferent_access
   end
   let(:description_with_html) do
-    JSON.parse(file_fixture('protocols_importer/description_with_body_html.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocol_importers/description_with_body_html.json').read).to_h.with_indifferent_access
   end
 
   describe 'self.generate' do

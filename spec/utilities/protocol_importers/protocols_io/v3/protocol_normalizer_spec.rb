@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
   let(:response) do
-    JSON.parse(file_fixture('protocols_importer/protocols_io/v3/single_protocol.json').read)
+    JSON.parse(file_fixture('protocol_importers/protocols_io/v3/single_protocol.json').read)
         .to_h.with_indifferent_access
   end
 
@@ -15,7 +15,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
   end
 
   let(:normalized_result) do
-    JSON.parse(file_fixture('protocols_importer/protocols_io/v3/normalized_single_protocol.json').read)
+    JSON.parse(file_fixture('protocol_importers/normalized_single_protocol.json').read)
         .to_h.with_indifferent_access
   end
 

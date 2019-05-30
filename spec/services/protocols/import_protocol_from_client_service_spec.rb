@@ -10,7 +10,7 @@ describe Protocols::ImportProtocolFromClientService do
       .call(protocol_client_id: 'id', protocol_source: 'protocolsio/v3', user_id: user.id, team_id: team.id)
   end
   let(:normalized_response) do
-    JSON.parse(file_fixture('protocols_importer/protocols_io/v3/normalized_single_protocol.json').read)
+    JSON.parse(file_fixture('protocol_importers/normalized_single_protocol.json').read)
         .to_h.with_indifferent_access
   end
 
