@@ -4,25 +4,25 @@ require 'rails_helper'
 
 RSpec.describe ProtocolImporters::StepDescriptionBuilder do
   let(:description_only) do
-    JSON.parse(file_fixture('protocols_importer/description_with_body.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocol_importers/description_with_body.json').read).to_h.with_indifferent_access
   end
 
   let(:description_with_html) do
-    JSON.parse(file_fixture('protocols_importer/description_with_body_html.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocol_importers/description_with_body_html.json').read).to_h.with_indifferent_access
   end
 
   let(:description_with_components) do
-    JSON.parse(file_fixture('protocols_importer/step_description_with_components.json').read)
+    JSON.parse(file_fixture('protocol_importers/step_description_with_components.json').read)
         .to_h.with_indifferent_access
   end
 
   let(:description_with_extra_content) do
-    JSON.parse(file_fixture('protocols_importer/description_with_extra_content.json').read)
+    JSON.parse(file_fixture('protocol_importers/description_with_extra_content.json').read)
         .to_h.with_indifferent_access
   end
 
   let(:normalized_json) do
-    JSON.parse(file_fixture('protocols_importer/protocols_io/v3/normalized_single_protocol.json').read)
+    JSON.parse(file_fixture('protocol_importers/normalized_single_protocol.json').read)
         .to_h.with_indifferent_access
   end
 
