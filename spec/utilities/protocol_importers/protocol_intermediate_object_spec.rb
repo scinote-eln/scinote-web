@@ -8,7 +8,7 @@ describe ProtocolImporters::ProtocolIntermediateObject do
   let(:user) { create :user }
   let(:team) { create :team }
   let(:normalized_result) do
-    JSON.parse(file_fixture('protocols_importer/protocols_io/v3/normalized_single_protocol.json').read)
+    JSON.parse(file_fixture('protocol_importers/normalized_single_protocol.json').read)
         .to_h.with_indifferent_access
   end
 
