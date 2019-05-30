@@ -8,7 +8,14 @@ describe ProtocolImporters::ProtocolIntermediateObject do
   let(:user) { create :user }
   let(:team) { create :team }
   let(:normalized_result) do
-    JSON.parse(file_fixture('protocols_io/v3/normalized_single_protocol.json').read).to_h.with_indifferent_access
+    JSON.parse(file_fixture('protocols_importer/protocols_io/v3/normalized_single_protocol.json').read)
+        .to_h.with_indifferent_access
+  end
+
+  before do
+    stub_request(:get, 'https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg').to_return(status: 200, body: '', headers: {})
+    stub_request(:get, 'http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg')
+      .to_return(status: 200, body: '', headers: {})
   end
 
   describe '.build' do
@@ -18,7 +25,8 @@ describe ProtocolImporters::ProtocolIntermediateObject do
   describe '.import' do
     context 'when have valid object' do
       it { expect { pio.import }.to change { Protocol.all.count }.by(1) }
-      it { expect { pio.import }.to change { Step.all.count }.by(66) }
+      it { expect { pio.import }.to change { Step.all.count }.by(2) }
+      it { expect { pio.import }.to change { Asset.all.count }.by(2) }
       it { expect(pio.import).to be_valid }
     end
 
