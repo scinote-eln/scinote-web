@@ -36,6 +36,11 @@ module Api
     def health
       User.new && Team.new && Project.new
       User.first if params[:db]
+      if Rails.application.secrets.system_notifications_uri.present? &&
+         Rails.application.secrets.system_notifications_channel.present? &&
+         !Notifications::SyncSystemNotificationsService.available?
+        return render plain: 'SYSTEM NOTIFICATIONS SERVICE CHECK FAILED', status: :error
+      end
       render plain: 'RUNNING'
     end
 
