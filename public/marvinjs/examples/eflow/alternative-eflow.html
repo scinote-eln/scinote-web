@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Alternative electron flow arrow</title>
+	<link type="text/css" rel="stylesheet" href="../../css/doc.css" />
+	<script src="../../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../../js/marvinjslauncher.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+		
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				var settings = {};
+				settings.lonePairsVisible = true;
+				marvinSketcherInstance.setDisplaySettings(settings);
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+	</script>
+</head>
+<body>
+	<div class="resizable" style="height: 770px; width: 680px">
+		<iframe src="../../editorws.html" id="sketch" class="sketcher-frame" 
+			data-toolbars="mechanismQuestionB" 
+			data-eflowlimited="true"
+			data-eflowmidline="false"></iframe>
+	</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Load Custom Templates (in JSON format)</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+</head>
+<body>
+	<h1>Marvin JS Example - Load Custom Templates (in JSON format)</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<div class="resizable">
+		<iframe src="../editorws.html" id="sketch" class="sketcher-frame" data-templateurl="templates/default_templates_with_naphtalane.json"></iframe>
+	</div>
+	<div>
+	<p>In this example, custom templates are loaded. These templates are stored in <em>templates/default_templates_with_naphtalane.json</em> (URL is relative to the directory of Marvin JS package).
+	To display them on custom template toolbar, define the location of their source file in the <strong>data-templateurl</strong> attribute of the <code>iframe</code> tag of the editor.</p>
+	<pre><code data-language="html">&lt;div class=&quot;resizable&quot;&gt;
+	&lt;iframe src=&quot;../editorws.html&quot; id=&quot;sketch&quot; class=&quot;sketcher-frame&quot; data-templateurl=&quot;templates/default_templates_with_naphtalane.json&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code>
+		</pre>
+	<p>You can generate your own templates file via the following form: <a href="example-create-template.html">Create template</a></p>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

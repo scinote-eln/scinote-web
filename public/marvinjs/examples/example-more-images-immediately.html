@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Marvin JS Examples - Display More Images Immediately</title>
+  <link type="text/css" rel="stylesheet" href="../css/example-edit-images.css" />
+  <link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+  <link type="text/css" rel="stylesheet" href="../css/doc.css" />
+  <script src="../js/lib/jquery-1.9.1.min.js"></script>
+  <script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+  <script src="../gui/lib/promise-1.0.0.min.js"></script>
+  <script src="../js/marvinjslauncher.js"></script>
+  <style>
+	iframe#marvinjs-iframe {
+		width: 0;
+		height: 0;
+		display: initial;
+		position: absolute;
+		left: -1000;
+		top: -1000;
+		margin: 0;
+		padding: 0;
+	}
+  </style>
+  <script>
+    var molecules = new Array( 
+		"Ac\n  Mrv0541 02121315482D          \n\n  3  2  0  0  0  0            999 V2000\n    1.2375   -0.7145    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.9520   -1.1270    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.6664   -0.7145    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  2  0  0  0  0\nM  STY  1   1 SUP\nM  SAL   1  3   1   2   3\nM  SMT   1 Ac\nM  SAP   1  1   2   0  1\nM  SCL   1 CXN\nM  SDS EXP  1   1\nM  END\n",  
+		"AcAc\n  Mrv0541 02121315492D          \n\n  6  5  0  0  0  0            999 V2000\n    2.4750   -1.4289    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.0625   -0.7145    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.4750    0.0000    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    1.2375   -0.7145    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8250    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.0000    0.0000    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  2  0  0  0  0\n  2  4  1  0  0  0  0\n  4  5  1  0  0  0  0\n  5  6  2  0  0  0  0\nM  STY  1   1 SUP\nM  SAL   1  6   1   2   3   4   5   6\nM  SMT   1 AcAc\nM  SAP   1  1   5   0  1\nM  SCL   1 CXN\nM  SDS EXP  1   1\nM  END\n",  
+		"Acet\n  Mrv0541 02121315502D          \n\n  3  2  0  0  0  0            999 V2000\n    1.2375   -0.7145    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.9520   -1.1270    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.6664   -0.7145    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  2  0  0  0  0\nM  STY  1   1 SUP\nM  SAL   1  3   1   2   3\nM  SMT   1 Acet\nM  SAP   1  1   2   0  1\nM  SCL   1 CXN\nM  SDS EXP  1   1\nM  END\n",
+		"Acm\n  Mrv0541 02121315512D          \n\n  5  4  0  0  0  0            999 V2000\n    0.8250    1.4289    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.2375    0.7145    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8250    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.2375   -0.7145    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.0000    0.0000    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  0  0\n  3  5  2  0  0  0  0\nM  STY  1   1 SUP\nM  SAL   1  5   1   2   3   4   5\nM  SMT   1 Acm\nM  SAP   1  1   1   0  1\nM  SCL   1 CXN\nM  SDS EXP  1   1\nM  END\n"
+    );
+	
+    var marvin;
+	$(document).ready(function handleDocumentReady (e) {
+		// load marvin namespace in a separate frame to avoid css conflict
+		// the display attribute of this iframe cannot be "none", but you can hide it somewhere
+		$('body').append($('<iframe>', { id: "marvinjs-iframe", src: "../marvinpack.html"}));
+		// wait for the reference of marvin namespace from the iframe
+		MarvinJSUtil.getPackage("#marvinjs-iframe").then(function (marvinNameSpace) {
+			// the reference to the namespace is arrived but there is no guaranty that its initalization has been finished
+			// because of it, wait till the ready state to be sure the whole API is available
+			marvinNameSpace.onReady(function() {
+				marvin = marvinNameSpace;
+				exportImages();
+			});
+		},function (error) {
+			alert("Cannot retrieve marvin instance from iframe:"+error);
+		});
+	});
+	
+	function exportImages() {
+		// initalize table
+		$("#imageContainer").empty();
+		// iterate the array of molecule sources to create images
+		$.each(molecules, function(index, value) {
+			var imgData = marvin.ImageExporter.molToDataUrl(value);
+			// create a new cell with the new image and append to the table
+			if(imgData != null) {
+				var molCell = $('<div>', { class: "mol-cell"});
+				$("#imageContainer").append(molCell);
+				molCell.append($('<span>', { text: (index+1) }));
+				var img = $('<img>');
+				img.attr('src', imgData);
+				img.attr('data-mol', escape(value));
+				molCell.append(img);
+			}
+		});
+		// close table
+		$("#imageContainer").append($('<div>', { class: "table-bottom"}));
+	}
+  </script>  
+</head>
+
+<body>
+<h1>Marvin JS Examples - Display More Images Immediately</h1>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+<p>A molecule table should be displayed as the loading of the page is finished. See below the <a href="#technical-details">commented code</a></p>
+
+<noscript>
+  <div
+	style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+	Your web browser must have JavaScript enabled in order for this
+	application to display correctly.</div>
+</noscript>
+
+<div id="imageContainer" class="image-container">
+	<p>Preparation of the page is in progress ...</p>
+</div>
+
+<div><a name="technical-details"></a>
+
+<p>First of all, you need the <strong>marvin</strong> object that encapsulates the whole Marvin JS API into a common namespace. The MarvinJSUtil loads it asynchronously with the help of an invisible iframe.
+After <code>marvin</code> is available, the <code>exportImages</code> function is called automatically.</p>
+<pre><code data-language="javascript">	var marvin;
+	$(document).ready(function handleDocumentReady (e) {
+		// load marvin namespace in a separate frame to avoid css conflict
+		// the display attribute of this iframe cannot be "none", but you can hide it somewhere	
+		$('body').append($('&lt;iframe&gt;', { id: "marvinjs-iframe", src: "../marvinpack.html"}));
+		// wait for the reference of marvin namespace from the iframe
+		MarvinJSUtil.getPackage("#marvinjs-iframe").then(function (marvinNameSpace) {
+			// the reference to the namespace is arrived but there is no guaranty that its initalization has been finished
+			// because of it, wait till the ready state to be sure the whole API is available
+			marvinNameSpace.onReady(function() {
+				marvin = marvinNameSpace;
+				exportImages();
+			});
+		},function (error) {
+			alert("Cannot retrieve marvin instance from iframe:"+error);
+		});
+	});</code></pre>
+<p>The <code>exportImages</code> function converts predefined molecules into images and renders them into a table.</p>
+<pre><code data-language="javascript">	function exportImages() {
+		// initalize table
+		$("#imageContainer").empty();
+		// iterate the array of molecule sources to create images
+		$.each(molecules, function(index, value) {
+			var imgData = marvin.ImageExporter.molToDataUrl(value);
+			// create a new cell with the new image and append to the table
+			if(imgData != null) {
+				var molCell = $('&lt;div&gt;', { class: "mol-cell"});
+				$("#imageContainer").append(molCell);
+				molCell.append($('&lt;span&gt;', { text: (index+1) }));
+				var img = $('&lt;img&gt;');
+				img.attr('src', imgData);
+				img.attr('data-mol', escape(value));
+				molCell.append(img);
+			}
+		});
+		// close table
+		$("#imageContainer").append($('&lt;div&gt;', { class: "table-bottom"}));
+	}</code></pre>
+</div>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>  

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Configure toolbars and services</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script src="../js/webservices.js"></script>
+	
+	<script>
+		$(document).ready(function handleDocumentReady (e) {			
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				setServices(sketcherInstance);
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+		
+		function setServices(marvinSketcherInstance) {
+			// set null value for those services that you would like to switch off
+			var excluded = {
+				"stereoinfows": null, 
+				"hydrogenizews": null,
+			}
+			// all services
+			var defaultServices = getDefaultServices();
+			// merge defaultServices and excluded into an empty object
+			// the new object contains the result
+			var services = $.extend({}, defaultServices, excluded);
+			marvinSketcherInstance.setServices(services);
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Configure toolbars and services</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<p>
+		This example demonstrates how to switch off certain server-side features in an editor that has a specific toolbar setting. New buttons can not be added through this usecase, and only those buttons can be removed which would be available with the toolbar preset.
+		</p>
+	<div class="darkbox" style="vertical-align: middle;">
+		<div class="resizable">
+			<iframe src="../editor.html" id="sketch" class="sketcher-frame" data-toolbars="search"></iframe>
+		</div>
+	</div>
+	<div>
+		<p>Embed the Marvin JS editor without the default webservices (<code>editor.html</code>) and specify the <strong>search</strong> layout:
+		<pre><code data-language="html">&lt;div class=&quot;resizable&quot;&gt;
+    &lt;iframe src="../editor.html" id="sketch" class="sketcher-frame" data-toolbars="search"&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+
+		<p>Include <code>webservices.js</code> in order to reach default webservice locations.</p>
+		<pre><code data-language="javascript">&lt;script src=&quot;../js/webservices.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+		<p>Bind a listener to the loading of the sketcher. When the sketcher is loaded, the <code>setServices</code> method setups the services.</p>
+		<pre><code data-language="javascript">
+$(document).ready(function handleDocumentReady (e) {
+	MarvinJSUtil.getEditor(&quot;#sketch&quot;).then(function (sketcherInstance) {
+		setServices(sketcherInstance);
+	},function (error) {
+		//what should happen if marvinjs initiation fails.
+	});
+});</code></pre>
+		<p>The <code>setServices</code> method receives the reference to the sketcher object as parameter.
+		The <code>excluded</code> object declares services to switch off.
+		With the predefined <code>getDefaultServices()</code>, you can get factory settings of services.</p>
+		<p>When you merge the above objects, the new one specifies all services (those ones that are not specified in
+		<code>excluded</code> inherits the default value, the others are overwritten).</p>
+		<p>Finally, call <code>setServices</code> function of the sketcher with the above settings.
+		After then, enabled services are activated (if current layout includes their button) and buttons of disabled
+		services are removed.</p>
+		<pre><code data-language="javascript">
+function setServices(marvinSketcherInstance) {
+	// set null value for those services that you would like to switch off
+	var excluded = {
+		"stereoinfows": null, 
+		"hydrogenizews": null,
+	}
+	// all services
+	var defaultServices = getDefaultServices();
+	// merge defaultServices and excluded into an empty object
+	// the new object contains the result
+	var services = $.extend({}, defaultServices, excluded);
+	marvinSketcherInstance.setServices(services);
+}</code></pre>
+	</div>
+
+
+
+
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

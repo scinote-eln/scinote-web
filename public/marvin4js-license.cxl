@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--PLEASE DO NOT MODIFY THIS FILE AND BE AWARE THAT THE FILE CONTAINS CONFIDENTIAL INFORMATION.-->
+<ChemAxon>
+<License>
+<Field Name="Software" Value="Marvin for JavaScript"/>
+<Field Name="License Term" Value="Evaluation"/>
+<Field Name="Licensee" Value="SciNote"/>
+<Field Name="Number of Users" Value="5"/>
+<Field Name="Expiration Date" Value="2019-05-29"/>
+<Field Name="Support Expiration Date" Value="2019-05-29"/>
+<Field Name="Comment" Value="null"/>
+<Restriction Name="Server Use" Value="Allowed"/>
+<Signature Value="MCwCFCNH7FU7ypxneQZI3QId7mMQ9ZU0AhRAorIqRG2jY9h9+4uAwNjHFrFomA=="/>
+</License>
+</ChemAxon>

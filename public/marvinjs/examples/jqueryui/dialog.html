@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Marvin JS Editor in jQuery UI Dialog</title>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="../../gui/lib/promise-1.0.0.min.js"></script>
+
+    	<script src="../../js/marvinjslauncher.js"></script>
+
+    	<script src="../../js/webservices.js"></script>
+	</head>
+<body>
+
+<textarea id="text" rows="8" cols="80">
+</textarea>
+<div id="dialog">
+	<iframe id="sketch" width=500 height=400></iframe>
+</div>
+<button id="btn-open">Open</button>
+<script>
+var marvinSketcherInstance = null;
+
+$(function() {
+	var molSource = "\n  Mrv0541 10291414422D          \n\n"+
+	"  2  1  0  0  0  0            999 V2000\n"+
+	"   -1.1491    0.9429    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"   -0.4346    1.3554    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"  1  2  1  0  0  0  0\nM  END\n";
+	$("#text").html(molSource);
+	// JQuery UI wraps div#dialog into a new div: remove div#dialog from the DOM, append it to the
+	// wrapper div, and append this new div to the body.
+	// When iframe#sketch is temporary removed from the DOM, browser destroy its content.
+	// To prevent it, do not preload document into the iframe
+	$("#dialog").dialog({
+		autoOpen: false,
+		width: 550,
+		height: 480,
+		open: function(type, data) { // perform when JQuery UI dialog is shown
+			// You can already start loading of iframe content, JQuery UI does not bother DOM anymore.
+			$("#sketch").attr("src", "MarvinJS/editorws.html");
+			// Request a promise to notify when sketcher is initalized in iframe
+			MarvinJSUtil.getEditor("#sketch").then(function(sketcherInstance) { // initalized successful
+				marvinSketcherInstance = sketcherInstance;
+				// import molecule source from above textbox into the sketcher
+				var s = $("#text").val();
+				marvinSketcherInstance.importStructure("mol", s) ;
+			}, function(error) { // error occured during init process
+				$("<p>ERROR: Cannot access the editor</p>").appendTo("body");
+			});
+		},
+		close: function(type, data) { // perform when JQuery UI dialog is closed
+			if(marvinSketcherInstance != null) {
+				// retrieve molecule from the sketcher and show molecule source in the textbox
+				marvinSketcherInstance.exportStructure("mol").then(function(result) {
+					$("#text").html(result);
+				}, function(error) {
+					$("<p>ERROR: marvin.Sketch.exportStructure(\"mol\") failed</p>").appendTo("body");
+				});
+			}
+		}
+	});
+	$("#btn-open").on("click", function() {
+			// open dialog
+			$("#dialog").dialog("open");
+	});
+});
+</script>
+
+</body>
+</html>

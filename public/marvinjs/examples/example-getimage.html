@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Get The Image</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+		var marvin;
+		
+		$(document).ready(function handleDocumentReady (e) {
+			// get the reference to the Marvin JS editor
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControl () {
+
+			// the export button
+			$("#btn-export").on("click", function (e) {
+				var settings = marvinSketcherInstance.getDisplaySettings(); 
+				settings.width = 420;
+				settings.height = 420;
+				settings.backgroundColor = "#ffffff";
+				marvinSketcherInstance.exportStructure("jpeg", settings).then(function(source) {
+					exportImage(source);
+				}, function(error) {
+					alert("Image export failed:"+error);	
+				});
+			});
+		}
+
+		function exportImage(dataUrl) {
+			// set image source for the existing hidden image tag and display it.
+			$("#image").attr("src", dataUrl);
+			$("#imageContainer").css("display", "inline-block");
+		}
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Get The Image</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		
+		<div class="resizable">
+			<iframe src="../editorws.html" id="sketch" class="sketcher-frame"></iframe>
+		</div>
+		<ul style="-moz-padding-start: 0px; -webkit-padding-start: 0px; padding-start: 0px padding-0px;">
+			<li><input type="button" id="btn-export" value="Export" /></li>
+			<li>
+				<div id="imageContainer" class="left10" style="display: none;">
+					<img id="image" class="bordered" />
+				</div>
+			</li>
+		</ul>
+	<div>
+		<p>This example demonstrates how to retrieve the molecule image from the sketcher. When you push the <strong>Export</strong>
+		button, the current molecule is exported as a JPEG image. The result is shown next to the editor.</p>
+		<p>First of all, you need a reference for the current editor. 
+		<code>MarvinJSUtil.getEditor(String)</code> provides a Promise object for you to get it when the editor is ready.</p>
+		<p>After the editor is loaded, run the <code>initcontrol()</code> function to bind action the the <strong>Export</strong> button.</p>
+		<p>When the button is clicked, the <code>exportImage(String)</code> function of the editor is called. It provides a Promise object to access the result
+		of the export process. Call its <code>then(...)</code> function with the callback function that describes what you would like to do with the export result.
+		In this case, the <code>src</code> attribute of the <code>&lt;img&gt;</code> tag is updated with the image source.</p>
+		<pre><code data-language="javascript">		var marvinSketcherInstance;
+		
+		$(document).ready(function handleDocumentReady (e) {
+			// get the reference to the Marvin JS editor
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControl () {
+
+			// the export button
+			$("#btn-export").on("click", function (e) {
+				var settings = marvinSketcherInstance.getDisplaySettings(); 
+				settings.width = 420;
+				settings.height = 420;
+				settings.backgroundColor = "#ffffff";
+				marvinSketcherInstance.exportStructure("jpeg", settings).then(function(source) {
+					exportImage(source);
+				}, function(error) {
+					alert("Image export failed:"+error);	
+				});
+			});
+		}
+
+		function exportImage(dataUrl) {
+			// set image source for the existing hidden image tag and display it.
+			$("#image").attr("src", dataUrl);
+			$("#imageContainer").css("display", "inline-block");
+		}
+</code>
+	</pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

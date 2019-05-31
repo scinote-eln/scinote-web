@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Overwrite custom templates toolbar</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			// after editor in the sketch iframe is ready store its reference 
+			// and activate controls
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControls();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControls () {
+			// overwrite custom templates toolbar
+			$("#updateCustomTemplates").on("click", function(e) {
+				var s = $("#templateurl").val();
+				if(typeof s != "undefined" && s.length > 0) {
+					updateCustomToolbar(s);	
+				}
+			});
+		}
+
+		function updateCustomToolbar(url) {
+			var settings = {
+					"templateurl": url
+			};
+			marvinSketcherInstance.setDisplaySettings(settings);
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Overwrite custom templates toolbar</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<div class="darkbox">
+		<div style="padding-bottom: 0.8em;">
+			<input type="textfield" id="templateurl" value="templates/mytemplates.mrv"></input>
+			<input type="button" id="updateCustomTemplates" value="Update Templates"/>
+		</div>
+		<div class="resizable">
+			<iframe src="../editorws.html" id="sketch" class="sketcher-frame" data-toolbars="standard"></iframe>
+		</div>
+	</div>
+	<div>
+	<p>In this example, you can change the content of the custom template toolbar without reloading of the editor.
+	To do this, type the URL of a template source file into the given input field and submit the <strong>Update Templates</strong> button.</p>
+	<p>When you take a look at the source code, you can see that a listener function is bind to the submit button. 
+	(URLs are relative to the root directory of Marvin JS package.)
+		When the click event is invoked, the <code>updateToolbars(value)</code> function is performed unless the input field is empty.
+		This function creates a JavaScript object that contains a <strong>templateurl</strong> property </strong>. To update toolbar pass this object to the <code>setDisplaySettings(settings)</code> function of the sketcher.</p>
+		<p><pre><code data-language="html">
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			// after editor in the sketch iframe is ready store its reference 
+			// and activate controls
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControls();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControls () {
+			// overwrite custom templates toolbar
+			$("#updateCustomTemplates").on("click", function(e) {
+				var s = $("#templateurl").val();
+				if(typeof s != "undefined" && s.length > 0) {
+					updateCustomToolbar(s);	
+				}
+			});
+		}
+
+		function updateCustomToolbar(url) {
+			var settings = {
+					"templateurl": url
+			};
+			marvinSketcherInstance.setDisplaySettings(settings);
+		}</code></pre></p>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+  #tableNameText{
+  	visibility: hidden;
+  }
+  
+    .error-container {
+  	color: red;
+  }
+  
+  .image-container {
+  	margin-top: 10px;
+  	margin-bottom: 30px;
+  	display: inline-table;
+  }
+  .mol-cell {
+  	display: inline;
+  	float: left;
+  	margin-top: 4px;
+  	margin-bottom: 4px;
+  	margin-left: 4px;
+  	margin-right: 24px;
+  }
+  .mol-cell span {
+  	font-weight: bold;
+  	padding-top: 2px;
+  	padding-left: 2px;
+  	padding-right: 2px;
+  	background: lightgrey;
+  }
+  .mol-cell img, .mol-cell iframe {
+    display: block;
+  	box-shadow: 2px 2px 8px #444;
+  }
+  
+

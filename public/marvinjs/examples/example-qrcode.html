@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Marvin JS Example - Create QR Code</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css">
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/webservices.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script src="../js/lib/qrcode/qrcode.min.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+
+				$("#resetButton").on("click", function handlegetQRCodeButton () {
+					qrCodeControl.reset();
+				});
+				var buttonAttributes = {
+						"name" : "Generate QR Code",
+						"image-url" : "examples/images/qr.png",
+						"toolbar" : "W"
+				};
+				sketcherInstance.addButton(buttonAttributes, function() {
+					qrCodeControl.getQRCode();
+				});
+				
+				var s = "\n\n\n"+
+				" 14 15  0  0  0  0  0  0  0  0999 V2000\n"+
+				"    0.5089    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    1.2234    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    1.2234    7.4191    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.2055    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.9200    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    5.3566    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.2055    7.4191    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    6.1816    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.9200    6.1816    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    8.6566    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.4929    7.0066    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.0080    7.6740    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.0080    6.3391    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.2630    8.4586    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"  1  7  1  0  0  0  0\n"+
+				"  8  2  1  0  0  0  0\n"+
+				"  1  3  1  0  0  0  0\n"+
+				"  2  3  2  0  0  0  0\n"+
+				"  7  4  1  0  0  0  0\n"+
+				"  4  8  1  0  0  0  0\n"+
+				"  4  9  2  0  0  0  0\n"+
+				"  7  5  1  0  0  0  0\n"+
+				"  8  6  1  0  0  0  0\n"+
+				"  1 10  2  0  0  0  0\n"+
+				"  3 12  1  0  0  0  0\n"+
+				"  2 13  1  0  0  0  0\n"+
+				" 13 11  2  0  0  0  0\n"+
+				" 12 11  1  0  0  0  0\n"+
+				" 12 14  1  0  0  0  0\n"+
+				"M  END\n";
+				
+				sketcherInstance.importStructure("mol", s).catch(function(error) {
+					alert("Import structure failed:"+error);
+				});
+			}, function () {
+				alert("Cannot retrieve sketcher instance from iframe");
+			});
+		});
+
+		var errorConsole = (function () {
+			var controlObject = {
+				"reset" : function() {
+					$("#error").children("p").html("");
+				}
+				,"print" : function(txt) {
+					$("#error").children("p").html(txt);
+				}
+				,"isEmpty" : function() {
+					return ($("#error").children("p").html() === "");
+				}
+			};
+
+			return controlObject;
+
+		}());
+
+		var qrCodeControl = (function () {
+
+			function getMolConvertURL() {
+				var ws = getDefaultServices();
+				return ws['molconvertws'];
+			};
+			
+			function handleRequestError (qXHR, textStatus, errorThrown) {
+				if (qXHR.status == 0) { // UNSENT request
+					var errMsg = "ERROR: MolConvert failed.\nThe request has not been sent.\nThe request may violate the cross domain policy.";
+					errorConsole.print(errMsg);
+				} else {
+					errorConsole.print("ERROR: MolConvert failed (status code "+ qXHR.status + ")\n" + qXHR.responseText);
+				}
+			};
+
+			var controlObject = {
+
+				"getQRCode": function getQRCode () {
+					errorConsole.reset();
+					var s = marvinSketcherInstance.exportAsMrv();
+					var	data = JSON.stringify({
+						"structure" : s,
+						"inputFormat" : "mrv",
+						"parameters" : "smiles"
+					});
+
+					$.ajax({
+						"url": getMolConvertURL()
+						,"type": "POST"
+						,"dataType": "json"
+						,"contentType": "application/json"
+						,"data": data
+					}).done(function (data, textStatus, jqXHR) {
+						qrCodeControl.convertsmilesToQRCode(data["structure"]);
+					}).fail(handleRequestError);
+				}
+
+				,"reset": function reset () {
+					$("#targetField").val("http://www.chemicalize.org/structure/#!mol=");
+					$("#result").empty();
+					errorConsole.reset();
+				}
+				
+				,"convertsmilesToQRCode": function convertsmilesToQRCode(smiles) {
+					$("#result").empty();
+					var qrCode = new QRCode(document.getElementById("result"), { "width" : 450, "height" : 450,	"correctLevel" : QRCode.CorrectLevel.M });
+					var s = $("#targetField").val() + escape(smiles);
+					qrCode.makeCode(s);
+				}
+			}
+
+			return controlObject;
+
+		}());
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Create QR Code</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<p>You can create QR Code from the drawn structure. If the MolConvert web service is not available, error message appears on the page when you attempt to convert the structure.</p>
+	<p>In the text field above the sketcher, you can specify the target URL encoded into the QR Code.</p>
+	<p>Please, press the <img style="vertical-align: middle;" src="images/qr.png" width="24" height="24" alt="QR Code"> button on the left toolbar to generate QR Code image from the current structure. The generated code can be scanned by your mobile phone 
+	(eg. with these apps: <a href="https://itunes.apple.com/en/app/qr-reader-for-iphone/id368494609?mt=8" target="_blank">iOS</a> , 
+	<a href="https://play.google.com/store/apps/details?id=com.google.zxing.client.android&hl=en" target="_blank">Android</a>).</p>  
+	<div style="margin-right: 30px;">
+		<label>QR Code target:</label>
+		<input id="targetField" type="text" size="30" value="http://www.chemicalize.org/structure/#!mol=" />
+		<input id="resetButton" type="button" value="Default">
+	</div>
+	<div class="resizable" style="display: inline-block; float: left;">
+		<iframe src="../editor.html" id="sketch" class="sketcher-frame"></iframe>
+	</div>
+	<div id="result" style="display: inline-block; float: left; margin: 8px; margin-left: 36px;"></div>
+	<div id="error">
+		<p></p>
+	</div>
+	<div style="clear: both;"></div>
+	<p>When the page is loaded, setup a molecule for the sketcher, define a custom button to submit QR Code generation process and provide an option to change
+	the URL prefix of the generated code by the creating a textbox.</p>
+	<pre><code data-language="javascript">
+var marvinSketcherInstance;
+
+$(document).ready(function handleDocumentReady (e) {
+	MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+		marvinSketcherInstance = sketcherInstance;
+			$("#resetButton").on("click", function handlegetQRCodeButton () {
+			qrCodeControl.reset();
+		});
+		var buttonAttributes = {
+				"name" : "Generate QR Code",
+				"image-url" : "examples/images/qr.png",
+				"toolbar" : "W"
+		};
+		sketcherInstance.addButton(buttonAttributes, function() {
+			qrCodeControl.getQRCode();
+		});
+		
+		var s = "\n\n\n"+
+		" 14 15  0  0  0  0  0  0  0  0999 V2000\n"+
+		"    0.5089    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    1.2234    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    1.2234    7.4191    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"   -0.2055    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"   -0.9200    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    0.5089    5.3566    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"   -0.2055    7.4191    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    0.5089    6.1816    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"   -0.9200    6.1816    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    0.5089    8.6566    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.4929    7.0066    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.0080    7.6740    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.0080    6.3391    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.2630    8.4586    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"  1  7  1  0  0  0  0\n"+
+		"  8  2  1  0  0  0  0\n"+
+		"  1  3  1  0  0  0  0\n"+
+		"  2  3  2  0  0  0  0\n"+
+		"  7  4  1  0  0  0  0\n"+
+		"  4  8  1  0  0  0  0\n"+
+		"  4  9  2  0  0  0  0\n"+
+		"  7  5  1  0  0  0  0\n"+
+		"  8  6  1  0  0  0  0\n"+
+		"  1 10  2  0  0  0  0\n"+
+		"  3 12  1  0  0  0  0\n"+
+		"  2 13  1  0  0  0  0\n"+
+		" 13 11  2  0  0  0  0\n"+
+		" 12 11  1  0  0  0  0\n"+
+		" 12 14  1  0  0  0  0\n"+
+		"M  END\n";
+		
+		sketcherInstance.importStructure("mol", s).catch(function(error) {
+			alert("Import structure failed:"+error);
+		});
+	}, function () {
+		alert("Cannot retrieve sketcher instance from iframe");
+	});
+});
+	</code></pre>
+	<p>The <strong>qrCodeControl</strong> object is responsible to retrieve the structure from the editor. It communicates with the MolConvert webservice via AJAX request
+	to convert the molecule to SMILES format. It provides the input for the QR Code generator. The QR Code generator expects a DOM object to insert into and a text data to encode.</p>
+	<pre><code data-language="javascript">
+var qrCodeControl = (function () {
+
+	function getMolConvertURL() {
+		var ws = getDefaultServices();
+		return ws['molconvertws'];
+	};
+	
+	function handleRequestError (qXHR, textStatus, errorThrown) {
+		if (qXHR.status == 0) { // UNSENT request
+			var errMsg = "ERROR: MolConvert failed.\nThe request has not been sent.\nThe request may violate the cross domain policy.";
+			errorConsole.print(errMsg);
+		} else {
+			errorConsole.print("ERROR: MolConvert failed (status code "+ qXHR.status + ")\n" + qXHR.responseText);
+		}
+	};
+	var controlObject = {
+		"getQRCode": function getQRCode () {
+			errorConsole.reset();
+			var s = marvinSketcherInstance.exportAsMrv();
+			var data = JSON.stringify({
+				"structure" : s,
+				"inputFormat" : "mrv",
+				"parameters" : "smiles"
+			});
+			$.ajax({
+				"url": getMolConvertURL()
+				,"type": "POST"
+				,"dataType": "json"
+				,"contentType": "application/json"
+				,"data": data
+			}).done(function (data, textStatus, jqXHR) {
+				qrCodeControl.convertsmilesToQRCode(data['structure']);
+			}).fail(handleRequestError);
+		}
+
+		, "reset": function reset () {
+			$("#targetField").val("http://www.chemicalize.org/structure/#!mol=");
+			$("#result").empty();
+			errorConsole.reset();
+		}
+		
+		, "convertsmilesToQRCode": function convertsmilesToQRCode(smiles) {
+			$("#result").empty();
+			var qrCode = new QRCode(document.getElementById("result"), { "width" : 450, "height" : 450 , "correctLevel" : QRCode.CorrectLevel.M });
+			var s = $("#targetField").val() + escape(smiles);
+			qrCode.makeCode(s);
+		}
+	}
+	return controlObject;
+}());
+	</code></pre>
+	<p>The errorConsole object is responsible to display error messages.</p>
+	<pre><code data-language="javascript">
+var errorConsole = (function () {
+	var controlObject = {
+		"reset" : function() {
+			$("#error").children("p").html("");
+		}
+		, "print" : function(txt) {
+			$("#error").children("p").html(txt);
+		}
+		, "isEmpty" : function() {
+			return ($("#error").children("p").html() === "");
+		}
+	};
+	return controlObject;
+}());
+</code></pre>
+	<p>The following additional JavaScript libraries are required:</p>	 
+	<pre><code data-language="javascript">
+	&lt;script src=&quote;../js/lib/jquery-1.9.1.min.js&quote;&gt;&lt;/script&gt;
+	&lt;script src=&quote;../js/webservices.js&quote;&gt;&lt;/script&gt;
+	&lt;script src=&quote;../js/util.js&quote;&gt;&lt;/script&gt;
+	&lt;script src=&quote;../js/lib/qrcode/qrcode.min.js&quote;&gt;&lt;/script&gt;
+	</code>
+	</pre>
+	<p>The QR Code generation uses a contributed JavaScript library, it is under <a href="../license/qrcode_license.txt" target="_blank">MIT license</a>.</p>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

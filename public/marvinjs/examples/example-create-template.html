@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Create Templates for Marvin JS</title>
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../gui/gui.nocache.js"></script>
+	<script>
+		var templateSource = '<cml><MDocument><MChemicalStruct><molecule molID="m1"><atomArray><atom id="a1" elementType="C" x2="-0.1875" y2="4.64321535254928"/><atom id="a2" elementType="C" x2="-1.4333663290170264" y2="3.7379987540372785"/><atom id="a3" elementType="C" x2="-0.9575039116298072" y2="2.2734513141173855"/><atom id="a4" elementType="C" x2="0.5825039116298072" y2="2.2734513141173855"/><atom id="a5" elementType="C" x2="1.0583663290170282" y2="3.7379987540372785"/></atomArray><bondArray><bond atomRefs2="a1 a2" order="1"/><bond atomRefs2="a1 a5" order="1"/><bond atomRefs2="a2 a3" order="1"/><bond atomRefs2="a3 a4" order="1"/><bond atomRefs2="a4 a5" order="1"/></bondArray></molecule></MChemicalStruct></MDocument></cml>';
+
+		$(document).ready(function handleDocumentReady (e) {
+			$("#molsource-box").val(templateSource);
+			$("#createButton").on("click", function(e) {
+				var current = TemplateBuilder.append();
+				Toolbar.add(current["icon"], current["tooltip"]);
+				var output = TemplateBuilder.get();
+				$("#structure").text(JSON.stringify(output));
+			});
+			$("#resetButton").on("click", function(e) {
+				Toolbar.reset();
+				TemplateBuilder.reset();
+				$("#structure").text("");
+				e.preventDefault();
+			});
+			$("#resetFormButton").on("click", function(e) {
+				$("#molsource-box").val("");
+				$("#name").val("");
+				$("#icon").val("");
+			});
+		});
+		
+		var TemplateBuilder = (function() {
+			var templatesObject = { "templates": []};
+			var w = 24;
+			var h = 24;
+			
+			var settings = {
+					'width': w,
+					'height': h,
+					'cpkColoring': true,
+					//'implicitHydrogen': "OFF",
+					'valenceErrorVisible': false,
+					//'carbonLabelVisible': false,
+					'chiralFlagVisible': false,
+					'displayMode': "WIREFRAME"
+			};
+			
+			function createImage(format, structure) {
+				if(format == "mol") {
+					return marvin.ImageExporter.molToDataUrl(structure,"image/png", settings);
+				} else if(format == "mrv") {
+					return marvin.ImageExporter.mrvToDataUrl(structure,"image/png", settings);
+				}
+				return null;
+			}
+			
+			function createTemplate() {
+				var output = {};
+				var format = $("#format option:selected").val();
+				output['structure'] = $("#molsource-box").val();
+				output['name'] = $("#name").val();
+				var icon = $("#icon").val();
+				if(typeof icon != 'undefined' && icon.indexOf("data:image/png;base64,") == 0) {
+					output['icon'] = icon;
+				} else {
+					output['icon'] = createImage(format, output['structure']);
+				}
+				return output;
+			}
+			
+			var templateBuilderObject = {
+				
+				"append": function append() {
+					var current = createTemplate();
+					templatesObject["templates"].push(current);
+					return current;
+				}
+				
+				,"reset": function reset() {
+					templatesObject = { "templates": []};
+				}
+				
+				,"get": function() {
+					return templatesObject;
+				}
+			}
+			
+			return templateBuilderObject;
+		}());
+		
+		var Toolbar = (function(){
+			var id = "#toolbarContainer";
+			var thumbW = 24;
+			var thumbH = 24;
+			
+			var toolbarObject = {
+				
+				"add": function add(image, tooltip) {
+					var img = $('<img width='+thumbW+' height='+thumbH+' style="display: inline-block;"/>');
+					img.attr("src", image);
+					var alt = tooltip || "";
+					img.attr("alt", alt);
+					$(id).append(img);
+				}
+				
+				,"reset": function reset() {
+					$(id).empty();
+				}
+			}
+			return toolbarObject;
+		}());
+	</script>
+</head>
+<body>
+	<h1>Create Templates for Marvin JS</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<p>You can generate templates for Marvin JS with the help of the following form. Just fill the form and push the <strong>Add</strong> button.
+	The template source appears in the <em>Result</em> text box, and the generated (24x24 )icon displays above it.</p>
+	<p>By repeating these steps, you can append further and further template to the templates object.</p>
+	<p>Finally, you can copy the textual result (from the textbox) in a file that you can refer later in Marvin JS.</p>
+	<noscript>
+		<div>
+			<p>Your web browser must have JavaScript enabled in order for this application to display correctly.</p>
+		</div>
+	</noscript>
+	
+	<h3>Input</h3>
+	<div class="table-layout" style="background-color: #d0d0d0; display: inline-block; margin-bottom: 2em;">
+		<li><label>structure:</label></li>
+		<li><textarea id="molsource-box"></textarea></li>
+		<li><label>format:</label></li>
+		<li><select id="format">
+			<!-- <option value="mol" selected>MDL molfile</option>-->
+			<option value="mrv" selected>Marvin Document (mrv)</option>
+			<!--<option value="smiles">SMILES</option>-->
+		</select></li>
+		<li><label>name:</label></li>
+		<li><input id="name" type="textfield"></input></li>
+		<li><label>icon:</label></li>
+		<li><textarea id="icon"></textarea></li>
+		<li>
+			<input id="createButton" type="button" value="Add" style="float: right; margin-top: 1em;"/>
+			<input id="resetButton" type="button" value="Reset Result" style="float: right; margin-top: 1em;"/>
+			<input id="resetFormButton" type="button" value="Reset form" style="float: right; margin-top: 1em;"/>
+		</li>
+	</div>
+	<h3>Result</h3>
+	<div id="result" class="table-layout" style="background-color: #d0d0d0; display: inline-block; padding: 2px;">
+		<li><div id="toolbarContainer" style="background-color: white; min-height: 24px; height: 24px;"></div></li>
+		<li><textarea id="structure" readonly="readonly" style="min-width: 30%; width: 600px; height: 200px;"></textarea></li>
+	</div>
+
+
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

@@ -55,7 +55,7 @@ class MyModuleTagsController < ApplicationController
   end
 
   def create
-    return render_403 unless mt_params[:tag_id]
+    return render_403 unless params[:my_module_tag] && mt_params[:tag_id]
 
     @mt = MyModuleTag.new(mt_params.merge(my_module: @my_module))
     @mt.created_by = current_user
@@ -125,6 +125,9 @@ class MyModuleTagsController < ApplicationController
 
   def destroy_by_tag_id
     tag = @my_module.my_module_tags.find_by_tag_id(params[:id])
+
+    return render_404 unless tag
+
     tag.destroy
     render json: { result: tag }
   end

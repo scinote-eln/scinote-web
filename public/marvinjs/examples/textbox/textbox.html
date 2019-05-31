@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Marvin JS</title>
+	<script src="../../js/lib/jquery-1.9.1.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../../css/doc.css" />
+	<script>
+
+		$(document).ready(function handleDocumentReady (e) {
+			$("#clearButton").on("click", clearText);
+			$("#submitButton").on("click", submitText);
+		});
+
+		function submitText(e) {
+			var txt = $("#textbox").val(),
+				format = $("#format").val();
+			var winowner = window.opener;
+			winowner.asynCallbackOfAppendMol(txt, format);
+			window.close();
+		}
+
+		function clearText() {
+			textbox.value = "";
+		}
+
+	</script>
+</head>
+<body>
+	<form method="post">
+		<p><textarea id="textbox" class="scrollablebox"></textarea></p>
+		<p class="button"><input id="clearButton" type="button" value="Clear" />
+		<label>Format:</label>
+		<select id="format">
+			<option value="mol">MDL molfile</option>
+			<option value="mrv">MRV</option>
+		</select>
+		<input id="submitButton" type="button" value="Submit" /></p>
+	</form>
+</body>
+</html>

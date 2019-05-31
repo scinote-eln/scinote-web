@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Set lone pairs manually</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+		
+		var molecule = "\n\n\n"+
+		"  6  3  0  0  0  0  0  0  0  0999 V2000\n"+
+		"    0.0000   -0.0418    0.0000 Cl  0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.4274    0.0000    0.0000 Ne  0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    3.1419    0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    1.7129    0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.4274   -0.8250    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"   -1.7299   -0.0558    0.0000 Kr  0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"  2  3  1  0  0  0  0\n"+
+		"  2  4  1  0  0  0  0\n"+
+		"  2  5  1  0  0  0  0\n"+
+		"M  END\n";
+		
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				marvinSketcherInstance.importStructure("mol",molecule);
+				initControl();
+				update($("#chbx-educationmode"));
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControl () {
+			$("#chbx-educationmode").on("change", function (e) {
+				update(e.target);
+			});
+		}
+		
+		function update(checkBox){
+			var settings = {};
+			settings.lonePairsVisible= true;
+			settings.lonepaircalculationenabled = !(checkBox.checked);
+			settings.copyasmrv = checkBox.checked;
+			settings.implicitHydrogen = (checkBox.checked) ? "OFF" : "TERMINAL_AND_HETERO";
+			settings.valenceErrorVisible = !(checkBox.checked);
+			settings.circledsign = checkBox.checked;
+			marvinSketcherInstance.setDisplaySettings(settings);
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - How to change the editor settings for adding lone pairs manually feature</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		<div>
+			<input type="checkbox" id="chbx-educationmode"></input>EDUCATION MODE
+		</div>
+		<div class="resizable" style="display: inline-block;">
+			<iframe src="../editorws.html" id="sketch" class="sketcher-frame" data-toolbars="reporting"></iframe>
+		</div>
+	<div>
+		<p>This example demonstrates all of the preparations which should be made before applying the manual lone pair usage. 
+		When EDUCATION MODE is <strong>activated</strong> via its checkbox, the following settings will be applied:
+		<ul style="list-style-type: circle;">
+			<li style="list-style-type: circle;">automatic lone pair calculation is <em>disabled</em>, every atom gets <em>0 lone pairs</em> immediately</li>
+			<li style="list-style-type: circle;">'Increase lone pairs' button is <em>enabled</em> on the toolbar, and becomes ready to use</li>
+			<li style="list-style-type: circle;">on copy, any structure is placed in <em>MRV</em> format to the clipboard </li>
+			<li style="list-style-type: circle;">implicit hydrogens are <em>hidden</em></li>
+			<li style="list-style-type: circle;">valence errors are <em>hidden</em>.</li>
+			<li style="list-style-type: circle;">circled plus / minus sign at charge.</li>
+		</ul>
+		When the checkbox is <strong>inactivated</strong>, the DEFAULT settings will be applied:
+		<ul style="list-style-type: circle;">
+			<li style="list-style-type: circle;">automatic lone pair calculation is <em>enabled</em>, the lone pairs are <em>recalculated</em>on every atom</li>
+			<li style="list-style-type: circle;">'Increase lone pairs' button is <em>disabled</em> on the toolbar</li>
+			<li style="list-style-type: circle;">on copy, any structure is placed as <em>MDL MOL file</em> to the clipboard </li>
+			<li style="list-style-type: circle;">implicit hydrogens are <em>visible</em> on terminal and hetero atoms</li>
+			<li style="list-style-type: circle;">valence errors are <em>visible</em>.</li>
+			<li style="list-style-type: circle;">normal plus / minus sign at charge.</li>
+		</ul>
+		To see the differences between the two settings, some structures are set to the editor. (This example will return to this initial state on page refresh.)
+		
+		
+		In this example, the <em>reporting preset</em> has been set, and the display of lone pairs has been turned on. Please, note that lone pairs are not visible by default in Marvin JS and 'Increase lone pairs' button is only available in the <em>education</em> and the <em>reporting</em> preset. 
+		
+		
+		<p>At startup, <strong>EDUCATION MODE</strong> is not set in Marvin JS.</p>
+		<pre><code data-language="html">&lt;iframe src="../editorws.html" id="sketch" class="sketcher-frame" data-toolbars="reporting" &gt;&lt;/iframe&gt;</code></pre>
+		<p>First of all, a reference is needed for the editor. <code>MarvinJSUtil.getEditor(String)</code> provides a Promise object to get it
+		when the editor is ready.</p>
+		<p>After the editor is loaded and an initial molecule is set, <code>initcontrol()</code> function binds actions to the <em>EDUCATION MODE</em> checkbox. Invoking <code>initcontrol()</code> function ensures that the initial state of the checkbox is consistent with the initial settings of the editor in this example.</p> 
+		<pre><code data-language="javascript">		
+		var marvinSketcherInstance;
+
+		var molecule = "\n\n\n"+
+		"  6  3  0  0  0  0  0  0  0  0999 V2000\n"+
+		"    0.0000   -0.0418    0.0000 Cl  0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.4274    0.0000    0.0000 Ne  0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    3.1419    0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    1.7129    0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"    2.4274   -0.8250    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"   -1.7299   -0.0558    0.0000 Kr  0  0  0  0  0  0  0  0  0  0  0  0\n"+
+		"  2  3  1  0  0  0  0\n"+
+		"  2  4  1  0  0  0  0\n"+
+		"  2  5  1  0  0  0  0\n"+
+		"M  END\n";
+		
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				marvinSketcherInstance.importStructure("mol",molecule);
+				initControl();
+				update($("#chbx-educationmode"));
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});</code></pre>
+		<p>Changing the checkbox value triggers the update of the editor settings.
+		In the change event handler, the <code>target</code> of the change event is the checkbox. If the checkbox is checked, the new settings are applied to the editor.
+		Settings of the editor can be updated with its <em>setDisplaySettings(settings)</em> function.</p>
+		<pre><code data-language="javascript">		
+		function initControl () {
+			$("#chbx-educationmode").on("change", function (e) {
+				update(e.target);
+			});
+		}
+		
+		function update(checkBox){
+			var settings = {};
+			settings.lonePairsVisible= true;
+			settings.lonepaircalculationenabled = !(checkBox.checked);
+			settings.copyasmrv = checkBox.checked;
+			settings.implicitHydrogen = (checkBox.checked) ? "OFF" : "TERMINAL_AND_HETERO";
+			settings.valenceErrorVisible = !(checkBox.checked);
+			settings.circledsign = checkBox.checked;
+			marvinSketcherInstance.setDisplaySettings(settings);
+		}
+		</code></pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

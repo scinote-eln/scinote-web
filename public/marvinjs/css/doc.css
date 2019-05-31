@@ -1,0 +1,276 @@
+html{
+	font-family: "Titillium",  Cambria, Helvetica, Arial, Geneva, sans-serif !important;
+	padding: 20px 5% 20px 5% !important;
+	background: #29999c;
+}
+
+body {
+	clear: both;
+	box-shadow: 2px 2px 3px #444;
+	border-radius: 3px;
+	padding: 20px !important;
+	margin: 0px;
+	background: #f9f9f9;
+	min-width: 650px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+a, a:link, a:active{color:#29999C !important;}
+a:visited{color:#55299C !important;}
+a:hover{color:#3EB9BD !important;}
+
+
+h1 {
+	text-align: center;
+	color: #29999c;
+	background: white;
+	border-radius: 3px 3px 0px 0px;
+	margin: -20px -20px 0px -20px;
+	border-bottom: 1px solid #888;
+}
+
+h1, h1 a, h2 a{
+		font-family: "Titillium",  Cambria, Helvetica, Arial, Geneva, sans-serif !important;
+}
+
+.version {
+	font-family: sans-serif;
+	font-size: smaller;
+	float: right;
+}
+
+pre {
+	padding: 30px;
+	font-family: courier;
+	max-width: 70vw;
+	overflow-x: auto;
+}
+
+input {
+	border: 1px solid;
+}
+
+iframe{
+	border:none;
+	padding: 0px;
+	margin: 0px;
+    
+	box-shadow: 2px 2px 3px #888;
+}
+
+select {
+	border: 1px solid;
+}
+
+textarea {
+	font-family: monospace;
+}
+
+
+#molsource-box{
+	min-width: 30%;
+	width: 600px;
+	height: 350px;
+}
+.sketcher-frame {
+	margin: -2px;
+	resize: none;
+	min-width: 370px;
+	min-height: 370px;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+.resizable{
+	border: none;
+	padding: 0px 8px 8px 0px;
+	border: 0px;
+	resize: both;
+	width: 510px;
+	height: 510px;
+	min-width: 370px;
+	min-height: 370px;
+	overflow: auto;
+	background-color: transparent;
+}
+
+ul.horizontalmenu {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 6px;
+	background-color: #dddddd;
+}
+
+ul.horizontalmenu li {
+	display: inline;
+	list-style-type: none;
+	padding-right: 6px;
+}
+
+input[type="checkbox"], input[type="button"] {
+	cursor: pointer;
+}
+
+input[type="number"] {
+	width: 70px;
+	text-indent: 2px;
+}
+
+.table-layout {
+	vertical-align: top;
+}
+
+.table-layout li {
+	display: table-row;
+}
+.table-layout li >* {
+	display: table-cell;
+	padding: 2px;
+}
+
+label {
+	cursor: pointer;
+}
+
+.darkbox {
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	background-color: transparent;
+}
+
+.scrollablebox {
+	width: 90%;
+	height:350px;
+	white-space: nowrap;
+	overflow: scroll;
+	margin-bottom: 20px;
+	margin-top: 0px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+#submitButton {
+	margin-top: -20px;
+}
+
+td { vertical-align: top; }
+li { list-style-type: none; }
+
+.molecule-div {
+	background-color: #bababa;
+	margin-left: 20px;
+	margin-right: 0px;
+	font-size: 11px;
+}
+
+div#serviceForm {
+	margin: 10px;
+	background-color: #ddd;
+	padding: 4px;
+	clear: none;
+	display: inline-block;
+	font-family: sans-serif;
+	font-size: 12px;
+}
+
+div#serviceForm input {
+	border: none;
+	margin: 2px;
+	margin-left: 0px;
+}
+
+.editorheader {
+    float: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: transparent;
+}
+
+.left10 {
+	margin-left: 10px;
+}
+
+#convertStructureInputHeader {
+	display: inline-block;
+	margin-right: 10px;
+	background-color: #ddd;
+	font-size: 12px;
+	font-family: sans-serif;
+	margin-bottom: 20px;
+}
+
+.bordered {
+	box-shadow: 2px 2px 3px #444;
+}
+
+/* APIDOC style */
+.rightSide {
+	float: right;
+}
+
+div.table {
+	border: 1px solid;
+	display: table;
+	width: 100%;
+	margin-bottom: 14px;
+}
+
+div.api-header div.api-body {
+	display: table-row;
+}
+
+.api-body, .api-header, div.inner-api-table {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+div.api-body p:last-of-type {
+	margin-bottom: 1em;
+}
+
+.api-header {
+	background-color:  #29999C;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+span.api-method-returntype:before {
+	content: "Returns: ";
+}
+
+div code {
+	background-color: inherit;
+	border: none;
+}
+
+div.inner-api-table {
+	display: block;
+	background-color: lightblue;
+	border: none;
+	overflow-x: auto;
+}
+
+/* categories.html and items.html */
+table.cell-borrder-vertical tr > td {
+	padding-top: 0.5em;
+}
+
+table.cell-border-vertical tr > td, table.cell-border-vertical tr > th {
+	border-left: 1px solid;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+table.cell-border-vertical tr > td:first-of-type, table.cell-border-vertical tr > th:first-of-type {
+	border-left: none;
+	padding-left: initial;
+}

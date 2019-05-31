@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Set a Molecule</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				marvinSketcherInstance.importStructure("mol", s).catch(function(error) {
+					alert(error);
+				});
+				initControls();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControls () {
+
+			// Reset mol button
+			$("#btn-setmol").on("click", function (e) {
+				marvinSketcherInstance.importStructure("mol",s);
+			});
+		}
+
+		var s = "\n\n\n"+
+				" 14 15  0  0  0  0  0  0  0  0999 V2000\n"+
+				"    0.5089    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    1.2234    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    1.2234    7.4191    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.2055    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.9200    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    5.3566    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.2055    7.4191    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    6.1816    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.9200    6.1816    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    8.6566    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.4929    7.0066    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.0080    7.6740    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.0080    6.3391    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.2630    8.4586    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"  1  7  1  0  0  0  0\n"+
+				"  8  2  1  0  0  0  0\n"+
+				"  1  3  1  0  0  0  0\n"+
+				"  2  3  2  0  0  0  0\n"+
+				"  7  4  1  0  0  0  0\n"+
+				"  4  8  1  0  0  0  0\n"+
+				"  4  9  2  0  0  0  0\n"+
+				"  7  5  1  0  0  0  0\n"+
+				"  8  6  1  0  0  0  0\n"+
+				"  1 10  2  0  0  0  0\n"+
+				"  3 12  1  0  0  0  0\n"+
+				"  2 13  1  0  0  0  0\n"+
+				" 13 11  2  0  0  0  0\n"+
+				" 12 11  1  0  0  0  0\n"+
+				" 12 14  1  0  0  0  0\n"+
+				"M  END\n";
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Set a Molecule</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<div class="darkbox">
+		<ul class="horizontalmenu">
+			<li><input type="button" id="btn-setmol" value="Reset mol" /></li>
+		</ul>
+		<div class="resizable">
+			<iframe src="../editorws.html" id="sketch" class="sketcher-frame"></iframe>
+		</div>
+	</div>
+	<div>
+		<p>To be able to embed the Marvin JS editor into a web page, you need one of the following HTML files:
+		<ul>
+			<li><strong>editor.html</strong> - the pure editor</li>
+			<li><strong>editorws.html</strong> - the editor extended with default webservices</li>
+		</ul>
+
+		<p>These HTML files are responsible for loading all resources that the editor component requires.</p>
+
+		<p>First of all, create an <strong>iframe</strong> that loads the proper HTML file. 
+		(In this example, the <em>editorws.html</em> file is preferred to be able to use extra functionalities that webservices provide.) 
+		The editor component fills the <code>iframe</code>. As you resize the <code>iframe</code>, the editor follows the changing of the 
+		<code>iframe</code> width and height. In this example, the <code>iframe</code> size is determined by its CSS class, 
+		which is defined in <code>docs.css</code>: <code>sketcher-frame</code></p>
+
+		<pre>
+			<code data-language="html">&lt;div class=&quot;resizable&quot;&gt;
+	&lt;iframe src=&quot;../editorws.html&quot; id=&quot;sketch&quot; class=&quot;sketcher-frame&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code>
+		</pre>
+
+		<p>The host page is where the <code>iframe</code> is inserted.</p>
+
+		<p>The loading of the editor is not synchronized with the loading of the hosted page. The sketcher object is instantiated inside the <code>iframe</code>. Thus, there is no guaranty that the sketcher is already available
+		when the loading of the hosted page is finished.</p> 
+		<p>If you would like to access the sketcher object, use the <code>MarvinJSUtil.getEditor(<em>iframeID</em>)</code> helper function from the <code>js/marvinjslauncher.js</code>.
+		<p>To use it, please include the following script in the header of the HTML document where you would like to use.
+		<pre><code data-language="javascript">&lt;script src="../gui/lib/promise-1.0.0.min.js"&gt;&lt;/script&gt;
+	&lt;script src="../js/marvinjslauncher.js"&gt;&lt;/script&gt;</code></pre>
+		</p>
+		<p>Below, you can see its usage.
+		Call <code>MarvinJSUtil.getEditor</code> with the ID of the iframe that contains the editor. It returns with a promise.
+		After then, call the <code>then</code> method of the promise object. Here, you can specify which code should be evaluated when loading of the sketcher is successful and which one when it fails.</p>
+		<pre><code data-language="javascript">
+		MarvinJSUtil.getEditor("#sketch").then(function(sketcherInstance) {
+			// code performed when the sketcher loaded successful (sketcherInstance is a reference to the editor object)
+		}, function() {
+			// code performed when the sketcher loading failed
+		});</code></pre>
+		<p>The fail branch can be evaluated in the following cases:</p>
+		<ul>
+			<li>Unable to get iframe with the given ID.</li>
+			<li>Unable to find sketcherInstance in iframe with the given ID.</li>
+			<li>Unable to find marvin package</li>
+			<li>Unable to retrieve sketcher instance.</li>
+		</ul>
+		<p>Please, take care that in certain case the browser can reject accessing of the sketcher despite it is loaded into the iframe. It happens when the JavaScript request violates the security concept of the browser  
+		(<a href="http://en.wikipedia.org/wiki/Same_origin_policy">same origin policy</a>).</p> See the <a href="../docs/troubleshoot.html">Troubleshoot</a> section of the documentation for more details.</a>
+		
+		<p>In this example, when sketcher is loaded, the initial molecule is setup by calling the <code>importStructure</code> function, and the <code>initControls()</code> function is performed. It binds even handlers
+		for the checkboxes above the editor (CPK coloring and Carbon label visibility).</p>
+
+		<pre><code data-language="javascript">var marvinSketcherInstance;
+
+$(document).ready(function handleDocumentReady (e) {
+	var p = MarvinJSUtil.getEditor("#sketch");
+	p.then(function (sketcherInstance) {
+		marvinSketcherInstance = sketcherInstance;
+		marvinSketcherInstance.importStructure("mol", s).catch(function(error) {
+			alert(error);
+		});
+		initControls();
+	}, function (error) {
+		alert("Cannot retrieve sketcher instance from iframe:"+error);
+	});
+});
+
+function initControls () {
+
+	// Reset mol button
+	$("#btn-setmol").on("click", function (e) {
+		marvinSketcherInstance.importStructure("mol", s);
+	});
+}
+
+var s = "\n\n\n"+
+	" 14 15  0  0  0  0  0  0  0  0999 V2000\n"+
+	"    0.5089    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    1.2234    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    1.2234    7.4191    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"   -0.2055    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"   -0.9200    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    0.5089    5.3566    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"   -0.2055    7.4191    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    0.5089    6.1816    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"   -0.9200    6.1816    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    0.5089    8.6566    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    2.4929    7.0066    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    2.0080    7.6740    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    2.0080    6.3391    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"    2.2630    8.4586    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+	"  1  7  1  0  0  0  0\n"+
+	"  8  2  1  0  0  0  0\n"+
+	"  1  3  1  0  0  0  0\n"+
+	"  2  3  2  0  0  0  0\n"+
+	"  7  4  1  0  0  0  0\n"+
+	"  4  8  1  0  0  0  0\n"+
+	"  4  9  2  0  0  0  0\n"+
+	"  7  5  1  0  0  0  0\n"+
+	"  8  6  1  0  0  0  0\n"+
+	"  1 10  2  0  0  0  0\n"+
+	"  3 12  1  0  0  0  0\n"+
+	"  2 13  1  0  0  0  0\n"+
+	" 13 11  2  0  0  0  0\n"+
+	" 12 11  1  0  0  0  0\n"+
+	" 12 14  1  0  0  0  0\n"+
+	"M  END\n";</code>
+	</pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

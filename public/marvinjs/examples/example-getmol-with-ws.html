@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Get The Molecule via webservices</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script src="../js/webservices.js"></script>
+	<script>
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControl () {
+
+			// get mol button
+			$("#btn-getmol").on("click", function (e) {
+				marvinSketcherInstance.exportStructure("mol", {"extra": "+H"}).then(function(source) {
+					$("#molsource").text(source);
+				}, function(error) {
+					alert("Molecule export failed:"+error);	
+				});
+			});
+			var molconvertws_value = getDefaultServices()["molconvertws"]
+			$("#btn-service").change(function(e) {
+				var services = {
+					"molconvertws" : (e.target['checked']) ? molconvertws_value : null
+				};
+				marvinSketcherInstance.setServices(services);
+			});
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example - Get The Molecule</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+		
+		<div class="resizable">
+			<iframe src="../editorws.html" id="sketch" class="sketcher-frame"></iframe>
+		</div>
+		<ul style="-moz-padding-start: 0px; -webkit-padding-start: 0px; padding-start: 0px padding-0px;">
+			<li><input type="button" id="btn-getmol" value="Get mol" /></li>
+			<li><input type="checkbox" id="btn-service" checked>Enable molconvertws</input></li>
+			<li><textarea id="molsource" rows=10 cols=80></textarea></li>
+		</ul>
+	<div>
+		<p>This example demonstrates how to retrieve a structure from Marvin JS editor, using extra export options.</p>
+ 
+		<p>JChem Webservices (the web service implementation provided by ChemAxon) can accept special 
+		<a href="https://docs.chemaxon.com/display/docs/Molconvert#Molconvert-OptionsForFileformats"> export options </a>. The exportStructure() API function of Marvin JS gives the chance to specify export parameters for the molExport service.</p> 
+		<p>In this example, <strong>+H</strong> export option (adding explicit Hydrogens to the structure) is passed to the <strong>molExport</strong> service. If the extra option has been specified, the exportStructure passes the request directly to the remote service instead of evaluating it on client side. 
+		If the location of the service has not been specified, an error message is thrown.</p>
+		<p>Please, take care that Marvin JS does not check whether the extra export options passed to WS are valid or not.</p>
+
+		<p>When the Get mol button is pressed, the current molecule is retrieved from the editor in mol format and the result is displayed in the textbox.</p>
+		<p>By unchecking the webservice checkbox, you can switch off the molExport web service. After this, pressing the Get mol button results in an error message, saying: <em>"Unsupported format mol:+H"</em>.</p>
+		<pre><code data-language="javascript">var marvinSketcherInstance;
+
+$(document).ready(function handleDocumentReady (e) {
+	var p = MarvinJSUtil.getEditor("#sketch");
+	p.then(function (sketcherInstance) {
+		marvinSketcherInstance = sketcherInstance;
+		initControl();
+	}, function (error) {
+		alert("Cannot retrieve sketcher instance from iframe:"+error);
+	});
+});
+
+function initControl () {
+
+	// get mol button
+	$("#btn-getmol").on("click", function (e) {
+		marvinSketcherInstance.exportStructure("mol", {"extra": "+H"}).then(function(source) {
+			$("#molsource").text(source);
+		}, function(error) {
+			alert("Molecule export failed:"+error);	
+		});
+	});
+	var molconvertws_value = getDefaultServices()["molconvertws"]
+	$("#btn-service").change(function(e) {
+		var services = {
+			"molconvertws" : (e.target['checked']) ? molconvertws_value : null
+		};
+		marvinSketcherInstance.setServices(services);
+	});
+}
+
+</code>
+	</pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

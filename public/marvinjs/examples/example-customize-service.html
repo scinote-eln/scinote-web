@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Marvin JS Example to customize service</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../js/lib/jquery-1.9.1.min.js"></script>
+	<script src="../js/webservices.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script type="text/javascript">
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				resetForm();
+				initControls();
+			}, function () {
+				alert("Cannot retrieve sketcher instance from iframe");
+			});
+		});
+
+		function initControls () {
+			$("#restoreButton").on("click", resetForm);
+			$("#applyButton").on("click", function (e) {
+				submitService($("#clean2dws-location").val());
+
+			});
+		}
+
+		function resetForm() {
+			$("#clean2dws-location").val(getDefaultServices()["clean2dws"]);
+		}
+
+		function submitService(url) {
+			var services = {
+				"clean2dws" : (url == "") ? null : url
+			};
+			marvinSketcherInstance.setServices(services);
+			$("#serviceForm").hide();
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Marvin JS Example to customize service</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<p>The Clean2D webservice is not available at startup (its icon is missing from the toolbar). You have an input form where you can specify the location of the Clean2D
+	webservice. As you apply the form, it disappears and the Clean2D service is registered to the sketcher with the given URL. After that, the Clean icon appears
+	on the toolbar and you can perform clean operation on the drawn structure.</p>
+
+	<p>Clean operation can fail in the following cases:
+	<ul>
+		<li>Wrong URL</li>
+		<li>The server where the URL points is not available.</li>
+		<li>The webservice is located on different domain than the editor (browser can block the request via the webservice if it harms its same origin policy).</li>
+		<li>The webservice is not compatible with the current JChem Webservice version that Marvin JS expects (e.g.: unexpected input or output data).</li>
+	</ul>
+	</p>
+	<div id="serviceForm">
+	<span>Clean2D Webservice location:</span><br>
+	<input id="clean2dws-location" type="text" size=100 value=""></input>
+	<input id="restoreButton" type="button" value="Restore default" />
+	<input id="applyButton" type="button" value="Apply Service" />
+	</div>
+	<div class="resizable">
+		<iframe src="../editor.html" id="sketch" class="sketcher-frame"></iframe>
+	</div>
+	
+	<div class="left10">
+	<p>Initialize the input form at startup. When the <strong>Apply Service</strong> button is submitted, the <code>setServices</code> function of the sketcher
+	is called to apply the given service to the editor. The function expects a JavaScript object that describes one or more webservices.
+	Finally, hide the input form to prevent applying further services.</p>
+		<pre>
+			<code data-language="javascript">$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor(&quot;#sketch&quot;).then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				resetForm();
+				initControls();
+			}, function () {
+				alert(&quot;Cannot retrieve sketcher instance from iframe&quot;);
+			});
+		});
+
+		function initControls () {
+			$(&quot;#restoreButton&quot;).on(&quot;click&quot;, resetForm);
+			$(&quot;#applyButton&quot;).on(&quot;click&quot;, function (e) {
+				submitService($(&quot;#clean2dws-location&quot;).val());
+
+			});
+		}
+
+		function resetForm() {
+			$(&quot;#clean2dws-location&quot;).val(getDefaultServices()[&quot;clean2dws&quot;]);
+		}
+
+		function submitService(url) {
+			var services = {
+				&quot;clean2dws&quot; : (url == &quot;&quot;) ? null : url
+			};
+			marvinSketcherInstance.setServices(services);
+			$(&quot;#serviceForm&quot;).hide();
+		}
+			</code>
+		</pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>
