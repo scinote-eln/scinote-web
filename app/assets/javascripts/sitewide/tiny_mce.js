@@ -192,7 +192,7 @@ var TinyMCE = (function() {
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
 
-            var editorToolbaroffset = mceConfig.toolbar_offset || 120;
+            var editorToolbaroffset
             var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
 
             var editorToolbaroffset;
