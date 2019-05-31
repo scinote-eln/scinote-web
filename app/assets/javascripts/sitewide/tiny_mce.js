@@ -95,7 +95,7 @@ var TinyMCE = (function() {
 
   // returns a public API for TinyMCE editor
   return Object.freeze({
-    init: function(selector, mceConfig = {}) {
+    init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
       var plugins;
@@ -106,7 +106,7 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-        plugins = 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern';
+        plugins = 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
         if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
@@ -252,6 +252,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+                if (onSaveCallback) { onSaveCallback(); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);

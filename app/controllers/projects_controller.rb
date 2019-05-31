@@ -16,6 +16,7 @@ class ProjectsController < ApplicationController
                                                   samples_index)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
+  before_action :set_inline_name_editing, only: %i(show experiment_archive)
 
   # except parameter could be used but it is not working.
   layout 'fluid'
@@ -337,6 +338,16 @@ class ProjectsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_project?(@project)
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_project?(@project)
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'project',
+      field_to_udpate: 'name',
+      path_to_update: project_path(@project)
+    }
   end
 
   def log_activity(type_of, message_items = {})

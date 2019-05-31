@@ -101,8 +101,7 @@ class StepCommentsController < ApplicationController
           # Generate activity
           log_activity(:edit_step_comment)
 
-          message = custom_auto_link(@comment.message, simple_format: false,
-              tags: %w(img), team: current_team)
+          message = custom_auto_link(@comment.message, team: current_team)
           render json: { comment: message }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
@@ -132,9 +131,9 @@ class StepCommentsController < ApplicationController
     @last_comment_id = params[:from].to_i
     @per_page = Constants::COMMENTS_SEARCH_LIMIT
     @step = Step.find_by_id(params[:step_id])
-    @protocol = @step.protocol
+    @protocol = @step&.protocol
 
-    unless @step
+    unless @step && @protocol
       render_404
     end
   end

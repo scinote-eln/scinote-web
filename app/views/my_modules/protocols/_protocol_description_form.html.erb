@@ -17,6 +17,7 @@
   <%= f.tiny_mce_editor(:description,
                         id: :protocol_description_textarea,
                         class: 'hidden',
+                        placeholder: t('my_modules.protocols.protocol_status_bar.empty_description_edit_label'),
                         hide_label: true,
                         value: sanitize_input(protocol.tinymce_render(:description)),
                         data: {

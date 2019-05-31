@@ -514,7 +514,7 @@ class StepsController < ApplicationController
 
   def load_vars
     @step = Step.find_by_id(params[:id])
-    @protocol = @step.protocol
+    @protocol = @step&.protocol
     if params[:checklistitem_id]
       @chk_item = ChecklistItem.find_by_id(params[:checklistitem_id])
     end

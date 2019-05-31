@@ -149,17 +149,10 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <% editable = false if local_assigns[:editable].nil? %>
-      <h4 class="nav-name <%= (editable && editable[:active]) ? 'editable' : '' %>">
-        <% if editable && editable[:active] %>
-          <%= render partial: "shared/inline_editing", locals: {
-            initial_value: truncate(title_element.name, length: Constants::MAX_EDGE_LENGTH),
-            width: editable[:width] || '100%',
-            name: editable[:name],
-            field_to_udpate: editable[:field_to_udpate],
-            path_to_update: editable[:path_to_update],
-            params_group: editable[:params_group]
-          } %>
+      <h4 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
+        <% if @inline_editable_title_config.present? %>
+          <%= render partial: "shared/inline_editing",
+                     locals: { initial_value: title_element.name } %>
         <% else %>
           <%= truncate(title_element.name,
                      length: Constants::MAX_EDGE_LENGTH) %>

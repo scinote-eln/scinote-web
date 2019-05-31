@@ -2,16 +2,7 @@
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
-<%= render partial: "shared/secondary_navigation", locals: {
-  editable: {
-    name: 'title',
-    active: can_manage_module?(@my_module),
-    width: 'calc(100% - 580px)',
-    params_group: 'my_module',
-    field_to_udpate: 'name',
-    path_to_update: my_module_path(@my_module)
-  }
-} %>
+<%= render partial: "shared/secondary_navigation" %>
 
 <div class="content-pane my-modules-protocols-index">
   <span class="module-header">

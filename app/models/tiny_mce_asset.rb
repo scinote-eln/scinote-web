@@ -50,9 +50,11 @@ class TinyMceAsset < ApplicationRecord
     end
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
-      image_to_update&.update(object: object, saved: true)
+      image_to_update&.update(object: object, saved: true) unless image_to_update.object
     end
     where(id: images_to_delete).destroy_all
+
+    object.delay(queue: :assets).copy_unknown_tiny_mce_images
   rescue StandardError => e
     Rails.logger.error e.message
   end
@@ -62,7 +64,7 @@ class TinyMceAsset < ApplicationRecord
     description = update_old_tinymce(description, obj)
 
     description = Nokogiri::HTML(description)
-    tm_assets = description.css('img')
+    tm_assets = description.css('img[data-mce-token]')
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset_url = find_by_id(Base62.decode(asset_id))

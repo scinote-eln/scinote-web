@@ -61,13 +61,9 @@
     padding-bottom: 0;
     padding-top: 0;
 
-    > * {
-      display: inline-block;
-      line-height: 39px;
-    }
-
     .panel-options {
       bottom: 0;
+      line-height: 39px;
     }
 
     span.step-number {
@@ -80,16 +76,19 @@
       align-items: center;
       display: flex;
       height: 39px;
+      padding-right: 5px;
 
       .step-name-link {
         display: flex;
         flex-shrink: 1;
+        line-height: 39px;
         overflow: hidden;
 
         .name-block {
-          display: inline-block;
+          display: flex;
+          flex-shrink: 1;
           height: 39px;
-          max-width: calc(100% - 300px);
+          min-width: 100px;
           overflow: hidden;
 
           strong {
@@ -104,9 +103,9 @@
 
         .author-block {
           display: inline-block;
+          flex-shrink: 0;
           font-size: 16px;
           overflow: hidden;
-          margin-right: 20px;
           white-space: nowrap;
         }
       }
@@ -295,13 +294,8 @@
 
   .avatar-placehodler {
     height: 30px;
+    margin: 13px 0;
     width: 30px;
-
-    img {
-      border-radius: 30px;
-      position: relative;
-      top: 7px;
-    }
   }
 
   .content-placeholder {

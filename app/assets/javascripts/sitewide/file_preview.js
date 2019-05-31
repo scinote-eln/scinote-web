@@ -427,6 +427,7 @@ var FilePreviewModal = (function() {
           }
         }).done(function() { closeEditor(); });
       }
+      if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
 
     window.onresize = function() {
@@ -487,6 +488,7 @@ var FilePreviewModal = (function() {
         modal.find('.file-name').text(name);
         modal.find('.preview-close').click(function() {
           modal.modal('hide');
+          if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
         });
         modal.modal();
         modal.find('a[disabled=disabled]').click(function(ev) {

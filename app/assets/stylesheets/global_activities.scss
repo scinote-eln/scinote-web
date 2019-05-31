@@ -92,12 +92,16 @@
       }
 
       p {
-        margin-bottom: 3px;
-        text-indent: -35px;
+        margin-bottom: 0;
       }
 
-      .atwho-user-img-popover {
-        margin: -5px 0;
+      .atwho-user-container:nth-child(1) {
+        height: 20px;
+        margin-left: -35px;
+
+        .global-avatar-container {
+          margin: 0 5px 0 0;
+        }
       }
     }
 

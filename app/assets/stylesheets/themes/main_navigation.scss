@@ -76,13 +76,6 @@
     margin-left: 12px;
   }
 
-  .avatar {
-    top: 0px;
-    margin-top: 5px;
-    height: 45px;
-    width: 45px;
-  }
-
   .assignment {
     background-color: $brand-primary;
     border-radius: 50%;
@@ -368,6 +361,10 @@
 
 #search-bar {
   padding-right: 0;
+
+  .btn-default[type="submit"] {
+    height: 34px;
+  }
 }
 
 @media (max-width: 768px) {

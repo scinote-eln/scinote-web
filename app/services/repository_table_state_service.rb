@@ -13,16 +13,20 @@ class RepositoryTableStateService
   # record, has EVERYTHING (booleans, symbols, keys, ...) saved as Strings.
 
   def load_state
-    state = RepositoryTableState.where(user: @user, repository: @repository).take
-    if state.blank?
-      state = self.create_default_state
-    end
-    state
+    loaded = RepositoryTableState.where(user: @user, repository: @repository).take
+    loaded = create_default_state unless loaded&.state&.present? &&
+                                         loaded.state['order'] &&
+                                         loaded.state['columns'] &&
+                                         loaded.state['ColReorder'] &&
+                                         loaded.state.dig('columns', '1', 'visible') == 'true' &&
+                                         loaded.state.dig('columns', '3', 'visible') == 'true'
+    loaded
   end
 
   def update_state(state)
-    self.load_state
-        .update(state: state)
+    saved_state = load_state
+    return if saved_state.state.except('time') == state.except('time')
+    saved_state.update(state: state)
   end
 
   def create_default_state

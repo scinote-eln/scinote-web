@@ -29,6 +29,10 @@
   }
 }
 
+.mce-container-body {
+  position: relative !important;
+}
+
 .tinymce-placeholder {
   background: $color-concrete;
   opacity: .7;
