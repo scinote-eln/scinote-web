@@ -1,0 +1,4 @@
+<p class="step-description-component-duration"><b><%= t('protocol_importers.templates.duration.title') %></b><br>
+  <%= "#{item[:name]} #{item[:value]} #{t('protocol_importers.templates.duration.unit')}" %>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

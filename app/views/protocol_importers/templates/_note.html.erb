@@ -1,0 +1,4 @@
+<p class="step-description-component-note"><b><%= t('protocol_importers.templates.note.title') %></b><br/>
+  <%= "#{t('protocol_importers.templates.note.author')}: #{item[:author]}" %><br/>
+  <%= item[:body] %></p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

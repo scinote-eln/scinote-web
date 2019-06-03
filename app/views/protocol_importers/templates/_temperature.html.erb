@@ -1,0 +1,3 @@
+<p class="step-description-component-temperature"><b><%= t('protocol_importers.templates.temperature.title') %></b><br/>
+<%= "#{item[:value]} #{item[:unit]} #{item[:name]}" %></p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

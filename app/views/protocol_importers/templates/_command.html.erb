@@ -1,0 +1,5 @@
+<p class="step-description-component-command"><b><%= t('protocol_importers.templates.command.title') %></b><br>
+  <%= "#{t('protocol_importers.templates.command.name')}: #{item[:name]}" %>
+  <%= "#{t('protocol_importers.templates.command.code')}: <code>#{item[:command]}</code>" %>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>
