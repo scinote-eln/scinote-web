@@ -111,7 +111,7 @@ function bindEditTagsAjax() {
       .submit(function() {
         var selectOptions = manageTagsModalBody.find('.add-tag-form .dropdown-menu li').length;
         if (selectOptions === 0) return false;
-        return true
+        return true;
       })
       .on('ajax:success', function(e, data) {
         initTagsModalBody(data);
