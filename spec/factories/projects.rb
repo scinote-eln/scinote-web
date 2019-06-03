@@ -8,12 +8,4 @@ FactoryBot.define do
     archived { false }
     visibility { 'hidden' }
   end
-
-  factory :project_user, class: User do
-    full_name Faker::Name.name
-    initials 'AD'
-    email Faker::Internet.email
-    password 'asdf1243'
-    password_confirmation 'asdf1243'
-  end
 end
