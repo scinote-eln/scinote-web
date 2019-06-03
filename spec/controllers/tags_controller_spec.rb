@@ -3,26 +3,15 @@
 require 'rails_helper'
 
 describe TagsController, type: :controller do
-  login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-  let(:tag) { create :tag, project: project }
+  project_generator(tags: 1)
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
       {
-        my_module_id: my_module.id,
-        project_id: project.id,
-        tag: { project_id: project.id,
+        my_module_id: @project[:my_module].id,
+        project_id: @project[:project].id,
+        tag: { project_id: @project[:project].id,
                name: 'name',
                color: '#123456' }
       }
@@ -47,9 +36,9 @@ describe TagsController, type: :controller do
   describe 'PUT update' do
     let(:action) do
       put :update, params: {
-        project_id: tag.project.id,
-        id: tag.id,
-        my_module_id: my_module.id,
+        project_id: @project[:tag].project.id,
+        id: @project[:tag].id,
+        my_module_id: @project[:my_module].id,
         tag: { name: 'Name2' }
       }, format: :json
     end
@@ -70,9 +59,9 @@ describe TagsController, type: :controller do
   describe 'DELETE destroy' do
     let(:action) do
       delete :destroy, params: {
-        project_id: tag.project.id,
-        id: tag.id,
-        my_module_id: my_module.id,
+        project_id: @project[:tag].project.id,
+        id: @project[:tag].id,
+        my_module_id: @project[:my_module].id,
         format: :json
       }
     end

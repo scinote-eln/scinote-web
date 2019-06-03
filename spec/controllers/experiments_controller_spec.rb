@@ -3,20 +3,12 @@
 require 'rails_helper'
 
 describe ExperimentsController, type: :controller do
-  login_user
-
-  let!(:user) { controller.current_user }
-  let!(:team) { create :team, created_by: user, users: [user] }
-  let!(:project) { create :project, team: team }
-  let!(:user_project) do
-    create :user_project, :owner, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
+  project_generator
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
-      { project_id: project.id,
+      { project_id: @project[:project].id,
         experiment: { name: 'test experiment A1',
                       description: 'test description one' } }
     end
@@ -40,7 +32,7 @@ describe ExperimentsController, type: :controller do
     context 'when editing experiment' do
       let(:params) do
         {
-          id: experiment.id,
+          id: @project[:experiment].id,
           experiment: { title: 'new_title' }
         }
       end
@@ -65,7 +57,7 @@ describe ExperimentsController, type: :controller do
                archived: true,
                archived_by: (create :user),
                archived_on: Time.now,
-               project: project
+               project: @project[:project]
       end
 
       let(:params) do
@@ -93,7 +85,7 @@ describe ExperimentsController, type: :controller do
   describe 'GET archive' do
     let(:action) { get :archive, params: params, format: :json }
     let(:params) do
-      { id: experiment.id,
+      { id: @project[:experiment].id,
         experiment: { archived: false } }
     end
     it 'calls create activity service' do

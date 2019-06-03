@@ -3,27 +3,11 @@
 require 'rails_helper'
 
 describe StepCommentsController, type: :controller do
-  login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-  let(:protocol) do
-    create :protocol, my_module: my_module, team: team, added_by: user
-  end
-  let(:step) { create :step, protocol: protocol, user: user }
-  let(:step_comment) { create :step_comment, user: user, step: step }
-
   describe 'POST create' do
+    project_generator(steps: 1)
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
-      { step_id: step.id, comment: { message: 'comment created' } }
+      { step_id: @project[:step].id, comment: { message: 'comment created' } }
     end
 
     it 'calls create activity for adding comment to step' do
@@ -40,10 +24,11 @@ describe StepCommentsController, type: :controller do
   end
 
   describe 'PUT update' do
+    project_generator(steps: 1, step_comments: 1)
     let(:action) { put :update, params: params, format: :json }
     let(:params) do
-      { step_id: step.id,
-        id: step_comment.id,
+      { step_id: @project[:step].id,
+        id: @project[:step_comment].id,
         comment: { message: 'comment updated' } }
     end
 
@@ -61,9 +46,10 @@ describe StepCommentsController, type: :controller do
   end
 
   describe 'DELETE destroy' do
+    project_generator(steps: 1, step_comments: 1)
     let(:action) { delete :destroy, params: params, format: :json }
     let(:params) do
-      { step_id: step.id, id: step_comment.id }
+      { step_id: @project[:step].id, id: @project[:step_comment].id }
     end
 
     it 'calls create activity for deleting comment on step' do

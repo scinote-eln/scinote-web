@@ -3,17 +3,7 @@
 require 'rails_helper'
 
 describe ProtocolsController, type: :controller do
-  login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
+  project_generator
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -34,9 +24,9 @@ describe ProtocolsController, type: :controller do
   end
 
   describe 'GET export' do
-    let(:protocol) { create :protocol, :in_public_repository, team: team }
+    let(:protocol) { create :protocol, :in_public_repository, team: @project[:team] }
     let(:second_protocol) do
-      create :protocol, :in_public_repository, team: team
+      create :protocol, :in_public_repository, team: @project[:team]
     end
     let(:params) { { protocol_ids: [protocol.id, second_protocol.id] } }
     let(:action) { get :export, params: params }
@@ -56,8 +46,8 @@ describe ProtocolsController, type: :controller do
   end
 
   describe 'GET export from MyModule' do
-    let(:protocol) { create :protocol, :in_public_repository, team: team }
-    let(:params) { { protocol_ids: [protocol.id], my_module_id: my_module.id } }
+    let(:protocol) { create :protocol, :in_public_repository, team: @project[:team] }
+    let(:params) { { protocol_ids: [protocol.id], my_module_id: @project[:my_module].id } }
     let(:action) { get :export, params: params }
 
     it 'calls create activity for exporting protocols' do
@@ -78,7 +68,7 @@ describe ProtocolsController, type: :controller do
   describe 'POST import' do
     let(:params) do
       {
-        team_id: team.id,
+        team_id: @project[:team].id,
         type: 'public',
         # protocol: fixture_file_upload('files/my_test_protocol.eln',
         #   'application/json'),
@@ -108,7 +98,7 @@ describe ProtocolsController, type: :controller do
 
   describe 'POST metadata' do
     let(:protocol) do
-      create :protocol, :in_public_repository, team: team, added_by: user
+      create :protocol, :in_public_repository, team: @project[:team], added_by: @project[:user]
     end
     let(:params) do
       {
@@ -136,7 +126,7 @@ describe ProtocolsController, type: :controller do
 
   describe 'POST update_keywords' do
     let(:protocol) do
-      create :protocol, :in_public_repository, team: team, added_by: user
+      create :protocol, :in_public_repository, team: @project[:team], added_by: @project[:user]
     end
     let(:action) { put :update_keywords, params: params, format: :json }
     let(:params) do
@@ -160,15 +150,15 @@ describe ProtocolsController, type: :controller do
   context 'update protocol' do
     let(:protocol_repo) do
       create :protocol, :in_public_repository, name: ' test protocol',
-                                               team: team,
-                                               added_by: user
+                                               team: @project[:team],
+                                               added_by: @project[:user]
     end
     let(:protocol) do
       create :protocol, :linked_to_repository, name: ' test protocol',
-                                               my_module: my_module,
+                                               my_module: @project[:my_module],
                                                parent: protocol_repo,
-                                               team: team,
-                                               added_by: user
+                                               team: @project[:team],
+                                               added_by: @project[:user]
     end
     let(:params) { { id: protocol.id } }
 
@@ -209,9 +199,9 @@ describe ProtocolsController, type: :controller do
 
   describe 'POST load_from_repository' do
     let(:protocol_source) do
-      create :protocol, :in_public_repository, team: team, added_by: user
+      create :protocol, :in_public_repository, team: @project[:team], added_by: @project[:user]
     end
-    let(:protocol) { create :protocol, team: team, added_by: user }
+    let(:protocol) { create :protocol, team: @project[:team], added_by: @project[:user] }
     let(:action) { put :load_from_repository, params: params, format: :json }
     let(:params) do
       { source_id: protocol_source.id, id: protocol.id }
@@ -233,7 +223,7 @@ describe ProtocolsController, type: :controller do
 
   describe 'POST load_from_file' do
     let(:protocol) do
-      create :protocol, my_module: my_module, team: team, added_by: user
+      create :protocol, my_module: @project[:my_module], team: @project[:team], added_by: @project[:user]
     end
     let(:action) { put :load_from_file, params: params, format: :json }
     let(:params) do

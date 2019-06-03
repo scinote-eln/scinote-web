@@ -3,24 +3,13 @@
 require 'rails_helper'
 
 describe ProjectCommentsController, type: :controller do
-  login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let(:user_team) { create :user_team, team: team, user: user }
-  let(:user_project) { create :user_project, :owner, user: user }
-  let(:project) do
-    create :project, team: team, user_projects: [user_project]
-  end
-  let(:project_comment) do
-    create :project_comment, project: project, user: user
-  end
+  project_generator(project_comments: 1)
 
   describe 'POST create' do
     context 'in JSON format' do
       let(:action) { post :create, params: params, format: :json }
       let(:params) do
-        { project_id: project.id,
+        { project_id: @project[:project].id,
           comment: { message: 'test message' } }
       end
 
@@ -42,8 +31,8 @@ describe ProjectCommentsController, type: :controller do
     context 'in JSON format' do
       let(:action) { put :update, params: params, format: :json }
       let(:params) do
-        { project_id: project.id,
-          id: project_comment.id,
+        { project_id: @project[:project].id,
+          id: @project[:project_comment].id,
           comment: { message: 'test message updated' } }
       end
 
@@ -65,8 +54,8 @@ describe ProjectCommentsController, type: :controller do
     context 'in JSON format' do
       let(:action) { delete :destroy, params: params, format: :json }
       let(:params) do
-        { project_id: project.id,
-          id: project_comment.id }
+        { project_id: @project[:project].id,
+          id: @project[:project_comment].id }
       end
 
       it 'calls create activity service' do

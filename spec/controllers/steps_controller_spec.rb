@@ -3,23 +3,9 @@
 require 'rails_helper'
 
 describe StepsController, type: :controller do
-  login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-  let(:protocol) do
-    create :protocol, my_module: my_module, team: team, added_by: user
-  end
-  let(:step) { create :step, protocol: protocol, user: user }
+  project_generator(steps: 1)
   let(:protocol_repo) do
-    create :protocol, :in_public_repository, team: team, added_by: user
+    create :protocol, :in_public_repository, team: @project[:team], added_by: @project[:user]
   end
   let(:step_repo) { create :step, protocol: protocol_repo }
 
@@ -48,7 +34,7 @@ describe StepsController, type: :controller do
 
     context 'when in protocol on task' do
       let(:params) do
-        { protocol_id: protocol.id,
+        { protocol_id: @project[:protocol].id,
           step: { name: 'test', description: 'description' } }
       end
 
@@ -97,7 +83,7 @@ describe StepsController, type: :controller do
 
     context 'when in protocol on task' do
       let(:params) do
-        { id: step.id,
+        { id: @project[:step].id,
           step: { name: 'updated name', description: 'updated description' } }
       end
 
@@ -136,7 +122,7 @@ describe StepsController, type: :controller do
     end
 
     context 'when in protocol on task' do
-      let(:params) { { id: step.id } }
+      let(:params) { { id: @project[:step].id } }
 
       it 'calls create activity for deleting step in protocol on task' do
         expect(Activities::CreateActivityService)
@@ -153,7 +139,7 @@ describe StepsController, type: :controller do
   end
 
   describe 'POST checklistitem_state' do
-    let(:checklist) { create :checklist, step: step }
+    let(:checklist) { create :checklist, step: @project[:step] }
     let(:action) { post :checklistitem_state, params: params, format: :json }
 
     context 'when checking checklist item' do
@@ -161,7 +147,7 @@ describe StepsController, type: :controller do
         create :checklist_item, checklist: checklist, checked: false
       end
       let(:params) do
-        { id: step.id, checklistitem_id: checklist_item.id, checked: true }
+        { id: @project[:step].id, checklistitem_id: checklist_item.id, checked: true }
       end
 
       it 'calls create activity for checking checklist item on step' do
@@ -183,7 +169,7 @@ describe StepsController, type: :controller do
         create :checklist_item, checklist: checklist, checked: true
       end
       let(:params) do
-        { id: step.id, checklistitem_id: checklist_item.id, checked: false }
+        { id: @project[:step].id, checklistitem_id: checklist_item.id, checked: false }
       end
 
       it 'calls create activity for unchecking checklist item on step' do
@@ -206,7 +192,7 @@ describe StepsController, type: :controller do
 
     context 'when completing step' do
       let(:step) do
-        create :step, protocol: protocol, user: user, completed: false
+        create :step, protocol: @project[:protocol], user: @project[:user], completed: false
       end
       let(:params) { { id: step.id, completed: true } }
 
@@ -224,7 +210,7 @@ describe StepsController, type: :controller do
     end
 
     context 'when uncompleting step' do
-      let(:params) { { id: step.id, completed: false } }
+      let(:params) { { id: @project[:step].id, completed: false } }
 
       it 'calls create activity for uncompleting step' do
         expect(Activities::CreateActivityService)
