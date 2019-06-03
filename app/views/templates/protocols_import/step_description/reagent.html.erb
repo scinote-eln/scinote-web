@@ -1,7 +1,0 @@
-<p class="step-description-component-reagent">Reagent: <br/>
-  <%= "Name: #{@item[:name]}" %>
-  <%= "Name: #{@item[:mol_weight]}" %>
-  <%= "Link: <a href='#{@item[:source]}'>#{@item[:source]}</a>" if @item[:source] %>
-</p>
-<%= render partial: 'templates/protocols_import/step_description/details', locals: { item: @item } %>
-

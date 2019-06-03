@@ -1,0 +1,12 @@
+<% if @description[:body] %>
+  <p> <%= strip_tags @description[:body] %> </p>
+<% end %>
+<% if @description[:image] %>
+  <br/>
+  <img src='<%= @description[:image] %>' />
+<% end %>
+
+<% @description[:extra_content]&.each do |i| %>
+  <b><%= strip_tags i[:title] %>:</b> <br/>
+  <%= strip_tags i[:body] %><br/>
+<% end %>

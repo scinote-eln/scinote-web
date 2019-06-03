@@ -1,0 +1,6 @@
+<p class="step-description-component-software"><b><%= t('protocol_importers.templates.software.title') %></b><br>
+  <%= "#{t('protocol_importers.templates.software.name')}: #{item[:name]}" %>
+  <%= "#{t('protocol_importers.templates.software.link')}: #{ActionController::Base.helpers.link_to(item[:source], item[:source])}" %>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>
+

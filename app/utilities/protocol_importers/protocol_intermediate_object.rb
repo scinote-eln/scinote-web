@@ -18,7 +18,7 @@ module ProtocolImporters
 
     def build
       @protocol = Protocol.new(protocol_attributes)
-      @protocol.description = ProtocolDescriptionBuilder.generate(@normalized_protocol_data&.reject { |k| k == :steps })
+      @protocol.description = ProtocolDescriptionBuilder.generate(@normalized_protocol_data)
       @protocol.steps << build_steps
       @protocol
     end
@@ -36,12 +36,14 @@ module ProtocolImporters
     end
 
     def protocol_attributes
-      defaults = { protocol_type: :in_repository_public, added_by: @user, team: @team }
-      values = %i(name published_on authors)
-      p_attrs = @normalized_protocol_data.slice(*values).each_with_object({}) do |(k, v), h|
-        h[k] = k == 'published_on' ? Time.at(v) : v
-      end
-      p_attrs.merge!(defaults)
+      {
+        protocol_type: :in_repository_public,
+        added_by: @user,
+        team: @team,
+        name: @normalized_protocol_data[:name],
+        published_on: Time.at(@normalized_protocol_data[:published_on]),
+        authors: @normalized_protocol_data[:authors]
+      }
     end
 
     def step_attributes(step_json)
