@@ -1,5 +1,4 @@
 <% display_status = protocol.description.blank? && protocol.steps.count.zero? %>
-<% p @recent_protcols_positive %>
 <% if @recent_protcols_positive %>
   <div class="my-module-recent-protocols"
     style="display: <%= display_status ? '' : 'none' %>"
