@@ -18,8 +18,9 @@ class Protocol < ApplicationRecord
   }
 
   scope :recent_protocols, lambda { |user, team, amount|
-    where(team: team, protocol_type: :in_repository_public).or(where(team: team, protocol_type: :in_repository_private, added_by: user))
-                                       .order(updated_at: :desc).limit(amount)
+    where(team: team, protocol_type: :in_repository_public)
+      .or(where(team: team, protocol_type: :in_repository_private, added_by: user))
+      .order(updated_at: :desc).limit(amount)
   }
 
   auto_strip_attributes :name, :description, nullify: false
