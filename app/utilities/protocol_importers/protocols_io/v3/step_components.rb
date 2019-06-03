@@ -5,10 +5,10 @@ module ProtocolImporters
     module V3
       class StepComponents
         AVAILABLE_COMPONENTS = {
-          6 => :title,
           1 => :description,
           3 => :amount,
           4 => :duration,
+          6 => :title,
           7 => :link,
           8 => :software,
           9 => :dataset,
@@ -17,10 +17,13 @@ module ProtocolImporters
           19 => :safety,
           20 => :reagents,
           22 => :gotostep,
+          23 => :file,
           24 => :temperature,
           25 => :concentration,
           26 => :notes
         }.freeze
+
+        DESCRIPTION_COMPONENTS = AVAILABLE_COMPONENTS.slice(3, 4, 7, 8, 9, 15, 17, 19, 20, 22, 24, 25, 26).freeze
 
         def self.get_component(id, components)
           if AVAILABLE_COMPONENTS.include?(id)
@@ -39,7 +42,7 @@ module ProtocolImporters
         end
 
         def self.description_components(components)
-          description_components = components.select { |c| AVAILABLE_COMPONENTS.except(6, 1).include?(c[:type_id]) }
+          description_components = components.select { |c| DESCRIPTION_COMPONENTS.include?(c[:type_id]) }
 
           description_components.map do |dc|
             build_desc_component dc

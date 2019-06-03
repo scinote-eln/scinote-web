@@ -25,11 +25,11 @@ RSpec.describe ProtocolImporters::ProtocolDescriptionBuilder do
 
     context 'when have only description' do
       it 'includes paragraph description' do
-        expect(described_class.generate(description_only)).to include('<p>original desc</p>')
+        expect(described_class.generate(description_only)).to include('<p> original desc </p>')
       end
 
       it 'strips HTML tags' do
-        expect(described_class.generate(description_with_html)).to be == '<p>Text only</p>'
+        expect(described_class.generate(description_with_html).scan('script').count).to be == 0
       end
     end
 
@@ -41,7 +41,7 @@ RSpec.describe ProtocolImporters::ProtocolDescriptionBuilder do
 
     context 'when have extra content' do
       it 'add extra fields as paragraphs' do
-        expect(described_class.generate(description_with_extra_content).scan('<p>').size).to be == 7
+        expect(described_class.generate(description_with_extra_content).scan('<br/>').size).to be == 6
       end
     end
   end

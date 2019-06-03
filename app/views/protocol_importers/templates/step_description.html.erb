@@ -1,0 +1,16 @@
+<% if @step_description[:body] %>
+  <p> <%= strip_tags @step_description[:body] %> </p>
+<% end %>
+
+<% @step_description[:components]&.each do |component| %>
+  <% sanitized_component = component.except('type') %>
+  <% sanitized_component[:body] = strip_tags(component[:body]) if component[:body] %>
+  <%= render partial: "protocol_importers/templates/#{component[:type]}", locals: { item: sanitized_component } %>
+<% end %>
+
+<% @step_description[:extra_content]&.each do |i| %>
+  <b><%= strip_tags i[:title] %>:</b> <br/>
+  <%= strip_tags i[:body] %><br/>
+<% end %>
+
+

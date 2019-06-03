@@ -1,5 +1,0 @@
-<p class="step-description-component-dataset">Dataset: <br>
-  <%= "Name: #{@item[:name]}" %>
-  <%= "Link: #{ActionController::Base.helpers.link_to(@item[:source], @item[:source])}" if @item[:source] %>
-</p>
-<%= render partial: 'templates/protocols_import/step_description/details', locals: { item: @item } %>
