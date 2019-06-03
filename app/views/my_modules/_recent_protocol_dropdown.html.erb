@@ -1,11 +1,12 @@
-<% display_status = protocol.description.empty? && protocol.steps.count.zero? %>
-<% if Protocol.recent_protocols(current_user, current_team, 14).count.positive? %>
+<% display_status = protocol.description.blank? && protocol.steps.count.zero? %>
+<% p @recent_protcols_positive %>
+<% if @recent_protcols_positive %>
   <div class="my-module-recent-protocols"
     style="display: <%= display_status ? '' : 'none' %>"
     data-update-url="<%= load_from_repository_protocol_path(protocol) %>"
   >
     <div class="btn-group">
-      <div class="title">Recent protocols from the Repository</div>
+      <div class="title"><%= t('my_modules.module_header.recent_protocols_from_repository') %></div>
       <div
         class="dropdown-button"
         title="Recent protocols"
@@ -13,7 +14,6 @@
         aria-haspopup="true"
         aria-expanded="false">
         <span class="caret"></span>
-        <span class="sr-only">Toggle Dropdown</span>
       </div>
       <ul class="dropdown-menu">
       </ul>
