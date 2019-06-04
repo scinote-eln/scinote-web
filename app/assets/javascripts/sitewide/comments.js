@@ -61,6 +61,9 @@ var Comments = (function() {
       );
       $el.find('.new-comment-button').off('click').click(() => {
         var errorField = $el.find('.new-message-error');
+        var newButton = this;
+        if (newButton.disable) return;
+        newButton.disable = true;
         $.post(el.dataset.createUrl, {
           comment: { message: $el.find('#message').val() }
         }, (result) => {
@@ -72,9 +75,11 @@ var Comments = (function() {
           errorField.html('');
           $el.find('#message').val('');
           $el.find('.new-comment-button').removeClass('show');
+          newButton.disable = false;
         })
           .error((error) => {
             errorField.html(error.responseJSON.errors.message);
+            newButton.disable = false;
           });
       });
     });
