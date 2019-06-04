@@ -160,12 +160,11 @@ module ProtocolsImporter
       tiny_mce_img.save!
       if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
                            "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
-        description.gsub!('  ]]--&gt;', '')
-
       else
         description.gsub!("data-mce-token=\"#{Base62.encode(tiny_mce_img_json['tokenId'].to_i)}\"",
-                          "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"").gsub!('  ]]--&gt;', '')
+                          "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
       end
+      description.gsub!('  ]]--&gt;', '')
     end
     description
   end

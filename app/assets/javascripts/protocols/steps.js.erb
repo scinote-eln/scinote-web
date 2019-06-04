@@ -1,7 +1,6 @@
 //= require Sortable.min
 //= require canvas-to-blob.min
 //= require assets
-//= require comments
 
 (function(global) {
   'use strict';
@@ -184,8 +183,8 @@
       // Switch position of top and bottom steps
       if (!_.isUndefined($stepDown) && !_.isUndefined($stepUp)) {
         $stepDown.insertAfter($stepUp);
-        $stepDown.find(".badge").html(stepDownPosition+1);
-        $stepUp.find(".badge").html(stepUpPosition+1);
+        $stepDown.find(".step-number").html(stepDownPosition + 1);
+        $stepUp.find(".step-number").html(stepUpPosition + 1);
         $("html, body").animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
       }
 
@@ -220,7 +219,7 @@
     });
   }
 
-    // Init ajax success/error for edit form  
+    // Init ajax success/error for edit form
   function formEditAjax($form) {
     $form
     .on("ajax:beforeSend", function () {
@@ -249,7 +248,7 @@
       });
       setupAssetsLoading();
     })
-    .on("ajax:error", function(e, xhr, status, error) { 
+    .on("ajax:error", function(e, xhr, status, error) {
       $form.renderFormErrors('step', xhr.responseJSON, true, e);
 
       formCallback($form);
@@ -364,6 +363,7 @@
       });
       toggleButtons(true);
       DragNDropSteps.clearFiles();
+      tinyMCE.editors.step_description_textarea.remove();
     });
   }
 
@@ -501,9 +501,13 @@
             initializeCheckboxSorting();
 
             $('#step_name').focus();
-            $('#new-step-main-tab a').on('shown.bs.tab', function() {
-              $('#step_name').focus();
-            });
+            $('#new-step-main-tab a')
+              .on('shown.bs.tab', function() {
+                $('#step_name').focus();
+                TinyMCE.init('#step_description_textarea');
+              }).on('hidden.bs.tab', function() {
+                tinyMCE.editors.step_description_textarea.remove();
+              });
 
             TinyMCE.init('#step_description_textarea');
           });
@@ -659,10 +663,7 @@
   }
 
   function initStepsComments() {
-    Comments.initialize();
-    Comments.initCommentOptions("ul.content-comments");
-    Comments.initEditComments("#steps");
-    Comments.initDeleteComments("#steps");
+    Comments.init();
   }
 
   // Reorder attachments
@@ -680,7 +681,6 @@
   initHandsOnTable($(document));
   expandAllSteps();
   setupAssetsLoading();
-  initStepsComments();
   FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');

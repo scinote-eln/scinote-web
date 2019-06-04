@@ -1,3 +1,4 @@
 const globalConstants = {
-  name_truncation_length: <%= Constants::NAME_TRUNCATION_LENGTH %>
+  name_truncation_length: <%= Constants::NAME_TRUNCATION_LENGTH %>,
+  is_safari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 }

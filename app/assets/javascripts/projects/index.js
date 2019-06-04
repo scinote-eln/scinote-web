@@ -10,7 +10,6 @@
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
    I18n setupSidebarTree */
 
-//= require comments
 (function(global) {
   var newProjectModal = null;
   var newProjectModalForm = null;
@@ -382,9 +381,6 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
-    Comments.initCommentOptions('ul.content-comments', true);
-    Comments.initEditComments('.panel-project .tab-content');
-    Comments.initDeleteComments('.panel-project .tab-content');
 
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
@@ -434,15 +430,11 @@
 
         target.html(data.html);
         initUsersEditLink(parentNode);
-        Comments.form(parentNode);
-        Comments.moreComments(parentNode);
-
-        // TODO move to fn
         parentNode.find('.active').removeClass('active');
         $this.parents('li').addClass('active');
         target.addClass('active');
 
-        Comments.scrollBottom(parentNode);
+        Comments.init('simple')
       })
       .on('ajax:error', function() {
         // TODO

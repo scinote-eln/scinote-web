@@ -4,7 +4,6 @@
 
 //= require my_modules
 //= require protocols/import_export/import
-//= require comments
 
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;

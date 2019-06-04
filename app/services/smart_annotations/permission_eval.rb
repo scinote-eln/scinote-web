@@ -6,7 +6,7 @@ module SmartAnnotations
       include Canaid::Helpers::PermissionsHelper
 
       def check(user, team, type, object)
-        send("validate_#{type}_permissions", user, team, object)
+        __send__("validate_#{type}_permissions", user, team, object)
       end
 
       private

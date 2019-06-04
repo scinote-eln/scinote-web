@@ -3,7 +3,7 @@
 <hr>
 </div>
 <div class="col-xs-12 attachments-actions">
-  
+
   <div class="title">
     <h4>
       <%= t('protocols.steps.files', count: assets.count) %>
@@ -11,7 +11,8 @@
   </div>
   <div>
     <div class="attachemnts-header pull-right">
-      <% if !(preview) %>
+      <% if !(preview) && (can_manage_protocol_in_module?(@protocol) ||
+                           can_manage_protocol_in_repository?(@protocol)) %>
         <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
                    locals: {  element_id: step.id, element_type: 'Step' } %>
       <% end %>

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class MyModuleCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include ApplicationHelper
-  include Rails.application.routes.url_helpers
+  include CommentHelper
 
   before_action :load_vars
   before_action :check_view_permissions, only: :index
@@ -10,36 +12,11 @@ class MyModuleCommentsController < ApplicationController
   before_action :check_manage_permissions, only: %i(edit update destroy)
 
   def index
-    @comments = @my_module.last_comments(@last_comment_id, @per_page)
-
-    respond_to do |format|
-      format.json do
-        # 'index' partial includes header and form for adding new
-        # messages. 'list' partial is used for showing more
-        # comments.
-        partial = 'index.html.erb'
-        partial = 'list.html.erb' if @last_comment_id > 0
-        more_url = ''
-        if @comments.count > 0
-          more_url = url_for(my_module_my_module_comments_url(@my_module,
-                                                              format: :json,
-                                                              from: @comments
-                                                                    .first.id))
-        end
-        render json: {
-          perPage: @per_page,
-          resultsNumber: @comments.length,
-          moreUrl: more_url,
-          html: render_to_string(
-            partial: partial,
-            locals: {
-              comments: @comments,
-              more_comments_url: more_url
-            }
-          )
-        }
-      end
+    comments = @my_module.last_comments(@last_comment_id, @per_page)
+    unless comments.empty?
+      more_url = url_for(my_module_my_module_comments_url(@my_module, format: :json, from: comments.first.id))
     end
+    comment_index_helper(comments, more_url, @last_comment_id.positive? ? false : '/my_module_comments/index.html.erb')
   end
 
   def create
@@ -48,86 +25,17 @@ class MyModuleCommentsController < ApplicationController
       user: current_user,
       my_module: @my_module
     )
-
-    respond_to do |format|
-      if @comment.save
-        my_module_comment_annotation_notification
-        log_activity(:add_comment_to_module)
-
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'comment.html.erb',
-              locals: {
-                comment: @comment
-              }
-            ),
-            date: I18n.l(@comment.created_at, format: :full_date),
-            linked_id: @my_module.id, # Used for counter badge
-            counter: @my_module.task_comments.count # Used for counter badge
-          },
-          status: :created
-        end
-      else
-        response.status = 400
-        format.json do
-          render json: {
-            errors: @comment.errors.to_hash(true)
-          }
-        end
-      end
-    end
-  end
-
-  def edit
-    @update_url =
-      my_module_my_module_comment_path(@my_module, @comment, format: :json)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: '/comments/edit.html.erb'
-          )
-        }
-      end
-    end
+    comment_create_helper(@comment)
   end
 
   def update
     old_text = @comment.message
     @comment.message = comment_params[:message]
-    respond_to do |format|
-      format.json do
-        if @comment.save
-          my_module_comment_annotation_notification(old_text)
-          log_activity(:edit_module_comment)
-
-          message = custom_auto_link(@comment.message, team: current_team)
-          render json: { comment: message }, status: :ok
-        else
-          render json: { errors: @comment.errors.to_hash(true) },
-                 status: :unprocessable_entity
-        end
-      end
-    end
+    comment_update_helper(@comment, old_text)
   end
 
   def destroy
-    respond_to do |format|
-      format.json do
-        if @comment.destroy
-          log_activity(:delete_module_comment)
-
-          # 'counter' and 'linked_id' are used for counter badge
-          render json: { linked_id: @my_module.id,
-                         counter: @my_module.task_comments.count },
-                 status: :ok
-        else
-          render json: { message: I18n.t('comments.delete_error') },
-                 status: :unprocessable_entity
-        end
-      end
-    end
+    comment_destroy_helper(@comment)
   end
 
   private
@@ -137,9 +45,7 @@ class MyModuleCommentsController < ApplicationController
     @per_page = Constants::COMMENTS_SEARCH_LIMIT
     @my_module = MyModule.find_by_id(params[:my_module_id])
 
-    unless @my_module
-      render_404
-    end
+    render_404 unless @my_module
   end
 
   def check_view_permissions
