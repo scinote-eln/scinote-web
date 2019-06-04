@@ -15,22 +15,31 @@ module ProtocolImporters
 
         def normalize(response)
           protocol_hash = response.parsed_response.with_indifferent_access[:protocol]
-          normalized_data = {}
-          normalized_data[:uri] = response.request.last_uri.to_s
-          normalized_data[:source] = Constants::PROTOCOLS_IO_V3_API[:source_id]
-          normalized_data[:doi] = protocol_hash[:doi]
-          normalized_data[:published_on] = protocol_hash[:published_on]
-          normalized_data[:version] = protocol_hash[:version_id]
-          normalized_data[:source_id] = protocol_hash[:id]
-          normalized_data[:name] = protocol_hash[:title]
-          normalized_data[:description] = protocol_hash[:description]
-          normalized_data[:authors] = protocol_hash[:authors].map { |e| e[:name] }.join(', ')
+
+          normalized_data = {
+            uri: response.request.last_uri.to_s,
+            source: Constants::PROTOCOLS_IO_V3_API[:source_id],
+            doi: protocol_hash[:doi],
+            published_on: protocol_hash[:published_on],
+            version: protocol_hash[:version_id],
+            source_id: protocol_hash[:id],
+            name: protocol_hash[:title],
+            description: {
+              body: protocol_hash[:description],
+              image: protocol_hash[:image][:source]
+            },
+            authors: protocol_hash[:authors].map { |e| e[:name] }.join(', ')
+          }
 
           normalized_data[:steps] = protocol_hash[:steps].map do |e|
             {
               source_id: e[:id],
               name: StepComponents.name(e[:components]),
-              description: StepComponents.description(e[:components]),
+              attachments: StepComponents.attachments(e[:components]),
+              description: {
+                body: StepComponents.description(e[:components]),
+                components: StepComponents.description_components(e[:components])
+              },
               position: e[:previous_id].nil? ? 0 : nil
             }
           end

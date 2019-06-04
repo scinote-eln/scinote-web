@@ -1,0 +1,6 @@
+<p>
+  <%= item[:details]&.any? ? "<b>#{t('protocol_importers.templates.details.title') }</b>" : '' %>
+  <% item[:details]&.each do |k, v| %>
+    <%= "#{k.camelize.to_s}: #{v.to_s}" %>
+  <% end %>
+</p>
