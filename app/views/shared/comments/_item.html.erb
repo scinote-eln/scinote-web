@@ -1,9 +1,9 @@
-  <% user_comment = comment.user == current_user %>
+ <% user_comment = comment.user == current_user %>
   <div 
     class="comment-container <%= user_comment ? 'comment-editable-field' : '' %>"
     data-field-to-update="message"
     data-params-group="comment"
-    data-path-to-update="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
+    data-path-to-update="<%= comment_action_url(comment) %>"
     data-original-name="<%= comment.message %>"
     data-response-field="comment"
     data-smart-annotation="true"
@@ -28,7 +28,7 @@
               <span class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
               <a href="#"
                 class="delete-button"
-                data-url="<%= step_step_comment_path(comment.step, comment, format: :json) %>"
+                data-url="<%= comment_action_url(comment) %>"
                 data-confirm-message="<%= t('comments.delete_confirm') %>"
                 data-turbolinks="false">
                 <span class="fas fa-trash action-icon-delete"></span>
@@ -38,7 +38,7 @@
         <% end %>
       </div>
       <div class="comment-message">
-           <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team).html_safe %></div>
+           <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team, simple_format: true).html_safe %></div>
             <% if user_comment %>
               <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
             <% end %>
@@ -46,5 +46,4 @@
       <div class="error-block"></div>
     </div>
   </div>
-
 
