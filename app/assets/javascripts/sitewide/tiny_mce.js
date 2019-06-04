@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n */
+/* global _ hljs tinyMCE SmartAnnotation I18n globalConstants */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -132,7 +132,11 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
-            editorToolbar.css('position', 'sticky');
+            if (globalConstants.is_safari) {
+              editorToolbar.css('position', '-webkit-sticky');
+            } else {
+              editorToolbar.css('position', 'sticky');
+            }
             editorToolbar.css('top', editorToolbaroffset + 'px');
 
             // Update scroll position after exit
