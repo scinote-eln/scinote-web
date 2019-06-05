@@ -686,4 +686,10 @@ Rails.application.routes.draw do
     get 'wopi/files/:id', to: 'wopi#file_get_endpoint', as: 'wopi_rest_endpoint'
     post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
   end
+
+  if Rails.env.test?
+    namespace :wopi do
+      post :post_file_endpoint
+    end
+  end
 end
