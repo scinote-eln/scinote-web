@@ -218,6 +218,8 @@ class Constants
     'text/plain'
   ].freeze
 
+  PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
+
   WHITELISTED_IMAGE_TYPES = [
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
