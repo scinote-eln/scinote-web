@@ -268,6 +268,7 @@
     var offset;
     if ($('#slide-panel .active').length) {
       offset = $('#slide-panel .active').offset().top - 50;
+      if (offset < 0) offset = 0;
       $('#slide-panel .tree').scrollTo(offset, 10);
     }
   }
