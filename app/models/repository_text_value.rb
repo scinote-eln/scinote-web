@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryTextValue < ApplicationRecord
   belongs_to :created_by,
              foreign_key: :created_by_id,
@@ -14,6 +16,9 @@ class RepositoryTextValue < ApplicationRecord
   validates :data,
             presence: true,
             length: { maximum: Constants::TEXT_MAX_LENGTH }
+
+  SORTABLE_COLUMN_NAME = 'repository_text_values.data'
+  SORTABLE_VALUE_INCLUDE = :repository_text_value
 
   def formatted
     data

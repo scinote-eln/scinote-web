@@ -25,24 +25,26 @@
           <%= f.text_field :name %>
           <%= f.form_group :data_type, label: { text: t('libraries.manange_modal_column.colum_type') } do %>
             <br />
-            <%= f.radio_button :data_type,
-                               'RepositoryTextValue'.freeze,
-                               label: t('libraries.manange_modal_column.labels.text'),
-                               inline: true,
-                               checked: checked?(@repository_column, 'RepositoryTextValue'.freeze),
-                               disabled: disabled?(@repository_column, 'RepositoryTextValue'.freeze) %>
-            <%= f.radio_button :data_type,
-                               'RepositoryAssetValue'.freeze,
-                               label: t('libraries.manange_modal_column.labels.file'),
-                               inline: true,
-                               checked: checked?(@repository_column, 'RepositoryAssetValue'.freeze),
-                               disabled: disabled?(@repository_column, 'RepositoryAssetValue'.freeze) %>
-            <%= f.radio_button :data_type,
-                               'RepositoryListValue'.freeze,
-                               label: t('libraries.manange_modal_column.labels.dropdown'),
-                               inline: true,
-                               checked: checked?(@repository_column, 'RepositoryListValue'.freeze),
-                               disabled: disabled?(@repository_column, 'RepositoryListValue'.freeze) %>
+            <span id="repository-column-types-list">
+              <%= f.radio_button :data_type,
+                                 'RepositoryTextValue'.freeze,
+                                 label: t('libraries.manange_modal_column.labels.text'),
+                                 inline: true,
+                                 checked: checked?(@repository_column, 'RepositoryTextValue'.freeze),
+                                 disabled: disabled?(@repository_column, 'RepositoryTextValue'.freeze) %>
+              <%= f.radio_button :data_type,
+                                 'RepositoryAssetValue'.freeze,
+                                 label: t('libraries.manange_modal_column.labels.file'),
+                                 inline: true,
+                                 checked: checked?(@repository_column, 'RepositoryAssetValue'.freeze),
+                                 disabled: disabled?(@repository_column, 'RepositoryAssetValue'.freeze) %>
+              <%= f.radio_button :data_type,
+                                 'RepositoryListValue'.freeze,
+                                 label: t('libraries.manange_modal_column.labels.dropdown'),
+                                 inline: true,
+                                 checked: checked?(@repository_column, 'RepositoryListValue'.freeze),
+                                 disabled: disabled?(@repository_column, 'RepositoryListValue'.freeze) %>
+            </span>
           <% end %>
           <input class="form-control"
                  data-role="tagsinput"
