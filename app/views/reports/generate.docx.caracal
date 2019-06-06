@@ -1,0 +1,1 @@
+Report::Docx.new(@data,docx).draw

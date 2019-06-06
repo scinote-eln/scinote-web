@@ -150,6 +150,10 @@ class ReportsController < ApplicationController
                               template: 'reports/report.pdf.erb',
                               disable_javascript: true
       end
+      format.docx do
+        @data = params[:json]
+        headers["Content-Disposition"] = "attachment; filename=\"caracal.docx\""
+      end
     end
   end
 

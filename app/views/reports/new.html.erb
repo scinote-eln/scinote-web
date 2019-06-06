@@ -31,6 +31,7 @@
     <div id="report-content">
 
     <% if @report.present? %>
+      <% p @report %> 
       <% @report.root_elements.each do |el| %>
         <%= render_report_element(el, local_assigns) %>
         <%= render_new_element(false) %>

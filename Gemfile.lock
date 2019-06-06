@@ -144,6 +144,13 @@ GEM
     capybara-email (3.0.1)
       capybara (>= 2.4, < 4.0)
       mail
+    caracal (1.4.1)
+      nokogiri (~> 1.6)
+      rubyzip (~> 1.1)
+      tilt (>= 1.4)
+    caracal-rails (1.0.1)
+      caracal (~> 1.0)
+      rails (>= 3.2)
     case_transform (0.2)
       activesupport
     childprocess (0.9.0)
@@ -564,6 +571,7 @@ DEPENDENCIES
   canaid!
   capybara
   capybara-email
+  caracal-rails
   commit_param_routing
   cucumber-rails (~> 1.5)
   database_cleaner
