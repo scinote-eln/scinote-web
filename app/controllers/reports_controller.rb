@@ -151,6 +151,7 @@ class ReportsController < ApplicationController
                               disable_javascript: true
       end
       format.docx do
+        @user = current_user
         @data = params[:json]
         headers["Content-Disposition"] = "attachment; filename=\"caracal.docx\""
       end

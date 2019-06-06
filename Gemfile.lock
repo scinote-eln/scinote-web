@@ -232,6 +232,7 @@ GEM
       i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
+    fastimage (2.1.5)
     ffi (1.10.0)
     figaro (1.1.1)
       thor (~> 0.14)
@@ -585,6 +586,7 @@ DEPENDENCIES
   doorkeeper (>= 4.6)
   factory_bot_rails
   faker
+  fastimage
   figaro
   hammerjs-rails
   httparty (~> 0.13.1)

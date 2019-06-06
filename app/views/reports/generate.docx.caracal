@@ -1,1 +1,1 @@
-Report::Docx.new(@data,docx).draw
+Report::Docx.new(@data,docx,user: @user, team: @user.current_team).draw

@@ -61,6 +61,7 @@ gem 'delayed_paperclip',
     git: 'https://github.com/jrgifford/delayed_paperclip.git',
     ref: 'fcf574c'
 gem 'faker' # Generate fake data
+gem 'fastimage'
 gem 'httparty', '~> 0.13.1'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
