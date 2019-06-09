@@ -80,7 +80,7 @@ Paperclip::Attachment.class_eval do
   end
 
   def previewable_image?
-    content_type == %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+    content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
   end
 end
 
