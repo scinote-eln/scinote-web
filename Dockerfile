@@ -1,7 +1,12 @@
 FROM ruby:2.5.5
 MAINTAINER BioSistemika <info@biosistemika.com>
 
-RUN echo deb "http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list
+# Get version of Debian (lsb_release substitute) and save it to /tmp/lsb_release for further commands
+RUN cat /etc/os-release | grep -Po "VERSION=.*\(\K\w+" | tee /tmp/lsb_release
+
+# Add Debian stretch backports repository
+RUN echo "deb http://http.debian.net/debian $(cat /tmp/lsb_release)-backports main" \
+  | tee /etc/apt/sources.list.d/$(cat /tmp/lsb_release)-backports.list
 
 # additional dependecies
 # libSSL-1.0 is required by wkhtmltopdf binary
@@ -17,7 +22,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   unison \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
-  apt-get install -y --no-install-recommends -t stretch-backports libreoffice && \
+  apt-get install -y --no-install-recommends -t $(cat /tmp/lsb_release)-backports libreoffice && \
   npm install -g yarn && \
   rm -rf /var/lib/apt/lists/*
 
