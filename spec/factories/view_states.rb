@@ -4,6 +4,8 @@ FactoryBot.define do
   factory :view_state do
     state {}
     user
-    viewable { create :team }
+    trait :team do
+      viewable { create :team }
+    end
   end
 end
