@@ -33,7 +33,7 @@ class Asset < ApplicationRecord
                     }
 
   before_post_process :previewable?
-  before_save :extract_image_quality
+  before_post_process :extract_image_quality
 
   # adds image processing in background job
   process_in_background :file, processing_image_url: '/images/:style/processing.gif'
