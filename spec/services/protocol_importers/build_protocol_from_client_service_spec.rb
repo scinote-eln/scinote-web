@@ -2,11 +2,11 @@
 
 require 'rails_helper'
 
-describe Protocols::ImportProtocolFromClientService do
+describe Protocols::BuildProtocolFromClientService do
   let(:user) { create :user }
   let(:team) { create :team }
   let(:service_call) do
-    Protocols::ImportProtocolFromClientService
+    Protocols::BuildProtocolFromClientService
       .call(protocol_client_id: 'id', protocol_source: 'protocolsio/v3', user_id: user.id, team_id: team.id)
   end
   let(:normalized_response) do
@@ -28,9 +28,6 @@ describe Protocols::ImportProtocolFromClientService do
         .to(receive(:load_protocol).and_return(normalized_response))
       # Do not generate and request real images
       allow(ProtocolImporters::AttachmentsBuilder).to(receive(:generate).and_return([]))
-    end
-    it 'Adds Protocol record' do
-      expect { service_call }.to(change { Protocol.all.count }.by(1))
     end
     # more tests will be implemented when add error handling to service
   end

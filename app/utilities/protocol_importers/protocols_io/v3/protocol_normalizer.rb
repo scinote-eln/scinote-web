@@ -4,11 +4,8 @@ module ProtocolImporters
   module ProtocolsIO
     module V3
       class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
-        def load_protocol(id:)
-          response = ProtocolImporters::ProtocolsIO::V3::ApiClient.new.single_protocol(id)
-
-          normalized_hash = normalize(response)
-          normalized_hash
+        def load_protocol(api_response)
+          normalize(api_response)
         end
 
         private

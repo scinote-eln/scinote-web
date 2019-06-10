@@ -31,7 +31,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
         allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
           .to receive_message_chain(:single_protocol, :parsed_response).and_return(response)
 
-        expect(subject.load_protocol(id: 'id').deep_stringify_keys).to be == normalized_result
+        expect(subject.load_protocol(response).deep_stringify_keys).to be == normalized_result
       end
     end
 
@@ -40,7 +40,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
         allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
           .to receive_message_chain(:single_protocol, :parsed_response).and_return(response_without_title)
 
-        expect(subject.load_protocol(id: 'id')[:protocol][:name]).to be_nil
+        expect(subject.load_protocol(response)[:protocol][:name]).to be_nil
       end
     end
   end
