@@ -18,17 +18,18 @@ module ProtocolImporters
       return self unless valid?
 
       # TODO: check for errors
-      api_response = api_client.single_protocol(id: @id)
-      normalized_hash = normalizer.load_protocol(api_response.parsed_response)
+      api_response = api_client.single_protocol(@id)
+      normalized_hash = normalizer.normalize_protocol(api_response)
 
       pio = ProtocolImporters::ProtocolIntermediateObject.new(normalized_json: normalized_hash,
                                                               user: @user,
                                                               team: @team)
 
+      @pio_protocol = pio.build
       @errors[:protocol] = pio.protocol.errors unless @pio_protocol.valid?
+      self
     rescue StandardError => e
       @errors[:build_protocol] = e.message
-    ensure
       self
     end
 
