@@ -24,10 +24,8 @@ module ProtocolImporters
       pio = ProtocolImporters::ProtocolIntermediateObject.new(normalized_json: normalized_hash,
                                                               user: @user,
                                                               team: @team)
-      @pio_protocol = pio.build
-      unless @pio_protocol.valid?
-        @errors[:protocol] = pio.protocol.errors
-      end
+
+      @errors[:protocol] = pio.protocol.errors unless @pio_protocol.valid?
     rescue StandardError => e
       @errors[:build_protocol] = e.message
     ensure
