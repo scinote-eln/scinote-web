@@ -45,7 +45,7 @@ function initializeHandsonTable(el) {
       formulas: true
     });
     el.handsontable("getInstance").loadData(data);
-    el.handsontable("getInstance").sort(3, order);
+    el.handsontable("getInstance").getPlugin('columnSorting').sort(3, order);
 
     // "Hack" to disable user sorting rows by clicking on
     // header elements

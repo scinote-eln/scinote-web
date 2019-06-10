@@ -152,6 +152,7 @@ class ReportsController < ApplicationController
       end
       format.docx do
         @user = current_user
+        @team = current_team
         @data = params[:json]
         headers["Content-Disposition"] = "attachment; filename=\"caracal.docx\""
       end

@@ -521,6 +521,7 @@ en:
         step_checklist:
           checklist_name: "[ %{name} ]"
           user_time: "Checklist created on %{timestamp}."
+          checked: "checked"
         result_comments:
           sidebar_name: "Comments"
           name: "Comments for result %{result}"
