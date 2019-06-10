@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Protocols
+module ProtocolImporters
   class BuildProtocolFromClientService
     extend Service
 
@@ -19,7 +19,7 @@ module Protocols
 
       # TODO: check for errors
       api_response = api_client.single_protocol(id: @id)
-      normalized_hash = normalizer.load_protocol(api_response)
+      normalized_hash = normalizer.load_protocol(api_response.parsed_response)
 
       pio = ProtocolImporters::ProtocolIntermediateObject.new(normalized_json: normalized_hash,
                                                               user: @user,

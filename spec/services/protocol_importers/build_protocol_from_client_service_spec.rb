@@ -2,11 +2,11 @@
 
 require 'rails_helper'
 
-describe Protocols::BuildProtocolFromClientService do
+describe ProtocolImporters::BuildProtocolFromClientService do
   let(:user) { create :user }
   let(:team) { create :team }
   let(:service_call) do
-    Protocols::BuildProtocolFromClientService
+    ProtocolImporters::BuildProtocolFromClientService
       .call(protocol_client_id: 'id', protocol_source: 'protocolsio/v3', user_id: user.id, team_id: team.id)
   end
   let(:normalized_response) do
@@ -25,7 +25,7 @@ describe Protocols::BuildProtocolFromClientService do
   context 'when have valid arguments' do
     before do
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
-        .to(receive(:load_protocol).and_return(normalized_response))
+        .to(receive(:normalize_protocol).and_return(normalized_response))
       # Do not generate and request real images
       allow(ProtocolImporters::AttachmentsBuilder).to(receive(:generate).and_return([]))
     end
