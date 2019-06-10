@@ -23,8 +23,7 @@ class Asset < ApplicationRecord
                       else
                         {
                           large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                          medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
-                          original: { processors: [:image_quality_calculate] }
+                          medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
                         }
                       end
                     },
@@ -34,6 +33,7 @@ class Asset < ApplicationRecord
                     }
 
   before_post_process :previewable?
+  before_save :extract_image_quality
 
   # adds image processing in background job
   process_in_background :file, processing_image_url: '/images/:style/processing.gif'
@@ -198,6 +198,18 @@ class Asset < ApplicationRecord
     else
       new_query
     end
+  end
+
+  def extract_image_quality
+    return unless ['image/jpeg', 'image/pjpeg'].include? file_content_type
+
+    tempfile = file.queued_for_write[:original]
+    unless tempfile.nil?
+      quality = Paperclip::Processor.new(tempfile).identify(" -format '%Q' #{tempfile.path}")
+      self.file_image_quality = quality.to_i
+    end
+  rescue StandardError => e
+    Rails.logger.info "There was an error extracting image quality - #{e}"
   end
 
   def previewable?
