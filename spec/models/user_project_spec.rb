@@ -1,6 +1,19 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserProject, type: :model do
+  let(:user_project_without_role) { build :user_project }
+  let(:user_project) { build :user_project, :owner }
+
+  it 'is invalid without role' do
+    expect(user_project_without_role).not_to be_valid
+  end
+
+  it 'is valid with role' do
+    expect(user_project).to be_valid
+  end
+
   it 'should be of class UserProject' do
     expect(subject.class).to eq UserProject
   end

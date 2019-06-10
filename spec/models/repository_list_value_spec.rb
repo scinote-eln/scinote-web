@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe RepositoryListValue, type: :model do
+  let(:repository_list_value) { build :repository_list_value }
+
+  it 'is valid' do
+    expect(repository_list_value).to be_valid
+  end
+
   it 'should be of class RepositoryListValue' do
     expect(subject.class).to eq RepositoryListValue
   end
@@ -19,76 +27,29 @@ RSpec.describe RepositoryListValue, type: :model do
   end
 
   describe '#formatted' do
-    let!(:repository) { create :repository }
-    let!(:repository_column) do
-      create :repository_column,
-             name: 'My column',
-             data_type: :RepositoryListValue,
-             repository: repository
-    end
-    let!(:repository_row) do
-      create :repository_row, name: 'My row', repository: repository
-    end
-    let!(:repository_list_value) do
-      build :repository_list_value, repository_cell_attributes: {
-        repository_column: repository_column,
-        repository_row: repository_row
-      }
-    end
+    let(:list_item) { create :repository_list_item, data: 'my item' }
 
     it 'returns the formatted data of a selected item' do
-      list_item = create :repository_list_item,
-                         data: 'my item',
-                         repository: repository,
-                         repository_column: repository_column
-      repository_list_value.repository_list_item = list_item
-      repository_list_value.save!
+      repository_list_value = create :repository_list_value, repository_list_item: list_item
+
       expect(repository_list_value.reload.formatted).to eq 'my item'
     end
   end
 
   describe '#data' do
-    let!(:repository) { create :repository }
-    let!(:repository_column) do
-      create :repository_column,
-             name: 'My column',
-             data_type: :RepositoryListValue,
-             repository: repository
-    end
-    let!(:repository_row) do
-      create :repository_row, name: 'My row', repository: repository
-    end
-    let!(:repository_list_value) do
-      build :repository_list_value, repository_cell_attributes: {
-        repository_column: repository_column,
-        repository_row: repository_row
-      }
-    end
+    let(:list_item) { create :repository_list_item, data: 'my item' }
+    let(:repository_list_value) { create :repository_list_value, repository_list_item: list_item }
 
     it 'returns the data of a selected item' do
-      list_item = create :repository_list_item,
-                         data: 'my item',
-                         repository: repository,
-                         repository_column: repository_column
-      repository_list_value.repository_list_item = list_item
-      repository_list_value.save!
       expect(repository_list_value.reload.data).to eq 'my item'
     end
 
-    it 'retuns only the the item related to the list' do
-      repository_column_two = create :repository_column, name: 'New column'
-      list_item = create :repository_list_item,
-                         data: 'new item',
-                         repository: repository,
-                         repository_column: repository_column_two
-      repository_list_value_two = build :repository_list_value,
-                                        repository_cell_attributes: {
-                                          repository_column: repository_column,
-                                          repository_row: repository_row
-                                        }
-      repository_list_value_two.repository_list_item = list_item
-      saved = repository_list_value_two.save
-      expect(saved).to eq false
+    # Not sure if this test make sense, because validation will fail before hit this function. Updated in SCI-3183
+    it 'retuns only the item related to the list' do
+      repository_list_value.repository_list_item = nil
+      repository_list_value.save(validate: false)
+
+      expect(repository_list_value.reload.data).to be_nil
     end
   end
 end

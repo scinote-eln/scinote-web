@@ -116,6 +116,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'rubocop', '>= 0.59.0', require: false
+  gem 'rubocop-performance'
   gem 'timecop'
 end
 

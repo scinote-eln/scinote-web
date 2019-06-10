@@ -3,6 +3,6 @@
 FactoryBot.define do
   factory :result_text do
     text { Faker::Lorem.paragraph }
-    result { create(:result) }
+    result
   end
 end

@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe WopiApp, type: :model do
+  let(:wopi_app) { build :wopi_app }
+
+  it 'is valid' do
+    expect(wopi_app).to be_valid
+  end
+
   it 'should be of class WopiApp' do
     expect(subject.class).to eq WopiApp
   end

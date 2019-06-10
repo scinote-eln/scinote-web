@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe WopiDiscovery, type: :model do
+  let(:wopi_discovery) { build :wopi_discovery }
+
+  it 'is valid' do
+    expect(wopi_discovery).to be_valid
+  end
+
   it 'should be of class WopiDiscovery' do
     expect(subject.class).to eq WopiDiscovery
   end

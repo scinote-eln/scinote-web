@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :result_asset do
-    asset { create(:asset) }
-    result { create(:result) }
+    asset
+    result
   end
 end
