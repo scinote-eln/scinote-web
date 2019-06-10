@@ -30,7 +30,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
     context 'when have all data' do
       it 'should normalize data correctly' do
         allow(client_data).to receive_message_chain(:parsed_response)
-                          .and_return(response)
+          .and_return(response)
 
         expect(subject.normalize_protocol(client_data).deep_stringify_keys).to be == normalized_result
       end
@@ -39,7 +39,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
     context 'when do not have name' do
       it 'sets nil for name' do
         allow(client_data).to receive_message_chain(:parsed_response)
-                          .and_return(response_without_title)
+          .and_return(response_without_title)
 
         expect(subject.normalize_protocol(client_data)[:protocol][:name]).to be_nil
       end
