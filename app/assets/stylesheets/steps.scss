@@ -91,6 +91,10 @@
           height: 39px;
           overflow: hidden;
 
+          @media (max-width: 1188px) {
+            min-width: 100px;
+          }
+
           strong {
             font-size: 16px;
             white-space: nowrap;
