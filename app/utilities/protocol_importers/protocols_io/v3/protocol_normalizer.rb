@@ -4,17 +4,12 @@ module ProtocolImporters
   module ProtocolsIO
     module V3
       class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
-        def load_protocol(api_response)
-          normalize(api_response)
-        end
-
-        private
-
-        def normalize(response)
-          protocol_hash = response.parsed_response.with_indifferent_access[:protocol]
+        def normalize_protocol(client_data)
+          # client_data is HttpParty ApiReponse object
+          protocol_hash = client_data.parsed_response.with_indifferent_access[:protocol]
 
           normalized_data = {
-            uri: response.request.last_uri.to_s,
+            uri: client_data.request.last_uri.to_s,
             source: Constants::PROTOCOLS_IO_V3_API[:source_id],
             doi: protocol_hash[:doi],
             published_on: protocol_hash[:published_on],
