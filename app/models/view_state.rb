@@ -8,4 +8,12 @@ class ViewState < ApplicationRecord
     scope: %i(viewable_type user_id),
     message: :not_unique
   }
+
+  validate :validate_state
+
+  private
+
+  def validate_state
+    viewable.validate_view_state(self)
+  end
 end

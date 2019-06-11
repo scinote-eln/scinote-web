@@ -667,13 +667,20 @@
   }
 
   // Reorder attachments
-  global.reorderAttachments = function reorderAtt(stepId, sortType) {
+  global.reorderAttachments = function reorderAtt(elem, stepId, sortType) {
     var label_value = $("#dd-att-step-" + stepId + "> .dropdown-menu > li > a[data-order=" + sortType + "]").html();
     $("#dd-att-step-" + stepId + "-label").html(label_value);
     $('#att-' + stepId + ' a.file-preview-link').each(function(){
       var elm = $(this)
       elm.parent().css('order', elm.attr('data-order-' + sortType));
-    })
+    });
+
+    $.post(
+      $(elem).closest('.dropdown-menu').data('stateSavePath'),
+      { assets: { order: sortType } },
+      null,
+      'json',
+    );
   }
 
     // On init

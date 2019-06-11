@@ -3,6 +3,10 @@
 module ViewableModel
   extend ActiveSupport::Concern
 
+  # This module requres that the class which includes it implements these methods:
+  # => default_view_state, returning hash with default state representation
+  # => validate_view_state(view_state), custom validator for the state hash
+
   included do
     has_many :view_states, as: :viewable, dependent: :destroy
   end

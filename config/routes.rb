@@ -435,6 +435,7 @@ Rails.application.routes.draw do
         post 'toggle_step_state'
         get 'move_down'
         get 'move_up'
+        post 'update_view_state'
       end
     end
 

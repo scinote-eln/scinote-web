@@ -15,8 +15,8 @@
                     status: asset_status,
                     'present-url': present_url,
                     'preview-url': asset_file_preview_path(asset),
-                    'order-atoz': az_ordered_assets_index(step, asset.id),
-                    'order-ztoa': assets_count - az_ordered_assets_index(step, asset.id),
+                    'order-atoz': order_atoz,
+                    'order-ztoa': order_ztoa,
                     'order-old': i,
                     'order-new': assets_count - i,
             } do %>
