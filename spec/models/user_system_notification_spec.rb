@@ -3,8 +3,7 @@
 require 'rails_helper'
 
 describe UserSystemNotification do
-  let(:user) { create :user }
-  subject(:user_system_notification) { build :user_system_notification }
+  let(:user_system_notification) { build :user_system_notification }
 
   it 'is valid' do
     expect(user_system_notification).to be_valid
@@ -16,6 +15,7 @@ describe UserSystemNotification do
   end
 
   describe 'Methods' do
+    let(:user) { create :user }
     let(:notifcation_one) { create :system_notification }
     let(:notifcation_two) { create :system_notification }
     let(:notifcation_three) { create :system_notification, :show_on_login }

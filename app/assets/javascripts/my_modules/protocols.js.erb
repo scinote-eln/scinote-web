@@ -1,6 +1,6 @@
 //= require my_modules
 //= require protocols/import_export/import
-//= require comments
+
 
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
@@ -15,7 +15,7 @@ function init() {
   initCopyToRepository();
   initLinkUpdate();
   initLoadFromRepository();
-  initRefreshStatusBar();
+  refreshProtocolStatusBar();
   initImport();
 }
 
@@ -27,7 +27,7 @@ function initEditMyModuleDescription() {
 
 function initEditProtocolDescription() {
   $('#protocol_description_view').on('click', function(){
-    TinyMCE.init('#protocol_description_textarea');
+    TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
   });
 }
 
@@ -384,28 +384,20 @@ function loadFromRepository() {
   }
 }
 
-function initRefreshStatusBar() {
-  $("[data-role='steps-container']")
-  .on(
-    "ajax:success",
-    function(e, data) {
-      if ($(e.target).is("[data-role='edit-step-form'], [data-role='new-step-form']")) {
-        // Get the status bar URL
-        var url = $("[data-role='protocol-status-bar-url']").attr("data-url");
+function refreshProtocolStatusBar() {
+  // Get the status bar URL
+  var url = $("[data-role='protocol-status-bar-url']").attr("data-url");
 
-        // Fetch new updated at label
-        $.ajax({
-          url: url,
-          type: "GET",
-          dataType: "json",
-          success: function (data2) {
-            $("[data-role='protocol-status-bar']").html(data2.html);
-            initLinkUpdate();
-          }
-        });
-      }
+  // Fetch new updated at label
+  $.ajax({
+    url: url,
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      $("[data-role='protocol-status-bar']").html(data.html);
+      initLinkUpdate();
     }
-  );
+  });
 }
 
 function initImport() {

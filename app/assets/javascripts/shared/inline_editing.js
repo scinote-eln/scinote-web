@@ -3,10 +3,6 @@
 function initInlineEditing(title) {
   var editBlocks = $('.' + title + '-editable-field');
 
-  function prepareText(text) {
-    return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
-  }
-
   $.each(editBlocks, function(i, element) {
     var editBlock = element;
     var $editBlock = $(editBlock);
@@ -39,6 +35,8 @@ function initInlineEditing(title) {
         $editBlock.find('.view-mode').removeClass('hidden');
         return false;
       }
+      if (editBlock.disable) return false;
+      editBlock.disable = true;
       params[editBlock.dataset.paramsGroup] = {};
       params[editBlock.dataset.paramsGroup][editBlock.dataset.fieldToUpdate] = inputString.value;
       $.ajax({
@@ -59,10 +57,11 @@ function initInlineEditing(title) {
           editBlock.dataset.originalName = inputString.value;
           editBlock.dataset.error = false;
           $inputString.addClass('hidden');
-          $editBlock.find('.view-mode').html(prepareText(viewData)).removeClass('hidden');
+          $editBlock.find('.view-mode').html(viewData).removeClass('hidden');
 
           inputString.disabled = true;
           editBlock.dataset.editMode = 0;
+          editBlock.disable = false;
         },
         error: function(response) {
           var errors = response.responseJSON;
@@ -74,6 +73,7 @@ function initInlineEditing(title) {
           }
           $editBlock.find('.error-block')[0].innerHTML = errors;
           $inputString.focus();
+          editBlock.disable = false;
         }
       });
       return true;

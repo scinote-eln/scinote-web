@@ -135,8 +135,10 @@
             <span>
               <%= t('nav.user_greeting', full_name: current_user.full_name) %>
             </span>
-            <%= image_tag avatar_path(current_user, :icon_small),
+            <span class='global-avatar-container'>
+              <%= image_tag avatar_path(current_user, :icon_small),
                           class: "avatar" %>
+            </span>
           </a>
           <ul class="dropdown-menu" data-hook="navigation-user-menu">
             <li>

@@ -407,6 +407,7 @@ var FilePreviewModal = (function() {
         imageEditor = {};
         $('#tui-image-editor').html('');
         $('#fileEditModal').modal('hide');
+        if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
       });
     });
 
@@ -472,6 +473,7 @@ var FilePreviewModal = (function() {
         modal.find('.preview-close').click(function() {
           checkReadyCntr = CHECK_READY_TRIES_LIMIT;
           modal.modal('hide');
+          if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
         });
         modal.modal();
         modal.find('a[disabled=disabled]').click(function(ev) {

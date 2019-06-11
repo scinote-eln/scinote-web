@@ -90,9 +90,9 @@ class Constants
   # Picture size formats
   LARGE_PIC_FORMAT = '800x600>'.freeze
   MEDIUM_PIC_FORMAT = '300x300>'.freeze
-  THUMB_PIC_FORMAT = '100x100>'.freeze
-  ICON_PIC_FORMAT = '40x40>'.freeze
-  ICON_SMALL_PIC_FORMAT = '30x30>'.freeze
+  THUMB_PIC_FORMAT = '100x100#'.freeze
+  ICON_PIC_FORMAT = '40x40#'.freeze
+  ICON_SMALL_PIC_FORMAT = '30x30#'.freeze
 
   # Hands-on-table number of starting columns and rows
   HANDSONTABLE_INIT_COLS_CNT = 5
@@ -217,6 +217,8 @@ class Constants
     'application/vnd.ms-word',
     'text/plain'
   ].freeze
+
+  PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
 
   WHITELISTED_IMAGE_TYPES = [
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'

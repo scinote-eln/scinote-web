@@ -247,7 +247,7 @@ describe RepositoryTableStateColumnUpdateService do
 
     it 'should keep columns as they were' do
       cols_1 = initial_state_1.state['columns'].deep_dup
-      cols_1['3']['visible'] = 'false'
+      cols_1['4']['visible'] = 'false'
       RepositoryTableStateService.new(user_1, repository).update_state(
         initial_state_1.state.merge('columns' => cols_1)
       )

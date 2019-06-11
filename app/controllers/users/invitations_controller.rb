@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   class InvitationsController < Devise::InvitationsController
     include InputSanitizeHelper
@@ -13,6 +15,7 @@ module Users
 
     def update
       return super unless Rails.configuration.x.new_team_on_signup
+
       # Instantialize a new team with the provided name
       @team = Team.new
       @team.name = params[:team][:name]
@@ -59,58 +62,46 @@ module Users
       @invite_results = []
       @too_many_emails = false
 
-      cntr = 0
-      @emails.each do |email|
-        cntr += 1
-
-        if cntr > Constants::INVITE_USERS_LIMIT
+      @emails.each_with_index do |email, email_counter|
+        # email_counter starts with 0
+        if email_counter >= Constants::INVITE_USERS_LIMIT
           @too_many_emails = true
           break
         end
 
-        password = generate_user_password
-
-        # Check if user already exists
-        user = nil
-        user = User.find_by_email(email) if User.exists?(email: email)
-
         result = { email: email }
+        unless Constants::BASIC_EMAIL_REGEX.match?(email)
+          result[:status] = :user_invalid
+          @invite_results << result
+          next
+        end
+        # Check if user already exists
+        user = User.find_by_email(email)
 
-        if user.present?
+        if user
           result[:status] = :user_exists
           result[:user] = user
         else
-          # Validate the user data
-          error = !(Constants::BASIC_EMAIL_REGEX === email)
-          error = validate_user(email, email, password).count > 0 unless error
+          user = User.invite!(
+            full_name: email,
+            email: email,
+            initials: email.upcase[0..1],
+            skip_invitation: true
+          )
+          user.update(invited_by: @user)
 
-          if !error
-            user = User.invite!(
-              full_name: email,
-              email: email,
-              initials: email.upcase[0..1],
-              skip_invitation: true
-            )
-            user.update(invited_by: @user)
+          result[:status] = :user_created
+          result[:user] = user
 
-            result[:status] = :user_created
-            result[:user] = user
-
-            # Sending email invitation is done in background job to prevent
-            # issues with email delivery. Also invite method must be call
-            # with :skip_invitation attribute set to true - see above.
-            user.delay.deliver_invitation
-          else
-            # Return invalid status
-            result[:status] = :user_invalid
-          end
+          # Sending email invitation is done in background job to prevent
+          # issues with email delivery. Also invite method must be call
+          # with :skip_invitation attribute set to true - see above.
+          user.delay.deliver_invitation
         end
 
-        if @team.present? && result[:status] != :user_invalid
-          if UserTeam.exists?(user: user, team: @team)
-            user_team =
-              UserTeam.where(user: user, team: @team).first
-
+        if @team && user
+          user_team = UserTeam.find_by_user_id_and_team_id(user.id, @team.id)
+          if user_team
             result[:status] = :user_exists_and_in_team
           else
             # Also generate user team relation
@@ -127,7 +118,6 @@ module Users
               user_team.role_str,
               user_team.team
             )
-
             Activities::CreateActivityService
               .call(activity_type: :invite_user_to_team,
                     owner: current_user,
@@ -139,13 +129,13 @@ module Users
                       role: user_team.role_str
                     })
 
-            if result[:status] == :user_exists && !user.confirmed?
-              result[:status] = :user_exists_unconfirmed_invited_to_team
-            elsif result[:status] == :user_exists
-              result[:status] = :user_exists_invited_to_team
-            else
-              result[:status] = :user_created_invited_to_team
-            end
+            result[:status] = if result[:status] == :user_exists && !user.confirmed?
+                                :user_exists_unconfirmed_invited_to_team
+                              elsif result[:status] == :user_exists
+                                :user_exists_invited_to_team
+                              else
+                                :user_created_invited_to_team
+                              end
           end
 
           result[:user_team] = user_team
@@ -196,9 +186,7 @@ module Users
         message: sanitize_input(message)
       )
 
-      if target_user.assignments_notification
-        UserNotification.create(notification: notification, user: target_user)
-      end
+      UserNotification.create(notification: notification, user: target_user) if target_user.assignments_notification
     end
 
     def check_captcha_for_invite
@@ -212,13 +200,14 @@ module Users
 
     def check_invite_users_permission
       @user = current_user
-      @emails = params[:emails].map(&:downcase)
+      @emails = params[:emails]&.map(&:downcase)
       @team = Team.find_by_id(params['teamId'])
       @role = params['role']
 
-      render_403 if @emails && @emails.empty?
-      render_403 if @team && !can_manage_team_users?(@team)
-      render_403 if @role && !UserTeam.roles.keys.include?(@role)
+      return render_403 unless @emails && @team && @role
+      return render_403 if @emails.empty?
+      return render_403 unless can_manage_team_users?(@team)
+      return render_403 unless UserTeam.roles.key?(@role)
     end
   end
 end

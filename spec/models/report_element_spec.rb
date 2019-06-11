@@ -1,6 +1,19 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ReportElement, type: :model do
+  let(:report_element) { build :report_element, :with_experiment }
+  let(:report_element_without_element) { build :report_element }
+
+  it 'is not valid without element' do
+    expect(report_element_without_element).not_to be_valid
+  end
+
+  it 'is valid' do
+    expect(report_element).to be_valid
+  end
+
   it 'should be of class ReportElement' do
     expect(subject.class).to eq ReportElement
   end
@@ -39,7 +52,7 @@ describe ReportElement, type: :model do
     it { should have_many(:children).class_name('ReportElement') }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :position }
     it { should validate_presence_of :report }
     it { should validate_presence_of :type_of }

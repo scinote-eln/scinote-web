@@ -10,15 +10,33 @@ class Asset < ApplicationRecord
 
   # Paperclip validation
   has_attached_file :file,
-                    styles: {
-                      large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                      medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
-                      original: { processors: [:image_quality_calculate] }
+                    styles: lambda { |a|
+                      if a.previewable_document?
+                        {
+                          large: { processors: [:custom_file_preview],
+                                   geometry: Constants::LARGE_PIC_FORMAT,
+                                   format: :jpg },
+                          medium: { processors: [:custom_file_preview],
+                                    geometry: Constants::MEDIUM_PIC_FORMAT,
+                                    format: :jpg }
+                        }
+                      else
+                        {
+                          large: [Constants::LARGE_PIC_FORMAT, :jpg],
+                          medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
+                        }
+                      end
                     },
                     convert_options: {
                       medium: '-quality 70 -strip',
                       all: '-background "#d2d2d2" -flatten +matte'
                     }
+
+  before_post_process :previewable?
+  before_post_process :extract_image_quality
+
+  # adds image processing in background job
+  process_in_background :file, processing_image_url: '/images/:style/processing.gif'
 
   validates_attachment :file,
                        presence: true,
@@ -30,20 +48,6 @@ class Asset < ApplicationRecord
 
   # Should be checked for any security leaks
   do_not_validate_attachment_file_type :file
-
-  # adds image processing in background job
-  process_in_background :file,
-                        only_process: lambda { |a|
-                                        if a.content_type ==
-                                           %r{^image/#{ Regexp.union(
-                                             Constants::WHITELISTED_IMAGE_TYPES
-                                           ) }}
-                                          %i(large medium original)
-                                        else
-                                          {}
-                                        end
-                                      },
-                        processing_image_url: '/images/:style/processing.gif'
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -194,6 +198,22 @@ class Asset < ApplicationRecord
     else
       new_query
     end
+  end
+
+  def extract_image_quality
+    return unless ['image/jpeg', 'image/pjpeg'].include? file_content_type
+
+    tempfile = file.queued_for_write[:original]
+    unless tempfile.nil?
+      quality = Paperclip::Processor.new(tempfile).identify(" -format '%Q' #{tempfile.path}")
+      self.file_image_quality = quality.to_i
+    end
+  rescue StandardError => e
+    Rails.logger.info "There was an error extracting image quality - #{e}"
+  end
+
+  def previewable?
+    file.previewable_image? || file.previewable_document?
   end
 
   def is_image?
@@ -390,7 +410,7 @@ class Asset < ApplicationRecord
     action = get_action(file_ext, action)
     if !action.nil?
       action_url = action.urlsrc
-      if ENV['WOPI_BUSINESS_USERS'] && ENV['WOPI_BUSINESS_USERS']=='true'
+      if ENV['WOPI_BUSINESS_USERS'] && ENV['WOPI_BUSINESS_USERS'] == 'true'
         action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
                                      'IsLicensedUser=1&')
         action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/,

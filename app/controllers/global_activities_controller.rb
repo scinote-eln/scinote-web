@@ -105,7 +105,7 @@ class GlobalActivitiesController < ApplicationController
     subject_types.each do |subject|
       matched = subject.constantize
                        .search_by_name(current_user, teams, query, whole_phrase: true)
-                       .where.not(name: nil)
+                       .where.not(name: nil).where.not(name: '')
                        .filter_by_teams(filter_teams)
                        .limit(Constants::SEARCH_LIMIT)
                        .pluck(:id, :name)

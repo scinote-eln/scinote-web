@@ -76,7 +76,7 @@
         Results.toggleResultEditButtons(true);
         Results.expandResult(newResult);
         TinyMCE.destroyAll();
-        Comments.initialize();
+        Comments.init();
         initNewReslutText();
       });
       $form.on('ajax:error', function(e, xhr) {

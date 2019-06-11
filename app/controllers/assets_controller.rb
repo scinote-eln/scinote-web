@@ -137,6 +137,8 @@ class AssetsController < ApplicationController
     tkn = current_user.get_wopi_token
     @token = tkn.token
     @ttl = (tkn.ttl * 1000).to_s
+    @asset.step&.protocol&.update(updated_at: Time.now)
+
     create_wopi_file_activity(current_user, true)
 
     render layout: false
@@ -166,6 +168,7 @@ class AssetsController < ApplicationController
     @asset.team.release_space(orig_file_size)
     # Post process file here
     @asset.post_process_file(@asset.team)
+    @asset.step&.protocol&.update(updated_at: Time.now)
 
     render_html = if @asset.step
                     asset_position = @asset.step.asset_position(@asset)
@@ -220,6 +223,7 @@ class AssetsController < ApplicationController
       render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
                                   can_manage_protocol_in_repository?(step.protocol)
       step_asset = StepAsset.create!(step: step, asset: asset)
+      step.protocol&.update(updated_at: Time.now)
 
       edit_url = edit_asset_url(step_asset.asset_id)
     elsif params[:element_type] == 'Result'
@@ -286,12 +290,9 @@ class AssetsController < ApplicationController
   end
 
   def append_wd_params(url)
-    wd_params = ''
-    params.keys.select { |i| i[/^wd.*/] }.each do |wd|
-      next if wd == 'wdPreviousSession' || wd == 'wdPreviousCorrelation'
-      wd_params += "&#{wd}=#{params[wd]}"
-    end
-    url + wd_params
+    exclude_params = %w(wdPreviousSession wdPreviousCorrelation)
+    wd_params = params.as_json.select { |key, _value| key[/^wd.*/] && !(exclude_params.include? key) }.to_query
+    url + '&' + wd_params
   end
 
   def asset_params

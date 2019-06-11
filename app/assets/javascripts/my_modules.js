@@ -298,7 +298,10 @@ function initTagsSelector() {
     var selectElement = e.target;
     if (params.id > 0) {
       newTag = { my_module_tag: { tag_id: e.params.data.id } };
-      $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl, newTag);
+      $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl, newTag)
+        .fail(function() {
+          $('.module-tags .select2-selection__choice').last().remove();
+        });
     } else {
       newTag = {
         tag: {

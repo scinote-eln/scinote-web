@@ -1,4 +1,4 @@
-<% image_preview = asset.is_image? ? asset.url(:medium) : nil %>
+<% image_preview = (asset.is_image? || asset.file.previewable_document?) ? asset.url(:medium) : nil %>
 
 <div class="attachment-placeholder pull-left">
   <div class="attachment-thumbnail <%= image_preview ? '' : 'no-shadow' %>">

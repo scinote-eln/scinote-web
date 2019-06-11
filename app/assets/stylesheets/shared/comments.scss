@@ -1,0 +1,330 @@
+// scss-lint:disable SelectorDepth SelectorFormat
+// scss-lint:disable NestingDepth ImportantRule
+
+@import "constants";
+@import "mixins";
+
+.comments-container {
+  // Comment item
+
+  .content-comments {
+    position: relative;
+
+    .ps__rail-y {
+      opacity: .9;
+    }
+  }
+
+  .comment-container {
+    display: flex;
+    padding: 5px 0 5px 5px;
+
+    .avatar-placehodler {
+      height: 30px;
+      margin: 13px 0;
+      width: 30px;
+    }
+
+    .content-placeholder {
+      padding-left: 10px;
+      width: calc(100% - 30px);
+
+      .comment-name {
+        color: $color-silver-chalice;
+        float: left;
+        font-size: 16px;
+        line-height: 30px;
+        padding-left: 5px;
+        width: 50%;
+      }
+
+      .comment-message {
+        float: left;
+        width: 100%;
+
+        .view-mode {
+          border: 1px solid transparent;
+          border-radius: $border-radius-small;
+          display: inline-block;
+          line-height: 16px;
+          min-height: 20px;
+          overflow: hidden;
+          padding: 2px 5px;
+          width: 100%;
+
+          p {
+            margin: 0;
+          }
+        }
+
+        textarea {
+          border: 1px solid $color-silver;
+          border-radius: $border-radius-small;
+          height: 22px;
+          line-height: 16px;
+          overflow: hidden;
+          padding: 2px 5px;
+          width: 100%;
+
+          &:focus {
+            outline: 0;
+          }
+
+          &:disabled {
+            background: transparent;
+            border: 1px solid transparent;
+            pointer-events: none;
+            user-select: none;
+          }
+        }
+      }
+
+      .error-block {
+        color: $brand-danger;
+        display: none;
+        float: left;
+      }
+
+      .comment-right {
+        color: $color-silver-chalice;
+        float: right;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        position: relative;
+        transition: $md-transaction;
+        width: 120px;
+
+        .comment-datetime {
+          float: left;
+          font-size: 12px;
+          line-height: 30px;
+          width: 120px;
+        }
+
+        .comment-actions {
+          left: 120px;
+          position: absolute;
+          transition: $md-transaction;
+          width: 100px;
+
+          .view-buttons,
+          .edit-buttons {
+            display: none;
+            font-size: 16px;
+
+            * {
+              cursor: pointer;
+            }
+
+            .edit-button,
+            .save-button {
+              display: inline-block;
+              width: 80px;
+            }
+
+            .delete-button,
+            .cancel-button {
+              float: right;
+              padding-right: 5px;
+              width: 20px;
+            }
+
+            a {
+              color: inherit;
+            }
+
+            span {
+              .fas {
+                margin-right: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &[data-edit-mode="0"]:hover,
+    &[data-edit-mode="1"] {
+      .comment-right {
+        width: 220px;
+      }
+
+      textarea:disabled,
+      .view-mode {
+        border: 1px solid $color-gainsboro;
+        cursor: pointer;
+      }
+    }
+
+    &[data-edit-mode="0"]:hover {
+      cursor: pointer;
+
+      .comment-actions {
+
+        .view-buttons {
+          display: inline;
+        }
+      }
+    }
+
+    &[data-edit-mode="1"] {
+
+      .comment-actions {
+
+        .edit-buttons {
+          display: inline !important;
+        }
+      }
+    }
+
+    &[data-error="true"] {
+
+      .error-block {
+        display: block;
+      }
+
+      .comment-actions {
+
+        .edit-buttons {
+          display: inline !important;
+        }
+      }
+    }
+  }
+
+  .new-message-container {
+    float: left;
+    margin-left: 15px;
+    margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+    width: calc(100% - 15px);
+
+    textarea {
+      border: 1px solid transparent;
+      box-shadow: none;
+      outline: none;
+      width: 100%;
+
+      &:focus {
+        border: 1px solid $color-silver;
+        box-shadow: none;
+        outline: none;
+      }
+
+      &.border {
+        border: 1px solid $color-silver;
+      }
+    }
+
+    .new-message-error {
+      color: $brand-danger;
+    }
+
+    .new-comment-button {
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 18px;
+      margin: 8px;
+      position: absolute;
+      right: -36px;
+      top: 0;
+      transition: $md-transaction;
+
+      &.show {
+        right: 0;
+      }
+    }
+
+    &:hover {
+
+      textarea {
+        border: 1px solid $color-silver;
+      }
+    }
+  }
+////////// Simple view /////////
+
+  &.simple {
+    display: inline-block;
+    width: 100%;
+
+    .new-message-container {
+      margin: 5px;
+      width: calc(100% - 10px);
+    }
+
+    .comment-container {
+      padding: 5px;
+
+      .avatar-placehodler {
+        margin: 0;
+      }
+
+      .content-placeholder {
+        margin-left: -30px;
+        padding: 0;
+        width: 100%;
+      }
+
+      .comment-name {
+        font-size: 14px;
+        line-height: 15px;
+        padding-left: 35px;
+      }
+
+      .comment-message {
+        margin-top: 5px;
+      }
+
+      .comment-right {
+        float: left;
+        font-size: 14px;
+        height: 15px;
+        line-height: 15px;
+        overflow-y: none;
+        padding-left: 35px;
+        width: 100%;
+        z-index: 3;
+
+        .comment-datetime {
+          font-size: 12px;
+          height: inherit;
+          line-height: inherit;
+          width: 100%;
+        }
+
+        .comment-actions {
+          background: $color-white;
+          height: 15px;
+          left: auto;
+          padding-left: 10px;
+          right: -90px;
+          width: 90px;
+
+          .view-buttons,
+          .edit-buttons {
+            font-size: 14px;
+          }
+
+          .edit-button,
+          .save-button {
+            width: 50px !important;
+          }
+        }
+      }
+
+      &[data-edit-mode="0"]:hover,
+      &[data-edit-mode="1"] {
+        .comment-right {
+          width: 100%;
+
+          .comment-actions {
+            right: 0;
+          }
+        }
+      }
+    }
+  }
+}

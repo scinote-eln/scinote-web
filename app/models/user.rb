@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   include SearchableModel
   include SettingsModel
@@ -72,7 +74,7 @@ class User < ApplicationRecord
   has_many :user_my_modules, inverse_of: :user
   has_many :my_modules, through: :user_my_modules
   has_many :comments, inverse_of: :user
-  has_many :activities, inverse_of: :owner
+  has_many :activities, inverse_of: :owner, foreign_key: 'owner_id'
   has_many :results, inverse_of: :user
   has_many :samples, inverse_of: :user
   has_many :samples_tables, inverse_of: :user, dependent: :destroy

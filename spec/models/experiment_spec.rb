@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 describe Experiment, type: :model do
+  let(:experiment) { build :experiment }
+
+  it 'is valid' do
+    expect(experiment).to be_valid
+  end
+
   it 'should be of class Experiment' do
     expect(subject.class).to eq Experiment
   end

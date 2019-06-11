@@ -6,7 +6,7 @@ class Report < ApplicationRecord
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: [:user, :project], case_sensitive: false }
+            uniqueness: { scope: %i(user_id project_id), case_sensitive: false }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :user, presence: true

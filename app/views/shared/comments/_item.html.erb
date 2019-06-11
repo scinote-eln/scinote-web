@@ -1,0 +1,49 @@
+ <% user_comment = comment.user == current_user %>
+  <div 
+    class="comment-container <%= user_comment ? 'comment-editable-field' : '' %>"
+    data-field-to-update="message"
+    data-params-group="comment"
+    data-path-to-update="<%= comment_action_url(comment) %>"
+    data-original-name="<%= comment.message %>"
+    data-response-field="comment"
+    data-smart-annotation="true"
+    error="false"
+  >
+    <div class="avatar-placehodler">
+      <span class='global-avatar-container'> 
+        <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+      </span>
+    </div>
+    <div class="content-placeholder">
+      <div class="comment-name"><%= comment.user.full_name %></div>
+      <div class="comment-right">
+        <div class="comment-datetime"><%= l(comment.created_at, format: :full) %></div>
+        <% if user_comment %>
+          <div class="comment-actions">
+            <div class="edit-buttons">
+              <span class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
+              <span class="cancel-button"><i class="fas fa-times"></i></span>
+            </div>
+            <div class="view-buttons">
+              <span class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
+              <a href="#"
+                class="delete-button"
+                data-url="<%= comment_action_url(comment) %>"
+                data-confirm-message="<%= t('comments.delete_confirm') %>"
+                data-turbolinks="false">
+                <span class="fas fa-trash action-icon-delete"></span>
+              </a>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="comment-message">
+           <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team, simple_format: true).html_safe %></div>
+            <% if user_comment %>
+              <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
+            <% end %>
+      </div>
+      <div class="error-block"></div>
+    </div>
+  </div>
+

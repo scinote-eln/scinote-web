@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe MyModuleTag, type: :model do
+  let(:my_module_tag) { build :my_module_tag }
+
+  it 'is valid' do
+    expect(my_module_tag).to be_valid
+  end
+
   it 'should be of class MyModuleTag' do
     expect(subject.class).to eq MyModuleTag
   end
@@ -17,7 +25,7 @@ describe MyModuleTag, type: :model do
     it { should belong_to :tag }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :my_module }
     it { should validate_presence_of :tag }
   end

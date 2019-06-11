@@ -3,13 +3,15 @@
 @import 'constants';
 
 /* navbar avatar image */
-.navbar-nav .avatar {
-  border-radius: 30px;
-  height: 30px;
-  margin-top: -14px;
-  position: relative;
-  width: 30px;
-  top: 5px;
+.navbar-nav .dropdown-toggle[title="Account"] {
+  align-items: center;
+  display: inline-flex;
+  height: 50px;
+  padding: 10px 15px;
+
+  .global-avatar-container {
+    margin-left: 5px;
+  }
 }
 
 // Active tab with error should retain error color if clicked on again

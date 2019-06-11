@@ -3,7 +3,7 @@ class UserRepositoriesController < ApplicationController
 
   def save_table_state
     service = RepositoryTableStateService.new(current_user, @repository)
-    service.update_state(params[:state])
+    service.update_state(params.require(:state).permit!.to_h)
     respond_to do |format|
       format.json do
         render json: {

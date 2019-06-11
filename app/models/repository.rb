@@ -7,10 +7,7 @@ class Repository < ApplicationRecord
   attribute :discarded_by_id, :integer
 
   belongs_to :team, optional: true
-  belongs_to :created_by,
-             foreign_key: :created_by_id,
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_columns, dependent: :destroy
   has_many :repository_rows, dependent: :destroy
   has_many :repository_table_states,
@@ -21,7 +18,7 @@ class Repository < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,
-            uniqueness: { scope: :team, case_sensitive: false },
+            uniqueness: { scope: :team_id, case_sensitive: false },
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :team, presence: true
   validates :created_by, presence: true

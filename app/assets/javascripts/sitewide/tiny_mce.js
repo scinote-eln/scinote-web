@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n */
+/* global _ hljs tinyMCE SmartAnnotation I18n globalConstants */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -18,7 +18,7 @@ var TinyMCE = (function() {
 
   // returns a public API for TinyMCE editor
   return Object.freeze({
-    init: function(selector, mceConfig = {}) {
+    init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
       if (typeof tinyMCE !== 'undefined') {
@@ -35,7 +35,7 @@ var TinyMCE = (function() {
           selector: selector,
           menubar: 'file edit view insert format',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
-          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern',
+          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor placeholder colorpicker textpattern',
           autoresize_bottom_margin: 20,
           codesample_languages: [
             { text: 'R', value: 'r' },
@@ -132,7 +132,11 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
-            editorToolbar.css('position', 'sticky');
+            if (globalConstants.is_safari) {
+              editorToolbar.css('position', '-webkit-sticky');
+            } else {
+              editorToolbar.css('position', 'sticky');
+            }
             editorToolbar.css('top', editorToolbaroffset + 'px');
 
             // Update scroll position after exit
@@ -164,6 +168,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+                if (onSaveCallback) { onSaveCallback(); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);

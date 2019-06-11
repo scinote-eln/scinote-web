@@ -1,32 +1,9 @@
 <h5 class="text-center"><%= t('experiments.canvas.popups.comments_tab') %></h5>
 <hr>
-<ul class="no-style double-line content-comments">
-  <% if @comments.length == @per_page %>
-  <li class="comment-more text-center">
-    <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
-      <%=t "experiments.canvas.popups.more_comments" %>
-    </a>
-  </li>
-  <% end %>
-  <% if @comments.size == 0 then %>
-    <li class="no-comments"><em><%= t 'experiments.canvas.popups.no_comments' %></em></li>
-  <% else %>
-    <%= render 'my_module_comments/list.html.erb', comments: @comments %>
-  <% end %>
-</ul>
-<% if can_create_comments_in_module?(@my_module) %>
-  <ul class="no-style double-line">
-    <li>
-      <hr>
-      <%= bootstrap_form_for :comment, url: { format: :json }, method: :post, remote: true, html: { class: 'comment-form' } do |f| %>
-        <%= f.smart_text_area :message,
-                              single_line: true,
-                              hide_label: true,
-                              placeholder: t("experiments.canvas.popups.comment_placeholder"),
-                              append: f.submit("+"),
-                              help: '.',
-                              data: { 'atwho-edit' => '' } %>
-      <% end %>
-    </li>
-  </ul>
-<% end %>
+  <%= render partial: 'shared/comments/comments.html.erb', locals: {
+    object: @my_module,
+    comments: comments, 
+    can_create_comments: can_create_comments_in_module?(@my_module), 
+    create_url: my_module_my_module_comments_path(@my_module, format: :json),
+    more_url: my_module_my_module_comments_path(@my_module, format: :json, from: comments.first&.id)
+  } %>
