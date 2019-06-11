@@ -3,6 +3,6 @@
 FactoryBot.define do
   factory :table do
     name { Faker::Name.unique.name }
-    contents { { some_data: 'needs to be here' } }
+    contents { { data: [%w(A B C), %w(D E F), %w(G H I)] } }
   end
 end
