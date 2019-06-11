@@ -34,16 +34,19 @@ class Report::Docx
 
   def draw
     @docx.page_size do
-      width   12240
-      height  15840
+      width   Constants::REPORT_DOCX_WIDTH
+      height  Constants::REPORT_DOCX_HEIGHT
     end
 
     @docx.page_margins do
-      left    720
-      right   720
-      top     1440
-      bottom  1440
+      left    Constants::REPORT_DOCX_MARGIN_LEFT
+      right   Constants::REPORT_DOCX_MARGIN_RIGHT
+      top     Constants::REPORT_DOCX_MARGIN_TOP
+      bottom  Constants::REPORT_DOCX_MARGIN_BOTTOM
     end
+
+    @docx.page_numbers true, align: :right
+
     @json.each do |main_object|
       case main_object['type_of']
       when 'project_header'
@@ -65,6 +68,7 @@ class Report::Docx
 
   private
 
+  # RTE fields support
   def html_to_word_converter(text)
     html = Nokogiri::HTML(text)
     raw_elements = recursive_children(html.css('body').children, [])
@@ -72,6 +76,7 @@ class Report::Docx
     elements = []
     temp_p = []
 
+    # Combined raw text blocks in paragraphs
     raw_elements.each do |elem|
       if elem[:type] == 'image' || elem[:type] == 'newline'
         unless temp_p.empty?
@@ -84,6 +89,7 @@ class Report::Docx
       end
     end
     elements.push(type: 'p', children: temp_p)
+    # Draw elements
     elements.each do |elem|
       if elem[:type] == 'p'
         @docx.p do
@@ -113,6 +119,7 @@ class Report::Docx
     end
   end
 
+  # Convert HTML structure to plain text structure
   def recursive_children(children, elements)
     children.each do |elem|
       if elem.class == Nokogiri::XML::Text
@@ -146,6 +153,7 @@ class Report::Docx
     elements
   end
 
+  # Prepare style for text
   def paragraph_styling(elem)
     style = elem.attributes['style']
     result = {}
@@ -170,6 +178,7 @@ class Report::Docx
     result
   end
 
+  # Prepare style for images
   def image_styling(elem, dimension)
     dimension[0] = elem.attributes['width'].value.to_i if elem.attributes['width']
     dimension[1] = elem.attributes['height'].value.to_i if elem.attributes['height']
@@ -184,7 +193,8 @@ class Report::Docx
               end
     end
 
-    max_width = (12240 - 1440) / 20
+    margins = Constants::REPORT_DOCX_MARGIN_LEFT + Constants::REPORT_DOCX_MARGIN_RIGHT
+    max_width = (Constants::REPORT_DOCX_WIDTH - margins) / 20
 
     if dimension[0] > max_width
       x = max_width

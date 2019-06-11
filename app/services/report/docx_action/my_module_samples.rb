@@ -11,6 +11,8 @@ module Report::DocxAction::MyModuleSamples
     else
       I18n.t 'projects.reports.elements.module_samples.no_samples'
     end
+    @docx.p
+    @docx.p
   end
 end
 # rubocop:enable  Style/ClassAndModuleChildren

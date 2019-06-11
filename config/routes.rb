@@ -247,7 +247,7 @@ Rails.application.routes.draw do
         collection do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
-          post 'generate', to: 'reports#generate', format: ['docx','pdf']
+          post 'generate', to: 'reports#generate', format: %w(docx pdf)
           get 'new/', to: 'reports#new'
           get 'new/project_contents_modal',
               to: 'reports#project_contents_modal',

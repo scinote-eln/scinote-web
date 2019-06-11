@@ -45,7 +45,7 @@ function initializeHandsonTable(el) {
       formulas: true
     });
     el.handsontable("getInstance").loadData(data);
-    el.handsontable("getInstance").getPlugin('columnSorting').sort(3, order);
+    el.handsontable('getInstance').getPlugin('columnSorting').sort(3, order);
 
     // "Hack" to disable user sorting rows by clicking on
     // header elements
@@ -436,21 +436,19 @@ function initializeSaveToPdf() {
 }
 
 function initializeSaveToDocx() {
-  var saveToPdfForm = $(".get-report-docx-form");
+  var saveToPdfForm = $('.get-report-docx-form');
   var hiddenInput = saveToPdfForm.find("input[type='hidden']");
-  var saveToPdfBtn = saveToPdfForm.find("#get-report-docx");
+  var saveToPdfBtn = saveToPdfForm.find('#get-report-docx');
 
   saveToPdfBtn.click(function(e) {
-    var content = $(REPORT_CONTENT);
-
     // Fill hidden input element
-    hiddenInput.attr("value", JSON.stringify(constructReportContentsJson()));
+    hiddenInput.attr('value', JSON.stringify(constructReportContentsJson()));
 
     // Fire form submission
     saveToPdfForm.submit();
 
     // Clear form
-    hiddenInput.attr("value", "");
+    hiddenInput.attr('value', '');
 
     // Prevent page reload
     e.preventDefault();
@@ -493,7 +491,7 @@ function init() {
   initializeGlobalReportSort();
   initializePrintPopup();
   initializeSaveToPdf();
-  initializeSaveToDocx()
+  initializeSaveToDocx();
   initializeSaveReport();
   initializeAddContentsModal();
   initializeUnsavedWorkDialog();

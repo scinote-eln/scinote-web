@@ -18,8 +18,8 @@ module Report::DocxAction::Step
     @docx.hr
 
     @docx.p do
-      text I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one), bold: true
-      text ' ' + step.name
+      text I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one), bold: true, size: 26
+      text ' ' + step.name, size: 26
       text ' '
       if step.completed
         text I18n.t('protocols.steps.completed'), color: '2dbe61'

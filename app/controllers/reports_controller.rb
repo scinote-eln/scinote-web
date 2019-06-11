@@ -154,7 +154,7 @@ class ReportsController < ApplicationController
         @user = current_user
         @team = current_team
         @data = params[:json]
-        headers["Content-Disposition"] = "attachment; filename=\"caracal.docx\""
+        headers["Content-Disposition"] = 'attachment; filename="scinote_report.docx"'
       end
     end
   end
