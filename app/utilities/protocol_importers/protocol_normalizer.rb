@@ -2,11 +2,11 @@
 
 module ProtocolImporters
   class ProtocolNormalizer
-    def load_all_protocols(_params: {})
+    def normalize_all_protocols(_client_data)
       raise NotImplementedError
     end
 
-    def load_protocol(_id:, _params: {})
+    def normalize_protocol(_client_data)
       raise NotImplementedError
     end
   end
