@@ -27,7 +27,7 @@ describe OnlineSourcesController, type: :controller do
       # Setup double
       service = double('success_service')
       allow(service).to(receive(:succeed?)).and_return(true)
-      allow(service).to(receive(:pio_protocol)).and_return({})
+      allow(service).to(receive(:built_protocol)).and_return({})
 
       allow_any_instance_of(ProtocolImporters::BuildProtocolFromClientService).to(receive(:call)).and_return(service)
 

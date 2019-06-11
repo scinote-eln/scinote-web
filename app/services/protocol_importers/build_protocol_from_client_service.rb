@@ -4,7 +4,7 @@ module ProtocolImporters
   class BuildProtocolFromClientService
     extend Service
 
-    attr_reader :errors, :pio_protocol
+    attr_reader :errors, :built_protocol
 
     def initialize(protocol_client_id:, protocol_source:, user_id:, team_id:)
       @id = protocol_client_id
@@ -25,8 +25,8 @@ module ProtocolImporters
                                                               user: @user,
                                                               team: @team)
 
-      @pio_protocol = pio.build
-      @errors[:protocol] = pio.protocol.errors unless @pio_protocol.valid?
+      @built_protocol = pio.build
+      @errors[:protocol] = pio.protocol.errors unless @built_protocol.valid?
       self
     rescue StandardError => e
       @errors[:build_protocol] = e.message
