@@ -209,6 +209,8 @@ Rails.application.routes.draw do
       match '*path',
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
+
+      get 'build_online_sources_protocol', to: 'online_sources#new'
     end
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
