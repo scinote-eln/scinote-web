@@ -39,7 +39,7 @@ describe ProtocolImporters::BuildProtocolFromClientService do
     end
 
     it 'returns ProtocolIntermediateObject' do
-      expect(service_call.pio_protocol).to be_instance_of(Protocol)
+      expect(service_call.built_protocol).to be_instance_of(Protocol)
     end
     # more tests will be implemented when add error handling to service
   end

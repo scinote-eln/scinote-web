@@ -33,7 +33,7 @@ class OnlineSourcesController < ApplicationController
     )
 
     if service_call.succeed?
-      render json: service_call.pio_protocol
+      render json: service_call.built_protocol
     else
       render json: { errors: service_call.errors }, status: 400
     end
