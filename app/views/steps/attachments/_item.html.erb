@@ -1,6 +1,6 @@
 <% if asset.file.processing? && (asset.is_image? || asset.file.previewable_document?) %>
   <% asset_status = 'asset-loading' %>
-  <% present_url = step_file_present_asset_path(asset.id) %>
+  <% present_url = file_present_asset_path(asset.id) %>
 <% else %>
   <% asset_status = 'asset-present' %>
   <% present_url = '' %>

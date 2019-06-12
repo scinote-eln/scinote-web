@@ -246,7 +246,7 @@
       $new_step.find("[data-role='step-hot-table']").each(function() {
         renderTable($(this));
       });
-      setupAssetsLoading();
+      Assets.setupAssetsLoading();
     })
     .on("ajax:error", function(e, xhr, status, error) {
       $form.renderFormErrors('step', xhr.responseJSON, true, e);
@@ -609,7 +609,7 @@
             $(this).handsontable("render");
           });
           animateSpinner(null, false);
-          setupAssetsLoading();
+          Assets.setupAssetsLoading();
           DragNDropSteps.clearFiles();
           FilePreviewModal.init();
           $.initTooltips();
@@ -680,7 +680,7 @@
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();
-  setupAssetsLoading();
+  Assets.setupAssetsLoading();
   FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');
