@@ -51,6 +51,8 @@ class Report::Docx
       bottom  Constants::REPORT_DOCX_MARGIN_BOTTOM
     end
 
+    @docx.page_numbers true, align: :right
+
     generate_html_styles
 
     @json.each do |main_object|
@@ -76,6 +78,8 @@ class Report::Docx
 
   # RTE fields support
   def html_to_word_converter(text)
+    link_style = @link_style
+    scinote_url = @scinote_url
     html = Nokogiri::HTML(text)
     raw_elements = recursive_children(html.css('body').children, [])
 
@@ -90,7 +94,7 @@ class Report::Docx
           temp_p = []
         end
         elements.push(elem)
-      elsif elem[:type] == 'br' || elem[:type] == 'text'
+      elsif %w(br text a).include? elem[:type]
         temp_p.push(elem)
       end
     end
@@ -106,6 +110,12 @@ class Report::Docx
               text ' ' if text_el[:value] != ''
             elsif text_el[:type] == 'br'
               br
+            elsif text_el[:type] == 'a'
+              if text_el[:link]
+                link text_el[:value], scinote_url + text_el[:link], link_style
+              else
+                text text_el[:value], link_style
+              end
             end
           end
         end
@@ -140,7 +150,7 @@ class Report::Docx
 
       elements.push(type: 'br') if elem.name == 'br'
 
-      if elem.name == 'img'
+      if elem.name == 'img' && elem.attributes['data-mce-token']
 
         image = TinyMceAsset.find_by_id(elem.attributes['data-mce-token'].value)
 
@@ -157,9 +167,25 @@ class Report::Docx
         )
       end
 
+      if elem.name == 'a'
+        elements.push(link_prepare(elem))
+        next
+      end
+
       elements = recursive_children(elem.children, elements) if elem.children
     end
     elements
+  end
+
+  def link_prepare(elem)
+    text = elem.text
+    link = elem.attributes['href'].value if elem.attributes['href']
+    link = nil if elem.attributes['class'] && elem.attributes['class'].value == 'record-info-link'
+    {
+      type: 'a',
+      value: text,
+      link: link
+    }
   end
 
   # Prepare style for text
@@ -278,7 +304,7 @@ class Report::Docx
   end
 
   def image_path(image)
-    if image.stored_on_s3?
+    if image.is_stored_on_s3?
       image.url
     else
       image.open.path

@@ -3,6 +3,7 @@
 # rubocop:disable  Style/ClassAndModuleChildren
 module Report::DocxAction::Experiment
   def draw_experiment(experiment, children)
+    link_style = @link_style
     scinote_url = @scinote_url
     @docx.h2 experiment.name
     @docx.p do
@@ -11,7 +12,7 @@ module Report::DocxAction::Experiment
       text ' | '
       link  'SciNote Link',
             scinote_url + Rails.application.routes.url_helpers.canvas_experiment_path(experiment),
-            @link_style
+            link_style
     end
     html = custom_auto_link(experiment.description, team: @report_team)
     html_to_word_converter(html)

@@ -3,6 +3,7 @@
 # rubocop:disable  Style/ClassAndModuleChildren
 module Report::DocxAction::MyModule
   def draw_my_module(my_module, children)
+    link_style = @link_style
     scinote_url = @scinote_url
     @docx.h3 my_module.name, italic: false
     @docx.p do
@@ -22,7 +23,7 @@ module Report::DocxAction::MyModule
       text ' | '
       link  'SciNote Link',
             scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),
-            @link_style
+            link_style
     end
     if my_module.description.present?
       html = custom_auto_link(my_module.description, team: @report_team)
