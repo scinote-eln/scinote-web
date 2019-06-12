@@ -3,15 +3,18 @@
 # rubocop:disable  Style/ClassAndModuleChildren
 module Report::DocxAction::Experiment
   def draw_experiment(experiment, children)
-    @docx.p I18n.t 'projects.reports.elements.experiment.user_time',
-                   timestamp: I18n.l(experiment.created_at, format: :full)
-    @docx.hr do
-      spacing 1
-    end
+    scinote_url = @scinote_url
     @docx.h2 experiment.name
-    @docx.p
-    @docx.p SmartAnnotations::TagToText.new(@user, @report_team, experiment.description).text
-    @docx.p
+    @docx.p do
+      text I18n.t('projects.reports.elements.experiment.user_time',
+                  timestamp: I18n.l(experiment.created_at, format: :full)), color: 'a0a0a0'
+      text ' | '
+      link  'SciNote Link',
+            scinote_url + Rails.application.routes.url_helpers.canvas_experiment_path(experiment),
+            @link_style
+    end
+    html = custom_auto_link(experiment.description, team: @report_team)
+    html_to_word_converter(html)
     @docx.p
     children.each do |my_module_hash|
       my_module = MyModule.find_by_id(my_module_hash['id']['my_module_id'])

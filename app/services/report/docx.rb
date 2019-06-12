@@ -9,6 +9,7 @@ class Report::Docx
   include InputSanitizeHelper
   include TeamsHelper
   include GlobalActivitiesHelper
+  include RepositoryDatatableHelper
 
   include Report::DocxAction::Experiment
   include Report::DocxAction::MyModule
@@ -30,6 +31,11 @@ class Report::Docx
     @docx = docx
     @user = options[:user]
     @report_team = options[:team]
+    @link_style = {
+      color: '37a0d9',
+      bold: true
+    }
+    @scinote_url = options[:scinote_url][0..-2]
   end
 
   def draw
@@ -45,7 +51,7 @@ class Report::Docx
       bottom  Constants::REPORT_DOCX_MARGIN_BOTTOM
     end
 
-    @docx.page_numbers true, align: :right
+    generate_html_styles
 
     @json.each do |main_object|
       case main_object['type_of']
@@ -114,7 +120,7 @@ class Report::Docx
         end
       elsif elem[:type] == 'image'
         style = elem[:style]
-        @docx.img elem[:data], width: style[:width], height: style[:height], align: style[:align]
+        @docx.img elem[:data], width: style[:width], height: style[:height], align: (style[:align] || :left)
       end
     end
   end
@@ -137,13 +143,16 @@ class Report::Docx
       if elem.name == 'img'
 
         image = TinyMceAsset.find_by_id(elem.attributes['data-mce-token'].value)
-        dimension = FastImage.size(image.open.path)
+
+        image_path = image_path(image)
+
+        dimension = FastImage.size(image_path)
 
         style = image_styling(elem, dimension)
 
         elements.push(
           type: 'image',
-          data: image.open.path,
+          data: image_path,
           style: style
         )
       end
@@ -157,7 +166,7 @@ class Report::Docx
   def paragraph_styling(elem)
     style = elem.attributes['style']
     result = {}
-    result[:style] = elem.name.gsub('h', 'Heading') if elem.name.include? 'h'
+    result[:style] = elem.name if elem.name.include? 'h'
     result[:bold] = true if elem.name == 'strong'
     result[:italic] = true if elem.name == 'em'
     style_keys = ['text-align', 'color']
@@ -212,14 +221,68 @@ class Report::Docx
   end
 
   def asset_image_preparing(asset)
-    dimension = FastImage.size(asset.open.path)
+    image_path = image_path(asset)
+
+    dimension = FastImage.size(image_path)
     x = dimension[0]
     y = dimension[1]
     if x > 300
       y = y * 300 / x
       x = 300
     end
-    @docx.img asset.open.path, width: x, height: y
+    @docx.img image_path, width: x, height: y
+  end
+
+  def generate_html_styles
+    @docx.style do
+      id 'h1'
+      name 'h1'
+      bold true
+      size 64
+    end
+
+    @docx.style do
+      id 'h2'
+      name 'h2'
+      bold true
+      size 48
+    end
+
+    @docx.style do
+      id 'h3'
+      name 'h3'
+      bold true
+      size 36
+    end
+
+    @docx.style do
+      id 'h4'
+      name 'h4'
+      bold true
+      size 32
+    end
+
+    @docx.style do
+      id 'h5'
+      name 'h5'
+      bold true
+      size 26
+    end
+
+    @docx.style do
+      id 'h6'
+      name 'h6'
+      bold true
+      size 24
+    end
+  end
+
+  def image_path(image)
+    if image.stored_on_s3?
+      image.url
+    else
+      image.open.path
+    end
   end
 end
 

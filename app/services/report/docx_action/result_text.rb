@@ -13,7 +13,7 @@ module Report::DocxAction::ResultText
       text I18n.t('projects.reports.elements.result_table.user_time',
                   timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: 'a0a0a0'
     end
-    html = SmartAnnotations::TagToHtml.new(@user, @report_team, result_text.text).html
+    html = custom_auto_link(result_text.text, team: @report_team)
     html_to_word_converter(html)
 
     children.each do |result_hash|

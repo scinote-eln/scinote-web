@@ -3,12 +3,12 @@
 # rubocop:disable  Style/ClassAndModuleChildren
 module Report::DocxAction::MyModule
   def draw_my_module(my_module, children)
-    @docx.p I18n.t 'projects.reports.elements.module.user_time',
-                   timestamp: I18n.l(my_module.created_at, format: :full)
-    @docx.hr
+    scinote_url = @scinote_url
+    @docx.h3 my_module.name, italic: false
     @docx.p do
-      text my_module.name, size: 26, bold: true
-      text '   '
+      text I18n.t('projects.reports.elements.module.user_time',
+                  timestamp: I18n.l(my_module.created_at, format: :full)), color: 'a0a0a0'
+      text ' | '
       if my_module.due_date.present?
         text I18n.t('projects.reports.elements.module.due_date',
                     due_date: I18n.l(my_module.due_date, format: :full)), color: 'a0a0a0'
@@ -19,9 +19,13 @@ module Report::DocxAction::MyModule
         text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}",
              color: 'a0a0a0'
       end
+      text ' | '
+      link  'SciNote Link',
+            scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),
+            @link_style
     end
     if my_module.description.present?
-      html = SmartAnnotations::TagToHtml.new(@user, @report_team, my_module.description).html
+      html = custom_auto_link(my_module.description, team: @report_team)
       html_to_word_converter(html)
     else
       @docx.p I18n.t 'projects.reports.elements.module.no_description'
@@ -53,7 +57,6 @@ module Report::DocxAction::MyModule
         result = Result.find_by_id(my_module_hash['id']['result_id'])
         draw_result_text(result, my_module_hash['children']) if result
       when 'my_module_repository'
-        p my_module_hash
         draw_my_module_samples(my_module, my_module_hash['id']['repository_id'], my_module_hash['sort_order'])
       end
     end

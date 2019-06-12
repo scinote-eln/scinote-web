@@ -11,7 +11,7 @@ module Report::DocxAction::StepTable
       text I18n.t('projects.reports.elements.step_table.user_time',
                   timestamp: I18n.l(timestamp, format: :full)), color: 'a0a0a0'
     end
-    @docx.table JSON.parse(table.contents_utf_8)['data'], border_color: '666666'
+    @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: 4
   end
 end
 # rubocop:enable  Style/ClassAndModuleChildren

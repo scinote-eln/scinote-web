@@ -10,25 +10,24 @@ module Report::DocxAction::Step
     assets = step.assets
     checklists = step.checklists
     comments = step.step_comments
-    @docx.p I18n.t(
-      "projects.reports.elements.step.#{step_type_str}.user_time",
-      user: user.full_name,
-      timestamp: I18n.l(timestamp, format: :full)
-    )
-    @docx.hr
-
+    @docx.p
+    @docx.h5 I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one) +
+             ' ' + step.name
     @docx.p do
-      text I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one), bold: true, size: 26
-      text ' ' + step.name, size: 26
-      text ' '
       if step.completed
         text I18n.t('protocols.steps.completed'), color: '2dbe61'
       else
         text I18n.t('protocols.steps.uncompleted'), color: 'a0a0a0'
       end
+      text ' | '
+      text I18n.t(
+        "projects.reports.elements.step.#{step_type_str}.user_time",
+        user: user.full_name,
+        timestamp: I18n.l(timestamp, format: :full)
+      ), color: 'a0a0a0'
     end
     if step.description.present?
-      html = SmartAnnotations::TagToHtml.new(@user, @report_team, step.description).html
+      html = custom_auto_link(step.description, team: @report_team)
       html_to_word_converter(html)
     else
       @docx.p I18n.t 'projects.reports.elements.step.no_description'
