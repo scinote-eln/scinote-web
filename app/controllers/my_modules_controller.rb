@@ -282,7 +282,7 @@ class MyModulesController < ApplicationController
       current_user,
       current_team,
       Constants::RECENT_PROTOCOL_LIMIT
-    ).count.positive?
+    ).any?
     current_team_switch(@protocol.team)
   end
 
