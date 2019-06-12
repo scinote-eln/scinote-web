@@ -1631,6 +1631,7 @@ en:
       navigation:
         public: "Team protocols"
         private: "My protocols"
+        external_protocols: "External protocols"
         archive: "Archive"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
