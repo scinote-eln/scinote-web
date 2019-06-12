@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe OnlineSourcesController, type: :controller do
+describe ExternalProtocolsController, type: :controller do
   login_user
 
   let(:user) { subject.current_user }

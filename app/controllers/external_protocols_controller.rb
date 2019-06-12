@@ -1,4 +1,4 @@
-class OnlineSourcesController < ApplicationController
+class ExternalProtocolsController < ApplicationController
   # GET
   def index
     # list_protocols = SearchService.call(index_params)

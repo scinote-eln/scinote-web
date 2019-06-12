@@ -210,7 +210,7 @@ Rails.application.routes.draw do
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
 
-      get 'build_online_sources_protocol', to: 'online_sources#new'
+      get 'build_external_protocol', to: 'external_protocols#new'
     end
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
