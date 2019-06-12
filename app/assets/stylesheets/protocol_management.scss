@@ -66,9 +66,9 @@
     align-items: center;
     display: flex;
     flex-direction: row;
-    padding-right: 0px;
     justify-content: space-between;
     margin-bottom: 15px;
+    padding-right: 0;
 
     .protocolsio-logo {
       height: 30px;
@@ -82,7 +82,7 @@
     }
 
     .protocols-search-bar {
-      padding-right: 0px;
+      padding-right: 0;
       width: 70%;
 
       .input-group {
@@ -106,7 +106,7 @@
     border-right: 1px solid $color-silver-chalice;
     border-top: 1px solid $color-silver-chalice;
     height: 600px;
-    padding-right: 0px;
+    padding-right: 0;
 
     .row {
       margin-left: 0;
@@ -116,8 +116,8 @@
         border-bottom: 1px solid $color-silver-chalice;
 
         span {
-          vertical-align: middle;
           color: $color-silver-chalice;
+          vertical-align: middle;
         }
 
         .btn-group {
@@ -147,11 +147,11 @@
   }
 
   .protocol-preview-panel {
-    border-top: 1px solid $color-silver-chalice;
     background-color: $color-concrete;
+    border-top: 1px solid $color-silver-chalice;
     height: 600px;
+    padding-left: 0;
     padding-top: 79px;
-    padding-left: 0px;
 
     .row {
       margin-left: 0;
