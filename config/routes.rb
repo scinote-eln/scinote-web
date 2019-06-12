@@ -211,6 +211,7 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
 
       get 'build_external_protocol', to: 'external_protocols#new'
+      post 'import_external_protocol', to: 'external_protocols#create'
     end
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
