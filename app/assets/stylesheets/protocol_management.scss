@@ -57,6 +57,125 @@
 
   .tab-pane-settings {
     border: 0;
-    padding: 25px 20px;
+  }
+}
+
+.external-protocols-tab {
+
+  .protocols-search-bar-panel {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    padding-right: 0px;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    .protocolsio-logo {
+      height: 30px;
+      width: 30px;
+    }
+
+    .protocolsio-title {
+      color: $brand-primary;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .protocols-search-bar {
+      padding-right: 0px;
+      width: 70%;
+
+      .input-group {
+        margin-bottom: 0;
+        width: 100%;
+
+        .form-control {
+          border-right: 0;
+        }
+
+        .input-group-addon {
+          background: $color-white;
+          color: $color-emperor;
+        }
+      }
+    }
+  }
+
+  .protocol-list-side-panel {
+    background-color: $color-white;
+    border-right: 1px solid $color-silver-chalice;
+    border-top: 1px solid $color-silver-chalice;
+    height: 600px;
+    padding-right: 0px;
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+
+      &.protocol-sort {
+        border-bottom: 1px solid $color-silver-chalice;
+
+        span {
+          vertical-align: middle;
+          color: $color-silver-chalice;
+        }
+
+        .btn-group {
+          margin-bottom: 10px;
+          margin-top: 10px;
+
+          label {
+            padding-bottom: 0;
+            padding-top: 0;
+
+            &.active {
+              background: $color-gainsboro;
+              border-radius: 5px;
+              color: $color-emperor;
+            }
+          }
+        }
+      }
+    }
+
+    // When no search result is present
+    .empty-text {
+      color: $color-silver-chalice;
+      font-size: 13px;
+      margin-top: 20px;
+    }
+  }
+
+  .protocol-preview-panel {
+    border-top: 1px solid $color-silver-chalice;
+    background-color: $color-concrete;
+    height: 600px;
+    padding-top: 79px;
+    padding-left: 0px;
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    // Empty texts on the right
+    .protocol-preview-text {
+      color: $color-silver-chalice;
+      font-size: 24px;
+    }
+
+    .protocol-preview-subtext {
+      color: $color-silver-chalice;
+      font-size: 14px;
+    }
+
+    .text-rows {
+      text-align: center;
+    }
+
+    .text-separator hr {
+      border: 1px solid $color-alto;
+      width: 120px;
+    }
   }
 }
