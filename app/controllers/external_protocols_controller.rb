@@ -4,7 +4,7 @@ class ExternalProtocolsController < ApplicationController
   before_action :load_vars
   before_action :check_import_permissions, only: [:create]
 
-  # GET
+  # GET list_external_protocol
   def index
     # list_protocols = SearchService.call(index_params)
     succeed = true
@@ -28,7 +28,7 @@ class ExternalProtocolsController < ApplicationController
     end
   end
 
-  # GET
+  # GET show_external_protocol
   def show
     # TODO: this should be refactored, it's only for placeholding
     endpoint_name = Constants::PROTOCOLS_ENDPOINTS.dig(*show_params[:protocol_source]
@@ -47,7 +47,7 @@ class ExternalProtocolsController < ApplicationController
     }, status: 400
   end
 
-  # GET team_build_online_sources_protocol
+  # GET build_online_sources_protocol
   def new
     service_call = ProtocolImporters::BuildProtocolFromClientService.call(
       protocol_source: new_params[:protocol_source],
@@ -57,7 +57,12 @@ class ExternalProtocolsController < ApplicationController
     )
 
     if service_call.succeed?
-      render json: service_call.built_protocol
+      render json: {
+        html: render_to_string(
+          partial: 'protocol_importers/import_form.html.erb',
+          locals: { protocol: service_call.built_protocol }
+        )
+      }
     else
       render json: { errors: service_call.errors }, status: 400
     end
