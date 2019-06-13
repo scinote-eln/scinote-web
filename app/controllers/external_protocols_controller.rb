@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExternalProtocolsController < ApplicationController
   before_action :load_vars
   before_action :check_import_permissions, only: [:create]
@@ -5,15 +7,20 @@ class ExternalProtocolsController < ApplicationController
   # GET
   def index
     # list_protocols = SearchService.call(index_params)
-    succeed = false
-    list_protocols = [
+    succeed = true
+    protocols = [
       { name: 'Protocol1' },
       { name: 'Protocol2' },
       { name: 'Protocol3' }
     ]
 
     if succeed
-      render json: list_protocols
+      render json: {
+        html: render_to_string(
+          partial: 'protocol_importers/list_of_protocol_cards.html.erb',
+          locals: { protocols: protocols }
+        )
+      }
     else
       render json: {
         errors: { protocol: 'error_placeholder' }
@@ -68,6 +75,10 @@ class ExternalProtocolsController < ApplicationController
 
   def index_params
     params.permit(:protocol_source, :key, :page_id, :page_size, :order_field, :order_dir)
+  end
+
+  def show_params
+    params.permit(:protocol_source, :protocol_id)
   end
 
   def new_params
