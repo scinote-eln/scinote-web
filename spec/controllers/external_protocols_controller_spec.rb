@@ -51,8 +51,7 @@ describe ExternalProtocolsController, type: :controller do
       html_preview = '<html></html>'
 
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
-        .to(receive(:protocol_html_preview))
-        .and_return(html_preview)
+        .to(receive(:protocol_html_preview)).and_return(html_preview)
 
       # Call action
       action
@@ -64,8 +63,7 @@ describe ExternalProtocolsController, type: :controller do
       html_preview = '<html></html>'
 
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
-        .to(receive(:protocol_html_preview))
-        .and_return(html_preview)
+        .to(receive(:protocol_html_preview)).and_return(html_preview)
 
       # Call action
       action
@@ -74,8 +72,7 @@ describe ExternalProtocolsController, type: :controller do
 
     it 'returns error JSON and 400 response when something went wrong' do
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
-        .to(receive(:protocol_html_preview))
-        .and_raise(StandardError)
+        .to(receive(:protocol_html_preview)).and_raise(StandardError)
 
       # Call action
       action
@@ -98,27 +95,38 @@ describe ExternalProtocolsController, type: :controller do
 
     let(:action) { get :new, params: params }
 
-    it 'returns JSON, 200 response when protocol parsing was valid' do
-      # Setup double
-      service = double('success_service')
-      allow(service).to(receive(:succeed?)).and_return(true)
-      allow(service).to(receive(:built_protocol)).and_return({})
+    context 'successful response' do
+      let(:protocol) { create :protocol }
 
-      allow_any_instance_of(ProtocolImporters::BuildProtocolFromClientService).to(receive(:call)).and_return(service)
+      before do
+        service = double('success_service')
+        allow(service).to(receive(:succeed?)).and_return(true)
+        allow(service).to(receive(:built_protocol)).and_return(protocol)
 
-      # Call action
-      action
-      expect(response).to have_http_status(:success)
-      expect(response.content_type).to eq 'application/json'
+        allow_any_instance_of(ProtocolImporters::BuildProtocolFromClientService)
+          .to(receive(:call)).and_return(service)
+      end
+
+      it 'returns JSON, 200 response when protocol parsing was valid' do
+        action
+        expect(response).to have_http_status(:success)
+        expect(response.content_type).to eq 'application/json'
+      end
+
+      it 'should return html form in the JSON' do
+        action
+        expect(JSON.parse(response.body)).to have_key('html')
+      end
     end
 
     it 'returns JSON, 400 response when protocol parsing was invalid' do
       # Setup double
-      service = double('success_service')
+      service = double('failed_service')
       allow(service).to(receive(:succeed?)).and_return(false)
       allow(service).to(receive(:errors)).and_return({})
 
-      allow_any_instance_of(ProtocolImporters::BuildProtocolFromClientService).to(receive(:call)).and_return(service)
+      allow_any_instance_of(ProtocolImporters::BuildProtocolFromClientService)
+        .to(receive(:call)).and_return(service)
 
       # Call action
       action
