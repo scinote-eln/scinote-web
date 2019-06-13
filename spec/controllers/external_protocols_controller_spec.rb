@@ -36,6 +36,54 @@ describe ExternalProtocolsController, type: :controller do
     end
   end
 
+  describe 'GET show' do
+    let(:params) do
+      {
+        team_id: team.id,
+        protocol_source: 'protocolsio/v3',
+        protocol_id: 'protocolsio_uri'
+      }
+    end
+
+    let(:action) { get :show, params: params }
+
+    it 'returns JSON, 200 response when preview was successfully returned' do
+      html_preview = '<html></html>'
+
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:protocol_html_preview))
+        .and_return(html_preview)
+
+      # Call action
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq 'application/json'
+    end
+
+    it 'should return html preview in the JSON' do
+      html_preview = '<html></html>'
+
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:protocol_html_preview))
+        .and_return(html_preview)
+
+      # Call action
+      action
+      expect(JSON.parse(response.body)['html']).to eq(html_preview)
+    end
+
+    it 'returns error JSON and 400 response when something went wrong' do
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:protocol_html_preview))
+        .and_raise(StandardError)
+
+      # Call action
+      action
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to have_key('errors')
+    end
+  end
+
   describe 'GET new' do
     let(:params) do
       {
