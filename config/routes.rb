@@ -206,12 +206,15 @@ Rails.application.routes.draw do
         get 'atwho_my_modules', to: 'at_who#my_modules'
         get 'atwho_menu_items', to: 'at_who#menu_items'
       end
+
+      # External protocols routes
+      get 'list_external_protocol', to: 'external_protocols#index'
+      get 'build_external_protocol', to: 'external_protocols#new'
+      post 'import_external_protocol', to: 'external_protocols#create'
+
       match '*path',
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
-
-      get 'build_external_protocol', to: 'external_protocols#new'
-      post 'import_external_protocol', to: 'external_protocols#create'
     end
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'

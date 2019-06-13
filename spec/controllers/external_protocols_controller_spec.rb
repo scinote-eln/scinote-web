@@ -9,6 +9,33 @@ describe ExternalProtocolsController, type: :controller do
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
 
+  describe 'GET index' do
+    let(:params) do
+      {
+        team_id: team.id,
+        key: 'search_string',
+        protocol_source: 'protocolsio/v3',
+        page_id: 1,
+        page_size: 10,
+        order_field: 'activity',
+        order_dir: 'desc'
+      }
+    end
+
+    let(:action) { get :index, params: params }
+
+    it 'returns JSON, 200 response when protocol parsing was valid' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq 'application/json'
+    end
+
+    it 'contains html key in the response' do
+      action
+      expect(JSON.parse(response.body)).to have_key('html')
+    end
+  end
+
   describe 'GET new' do
     let(:params) do
       {
@@ -50,7 +77,6 @@ describe ExternalProtocolsController, type: :controller do
       expect(response).to have_http_status(:bad_request)
       expect(response.content_type).to eq 'application/json'
     end
-
   end
 
   describe 'POST create' do
