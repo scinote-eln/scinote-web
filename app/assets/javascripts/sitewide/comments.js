@@ -76,6 +76,7 @@ var Comments = (function() {
           $el.find('#message').val('');
           $el.find('.new-comment-button').removeClass('show');
           newButton.disable = false;
+          $el.find('textarea').focus().blur();
         })
           .error((error) => {
             errorField.html(error.responseJSON.errors.message);
