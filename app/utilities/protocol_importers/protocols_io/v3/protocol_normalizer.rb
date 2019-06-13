@@ -50,6 +50,24 @@ module ProtocolImporters
 
           { protocol: normalized_data }
         end
+
+        def normalize_list(client_data)
+          # client_data is HttpParty ApiReponse object
+          protocols_hash = client_data.parsed_response.with_indifferent_access[:items]
+          normalized_data = {}
+          normalized_data[:protocols] = protocols_hash.map do |e|
+            {
+              "id": e[:id],
+              "title": e[:title],
+              "created_on": e[:created_on],
+              "authors": e[:authors].map { |a| a[:name] }.join(', '),
+              "nr_of_steps": e[:stats][:number_of_steps],
+              "nr_of_views": e[:stats][:number_of_views],
+              "uri": e[:uri]
+            }
+          end
+          normalized_data
+        end
       end
     end
   end

@@ -203,6 +203,8 @@ class Constants
     base_uri: 'https://www.protocols.io/api/v3/',
     default_timeout: 10,
     debug_level: :debug,
+    available_order_fields: %i(title created_on),
+    available_order_dirs: %i(asc desc),
     endpoints: {
       protocols: {
         default_query_params: {

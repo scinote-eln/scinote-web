@@ -2,7 +2,7 @@
 
 module ProtocolImporters
   class ProtocolNormalizer
-    def normalize_all_protocols(_client_data)
+    def normalize_list(_client_data)
       raise NotImplementedError
     end
 
