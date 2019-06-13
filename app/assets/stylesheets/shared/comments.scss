@@ -144,6 +144,21 @@
       }
     }
 
+    // Looks like PDF has some specail CSS rules, here is some hack
+    &.report {
+      display: block;
+      float: left;
+      width: 100%;
+
+      .avatar-placehodler {
+        float: left;
+      }
+
+      .content-placeholder {
+        float: left;
+      }
+    }
+
     &[data-edit-mode="0"]:hover,
     &[data-edit-mode="1"] {
       .comment-right {
