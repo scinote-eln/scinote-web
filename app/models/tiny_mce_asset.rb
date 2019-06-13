@@ -107,7 +107,7 @@ class TinyMceAsset < ApplicationRecord
     asset.destroy if asset && !asset.saved
   end
 
-  def self.update_old_tinymce(description, obj = nil)
+  def self.update_old_tinymce(description, obj = nil, import = false)
     return description unless description
 
     description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
@@ -115,7 +115,8 @@ class TinyMceAsset < ApplicationRecord
       new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
 
       asset = find_by_id(token)
-      unless asset
+      # impor flag only for import from file cases, because we don't have image in DB
+      unless asset || import
         # remove tag if asset deleted
         description.sub!(old_format, '')
         next
