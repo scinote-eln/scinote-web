@@ -209,6 +209,7 @@ Rails.application.routes.draw do
 
       # External protocols routes
       get 'list_external_protocol', to: 'external_protocols#index'
+      get 'show_external_protocol', to: 'external_protocols#show'
       get 'build_external_protocol', to: 'external_protocols#new'
       post 'import_external_protocol', to: 'external_protocols#create'
 
