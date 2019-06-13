@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 describe ProtocolImporters::ProtocolNormalizer do
-  describe '.normalize_all_protocols' do
-    it { expect { subject.normalize_all_protocols({}) }.to raise_error(NotImplementedError) }
+  describe '.normalize_list' do
+    it { expect { subject.normalize_list({}) }.to raise_error(NotImplementedError) }
   end
 
-  describe '.normalize_protocols' do
+  describe '.normalize_protocol' do
     it { expect { subject.normalize_protocol({}) }.to raise_error(NotImplementedError) }
   end
 end
