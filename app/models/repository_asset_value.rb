@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryAssetValue < ApplicationRecord
   belongs_to :created_by,
              foreign_key: :created_by_id,
@@ -14,6 +16,9 @@ class RepositoryAssetValue < ApplicationRecord
   accepts_nested_attributes_for :repository_cell
 
   validates :asset, :repository_cell, presence: true
+
+  SORTABLE_COLUMN_NAME = 'assets.file_file_name'
+  SORTABLE_VALUE_INCLUDE = { repository_asset_value: :asset }.freeze
 
   def formatted
     asset.file_file_name

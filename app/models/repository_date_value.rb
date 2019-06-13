@@ -9,6 +9,9 @@ class RepositoryDateValue < ApplicationRecord
   validates :repository_cell, presence: true
   validates :data, presence: true
 
+  SORTABLE_COLUMN_NAME = 'repository_date_values.data'
+  SORTABLE_VALUE_INCLUDE = :repository_date_value
+
   def formatted
     data
   end

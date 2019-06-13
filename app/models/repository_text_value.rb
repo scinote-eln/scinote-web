@@ -11,6 +11,9 @@ class RepositoryTextValue < ApplicationRecord
             presence: true,
             length: { maximum: Constants::TEXT_MAX_LENGTH }
 
+  SORTABLE_COLUMN_NAME = 'repository_text_values.data'
+  SORTABLE_VALUE_INCLUDE = :repository_text_value
+
   def formatted
     data
   end
