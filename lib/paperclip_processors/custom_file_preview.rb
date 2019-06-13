@@ -3,7 +3,7 @@
 module Paperclip
   class CustomFilePreview < Processor
     def make
-      libreoffice_path = ENV['LIBREOFFICE_PATH'] || 'libreoffice'
+      libreoffice_path = ENV['LIBREOFFICE_PATH'] || 'soffice'
       directory = File.dirname(@file.path)
       basename  = File.basename(@file.path, '.*')
       original_preview_file = File.join(directory, "#{basename}.png")
