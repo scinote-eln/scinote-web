@@ -1,0 +1,19 @@
+<%= form_for protocol,
+	url: team_import_external_protocol_path(team_id: current_team.id),
+	method: :post,
+	remote: true  do |f|%>
+
+	<%= f.text_field :name %>
+	<%= f.text_field :authors %>
+	<%= f.text_field :description %>
+	<%= f.text_field :published_on, disabled: true %>
+
+	<div id="steps">
+		<% protocol.steps.order(:position).each do |step| %>
+		 <%= render partial: "steps/step.html.erb", locals: { step: step, preview: true } %>
+		<% end %>
+	</div>
+
+	<%= f.submit %>
+
+<% end %>
