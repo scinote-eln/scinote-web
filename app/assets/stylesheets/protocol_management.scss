@@ -95,6 +95,32 @@
 
         .input-group-addon {
           background: $color-white;
+          color: $color-silver-chalice;
+        }
+      }
+    }
+  }
+
+  .protocol-sort {
+    padding-left: 7px;
+
+    span {
+      color: $color-silver-chalice;
+      font-size: 14px;
+    }
+
+    .btn-group {
+      margin-bottom: 10px;
+      margin-top: 6px;
+      padding-left: 3px;
+
+      label {
+        padding-bottom: 0;
+        padding-top: 0;
+
+        &.active {
+          background: $color-gainsboro;
+          border-radius: 5px;
           color: $color-emperor;
         }
       }
@@ -112,30 +138,6 @@
       margin-left: 0;
       margin-right: 0;
 
-      &.protocol-sort {
-        border-bottom: 1px solid $color-silver-chalice;
-
-        span {
-          color: $color-silver-chalice;
-          vertical-align: middle;
-        }
-
-        .btn-group {
-          margin-bottom: 10px;
-          margin-top: 10px;
-
-          label {
-            padding-bottom: 0;
-            padding-top: 0;
-
-            &.active {
-              background: $color-gainsboro;
-              border-radius: 5px;
-              color: $color-emperor;
-            }
-          }
-        }
-      }
     }
 
     // When no search result is present
