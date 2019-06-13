@@ -1,0 +1,73 @@
+<div class='external-protocols-tab'>
+  <div class='row'>
+    <div class='col-md-5 protocols-search-bar-panel'>
+
+      <div>
+        <%= image_tag 'external_protocols/protocolsio_logo.png',
+          class: 'protocolsio-logo' %>
+        <span class='protocolsio-title'><%= t('protocols.index.external_protocols.protocolsio_title') %></span>
+      </div>
+      <%= form_tag '#',
+        method: :get,
+        class: 'protocols-search-bar' do %>
+
+          <div class='input-group'>
+            <input class='form-control'
+            type="text"
+            name="q"
+            placeholder="<%= t('protocols.index.external_protocols.search_bar_placeholder') %>" >
+            </input>
+
+            <span class='input-group-addon'><i class='fas fa-search '></i></span>
+          </div>
+        <% end %>
+      </div>
+      <div class='col-md-7'>
+        <div class='protocol-sort'>
+          <span><%= t('protocols.index.external_protocols.sort_by.title') %></span>
+          <div class='btn-group' data-toggle='buttons' >
+            <label class='btn btn-link active'>
+              <input type='radio' name='sory_by' id='alphabetically' value='alpha'>
+              <%= t('protocols.index.external_protocols.sort_by.alphabetically') %>
+            </label>
+            <label class='btn btn-link'>
+              <input type='radio' name='sory_by' id='newest' value='newest'>
+              <%= t('protocols.index.external_protocols.sort_by.newest') %>
+            </label>
+            <label class='btn btn-link'>
+              <input type='radio' name='sory_by' id='oldest' value='oldest'>
+              <%= t('protocols.index.external_protocols.sort_by.oldest') %>
+            </label>
+          </label>
+        </div>
+      </div>
+      </div>
+    </div>
+
+
+    <div class='row main-protocol-panel'>
+      <div class='col-md-5 protocol-list-side-panel'>
+
+      <div class='row empty-text'>
+        <%= t('protocols.index.external_protocols.list_panel.empty_text') %>
+      </div>
+    </div>
+
+    <div class='col-md-7 protocol-preview-panel'>
+      <div class='row'>
+        <div class='text-rows protocol-preview-text'>
+        <%= t('protocols.index.external_protocols.preview_panel.empty_title') %>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='text-separator'> <hr> </div>
+      </div>
+      <div class='row'>
+        <div class='text-rows protocol-preview-subtext'>
+          <%= t('protocols.index.external_protocols.preview_panel.empty_subtext') %>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

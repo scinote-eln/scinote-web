@@ -1,0 +1,26 @@
+<div id="protocols-datatable-spinner">
+  <div class="protocols-datatable">
+    <table id="protocols-table" class="table" data-team-id="<%= @current_team.id %>" data-type="<%= @type %>" data-source="<%= datatable_protocols_path(team: @current_team, type: @type) %>">
+      <thead>
+        <tr>
+          <th id="select-all"><input name="select_all" value="1" type="checkbox"></th>
+          <th id="protocol-name"><%= t("protocols.index.thead_name") %></th>
+          <th id="protocol-keywords"><%= t("protocols.index.thead_keywords") %></th>
+          <th id="protocol-nr-of-linked-children"><%= t("protocols.index.thead_nr_of_linked_children") %></th>
+          <% if @type == :public %>
+            <th id="protocol-published-by"><%= t("protocols.index.thead_published_by") %></th>
+            <th id="protocol-published-on"><%= t("protocols.index.thead_published_on") %></th>
+          <% elsif @type == :private %>
+            <th id="protocol-added-by"><%= t("protocols.index.thead_added_by") %></th>
+            <th id="protocol-created-at"><%= t("protocols.index.thead_created_at") %></th>
+          <% else %>
+            <th id="protocol-archived-by"><%= t("protocols.index.thead_archived_by") %></th>
+            <th id="protocol-archived-on"><%= t("protocols.index.thead_archived_on") %></th>
+          <% end %>
+          <th id="protocol-updated-at"><%= t("protocols.index.thead_updated_at") %></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>

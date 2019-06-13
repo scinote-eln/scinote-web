@@ -57,6 +57,127 @@
 
   .tab-pane-settings {
     border: 0;
-    padding: 25px 20px;
+  }
+}
+
+.external-protocols-tab {
+
+  .protocols-search-bar-panel {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-right: 0;
+
+    .protocolsio-logo {
+      height: 30px;
+      width: 30px;
+    }
+
+    .protocolsio-title {
+      color: $brand-primary;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .protocols-search-bar {
+      padding-right: 0;
+      width: 70%;
+
+      .input-group {
+        margin-bottom: 0;
+        width: 100%;
+
+        .form-control {
+          border-right: 0;
+        }
+
+        .input-group-addon {
+          background: $color-white;
+          color: $color-silver-chalice;
+        }
+      }
+    }
+  }
+
+  .protocol-sort {
+    padding-left: 7px;
+
+    span {
+      color: $color-silver-chalice;
+      font-size: 14px;
+    }
+
+    .btn-group {
+      margin-bottom: 10px;
+      margin-top: 6px;
+      padding-left: 3px;
+
+      label {
+        padding-bottom: 0;
+        padding-top: 0;
+
+        &.active {
+          background: $color-gainsboro;
+          border-radius: 5px;
+          color: $color-emperor;
+        }
+      }
+    }
+  }
+
+  .protocol-list-side-panel {
+    background-color: $color-white;
+    border-right: 1px solid $color-silver-chalice;
+    border-top: 1px solid $color-silver-chalice;
+    height: 600px;
+    padding-right: 0;
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+
+    }
+
+    // When no search result is present
+    .empty-text {
+      color: $color-silver-chalice;
+      font-size: 13px;
+      margin-top: 20px;
+    }
+  }
+
+  .protocol-preview-panel {
+    background-color: $color-concrete;
+    border-top: 1px solid $color-silver-chalice;
+    height: 600px;
+    padding-left: 0;
+    padding-top: 79px;
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    // Empty texts on the right
+    .protocol-preview-text {
+      color: $color-silver-chalice;
+      font-size: 24px;
+    }
+
+    .protocol-preview-subtext {
+      color: $color-silver-chalice;
+      font-size: 14px;
+    }
+
+    .text-rows {
+      text-align: center;
+    }
+
+    .text-separator hr {
+      border: 1px solid $color-alto;
+      width: 120px;
+    }
   }
 }

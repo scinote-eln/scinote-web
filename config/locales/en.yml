@@ -1631,6 +1631,7 @@ en:
       navigation:
         public: "Team protocols"
         private: "My protocols"
+        external_protocols: "External protocols"
         archive: "Archive"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
@@ -1731,6 +1732,20 @@ en:
         row_failed: "Failed"
         row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
+      external_protocols:
+        search_bar_placeholder: 'Search for protocols'
+        protocolsio_title: 'Protocols.io'
+        sort_by:
+          title: 'Show first:'
+          alphabetically: 'alphabetically'
+          newest: 'newest'
+          oldest: 'oldest'
+        list_panel:
+          empty_text: 'Search for protocols above to list them here'
+        preview_panel:
+          empty_title: 'PROTOCOL PREVIEW'
+          empty_subtext: 'Click on the protocol in the list to preview it here'
+
     steps:
       completed: 'Completed'
       uncompleted: 'Uncompleted'
