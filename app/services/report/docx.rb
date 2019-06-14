@@ -140,7 +140,7 @@ class Report::Docx
     children.each do |elem|
       if elem.class == Nokogiri::XML::Text
         style = paragraph_styling(elem.parent)
-        type = style[:align] || style[:style] ? 'newline' : 'text'
+        type = (style[:align] && style[:align] != :justify) || style[:style] ? 'newline' : 'text'
         elements.push(
           type: type,
           value: elem.text.strip,
