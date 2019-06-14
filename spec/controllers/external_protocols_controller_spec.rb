@@ -24,6 +24,14 @@ describe ExternalProtocolsController, type: :controller do
 
     let(:action) { get :index, params: params }
 
+    before do
+      service = double('success_service')
+      allow(service).to(receive(:succeed?)).and_return(true)
+      allow(service).to(receive(:protocols_list)).and_return({})
+
+      allow_any_instance_of(ProtocolImporters::SearchProtocolsService).to(receive(:call)).and_return(service)
+    end
+
     it 'returns JSON, 200 response when protocol parsing was valid' do
       action
       expect(response).to have_http_status(:success)

@@ -6,25 +6,18 @@ class ExternalProtocolsController < ApplicationController
 
   # GET list_external_protocol
   def index
-    # list_protocols = SearchService.call(index_params)
-    succeed = true
-    protocols = [
-      { name: 'Protocol1' },
-      { name: 'Protocol2' },
-      { name: 'Protocol3' }
-    ]
+    service_call = ProtocolImporters::SearchProtocolsService
+                   .call(protocol_source: 'protocolsio/v3', query_params: index_params)
 
-    if succeed
+    if service_call.succeed?
       render json: {
         html: render_to_string(
           partial: 'protocol_importers/list_of_protocol_cards.html.erb',
-          locals: { protocols: protocols }
+          locals: { protocols: service_call.protocols_list }
         )
       }
     else
-      render json: {
-        errors: { protocol: 'error_placeholder' }
-      }, status: 400
+      render json: { errors: service_call.errors }, status: 400
     end
   end
 
