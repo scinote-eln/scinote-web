@@ -239,13 +239,16 @@
 
     .new-comment-button {
       cursor: pointer;
-      font-size: 18px;
+      font-size: 14px;
       line-height: 18px;
-      margin: 8px;
+      margin: 4px;
+      padding: 4px;
       position: absolute;
       right: -36px;
+      text-align: center; 
       top: 0;
       transition: $md-transaction;
+      width: 26px;
 
       &.show {
         right: 0;
