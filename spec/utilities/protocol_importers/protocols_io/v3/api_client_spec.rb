@@ -44,7 +44,8 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
         order_dir: :asc,
         order_field: :date,
         page_id: 2,
-        page_size: 15
+        page_size: 15,
+        fields: 'somefields'
       }
       stub_request(:get, URL).with(query: query)
 
