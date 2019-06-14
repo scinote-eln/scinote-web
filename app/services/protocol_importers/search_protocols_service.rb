@@ -35,7 +35,7 @@ module ProtocolImporters
       @errors[:invalid_params][:key] = 'Key cannot be empty' if @query_params[:key].blank?
 
       # try if page id is ok
-      if @query_params[:page_id] && !@query_params[:page_id].positive?
+      if @query_params[:page_id] && !@query_params[:page_id].to_i.positive?
         @errors[:invalid_params][:page_id] = 'Page needs to be positive'
       end
 
