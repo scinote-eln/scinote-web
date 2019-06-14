@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssetsController < ApplicationController
   include WopiUtil
   # include ActionView::Helpers
@@ -71,12 +73,10 @@ class AssetsController < ApplicationController
         'processing-img' => image_tag('medium/processing.gif')
       )
     else
-      response_json.merge!(
-        'processing'   => @asset.file.processing?,
-        'preview-icon' => render_to_string(
-          partial: 'shared/file_preview_icon.html.erb',
-          locals: { asset: @asset }
-        )
+      response_json['processing'] = @asset.file.processing?
+      response_json['preview-icon'] = render_to_string(
+        partial: 'shared/file_preview_icon.html.erb',
+        locals: { asset: @asset }
       )
     end
 
@@ -155,6 +155,13 @@ class AssetsController < ApplicationController
     render layout: false
   end
 
+  def start_edit
+    asset = Asset.find_by_id(params[:id])
+    return render_403 unless asset
+
+    create_edit_image_activity(asset, current_user, true)
+  end
+
   def update_image
     @asset = Asset.find(params[:id])
     orig_file_size = @asset.file_file_size
@@ -164,6 +171,7 @@ class AssetsController < ApplicationController
     @asset.file = params[:image]
     @asset.file_file_name = orig_file_name
     @asset.save!
+    create_edit_image_activity(@asset, current_user, false)
     # release previous image space
     @asset.team.release_space(orig_file_size)
     # Post process file here
@@ -306,5 +314,53 @@ class AssetsController < ApplicationController
     return 'image' if asset.is_image?
 
     'file'
+  end
+
+  def create_edit_image_activity(asset, current_user, started_editing)
+    action = if started_editing
+               t('activities.file_editing.started')
+             else
+               t('activities.file_editing.finished')
+             end
+    if asset.step.class == Step
+      protocol = asset.step.protocol
+      default_step_items =
+        { step: asset.step.id,
+          step_position: { id: asset.step.id, value_for: 'position_plus_one' },
+          asset_name: { id: asset.id, value_for: 'file_file_name' },
+          action: action }
+      if protocol.in_module?
+        project = protocol.my_module.experiment.project
+        team = project.team
+        type_of = :edit_image_on_step
+        message_items = { my_module: protocol.my_module.id }
+      else
+        type_of = :edit_image_on_step_in_repository
+        project = nil
+        team = protocol.team
+        message_items = { protocol: protocol.id }
+      end
+      message_items = default_step_items.merge(message_items)
+      Activities::CreateActivityService
+        .call(activity_type: type_of,
+              owner: current_user,
+              subject: protocol,
+              team: team,
+              project: project,
+              message_items: message_items)
+    elsif asset.result.class == Result
+      my_module = asset.result.my_module
+      Activities::CreateActivityService
+        .call(activity_type: :edit_image_on_result,
+              owner: current_user,
+              subject: asset.result,
+              team: my_module.experiment.project.team,
+              project: my_module.experiment.project,
+              message_items: {
+                result: asset.result.id,
+                asset_name: { id: asset.id, value_for: 'file_file_name' },
+                action: action
+              })
+    end
   end
 end

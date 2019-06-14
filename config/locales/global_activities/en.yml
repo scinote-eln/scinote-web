@@ -131,6 +131,9 @@ en:
       edit_tag_html: "%{user} edited tag <strong>%{tag}</strong> in project %{project}."
       delete_tag_html: "%{user} deleted tag <strong>%{tag}</strong> in project %{project}."
       import_inventory_items_html: "%{user} imported %{num_of_items} inventory item(s) to %{repository}."
+      edit_image_on_result_html: "%{user} edited image %{asset_name} on result %{result}: %{action}." 
+      edit_image_on_step_html: "%{user} edited image %{asset_name} on protocol's step %{step_position} %{step} on task %{my_module}: %{action}."
+      edit_image_on_step_in_repository_html: "%{user} edited image %{asset_name} on protocol %{protocol}'s step %{step_position} %{step} in Protocol repository: %{action}."
 
     activity_name:
       create_project: "Project created"
@@ -233,6 +236,9 @@ en:
       edit_tag: "Tag edited"
       delete_tag: "Tag deleted"
       import_inventory_items: "Inventory items imported"
+      edit_image_on_result: "Image on result edited"
+      edit_image_on_step: "Image on task step edited"
+      edit_image_on_step_in_repository: "Image on step edited"
 
     activity_group:
       projects: "Projects"
