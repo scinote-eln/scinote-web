@@ -40,12 +40,12 @@ module ProtocolImporters
       end
 
       # try if order_field is ok
-      if CONSTANTS[:available_order_fields]&.exclude? @query_params[:order_field].to_sym
+      if @query_params[:order_field] && CONSTANTS[:available_order_fields].exclude?(@query_params[:order_field]&.to_sym)
         @errors[:invalid_params][:order_field] = 'Order field is not ok'
       end
 
       # try if order dir is ok
-      if CONSTANTS[:available_order_dirs]&.exclude? @query_params[:order_dir].to_sym
+      if @query_params[:order_field] && CONSTANTS[:available_order_dirs].exclude?(@query_params[:order_dir]&.to_sym)
         @errors[:invalid_params][:order_dir] = 'Order dir is not ok'
       end
 
