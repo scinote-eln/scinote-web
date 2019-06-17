@@ -18,10 +18,15 @@ module ProtocolImporters
             name: protocol_hash[:title],
             description: {
               body: protocol_hash[:description],
-              image: protocol_hash[:image][:source]
+              image: protocol_hash[:image][:source],
+              extra_content: []
             },
             authors: protocol_hash[:authors].map { |e| e[:name] }.join(', ')
           }
+
+          { before_start: 'Before start', guidelines: 'Guidelines', warning: 'Warnings' }.each do |k, v|
+            normalized_data[:description][:extra_content] << { title: v, body: protocol_hash[k] } if protocol_hash[k]
+          end
 
           normalized_data[:steps] = protocol_hash[:steps].map do |e|
             {
@@ -57,13 +62,13 @@ module ProtocolImporters
           normalized_data = {}
           normalized_data[:protocols] = protocols_hash.map do |e|
             {
-              "id": e[:id],
-              "title": e[:title],
-              "created_on": e[:created_on],
-              "authors": e[:authors].map { |a| a[:name] }.join(', '),
-              "nr_of_steps": e[:stats][:number_of_steps],
-              "nr_of_views": e[:stats][:number_of_views],
-              "uri": e[:uri]
+              id: e[:id],
+              title: e[:title],
+              created_on: e[:created_on],
+              authors: e[:authors].map { |a| a[:name] }.join(', '),
+              nr_of_steps: e[:stats][:number_of_steps],
+              nr_of_views: e[:stats][:number_of_views],
+              uri: e[:uri]
             }
           end
           normalized_data
