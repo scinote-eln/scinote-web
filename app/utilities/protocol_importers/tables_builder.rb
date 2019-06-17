@@ -2,7 +2,7 @@
 
 module ProtocolImporters
   class TablesBuilder
-    def self.extract_tables_from_html_string(description_string)
+    def self.extract_tables_from_html_string(description_string, remove_first_column_row = false)
       tables = []
 
       doc = Nokogiri::HTML(description_string)
@@ -17,7 +17,9 @@ module ProtocolImporters
           row.css('td').each_with_index do |cell, j|
             two_d_array[i][j] = cell.inner_html
           end
+          two_d_array[i].shift if remove_first_column_row
         end
+        two_d_array.shift if remove_first_column_row
 
         tables << Table.new(contents: { data: two_d_array }.to_json)
       end

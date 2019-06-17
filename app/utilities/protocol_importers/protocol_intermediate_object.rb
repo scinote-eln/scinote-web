@@ -30,7 +30,7 @@ module ProtocolImporters
         step = Step.new(step_attributes(s))
         step.description = StepDescriptionBuilder.generate(s)
         step.assets << AttachmentsBuilder.generate(s)
-        step.tables << TablesBuilder.extract_tables_from_html_string(s[:description][:body])
+        step.tables << TablesBuilder.extract_tables_from_html_string(s[:description][:body], true)
         step
       end
     end
