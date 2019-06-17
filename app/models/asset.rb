@@ -497,7 +497,7 @@ class Asset < ApplicationRecord
     image = if file.options[:storage].to_sym == :s3
               URI.parse(url(style)).open.to_a.join
             else
-              File.open(path(style)).to_a.join
+              File.open(file.path(style)).to_a.join
             end
     encoded_data = Base64.strict_encode64(image)
     "data:#{file_content_type};base64,#{encoded_data}"
