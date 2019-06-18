@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::ResultAsset
-  def draw_result_asset(result, children)
+module DrawResultAsset
+  def draw_result_asset(subject)
+    result = Result.find_by_id(subject['id']['result_id'])
+    return unless result
     asset = result.asset
     is_image = result.asset.is_image?
     timestamp = asset.created_at
@@ -17,8 +19,8 @@ module Report::DocxAction::ResultAsset
 
     asset_image_preparing(asset) if is_image
 
-    children.each do |result_hash|
-      draw_result_comments(result, result_hash['sort_order']) if result_hash['type_of'] == 'result_comments'
+    subject['children'].each do |child|
+      public_send("draw_#{child['type_of']}", child)
     end
   end
 end

@@ -1,80 +1,9 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
+module PrivateMethods
 
-class Report::Docx
-  include ActionView::Helpers::TextHelper
-  include ActionView::Helpers::UrlHelper
-  include ApplicationHelper
-  include InputSanitizeHelper
-  include TeamsHelper
-  include GlobalActivitiesHelper
-  include RepositoryDatatableHelper
-
-  include Report::DocxAction::Experiment
-  include Report::DocxAction::MyModule
-  include Report::DocxAction::MyModuleActivity
-  include Report::DocxAction::MyModuleSamples
-  include Report::DocxAction::Protocol
-  include Report::DocxAction::Step
-  include Report::DocxAction::StepTable
-  include Report::DocxAction::StepChecklist
-  include Report::DocxAction::StepAsset
-  include Report::DocxAction::StepComments
-  include Report::DocxAction::ResultAsset
-  include Report::DocxAction::ResultTable
-  include Report::DocxAction::ResultText
-  include Report::DocxAction::ResultComments
-
-  def initialize(json, docx, options)
-    @json = JSON.parse(json)
-    @docx = docx
-    @user = options[:user]
-    @report_team = options[:team]
-    @link_style = {
-      color: '37a0d9',
-      bold: true
-    }
-    @scinote_url = options[:scinote_url][0..-2]
-  end
-
-  def draw
-    @docx.page_size do
-      width   Constants::REPORT_DOCX_WIDTH
-      height  Constants::REPORT_DOCX_HEIGHT
-    end
-
-    @docx.page_margins do
-      left    Constants::REPORT_DOCX_MARGIN_LEFT
-      right   Constants::REPORT_DOCX_MARGIN_RIGHT
-      top     Constants::REPORT_DOCX_MARGIN_TOP
-      bottom  Constants::REPORT_DOCX_MARGIN_BOTTOM
-    end
-
-    @docx.page_numbers true, align: :right
-
-    generate_html_styles
-
-    @json.each do |main_object|
-      case main_object['type_of']
-      when 'project_header'
-        project = Project.find_by_id(main_object['id']['project_id'])
-        @docx.p I18n.t('projects.reports.elements.project_header.user_time',
-                       timestamp: I18n.l(project.created_at, format: :full))
-        @docx.h1 I18n.t('projects.reports.elements.project_header.title', project: project.name)
-        @docx.hr do
-          size 18
-          spacing 24
-        end
-      when 'experiment'
-        experiment = Experiment.find_by_id(main_object['id']['experiment_id'])
-        draw_experiment(experiment, main_object['children'])
-      end
-    end
-    @docx
-  end
-
-  private
+private
 
   # RTE fields support
   def html_to_word_converter(text)
@@ -116,6 +45,7 @@ class Report::Docx
               else
                 text text_el[:value], link_style
               end
+              text ' ' if text_el[:value] != ''
             end
           end
         end
@@ -146,9 +76,13 @@ class Report::Docx
           value: elem.text.strip,
           style: style
         )
+        next
       end
 
-      elements.push(type: 'br') if elem.name == 'br'
+      if elem.name == 'br'
+        elements.push(type: 'br')
+        next
+      end
 
       if elem.name == 'img' && elem.attributes['data-mce-token']
 
@@ -165,6 +99,7 @@ class Report::Docx
           data: image_path,
           style: style
         )
+        next
       end
 
       if elem.name == 'a'
@@ -259,6 +194,24 @@ class Report::Docx
     @docx.img image_path, width: x, height: y
   end
 
+  def initial_document_load
+    @docx.page_size do
+      width   Constants::REPORT_DOCX_WIDTH
+      height  Constants::REPORT_DOCX_HEIGHT
+    end
+
+    @docx.page_margins do
+      left    Constants::REPORT_DOCX_MARGIN_LEFT
+      right   Constants::REPORT_DOCX_MARGIN_RIGHT
+      top     Constants::REPORT_DOCX_MARGIN_TOP
+      bottom  Constants::REPORT_DOCX_MARGIN_BOTTOM
+    end
+
+    @docx.page_numbers true, align: :right
+
+    generate_html_styles
+  end
+
   def generate_html_styles
     @docx.style do
       id 'h1'
@@ -301,6 +254,15 @@ class Report::Docx
       bold true
       size 24
     end
+
+    @link_style = {
+      color: '37a0d9',
+      bold: true
+    }
+
+    @color = {
+      gray: 'a0a0a0'
+    }
   end
 
   def image_path(image)

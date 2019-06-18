@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::StepChecklist
-  def draw_step_checklist(checklist)
+module DrawStepChecklist
+  def draw_step_checklist(subject)
+    checklist = Checklist.find_by_id(subject["id"]["checklist_id"])
+    return unless checklist
     items = checklist.checklist_items
     timestamp = checklist.created_at
     @docx.p

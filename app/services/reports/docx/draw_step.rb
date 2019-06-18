@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::Step
-  def draw_step(step, _children)
+module DrawStep
+  def draw_step(subject)
+    step = Step.find_by_id(subject['id']['step_id'])
+    return unless step
     step_type_str = step.completed ? 'completed' : 'uncompleted'
     user = step.completed || !step.changed? ? step.user : step.last_modified_by
     timestamp = step.completed ? step.completed_on : step.updated_at
@@ -33,20 +35,9 @@ module Report::DocxAction::Step
       @docx.p I18n.t 'projects.reports.elements.step.no_description'
     end
 
-    tables.each do |table|
-      draw_step_table(table)
+    subject['children'].each do |child|
+      public_send("draw_#{child['type_of']}", child)
     end
-
-    checklists.each do |checklist|
-      draw_step_checklist(checklist)
-    end
-
-    assets.each do |asset|
-      draw_step_asset(asset)
-    end
-
-    draw_step_comments(comments, step)
-
     @docx.p
     @docx.p
   end

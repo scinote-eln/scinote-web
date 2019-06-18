@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::StepAsset
-  def draw_step_asset(asset)
+module DrawStepAsset
+  def draw_step_asset(subject)
+    asset = Asset.find_by_id(subject["id"]["asset_id"])
+    return unless asset
     is_image = asset.is_image?
     timestamp = asset.created_at
     @docx.p

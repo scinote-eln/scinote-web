@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::ResultText
-  def draw_result_text(result, children)
+module DrawResultText
+  def draw_result_text(subject)
+    result = Result.find_by_id(subject['id']['result_id'])
+    return unless result
     result_text = result.result_text
     timestamp = result.created_at
     @docx.p
@@ -16,8 +18,8 @@ module Report::DocxAction::ResultText
     html = custom_auto_link(result_text.text, team: @report_team)
     html_to_word_converter(html)
 
-    children.each do |result_hash|
-      draw_result_comments(result, result_hash['sort_order']) if result_hash['type_of'] == 'result_comments'
+    subject['children'].each do |child|
+      public_send("draw_#{child['type_of']}", child)
     end
   end
 end

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::StepComments
-  def draw_step_comments(comments, step)
-    return false if comments.count.zero?
+module DrawStepComments
+  def draw_step_comments(subject)
+    step = Step.find_by_id(subject['id']['step_id'])
+    return unless step
+    comments = step.step_comments
+    return if comments.count.zero?
 
     team = @report_team
     user = @user

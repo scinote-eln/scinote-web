@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::ResultComments
-  def draw_result_comments(result, order)
-    comments = result.result_comments.order(created_at: order)
-    return false if comments.count.zero?
+module DrawResultComments
+  def draw_result_comments(subject)
+    result = Result.find_by_id(subject['id']['result_id'])
+    return unless result
+    comments = result.result_comments.order(created_at: subject['sort_order'])
+    return if comments.count.zero?
 
     @docx.p
     @docx.p I18n.t('projects.reports.elements.result_comments.name', result: result.name), bold: true

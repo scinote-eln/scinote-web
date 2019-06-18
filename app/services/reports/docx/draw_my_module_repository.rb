@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 # rubocop:disable  Style/ClassAndModuleChildren
-module Report::DocxAction::MyModuleSamples
-  def draw_my_module_samples(my_module, repository, order)
-    repository_data = my_module.repository_json(repository, order, @user)
+module DrawMyModuleRepository
+  def draw_my_module_repository(subject)
+    my_module = MyModule.find_by_id(subject['id']['my_module_id'])
+    return unless my_module
+    repository_data = my_module.repository_json(subject['id']['repository_id'], subject['sort_order'], @user)
     return false unless repository_data[:data].assigned_rows.count.positive?
 
     records = repository_data[:data]
     assigned_rows = records.assigned_rows
     columns_mappings = records.mappings
-    repository = ::Repository.find_by_id(repository)
+    repository = ::Repository.find_by_id(subject['id']['repository_id'])
     repository_rows = records.repository_rows
                              .preload(
                                :repository_columns,
