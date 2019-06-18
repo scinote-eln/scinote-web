@@ -12,9 +12,12 @@ module ProtocolImporters
         default_timeout CONSTANTS[:default_timeout]
         logger Rails.logger, CONSTANTS[:debug_level]
 
+        attr_reader :errors
+
         def initialize(token = nil)
           # Currently we support public tokens only (no token needed for public data)
           @auth = { token: token }
+          @errors = {}
 
           # Set default headers
           self.class.headers('Authorization': "Bearer #{@auth[:token]}") if @auth[:token].present?
@@ -45,12 +48,12 @@ module ProtocolImporters
           query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
                            .merge(query_params)
 
-          self.class.get('/protocols', query: query)
+          check_for_api_errors(self.class.get('/protocols', query: query))
         end
 
         # Returns full representation of given protocol ID
         def single_protocol(id)
-          self.class.get("/protocols/#{id}")
+          check_for_api_errors(self.class.get("/protocols/#{id}"))
         end
 
         # Returns html preview for given protocol
@@ -58,6 +61,22 @@ module ProtocolImporters
         # sake of clarity
         def protocol_html_preview(uri)
           self.class.get("https://www.protocols.io/view/#{uri}.html", headers: {})
+        end
+
+        private
+
+        def check_for_api_errors(response)
+          if response['status_code'] == 0
+            return response
+          elsif response['status_code'] == 1
+            raise ApiErrors::MissingOrEmptyParametersError.new(response['status_code'], response['error_message'])
+          elsif response['status_code'] == 1218
+            raise ApiErrors::InvalidTokenError.new(response['status_code'], response['error_message'])
+          elsif response['status_code'] == 1219
+            raise ApiErrors::TokenExpiredError.new(response['status_code'], response['error_message'])
+          else
+            raise ApiErrors::Error.new(response['status_code'], response['error_message'])
+          end
         end
       end
     end

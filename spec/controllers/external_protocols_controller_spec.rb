@@ -78,6 +78,16 @@ describe ExternalProtocolsController, type: :controller do
       expect(JSON.parse(response.body)['html']).to eq(html_preview)
     end
 
+    it 'return network errors when calling api client' do
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:protocol_html_preview)
+        .and_raise(SocketError))
+
+        # Call action
+        action
+      expect(JSON.parse(response.body)).to have_key('errors')
+    end
+
     it 'returns error JSON and 400 response when something went wrong' do
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
         .to(receive(:protocol_html_preview)).and_raise(StandardError)

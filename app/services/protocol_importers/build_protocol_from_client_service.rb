@@ -17,9 +17,24 @@ module ProtocolImporters
     def call
       return self unless valid?
 
-      # TODO: check for errors
-      api_response = api_client.single_protocol(@id)
-      normalized_hash = normalizer.normalize_protocol(api_response)
+      # Call api client
+      begin
+        api_response = api_client.single_protocol(@id)
+      rescue api_errors => e
+        @errors[e.class.to_s.downcase.to_sym] = e.error_message
+        return self
+      rescue SocketError, HTTParty::Error => e
+        @errors[e.class.to_s.downcase.to_sym] = e.message
+        return self
+      end
+
+      # Normalize protocol
+      begin
+        normalized_hash = normalizer.normalize_protocol(api_response)
+      rescue normalizer_errors => e
+        @errors[e.class.to_s.downcase.to_sym] = e.error_message
+        return self
+      end
 
       pio = ProtocolImporters::ProtocolIntermediateObject.new(normalized_json: normalized_hash,
                                                               user: @user,
@@ -62,6 +77,14 @@ module ProtocolImporters
 
     def normalizer
       "ProtocolImporters::#{endpoint_name}::ProtocolNormalizer".constantize.new
+    end
+
+    def api_errors
+      "ProtocolImporters::#{endpoint_name}::ApiErrors::Error".constantize
+    end
+
+    def normalizer_errors
+      "ProtocolImporters::#{endpoint_name}::NormalizerError".constantize
     end
   end
 end

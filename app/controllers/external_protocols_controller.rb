@@ -27,7 +27,15 @@ class ExternalProtocolsController < ApplicationController
     endpoint_name = Constants::PROTOCOLS_ENDPOINTS.dig(*show_params[:protocol_source]
                                                   .split('/').map(&:to_sym))
     api_client = "ProtocolImporters::#{endpoint_name}::ApiClient".constantize.new
-    html_preview = api_client.protocol_html_preview(show_params[:protocol_id])
+
+    begin
+      html_preview = api_client.protocol_html_preview(show_params[:protocol_id])
+    rescue SocketError, HTTParty::Error => e
+      render json: {
+        errors: [network: e.message]
+      }
+      return
+    end
 
     render json: {
       protocol_source: show_params[:protocol_source],
