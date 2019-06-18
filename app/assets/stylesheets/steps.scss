@@ -70,13 +70,14 @@
       font-size: 24px;
       font-weight: bold;
       margin: 0 10px;
+      min-width: fit-content;
     }
 
     .left-floats {
       align-items: center;
       display: flex;
       height: 39px;
-      padding-right: 5px;
+      padding-right: 15px;
 
       .step-name-link {
         display: flex;
@@ -88,8 +89,11 @@
           display: flex;
           flex-shrink: 1;
           height: 39px;
-          min-width: 100px;
           overflow: hidden;
+
+          @media (max-width: 1188px) {
+            min-width: 100px;
+          }
 
           strong {
             font-size: 16px;

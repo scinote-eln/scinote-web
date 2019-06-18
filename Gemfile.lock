@@ -102,13 +102,19 @@ GEM
       rails (>= 3.1)
     awesome_print (1.8.0)
     aws-eventstream (1.0.3)
-    aws-sdk (2.11.264)
-      aws-sdk-resources (= 2.11.264)
-    aws-sdk-core (2.11.264)
-      aws-sigv4 (~> 1.0)
+    aws-partitions (1.172.0)
+    aws-sdk-core (3.54.2)
+      aws-eventstream (~> 1.0, >= 1.0.2)
+      aws-partitions (~> 1.0)
+      aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.11.264)
-      aws-sdk-core (= 2.11.264)
+    aws-sdk-kms (1.21.0)
+      aws-sdk-core (~> 3, >= 3.53.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.42.0)
+      aws-sdk-core (~> 3, >= 3.53.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.1.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
     backports (3.14.0)
@@ -342,7 +348,7 @@ GEM
     overcommit (0.47.0)
       childprocess (~> 0.6, >= 0.6.3)
       iniparse (~> 1.4)
-    paperclip (5.3.0)
+    paperclip (6.1.0)
       activemodel (>= 4.2.0)
       activesupport (>= 4.2.0)
       mime-types
@@ -455,6 +461,8 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.6)
+    rubocop-performance (1.2.0)
+      rubocop (>= 0.68.0)
     ruby-graphviz (1.2.4)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
@@ -558,7 +566,7 @@ DEPENDENCIES
   auto_strip_attributes (~> 2.1)
   autosize-rails
   awesome_print
-  aws-sdk (~> 2)
+  aws-sdk-s3
   base62
   bcrypt (~> 3.1.10)
   better_errors
@@ -609,7 +617,7 @@ DEPENDENCIES
   omniauth
   omniauth-linkedin-oauth2
   overcommit
-  paperclip (~> 5.3)
+  paperclip (~> 6.1)
   pg (~> 0.18)
   pg_search
   phantomjs
@@ -628,6 +636,7 @@ DEPENDENCIES
   roo (~> 2.8.2)
   rspec-rails
   rubocop (>= 0.59.0)
+  rubocop-performance
   ruby-graphviz (~> 1.2)
   rubyzip
   rufus-scheduler (~> 3.5)

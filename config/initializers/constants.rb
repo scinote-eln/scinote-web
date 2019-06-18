@@ -64,6 +64,9 @@ class Constants
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
 
+  # Number of protocols in recent protocol dropdown
+  RECENT_PROTOCOL_LIMIT = 14
+
   #=============================================================================
   # File and data memory size
   #=============================================================================
@@ -227,6 +230,8 @@ class Constants
     'application/vnd.ms-word',
     'text/plain'
   ].freeze
+
+  PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
 
   WHITELISTED_IMAGE_TYPES = [
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'

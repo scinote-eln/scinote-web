@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryAssetValue, type: :model do
+  let(:repository_asset_value) { build :repository_asset_value }
+
+  it 'is valid' do
+    expect(repository_asset_value).to be_valid
+  end
+
   it 'should be of class RepositoryAssetValue' do
     expect(subject.class).to eq RepositoryAssetValue
   end
@@ -21,28 +29,16 @@ describe RepositoryAssetValue, type: :model do
     it { should accept_nested_attributes_for(:repository_cell) }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :repository_cell }
     it { should validate_presence_of :asset }
   end
 
   describe '#data' do
-    let!(:repository) { create :repository }
-    let!(:repository_row) { create :repository_row, repository: repository }
-    let!(:repository_column) do
-      create :repository_column,
-             data_type: :RepositoryAssetValue,
-             repository: repository
-    end
-
     it 'returns the asset' do
       asset = create :asset, file_file_name: 'my file'
-      repository_asset_value = create :repository_asset_value,
-                                      asset: asset,
-                                      repository_cell_attributes: {
-                                        repository_column: repository_column,
-                                        repository_row: repository_row
-                                      }
+      repository_asset_value = create :repository_asset_value, asset: asset
+
       expect(repository_asset_value.reload.formatted).to eq 'my file'
     end
   end

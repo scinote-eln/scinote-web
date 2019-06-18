@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe ViewState, type: :model do
+  let(:view_state) { build :view_state, :team }
+
+  it 'is valid' do
+    expect(view_state).to be_valid
+  end
+
   it 'should be of class ViewState' do
     expect(subject.class).to eq ViewState
   end

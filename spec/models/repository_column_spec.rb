@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryColumn, type: :model do
+  let(:repository_column) { build :repository_column }
+
+  it 'is valid' do
+    expect(repository_column).to be_valid
+  end
+
   it 'should be of class RepositoryColumn' do
     expect(subject.class).to eq RepositoryColumn
   end
@@ -22,19 +30,23 @@ describe RepositoryColumn, type: :model do
     it { should have_many :repository_list_items }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :name }
-    it { should validate_presence_of :created_by }
-    it { should validate_presence_of :repository }
-    it { should validate_presence_of :data_type }
-    it do
-      should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  describe 'Validations' do
+    describe '#name' do
+      it { is_expected.to validate_presence_of :name }
+      it { is_expected.to(validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)) }
+      it { expect(repository_column).to validate_uniqueness_of(:name).scoped_to(:repository_id) }
     end
-    it 'have uniq name scoped to repository' do
-      r = create :repository_column, name: 'Repo One'
-      ct = build :repository_column, name: 'Repo One', repository: r.repository
 
-      expect(ct).to_not be_valid
+    describe '#created_by' do
+      it { is_expected.to validate_presence_of :created_by }
+    end
+
+    describe '#repository' do
+      it { is_expected.to validate_presence_of :repository }
+    end
+
+    describe '#data_type' do
+      it { is_expected.to validate_presence_of :data_type }
     end
   end
 end

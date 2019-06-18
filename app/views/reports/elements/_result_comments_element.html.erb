@@ -18,22 +18,13 @@
   </div>
   <div class="report-element-body">
     <div class="row">
-      <div class="col-xs-12 comments-container">
+      <div class="col-xs-12  comments-container simple">
         <% if comments.count == 0 %>
           <em><%=t "projects.reports.elements.result_comments.no_comments" %></em>
         <% else %>
-          <ul class="no-style comments-list">
+          <ul class="no-style content-comments">
             <% comments.each do |comment| %>
-              <% comment_ts = comment.created_at %>
-              <li class="comment" data-ts="<%= comment_ts.to_i %>">
-                <span class="comment-prefix">
-                  <em><%=t "projects.reports.elements.result_comments.comment_prefix", user: comment.user.full_name, date: l(comment_ts, format: :full_date), time: l(comment_ts, format: :time) %></em>
-                </span>
-                <span class="comment-message">
-                  &nbsp;
-                  <%= custom_auto_link(comment.message, team: current_team) %>
-                </span>
-              </li>
+              <%= render partial: 'shared/comments/item.html.erb', locals: { comment: comment, readonly: true, report: true } %>
             <% end %>
           </ul>
         <% end %>

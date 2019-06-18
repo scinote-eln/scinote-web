@@ -145,7 +145,7 @@ module ProtocolsImporter
   def populate_rte(object_json, object, team)
     return populate_rte_legacy(object_json) unless object_json['descriptionAssets']
 
-    description = TinyMceAsset.update_old_tinymce(object_json['description'])
+    description = TinyMceAsset.update_old_tinymce(object_json['description'], nil, true)
     object_json['descriptionAssets'].values.each do |tiny_mce_img_json|
       tiny_mce_img = TinyMceAsset.new(
         object: object,

@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SamplesTable, type: :model do
+  let(:samples_table) { build :samples_table }
+
+  it 'is valid' do
+    expect(samples_table).to be_valid
+  end
+
   it 'should be of class SamplesTable' do
     expect(subject.class).to eq SamplesTable
   end
@@ -18,7 +26,7 @@ describe SamplesTable, type: :model do
     it { should belong_to :team }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :team }
     it { should validate_presence_of :user }
   end

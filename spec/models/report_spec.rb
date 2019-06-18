@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Report, type: :model do
+  let(:report) { build :report }
+
+  it 'is valid' do
+    expect(report).to be_valid
+  end
+
   it 'should be of class Report' do
     expect(subject.class).to eq Report
   end
@@ -25,7 +33,7 @@ describe Report, type: :model do
     it { should have_many :report_elements }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :project }
     it { should validate_presence_of :user }
     it do
@@ -38,14 +46,8 @@ describe Report, type: :model do
         .is_at_most(Constants::NAME_MAX_LENGTH)
     end
 
-    it 'should have uniq name scoped to user, project' do
-      r = create :report, name: 'Same Name'
-      new_report = build :report,
-                         name: 'Same Name',
-                         user: r.user,
-                         project: r.project
-
-      expect(new_report).to_not be_valid
+    it do
+      expect(report).to validate_uniqueness_of(:name).scoped_to(:user_id, :project_id).case_insensitive
     end
   end
 end

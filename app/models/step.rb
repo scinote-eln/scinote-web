@@ -13,25 +13,16 @@ class Step < ApplicationRecord
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
 
-  belongs_to :user, inverse_of: :steps, optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :protocol,
-             inverse_of: :steps,
-             optional: true
-  has_many :checklists, inverse_of: :step,
-    dependent: :destroy
+  belongs_to :user, inverse_of: :steps
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
+  belongs_to :protocol, inverse_of: :steps
+  has_many :checklists, inverse_of: :step, dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
-  has_many :step_assets, inverse_of: :step,
-    dependent: :destroy
+  has_many :step_assets, inverse_of: :step, dependent: :destroy
   has_many :assets, through: :step_assets
-  has_many :step_tables, inverse_of: :step,
-    dependent: :destroy
+  has_many :step_tables, inverse_of: :step, dependent: :destroy
   has_many :tables, through: :step_tables
-  has_many :report_elements, inverse_of: :step,
-    dependent: :destroy
+  has_many :report_elements, inverse_of: :step, dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,

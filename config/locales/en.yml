@@ -608,6 +608,7 @@ en:
       no_description: "No task description"
       description_label: "Description"
       empty_description_edit_label: "Click here to enter Task Description (optional)"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:

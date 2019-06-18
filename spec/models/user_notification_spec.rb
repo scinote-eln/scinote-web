@@ -1,7 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserNotification, type: :model do
   let(:user) { create :user }
+  let(:user_notification) { build :user_notification }
+
+  it 'is valid' do
+    expect(user_notification).to be_valid
+  end
 
   it 'should be of class UserNotification' do
     expect(subject.class).to eq UserNotification

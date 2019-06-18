@@ -1,15 +1,11 @@
+# frozen_string_literal: true
+
 class RepositoryRow < ApplicationRecord
   include SearchableModel
 
   belongs_to :repository, optional: true
-  belongs_to :created_by,
-             foreign_key: :created_by_id,
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: :last_modified_by_id,
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
+  belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User'
   has_many :repository_cells, -> { order(:id) }, dependent: :destroy
   has_many :repository_columns, through: :repository_cells
   has_many :my_module_repository_rows,
