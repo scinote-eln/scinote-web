@@ -60,6 +60,8 @@ module FileIconsHelper
       image_link = 'office/Excel-color_16x16x32.png'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
       image_link = 'office/PowerPoint-Color_16x16x32.png'
+    elsif "wopitest" == file_ext
+      image_link = 'office/Word-color_16x16x32.png'
     end
 
     if image_link
@@ -78,6 +80,8 @@ module FileIconsHelper
       app = 'Excel Online'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
       app = 'PowerPoint Online'
+    elsif "wopitest" == file_ext
+      app = 'WOPI Test File'
     end
 
     if action == 'view'
