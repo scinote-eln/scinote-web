@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module PrivateMethods
-
-private
+  private
 
   # RTE fields support
   def html_to_word_converter(text)
@@ -273,5 +271,3 @@ private
     end
   end
 end
-
-# rubocop:enable  Style/ClassAndModuleChildren

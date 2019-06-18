@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawResultComments
   def draw_result_comments(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result
+
     comments = result.result_comments.order(created_at: subject['sort_order'])
     return if comments.count.zero?
 
@@ -28,4 +28,3 @@ module DrawResultComments
     end
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren

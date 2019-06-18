@@ -11,11 +11,11 @@ class Reports::Docx
   include GlobalActivitiesHelper
   include RepositoryDatatableHelper
 
-  Dir[File.join(File.dirname(__FILE__), 'docx') + "**/*.rb"].each {|file|
-      require file
-      include_module = File.basename(file).gsub('.rb','').split("_").map{|ea| ea.capitalize}.join
-      include include_module.constantize
-  }
+  Dir[File.join(File.dirname(__FILE__), 'docx') + '**/*.rb'].each do |file|
+    require file
+    include_module = File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join
+    include include_module.constantize
+  end
 
   def initialize(json, docx, options)
     @json = JSON.parse(json)
@@ -35,7 +35,6 @@ class Reports::Docx
     end
     @docx
   end
-
-end 
+end
 
 # rubocop:enable  Style/ClassAndModuleChildren

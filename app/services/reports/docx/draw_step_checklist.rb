@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawStepChecklist
   def draw_step_checklist(subject)
-    checklist = Checklist.find_by_id(subject["id"]["checklist_id"])
+    checklist = Checklist.find_by_id(subject['id']['checklist_id'])
     return unless checklist
+
     items = checklist.checklist_items
     timestamp = checklist.created_at
     @docx.p
@@ -28,4 +28,3 @@ module DrawStepChecklist
     end
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren

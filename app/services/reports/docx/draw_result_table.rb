@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawResultTable
   def draw_result_table(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result
+
     table = result.table
     timestamp = table.created_at
     @docx.p
@@ -23,4 +23,3 @@ module DrawResultTable
     end
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren

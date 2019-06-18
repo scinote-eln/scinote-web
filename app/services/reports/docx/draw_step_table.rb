@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawStepTable
   def draw_step_table(subject)
-    table = Table.find_by_id(subject["id"]["table_id"])
+    table = Table.find_by_id(subject['id']['table_id'])
     return unless table
+
     timestamp = table.created_at
     @docx.p
     @docx.p do
@@ -16,4 +16,3 @@ module DrawStepTable
     @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: 4
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren

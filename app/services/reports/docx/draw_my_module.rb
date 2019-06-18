@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawMyModule
   def draw_my_module(subject)
     color = @color
@@ -8,6 +7,7 @@ module DrawMyModule
     scinote_url = @scinote_url
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
     return unless my_module
+
     @docx.h3 my_module.name, italic: false
     @docx.p do
       text I18n.t('projects.reports.elements.module.user_time',
@@ -49,4 +49,3 @@ module DrawMyModule
     end
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren

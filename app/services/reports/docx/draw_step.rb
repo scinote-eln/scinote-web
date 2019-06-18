@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawStep
   def draw_step(subject)
     step = Step.find_by_id(subject['id']['step_id'])
     return unless step
+
     step_type_str = step.completed ? 'completed' : 'uncompleted'
     user = step.completed || !step.changed? ? step.user : step.last_modified_by
     timestamp = step.completed ? step.completed_on : step.updated_at
-    tables = step.tables
-    assets = step.assets
-    checklists = step.checklists
-    comments = step.step_comments
     @docx.p
     @docx.h5 I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one) +
              ' ' + step.name
@@ -42,4 +38,3 @@ module DrawStep
     @docx.p
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren

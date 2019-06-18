@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawResultAsset
   def draw_result_asset(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result
+
     asset = result.asset
     is_image = result.asset.is_image?
     timestamp = asset.created_at
@@ -24,5 +24,3 @@ module DrawResultAsset
     end
   end
 end
-
-# rubocop:enable  Style/ClassAndModuleChildren

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawMyModuleActivity
   def draw_my_module_activity(subject)
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
     return unless my_module
+
     activities = ActivitiesService.my_module_activities(my_module).order(created_at: subject['sort_order'])
 
     return false unless activities.any?
@@ -24,5 +24,3 @@ module DrawMyModuleActivity
     end
   end
 end
-
-# rubocop:enable  Style/ClassAndModuleChildren

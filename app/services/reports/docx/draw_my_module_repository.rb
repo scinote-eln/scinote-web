@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawMyModuleRepository
   def draw_my_module_repository(subject)
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
     return unless my_module
+
     repository_data = my_module.repository_json(subject['id']['repository_id'], subject['sort_order'], @user)
     return false unless repository_data[:data].assigned_rows.count.positive?
 
@@ -49,4 +49,3 @@ module DrawMyModuleRepository
     @docx.p
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren

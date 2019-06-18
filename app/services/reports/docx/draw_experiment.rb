@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable  Style/ClassAndModuleChildren
 module DrawExperiment
   def draw_experiment(subject)
     color = @color
@@ -8,6 +7,7 @@ module DrawExperiment
     scinote_url = @scinote_url
     experiment = Experiment.find_by_id(subject['id']['experiment_id'])
     return unless experiment
+
     @docx.h2 experiment.name
     @docx.p do
       text I18n.t('projects.reports.elements.experiment.user_time',
@@ -25,4 +25,3 @@ module DrawExperiment
     end
   end
 end
-# rubocop:enable  Style/ClassAndModuleChildren
