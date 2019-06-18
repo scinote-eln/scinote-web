@@ -1,7 +1,7 @@
 module FileIconsHelper
   def wopi_file?(asset)
     file_ext = asset.file_file_name.split('.').last
-    %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
+    %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf wopitest).include?(file_ext)
   end
 
   # For showing next to file
@@ -15,7 +15,7 @@ module FileIconsHelper
       fa_class = 'fa-file-powerpoint'
     elsif %w(pdf).include?(file_ext)
       fa_class = 'fa-file-pdf'
-    elsif %w(txt csv tab tex).include?(file_ext)
+    elsif %w(txt csv tab tex wopitest).include?(file_ext)
       fa_class = 'fa-file-alt'
     end
 
@@ -37,6 +37,8 @@ module FileIconsHelper
       image_link = 'office/Excel-xlsx_20x20x32.png'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
       image_link = 'office/PowerPoint-pptx_20x20x32.png'
+    elsif "wopitest" == file_ext
+      image_link = 'office/Word-docx_20x20x32.png'
     end
 
     # Now check for custom mappings or possible overrides
