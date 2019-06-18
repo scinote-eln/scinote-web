@@ -5,6 +5,7 @@ module ProtocolImporters
     def self.generate(step_json)
       return '' unless step_json[:description]
 
+      step_json[:description][:body] = TablesBuilder.remove_tables_from_html(step_json[:description][:body])
       html_string = ApplicationController
                     .renderer
                     .render(template: 'protocol_importers/templates/step_description',

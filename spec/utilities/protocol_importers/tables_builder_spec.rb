@@ -41,4 +41,11 @@ RSpec.describe ProtocolImporters::TablesBuilder do
       end
     end
   end
+
+  describe '.remove_tables_from_html' do
+    it 'returns description string without tables' do
+      expect(described_class.remove_tables_from_html(description_string)
+               .scan('<p><i>There was a table here, it was moved to tables section.</i></p>').size).to eq(2)
+    end
+  end
 end
