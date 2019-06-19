@@ -22,7 +22,7 @@
       </li>
     </ul>
     <div class="tab-content">
-      <div class="tab-pane tab-pane-settings tab-pane-protocols active" role="tabpanel">
+      <div class="tab-pane tab-pane-settings tab-pane-protocols active <%= @type %>" role="tabpanel">
         <!-- Buttons container -->
         <% if @type.in? [:public, :private] %>
           <div class="protocols-description">

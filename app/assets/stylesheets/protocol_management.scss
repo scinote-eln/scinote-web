@@ -60,6 +60,10 @@
   }
 }
 
+.tab-pane.external_protocols {
+  padding-bottom: 0;
+}
+
 .external-protocols-tab {
 
   .protocols-search-bar-panel {
@@ -153,7 +157,7 @@
     border-top: 1px solid $color-silver-chalice;
     height: 600px;
     padding-left: 0;
-    padding-top: 79px;
+    padding-right: 0;
 
     .row {
       margin-left: 0;
@@ -161,23 +165,44 @@
     }
 
     // Empty texts on the right
-    .protocol-preview-text {
-      color: $color-silver-chalice;
-      font-size: 24px;
+    .empty-preview-panel {
+      padding-top: 79px;
+
+      .protocol-preview-text {
+        color: $color-silver-chalice;
+        font-size: 24px;
+      }
+
+      .protocol-preview-subtext {
+        color: $color-silver-chalice;
+        font-size: 14px;
+      }
+
+      .text-rows {
+        text-align: center;
+      }
+
+      .text-separator hr {
+        border: 1px solid $color-alto;
+        width: 120px;
+      }
     }
 
-    .protocol-preview-subtext {
-      color: $color-silver-chalice;
-      font-size: 14px;
-    }
+    .full-preview-panel {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding-left: 21px;
+      padding-right: 21px;
+      width: 100%;
 
-    .text-rows {
-      text-align: center;
-    }
-
-    .text-separator hr {
-      border: 1px solid $color-alto;
-      width: 120px;
+      .preview-iframe {
+        border: none;
+        flex-grow: 1;
+        margin: 0;
+        padding: 0;
+      }
     }
   }
 }

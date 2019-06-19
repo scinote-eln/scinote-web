@@ -51,23 +51,53 @@
       <div class='row empty-text'>
         <%= t('protocols.index.external_protocols.list_panel.empty_text') %>
       </div>
+
+      <div class='protocol-card'
+        data-protocol-source='protocolsio/v3'
+        data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
+        data-show-protocol-id='Extracting-DNA-from-bananas-esvbee6'>
+        Banana protocol (click me)
+      </div>
+
+      <div class='protocol-card'
+        data-protocol-source='protocolsio/v3'
+        data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
+        data-show-protocol-id='cut-run-targeted-in-situ-genome-wide-profiling-wit-mgjc3un'>
+        Cut run targeted protocol (click me)
+      </div>
+
+      <div class='protocol-card'
+        data-protocol-source='protocolsio/3'
+        data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
+        data-show-protocol-id='errorr'>
+        Error protocol (click me, should default to default screen)
+      </div>
+
     </div>
 
     <div class='col-md-7 protocol-preview-panel'>
-      <div class='row'>
-        <div class='text-rows protocol-preview-text'>
-        <%= t('protocols.index.external_protocols.preview_panel.empty_title') %>
+      <div class='empty-preview-panel'>
+        <div class='row'>
+          <div class='text-rows protocol-preview-text'>
+            <%= t('protocols.index.external_protocols.preview_panel.empty_title') %>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='text-separator'> <hr> </div>
+        </div>
+        <div class='row'>
+          <div class='text-rows protocol-preview-subtext'>
+            <%= t('protocols.index.external_protocols.preview_panel.empty_subtext') %>
+          </div>
         </div>
       </div>
-      <div class='row'>
-        <div class='text-separator'> <hr> </div>
-      </div>
-      <div class='row'>
-        <div class='text-rows protocol-preview-subtext'>
-          <%= t('protocols.index.external_protocols.preview_panel.empty_subtext') %>
-        </div>
-      </div>
+
+      <div class='full-preview-panel' style='display: none;'>
+        <iframe class='preview-iframe'></iframe>
       </div>
     </div>
   </div>
 </div>
+</div>
+
+<%= javascript_include_tag "protocols/external_protocols_tab.js" %>
