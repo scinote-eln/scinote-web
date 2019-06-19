@@ -15,10 +15,9 @@ module ViewableModel
     raise NotImplementedError, 'default_view_state should be implemented!'
   end
 
-  def validate_view_state(view_state)
+  def validate_view_state(_view_state)
     raise NotImplementedError, 'validate_view_state(view_state) should be implemented!'
   end
-
 
   def current_view_state(user)
     state = view_states.where(user: user).take
