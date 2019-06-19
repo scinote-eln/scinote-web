@@ -37,7 +37,7 @@ RSpec.describe ProtocolImporters::StepDescriptionBuilder do
 
     context 'when have only description body' do
       it 'includes paragraph description' do
-        expect(described_class.generate(description_only)).to include('<p> original desc </p>')
+        expect(described_class.generate(description_only)).to include('<p> original desc')
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe ProtocolImporters::StepDescriptionBuilder do
       end
 
       it 'strips HTML tags from body values for component' do
-        expect(described_class.generate(description_with_components).scan('alert').size).to be == 0
+        expect(described_class.generate(description_with_components).scan('<script>').size).to be == 0
       end
     end
 
@@ -58,6 +58,12 @@ RSpec.describe ProtocolImporters::StepDescriptionBuilder do
 
       it 'strips HTML tags for values' do
         expect(described_class.generate(description_with_html).scan('script').count).to be == 0
+      end
+    end
+
+    context 'when have allowed html tags' do
+      it 'does not strip img tags' do
+        expect(described_class.generate(description_with_html).scan('img').size).to eq(1)
       end
     end
   end
