@@ -41,7 +41,7 @@ RSpec.describe ProtocolImporters::ProtocolDescriptionBuilder do
 
     context 'when have extra content' do
       it 'add extra fields as paragraphs' do
-        expect(described_class.generate(description_with_extra_content).scan('<br/>').size).to be == 6
+        expect(described_class.generate(description_with_extra_content).scan('<br/>').size).to be == 10
       end
     end
   end
