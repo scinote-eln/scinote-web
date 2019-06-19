@@ -124,7 +124,7 @@
 
         &.active {
           background: $color-gainsboro;
-          border-radius: 5px;
+          border-radius: 5px !important;
           color: $color-emperor;
         }
       }
@@ -141,7 +141,6 @@
     .row {
       margin-left: 0;
       margin-right: 0;
-
     }
 
     // When no search result is present
