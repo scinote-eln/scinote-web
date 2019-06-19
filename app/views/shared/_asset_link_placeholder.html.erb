@@ -1,0 +1,19 @@
+<% if asset.file.processing? && display_image_tag && asset.is_image? %>
+  <%= image_tag 'medium/processing.gif' %>
+  <span>
+    <%= truncate(asset.file_file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+  </span>
+<% else %>
+  <% if asset.is_image? && display_image_tag %>
+    <%= image_tag asset.url(:medium) %>
+  <% end %>
+  <% if display_image_tag %>
+    <p>
+      <%= truncate(asset.file_file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    </p>
+  <% else %>
+    <span>
+      <%= truncate(asset.file_file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    </span>
+  <% end %>
+<% end %>

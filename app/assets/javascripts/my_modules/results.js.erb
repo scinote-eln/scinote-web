@@ -16,6 +16,7 @@
       _expandAllResults();
       applyCollapseLinkCallBack();
       applyCreateWopiFileCallback();
+      Assets.setupAssetsLoading();
 
 
 
@@ -111,7 +112,7 @@
       });
       _renderTable($(result).find('div.step-result-hot-table'));
       animateSpinner(null, false);
-      setupAssetsLoading();
+      Assets.setupAssetsLoading();
     }
 
     function _renderTable(table) {

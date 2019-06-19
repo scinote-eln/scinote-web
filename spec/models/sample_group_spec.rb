@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SampleGroup, type: :model do
+  let(:sample_group) { build :sample_group }
+
+  it 'is valid' do
+    expect(sample_group).to be_valid
+  end
+
   it 'should be of class SampleGroup' do
     expect(subject.class).to eq SampleGroup
   end
@@ -26,21 +34,20 @@ describe SampleGroup, type: :model do
     end
   end
 
-  describe 'Should be a valid object' do
-    let!(:team_one) { create :team, name: 'My team' }
-    it { should validate_presence_of :name }
-    it { should validate_presence_of :color }
-    it { should validate_presence_of :team }
-    it do
-      should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  describe 'Validations' do
+    describe '#name' do
+      it { is_expected.to validate_presence_of :name }
+      it { is_expected.to validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH) }
+      it { expect(sample_group).to validate_uniqueness_of(:name).scoped_to(:team_id).case_insensitive }
     end
-    it do
-      should validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH)
+
+    describe '#color' do
+      it { is_expected.to validate_presence_of :color }
+      it { is_expected.to validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH) }
     end
-    it 'should have uniq name scoped to team' do
-      create :sample_group, name: 'My Group', team: team_one
-      new_group = build :sample_group, name: 'My Group', team: team_one
-      expect(new_group).to_not be_valid
+
+    describe '#team' do
+      it { is_expected.to validate_presence_of :team }
     end
   end
 end

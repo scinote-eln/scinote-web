@@ -1,3 +1,5 @@
+require: rubocop-performance
+
 AllCops:
   Exclude:
     - "vendor/**/*"
@@ -79,8 +81,8 @@ Naming/FileName:
   Enabled: false
   Exclude: []
 
-Layout/FirstParameterIndentation:
-  EnforcedStyle: special_for_inner_method_call_in_parentheses
+Layout/IndentFirstParameter:
+  EnforcedStyle: consistent
 
 Style/For:
   EnforcedStyle: each
@@ -107,10 +109,10 @@ Layout/IndentationConsistency:
 Layout/IndentationWidth:
   Width: 2
 
-Layout/IndentArray:
+Layout/IndentFirstArrayElement:
   EnforcedStyle: special_inside_parentheses
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   EnforcedStyle: special_inside_parentheses
 
 Style/Next:
@@ -124,9 +126,6 @@ Style/MethodDefParentheses:
 
 Naming/MethodName:
   EnforcedStyle: snake_case
-
-Style/ModuleFunction:
-  EnforcedStyle: module_function
 
 Layout/MultilineArrayBraceLayout:
   EnforcedStyle: symmetrical
@@ -326,6 +325,7 @@ Style/EmptyLiteral:
 
 Style/ModuleFunction:
   Enabled: true
+  EnforcedStyle: module_function
 
 Style/OneLineConditional:
   Enabled: true

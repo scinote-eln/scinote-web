@@ -1,8 +1,11 @@
 FROM ruby:2.5.5
 MAINTAINER BioSistemika <info@biosistemika.com>
 
+RUN echo deb "http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list
+
 # additional dependecies
 # libSSL-1.0 is required by wkhtmltopdf binary
+# libreoffice for file preview generation
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   apt-get update -qq && \
   apt-get install -y \
@@ -16,6 +19,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   default-jre-headless \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
+  apt-get install -y --no-install-recommends -t stretch-backports libreoffice && \
   npm install -g yarn && \
   rm -rf /var/lib/apt/lists/*
 
