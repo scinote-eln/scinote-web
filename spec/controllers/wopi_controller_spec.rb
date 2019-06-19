@@ -35,6 +35,8 @@ describe WopiController, type: :controller do
   describe 'POST unlock' do
     before do
       token
+      ENV['WOPI_SUBDOMAIN'] = nil
+      allow(controller).to receive(:verify_proof!).and_return(true)
       @request.headers['X-WOPI-Override'] = 'UNLOCK'
       @request.headers['X-WOPI-Lock'] = 'lock'
       asset.lock_asset('lock')

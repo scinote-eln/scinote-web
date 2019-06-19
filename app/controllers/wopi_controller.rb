@@ -2,7 +2,7 @@ class WopiController < ActionController::Base
   include WopiUtil
 
   before_action :load_vars, :authenticate_user_from_token!
-  before_action :verify_proof! unless Rails.env.test?
+  before_action :verify_proof!
 
   # Only used for checkfileinfo
   def file_get_endpoint
