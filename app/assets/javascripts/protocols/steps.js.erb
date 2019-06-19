@@ -504,10 +504,9 @@
             $('#new-step-main-tab a')
               .on('shown.bs.tab', function() {
                 $('#step_name').focus();
-                TinyMCE.init('#step_description_textarea');
-              }).on('hidden.bs.tab', function() {
                 tinyMCE.editors.step_description_textarea.remove();
-              });
+                TinyMCE.init('#step_description_textarea');
+              })
 
             TinyMCE.init('#step_description_textarea');
           });
