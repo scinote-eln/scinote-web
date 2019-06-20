@@ -1,6 +1,6 @@
 <div class="comments-container" data-object-id = <%= object.id %>> 
   <% per_page = Constants::COMMENTS_SEARCH_LIMIT %>
-  <div class="content-comments">
+  <div class="content-comments inline_scroll_block">
     <% if comments.size == per_page %>
       <div class="comment-more text-center">
         <a class="btn btn-default btn-more-comments-new"

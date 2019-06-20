@@ -493,6 +493,16 @@ class Asset < ApplicationRecord
     !locked? && %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type
   end
 
+  def generate_base64(style)
+    image = if file.options[:storage].to_sym == :s3
+              URI.parse(url(style)).open.to_a.join
+            else
+              File.open(file.path(style)).to_a.join
+            end
+    encoded_data = Base64.strict_encode64(image)
+    "data:#{file_content_type};base64,#{encoded_data}"
+  end
+
   protected
 
   # Checks if attachments is an image (in post processing imagemagick will

@@ -504,10 +504,9 @@
             $('#new-step-main-tab a')
               .on('shown.bs.tab', function() {
                 $('#step_name').focus();
-                TinyMCE.init('#step_description_textarea');
-              }).on('hidden.bs.tab', function() {
                 tinyMCE.editors.step_description_textarea.remove();
-              });
+                TinyMCE.init('#step_description_textarea');
+              })
 
             TinyMCE.init('#step_description_textarea');
           });
@@ -538,7 +537,7 @@
     var nameValid = textValidator(ev, $nameInput, 1,
       <%= Constants::NAME_MAX_LENGTH %>);
     var $descrTextarea = $form.find("#step_description_textarea");
-    var $tinyMCEInput = TinyMCE.getContent();
+    var $tinyMCEInput = tinyMCE.editors.step_description_textarea.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
     var tableNamesValidArray = [];
@@ -579,7 +578,7 @@
 
       animateSpinner(null, true);
       var data = DragNDropSteps.appendFilesToForm(ev);
-      data.append('step[description]', TinyMCE.getContent());
+      data.append('step[description]', $tinyMCEInput);
       $.ajax({
         url: $form.attr('action'),
         method: 'POST',
@@ -614,6 +613,7 @@
           FilePreviewModal.init();
           $.initTooltips();
           if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
+          if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {

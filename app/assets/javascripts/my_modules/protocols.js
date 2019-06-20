@@ -452,14 +452,19 @@ function initRecentProtocols() {
 
   // We use here ajax:success, because we want to check any change on this page
   $(document).on('ajax:success', () => {
-    var steps = $('.step');
-    var protocolDescription = $('#protocol_description_view').html();
-    if (steps.length === 0 && protocolDescription.length === 0) {
-      recentProtocolContainer.css('display', '');
-    } else {
-      recentProtocolContainer.css('display', 'none');
-    }
+    updateRecentProtocolsStatus();
   });
+}
+
+function updateRecentProtocolsStatus() {
+  var recentProtocolContainer = $('.my-module-recent-protocols');
+  var steps = $('.step');
+  var protocolDescription = $('#protocol_description_view').html();
+  if (steps.length === 0 && protocolDescription.length === 0) {
+    recentProtocolContainer.css('display', '');
+  } else {
+    recentProtocolContainer.css('display', 'none');
+  }
 }
 
 /**
