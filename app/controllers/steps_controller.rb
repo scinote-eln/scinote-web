@@ -3,12 +3,11 @@ class StepsController < ApplicationController
   include ApplicationHelper
   include StepsActions
 
-  before_action :load_vars, only: %i(edit update destroy show toggle_step_state
-                                     checklistitem_state)
+  before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state)
   before_action :load_vars_nested, only: [:new, :create]
   before_action :convert_table_contents_to_utf8, only: [:create, :update]
 
-  before_action :check_view_permissions, only: [:show]
+  before_action :check_view_permissions, only: %i(show update_view_state)
   before_action :check_manage_permissions, only: %i(new create edit update
                                                     destroy)
   before_action :check_complete_and_checkbox_permissions, only:
@@ -186,6 +185,17 @@ class StepsController < ApplicationController
         format.json {
           render json: @step.errors.to_json, status: :bad_request
         }
+      end
+    end
+  end
+
+  def update_view_state
+    view_state = @step.current_view_state(current_user)
+    view_state.state['assets']['sort'] = params.require(:assets).require(:order)
+    view_state.save! if view_state.changed?
+    respond_to do |format|
+      format.json do
+        render json: {}, status: :ok
       end
     end
   end

@@ -75,6 +75,8 @@ en:
           attributes:
             viewable_id:
               not_unique: "State already exists for this user and parent object"
+            state:
+              wrong_state: "Wrong parameters"
 
   helpers:
     label:
@@ -1761,10 +1763,11 @@ en:
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
       attachments:
-        sort_new: "Newest first &#8595;"
-        sort_old: "Oldest first &#8593;"
-        sort_atoz: "Name &#8595;"
-        sort_ztoa: "Name &#8593;"
+        sort:
+          new_html: "Newest first &#8595;"
+          old_html: "Oldest first &#8593;"
+          atoz_html: "Name &#8595;"
+          ztoa_html: "Name &#8593;"
         modified_label: "Modified:"
       new:
         add_step_title: "Add new step"

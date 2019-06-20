@@ -8,11 +8,19 @@ module MyModulesHelper
   end
 
   def ordered_assets(step)
-    step.assets.order(:file_updated_at)
+    view_state = step.current_view_state(current_user)
+    sort = case view_state.state.dig('assets', 'sort')
+           when 'old' then { created_at: :asc }
+           when 'atoz' then { file_file_name: :asc }
+           when 'ztoa' then { file_file_name: :desc }
+           else { created_at: :desc }
+           end
+
+    step.assets.order(sort)
   end
 
-  def az_ordered_assets_index(step, asset_id)
-    step.assets.order('LOWER(file_file_name)').pluck(:id).index(asset_id)
+  def az_ordered_assets_index(assets, asset_id)
+    assets.sort_by(&:file_file_name).map(&:id).index(asset_id)
   end
 
   def number_of_samples(my_module)

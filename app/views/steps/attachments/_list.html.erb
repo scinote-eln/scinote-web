@@ -1,4 +1,4 @@
-<% assets = ordered_assets step %>
+<% assets = ordered_assets(step) %>
 <div class="col-xs-12">
 <hr>
 </div>
@@ -6,7 +6,7 @@
 
   <div class="title">
     <h4>
-      <%= t('protocols.steps.files', count: assets.count) %>
+      <%= t('protocols.steps.files', count: assets.length) %>
     </h4>
   </div>
   <div>
@@ -18,14 +18,17 @@
       <% end %>
       <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
         <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span id="dd-att-step-<%= step.id %>-label"><%= t('protocols.steps.attachments.sort_new').html_safe %></span>
+          <span id="dd-att-step-<%= step.id %>-label">
+            <%= t("protocols.steps.attachments.sort.#{step.current_view_state(current_user).state.dig('assets', 'sort')}_html") %>
+          </span>
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="sortMenu">
+        <ul class="dropdown-menu" aria-labelledby="sortMenu" data-state-save-path="<%= update_view_state_step_path(step.id) %>">
           <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
             <li>
-              <a data-order="<%= sort %>" onClick="reorderAttachments('<%= step.id %>', '<%= sort %>')">
-                <%= t('protocols.steps.attachments.sort_' + sort ).html_safe %></a>
+              <a data-order="<%= sort %>" onClick="reorderAttachments(this, '<%= step.id %>', '<%= sort %>')">
+                <%= t("protocols.steps.attachments.sort.#{sort}_html") %>
+              </a>
             </li>
           <% end %>
         </ul>
@@ -36,8 +39,10 @@
 
 <div class="col-xs-12 attachments" id="att-<%= step.id %>">
   <% assets.each_with_index do |asset, i| %>
+    <% order_atoz = az_ordered_assets_index(assets, asset.id) %>
+    <% order_ztoa = assets.length - az_ordered_assets_index(assets, asset.id) %>
     <%= render partial: 'steps/attachments/item.html.erb',
-               locals: { asset: asset, i: i, assets_count: assets.count, step: step } %>
+               locals: { asset: asset, i: i, assets_count: assets.length, step: step, order_atoz: order_atoz, order_ztoa: order_ztoa } %>
   <% end %>
 </div>
 <hr>
