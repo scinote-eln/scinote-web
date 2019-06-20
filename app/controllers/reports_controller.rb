@@ -150,6 +150,13 @@ class ReportsController < ApplicationController
                               template: 'reports/report.pdf.erb',
                               disable_javascript: true
       end
+      format.docx do
+        @user = current_user
+        @team = current_team
+        @scinote_url = root_url
+        @data = params[:json]
+        headers["Content-Disposition"] = 'attachment; filename="scinote_report.docx"'
+      end
     end
   end
 

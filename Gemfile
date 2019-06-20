@@ -54,12 +54,14 @@ gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
+gem 'caracal-rails' # Build docx report
 gem 'commit_param_routing' # Enables different submit actions in the same form
 gem 'deface', '~> 1.0'
 gem 'delayed_paperclip',
     git: 'https://github.com/jrgifford/delayed_paperclip.git',
     ref: 'fcf574c'
 gem 'faker' # Generate fake data
+gem 'fastimage' # Light gem to get image resolution
 gem 'httparty', '~> 0.13.1'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL

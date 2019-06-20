@@ -101,6 +101,16 @@ class Constants
   HANDSONTABLE_INIT_COLS_CNT = 5
   HANDSONTABLE_INIT_ROWS_CNT = 5
 
+  # Word reports format. All units in Twips.
+  # A twip is 1/20 of a point. Word documents are printed at 72dpi. 1in == 72pt == 1440 twips.
+  # Here is default A4
+  REPORT_DOCX_WIDTH = 12240
+  REPORT_DOCX_HEIGHT = 15840
+  REPORT_DOCX_MARGIN_TOP = 720
+  REPORT_DOCX_MARGIN_RIGHT = 720
+  REPORT_DOCX_MARGIN_BOTTOM = 720
+  REPORT_DOCX_MARGIN_LEFT = 720
+
   #=============================================================================
   # Styling
   #=============================================================================

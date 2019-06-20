@@ -369,6 +369,7 @@ en:
         nav_title: "Report for: "
         nav_print: "Print"
         nav_pdf: "Download PDF"
+        nav_docx: "Download .docx"
         save_PDF_to_inventory: "Save PDF to Inventory"
         nav_save: "Save"
         nav_close: "Cancel"
@@ -523,6 +524,7 @@ en:
         step_checklist:
           checklist_name: "[ %{name} ]"
           user_time: "Checklist created on %{timestamp}."
+          checked: "checked"
         result_comments:
           sidebar_name: "Comments"
           name: "Comments for result %{result}"

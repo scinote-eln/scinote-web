@@ -26,6 +26,16 @@
       <% end %>
       </div>
     <% end %>
+    <%= form_tag generate_project_reports_path(@project, format: :docx), method: :post, target: "_blank", class: "get-report-docx-form" do %>
+      <div class="form-group">
+      <%= hidden_field_tag "json", "" %>
+      <%= link_to "", class: "btn btn-default", remote: true, id: "get-report-docx" do %>
+        <span class="fas fa-upload"></span>
+        <span class="hidden-xs"><%=t "projects.reports.new.nav_docx" %></span>
+      <% end %>
+      </div>
+    <% end %>
+
 
     <button
       onclick="$('#savePDFtoInventory').modal('show')"

@@ -435,6 +435,28 @@ function initializeSaveToPdf() {
   });
 }
 
+function initializeSaveToDocx() {
+  var saveToPdfForm = $('.get-report-docx-form');
+  var hiddenInput = saveToPdfForm.find("input[type='hidden']");
+  var saveToPdfBtn = saveToPdfForm.find('#get-report-docx');
+
+  saveToPdfBtn.click(function(e) {
+    // Fill hidden input element
+    hiddenInput.attr('value', JSON.stringify(constructReportContentsJson()));
+
+    // Fire form submission
+    saveToPdfForm.submit();
+
+    // Clear form
+    hiddenInput.attr('value', '');
+
+    // Prevent page reload
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+}
+
 function initializeUnsavedWorkDialog() {
   var dh = $('#data-holder');
   var alertText = dh.attr('data-unsaved-work-text');
@@ -469,6 +491,7 @@ function init() {
   initializeGlobalReportSort();
   initializePrintPopup();
   initializeSaveToPdf();
+  initializeSaveToDocx();
   initializeSaveReport();
   initializeAddContentsModal();
   initializeUnsavedWorkDialog();
