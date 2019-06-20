@@ -17,25 +17,19 @@
       <span class="fas fa-print"></span>
       <span class="hidden-xs"><%=t "projects.reports.new.nav_print" %></span>
     <% end %>
-    <%= form_tag generate_project_reports_path(@project, format: :pdf), method: :post, target: "_blank", class: "get-report-pdf-form" do %>
-      <div class="form-group">
-      <%= hidden_field_tag "html", "" %>
-      <%= link_to "", class: "btn btn-default", remote: true, id: "get-report-pdf" do %>
-        <span class="fas fa-upload"></span>
-        <span class="hidden-xs"><%=t "projects.reports.new.nav_pdf" %></span>
-      <% end %>
-      </div>
-    <% end %>
-    <%= form_tag generate_project_reports_path(@project, format: :docx), method: :post, target: "_blank", class: "get-report-docx-form" do %>
-      <div class="form-group">
-      <%= hidden_field_tag "json", "" %>
-      <%= link_to "", class: "btn btn-default", remote: true, id: "get-report-docx" do %>
-        <span class="fas fa-upload"></span>
-        <span class="hidden-xs"><%=t "projects.reports.new.nav_docx" %></span>
-      <% end %>
-      </div>
-    <% end %>
 
+
+    <div class="dropdown" id="download-report">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="fas fa-download"></span>
+        <span class="hidden-xs"><%= t("projects.reports.new.nav_download") %><span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><%= link_to t("projects.reports.new.nav_pdf"), generate_project_reports_path(@project, format: :pdf), id: "get-report-pdf" %></li>
+        <li><%= link_to t("projects.reports.new.nav_docx"), generate_project_reports_path(@project, format: :docx), id: "get-report-docx" %></li>
+      </ul>
+    </div>
 
     <button
       onclick="$('#savePDFtoInventory').modal('show')"
