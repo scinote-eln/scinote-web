@@ -84,7 +84,8 @@ module PrivateMethods
 
       if elem.name == 'img' && elem.attributes['data-mce-token']
 
-        image = TinyMceAsset.find_by_id(elem.attributes['data-mce-token'].value)
+        image = TinyMceAsset.find_by_id(Base62.decode(elem.attributes['data-mce-token'].value))
+        next unless image
 
         image_path = image_path(image)
 
@@ -180,6 +181,7 @@ module PrivateMethods
   end
 
   def asset_image_preparing(asset)
+    return unless asset
     image_path = image_path(asset)
 
     dimension = FastImage.size(image_path)
