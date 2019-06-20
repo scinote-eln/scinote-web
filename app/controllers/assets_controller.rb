@@ -14,7 +14,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: :file_present
-  before_action :check_edit_permission, only: :edit
+  before_action :check_edit_permission, only: %i(edit create_start_edit_image_activity)
 
   def file_present
     return render_403 unless @asset.team == current_team
