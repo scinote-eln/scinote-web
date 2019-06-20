@@ -32,6 +32,9 @@ describe AssetsController, type: :controller do
   let(:step_asset_in_repository) { create :step_asset, step: step_in_repository, asset: asset }
 
   describe 'POST start_edit' do
+    before do
+      allow(controller).to receive(:check_edit_permission).and_return(true)
+    end
     let(:action) { post :create_start_edit_image_activity, params: params, format: :json }
     let!(:params) do
       { id: nil }
