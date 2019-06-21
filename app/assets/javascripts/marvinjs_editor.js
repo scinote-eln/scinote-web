@@ -2,50 +2,127 @@
 /* global TinyMCE, PerfectScrollbar, ChemicalizeMarvinJs */
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
-var MarvinJsEditor;
-if (typeof ChemicalizeMarvinJs !== 'undefined') {
-  ChemicalizeMarvinJs.createEditor('#marvinjs-sketch');
-}
-MarvinJsEditor = (function() {
+var marvinJsRemoteLastMrv;
+
+
+var MarvinJsEditor = (function() {
   var marvinJsModal = $('#MarvinJsModal');
   var marvinJsContainer = $('#marvinjs-editor');
   var marvinJsObject = $('#marvinjs-sketch');
   var emptySketch = '<cml><MDocument></MDocument></cml>';
   var sketchName = marvinJsModal.find('.file-name input');
+  var marvinJsMode = marvinJsContainer[0].dataset.marvinjsMode
+
+  // Facade api actions
+
+  var marvinJsExport = (child_function, options = {}) => {
+    if (marvinJsMode == 'remote'){
+      remoteExport(child_function,options)
+    }else{
+      localExport(child_function,options)
+    }
+  }
+
+  var marvinJsImage = (child_function, source, options = {}) => {
+    if (marvinJsMode == 'remote'){
+      remoteImage(child_function, source, options)
+    }else{
+      localImage(child_function, source, options)
+    }
+  }
+  /////////////////
 
   var loadEditor = () => {
-    if (marvinJsObject[0].nodeName === 'DIV') {
-      return MarvinJSUtil.getEditor('#' + marvinJsObject.children()[0].id);
+    if (marvinJsMode == 'remote'){
+      marvinJsObject.find('iframe').remove()
+      return ChemicalizeMarvinJs.createEditor("#marvinjs-sketch");
+    } else {
+      return MarvinJSUtil.getEditor('#marvinjs-sketch');
     }
-    return MarvinJSUtil.getEditor('#marvinjs-sketch');
   };
-
   var loadPackages = () => {
-    if (marvinJsObject[0].nodeName === 'DIV') {
-      return MarvinJSUtil.getPackage('#' + marvinJsObject.children()[0].id);
-    }
     return MarvinJSUtil.getPackage('#marvinjs-sketch');
   };
 
-  function preloadActions(config) {
-    if (config.mode === 'new' || config.mode === 'new-tinymce') {
-      loadEditor().then(function(sketcherInstance) {
-        sketcherInstance.importStructure('mrv', emptySketch);
-        sketchName.val(I18n.t('marvinjs.new_sketch'));
-      });
-    } else if (config.mode === 'edit') {
-      loadEditor().then(function(sketcherInstance) {
-        sketcherInstance.importStructure('mrv', config.data);
-        sketchName.val(config.name);
-      });
-    } else if (config.mode === 'edit-tinymce') {
-      loadEditor().then(function(sketcherInstance) {
-        $.get(config.marvinUrl, function(result) {
-          sketcherInstance.importStructure('mrv', result.description);
-          sketchName.val(result.name);
+  // Local marvinJS installation
+
+  var localExport = (child_function, options = {}) => {
+    loadEditor().then(function(sketcherInstance) {
+      sketcherInstance.exportStructure('mrv').then(function(source) {
+        child_function(source, options)
+      })
+    })
+  }
+
+  var localImage = (child_function, source, options = {}) => {
+    loadPackages().then(function(sketcherInstance) {
+      sketcherInstance.onReady(function() {
+        var exporter = createExporter(sketcherInstance, 'image/jpeg');
+        exporter.render(source).then(function(image) {
+          child_function(image, options)
         });
       });
-    }
+    });
+  }
+
+  var localExportImage = (child_function, options = {}) => {
+    loadEditor().then(function(sketcherInstance) {
+      sketcherInstance.exportStructure('mrv').then(function(source) {
+        loadPackages().then(function(sketcherPackage) {
+          sketcherPackage.onReady(function() {
+            var exporter = createExporter(sketcherPackage, 'image/jpeg');
+            exporter.render(source).then(function(image) {
+              child_function(source, image, options)
+            })
+          })
+        })
+      })
+    })
+  }
+
+  // Web services installation
+
+  var remoteExport = (child_function, options = {}) => {
+    child_function(marvinJsRemoteLastMrv, options)
+  }
+
+  var remoteImage = (child_function, source, options = {}) => {
+    ChemicalizeMarvinJs.createEditor("#marvinjs-sketch").then(function (marvin) {
+      params = {
+        'carbonLabelVisible' : false,
+        'implicitHydrogen' : "TERMINAL_AND_HETERO",
+        'displayMode' : "WIREFRAME",
+        'width' : 900,
+        'height' : 900
+      };
+      marvin.exportMrvToImageDataUri(source, 'jpeg', params).then(function(image) {
+        child_function(image, options)
+      })
+    })
+  }
+
+  // Support actions
+  function preloadActions(config) {
+    loadEditor().then(function(marvin) {
+      if (config.mode === 'new' || config.mode === 'new-tinymce') {
+        marvin.importStructure('mrv', emptySketch);
+        sketchName.val(I18n.t('marvinjs.new_sketch'));
+      } else if (config.mode === 'edit') {
+        marvin.importStructure('mrv', config.data);
+        sketchName.val(config.name);
+      } else if (config.mode === 'edit-tinymce') {
+        $.get(config.marvinUrl, function(result) {
+          marvin.importStructure('mrv', result.description);
+          sketchName.val(result.name);
+        });
+      }
+
+      marvin.on("molchange", () => {
+        marvin.exportStructure('mrv').then(function(source) {
+          marvinJsRemoteLastMrv = source
+        })
+      });
+    });
   }
 
   function createExporter(marvin, imageType) {
@@ -63,7 +140,7 @@ MarvinJsEditor = (function() {
     return new marvin.ImageExporter(params);
   }
 
-  function assignImage(target, data) {
+  function assignImage(data, target) {
     target.attr('src', data);
     return data;
   }
@@ -77,9 +154,86 @@ MarvinJsEditor = (function() {
     return imgstr;
   }
 
+  function save_function(source, config){
+    $.post(config.marvinUrl, {
+      description: source,
+      object_id: config.objectId,
+      object_type: config.objectType,
+      name: sketchName.val()
+    }, function(result) {
+      var newAsset;
+      if (config.objectType === 'Step') {
+        newAsset = $(result.html);
+        newAsset.find('.file-preview-link').css('top', '-300px');
+        newAsset.addClass('new').prependTo($(config.container));
+        setTimeout(function() {
+          newAsset.find('.file-preview-link').css('top', '0px');
+        }, 200);
+        FilePreviewModal.init();
+      }
+      $(marvinJsModal).modal('hide');
+    });
+  }
+
+  function save_tinymce_function(source, image, config){
+    $.post(config.marvinUrl, {
+      description: source,
+      object_id: config.objectId,
+      object_type: config.objectType,
+      name: sketchName.val(),
+      image: image
+    }, function(result) {
+      var json = tinymce.util.JSON.parse(result);
+      config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
+      TinyMCE.updateImages(config.editor);
+      $(marvinJsModal).modal('hide');
+    });
+  }
+
+  function update_function(source, config){
+    $.ajax({
+      url: config.marvinUrl,
+      data: {
+        description: source,
+        name: sketchName.val()
+      },
+      dataType: 'json',
+      type: 'PUT',
+      success: function(json) {
+        $(marvinJsModal).modal('hide');
+        config.reloadImage.src.val(json.description);
+        $(config.reloadImage.sketch).find('.attachment-label').text(json.name);
+        MarvinJsEditor().create_preview(
+          config.reloadImage.src,
+          $(config.reloadImage.sketch).find('img')
+        );
+      }
+    });
+  }
+
+  function update_tinymce_function(source, image, config){
+    $.ajax({
+      url: config.marvinUrl,
+      data: {
+        description: source,
+        name: sketchName.val(),
+        object_type: 'TinyMceAsset',
+        image: image
+      },
+      dataType: 'json',
+      type: 'PUT',
+      success: function(json) {
+        config.image[0].src = json.url;
+        $(marvinJsModal).modal('hide');
+      }
+    });
+  }
+
+  // MarvinJS Methods
+
   return Object.freeze({
     open: function(config) {
-      MarvinJsEditor().team_sketches();
+      //MarvinJsEditor().team_sketches();
       preloadActions(config);
       $(marvinJsModal).modal('show');
       $(marvinJsObject)
@@ -116,133 +270,31 @@ MarvinJsEditor = (function() {
     },
 
     save: function(config) {
-      loadEditor().then(function(sketcherInstance) {
-        sketcherInstance.exportStructure('mrv').then(function(source) {
-          $.post(config.marvinUrl, {
-            description: source,
-            object_id: config.objectId,
-            object_type: config.objectType,
-            name: sketchName.val()
-          }, function(result) {
-            var newAsset;
-            if (config.objectType === 'Step') {
-              newAsset = $(result.html);
-              newAsset.find('.file-preview-link').css('top', '-300px');
-              newAsset.addClass('new').prependTo($(config.container));
-              setTimeout(function() {
-                newAsset.find('.file-preview-link').css('top', '0px');
-              }, 200);
-              FilePreviewModal.init();
-            }
-            $(marvinJsModal).modal('hide');
-          });
-        });
-      });
+      marvinJsExport(save_function,config)
     },
 
     save_with_image: function(config) {
-      loadEditor().then(function(sketcherInstance) {
-        sketcherInstance.exportStructure('mrv').then(function(mrvDescription) {
-          loadPackages().then(function(sketcherPackage) {
-            sketcherPackage.onReady(function() {
-              var exporter = createExporter(sketcherPackage, 'image/jpeg');
-              exporter.render(mrvDescription).then(function(image) {
-                $.post(config.marvinUrl, {
-                  description: mrvDescription,
-                  object_id: config.objectId,
-                  object_type: config.objectType,
-                  name: sketchName.val(),
-                  image: image
-                }, function(result) {
-                  var json = tinymce.util.JSON.parse(result);
-                  config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
-                  TinyMCE.updateImages(config.editor);
-                  $(marvinJsModal).modal('hide');
-                });
-              });
-            });
-          });
-        });
-      });
+      localExportImage(save_tinymce_function,config)
     },
 
     update: function(config) {
-      loadEditor().then(function(sketcherInstance) {
-        sketcherInstance.exportStructure('mrv').then(function(source) {
-          $.ajax({
-            url: config.marvinUrl,
-            data: {
-              description: source,
-              name: sketchName.val()
-            },
-            dataType: 'json',
-            type: 'PUT',
-            success: function(json) {
-              $(marvinJsModal).modal('hide');
-              config.reloadImage.src.val(json.description);
-              $(config.reloadImage.sketch).find('.attachment-label').text(json.name);
-              MarvinJsEditor().create_preview(
-                config.reloadImage.src,
-                $(config.reloadImage.sketch).find('img')
-              );
-            }
-          });
-        });
-      });
+      marvinJsExport(update_function,config)
     },
 
     update_tinymce: function(config) {
-      loadEditor().then(function(sketcherInstance) {
-        sketcherInstance.exportStructure('mrv').then(function(mrvDescription) {
-          loadPackages().then(function(sketcherPackage) {
-            sketcherPackage.onReady(function() {
-              var exporter = createExporter(sketcherPackage, 'image/jpeg');
-              exporter.render(mrvDescription).then(function(image) {
-                $.ajax({
-                  url: config.marvinUrl,
-                  data: {
-                    description: mrvDescription,
-                    name: sketchName.val(),
-                    object_type: 'TinyMceAsset',
-                    image: image
-                  },
-                  dataType: 'json',
-                  type: 'PUT',
-                  success: function(json) {
-                    config.image[0].src = json.url;
-                    $(marvinJsModal).modal('hide');
-                  }
-                });
-              });
-            });
-          });
-        });
-      });
+      localExportImage(update_tinymce_function,config)
     },
 
     create_preview: function(source, target) {
-      loadPackages().then(function(sketcherInstance) {
-        sketcherInstance.onReady(function() {
-          var exporter = createExporter(sketcherInstance, 'image/jpeg');
-          var sketchConfig = source.val();
-          exporter.render(sketchConfig).then(function(result) {
-            assignImage(target, result);
-          });
-        });
-      });
+      marvinJsImage(assignImage, source.val(), target)
     },
 
     create_download_link: function(source, link, filename) {
-      loadPackages().then(function(sketcherInstance) {
-        sketcherInstance.onReady(function() {
-          var exporter = createExporter(sketcherInstance, 'image/jpeg');
-          var sketchConfig = source.val();
-          exporter.render(sketchConfig).then(function(result) {
-            link.attr('href', result);
-            link.attr('download', filename);
-          });
-        });
-      });
+      var download_link = (image, option) => {
+        option.link.attr('href', image);
+        option.link.attr('download', option.filename);
+      }
+      marvinJsImage(download_link, source.val(), {link: link, filename: filename})
     },
 
     delete_sketch: function(url, object) {
