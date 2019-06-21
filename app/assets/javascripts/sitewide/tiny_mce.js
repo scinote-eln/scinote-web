@@ -165,6 +165,7 @@ var TinyMCE = (function() {
               .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
+                editor.plugins.autosave.removeDraft();
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
