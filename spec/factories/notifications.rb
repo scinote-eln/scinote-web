@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :notification do
     title '<i>Admin</i> was added as Owner to project ' \

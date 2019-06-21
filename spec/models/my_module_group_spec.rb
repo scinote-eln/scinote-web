@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe MyModuleGroup, type: :model do
+  let(:my_module_group) { build :my_module_group }
+
+  it 'is valid' do
+    expect(my_module_group).to be_valid
+  end
+
   it 'should be of class MyModuleGroup' do
     expect(subject.class).to eq MyModuleGroup
   end
@@ -19,7 +27,7 @@ describe MyModuleGroup, type: :model do
     it { should have_many(:my_modules) }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :experiment }
   end
 end

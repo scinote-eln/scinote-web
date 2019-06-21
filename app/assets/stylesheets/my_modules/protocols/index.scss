@@ -239,3 +239,49 @@
   border-left: 0;
   border-radius: 0 5px 5px 0;
 }
+
+.my-module-recent-protocols {
+  flex-grow: 1;
+  margin-bottom: 5px;
+  position: relative;
+
+  .btn-group {
+    align-items: center;
+    display: flex;
+    float: right;
+    height: 33px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .dropdown-button {
+    cursor: pointer;
+    padding: 10px 5px;
+  }
+
+  .dropdown-menu {
+    left: auto;
+    padding: 0;
+    right: 0;
+    width: 402px;
+
+    .protocol {
+      cursor: pointer;
+      display: inline-block;
+      float: left;
+      padding: 5px 10px;
+      transition: $md-transaction;
+      width: 200px;
+
+      &:hover {
+        background: $color-gainsboro;
+      }
+
+      .fas {
+        margin-right: 5px;
+      }
+    }
+  }
+}

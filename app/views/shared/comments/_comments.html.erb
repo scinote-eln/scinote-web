@@ -1,0 +1,26 @@
+<div class="comments-container" data-object-id = <%= object.id %>> 
+  <% per_page = Constants::COMMENTS_SEARCH_LIMIT %>
+  <div class="content-comments inline_scroll_block">
+    <% if comments.size == per_page %>
+      <div class="comment-more text-center">
+        <a class="btn btn-default btn-more-comments-new"
+           href="<%= more_url %>"
+           data-remote="true">
+          <%=t "general.more_comments" %>
+        </a>
+      </div>
+    <% end %>
+    <div class="comments-list">
+      <%= render partial: 'shared/comments/list.html.erb', locals: { comments: comments} %>
+    </div>
+  </div>
+  <% if can_create_comments %>
+  <div class="new-message-container" data-create-url="<%= create_url %>">
+    <%= text_area_tag 'message', '',  placeholder: t('general.comment_placeholder_new'), 
+                                        class: 'form-control  smart-text-area textarea-sm', 
+                                        data: { 'atwho-edit' => '' } %>
+    <i class="fas fa-paper-plane new-comment-button"></i>
+    <span class="new-message-error"></span>
+  </div>
+  <% end %>
+</div>

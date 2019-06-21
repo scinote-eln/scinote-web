@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssetTextDatum < ApplicationRecord
   include SearchableModel
 

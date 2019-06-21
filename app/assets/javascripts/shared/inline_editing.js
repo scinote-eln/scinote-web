@@ -35,6 +35,8 @@ function initInlineEditing(title) {
         $editBlock.find('.view-mode').removeClass('hidden');
         return false;
       }
+      if (editBlock.disable) return false;
+      editBlock.disable = true;
       params[editBlock.dataset.paramsGroup] = {};
       params[editBlock.dataset.paramsGroup][editBlock.dataset.fieldToUpdate] = inputString.value;
       $.ajax({
@@ -59,6 +61,7 @@ function initInlineEditing(title) {
 
           inputString.disabled = true;
           editBlock.dataset.editMode = 0;
+          editBlock.disable = false;
         },
         error: function(response) {
           var errors = response.responseJSON;
@@ -70,6 +73,7 @@ function initInlineEditing(title) {
           }
           $editBlock.find('.error-block')[0].innerHTML = errors;
           $inputString.focus();
+          editBlock.disable = false;
         }
       });
       return true;
@@ -81,6 +85,7 @@ function initInlineEditing(title) {
       if (inputString.disabled) {
         saveAllEditFields();
         editBlock.dataset.editMode = 1;
+        $editBlock.closest('.inline_scroll_block').scrollTop(editBlock.offsetTop);
         inputString.disabled = false;
         $inputString.removeClass('hidden');
         $editBlock.find('.view-mode').addClass('hidden');

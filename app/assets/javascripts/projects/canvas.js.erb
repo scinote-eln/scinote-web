@@ -1,4 +1,4 @@
-//= require comments
+
 
 //************************************
 // CONSTANTS
@@ -317,9 +317,7 @@ function initializeFullZoom() {
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
 
   // Initialize comments
-  Comments.initCommentOptions("ul.content-comments", true);
-  Comments.initEditComments(".panel.module-large .tab-content");
-  Comments.initDeleteComments(".panel.module-large .tab-content");
+  Comments.init()
 
   $('#diagram-container').on('shown.bs.dropdown', '.dropdown-comment', function() {
     var commentMenu = $(this).find('.dropdown-menu-fixed');
@@ -702,8 +700,7 @@ function bindFullZoomAjaxTabs() {
     } else if (targetContents === "users") {
       initUsersEditLink(parentNode);
     } else if (targetContents === "comments") {
-      Comments.form(parentNode);
-      Comments.moreComments(parentNode);
+      
     }
 
     $this.parents("ul").parent().find(".active").removeClass("active");
@@ -714,7 +711,7 @@ function bindFullZoomAjaxTabs() {
     // Call scrollBotton after the comments are displayed
     // so that the scrollHight can be calculated
     if ( targetContents === 'comments' ) {
-      Comments.scrollBottom(parentNode);
+      Comments.init('simple')
     }
   })
   .on("ajax:error", function (e, xhr, status, error) {
@@ -799,6 +796,11 @@ function bindEditTagsAjax(elements) {
   // tag.
   function initAddTagForm() {
     manageTagsModalBody.find(".add-tag-form")
+      .submit(function() {
+        var selectOptions = manageTagsModalBody.find('.add-tag-form .dropdown-menu li').length;
+        if (selectOptions === 0) return false;
+        return true;
+      })
       .on("ajax:success", function (e, data) {
         initTagsModalBody(data);
       });

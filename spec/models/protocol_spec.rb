@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 describe Protocol, type: :model do
+  let(:protocol) { build :protocol }
+
+  it 'is valid' do
+    expect(protocol).to be_valid
+  end
+
   it 'should be of class Protocol' do
     expect(subject.class).to eq Protocol
   end
@@ -40,7 +46,7 @@ describe Protocol, type: :model do
     it { should have_many :steps }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :team }
     it { should validate_presence_of :protocol_type }
     it do
@@ -51,6 +57,7 @@ describe Protocol, type: :model do
         .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
     end
   end
+
   describe '.archive(user)' do
     let(:protocol) { create :protocol, :in_public_repository, added_by: user }
     let(:user) { create :user }

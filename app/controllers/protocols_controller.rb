@@ -9,6 +9,7 @@ class ProtocolsController < ApplicationController
   include InputSanitizeHelper
   include ProtocolsIoHelper
   include TeamsHelper
+  include CommentHelper
 
   before_action :check_create_permissions, only: %i(
     create_new_modal
@@ -103,6 +104,14 @@ class ProtocolsController < ApplicationController
         }
       end
     end
+  end
+
+  def recent_protocols
+    render json: Protocol.recent_protocols(
+      current_user,
+      current_team,
+      Constants::RECENT_PROTOCOL_LIMIT
+    ).select(:id, :name)
   end
 
   def linked_children

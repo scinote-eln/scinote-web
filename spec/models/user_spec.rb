@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 describe User, type: :model do
+  let(:user) { build :user }
+
+  it 'is valid' do
+    expect(user).to be_valid
+  end
   it 'should be of class User' do
     expect(subject.class).to eq User
   end
@@ -120,7 +125,7 @@ describe User, type: :model do
     end
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :full_name }
     it { should validate_presence_of :initials  }
     it { should validate_presence_of :email }

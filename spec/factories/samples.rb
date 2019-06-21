@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :sample do
-    name 'Sample'
-    user { User.first || create(:user) }
-    team { Team.first || create(:team) }
+    name { Faker::Name.unique.name }
+    user
+    team
   end
 end

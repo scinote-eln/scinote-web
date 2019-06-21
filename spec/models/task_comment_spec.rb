@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TaskComment, type: :model do
+  let(:task_comment) { build :task_comment }
+
+  it 'is valid' do
+    expect(task_comment).to be_valid
+  end
+
   it 'should be of class TaskComment' do
     expect(subject.class).to eq TaskComment
   end
@@ -19,7 +27,7 @@ describe TaskComment, type: :model do
     it { should belong_to :my_module }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :my_module }
   end
 end

@@ -1,5 +1,4 @@
 //= require assets
-//= require comments
 
 (function(global) {
   'use strict';
@@ -17,12 +16,9 @@
       _expandAllResults();
       applyCollapseLinkCallBack();
       applyCreateWopiFileCallback();
+      Assets.setupAssetsLoading();
 
-      Comments.initialize();
 
-      Comments.initCommentOptions('ul.content-comments');
-      Comments.initEditComments('#results');
-      Comments.initDeleteComments('#results');
 
       $(function () {
         $('#results-collapse-btn').click(function () {
@@ -116,7 +112,7 @@
       });
       _renderTable($(result).find('div.step-result-hot-table'));
       animateSpinner(null, false);
-      setupAssetsLoading();
+      Assets.setupAssetsLoading();
     }
 
     function _renderTable(table) {
@@ -189,7 +185,7 @@
               applyCreateWopiFileCallback();
               toggleResultEditButtons(true);
               FilePreviewModal.init();
-              Comments.initialize();
+              Comments.init();
               ResutlAssets.initNewResultAsset();
               expandResult($(this));
             });

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
@@ -54,6 +56,13 @@ class Team < ApplicationRecord
             'start' => 0,
             'length' => 10 },
         'filter' => 'active' } }
+  end
+
+  def validate_view_state(view_state)
+    unless %w(new old atoz ztoa).include?(view_state.state.dig('projects', 'cards', 'sort')) &&
+           %w(active archived).include?(view_state.state.dig('projects', 'filter'))
+      view_state.errors.add(:state, :wrong_state)
+    end
   end
 
   def search_users(query = nil)

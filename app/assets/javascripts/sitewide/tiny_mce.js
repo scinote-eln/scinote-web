@@ -217,7 +217,11 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
-            editorToolbar.css('position', 'sticky');
+            if (globalConstants.is_safari) {
+              editorToolbar.css('position', '-webkit-sticky');
+            } else {
+              editorToolbar.css('position', 'sticky');
+            }
             editorToolbar.css('top', editorToolbaroffset + 'px');
 
             // Init image toolbar

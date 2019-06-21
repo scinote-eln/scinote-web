@@ -5,8 +5,11 @@
   border: solid 1px;
   border-color: $color-white;
   border-radius: 3px;
+  float: left;
+  margin-bottom: 10px;
   min-height: 100px;
   padding: 3px;
+  width: 100%;
 
   &:hover {
     border-color: $color-gainsboro;

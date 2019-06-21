@@ -13,8 +13,19 @@ module MyModulesHelper
     assets = []
     assets += step.assets
     assets += step.marvin_js_assets if MarvinJsAsset.enabled?
+    
+    view_state = step.current_view_state(current_user)
     assets.sort! do |a, b|
-      a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)]
+      case view_state.state.dig('assets', 'sort')
+      when 'old'
+        a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)]
+      when 'atoz'
+        (a[asset_name_sort_field(a)]).downcase <=> (b[asset_name_sort_field(b)]).downcase
+      when 'ztoa'
+        (b[asset_name_sort_field(b)]).downcase <=> (a[asset_name_sort_field(a)]).downcase
+      else
+        b[asset_date_sort_field(b)] <=> a[asset_date_sort_field(a)]
+      end
     end
   end
 
@@ -23,7 +34,7 @@ module MyModulesHelper
     assets += step.assets
     assets += step.marvin_js_assets if MarvinJsAsset.enabled?
     assets.sort! do |a, b|
-      (a[asset_name_sort_field(a)] || '').downcase <=> (b[asset_name_sort_field(b)] || '').downcase
+      (a[asset_name_sort_field(a)]).downcase <=> (b[asset_name_sort_field(b)]).downcase
     end.pluck(:id).index(asset_id)
   end
 
@@ -69,6 +80,6 @@ module MyModulesHelper
       'Asset' => :file_file_name,
       'MarvinJsAsset' => :name
     }
-    result[element.class.name]
+    result[element.class.name] || ''
   end
 end

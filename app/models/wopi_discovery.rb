@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WopiDiscovery < ApplicationRecord
   require 'base64'
 

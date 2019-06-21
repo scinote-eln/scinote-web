@@ -9,6 +9,9 @@ var FilePreviewModal = (function() {
   'use strict';
 
   var readOnly = false;
+  var CHECK_READY_DELAY = 5000;
+  var CHECK_READY_TRIES_LIMIT = 60;
+  var checkReadyCntr;
 
   function initPreviewModal(options = {}) {
     var name;
@@ -394,7 +397,6 @@ var FilePreviewModal = (function() {
 
       dataUpload.append('image', imageBlob);
       animateSpinner(null, true);
-
       function closeEditor() {
         animateSpinner(null, false);
         imageEditor.destroy();
@@ -423,7 +425,7 @@ var FilePreviewModal = (function() {
           processData: false,
           success: function(res) {
             $('#modal_link' + data.id).parent().html(res.html);
-            setupAssetsLoading();
+            Assets.setupAssetsLoading();
           }
         }).done(function() { closeEditor(); });
       }
@@ -483,10 +485,13 @@ var FilePreviewModal = (function() {
           modal.find('#wopi_file_edit_button').remove();
         }
         if (data.processing) {
-          checkFileReady(url, modal);
+          setTimeout(function() {
+            checkFileReady(url, modal);
+          }, CHECK_READY_DELAY);
         }
         modal.find('.file-name').text(name);
         modal.find('.preview-close').click(function() {
+          checkReadyCntr = CHECK_READY_TRIES_LIMIT;
           modal.modal('hide');
           if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
         });
@@ -495,6 +500,7 @@ var FilePreviewModal = (function() {
           ev.preventDefault();
         });
         $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
+        checkReadyCntr = 0;
       },
       error: function() {
         // TODO
@@ -515,9 +521,11 @@ var FilePreviewModal = (function() {
             ev.preventDefault();
             ev.stopPropagation();
           });
-        setTimeout(function() {
-          checkFileReady(url, modal);
-        }, 10000);
+        if (checkReadyCntr < CHECK_READY_TRIES_LIMIT) {
+          setTimeout(function() {
+            checkFileReady(url, modal);
+          }, CHECK_READY_DELAY);
+        }
       } else {
         if (data.type === 'image') {
           modal.find('.file-preview-container').empty();
@@ -541,6 +549,8 @@ var FilePreviewModal = (function() {
           .off();
       }
     });
+
+    checkReadyCntr += 1;
   }
 
   function clearPrevieModal() {

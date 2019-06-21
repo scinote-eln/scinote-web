@@ -79,8 +79,8 @@ gem 'underscore-rails'
 gem 'wicked_pdf', '~> 1.1.0'
 gem 'wkhtmltopdf-heroku'
 
-gem 'aws-sdk', '~> 2'
-gem 'paperclip', '~> 5.3' # File attachment, image attachment library
+gem 'aws-sdk-s3'
+gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
@@ -116,6 +116,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'rubocop', '>= 0.59.0', require: false
+  gem 'rubocop-performance'
   gem 'timecop'
 end
 

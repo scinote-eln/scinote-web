@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ProjectComment, type: :model do
+  let(:project_comment) { build :project_comment }
+
+  it 'is valid' do
+    expect(project_comment).to be_valid
+  end
+
   it 'should be of class MyModuleTag' do
     expect(subject.class).to eq ProjectComment
   end
@@ -20,7 +28,7 @@ describe ProjectComment, type: :model do
     it { should belong_to(:project).with_foreign_key('associated_id') }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :project }
   end
 end
