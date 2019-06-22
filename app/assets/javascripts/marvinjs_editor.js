@@ -4,9 +4,16 @@
 /* eslint-disable wrap-iife */
 /* eslint-disable no-use-before-define */
 var marvinJsRemoteLastMrv;
+var marvinJsRemoteEditor;
+var MarvinJsEditor;
+if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
+  ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
+    marvinJsRemoteEditor = marvin;
+  });
+}
 
 
-var MarvinJsEditor = (function() {
+MarvinJsEditor = (function() {
   var marvinJsModal = $('#MarvinJsModal');
   var marvinJsContainer = $('#marvinjs-editor');
   var marvinJsObject = $('#marvinjs-sketch');
@@ -43,8 +50,7 @@ var MarvinJsEditor = (function() {
 
   var loadEditor = () => {
     if (marvinJsMode === 'remote') {
-      marvinJsObject.find('iframe').remove();
-      return ChemicalizeMarvinJs.createEditor('#marvinjs-sketch');
+      return marvinJsRemoteEditor;
     }
     return MarvinJSUtil.getEditor('#marvinjs-sketch');
   };
@@ -95,18 +101,21 @@ var MarvinJsEditor = (function() {
   };
 
   var remoteImage = (childFuction, source, options = {}) => {
-    ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
-      var params = {
-        carbonLabelVisible: false,
-        implicitHydrogen: 'TERMINAL_AND_HETERO',
-        displayMode: 'WIREFRAME',
-        width: 900,
-        height: 900
-      };
-      marvin.exportMrvToImageDataUri(source, 'jpeg', params).then(function(image) {
-        childFuction(source, image, options);
-      });
+    var params = {
+      carbonLabelVisible: false,
+      implicitHydrogen: 'TERMINAL_AND_HETERO',
+      displayMode: 'WIREFRAME',
+      width: 900,
+      height: 900
+    };
+    if (typeof (marvinJsRemoteEditor) === 'undefined') {
+      setTimeout(() => { remoteImage(childFuction, source, options); }, 100);
+      return false;
+    }
+    marvinJsRemoteEditor.exportMrvToImageDataUri(source, 'jpeg', params).then(function(image) {
+      childFuction(source, image, options);
     });
+    return true;
   };
 
   var remoteExportImage = (childFuction, options = {}) => {
@@ -115,26 +124,41 @@ var MarvinJsEditor = (function() {
 
   // Support actions
   function preloadActions(config) {
-    loadEditor().then(function(marvin) {
+    if (marvinJsMode === 'remote') {
       if (config.mode === 'new' || config.mode === 'new-tinymce') {
-        marvin.importStructure('mrv', emptySketch);
+        marvinJsRemoteEditor.importStructure('mrv', emptySketch);
         sketchName.val(I18n.t('marvinjs.new_sketch'));
       } else if (config.mode === 'edit') {
-        marvin.importStructure('mrv', config.data);
+        marvinJsRemoteEditor.importStructure('mrv', config.data);
         sketchName.val(config.name);
       } else if (config.mode === 'edit-tinymce') {
         $.get(config.marvinUrl, function(result) {
-          marvin.importStructure('mrv', result.description);
+          marvinJsRemoteEditor.importStructure('mrv', result.description);
           sketchName.val(result.name);
         });
       }
 
-      marvin.on('molchange', () => {
-        marvin.exportStructure('mrv').then(function(source) {
+      marvinJsRemoteEditor.on('molchange', () => {
+        marvinJsRemoteEditor.exportStructure('mrv').then(function(source) {
           marvinJsRemoteLastMrv = source;
         });
       });
-    });
+    } else {
+      loadEditor().then(function(marvin) {
+        if (config.mode === 'new' || config.mode === 'new-tinymce') {
+          marvin.importStructure('mrv', emptySketch);
+          sketchName.val(I18n.t('marvinjs.new_sketch'));
+        } else if (config.mode === 'edit') {
+          marvin.importStructure('mrv', config.data);
+          sketchName.val(config.name);
+        } else if (config.mode === 'edit-tinymce') {
+          $.get(config.marvinUrl, function(result) {
+            marvin.importStructure('mrv', result.description);
+            sketchName.val(result.name);
+          });
+        }
+      });
+    }
   }
 
   function createExporter(marvin, imageType) {
@@ -245,6 +269,10 @@ var MarvinJsEditor = (function() {
 
   return Object.freeze({
     open: function(config) {
+      if (marvinJsMode === 'remote' && typeof (marvinJsRemoteEditor) === 'undefined') {
+        setTimeout(() => { MarvinJsEditor().open(config); }, 100);
+        return false;
+      }
       preloadActions(config);
       $(marvinJsModal).modal('show');
       $(marvinJsObject)
@@ -262,6 +290,7 @@ var MarvinJsEditor = (function() {
           MarvinJsEditor().update_tinymce(config);
         }
       });
+      return true;
     },
 
     initNewButton: function(selector) {
