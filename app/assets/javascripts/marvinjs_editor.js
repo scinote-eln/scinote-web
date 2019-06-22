@@ -1,7 +1,8 @@
 /* global MarvinJSUtil, I18n, FilePreviewModal, tinymce */
-/* global TinyMCE, PerfectScrollbar, ChemicalizeMarvinJs */
+/* global TinyMCE, ChemicalizeMarvinJs */
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
+/* eslint-disable no-use-before-define */
 var marvinJsRemoteLastMrv;
 
 
@@ -11,34 +12,41 @@ var MarvinJsEditor = (function() {
   var marvinJsObject = $('#marvinjs-sketch');
   var emptySketch = '<cml><MDocument></MDocument></cml>';
   var sketchName = marvinJsModal.find('.file-name input');
-  var marvinJsMode = marvinJsContainer[0].dataset.marvinjsMode
+  var marvinJsMode = marvinJsContainer[0].dataset.marvinjsMode;
 
   // Facade api actions
 
-  var marvinJsExport = (child_function, options = {}) => {
-    if (marvinJsMode == 'remote'){
-      remoteExport(child_function,options)
-    }else{
-      localExport(child_function,options)
+  var marvinJsExport = (childFunction, options = {}) => {
+    if (marvinJsMode === 'remote') {
+      remoteExport(childFunction, options);
+    } else {
+      localExport(childFunction, options);
     }
-  }
+  };
 
-  var marvinJsImage = (child_function, source, options = {}) => {
-    if (marvinJsMode == 'remote'){
-      remoteImage(child_function, source, options)
-    }else{
-      localImage(child_function, source, options)
+  var marvinJsImage = (childFunction, source, options = {}) => {
+    if (marvinJsMode === 'remote') {
+      remoteImage(childFunction, source, options);
+    } else {
+      localImage(childFunction, source, options);
     }
-  }
-  /////////////////
+  };
+
+  var marvinJsExportImage = (childFuction, options = {}) => {
+    if (marvinJsMode === 'remote') {
+      remoteExportImage(childFuction, options);
+    } else {
+      localExportImage(childFuction, options);
+    }
+  };
+  // ///////////////
 
   var loadEditor = () => {
-    if (marvinJsMode == 'remote'){
-      marvinJsObject.find('iframe').remove()
-      return ChemicalizeMarvinJs.createEditor("#marvinjs-sketch");
-    } else {
-      return MarvinJSUtil.getEditor('#marvinjs-sketch');
+    if (marvinJsMode === 'remote') {
+      marvinJsObject.find('iframe').remove();
+      return ChemicalizeMarvinJs.createEditor('#marvinjs-sketch');
     }
+    return MarvinJSUtil.getEditor('#marvinjs-sketch');
   };
   var loadPackages = () => {
     return MarvinJSUtil.getPackage('#marvinjs-sketch');
@@ -46,60 +54,64 @@ var MarvinJsEditor = (function() {
 
   // Local marvinJS installation
 
-  var localExport = (child_function, options = {}) => {
+  var localExport = (childFuction, options = {}) => {
     loadEditor().then(function(sketcherInstance) {
       sketcherInstance.exportStructure('mrv').then(function(source) {
-        child_function(source, options)
-      })
-    })
-  }
+        childFuction(source, options);
+      });
+    });
+  };
 
-  var localImage = (child_function, source, options = {}) => {
+  var localImage = (childFuction, source, options = {}) => {
     loadPackages().then(function(sketcherInstance) {
       sketcherInstance.onReady(function() {
         var exporter = createExporter(sketcherInstance, 'image/jpeg');
         exporter.render(source).then(function(image) {
-          child_function(image, options)
+          childFuction(source, image, options);
         });
       });
     });
-  }
+  };
 
-  var localExportImage = (child_function, options = {}) => {
+  var localExportImage = (childFuction, options = {}) => {
     loadEditor().then(function(sketcherInstance) {
       sketcherInstance.exportStructure('mrv').then(function(source) {
         loadPackages().then(function(sketcherPackage) {
           sketcherPackage.onReady(function() {
             var exporter = createExporter(sketcherPackage, 'image/jpeg');
             exporter.render(source).then(function(image) {
-              child_function(source, image, options)
-            })
-          })
-        })
-      })
-    })
-  }
+              childFuction(source, image, options);
+            });
+          });
+        });
+      });
+    });
+  };
 
   // Web services installation
 
-  var remoteExport = (child_function, options = {}) => {
-    child_function(marvinJsRemoteLastMrv, options)
-  }
+  var remoteExport = (childFuction, options = {}) => {
+    childFuction(marvinJsRemoteLastMrv, options);
+  };
 
-  var remoteImage = (child_function, source, options = {}) => {
-    ChemicalizeMarvinJs.createEditor("#marvinjs-sketch").then(function (marvin) {
-      params = {
-        'carbonLabelVisible' : false,
-        'implicitHydrogen' : "TERMINAL_AND_HETERO",
-        'displayMode' : "WIREFRAME",
-        'width' : 900,
-        'height' : 900
+  var remoteImage = (childFuction, source, options = {}) => {
+    ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
+      var params = {
+        carbonLabelVisible: false,
+        implicitHydrogen: 'TERMINAL_AND_HETERO',
+        displayMode: 'WIREFRAME',
+        width: 900,
+        height: 900
       };
       marvin.exportMrvToImageDataUri(source, 'jpeg', params).then(function(image) {
-        child_function(image, options)
-      })
-    })
-  }
+        childFuction(source, image, options);
+      });
+    });
+  };
+
+  var remoteExportImage = (childFuction, options = {}) => {
+    remoteImage(childFuction, marvinJsRemoteLastMrv, options);
+  };
 
   // Support actions
   function preloadActions(config) {
@@ -117,10 +129,10 @@ var MarvinJsEditor = (function() {
         });
       }
 
-      marvin.on("molchange", () => {
+      marvin.on('molchange', () => {
         marvin.exportStructure('mrv').then(function(source) {
-          marvinJsRemoteLastMrv = source
-        })
+          marvinJsRemoteLastMrv = source;
+        });
       });
     });
   }
@@ -140,7 +152,7 @@ var MarvinJsEditor = (function() {
     return new marvin.ImageExporter(params);
   }
 
-  function assignImage(data, target) {
+  function assignImage(source, data, target) {
     target.attr('src', data);
     return data;
   }
@@ -154,7 +166,7 @@ var MarvinJsEditor = (function() {
     return imgstr;
   }
 
-  function save_function(source, config){
+  function saveFunction(source, config) {
     $.post(config.marvinUrl, {
       description: source,
       object_id: config.objectId,
@@ -175,7 +187,7 @@ var MarvinJsEditor = (function() {
     });
   }
 
-  function save_tinymce_function(source, image, config){
+  function saveTinymceFunction(source, image, config) {
     $.post(config.marvinUrl, {
       description: source,
       object_id: config.objectId,
@@ -190,7 +202,7 @@ var MarvinJsEditor = (function() {
     });
   }
 
-  function update_function(source, config){
+  function updateFunction(source, config) {
     $.ajax({
       url: config.marvinUrl,
       data: {
@@ -211,7 +223,7 @@ var MarvinJsEditor = (function() {
     });
   }
 
-  function update_tinymce_function(source, image, config){
+  function updateTinymceFunction(source, image, config) {
     $.ajax({
       url: config.marvinUrl,
       data: {
@@ -233,11 +245,10 @@ var MarvinJsEditor = (function() {
 
   return Object.freeze({
     open: function(config) {
-      //MarvinJsEditor().team_sketches();
       preloadActions(config);
       $(marvinJsModal).modal('show');
       $(marvinJsObject)
-        .css('width', (marvinJsContainer.width() - 200) + 'px')
+        .css('width', marvinJsContainer.width() + 'px')
         .css('height', marvinJsContainer.height() + 'px');
       marvinJsModal.find('.file-save-link').off('click').on('click', () => {
         if (config.mode === 'new') {
@@ -270,31 +281,31 @@ var MarvinJsEditor = (function() {
     },
 
     save: function(config) {
-      marvinJsExport(save_function,config)
+      marvinJsExport(saveFunction, config);
     },
 
     save_with_image: function(config) {
-      localExportImage(save_tinymce_function,config)
+      marvinJsExportImage(saveTinymceFunction, config);
     },
 
     update: function(config) {
-      marvinJsExport(update_function,config)
+      marvinJsExport(updateFunction, config);
     },
 
     update_tinymce: function(config) {
-      localExportImage(update_tinymce_function,config)
+      marvinJsExportImage(updateTinymceFunction, config);
     },
 
     create_preview: function(source, target) {
-      marvinJsImage(assignImage, source.val(), target)
+      marvinJsImage(assignImage, source.val(), target);
     },
 
     create_download_link: function(source, link, filename) {
-      var download_link = (image, option) => {
+      var downloadLink = (mrv, image, option) => {
         option.link.attr('href', image);
         option.link.attr('download', option.filename);
-      }
-      marvinJsImage(download_link, source.val(), {link: link, filename: filename})
+      };
+      marvinJsImage(downloadLink, source.val(), { link: link, filename: filename });
     },
 
     delete_sketch: function(url, object) {
@@ -305,28 +316,6 @@ var MarvinJsEditor = (function() {
         success: function() {
           $(object).remove();
         }
-      });
-    },
-
-    team_sketches: function() {
-      var ps = new PerfectScrollbar(marvinJsContainer.find('.marvinjs-team-sketch')[0]);
-      marvinJsContainer.find('.sketch-container').remove();
-      $.get('/marvin_js_assets/team_sketches', function(result) {
-        $(result.html).appendTo(marvinJsContainer.find('.marvinjs-team-sketch'));
-
-        $.each(result.sketches, function(i, sketch) {
-          var sketchObj = marvinJsContainer.find('.marvinjs-team-sketch .sketch-container[data-sketch-id="' + sketch + '"]');
-          var src = sketchObj.find('#description');
-          var dest = sketchObj.find('img');
-          MarvinJsEditor().create_preview(src, dest);
-          setTimeout(() => { ps.update(); }, 500);
-          marvinJsContainer.find('.sketch-container').click(function() {
-            var sketchContainer = $(this);
-            loadEditor().then(function(sketcherInstance) {
-              sketcherInstance.importStructure('mrv', sketchContainer.find('#description').val());
-            });
-          });
-        });
       });
     }
   });

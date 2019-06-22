@@ -77,28 +77,6 @@
         min-width: 500px;
         overflow: hidden;
       }
-
-      .marvinjs-team-sketch {
-        background: $color-white;
-        float: right;
-        height: calc(100% - 40px);
-        overflow-y: scroll;
-        position: relative;
-        width: 200px;
-      }
-
-      .marvinjs-team-sketch-header {
-        background: $color-white;
-        border-bottom: 1px solid $color-gainsboro;
-        color: $color-emperor;
-        float: right;
-        font-size: 16px;
-        height: 40px;
-        line-height: 39px;
-        text-align: center;
-        width: 200px;
-      }
-
     }
 
     .sketch-container {
