@@ -1335,6 +1335,9 @@ en:
     wupi_file_editing:
       started: "editing started"
       finished: "editing finished"
+    file_editing:
+      started: "editing started"
+      finished: "editing finished"
     protocols:
       my_to_team_message: 'My protocols to Team protocols'
       team_to_my_message: 'Team protocols to My protocols'

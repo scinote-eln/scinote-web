@@ -1,7 +1,8 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
 /* eslint-disable no-underscore-dangle */
-/* global Uint8Array fabric tui animateSpinner Assets I18n PerfectScrollbar*/
+/* global Uint8Array fabric tui animateSpinner */
+/* global Assets I18n PerfectScrollbar refreshProtocolStatusBar */
 //= require assets
 
 var FilePreviewModal = (function() {
@@ -448,6 +449,7 @@ var FilePreviewModal = (function() {
             if (!readOnly && data.editable) {
               modal.find('.file-edit-link').css('display', '');
               modal.find('.file-edit-link').off().click(function(ev) {
+                $.post('/files/' + data.id + '/start_edit_image');
                 ev.preventDefault();
                 ev.stopPropagation();
                 modal.modal('hide');

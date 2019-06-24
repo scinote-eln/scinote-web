@@ -594,6 +594,7 @@ Rails.application.routes.draw do
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',
          as: 'create_wopi_file'
+    post 'files/:id/start_edit_image', to: 'assets#create_start_edit_image_activity', as: 'start_edit_image'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'

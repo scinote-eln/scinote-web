@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 class AssetsController < ApplicationController
   include WopiUtil
+  include AssetsActions
   # include ActionView::Helpers
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TextHelper
@@ -11,7 +14,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: :file_present
-  before_action :check_edit_permission, only: :edit
+  before_action :check_edit_permission, only: %i(edit create_start_edit_image_activity)
 
   def file_present
     return render_403 unless @asset.team == current_team
@@ -71,12 +74,10 @@ class AssetsController < ApplicationController
         'processing-img' => image_tag('medium/processing.gif')
       )
     else
-      response_json.merge!(
-        'processing'   => @asset.file.processing?,
-        'preview-icon' => render_to_string(
-          partial: 'shared/file_preview_icon.html.erb',
-          locals: { asset: @asset }
-        )
+      response_json['processing'] = @asset.file.processing?
+      response_json['preview-icon'] = render_to_string(
+        partial: 'shared/file_preview_icon.html.erb',
+        locals: { asset: @asset }
       )
     end
 
@@ -155,6 +156,10 @@ class AssetsController < ApplicationController
     render layout: false
   end
 
+  def create_start_edit_image_activity
+    create_edit_image_activity(@asset, current_user, :start_editing)
+  end
+
   def update_image
     @asset = Asset.find(params[:id])
     orig_file_size = @asset.file_file_size
@@ -164,6 +169,7 @@ class AssetsController < ApplicationController
     @asset.file = params[:image]
     @asset.file_file_name = orig_file_name
     @asset.save!
+    create_edit_image_activity(@asset, current_user, :finish_editing)
     # release previous image space
     @asset.team.release_space(orig_file_size)
     # Post process file here
