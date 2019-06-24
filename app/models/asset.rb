@@ -6,48 +6,51 @@ class Asset < ApplicationRecord
 
   require 'tempfile'
   # Lock duration set to 30 minutes
-  LOCK_DURATION = 60*30
+  LOCK_DURATION = 60 * 30
+
+  # ActiveStorage configuration
+  has_one_attached :file
 
   # Paperclip validation
-  has_attached_file :file,
-                    styles: lambda { |a|
-                      if a.previewable_document?
-                        {
-                          large: { processors: [:custom_file_preview],
-                                   geometry: Constants::LARGE_PIC_FORMAT,
-                                   format: :jpg },
-                          medium: { processors: [:custom_file_preview],
-                                    geometry: Constants::MEDIUM_PIC_FORMAT,
-                                    format: :jpg }
-                        }
-                      else
-                        {
-                          large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                          medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
-                        }
-                      end
-                    },
-                    convert_options: {
-                      medium: '-quality 70 -strip',
-                      all: '-background "#d2d2d2" -flatten +matte'
-                    }
+  # has_attached_file :file,
+  #                   styles: lambda { |a|
+  #                     if a.previewable_document?
+  #                       {
+  #                         large: { processors: [:custom_file_preview],
+  #                                  geometry: Constants::LARGE_PIC_FORMAT,
+  #                                  format: :jpg },
+  #                         medium: { processors: [:custom_file_preview],
+  #                                   geometry: Constants::MEDIUM_PIC_FORMAT,
+  #                                   format: :jpg }
+  #                       }
+  #                     else
+  #                       {
+  #                         large: [Constants::LARGE_PIC_FORMAT, :jpg],
+  #                         medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
+  #                       }
+  #                     end
+  #                   },
+  #                   convert_options: {
+  #                     medium: '-quality 70 -strip',
+  #                     all: '-background "#d2d2d2" -flatten +matte'
+  #                   }
 
-  before_post_process :previewable?
-  before_post_process :extract_image_quality
+  # before_post_process :previewable?
+  # before_post_process :extract_image_quality
 
   # adds image processing in background job
-  process_in_background :file, processing_image_url: '/images/:style/processing.gif'
+  # process_in_background :file, processing_image_url: '/images/:style/processing.gif'
 
-  validates_attachment :file,
-                       presence: true,
-                       size: {
-                         less_than: Rails.configuration.x.file_max_size_mb.megabytes
-                       }
-  validates :estimated_size, presence: true
-  validates :file_present, inclusion: { in: [true, false] }
+  # validates_attachment :file,
+  #                      presence: true,
+  #                      size: {
+  #                        less_than: Rails.configuration.x.file_max_size_mb.megabytes
+  #                      }
+  # validates :estimated_size, presence: true
+  # validates :file_present, inclusion: { in: [true, false] }
 
   # Should be checked for any security leaks
-  do_not_validate_attachment_file_type :file
+  # do_not_validate_attachment_file_type :file
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -198,6 +201,18 @@ class Asset < ApplicationRecord
     else
       new_query
     end
+  end
+
+  def medium_preview
+    file.variant(resize: Constants::MEDIUM_PIC_FORMAT)
+  end
+
+  def large_preview
+    file.variant(resize: Constants::LARGE_PIC_FORMAT)
+  end
+
+  def file_size
+    file.blob.byte_size
   end
 
   def extract_image_quality

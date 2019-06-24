@@ -35,6 +35,9 @@ ehthumbs.db
 # Ignore temporary files
 public/system/*
 
+# Ignore ActiveStorage Disc service storage directory
+storage/
+
 # Ignore robots.txt
 public/robots.txt
 

@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '2.5.5'
+ruby '2.6.3'
 
 
 gem 'bootsnap', require: false
@@ -80,7 +80,9 @@ gem 'underscore-rails'
 gem 'wicked_pdf', '~> 1.1.0'
 gem 'wkhtmltopdf-heroku'
 
+gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
+gem 'mini_magick'
 gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'delayed_job_active_record'
 gem 'devise-async',
