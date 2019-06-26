@@ -8,15 +8,18 @@ function applyClickCallbackOnProtocolCards() {
         protocol_source: $(this).data('protocol-source'),
         protocol_id: $(this).data('show-protocol-id')
       },
+      beforeSend: animateSpinner($('.protocol-preview-panel'), true),
       success: function(data) {
         $('.empty-preview-panel').hide();
         $('.full-preview-panel').show();
         $('.preview-iframe').contents().find('body').html(data.html);
+        animateSpinner($('.protocol-preview-panel'), false);
       },
       error: function(_error) {
         // TODO: we should probably show some alert bubble
         $('.empty-preview-panel').show();
         $('.full-preview-panel').hide();
+        animateSpinner($('.protocol-preview-panel'), false);
       }
     });
     e.preventDefault();
