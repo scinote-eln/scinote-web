@@ -376,7 +376,7 @@
   }
 
   function initCallBacks() {
-    applyCreateWopiFileCallback();
+    if (typeof(applyCreateWopiFileCallback) === 'function') applyCreateWopiFileCallback();
     applyCheckboxCallBack();
     applyStepCompletedCallBack();
     applyEditCallBack();
