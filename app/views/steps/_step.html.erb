@@ -56,7 +56,7 @@
       </div>
       <div class="left-floats">
         <a class="step-panel-collapse-link"
-           href="#step-panel-<%= step.id %>"
+           href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
            data-remote="true">
           <span class="fas fa-caret-square-down collapse-step-icon"></span>
@@ -65,19 +65,21 @@
         <span class="step-number"><%= step.position + 1 %></span>
 
         <a class="step-panel-collapse-link step-name-link"
-           href="#step-panel-<%= step.id %>"
+           href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
            data-remote="true">
-          <span class="name-block"><strong><%= step.name %></strong></span> 
-          <span class="delimiter">|</span>
-          <span class="author-block"><%= sanitize_input t('protocols.steps.published_on',
-                                     timestamp: l(step.created_at, format: :full),
-                                     user: h(step.user.full_name)) %></span>
+          <span class="name-block"><strong><%= step.name %></strong></span>
+          <% unless step.new_record? %>
+            <span class="delimiter">|</span>
+            <span class="author-block"><%= sanitize_input t('protocols.steps.published_on',
+                                       timestamp: l(step.created_at, format: :full),
+                                       user: h(step.user.full_name)) %></span>
+          <% end %>
         </a>
       </div>
 
     </div>
-    <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
+    <div class="panel-collapse collapse" id="step-panel-<%= step.id || step.position %>" role="tabpanel">
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
@@ -94,7 +96,7 @@
           </div>
         </div>
         <div class="row">
-          <% unless step.tables.blank? then %>
+          <% if step.tables.any? %>
             <div class="col-xs-12">
               <hr>
               <% step.tables.each do |table| %>

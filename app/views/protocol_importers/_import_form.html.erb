@@ -34,3 +34,16 @@
   <%= f.hidden_field(:protocol_type, value: protocol.protocol_type) %>
 
 <% end %>
+
+<div data-role="steps-container">
+  <div class="row">
+    <div class="col-xs-8">
+      <h2><%= t("protocols.steps.subtitle") %></h2>
+    </div>
+  </div>
+  <div id="steps">
+    <% protocol.steps.sort_by{ |s| s.position }.each do |step| %>
+      <%= render partial: "steps/step.html.erb", locals: { step: step, preview: true } %>
+    <% end %>
+  </div>
+</div>

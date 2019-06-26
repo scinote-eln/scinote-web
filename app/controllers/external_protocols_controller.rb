@@ -52,7 +52,7 @@ class ExternalProtocolsController < ApplicationController
     p = service_call.built_protocol
     p.valid? # Get validations errors here
 
-
+    @protocol = p
     if service_call.succeed?
       render json: {
         html: render_to_string(

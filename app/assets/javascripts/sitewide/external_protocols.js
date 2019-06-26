@@ -1,4 +1,4 @@
-/* global animateSpinner */
+/* global animateSpinner initHandsOnTable */
 /* eslint-disable no-restricted-globals, no-alert */
 
 var ExternalProtocols = (function() {
@@ -23,6 +23,26 @@ var ExternalProtocols = (function() {
       } else if (errors.protocol[key].length > 0) {
         modal.find('.general-error > span').append(msg + '<br/>');
       }
+    });
+  }
+
+  function renderTable(table) {
+    $(table).handsontable('render');
+    // Yet another dirty hack to solve HandsOnTable problems
+    if (parseInt($(table).css('height'), 10) < parseInt($(table).css('max-height'), 10) - 30) {
+      $(table).find('.ht_master .wtHolder').css({ height: '100%', width: '100%' });
+    }
+  }
+
+  // Expand all steps
+  function expandAllSteps() {
+    $('.step .panel-collapse').collapse('show');
+    $(document).find("[data-role='step-hot-table']").each(function() {
+      renderTable($(this));
+    });
+    $(document).find('span.collapse-step-icon').each(function() {
+      $(this).addClass('fa-caret-square-up');
+      $(this).removeClass('fa-caret-square-down');
     });
   }
 
@@ -73,7 +93,10 @@ var ExternalProtocols = (function() {
           modalTitle.html(data.title);
           modalBody.html(data.html);
           modalFooter.html(data.footer);
+          initHandsOnTable(modalBody);
           modal.modal('show');
+          expandAllSteps();
+          initHandsOnTable(modalBody);
 
           if (data.validation_errors) {
             showFormErrors(modal, data.validation_errors);
