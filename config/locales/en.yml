@@ -1590,6 +1590,7 @@ en:
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
+        published_on_label: "Published on"
         created_at_label: "Created at"
         updated_at_label: "Last modified at"
         preview_title: "Protocol preview"
@@ -1598,6 +1599,8 @@ en:
         import_current: "Load Current"
         import_all: "Load All"
         import: "Load"
+        import_to_team_protocols_label: "Import to Team Protocols"
+        import_to_private_protocols_label: "Import to Private Protocols"
     export:
       export_results:
         title: "Export results"

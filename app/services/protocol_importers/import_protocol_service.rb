@@ -18,9 +18,10 @@ module ProtocolImporters
       return self unless valid?
 
       @protocol = Protocol.new(@protocol_params.merge!(added_by: @user, team: @team))
-
       @protocol.steps << @steps_params.collect do |step_params|
         Step.new(step_params.merge(user: @user, completed: false))
+
+        # TODO: Manually create file here. "Accept nasted attributes won't work here"
       end
 
       @errors[:protocol] = @protocol.errors.messages unless @protocol.save

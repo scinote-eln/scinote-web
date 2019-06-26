@@ -29,7 +29,8 @@ module ProtocolImporters
                                                               team: @team)
 
       @built_protocol = pio.build
-      @errors[:protocol] = pio.protocol.errors unless @built_protocol.valid?
+      # Protocol with AR errors should not handled here as someting whats wrong.
+      # @errors[:protocol] = pio.protocol.errors unless @built_protocol.valid?
       self
     rescue api_errors => e
       @errors[e.error_type] = e.message
@@ -44,6 +45,24 @@ module ProtocolImporters
 
     def succeed?
       @errors.none?
+    end
+
+    def serialized_steps
+      return nil unless built_protocol
+
+      built_protocol.steps.map do |step|
+        step_hash = step.attributes.symbolize_keys.slice(:name, :description, :position)
+
+        # if step.assets.any?
+        #   step_hash[:assets_attributes] = step.assets.map { |a| a.attributes.symbolize_keys.except(:id) }
+        # end
+
+        if step.tables.any?
+          step_hash[:tables_attributes] = step.tables.map { |t| t.attributes.symbolize_keys.slice(:contents) }
+        end
+
+        step_hash
+      end.to_json
     end
 
     private
