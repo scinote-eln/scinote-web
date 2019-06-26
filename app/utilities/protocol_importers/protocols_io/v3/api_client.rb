@@ -12,12 +12,9 @@ module ProtocolImporters
         default_timeout CONSTANTS[:default_timeout]
         logger Rails.logger, CONSTANTS[:debug_level]
 
-        attr_reader :errors
-
         def initialize(token = nil)
           # Currently we support public tokens only (no token needed for public data)
           @auth = { token: token }
-          @errors = {}
 
           # Set default headers
           self.class.headers('Authorization': "Bearer #{@auth[:token]}") if @auth[:token].present?
@@ -49,11 +46,23 @@ module ProtocolImporters
                            .merge(query_params)
 
           check_for_api_errors(self.class.get('/protocols', query: query))
+        rescue SocketError, HTTParty::Error => e
+          raise V3Errors::NetworkError.new(:network_error), e.message
+        rescue StandardError => e
+          error_type = e.respond_to?(:error_type) ? e.error_type : e.class.to_s.downcase.to_sym
+          raise V3Errors::Error.new(error_type), e.message
         end
 
         # Returns full representation of given protocol ID
         def single_protocol(id)
           check_for_api_errors(self.class.get("/protocols/#{id}"))
+        rescue SocketError, HTTParty::Error => e
+          byebug
+          raise V3Errors::NetworkError.new(:network_error), e.message
+        rescue StandardError => e
+          byebug
+          error_type = e.respond_to?(:error_type) ? e.error_type : e.class.to_s.downcase.to_sym
+          raise V3Errors::Error.new(error_type), e.message
         end
 
         # Returns html preview for given protocol
@@ -61,21 +70,29 @@ module ProtocolImporters
         # sake of clarity
         def protocol_html_preview(uri)
           self.class.get("https://www.protocols.io/view/#{uri}.html", headers: {})
+        rescue SocketError, HTTParty::Error => e
+          raise V3Errors::NetworkError.new(:network_error), e.message
+        rescue StandardError => e
+          raise V3Errors::Error.new(e.class.to_s.downcase.to_sym), e.message
         end
 
         private
 
         def check_for_api_errors(response)
-          if response['status_code'] == 0
+          byebug
+          error_message = response.parsed_response['error_message']
+
+          case response.parsed_response['status_code']
+          when 0
             return response
-          elsif response['status_code'] == 1
-            raise ApiErrors::MissingOrEmptyParametersError.new(response['status_code'], response['error_message'])
-          elsif response['status_code'] == 1218
-            raise ApiErrors::InvalidTokenError.new(response['status_code'], response['error_message'])
-          elsif response['status_code'] == 1219
-            raise ApiErrors::TokenExpiredError.new(response['status_code'], response['error_message'])
+          when 1
+            raise V3Errors::ArgumentError.new(:missing_or_empty_parameters), error_message
+          when 1218
+            raise V3Errors::UnauthorizedError.new(:invalid_token), error_message
+          when 1219
+            raise V3Errors::UnauthorizedError.new(:token_expires), error_message
           else
-            raise ApiErrors::Error.new(response['status_code'], response['error_message'])
+            raise V3Errors::Error.new(:api_error), error_message
           end
         end
       end

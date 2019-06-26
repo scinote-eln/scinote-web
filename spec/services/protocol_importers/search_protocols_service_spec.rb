@@ -33,20 +33,13 @@ describe ProtocolImporters::SearchProtocolsService do
   end
 
   context 'when raise api client error' do
-    it 'return network errors' do
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
-        .to(receive(:protocol_list)
-        .and_raise(SocketError))
-
-      expect(service_call.errors).to have_key(:socketerror)
-    end
-
     it 'return api errors' do
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
         .to(receive(:protocol_list)
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::ApiErrors::MissingOrEmptyParametersError.new('1', 'Missing Or Empty Parameters Error')))
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::V3Errors::ArgumentError
+          .new(:missing_or_empty_parameters), 'Missing Or Empty Parameters Error'))
 
-      expect(service_call.errors).to have_key(:"protocolimporters::protocolsio::v3::apierrors::missingoremptyparameterserror")
+      expect(service_call.errors).to have_key(:missing_or_empty_parameters)
     end
   end
 
@@ -60,9 +53,9 @@ describe ProtocolImporters::SearchProtocolsService do
 
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
         .to(receive(:normalize_list).with(client_data)
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::NormalizerError.new('nil_items', 'Nil Items')))
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::V3Errors::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
 
-      expect(service_call.errors).to have_key(:"protocolimporters::protocolsio::v3::normalizererror")
+      expect(service_call.errors).to have_key(:nil_protocol)
     end
   end
 

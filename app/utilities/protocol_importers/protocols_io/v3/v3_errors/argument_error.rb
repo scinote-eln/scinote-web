@@ -3,8 +3,9 @@
 module ProtocolImporters
   module ProtocolsIO
     module V3
-      module ApiErrors
-        class MissingOrEmptyParametersError < Error
+      module V3Errors
+        class ArgumentError < Error
+          # MissingOrEmptyParameters
         end
       end
     end

@@ -30,9 +30,9 @@ class ExternalProtocolsController < ApplicationController
 
     begin
       html_preview = api_client.protocol_html_preview(show_params[:protocol_id])
-    rescue SocketError, HTTParty::Error => e
+    rescue api_errors => e
       render json: {
-        errors: [network: e.message]
+        errors: [protocol_html_preview: e.message]
       }
       return
     end

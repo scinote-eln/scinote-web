@@ -21,10 +21,7 @@ module ProtocolImporters
       begin
         api_response = api_client.single_protocol(@id)
       rescue api_errors => e
-        @errors[e.class.to_s.downcase.to_sym] = e.error_message
-        return self
-      rescue SocketError, HTTParty::Error => e
-        @errors[e.class.to_s.downcase.to_sym] = e.message
+        @errors[e.error_type] = e.message
         return self
       end
 
@@ -32,7 +29,7 @@ module ProtocolImporters
       begin
         normalized_hash = normalizer.normalize_protocol(api_response)
       rescue normalizer_errors => e
-        @errors[e.class.to_s.downcase.to_sym] = e.error_message
+        @errors[e.error_type] = e.message
         return self
       end
 
@@ -80,11 +77,11 @@ module ProtocolImporters
     end
 
     def api_errors
-      "ProtocolImporters::#{endpoint_name}::ApiErrors::Error".constantize
+      "ProtocolImporters::#{endpoint_name}::V3Errors::Error".constantize
     end
 
     def normalizer_errors
-      "ProtocolImporters::#{endpoint_name}::NormalizerError".constantize
+      "ProtocolImporters::#{endpoint_name}::V3Errors::NormalizerError".constantize
     end
   end
 end
