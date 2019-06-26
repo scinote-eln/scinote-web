@@ -151,14 +151,35 @@ class ReportsController < ApplicationController
                               disable_javascript: true
       end
       format.docx do
-        @user = current_user
-        @team = current_team
-        @scinote_url = root_url
-        @data = params[:json]
-        headers["Content-Disposition"] = 'attachment; filename="scinote_report.docx"'
+        if params[:file_id]
+          temp_file = TempFile.find_by_id_and_session_id(params[:file_id], session.id)
+
+          return false unless temp_file
+
+          if temp_file.file.present?
+            render json: { url: temp_file.file.url }
+          else
+            render json: { file_id: temp_file.id }
+          end
+          return true
+        end
+
+        temp_file = TempFile.create(session_id: session.id)
+        config = {
+          user: current_user,
+          team: current_team,
+          url: root_url,
+          data: params[:json],
+          temp_file: temp_file.id
+        }
+
+        Report.delay.generate_docx_report(config)
+
+        render json: { file_id: temp_file.id }
       end
     end
   end
+
 
   def save_pdf_to_inventory_item
     save_pdf_to_inventory_item = ReportActions::SavePdfToInventoryItem.new(

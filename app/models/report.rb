@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Report < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
@@ -58,7 +60,7 @@ class Report < ApplicationRecord
   end
 
   def root_elements
-    (report_elements.order(:position)).select { |el| el.parent.blank? }
+    report_elements.order(:position).select { |el| el.parent.blank? }
   end
 
   # Save the JSON represented contents to this report
@@ -66,7 +68,7 @@ class Report < ApplicationRecord
   def save_with_contents(json_contents)
     begin
       Report.transaction do
-        #First, save the report itself
+        # First, save the report itself
         save!
 
         # Secondly, delete existing report elements
@@ -80,15 +82,13 @@ class Report < ApplicationRecord
     rescue ActiveRecord::ActiveRecordError, ArgumentError
       return false
     end
-    return true
+    true
   end
 
   # Clean report elements from report
   # the function runs before the report is edit
   def cleanup_report
-    report_elements.each do |el|
-      el.clean_removed_or_archived_elements
-    end
+    report_elements.each(&:clean_removed_or_archived_elements)
   end
 
   def self.generate_whole_project_report(project, current_user, current_team)
@@ -187,6 +187,19 @@ class Report < ApplicationRecord
     end
 
     elements
+  end
+
+  def self.generate_docx_report(config)
+    file = Tempfile.new(['report', '.docx'])
+    file << ApplicationController.render(template: 'reports/report_template.docx.caracal',
+            layout: false, formats: [:docx], assigns: { config: config })
+    file.rewind
+    temp_file = TempFile.find_by_id(config[:temp_file])
+    return unless temp_file
+
+    temp_file.update(
+      file: file
+    )
   end
 
   private

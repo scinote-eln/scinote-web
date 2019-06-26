@@ -1,0 +1,1 @@
+Reports::Docx.new(@config[:data],docx,user: @config[:user], team: @config[:team], scinote_url: @config[:data]).draw

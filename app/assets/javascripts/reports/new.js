@@ -445,7 +445,14 @@ function initializeSaveToDocx() {
     hiddenInput.attr('value', JSON.stringify(constructReportContentsJson()));
 
     // Fire form submission
-    saveToPdfForm.submit();
+    $.post('/projects/1/reports/generate.docx', {
+      json: JSON.stringify(constructReportContentsJson())
+    }, function(result) {
+      var data = JSON.parse(result);
+      setTimeout(() => {
+        docxRepeatAction(data.file_id);
+      }, 2000);
+    });
 
     // Clear form
     hiddenInput.attr('value', '');
@@ -454,6 +461,19 @@ function initializeSaveToDocx() {
     e.preventDefault();
     e.stopPropagation();
     return false;
+  });
+}
+
+function docxRepeatAction(id) {
+  $.post('/projects/1/reports/generate.docx', { file_id: id }, function(result) {
+    var data = JSON.parse(result);
+    if (data.url) {
+      window.open(data.url, '_blank');
+    } else {
+      setTimeout(() => {
+        docxRepeatAction(data.file_id);
+      }, 2000);
+    }
   });
 }
 

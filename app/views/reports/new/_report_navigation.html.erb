@@ -26,7 +26,7 @@
       <% end %>
       </div>
     <% end %>
-    <%= form_tag generate_project_reports_path(@project, format: :docx), method: :post, target: "_blank", class: "get-report-docx-form" do %>
+    <%= form_tag generate_project_reports_path(@project, format: :docx), method: :post, class: "get-report-docx-form" do %>
       <div class="form-group">
       <%= hidden_field_tag "json", "" %>
       <%= link_to "", class: "btn btn-default", remote: true, id: "get-report-docx" do %>
