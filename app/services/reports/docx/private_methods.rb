@@ -67,11 +67,13 @@ module PrivateMethods
   def recursive_children(children, elements)
     children.each do |elem|
       if elem.class == Nokogiri::XML::Text
+        next if elem.text.strip == ' ' # Dont change it! it remove invisible symbol of death.
+
         style = paragraph_styling(elem.parent)
         type = (style[:align] && style[:align] != :justify) || style[:style] ? 'newline' : 'text'
         elements.push(
           type: type,
-          value: elem.text.strip,
+          value: elem.text.strip.delete(' '), # Dont change it! it remove invisible symbol of death.
           style: style
         )
         next
@@ -182,6 +184,7 @@ module PrivateMethods
 
   def asset_image_preparing(asset)
     return unless asset
+
     image_path = image_path(asset)
 
     dimension = FastImage.size(image_path)
