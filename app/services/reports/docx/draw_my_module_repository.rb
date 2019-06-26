@@ -43,7 +43,9 @@ module DrawMyModuleRepository
     table.unshift(repository_data[:headers])
 
     @docx.p
-    @docx.p I18n.t('projects.reports.elements.module_samples.name', my_module: my_module.name), bold: true
+    @docx.p I18n.t('projects.reports.elements.module_repository.name',
+                   repository: repository.name,
+                   my_module: my_module.name), bold: true
     @docx.table table, border_size: 4
     @docx.p
     @docx.p

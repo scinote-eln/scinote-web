@@ -182,6 +182,7 @@ module PrivateMethods
 
   def asset_image_preparing(asset)
     return unless asset
+
     image_path = image_path(asset)
 
     dimension = FastImage.size(image_path)
