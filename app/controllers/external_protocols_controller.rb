@@ -28,23 +28,16 @@ class ExternalProtocolsController < ApplicationController
                                                   .split('/').map(&:to_sym))
     api_client = "ProtocolImporters::#{endpoint_name}::ApiClient".constantize.new
 
-    begin
-      html_preview = api_client.protocol_html_preview(show_params[:protocol_id])
-    rescue api_errors => e
-      render json: {
-        errors: [protocol_html_preview: e.message]
-      }
-      return
-    end
+    html_preview = api_client.protocol_html_preview(show_params[:protocol_id])
 
     render json: {
       protocol_source: show_params[:protocol_source],
       protocol_id: show_params[:protocol_id],
       html: html_preview
-    } and return
+    }
   rescue StandardError => e
     render json: {
-      errors: [show_protocol: e.message]
+      errors: [protocol_html_preview: e.message]
     }, status: 400
   end
 

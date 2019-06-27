@@ -5,6 +5,7 @@ module ProtocolImporters
     module V3
       class ApiClient
         include HTTParty
+        require 'protocol_importers/protocols_io/v3/errors'
 
         CONSTANTS = Constants::PROTOCOLS_IO_V3_API
 
@@ -42,57 +43,54 @@ module ProtocolImporters
         #     id of page.
         #     Default is 1.
         def protocol_list(query_params = {})
-          query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
-                           .merge(query_params)
+          with_handle_errors do
+            query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
+                             .merge(query_params)
 
-          check_for_api_errors(self.class.get('/protocols', query: query))
-        rescue SocketError, HTTParty::Error => e
-          raise V3Errors::NetworkError.new(:network_error), e.message
-        rescue StandardError => e
-          error_type = e.respond_to?(:error_type) ? e.error_type : e.class.to_s.downcase.to_sym
-          raise V3Errors::Error.new(error_type), e.message
+            check_for_api_errors(self.class.get('/protocols', query: query))
+          end
         end
 
         # Returns full representation of given protocol ID
         def single_protocol(id)
-          check_for_api_errors(self.class.get("/protocols/#{id}"))
-        rescue SocketError, HTTParty::Error => e
-          byebug
-          raise V3Errors::NetworkError.new(:network_error), e.message
-        rescue StandardError => e
-          byebug
-          error_type = e.respond_to?(:error_type) ? e.error_type : e.class.to_s.downcase.to_sym
-          raise V3Errors::Error.new(error_type), e.message
+          with_handle_errors do
+            check_for_api_errors(self.class.get("/protocols/#{id}"))
+          end
         end
 
         # Returns html preview for given protocol
         # This endpoint is outside the scope of API but is listed here for the
         # sake of clarity
         def protocol_html_preview(uri)
-          self.class.get("https://www.protocols.io/view/#{uri}.html", headers: {})
-        rescue SocketError, HTTParty::Error => e
-          raise V3Errors::NetworkError.new(:network_error), e.message
-        rescue StandardError => e
-          raise V3Errors::Error.new(e.class.to_s.downcase.to_sym), e.message
+          with_handle_errors do
+            self.class.get("https://www.protocols.io/view/#{uri}.html", headers: {})
+          end
         end
 
         private
 
+        def with_handle_errors
+          yield
+        rescue SocketError, HTTParty::Error => e
+          raise ProtocolImporters::ProtocolsIO::V3::NetworkError.new(:network_error), e.message
+        rescue StandardError => e
+          raise ProtocolImporters::ProtocolsIO::V3::Error.new(e.class.to_s.downcase.to_sym), e.message
+        end
+
         def check_for_api_errors(response)
-          byebug
           error_message = response.parsed_response['error_message']
 
           case response.parsed_response['status_code']
           when 0
             return response
           when 1
-            raise V3Errors::ArgumentError.new(:missing_or_empty_parameters), error_message
+            raise ProtocolImporters::ProtocolsIO::V3::ArgumentError.new(:missing_or_empty_parameters), error_message
           when 1218
-            raise V3Errors::UnauthorizedError.new(:invalid_token), error_message
+            raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:invalid_token), error_message
           when 1219
-            raise V3Errors::UnauthorizedError.new(:token_expires), error_message
+            raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:token_expires), error_message
           else
-            raise V3Errors::Error.new(:api_error), error_message
+            raise ProtocolImporters::ProtocolsIO::V3::Error.new(:api_error), error_message
           end
         end
       end
