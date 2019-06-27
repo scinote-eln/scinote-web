@@ -1749,6 +1749,7 @@ en:
         preview_panel:
           empty_title: 'PROTOCOL PREVIEW'
           empty_subtext: 'Click on the protocol in the list to preview it here'
+          banner_text: 'Protocol Preview'
 
     steps:
       completed: 'Completed'

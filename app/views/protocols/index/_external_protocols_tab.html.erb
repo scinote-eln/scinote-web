@@ -58,14 +58,17 @@
 
     <div class='col-md-7 protocol-preview-panel'>
       <div class='empty-preview-panel'>
+
         <div class='row'>
           <div class='text-rows protocol-preview-text'>
             <%= t('protocols.index.external_protocols.preview_panel.empty_title') %>
           </div>
         </div>
+
         <div class='row'>
           <div class='text-separator'> <hr> </div>
         </div>
+
         <div class='row'>
           <div class='text-rows protocol-preview-subtext'>
             <%= t('protocols.index.external_protocols.preview_panel.empty_subtext') %>
@@ -74,7 +77,18 @@
       </div>
 
       <div class='full-preview-panel' style='display: none;'>
-        <iframe class='preview-iframe'></iframe>
+        <div class='row preview-banner'>
+          <div class='col-md-6 txt-holder'>
+            <span>
+              <%= t('protocols.index.external_protocols.preview_panel.banner_text') %>
+            </span>
+          </div>
+          <div class='col-md-6 btn-holder'>
+          </div>
+        </div>
+        <div class='preview-holder'>
+          <iframe class='preview-iframe'></iframe>
+        </div>
       </div>
     </div>
   </div>

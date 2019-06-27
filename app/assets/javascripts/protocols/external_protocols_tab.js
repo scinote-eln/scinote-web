@@ -6,22 +6,26 @@ function applyClickCallbackOnProtocolCards() {
       $(this).removeClass('active');
     }
     else {
+      var curr_protocol_card = $(this);
       $('.protocol-card').removeClass('active');
-      $(this).addClass('active');
+      curr_protocol_card.addClass('active');
 
       $.ajax({
-        url: $(this).data('show-url'),
+        url: $(curr_protocol_card).data('show-url'),
         type: 'GET',
         dataType: 'json',
         data: {
-          protocol_source: $(this).data('protocol-source'),
-          protocol_id: $(this).data('show-protocol-id')
+          protocol_source: $(curr_protocol_card).data('protocol-source'),
+          protocol_id: $(curr_protocol_card).data('show-protocol-id')
         },
         beforeSend: animateSpinner($('.protocol-preview-panel'), true),
         success: function(data) {
           $('.empty-preview-panel').hide();
           $('.full-preview-panel').show();
+          $('.btn-holder').html($(curr_protocol_card).find('.external-import-btn').clone());
           $('.preview-iframe').contents().find('body').html(data.html);
+
+          initLoadProtocolModalPreview();
           animateSpinner($('.protocol-preview-panel'), false);
         },
         error: function(_error) {
