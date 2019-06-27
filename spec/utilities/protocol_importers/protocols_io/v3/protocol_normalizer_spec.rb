@@ -43,6 +43,14 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
       end
     end
 
+    it 'raises NormalizerError if response is empty' do
+      allow(client_data).to receive_message_chain(:parsed_response)
+        .and_return({})
+
+      expect { subject.normalize_protocol(client_data) }
+        .to raise_error(ProtocolImporters::ProtocolsIO::V3::NormalizerError)
+    end
+
     context 'when do not have name' do
       it 'sets nil for name' do
         allow(client_data).to receive_message_chain(:parsed_response)
@@ -58,6 +66,14 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
       allow(client_data).to receive_message_chain(:parsed_response).and_return(protocols_io_list)
 
       expect(subject.normalize_list(client_data).deep_stringify_keys).to be == normalized_list
+    end
+
+    it 'raises NormalizerError if response is empty' do
+      allow(client_data).to receive_message_chain(:parsed_response)
+        .and_return({})
+
+      expect { subject.normalize_list(client_data) }
+        .to raise_error(ProtocolImporters::ProtocolsIO::V3::NormalizerError)
     end
   end
 end

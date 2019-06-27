@@ -4,6 +4,8 @@ module ProtocolImporters
   module ProtocolsIO
     module V3
       class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
+        require 'protocol_importers/protocols_io/v3/errors'
+
         def normalize_protocol(client_data)
           # client_data is HttpParty ApiReponse object
           protocol_hash = client_data.parsed_response.with_indifferent_access[:protocol]
@@ -54,11 +56,14 @@ module ProtocolImporters
           end
 
           { protocol: normalized_data }
+        rescue StandardError => e
+          raise ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
         end
 
         def normalize_list(client_data)
           # client_data is HttpParty ApiReponse object
           protocols_hash = client_data.parsed_response.with_indifferent_access[:items]
+
           normalized_data = {}
           normalized_data[:protocols] = protocols_hash.map do |e|
             {
@@ -72,6 +77,8 @@ module ProtocolImporters
             }
           end
           normalized_data
+        rescue StandardError => e
+          raise ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
         end
       end
     end

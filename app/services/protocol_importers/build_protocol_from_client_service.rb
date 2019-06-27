@@ -3,6 +3,7 @@
 module ProtocolImporters
   class BuildProtocolFromClientService
     extend Service
+    require 'protocol_importers/protocols_io/v3/errors'
 
     attr_reader :errors, :built_protocol
 
@@ -17,8 +18,10 @@ module ProtocolImporters
     def call
       return self unless valid?
 
-      # TODO: check for errors
+      # Call api client
       api_response = api_client.single_protocol(@id)
+
+      # Normalize protocol
       normalized_hash = normalizer.normalize_protocol(api_response)
 
       pio = ProtocolImporters::ProtocolIntermediateObject.new(normalized_json: normalized_hash,
@@ -27,6 +30,12 @@ module ProtocolImporters
 
       @built_protocol = pio.build
       @errors[:protocol] = pio.protocol.errors unless @built_protocol.valid?
+      self
+    rescue api_errors => e
+      @errors[e.error_type] = e.message
+      self
+    rescue normalizer_errors => e
+      @errors[e.error_type] = e.message
       self
     rescue StandardError => e
       @errors[:build_protocol] = e.message
@@ -62,6 +71,14 @@ module ProtocolImporters
 
     def normalizer
       "ProtocolImporters::#{endpoint_name}::ProtocolNormalizer".constantize.new
+    end
+
+    def api_errors
+      "ProtocolImporters::#{endpoint_name}::Error".constantize
+    end
+
+    def normalizer_errors
+      "ProtocolImporters::#{endpoint_name}::NormalizerError".constantize
     end
   end
 end

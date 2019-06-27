@@ -22,6 +22,33 @@ describe ProtocolImporters::BuildProtocolFromClientService do
     end
   end
 
+  context 'when raise api client error' do
+    it 'return api errors' do
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:single_protocol)
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::ArgumentError
+          .new(:missing_or_empty_parameters), 'Missing Or Empty Parameters Error'))
+
+      expect(service_call.errors).to have_key(:missing_or_empty_parameters)
+    end
+  end
+
+  context 'when normalize protocol fails' do
+    it 'return normalizer errors' do
+      client_data = double('api_response')
+
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:single_protocol)
+        .and_return(client_data))
+
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
+        .to(receive(:normalize_protocol).with(client_data)
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
+
+      expect(service_call.errors).to have_key(:nil_protocol)
+    end
+  end
+
   context 'when have valid arguments' do
     before do
       client_data = double('api_response')
