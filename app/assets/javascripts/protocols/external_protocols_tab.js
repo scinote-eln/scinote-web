@@ -55,9 +55,15 @@ function setDefaultViewState() {
 
 // Apply AJAX callbacks onto the search box
 function applySearchCallback() {
+  var timeout;
   // Submit form on every input in the search box
   $('input[name="key"]').off('input').on('input', function() {
-    $('form.protocols-search-bar').submit();
+    if (timeout)
+      clearTimeout(timeout)
+
+    timeout = setTimeout(function() {
+      $('form.protocols-search-bar').submit();
+    }, 500);
   });
 
   // Submit form when clicking on sort buttons
