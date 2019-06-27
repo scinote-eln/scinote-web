@@ -46,7 +46,7 @@ function applySearchCallback() {
   });
 
   // Submit form when clicking on sort buttons
-  $('.protocol-sort label').off('click').on('click', function () {
+  $('input[name="sort_by"]').off('change').on('change', function () {
     $('form.protocols-search-bar').submit();
   });
 
