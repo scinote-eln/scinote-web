@@ -166,6 +166,10 @@
         border-radius: 2px;
         box-shadow: 0 1px 4px 0 $color-black;
       }
+
+      &:hover {
+        background-color: rgba(64,161,215,0.1);
+      }
     }
 
     .protocol-title {
