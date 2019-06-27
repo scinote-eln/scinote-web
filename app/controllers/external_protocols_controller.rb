@@ -101,7 +101,7 @@ class ExternalProtocolsController < ApplicationController
   end
 
   def index_params
-    params.permit(:protocol_source, :key, :page_id, :page_size, :order_field, :order_dir)
+    params.permit(:protocol_source, :key, :page_id, :page_size, :sort_by)
   end
 
   def show_params
