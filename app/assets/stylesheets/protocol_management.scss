@@ -74,6 +74,12 @@
     margin-bottom: 15px;
     padding-right: 0;
 
+    .service-provider {
+      display: flex;
+      align-items: center;
+      width: 50%;
+    }
+
     .protocolsio-logo {
       height: 30px;
       width: 30px;
@@ -82,25 +88,20 @@
     .protocolsio-title {
       color: $brand-primary;
       font-size: 14px;
+      margin-left: 3px;
       vertical-align: middle;
     }
 
-    .protocols-search-bar {
-      padding-right: 0;
-      width: 70%;
+    .input-group {
+      margin-bottom: 0;
 
-      .input-group {
-        margin-bottom: 0;
-        width: 100%;
+      .form-control {
+        border-right: 0;
+      }
 
-        .form-control {
-          border-right: 0;
-        }
-
-        .input-group-addon {
-          background: $color-white;
-          color: $color-silver-chalice;
-        }
+      .input-group-addon {
+        background: $color-white;
+        color: $color-silver-chalice;
       }
     }
   }
