@@ -11,6 +11,9 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
 
     let(:stub_protocols) do
       stub_request(:get, URL).with(query: hash_including({}))
+                             .to_return(status: 200,
+                                        body: JSON.generate(status_code: 0),
+                                        headers: { 'Content-Type': 'application/json' })
     end
 
     let(:default_query_params) do
@@ -18,20 +21,46 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
     end
 
     it 'returns 200 on successfull call' do
-      stub_protocols.to_return(status: 200, body: '[]', headers: {})
-
+      stub_protocols
       expect(subject.protocol_list.code).to eq 200
       expect(stub_protocols).to have_been_requested
     end
 
-    it 'raises OpenTimeout error on timeout' do
-      stub_protocols.to_timeout
+    it 'raises NetworkError on timeout' do
+      stub_request(:get, URL).with(query: hash_including({})).to_timeout
 
-      expect { subject.protocol_list }.to raise_error(Net::OpenTimeout)
+      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
+    end
+
+    it 'raises ArgumentError when status_code = 1' do
+      stub_request(:get, URL).with(query: hash_including({}))
+                             .to_return(status: 200,
+                                        body: JSON.generate(status_code: 1, error_message: 'Argument error'),
+                                        headers: { 'Content-Type': 'application/json' })
+
+      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::ArgumentError)
+    end
+
+    it 'raises UnauthorizedError when status_code = 1218' do
+      stub_request(:get, URL).with(query: hash_including({}))
+                             .to_return(status: 200,
+                                        body: JSON.generate(status_code: 1218, error_message: 'Argument error'),
+                                        headers: { 'Content-Type': 'application/json' })
+
+      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
+    end
+
+    it 'raises UnauthorizedError when status_code = 1219' do
+      stub_request(:get, URL).with(query: hash_including({}))
+                             .to_return(status: 200,
+                                        body: JSON.generate(status_code: 1219, error_message: 'Argument error'),
+                                        headers: { 'Content-Type': 'application/json' })
+
+      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
     end
 
     it 'requests server with default query parameters if none are given' do
-      stub_request(:get, URL).with(query: default_query_params)
+      stub_protocols.with(query: default_query_params)
 
       subject.protocol_list
       expect(WebMock).to have_requested(:get, URL).with(query: default_query_params)
@@ -47,7 +76,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
         page_size: 15,
         fields: 'somefields'
       }
-      stub_request(:get, URL).with(query: query)
+      stub_protocols.with(query: query)
 
       subject.protocol_list(query)
       expect(WebMock).to have_requested(:get, URL).with(query: query)
@@ -56,6 +85,9 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
     it 'should send authorization token if provided on initialization' do
       headers = { 'Authorization': "Bearer #{TOKEN}" }
       stub_request(:get, URL).with(headers: headers, query: default_query_params)
+                             .to_return(status: 200,
+                                        body: JSON.generate(status_code: 0),
+                                        headers: { 'Content-Type': 'application/json' })
 
       ProtocolImporters::ProtocolsIO::V3::ApiClient.new(TOKEN).protocol_list
       expect(WebMock).to have_requested(:get, URL).with(headers: headers, query: default_query_params)
@@ -67,20 +99,24 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
     SINGLE_PROTOCOL_URL = "#{CONSTANTS[:base_uri]}protocols/#{PROTOCOL_ID}"
 
     let(:stub_single_protocol) do
-      stub_request(:get, SINGLE_PROTOCOL_URL)
+      stub_request(:get, SINGLE_PROTOCOL_URL).to_return(
+        status: 200,
+        body: JSON.generate(status_code: 0),
+        headers: { 'Content-Type': 'application/json' }
+      )
     end
 
     it 'returns 200 on successfull call' do
-      stub_single_protocol.to_return(status: 200, body: '[]', headers: {})
+      stub_single_protocol
 
       expect(subject.single_protocol(PROTOCOL_ID).code).to eq 200
       expect(stub_single_protocol).to have_been_requested
     end
 
-    it 'raises OpenTimeout error on timeout' do
-      stub_single_protocol.to_timeout
+    it 'raises NetworkError on timeout' do
+      stub_request(:get, SINGLE_PROTOCOL_URL).to_timeout
 
-      expect { subject.single_protocol(PROTOCOL_ID) }.to raise_error(Net::OpenTimeout)
+      expect { subject.single_protocol(PROTOCOL_ID) }.to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
     end
 
     it 'should send authorization token if provided on initialization' do
@@ -106,10 +142,11 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
       expect(stub_html_preview).to have_been_requested
     end
 
-    it 'raises OpenTimeout error on timeout' do
+    it 'raises NetworkErrorr on timeout' do
       stub_html_preview.to_timeout
 
-      expect { subject.protocol_html_preview(PROTOCOL_URI) }.to raise_error(Net::OpenTimeout)
+      expect { subject.protocol_html_preview(PROTOCOL_URI) }
+        .to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
     end
   end
 end

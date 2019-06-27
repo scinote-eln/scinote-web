@@ -80,11 +80,11 @@ module ProtocolImporters
     end
 
     def api_errors
-      "ProtocolImporters::#{endpoint_name}::V3Errors::Error".constantize
+      "ProtocolImporters::#{endpoint_name}::Error".constantize
     end
 
     def normalizer_errors
-      "ProtocolImporters::#{endpoint_name}::V3Errors::NormalizerError".constantize
+      "ProtocolImporters::#{endpoint_name}::NormalizerError".constantize
     end
   end
 end

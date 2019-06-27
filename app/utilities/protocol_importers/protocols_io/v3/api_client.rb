@@ -43,41 +43,41 @@ module ProtocolImporters
         #     id of page.
         #     Default is 1.
         def protocol_list(query_params = {})
-          with_handle_errors do
+          response = with_handle_network_errors do
             query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
                              .merge(query_params)
 
-            check_for_api_errors(self.class.get('/protocols', query: query))
+            self.class.get('/protocols', query: query)
           end
+          check_for_response_errors(response)
         end
 
         # Returns full representation of given protocol ID
         def single_protocol(id)
-          with_handle_errors do
-            check_for_api_errors(self.class.get("/protocols/#{id}"))
+          response = with_handle_network_errors do
+            self.class.get("/protocols/#{id}")
           end
+          check_for_response_errors(response)
         end
 
         # Returns html preview for given protocol
         # This endpoint is outside the scope of API but is listed here for the
         # sake of clarity
         def protocol_html_preview(uri)
-          with_handle_errors do
+          with_handle_network_errors do
             self.class.get("https://www.protocols.io/view/#{uri}.html", headers: {})
           end
         end
 
         private
 
-        def with_handle_errors
+        def with_handle_network_errors
           yield
-        rescue SocketError, HTTParty::Error => e
-          raise ProtocolImporters::ProtocolsIO::V3::NetworkError.new(:network_error), e.message
         rescue StandardError => e
-          raise ProtocolImporters::ProtocolsIO::V3::Error.new(e.class.to_s.downcase.to_sym), e.message
+          raise ProtocolImporters::ProtocolsIO::V3::NetworkError.new(e.class), e.message
         end
 
-        def check_for_api_errors(response)
+        def check_for_response_errors(response)
           error_message = response.parsed_response['error_message']
 
           case response.parsed_response['status_code']
@@ -90,7 +90,7 @@ module ProtocolImporters
           when 1219
             raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:token_expires), error_message
           else
-            raise ProtocolImporters::ProtocolsIO::V3::Error.new(:api_error), error_message
+            raise ProtocolImporters::ProtocolsIO::V3::Error.new(e.class), error_message
           end
         end
       end

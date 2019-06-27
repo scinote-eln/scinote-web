@@ -36,7 +36,7 @@ describe ProtocolImporters::SearchProtocolsService do
     it 'return api errors' do
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
         .to(receive(:protocol_list)
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::V3Errors::ArgumentError
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::ArgumentError
           .new(:missing_or_empty_parameters), 'Missing Or Empty Parameters Error'))
 
       expect(service_call.errors).to have_key(:missing_or_empty_parameters)
@@ -53,7 +53,7 @@ describe ProtocolImporters::SearchProtocolsService do
 
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
         .to(receive(:normalize_list).with(client_data)
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::V3Errors::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
 
       expect(service_call.errors).to have_key(:nil_protocol)
     end
