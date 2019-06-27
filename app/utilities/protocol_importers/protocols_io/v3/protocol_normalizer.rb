@@ -69,6 +69,7 @@ module ProtocolImporters
             {
               id: e[:id],
               title: e[:title],
+              source: Constants::PROTOCOLS_IO_V3_API[:source_id],
               created_on: e[:created_on],
               authors: e[:authors].map { |a| a[:name] }.join(', '),
               nr_of_steps: e[:stats][:number_of_steps],

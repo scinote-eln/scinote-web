@@ -150,6 +150,11 @@
       font-size: 13px;
       margin-top: 20px;
     }
+
+    .list-wrapper {
+      overflow: auto;
+      height: 100%;
+    }
   }
 
   .protocol-preview-panel {

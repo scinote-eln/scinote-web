@@ -17,8 +17,7 @@ function applyClickCallbackOnProtocolCards() {
       },
       error: function(_error) {
         // TODO: we should probably show some alert bubble
-        $('.empty-preview-panel').show();
-        $('.full-preview-panel').hide();
+        resetPreviewPanel();
         animateSpinner($('.protocol-preview-panel'), false);
       }
     });
@@ -27,4 +26,49 @@ function applyClickCallbackOnProtocolCards() {
   });
 }
 
-applyClickCallbackOnProtocolCards();
+// Resets preview to the default state
+function resetPreviewPanel() {
+  $('.empty-preview-panel').show();
+  $('.full-preview-panel').hide();
+}
+
+function setDefaultViewState() {
+  resetPreviewPanel();
+  $('.empty-text').show();
+  $('.list-wrapper').hide();
+}
+
+// Apply AJAX callbacks onto the search box
+function applySearchCallback() {
+  // Submit form on every input in the search box
+  $('input[name="key"]').off('input').on('input', function() {
+    $('form.protocols-search-bar').submit();
+  });
+
+  // Submit form when clicking on sort buttons
+  $('.protocol-sort label').off('click').on('click', function () {
+    $('form.protocols-search-bar').submit();
+  });
+
+  // Bind ajax calls on the form
+  $('form.protocols-search-bar').off('ajax:success').off('ajax:error')
+    .bind('ajax:success', function(evt, data, status, xhr) {
+      if (data.html) {
+        resetPreviewPanel();
+        $('.empty-text').hide();
+        $('.list-wrapper').show();
+
+        $('.list-wrapper').html(data.html)
+        applyClickCallbackOnProtocolCards();
+      } else {
+        setDefaultViewState();
+      }
+    })
+    .bind("ajax:error", function(evt, xhr, status, error) {
+      setDefaultViewState();
+
+      console.log(xhr.responseText);
+    });
+}
+
+applySearchCallback();

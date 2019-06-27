@@ -51,16 +51,6 @@ module ProtocolImporters
         @errors[:invalid_params][:page_id] = 'Page needs to be positive'
       end
 
-      # try if order_field is ok
-      if @query_params[:order_field] && CONSTANTS[:available_order_fields].exclude?(@query_params[:order_field]&.to_sym)
-        @errors[:invalid_params][:order_field] = 'Order field is not ok'
-      end
-
-      # try if order dir is ok
-      if @query_params[:order_field] && CONSTANTS[:available_order_dirs].exclude?(@query_params[:order_dir]&.to_sym)
-        @errors[:invalid_params][:order_dir] = 'Order dir is not ok'
-      end
-
       # try if endpints exists
       @errors[:invalid_params][:source_endpoint] = 'Wrong source endpoint' unless endpoint_name&.is_a?(String)
 
