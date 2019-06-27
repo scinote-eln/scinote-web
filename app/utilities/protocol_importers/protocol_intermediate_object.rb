@@ -2,12 +2,14 @@
 
 module ProtocolImporters
   class ProtocolIntermediateObject
-    attr_accessor :normalized_protocol_data, :user, :team, :protocol
+    attr_reader :normalized_protocol_data, :user, :team, :protocol, :steps_assets, :build_with_assets
 
-    def initialize(normalized_json: {}, user:, team:)
+    def initialize(normalized_json: {}, user:, team:, build_with_assets: true)
       @normalized_protocol_data = normalized_json.with_indifferent_access[:protocol] if normalized_json
       @user = user
       @team = team
+      @steps_assets = {}
+      @build_with_assets = build_with_assets
     end
 
     def import
@@ -28,7 +30,11 @@ module ProtocolImporters
     def build_steps
       @normalized_protocol_data[:steps].map do |s|
         step = Step.new(step_attributes(s))
-        step.assets << AttachmentsBuilder.generate(s)
+        if @build_with_assets
+          step.assets << AttachmentsBuilder.generate(s, user: user, team: team)
+        else
+          @steps_assets[step.position] = AttachmentsBuilder.generate_json(s)
+        end
         step.tables << TablesBuilder.extract_tables_from_html_string(s[:description][:body], true)
         step.description = StepDescriptionBuilder.generate(s)
         step

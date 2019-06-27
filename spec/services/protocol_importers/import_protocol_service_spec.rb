@@ -8,19 +8,19 @@ describe ProtocolImporters::ImportProtocolService do
   let(:protocol_params) { attributes_for :protocol, :in_public_repository }
   let(:steps_params) do
     [
-      attributes_for(:step).merge!(assets_attributes: [attributes_for(:asset)]),
+      attributes_for(:step).merge!(attachments: [{ name: 'random.jpg', url: 'http://www.example.com/random.jpg' }]),
       attributes_for(:step).merge!(tables_attributes: [attributes_for(:table), attributes_for(:table)])
-    ]
+    ].to_json
   end
 
   let(:service_call) do
     ProtocolImporters::ImportProtocolService
-      .call(protocol_params: protocol_params, steps_params: steps_params, user_id: user.id, team_id: team.id)
+      .call(protocol_params: protocol_params, steps_params_json: steps_params, user_id: user.id, team_id: team.id)
   end
 
   context 'when have invalid arguments' do
     it 'returns an error when can\'t find user' do
-      allow(User).to receive(:find).and_return(nil)
+      allow(User).to receive(:find_by_id).and_return(nil)
 
       expect(service_call.errors).to have_key(:invalid_arguments)
     end
@@ -28,19 +28,20 @@ describe ProtocolImporters::ImportProtocolService do
     it 'returns invalid protocol when can\'t save it' do
       # step with file without name
       steps_invalid_params = [
-        attributes_for(:step).merge!(assets_attributes: [attributes_for(:asset).except(:file_file_name)])
-      ]
+        attributes_for(:step).except(:name).merge!(tables_attributes: [attributes_for(:table)])
+      ].to_json
 
       s = ProtocolImporters::ImportProtocolService.call(protocol_params: protocol_params,
-                                                        steps_params: steps_invalid_params,
+                                                        steps_params_json: steps_invalid_params,
                                                         user_id: user.id, team_id: team.id)
-
       expect(s.protocol).to be_invalid
     end
   end
 
   context 'when have valid arguments' do
     before do
+      stub_request(:get, 'http://www.example.com/random.jpg').to_return(status: 200, body: '', headers: {})
+
       @protocol = Protocol.new
     end
 

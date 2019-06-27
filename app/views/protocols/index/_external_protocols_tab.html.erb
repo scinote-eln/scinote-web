@@ -51,6 +51,9 @@
       <div class='row empty-text'>
         <%= t('protocols.index.external_protocols.list_panel.empty_text') %>
       </div>
+        <div class="external-protocol-result">
+          <a href="#" data-source="protocolsio/v3" data-id="11176" data-action="external-import" data-url="<%= team_build_external_protocol_path(current_team.id,) %>">Protocols IO, 11176</a>
+        </div>
 
       <div class='protocol-card'
         data-protocol-source='protocolsio/v3'
@@ -72,7 +75,6 @@
         data-show-protocol-id='errorr'>
         Error protocol (click me, should default to default screen)
       </div>
-
     </div>
 
     <div class='col-md-7 protocol-preview-panel'>
