@@ -3,6 +3,7 @@
 module ProtocolImporters
   class SearchProtocolsService
     extend Service
+    require 'protocol_importers/protocols_io/v3/errors'
 
     attr_reader :errors, :protocols_list
 
@@ -18,21 +19,20 @@ module ProtocolImporters
       return self unless valid?
 
       # Call api client
-      begin
-        api_response = api_client.protocol_list(@query_params)
-      rescue api_errors => e
-        @errors[e.error_type] = e.message
-        return self
-      end
+      api_response = api_client.protocol_list(@query_params)
 
       # Normalize protocols list
-      begin
-        @protocols_list = normalizer.normalize_list(api_response)
-      rescue normalizer_errors => e
-        @errors[e.error_type] = e.message
-        return self
-      end
+      @protocols_list = normalizer.normalize_list(api_response)
 
+      self
+    rescue api_errors => e
+      @errors[e.error_type] = e.message
+      self
+    rescue normalizer_errors => e
+      @errors[e.error_type] = e.message
+      self
+    rescue StandardError => e
+      @errors[:build_protocol] = e.message
       self
     end
 
