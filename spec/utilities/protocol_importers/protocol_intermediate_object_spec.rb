@@ -5,6 +5,9 @@ require 'rails_helper'
 describe ProtocolImporters::ProtocolIntermediateObject do
   subject(:pio) { described_class.new(normalized_json: normalized_result, user: user, team: team) }
   let(:invalid_pio) { described_class.new(normalized_json: normalized_result, user: nil, team: team) }
+  let(:pio_without_assets) do
+    described_class.new(normalized_json: normalized_result, user: user, team: team, build_with_assets: false)
+  end
   let(:user) { create :user }
   let(:team) { create :team }
   let(:normalized_result) do
@@ -33,6 +36,27 @@ describe ProtocolImporters::ProtocolIntermediateObject do
     context 'when have invalid object' do
       it { expect(invalid_pio.import).to be_invalid }
       it { expect { invalid_pio.import }.not_to(change { Protocol.all.count }) }
+    end
+
+    context 'when build wihout assets' do
+      it { expect { pio_without_assets.import }.to change { Protocol.all.count }.by(1) }
+      it { expect { invalid_pio.import }.not_to(change { Asset.all.count }) }
+    end
+  end
+
+  describe '.steps_assets' do
+    context 'when have default pio' do
+      it 'retuns empty hash for steps_assets' do
+        pio.build
+        expect(pio.steps_assets).to be == {}
+      end
+    end
+
+    context 'when have pio built without assets' do
+      it 'returns hash with two assets on steps by position' do
+        pio_without_assets.build
+        expect(pio_without_assets.steps_assets.size).to be == 2
+      end
     end
   end
 end

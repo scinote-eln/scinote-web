@@ -18,8 +18,8 @@ var ExternalProtocols = (function() {
       var msg;
       msg = key.charAt(0).toUpperCase() + key.slice(1) + ': ' + errors.protocol[key].join(', ');
       if ((input.length > 0) && (errors.protocol[key].length > 0)) {
-        input.next('span.help-block').html(msg);
-        input.parent().addClass('has-error');
+        input.parent().next('span.help-block').html(msg);
+        input.parent().parent().addClass('has-error');
       } else if (errors.protocol[key].length > 0) {
         modal.find('.general-error > span').append(msg + '<br/>');
       }
@@ -72,7 +72,7 @@ var ExternalProtocols = (function() {
   }
 
   function initLoadProtocolModalPreview() {
-    var externalProtocols = $('.exteral-proocol-result');
+    var externalProtocols = $('.external-protocol-result');
     externalProtocols.on('click', 'a[data-action="external-import"]', function(e) {
       var link = $(this);
       animateSpinner(null, true);
@@ -120,7 +120,6 @@ var ExternalProtocols = (function() {
   function initFormSubmits() {
     var modal = $('#protocol-preview-modal');
     modal.on('click', 'button[data-action=import_protocol]', function() {
-      // console.log('click');
       var form = modal.find('form');
       var hiddenField = form.find('#protocol_protocol_type');
       hiddenField.attr('value', $(this).data('import_type'));

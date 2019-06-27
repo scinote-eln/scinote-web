@@ -1,5 +1,7 @@
 en:
   protocol_importers:
+    new:
+      modal_title: 'Import protocol - %{protocol_name}'
     templates:
       amount:
         title: 'Amount'

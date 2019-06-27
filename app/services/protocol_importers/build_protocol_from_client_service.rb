@@ -5,13 +5,15 @@ module ProtocolImporters
     extend Service
     require 'protocol_importers/protocols_io/v3/errors'
 
-    attr_reader :errors, :built_protocol
+    attr_reader :errors, :built_protocol, :steps_assets
 
-    def initialize(protocol_client_id:, protocol_source:, user_id:, team_id:)
+    def initialize(protocol_client_id:, protocol_source:, user_id:, team_id:, build_with_assets: true)
       @id = protocol_client_id
       @protocol_source = protocol_source
-      @user = User.find user_id
-      @team = Team.find team_id
+      @user = User.find_by_id user_id
+      @team = Team.find_by_id team_id
+      @build_with_assets = build_with_assets
+      @steps_assets = {}
       @errors = {}
     end
 
@@ -26,11 +28,12 @@ module ProtocolImporters
 
       pio = ProtocolImporters::ProtocolIntermediateObject.new(normalized_json: normalized_hash,
                                                               user: @user,
-                                                              team: @team)
+                                                              team: @team,
+                                                              build_with_assets: @build_with_assets)
 
       @built_protocol = pio.build
-      # Protocol with AR errors should not handled here as someting whats wrong.
-      # @errors[:protocol] = pio.protocol.errors unless @built_protocol.valid?
+      @steps_assets = pio.steps_assets unless @build_with_assets
+
       self
     rescue api_errors => e
       @errors[e.error_type] = e.message
@@ -48,14 +51,18 @@ module ProtocolImporters
     end
 
     def serialized_steps
+      # Serialize steps with nested attributes for Tables and NOT nasted attributes for Assets
+      # We want to avoid creating (downloading) Assets instances on building first time and again on importing/creating,
+      # when both actions are not in a row.
+      # Also serialization does not work properly with paperclip attrs
       return nil unless built_protocol
 
       built_protocol.steps.map do |step|
         step_hash = step.attributes.symbolize_keys.slice(:name, :description, :position)
 
-        # if step.assets.any?
-        #   step_hash[:assets_attributes] = step.assets.map { |a| a.attributes.symbolize_keys.except(:id) }
-        # end
+        if !@build_with_assets && @steps_assets[step.position].any?
+          step_hash[:attachments] = @steps_assets[step.position]
+        end
 
         if step.tables.any?
           step_hash[:tables_attributes] = step.tables.map { |t| t.attributes.symbolize_keys.slice(:contents) }

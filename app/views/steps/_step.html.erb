@@ -1,4 +1,5 @@
 <% preview = (defined?(preview) ? preview : false) %>
+<% import = (defined?(import) ? import : false) %>
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -113,7 +114,12 @@
             </div>
           <% end %>
 
-          <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step, preview: preview } %>
+          <% if import %>
+            <%= render partial: 'steps/attachments/preview_list.html.erb',
+                       locals: {  attachments: steps_assets[step.position]} %>
+          <% else %>
+            <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step, preview: preview } %>
+          <% end %>
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
@@ -147,10 +153,12 @@
             </div>
           <% end %>
         </div>
-        <hr>
-        <%= render partial: 'steps/comments.html.erb', locals: {  comments: step.last_comments,
-                                                                       comments_count: step.step_comments.count,
-                                                                       step: step } %>
+        <% unless import %>
+          <hr>
+          <%= render partial: 'steps/comments.html.erb', locals: {  comments: step.last_comments,
+                                                                    comments_count: step.step_comments.count,
+                                                                    step: step } %>
+        <% end %>
       </div>
     </div>
   </div>

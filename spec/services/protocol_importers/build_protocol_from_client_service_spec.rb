@@ -9,6 +9,14 @@ describe ProtocolImporters::BuildProtocolFromClientService do
     ProtocolImporters::BuildProtocolFromClientService
       .call(protocol_client_id: 'id', protocol_source: 'protocolsio/v3', user_id: user.id, team_id: team.id)
   end
+  let(:service_call_without_assets) do
+    ProtocolImporters::BuildProtocolFromClientService
+      .call(protocol_client_id: 'id',
+            protocol_source: 'protocolsio/v3',
+            user_id: user.id,
+            team_id: team.id,
+            build_with_assets: false)
+  end
   let(:normalized_response) do
     JSON.parse(file_fixture('protocol_importers/normalized_single_protocol.json').read)
         .to_h.with_indifferent_access
@@ -16,7 +24,7 @@ describe ProtocolImporters::BuildProtocolFromClientService do
 
   context 'when have invalid arguments' do
     it 'returns an error when can\'t find user' do
-      allow(User).to receive(:find).and_return(nil)
+      allow(User).to receive(:find_by_id).and_return(nil)
 
       expect(service_call.errors).to have_key(:invalid_arguments)
     end
@@ -69,5 +77,13 @@ describe ProtocolImporters::BuildProtocolFromClientService do
       expect(service_call.built_protocol).to be_instance_of(Protocol)
     end
     # more tests will be implemented when add error handling to service
+
+    describe 'serialized_steps' do
+      context 'when build without assets' do
+        it 'returns JSON with attachments' do
+          expect(JSON.parse(service_call_without_assets.serialized_steps).first).to have_key('attachments')
+        end
+      end
+    end
   end
 end
