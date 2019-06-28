@@ -165,6 +165,11 @@ function handleFormSubmit(modal) {
 function initLoadProtocolModalPreview() {
   $('.external-import-btn').off('click').on('click', function(e) {
     var link = $(this).parents('.protocol-card');
+
+    // When clicking on the banner button, we have no protocol-card parent
+    if (link.length == 0)
+      link = $('.protocol-card.active');
+
     animateSpinner(null, true);
     $.ajax({
       url: link.data('url'),
