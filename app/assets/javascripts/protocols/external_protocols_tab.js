@@ -1,28 +1,28 @@
 function applyClickCallbackOnProtocolCards() {
   $('.protocol-card').off('click').on('click', function(e) {
+    var currProtocolCard = $(this);
+
     // Check whether this card is already active and deactivate it
-    if ($(this).hasClass('active')) {
+    if ($(currProtocolCard).hasClass('active')) {
       resetPreviewPanel();
-      $(this).removeClass('active');
-    }
-    else {
-      var curr_protocol_card = $(this);
+      $(currProtocolCard).removeClass('active');
+    } else {
       $('.protocol-card').removeClass('active');
-      curr_protocol_card.addClass('active');
+      currProtocolCard.addClass('active');
 
       $.ajax({
-        url: $(curr_protocol_card).data('show-url'),
+        url: $(currProtocolCard).data('show-url'),
         type: 'GET',
         dataType: 'json',
         data: {
-          protocol_source: $(curr_protocol_card).data('protocol-source'),
-          protocol_id: $(curr_protocol_card).data('show-protocol-id')
+          protocol_source: $(currProtocolCard).data('protocol-source'),
+          protocol_id: $(currProtocolCard).data('show-protocol-id')
         },
         beforeSend: animateSpinner($('.protocol-preview-panel'), true),
         success: function(data) {
           $('.empty-preview-panel').hide();
           $('.full-preview-panel').show();
-          $('.btn-holder').html($(curr_protocol_card).find('.external-import-btn').clone());
+          $('.btn-holder').html($(currProtocolCard).find('.external-import-btn').clone());
           $('.preview-iframe').contents().find('body').html(data.html);
 
           initLoadProtocolModalPreview();
@@ -56,10 +56,12 @@ function setDefaultViewState() {
 // Apply AJAX callbacks onto the search box
 function applySearchCallback() {
   var timeout;
+
   // Submit form on every input in the search box
   $('input[name="key"]').off('input').on('input', function() {
-    if (timeout)
-      clearTimeout(timeout)
+    if (timeout) {
+      clearTimeout(timeout);
+    }
 
     timeout = setTimeout(function() {
       $('form.protocols-search-bar').submit();
@@ -67,7 +69,7 @@ function applySearchCallback() {
   });
 
   // Submit form when clicking on sort buttons
-  $('input[name="sort_by"]').off('change').on('change', function () {
+  $('input[name="sort_by"]').off('change').on('change', function() {
     $('form.protocols-search-bar').submit();
   });
 
@@ -167,8 +169,9 @@ function initLoadProtocolModalPreview() {
     var link = $(this).parents('.protocol-card');
 
     // When clicking on the banner button, we have no protocol-card parent
-    if (link.length == 0)
+    if (link.length === 0) {
       link = $('.protocol-card.active');
+    }
 
     animateSpinner(null, true);
     $.ajax({
