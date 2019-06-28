@@ -236,7 +236,7 @@ class Protocol < ApplicationRecord
       dest.file = src.file
       dest.save!
 
-      if dest.is_image?
+      if dest.image?
         dest.file.reprocess!(:large)
         dest.file.reprocess!(:medium)
       end
@@ -325,7 +325,7 @@ class Protocol < ApplicationRecord
         asset2.created_by = current_user
         asset2.team = dest.team
         asset2.last_modified_by = current_user
-        asset2.file_processing = true if asset.is_image?
+        asset2.file_processing = true if asset.image?
         asset2.save!
 
         step2.assets << asset2

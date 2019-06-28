@@ -41,7 +41,7 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
                 instance.__send__("#{attachment}_file_name"),
                 instance.__send__("#{attachment}_content_type"),
                 instance.__send__("#{attachment}_file_size") || 0,
-                checksum(instance.__send__(attachment)),
+                checksum(attachment),
                 instance.updated_at.iso8601
               ]
             )
@@ -96,12 +96,12 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
   def key(instance, attachment)
     # SecureRandom.uuid
     # Alternatively:
-    pattern = if ENV['PAPERCLIP_STORAGE'] == 's3'
-                ':class/:attachment/:id_partition/:hash/original/:filename'
-              else
-                "#{Rails.root}/public/system/:class/:attachment/:id_partition/:hash/original/:filename"
-              end
-    interpolate(pattern, instance, attachment)
+    if ENV['PAPERCLIP_STORAGE'] == 's3'
+      interpolate(':class/:attachment/:id_partition/:hash/original/:filename', instance, attachment)
+    else
+      key = SecureRandom.uuid
+      File.join('storage', key.first(2), key.first(4).last(2))
+    end
   end
 
   def checksum(_attachment)

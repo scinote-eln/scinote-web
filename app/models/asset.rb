@@ -203,16 +203,30 @@ class Asset < ApplicationRecord
     end
   end
 
+  def previewable?
+    previewable_document? || previewable_image?
+  end
+
   def medium_preview
-    file.variant(resize: Constants::MEDIUM_PIC_FORMAT)
+    return file.variant(resize: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
+
+    'medium/processing.gif'
+    # file.preview(resize: Constants::MEDIUM_PIC_FORMAT)
   end
 
   def large_preview
-    file.variant(resize: Constants::LARGE_PIC_FORMAT)
+    return file.variant(resize: Constants::LARGE_PIC_FORMAT) if previewable_image?
+
+    'large/processing.gif'
+    # file.preview(resize: Constants::LARGE_PIC_FORMAT)
+  end
+
+  def file_name
+    file.blob&.filename&.to_s
   end
 
   def file_size
-    file.blob.byte_size
+    file.blob&.byte_size
   end
 
   def extract_image_quality
@@ -227,13 +241,8 @@ class Asset < ApplicationRecord
     Rails.logger.info "There was an error extracting image quality - #{e}"
   end
 
-  def previewable?
-    file.previewable_image? || file.previewable_document?
-  end
-
-  def is_image?
-    %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}} ===
-      file.content_type
+  def image?
+    file.blob.content_type == %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
   end
 
   def text?
@@ -519,6 +528,29 @@ class Asset < ApplicationRecord
   end
 
   private
+
+  def previewable_document?
+    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(file.blob&.content_type)
+
+    filename = file.blob&.filename
+    content_type = file.blob&.content_type
+
+    extensions = %w(.xlsx .docx .pptx .xls .doc .ppt)
+    # Mimetype sometimes recognizes Office files as zip files
+    # In this case we also check the extension of the given file
+    # Otherwise the conversion should fail if the file is being something else
+    previewable ||= (content_type == 'application/zip' && extensions.include?(File.extname(filename)))
+
+    # Mimetype also sometimes recognizes '.xls' and '.ppt' files as
+    # application/x-ole-storage (https://github.com/minad/mimemagic/issues/50)
+    previewable ||= (content_type == 'application/x-ole-storage' && %w(.xls .ppt).include?(File.extname(filename)))
+
+    previewable
+  end
+
+  def previewable_image?
+    file.blob&.content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+  end
 
   def filter_paperclip_errors
     if errors.size > 1

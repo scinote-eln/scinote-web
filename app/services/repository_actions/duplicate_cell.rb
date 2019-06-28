@@ -77,13 +77,13 @@ module RepositoryActions
       new_asset.created_by = old_asset.created_by
       new_asset.team = @team
       new_asset.last_modified_by = @user
-      new_asset.file_processing = true if old_asset.is_image?
+      new_asset.file_processing = true if old_asset.image?
       new_asset.file = old_asset.file
       new_asset.save
 
       return unless new_asset.valid?
 
-      if new_asset.is_image?
+      if new_asset.image?
         new_asset.file.reprocess!(:large)
         new_asset.file.reprocess!(:medium)
       end
