@@ -157,6 +157,8 @@
       $("#step_name").focus();
       $("#new-step-main-tab a").on("shown.bs.tab", function() {
         $("#step_name").focus();
+        tinyMCE.editors.step_description_textarea.remove();
+        TinyMCE.init('#step_description_textarea');
       });
     });
   }
