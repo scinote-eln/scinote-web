@@ -18,13 +18,13 @@ module MyModulesHelper
     assets.sort! do |a, b|
       case view_state.state.dig('assets', 'sort')
       when 'old'
-        a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)]
+        b[asset_date_sort_field(b)] <=> a[asset_date_sort_field(a)]
       when 'atoz'
         (a[asset_name_sort_field(a)]).downcase <=> (b[asset_name_sort_field(b)]).downcase
       when 'ztoa'
         (b[asset_name_sort_field(b)]).downcase <=> (a[asset_name_sort_field(a)]).downcase
       else
-        b[asset_date_sort_field(b)] <=> a[asset_date_sort_field(a)]
+        a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)]
       end
     end
   end

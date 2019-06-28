@@ -15,14 +15,12 @@
         <p class="file-save-link"><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
       </div>
       <div class="modal-body">
-        <div id="marvinjs-editor">
+        <div id="marvinjs-editor" data-marvinjs-mode="<%= ENV['MARVINJS_API_KEY'] ? 'remote' : 'local' %>">
           <% if ENV['MARVINJS_API_KEY'] %>
             <div id="marvinjs-sketch" style="width: 600px; height: 480px"></div>
           <% elsif ENV['MARVINJS_URL'] %>
             <iframe id="marvinjs-sketch" src="<%= MarvinJsAsset.url %>" frameBorder="0"></iframe>
           <% end %>
-          <div class="marvinjs-team-sketch-header"><%= t('marvinjs.team_drawings') %></div>
-          <div class="marvinjs-team-sketch"></div>
         </div>
       </div>
     </div>
