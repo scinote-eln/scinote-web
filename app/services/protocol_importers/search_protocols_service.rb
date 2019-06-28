@@ -11,7 +11,7 @@ module ProtocolImporters
 
     def initialize(protocol_source:, query_params: {})
       @protocol_source = protocol_source
-      @query_params = query_params
+      @query_params = query_params.except(:protocol_source)
       @errors = Hash.new { |h, k| h[k] = {} }
     end
 
@@ -49,16 +49,6 @@ module ProtocolImporters
       # try if page id is ok
       if @query_params[:page_id] && !@query_params[:page_id].to_i.positive?
         @errors[:invalid_params][:page_id] = 'Page needs to be positive'
-      end
-
-      # try if order_field is ok
-      if @query_params[:order_field] && CONSTANTS[:available_order_fields].exclude?(@query_params[:order_field]&.to_sym)
-        @errors[:invalid_params][:order_field] = 'Order field is not ok'
-      end
-
-      # try if order dir is ok
-      if @query_params[:order_field] && CONSTANTS[:available_order_dirs].exclude?(@query_params[:order_dir]&.to_sym)
-        @errors[:invalid_params][:order_dir] = 'Order dir is not ok'
       end
 
       # try if endpints exists

@@ -74,6 +74,12 @@
     margin-bottom: 15px;
     padding-right: 0;
 
+    .service-provider {
+      display: flex;
+      align-items: center;
+      width: 50%;
+    }
+
     .protocolsio-logo {
       height: 30px;
       width: 30px;
@@ -82,25 +88,20 @@
     .protocolsio-title {
       color: $brand-primary;
       font-size: 14px;
+      margin-left: 3px;
       vertical-align: middle;
     }
 
-    .protocols-search-bar {
-      padding-right: 0;
-      width: 70%;
+    .input-group {
+      margin-bottom: 0;
 
-      .input-group {
-        margin-bottom: 0;
-        width: 100%;
+      .form-control {
+        border-right: 0;
+      }
 
-        .form-control {
-          border-right: 0;
-        }
-
-        .input-group-addon {
-          background: $color-white;
-          color: $color-silver-chalice;
-        }
+      .input-group-addon {
+        background: $color-white;
+        color: $color-silver-chalice;
       }
     }
   }
@@ -149,6 +150,40 @@
       font-size: 13px;
       margin-top: 20px;
     }
+
+    .list-wrapper {
+      height: 100%;
+      overflow: auto;
+    }
+
+    .protocol-card {
+      border-bottom: 1px solid $color-gainsboro;
+      margin-right: 20px;
+      padding: 12px 11px 7px 11px;
+
+      &.active {
+        border: 2px solid $brand-primary;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px 0 $color-black;
+      }
+
+      &:hover {
+        background-color: rgba(64,161,215,0.1);
+      }
+    }
+
+    .protocol-title {
+      color: $brand-primary;
+      font-size: 16px;
+    }
+
+    .info-line {
+      color: $color-dove-gray;
+      font-size: 13px;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
   }
 
   .protocol-preview-panel {
@@ -188,10 +223,35 @@
     }
 
     .full-preview-panel {
+      height: 100%;
+    }
+
+    .preview-banner {
+      align-items: center;
+      background-color: $color-white;
+      border-bottom: 1px solid $color-alto;
+      color: $color-dove-gray;
+      display: flex;
+      font-size: 16px;
+      height: 40px;
+      padding-left: 21px;
+
+      .txt-holder {
+        padding-left: 0;
+      }
+
+      .btn-holder {
+        padding-right: 21px;
+      }
+    }
+
+
+    .preview-holder {
       display: flex;
       flex-direction: column;
       height: 100%;
       overflow: hidden;
+      padding-bottom: 40px;
       padding-left: 21px;
       padding-right: 21px;
       width: 100%;
@@ -203,5 +263,14 @@
         padding: 0;
       }
     }
+  }
+
+  .external-import-btn {
+    background-color: $brand-primary;
+    border: none;
+    color: $color-white;
+    font-size: 12px;
+    padding-bottom: 3px;
+    padding-top: 3px;
   }
 }

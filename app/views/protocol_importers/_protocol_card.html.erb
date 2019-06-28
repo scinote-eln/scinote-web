@@ -1,3 +1,23 @@
-<div class='protocol-card'>
-	<h2><%= protocol[:name] %></h2>
+<div class='protocol-card'
+	data-id='<%= protocol[:id] %>'
+	data-protocol-source='<%= protocol[:source] %>'
+	data-url='<%= team_build_external_protocol_path(current_team.id,) %>'
+	data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
+	data-show-protocol-id='<%= protocol[:uri] %>'>
+	<p class='protocol-title'><%= protocol[:title] %></p>
+
+	<div class='row'>
+		<div class='row col-md-12 info-line'>
+		<%= l(Time.at(protocol[:created_on]).to_datetime, format: :full_date) %> • <%= protocol[:authors] %>
+		</div>
+
+		<div class='row'>
+			<div class='col-md-6 info-line'>
+				<%= t('protocol_importers.card.views_and_steps', nr_of_views: protocol[:nr_of_views], nr_of_steps: protocol[:nr_of_steps]) %>
+			</div>
+			<div class='col-md-6 info-line'>
+			<button type="button" class='external-import-btn btn btn-primary pull-right'><%= t('protocol_importers.card.import_button_text') %></button>
+			</div>
+		</div>
+	</div>
 </div>

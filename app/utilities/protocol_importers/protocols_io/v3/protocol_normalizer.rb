@@ -50,9 +50,15 @@ module ProtocolImporters
           original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }.to_h
           current_position = 0
           while next_step_id
+
             current_position += 1
             steps[next_step_id][:position] = current_position
             next_step_id = original_order[next_step_id]
+          end
+
+          # Check if step name are valid
+          steps.each do |step|
+            step[1][:name] = "Step #{(step[1][:position] + 1)}" if step[1][:name].blank?
           end
 
           { protocol: normalized_data }
@@ -69,6 +75,7 @@ module ProtocolImporters
             {
               id: e[:id],
               title: e[:title],
+              source: Constants::PROTOCOLS_IO_V3_API[:source_id],
               created_on: e[:created_on],
               authors: e[:authors].map { |a| a[:name] }.join(', '),
               nr_of_steps: e[:stats][:number_of_steps],

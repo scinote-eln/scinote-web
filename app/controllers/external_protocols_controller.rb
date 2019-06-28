@@ -7,7 +7,8 @@ class ExternalProtocolsController < ApplicationController
   # GET list_external_protocols
   def index
     service_call = ProtocolImporters::SearchProtocolsService
-                   .call(protocol_source: 'protocolsio/v3', query_params: index_params)
+                   .call(protocol_source: index_params[:protocol_source],
+                         query_params: index_params)
 
     if service_call.succeed?
       render json: {
@@ -101,7 +102,7 @@ class ExternalProtocolsController < ApplicationController
   end
 
   def index_params
-    params.permit(:protocol_source, :key, :page_id, :page_size, :order_field, :order_dir)
+    params.permit(:protocol_source, :key, :page_id, :page_size, :sort_by)
   end
 
   def show_params

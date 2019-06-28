@@ -1,92 +1,75 @@
 <div class='external-protocols-tab'>
   <div class='row'>
-    <div class='col-md-5 protocols-search-bar-panel'>
+    <%= form_tag team_list_external_protocol_path(@current_team.id),
+      method: :get,
+      class: 'protocols-search-bar',
+      remote: true do %>
+      <div class='col-md-5 protocols-search-bar-panel'>
+        <div class='service-provider'>
+          <%= image_tag 'external_protocols/protocolsio_logo.png',
+            class: 'protocolsio-logo' %>
+          <span class='protocolsio-title'><%= t('protocols.index.external_protocols.protocolsio_title') %></span>
+          <%= hidden_field_tag 'protocol_source', 'protocolsio/v3' %>
+        </div>
 
-      <div>
-        <%= image_tag 'external_protocols/protocolsio_logo.png',
-          class: 'protocolsio-logo' %>
-        <span class='protocolsio-title'><%= t('protocols.index.external_protocols.protocolsio_title') %></span>
+        <div class='input-group'>
+          <input class='form-control'
+          type='text'
+          name='key'
+          placeholder="<%= t('protocols.index.external_protocols.search_bar_placeholder') %>" >
+          </input>
+
+          <span class='input-group-addon'><i class='fas fa-search '></i></span>
+        </div>
       </div>
-      <%= form_tag '#',
-        method: :get,
-        class: 'protocols-search-bar' do %>
 
-          <div class='input-group'>
-            <input class='form-control'
-            type="text"
-            name="q"
-            placeholder="<%= t('protocols.index.external_protocols.search_bar_placeholder') %>" >
-            </input>
-
-            <span class='input-group-addon'><i class='fas fa-search '></i></span>
-          </div>
-        <% end %>
-      </div>
       <div class='col-md-7'>
         <div class='protocol-sort'>
           <span><%= t('protocols.index.external_protocols.sort_by.title') %></span>
-          <div class='btn-group' data-toggle='buttons' >
+          <div class='btn-group' data-toggle='buttons'>
             <label class='btn btn-link active'>
-              <input type='radio' name='sory_by' id='alphabetically' value='alpha'>
+              <input type='radio' name='sort_by' id='alphabetically' value='alpha' checked>
               <%= t('protocols.index.external_protocols.sort_by.alphabetically') %>
             </label>
             <label class='btn btn-link'>
-              <input type='radio' name='sory_by' id='newest' value='newest'>
+              <input type='radio' name='sort_by' id='newest' value='newest'>
               <%= t('protocols.index.external_protocols.sort_by.newest') %>
             </label>
             <label class='btn btn-link'>
-              <input type='radio' name='sory_by' id='oldest' value='oldest'>
+              <input type='radio' name='sort_by' id='oldest' value='oldest'>
               <%= t('protocols.index.external_protocols.sort_by.oldest') %>
             </label>
           </label>
         </div>
       </div>
-      </div>
     </div>
 
+  <% end %>
+  </div>
 
-    <div class='row main-protocol-panel'>
-      <div class='col-md-5 protocol-list-side-panel'>
+  <div class='row main-protocol-panel'>
+    <div class='col-md-5 protocol-list-side-panel'>
 
       <div class='row empty-text'>
         <%= t('protocols.index.external_protocols.list_panel.empty_text') %>
       </div>
-        <div class="external-protocol-result">
-          <a href="#" data-source="protocolsio/v3" data-id="11176" data-action="external-import" data-url="<%= team_build_external_protocol_path(current_team.id,) %>">Protocols IO, 11176</a>
-        </div>
 
-      <div class='protocol-card'
-        data-protocol-source='protocolsio/v3'
-        data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
-        data-show-protocol-id='Extracting-DNA-from-bananas-esvbee6'>
-        Banana protocol (click me)
-      </div>
-
-      <div class='protocol-card'
-        data-protocol-source='protocolsio/v3'
-        data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
-        data-show-protocol-id='cut-run-targeted-in-situ-genome-wide-profiling-wit-mgjc3un'>
-        Cut run targeted protocol (click me)
-      </div>
-
-      <div class='protocol-card'
-        data-protocol-source='protocolsio/3'
-        data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
-        data-show-protocol-id='errorr'>
-        Error protocol (click me, should default to default screen)
-      </div>
+      <div class='list-wrapper'></div>
     </div>
 
     <div class='col-md-7 protocol-preview-panel'>
       <div class='empty-preview-panel'>
+
         <div class='row'>
           <div class='text-rows protocol-preview-text'>
             <%= t('protocols.index.external_protocols.preview_panel.empty_title') %>
           </div>
         </div>
+
         <div class='row'>
           <div class='text-separator'> <hr> </div>
         </div>
+
         <div class='row'>
           <div class='text-rows protocol-preview-subtext'>
             <%= t('protocols.index.external_protocols.preview_panel.empty_subtext') %>
@@ -95,7 +78,18 @@
       </div>
 
       <div class='full-preview-panel' style='display: none;'>
-        <iframe class='preview-iframe'></iframe>
+        <div class='row preview-banner'>
+          <div class='col-md-6 txt-holder'>
+            <span>
+              <%= t('protocols.index.external_protocols.preview_panel.banner_text') %>
+            </span>
+          </div>
+          <div class='col-md-6 btn-holder'>
+          </div>
+        </div>
+        <div class='preview-holder'>
+          <iframe class='preview-iframe'></iframe>
+        </div>
       </div>
     </div>
   </div>

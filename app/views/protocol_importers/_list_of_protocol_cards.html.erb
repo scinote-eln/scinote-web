@@ -1,5 +1,4 @@
-<% protocols.each do |protocol| %>
+<% protocols[:protocols].each do |protocol| %>
 	<%= render partial: 'protocol_importers/protocol_card',
 		locals: { protocol: protocol } %>
-	<hr>
 <% end %>

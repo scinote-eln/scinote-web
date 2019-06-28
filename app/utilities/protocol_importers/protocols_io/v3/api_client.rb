@@ -44,8 +44,13 @@ module ProtocolImporters
         #     Default is 1.
         def protocol_list(query_params = {})
           response = with_handle_network_errors do
+            sort_mappings = CONSTANTS[:sort_mappings]
             query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
-                             .merge(query_params)
+                             .merge(query_params.except(:sort_by))
+
+            if sort_mappings[query_params[:sort_by]&.to_sym]
+              query = query.merge(sort_mappings[query_params[:sort_by].to_sym])
+            end
 
             self.class.get('/protocols', query: query)
           end
