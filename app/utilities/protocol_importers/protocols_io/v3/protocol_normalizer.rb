@@ -58,7 +58,7 @@ module ProtocolImporters
 
           # Check if step name are valid
           steps.each do |step|
-            step[1][:name] = (step[1][:position] + 1).to_s if step[1][:name].blank?
+            step[1][:name] = "Step #{(step[1][:position] + 1)}" if step[1][:name].blank?
           end
 
           { protocol: normalized_data }
