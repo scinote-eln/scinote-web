@@ -79,7 +79,7 @@ function applySearchCallback() {
         $('.empty-text').hide();
         $('.list-wrapper').show();
 
-        $('.list-wrapper').html(data.html)
+        $('.list-wrapper').html(data.html);
         applyClickCallbackOnProtocolCards();
         initLoadProtocolModalPreview();
       } else {
@@ -163,7 +163,7 @@ function handleFormSubmit(modal) {
 }
 
 function initLoadProtocolModalPreview() {
-  $('.external-import-btn').off('click').on('click',  function(e) {
+  $('.external-import-btn').off('click').on('click', function(e) {
     var link = $(this).parents('.protocol-card');
     animateSpinner(null, true);
     $.ajax({
