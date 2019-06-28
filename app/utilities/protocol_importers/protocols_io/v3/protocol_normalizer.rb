@@ -50,9 +50,15 @@ module ProtocolImporters
           original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }.to_h
           current_position = 0
           while next_step_id
+
             current_position += 1
             steps[next_step_id][:position] = current_position
             next_step_id = original_order[next_step_id]
+          end
+
+          # Check if step name are valid
+          steps.each do |step|
+            step[1][:name] = (step[1][:position] + 1).to_s if step[1][:name].blank?
           end
 
           { protocol: normalized_data }
