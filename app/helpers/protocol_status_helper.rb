@@ -7,7 +7,7 @@ module ProtocolStatusHelper
     res << 'data-trigger="focus" data-placement="bottom" title="'
     res << protocol_status_popover_title(parent) +
            '" data-content="' + protocol_status_popover_content(parent) +
-           '">' + protocol_name(parent) + '</a>'
+           '">' + protocol_name(parent).truncate(Constants::NAME_TRUNCATION_LENGTH) + '</a>'
     res.html_safe
   end
 
