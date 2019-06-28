@@ -9,6 +9,7 @@
           <%= image_tag 'external_protocols/protocolsio_logo.png',
             class: 'protocolsio-logo' %>
           <span class='protocolsio-title'><%= t('protocols.index.external_protocols.protocolsio_title') %></span>
+          <%= hidden_field_tag 'protocol_source', 'protocolsio/v3' %>
         </div>
 
         <div class='input-group'>

@@ -11,7 +11,7 @@ module ProtocolImporters
 
     def initialize(protocol_source:, query_params: {})
       @protocol_source = protocol_source
-      @query_params = query_params
+      @query_params = query_params.except(:protocol_source)
       @errors = Hash.new { |h, k| h[k] = {} }
     end
 
