@@ -164,7 +164,7 @@ function handleFormSubmit(modal) {
 
 function initLoadProtocolModalPreview() {
   $('.external-import-btn').off('click').on('click',  function(e) {
-    var link = $(this).parent('.protocol-card');
+    var link = $(this).parents('.protocol-card');
     animateSpinner(null, true);
     $.ajax({
       url: link.data('url'),
@@ -210,7 +210,7 @@ function initLoadProtocolModalPreview() {
 
 function initFormSubmits() {
   var modal = $('#protocol-preview-modal');
-  modal.off('click').on('click', 'button[data-action=import_protocol]', function() {
+  modal.find('button[data-action=import_protocol]').off('click').on('click', function() {
     var form = modal.find('form');
     var hiddenField = form.find('#protocol_protocol_type');
     hiddenField.attr('value', $(this).data('import_type'));
