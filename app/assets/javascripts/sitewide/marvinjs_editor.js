@@ -1,17 +1,10 @@
-/* global MarvinJSUtil, I18n, FilePreviewModal, tinymce */
-/* global TinyMCE, ChemicalizeMarvinJs */
+/* global TinyMCE, ChemicalizeMarvinJs, MarvinJSUtil, I18n, FilePreviewModal, tinymce */
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
 /* eslint-disable no-use-before-define */
 var marvinJsRemoteLastMrv;
 var marvinJsRemoteEditor;
 var MarvinJsEditor;
-if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
-  ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
-    marvinJsRemoteEditor = marvin;
-  });
-}
-
 
 MarvinJsEditor = (function() {
   var marvinJsModal = $('#MarvinJsModal');
@@ -19,7 +12,7 @@ MarvinJsEditor = (function() {
   var marvinJsObject = $('#marvinjs-sketch');
   var emptySketch = '<cml><MDocument></MDocument></cml>';
   var sketchName = marvinJsModal.find('.file-name input');
-  var marvinJsMode = marvinJsContainer[0].dataset.marvinjsMode;
+  var marvinJsMode = marvinJsContainer.data('marvinjsMode');
 
   // Facade api actions
 
@@ -239,7 +232,7 @@ MarvinJsEditor = (function() {
         $(marvinJsModal).modal('hide');
         config.reloadImage.src.val(json.description);
         $(config.reloadImage.sketch).find('.attachment-label').text(json.name);
-        MarvinJsEditor().create_preview(
+        MarvinJsEditor.create_preview(
           config.reloadImage.src,
           $(config.reloadImage.sketch).find('img')
         );
@@ -267,10 +260,19 @@ MarvinJsEditor = (function() {
 
   // MarvinJS Methods
 
-  return Object.freeze({
+  return {
+    enabled: function() {
+      return ($('#MarvinJsModal').length > 0);
+    },
+
     open: function(config) {
+      if (!MarvinJsEditor.enabled()) {
+        $('#MarvinJsPromoModal').modal('show');
+        return false;
+      }
+
       if (marvinJsMode === 'remote' && typeof (marvinJsRemoteEditor) === 'undefined') {
-        setTimeout(() => { MarvinJsEditor().open(config); }, 100);
+        setTimeout(() => { MarvinJsEditor.open(config); }, 100);
         return false;
       }
       preloadActions(config);
@@ -280,14 +282,14 @@ MarvinJsEditor = (function() {
         .css('height', marvinJsContainer.height() + 'px');
       marvinJsModal.find('.file-save-link').off('click').on('click', () => {
         if (config.mode === 'new') {
-          MarvinJsEditor().save(config);
+          MarvinJsEditor.save(config);
         } else if (config.mode === 'edit') {
-          MarvinJsEditor().update(config);
+          MarvinJsEditor.update(config);
         } else if (config.mode === 'new-tinymce') {
           config.objectType = 'TinyMceAsset';
-          MarvinJsEditor().save_with_image(config);
+          MarvinJsEditor.save_with_image(config);
         } else if (config.mode === 'edit-tinymce') {
-          MarvinJsEditor().update_tinymce(config);
+          MarvinJsEditor.update_tinymce(config);
         }
       });
       return true;
@@ -299,7 +301,7 @@ MarvinJsEditor = (function() {
         var objectType = this.dataset.objectType;
         var marvinUrl = this.dataset.marvinUrl;
         var container = this.dataset.sketchContainer;
-        MarvinJsEditor().open({
+        MarvinJsEditor.open({
           mode: 'new',
           objectId: objectId,
           objectType: objectType,
@@ -347,8 +349,10 @@ MarvinJsEditor = (function() {
         }
       });
     }
-  });
+  };
 });
+
+// TinyMCE plugin
 
 (function() {
   'use strict';
@@ -360,7 +364,7 @@ MarvinJsEditor = (function() {
       var editor = ed;
 
       function openMarvinJs() {
-        MarvinJsEditor().open({
+        MarvinJsEditor.open({
           mode: 'new-tinymce',
           marvinUrl: '/marvin_js_assets',
           editor: editor
@@ -388,3 +392,18 @@ MarvinJsEditor = (function() {
     tinymce.plugins.MarvinJsPlugin
   );
 })();
+
+// Initialization
+
+
+$(document).on('turbolinks:load', function() {
+  MarvinJsEditor = MarvinJsEditor();
+  if (MarvinJsEditor.enabled()) {
+    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
+      ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
+        marvinJsRemoteEditor = marvin;
+      });
+    }
+  }
+  MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
+});

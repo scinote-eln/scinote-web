@@ -1,8 +1,8 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
 /* eslint-disable no-underscore-dangle */
-/* global Uint8Array fabric tui animateSpinner
-  setupAssetsLoading I18n PerfectScrollbar MarvinJsEditor refreshProtocolStatusBar  */
+/* global Uint8Array fabric tui animateSpinner Assets
+   I18n PerfectScrollbar MarvinJsEditor refreshProtocolStatusBar  */
 //= require assets
 
 var FilePreviewModal = (function() {
@@ -571,8 +571,8 @@ var FilePreviewModal = (function() {
     modal.find('.file-preview-container')
       .append($('<img>').attr('src', '').attr('alt', ''));
     target = modal.find('.file-preview-container').find('img');
-    MarvinJsEditor().create_preview(src, target);
-    MarvinJsEditor().create_download_link(src, link, name);
+    MarvinJsEditor.create_preview(src, target);
+    MarvinJsEditor.create_download_link(src, link, name);
     modal.find('.file-name').text(name);
     $.get(sketch.dataset.updateUrl, function(result) {
       if (!readOnly && result.editable) {
@@ -581,7 +581,7 @@ var FilePreviewModal = (function() {
           ev.preventDefault();
           ev.stopPropagation();
           modal.modal('hide');
-          MarvinJsEditor().open({
+          MarvinJsEditor.open({
             mode: 'edit',
             data: src.val(),
             name: name,

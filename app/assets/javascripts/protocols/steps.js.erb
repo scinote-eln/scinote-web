@@ -377,7 +377,7 @@
 
   function initCallBacks() {
     applyCreateWopiFileCallback()
-    if (typeof(MarvinJsEditor) !== 'undefined') MarvinJsEditor().initNewButton('.new-marvinjs-upload-button');
+    if (typeof(MarvinJsEditor.initNewButton) == 'function') MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
     applyCheckboxCallBack();
     applyStepCompletedCallBack();
     applyEditCallBack();

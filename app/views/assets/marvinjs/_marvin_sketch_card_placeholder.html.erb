@@ -3,13 +3,6 @@
               <img src>
               <%= hidden_field_tag :description, sketch.description %>
           </div>
-          <script>
-            (function(){
-                src=$('.attachment-placeholder[data-marvinjs-sketch="<%= sketch.id %>"]').find('#description')
-                target=$('.attachment-placeholder[data-marvinjs-sketch="<%= sketch.id %>"]').find('img')
-                MarvinJsEditor().create_preview(src,target)
-            })()
-          </script>
           <div class="attachment-label"><%= truncate(sketch.name,
                                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></div>
           <div class="spencer-bonnet-modif">
