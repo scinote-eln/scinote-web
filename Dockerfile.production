@@ -1,4 +1,4 @@
-FROM ruby:2.5.5
+FROM ruby:2.6.3
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 RUN echo deb "http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list

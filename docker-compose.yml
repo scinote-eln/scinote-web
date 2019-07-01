@@ -44,6 +44,7 @@ services:
       bash -c "./bin/webpack-dev-server"
     environment:
       - RAILS_ENV=development
+      - WORKER=true
     volumes:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/

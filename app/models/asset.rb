@@ -6,48 +6,51 @@ class Asset < ApplicationRecord
 
   require 'tempfile'
   # Lock duration set to 30 minutes
-  LOCK_DURATION = 60*30
+  LOCK_DURATION = 60 * 30
+
+  # ActiveStorage configuration
+  has_one_attached :file
 
   # Paperclip validation
-  has_attached_file :file,
-                    styles: lambda { |a|
-                      if a.previewable_document?
-                        {
-                          large: { processors: [:custom_file_preview],
-                                   geometry: Constants::LARGE_PIC_FORMAT,
-                                   format: :jpg },
-                          medium: { processors: [:custom_file_preview],
-                                    geometry: Constants::MEDIUM_PIC_FORMAT,
-                                    format: :jpg }
-                        }
-                      else
-                        {
-                          large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                          medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
-                        }
-                      end
-                    },
-                    convert_options: {
-                      medium: '-quality 70 -strip',
-                      all: '-background "#d2d2d2" -flatten +matte'
-                    }
+  # has_attached_file :file,
+  #                   styles: lambda { |a|
+  #                     if a.previewable_document?
+  #                       {
+  #                         large: { processors: [:custom_file_preview],
+  #                                  geometry: Constants::LARGE_PIC_FORMAT,
+  #                                  format: :jpg },
+  #                         medium: { processors: [:custom_file_preview],
+  #                                   geometry: Constants::MEDIUM_PIC_FORMAT,
+  #                                   format: :jpg }
+  #                       }
+  #                     else
+  #                       {
+  #                         large: [Constants::LARGE_PIC_FORMAT, :jpg],
+  #                         medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
+  #                       }
+  #                     end
+  #                   },
+  #                   convert_options: {
+  #                     medium: '-quality 70 -strip',
+  #                     all: '-background "#d2d2d2" -flatten +matte'
+  #                   }
 
-  before_post_process :previewable?
-  before_post_process :extract_image_quality
+  # before_post_process :previewable?
+  # before_post_process :extract_image_quality
 
   # adds image processing in background job
-  process_in_background :file, processing_image_url: '/images/:style/processing.gif'
+  # process_in_background :file, processing_image_url: '/images/:style/processing.gif'
 
-  validates_attachment :file,
-                       presence: true,
-                       size: {
-                         less_than: Rails.configuration.x.file_max_size_mb.megabytes
-                       }
-  validates :estimated_size, presence: true
-  validates :file_present, inclusion: { in: [true, false] }
+  # validates_attachment :file,
+  #                      presence: true,
+  #                      size: {
+  #                        less_than: Rails.configuration.x.file_max_size_mb.megabytes
+  #                      }
+  # validates :estimated_size, presence: true
+  # validates :file_present, inclusion: { in: [true, false] }
 
   # Should be checked for any security leaks
-  do_not_validate_attachment_file_type :file
+  # do_not_validate_attachment_file_type :file
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -200,6 +203,32 @@ class Asset < ApplicationRecord
     end
   end
 
+  def previewable?
+    previewable_document? || previewable_image?
+  end
+
+  def medium_preview
+    return file.variant(resize: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
+
+    'medium/processing.gif'
+    # file.preview(resize: Constants::MEDIUM_PIC_FORMAT)
+  end
+
+  def large_preview
+    return file.variant(resize: Constants::LARGE_PIC_FORMAT) if previewable_image?
+
+    'large/processing.gif'
+    # file.preview(resize: Constants::LARGE_PIC_FORMAT)
+  end
+
+  def file_name
+    file.blob&.filename&.to_s
+  end
+
+  def file_size
+    file.blob&.byte_size
+  end
+
   def extract_image_quality
     return unless ['image/jpeg', 'image/pjpeg'].include? file_content_type
 
@@ -212,13 +241,8 @@ class Asset < ApplicationRecord
     Rails.logger.info "There was an error extracting image quality - #{e}"
   end
 
-  def previewable?
-    file.previewable_image? || file.previewable_document?
-  end
-
-  def is_image?
-    %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}} ===
-      file.content_type
+  def image?
+    file.blob.content_type == %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
   end
 
   def text?
@@ -514,6 +538,29 @@ class Asset < ApplicationRecord
   end
 
   private
+
+  def previewable_document?
+    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(file.blob&.content_type)
+
+    filename = file.blob&.filename
+    content_type = file.blob&.content_type
+
+    extensions = %w(.xlsx .docx .pptx .xls .doc .ppt)
+    # Mimetype sometimes recognizes Office files as zip files
+    # In this case we also check the extension of the given file
+    # Otherwise the conversion should fail if the file is being something else
+    previewable ||= (content_type == 'application/zip' && extensions.include?(File.extname(filename)))
+
+    # Mimetype also sometimes recognizes '.xls' and '.ppt' files as
+    # application/x-ole-storage (https://github.com/minad/mimemagic/issues/50)
+    previewable ||= (content_type == 'application/x-ole-storage' && %w(.xls .ppt).include?(File.extname(filename)))
+
+    previewable
+  end
+
+  def previewable_image?
+    file.blob&.content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+  end
 
   def filter_paperclip_errors
     if errors.size > 1

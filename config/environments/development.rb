@@ -27,8 +27,6 @@ Rails.application.configure do
     from: Rails.application.secrets.mailer_from,
     reply_to: Rails.application.secrets.mailer_reply_to
   }
-  config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.perform_caching = false
 
   if ENV['CUCUMBER'] == 'cucumber'
     config.action_mailer.delivery_method = :test
@@ -57,6 +55,14 @@ Rails.application.configure do
     password: Rails.application.secrets.mailer_password
   }
 
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = ENV['ACTIVESTORAGE_SERVICE'] || :local
+
+  # Don't care if the mailer can't send.
+  config.action_mailer.raise_delivery_errors = false
+
+  config.action_mailer.perform_caching = false
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -64,6 +70,9 @@ Rails.application.configure do
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
+
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
@@ -85,6 +94,9 @@ Rails.application.configure do
   # Only allow Better Errors to work on trusted ip, use ifconfig to see which
   # one you use and put it into application.yml!
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
+
+  # Suppress logger output for asset requests.
+  config.assets.quiet = false
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
@@ -108,11 +120,7 @@ Rails.application.configure do
 
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
-  #config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-
-  # Suppress logger output for asset requests. By default logger output is
-  # enabled.
-  # config.assets.quiet = true
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Enable/disable caching. By default caching is disabled.
   if Rails.root.join('tmp/caching-dev.txt').exist?
