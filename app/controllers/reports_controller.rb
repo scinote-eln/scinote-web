@@ -141,7 +141,7 @@ class ReportsController < ApplicationController
   # Generation action
   # Currently, only .PDF is supported
   def generate
-    content = params[:html]
+    content = params[:data]
     content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
     respond_to do |format|
       format.pdf do
@@ -149,6 +149,13 @@ class ReportsController < ApplicationController
                               locals: { content: content },
                               template: 'reports/report.pdf.erb',
                               disable_javascript: true
+      end
+      format.docx do
+        @user = current_user
+        @team = current_team
+        @scinote_url = root_url
+        @data = params[:data]
+        headers["Content-Disposition"] = 'attachment; filename="scinote_report.docx"'
       end
     end
   end

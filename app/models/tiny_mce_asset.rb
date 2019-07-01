@@ -70,7 +70,7 @@ class TinyMceAsset < ApplicationRecord
   def presigned_url(style = :large,
                     download: false,
                     timeout: Constants::URL_LONG_EXPIRE_TIME)
-    if stored_on_s3?
+    if is_stored_on_s3?
       download_arg = ('attachment; filename=' + CGI.escape(image_file_name) if download)
 
       signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
@@ -82,7 +82,7 @@ class TinyMceAsset < ApplicationRecord
     end
   end
 
-  def stored_on_s3?
+  def is_stored_on_s3?
     image.options[:storage].to_sym == :s3
   end
 
