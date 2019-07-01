@@ -1,8 +1,7 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
 /* eslint-disable no-underscore-dangle */
-/* global Uint8Array fabric tui animateSpinner setupAssetsLoading I18n PerfectScrollbar*/
-//= require assets
+/* global Uint8Array fabric tui animateSpinner I18n PerfectScrollbar*/
 
 var FilePreviewModal = (function() {
   'use strict';
@@ -396,7 +395,6 @@ var FilePreviewModal = (function() {
         processData: false,
         success: function(res) {
           $('#modal_link' + data.id).parent().html(res.html);
-          setupAssetsLoading();
         }
       }).done(function() {
         animateSpinner(null, false);

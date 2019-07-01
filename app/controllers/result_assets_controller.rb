@@ -194,10 +194,10 @@ class ResultAssetsController < ApplicationController
     success = true
     results = []
     params[:results_files].values.each_with_index do |file, index|
-      asset = Asset.new(file: file,
-                        created_by: current_user,
+      asset = Asset.new(created_by: current_user,
                         last_modified_by: current_user,
                         team: current_team)
+      asset.file.attach(file)
       result = Result.new(user: current_user,
                           my_module: @my_module,
                           name: params[:results_names][index.to_s],

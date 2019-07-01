@@ -204,6 +204,8 @@ class Asset < ApplicationRecord
   end
 
   def previewable?
+    return false unless file.attached?
+
     previewable_document? || previewable_image?
   end
 
@@ -222,10 +224,14 @@ class Asset < ApplicationRecord
   end
 
   def file_name
+    return '' unless file.attached?
+
     file.blob&.filename&.to_s
   end
 
   def file_size
+    return 0 unless file.attached?
+
     file.blob&.byte_size
   end
 
@@ -247,7 +253,7 @@ class Asset < ApplicationRecord
 
   def text?
     Constants::TEXT_EXTRACT_FILE_TYPES.any? do |v|
-      file_content_type.start_with? v
+      file.content_type.start_with? v
     end
   end
 
@@ -530,10 +536,10 @@ class Asset < ApplicationRecord
   private
 
   def previewable_document?
-    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(file.blob&.content_type)
+    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(file.content_type)
 
-    filename = file.blob&.filename
-    content_type = file.blob&.content_type
+    filename = file.filename.to_s
+    content_type = file.content_type
 
     extensions = %w(.xlsx .docx .pptx .xls .doc .ppt)
     # Mimetype sometimes recognizes Office files as zip files

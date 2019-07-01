@@ -1,11 +1,12 @@
 module FileIconsHelper
   def wopi_file?(asset)
-    file_ext = asset.file_file_name.split('.').last
-    %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
+    file_ext = asset.file_name.split('.').last
+    %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm
+       ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
   end
 
   def file_fa_icon_class(asset)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
 
     if Extends::FILE_FA_ICON_MAPPINGS[file_ext] # Check for custom mappings or possible overrides
       return Extends::FILE_FA_ICON_MAPPINGS[file_ext]
@@ -28,7 +29,7 @@ module FileIconsHelper
 
   # For showing next to file
   def file_extension_icon(asset)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       image_link = 'office/Word-docx_20x20x32.png'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -38,9 +39,7 @@ module FileIconsHelper
     end
 
     # Now check for custom mappings or possible overrides
-    if Extends::FILE_ICON_MAPPINGS[file_ext]
-      image_link = Extends::FILE_ICON_MAPPINGS[file_ext]
-    end
+    image_link = Extends::FILE_ICON_MAPPINGS[file_ext] if Extends::FILE_ICON_MAPPINGS[file_ext]
 
     if image_link
       image_tag image_link

@@ -1,6 +1,5 @@
 //= require Sortable.min
 //= require canvas-to-blob.min
-//= require assets
 
 (function(global) {
   'use strict';
@@ -246,7 +245,6 @@
       $new_step.find("[data-role='step-hot-table']").each(function() {
         renderTable($(this));
       });
-      setupAssetsLoading();
     })
     .on("ajax:error", function(e, xhr, status, error) {
       $form.renderFormErrors('step', xhr.responseJSON, true, e);
@@ -609,7 +607,6 @@
             $(this).handsontable("render");
           });
           animateSpinner(null, false);
-          setupAssetsLoading();
           DragNDropSteps.clearFiles();
           FilePreviewModal.init();
           $.initTooltips();
@@ -680,7 +677,6 @@
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();
-  setupAssetsLoading();
   FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');
