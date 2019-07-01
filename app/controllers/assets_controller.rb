@@ -47,7 +47,7 @@ class AssetsController < ApplicationController
   def file_preview
     response_json = {
       'id' => @asset.id,
-      'type' => (@asset.is_image? ? 'image' : 'file'),
+      'type' => (@asset.image? ? 'image' : 'file'),
 
       'filename' => truncate(escape_input(@asset.file_file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
@@ -62,7 +62,7 @@ class AssetsController < ApplicationController
                  can_manage_repository_rows?(@repository.team)
                end
 
-    if @asset.is_image?
+    if @asset.image?
       if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
         response_json['quality'] = @asset.file_image_quality || 90
       end
@@ -309,7 +309,7 @@ class AssetsController < ApplicationController
 
   def asset_data_type(asset)
     return 'wopi' if wopi_file?(asset)
-    return 'image' if asset.is_image?
+    return 'image' if asset.image?
 
     'file'
   end

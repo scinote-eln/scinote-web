@@ -5,7 +5,7 @@ AllCops:
     - "vendor/**/*"
     - "db/schema.rb"
   UseCache: false
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
 
 ##################### Style ####################################
 
@@ -91,7 +91,7 @@ Style/FormatString:
   EnforcedStyle: format
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: when_needed
+  EnforcedStyle: always
 
 Style/GuardClause:
   Enabled: false

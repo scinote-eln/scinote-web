@@ -1,5 +1,5 @@
 <% asset ||= @asset %>
-<% is_image = asset.is_image? %>
+<% is_image = asset.image? %>
 <% timestamp = asset.created_at %>
 <% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
 <div class="report-element report-step-attachment-element report-step-asset-element" data-ts="<%= timestamp.to_i %>" data-type="step_asset" data-id='{ "asset_id": <%= asset.id %> }' data-scroll-id="<%= asset.id %>" data-name="<%=t "projects.reports.elements.step_asset.sidebar_name", file: asset.file_file_name %>" data-icon-class="<%= icon_class %>">

@@ -2,9 +2,10 @@
 
 source 'http://rubygems.org'
 
-ruby '2.5.5'
+ruby '2.6.3'
 
 
+gem 'bootsnap', require: false
 gem 'webpacker', '~> 3.5'
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form', '~> 2.7.0'
@@ -13,7 +14,7 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 0.18'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 5.1.7'
+gem 'rails', '~> 5.2.3'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'sassc-rails'
@@ -79,7 +80,9 @@ gem 'underscore-rails'
 gem 'wicked_pdf', '~> 1.1.0'
 gem 'wkhtmltopdf-heroku'
 
+gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
+gem 'mini_magick'
 gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'delayed_job_active_record'
 gem 'devise-async',
