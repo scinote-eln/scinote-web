@@ -100,11 +100,6 @@ class UserProjectsController < ApplicationController
   def destroy
     if @up.destroy
       log_activity(:unassign_user_from_project)
-      generate_notification(current_user,
-                            @up.user,
-                            false,
-                            @up.role_str,
-                            @project)
       respond_to do |format|
         format.json do
           redirect_to project_users_edit_path(format: :json),

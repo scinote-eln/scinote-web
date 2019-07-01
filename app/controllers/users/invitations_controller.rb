@@ -4,6 +4,7 @@ module Users
   class InvitationsController < Devise::InvitationsController
     include InputSanitizeHelper
     include UsersGenerator
+    include NotificationsHelper
 
     prepend_before_action :check_captcha, only: [:update]
 
@@ -115,8 +116,8 @@ module Users
             generate_notification(
               @user,
               user,
-              user_team.role_str,
-              user_team.team
+              user_team.team,
+              user_team.role_str
             )
             Activities::CreateActivityService
               .call(activity_type: :invite_user_to_team,
@@ -170,23 +171,6 @@ module Users
           respond_with_navigational(resource) { render :edit }
         end
       end
-    end
-
-    def generate_notification(user, target_user, role, team)
-      title = I18n.t('notifications.assign_user_to_team',
-                     assigned_user: target_user.name,
-                     role: role,
-                     team: team.name,
-                     assigned_by_user: user.name)
-
-      message = "#{I18n.t('search.index.team')} #{team.name}"
-      notification = Notification.create(
-        type_of: :assignment,
-        title: sanitize_input(title),
-        message: sanitize_input(message)
-      )
-
-      UserNotification.create(notification: notification, user: target_user) if target_user.assignments_notification
     end
 
     def check_captcha_for_invite

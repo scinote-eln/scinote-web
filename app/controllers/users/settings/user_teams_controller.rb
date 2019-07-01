@@ -156,7 +156,6 @@ module Users
             generate_notification(current_user,
                                   @user_t.user,
                                   @user_t.team,
-                                  false,
                                   false)
             format.json { render json: { status: :ok } }
           else
