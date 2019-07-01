@@ -1,5 +1,5 @@
 
-/* global _ hljs tinyMCE SmartAnnotation MarvinJsEditor FilePreviewModal */
+/* global _ hljs tinyMCE SmartAnnotation MarvinJsEditor FilePreviewModal globalConstants */
 
 /* global _  I18n */
 
@@ -55,7 +55,7 @@ var TinyMCE = (function() {
             if (!marvinJsEdit) editLink.css('display', 'none');
             editLink.on('click', function() {
               if (marvinJsEdit) {
-                MarvinJsEditor().open({
+                MarvinJsEditor.open({
                   mode: 'edit-tinymce',
                   marvinUrl: '/marvin_js_assets/' + image[0].dataset.sourceId,
                   image: image
@@ -192,7 +192,6 @@ var TinyMCE = (function() {
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
 
-            var editorToolbaroffset
             var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
 
             var editorToolbaroffset;
