@@ -1,5 +1,3 @@
-<%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
-
 <% results.each do |protocol| %>
   <% has_description = protocol.description.present? && !protocol.description.empty? %>
   <% has_authors = protocol.authors.present? && !protocol.authors.empty? %>
@@ -107,7 +105,7 @@
       <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb",
-                   locals: { project: protocol.my_module.experiment.project } %>
+                   locals: { project: protocol.my_module.experiment.project, link_to_page: :show } %>
       </span>
       <br>
     <% end %>
@@ -122,11 +120,4 @@
 
 <% end %>
 
-<%= javascript_include_tag "handsontable.full.min" %>
 
-<!-- Libraries for formulas -->
-<%= render partial: "shared/formulas_libraries.html.erb" %>
-
-<%= stylesheet_link_tag 'datatables' %>
-<%= javascript_include_tag "protocols/index" %>
-<%= javascript_include_tag "protocols/steps" %>
