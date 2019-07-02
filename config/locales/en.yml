@@ -1741,7 +1741,8 @@ en:
         protocolsio_title: 'Protocols.io'
         sort_by:
           title: 'Show first:'
-          alphabetically: 'alphabetically'
+          alphabetically-asc: 'A-Z'
+          alphabetically-desc: 'Z-A'
           newest: 'newest'
           oldest: 'oldest'
         list_panel:

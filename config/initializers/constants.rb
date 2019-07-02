@@ -204,7 +204,8 @@ class Constants
     default_timeout: 10,
     debug_level: :debug,
     sort_mappings: {
-      alpha: { order_field: :name, order_dir: :asc },
+      alpha_asc: { order_field: :name, order_dir: :asc },
+      alpha_desc: { order_field: :name, order_dir: :desc },
       newest: { order_field: :date, order_dir: :desc },
       oldest: { order_field: :date, order_dir: :asc }
     },
