@@ -450,8 +450,7 @@ function initRecentProtocols() {
     });
   });
 
-  // We use here ajax:success, because we want to check any change on this page
-  $(document).on('ajax:success', () => {
+  $('.protocol-description-content').on('ajax:success', () => {
     updateRecentProtocolsStatus();
   });
 }
