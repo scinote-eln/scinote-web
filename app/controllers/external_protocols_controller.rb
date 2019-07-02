@@ -9,12 +9,12 @@ class ExternalProtocolsController < ApplicationController
     service_call = ProtocolImporters::SearchProtocolsService
                    .call(protocol_source: index_params[:protocol_source],
                          query_params: index_params)
-
     if service_call.succeed?
+      show_import_button = current_user.is_normal_user_or_admin_of_team?(current_team)
       render json: {
         html: render_to_string(
           partial: 'protocol_importers/list_of_protocol_cards.html.erb',
-          locals: { protocols: service_call.protocols_list }
+          locals: { protocols: service_call.protocols_list, show_import_button: show_import_button }
         )
       }
     else
