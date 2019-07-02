@@ -39,10 +39,10 @@
     "flow-typed": "^2.5.1",
     "prettier": "^1.13.7",
     "prettier-eslint": "^8.8.2",
-    "webpack-dev-server": "^2.11.2"
+    "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "@rails/webpacker": "^3.5.5",
+    "@rails/webpacker": "^4.0.7",
     "autoprefixer": "^7.2.6",
     "axios": "0.18.1",
     "babel-core": "^6.26.3",
