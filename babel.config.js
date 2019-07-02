@@ -34,13 +34,6 @@ module.exports = function(api) {
           modules: false,
           exclude: ['transform-typeof-symbol']
         }
-      ],
-      [
-        require('@babel/preset-react').default,
-        {
-          development: isDevelopmentEnv || isTestEnv,
-          useBuiltIns: true
-        }
       ]
     ].filter(Boolean),
     plugins: [
