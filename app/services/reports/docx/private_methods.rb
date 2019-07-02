@@ -67,11 +67,13 @@ module PrivateMethods
   def recursive_children(children, elements)
     children.each do |elem|
       if elem.class == Nokogiri::XML::Text
+        next if elem.text.strip == ' ' # Invisible symbol
+
         style = paragraph_styling(elem.parent)
         type = (style[:align] && style[:align] != :justify) || style[:style] ? 'newline' : 'text'
         elements.push(
           type: type,
-          value: elem.text.strip,
+          value: elem.text.strip.delete(' '), # Invisible symbol
           style: style
         )
         next
