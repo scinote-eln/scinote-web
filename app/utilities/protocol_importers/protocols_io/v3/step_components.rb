@@ -117,6 +117,7 @@ module ProtocolImporters
               name: desc_component[:source][:name],
               mol_weight: desc_component[:source][:mol_weight],
               details: {
+                catalog_number: desc_component[:source][:sku],
                 link: desc_component[:source][:vendor][:link],
                 linear_formula: desc_component[:source][:linfor]
               }
