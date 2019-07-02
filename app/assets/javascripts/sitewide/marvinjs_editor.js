@@ -15,23 +15,6 @@ MarvinJsEditor = (function() {
   var marvinJsMode = marvinJsContainer.data('marvinjsMode');
 
   // Facade api actions
-
-  var marvinJsExport = (childFunction, options = {}) => {
-    if (marvinJsMode === 'remote') {
-      remoteExport(childFunction, options);
-    } else {
-      localExport(childFunction, options);
-    }
-  };
-
-  var marvinJsImage = (childFunction, source, options = {}) => {
-    if (marvinJsMode === 'remote') {
-      remoteImage(childFunction, source, options);
-    } else {
-      localImage(childFunction, source, options);
-    }
-  };
-
   var marvinJsExportImage = (childFuction, options = {}) => {
     if (marvinJsMode === 'remote') {
       remoteExportImage(childFuction, options);
@@ -53,25 +36,6 @@ MarvinJsEditor = (function() {
 
   // Local marvinJS installation
 
-  var localExport = (childFuction, options = {}) => {
-    loadEditor().then(function(sketcherInstance) {
-      sketcherInstance.exportStructure('mrv').then(function(source) {
-        childFuction(source, options);
-      });
-    });
-  };
-
-  var localImage = (childFuction, source, options = {}) => {
-    loadPackages().then(function(sketcherInstance) {
-      sketcherInstance.onReady(function() {
-        var exporter = createExporter(sketcherInstance, 'image/jpeg');
-        exporter.render(source).then(function(image) {
-          childFuction(source, image, options);
-        });
-      });
-    });
-  };
-
   var localExportImage = (childFuction, options = {}) => {
     loadEditor().then(function(sketcherInstance) {
       sketcherInstance.exportStructure('mrv').then(function(source) {
@@ -88,10 +52,6 @@ MarvinJsEditor = (function() {
   };
 
   // Web services installation
-
-  var remoteExport = (childFuction, options = {}) => {
-    childFuction(marvinJsRemoteLastMrv, options);
-  };
 
   var remoteImage = (childFuction, source, options = {}) => {
     var params = {
@@ -122,15 +82,16 @@ MarvinJsEditor = (function() {
         marvinJsRemoteEditor.importStructure('mrv', emptySketch);
         sketchName.val(I18n.t('marvinjs.new_sketch'));
       } else if (config.mode === 'edit') {
+        marvinJsRemoteLastMrv = config.data;
         marvinJsRemoteEditor.importStructure('mrv', config.data);
         sketchName.val(config.name);
       } else if (config.mode === 'edit-tinymce') {
+        marvinJsRemoteLastMrv = config.data;
         $.get(config.marvinUrl, function(result) {
           marvinJsRemoteEditor.importStructure('mrv', result.description);
           sketchName.val(result.name);
         });
       }
-
       marvinJsRemoteEditor.on('molchange', () => {
         marvinJsRemoteEditor.exportStructure('mrv').then(function(source) {
           marvinJsRemoteLastMrv = source;
@@ -169,11 +130,6 @@ MarvinJsEditor = (function() {
     return new marvin.ImageExporter(params);
   }
 
-  function assignImage(source, data, target) {
-    target.attr('src', data);
-    return data;
-  }
-
   function TinyMceBuildHTML(json) {
     var imgstr = "<img src='" + json.image.url + "'";
     imgstr += " data-mce-token='" + json.image.token + "'";
@@ -183,12 +139,13 @@ MarvinJsEditor = (function() {
     return imgstr;
   }
 
-  function saveFunction(source, config) {
+  function saveFunction(source, image, config) {
     $.post(config.marvinUrl, {
       description: source,
       object_id: config.objectId,
       object_type: config.objectType,
-      name: sketchName.val()
+      name: sketchName.val(),
+      image: image
     }, function(result) {
       var newAsset;
       if (config.objectType === 'Step') {
@@ -219,23 +176,19 @@ MarvinJsEditor = (function() {
     });
   }
 
-  function updateFunction(source, config) {
+  function updateFunction(source, image, config) {
     $.ajax({
       url: config.marvinUrl,
       data: {
         description: source,
-        name: sketchName.val()
+        name: sketchName.val(),
+        image: image
       },
       dataType: 'json',
       type: 'PUT',
       success: function(json) {
         $(marvinJsModal).modal('hide');
-        config.reloadImage.src.val(json.description);
-        $(config.reloadImage.sketch).find('.attachment-label').text(json.name);
-        MarvinJsEditor.create_preview(
-          config.reloadImage.src,
-          $(config.reloadImage.sketch).find('img')
-        );
+        $('#modal_link' + json.id + ' img').attr('src', json.url);
       }
     });
   }
@@ -312,7 +265,7 @@ MarvinJsEditor = (function() {
     },
 
     save: function(config) {
-      marvinJsExport(saveFunction, config);
+      marvinJsExportImage(saveFunction, config);
     },
 
     save_with_image: function(config) {
@@ -320,23 +273,11 @@ MarvinJsEditor = (function() {
     },
 
     update: function(config) {
-      marvinJsExport(updateFunction, config);
+      marvinJsExportImage(updateFunction, config);
     },
 
     update_tinymce: function(config) {
       marvinJsExportImage(updateTinymceFunction, config);
-    },
-
-    create_preview: function(source, target) {
-      marvinJsImage(assignImage, source.val(), target);
-    },
-
-    create_download_link: function(source, link, filename) {
-      var downloadLink = (mrv, image, option) => {
-        option.link.attr('href', image);
-        option.link.attr('download', option.filename);
-      };
-      marvinJsImage(downloadLink, source.val(), { link: link, filename: filename });
     },
 
     delete_sketch: function(url, object) {

@@ -20,8 +20,7 @@ class AssetsController < ApplicationController
   def file_preview
     response_json = {
       'id' => @asset.id,
-      'type' => (@asset.image? ? 'image' : 'file'),
-
+      'type' => @asset.file.metadata[:asset_type] || (@asset.image? ? 'image' : 'file'),
       'filename' => truncate(escape_input(@asset.file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
       'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
@@ -35,14 +34,22 @@ class AssetsController < ApplicationController
                  can_manage_repository_rows?(@repository.team)
                end
 
-    if @asset.image?
-      if ['image/jpeg', 'image/pjpeg'].include? @asset.content_type
+    if response_json['type'] == 'image'
+      if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
         response_json['quality'] = @asset.file_image_quality || 90
       end
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'mime-type' => @asset.file.content_type,
         'large-preview-url' => @asset.large_preview
+      )
+    elsif response_json['type'] == 'marvinjs'
+      response_json.merge!(
+        'editable' => can_edit,
+        'large-preview-url' => @asset.large_preview,
+        'update-url' => marvin_js_asset_path(@asset.id),
+        'description' => @asset.file.metadata[:description],
+        'name' => @asset.file.metadata[:name]
       )
     else
 

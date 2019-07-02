@@ -580,10 +580,6 @@ Rails.application.routes.draw do
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior
-<<<<<<< HEAD
-    get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
-=======
->>>>>>> activestorage_migration
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'

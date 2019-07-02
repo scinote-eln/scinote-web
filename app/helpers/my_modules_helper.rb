@@ -10,23 +10,15 @@ module MyModulesHelper
   end
 
   def ordered_assets(step)
-    assets = []
-    assets += step.assets
-    assets += step.marvin_js_assets
-    
     view_state = step.current_view_state(current_user)
-    assets.sort! do |a, b|
-      case view_state.state.dig('assets', 'sort')
-      when 'old'
-        b[asset_date_sort_field(b)] <=> a[asset_date_sort_field(a)]
-      when 'atoz'
-        (a[asset_name_sort_field(a)]).downcase <=> (b[asset_name_sort_field(b)]).downcase
-      when 'ztoa'
-        (b[asset_name_sort_field(b)]).downcase <=> (a[asset_name_sort_field(a)]).downcase
-      else
-        a[asset_date_sort_field(a)] <=> b[asset_date_sort_field(b)]
-      end
-    end
+    sort = case view_state.state.dig('assets', 'sort')
+           when 'old' then { created_at: :asc }
+           when 'atoz' then { file_file_name: :asc }
+           when 'ztoa' then { file_file_name: :desc }
+           else { created_at: :desc }
+           end
+
+    step.assets.order(sort)
   end
 
   def az_ordered_assets_index(step, asset_id)
@@ -62,23 +54,5 @@ module MyModulesHelper
 
   def is_results_page?
     action_name == 'results'
-  end
-
-  private
-
-  def asset_date_sort_field(element)
-    result = {
-      'Asset' => :file_updated_at,
-      'MarvinJsAsset' => :updated_at
-    }
-    result[element.class.name]
-  end
-
-  def asset_name_sort_field(element)
-    result = {
-      'Asset' => :file_file_name,
-      'MarvinJsAsset' => :name
-    }
-    result[element.class.name] || ''
   end
 end
