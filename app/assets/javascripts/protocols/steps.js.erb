@@ -603,6 +603,7 @@
           toggleButtons(true);
           SmartAnnotation.preventPropagation('.atwho-user-popover');
 
+          tinyMCE.editors.step_description_textarea.plugins.autosave.removeDraft();
           tinyMCE.editors.step_description_textarea.remove();
 
           //Rerender tables
