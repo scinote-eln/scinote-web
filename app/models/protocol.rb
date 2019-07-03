@@ -425,17 +425,20 @@ class Protocol < ApplicationRecord
     self.restored_by = nil
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    save
+    result = save
 
-    Activities::CreateActivityService
-      .call(activity_type: :move_protocol_in_repository,
-            owner: user,
-            subject: self,
-            team: team,
-            message_items: {
-              protocol: id,
-              storage: I18n.t('activities.protocols.team_to_my_message')
-            })
+    if result
+      Activities::CreateActivityService
+        .call(activity_type: :move_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id,
+                storage: I18n.t('activities.protocols.team_to_my_message')
+              })
+    end
+    result
   end
 
   # This publish action simply moves the protocol from
@@ -452,17 +455,20 @@ class Protocol < ApplicationRecord
     self.restored_by = nil
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    save
+    result = save
 
-    Activities::CreateActivityService
-      .call(activity_type: :move_protocol_in_repository,
-            owner: user,
-            subject: self,
-            team: team,
-            message_items: {
-              protocol: id,
-              storage: I18n.t('activities.protocols.my_to_team_message')
-            })
+    if result
+      Activities::CreateActivityService
+        .call(activity_type: :move_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id,
+                storage: I18n.t('activities.protocols.my_to_team_message')
+              })
+    end
+    result
   end
 
   def archive(user)
@@ -518,16 +524,19 @@ class Protocol < ApplicationRecord
     else
       self.protocol_type = Protocol.protocol_types[:in_repository_private]
     end
-    save
+    result = save
 
-    Activities::CreateActivityService
-      .call(activity_type: :restore_protocol_in_repository,
-            owner: user,
-            subject: self,
-            team: team,
-            message_items: {
-              protocol: id
-            })
+    if result
+      Activities::CreateActivityService
+        .call(activity_type: :restore_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id
+              })
+    end
+    result
   end
 
   def update_keywords(keywords)
