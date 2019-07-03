@@ -1,3 +1,4 @@
+// * Licensed under the MIT license
 (function(Handsontable) {
   'use strict';
 
