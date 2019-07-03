@@ -91,7 +91,7 @@ Style/FormatString:
   EnforcedStyle: format
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: when_needed
+  EnforcedStyle: always
 
 Style/GuardClause:
   Enabled: false

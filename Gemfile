@@ -4,18 +4,20 @@ source 'http://rubygems.org'
 
 ruby '2.5.5'
 
+gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.6.2'
 gem 'devise_invitable'
 gem 'figaro'
-gem 'pg', '~> 0.18'
+gem 'pg', '~> 1.1.4'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 5.1.7'
+gem 'rails', '~> 5.2.3'
 gem 'recaptcha', require: 'recaptcha/rails'
-gem 'sanitize', '~> 4.4'
+gem 'sanitize', '~> 5.0'
 gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
+gem 'webpacker', '~> 4.0.0'
 gem 'yomu'
 
 # Gems for OAuth2 subsystem
@@ -65,7 +67,7 @@ gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.8.1' # HTML/XML parser
+gem 'nokogiri', '~> 1.10.3' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
@@ -100,7 +102,6 @@ gem 'newrelic_rpm'
 
 # Permission helper Gem
 gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'master'
-gem 'webpacker', '~> 4.0.0'
 
 group :development, :test do
   gem 'awesome_print'
