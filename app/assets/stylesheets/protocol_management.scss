@@ -159,17 +159,28 @@
     .protocol-card {
       border-bottom: 1px solid $color-gainsboro;
       margin-right: 20px;
-      padding: 12px 11px 7px 11px;
+      padding: 12px 11px;
 
       &.active {
         border: 2px solid $brand-primary;
         border-radius: 2px;
         box-shadow: 0 1px 4px 0 $color-black;
+        padding-bottom: 7px;
       }
 
       &:hover {
         background-color: rgba(64,161,215,0.1);
+        padding-bottom: 7px;
       }
+
+      .external-import-btn {
+        display: none;
+      }
+
+      &:hover .external-import-btn, &.active .external-import-btn{
+        display: block;
+      }
+
     }
 
     .protocol-title {
