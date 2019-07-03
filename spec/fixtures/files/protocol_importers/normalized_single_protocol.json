@@ -110,6 +110,10 @@
           {
             "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
             "name": "Second file"
+          },
+          {
+            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
+            "name": "14506718045_5b3e71dacd_o.jpg"
           }
         ],
         "position": 0
