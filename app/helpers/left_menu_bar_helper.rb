@@ -22,6 +22,6 @@ module LeftMenuBarHelper
   end
 
   def activities_are_selected?
-    controller_name == 'activities'
+    controller_name == 'global_activities'
   end
 end
