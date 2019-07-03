@@ -28,8 +28,12 @@
           <span><%= t('protocols.index.external_protocols.sort_by.title') %></span>
           <div class='btn-group' data-toggle='buttons'>
             <label class='btn btn-link active'>
-              <input type='radio' name='sort_by' id='alphabetically' value='alpha' checked>
-              <%= t('protocols.index.external_protocols.sort_by.alphabetically') %>
+              <input type='radio' name='sort_by' id='alphabetically-asc' value='alpha_asc' checked>
+              <%= t('protocols.index.external_protocols.sort_by.alphabetically-asc') %>
+            </label>
+            <label class='btn btn-link'>
+              <input type='radio' name='sort_by' id='alphabetically-desc' value='alpha_desc'>
+              <%= t('protocols.index.external_protocols.sort_by.alphabetically-desc') %>
             </label>
             <label class='btn btn-link'>
               <input type='radio' name='sort_by' id='newest' value='newest'>
