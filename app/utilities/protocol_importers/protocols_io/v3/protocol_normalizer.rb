@@ -44,21 +44,25 @@ module ProtocolImporters
           end
 
           # set positions
-          first_step_id = normalized_data[:steps].find { |s| s[:position].zero? }[:source_id]
-          next_step_id = protocol_hash[:steps].find { |s| s[:previous_id] == first_step_id }.try(:[], :id)
-          steps = normalized_data[:steps].map { |s| [s[:source_id], s] }.to_h
-          original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }.to_h
-          current_position = 0
-          while next_step_id
+          if protocol_hash[:steps].any?
+            first_step_id = normalized_data[:steps].find { |s| s[:position].zero? }[:source_id]
+            next_step_id = protocol_hash[:steps].find { |s| s[:previous_id] == first_step_id }.try(:[], :id)
+            steps = normalized_data[:steps].map { |s| [s[:source_id], s] }.to_h
+            original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }.to_h
 
-            current_position += 1
-            steps[next_step_id][:position] = current_position
-            next_step_id = original_order[next_step_id]
-          end
+            current_position = 0
+            while next_step_id
+              current_position += 1
+              steps[next_step_id][:position] = current_position
+              next_step_id = original_order[next_step_id]
+            end
 
-          # Check if step name are valid
-          steps.each do |step|
-            step[1][:name] = "Step #{(step[1][:position] + 1)}" if step[1][:name].blank?
+            # Check if step name are valid
+            steps.each do |step|
+              step[1][:name] = "Step #{(step[1][:position] + 1)}" if step[1][:name].blank?
+            end
+          else
+            normalized_data[:steps] = []
           end
 
           { protocol: normalized_data }
