@@ -25,14 +25,8 @@ module ProtocolImporters
       @protocols_list = normalizer.normalize_list(api_response)
 
       self
-    rescue api_errors => e
+    rescue client_errors => e
       @errors[e.error_type] = e.message
-      self
-    rescue normalizer_errors => e
-      @errors[e.error_type] = e.message
-      self
-    rescue StandardError => e
-      @errors[:build_protocol] = e.message
       self
     end
 
@@ -69,12 +63,8 @@ module ProtocolImporters
       "ProtocolImporters::#{endpoint_name}::ProtocolNormalizer".constantize.new
     end
 
-    def api_errors
+    def client_errors
       "ProtocolImporters::#{endpoint_name}::Error".constantize
-    end
-
-    def normalizer_errors
-      "ProtocolImporters::#{endpoint_name}::NormalizerError".constantize
     end
   end
 end
