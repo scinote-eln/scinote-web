@@ -206,6 +206,13 @@ Rails.application.routes.draw do
         get 'atwho_my_modules', to: 'at_who#my_modules'
         get 'atwho_menu_items', to: 'at_who#menu_items'
       end
+
+      # External protocols routes
+      get 'list_external_protocol', to: 'external_protocols#index'
+      get 'show_external_protocol', to: 'external_protocols#show'
+      get 'build_external_protocol', to: 'external_protocols#new'
+      post 'import_external_protocol', to: 'external_protocols#create'
+
       match '*path',
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]

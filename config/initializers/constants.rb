@@ -200,6 +200,44 @@ class Constants
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
   #=============================================================================
+  # Protocol importers
+  #=============================================================================
+
+  PROTOCOLS_ENDPOINTS = {
+    protocolsio: {
+      v3: 'ProtocolsIO::V3'
+    }
+  }.freeze
+
+  PROTOCOLS_IO_V3_API = {
+    base_uri: 'https://www.protocols.io/api/v3/',
+    default_timeout: 10,
+    debug_level: :debug,
+    sort_mappings: {
+      alpha_asc: { order_field: :name, order_dir: :asc },
+      alpha_desc: { order_field: :name, order_dir: :desc },
+      newest: { order_field: :date, order_dir: :desc },
+      oldest: { order_field: :date, order_dir: :asc }
+    },
+    endpoints: {
+      protocols: {
+        default_query_params: {
+          filter: :public,
+          key: '',
+          order_field: :activity,
+          order_dir: :desc,
+          page_size: 10,
+          page_id: 1,
+          fields: 'id,title,authors,created_on,uri,stats'
+        }
+      }
+    },
+    source_id: 'protocolsio/v3'
+  }.freeze
+
+  PROTOCOLS_DESC_TAGS = %w(a img i br).freeze
+
+  #=============================================================================
   # Other
   #=============================================================================
 

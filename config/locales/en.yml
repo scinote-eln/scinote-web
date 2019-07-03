@@ -1598,6 +1598,7 @@ en:
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
+        published_on_label: "Published on"
         created_at_label: "Created at"
         updated_at_label: "Last modified at"
         preview_title: "Protocol preview"
@@ -1606,6 +1607,8 @@ en:
         import_current: "Load Current"
         import_all: "Load All"
         import: "Load"
+        import_to_team_protocols_label: "Import to Team Protocols"
+        import_to_private_protocols_label: "Import to Private Protocols"
     export:
       export_results:
         title: "Export results"
@@ -1640,6 +1643,7 @@ en:
       navigation:
         public: "Team protocols"
         private: "My protocols"
+        external_protocols: "External protocols"
         archive: "Archive"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
@@ -1740,6 +1744,22 @@ en:
         row_failed: "Failed"
         row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
+      external_protocols:
+        search_bar_placeholder: 'Search for protocols'
+        protocolsio_title: 'Protocols.io'
+        sort_by:
+          title: 'Show first:'
+          alphabetically-asc: 'A-Z'
+          alphabetically-desc: 'Z-A'
+          newest: 'newest'
+          oldest: 'oldest'
+        list_panel:
+          empty_text: 'Search for protocols above to list them here'
+        preview_panel:
+          empty_title: 'PROTOCOL PREVIEW'
+          empty_subtext: 'Click on the protocol in the list to preview it here'
+          banner_text: 'Protocol Preview'
+
     steps:
       completed: 'Completed'
       uncompleted: 'Uncompleted'

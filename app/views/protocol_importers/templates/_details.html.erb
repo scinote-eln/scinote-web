@@ -1,0 +1,10 @@
+<p>
+  <% if item[:details]&.any? %>
+    <b> <%= t('protocol_importers.templates.details.title')%>: </b>
+    <br />
+    <% item[:details].reject { |_,v| v.blank? }.each do |k, v| %>
+      <%= "#{k.humanize}: #{v.to_s}" %>
+      <br />
+    <% end %>
+  <% end %>
+</p>

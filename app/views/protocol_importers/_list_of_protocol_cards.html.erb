@@ -1,0 +1,4 @@
+<% protocols[:protocols].each do |protocol| %>
+	<%= render partial: 'protocol_importers/protocol_card',
+		locals: { protocol: protocol, show_import_button: show_import_button } %>
+<% end %>

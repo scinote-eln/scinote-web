@@ -57,6 +57,232 @@
 
   .tab-pane-settings {
     border: 0;
-    padding: 25px 20px;
+  }
+}
+
+.tab-pane.external_protocols {
+  padding-bottom: 0;
+}
+
+.external-protocols-tab {
+
+  .protocols-search-bar-panel {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-right: 0;
+
+    .service-provider {
+      display: flex;
+      align-items: center;
+      width: 50%;
+    }
+
+    .protocolsio-logo {
+      height: 30px;
+      width: 30px;
+    }
+
+    .protocolsio-title {
+      color: $brand-primary;
+      font-size: 14px;
+      margin-left: 3px;
+      vertical-align: middle;
+    }
+
+    .input-group {
+      margin-bottom: 0;
+      max-width: 50%;
+
+      .form-control {
+        border-right: 0;
+      }
+
+      .input-group-addon {
+        background: $color-white;
+        color: $color-silver-chalice;
+      }
+    }
+  }
+
+  .protocol-sort {
+    padding-left: 7px;
+
+    span {
+      color: $color-silver-chalice;
+      font-size: 14px;
+    }
+
+    .btn-group {
+      margin-bottom: 10px;
+      margin-top: 6px;
+      padding-left: 3px;
+
+      label {
+        padding-bottom: 0;
+        padding-top: 0;
+
+        &.active {
+          background: $color-gainsboro;
+          border-radius: 5px !important;
+          color: $color-emperor;
+        }
+      }
+    }
+  }
+
+  .protocol-list-side-panel {
+    background-color: $color-white;
+    border-right: 1px solid $color-silver-chalice;
+    border-top: 1px solid $color-silver-chalice;
+    height: 600px;
+    padding-right: 0;
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    // When no search result is present
+    .empty-text {
+      color: $color-silver-chalice;
+      font-size: 13px;
+      margin-top: 20px;
+    }
+
+    .list-wrapper {
+      height: 100%;
+      overflow: auto;
+    }
+
+    .protocol-card {
+      border-bottom: 1px solid $color-gainsboro;
+      margin-right: 20px;
+      padding: 12px 11px;
+
+      &.active {
+        border: 2px solid $brand-primary;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px 0 $color-black;
+        padding-bottom: 7px;
+      }
+
+      &:hover {
+        background-color: rgba(64,161,215,0.1);
+        padding-bottom: 7px;
+      }
+
+      .external-import-btn {
+        display: none;
+      }
+
+      &:hover .external-import-btn, &.active .external-import-btn{
+        display: block;
+      }
+
+    }
+
+    .protocol-title {
+      color: $brand-primary;
+      font-size: 16px;
+    }
+
+    .info-line {
+      color: $color-dove-gray;
+      font-size: 13px;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+  }
+
+  .protocol-preview-panel {
+    background-color: $color-concrete;
+    border-top: 1px solid $color-silver-chalice;
+    height: 600px;
+    padding-left: 0;
+    padding-right: 0;
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    // Empty texts on the right
+    .empty-preview-panel {
+      padding-top: 79px;
+
+      .protocol-preview-text {
+        color: $color-silver-chalice;
+        font-size: 24px;
+      }
+
+      .protocol-preview-subtext {
+        color: $color-silver-chalice;
+        font-size: 14px;
+      }
+
+      .text-rows {
+        text-align: center;
+      }
+
+      .text-separator hr {
+        border: 1px solid $color-alto;
+        width: 120px;
+      }
+    }
+
+    .full-preview-panel {
+      height: 100%;
+    }
+
+    .preview-banner {
+      align-items: center;
+      background-color: $color-white;
+      border-bottom: 1px solid $color-alto;
+      color: $color-dove-gray;
+      display: flex;
+      font-size: 16px;
+      height: 40px;
+      padding-left: 21px;
+
+      .txt-holder {
+        padding-left: 0;
+      }
+
+      .btn-holder {
+        padding-right: 21px;
+      }
+    }
+
+
+    .preview-holder {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding-bottom: 40px;
+      padding-left: 21px;
+      padding-right: 21px;
+      width: 100%;
+
+      .preview-iframe {
+        border: 0;
+        flex-grow: 1;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  .external-import-btn {
+    background-color: $brand-primary;
+    border: none;
+    color: $color-white;
+    font-size: 12px;
+    padding-bottom: 3px;
+    padding-top: 3px;
   }
 }

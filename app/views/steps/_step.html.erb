@@ -1,4 +1,5 @@
 <% preview = (defined?(preview) ? preview : false) %>
+<% import = (defined?(import) ? import : false) %>
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -56,7 +57,7 @@
       </div>
       <div class="left-floats">
         <a class="step-panel-collapse-link"
-           href="#step-panel-<%= step.id %>"
+           href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
            data-remote="true">
           <span class="fas fa-caret-square-down collapse-step-icon"></span>
@@ -65,19 +66,21 @@
         <span class="step-number"><%= step.position + 1 %></span>
 
         <a class="step-panel-collapse-link step-name-link"
-           href="#step-panel-<%= step.id %>"
+           href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
            data-remote="true">
-          <span class="name-block"><strong><%= step.name %></strong></span> 
-          <span class="delimiter">|</span>
-          <span class="author-block"><%= sanitize_input t('protocols.steps.published_on',
-                                     timestamp: l(step.created_at, format: :full),
-                                     user: h(step.user.full_name)) %></span>
+          <span class="name-block"><strong><%= step.name %></strong></span>
+          <% unless step.new_record? %>
+            <span class="delimiter">|</span>
+            <span class="author-block"><%= sanitize_input t('protocols.steps.published_on',
+                                       timestamp: l(step.created_at, format: :full),
+                                       user: h(step.user.full_name)) %></span>
+          <% end %>
         </a>
       </div>
 
     </div>
-    <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
+    <div class="panel-collapse collapse" id="step-panel-<%= step.id || step.position %>" role="tabpanel">
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
@@ -94,7 +97,7 @@
           </div>
         </div>
         <div class="row">
-          <% unless step.tables.blank? then %>
+          <% if step.tables.any? %>
             <div class="col-xs-12">
               <hr>
               <% step.tables.each do |table| %>
@@ -111,7 +114,12 @@
             </div>
           <% end %>
 
-          <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step, preview: preview } %>
+          <% if import %>
+            <%= render partial: 'steps/attachments/preview_list.html.erb',
+                       locals: {  attachments: steps_assets[step.position]} %>
+          <% else %>
+            <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step, preview: preview } %>
+          <% end %>
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
@@ -145,10 +153,12 @@
             </div>
           <% end %>
         </div>
-        <hr>
-        <%= render partial: 'steps/comments.html.erb', locals: {  comments: step.last_comments,
-                                                                       comments_count: step.step_comments.count,
-                                                                       step: step } %>
+        <% unless import %>
+          <hr>
+          <%= render partial: 'steps/comments.html.erb', locals: {  comments: step.last_comments,
+                                                                    comments_count: step.step_comments.count,
+                                                                    step: step } %>
+        <% end %>
       </div>
     </div>
   </div>

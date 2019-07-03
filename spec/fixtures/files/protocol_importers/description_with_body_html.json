@@ -1,0 +1,5 @@
+{
+  "description": {
+    "body": "<script>alert('boom')</script><div class='col-5'><h5>Text only</h5> <img src='nekaj.com'/> <i></i> <b></b> <a href='nekaj.com'>Link tukaj</a> WTF <div class='asd'></div>"
+  }
+}
