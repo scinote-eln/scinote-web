@@ -9,6 +9,7 @@ class ProjectsOverviewService
     if @view_state.state.dig('projects', 'filter') != @params[:filter] &&
        %w(active archived all).include?(@params[:filter])
       @view_state.state['projects']['filter'] = @params[:filter]
+      @view_state.save!
     end
   end
 
@@ -45,7 +46,12 @@ class ProjectsOverviewService
                else
                  10
                end
-    table_state['length'] = per_page if table_state['length'] != per_page
+    if table_state['length'] != per_page
+      table_state['length'] = per_page
+      table_state['time'] = Time.now.to_i
+      @view_state.state['projects']['table'] = table_state
+      @view_state.save!
+    end
     page = @params[:start] ? (@params[:start].to_i / per_page) + 1 : 1
     records = fetch_dt_records
     records = records.where(archived: true) if @params[:filter] == 'archived'
@@ -53,10 +59,6 @@ class ProjectsOverviewService
     search_value = @params.dig(:search, :value)
     records = search(records, search_value) if search_value.present?
     records = sort(records).page(page).per(per_page)
-    if @view_state.changed?
-      @view_state.state['projects']['table']['time'] = Time.now.to_i
-      @view_state.save!
-    end
     records
   end
 
