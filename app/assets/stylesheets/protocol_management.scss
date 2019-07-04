@@ -86,7 +86,6 @@
     }
 
     .protocolsio-title {
-      color: $brand-primary;
       font-size: 14px;
       margin-left: 3px;
       vertical-align: middle;
@@ -135,8 +134,8 @@
 
   .protocol-list-side-panel {
     background-color: $color-white;
-    border-right: 1px solid $color-silver-chalice;
-    border-top: 1px solid $color-silver-chalice;
+    border-right: 1px solid $color-alto;
+    border-top: 1px solid $color-alto;
     height: 600px;
     padding-right: 0;
 
@@ -165,7 +164,7 @@
       &.active {
         border: 2px solid $brand-primary;
         border-radius: 2px;
-        box-shadow: 0 1px 4px 0 $color-black;
+        box-shadow: 0 1px 4px 0 $color-alto;
         padding-bottom: 7px;
       }
 
@@ -200,7 +199,7 @@
 
   .protocol-preview-panel {
     background-color: $color-concrete;
-    border-top: 1px solid $color-silver-chalice;
+    border-top: 1px solid $color-alto;
     height: 600px;
     padding-left: 0;
     padding-right: 0;

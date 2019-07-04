@@ -8,7 +8,8 @@
         <div class='service-provider'>
           <%= image_tag 'external_protocols/protocolsio_logo.png',
             class: 'protocolsio-logo' %>
-          <span class='protocolsio-title'><%= t('protocols.index.external_protocols.protocolsio_title') %></span>
+          <a class='protocolsio-title' href='https://www.protocols.io/' target='_blank'>
+            <%= t('protocols.index.external_protocols.protocolsio_title') %></a>
           <%= hidden_field_tag 'protocol_source', 'protocolsio/v3' %>
         </div>
 
