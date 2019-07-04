@@ -94,6 +94,7 @@ function applySearchCallback() {
         $('.list-wrapper').show();
 
         $('.list-wrapper').html(data.html);
+        $('.list-wrapper').scrollTo(0);
       } else {
         setDefaultViewState();
       }
