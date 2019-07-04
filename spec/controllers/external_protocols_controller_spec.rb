@@ -15,8 +15,8 @@ describe ExternalProtocolsController, type: :controller do
         team_id: team.id,
         key: 'search_string',
         protocol_source: 'protocolsio/v3',
-        page_id: 1,
-        page_size: 10,
+        page_id: 2,
+        page_size: 50,
         order_field: 'activity',
         order_dir: 'desc'
       }
@@ -24,10 +24,21 @@ describe ExternalProtocolsController, type: :controller do
 
     let(:action) { get :index, params: params }
 
+    let(:valid_search_response) do
+      {
+        protocols: [],
+        pagination: {
+          current_page: 2,
+          total_pages: 6,
+          page_size: 10
+        }
+      }
+    end
+
     before do
       service = double('success_service')
       allow(service).to(receive(:succeed?)).and_return(true)
-      allow(service).to(receive(:protocols_list)).and_return({})
+      allow(service).to(receive(:protocols_list)).and_return(valid_search_response)
 
       allow_any_instance_of(ProtocolImporters::SearchProtocolsService).to(receive(:call)).and_return(service)
     end
@@ -41,6 +52,11 @@ describe ExternalProtocolsController, type: :controller do
     it 'contains html key in the response' do
       action
       expect(JSON.parse(response.body)).to have_key('html')
+    end
+
+    it 'contains page_id in the response' do
+      action
+      expect(JSON.parse(response.body)['page_id']).to eq 2
     end
   end
 
