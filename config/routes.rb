@@ -579,8 +579,6 @@ Rails.application.routes.draw do
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior
-    get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
-    get 'files/:id/present_in_step', to: 'assets#step_file_present', as: 'step_file_present_asset'
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'

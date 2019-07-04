@@ -212,14 +212,14 @@ class Asset < ApplicationRecord
   def medium_preview
     return file.variant(resize: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
 
-    'medium/processing.gif'
+    '/images/medium/processing.gif'
     # file.preview(resize: Constants::MEDIUM_PIC_FORMAT)
   end
 
   def large_preview
     return file.variant(resize: Constants::LARGE_PIC_FORMAT) if previewable_image?
 
-    'large/processing.gif'
+    '/images/large/processing.gif'
     # file.preview(resize: Constants::LARGE_PIC_FORMAT)
   end
 
