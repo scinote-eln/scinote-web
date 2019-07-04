@@ -42,8 +42,8 @@ class TinyMceAsset < ApplicationRecord
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
       next if image_to_update.object || image_to_update.team_id != Team.find_by_object(object)
-      
-      image_to_update&.update(object: object, saved: true) 
+
+      image_to_update&.update(object: object, saved: true)
     end
     where(id: images_to_delete).destroy_all
 
