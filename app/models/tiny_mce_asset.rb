@@ -41,7 +41,9 @@ class TinyMceAsset < ApplicationRecord
     end
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
-      image_to_update&.update(object: object, saved: true) unless image_to_update.object
+      next if image_to_update.object || image_to_update.team_id != Team.find_by_object(object)
+      
+      image_to_update&.update(object: object, saved: true) 
     end
     where(id: images_to_delete).destroy_all
 
@@ -59,7 +61,7 @@ class TinyMceAsset < ApplicationRecord
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset_url = find_by_id(Base62.decode(asset_id))
-      if new_asset_url
+      if new_asset_url && new_asset_url.object == obj
         tm_asset.attributes['src'].value = new_asset_url.url
         tm_asset['class'] = 'img-responsive'
       end
