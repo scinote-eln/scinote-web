@@ -53,6 +53,14 @@ function setDefaultViewState() {
   $('.list-wrapper').hide();
 }
 
+// Handle clicks on Load more protocols button
+function applyClickCallbackOnShowMoreProtocols() {
+  $('.show-more-protocols-btn button').off('click').on('click', function() {
+    $('form.protocols-search-bar #page-id').val($(this).data('next-page-id'));
+    $('form.protocols-search-bar').submit();
+  });
+}
+
 // Apply AJAX callbacks onto the search box
 function applySearchCallback() {
   var timeout;
@@ -75,20 +83,30 @@ function applySearchCallback() {
 
   // Bind ajax calls on the form
   $('form.protocols-search-bar').off('ajax:success').off('ajax:error')
-    .bind('ajax:success', function(evt, data, status, xhr) {
-      if (data.html) {
+    .bind('ajax:success', function(evt, data) {
+      if (data.page_id > 1) {
+        // Remove old load more button since we will append a new one
+        $('.show-more-protocols-btn').remove();
+        $('.list-wrapper').append(data.html);
+      } else if (data.html) {
         resetPreviewPanel();
         $('.empty-text').hide();
         $('.list-wrapper').show();
 
         $('.list-wrapper').html(data.html);
-        applyClickCallbackOnProtocolCards();
-        initLoadProtocolModalPreview();
       } else {
         setDefaultViewState();
       }
+
+      // Reset page id after every request
+      $('form.protocols-search-bar #page-id').val(1);
+
+      // Apply all callbacks on new elements
+      applyClickCallbackOnProtocolCards();
+      applyClickCallbackOnShowMoreProtocols();
+      initLoadProtocolModalPreview();
     })
-    .bind("ajax:error", function(evt, xhr, status, error) {
+    .bind('ajax:error', function(evt, xhr) {
       setDefaultViewState();
 
       console.log(xhr.responseText);

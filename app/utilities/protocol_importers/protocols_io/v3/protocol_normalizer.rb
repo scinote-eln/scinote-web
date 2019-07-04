@@ -73,6 +73,7 @@ module ProtocolImporters
         def normalize_list(client_data)
           # client_data is HttpParty ApiReponse object
           protocols_hash = client_data.parsed_response.with_indifferent_access[:items]
+          pagination = client_data.parsed_response.with_indifferent_access[:pagination]
 
           normalized_data = {}
           normalized_data[:protocols] = protocols_hash.map do |e|
@@ -87,6 +88,14 @@ module ProtocolImporters
               uri: e[:uri]
             }
           end
+
+          # Parse pagination
+          normalized_data[:pagination] = {
+            current_page: pagination[:current_page],
+            total_pages: pagination[:total_pages],
+            page_size: pagination[:page_size]
+          }
+
           normalized_data
         rescue StandardError => e
           raise ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message

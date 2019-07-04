@@ -226,7 +226,7 @@ class Constants
           key: '',
           order_field: :activity,
           order_dir: :desc,
-          page_size: 10,
+          page_size: 50,
           page_id: 1,
           fields: 'id,title,authors,created_on,uri,stats'
         }
