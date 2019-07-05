@@ -9,7 +9,8 @@ module DrawResultComments
     return if comments.count.zero?
 
     @docx.p
-    @docx.p I18n.t('projects.reports.elements.result_comments.name', result: result.name), bold: true
+    @docx.p I18n.t('projects.reports.elements.result_comments.name', result: result.name),
+            bold: true, size: Constants::REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE
     team = @report_team
     user = @user
     @docx.ol do

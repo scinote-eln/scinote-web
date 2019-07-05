@@ -14,7 +14,7 @@ module DrawStepChecklist
         @user,
         @report_team,
         I18n.t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)
-      ).text
+      ).text, italic: true
       text ' '
       text I18n.t('projects.reports.elements.step_checklist.user_time',
                   timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

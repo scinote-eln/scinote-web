@@ -24,7 +24,7 @@
         <% else %>
           <ul class="no-style content-comments">
             <% comments.each do |comment| %>
-              <%= render partial: 'shared/comments/item.html.erb', locals: { comment: comment, readonly: true, report: true } %>`
+              <%= render partial: 'shared/comments/item.html.erb', locals: { comment: comment, readonly: true, report: true } %>
             <% end %>
           </ul>
         <% end %>

@@ -8,7 +8,7 @@ module DrawExperiment
     experiment = Experiment.find_by_id(subject['id']['experiment_id'])
     return unless experiment
 
-    @docx.h2 experiment.name
+    @docx.h2 experiment.name, size: Constants::REPORT_DOCX_EXPERIMENT_TITLE_SIZE
     @docx.p do
       text I18n.t('projects.reports.elements.experiment.user_time',
                   timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]

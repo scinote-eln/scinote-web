@@ -8,23 +8,18 @@ module DrawStepComments
     comments = step.step_comments
     return if comments.count.zero?
 
-    team = @report_team
-    user = @user
     @docx.p
-    @docx.p I18n.t('projects.reports.elements.step_comments.name', step: step.name), bold: true
-    @docx.ol do
-      comments.each do |comment|
-        comment_ts = comment.created_at
-        li do
-          text I18n.t('projects.reports.elements.step_comments.comment_prefix',
-                      user: comment.user.full_name,
-                      date: I18n.l(comment_ts, format: :full_date),
-                      time: I18n.l(comment_ts, format: :time)), italic: true
-          br
-          text SmartAnnotations::TagToText.new(user, team, comment.message).text
-          br
-        end
-      end
+    @docx.p I18n.t('projects.reports.elements.step_comments.name', step: step.name),
+            bold: true, size: Constants::REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE
+    comments.each do |comment|
+      comment_ts = comment.created_at
+      @docx.p I18n.t('projects.reports.elements.step_comments.comment_prefix',
+                     user: comment.user.full_name,
+                     date: I18n.l(comment_ts, format: :full_date),
+                     time: I18n.l(comment_ts, format: :time)), italic: true
+      html = custom_auto_link(comment.message, team: @report_team)
+      html_to_word_converter(html)
+      @docx.p
     end
   end
 end
