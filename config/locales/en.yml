@@ -469,6 +469,7 @@ en:
           move_up: "Move report element up"
           move_down: "Move report element down"
           remove: "Remove report element from the report"
+          scinote_link: "SciNote link"
         new_element:
           title: "Add new report element/s here"
         project_header:

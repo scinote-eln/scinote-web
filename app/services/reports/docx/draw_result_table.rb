@@ -7,17 +7,18 @@ module DrawResultTable
 
     table = result.table
     timestamp = table.created_at
+    color = @color
     @docx.p
     @docx.p do
       text result.name
-      text ' ' + I18n.t('search.index.archived'), color: 'a0a0a0' if result.archived?
+      text ' ' + I18n.t('search.index.archived'), color: color[:gray] if result.archived?
       text ' '
       text I18n.t 'projects.reports.elements.result_table.table_name', name: table.name
       text ' '
       text I18n.t('projects.reports.elements.result_text.user_time',
-                  timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: 'a0a0a0'
+                  timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
     end
-    @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: 4
+    @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
     subject['children'].each do |child|
       public_send("draw_#{child['type_of']}", child)
     end
