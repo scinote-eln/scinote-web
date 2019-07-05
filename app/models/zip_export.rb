@@ -22,71 +22,45 @@ class ZipExport < ApplicationRecord
   belongs_to :user, optional: true
 
   # Override path only for S3
-  if ENV['PAPERCLIP_STORAGE'] == 's3'
-    s3_path =
-      if ENV['S3_SUBFOLDER']
-        "/#{ENV['S3_SUBFOLDER']}/zip_exports/:attachment/"\
-        ":id_partition/:hash/:style/:filename"
-      else
-        '/zip_exports/:attachment/:id_partition/:hash/:style/:filename'
-      end
+  # if ENV['PAPERCLIP_STORAGE'] == 's3'
+  #   s3_path =
+  #     if ENV['S3_SUBFOLDER']
+  #       "/#{ENV['S3_SUBFOLDER']}/zip_exports/:attachment/"\
+  #       ":id_partition/:hash/:style/:filename"
+  #     else
+  #       '/zip_exports/:attachment/:id_partition/:hash/:style/:filename'
+  #     end
+  #
+  #   has_attached_file :zip_file, path: s3_path
+  # else
+  #   has_attached_file :zip_file
+  # end
 
-    has_attached_file :zip_file, path: s3_path
-  else
-    has_attached_file :zip_file
-  end
+  has_one_attached :zip_file
 
-  validates_attachment :zip_file,
-                       content_type: { content_type: 'application/zip' }
+  # validates_attachment :zip_file,
+  #                      content_type: { content_type: 'application/zip' }
 
   after_create :self_destruct
 
-  # When using S3 file upload, we can limit file accessibility with url signing
-  def presigned_url(style = :original,
-                    download: false,
-                    timeout: Constants::URL_SHORT_EXPIRE_TIME)
-    if stored_on_s3?
-      if download
-        download_arg = 'attachment; filename=' + URI.escape(zip_file_file_name)
-      else
-        download_arg = nil
-      end
-
-      signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
-      signer.presigned_url(:get_object,
-                           bucket: S3_BUCKET.name,
-                           key: zip_file.path(style)[1..-1],
-                           expires_in: timeout,
-                           response_content_disposition: download_arg)
-    end
-  end
-
-  def stored_on_s3?
-    zip_file.options[:storage].to_sym == :s3
-  end
-
   def self.delete_expired_export(id)
     export = find_by_id(id)
-    export.destroy if export
+    export&.destroy
   end
 
   def generate_exportable_zip(user, data, type, options = {})
-    I18n.backend.date_format =
-      user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
-    zip_input_dir = FileUtils.mkdir_p(
-      File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")
-    ).first
-    zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
-    zip_file = File.new(
-      File.join(zip_dir, "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip"),
-      'w+'
-    )
+    I18n.backend.date_format = user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
+    zip_input_dir = FileUtils.mkdir_p(File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")).first
+    tmp_zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
+    tmp_zip_name = "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip"
+    tmp_zip_file = File.new(File.join(tmp_zip_dir, tmp_zip_name), 'w+')
+
     fill_content(zip_input_dir, data, type, options)
-    zip!(zip_input_dir, zip_file)
-    self.zip_file = File.open(zip_file)
+    zip!(zip_input_dir, tmp_zip_file)
+    zip_file.attach(io: File.open(tmp_zip_file), filename: tmp_zip_name)
     generate_notification(user) if save
   ensure
-    FileUtils.rm_rf([zip_input_dir, zip_file], secure: true)
+    FileUtils.rm_rf([zip_input_dir, tmp_zip_file], secure: true)
   end
 
   handle_asynchronously :generate_exportable_zip

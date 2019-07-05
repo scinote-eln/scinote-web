@@ -98,19 +98,7 @@ module ReportsHelper
 
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset, type = :asset, klass = nil)
-    prefix = ''
-    if ENV['PAPERCLIP_STORAGE'].present? &&
-       ENV['MAIL_SERVER_URL'].present? &&
-       ENV['PAPERCLIP_STORAGE'] == 'filesystem'
-      prefix = ENV['MAIL_SERVER_URL']
-    end
-    if !prefix.empty? &&
-       !prefix.include?('http://') &&
-       !prefix.include?('https://')
-      prefix = "http://#{prefix}"
-    end
-    size = type == :tiny_mce_asset ? :large : :medium
-    url = prefix + asset.url(size, timeout: Constants::URL_LONG_EXPIRE_TIME)
+    url = type == :tiny_mce_asset ? asset.preview : asset.large_preview
     image_tag(url, class: klass)
   end
 

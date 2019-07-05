@@ -15,14 +15,17 @@ class User < ApplicationRecord
          :timeoutable, :omniauthable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
-  has_attached_file :avatar,
-                    styles: {
-                      medium: Constants::MEDIUM_PIC_FORMAT,
-                      thumb: Constants::THUMB_PIC_FORMAT,
-                      icon: Constants::ICON_PIC_FORMAT,
-                      icon_small: Constants::ICON_SMALL_PIC_FORMAT
-                    },
-                    default_url: Constants::DEFAULT_AVATAR_URL
+
+  has_one_attached :avatar
+
+  # has_attached_file :avatar,
+  #                   styles: {
+  #                     medium: Constants::MEDIUM_PIC_FORMAT,
+  #                     thumb: Constants::THUMB_PIC_FORMAT,
+  #                     icon: Constants::ICON_PIC_FORMAT,
+  #                     icon_small: Constants::ICON_SMALL_PIC_FORMAT
+  #                   },
+  #                   default_url: Constants::DEFAULT_AVATAR_URL
 
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
@@ -35,10 +38,10 @@ class User < ApplicationRecord
             presence: true,
             length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  validates_attachment :avatar,
-    :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
-            message: I18n.t('client_api.user.avatar_too_big') }
+  # validates_attachment :avatar,
+  #   :content_type => { :content_type => ["image/jpeg", "image/png"] },
+  #   size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
+  #           message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications_settings
@@ -229,7 +232,7 @@ class User < ApplicationRecord
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
   # and put all other (more specific ones) in it
-  after_validation :filter_paperclip_errors
+  # after_validation :filter_paperclip_errors
 
   before_destroy :destroy_notifications
 
@@ -247,6 +250,26 @@ class User < ApplicationRecord
     # avatar_file_name == "face.png"
     # avatar_content_type == "image/png"
     @avatar_remote_url = url_value
+  end
+
+  def avatar_variant(style)
+    format = case style.to_sym
+             when :medium
+               Constants::MEDIUM_PIC_FORMAT
+             when :thumb
+               Constants::THUMB_PIC_FORMAT
+             when :icon
+               Constants::ICON_PIC_FORMAT
+             when :icon_small
+               Constants::ICON_SMALL_PIC_FORMAT
+             else
+               Constants::ICON_SMALL_PIC_FORMAT
+             end
+    avatar.variant(resize: format)
+  end
+
+  def avatar_url(style)
+    Rails.application.routes.url_helpers.url_for(avatar_variant(style))
   end
 
   def date_format

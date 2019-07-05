@@ -5,12 +5,10 @@ class ZipExportsController < ApplicationController
   before_action :check_download_permissions, except: :file_expired
 
   def download
-    if @zip_export.stored_on_s3?
-      redirect_to @zip_export.presigned_url(download: true), status: 307
+    if !@zip_export.zip_file.attached?
+      render_404
     else
-      send_file @zip_export.zip_file.path,
-                filename: URI.unescape(@zip_export.zip_file_file_name),
-                type: 'application/zip'
+      redirect_to rails_blob_path(@zip_export.zip_file, disposition: 'attachment')
     end
   end
 

@@ -83,7 +83,6 @@ class Asset < ApplicationRecord
   after_validation :filter_paperclip_errors
   # Needed because Paperclip validatates on creation
   after_initialize :filter_paperclip_errors, if: :new_record?
-  before_destroy :paperclip_delete, prepend: true
   after_save { result&.touch; step&.touch }
 
   attr_accessor :file_content, :file_info, :preview_cached, :in_template
@@ -330,23 +329,6 @@ class Asset < ApplicationRecord
     end
   end
 
-  # Workaround for making Paperclip work with asset deletion (might be because
-  # of how the asset models are implemented)
-  def paperclip_delete
-    report_elements.destroy_all
-    asset_text_datum.destroy if asset_text_datum.present?
-    # Nullify needed to force paperclip file deletion
-    file = nil
-    save && reload
-  end
-
-  def destroy
-    super()
-    # Needed, otherwise the object isn't deleted, because of how the asset
-    # models are implemented
-    delete
-  end
-
   # If team is provided, its space_taken
   # is updated as well
   def update_estimated_size(team = nil)
@@ -366,43 +348,6 @@ class Asset < ApplicationRecord
     if team.present?
       team.take_space(es)
       team.save
-    end
-  end
-
-  def url(style = :original, timeout: Constants::URL_SHORT_EXPIRE_TIME)
-    if file.is_stored_on_s3? && !file.processing?
-      presigned_url(style, timeout: timeout)
-    else
-      file.url(style)
-    end
-  end
-
-  # When using S3 file upload, we can limit file accessibility with url signing
-  def presigned_url(style = :original,
-                    download: false,
-                    timeout: Constants::URL_SHORT_EXPIRE_TIME)
-    if file.is_stored_on_s3?
-      if download
-        download_arg = 'attachment; filename=' + URI.escape(file_file_name)
-      else
-        download_arg = nil
-      end
-
-      signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
-      signer.presigned_url(:get_object,
-        bucket: S3_BUCKET.name,
-        key: file.path(style)[1..-1],
-        expires_in: timeout,
-        # this response header forces object download
-        response_content_disposition: download_arg)
-    end
-  end
-
-  def open
-    if file.is_stored_on_s3?
-      Kernel.open(presigned_url, "rb")
-    else
-      File.open(file.path, "rb")
     end
   end
 

@@ -78,6 +78,7 @@ module Experiments
       @graph.output(png: file.path)
       @exp.workflowimg.attach(io: file, filename: File.basename(file.path))
       file.close
+      file.unlink
       @exp.touch(:workflowimg_updated_at)
     end
   end

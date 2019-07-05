@@ -327,14 +327,16 @@ class Team < ApplicationRecord
   end
 
   def self.find_by_object(obj)
-    case obj.class.name
-    when 'Protocol'
-      obj.team_id
-    when 'MyModule', 'Step'
-      obj.protocol.team_id
-    when 'ResultText'
-      obj.result.my_module.protocol.team_id
-    end
+    find(
+      case obj.class.name
+      when 'Protocol'
+        obj.team_id
+      when 'MyModule', 'Step'
+        obj.protocol.team_id
+      when 'ResultText'
+        obj.result.my_module.protocol.team_id
+      end
+    )
   end
 
   private

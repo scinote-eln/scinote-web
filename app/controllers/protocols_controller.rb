@@ -791,7 +791,7 @@ class ProtocolsController < ApplicationController
                   asset_file_name = asset_guid.to_s +
                                     File.extname(asset.file_file_name).to_s
                   ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-                  input_file = asset.open
+                  input_file = asset.file.download
                   ostream.print(input_file.read)
                   input_file.close
                 end

@@ -88,7 +88,6 @@ describe TemplatesService do
               .to eq(tmpl_step.step_comments.size)
           end
         end
-        Asset.all.each(&:paperclip_delete)
         FileUtils.remove_dir(tmplts_dir)
       end
     end
