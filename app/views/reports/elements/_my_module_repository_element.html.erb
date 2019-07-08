@@ -28,8 +28,20 @@
   </div>
   <div class="report-element-body">
     <% if rows_json[:data].count > 0 %>
-      <input type="hidden" class="hot-table-contents hot-samples" value='<%= rows_json.to_json.force_encoding(Encoding::UTF_8) %>' />
-      <div class="hot-table-container"></div>
+    <table class="report-common-table-format">
+      <tr>
+      <% rows_json[:headers].each do |cell| %>
+        <th><span><%= cell %></span></th>
+      <% end %>
+      </tr>
+      <% rows_json[:data].each do |row|  %>
+        <tr>
+          <% row.each do |cell| %>
+            <td><span><%= cell %></span></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
     <% else %>
       <div class="row">
         <div class="col-xs-12">
