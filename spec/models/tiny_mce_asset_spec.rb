@@ -30,8 +30,8 @@ describe TinyMceAsset, type: :model do
   end
 
   describe 'Methods' do
-    let(:team) { create :team}
-    let(:my_module) { create :my_module}
+    let(:team) { create :team }
+    let(:my_module) { create :my_module }
     let(:result) do
       create :result, name: 'test result', my_module: my_module
     end
@@ -39,7 +39,7 @@ describe TinyMceAsset, type: :model do
     let(:result_text) do
       create :result_text, text: '<img data-mce-token=1  src=""/>', result: result
     end
-    let(:image) { create :tiny_mce_asset, id: 1, team_id: team.id}
+    let(:image) { create :tiny_mce_asset, id: 1, team_id: team.id }
 
     describe '#update_images' do
       it 'save new image' do
@@ -62,7 +62,6 @@ describe TinyMceAsset, type: :model do
         image
         expect(TinyMceAsset.generate_url(result_text.text, result_text)).not_to include 'sample_file.jpg'
       end
-
     end
 
     describe '#reassign_tiny_mce_image_references' do
