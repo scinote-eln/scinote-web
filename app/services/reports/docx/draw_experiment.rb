@@ -13,7 +13,7 @@ module DrawExperiment
       text I18n.t('projects.reports.elements.experiment.user_time',
                   timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
       text ' | '
-      link  'SciNote Link',
+      link  I18n.t('projects.reports.elements.all.scinote_link'),
             scinote_url + Rails.application.routes.url_helpers.canvas_experiment_path(experiment),
             link_style
     end

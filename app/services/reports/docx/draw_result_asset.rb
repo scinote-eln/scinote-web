@@ -8,13 +8,14 @@ module DrawResultAsset
     asset = result.asset
     is_image = result.asset.is_image?
     timestamp = asset.created_at
+    color = @color
     @docx.p
     @docx.p do
       text result.name
-      text ' ' + I18n.t('search.index.archived'), color: 'a0a0a0' if result.archived?
+      text ' ' + I18n.t('search.index.archived'), color: color[:gray] if result.archived?
       text  ' ' + I18n.t('projects.reports.elements.result_asset.file_name', file: asset.file_file_name)
       text  ' ' + I18n.t('projects.reports.elements.result_asset.user_time',
-                         user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: 'a0a0a0'
+                         user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
 
     asset_image_preparing(asset) if is_image

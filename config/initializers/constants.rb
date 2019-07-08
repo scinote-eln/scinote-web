@@ -111,6 +111,11 @@ class Constants
   REPORT_DOCX_MARGIN_BOTTOM = 720
   REPORT_DOCX_MARGIN_LEFT = 720
 
+  # Word borders in eighth point units.
+  # A eighth point is 1/8 of a point. A border size of 4 is equivalent to 0.5pt.
+
+  REPORT_DOCX_TABLE_BORDER_SIZE = 4
+
   #=============================================================================
   # Styling
   #=============================================================================

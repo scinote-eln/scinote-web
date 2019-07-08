@@ -7,6 +7,7 @@ module DrawStepChecklist
 
     items = checklist.checklist_items
     timestamp = checklist.created_at
+    color = @color
     @docx.p
     @docx.p do
       text SmartAnnotations::TagToText.new(
@@ -16,7 +17,7 @@ module DrawStepChecklist
       ).text
       text ' '
       text I18n.t('projects.reports.elements.step_checklist.user_time',
-                  timestamp: I18n.l(timestamp, format: :full)), color: 'a0a0a0'
+                  timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
     @docx.ul do
       items.each do |item|

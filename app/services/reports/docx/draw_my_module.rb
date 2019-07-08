@@ -24,7 +24,7 @@ module DrawMyModule
              color: color[:gray]
       end
       text ' | '
-      link  'SciNote Link',
+      link  I18n.t('projects.reports.elements.all.scinote_link'),
             scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),
             link_style
     end
