@@ -1,8 +1,8 @@
-<% if @description[:body] %>
+<% if @description[:body].present? %>
   <p> <%= sanitize(@description[:body], tags: Constants::PROTOCOLS_DESC_TAGS) %> </p>
   <br/>
 <% end %>
-<% if @description[:image] %>
+<% if @description[:image].present? %>
   <br/>
   <img src='<%= @description[:image] %>' />
   <br/>
