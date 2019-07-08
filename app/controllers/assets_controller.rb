@@ -76,6 +76,7 @@ class AssetsController < ApplicationController
       )
     else
       response_json['processing'] = @asset.file.processing?
+      response_json['large-preview-url'] = @asset.url(:large)
       response_json['preview-icon'] = render_to_string(
         partial: 'shared/file_preview_icon.html.erb',
         locals: { asset: @asset }

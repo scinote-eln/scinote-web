@@ -509,7 +509,7 @@ var FilePreviewModal = (function() {
           }, CHECK_READY_DELAY);
         }
       } else {
-        if (data.type === 'image') {
+        if (data.type === 'image' || (data.type === 'file' && data['preview-icon'])) {
           modal.find('.file-preview-container').empty();
           modal.find('.file-preview-container')
             .append($('<img>')
