@@ -308,7 +308,10 @@ $.fn.extend({
         var groups;
         var groupChildrens;
         $('.select2-selection').scrollTo(0);
-        $('.select2-results__options').scrollTop($(e.currentTarget).data('scrolltop'));
+        // Fix scroll to selected element after click
+        setTimeout(() => {
+          $('.select2-results__options').scrollTop($(e.currentTarget).data('scrolltop'));
+        }, 0);
         if (this.dataset.singleDisplay === 'true') {
           $(this).updateSingleName();
         }
