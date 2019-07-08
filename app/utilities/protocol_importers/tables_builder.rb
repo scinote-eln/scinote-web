@@ -31,7 +31,7 @@ module ProtocolImporters
 
       doc = Nokogiri::HTML(description_string)
       doc.search('table').each do |t|
-        t.swap('<br/><p><i>There was a table here, it was moved to tables section.</i></p>')
+        t.swap('<br/><br/><p><i>There was a table here, it was moved to tables section.</i></p><br/><br/>')
       end
       doc.css('body').first.inner_html
     end
