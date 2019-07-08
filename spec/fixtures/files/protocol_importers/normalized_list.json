@@ -100,5 +100,10 @@
       "nr_of_views": 33,
       "uri": "SN-Maintenance-Medium-for-Synechococcus-c9hz35"
     }
-  ]
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 6,
+    "page_size": 10
+  }
 }

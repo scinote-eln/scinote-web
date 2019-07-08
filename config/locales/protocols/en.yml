@@ -5,6 +5,8 @@ en:
     card:
       views_and_steps: '%{nr_of_views} views • %{nr_of_steps} steps'
       import_button_text: 'Import...'
+    show_more_button:
+      title: 'Show more protocols'
     templates:
       amount:
         title: 'Amount'
