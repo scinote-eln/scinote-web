@@ -195,7 +195,6 @@ class Constants
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
   SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
-  WEBINARS_URL = (HTTP + 'goo.gl/T2QYAd').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
