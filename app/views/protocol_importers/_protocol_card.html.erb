@@ -8,7 +8,10 @@
   <p class='protocol-title'><%= protocol[:title] %></p>
 
   <div class='info-line'>
-    <%= l(Time.at(protocol[:created_on]).to_datetime, format: :full_date) %> • <%= protocol[:authors] %>
+    <% if protocol[:published_on] %>
+      <%= l(Time.at(protocol[:published_on]).to_datetime, format: :full_date) %> •
+    <% end %>
+    <%= protocol[:authors] %>
   </div>
   <div class='card-footer'>
     <div class='info-line'>
