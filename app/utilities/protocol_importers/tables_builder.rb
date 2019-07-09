@@ -15,7 +15,7 @@ module ProtocolImporters
 
         rows_nodeset.each_with_index do |row, i|
           row.css('td').each_with_index do |cell, j|
-            two_d_array[i][j] = cell.inner_html
+            two_d_array[i][j] = ActionController::Base.helpers.strip_tags(cell.inner_html)
           end
           two_d_array[i].shift if remove_first_column_row
         end
@@ -31,7 +31,7 @@ module ProtocolImporters
 
       doc = Nokogiri::HTML(description_string)
       doc.search('table').each do |t|
-        t.swap('<br/><p><i>There was a table here, it was moved to tables section.</i></p>')
+        t.swap('<br/><br/><p><i>There was a table here, it was moved to tables section.</i></p><br/><br/>')
       end
       doc.css('body').first.inner_html
     end
