@@ -229,11 +229,6 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
-  # If other errors besides parameter "avatar" exist,
-  # they will propagate to "avatar" also, so remove them
-  # and put all other (more specific ones) in it
-  # after_validation :filter_paperclip_errors
-
   before_destroy :destroy_notifications
 
   def name
@@ -332,20 +327,6 @@ class User < ApplicationRecord
     self.avatar_file_name = name
     self.avatar_content_type = Rack::Mime.mime_type(".#{file_ext}")
     self.avatar_file_size = size.to_i
-  end
-
-  def filter_paperclip_errors
-    if errors.key? :avatar
-      errors.delete(:avatar)
-      messages = []
-      errors.each do |attribute|
-        errors.full_messages_for(attribute).each do |message|
-          messages << message.split(' ').drop(1).join(' ')
-        end
-      end
-      errors.clear
-      errors.add(:avatar, messages.join(','))
-    end
   end
 
   # Whether user is active (= confirmed) or not

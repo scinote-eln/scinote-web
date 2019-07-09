@@ -50,7 +50,7 @@ module FileIconsHelper
 
   # For showing in view/edit buttons (WOPI)
   def file_application_icon(asset)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       image_link = 'office/Word-color_16x16x32.png'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -68,7 +68,7 @@ module FileIconsHelper
 
   # Shows correct WOPI application text (Word Online/Excel ..)
   def wopi_button_text(asset, action)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       app = 'Word Online'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)

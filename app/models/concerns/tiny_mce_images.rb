@@ -97,12 +97,11 @@ module TinyMceImages
           next if asset && asset.object == self && asset.team_id != asset_team_id
 
           new_image = asset.image
-          new_image_filename = new_image.image.filename.to_s
+          new_image_filename = new_image.file_name
         else
           # We need implement size and type checks here
           new_image = URI.parse(image['src']).open
           new_image_filename = asset.class.generate_unique_secure_token + '.jpg'
-          # new_image_filename = File.basename(new_image.base_uri.path)
         end
 
         new_asset = TinyMceAsset.create(

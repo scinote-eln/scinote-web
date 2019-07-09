@@ -10,11 +10,11 @@ module Api
       end
 
       def file_name
-        object.asset&.file_file_name
+        object.asset&.file_name
       end
 
       def file_size
-        object.asset&.file_file_size
+        object.asset&.file_size
       end
 
       def url

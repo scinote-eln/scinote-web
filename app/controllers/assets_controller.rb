@@ -32,7 +32,7 @@ class AssetsController < ApplicationController
                end
 
     if @asset.image?
-      if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
+      if ['image/jpeg', 'image/pjpeg'].include? @asset.content_type
         response_json['quality'] = @asset.file_image_quality || 90
       end
       response_json.merge!(

@@ -226,41 +226,15 @@ class Protocol < ApplicationRecord
   end
 
   # Deep-clone given array of assets
-  def self.deep_clone_assets(assets_to_clone, team)
+  def self.deep_clone_assets(assets_to_clone)
     assets_to_clone.each do |src_id, dest_id|
       src = Asset.find_by_id(src_id)
       dest = Asset.find_by_id(dest_id)
       dest.destroy! if src.blank? && dest.present?
       next unless src.present? && dest.present?
+
       # Clone file
-      dest.file = src.file
-      dest.save!
-
-      if dest.image?
-        dest.file.reprocess!(:large)
-        dest.file.reprocess!(:medium)
-      end
-
-      # Clone extracted text data if it exists
-      if (atd = src.asset_text_datum).present?
-        atd2 = AssetTextDatum.new(
-          data: atd.data,
-          asset: dest
-        )
-        atd2.save!
-      end
-
-      # Update estimated size of cloned asset
-      # (& file_present flag)
-      dest.update(
-        estimated_size: src.estimated_size,
-        file_present: true
-      )
-
-      # Update team's space taken
-      team.reload
-      team.take_space(dest.estimated_size)
-      team.save!
+      src.duplicate_file(dst)
     end
   end
 
@@ -318,16 +292,8 @@ class Protocol < ApplicationRecord
 
       # "Shallow" Copy assets
       step.assets.each do |asset|
-        asset2 = Asset.new_empty(
-          asset.file_file_name,
-          asset.file_file_size
-        )
-        asset2.created_by = current_user
-        asset2.team = dest.team
-        asset2.last_modified_by = current_user
-        asset2.file_processing = true if asset.image?
+        asset2 = asset.dup
         asset2.save!
-
         step2.assets << asset2
         assets_to_clone << [asset.id, asset2.id]
       end
@@ -348,10 +314,7 @@ class Protocol < ApplicationRecord
       step.clone_tinymce_assets(step2, dest.team)
     end
     # Call clone helper
-    Protocol.delay(queue: :assets).deep_clone_assets(
-      assets_to_clone,
-      dest.team
-    )
+    Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
   end
 
   def in_repository_active?

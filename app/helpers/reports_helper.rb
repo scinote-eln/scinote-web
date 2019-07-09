@@ -148,7 +148,7 @@ module ReportsHelper
 
   def obj_name_to_filename(obj, filename_suffix = '')
     obj_name = if obj.class == Asset
-                 obj_name, extension = obj.file_file_name.split('.')
+                 obj_name, extension = obj.file_name.split('.')
                  extension&.prepend('.')
                  obj_name
                elsif obj.class.in? [Table, Result, Repository]

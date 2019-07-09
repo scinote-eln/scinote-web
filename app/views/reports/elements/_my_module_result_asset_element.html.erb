@@ -24,7 +24,7 @@
           </a>
         <% else %>
           <em><%=t "projects.reports.elements.result_asset.file_name",
-                   file: truncate(asset.file_file_name,
+                   file: truncate(asset.file_name,
                                   length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
         <% end %>
       </div>

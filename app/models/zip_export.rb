@@ -48,6 +48,12 @@ class ZipExport < ApplicationRecord
     export&.destroy
   end
 
+  def zip_file_name
+    return '' unless file.attached?
+
+    zip_file.blob&.filename&.to_s
+  end
+
   def generate_exportable_zip(user, data, type, options = {})
     I18n.backend.date_format = user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
     zip_input_dir = FileUtils.mkdir_p(File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")).first
@@ -96,7 +102,7 @@ class ZipExport < ApplicationRecord
                               .routes
                               .url_helpers
                               .zip_exports_download_path(self)}'>" \
-                "#{zip_file_file_name}</a>"
+                "#{zip_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
   end

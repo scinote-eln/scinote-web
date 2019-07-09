@@ -70,6 +70,26 @@ class TinyMceAsset < ApplicationRecord
     description.css('body').inner_html.to_s
   end
 
+  def file_name
+    return '' unless image.attached?
+
+    image.blob&.filename&.to_s
+  end
+
+  def file_size
+    return 0 unless image.attached?
+
+    image.blob&.byte_size
+  end
+
+  def content_type
+    image&.blob&.content_type
+  end
+
+  def file_size
+    image&.blob&.byte_size
+  end
+
   def preview
     image.variant(resize: Constants::LARGE_PIC_FORMAT)
   end
@@ -122,8 +142,7 @@ class TinyMceAsset < ApplicationRecord
         asset_guid = get_guid(tiny_mce_asset.id)
         asset_file_name = "rte-#{asset_guid.to_s + File.extname(tiny_mce_asset.image.filename.to_s)}"
         ostream.put_next_entry("#{dir}/#{asset_file_name}")
-        input_file = tiny_mce_asset.image.download
-        ostream.print(input_file.read)
+        ostream.print(tiny_mce_asset.image.download)
         input_file.close
       end
     end

@@ -4,11 +4,6 @@ class SpreadsheetParser
     filename = file.original_filename
     file_path = file.path
 
-    if file.class == Paperclip::Attachment && file.is_stored_on_s3?
-      fa = file.fetch
-      file_path = fa.path
-    end
-
     case File.extname(filename)
     when '.csv'
       Roo::CSV.new(file_path, extension: :csv)

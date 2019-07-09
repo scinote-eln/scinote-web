@@ -12,7 +12,11 @@ module MyModulesHelper
   end
 
   def az_ordered_assets_index(step, asset_id)
-    step.assets.order('LOWER(file_file_name)').pluck(:id).index(asset_id)
+    step.assets
+        .joins(file_attachment: :blob)
+        .order(Arel.sql('LOWER(active_storage_blobs.filename)'))
+        .pluck(:id)
+        .index(asset_id)
   end
 
   def number_of_samples(my_module)

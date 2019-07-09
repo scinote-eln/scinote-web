@@ -12,7 +12,7 @@ gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.6.2'
 gem 'devise_invitable'
 gem 'figaro'
-gem 'pg', '~> 0.18'
+gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
 gem 'rails', '~> 5.2.3'
 gem 'recaptcha', require: 'recaptcha/rails'
