@@ -15,7 +15,7 @@ module ProtocolImporters
 
         rows_nodeset.each_with_index do |row, i|
           row.css('td').each_with_index do |cell, j|
-            two_d_array[i][j] = cell.inner_html
+            two_d_array[i][j] = ActionController::Base.helpers.strip_tags(cell.inner_html)
           end
           two_d_array[i].shift if remove_first_column_row
         end
