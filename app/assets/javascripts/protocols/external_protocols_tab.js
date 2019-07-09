@@ -92,7 +92,6 @@ function applySearchCallback() {
         resetPreviewPanel();
         $('.empty-text').hide();
         $('.list-wrapper').show();
-
         $('.list-wrapper').html(data.html);
         $('.list-wrapper').scrollTo(0);
       } else {

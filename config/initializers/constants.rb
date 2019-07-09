@@ -213,6 +213,8 @@ class Constants
     }
   }.freeze
 
+  PROTOCOLS_IO_URL = 'https://www.protocols.io/'
+  
   PROTOCOLS_IO_V3_API = {
     base_uri: 'https://www.protocols.io/api/v3/',
     default_timeout: 10,
