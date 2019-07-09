@@ -80,8 +80,8 @@ function applySearchCallback() {
         resetPreviewPanel();
         $('.empty-text').hide();
         $('.list-wrapper').show();
-
         $('.list-wrapper').html(data.html);
+        new PerfectScrollbar($('.list-wrapper')[0], { wheelSpeed: 0.5 });
         applyClickCallbackOnProtocolCards();
         initLoadProtocolModalPreview();
       } else {

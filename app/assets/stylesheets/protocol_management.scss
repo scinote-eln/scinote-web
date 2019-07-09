@@ -57,6 +57,7 @@
 
   .tab-pane-settings {
     border: 0;
+    height: calc(100vh - 167px);
   }
 }
 
@@ -65,78 +66,105 @@
 }
 
 .external-protocols-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
 
-  .protocols-search-bar-panel {
-    align-items: center;
+  .header {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    padding-right: 0;
+    flex-wrap: wrap;
 
-    .service-provider {
-      display: flex;
+    .protocols-search-bar-panel {
       align-items: center;
-      width: 50%;
-    }
+      display: flex;
+      flex-basis: 500px;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding-right: 0;
 
-    .protocolsio-logo {
-      height: 30px;
-      width: 30px;
-    }
-
-    .protocolsio-title {
-      font-size: 14px;
-      margin-left: 3px;
-      vertical-align: middle;
-    }
-
-    .input-group {
-      margin-bottom: 0;
-      max-width: 50%;
-
-      .form-control {
-        border-right: 0;
+      .service-provider {
+        align-items: center;
+        display: flex;
+        width: 120px;
       }
 
-      .input-group-addon {
-        background: $color-white;
-        color: $color-silver-chalice;
+      .protocolsio-logo {
+        height: 30px;
+        width: 30px;
       }
-    }
-  }
 
-  .protocol-sort {
-    padding-left: 7px;
+      .protocolsio-title {
+        font-size: 14px;
+        margin-left: 3px;
+        vertical-align: middle;
+      }
 
-    span {
-      color: $color-silver-chalice;
-      font-size: 14px;
-    }
+      .input-group {
+        margin-bottom: 0;
+        width: calc(100% - 130px);
 
-    .btn-group {
-      margin-bottom: 10px;
-      margin-top: 6px;
-      padding-left: 3px;
+        .form-control {
+          border-radius: 4px;
+          padding-right: 34px;
+        }
 
-      label {
-        padding-bottom: 0;
-        padding-top: 0;
-
-        &.active {
-          background: $color-gainsboro;
-          border-radius: 5px !important;
-          color: $color-emperor;
+        .input-group-addon {
+          align-items: center;
+          background: transparent;
+          border: 0;
+          color: $color-silver-chalice;
+          display: flex;
+          height: 34px;
+          justify-content: center;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 34px;
+          z-index: 5;
         }
       }
     }
+
+    .protocol-sort {
+      padding-left: 7px;
+
+      span {
+        color: $color-silver-chalice;
+        font-size: 14px;
+      }
+
+      .btn-group {
+        margin-bottom: 10px;
+        margin-top: 6px;
+        padding-left: 3px;
+
+        label {
+          padding-bottom: 0;
+          padding-top: 0;
+
+          &.active {
+            background: $color-gainsboro;
+            border-radius: 5px !important;
+            color: $color-emperor;
+          }
+        }
+      }
+    }
+  }
+  .main-protocol-panel {
+    display: flex;
+    flex-grow: 1;
+    width: calc(100% + 15px);
   }
 
   .protocol-list-side-panel {
     background-color: $color-white;
     border-right: 1px solid $color-alto;
     border-top: 1px solid $color-alto;
-    height: 600px;
+    flex-basis: 400px;
+    height: 100%;
     padding-right: 0;
 
     .row {
@@ -154,11 +182,12 @@
     .list-wrapper {
       height: 100%;
       overflow: auto;
+      position: relative;
     }
 
     .protocol-card {
       border-bottom: 1px solid $color-gainsboro;
-      margin-right: 20px;
+      margin-right: 15px;
       padding: 12px 11px;
 
       &.active {
@@ -200,7 +229,8 @@
   .protocol-preview-panel {
     background-color: $color-concrete;
     border-top: 1px solid $color-alto;
-    height: 600px;
+    flex-grow: 1;
+    height: 100%;
     padding-left: 0;
     padding-right: 0;
 
@@ -278,10 +308,51 @@
 
   .external-import-btn {
     background-color: $brand-primary;
-    border: none;
+    border: 0;
     color: $color-white;
     font-size: 12px;
     padding-bottom: 3px;
     padding-top: 3px;
+  }
+
+  .footer {
+    background: $color-white;
+    bottom: -30px;
+    box-shadow: 0 -1px 4px 0 $color-gainsboro;
+    height: 30px;
+    left: -15px;
+    position: absolute;
+    width: calc(100% + 30px);
+  }
+}
+
+@media (max-width: 900px) {
+  .external-protocols-tab {
+    .header {
+      .protocol-sort {
+        padding-left: 0;
+      }
+
+      .protocols-search-bar-panel {
+        flex-basis: 100%;
+      }
+    }
+
+    .main-protocol-panel {
+      display: block;
+
+      .protocol-list-side-panel {
+        border-right: 0;
+        height: 200px;
+        width: 100%;
+      }
+
+      .protocol-preview-panel {
+        height: calc(100% - 200px);
+        left: -15px;
+        position: relative;
+        width: calc(100% + 15px);
+      }
+    }
   }
 }
