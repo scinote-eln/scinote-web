@@ -18,23 +18,17 @@ module TinyMceImages
       description = TinyMceAsset.update_old_tinymce(description, self)
 
       tiny_mce_assets.each do |tm_asset|
-        tmp_f = Tempfile.open(tm_asset.image_file_name, Rails.root.join('tmp'))
-        begin
-          tm_asset.image.copy_to_local_file(:large, tmp_f.path)
-          encoded_tm_asset = Base64.strict_encode64(tmp_f.read)
-          new_tm_asset_src = "data:image/jpg;base64,#{encoded_tm_asset}"
-          html_description = Nokogiri::HTML(description)
-          tm_asset_to_update = html_description.css(
-            "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
-          )[0]
-          next unless tm_asset_to_update
+        tm_asset_key = tm_asset.image.preview.key
+        encoded_tm_asset = Base64.strict_encode64(tm_asset.image.service.download(tm_asset_key))
+        new_tm_asset_src = "data:image/jpg;base64,#{encoded_tm_asset}"
+        html_description = Nokogiri::HTML(description)
+        tm_asset_to_update = html_description.css(
+          "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
+        )[0]
+        next unless tm_asset_to_update
 
-          tm_asset_to_update.attributes['src'].value = new_tm_asset_src
-          description = html_description.css('body').inner_html.to_s
-        ensure
-          tmp_f.close
-          tmp_f.unlink
-        end
+        tm_asset_to_update.attributes['src'].value = new_tm_asset_src
+        description = html_description.css('body').inner_html.to_s
       end
       description
     end
@@ -72,12 +66,15 @@ module TinyMceImages
       cloned_img_ids = []
       tiny_mce_assets.each do |tiny_img|
         tiny_img_clone = TinyMceAsset.new(
-          image: tiny_img.image,
           estimated_size: tiny_img.estimated_size,
           object: target,
           team: team
         )
-        tiny_img_clone.save!
+
+        tiny_img_clone.transaction do
+          tiny_img_clone.save!
+          tiny_img_clone.image.attach(io: tiny_img.image.open, filename: tiny_img.image.filename.to_s)
+        end
 
         target.tiny_mce_assets << tiny_img_clone
         cloned_img_ids << [tiny_img.id, tiny_img_clone.id]
@@ -86,7 +83,7 @@ module TinyMceImages
     end
 
     def copy_unknown_tiny_mce_images
-      asset_team_id = Team.find_by_object(self)
+      asset_team_id = Team.find_by_object(self).id
       return unless asset_team_id
 
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
@@ -97,18 +94,25 @@ module TinyMceImages
         if image['data-mce-token']
           asset = TinyMceAsset.find_by_id(Base62.decode(image['data-mce-token']))
 
-          next if asset && asset.object == self
+          next if asset && asset.object == self && asset.team_id != asset_team_id
 
           new_image = asset.image
+          new_image_filename = new_image.file_name
         else
-          new_image = URI.parse(image['src'])
+          # We need implement size and type checks here
+          new_image = URI.parse(image['src']).open
+          new_image_filename = asset.class.generate_unique_secure_token + '.jpg'
         end
 
         new_asset = TinyMceAsset.create(
-          image: new_image,
           object: self,
           team_id: asset_team_id
         )
+
+        new_asset.transaction do
+          new_asset.save!
+          new_asset.image.attach(io: new_image, filename: new_image_filename)
+        end
 
         image['src'] = ''
         image['class'] = 'img-responsive'

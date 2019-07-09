@@ -1,19 +1,9 @@
-<% if asset.file.processing? && (asset.is_image? || asset.file.previewable_document?) %>
-  <% asset_status = 'asset-loading' %>
-  <% present_url = step_file_present_asset_path(asset.id) %>
-<% else %>
-  <% asset_status = 'asset-present' %>
-  <% present_url = '' %>
-<% end %>
-
 <div class="pseudo-attachment-container" style="order: <%= assets_count - i %>">
     <%= link_to download_asset_path(asset),
             class: 'file-preview-link',
             id: "modal_link#{asset.id}",
             data: { no_turbolink: true,
                     id: true,
-                    status: asset_status,
-                    'present-url': present_url,
                     'preview-url': asset_file_preview_path(asset),
                     'order-atoz': az_ordered_assets_index(step, asset.id),
                     'order-ztoa': assets_count - az_ordered_assets_index(step, asset.id),

@@ -786,14 +786,11 @@ class ProtocolsController < ApplicationController
               step_dir = "#{protocol_dir}/#{step_guid}"
               if step.assets.exists?
                 step.assets.order(:id).each do |asset|
-                  next unless asset.file.exists?
+                  next unless asset.file.attached?
                   asset_guid = get_guid(asset.id)
-                  asset_file_name = asset_guid.to_s +
-                                    File.extname(asset.file_file_name).to_s
+                  asset_file_name = asset_guid.to_s + File.extname(asset.file_name).to_s
                   ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-                  input_file = asset.open
-                  ostream.print(input_file.read)
-                  input_file.close
+                  ostream.print(asset.file.download)
                 end
               end
               ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)

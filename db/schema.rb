@@ -10,12 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190520135317) do
+ActiveRecord::Schema.define(version: 2019_06_13_134100) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "pg_trgm"
   enable_extension "btree_gist"
+  enable_extension "pg_trgm"
+  enable_extension "plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
 
   create_table "activities", force: :cascade do |t|
     t.bigint "my_module_id"
@@ -56,7 +77,7 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at"
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
@@ -169,7 +190,7 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.datetime "updated_at", null: false
     t.string "workflowimg_file_name"
     t.string "workflowimg_content_type"
-    t.integer "workflowimg_file_size"
+    t.bigint "workflowimg_file_size"
     t.datetime "workflowimg_updated_at"
     t.uuid "uuid"
     t.index ["archived_by_id"], name: "index_experiments_on_archived_by_id"
@@ -737,14 +758,14 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at"
   end
 
   create_table "tiny_mce_assets", force: :cascade do |t|
     t.string "image_file_name"
     t.string "image_content_type"
-    t.integer "image_file_size"
+    t.bigint "image_file_size"
     t.datetime "image_updated_at"
     t.integer "estimated_size", default: 0, null: false
     t.integer "step_id"
@@ -857,7 +878,7 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.datetime "updated_at", null: false
     t.string "avatar_file_name"
     t.string "avatar_content_type"
-    t.integer "avatar_file_size"
+    t.bigint "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
@@ -924,12 +945,13 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.datetime "updated_at", null: false
     t.string "zip_file_file_name"
     t.string "zip_file_content_type"
-    t.integer "zip_file_file_size"
+    t.bigint "zip_file_file_size"
     t.datetime "zip_file_updated_at"
     t.string "type"
     t.index ["user_id"], name: "index_zip_exports_on_user_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activities", "experiments"
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"

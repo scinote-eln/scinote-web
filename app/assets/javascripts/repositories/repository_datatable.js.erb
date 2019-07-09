@@ -1002,7 +1002,7 @@ var RepositoryDatatable = (function(global) {
       if (cell.value != null) {
         const dT = new ClipboardEvent('').clipboardData || // Firefox workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
           new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
-        dT.items.add(new File([_], cell.value.file_file_name));
+        dT.items.add(new File([_], cell.value.file_name));
         input.files = dT.files;
       }
       $(input).on('change', function(){

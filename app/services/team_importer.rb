@@ -340,8 +340,8 @@ class TeamImporter
           tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
         end
         tiny_mce_asset.team = team
-        tiny_mce_asset.image = tiny_mce_file
         tiny_mce_asset.save!
+        tiny_mce_asset.image.attach(io: tiny_mce_file, filename: tiny_mce_file.basename)
         @mce_asset_counter += 1
         if tiny_mce_asset.object_id.present?
           object = tiny_mce_asset.object
@@ -794,7 +794,7 @@ class TeamImporter
   def create_asset(asset_json, team, user_id = nil)
     asset = Asset.new(asset_json)
     File.open(
-      "#{@import_dir}/assets/#{asset.id}/#{asset.file_file_name}"
+      "#{@import_dir}/assets/#{asset.id}/#{asset.file_name}"
     ) do |file|
       orig_asset_id = asset.id
       asset.id = nil
@@ -802,9 +802,9 @@ class TeamImporter
       asset.last_modified_by_id =
         user_id || find_user(asset.last_modified_by_id)
       asset.team = team
-      asset.file = file
       asset.in_template = true if @is_template
       asset.save!
+      asset.file.attach(io: file, filename: file.basename)
       asset.post_process_file(team)
       @asset_mappings[orig_asset_id] = asset.id
       @asset_counter += 1

@@ -52,9 +52,9 @@ class WopiController < ActionController::Base
     asset_owner_id = @asset.created_by_id.to_s if @asset.created_by_id
 
     msg = {
-      BaseFileName:                @asset.file_file_name,
+      BaseFileName:                @asset.file_name,
       OwnerId:                     asset_owner_id,
-      Size:                        @asset.file_file_size,
+      Size:                        @asset.file_size,
       UserId:                      @user.id.to_s,
       Version:                     @asset.version.to_s,
       SupportsExtendedLockLength:  true,
@@ -218,7 +218,7 @@ class WopiController < ActionController::Base
           response.headers['X-WOPI-Lock'] = @asset.lock
           render body: nil, status: 409 and return
         end
-      elsif !@asset.file_file_size.nil? && @asset.file_file_size.zero?
+      elsif !@asset.file_size.nil? && @asset.file_size.zero?
         logger.warn 'WOPI: initializing empty file'
 
         @team.release_space(@asset.estimated_size)

@@ -63,124 +63,6 @@ class Team < ApplicationRecord
          .where('full_name ILIKE ? OR email ILIKE ?', a_query, a_query)
   end
 
-  # Imports samples into db
-  # -1 == sample_name,
-  # -2 == sample_type,
-  # -3 == sample_group
-  # TODO: use constants
-  def import_samples(sheet, mappings, user)
-    errors = false
-    nr_of_added = 0
-    total_nr = 0
-    header_skipped = false
-
-    # First let's query for all custom_fields we're refering to
-    custom_fields = []
-    sname_index = -1
-    stype_index = -1
-    sgroup_index = -1
-    mappings.each.with_index do |(_, v), i|
-      if v == '-1'
-        # Fill blank space, so our indices stay the same
-        custom_fields << nil
-        sname_index = i
-      elsif v == '-2'
-        custom_fields << nil
-        stype_index = i
-      elsif v == '-3'
-        custom_fields << nil
-        sgroup_index = i
-      else
-        cf = CustomField.find_by_id(v)
-
-        # Even if doesn't exist we add nil value in order not to destroy our
-        # indices
-        custom_fields << cf
-      end
-    end
-
-    rows = SpreadsheetParser.spreadsheet_enumerator(sheet)
-
-    # Now we can iterate through sample data and save stuff into db
-    rows.each do |row|
-      # Skip empty rows
-      next if row.empty?
-      unless header_skipped
-        header_skipped = true
-        next
-      end
-      total_nr += 1
-      row = SpreadsheetParser.parse_row(row, sheet)
-
-      sample = Sample.new(name: row[sname_index],
-                          team: self,
-                          user: user)
-
-      sample.transaction do
-        unless sample.valid?
-          errors = true
-          raise ActiveRecord::Rollback
-        end
-
-        row.each.with_index do |value, index|
-          next unless value.present?
-          if index == stype_index
-            stype = SampleType.where(team: self)
-                              .where('name ILIKE ?', value.strip)
-                              .take
-
-            unless stype
-              stype = SampleType.new(name: value.strip, team: self)
-              unless stype.save
-                errors = true
-                raise ActiveRecord::Rollback
-              end
-            end
-            sample.sample_type = stype
-          elsif index == sgroup_index
-            sgroup = SampleGroup.where(team: self)
-                                .where('name ILIKE ?', value.strip)
-                                .take
-
-            unless sgroup
-              sgroup = SampleGroup.new(name: value.strip, team: self)
-              unless sgroup.save
-                errors = true
-                raise ActiveRecord::Rollback
-              end
-            end
-            sample.sample_group = sgroup
-          elsif value && custom_fields[index]
-            # we're working with CustomField
-            scf = SampleCustomField.new(
-              sample: sample,
-              custom_field: custom_fields[index],
-              value: value
-            )
-            unless scf.valid?
-              errors = true
-              raise ActiveRecord::Rollback
-            end
-            sample.sample_custom_fields << scf
-          end
-        end
-        if Sample.import([sample],
-                         recursive: true,
-                         validate: false).failed_instances.any?
-          errors = true
-          raise ActiveRecord::Rollback
-        end
-        nr_of_added += 1
-      end
-    end
-
-    if errors
-      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
-    else
-      return { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
-    end
-  end
-
   def to_csv(samples, headers)
     require "csv"
 
@@ -327,14 +209,16 @@ class Team < ApplicationRecord
   end
 
   def self.find_by_object(obj)
-    case obj.class.name
-    when 'Protocol'
-      obj.team_id
-    when 'MyModule', 'Step'
-      obj.protocol.team_id
-    when 'ResultText'
-      obj.result.my_module.protocol.team_id
-    end
+    find(
+      case obj.class.name
+      when 'Protocol'
+        obj.team_id
+      when 'MyModule', 'Step'
+        obj.protocol.team_id
+      when 'ResultText'
+        obj.result.my_module.protocol.team_id
+      end
+    )
   end
 
   private

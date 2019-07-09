@@ -29,6 +29,7 @@ services:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/
       - scinote_development_files:/usr/src/app/public/system
+      - scinote_development_storage:/usr/src/app/storage
 
   webpack:
     build:
@@ -44,6 +45,7 @@ services:
       bash -c "./bin/webpack-dev-server"
     environment:
       - RAILS_ENV=development
+      - WORKER=true
     volumes:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/
@@ -53,3 +55,4 @@ volumes:
   scinote_development_postgres:
   scinote_development_bundler:
   scinote_development_files:
+  scinote_development_storage:

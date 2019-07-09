@@ -197,11 +197,7 @@ module ApplicationHelper
   def user_avatar_absolute_url(user, style)
     begin
       unless missing_avatar(user, style)
-        image = if user.avatar.options[:storage].to_sym == :s3
-                  URI.parse(user.avatar.url(style)).open.to_a.join
-                else
-                  File.open(user.avatar.path(style)).to_a.join
-                end
+        image = File.open(user.avatar_variant(style))
         encoded_data = Base64.strict_encode64(image)
         avatar_base64 = "data:#{user.avatar_content_type};base64,#{encoded_data}"
         return avatar_base64

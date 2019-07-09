@@ -111,9 +111,7 @@ module ProtocolsImporter
         )
 
         # Decode the file bytes
-        asset.file = StringIO.new(Base64.decode64(asset_json['bytes']))
-        asset.file_file_name = asset_json['fileName']
-        asset.file_content_type = asset_json['fileType']
+        asset.file.attach(io: StringIO.new(Base64.decode64(asset_json['bytes'])), filename: asset_json['fileName'])
         asset.save!
         asset_ids << asset.id
 
@@ -152,12 +150,11 @@ module ProtocolsImporter
         team_id: team.id,
         saved: true
       )
-      # Decode the file bytes
-      tiny_mce_img.image = StringIO.new(
-        Base64.decode64(tiny_mce_img_json['bytes'])
-      )
-      tiny_mce_img.image_content_type = tiny_mce_img_json['fileType']
       tiny_mce_img.save!
+
+      # Decode the file bytes
+      tiny_mce_img.image.attach(io: StringIO.new(Base64.decode64(tiny_mce_img_json['bytes'])),
+                                filename: tiny_mce_img_json['fileName'])
       if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
                            "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
       else

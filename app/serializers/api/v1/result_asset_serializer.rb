@@ -11,20 +11,18 @@ module Api
       end
 
       def file_name
-        object.asset&.file_file_name
+        object.asset&.file_name
       end
 
       def file_size
-        object.asset&.file_file_size
+        object.asset&.file_size
       end
 
       def url
         if !object.asset&.file&.exists?
           nil
-        elsif object.asset&.file&.is_stored_on_s3?
-          object.asset.presigned_url(download: true)
         else
-          object.asset.file.url
+          rails_blob_path(object.asset.file, disposition: 'attachment')
         end
       end
     end

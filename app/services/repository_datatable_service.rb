@@ -171,12 +171,18 @@ class RepositoryDatatableService
   def filter_by_asset_value(records, id, dir)
     records.joins(
       "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
-        assets.file_file_name AS value
+        active_storage_blobs.filename AS value
       FROM repository_cells
       INNER JOIN repository_asset_values
       ON repository_asset_values.id = repository_cells.value_id
       INNER JOIN assets
       ON repository_asset_values.asset_id = assets.id
+      INNER JOIN active_storage_attachments
+      ON active_storage_attachments.record_id = assets.id
+         AND active_storage_attachments.record_type = 'Asset'
+         AND active_storage_attachments.name = 'file'
+      INNER JOIN active_storage_blobs
+      ON active_storage_blobs.id = active_storage_attachments.blob_id
       WHERE repository_cells.repository_column_id = #{id}) AS values
       ON values.repository_row_id = repository_rows.id"
     ).order("values.value #{dir}")

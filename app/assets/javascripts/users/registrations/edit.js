@@ -82,8 +82,8 @@
       croppieContainer.croppie({ viewport: { type: 'circle' } });
       $('.new-avatar-preview-container').off('update.croppie').on('update.croppie', function() {
         croppieContainer.croppie('result', { type: 'base64', format: 'jpeg', circle: false })
-          .then(function(html) {
-            $('#user_avatar').val(html);
+          .then(function(image) {
+            $('#user_avatar').val(image);
           });
       });
     };
@@ -98,5 +98,6 @@
       // Local file uploading
       animateSpinner();
     }
+    $fileInput[0].value = '';
   });
 }());

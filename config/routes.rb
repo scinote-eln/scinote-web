@@ -192,8 +192,6 @@ Rails.application.routes.draw do
       # end
       member do
         post 'parse_sheet', defaults: { format: 'json' }
-        # post 'import_samples'
-        # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_projects'
         get 'export_projects_modal'
@@ -579,8 +577,6 @@ Rails.application.routes.draw do
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior
-    get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
-    get 'files/:id/present_in_step', to: 'assets#step_file_present', as: 'step_file_present_asset'
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
@@ -596,7 +592,6 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       post 'users/complete_sign_up_provider' =>
