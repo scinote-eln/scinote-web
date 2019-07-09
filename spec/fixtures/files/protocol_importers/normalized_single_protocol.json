@@ -72,9 +72,9 @@
             {
               "type": "reagent",
               "name": "2 mg Gastrin I, human",
+              "link": "https://www.biorbyt.com/gastrin-i-human-orb321073",
               "details": {
                 "catalog_number": "",
-                "link": "https://www.biorbyt.com/gastrin-i-human-orb321073",
                 "linear_formula": "C130H204N38O31S",
                 "mol_weight": 0.1
               }
@@ -111,6 +111,10 @@
           {
             "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
             "name": "Second file"
+          },
+          {
+            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
+            "name": "14506718045_5b3e71dacd_o.jpg"
           }
         ],
         "position": 0

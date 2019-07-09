@@ -9,6 +9,7 @@ module DrawMyModuleActivity
 
     return false unless activities.any?
 
+    color = @color
     @docx.p
     @docx.p I18n.t('projects.reports.elements.module_activity.name', my_module: my_module.name), bold: true
     activities.each do |activity|
@@ -18,7 +19,7 @@ module DrawMyModuleActivity
                       else
                         sanitize_input(generate_activity_content(activity, true))
                       end
-      @docx.p I18n.l(activity_ts, format: :full), color: 'a0a0a0'
+      @docx.p I18n.l(activity_ts, format: :full), color: color[:gray]
       html_to_word_converter(activity_text)
       @docx.p
     end

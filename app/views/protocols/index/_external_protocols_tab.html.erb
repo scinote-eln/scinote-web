@@ -11,6 +11,7 @@
           <a class='protocolsio-title' href='<%= Constants::PROTOCOLS_IO_URL %>' target='_blank'>
             <%= t('protocols.index.external_protocols.protocolsio_title') %></a>
           <%= hidden_field_tag 'protocol_source', 'protocolsio/v3' %>
+          <%= hidden_field_tag 'page_id', 1, id: 'page-id' %>
         </div>
 
         <div class='input-group'>

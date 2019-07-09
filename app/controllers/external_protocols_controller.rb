@@ -15,7 +15,8 @@ class ExternalProtocolsController < ApplicationController
         html: render_to_string(
           partial: 'protocol_importers/list_of_protocol_cards.html.erb',
           locals: { protocols: service_call.protocols_list, show_import_button: show_import_button }
-        )
+        ),
+        page_id: service_call.protocols_list[:pagination][:current_page]
       }
     else
       render json: { errors: service_call.errors }, status: 400

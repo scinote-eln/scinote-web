@@ -111,6 +111,11 @@ class Constants
   REPORT_DOCX_MARGIN_BOTTOM = 720
   REPORT_DOCX_MARGIN_LEFT = 720
 
+  # Word borders in eighth point units.
+  # A eighth point is 1/8 of a point. A border size of 4 is equivalent to 0.5pt.
+
+  REPORT_DOCX_TABLE_BORDER_SIZE = 4
+
   #=============================================================================
   # Styling
   #=============================================================================
@@ -195,7 +200,6 @@ class Constants
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
   SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
-  WEBINARS_URL = (HTTP + 'goo.gl/T2QYAd').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
@@ -228,7 +232,7 @@ class Constants
           key: '',
           order_field: :activity,
           order_dir: :desc,
-          page_size: 10,
+          page_size: 50,
           page_id: 1,
           fields: 'id,title,authors,created_on,uri,stats'
         }

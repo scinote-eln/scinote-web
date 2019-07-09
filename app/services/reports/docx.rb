@@ -35,6 +35,11 @@ class Reports::Docx
     end
     @docx
   end
+
+
+  def self.link_prepare(scinote_url, link)
+    link[0] == '/' ? scinote_url + link : link
+  end
 end
 
 # rubocop:enable  Style/ClassAndModuleChildren

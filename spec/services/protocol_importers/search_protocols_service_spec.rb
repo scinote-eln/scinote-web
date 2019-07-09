@@ -72,7 +72,7 @@ describe ProtocolImporters::SearchProtocolsService do
               .and_return(normalized_list))
     end
 
-    it 'returns an error when params are invalid' do
+    it 'returns normalized list' do
       expect(service_call.protocols_list).to be == normalized_list
     end
   end

@@ -29,7 +29,7 @@ describe ProtocolImporters::ProtocolIntermediateObject do
     context 'when have valid object' do
       it { expect { pio.import }.to change { Protocol.all.count }.by(1) }
       it { expect { pio.import }.to change { Step.all.count }.by(2) }
-      it { expect { pio.import }.to change { Asset.all.count }.by(2) }
+      it { expect { pio.import }.to change { Asset.all.count }.by(3) }
       it { expect(pio.import).to be_valid }
     end
 

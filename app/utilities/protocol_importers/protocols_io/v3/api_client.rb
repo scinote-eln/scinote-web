@@ -46,10 +46,11 @@ module ProtocolImporters
           response = with_handle_network_errors do
             sort_mappings = CONSTANTS[:sort_mappings]
             query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
+                             .stringify_keys
                              .merge(query_params.except(:sort_by))
 
             if sort_mappings[query_params[:sort_by]&.to_sym]
-              query = query.merge(sort_mappings[query_params[:sort_by].to_sym])
+              query = query.merge(sort_mappings[query_params[:sort_by].to_sym].stringify_keys)
             end
 
             self.class.get('/protocols', query: query)
@@ -95,7 +96,7 @@ module ProtocolImporters
           when 1219
             raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:token_expires), error_message
           else
-            raise ProtocolImporters::ProtocolsIO::V3::Error.new(e.class), error_message
+            raise ProtocolImporters::ProtocolsIO::V3::Error.new(:api_response_error), response.parsed_response
           end
         end
       end

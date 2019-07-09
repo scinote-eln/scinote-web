@@ -57,6 +57,10 @@
     .flex-block {
       display: flex;
       flex-grow: 1;
+
+      .well-sm {
+        display: inline-block;
+      }
     }
   }
 

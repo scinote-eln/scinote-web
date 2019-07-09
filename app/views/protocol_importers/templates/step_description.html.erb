@@ -1,4 +1,4 @@
-<% if @step_description[:body] %>
+<% if @step_description[:body].present? %>
   <p> <%= sanitize(@step_description[:body], tags: Constants::PROTOCOLS_DESC_TAGS) %> </p>
 <% end %>
 

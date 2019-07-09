@@ -51,9 +51,12 @@ module ProtocolImporters
 
         def self.attachments(components)
           components.select { |c| c[:type_id] == 23 }.map do |cc|
+            # Original name can be empty, so just use source
+            name = cc[:source][:original_name] || cc[:source][:source].split('/')[-1]
+
             {
               url: cc[:source][:source],
-              name: cc[:source][:name]
+              name: name
             }
           end
         end
@@ -115,9 +118,9 @@ module ProtocolImporters
             {
               type: 'reagent',
               name: desc_component[:source][:name],
+              link: desc_component[:source][:url],
               details: {
                 catalog_number: desc_component[:source][:sku],
-                link: desc_component[:source][:vendor][:link],
                 linear_formula: desc_component[:source][:linfor],
                 mol_weight: desc_component[:source][:mol_weight]
               }

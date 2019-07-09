@@ -7,12 +7,13 @@ module DrawStepAsset
 
     is_image = asset.is_image?
     timestamp = asset.created_at
+    color = @color
     @docx.p
     @docx.p do
       text I18n.t 'projects.reports.elements.step_asset.file_name', file: asset.file_file_name
       text ' '
       text I18n.t('projects.reports.elements.step_asset.user_time',
-                  timestamp: I18n.l(timestamp, format: :full)), color: 'a0a0a0'
+                  timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
 
     asset_image_preparing(asset) if is_image

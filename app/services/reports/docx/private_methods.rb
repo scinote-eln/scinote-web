@@ -39,7 +39,8 @@ module PrivateMethods
               br
             elsif text_el[:type] == 'a'
               if text_el[:link]
-                link text_el[:value], scinote_url + text_el[:link], link_style
+                link_url = Reports::Docx.link_prepare(scinote_url, text_el[:link])
+                link text_el[:value], link_url, link_style
               else
                 text text_el[:value], link_style
               end
