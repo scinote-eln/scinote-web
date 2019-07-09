@@ -4,6 +4,7 @@
 function applyClickCallbackOnProtocolCards() {
   $('.protocol-card').off('click').on('click', function(e) {
     var currProtocolCard = $(this);
+    var baseTag = document.createElement('base');
 
     // Check whether this card is already active and deactivate it
     if ($(currProtocolCard).hasClass('active')) {
@@ -30,7 +31,14 @@ function applyClickCallbackOnProtocolCards() {
           $('.empty-preview-panel').hide();
           $('.full-preview-panel').show();
           $('.btn-holder').html($(currProtocolCard).find('.external-import-btn').clone());
+
+          // Set base tag to account for relative links in the iframe
+          baseTag.href = data.base_uri;
+          iFrame.contents().find('head').html(baseTag);
+
+          // Set iframe content
           iFrame.contents().find('body').html(data.html);
+
           scrollbox.scrollTo(0);
           iFrame.contents().find('body').find('table.htCore').css('width', '100%');
           iFrame.contents().find('body').find('span').css('word-break', 'break-word');
