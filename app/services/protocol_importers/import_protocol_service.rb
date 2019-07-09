@@ -10,7 +10,7 @@ module ProtocolImporters
       @user = User.find_by_id user_id
       @team = Team.find_by_id team_id
       @protocol_params = protocol_params
-      @steps_params = JSON.parse(steps_params_json) # catch error here
+      @steps_params = JSON.parse(steps_params_json)
       @errors = {}
     end
 
@@ -26,7 +26,7 @@ module ProtocolImporters
                        .slice(:name, :position, :description, :tables_attributes)
                        .merge(user: @user, completed: false))
 
-        # 'Manually' create assets here. "Accept nasted attributes won't work assets"
+        # 'Manually' create assets here. "Accept nasted attributes" won't work for assets
         s.assets << AttachmentsBuilder.generate(step_params.deep_symbolize_keys, user: @user, team: @team)
         s
       end

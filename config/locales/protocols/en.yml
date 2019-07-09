@@ -1,5 +1,7 @@
 en:
   protocol_importers:
+    errors:
+      cannot_import_protocol: "We weren't able to import the protocol because something went wrong"
     new:
       modal_title: 'Import protocol - %{protocol_name}'
     card:
