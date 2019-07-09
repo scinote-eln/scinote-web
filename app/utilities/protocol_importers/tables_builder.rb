@@ -27,6 +27,8 @@ module ProtocolImporters
     end
 
     def self.remove_tables_from_html(description_string)
+      return '' if description_string.blank?
+
       doc = Nokogiri::HTML(description_string)
       doc.search('table').each do |t|
         t.swap('<br/><p><i>There was a table here, it was moved to tables section.</i></p>')

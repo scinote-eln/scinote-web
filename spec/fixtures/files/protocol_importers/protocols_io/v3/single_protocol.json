@@ -579,7 +579,7 @@
             "type_id": 23,
             "title": "file",
             "source": {
-              "name": "First file",
+              "original_name": "First file",
               "source": "https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg"
             }
           },
@@ -590,7 +590,17 @@
             "type_id": 23,
             "title": "file",
             "source": {
-              "name": "Second file",
+              "original_name": "Second file",
+              "source": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "A85D4EBC0F394B38A4C8D65D5CB6877F",
+            "order_id": 4,
+            "type_id": 23,
+            "title": "file",
+            "source": {
               "source": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg"
             }
           }
