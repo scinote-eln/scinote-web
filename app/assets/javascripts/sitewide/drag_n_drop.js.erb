@@ -165,6 +165,17 @@
     var fileMaxSizeMb;
     var fileMaxSize;
 
+    function checkErrors() {
+      // Check for error
+      var errors = $('.attachments.edit').find('.dnd-error').length;
+      if (errors > 0){
+        $('#new-step-assets-tab').addClass('has-error');
+      } else {
+        $('#new-step-assets-tab').removeClass('has-error');
+        filesValid = true;
+      }
+    }
+
     function init(files) {
       fileMaxSizeMb = $(document.body).data('file-max-size-mb');
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
@@ -172,6 +183,11 @@
         droppedFiles.push(files[i]);
       }
       listItems();
+
+      checkErrors();
+      $('.attachments.edit').find('.remove-icon .fa-trash').click(() => {
+        setTimeout(() => {checkErrors()}, 0);
+      }) 
     }
 
     // return the status of files if they are ready to submit
@@ -312,7 +328,8 @@
       appendFilesToForm: appendFilesToForm,
       listItems: listItems,
       filesStatus: filesStatus,
-      clearFiles: clearFiles
+      clearFiles: clearFiles,
+      checkErrors: checkErrors
     });
   })();
 
