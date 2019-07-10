@@ -173,12 +173,14 @@
     background-color: $color-white;
     border-right: 1px solid $color-alto;
     border-top: 1px solid $color-alto;
-    flex-basis: 400px;
+    flex-grow: 1;
     height: 100%;
+    max-width: 600px;
+    min-width: 400px;
     padding-left: 15px;
     padding-right: 0;
     position: relative;
-    width: 400px;
+    width: calc(100% / 3);
 
     .row {
       margin-left: 0;
@@ -279,12 +281,12 @@
   .protocol-preview-panel {
     background-color: $color-concrete;
     border-top: 1px solid $color-alto;
-    flex-grow: 1;
+    flex-grow: 2;
     height: 100%;
     padding-left: 0;
     padding-right: 0;
     position: relative;
-    width: 100%;
+    width: calc((100% / 3) * 2);
 
     .row {
       margin-left: 0;
@@ -343,6 +345,7 @@
     .preview-holder {
       height: calc(100% - 40px);
       margin: 0 21px 40px;
+      max-width: 900px;
       overflow: hidden;
       position: absolute;
       width: calc(100% - 42px);
@@ -395,14 +398,30 @@
       .protocol-list-side-panel {
         border-right: 0;
         height: 200px;
+        max-width: 100%;
         width: 100%;
       }
 
       .protocol-preview-panel {
         height: calc(100% - 200px);
-        left: -15px;
+        //left: -15px;
         position: relative;
-        width: calc(100% + 15px);
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (min-width: 1520px) {
+  .external-protocols-tab {
+
+    .main-protocol-panel {
+
+      .protocol-preview-panel {
+
+        .preview-holder {
+          margin: 0 calc(50% - 450px) 40px;
+        }
       }
     }
   }
