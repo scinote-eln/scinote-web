@@ -71,9 +71,14 @@ describe ExternalProtocolsController, type: :controller do
 
     let(:action) { get :show, params: params }
 
-    it 'returns JSON, 200 response when preview was successfully returned' do
-      html_preview = '<html></html>'
+    let(:html_preview) { double('html_preview') }
 
+    before do
+      allow(html_preview).to(receive(:as_json).and_return('<html></html>'))
+      allow(html_preview).to(receive_message_chain(:request, :last_uri, :to_s).and_return('http://www.protocols.io/test_protocol'))
+    end
+
+    it 'returns JSON, 200 response when preview was successfully returned' do
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
         .to(receive(:protocol_html_preview)).and_return(html_preview)
 
@@ -84,14 +89,12 @@ describe ExternalProtocolsController, type: :controller do
     end
 
     it 'should return html preview in the JSON' do
-      html_preview = '<html></html>'
-
       allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
         .to(receive(:protocol_html_preview)).and_return(html_preview)
 
       # Call action
       action
-      expect(JSON.parse(response.body)['html']).to eq(html_preview)
+      expect(JSON.parse(response.body)['html']).to eq('<html></html>')
     end
 
     it 'returns error JSON and 400 response when something went wrong' do
