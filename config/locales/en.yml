@@ -1608,7 +1608,7 @@ en:
         import_all: "Load All"
         import: "Load"
         import_to_team_protocols_label: "Import to Team Protocols"
-        import_to_private_protocols_label: "Import to Private Protocols"
+        import_to_private_protocols_label: "Import to My Protocols"
     export:
       export_results:
         title: "Export results"
