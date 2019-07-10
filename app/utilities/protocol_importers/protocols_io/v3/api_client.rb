@@ -80,7 +80,10 @@ module ProtocolImporters
         def with_handle_network_errors
           yield
         rescue StandardError => e
-          raise ProtocolImporters::ProtocolsIO::V3::NetworkError.new(e.class), e.message
+          Rails.logger.error "Error: #{e.class}, message: #{e.message}"
+
+          raise ProtocolImporters::ProtocolsIO::V3::NetworkError.new(e.class),
+                I18n.t('protocol_importers.errors.cannot_import_protocol')
         end
 
         def check_for_response_errors(response)
