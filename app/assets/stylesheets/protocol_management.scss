@@ -1,23 +1,25 @@
-@import 'constants';
+// scss-lint:disable SelectorDepth, NestingDepth, SelectorFormat, ImportantRule, QualifyingElement, IdSelector
+
+@import "constants";
 
 .btn-open-file {
-  position: relative;
   overflow: hidden;
+  position: relative;
 
-  & > input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
+  > input[type=file] {
+    background: $color-white;
     cursor: inherit;
     display: block;
+    filter: alpha(opacity = 0);
+    font-size: 100px;
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    outline: none;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
   }
 }
 
@@ -70,6 +72,10 @@
   flex-direction: column;
   height: 100%;
   position: relative;
+
+  .ps__rail-y {
+    opacity: .6;
+  }
 
   .header {
     display: flex;
@@ -148,24 +154,33 @@
             background: $color-gainsboro;
             border-radius: 5px !important;
             color: $color-emperor;
+            outline: 0;
           }
         }
       }
     }
   }
+
   .main-protocol-panel {
     display: flex;
     flex-grow: 1;
-    width: calc(100% + 15px);
+    left: -15px;
+    position: relative;
+    width: calc(100% + 30px);
   }
 
   .protocol-list-side-panel {
     background-color: $color-white;
     border-right: 1px solid $color-alto;
     border-top: 1px solid $color-alto;
-    flex-basis: 400px;
+    flex-grow: 1;
     height: 100%;
+    max-width: 600px;
+    min-width: 400px;
+    padding-left: 15px;
     padding-right: 0;
+    position: relative;
+    width: calc(100% / 3);
 
     .row {
       margin-left: 0;
@@ -177,37 +192,69 @@
       color: $color-silver-chalice;
       font-size: 13px;
       margin-top: 20px;
+      text-align: center;
+      width: calc(100% - 15px);
     }
 
     .list-wrapper {
       height: 100%;
-      overflow: auto;
-      position: relative;
+      overflow: hidden;
+      position: absolute;
+      width: calc(100% - 15px);
     }
 
     .protocol-card {
-      border-bottom: 1px solid $color-gainsboro;
+      border: 2px solid transparent;
+      box-shadow: 0 0 0 0 $color-alto;
+      cursor: pointer;
       margin-right: 15px;
-      padding: 12px 11px;
+      padding: 12px;
+      position: relative;
+      transition: .3s;
+
+      &::after {
+        background: $color-gainsboro;
+        bottom: -2px;
+        content: "";
+        height: 1px;
+        left: 0;
+        position: absolute;
+        width: 100%;
+
+      }
+
+      .card-footer {
+        align-items: center;
+        display: flex;
+        height: 30px;
+
+        .info-line.button {
+          flex-grow: 1;
+        }
+      }
 
       &.active {
         border: 2px solid $brand-primary;
         border-radius: 2px;
         box-shadow: 0 1px 4px 0 $color-alto;
-        padding-bottom: 7px;
+
+        &::after {
+          display: none;
+        }
       }
 
       &:hover {
-        background-color: rgba(64,161,215,0.1);
-        padding-bottom: 7px;
+        background-color: $brand-primary-light;
       }
 
       .external-import-btn {
         display: none;
       }
 
-      &:hover .external-import-btn, &.active .external-import-btn{
+      &:hover .external-import-btn,
+      &.active .external-import-btn {
         display: block;
+        float: right;
       }
 
     }
@@ -225,8 +272,8 @@
     }
 
     .show-more-protocols-btn {
-      margin-bottom: 5px;
-      margin-top: 5px;
+      margin: 15px 0;
+      width: calc(100% - 15px);
     }
 
   }
@@ -234,10 +281,12 @@
   .protocol-preview-panel {
     background-color: $color-concrete;
     border-top: 1px solid $color-alto;
-    flex-grow: 1;
+    flex-grow: 2;
     height: 100%;
     padding-left: 0;
     padding-right: 0;
+    position: relative;
+    width: calc((100% / 3) * 2);
 
     .row {
       margin-left: 0;
@@ -247,6 +296,7 @@
     // Empty texts on the right
     .empty-preview-panel {
       padding-top: 79px;
+      user-select: none;
 
       .protocol-preview-text {
         color: $color-silver-chalice;
@@ -270,6 +320,7 @@
 
     .full-preview-panel {
       height: 100%;
+
     }
 
     .preview-banner {
@@ -291,22 +342,17 @@
       }
     }
 
-
     .preview-holder {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
+      height: calc(100% - 40px);
+      margin: 0 21px 40px;
+      max-width: 900px;
       overflow: hidden;
-      padding-bottom: 40px;
-      padding-left: 21px;
-      padding-right: 21px;
-      width: 100%;
+      position: absolute;
+      width: calc(100% - 42px);
 
       .preview-iframe {
         border: 0;
-        flex-grow: 1;
-        margin: 0;
-        padding: 0;
+        width: 100%;
       }
     }
   }
@@ -345,18 +391,36 @@
 
     .main-protocol-panel {
       display: block;
+      left: -15px;
+      position: relative;
+      width: calc(100% + 30px);
 
       .protocol-list-side-panel {
         border-right: 0;
         height: 200px;
+        max-width: 100%;
         width: 100%;
       }
 
       .protocol-preview-panel {
         height: calc(100% - 200px);
-        left: -15px;
         position: relative;
-        width: calc(100% + 15px);
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (min-width: 1520px) {
+  .external-protocols-tab {
+
+    .main-protocol-panel {
+
+      .protocol-preview-panel {
+
+        .preview-holder {
+          margin: 0 calc(50% - 450px) 40px;
+        }
       }
     }
   }

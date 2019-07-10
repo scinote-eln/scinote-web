@@ -1,3 +1,6 @@
+/* global animateSpinner PerfectSb initHandsOnTable */
+/* eslint-disable no-use-before-define, no-alert */
+
 function applyClickCallbackOnProtocolCards() {
   $('.protocol-card').off('click').on('click', function(e) {
     var currProtocolCard = $(this);
@@ -20,15 +23,29 @@ function applyClickCallbackOnProtocolCards() {
         },
         beforeSend: animateSpinner($('.protocol-preview-panel'), true),
         success: function(data) {
+          var iFrame = $('.preview-iframe');
+          var scrollbox = $('.preview-holder');
+          $('.preview-holder').find('.ps__rail-y').remove();
+          iFrame[0].height = '0px';
           $('.empty-preview-panel').hide();
           $('.full-preview-panel').show();
           $('.btn-holder').html($(currProtocolCard).find('.external-import-btn').clone());
-          $('.preview-iframe').contents().find('body').html(data.html);
+          iFrame.contents().find('body').html(data.html);
+          scrollbox.scrollTo(0);
+          iFrame.contents().find('body').find('table.htCore').css('width', '100%');
+          iFrame.contents().find('body').find('span').css('word-break', 'break-word');
+          setTimeout(() => {
+            iFrame[0].height = iFrame[0].contentWindow.document.body.scrollHeight + 'px';
+            iFrame.contents().find('body').bind('mousewheel', function(element, delta) {
+              scrollbox.scrollTop(scrollbox.scrollTop() + (delta > 0 ? -40 : 40));
+            });
+            PerfectSb().update_all();
+          }, 1000);
 
           initLoadProtocolModalPreview();
           animateSpinner($('.protocol-preview-panel'), false);
         },
-        error: function(_error) {
+        error: function() {
           // TODO: we should probably show some alert bubble
           resetPreviewPanel();
           animateSpinner($('.protocol-preview-panel'), false);
@@ -84,6 +101,7 @@ function applySearchCallback() {
   // Bind ajax calls on the form
   $('form.protocols-search-bar').off('ajax:success').off('ajax:error')
     .bind('ajax:success', function(evt, data) {
+      var listWrapper = $('.list-wrapper');
       if (data.page_id > 1) {
         // Remove old load more button since we will append a new one
         $('.show-more-protocols-btn').remove();
@@ -91,13 +109,11 @@ function applySearchCallback() {
       } else if (data.html) {
         resetPreviewPanel();
         $('.empty-text').hide();
-        $('.list-wrapper').show();
-        $('.list-wrapper').html(data.html);
-        $('.list-wrapper').scrollTo(0);
+        listWrapper.show().html(data.html).scrollTo(0);
       } else {
         setDefaultViewState();
       }
-
+      PerfectSb().update_all();
       // Reset page id after every request
       $('form.protocols-search-bar #page-id').val(1);
 
@@ -106,10 +122,8 @@ function applySearchCallback() {
       applyClickCallbackOnShowMoreProtocols();
       initLoadProtocolModalPreview();
     })
-    .bind('ajax:error', function(evt, xhr) {
+    .bind('ajax:error', function() {
       setDefaultViewState();
-
-      console.log(xhr.responseText);
     });
 }
 
@@ -221,8 +235,7 @@ function initLoadProtocolModalPreview() {
         initFormSubmits();
         handleFormSubmit(modal);
       },
-      error: function(error) {
-        console.log(error.responseJSON.errors);
+      error: function() {
         alert('Server error');
       },
       complete: function() {
