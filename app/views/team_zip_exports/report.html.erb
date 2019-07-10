@@ -16,7 +16,7 @@
         'md5.js', 'jstat.js', 'formula.js', 'parser.js', 'ruleJS.js',
         'handsontable.formula.js', 'big.min.js' ].each do |js_asset| %>
         <script type="text/javascript">
-          <%= Rails.application
+          <%= j Rails.application
                    .assets_manifest
                    .find_sources(js_asset)
                    .first
