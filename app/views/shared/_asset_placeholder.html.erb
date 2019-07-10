@@ -10,7 +10,7 @@
     <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
   </div>
   <div class="spencer-bonnet-modif">
-    <%= t('protocols.steps.attachments.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %>  <br>
+    <%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %>  <br>
     <%= number_to_human_size(asset.file_size) %>
   </div>
 
