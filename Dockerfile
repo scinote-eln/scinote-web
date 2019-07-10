@@ -20,7 +20,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   postgresql-client \
   default-jre-headless \
   unison \
-  ghostscript \
+  poppler-utils \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
   apt-get install -y --no-install-recommends -t $(cat /tmp/lsb_release)-backports libreoffice && \
