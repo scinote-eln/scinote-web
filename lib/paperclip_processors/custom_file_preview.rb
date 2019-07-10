@@ -3,6 +3,7 @@
 module Paperclip
   class CustomFilePreview < Processor
     def make
+      pdftoppm_path = ENV['PDFTOPPM_PATH'] || 'pdftoppm'
       libreoffice_path = ENV['LIBREOFFICE_PATH'] || 'soffice'
       directory = File.dirname(@file.path)
       basename  = File.basename(@file.path, '.*')
@@ -11,25 +12,29 @@ module Paperclip
 
       begin
         if @file.content_type == 'application/pdf'
-          # We use special convert options for PDFs to improve quality and
-          # background, we append [0] to convert only the first page
-          convert(
-            ":source -resize '#{options[:geometry]}' -format #{options[:format]} -flatten -quality 70 :dest",
-            source: File.expand_path(@file.path) + '[0]',
-            dest: File.expand_path(dst.path)
+          content = Paperclip.run(
+            pdftoppm_path,
+            "-singlefile -r 72 -png #{@file.path}"
           )
+
+          # Save intermediate content to tempfile
+          tmp = TempfileFactory.new.generate
+          tmp.write(content)
+          tmp.rewind
+
+          original_preview_file = tmp.path
         else
           Paperclip.run(
             libreoffice_path,
             "--headless --invisible --convert-to png --outdir #{directory} #{@file.path}"
           )
-
-          convert(
-            ":source -resize '#{options[:geometry]}' -format #{options[:format]} #{options[:convert_options]} :dest",
-            source: File.expand_path(original_preview_file),
-            dest: File.expand_path(dst.path)
-          )
         end
+
+        convert(
+          ":source -resize '#{options[:geometry]}' -format #{options[:format]} #{options[:convert_options]} :dest",
+          source: File.expand_path(original_preview_file),
+          dest: File.expand_path(dst.path)
+        )
       ensure
         File.delete(original_preview_file) if File.file?(original_preview_file)
       end
