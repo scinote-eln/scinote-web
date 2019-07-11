@@ -1,4 +1,5 @@
 /* global animateSpinner PerfectSb initHandsOnTable */
+/* global HelperModule */
 /* eslint-disable no-use-before-define, no-alert */
 
 function applyClickCallbackOnProtocolCards() {
@@ -192,7 +193,8 @@ function handleFormSubmit(modal) {
       data: form.serialize(), // serializes the form's elements.
       success: function(data) {
         animateSpinner(modal, false);
-        window.location.replace(data.redirect_url);
+        modal.modal('hide');
+        HelperModule.flashAlertMsg(data.message, 'success');
       },
       error: function(data) {
         showFormErrors(modal, data.responseJSON.errors);
@@ -244,7 +246,7 @@ function initLoadProtocolModalPreview() {
         handleFormSubmit(modal);
       },
       error: function() {
-        alert('Server error');
+        HelperModule.flashAlertMsg('Server error', 'danger');
       },
       complete: function() {
         animateSpinner(null, false);

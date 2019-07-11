@@ -1759,6 +1759,10 @@ en:
           empty_title: 'PROTOCOL PREVIEW'
           empty_subtext: 'Click on the protocol in the list to preview it here'
           banner_text: 'Protocol Preview'
+        import:
+          public: "Team protocols"
+          private: "My protocols"
+          success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
 
     steps:
       completed: 'Completed'

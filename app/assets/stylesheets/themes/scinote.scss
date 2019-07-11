@@ -12,6 +12,10 @@ body,
   min-width: 320px;
 }
 
+#content-wrapper .container #notifications {
+  margin-left: -15px;
+}
+
 // Word wrapping everywhere, except for table header of "datatables.js"
 body,
 table.dataTable td {

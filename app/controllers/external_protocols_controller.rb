@@ -89,9 +89,11 @@ class ExternalProtocolsController < ApplicationController
 
     if service_call.succeed?
       protocol_type = service_call.protocol.in_repository_public? ? 'public' : 'private'
-
+      message = t('protocols.index.external_protocols.import.success_flash',
+                  name: service_call.protocol.name,
+                  type: t("protocols.index.external_protocols.import.#{protocol_type}"))
       render json: { protocol: service_call.protocol,
-                     redirect_url: protocols_path(type: protocol_type) }
+                     message: message }
     else
       render json: { errors: service_call.errors }, status: 400
     end
