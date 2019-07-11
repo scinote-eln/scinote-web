@@ -60,7 +60,8 @@ var TinyMCE = (function() {
           removed_menuitems: 'newdocument',
           object_resizing: true,
           elementpath: false,
-          forced_root_block: false,
+          forced_root_block: 'div',
+          force_p_newlines: false,
           default_link_target: '_blank',
           target_list: [
             { title: 'New page', value: '_blank' },
