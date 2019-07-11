@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Repository < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
@@ -14,6 +16,8 @@ class Repository < ApplicationRecord
            inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
   has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
+  has_many :team_repositories, inverse_of: :repository, dependent: :destroy
+  has_many :teams_shared_with, through: :team_repositories, class_name: 'Team'
 
   auto_strip_attributes :name, nullify: false
   validates :name,

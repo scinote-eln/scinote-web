@@ -236,4 +236,9 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101, 112],
     team: [92, 94, 93, 97, 104]
   }.freeze
+
+  SHARED_INVENTORIES_PERMISSION_LEVELS = {
+    read: 0,
+    write: 1
+  }.freeze
 end
