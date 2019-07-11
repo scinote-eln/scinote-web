@@ -39,6 +39,8 @@ describe Team, type: :model do
     it { should have_many :tiny_mce_assets }
     it { should have_many :repositories }
     it { should have_many :reports }
+    it { should have_many(:team_repositories).dependent(:destroy) }
+    it { should have_many :shared_repositories }
   end
 
   describe 'Validations' do
