@@ -21,6 +21,7 @@ var TinyMCE = (function() {
     init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
+      var textAreaObject = $(selector);
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
@@ -28,6 +29,10 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
+
+        if (textAreaObject.data('objectType') === 'step') {
+          document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
+        }
 
 
         tinyMCE.init({
