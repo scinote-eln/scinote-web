@@ -352,7 +352,7 @@ class RepositoryRowsController < ApplicationController
     @repository = current_team.repositories
                               .eager_load(:repository_columns)
                               .find_by_id(params[:repository_id])
-    @record = @repository.repository_row
+    @record = @repository.repository_rows
                          .eager_load(:repository_columns)
                          .find_by_id(params[:id])
     render_404 unless @repository && @record
