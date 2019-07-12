@@ -1,7 +1,9 @@
 <% content_for :content do %>
     <div class="container <%= yield :container_class %>">
-      <%= render partial: 'shared/flash_alerts',
-                 locals: { flash: flash, notice: notice, alert: alert } %>
+      <% if user_signed_in? %>
+        <%= render partial: 'shared/flash_alerts',
+                   locals: { flash: flash, notice: notice, alert: alert } %>
+      <% end %>
       <%= yield %>
     </div>
 <% end %>
