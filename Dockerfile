@@ -1,4 +1,4 @@
-FROM ruby:2.5.5
+FROM ruby:2.5.5-stretch
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 # Get version of Debian (lsb_release substitute) and save it to /tmp/lsb_release for further commands
