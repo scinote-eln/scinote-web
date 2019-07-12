@@ -61,9 +61,7 @@ module Api
       end
 
       def check_create_permissions
-        unless can_create_repository_columns?(@inventory.team)
-          raise PermissionError.new(RepositoryColumn, :create)
-        end
+        raise PermissionError.new(RepositoryColumn, :create) unless can_create_repository_columns?(@inventory)
       end
 
       def inventory_column_params
