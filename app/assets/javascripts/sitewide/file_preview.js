@@ -572,7 +572,7 @@ var FilePreviewModal = (function() {
     modal.find('.file-preview-container')
       .append($('<img>')
         .attr('src', data['large-preview-url'])
-        .attr('alt', data.name)
+        .attr('alt', data.file_name)
         .click(function(ev) {
           ev.stopPropagation();
         }));

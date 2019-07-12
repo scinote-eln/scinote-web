@@ -27,19 +27,10 @@ class MarvinJsAssetsController < ApplicationController
     end
   end
 
-  def destroy
-    asset = current_team.marvin_js_assets.find_by_id(params[:id])
-    if asset.destroy
-      render json: { id: asset.id }
-    else
-      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
-    end
-  end
-
   def update
     asset = MarvinJsService.update_sketch(marvin_params, current_user)
     if asset
-      render json: { url: asset.url, id: asset.id }
+      render json: { url: asset.medium_preview, id: asset.id }
     else
       render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
     end

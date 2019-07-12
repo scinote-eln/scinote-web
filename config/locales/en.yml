@@ -1765,10 +1765,11 @@ en:
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
       attachments:
-        sort_new: "Newest first &#8595;"
-        sort_old: "Oldest first &#8593;"
-        sort_atoz: "Name &#8595;"
-        sort_ztoa: "Name &#8593;"
+        sort:
+          new_html: "Newest first &#8595;"
+          old_html: "Oldest first &#8593;"
+          atoz_html: "Name &#8595;"
+          ztoa_html: "Name &#8593;"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"

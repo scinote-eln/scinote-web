@@ -41,7 +41,7 @@ class Team < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :activities, inverse_of: :team, dependent: :destroy
-  has_many :marvin_js_assets, inverse_of: :team, dependent: :destroy
+  has_many :assets, inverse_of: :team, dependent: :destroy
 
   attr_accessor :without_templates
   attr_accessor :without_intro_demo

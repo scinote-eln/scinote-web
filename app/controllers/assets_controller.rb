@@ -33,7 +33,6 @@ class AssetsController < ApplicationController
                elsif @assoc.class == RepositoryCell
                  can_manage_repository_rows?(@repository.team)
                end
-
     if response_json['type'] == 'image'
       if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
         response_json['quality'] = @asset.file_image_quality || 90
