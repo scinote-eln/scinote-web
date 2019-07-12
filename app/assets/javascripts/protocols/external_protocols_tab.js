@@ -40,7 +40,9 @@ function applyClickCallbackOnProtocolCards() {
           iFrame.contents().find('body').html(data.html);
 
           scrollbox.scrollTo(0);
-          iFrame.contents().find('body').find('table.htCore').css('width', '100%');
+          iFrame.contents().find('body').find('table.htCore')
+            .css('width', '100%')
+            .css('table-layout', 'auto');
           iFrame.contents().find('body').find('span').css('word-break', 'break-word');
           setTimeout(() => {
             iFrame[0].height = iFrame[0].contentWindow.document.body.scrollHeight + 'px';
