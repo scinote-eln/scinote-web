@@ -72,9 +72,12 @@ module PrivateMethods
 
         style = paragraph_styling(elem.parent)
         type = (style[:align] && style[:align] != :justify) || style[:style] ? 'newline' : 'text'
+
+        text = smart_annotation_check(elem)
+
         elements.push(
           type: type,
-          value: elem.text.strip.delete(' '), # Invisible symbol
+          value: text.strip.delete(' '), # Invisible symbol
           style: style
         )
         next
@@ -117,12 +120,23 @@ module PrivateMethods
   def link_prepare(elem)
     text = elem.text
     link = elem.attributes['href'].value if elem.attributes['href']
-    link = nil if elem.attributes['class'] && elem.attributes['class'].value == 'record-info-link'
+    if elem.attributes['class']&.value == 'record-info-link'
+      link = nil
+      text = "##{text}"
+    end
+    text = "##{text}" if elem.parent.attributes['class']&.value == 'atwho-inserted'
+    text = "@#{text}" if elem.attributes['class']&.value == 'atwho-user-popover'
     {
       type: 'a',
       value: text,
       link: link
     }
+  end
+
+  def smart_annotation_check(elem)
+    return "[#{elem.text}]" if elem.parent.attributes['class']&.value == 'sa-type'
+
+    elem.text
   end
 
   # Prepare style for text
@@ -265,7 +279,8 @@ module PrivateMethods
     }
 
     @color = {
-      gray: 'a0a0a0'
+      gray: 'a0a0a0',
+      green: '2dbe61'
     }
   end
 

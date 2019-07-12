@@ -9,7 +9,7 @@ module DrawStepTable
     timestamp = table.created_at
     @docx.p
     @docx.p do
-      text I18n.t 'projects.reports.elements.step_table.table_name', name: table.name
+      text I18n.t('projects.reports.elements.step_table.table_name', name: table.name), italic: true
       text ' '
       text I18n.t('projects.reports.elements.step_table.user_time',
                   timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

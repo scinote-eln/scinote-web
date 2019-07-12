@@ -45,8 +45,9 @@ module DrawMyModuleRepository
     @docx.p
     @docx.p I18n.t('projects.reports.elements.module_repository.name',
                    repository: repository.name,
-                   my_module: my_module.name), bold: true
+                   my_module: my_module.name), bold: true, size: Constants::REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE
     @docx.table table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
+
     @docx.p
     @docx.p
   end

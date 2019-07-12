@@ -113,8 +113,13 @@ class Constants
 
   # Word borders in eighth point units.
   # A eighth point is 1/8 of a point. A border size of 4 is equivalent to 0.5pt.
-
   REPORT_DOCX_TABLE_BORDER_SIZE = 4
+
+  # All font size in half points
+  REPORT_DOCX_EXPERIMENT_TITLE_SIZE = 28
+  REPORT_DOCX_MY_MODULE_TITLE_SIZE = 24
+  REPORT_DOCX_STEP_TITLE_SIZE = 22
+  REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE = 20
 
   #=============================================================================
   # Styling

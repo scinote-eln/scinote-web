@@ -6,9 +6,10 @@ module DrawMyModule
     link_style = @link_style
     scinote_url = @scinote_url
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
+    tags = my_module.tags
     return unless my_module
 
-    @docx.h3 my_module.name, italic: false
+    @docx.h3 my_module.name, italic: false, size: Constants::REPORT_DOCX_MY_MODULE_TITLE_SIZE
     @docx.p do
       text I18n.t('projects.reports.elements.module.user_time',
                   timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
@@ -20,8 +21,8 @@ module DrawMyModule
         text I18n.t('projects.reports.elements.module.no_due_date'), color: color[:gray]
       end
       if my_module.completed?
-        text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}",
-             color: color[:gray]
+        text " #{I18n.t('my_modules.states.completed')}", bold: true, color: color[:green]
+        text " #{I18n.l(my_module.completed_on, format: :full)}", color: color[:gray]
       end
       if my_module.archived?
         text ' | '
@@ -41,9 +42,14 @@ module DrawMyModule
 
     @docx.p do
       text I18n.t 'projects.reports.elements.module.tags_header'
-      my_module.tags.each do |tag|
+      if tags.any?
+        my_module.tags.each do |tag|
+          text ' '
+          text "[#{tag.name}]", color: tag.color.delete('#')
+        end
+      else
         text ' '
-        text tag.name, color: tag.color.delete('#')
+        text I18n.t 'projects.reports.elements.module.no_tags'
       end
     end
 
