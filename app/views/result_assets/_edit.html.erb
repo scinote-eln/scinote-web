@@ -5,7 +5,7 @@
       <span><strong><%=t "result_assets.edit.uploaded_asset" %></strong></span>
       <p style="margin: 10px;">
         <%= file_extension_icon(ff.object) %>
-        <%= ff.object.file_file_name %>
+        <%= ff.object.file_name %>
       </p>
       <%= ff.file_field :file %>
     <% end %>

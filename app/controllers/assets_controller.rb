@@ -13,43 +13,16 @@ class AssetsController < ApplicationController
   include FileIconsHelper
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: :file_present
-  before_action :check_edit_permission, only: %i(edit create_start_edit_image_activity)
 
-  def file_present
-    return render_403 unless @asset.team == current_team
-
-    respond_to do |format|
-      format.json do
-        if @asset.file.processing?
-          render json: { processing: true }
-        else
-          # Only if file is ready, check_read_permission
-          check_read_permission
-          # If check_read_permission already rendered error, stop execution
-          return if performed?
-
-          placeholder_html =
-            if @assoc.class == Step
-              render_to_string(partial: 'steps/attachments/placeholder.html.erb',
-                               locals: { asset: @asset, edit_page: false })
-            else
-              render_to_string(partial: 'shared/asset_link_placeholder.html.erb',
-                               locals: { asset: @asset, display_image_tag: true })
-            end
-
-          render json: { placeholder_html: placeholder_html, processing: false }
-        end
-      end
-    end
-  end
+  before_action :check_read_permission
+  before_action :check_edit_permission, only: :edit
 
   def file_preview
     response_json = {
       'id' => @asset.id,
       'type' => (@asset.image? ? 'image' : 'file'),
 
-      'filename' => truncate(escape_input(@asset.file_file_name),
+      'filename' => truncate(escape_input(@asset.file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
       'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
     }
@@ -63,22 +36,18 @@ class AssetsController < ApplicationController
                end
 
     if @asset.image?
-      if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
+      if ['image/jpeg', 'image/pjpeg'].include? @asset.content_type
         response_json['quality'] = @asset.file_image_quality || 90
       end
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'mime-type' => @asset.file.content_type,
-        'processing' => @asset.file.processing?,
-        'large-preview-url' => @asset.url(:large),
-        'processing-img' => image_tag('medium/processing.gif')
+        'large-preview-url' => @asset.large_preview
       )
     else
-      response_json['processing'] = @asset.file.processing?
-      response_json['preview-icon'] = render_to_string(
-        partial: 'shared/file_preview_icon.html.erb',
-        locals: { asset: @asset }
-      )
+
+      response_json['preview-icon'] = render_to_string(partial: 'shared/file_preview_icon.html.erb',
+                                                       locals: { asset: @asset })
     end
 
     if wopi_enabled? && wopi_file?(@asset)
@@ -102,7 +71,7 @@ class AssetsController < ApplicationController
 
   # Check whether the wopi file can be edited and return appropriate response
   def wopi_file_edit_button_status
-    file_ext = @asset.file_file_name.split('.').last
+    file_ext = @asset.file_name.split('.').last
     if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
       edit_supported = true
       title = ''
@@ -120,20 +89,16 @@ class AssetsController < ApplicationController
   end
 
   def download
-    if !@asset.file_present
-      render_404 and return
-    elsif @asset.file.is_stored_on_s3?
-      redirect_to @asset.presigned_url(download: true), status: 307
+    if !@asset.file.attached?
+      render_404
     else
-      send_file @asset.file.path, filename: URI.unescape(@asset.file_file_name),
-        type: @asset.file_content_type
+      redirect_to rails_blob_path(@asset.file, disposition: 'attachment')
     end
   end
 
   def edit
-    action = @asset.file_file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
-    @action_url = append_wd_params(@asset
-                                  .get_action_url(current_user, action, false))
+    action = @asset.file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
+    @action_url = append_wd_params(@asset.get_action_url(current_user, action, false))
     @favicon_url = @asset.favicon_url('edit')
     tkn = current_user.get_wopi_token
     @token = tkn.token
@@ -146,8 +111,7 @@ class AssetsController < ApplicationController
   end
 
   def view
-    @action_url = append_wd_params(@asset
-                                   .get_action_url(current_user, 'view', false))
+    @action_url = append_wd_params(@asset.get_action_url(current_user, 'view', false))
     @favicon_url = @asset.favicon_url('view')
     tkn = current_user.get_wopi_token
     @token = tkn.token
@@ -162,12 +126,11 @@ class AssetsController < ApplicationController
 
   def update_image
     @asset = Asset.find(params[:id])
-    orig_file_size = @asset.file_file_size
-    orig_file_name = @asset.file_file_name
+    orig_file_size = @asset.file_size
+    orig_file_name = @asset.file_name
     return render_403 unless can_read_team?(@asset.team)
 
-    @asset.file = params[:image]
-    @asset.file_file_name = orig_file_name
+    @asset.file.attach(io: params.require(:image), filename: orig_file_name)
     @asset.save!
     create_edit_image_activity(@asset, current_user, :finish_editing)
     # release previous image space
@@ -212,10 +175,10 @@ class AssetsController < ApplicationController
     render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
 
     # Asset validation
-    file = Paperclip.io_adapters.for(StringIO.new)
-    file.original_filename = "#{params[:file_name]}.#{params[:file_type]}"
-    file.content_type = wopi_content_type(params[:file_type])
-    asset = Asset.new(file: file, created_by: current_user, file_present: true)
+    asset = Asset.new(created_by: current_user)
+    asset.file.attach(io: StringIO.new,
+                      filename: "#{params[:file_name]}.#{params[:file_type]}",
+                      content_type: wopi_content_type(params[:file_type]))
 
     unless asset.valid?(:wopi_file_creation)
       render json: {
@@ -302,9 +265,7 @@ class AssetsController < ApplicationController
   end
 
   def asset_params
-    params.permit(
-      :file
-    )
+    params.permit(:file)
   end
 
   def asset_data_type(asset)

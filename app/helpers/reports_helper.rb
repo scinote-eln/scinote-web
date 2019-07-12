@@ -97,8 +97,9 @@ module ReportsHelper
   end
 
   # "Hack" to omit file preview URL because of WKHTML issues
-  def report_image_asset_url(asset, _type = :asset, klass = nil)
-    image_tag(asset.generate_base64(:medium), class: klass)
+  def report_image_asset_url(asset, type = :asset, klass = nil)
+    url = type == :tiny_mce_asset ? asset.preview : asset.large_preview
+    image_tag(url, class: klass)
   end
 
   # "Hack" to load Glyphicons css directly from the CDN
@@ -147,7 +148,7 @@ module ReportsHelper
 
   def obj_name_to_filename(obj, filename_suffix = '')
     obj_name = if obj.class == Asset
-                 obj_name, extension = obj.file_file_name.split('.')
+                 obj_name, extension = obj.file_name.split('.')
                  extension&.prepend('.')
                  obj_name
                elsif obj.class.in? [Table, Result, Repository]

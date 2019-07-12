@@ -48,7 +48,7 @@ Rails.application.configure do
 
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = Uglifier.new(harmony: true)
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -70,6 +70,8 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = ENV['RAILS_FORCE_SSL'].present?
+
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path =~ %r{api\/health} } } }
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.

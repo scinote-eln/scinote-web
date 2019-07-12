@@ -99,8 +99,8 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
     if ENV['PAPERCLIP_STORAGE'] == 's3'
       interpolate(':class/:attachment/:id_partition/:hash/original/:filename', instance, attachment)
     else
-      key = SecureRandom.uuid
-      File.join('storage', key.first(2), key.first(4).last(2))
+      instance.class.generate_unique_secure_token
+      # File.join('storage', key.first(2), key.first(4).last(2))
     end
   end
 

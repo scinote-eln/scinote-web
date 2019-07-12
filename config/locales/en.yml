@@ -1265,7 +1265,6 @@ en:
       scinote_columns_html: "<em>SciNote</em> columns:"
       file_columns: "Imported columns:"
       example_value: "Imported file content:"
-      import_samples: "Import samples"
       do_not_include_column: "Do not include this column"
       errors:
         invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."

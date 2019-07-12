@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 /* global Uint8Array fabric tui animateSpinner Assets
    I18n PerfectScrollbar MarvinJsEditor refreshProtocolStatusBar  */
-//= require assets
+
 
 var FilePreviewModal = (function() {
   'use strict';
@@ -397,7 +397,16 @@ var FilePreviewModal = (function() {
 
       dataUpload.append('image', imageBlob);
       animateSpinner(null, true);
-      function closeEditor() {
+      $.ajax({
+        type: 'POST',
+        url: '/files/' + data.id + '/update_image',
+        data: dataUpload,
+        contentType: false,
+        processData: false,
+        success: function(res) {
+          $('#modal_link' + data.id).parent().html(res.html);
+        }
+      }).done(function() {
         animateSpinner(null, false);
         imageEditor.destroy();
         imageEditor = {};

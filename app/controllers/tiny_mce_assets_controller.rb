@@ -3,13 +3,17 @@
 class TinyMceAssetsController < ApplicationController
   def create
     image = params.fetch(:file) { render_404 }
-    tiny_img = TinyMceAsset.new(image: image,
-                                team_id: current_team.id,
-                                saved: false)
-    if tiny_img.save
+    tiny_img = TinyMceAsset.new(team_id: current_team.id, saved: false)
+
+    tiny_img.transaction do
+      tiny_img.save!
+      tiny_img.image.attach(io: image, filename: image.original_filename)
+    end
+
+    if tiny_img.persisted?
       render json: {
         image: {
-          url: view_context.image_url(tiny_img.url(:large)),
+          url: url_for(tiny_img.image),
           token: Base62.encode(tiny_img.id)
         }
       }, content_type: 'text/html'
@@ -18,11 +22,5 @@ class TinyMceAssetsController < ApplicationController
         error: tiny_img.errors.full_messages
       }, status: :unprocessable_entity
     end
-  end
-
-  def update
-    image = TinyMceAsset.find_by_id(Base62.decode(params[:id]))
-    image.update(image: params[:image], image_file_name: image.image_file_name)
-    render json: { url: view_context.image_url(image.url) }
   end
 end

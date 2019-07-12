@@ -30,12 +30,11 @@ module MyModulesHelper
   end
 
   def az_ordered_assets_index(step, asset_id)
-    assets = []
-    assets += step.assets
-    assets += step.marvin_js_assets
-    assets.sort! do |a, b|
-      (a[asset_name_sort_field(a)]).downcase <=> (b[asset_name_sort_field(b)]).downcase
-    end.pluck(:id).index(asset_id)
+    step.assets
+        .joins(file_attachment: :blob)
+        .order(Arel.sql('LOWER(active_storage_blobs.filename)'))
+        .pluck(:id)
+        .index(asset_id)
   end
 
   def number_of_samples(my_module)

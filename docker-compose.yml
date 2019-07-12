@@ -29,6 +29,7 @@ services:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/
       - scinote_development_files:/usr/src/app/public/system
+      - scinote_development_storage:/usr/src/app/storage
 
   webpack:
     build:
@@ -54,3 +55,4 @@ volumes:
   scinote_development_postgres:
   scinote_development_bundler:
   scinote_development_files:
+  scinote_development_storage:

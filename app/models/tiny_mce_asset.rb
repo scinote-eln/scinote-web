@@ -4,7 +4,7 @@ class TinyMceAsset < ApplicationRecord
   extend ProtocolsExporter
   attr_accessor :reference
   before_create :set_reference, optional: true
-  after_create :update_estimated_size, :self_destruct
+  after_create :calculate_estimated_size, :self_destruct
   after_destroy :release_team_space
 
   belongs_to :team, inverse_of: :tiny_mce_assets, optional: true
@@ -22,20 +22,23 @@ class TinyMceAsset < ApplicationRecord
   belongs_to :object, polymorphic: true,
                       optional: true,
                       inverse_of: :tiny_mce_assets
-  has_attached_file :image,
-                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg] },
-                    convert_options: { large: '-quality 100 -strip' }
 
-  validates_attachment_content_type :image,
-                                    content_type: %r{^image/#{ Regexp.union(
-                                      Constants::WHITELISTED_IMAGE_TYPES
-                                    ) }}
-  validates_attachment :image,
-                       presence: true,
-                       size: {
-                         less_than: Rails.configuration.x\
-                                         .file_max_size_mb.megabytes
-                       }
+  has_one_attached :image
+
+  # has_attached_file :image,
+  #                   styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg] },
+  #                   convert_options: { large: '-quality 100 -strip' }
+
+  # validates_attachment_content_type :image,
+  #                                   content_type: %r{^image/#{ Regexp.union(
+  #                                     Constants::WHITELISTED_IMAGE_TYPES
+  #                                   ) }}
+  # validates_attachment :image,
+  #                      presence: true,
+  #                      size: {
+  #                        less_than: Rails.configuration.x\
+  #                                        .file_max_size_mb.megabytes
+  #                      }
   validates :estimated_size, presence: true
 
   def source
@@ -67,13 +70,10 @@ class TinyMceAsset < ApplicationRecord
     tm_assets = description.css('img[data-mce-token]')
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
-      new_asset_url = find_by_id(Base62.decode(asset_id))
-      next unless new_asset_url
-
-      assets_source = new_asset_url.source
-      if assets_source
-        tm_asset.set_attribute('data-source-id', assets_source.id)
-        tm_asset.set_attribute('data-source-type', assets_source.class.name)
+      new_asset = obj.tiny_mce_assets.find_by_id(Base62.decode(asset_id))
+      if new_asset
+        tm_asset.attributes['src'].value = Rails.application.routes.url_helpers.url_for(new_asset.image)
+        tm_asset['class'] = 'img-responsive'
       end
       tm_asset.attributes['src'].value = new_asset_url.url
       tm_asset['class'] = 'img-responsive'
@@ -81,47 +81,51 @@ class TinyMceAsset < ApplicationRecord
     description.css('body').inner_html.to_s
   end
 
-  def presigned_url(style = :large,
-                    download: false,
-                    timeout: Constants::URL_LONG_EXPIRE_TIME)
-    if stored_on_s3?
-      download_arg = ('attachment; filename=' + CGI.escape(image_file_name) if download)
+  def file_name
+    return '' unless image.attached?
 
-      signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
-      signer.presigned_url(:get_object,
-                           bucket: S3_BUCKET.name,
-                           key: image.path(style)[1..-1],
-                           expires_in: timeout,
-                           response_content_disposition: download_arg)
-    end
+    image.blob&.filename&.to_s
   end
 
-  def stored_on_s3?
-    image.options[:storage].to_sym == :s3
+  def file_size
+    return 0 unless image.attached?
+
+    image.blob&.byte_size
   end
 
-  def url(style = :large, timeout: Constants::URL_LONG_EXPIRE_TIME)
-    if image.is_stored_on_s3?
-      presigned_url(style, timeout: timeout)
-    else
-      image.url(style)
-    end
+  def content_type
+    image&.blob&.content_type
   end
 
-  def open
-    if image.is_stored_on_s3?
-      Kernel.open(presigned_url, 'rb')
-    else
-      File.open(image.path, 'rb')
-    end
+  def file_size
+    image&.blob&.byte_size
+  end
+
+  def preview
+    image.variant(resize: Constants::LARGE_PIC_FORMAT)
   end
 
   def self.delete_unsaved_image(id)
     asset = find_by_id(id)
     asset.destroy if asset && !asset.saved
   end
+ 
+  def self.update_estimated_size(id)
+    asset = find_by_id(id)
+    return unless asset&.image&.attached?
 
-  def self.update_old_tinymce(description, obj = nil, import = false)
+    size = asset.image.blob.byte_size
+    return if size.blank?
+
+    e_size = size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
+    asset.update(estimated_size: e_size)
+    Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
+    # update team space taken
+    asset.team.take_space(e_size)
+    asset.team.save
+  end
+
+  def self.update_old_tinymce(description, obj = nil)
     return description unless description
 
     description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
@@ -148,12 +152,9 @@ class TinyMceAsset < ApplicationRecord
     if exists?
       order(:id).each do |tiny_mce_asset|
         asset_guid = get_guid(tiny_mce_asset.id)
-        asset_file_name =
-          "rte-#{asset_guid.to_s +
-            File.extname(tiny_mce_asset.image_file_name).to_s}"
+        asset_file_name = "rte-#{asset_guid.to_s + File.extname(tiny_mce_asset.image.filename.to_s)}"
         ostream.put_next_entry("#{dir}/#{asset_file_name}")
-        input_file = tiny_mce_asset.open
-        ostream.print(input_file.read)
+        ostream.print(tiny_mce_asset.image.download)
         input_file.close
       end
     end
@@ -176,12 +177,17 @@ class TinyMceAsset < ApplicationRecord
     return false unless team_id
 
     tiny_img_clone = TinyMceAsset.new(
-      image: image,
       estimated_size: estimated_size,
       object: obj,
       team_id: team_id
     )
-    tiny_img_clone.save!
+
+    tiny_img_clone.transaction do
+      tiny_img_clone.save!
+      tiny_img_clone.image.attach(io: image.download, filename: image.filename.to_s)
+    end
+
+    return false unless tiny_img_clone.persisted?
 
     obj.tiny_mce_assets << tiny_img_clone
     # Prepare array of image to update
@@ -202,15 +208,8 @@ class TinyMceAsset < ApplicationRecord
     TinyMceAsset.delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
   end
 
-  def update_estimated_size
-    return if image_file_size.blank?
-
-    es = image_file_size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
-    update(estimated_size: es)
-    Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
-    # update team space taken
-    team.take_space(es)
-    team.save
+  def calculate_estimated_size
+    TinyMceAsset.delay(queue: :assets, run_at: 5.minutes.from_now).update_estimated_size(id)
   end
 
   def release_team_space

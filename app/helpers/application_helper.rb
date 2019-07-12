@@ -196,7 +196,12 @@ module ApplicationHelper
   # No more dirty hack
   def user_avatar_absolute_url(user, style)
     begin
-      return user.avatar_base64(style) unless missing_avatar(user, style)
+      unless missing_avatar(user, style)
+        image = File.open(user.avatar_variant(style))
+        encoded_data = Base64.strict_encode64(image)
+        avatar_base64 = "data:#{user.avatar_content_type};base64,#{encoded_data}"
+        return avatar_base64
+      end
     rescue StandardError => e
       Rails.logger.error e.message
     end

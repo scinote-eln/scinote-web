@@ -2,19 +2,15 @@
   class: 'file-preview-link',
   id: "modal_link#{asset.id}",
   data: { no_turbolink: true, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(asset) } do %>
-  <% if asset.image? && display_image_tag %>
+  <% if display_image_tag && asset.previewable? %>
     <%= image_tag asset.medium_preview %>
-  <% end %>
-  <% if display_image_tag %>
     <p>
-      <%= truncate(asset.file_file_name,
-                   length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+      <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
     </p>
-    <% else %>
-      <span>
-        <%= truncate(asset.file_file_name,
-                     length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-      </span>
+  <% else %>
+    <span>
+      <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    </span>
   <% end %>
 
 <% end %>

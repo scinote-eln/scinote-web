@@ -364,7 +364,9 @@ GEM
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
-    pg (0.21.0)
+    pg (1.1.4)
+      activerecord (>= 4.2)
+      activesupport (>= 4.2)
     pg_search (2.2.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
@@ -627,7 +629,7 @@ DEPENDENCIES
   omniauth-linkedin-oauth2
   overcommit
   paperclip (~> 6.1)
-  pg (~> 0.18)
+  pg (~> 1.1)
   pg_search
   phantomjs
   poltergeist

@@ -21,11 +21,11 @@ class RepositoryAssetValue < ApplicationRecord
   SORTABLE_VALUE_INCLUDE = { repository_asset_value: :asset }.freeze
 
   def formatted
-    asset.file_file_name
+    asset.file_name
   end
 
   def data
-    asset.file_file_name
+    asset.file_name
   end
 
   def data_changed?(_new_data)
@@ -33,9 +33,8 @@ class RepositoryAssetValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    file = Paperclip.io_adapters.for(new_data[:file_data])
     file.original_filename = new_data[:file_name]
-    asset.file = file
+    asset.file.attach(io: new_data[:file_data], filename: new_data[:file_name])
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!

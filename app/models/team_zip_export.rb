@@ -147,7 +147,7 @@ class TeamZipExport < ZipExport
                               .routes
                               .url_helpers
                               .zip_exports_download_export_all_path(self)}'>" \
-                "#{zip_file_file_name}</a>"
+                "#{zip_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
   end
@@ -197,11 +197,9 @@ class TeamZipExport < ZipExport
 
       if type == :step
         name = "#{directory}/" \
-               "#{append_file_suffix(asset.file_file_name,
-                                     "_#{i}_Step#{element.step.position_plus_one}")}"
+               "#{append_file_suffix(asset.file_name, "_#{i}_Step#{element.step.position_plus_one}")}"
       elsif type == :result
-        name = "#{directory}/#{append_file_suffix(asset.file_file_name,
-                                                  "_#{i}")}"
+        name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{i}")}"
       end
       asset.file.copy_to_local_file(:original, name) if asset.file.exists?
       asset_indexes[asset.id] = name
@@ -254,8 +252,7 @@ class TeamZipExport < ZipExport
     assets = {}
     asset_counter = 0
     handle_name_func = lambda do |asset|
-      file_name = append_file_suffix(asset.file_file_name,
-                                     "_#{asset_counter}").to_s
+      file_name = append_file_suffix(asset.file_name, "_#{asset_counter}").to_s
 
       # Save pair for downloading it later
       assets[asset] = "#{attach_path}/#{file_name}"

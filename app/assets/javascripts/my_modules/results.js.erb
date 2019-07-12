@@ -1,5 +1,3 @@
-//= require assets
-
 (function(global) {
   'use strict';
 
@@ -112,7 +110,6 @@
       });
       _renderTable($(result).find('div.step-result-hot-table'));
       animateSpinner(null, false);
-      Assets.setupAssetsLoading();
     }
 
     function _renderTable(table) {

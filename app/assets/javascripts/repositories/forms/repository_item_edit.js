@@ -71,7 +71,7 @@
     $.each(itemData.repository_row.repository_cells, function(i, cell) {
       var tableCellId = 'colId-' + cell.cell_column_id;
       if(cell.type === 'RepositoryAssetValue') {
-        formBindingsData[tableCellId] = new File([""], cell.value.file_file_name);
+        formBindingsData[tableCellId] = new File([""], cell.value.file_name);
       } else {
         formBindingsData[tableCellId] = cell.value;
       }
@@ -193,7 +193,7 @@
    *  @returns (String)
    */
   function changeToInputFileField(object, name, value, id) {
-    var fileName    = (value.file_file_name) ? value.file_file_name : I18n.t('general.file.no_file_chosen');
+    var fileName    = (value.file_name) ? value.file_name : I18n.t('general.file.no_file_chosen');
     var buttonLabel = I18n.t('general.file.choose');
     var html        = "<div class='repository-input-file-field'>" +
       "<div class='form-group'><div><input type='file' name='" + name + "' id='" +
@@ -202,7 +202,7 @@
       "' data-id='" + id + "'>" + buttonLabel +
       "</button></div><div><p class='file-name-label'>" + truncateLongString(fileName, 20) +
       "</p></div>";
-    if(value.file_file_name) {
+    if(value.file_name) {
       html += "<div><a data-action='removeAsset' ";
       html += "onClick='clearFileInput(this)'><i class='fas fa-times'></i></a>";
     } else {
