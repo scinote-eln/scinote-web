@@ -12,17 +12,10 @@ module Paperclip
 
       begin
         if @file.content_type == 'application/pdf'
-          content = Paperclip.run(
+          Paperclip.run(
             pdftoppm_path,
-            "-singlefile -r 72 -png #{@file.path}"
+            "-singlefile -r 72 -png #{@file.path} #{File.join(directory, basename)}"
           )
-
-          # Save intermediate content to tempfile
-          tmp = TempfileFactory.new.generate
-          tmp.write(content)
-          tmp.rewind
-
-          original_preview_file = tmp.path
         else
           Paperclip.run(
             libreoffice_path,
