@@ -367,6 +367,6 @@ class WopiController < ActionController::Base
 
   # Overwrriten in electronic signature for locked inventory items
   def can_edit_wopi_file_in_repository_rows?
-    can_manage_repository_rows?(@team)
+    can_manage_repository_rows?(@repository)
   end
 end

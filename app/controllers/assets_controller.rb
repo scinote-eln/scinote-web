@@ -60,7 +60,7 @@ class AssetsController < ApplicationController
                elsif @assoc.class == Result
                  can_manage_module?(@my_module)
                elsif @assoc.class == RepositoryCell
-                 can_manage_repository_rows?(@repository.team)
+                 can_manage_repository_rows?(@repository)
                end
 
     if @asset.is_image?
@@ -298,7 +298,7 @@ class AssetsController < ApplicationController
     elsif @assoc.class == Result
       render_403 and return unless can_manage_module?(@my_module)
     elsif @assoc.class == RepositoryCell
-      render_403 and return unless can_manage_repository_rows?(@repository.team)
+      render_403 and return unless can_manage_repository_rows?(@repository)
     end
   end
 

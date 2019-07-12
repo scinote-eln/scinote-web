@@ -274,11 +274,10 @@ class RepositoryRowsController < ApplicationController
     if selected_params
       selected_params.each do |row_id|
         row = @repository.repository_rows.find_by_id(row_id)
-        if row && can_manage_repository_rows?(@repository.team)
-          log_activity(:delete_item_inventory, row)
+        next unless row && can_manage_repository_rows?(@repository)
 
-          row.destroy && deleted_count += 1
-        end
+        log_activity(:delete_item_inventory, row)
+        row.destroy && deleted_count += 1
       end
       if deleted_count.zero?
         flash = t('repositories.destroy.no_deleted_records_flash',
@@ -363,11 +362,11 @@ class RepositoryRowsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository_rows?(@repository.team)
+    render_403 unless can_create_repository_rows?(@repository)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_repository_rows?(@repository.team)
+    render_403 unless can_manage_repository_rows?(@repository)
   end
 
   def record_params
