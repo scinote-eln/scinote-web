@@ -1,4 +1,4 @@
-FROM ruby:2.5.5
+FROM ruby:2.5.5-stretch
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 # Get version of Debian (lsb_release substitute) and save it to /tmp/lsb_release for further commands
@@ -20,7 +20,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   postgresql-client \
   default-jre-headless \
   unison \
-  ghostscript \
+  poppler-utils \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
   apt-get install -y --no-install-recommends -t $(cat /tmp/lsb_release)-backports libreoffice && \

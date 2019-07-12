@@ -1,4 +1,4 @@
-FROM ruby:2.5.5
+FROM ruby:2.5.5-stretch
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 RUN echo deb "http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list
@@ -17,7 +17,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   postgresql-client \
   netcat \
   default-jre-headless \
-  ghostscript \
+  poppler-utils \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
   apt-get install -y --no-install-recommends -t stretch-backports libreoffice && \
