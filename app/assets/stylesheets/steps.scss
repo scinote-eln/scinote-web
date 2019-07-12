@@ -143,25 +143,6 @@
     background-color: rgba(95, 95, 95, .1);
   }
 
-  .attachment-thumbnail {
-    display: inline-block;
-    height: 160px;
-    margin: 16px 10px 5px;
-    overflow: hidden;
-    text-align: center;
-
-    img {
-      border-radius: 5px;
-      max-height: 100%;
-      max-width: 100%;
-    }
-
-    i.fas {
-      font-size: 100px;
-      line-height: 160px;
-    }
-  }
-
   .no-shadow {
     box-shadow: none;
   }

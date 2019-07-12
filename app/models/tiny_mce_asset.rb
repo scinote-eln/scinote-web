@@ -73,7 +73,7 @@ class TinyMceAsset < ApplicationRecord
   def file_name
     return '' unless image.attached?
 
-    image.blob&.filename&.to_s
+    image.blob&.filename&.sanitized
   end
 
   def file_size
@@ -83,11 +83,9 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def content_type
-    image&.blob&.content_type
-  end
+    return '' unless image.attached?
 
-  def file_size
-    image&.blob&.byte_size
+    image&.blob&.content_type
   end
 
   def preview
@@ -140,7 +138,7 @@ class TinyMceAsset < ApplicationRecord
     if exists?
       order(:id).each do |tiny_mce_asset|
         asset_guid = get_guid(tiny_mce_asset.id)
-        asset_file_name = "rte-#{asset_guid.to_s + File.extname(tiny_mce_asset.image.filename.to_s)}"
+        asset_file_name = "rte-#{asset_guid.to_s + tiny_mce_asset.image.blob.filename.extension}"
         ostream.put_next_entry("#{dir}/#{asset_file_name}")
         ostream.print(tiny_mce_asset.image.download)
         input_file.close
@@ -172,7 +170,7 @@ class TinyMceAsset < ApplicationRecord
 
     tiny_img_clone.transaction do
       tiny_img_clone.save!
-      tiny_img_clone.image.attach(io: image.download, filename: image.filename.to_s)
+      tiny_img_clone.image.attach(io: image.download, filename: image.filename.sanitized)
     end
 
     return false unless tiny_img_clone.persisted?

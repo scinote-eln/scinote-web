@@ -21,6 +21,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   default-jre-headless \
   unison \
   sudo graphviz --no-install-recommends \
+  poppler-utils \
   libfile-mimeinfo-perl && \
   apt-get install -y --no-install-recommends -t $(cat /tmp/lsb_release)-backports libreoffice && \
   npm install -g yarn && \
