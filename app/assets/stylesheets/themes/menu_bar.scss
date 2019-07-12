@@ -58,6 +58,10 @@
     padding-bottom: 16px;
     position: fixed;
     width: inherit;
+
+    .academy-color {
+      color: $brand-academy;
+    }
   }
 
   .dropup {

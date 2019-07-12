@@ -89,6 +89,17 @@
           <span><%= t('left_menu_bar.settings') %></span>
         <% end %>
       </li>
+      <li>
+        <%= link_to Constants::ACADEMY_BL_LINK, 
+          id: "academy-link", 
+          class: "academy-color", 
+          title: I18n.t('nav.academy_tooltip'),
+          target: :_blank do 
+        %>
+          <span class="fas fa-graduation-cap"></span>
+          <span><%= t('left_menu_bar.academy') %></span>
+        <% end %>
+      </li>
     </ul>
   </div>
 </div>

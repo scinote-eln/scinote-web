@@ -99,6 +99,7 @@ en:
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
     title: "SciNote"
+    academy_tooltip: "SciNote Academy"
     user:
       settings: "Settings"
       logout: "Log out"
@@ -130,6 +131,7 @@ en:
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
+    academy: "Academy"
     support: "Support"
     support_links:
       support: "Support Center"

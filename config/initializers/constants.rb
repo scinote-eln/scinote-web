@@ -203,6 +203,9 @@ class Constants
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
+  ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
+  ACADEMY_TR_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20TR&utm_medium=SciNote%20software%20TR'.freeze
+
   #=============================================================================
   # Protocol importers
   #=============================================================================
