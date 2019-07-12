@@ -1,16 +1,9 @@
 <%= link_to download_asset_path(asset),
   class: 'file-preview-link',
   id: "modal_link#{asset.id}",
-  data: { no_turbolink: true, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(asset) } do %>
-  <% if display_image_tag && asset.previewable? %>
-    <%= image_tag asset.medium_preview %>
-    <p>
-      <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-    </p>
-  <% else %>
-    <span>
-      <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-    </span>
-  <% end %>
-
+  data: { no_turbolink: true,
+          id: true,
+          status: 'asset-present',
+          'preview-url': asset_file_preview_path(asset) } do %>
+  <%= render partial: 'shared/asset_placeholder.html.erb', locals: { edit_page: false, asset: asset } %>
 <% end %>

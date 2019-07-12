@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 class Asset < ApplicationRecord
   include ActiveStorage::Downloading
   include SearchableModel
   include DatabaseHelper
   include Encryptor
   include WopiUtil
+  include ActiveStorageFileUtil
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -191,27 +194,25 @@ class Asset < ApplicationRecord
   def previewable?
     return false unless file.attached?
 
-    previewable_document? || previewable_image?
+    previewable_document?(blob) || previewable_image?
   end
 
   def medium_preview
     return file.variant(resize: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
 
-    '/images/medium/processing.gif'
-    # file.preview(resize: Constants::MEDIUM_PIC_FORMAT)
+    file.preview(resize: Constants::MEDIUM_PIC_FORMAT)
   end
 
   def large_preview
     return file.variant(resize: Constants::LARGE_PIC_FORMAT) if previewable_image?
 
-    '/images/large/processing.gif'
-    # file.preview(resize: Constants::LARGE_PIC_FORMAT)
+    file.preview(resize: Constants::LARGE_PIC_FORMAT)
   end
 
   def file_name
     return '' unless file.attached?
 
-    file.blob&.filename&.to_s
+    file.blob&.filename&.sanitized
   end
 
   def file_size
@@ -221,11 +222,9 @@ class Asset < ApplicationRecord
   end
 
   def content_type
-    file&.blob&.content_type
-  end
+    return '' unless file.attached?
 
-  def file_size
-    file&.blob&.byte_size
+    file&.blob&.content_type
   end
 
   def duplicate
@@ -467,25 +466,6 @@ class Asset < ApplicationRecord
 
   def tempdir
     Rails.root.join('tmp')
-  end
-
-  def previewable_document?
-    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(file.content_type)
-
-    filename = file.filename.to_s
-    content_type = file.content_type
-
-    extensions = %w(.xlsx .docx .pptx .xls .doc .ppt)
-    # Mimetype sometimes recognizes Office files as zip files
-    # In this case we also check the extension of the given file
-    # Otherwise the conversion should fail if the file is being something else
-    previewable ||= (content_type == 'application/zip' && extensions.include?(File.extname(filename)))
-
-    # Mimetype also sometimes recognizes '.xls' and '.ppt' files as
-    # application/x-ole-storage (https://github.com/minad/mimemagic/issues/50)
-    previewable ||= (content_type == 'application/x-ole-storage' && %w(.xls .ppt).include?(File.extname(filename)))
-
-    previewable
   end
 
   def previewable_image?

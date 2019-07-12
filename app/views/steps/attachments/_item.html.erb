@@ -12,7 +12,6 @@
                     'order-new': assets_count - i,
             } do %>
 
-    <%= render partial: 'steps/attachments/placeholder.html.erb',
-             locals: { edit_page: false, asset: asset } %>
+    <%= render partial: 'shared/asset_placeholder.html.erb', locals: { edit_page: false, asset: asset } %>
     <% end %>
 </div>

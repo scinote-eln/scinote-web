@@ -1765,12 +1765,10 @@ en:
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
       attachments:
-        sort:
-          new_html: "Newest first &#8595;"
-          old_html: "Oldest first &#8593;"
-          atoz_html: "Name &#8595;"
-          ztoa_html: "Name &#8593;"
-        modified_label: "Modified:"
+        sort_new: "Newest first &#8595;"
+        sort_old: "Oldest first &#8593;"
+        sort_atoz: "Name &#8595;"
+        sort_ztoa: "Name &#8593;"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1907,6 +1905,8 @@ en:
       add_image: 'Add'
       file_name: 'File name'
       file_name_placeholder: 'Image'
+    placeholder:
+      modified_label: "Modified:"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
