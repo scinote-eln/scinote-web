@@ -63,15 +63,8 @@ class ResultAssetsController < ApplicationController
   def update
     update_params = result_params
     previous_size = @result.space_taken
-    previous_asset = @result.asset
 
-    if update_params.key? :asset_attributes
-      asset = Asset.find_by_id(update_params[:asset_attributes][:id])
-      asset.created_by = current_user
-      asset.last_modified_by = current_user
-      asset.team = current_team
-      @result.asset = asset
-    end
+    @result.asset.last_modified_by = current_user if update_params.key? :asset_attributes
 
     @result.last_modified_by = current_user
     @result.assign_attributes(update_params)
@@ -79,7 +72,7 @@ class ResultAssetsController < ApplicationController
                       module: @my_module.name)
 
     if @result.archived_changed?(from: false, to: true)
-      if previous_asset.locked?
+      if @result.asset.locked?
         respond_to do |format|
           format.html do
             flash[:error] = t('result_assets.archive.error_flash')
@@ -98,7 +91,7 @@ class ResultAssetsController < ApplicationController
     elsif @result.archived_changed?(from: true, to: false)
       render_403
     else
-      if previous_asset.locked?
+      if @result.asset.locked?
         @result.errors.add(:asset_attributes,
                            t('result_assets.edit.locked_file_error'))
         respond_to do |format|
