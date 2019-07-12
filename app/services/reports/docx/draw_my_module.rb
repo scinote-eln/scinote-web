@@ -23,6 +23,10 @@ module DrawMyModule
         text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}",
              color: color[:gray]
       end
+      if my_module.archived?
+        text ' | '
+        text I18n.t('search.index.archived'), color: color[:gray]
+      end
       text ' | '
       link  I18n.t('projects.reports.elements.all.scinote_link'),
             scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),

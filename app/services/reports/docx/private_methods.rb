@@ -142,7 +142,7 @@ module PrivateMethods
         value = style_el.split(':')[1].strip if style_el
         if key == 'text-align'
           result[:align] = value.to_sym
-        elsif key == 'color'
+        elsif key == 'color' && calculate_color_hsp(value) < 190
           result[:color] = value.delete('#')
         end
       end
@@ -275,5 +275,17 @@ module PrivateMethods
     else
       image.open.path
     end
+  end
+
+  def calculate_color_hsp(color)
+    return 255 if color.length != 7
+
+    color = color.delete('#').scan(/.{1,2}/)
+    rgb = color.map(&:hex)
+    Math.sqrt(
+      0.299 * (rgb[0]**2) +
+      0.587 * (rgb[1]**2) +
+      0.114 * (rgb[2]**2)
+    )
   end
 end

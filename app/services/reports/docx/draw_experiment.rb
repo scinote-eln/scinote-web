@@ -12,6 +12,10 @@ module DrawExperiment
     @docx.p do
       text I18n.t('projects.reports.elements.experiment.user_time',
                   timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
+      if experiment.archived?
+        text ' | '
+        text I18n.t('search.index.archived'), color: color[:gray]
+      end
       text ' | '
       link  I18n.t('projects.reports.elements.all.scinote_link'),
             scinote_url + Rails.application.routes.url_helpers.canvas_experiment_path(experiment),
