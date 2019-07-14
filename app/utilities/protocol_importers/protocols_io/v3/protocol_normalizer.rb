@@ -91,11 +91,20 @@ module ProtocolImporters
           end
 
           # Parse pagination
-          normalized_data[:pagination] = {
-            current_page: pagination[:current_page],
-            total_pages: pagination[:total_pages],
-            page_size: pagination[:page_size]
-          }
+          normalized_data[:pagination] =
+            if pagination
+              {
+                current_page: pagination[:current_page],
+                total_pages: pagination[:total_pages],
+                page_size: pagination[:page_size]
+              }
+            else
+              {
+                current_page: 1,
+                total_pages: 1,
+                page_size: 0
+              }
+            end
 
           normalized_data
         rescue StandardError => e

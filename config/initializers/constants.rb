@@ -221,8 +221,8 @@ class Constants
     }
   }.freeze
 
-  PROTOCOLS_IO_URL = 'https://www.protocols.io/'
-  
+  PROTOCOLS_IO_URL = 'https://www.protocols.io/'.freeze
+
   PROTOCOLS_IO_V3_API = {
     base_uri: 'https://www.protocols.io/api/v3/',
     default_timeout: 10,
@@ -243,6 +243,11 @@ class Constants
           page_size: 50,
           page_id: 1,
           fields: 'id,title,authors,created_on,uri,stats,published_on'
+        }
+      },
+      publications: {
+        default_query_params: {
+          latest: 50
         }
       }
     },
