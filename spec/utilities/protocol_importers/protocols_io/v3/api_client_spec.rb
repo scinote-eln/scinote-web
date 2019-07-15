@@ -7,19 +7,38 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
   TOKEN = 'test_token'
 
   describe '#protocol_list' do
+    context 'when search key is not given' do
+      URL_PUBLICATIONS = "#{CONSTANTS[:base_uri]}publications"
+
+      let(:query_params) do
+        { latest: '50' }
+      end
+
+      let(:stub_protocols) do
+        stub_request(:get, URL_PUBLICATIONS)
+          .with(query: query_params)
+          .to_return(status: 200,
+                     body: JSON.generate(status_code: 0),
+                     headers: { 'Content-Type': 'application/json' })
+      end
+
+      it 'requests "publications" URL with latest=50 when no query params are given' do
+        stub_protocols
+        subject.protocol_list
+        expect(WebMock).to have_requested(:get, URL_PUBLICATIONS)
+          .with(query: query_params)
+      end
+    end
+
     context 'when search key is given' do
       URL = "#{CONSTANTS[:base_uri]}protocols"
-
-      let(:default_query_params) do
-        CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
-      end
 
       let(:key_query) do
         { key: 'key' }.stringify_keys
       end
 
       let(:default_query_params_with_key) do
-        default_query_params.merge(key_query)
+        CONSTANTS.dig(:endpoints, :protocols, :default_query_params).merge(key_query)
       end
 
       let(:stub_protocols) do
