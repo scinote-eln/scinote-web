@@ -227,13 +227,11 @@
     }
 
     .dnd-error {
-      float: left;
-      position: relative;
-      padding-left: 5px;
       bottom: 15px;
+      float: left;
+      padding-left: 5px;
+      position: relative;
     }
-
-    
 
     &:hover {
       .attachment-label {
