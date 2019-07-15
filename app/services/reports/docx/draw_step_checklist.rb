@@ -2,6 +2,8 @@
 
 module DrawStepChecklist
   def draw_step_checklist(subject)
+    team = @report_team
+    user = @user
     checklist = Checklist.find_by_id(subject['id']['checklist_id'])
     return unless checklist
 
@@ -22,7 +24,7 @@ module DrawStepChecklist
     @docx.ul do
       items.each do |item|
         li do
-          text SmartAnnotations::TagToText.new(@user, @report_team, item.text).text
+          text SmartAnnotations::TagToText.new(user, team, item.text).text
           text " (#{I18n.t('projects.reports.elements.step_checklist.checked')})", color: '2dbe61' if item.checked
         end
       end
