@@ -27,12 +27,13 @@
       font-size: $font-size-h6;
       margin-left: auto;
       margin-right: auto;
-      padding: 8px 0;
+      padding: 10px 0;
       text-align: center;
       word-break: normal;
 
       .fas {
         font-size: 18px;
+        padding-bottom: 5px;
       }
     }
 
@@ -60,7 +61,7 @@
     width: inherit;
 
     .academy-color {
-      color: $brand-academy;
+      color: $brand-academy-dark;
     }
   }
 
