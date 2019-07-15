@@ -195,7 +195,7 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository_columns?(@repository.team)
+    render_403 unless can_create_repository_columns?(@repository)
   end
 
   def check_manage_permissions

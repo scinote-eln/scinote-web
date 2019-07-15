@@ -12,7 +12,7 @@
 <div class="content-pane">
   <div id="repository-toolbar">
 
-    <% if can_create_repository_rows?(@repository.team) %>
+    <% if can_create_repository_rows?(@repository) %>
       <button type="button" class="btn btn-primary editAdd help_tooltips"
               id="addRepositoryRecord" onclick="onClickAddRecord()"
               data-tooltiplink="<%= I18n.t('tooltips.link.inventory.new') %>"
@@ -40,13 +40,13 @@
             <li class="dropdown-header">
               <%= t("repositories.index.options_dropdown.header") %>
             </li>
-            <% if can_create_repository_columns?(@repository.team) %>
+            <% if can_create_repository_columns?(@repository) %>
               <li>
                 <%= link_to t('repositories.index.options_dropdown.manage_columns'),
                             repository_repository_columns_path(@repository) %>
               </li>
             <% end %>
-            <% if can_create_repository_rows?(@repository.team) %>
+            <% if can_create_repository_rows?(@repository) %>
             <li>
               <a href="#" id="importRecordsButton" data-turbolinks="false">
                 <%= t('repositories.index.options_dropdown.import_items') %>
@@ -119,7 +119,7 @@
 
   <!-- These buttons are appended to table in javascript, after table initialization -->
   <div class="toolbarButtons" style="display:none">
-    <% if can_manage_repository_rows?(@repository.team) %>
+    <% if can_manage_repository_rows?(@repository) %>
       <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
         <span class="fas fa-pencil-alt"></span>
         <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
