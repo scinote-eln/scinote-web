@@ -47,7 +47,7 @@ module ProtocolImporters
             sort_mappings = CONSTANTS[:sort_mappings]
             query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
                              .stringify_keys
-                             .merge(query_params.except(:sort_by))
+                             .merge(query_params.except(:sort_by).stringify_keys)
 
             if sort_mappings[query_params[:sort_by]&.to_sym]
               query = query.merge(sort_mappings[query_params[:sort_by].to_sym].stringify_keys)
