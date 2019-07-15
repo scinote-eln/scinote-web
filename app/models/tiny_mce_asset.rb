@@ -14,11 +14,6 @@ class TinyMceAsset < ApplicationRecord
              touch: true,
              optional: true
 
-  has_one :marvin_js_asset,
-          as: :object,
-          class_name: :MarvinJsAsset,
-          dependent: :destroy
-
   belongs_to :object, polymorphic: true,
                       optional: true,
                       inverse_of: :tiny_mce_assets
@@ -40,10 +35,6 @@ class TinyMceAsset < ApplicationRecord
   #                                        .file_max_size_mb.megabytes
   #                      }
   validates :estimated_size, presence: true
-
-  def source
-    return marvin_js_asset if marvin_js_asset
-  end
 
   def self.update_images(object, images)
     images = JSON.parse(images)
@@ -75,7 +66,7 @@ class TinyMceAsset < ApplicationRecord
         tm_asset.attributes['src'].value = Rails.application.routes.url_helpers.url_for(new_asset.image)
         tm_asset['class'] = 'img-responsive'
       end
-      tm_asset.attributes['src'].value = new_asset_url.url
+      tm_asset.attributes['src'].value = new_asset.preview
       tm_asset['class'] = 'img-responsive'
     end
     description.css('body').inner_html.to_s
@@ -100,14 +91,14 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def preview
-    image.variant(resize: Constants::LARGE_PIC_FORMAT)
+    image.variant(resize: Constants::LARGE_PIC_FORMAT).processed.service_url
   end
 
   def self.delete_unsaved_image(id)
     asset = find_by_id(id)
     asset.destroy if asset && !asset.saved
   end
- 
+
   def self.update_estimated_size(id)
     asset = find_by_id(id)
     return unless asset&.image&.attached?

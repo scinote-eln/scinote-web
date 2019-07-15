@@ -2156,8 +2156,5 @@ en:
         manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
   marvinjs:
     new_sketch: "New sketch"
-    new_button: "New chemical drawing"
+    new_button: "New structure"
     checmical_drawing: "Chemical drawings"
-    team_drawings: "Team drawings"
-    task:  "Task"
-    no_sketches_found: "No sketches found"

@@ -1,12 +1,15 @@
 /* global TinyMCE, ChemicalizeMarvinJs, MarvinJSUtil, I18n, FilePreviewModal, tinymce */
+/* global Results, Comments */
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
 /* eslint-disable no-use-before-define */
+
+
 var marvinJsRemoteLastMrv;
 var marvinJsRemoteEditor;
 var MarvinJsEditor;
 
-MarvinJsEditor = (function() {
+var MarvinJsEditorApi = (function() {
   var marvinJsModal = $('#MarvinJsModal');
   var marvinJsContainer = $('#marvinjs-editor');
   var marvinJsObject = $('#marvinjs-sketch');
@@ -87,7 +90,7 @@ MarvinJsEditor = (function() {
         sketchName.val(config.name);
       } else if (config.mode === 'edit-tinymce') {
         marvinJsRemoteLastMrv = config.data;
-        $.get(config.marvinUrl, function(result) {
+        $.get(config.marvinUrl, { object_type: 'TinyMceAsset' }, function(result) {
           marvinJsRemoteEditor.importStructure('mrv', result.description);
           sketchName.val(result.name);
         });
@@ -132,6 +135,7 @@ MarvinJsEditor = (function() {
 
   function TinyMceBuildHTML(json) {
     var imgstr = "<img src='" + json.image.url + "'";
+    imgstr += " width='300' height='300'";
     imgstr += " data-mce-token='" + json.image.token + "'";
     imgstr += " data-source-id='" + json.image.source_id + "'";
     imgstr += " data-source-type='" + json.image.source_type + "'";
@@ -147,17 +151,20 @@ MarvinJsEditor = (function() {
       name: sketchName.val(),
       image: image
     }, function(result) {
-      var newAsset;
+      var newAsset = $(result.html);
       if (config.objectType === 'Step') {
-        newAsset = $(result.html);
         newAsset.find('.file-preview-link').css('top', '-300px');
         newAsset.addClass('new').prependTo($(config.container));
         setTimeout(function() {
           newAsset.find('.file-preview-link').css('top', '0px');
         }, 200);
-        FilePreviewModal.init();
+      } else if (config.objectType === 'Result') {
+        newAsset.prependTo($(config.container));
+        Results.expandResult(newAsset);
+        Comments.init();
       }
       $(marvinJsModal).modal('hide');
+      FilePreviewModal.init();
     });
   }
 
@@ -223,7 +230,6 @@ MarvinJsEditor = (function() {
         $('#MarvinJsPromoModal').modal('show');
         return false;
       }
-
       if (marvinJsMode === 'remote' && typeof (marvinJsRemoteEditor) === 'undefined') {
         setTimeout(() => { MarvinJsEditor.open(config); }, 100);
         return false;
@@ -314,14 +320,14 @@ MarvinJsEditor = (function() {
       // Add a button that opens a window
       editor.addButton('marvinjsplugin', {
         tooltip: I18n.t('marvinjs.new_button'),
-        icon: 'file-invoice',
+        icon: 'marvinjs',
         onclick: openMarvinJs
       });
 
       // Adds a menu item to the tools menu
       editor.addMenuItem('marvinjsplugin', {
         text: I18n.t('marvinjs.new_button'),
-        icon: 'file-invoice',
+        icon: 'marvinjs',
         context: 'insert',
         onclick: openMarvinJs
       });
@@ -338,7 +344,7 @@ MarvinJsEditor = (function() {
 
 
 $(document).on('turbolinks:load', function() {
-  MarvinJsEditor = MarvinJsEditor();
+  MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {
     if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {

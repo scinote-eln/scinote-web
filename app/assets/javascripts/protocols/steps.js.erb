@@ -375,7 +375,6 @@
 
   function initCallBacks() {
     applyCreateWopiFileCallback()
-    if (typeof(MarvinJsEditor.initNewButton) == 'function') MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
     applyCheckboxCallBack();
     applyStepCompletedCallBack();
     applyEditCallBack();
@@ -601,7 +600,7 @@
           SmartAnnotation.preventPropagation('.atwho-user-popover');
 
           tinyMCE.editors.step_description_textarea.remove();
-
+          MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
           //Rerender tables
           $new_step.find("div.step-result-hot-table").each(function()  {
             $(this).handsontable("render");

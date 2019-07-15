@@ -1,29 +1,51 @@
 # frozen_string_literal: true
 
 class MarvinJsAssetsController < ApplicationController
+  def show
+    asset = current_team.tiny_mce_assets.find_by_id(params[:id]) if params[:object_type] == 'TinyMceAsset'
+    return render_404 unless asset
+
+    render json: {
+      name: asset.image.metadata[:name],
+      description: asset.image.metadata[:description]
+    }
+  end
+
   def create
-    new_asset = MarvinJsService.create_sketch(marvin_params, current_user)
-    if marvin_params[:object_type] == 'Step'
+    result = MarvinJsService.create_sketch(marvin_params, current_user)
+    if result[:asset] && marvin_params[:object_type] == 'Step'
       render json: {
         html: render_to_string(
           partial: 'steps/attachments/item.html.erb',
-             locals: { asset: new_asset, i: 0, assets_count: 0, step: new_asset.step, order_atoz: 0, order_ztoa: 0 }
+             locals: { asset: result[:asset],
+                       i: 0,
+                       assets_count: 0,
+                       step: result[:object],
+                       order_atoz: 0,
+                       order_ztoa: 0 }
         )
       }
-    #  elsif new_asset.object_type == 'TinyMceAsset'
-    #    tiny_img = TinyMceAsset.find(new_asset.object_id)
-    #    render json: {
-    #      image: {
-    #        url: view_context.image_url(tiny_img.url(:large)),
-    #        token: Base62.encode(tiny_img.id),
-    #        source_id: new_asset.id,
-    #        source_type: new_asset.class.name
-    #      }
-    #    }, content_type: 'text/html'
-    elsif new_asset
-      render json: new_asset
+    elsif result[:asset] && marvin_params[:object_type] == 'Result'
+      @my_module = result[:object].my_module
+      render json: {
+        html: render_to_string(
+          partial: 'my_modules/result.html.erb',
+            locals: { result: result[:object] }
+        )
+      }, status: :ok
+    elsif result[:asset] && marvin_params[:object_type] == 'TinyMceAsset'
+      render json: {
+        image: {
+          url: result[:asset].preview,
+          token: Base62.encode(result[:asset].id),
+          source_id: result[:asset].id,
+          source_type: result[:asset].image.metadata[:asset_type]
+        }
+      }, content_type: 'text/html'
+    elsif result[:asset]
+      render json: result[:asset]
     else
-      render json: new_asset.errors, status: :unprocessable_entity
+      render json: result[:asset].errors, status: :unprocessable_entity
     end
   end
 

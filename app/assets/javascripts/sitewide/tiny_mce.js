@@ -1,5 +1,5 @@
 
-/* global _ hljs tinyMCE SmartAnnotation MarvinJsEditor FilePreviewModal globalConstants */
+/* global _ hljs tinyMCE SmartAnnotation MarvinJsEditor globalConstants */
 
 /* global _  I18n */
 
@@ -30,7 +30,6 @@ var TinyMCE = (function() {
     $('<div class="tinymce-active-object-handler" style="display:none">'
                 + '<a class="file-download-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-donwload"></i></a>'
                 + '<span class="file-edit-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-pencil"></i></span>'
-                + '<span class="file-image-editor-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-image"></i></span>'
               + '</div>').appendTo(editorToolbar.find('.mce-stack-layout'));
     editorIframe.contents().click(function() {
       var marvinJsEdit;
@@ -51,7 +50,7 @@ var TinyMCE = (function() {
           editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link');
           if (image[0].dataset.sourceId) {
             editLink.css('display', 'inline-block');
-            marvinJsEdit = (image[0].dataset.sourceType === 'MarvinJsAsset' && typeof (MarvinJsEditor) !== 'undefined');
+            marvinJsEdit = (image[0].dataset.sourceType === 'marvinjs' && typeof (MarvinJsEditor) !== 'undefined');
             if (!marvinJsEdit) editLink.css('display', 'none');
             editLink.on('click', function() {
               if (marvinJsEdit) {
@@ -65,26 +64,6 @@ var TinyMCE = (function() {
           } else {
             editLink.css('display', 'none');
             editLink.off('click');
-          }
-
-          // imaged editor Link
-          imageEditorLink = editorContainer.find('.tinymce-active-object-handler .file-image-editor-link');
-          if (image[0].dataset.mceToken && image[0].dataset.sourceId) {
-            imageEditorLink.css('display', 'inline-block');
-            imageEditorLink.on('click', function() {
-              FilePreviewModal.imageEditor({
-                'download-url': image[0].src,
-                filename: 'tinymce-image.jpg',
-                mode: 'tinymce',
-                url: '/tiny_mce_assets/' + image[0].dataset.mceToken,
-                quality: 100,
-                'mime-type': 'image/jpeg',
-                image: image[0]
-              });
-            });
-          } else {
-            imageEditorLink.css('display', 'none');
-            imageEditorLink.off('click');
           }
         } else {
           editorContainer.find('.tinymce-active-object-handler').css('display', 'none');

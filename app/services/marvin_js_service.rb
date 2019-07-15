@@ -12,12 +12,20 @@ class MarvinJsService
 
     def create_sketch(params, current_user)
       file = generate_image(params)
-      asset = Asset.new(created_by: current_user, team_id: current_user.current_team.id)
-      asset.team_id = current_user.current_team.id
-      attach_file(asset, file, params)
+      if params[:object_type] == 'TinyMceAsset'
+        asset = TinyMceAsset.new(team_id: current_user.current_team.id)
+        attach_file(asset.image, file, params)
+      else
+        asset = Asset.new(created_by: current_user,
+                          last_modified_by: current_user,
+                          team_id: current_user.current_team.id)
+        attach_file(asset.file, file, params)
+      end
+
       asset.save!
-      connect_asset(asset, params)
-      asset
+      return { asset: asset } if params[:object_type] == 'TinyMceAsset'
+
+      connect_asset(asset, params, current_user)
     end
 
     def update_sketch(params, current_user)
@@ -32,9 +40,21 @@ class MarvinJsService
 
     private
 
-    def connect_asset(asset, params)
-      object = params[:object_type].constantize.find(params[:object_id])
-      object.assets << asset
+    def connect_asset(asset, params, current_user)
+      if params[:object_type] == 'Step'
+        object = params[:object_type].constantize.find(params[:object_id])
+        object.assets << asset
+      elsif params[:object_type] == 'Result'
+        my_module = MyModule.find_by_id(params[:object_id])
+        return unless my_module
+
+        object = Result.create(user: current_user,
+                          my_module: my_module,
+                          name: params[:name],
+                          asset: asset,
+                          last_modified_by: current_user)
+      end
+      { asset: asset, object: object }
     end
 
     def generate_image(params)
@@ -47,7 +67,7 @@ class MarvinJsService
     end
 
     def attach_file(asset, file, params)
-      asset.file.attach(
+      asset.attach(
         io: file,
         filename: "#{params[:name]}.jpeg",
         content_type: 'image/jpeg',

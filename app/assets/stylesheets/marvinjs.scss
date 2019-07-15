@@ -131,10 +131,28 @@
   }
 }
 
-.mce-i-file-invoice::before {
-  content: "\F570";
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
+.new-marvinjs-upload-button {
+
+  .new-marvinjs-upload-icon {
+    display: inline-block;
+    height: 22px;
+    width: 22px;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.mce-i-marvinjs::before {
+  content: "";
+  background-image: url(icon_small/marvinjs.svg);
+  display: block;
+  height: 22px;
+  left: -3px;
   line-height: 16px;
-  position: absolute;
+  position: relative;
+  top: -3px;
+  width: 22px;
 }

@@ -25,11 +25,6 @@ class Step < ApplicationRecord
   has_many :tables, through: :step_tables
   has_many :report_elements, inverse_of: :step, dependent: :destroy
 
-  has_many :marvin_js_assets,
-           as: :object,
-           class_name: :MarvinJsAsset,
-           dependent: :destroy
-
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
                                 allow_destroy: true
@@ -40,9 +35,6 @@ class Step < ApplicationRecord
                                 reject_if: proc { |attributes|
                                   attributes['contents'].blank?
                                 },
-                                allow_destroy: true
-  accepts_nested_attributes_for :marvin_js_assets,
-                                reject_if: :all_blank,
                                 allow_destroy: true
 
   after_destroy :cascade_after_destroy
