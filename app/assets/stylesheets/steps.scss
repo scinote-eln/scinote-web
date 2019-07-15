@@ -139,10 +139,6 @@
     color: inherit;
   }
 
-  &.new {
-    background-color: rgba(95, 95, 95, .1);
-  }
-
   .attachment-thumbnail {
     display: inline-block;
     height: 160px;
@@ -220,6 +216,27 @@
 
     .spencer-bonnet-modif {
       top: 0;
+    }
+  }
+
+  &.new {
+    background-color: rgba(95, 95, 95, .1);
+
+    .attachment-label {
+      background-color: transparent;
+    }
+
+    .dnd-error {
+      bottom: 15px;
+      float: left;
+      padding-left: 5px;
+      position: relative;
+    }
+
+    &:hover {
+      .attachment-label {
+        top: 20px;
+      }
     }
   }
 }
