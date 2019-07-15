@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_11_125513) do
+ActiveRecord::Schema.define(version: 2019_07_15_150326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -725,6 +725,7 @@ ActiveRecord::Schema.define(version: 2019_07_11_125513) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["repository_id"], name: "index_team_repositories_on_repository_id"
+    t.index ["team_id", "repository_id"], name: "index_team_repositories_on_team_id_and_repository_id", unique: true
     t.index ["team_id"], name: "index_team_repositories_on_team_id"
   end
 

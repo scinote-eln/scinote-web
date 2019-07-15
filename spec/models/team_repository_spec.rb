@@ -13,6 +13,9 @@ describe TeamRepository, type: :model do
     describe '#permission_level' do
       it { is_expected.to validate_presence_of(:permission_level) }
     end
+    describe '#repository' do
+      it { expect(team_repository).to validate_uniqueness_of(:repository).scoped_to(:team_id) }
+    end
   end
 
   describe 'Associations' do
