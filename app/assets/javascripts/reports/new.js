@@ -944,3 +944,16 @@ function constructElementContentsJson(el) {
 if ($(REPORT_CONTENT).length) {
   init();
 }
+
+/** Convert Handsone table to normal table **/
+function reportHandsonTableConverter() {
+  setTimeout(() => {
+    $.each($('.hot-table-container'), function(index, value) {
+      var table = $(value);
+      var header = table.find('.ht_master thead');
+      var body = table.find('.ht_master tbody');
+      table.next().append(header).append(body);
+      table.remove();
+    });
+  }, 0);
+}
