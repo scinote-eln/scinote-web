@@ -34,11 +34,11 @@ module ProtocolImporters
         end
 
         def self.name(components)
-          get_component(6, components)[:source][:title]
+          get_component(6, components)&.dig(:source, :title)
         end
 
         def self.description(components)
-          get_component(1, components)[:source][:description]
+          get_component(1, components)&.dig(:source, :description)
         end
 
         def self.description_components(components)
@@ -52,10 +52,10 @@ module ProtocolImporters
         def self.attachments(components)
           components.select { |c| c[:type_id] == 23 }.map do |cc|
             # Original name can be empty, so just use source
-            name = cc[:source][:original_name] || cc[:source][:source].split('/')[-1]
+            name = cc.dig(:source, :original_name) || cc.dig(:source, :source).split('/')[-1]
 
             {
-              url: cc[:source][:source],
+              url: cc.dig(:source, :source),
               name: name
             }
           end
@@ -66,96 +66,96 @@ module ProtocolImporters
           when :amount
             {
               type: 'amount',
-              value: desc_component[:source][:amount],
-              unit: desc_component[:source][:unit],
-              name: desc_component[:source][:title]
+              value: desc_component.dig(:source, :amount),
+              unit: desc_component.dig(:source, :unit),
+              name: desc_component.dig(:source, :title)
             }
           when :duration
             {
               type: 'duration',
-              value: desc_component[:source][:duration],
-              name: desc_component[:source][:title]
+              value: desc_component.dig(:source, :duration),
+              name: desc_component.dig(:source, :title)
             }
           when :link
             {
               type: 'link',
-              source: desc_component[:source][:link]
+              source: desc_component.dig(:source, :link)
             }
           when :software
             {
               type: 'software',
-              name: desc_component[:source][:name],
-              source: desc_component[:source][:link],
+              name: desc_component.dig(:source, :name),
+              source: desc_component.dig(:source, :link),
               details: {
-                repository_link: desc_component[:source][:repository],
-                developer: desc_component[:source][:developer],
-                os_name: desc_component[:source][:os_name]
+                repository_link: desc_component.dig(:source, :repository),
+                developer: desc_component.dig(:source, :developer),
+                os_name: desc_component.dig(:source, :os_name)
               }
             }
           when :command
             {
               type: 'command',
-              software_name: desc_component[:source][:name],
-              command: desc_component[:source][:command],
+              software_name: desc_component.dig(:source, :name),
+              command: desc_component.dig(:source, :command),
               details: {
-                os_name: desc_component[:source][:os_name]
+                os_name: desc_component.dig(:source, :os_name)
               }
             }
           when :result
             {
               type: 'result',
-              body: desc_component[:source][:body]
+              body: desc_component.dig(:source, :body)
             }
           when :safety
             {
               type: 'warning',
-              body: desc_component[:source][:body],
+              body: desc_component.dig(:source, :body),
               details: {
-                link: desc_component[:source][:link]
+                link: desc_component.dig(:source, :link)
               }
             }
           when :reagents
             {
               type: 'reagent',
-              name: desc_component[:source][:name],
-              link: desc_component[:source][:url],
+              name: desc_component.dig(:source, :name),
+              link: desc_component.dig(:source, :url),
               details: {
-                catalog_number: desc_component[:source][:sku],
-                linear_formula: desc_component[:source][:linfor],
-                mol_weight: desc_component[:source][:mol_weight]
+                catalog_number: desc_component.dig(:source, :sku),
+                linear_formula: desc_component.dig(:source, :linfor),
+                mol_weight: desc_component.dig(:source, :mol_weight)
               }
             }
           when :gotostep
             {
               type: 'gotostep',
-              value: desc_component[:source][:title],
-              step_id: desc_component[:source][:step_guid]
+              value: desc_component.dig(:source, :title),
+              step_id: desc_component.dig(:source, :step_guid)
             }
           when :temperature
             {
               type: 'temperature',
-              value: desc_component[:source][:temperature],
-              unit: desc_component[:source][:unit],
-              name: desc_component[:source][:title]
+              value: desc_component.dig(:source, :temperature),
+              unit: desc_component.dig(:source, :unit),
+              name: desc_component.dig(:source, :title)
             }
           when :concentration
             {
               type: 'concentration',
-              value: desc_component[:source][:concentration],
-              unit: desc_component[:source][:unit],
-              name: desc_component[:source][:title]
+              value: desc_component.dig(:source, :concentration),
+              unit: desc_component.dig(:source, :unit),
+              name: desc_component.dig(:source, :title)
             }
           when :notes
             {
               type: 'note',
-              author: desc_component[:source][:creator][:name],
-              body: desc_component[:source][:body]
+              author: desc_component.dig(:source, :creator, :name),
+              body: desc_component.dig(:source, :body)
             }
           when :dataset
             {
               type: 'dataset',
-              name: desc_component[:source][:name],
-              source: desc_component[:source][:link]
+              name: desc_component.dig(:source, :name),
+              source: desc_component.dig(:source, :link)
             }
           end
         end
