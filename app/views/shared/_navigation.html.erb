@@ -125,38 +125,6 @@
           <% end %>
         </li>
 
-        <!-- greetings -->
-        <li id="user-account-dropdown" class="dropdown">
-          <a href="#"
-             class="dropdown-toggle"
-             title="<%= t('nav.label.account') %>"
-             data-toggle="dropdown"
-             role="button"
-             aria-haspopup="true"
-             aria-expanded="false">
-            <span>
-              <%= t('nav.user_greeting', full_name: current_user.full_name) %>
-            </span>
-            <span class='global-avatar-container'>
-              <%= image_tag avatar_path(current_user, :icon_small),
-                          class: "avatar" %>
-            </span>
-          </a>
-          <ul class="dropdown-menu" data-hook="navigation-user-menu">
-            <li>
-              <%= link_to t('nav.user.logout'),
-                          destroy_user_session_path,
-                          method: :delete %>
-            </li>
-            <li role="separator" class="divider">
-            <li>
-              <%= link_to '#', data: { trigger: 'about-modal' } do %>
-                <%= t('nav.user.about') %>
-              <% end %>
-            </li>
-          </ul>
-        </li>
-
         <!-- notifications -->
         <li class="dropdown">
           <a href="#"
@@ -186,6 +154,38 @@
             </li>
             <li class="notifications-dropdown-footer">
               <%= link_to t('notifications.show_all'), notifications_path %>
+            </li>
+          </ul>
+        </li>
+
+        <!-- greetings -->
+        <li id="user-account-dropdown" class="dropdown">
+          <a href="#"
+             class="dropdown-toggle"
+             title="<%= t('nav.label.account') %>"
+             data-toggle="dropdown"
+             role="button"
+             aria-haspopup="true"
+             aria-expanded="false">
+            <span>
+              <%= t('nav.user_greeting', full_name: current_user.full_name) %>
+            </span>
+            <span class='global-avatar-container'>
+              <%= image_tag avatar_path(current_user, :icon_small),
+                          class: "avatar" %>
+            </span>
+          </a>
+          <ul class="dropdown-menu" data-hook="navigation-user-menu">
+            <li>
+              <%= link_to t('nav.user.logout'),
+                          destroy_user_session_path,
+                          method: :delete %>
+            </li>
+            <li role="separator" class="divider">
+            <li>
+              <%= link_to '#', data: { trigger: 'about-modal' } do %>
+                <%= t('nav.user.about') %>
+              <% end %>
             </li>
           </ul>
         </li>
