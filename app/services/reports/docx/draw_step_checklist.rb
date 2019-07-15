@@ -19,11 +19,13 @@ module DrawStepChecklist
       text I18n.t('projects.reports.elements.step_checklist.user_time',
                   timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
-    items.each do |item|
-      html = custom_auto_link(item.text, team: @report_team)
-      html_to_word_converter(html)
-      @docx.p " (#{I18n.t('projects.reports.elements.step_checklist.checked')})", color: '2dbe61' if item.checked
+    @docx.ul do
+      items.each do |item|
+        li do
+          text SmartAnnotations::TagToText.new(@user, @report_team, item.text).text
+          text " (#{I18n.t('projects.reports.elements.step_checklist.checked')})", color: '2dbe61' if item.checked
+        end
+      end
     end
-
   end
 end
