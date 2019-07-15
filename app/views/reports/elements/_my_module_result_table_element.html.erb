@@ -34,15 +34,10 @@
     </div>
   </div>
   <div class="report-element-body">
-    <table class="report-common-table-format">
-    <% JSON.parse(table.contents_utf_8)['data'].each do |row|  %>
-      <tr>
-        <% row.each do |cell| %>
-          <td><span><%= cell %></span></td>
-        <% end %>
-      </tr>
-    <% end %>
-    </table>
+    <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8 %>" />
+    <div class="hot-table-container"></div>
+    <table class="report-common-table-format"></table>
+    <script>reportHandsonTableConverter()</script>
   </div>
   <div class="report-element-children">
     <%= children if (defined? children and children.present?) %>
