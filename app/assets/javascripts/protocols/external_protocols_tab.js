@@ -270,3 +270,6 @@ function initFormSubmits() {
 }
 
 applySearchCallback();
+
+// Trigger initial retrieval of latest publications
+$('form.protocols-search-bar').submit();

@@ -7,90 +7,124 @@ describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
   TOKEN = 'test_token'
 
   describe '#protocol_list' do
-    URL = "#{CONSTANTS[:base_uri]}protocols"
+    context 'when search key is not given' do
+      URL_PUBLICATIONS = "#{CONSTANTS[:base_uri]}publications"
 
-    let(:stub_protocols) do
-      stub_request(:get, URL).with(query: hash_including({}))
-                             .to_return(status: 200,
-                                        body: JSON.generate(status_code: 0),
-                                        headers: { 'Content-Type': 'application/json' })
+      let(:query_params) do
+        { latest: '50' }
+      end
+
+      let(:stub_protocols) do
+        stub_request(:get, URL_PUBLICATIONS)
+          .with(query: query_params)
+          .to_return(status: 200,
+                     body: JSON.generate(status_code: 0),
+                     headers: { 'Content-Type': 'application/json' })
+      end
+
+      it 'requests "publications" URL with latest=50 when no query params are given' do
+        stub_protocols
+        subject.protocol_list
+        expect(WebMock).to have_requested(:get, URL_PUBLICATIONS)
+          .with(query: query_params)
+      end
     end
 
-    let(:default_query_params) do
-      CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
-    end
+    context 'when search key is given' do
+      URL = "#{CONSTANTS[:base_uri]}protocols"
 
-    it 'returns 200 on successfull call' do
-      stub_protocols
-      expect(subject.protocol_list.code).to eq 200
-      expect(stub_protocols).to have_been_requested
-    end
+      let(:key_query) do
+        { key: 'key' }.stringify_keys
+      end
 
-    it 'raises NetworkError on timeout' do
-      stub_request(:get, URL).with(query: hash_including({})).to_timeout
+      let(:default_query_params_with_key) do
+        CONSTANTS.dig(:endpoints, :protocols, :default_query_params).merge(key_query)
+      end
 
-      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
-    end
+      let(:stub_protocols) do
+        stub_request(:get, URL).with(query: default_query_params_with_key)
+      end
 
-    it 'raises ArgumentError when status_code = 1' do
-      stub_request(:get, URL).with(query: hash_including({}))
-                             .to_return(status: 200,
-                                        body: JSON.generate(status_code: 1, error_message: 'Argument error'),
-                                        headers: { 'Content-Type': 'application/json' })
+      let(:protocol_list_call) do
+        subject.protocol_list(key_query)
+      end
 
-      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::ArgumentError)
-    end
+      it 'returns 200 on successfull call' do
+        stub_protocols.to_return(status: 200,
+                                 body: JSON.generate(status_code: 0),
+                                 headers: { 'Content-Type': 'application/json' })
+        expect(protocol_list_call.code).to eq 200
+        expect(stub_protocols).to have_been_requested
+      end
 
-    it 'raises UnauthorizedError when status_code = 1218' do
-      stub_request(:get, URL).with(query: hash_including({}))
-                             .to_return(status: 200,
-                                        body: JSON.generate(status_code: 1218, error_message: 'Argument error'),
-                                        headers: { 'Content-Type': 'application/json' })
+      it 'raises NetworkError on timeout' do
+        stub_protocols.to_timeout
 
-      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
-    end
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
+      end
 
-    it 'raises UnauthorizedError when status_code = 1219' do
-      stub_request(:get, URL).with(query: hash_including({}))
-                             .to_return(status: 200,
-                                        body: JSON.generate(status_code: 1219, error_message: 'Argument error'),
-                                        headers: { 'Content-Type': 'application/json' })
+      it 'raises ArgumentError when status_code = 1' do
+        stub_protocols.to_return(status: 200,
+                                 body: JSON.generate(status_code: 1, error_message: 'Argument error'),
+                                 headers: { 'Content-Type': 'application/json' })
 
-      expect { subject.protocol_list }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
-    end
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::ArgumentError)
+      end
 
-    it 'requests server with default query parameters if none are given' do
-      stub_protocols.with(query: default_query_params)
+      it 'raises UnauthorizedError when status_code = 1218' do
+        stub_protocols.to_return(status: 200,
+                                 body: JSON.generate(status_code: 1218, error_message: 'Argument error'),
+                                 headers: { 'Content-Type': 'application/json' })
 
-      subject.protocol_list
-      expect(WebMock).to have_requested(:get, URL).with(query: default_query_params)
-    end
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
+      end
 
-    it 'requests server with given query parameters' do
-      query = {
-        filter: :user_public,
-        key: 'banana',
-        order_dir: :asc,
-        order_field: :date,
-        page_id: 2,
-        page_size: 15,
-        fields: 'somefields'
-      }
-      stub_protocols.with(query: query)
+      it 'raises UnauthorizedError when status_code = 1219' do
+        stub_protocols.to_return(status: 200,
+                    body: JSON.generate(status_code: 1219, error_message: 'Argument error'),
+                    headers: { 'Content-Type': 'application/json' })
 
-      subject.protocol_list(query)
-      expect(WebMock).to have_requested(:get, URL).with(query: query)
-    end
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
+      end
 
-    it 'should send authorization token if provided on initialization' do
-      headers = { 'Authorization': "Bearer #{TOKEN}" }
-      stub_request(:get, URL).with(headers: headers, query: default_query_params)
-                             .to_return(status: 200,
-                                        body: JSON.generate(status_code: 0),
-                                        headers: { 'Content-Type': 'application/json' })
+      it 'requests server with default query parameters if none are given' do
+        stub_protocols.to_return(status: 200,
+                                 body: JSON.generate(status_code: 0),
+                                 headers: { 'Content-Type': 'application/json' })
 
-      ProtocolImporters::ProtocolsIO::V3::ApiClient.new(TOKEN).protocol_list
-      expect(WebMock).to have_requested(:get, URL).with(headers: headers, query: default_query_params)
+        subject.protocol_list(key_query)
+        expect(WebMock).to have_requested(:get, URL).with(query: default_query_params_with_key)
+      end
+
+      it 'requests server with given query parameters' do
+        query = {
+          filter: :user_public,
+          key: 'banana',
+          order_dir: :asc,
+          order_field: :date,
+          page_id: 2,
+          page_size: 15,
+          fields: 'somefields'
+        }
+        stub_protocols.with(query: query)
+                      .to_return(status: 200,
+                                body: JSON.generate(status_code: 0),
+                                headers: { 'Content-Type': 'application/json' })
+
+        subject.protocol_list(query)
+        expect(WebMock).to have_requested(:get, URL).with(query: query)
+      end
+
+      it 'should send authorization token if provided on initialization' do
+        headers = { 'Authorization': "Bearer #{TOKEN}" }
+        stub_protocols.with(headers: headers, query: default_query_params_with_key)
+                      .to_return(status: 200,
+                                body: JSON.generate(status_code: 0),
+                                headers: { 'Content-Type': 'application/json' })
+
+        ProtocolImporters::ProtocolsIO::V3::ApiClient.new(TOKEN).protocol_list(key_query)
+        expect(WebMock).to have_requested(:get, URL).with(headers: headers, query: default_query_params_with_key)
+      end
     end
   end
 
