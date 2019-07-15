@@ -177,6 +177,8 @@ Rails.application.routes.draw do
             defaults: { format: 'json' }
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
+
+        resources :team_repositories, only: %i(create destroy)
       end
       # resources :samples, only: [:new, :create]
       # resources :sample_types, except: [:show, :new] do
