@@ -13,15 +13,30 @@ describe TeamRepositoriesController, type: :controller do
 
   describe 'POST create' do
     context 'when resource can be saved' do
-      it 'renders 200' do
+      let(:action) do
         post :create,
              params: { team_id: team.id,
                        repository_id: repository.id,
                        target_team_id: target_team.id,
                        permission_level: 'read' },
              format: :json
+      end
+      it 'renders 200' do
+        action
 
         expect(response).to have_http_status(200)
+      end
+
+      it 'calls create activity for deleting inventory' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :share_inventory)))
+
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }.to(change { Activity.count })
       end
     end
 
@@ -62,10 +77,34 @@ describe TeamRepositoriesController, type: :controller do
     let(:team_repository) { create :team_repository, :read, team: team, repository: repository }
 
     context 'when resource can be deleted' do
-      it 'renders 204' do
+      let(:action) do
         delete :destroy, params: { repository_id: repository.id, team_id: team.id, id: team_repository.id }
+      end
+
+      it 'renders 204' do
+        action
 
         expect(response).to have_http_status(204)
+      end
+
+      it 'calls create activity for deleting inventory' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :unshare_inventory)))
+
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }.to(change { Activity.count })
+      end
+    end
+
+    context 'when resource is not found' do
+      it 'renders 422' do
+        delete :destroy, params: { repository_id: repository.id, team_id: team.id, id: -1 }
+
+        expect(response).to have_http_status(422)
       end
     end
 
