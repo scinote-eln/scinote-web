@@ -449,8 +449,11 @@ Rails.application.routes.draw do
     end
 
     # tinyMCE image uploader endpoint
-    resources :tiny_mce_assets, only: [:update]
-    post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
+    resources :tiny_mce_assets, only: [:create] do
+      member do
+        get :download
+      end
+    end
 
     resources :results, only: [:update, :destroy] do
       resources :result_comments,

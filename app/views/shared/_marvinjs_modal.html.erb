@@ -11,7 +11,8 @@
         <div class="modal-header">
           <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
           <span class="file-name">
-            <%= text_field_tag :sketch_name %>
+            <%= t('marvinjs.modal_name_title') %>
+            <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder') %>
           </span>
           <p class="file-save-link"><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
         </div>

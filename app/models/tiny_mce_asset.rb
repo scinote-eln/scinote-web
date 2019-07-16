@@ -66,8 +66,6 @@ class TinyMceAsset < ApplicationRecord
         tm_asset.attributes['src'].value = Rails.application.routes.url_helpers.url_for(new_asset.image)
         tm_asset['class'] = 'img-responsive'
       end
-      tm_asset.attributes['src'].value = new_asset.preview
-      tm_asset['class'] = 'img-responsive'
     end
     description.css('body').inner_html.to_s
   end
@@ -91,7 +89,7 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def preview
-    image.variant(resize: Constants::LARGE_PIC_FORMAT).processed.service_url
+    image.variant(resize: Constants::LARGE_PIC_FORMAT)
   end
 
   def self.delete_unsaved_image(id)

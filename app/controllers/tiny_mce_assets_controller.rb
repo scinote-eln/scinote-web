@@ -23,4 +23,13 @@ class TinyMceAssetsController < ApplicationController
       }, status: :unprocessable_entity
     end
   end
+
+  def download
+    asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
+    if asset&.image&.attached?
+      redirect_to rails_blob_path(asset.image, disposition: 'attachment')
+    else
+      render_404
+    end
+  end
 end

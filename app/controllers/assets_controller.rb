@@ -40,12 +40,12 @@ class AssetsController < ApplicationController
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'mime-type' => @asset.file.content_type,
-        'large-preview-url' => @asset.large_preview
+        'large-preview-url' => rails_representation_url(@asset.large_preview)
       )
     elsif response_json['type'] == 'marvinjs'
       response_json.merge!(
         'editable' => can_edit,
-        'large-preview-url' => @asset.large_preview,
+        'large-preview-url' => rails_representation_url(@asset.large_preview),
         'update-url' => marvin_js_asset_path(@asset.id),
         'description' => @asset.file.metadata[:description],
         'name' => @asset.file.metadata[:name]

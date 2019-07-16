@@ -41,9 +41,17 @@
     background: $color-black;
     border: 0;
     height: 60px;
+    line-height: 40px;
+    padding: 10px 15px;
     text-align: center;
 
+    .file-save-link {
+      margin : 0 20px 0 0;
+    }
+
     .file-name {
+      align-items: center;
+      display: flex;
       float: left;
 
       input {
@@ -51,10 +59,10 @@
         box-shadow: none;
         color: $color-black;
         height: 40px;
+        margin-left: 5px;
         outline: 0;
         padding: 5px 10px;
         position: relative;
-        top: -5px;
         width: 350px;
       }
     }
@@ -146,8 +154,8 @@
 }
 
 .mce-i-marvinjs::before {
+  background-image: url('icon_small/marvinjs.svg');
   content: "";
-  background-image: url(icon_small/marvinjs.svg);
   display: block;
   height: 22px;
   left: -3px;

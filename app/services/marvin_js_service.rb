@@ -15,26 +15,31 @@ class MarvinJsService
       if params[:object_type] == 'TinyMceAsset'
         asset = TinyMceAsset.new(team_id: current_user.current_team.id)
         attach_file(asset.image, file, params)
-      else
-        asset = Asset.new(created_by: current_user,
-                          last_modified_by: current_user,
-                          team_id: current_user.current_team.id)
-        attach_file(asset.file, file, params)
+        asset.save!
+        return { asset: asset }
       end
 
+      asset = Asset.new(created_by: current_user,
+                          last_modified_by: current_user,
+                          team_id: current_user.current_team.id)
+      attach_file(asset.file, file, params)
       asset.save!
-      return { asset: asset } if params[:object_type] == 'TinyMceAsset'
-
       connect_asset(asset, params, current_user)
     end
 
     def update_sketch(params, current_user)
-      asset = current_user.current_team.assets.find(params[:id])
-      return unless asset
+      if params[:object_type] == 'TinyMceAsset'
+        asset = current_user.current_team.tiny_mce_assets.find(params[:id])
+        attachment = asset&.image
+      else
+        asset = current_user.current_team.assets.find(params[:id])
+        attachment = asset&.file
+      end
+      return unless attachment
 
       file = generate_image(params)
-      asset.file.purge_later
-      attach_file(asset, file, params)
+      attachment.purge_later
+      attach_file(attachment, file, params)
       asset
     end
 
@@ -50,7 +55,7 @@ class MarvinJsService
 
         object = Result.create(user: current_user,
                           my_module: my_module,
-                          name: params[:name],
+                          name: prepare_name(params[:name]),
                           asset: asset,
                           last_modified_by: current_user)
       end
@@ -59,7 +64,7 @@ class MarvinJsService
 
     def generate_image(params)
       image_data = Base64.decode64(params[:image].split(',')[1])
-      file = Tempfile.new([params[:name], '.jpeg'])
+      file = Tempfile.new([prepare_name(params[:name]), '.jpg'])
       file.binmode
       file << image_data
       file.rewind
@@ -69,14 +74,22 @@ class MarvinJsService
     def attach_file(asset, file, params)
       asset.attach(
         io: file,
-        filename: "#{params[:name]}.jpeg",
+        filename: "#{prepare_name(params[:name])}.jpg",
         content_type: 'image/jpeg',
         metadata: {
-          name: params[:name],
+          name: prepare_name(params[:name]),
           description: params[:description],
           asset_type: 'marvinjs'
         }
       )
+    end
+
+    def prepare_name(sketch_name)
+      if !sketch_name.empty?
+        sketch_name
+      else
+        I18n.t('marvinjs.new_sketch')
+      end
     end
   end
 end

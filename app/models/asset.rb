@@ -198,13 +198,13 @@ class Asset < ApplicationRecord
   end
 
   def medium_preview
-    return file.variant(resize: Constants::MEDIUM_PIC_FORMAT).processed.service_url if previewable_image?
+    return file.variant(resize: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
 
     file.preview(resize: Constants::MEDIUM_PIC_FORMAT)
   end
 
   def large_preview
-    return file.variant(resize: Constants::LARGE_PIC_FORMAT).processed.service_url if previewable_image?
+    return file.variant(resize: Constants::LARGE_PIC_FORMAT) if previewable_image?
 
     file.preview(resize: Constants::LARGE_PIC_FORMAT)
   end
@@ -449,7 +449,6 @@ class Asset < ApplicationRecord
   end
 
   private
-
 
   def tempdir
     Rails.root.join('tmp')

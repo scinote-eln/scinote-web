@@ -2155,6 +2155,8 @@ en:
         visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
         manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
   marvinjs:
-    new_sketch: "New sketch"
+    new_sketch: "New structure"
     new_button: "New structure"
+    structure_placeholder: "Click here to enter structure name"
+    modal_name_title: "Structure name:"
     checmical_drawing: "Chemical drawings"

@@ -43,8 +43,7 @@ var TinyMCE = (function() {
           });
           editorContainer.find('.tinymce-active-object-handler').css('display', 'block');
           editorContainer.find('.tinymce-active-object-handler .file-download-link')
-            .attr('href', image[0].src)
-            .attr('download', 'tinymce-image');
+            .attr('href', '/tiny_mce_assets/' + image.data('mceToken') + '/download');
 
           // Edit link
           editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link');

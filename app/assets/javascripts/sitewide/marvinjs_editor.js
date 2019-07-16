@@ -68,7 +68,7 @@ var MarvinJsEditorApi = (function() {
       setTimeout(() => { remoteImage(childFuction, source, options); }, 100);
       return false;
     }
-    marvinJsRemoteEditor.exportMrvToImageDataUri(source, 'jpeg', params).then(function(image) {
+    marvinJsRemoteEditor.exportMrvToImageDataUri(source, 'image/jpeg', params).then(function(image) {
       childFuction(source, image, options);
     });
     return true;
@@ -83,7 +83,7 @@ var MarvinJsEditorApi = (function() {
     if (marvinJsMode === 'remote') {
       if (config.mode === 'new' || config.mode === 'new-tinymce') {
         marvinJsRemoteEditor.importStructure('mrv', emptySketch);
-        sketchName.val(I18n.t('marvinjs.new_sketch'));
+        sketchName.val('');
       } else if (config.mode === 'edit') {
         marvinJsRemoteLastMrv = config.data;
         marvinJsRemoteEditor.importStructure('mrv', config.data);
@@ -152,6 +152,7 @@ var MarvinJsEditorApi = (function() {
       image: image
     }, function(result) {
       var newAsset = $(result.html);
+      var json;
       if (config.objectType === 'Step') {
         newAsset.find('.file-preview-link').css('top', '-300px');
         newAsset.addClass('new').prependTo($(config.container));
@@ -162,24 +163,13 @@ var MarvinJsEditorApi = (function() {
         newAsset.prependTo($(config.container));
         Results.expandResult(newAsset);
         Comments.init();
+      } else if (config.objectType === 'TinyMceAsset') {
+        json = tinymce.util.JSON.parse(result);
+        config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
+        TinyMCE.updateImages(config.editor);
       }
       $(marvinJsModal).modal('hide');
       FilePreviewModal.init();
-    });
-  }
-
-  function saveTinymceFunction(source, image, config) {
-    $.post(config.marvinUrl, {
-      description: source,
-      object_id: config.objectId,
-      object_type: config.objectType,
-      name: sketchName.val(),
-      image: image
-    }, function(result) {
-      var json = tinymce.util.JSON.parse(result);
-      config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
-      TinyMCE.updateImages(config.editor);
-      $(marvinJsModal).modal('hide');
     });
   }
 
@@ -189,31 +179,21 @@ var MarvinJsEditorApi = (function() {
       data: {
         description: source,
         name: sketchName.val(),
+        object_type: config.objectType,
         image: image
       },
       dataType: 'json',
       type: 'PUT',
       success: function(json) {
-        $(marvinJsModal).modal('hide');
-        $('#modal_link' + json.id + ' img').attr('src', json.url);
-      }
-    });
-  }
-
-  function updateTinymceFunction(source, image, config) {
-    $.ajax({
-      url: config.marvinUrl,
-      data: {
-        description: source,
-        name: sketchName.val(),
-        object_type: 'TinyMceAsset',
-        image: image
-      },
-      dataType: 'json',
-      type: 'PUT',
-      success: function(json) {
-        config.image[0].src = json.url;
-        $(marvinJsModal).modal('hide');
+        if (config.objectType === 'TinyMceAsset') {
+          config.image[0].src = json.url;
+          config.image[0].dataset.mceSrc = json.url;
+          $(marvinJsModal).modal('hide');
+        } else {
+          $(marvinJsModal).modal('hide');
+          $('#modal_link' + json.id + ' img').attr('src', json.url);
+          $('#modal_link' + json.id + ' .attachment-label').html(json.file_name);
+        }
       }
     });
   }
@@ -243,12 +223,14 @@ var MarvinJsEditorApi = (function() {
         if (config.mode === 'new') {
           MarvinJsEditor.save(config);
         } else if (config.mode === 'edit') {
+          config.objectType = 'Asset';
           MarvinJsEditor.update(config);
         } else if (config.mode === 'new-tinymce') {
           config.objectType = 'TinyMceAsset';
-          MarvinJsEditor.save_with_image(config);
+          MarvinJsEditor.save(config);
         } else if (config.mode === 'edit-tinymce') {
-          MarvinJsEditor.update_tinymce(config);
+          config.objectType = 'TinyMceAsset';
+          MarvinJsEditor.update(config);
         }
       });
       return true;
@@ -274,27 +256,8 @@ var MarvinJsEditorApi = (function() {
       marvinJsExportImage(saveFunction, config);
     },
 
-    save_with_image: function(config) {
-      marvinJsExportImage(saveTinymceFunction, config);
-    },
-
     update: function(config) {
       marvinJsExportImage(updateFunction, config);
-    },
-
-    update_tinymce: function(config) {
-      marvinJsExportImage(updateTinymceFunction, config);
-    },
-
-    delete_sketch: function(url, object) {
-      $.ajax({
-        url: url,
-        dataType: 'json',
-        type: 'DELETE',
-        success: function() {
-          $(object).remove();
-        }
-      });
     }
   };
 });
