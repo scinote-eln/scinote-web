@@ -55,7 +55,7 @@ var TinyMCE = (function() {
               if (marvinJsEdit) {
                 MarvinJsEditor.open({
                   mode: 'edit-tinymce',
-                  marvinUrl: '/marvin_js_assets/' + image[0].dataset.sourceId,
+                  marvinUrl: '/tiny_mce_assets/' + image[0].dataset.sourceId + '/marvinjs',
                   image: image
                 });
               }

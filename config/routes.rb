@@ -452,6 +452,11 @@ Rails.application.routes.draw do
     resources :tiny_mce_assets, only: [:create] do
       member do
         get :download
+        get :marvinjs, to: 'tiny_mce_assets#marvinjs_show'
+        put :marvinjs, to: 'tiny_mce_assets#marvinjs_update'
+      end
+      collection do
+        post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
       end
     end
 

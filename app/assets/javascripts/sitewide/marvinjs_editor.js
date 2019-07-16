@@ -276,7 +276,7 @@ var MarvinJsEditorApi = (function() {
       function openMarvinJs() {
         MarvinJsEditor.open({
           mode: 'new-tinymce',
-          marvinUrl: '/marvin_js_assets',
+          marvinUrl: '/tiny_mce_assets/marvinjs',
           editor: editor
         });
       }
