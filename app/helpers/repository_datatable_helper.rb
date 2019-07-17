@@ -62,7 +62,8 @@ module RepositoryDatatableHelper
   end
 
   def can_perform_repository_actions(repository)
-    can_manage_repository?(repository) ||
+    can_read_repository?(repository) ||
+      can_manage_repository?(repository) ||
       can_create_repositories?(repository.team) ||
       can_manage_repository_rows?(repository)
   end

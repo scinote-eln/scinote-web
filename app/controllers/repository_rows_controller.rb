@@ -344,7 +344,7 @@ class RepositoryRowsController < ApplicationController
       my_module: [{ experiment: :project }]
     ).where(repository_row: @repository_row)
     render_404 and return unless @repository_row
-    render_403 unless can_read_team?(@repository_row.repository.team)
+    render_403 unless can_read_repository?(@repository_row.repository)
   end
 
   def load_vars
@@ -360,7 +360,7 @@ class RepositoryRowsController < ApplicationController
   def load_repository
     @repository = current_team.repositories.find_by_id(params[:repository_id])
     render_404 unless @repository
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
   end
 
   def check_create_permissions

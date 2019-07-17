@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 Canaid::Permissions.register_for(Repository) do
+  # repository: read/export
+  can :read_repository do |user, repository|
+    if user.teams.include?(repository.team)
+      user.is_member_of_team?(repository.team)
+    elsif (read_team_repo = repository
+                                .team_repositories
+                                .where(team: user.teams).take)
+      # When has some repository's relations with read permissions for at least one of user's teams.
+
+      user.is_member_of_team?(read_team_repo.team)
+    else
+      false
+    end
+  end
+
   # repository: update, delete
   can :manage_repository do |user, repository|
     user.is_admin_of_team?(repository.team)

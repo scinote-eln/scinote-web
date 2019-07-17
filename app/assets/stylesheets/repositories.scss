@@ -1,5 +1,12 @@
 @import "constants";
 
+#shared-repos {
+  background-color: $color-concrete;
+  font-size: 14px;
+  font-weight: bolder;
+  padding: 5px 10px;
+}
+
 .repositories-dropdown-menu {
   height: auto;
   max-height: 400px;
@@ -28,6 +35,7 @@
 .repository-cog {
   display: inline-block;
   float: right;
+  padding-bottom: 15px;
   padding-left: 4px;
 }
 
