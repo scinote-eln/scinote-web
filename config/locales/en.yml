@@ -127,6 +127,8 @@ en:
   left_menu_bar:
     projects: "Projects"
     repositories: "Inventories"
+    repositories_extra:
+      shared_repos: "Shared Inventories"
     templates: "Protocols"
     reports: "Reports"
     settings: "Settings"

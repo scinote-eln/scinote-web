@@ -287,7 +287,7 @@ class AssetsController < ApplicationController
     elsif @assoc.class == Result
       render_403 and return unless can_read_experiment?(@my_module.experiment)
     elsif @assoc.class == RepositoryCell
-      render_403 and return unless can_read_team?(@repository.team)
+      render_403 and return unless can_read_repository?(@repository)
     end
   end
 

@@ -1,6 +1,6 @@
 Canaid::Permissions.register_for(Team) do
   # team: leave, read users, read projects, read/export samples,
-  #       read protocols, read/export repositories
+  #       read protocols
   #
   can :read_team do |user, team|
     user.is_member_of_team?(team)
