@@ -257,7 +257,7 @@ class Asset < ApplicationRecord
   end
 
   def image?
-    content_type == %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+    content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
   end
 
   def text?
