@@ -63,12 +63,7 @@ class MarvinJsService
     end
 
     def generate_image(params)
-      image_data = Base64.decode64(params[:image].split(',')[1])
-      file = Tempfile.new([prepare_name(params[:name]), '.jpg'])
-      file.binmode
-      file << image_data
-      file.rewind
-      file
+      StringIO.new(Base64.decode64(params[:image].split(',')[1]))
     end
 
     def attach_file(asset, file, params)
