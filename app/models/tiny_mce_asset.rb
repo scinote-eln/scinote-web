@@ -138,10 +138,9 @@ class TinyMceAsset < ApplicationRecord
     if exists?
       order(:id).each do |tiny_mce_asset|
         asset_guid = get_guid(tiny_mce_asset.id)
-        asset_file_name = "rte-#{asset_guid.to_s + tiny_mce_asset.image.blob.filename.extension}"
+        asset_file_name = "rte-#{asset_guid}.#{tiny_mce_asset.image.blob.filename.extension}"
         ostream.put_next_entry("#{dir}/#{asset_file_name}")
         ostream.print(tiny_mce_asset.image.download)
-        input_file.close
       end
     end
     ostream
