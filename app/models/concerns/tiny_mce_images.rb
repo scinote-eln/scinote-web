@@ -73,7 +73,10 @@ module TinyMceImages
 
         tiny_img_clone.transaction do
           tiny_img_clone.save!
-          tiny_img_clone.image.attach(io: tiny_img.image.open, filename: tiny_img.image.filename.to_s)
+          tiny_img_clone.image.attach(io: StringIO.new(tiny_img.image.download),
+                                      filename: tiny_img.file_name,
+                                      content_type: tiny_img.content_type,
+                                      metadata: tiny_img.image.metadata)
         end
 
         target.tiny_mce_assets << tiny_img_clone
@@ -96,7 +99,7 @@ module TinyMceImages
 
           next if asset && asset.object == self && asset.team_id != asset_team_id
 
-          new_image = asset.image
+          new_image = StringIO.new(asset.image.download)
           new_image_filename = new_image.file_name
         else
           # We need implement size and type checks here

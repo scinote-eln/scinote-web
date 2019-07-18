@@ -294,6 +294,10 @@ class Protocol < ApplicationRecord
       step.assets.each do |asset|
         asset2 = asset.dup
         asset2.save!
+        asset2.file.attach(io: StringIO.new(asset.file.download),
+                           filename: asset.file_name,
+                           content_type: asset.content_type,
+                           metadata: asset.file.metadata)
         step2.assets << asset2
         assets_to_clone << [asset.id, asset2.id]
       end

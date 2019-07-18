@@ -170,7 +170,10 @@ class TinyMceAsset < ApplicationRecord
 
     tiny_img_clone.transaction do
       tiny_img_clone.save!
-      tiny_img_clone.image.attach(io: image.download, filename: image.filename.sanitized)
+      tiny_img_clone.image.attach(io: StringIO.new(image.download),
+                                  filename: file_name,
+                                  content_type: content_type,
+                                  metadta: image.metadata)
     end
 
     return false unless tiny_img_clone.persisted?
