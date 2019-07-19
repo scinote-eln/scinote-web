@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class MarvinJsAssetsController < ApplicationController
-  before_action :load_vars
+  before_action :load_vars, except: :create
+  before_action :load_create_vars, only: :create
 
   before_action :check_read_permission
   before_action :check_edit_permission, only: %i(update create)
 
   def create
-    result = MarvinJsService.create_sketch(marvin_params, current_user)
+    result = MarvinJsService.create_sketch(marvin_params, current_user, current_team)
     if result[:asset] && marvin_params[:object_type] == 'Step'
       render json: {
         html: render_to_string(
@@ -36,7 +37,7 @@ class MarvinJsAssetsController < ApplicationController
   end
 
   def update
-    asset = MarvinJsService.update_sketch(marvin_params, current_user)
+    asset = MarvinJsService.update_sketch(marvin_params, current_user, current_team)
     if asset
       render json: { url: rails_representation_url(asset.medium_preview), id: asset.id, file_name: asset.file_name }
     else
@@ -48,40 +49,48 @@ class MarvinJsAssetsController < ApplicationController
 
   def load_vars
     @asset = current_team.assets.find_by_id(params[:id])
-    if action_name == 'create'
-      @assoc ||= Step.find_by_id(marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
-      @assoc ||= MyModule.find_by_id(params[:object_id]) if marvin_params[:object_type] == 'Result'
-    else
-      return render_404 unless @asset
+    return render_404 unless @asset
 
-      @assoc ||= @asset.step
-      @assoc ||= @asset.result
-    end
+    @assoc ||= @asset.step
+    @assoc ||= @asset.result
 
     if @assoc.class == Step
       @protocol = @assoc.protocol
-    elsif @assoc.class == MyModule
-      @my_module = @assoc
     elsif @assoc.class == Result
       @my_module = @assoc.my_module
     end
   end
 
+  def load_create_vars
+    @assoc = Step.find_by_id(marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
+    @assoc = MyModule.find_by_id(params[:object_id]) if marvin_params[:object_type] == 'Result'
+
+    if @assoc.class == Step
+      @protocol = @assoc.protocol
+    elsif @assoc.class == MyModule
+      @my_module = @assoc
+    end
+  end
+
   def check_read_permission
     if @assoc.class == Step
-      render_403 && return unless can_read_protocol_in_module?(@protocol) ||
-                                  can_read_protocol_in_repository?(@protocol)
+      return render_403 unless can_read_protocol_in_module?(@protocol) ||
+                               can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result || @assoc.class == MyModule
-      render_403 and return unless can_read_experiment?(@my_module.experiment)
+      return render_403 unless can_read_experiment?(@my_module.experiment)
+    else
+      render_403
     end
   end
 
   def check_edit_permission
     if @assoc.class == Step
-      render_403 && return unless can_manage_protocol_in_module?(@protocol) ||
-                                  can_manage_protocol_in_repository?(@protocol)
+      return render_403 unless can_manage_protocol_in_module?(@protocol) ||
+                               can_manage_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result || @assoc.class == MyModule
-      render_403 and return unless can_manage_module?(@my_module)
+      return render_403 unless can_manage_module?(@my_module)
+    else
+      render_403
     end
   end
 

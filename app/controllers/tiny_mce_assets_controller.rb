@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class TinyMceAssetsController < ApplicationController
-  before_action :load_vars, only: %i(marvinjs_show marvinjs_update)
+  before_action :load_vars, only: %i(marvinjs_show marvinjs_update download)
 
-  before_action :check_read_permission, only: %i(marvinjs_show marvinjs_update)
+  before_action :check_read_permission, only: %i(marvinjs_show marvinjs_update download)
   before_action :check_edit_permission, only: %i(marvinjs_update)
 
   def create
@@ -30,9 +30,8 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def download
-    asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
-    if asset&.image&.attached?
-      redirect_to rails_blob_path(asset.image, disposition: 'attachment')
+    if @asset&.image&.attached?
+      redirect_to rails_blob_path(@asset.image, disposition: 'attachment')
     else
       render_404
     end
@@ -49,7 +48,7 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def marvinjs_create
-    result = MarvinJsService.create_sketch(marvin_params, current_user)
+    result = MarvinJsService.create_sketch(marvin_params, current_user, current_team)
     if result[:asset]
       render json: {
         image: {
@@ -64,7 +63,7 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def marvinjs_update
-    asset = MarvinJsService.update_sketch(marvin_params, current_user)
+    asset = MarvinJsService.update_sketch(marvin_params, current_user, current_team)
     if asset
       render json: { url: rails_representation_url(asset.preview), id: asset.id }
     else
@@ -78,7 +77,7 @@ class TinyMceAssetsController < ApplicationController
     @asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
     return render_404 unless @asset
 
-    @assoc ||= @asset.object
+    @assoc = @asset.object
 
     if @assoc.class == Step
       @protocol = @assoc.protocol
@@ -86,26 +85,30 @@ class TinyMceAssetsController < ApplicationController
       @protocol = @assoc
     elsif @assoc.class == MyModule
       @my_module = @assoc
-    elsif @assoc.class == Result
-      @my_module = @assoc.my_module
+    elsif @assoc.class == ResultText
+      @my_module = @assoc.result.my_module
     end
   end
 
   def check_read_permission
     if @assoc.class == Step || @assoc.class == Protocol
-      render_403 && return unless can_read_protocol_in_module?(@protocol) ||
-                                  can_read_protocol_in_repository?(@protocol)
-    elsif @assoc.class == Result || @assoc.class == MyModule
-      render_403 and return unless can_read_experiment?(@my_module.experiment)
+      return render_403 unless can_read_protocol_in_module?(@protocol) ||
+                               can_read_protocol_in_repository?(@protocol)
+    elsif @assoc.class == ResultText || @assoc.class == MyModule
+      return render_403 unless can_read_experiment?(@my_module.experiment)
+    else
+      render_403
     end
   end
 
   def check_edit_permission
     if @assoc.class == Step || @assoc.class == Protocol
-      render_403 && return unless can_manage_protocol_in_module?(@protocol) ||
-                                  can_manage_protocol_in_repository?(@protocol)
-    elsif @assoc.class == Result || @assoc.class == MyModule
-      render_403 and return unless can_manage_module?(@my_module)
+      return render_403 unless can_manage_protocol_in_module?(@protocol) ||
+                               can_manage_protocol_in_repository?(@protocol)
+    elsif @assoc.class == ResultText || @assoc.class == MyModule
+      return render_403 unless can_manage_module?(@my_module)
+    else
+      render_403
     end
   end
 

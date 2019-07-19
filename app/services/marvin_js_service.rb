@@ -10,10 +10,10 @@ class MarvinJsService
       !ENV['MARVINJS_URL'].nil? || !ENV['MARVINJS_API_KEY'].nil?
     end
 
-    def create_sketch(params, current_user)
+    def create_sketch(params, current_user, current_team)
       file = generate_image(params)
       if params[:object_type] == 'TinyMceAsset'
-        asset = TinyMceAsset.new(team_id: current_user.current_team.id)
+        asset = TinyMceAsset.new(team_id: current_team.id)
         attach_file(asset.image, file, params)
         asset.save!
         return { asset: asset }
@@ -21,24 +21,23 @@ class MarvinJsService
 
       asset = Asset.new(created_by: current_user,
                           last_modified_by: current_user,
-                          team_id: current_user.current_team.id)
+                          team_id: current_team.id)
       attach_file(asset.file, file, params)
       asset.save!
       connect_asset(asset, params, current_user)
     end
 
-    def update_sketch(params, current_user)
+    def update_sketch(params, _current_user, current_team)
       if params[:object_type] == 'TinyMceAsset'
-        asset = current_user.current_team.tiny_mce_assets.find(Base62.decode(params[:id]))
+        asset = current_team.tiny_mce_assets.find(Base62.decode(params[:id]))
         attachment = asset&.image
       else
-        asset = current_user.current_team.assets.find(params[:id])
+        asset = current_team.assets.find(params[:id])
         attachment = asset&.file
       end
       return unless attachment
 
       file = generate_image(params)
-      attachment.purge_later
       attach_file(attachment, file, params)
       asset
     end
