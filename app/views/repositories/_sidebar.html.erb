@@ -1,23 +1,23 @@
  <%= content_for :sidebar do %>
   <div id="slide-panel" class="visible">
-    <div class="tree">
+    <div id="repo-tree" class="tree">
       <ul>
         <% repositories.each do |repository| %>
-          <%= render partial: "repositories/sidebar_list.html.erb",
-                     locals: { repository: repository } %>
-        <% end %>
+          <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
+            <span class="tree-link line-wrap no-indent">
+              <% if current_page?(repository_path(repository)) %>
+                <span title="<%= repository.name %>"><%= repository.name %></span>
+              <% else %>
+                <%= link_to repository.name,
+                            repository_path(repository),
+                            data: { 'no-turbolink' => 'true' } %>
+              <% end %>
 
-        <% if @team.team_repositories.any? %>
-          <li >
-            <span id="shared-repos" class="tree-link line-wrap no-indent">
-              <%= t('left_menu_bar.repositories_extra.shared_repos') %>
+              <% if repository.team_repositories.where(team: current_team).any? %>
+                <i class="fas fa-user-friends"></i>
+              <% end %>
             </span>
           </li>
-
-          <% @team.shared_repositories.each do |repository| %>
-            <%= render partial: "repositories/sidebar_list.html.erb",
-                       locals: { repository: repository } %>
-          <% end %>
         <% end %>
       </ul>
     </div>
