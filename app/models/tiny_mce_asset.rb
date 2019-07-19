@@ -170,7 +170,7 @@ class TinyMceAsset < ApplicationRecord
 
     tiny_img_clone.transaction do
       tiny_img_clone.save!
-      tiny_img_clone.image.attach(io: StringIO.new(image.download),
+      tiny_img_clone.image.attach(io: image.generate_temp_file,
                                   filename: file_name,
                                   content_type: content_type,
                                   metadta: image.metadata)
@@ -189,6 +189,14 @@ class TinyMceAsset < ApplicationRecord
 
     # reassign images
     obj.reassign_tiny_mce_image_references(cloned_img_ids)
+  end
+
+  def generate_temp_file
+    tempfile = Tempfile.new
+    tempfile.binmode
+    tempfile << image.download
+    tempfile.rewind
+    tempfile
   end
 
   private

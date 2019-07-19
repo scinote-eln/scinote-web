@@ -448,6 +448,14 @@ class Asset < ApplicationRecord
     !locked? && %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type
   end
 
+  def generate_temp_file
+    tempfile = Tempfile.new
+    tempfile.binmode
+    tempfile << file.download
+    tempfile.rewind
+    tempfile
+  end
+
   private
 
   def tempdir

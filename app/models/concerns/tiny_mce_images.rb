@@ -73,7 +73,7 @@ module TinyMceImages
 
         tiny_img_clone.transaction do
           tiny_img_clone.save!
-          tiny_img_clone.image.attach(io: StringIO.new(tiny_img.image.download),
+          tiny_img_clone.image.attach(io: tiny_img.generate_temp_file,
                                       filename: tiny_img.file_name,
                                       content_type: tiny_img.content_type,
                                       metadata: tiny_img.image.metadata)
@@ -99,7 +99,7 @@ module TinyMceImages
 
           next if asset && asset.object == self && asset.team_id != asset_team_id
 
-          new_image = StringIO.new(asset.image.download)
+          new_image = asset.generate_temp_file
           new_image_filename = new_image.file_name
         else
           # We need implement size and type checks here

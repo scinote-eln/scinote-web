@@ -294,7 +294,7 @@ class Protocol < ApplicationRecord
       step.assets.each do |asset|
         asset2 = asset.dup
         asset2.save!
-        asset2.file.attach(io: StringIO.new(asset.file.download),
+        asset2.file.attach(io: asset.generate_temp_file,
                            filename: asset.file_name,
                            content_type: asset.content_type,
                            metadata: asset.file.metadata)
