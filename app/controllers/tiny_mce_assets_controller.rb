@@ -39,7 +39,7 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def marvinjs_show
-    asset = current_team.tiny_mce_assets.find_by_id(params[:id])
+    asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
     return render_404 unless asset
 
     render json: {
@@ -55,7 +55,6 @@ class TinyMceAssetsController < ApplicationController
         image: {
           url: rails_representation_url(result[:asset].preview),
           token: Base62.encode(result[:asset].id),
-          source_id: result[:asset].id,
           source_type: result[:asset].image.metadata[:asset_type]
         }
       }, content_type: 'text/html'
@@ -76,7 +75,7 @@ class TinyMceAssetsController < ApplicationController
   private
 
   def load_vars
-    @asset = current_team.tiny_mce_assets.find_by_id(params[:id])
+    @asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
     return render_404 unless @asset
 
     @assoc ||= @asset.object

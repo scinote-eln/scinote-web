@@ -29,7 +29,7 @@ class MarvinJsService
 
     def update_sketch(params, current_user)
       if params[:object_type] == 'TinyMceAsset'
-        asset = current_user.current_team.tiny_mce_assets.find(params[:id])
+        asset = current_user.current_team.tiny_mce_assets.find(Base62.decode(params[:id]))
         attachment = asset&.image
       else
         asset = current_user.current_team.assets.find(params[:id])

@@ -137,7 +137,6 @@ var MarvinJsEditorApi = (function() {
     var imgstr = "<img src='" + json.image.url + "'";
     imgstr += " width='300' height='300'";
     imgstr += " data-mce-token='" + json.image.token + "'";
-    imgstr += " data-source-id='" + json.image.source_id + "'";
     imgstr += " data-source-type='" + json.image.source_type + "'";
     imgstr += " alt='description-" + json.image.token + "' />";
     return imgstr;

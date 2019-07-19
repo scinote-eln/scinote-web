@@ -47,7 +47,7 @@ var TinyMCE = (function() {
 
           // Edit link
           editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link');
-          if (image[0].dataset.sourceId) {
+          if (image[0].dataset.sourceType) {
             editLink.css('display', 'inline-block');
             marvinJsEdit = (image[0].dataset.sourceType === 'marvinjs' && typeof (MarvinJsEditor) !== 'undefined');
             if (!marvinJsEdit) editLink.css('display', 'none');
@@ -55,7 +55,7 @@ var TinyMCE = (function() {
               if (marvinJsEdit) {
                 MarvinJsEditor.open({
                   mode: 'edit-tinymce',
-                  marvinUrl: '/tiny_mce_assets/' + image[0].dataset.sourceId + '/marvinjs',
+                  marvinUrl: '/tiny_mce_assets/' + image[0].dataset.mceToken + '/marvinjs',
                   image: image
                 });
               }
