@@ -22,53 +22,20 @@ var TinyMCE = (function() {
 
 
   function initImageToolBar(editor) {
-    var editorForm = $(editor.getContainer()).closest('form');
-    var editorContainer = $(editor.getContainer());
-    var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
-    var editorToolbar = editorForm.find('.mce-top-part');
     var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
-    $('<div class="tinymce-active-object-handler" style="display:none">'
-                + '<a class="file-download-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-donwload"></i></a>'
-                + '<span class="file-edit-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-pencil"></i></span>'
-              + '</div>').appendTo(editorToolbar.find('.mce-stack-layout'));
-    editorIframe.contents().click(function() {
-      var marvinJsEdit;
-      setTimeout(() => {
-        var image = editorIframe.contents().find('img[data-mce-selected="1"]');
-        var editLink;
-        var imageEditorLink;
-        if (image.length > 0) {
-          image.on('load', function() {
-            editor.fire('Dirty');
-          });
-          editorContainer.find('.tinymce-active-object-handler').css('display', 'block');
-          editorContainer.find('.tinymce-active-object-handler .file-download-link')
-            .attr('href', '/tiny_mce_assets/' + image.data('mceToken') + '/download');
-
-          // Edit link
-          editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link');
-          if (image[0].dataset.sourceType) {
-            editLink.css('display', 'inline-block');
-            marvinJsEdit = (image[0].dataset.sourceType === 'marvinjs' && typeof (MarvinJsEditor) !== 'undefined');
-            if (!marvinJsEdit) editLink.css('display', 'none');
-            editLink.on('click', function() {
-              if (marvinJsEdit) {
-                MarvinJsEditor.open({
-                  mode: 'edit-tinymce',
-                  marvinUrl: '/tiny_mce_assets/' + image[0].dataset.mceToken + '/marvinjs',
-                  image: image
-                });
-              }
-            });
-          } else {
-            editLink.css('display', 'none');
-            editLink.off('click');
-          }
-        } else {
-          editorContainer.find('.tinymce-active-object-handler').css('display', 'none');
-        }
-      }, 100);
-    });
+    editorIframe.contents().find('head').append(
+      '<style type="text/css">'
+        + 'img::-moz-selection{background:0 0}'
+        + 'img::selection{background:0 0}'
+        + '.mce-content-body img[data-mce-selected]{outline:2px solid #37a0d9}'
+        + '.mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}'
+        + '.mce-content-body div.mce-resizehandle:hover{background:transparent}'
+        + '.mce-content-body div#mceResizeHandlenw{border-left: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
+        + '.mce-content-body div#mceResizeHandlene{border-right: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
+        + '.mce-content-body div#mceResizeHandlesw{border-left: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
+        + '.mce-content-body div#mceResizeHandlese{border-right: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
+      + '</style>'
+    );
   }
 
   // returns a public API for TinyMCE editor
@@ -84,7 +51,7 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-        plugins = 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
+        plugins = 'custom_image_toolbar autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
         if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
@@ -199,7 +166,7 @@ var TinyMCE = (function() {
             } else {
               editorToolbar.css('position', 'sticky');
             }
-            editorToolbar.css('top', editorToolbaroffset + 'px');
+            editorToolbar.css('top', editorToolbaroffset + 'px').css('z-index', '100');
 
             // Init image toolbar
             initImageToolBar(editor);
