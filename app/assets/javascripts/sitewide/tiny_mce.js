@@ -23,19 +23,17 @@ var TinyMCE = (function() {
 
   function initImageToolBar(editor) {
     var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
-    editorIframe.contents().find('head').append(
-      '<style type="text/css">'
-        + 'img::-moz-selection{background:0 0}'
-        + 'img::selection{background:0 0}'
-        + '.mce-content-body img[data-mce-selected]{outline:2px solid #37a0d9}'
-        + '.mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}'
-        + '.mce-content-body div.mce-resizehandle:hover{background:transparent}'
-        + '.mce-content-body div#mceResizeHandlenw{border-left: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
-        + '.mce-content-body div#mceResizeHandlene{border-right: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
-        + '.mce-content-body div#mceResizeHandlesw{border-left: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
-        + '.mce-content-body div#mceResizeHandlese{border-right: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
-      + '</style>'
-    );
+    editorIframe.contents().find('head').append('<style type="text/css">'
+      + 'img::-moz-selection{background:0 0}'
+      + 'img::selection{background:0 0}'
+      + '.mce-content-body img[data-mce-selected]{outline:2px solid #37a0d9}'
+      + '.mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}'
+      + '.mce-content-body div.mce-resizehandle:hover{background:transparent}'
+      + '.mce-content-body div#mceResizeHandlenw{border-left: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
+      + '.mce-content-body div#mceResizeHandlene{border-right: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
+      + '.mce-content-body div#mceResizeHandlesw{border-left: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
+      + '.mce-content-body div#mceResizeHandlese{border-right: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
+      + '</style>');
   }
 
   // returns a public API for TinyMCE editor
