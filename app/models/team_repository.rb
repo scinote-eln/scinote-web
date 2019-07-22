@@ -7,4 +7,5 @@ class TeamRepository < ApplicationRecord
   belongs_to :repository
 
   validates :permission_level, presence: true
+  validates :repository, uniqueness: { scope: :team_id }
 end
