@@ -56,7 +56,7 @@ rails-production:
 	@docker-compose -f docker-compose.production.yml run --rm web $(cmd)
 
 run:
-	rm tmp/pids/server.pid || true
+	rm -f tmp/pids/server.pid
 	@docker-compose up -d
 	@docker attach scinote_web_development
 
