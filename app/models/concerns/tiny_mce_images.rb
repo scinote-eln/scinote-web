@@ -18,7 +18,7 @@ module TinyMceImages
       description = TinyMceAsset.update_old_tinymce(description, self)
 
       tiny_mce_assets.each do |tm_asset|
-        tm_asset_key = tm_asset.image.preview.key
+        tm_asset_key = tm_asset.preview.key
         encoded_tm_asset = Base64.strict_encode64(tm_asset.image.service.download(tm_asset_key))
         new_tm_asset_src = "data:image/jpg;base64,#{encoded_tm_asset}"
         html_description = Nokogiri::HTML(description)
