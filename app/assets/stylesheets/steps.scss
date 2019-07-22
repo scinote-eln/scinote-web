@@ -164,6 +164,10 @@
   text-align: center;
   width: 220px;
 
+  .attachment-thumbnail {
+    width: calc(100% - 20px);
+  }
+
   a {
     color: inherit;
   }

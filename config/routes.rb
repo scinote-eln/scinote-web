@@ -449,8 +449,16 @@ Rails.application.routes.draw do
     end
 
     # tinyMCE image uploader endpoint
-    resources :tiny_mce_assets, only: [:update]
-    post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
+    resources :tiny_mce_assets, only: [:create] do
+      member do
+        get :download
+        get :marvinjs, to: 'tiny_mce_assets#marvinjs_show'
+        put :marvinjs, to: 'tiny_mce_assets#marvinjs_update'
+      end
+      collection do
+        post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
+      end
+    end
 
     resources :results, only: [:update, :destroy] do
       resources :result_comments,
@@ -580,10 +588,6 @@ Rails.application.routes.draw do
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior
-<<<<<<< HEAD
-    get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
-=======
->>>>>>> activestorage_migration
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'

@@ -44,13 +44,8 @@
   <% assets.each_with_index do |asset, i| %>
     <% order_atoz = az_ordered_assets_index(step, asset.id) %>
     <% order_ztoa = assets.length - az_ordered_assets_index(step, asset.id) %>
-    <% if asset.class.name == 'Asset' %>
-      <%= render partial: 'steps/attachments/item.html.erb',
-               locals: { asset: asset, i: i, assets_count: assets.length, step: step, order_atoz: order_atoz, order_ztoa: order_ztoa } %>
-    <% elsif asset.class.name == 'MarvinJsAsset' %>
-      <%= render partial: 'assets/marvinjs/marvin_sketch_card.html.erb',
-               locals: { sketch: asset, i:i, assets_count: assets.count, step: step} %>
-    <% end %>
+    <%= render partial: 'steps/attachments/item.html.erb',
+      locals: { asset: asset, i: i, assets_count: assets.length, step: step, order_atoz: order_atoz, order_ztoa: order_ztoa } %>
   <% end %>
 </div>
 <hr>

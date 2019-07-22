@@ -201,17 +201,6 @@ ActiveRecord::Schema.define(version: 2019_06_13_134100) do
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
   end
 
-  create_table "marvin_js_assets", force: :cascade do |t|
-    t.bigint "team_id"
-    t.string "description"
-    t.string "object_type"
-    t.bigint "object_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name"
-    t.index ["object_type", "object_id"], name: "index_marvin_js_assets_on_object_type_and_object_id"
-  end
-
   create_table "my_module_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
