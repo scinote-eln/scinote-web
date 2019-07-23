@@ -2,6 +2,7 @@ class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include StepsActions
+  include MarvinJsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state)
   before_action :load_vars_nested, only: [:new, :create]
@@ -58,7 +59,7 @@ class StepsController < ApplicationController
         end
 
         # link tiny_mce_assets to the step
-        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
 
         create_annotation_notifications(@step)
 
@@ -144,7 +145,7 @@ class StepsController < ApplicationController
       end
       if @step.save
 
-        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
         @step.reload
 
         # generates notification on step upadate
@@ -509,6 +510,7 @@ class StepsController < ApplicationController
               if asset.try(&:locked?)
                 asset.errors.add(:base, 'This file is locked.')
               else
+                create_delete_marvinjs_activity(asset, current_user)
                 attr_params[pos] = { id: attrs[:id], _destroy: '1' }
               end
             end

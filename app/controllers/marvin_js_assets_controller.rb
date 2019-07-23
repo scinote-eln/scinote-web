@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 
 class MarvinJsAssetsController < ApplicationController
+  include MarvinJsActions
+
   before_action :load_vars, except: :create
   before_action :load_create_vars, only: :create
 
   before_action :check_read_permission
-  before_action :check_edit_permission, only: %i(update create)
+  before_action :check_edit_permission, only: %i(update create start_editing)
 
   def create
     result = MarvinJsService.create_sketch(marvin_params, current_user, current_team)
+
+    create_create_marvinjs_activity(result[:asset], current_user)
+
     if result[:asset] && marvin_params[:object_type] == 'Step'
       render json: {
         html: render_to_string(
@@ -38,11 +43,18 @@ class MarvinJsAssetsController < ApplicationController
 
   def update
     asset = MarvinJsService.update_sketch(marvin_params, current_user, current_team)
+
+    create_edit_marvinjs_activity(asset, current_user, :finish_editing)
+
     if asset
       render json: { url: rails_representation_url(asset.medium_preview), id: asset.id, file_name: asset.file_name }
     else
       render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
     end
+  end
+
+  def start_editing
+    create_edit_marvinjs_activity(@asset, current_user, :start_editing)
   end
 
   private

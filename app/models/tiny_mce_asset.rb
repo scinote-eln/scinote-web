@@ -2,6 +2,7 @@
 
 class TinyMceAsset < ApplicationRecord
   extend ProtocolsExporter
+  extend MarvinJsActions
   attr_accessor :reference
   before_create :set_reference, optional: true
   after_create :calculate_estimated_size, :self_destruct
@@ -36,7 +37,7 @@ class TinyMceAsset < ApplicationRecord
   #                      }
   validates :estimated_size, presence: true
 
-  def self.update_images(object, images)
+  def self.update_images(object, images, current_user)
     images = JSON.parse(images)
     current_images = object.tiny_mce_assets.pluck(:id)
     images_to_delete = current_images.reject do |x|
@@ -44,9 +45,16 @@ class TinyMceAsset < ApplicationRecord
     end
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
-      image_to_update&.update(object: object, saved: true) unless image_to_update.object
+      unless image_to_update.object
+        image_to_update&.update(object: object, saved: true)
+        create_create_marvinjs_activity(image_to_update, current_user)
+      end
     end
-    where(id: images_to_delete).destroy_all
+
+    where(id: images_to_delete).each do |image_to_delete|
+      create_delete_marvinjs_activity(image_to_delete, current_user)
+      image_to_delete.destroy
+    end
 
     object.delay(queue: :assets).copy_unknown_tiny_mce_images
   rescue StandardError => e

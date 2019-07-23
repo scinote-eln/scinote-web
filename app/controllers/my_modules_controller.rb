@@ -171,7 +171,7 @@ class MyModulesController < ApplicationController
       if saved
         if description_changed
           log_activity(:change_module_description)
-          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
         end
 
         if due_date_changes
@@ -238,7 +238,7 @@ class MyModulesController < ApplicationController
     respond_to do |format|
       format.json do
         if @my_module.update(description: params.require(:my_module)[:description])
-          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
           render json: {
             html: custom_auto_link(
               @my_module.tinymce_render(:description),
@@ -260,7 +260,7 @@ class MyModulesController < ApplicationController
     respond_to do |format|
       format.json do
         if protocol.update(description: params.require(:protocol)[:description])
-          TinyMceAsset.update_images(protocol, params[:tiny_mce_images])
+          TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
           render json: {
             html: custom_auto_link(
               protocol.tinymce_render(:description),
