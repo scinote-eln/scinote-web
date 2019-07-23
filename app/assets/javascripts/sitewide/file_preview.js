@@ -258,6 +258,7 @@ var FilePreviewModal = (function() {
       'colorpicker.title.color': '#fff'
     };
 
+    animateSpinner(null, true);
     imageEditor = new tui.ImageEditor('#tui-image-editor', {
       includeUI: {
         loadImage: {
@@ -284,6 +285,7 @@ var FilePreviewModal = (function() {
 
     imageEditor.on('image_loaded', () => {
       $('.file-save-link').css('display', '');
+      animateSpinner(null, false);
     });
 
     ps = new PerfectScrollbar($('.tui-image-editor-wrap')[0], { wheelSpeed: 0.5 });
