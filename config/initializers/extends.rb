@@ -225,19 +225,19 @@ class Extends
     edit_chemical_structure_on_step: 115,
     edit_chemical_structure_on_result: 116,
     edit_chemical_structure_on_step_in_repository: 117,
-    edit_chemical_structure_on_task_protocol:  118,
+    edit_chemical_structure_on_task_protocol: 118,
     edit_chemical_structure_on_protocol: 119,
     edit_chemical_structure_on_task: 120,
     create_chemical_structure_on_step: 121,
     create_chemical_structure_on_result: 122,
     create_chemical_structure_on_step_in_repository: 123,
-    create_chemical_structure_on_task_protocol:  124,
+    create_chemical_structure_on_task_protocol: 124,
     create_chemical_structure_on_protocol: 125,
     create_chemical_structure_on_task: 126,
     delete_chemical_structure_on_step: 127,
     delete_chemical_structure_on_result: 128,
     delete_chemical_structure_on_step_in_repository: 129,
-    delete_chemical_structure_on_task_protocol:  130,
+    delete_chemical_structure_on_task_protocol: 130,
     delete_chemical_structure_on_protocol: 131,
     delete_chemical_structure_on_task: 132
   }
@@ -251,7 +251,8 @@ class Extends
     experiment: [*27..31, 57],
     reports: [48, 50, 49],
     inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107],
-    protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101, 112, 123, 125, 117, 119, 129, 131],
+    protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
+                          83, 101, 112, 123, 125, 117, 119, 129, 131],
     team: [92, 94, 93, 97, 104]
   }.freeze
 end

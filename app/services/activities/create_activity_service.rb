@@ -48,7 +48,7 @@ module Activities
 
         const = try_to_constantize k
 
-        k = k.to_s.sub('tiny_mce_asset', "asset").to_sym if (k.to_s.include? 'tiny_mce_asset')
+        k = k.to_s.sub('tiny_mce_asset', 'asset').to_sym if k.to_s.include? 'tiny_mce_asset'
 
         if const
           if v.is_a?(Hash) # Value is array, so you have getter specified
