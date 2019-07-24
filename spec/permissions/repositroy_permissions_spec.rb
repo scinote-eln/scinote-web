@@ -63,4 +63,33 @@ describe 'RepositoryPermissions' do
       end
     end
   end
+
+  describe 'read_repository' do
+    context 'when team\'s repositroy' do
+      it 'should be true' do
+        create :user_team, :normal_user, user: user, team: team
+
+        expect(can_read_repository?(user, repository)).to be_truthy
+      end
+    end
+
+    context 'when shared repository' do
+      let(:new_team) { create :team }
+      let(:new_repository) { create :repository, team: new_team }
+
+      it 'should be true when have sharred repo with read' do
+        create :user_team, :normal_user, user: user, team: team
+        create :team_repository, :read, team: team, repository: new_repository
+
+        expect(can_read_repository?(user, new_repository)).to be_truthy
+      end
+
+      it 'should be false when do not have sharred repo' do
+        create :user_team, :normal_user, user: user, team: team
+        create :team_repository, :read, team: team
+
+        expect(can_read_repository?(user, new_repository)).to be_falsey
+      end
+    end
+  end
 end
