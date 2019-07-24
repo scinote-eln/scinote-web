@@ -90,7 +90,7 @@ var MarvinJsEditorApi = (function() {
         sketchName.val(config.name);
       } else if (config.mode === 'edit-tinymce') {
         marvinJsRemoteLastMrv = config.data;
-        $.get(config.marvinUrl, { object_type: 'TinyMceAsset' }, function(result) {
+        $.get(config.marvinUrl, { object_type: 'TinyMceAsset', show_action: 'start_edit' }, function(result) {
           marvinJsRemoteEditor.importStructure('mrv', result.description);
           sketchName.val(result.name);
         });
@@ -109,7 +109,7 @@ var MarvinJsEditorApi = (function() {
           marvin.importStructure('mrv', config.data);
           sketchName.val(config.name);
         } else if (config.mode === 'edit-tinymce') {
-          $.get(config.marvinUrl, function(result) {
+          $.get(config.marvinUrl, { object_type: 'TinyMceAsset', show_action: 'start_edit' }, function(result) {
             marvin.importStructure('mrv', result.description);
             sketchName.val(result.name);
           });
