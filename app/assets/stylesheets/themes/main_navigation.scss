@@ -164,6 +164,22 @@
 
   .repository-search {
     padding-left: 15px;
+
+    .fas-custom {
+      fill: $brand-primary;
+    }
+
+    &.active {
+      .fas-custom {
+        fill: $color-white !important;
+      }
+    }
+
+    &.disabled {
+      .fas-custom {
+        fill: $color-silver-chalice;
+      }
+    }
   }
 }
 
