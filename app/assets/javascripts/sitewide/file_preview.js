@@ -172,7 +172,18 @@ var FilePreviewModal = (function() {
     };
   }
 
-  function initImageEditor(data) {
+  function preInitImageEditor(data) {
+    $.ajax({
+      url: data['download-url'],
+      type: 'get',
+      success: function(responseData) {
+        var fileUrl = responseData;
+        initImageEditor(data, fileUrl);
+      }
+    });
+  }
+
+  function initImageEditor(data, fileUrl) {
     var imageEditor;
     var ps;
     var blackTheme = {
@@ -261,7 +272,7 @@ var FilePreviewModal = (function() {
     imageEditor = new tui.ImageEditor('#tui-image-editor', {
       includeUI: {
         loadImage: {
-          path: data['download-url'],
+          path: fileUrl,
           name: data.filename
         },
         theme: blackTheme,
@@ -453,7 +464,7 @@ var FilePreviewModal = (function() {
                 ev.preventDefault();
                 ev.stopPropagation();
                 modal.modal('hide');
-                initImageEditor(data);
+                preInitImageEditor(data);
               });
             } else {
               modal.find('.file-edit-link').css('display', 'none');

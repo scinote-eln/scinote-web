@@ -52,7 +52,7 @@ class AssetsController < ApplicationController
 
       'filename' => truncate(escape_input(@asset.file_file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
+      'download-url' => asset_file_url_path(@asset)
     }
 
     can_edit = if @assoc.class == Step
@@ -130,6 +130,17 @@ class AssetsController < ApplicationController
       send_file @asset.file.path, filename: URI.unescape(@asset.file_file_name),
         type: @asset.file_content_type
     end
+  end
+
+  def file_url
+    render_404 and return unless @asset.file_present
+
+    url = if @asset.file.is_stored_on_s3?
+            @asset.presigned_url(download: true)
+          else
+            @asset.file.url
+          end
+    render plain: url
   end
 
   def edit
