@@ -303,7 +303,7 @@ class RepositoriesController < ApplicationController
   def load_parent_vars
     @team = current_team
     render_404 unless @team
-    @repositories = (@team.repositories + @team.shared_repositories).uniq.sort_by(&:created_at)
+    @repositories = Repository.accessible_by_teams(@team)
   end
 
   def check_team

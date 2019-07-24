@@ -13,7 +13,7 @@
                             data: { 'no-turbolink' => 'true' } %>
               <% end %>
 
-              <% if repository.team_repositories.where(team: current_team).any? %>
+              <% if repository.shared_with?(current_team) %>
                 <i class="fas fa-user-friends"></i>
               <% end %>
             </span>
