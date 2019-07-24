@@ -262,7 +262,7 @@ class SearchController < ApplicationController
 
   def search_repository
     @repository = Repository.find_by_id(params[:repository])
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
     @repository_results = []
     if @repository_search_count_total > 0
       @repository_results =

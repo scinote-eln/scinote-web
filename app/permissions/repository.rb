@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 Canaid::Permissions.register_for(Repository) do
+  # repository: read/export
+  can :read_repository do |user, repository|
+    user.teams.include?(repository.team) || repository.team_repositories.where(team: user.teams).any?
+  end
+
   # repository: update, delete
   can :manage_repository do |user, repository|
     user.is_admin_of_team?(repository.team)

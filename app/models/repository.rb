@@ -17,7 +17,7 @@ class Repository < ApplicationRecord
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
   has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
-  has_many :teams_shared_with, through: :team_repositories, class_name: 'Team'
+  has_many :teams_shared_with, through: :team_repositories, source: :team
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -28,6 +28,11 @@ class Repository < ApplicationRecord
   validates :created_by, presence: true
 
   default_scope -> { kept }
+  scope :accessible_by_teams, lambda { |teams|
+    left_outer_joins(:team_repositories)
+      .where('repositories.team_id IN (?) OR team_repositories.team_id IN (?)', teams, teams)
+      .uniq.sort_by(&:created_at)
+  }
 
   def self.search(
     user,
@@ -64,6 +69,10 @@ class Repository < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def shared_with?(team)
+    team_repositories.where(team: team).any?
   end
 
   def self.viewable_by_user(_user, teams)

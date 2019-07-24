@@ -34,7 +34,7 @@ class AtWhoController < ApplicationController
   def rep_items
     repository = Repository.find_by_id(params[:repository_id])
     items =
-      if repository && can_read_team?(repository.team)
+      if repository && can_read_repository?(repository)
         SmartAnnotation.new(current_user, current_team, @query)
                        .repository_rows(repository)
       else

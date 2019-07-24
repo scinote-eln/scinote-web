@@ -324,7 +324,7 @@ class WopiController < ActionController::Base
       @breadcrumb_folder_name = @my_module.name
       @breadcrumb_folder_url  = @close_url
     elsif @assoc.class == RepositoryCell
-      @can_read = can_read_team?(@team)
+      @can_read = can_read_repository?(@repository)
       @can_write = can_edit_wopi_file_in_repository_rows?
 
       @close_url = repository_url(@repository,

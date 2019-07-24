@@ -300,7 +300,7 @@ class MyModulesController < ApplicationController
 
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_read_team?(@repository.team)
+    render_403 if @repository.nil? || !can_read_repository?(@repository)
     current_team_switch(@repository.team)
   end
 
@@ -670,7 +670,7 @@ class MyModulesController < ApplicationController
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_404 unless @repository
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
   end
 
   def load_projects_tree

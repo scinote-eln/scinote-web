@@ -169,7 +169,7 @@ class RepositoriesController < ApplicationController
 
   # AJAX actions
   def repository_table_index
-    if @repository.nil? || !can_read_team?(@repository.team)
+    if @repository.nil? || !can_read_repository?(@repository)
       render_403
     else
       respond_to do |format|
@@ -303,7 +303,7 @@ class RepositoriesController < ApplicationController
   def load_parent_vars
     @team = current_team
     render_404 unless @team
-    @repositories = @team.repositories.order(created_at: :asc)
+    @repositories = Repository.accessible_by_teams(@team)
   end
 
   def check_team
@@ -315,7 +315,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
   end
 
   def check_create_permissions

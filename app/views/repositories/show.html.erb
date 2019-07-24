@@ -53,7 +53,7 @@
               </a>
             <li>
             <% end %>
-            <% if can_read_team?(@repository.team) %>
+            <% if can_read_repository?(@repository) %>
             <li>
               <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
                 <%= t("repositories.index.options_dropdown.export_items") %>
