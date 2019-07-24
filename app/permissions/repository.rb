@@ -3,11 +3,7 @@
 Canaid::Permissions.register_for(Repository) do
   # repository: read/export
   can :read_repository do |user, repository|
-    if user.teams.include?(repository.team) || repository.team_repositories.where(team: user.teams).any?
-      true
-    else
-      false
-    end
+    user.teams.include?(repository.team) || repository.team_repositories.where(team: user.teams).any?
   end
 
   # repository: update, delete
