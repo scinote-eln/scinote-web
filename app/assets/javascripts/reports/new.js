@@ -139,6 +139,7 @@ function initializeReportElements(parentElement) {
   // Initialize handsontable containers
   _.each(parentElement.findWithSelf(".hot-table-container"), function(el) {
     initializeHandsonTable($(el));
+    reportHandsonTableConverter();
   });
 
   // Add event listeners element to controls
