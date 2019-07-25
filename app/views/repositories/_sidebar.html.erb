@@ -14,7 +14,11 @@
               <% end %>
 
               <% if repository.shared_with?(current_team) %>
-                <i class="fas fa-user-friends"></i>
+                <% if repository.team_repositories.where(team: current_team).take[:permission_level] == 'write' %>
+                  <%= draw_custom_icon('shared-edit') %>
+                <% elsif repository.team_repositories.where(team: current_team).take[:permission_level] == 'read' %>
+                  <%= draw_custom_icon('shared-read') %>
+                <% end %>
               <% end %>
             </span>
           </li>
