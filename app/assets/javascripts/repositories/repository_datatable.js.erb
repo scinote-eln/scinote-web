@@ -695,65 +695,13 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  // Save record
-  global.onClickSave = function() {
-    var node;
-    var rowData;
-    var formData;
-    if (saveAction === 'update') {
-      var row = TABLE.row(selectedRecord);
-      node = row.node();
-      rowData = row.data();
-      formData = SCINOTE_REPOSITORY_EDITED_ROWS[0].parseToFormObject(
-        TABLE_ID, selectedRecord
-      );
-
-    } else if (saveAction === 'create') {
-      node = selectedRecord;
-
-      // First fetch all the data in input fields
-      formData = new FormData();
-      formData.append('request_url', $(TABLE_ID).data('current-uri'));
-      formData.append('repository_row_id', $(selectedRecord).attr('id'));
-
-      // Direct record attributes
-      // Record name
-      formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
-
-      // Custom cells text type
-      $(node).find('td input[data-object = repository_cell]').each(function() {
-        // Send data only and only if cell is not empty
-        if ($(this).val().trim()) {
-          formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
-        }
-      });
-      // Custom cells file type
-      $(node).find('td input[data-object = repository_cell_file]').each(function() {
-        // Send data only and only if cell is not empty
-        if ($(this).context.files.length == 1 ) {
-          if ($(this).data('changed')) {
-            formData.append('repository_cells[' + $(this).attr('name') + ']',
-                            $(this).context.files[0]);
-          } else {
-            formData.append('repository_cells[' + $(this).attr('name') + ']', '');
-          }
-        }
-      });
-      // Custom cells list type
-      $(node).find('td[column_id]').each(function(index, el) {
-        var value = $(el).attr('list_item_id');
-        formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
-      });
-    }
-
+  function submitForm(url, formData) {
     var url;
     var type;
     if (saveAction === 'update') {
-      url = rowData.recordUpdateUrl;
       type = 'PUT';
     } else {
       type = 'POST';
-      url = $('table' + TABLE_ID).data('create-record');
     }
     $.ajax({
       url: url,
@@ -767,8 +715,10 @@ var RepositoryDatatable = (function(global) {
         SmartAnnotation.closePopup();
         SCINOTE_REPOSITORY_EDITED_ROWS = [];
         onClickCancel();
+        animateSpinner(null, false);
       },
       error: function(e) {
+        animateSpinner(null, false);
         SmartAnnotation.closePopup();
         var data = e.responseJSON;
         clearAllErrors();
@@ -825,6 +775,92 @@ var RepositoryDatatable = (function(global) {
         }
       }
     });
+  }
+
+  function buildNewFormData() {
+    return new Promise((resolve, reject) => {
+      var node = selectedRecord;
+      var formData = new FormData();
+      var filesToUploadCntr = 0;
+      var filesUploadedCntr = 0;
+      const directUploadUrl = $(TABLE_ID).data('directUploadUrl');
+
+      // First fetch all the data in input fields
+      formData.append('request_url', $(TABLE_ID).data('current-uri'));
+      formData.append('repository_row_id', $(selectedRecord).attr('id'));
+
+      // Direct record attributes
+      // Record name
+      formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
+
+      // Custom cells text type
+      $(node).find('td input[data-object = repository_cell]').each(function() {
+        // Send data only and only if cell is not empty
+        if ($(this).val().trim()) {
+          formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
+        }
+      });
+
+      // Custom cells list type
+      $(node).find('td[column_id]').each(function(index, el) {
+        var value = $(el).attr('list_item_id');
+        formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
+      });
+
+      // Custom cells file type, first run, count files ready for upload
+      $(node).find('td input[data-object = repository_cell_file]').each(function() {
+        // Send data only and only if cell is not empty
+        if ($(this)[0].files.length == 1 ) {
+          filesToUploadCntr += 1;
+        }
+      });
+
+      // No files for upload, so return earlier
+      if (filesToUploadCntr === 0) {
+        resolve(formData);
+        return;
+      }
+
+      // Custom cells file type, second run, upload files
+      $(node).find('td input[data-object = repository_cell_file]').each(function() {
+        // Send data only and only if cell is not empty
+        if ($(this)[0].files.length == 1 ) {
+          let upload = new ActiveStorage.DirectUpload($(this)[0].files[0], directUploadUrl);
+          let colId = $(this).attr('name');
+
+          upload.create(function(error, blob) {
+            if (error) {
+              reject(error);
+            } else {
+              formData.append('repository_cells[' + colId + ']', blob.signed_id);
+              filesUploadedCntr += 1;
+
+              if (filesUploadedCntr === filesToUploadCntr) {
+                resolve(formData);
+              }
+            }
+          });
+        }
+      });
+    });
+  }
+
+  // Save record
+  global.onClickSave = function() {
+    animateSpinner(null, true);
+    if (saveAction === 'update') {
+      let row = TABLE.row(selectedRecord);
+      let rowData = row.data();
+      SCINOTE_REPOSITORY_EDITED_ROWS[0].parseToFormObject(
+        TABLE_ID, selectedRecord
+      ).then(formData => {
+        submitForm(rowData.recordUpdateUrl, formData);
+      });
+    } else if (saveAction === 'create') {
+      buildNewFormData().then(formData => {
+        submitForm($('table' + TABLE_ID).data('create-record'), formData);
+      });
+    }
   };
 
   // Delete record

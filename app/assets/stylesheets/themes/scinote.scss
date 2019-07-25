@@ -1078,6 +1078,10 @@ ul.content-activities {
   }
 }
 
+.drag-n-drop-file-input {
+  display: none !important;
+}
+
 .dnd-error,
 .dnd-total-error {
   color: $brand-danger;

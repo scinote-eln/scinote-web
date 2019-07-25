@@ -7,6 +7,7 @@
     data-create-record="<%= repository_repository_rows_path(repository) %>"
     data-delete-record="<%= repository_delete_records_path(repository) %>"
     data-copy-records="<%= repository_copy_records_path(repository) %>"
+    data-direct-upload-url="<%= rails_direct_uploads_url %>"
     data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
     data-repository-columns-ids="<%= repository.available_columns_ids %>"
     data-save-text="<%= I18n.t('general.save') %>"
