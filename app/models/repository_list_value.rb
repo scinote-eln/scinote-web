@@ -12,9 +12,7 @@ class RepositoryListValue < ApplicationRecord
   validates :repository_cell, presence: true
   validates_inclusion_of :repository_list_item,
                          in: (lambda do |list_value|
-                           list_value.repository_cell
-                                     .repository_column
-                                     .repository_list_items
+                           list_value.repository_cell&.repository_column&.repository_list_items || []
                          end)
 
   def formatted

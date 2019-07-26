@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryTableStateColumnUpdateService do
@@ -13,7 +15,7 @@ describe RepositoryTableStateColumnUpdateService do
     create :repository_column, name: 'My column 1',
                                repository: repository,
                                data_type: :RepositoryTextValue
-                              end
+  end
   let!(:repository_column_2) do
     create :repository_column, name: 'My column 2',
                                repository: repository,
@@ -32,12 +34,12 @@ describe RepositoryTableStateColumnUpdateService do
                             last_modified_by: user_2
   end
   let!(:default_order) do
-    { '0' => ['2', 'asc'] }
+    { '0' => %w(2 asc) }
   end
   let!(:default_column_def) do
     { 'visible' => 'true',
       'searchable' => 'true',
-      'search' => { 'search' =>  '',
+      'search' => { 'search' => '',
                     'smart' => 'true',
                     'regex' => 'false',
                     'caseInsensitive' => 'true' } }
@@ -51,7 +53,7 @@ describe RepositoryTableStateColumnUpdateService do
       RepositoryTableStateService.new(user_1, repository).create_default_state
     end
     let!(:initial_state_2) do
-       RepositoryTableStateService.new(user_2, repository).create_default_state
+      RepositoryTableStateService.new(user_2, repository).create_default_state
     end
 
     it 'should keep default repository states valid' do
@@ -81,11 +83,11 @@ describe RepositoryTableStateColumnUpdateService do
     end
 
     it 'should keep order as it was' do
-      initial_state_1.state['order'] = { '0' => ['3', 'desc'] }
+      initial_state_1.state['order'] = { '0' => %w(3 desc) }
       RepositoryTableStateService.new(user_1, repository).update_state(
         initial_state_1.state
       )
-      initial_state_2.state['order'] = { '0' => ['4', 'asc'] }
+      initial_state_2.state['order'] = { '0' => %w(4 asc) }
       RepositoryTableStateService.new(user_2, repository).update_state(
         initial_state_2.state
       )
@@ -94,9 +96,9 @@ describe RepositoryTableStateColumnUpdateService do
       service.update_states_with_new_column(repository)
 
       state_1 = RepositoryTableStateService.new(user_1, repository).load_state
-      expect(state_1.state['order']).to eq({ '0' => ['3', 'desc'] })
+      expect(state_1.state['order']).to eq('0' => %w(3 desc))
       state_2 = RepositoryTableStateService.new(user_2, repository).load_state
-      expect(state_2.state['order']).to eq({ '0' => ['4', 'asc'] })
+      expect(state_2.state['order']).to eq('0' => %w(4 asc))
     end
 
     it 'should keep search as it was' do
@@ -131,7 +133,7 @@ describe RepositoryTableStateColumnUpdateService do
 
       state_1 = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state_1.state['columns']).to eq(
-        cols_1.merge({'8' => default_column_def, '9' => default_column_def})
+        cols_1.merge('8' => default_column_def, '9' => default_column_def)
       )
       state_2 = RepositoryTableStateService.new(user_2, repository).load_state
       expect(state_2.state['columns']).to eq(
@@ -141,12 +143,12 @@ describe RepositoryTableStateColumnUpdateService do
 
     it 'should keep column order as it was' do
       initial_state_1.state['ColReorder'] =
-        ['5', '3', '2', '0', '1', '4', '6', '7']
+        %w(5 3 2 0 1 4 6 7)
       RepositoryTableStateService.new(user_1, repository).update_state(
         initial_state_1.state
       )
       initial_state_2.state['ColReorder'] =
-        ['0', '6', '1', '4', '5', '7', '2', '3']
+        %w(0 6 1 4 5 7 2 3)
       RepositoryTableStateService.new(user_2, repository).update_state(
         initial_state_2.state
       )
@@ -156,11 +158,11 @@ describe RepositoryTableStateColumnUpdateService do
 
       state_1 = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state_1.state['ColReorder']).to eq(
-        ['5', '3', '2', '0', '1', '4', '6', '7', '8', '9']
+        %w(5 3 2 0 1 4 6 7 8 9)
       )
       state_2 = RepositoryTableStateService.new(user_2, repository).load_state
       expect(state_2.state['ColReorder']).to eq(
-        ['0', '6', '1', '4', '5', '7', '2', '3', '8', '9']
+        %w(0 6 1 4 5 7 2 3 8 9)
       )
     end
   end
@@ -170,7 +172,7 @@ describe RepositoryTableStateColumnUpdateService do
       RepositoryTableStateService.new(user_1, repository).create_default_state
     end
     let!(:initial_state_2) do
-       RepositoryTableStateService.new(user_2, repository).create_default_state
+      RepositoryTableStateService.new(user_2, repository).create_default_state
     end
 
     # For column removal, we often use the index '6' twice - first, to
@@ -204,11 +206,11 @@ describe RepositoryTableStateColumnUpdateService do
     end
 
     it 'should keep order as it was' do
-      initial_state_1.state['order'] = { '0' => ['3', 'desc'] }
+      initial_state_1.state['order'] = { '0' => %w(3 desc) }
       RepositoryTableStateService.new(user_1, repository).update_state(
         initial_state_1.state
       )
-      initial_state_2.state['order'] = { '0' => ['7', 'asc'] }
+      initial_state_2.state['order'] = { '0' => %w(7 asc) }
       RepositoryTableStateService.new(user_2, repository).update_state(
         initial_state_2.state
       )
@@ -217,7 +219,7 @@ describe RepositoryTableStateColumnUpdateService do
       service.update_states_with_removed_column(repository, '6')
 
       state_1 = RepositoryTableStateService.new(user_1, repository).load_state
-      expect(state_1.state['order']).to eq({ '0' => ['3', 'desc'] })
+      expect(state_1.state['order']).to eq('0' => %w(3 desc))
       state_2 = RepositoryTableStateService.new(user_2, repository).load_state
       expect(state_2.state['order']).to eq(default_order)
     end
@@ -270,12 +272,12 @@ describe RepositoryTableStateColumnUpdateService do
 
     it 'should keep column order as it was' do
       initial_state_1.state['ColReorder'] =
-        ['5', '3', '2', '0', '1', '4', '6', '7']
+        %w(5 3 2 0 1 4 6 7)
       RepositoryTableStateService.new(user_1, repository).update_state(
         initial_state_1.state
       )
       initial_state_2.state['ColReorder'] =
-        ['0', '6', '1', '4', '5', '7', '2', '3']
+        %w(0 6 1 4 5 7 2 3)
       RepositoryTableStateService.new(user_2, repository).update_state(
         initial_state_2.state
       )
@@ -285,11 +287,11 @@ describe RepositoryTableStateColumnUpdateService do
 
       state_1 = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state_1.state['ColReorder']).to eq(
-        ['5', '3', '2', '0', '1', '4']
+        %w(5 3 2 0 1 4)
       )
       state_2 = RepositoryTableStateService.new(user_2, repository).load_state
       expect(state_2.state['ColReorder']).to eq(
-        ['0', '1', '4', '5', '2', '3']
+        %w(0 1 4 5 2 3)
       )
     end
   end
@@ -308,12 +310,12 @@ describe RepositoryTableStateColumnUpdateService do
     let!(:initial_state) do
       state = RepositoryTableStateService.new(user_1, repository)
                                          .create_default_state
-      state.state['order'] = {'0' => ['8', 'desc']}
+      state.state['order'] = { '0' => %w(8 desc) }
       (0..9).each do |idx|
         state.state['columns'][idx.to_s]['search']['search'] = "search_#{idx}"
       end
       state.state['ColReorder'] =
-        ['0', '1', '2', '9', '8', '4', '7', '3', '5', '6']
+        %w(0 1 2 9 8 4 7 3 5 6)
       RepositoryTableStateService.new(user_1, repository).update_state(
         state.state
       )
@@ -328,7 +330,7 @@ describe RepositoryTableStateColumnUpdateService do
       state = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state).to be_valid_repository_table_state(5)
       expect(state.state['ColReorder']).to eq(
-        ['0', '1', '2', '9', '8', '4', '7', '3', '5', '6', '10']
+        %w(0 1 2 9 8 4 7 3 5 6 10)
       )
 
       service.update_states_with_removed_column(repository, '7')
@@ -336,25 +338,25 @@ describe RepositoryTableStateColumnUpdateService do
       state = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state).to be_valid_repository_table_state(4)
       expect(state.state['ColReorder']).to eq(
-        ['0', '1', '2', '8', '7', '4', '3', '5', '6', '9']
+        %w(0 1 2 8 7 4 3 5 6 9)
       )
-      expect(state.state['order']).to eq ({'0' => ['7', 'desc']})
+      expect(state.state['order']).to eq ({ '0' => %w(7 desc) })
 
       service.update_states_with_removed_column(repository, '7')
 
       state = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state).to be_valid_repository_table_state(3)
       expect(state.state['ColReorder']).to eq(
-        ['0', '1', '2', '7', '4', '3', '5', '6', '8']
+        %w(0 1 2 7 4 3 5 6 8)
       )
-      expect(state.state['order']).to eq ({'0' => ['2', 'asc']})
+      expect(state.state['order']).to eq ({ '0' => %w(2 asc) })
 
       service.update_states_with_removed_column(repository, '7')
 
       state = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state).to be_valid_repository_table_state(2)
       expect(state.state['ColReorder']).to eq(
-        ['0', '1', '2', '4', '3', '5', '6', '7']
+        %w(0 1 2 4 3 5 6 7)
       )
 
       service.update_states_with_new_column(repository)
@@ -363,7 +365,7 @@ describe RepositoryTableStateColumnUpdateService do
       state = RepositoryTableStateService.new(user_1, repository).load_state
       expect(state).to be_valid_repository_table_state(4)
       expect(state.state['ColReorder']).to eq(
-        ['0', '1', '2', '4', '3', '5', '6', '7', '8', '9']
+        %w(0 1 2 4 3 5 6 7 8 9)
       )
     end
   end

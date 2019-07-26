@@ -65,6 +65,7 @@ describe TemplatesService do
                  demo_task.protocol.steps.size.positive?
             next
           end
+
           demo_task.protocol.steps.each do |demo_step|
             tmpl_step = tmpl_task.protocol.steps.find_by_name(demo_step.name)
             expect(demo_step.name).to eq(tmpl_step.name)

@@ -92,7 +92,7 @@ class Protocol < ApplicationRecord
   belongs_to :my_module,
              inverse_of: :protocols,
              optional: true
-  belongs_to :team, inverse_of: :protocols, optional: true
+  belongs_to :team, inverse_of: :protocols
   belongs_to :parent,
              foreign_key: 'parent_id',
              class_name: 'Protocol',

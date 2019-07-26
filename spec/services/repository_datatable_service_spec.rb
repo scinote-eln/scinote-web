@@ -65,7 +65,7 @@ describe RepositoryDatatableService do
         contitions = subject.send(:build_conditions, params)
         expect(contitions[:search_value]).to eq 'row'
         expect(contitions[:order_by_column]).to eq(
-          { column: 3, dir: 'asc' }
+          column: 3, dir: 'asc'
         )
       end
     end

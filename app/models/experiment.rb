@@ -3,15 +3,13 @@ class Experiment < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
-  belongs_to :project, inverse_of: :experiments, touch: true, optional: true
+  belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
-             class_name: 'User',
-             optional: true
+             class_name: 'User'
   belongs_to :last_modified_by,
              foreign_key: :last_modified_by_id,
-             class_name: 'User',
-             optional: true
+             class_name: 'User'
   belongs_to :archived_by,
              foreign_key: :archived_by_id, class_name: 'User', optional: true
   belongs_to :restored_by,
@@ -223,6 +221,12 @@ class Experiment < ApplicationRecord
 
   def workflowimg_exists?
     workflowimg.service.exist?(workflowimg.blob.key)
+  end
+
+  def workflowimg_file_name
+    return '' unless workflowimg.attached?
+
+    workflowimg.blob&.filename&.sanitized
   end
 
   # Get projects where user is either owner or user in the same team

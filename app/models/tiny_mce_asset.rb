@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TinyMceAsset < ApplicationRecord
+  include ActiveStorage::Downloading
   extend ProtocolsExporter
   attr_accessor :reference
   before_create :set_reference, optional: true

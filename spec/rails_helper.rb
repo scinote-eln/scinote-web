@@ -103,6 +103,9 @@ RSpec.configure do |config|
 
   # includes FactoryBot in rspec
   config.include FactoryBot::Syntax::Methods
+  FactoryBot::SyntaxRunner.class_eval do
+    include ActionDispatch::TestProcess
+  end
   # Devise
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ApiHelper, type: :controller

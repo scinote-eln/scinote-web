@@ -3,7 +3,7 @@ class MyModuleGroup < ApplicationRecord
 
   validates :experiment, presence: true
 
-  belongs_to :experiment, inverse_of: :my_module_groups, optional: true
+  belongs_to :experiment, inverse_of: :my_module_groups
   belongs_to :created_by,
              foreign_key: 'created_by_id',
              class_name: 'User',

@@ -53,7 +53,7 @@ describe TeamImporter do
         it { expect(@exp.restored_by_id).to be_nil }
         it { expect(@exp.restored_on).to be_nil }
 
-        it { expect(@exp.workflowimg.exists?).to eq(true) }
+        it { expect(@exp.workflowimg.attached?).to eq(true) }
       end
 
       describe 'Module groups' do
@@ -155,9 +155,7 @@ describe TeamImporter do
             )
 
             # Check for lonely tasks
-            if json_module['my_module_group_id'].nil?
-              expect(db_module.my_module_group_id).to be_nil
-            end
+            expect(db_module.my_module_group_id).to be_nil if json_module['my_module_group_id'].nil?
 
             expect(db_module.nr_of_assigned_samples).to be_zero
 
@@ -281,13 +279,12 @@ describe TeamImporter do
               )
 
               json_step['assets'].each do |json_asset|
-                db_asset = db_step.assets.find_by(
-                  file_file_name: json_asset['file_file_name']
-                )
+                blob_id = ActiveRecord::Base.connection.execute("SELECT active_storage_blobs.id FROM active_storage_blobs WHERE active_storage_blobs.filename = '#{json_asset['asset_blob']['filename']}' LIMIT 1")
+                db_asset = db_step.assets.joins(:file_attachment).where('active_storage_attachments.blob_id' => blob_id.as_json[0]['id'].to_i).first
 
                 # Basic fields
                 expect(db_asset.created_at).to eq(
-                  json_asset['created_at'].to_time
+                  json_asset['asset']['created_at'].to_time
                 )
                 expect(db_asset.created_by_id).to eq USER_ID
                 expect(db_asset.last_modified_by_id).to eq USER_ID
@@ -295,24 +292,24 @@ describe TeamImporter do
 
                 # Other fields
                 expect(db_asset.estimated_size).to eq(
-                  json_asset['estimated_size']
+                  json_asset['asset']['estimated_size']
                 )
-                expect(db_asset.file_content_type).to eq(
-                  json_asset['file_content_type']
+                expect(db_asset.blob.content_type).to eq(
+                  json_asset['asset_blob']['content_type']
                 )
-                expect(db_asset.file_file_size).to eq(
-                  json_asset['file_file_size']
+                expect(db_asset.blob.byte_size).to eq(
+                  json_asset['asset_blob']['byte_size']
                 )
-                expect(db_asset.file_updated_at).to be_within(10.seconds)
+                expect(db_asset.blob.created_at).to be_within(10.seconds)
                   .of(Time.now)
                 expect(db_asset.lock).to eq(
-                  json_asset['lock']
+                  json_asset['asset']['lock']
                 )
                 expect(db_asset.lock_ttl).to eq(
-                  json_asset['lock_ttl']
+                  json_asset['asset']['lock_ttl']
                 )
                 expect(db_asset.version).to eq(
-                  json_asset['version']
+                  json_asset['asset']['version']
                 )
               end
 
@@ -385,9 +382,7 @@ describe TeamImporter do
             end
             #
             # User assigns to the the module
-            unless my_module['user_my_modules'].empty?
-              expect(db_module.user_my_modules.first.user_id).to eq USER_ID
-            end
+            expect(db_module.user_my_modules.first.user_id).to eq USER_ID unless my_module['user_my_modules'].empty?
           end
         end
       end
