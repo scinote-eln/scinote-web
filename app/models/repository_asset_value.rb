@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryAssetValue < ApplicationRecord
   belongs_to :created_by,
              foreign_key: :created_by_id,
@@ -28,8 +30,7 @@ class RepositoryAssetValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    file.original_filename = new_data[:file_name]
-    asset.file.attach(io: new_data[:file_data], filename: new_data[:file_name])
+    asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data].split(',')[1])), filename: new_data[:file_name])
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!
@@ -38,15 +39,15 @@ class RepositoryAssetValue < ApplicationRecord
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     team = value.repository_cell.repository_column.repository.team
-    file = Paperclip.io_adapters.for(payload[:file_data])
-    file.original_filename = payload[:file_name]
     value.asset = Asset.create!(
-      file: file,
       created_by: value.created_by,
       last_modified_by: value.created_by,
       team: team
     )
-    value.asset.post_process_file(team)
+    value.asset.file.attach(
+      io: StringIO.new(Base64.decode64(payload[:file_data].split(',')[1])),
+      filename: payload[:file_name]
+    )
     value
   end
 end
