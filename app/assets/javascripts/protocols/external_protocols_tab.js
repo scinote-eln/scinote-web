@@ -154,8 +154,8 @@ function showFormErrors(modal, errors) {
     var msg;
     msg = key.charAt(0).toUpperCase() + key.slice(1) + ': ' + errors.protocol[key].join(', ');
     if ((input.length > 0) && (errors.protocol[key].length > 0)) {
-      input.parent().next('span.help-block').html(msg);
-      input.parent().parent().addClass('has-error');
+      input.closest('.form-group').children('span.help-block').html(msg);
+      input.closest('.form-group').addClass('has-error');
     } else if (errors.protocol[key].length > 0) {
       modal.find('.general-error > span').append(msg + '<br/>');
     }
