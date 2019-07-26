@@ -41,7 +41,8 @@ class Repository < ApplicationRecord
     repository = nil,
     options = {}
   )
-    repositories = repository || Repository.where(team: user.teams)
+    repositories = repository ||
+                   Repository.accessible_by_teams(user.teams.pluck(:id))
 
     includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
     searchable_attributes = ['repository_rows.name', 'users.full_name'] +
