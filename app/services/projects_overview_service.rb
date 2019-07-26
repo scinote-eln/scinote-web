@@ -84,7 +84,9 @@ class ProjectsOverviewService
     ).joins(
       "LEFT OUTER JOIN (#{due_modules.to_sql}) due_modules "\
       "ON due_modules.experiment_id = experiments.id"
-    ).left_outer_joins(:user_projects, :project_comments)
+    ).joins(
+      'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
+    ).left_outer_joins(:project_comments)
 
     # Only admins see all projects of the team
     unless @user.is_admin_of_team?(@team)

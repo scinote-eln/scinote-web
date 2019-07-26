@@ -71,7 +71,8 @@ describe RepositoryZipExport, type: :background_job do
       ZipExport.skip_callback(:create, :after, :self_destruct)
       RepositoryZipExport.generate_zip(params, repository, user)
       csv_zip_file = ZipExport.first.zip_file
-      parsed_csv_content = Zip::File.open(csv_zip_file.path) do |zip_file|
+      file_path = ActiveStorage::Blob.service.public_send(:path_for, csv_zip_file.key)
+      parsed_csv_content = Zip::File.open(file_path) do |zip_file|
         csv_file = zip_file.glob('*.csv').first
         csv_content = csv_file.get_input_stream.read
         CSV.parse(csv_content, headers: true)
