@@ -451,7 +451,7 @@ class Asset < ApplicationRecord
   def generate_temp_file
     tempfile = Tempfile.new
     tempfile.binmode
-    tempfile << file.download
+    file.blob.download { |chunk| tempfile.write(chunk) }
     tempfile.rewind
     tempfile
   end

@@ -194,7 +194,7 @@ class TinyMceAsset < ApplicationRecord
   def generate_temp_file
     tempfile = Tempfile.new
     tempfile.binmode
-    tempfile << image.download
+    image.blob.download { |chunk| tempfile.write(chunk) }
     tempfile.rewind
     tempfile
   end
