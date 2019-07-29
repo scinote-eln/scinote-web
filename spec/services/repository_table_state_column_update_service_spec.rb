@@ -340,7 +340,7 @@ describe RepositoryTableStateColumnUpdateService do
       expect(state.state['ColReorder']).to eq(
         %w(0 1 2 8 7 4 3 5 6 9)
       )
-      expect(state.state['order']).to eq ({ '0' => %w(7 desc) })
+      expect(state.state['order']).to eq('0' => %w(7 desc))
 
       service.update_states_with_removed_column(repository, '7')
 
@@ -349,7 +349,7 @@ describe RepositoryTableStateColumnUpdateService do
       expect(state.state['ColReorder']).to eq(
         %w(0 1 2 7 4 3 5 6 8)
       )
-      expect(state.state['order']).to eq ({ '0' => %w(2 asc) })
+      expect(state.state['order']).to eq('0' => %w(2 asc))
 
       service.update_states_with_removed_column(repository, '7')
 

@@ -279,8 +279,13 @@ describe TeamImporter do
               )
 
               json_step['assets'].each do |json_asset|
-                blob_id = ActiveRecord::Base.connection.execute("SELECT active_storage_blobs.id FROM active_storage_blobs WHERE active_storage_blobs.filename = '#{json_asset['asset_blob']['filename']}' LIMIT 1")
-                db_asset = db_step.assets.joins(:file_attachment).where('active_storage_attachments.blob_id' => blob_id.as_json[0]['id'].to_i).first
+                blob_id = ActiveRecord::Base.connection.execute(\
+                  "SELECT active_storage_blobs.id "\
+                  "FROM active_storage_blobs "\
+                  "WHERE active_storage_blobs.filename = '#{json_asset['asset_blob']['filename']}' LIMIT 1"
+                )
+                db_asset = db_step.assets.joins(:file_attachment)
+                                  .where('active_storage_attachments.blob_id' => blob_id.as_json[0]['id'].to_i).first
 
                 # Basic fields
                 expect(db_asset.created_at).to eq(
