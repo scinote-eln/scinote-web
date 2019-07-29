@@ -983,8 +983,10 @@ en:
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" inventory was successfully copied from \"%{old}\"!"
-      visibility: "Visibility"
-      advanced: "Advanced"
+      columns: "Columns"
+      edit_inventory: "Edit Inventory"
+      share_inventory: "Share"
+      title_label: "Inventory:"
       options_dropdown:
         header: "Edit inventory"
         manage_columns: 'Manage columns'
