@@ -11,16 +11,34 @@
 
 <div class="content-pane">
   <div id="repository-toolbar">
+    <div class="repository-title">
+      <span class="repository-label"><%= t('repositories.index.title_label') %> </span>
+      <span class="repository-name" title="<%= @repository.name %>"><%= @repository.name %></span>
+      <span class="repository-share-icon">
+        <% if @repository.shared_with?(current_team) %>
+          <% if @repository.team_repositories.first[:permission_level] == 'write' %>
+            <%= draw_custom_icon('shared-edit') %>
+          <% else %>
+            <%= draw_custom_icon('shared-read') %>
+          <% end %>
+        <% end %>
+      </span>
+    </div>
 
-    <% if can_create_repository_rows?(@repository) %>
-      <button type="button" class="btn btn-primary editAdd help_tooltips"
-              id="addRepositoryRecord" onclick="onClickAddRecord()"
-              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.new') %>"
-              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.new') %>">
-        <span class="fas fa-plus"></span>
-        <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
-      </button>
-    <% end %>
+    <div id="datatables-buttons" class="datatables-buttons" style="display: inline;">
+      <div class="new-repository-button">
+        <% if can_manage_repository?(@repository) %>
+          <a class="btn btn-default"
+             id="share-repository"
+             data-remote="true"
+             href="#">
+            <span class="fas fa-user-plus"></span>
+            <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
+          </a>
+        <% end %>
+      </div>
+      <%= render partial: "columns_reorder_dropdown", formats: :html %>
+    </div>
 
     <div class="repository-cog dropdown">
         <button id="repository-acitons-dropdown"
@@ -30,8 +48,8 @@
                 aria-haspopup="true"
                 aria-expanded="true"
                 <%= "disabled" unless can_perform_repository_actions(@repository) %>>
-          <span class="fas fa-ellipsis-v"></span>
-          <span class="hidden-xs"><%= t('repositories.index.advanced') %></span>
+          <span class="fas fa-pencil-alt"></span>
+          <span class="hidden-xs"><%= t('repositories.index.edit_inventory') %></span>
           <span class="caret"></span>
         </button>
 
@@ -88,23 +106,9 @@
           </ul>
         <% end %>
     </div>
-
-
-    <div id="datatables-buttons" style="display: inline;">
-      <div class="new-repository-button">
-        <% if can_create_repositories?(@repository.team) %>
-          <a class="btn btn-default"
-             id="create-new-repository"
-             data-remote="true"
-             href="<%= create_modal_team_repositories_path(@repository.team) %>">
-            <span class="fas fa-plus"></span>
-            <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
-          </a>
-        <% end %>
-      </div>
-      <%= render partial: "columns_reorder_dropdown", formats: :html %>
-    </div>
   </div>
+
+  <hr/>
 
   <div class="btn-group inline" id="saveCancel" data-toggle="buttons" style="display:none">
     <button type="button" class="btn btn-success" id="saveRecord" onclick="onClickSave()">
@@ -118,7 +122,18 @@
   </div>
 
   <!-- These buttons are appended to table in javascript, after table initialization -->
-  <div class="toolbarButtons" style="display:none">
+  <div class="toolbarButtonsDatatable" style="display:none">
+
+    <% if can_create_repository_rows?(@repository) %>
+      <button type="button" class="btn btn-primary editAdd help_tooltips"
+              id="addRepositoryRecord" onclick="onClickAddRecord()"
+              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.new') %>"
+              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.new') %>">
+        <span class="fas fa-plus"></span>
+        <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
+      </button>
+    <% end %>
+
     <% if can_manage_repository_rows?(@repository) %>
       <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
         <span class="fas fa-pencil-alt"></span>
@@ -126,7 +141,7 @@
       </button>
       <button type="button" class="btn btn-default"
         id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
-        <span class="fas fa-trash-alt"></span>
+        <span class="fas fa-trash"></span>
         <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
           <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
           delete_repository_records_submit" %>

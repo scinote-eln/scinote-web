@@ -29,12 +29,12 @@
 @media (min-width: 1075px) {
   .col-sm-3-custom {
     float: left;
-    width: 25%;
+    width: 50%;
   }
 
   .col-sm-9-custom {
     float: left;
-    width: 75%;
+    width: 50%;
   }
 }
 
@@ -116,4 +116,10 @@
 #samples .dropdown-menu {
   float: none;
   position: relative;
+}
+
+.btn {
+  .fas {
+    margin-right: 5px;
+  }
 }

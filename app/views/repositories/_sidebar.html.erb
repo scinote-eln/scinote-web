@@ -23,6 +23,17 @@
             </span>
           </li>
         <% end %>
+        <% if can_create_repositories?(current_team) %>
+          <li>
+            <span class="tree-link link-wrap no-indent">
+              <a class="sidebar-button" id="create-new-repository" data-remote="true"
+                 href="<%= create_modal_team_repositories_path(@repository.team) %>">
+                <span class="fas fa-plus"></span>
+                <%= t('libraries.index.no_libraries.create_new_button') %>
+              </a>
+            </span>
+          </li>
+        <% end %>
       </ul>
     </div>
   </div>
