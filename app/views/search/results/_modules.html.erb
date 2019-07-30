@@ -8,7 +8,10 @@
     <p>
       <span>
         <%=t "search.index.description" %>
-        <%= highlight mod.description, search_query.strip.split(/\s+/) %>
+        <%= highlight custom_auto_link(mod.tinymce_render(:description),
+                             simple_format: false,
+                             tags: %w(img),
+                             team: current_team), search_query.strip.split(/\s+/) %>
       </span>
     <p>
   <% end %>

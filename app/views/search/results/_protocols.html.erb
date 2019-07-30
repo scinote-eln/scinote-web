@@ -13,7 +13,10 @@
       <% if has_description %>
         <span>
           <%=t "search.index.description" %>
-          <%= highlight protocol.description, search_query.strip.split(/\s+/) %>
+          <%= highlight custom_auto_link(protocol.tinymce_render(:description),
+                               simple_format: false,
+                               tags: %w(img),
+                               team: current_team), search_query.strip.split(/\s+/) %>
         </span>
         <% if has_authors || has_keywords %>
           <br>
