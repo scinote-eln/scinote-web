@@ -2373,6 +2373,7 @@ function addDraggablesToInstance(elements, gridDistX, gridDistY) {
       draggedModule.removeClass("collided");
       elLeft(draggedModule, leftInitial);
       elTop(draggedModule, topInitial);
+      instance.revalidate(draggedModule);
       instance.repaintEverything();
     }
 
