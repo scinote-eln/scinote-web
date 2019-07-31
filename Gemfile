@@ -24,6 +24,7 @@ gem 'yomu'
 gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
 
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
