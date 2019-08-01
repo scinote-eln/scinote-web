@@ -28,6 +28,11 @@ var FilePreviewModal = (function() {
       openPreviewModal(name, url, downloadUrl);
       return true;
     });
+
+    $('#filePreviewModal').find('.preview-close').click(function() {
+      $('#filePreviewModal').modal('hide');
+      if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
+    });
   }
 
   // Adding rotation icon
@@ -498,11 +503,6 @@ var FilePreviewModal = (function() {
           }, CHECK_READY_DELAY);
         }
         modal.find('.file-name').text(name);
-        modal.find('.preview-close').click(function() {
-          checkReadyCntr = CHECK_READY_TRIES_LIMIT;
-          modal.modal('hide');
-          if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
-        });
         modal.modal();
         modal.find('a[disabled=disabled]').click(function(ev) {
           ev.preventDefault();

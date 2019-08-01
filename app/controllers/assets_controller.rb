@@ -13,8 +13,8 @@ class AssetsController < ApplicationController
   include FileIconsHelper
 
   before_action :load_vars, except: :create_wopi_file
-
-  before_action :check_read_permission
+  # File download permissions are now managed by ActiveStorage controllers
+  before_action :check_read_permission, except: %i(download edit)
   before_action :check_edit_permission, only: :edit
 
   def file_preview
