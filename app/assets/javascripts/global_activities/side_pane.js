@@ -52,7 +52,7 @@ function GlobalActivitiesFilterPrepareArray() {
 
 $(function() {
   var updateRunning = false;
-  var selectors = ['activity', 'user', 'team'];
+  var selectors = ['user', 'team'];
   // Ajax request for object search
   var subjectAjaxQuery = {
     url: '/global_activities/search_subjects',
@@ -87,6 +87,8 @@ $(function() {
   var subjectCustomDisplay = (state) => {
     return (state.label ? state.label + ': ' : '') + state.text;
   };
+
+  dropdownSelector.init('.activity-selector #activity')
 
   var ajaxQuery = {};
   $.each(selectors, (index, e) => {
