@@ -119,7 +119,7 @@ class Asset < ApplicationRecord
                   assets_in_steps, assets_in_results, assets_in_inventories)
 
     new_query = Asset.left_outer_joins(:asset_text_datum)
-                     .left_outer_joins(file_attachment: :blob)
+                     .joins(file_attachment: :blob)
                      .from(assets, 'assets')
 
     a_query = s_query = ''
@@ -266,6 +266,10 @@ class Asset < ApplicationRecord
     end
   end
 
+  def marvinjs?
+    file.metadata[:asset_type] == 'marvinjs'
+  end
+
   def post_process_file(team = nil)
     # Update self.empty
     update(file_present: true)
@@ -277,6 +281,8 @@ class Asset < ApplicationRecord
       # estimated size calculation
       Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
            .extract_asset_text_delayed(id, in_template)
+    elsif marvinjs?
+      extract_asset_text
     else
       # Update asset's estimated size immediately
       update_estimated_size(team)
@@ -293,31 +299,36 @@ class Asset < ApplicationRecord
   def extract_asset_text(in_template = false)
     self.in_template = in_template
 
-    download_blob_to_tempfile do |tmp_file|
+    if marvinjs?
+      mjs_doc = Nokogiri::XML(file.metadata[:description])
+      mjs_doc.remove_namespaces!
+      text_data = mjs_doc.search("//Field[@name='text']").collect(&:text).join(' ')
+    else
       # Start Tika as a server
       Yomu.server(:text) if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
-
-      text_data = Yomu.new(tmp_file.path).text
-
-      if asset_text_datum.present?
-        # Update existing text datum if it exists
-        asset_text_datum.update(data: text_data)
-      else
-        # Create new text datum
-        AssetTextDatum.create(data: text_data, asset: self)
+      download_blob_to_tempfile do |tmp_file|
+        text_data = Yomu.new(tmp_file.path).text
       end
-
-      Rails.logger.info "Asset #{id}: Asset file successfully extracted"
-
-      # Finally, update asset's estimated size to include
-      # the data vector
-      update_estimated_size(team)
-    rescue StandardError => e
-      Rails.logger.fatal(
-        "Asset #{id}: Error extracting contents from asset "\
-        "file #{file.blob.key}: #{e.message}"
-      )
     end
+
+    if asset_text_datum.present?
+      # Update existing text datum if it exists
+      asset_text_datum.update(data: text_data)
+    else
+      # Create new text datum
+      AssetTextDatum.create(data: text_data, asset: self)
+    end
+
+    Rails.logger.info "Asset #{id}: Asset file successfully extracted"
+
+    # Finally, update asset's estimated size to include
+    # the data vector
+    update_estimated_size(team)
+  rescue StandardError => e
+    Rails.logger.fatal(
+      "Asset #{id}: Error extracting contents from asset "\
+      "file #{file.blob.key}: #{e.message}"
+    )
   end
 
   # If team is provided, its space_taken
