@@ -171,10 +171,7 @@ class TinyMceAsset < ApplicationRecord
 
     tiny_img_clone.transaction do
       tiny_img_clone.save!
-      tiny_img_clone.image.attach(io: image.generate_temp_file,
-                                  filename: file_name,
-                                  content_type: content_type,
-                                  metadta: image.metadata)
+      duplicate_file(tiny_img_clone)
     end
 
     return false unless tiny_img_clone.persisted?
