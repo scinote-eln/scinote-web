@@ -2,18 +2,44 @@
 
 .dropdown-selector-container {
   display: inline-block;
+  float: left;
   position: relative;
   width: 100%;
 
   .input-field {
+    align-items: center;
     background: $color-white;
     border: 1px solid $color-alto;
     border-radius: 4px;
-    min-height: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 36px;
+    padding: 3px;
     position: relative;
     transition: .2s;
     width: 100%;
     z-index: 12;
+
+    .ds-tags {
+      align-items: center;
+      background: $color-concrete;
+      border-radius: 12px;
+      box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+      display: flex;
+      line-height: 14px;
+      margin: 2px 3px;
+      padding: 5px 7px;
+
+      .tag-label {
+        margin-right: 5px
+      }
+
+      .fas {
+        cursor: pointer;
+        font-size: 14px;
+        opacity: 0.7;
+      }
+    }
   }
 
   .dropdown-container {
