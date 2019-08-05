@@ -25,6 +25,10 @@ gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 
+# TODO: remove this when omniauth gem resolves CVE issues
+# Prevents CVE-2015-9284 (https://github.com/omniauth/omniauth/wiki/FAQ#cve-2015-9284-warnings)
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
+
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
 gem 'json-jwt'
