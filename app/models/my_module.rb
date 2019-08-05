@@ -143,8 +143,7 @@ class MyModule < ApplicationRecord
     !experiment.archived? && experiment.navigable?
   end
 
-  # Removes assigned samples from module and connections with other
-  # modules.
+  # Removes connections with other modules
   def archive(current_user)
     self.x = 0
     self.y = 0

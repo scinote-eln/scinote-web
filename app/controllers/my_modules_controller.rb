@@ -27,16 +27,14 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions,
                 only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, only:
-    %i(show activities activities_tab protocols results samples samples_index
+    %i(show activities activities_tab protocols results
        archive repositories_dropdown)
   before_action :check_complete_module_permission, only: :complete_my_module
   before_action :check_assign_repository_records_permissions,
                 only: %i(unassign_repository_records_modal
                          assign_repository_records_modal
                          assign_repository_records
-                         unassign_repository_records
-                         assign_samples
-                         unassign_samples)
+                         unassign_repository_records)
   before_action :set_inline_name_editing, only: %i(protocols results activities repository archive)
 
   layout 'fluid'.freeze
