@@ -177,6 +177,7 @@ Rails.application.routes.draw do
             defaults: { format: 'json' }
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
+        get :share_modal
 
         resources :team_repositories, only: %i(create destroy)
       end

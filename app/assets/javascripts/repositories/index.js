@@ -101,6 +101,27 @@
     });
   }
 
+  function initShareModal() {
+    var form = $('#share-repo-modal').find('form');
+    var sharedCBs = form.find("input[name='shared[]']");
+
+    sharedCBs.change(function() {
+      var editableCB = $('#editable_' + this.value);
+
+      if (this.checked) {
+        editableCB.removeClass('hidden');
+        editableCB.attr('disabled', false);
+      } else {
+        editableCB.addClass('hidden');
+        editableCB.attr('disabled', true);
+      }
+    });
+  }
+
+  $('#shareRepoBtn').on('ajax:success', function() {
+    initShareModal();
+  });
+
   $('#create-new-repository').initializeModal('#create-repo-modal');
   loadRepositoryTab();
   initImportRecordsModal();

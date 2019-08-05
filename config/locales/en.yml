@@ -1019,6 +1019,9 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
+      modal_share:
+        title: 'Share Inventory'
+        submit: 'Share'
     table:
       id: 'ID'
       assigned: "Assigned"

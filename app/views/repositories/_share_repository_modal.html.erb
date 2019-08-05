@@ -1,0 +1,35 @@
+<div class="modal" id="share-repo-modal" tabindex="-1" role="dialog" >
+  <%= form_for :invenotry_share, remote: :true do |f| %>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="create-repo-modal-label">
+            <%= t("repositories.index.modal_share.title") %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <table style="width: 80%; margin: 0 auto">
+              <tr>
+                <th>Share with Team</th><th>Can Edit</th>
+              </tr>
+              <% current_user.teams.each do |t| %>
+                <tr>
+                  <td>
+                    <%= check_box_tag 'shared[]', t.id, @repository.shared_with?(t), {id: "shared_#{t.id}"} %>
+                    <%= t.name %>
+                  </td>
+                  <td><%= check_box_tag 'editable[]', t.id, nil, {id: "editable_#{t.id}", class: ('hidden' unless @repository.shared_with?(t))}.compact %></td>
+                </tr>
+              <% end %>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit t("repositories.index.modal_share.submit"), class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
