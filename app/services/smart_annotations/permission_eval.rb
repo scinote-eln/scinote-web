@@ -27,7 +27,7 @@ module SmartAnnotations
       def validate_rep_item_permissions(user, team, object)
         if object.repository
           return (object.repository.team.id == team.id ||
-                 object.repository.team_repositories.where(team_id: team.id).take[:team_id] == team.id) &&
+                 object.repository.team_repositories.where(team_id: team.id).first.try(:team_id) == team.id) &&
                  can_read_repository?(user, object.repository)
         end
 
@@ -37,7 +37,7 @@ module SmartAnnotations
         return false unless repository
 
         (repository.team.id == team.id ||
-          repository.team_repositories.where(team_id: team.id).take[:team_id] == team.id) &&
+          repository.team_repositories.where(team_id: team.id).first.try(:team_id) == team.id) &&
           can_read_repository?(user, repository)
       end
     end
