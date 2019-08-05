@@ -159,8 +159,6 @@ describe TeamImporter do
               expect(db_module.my_module_group_id).to be_nil
             end
 
-            expect(db_module.nr_of_assigned_samples).to be_zero
-
             # Check if callbacks for protocols are turned off
             expect(db_module.protocols.count).to eq 1
 
