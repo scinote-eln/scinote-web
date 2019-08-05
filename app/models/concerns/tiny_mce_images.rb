@@ -73,10 +73,7 @@ module TinyMceImages
 
         tiny_img_clone.transaction do
           tiny_img_clone.save!
-          tiny_img_clone.image.attach(io: tiny_img.generate_temp_file,
-                                      filename: tiny_img.file_name,
-                                      content_type: tiny_img.content_type,
-                                      metadata: tiny_img.image.metadata)
+          tiny_img.duplicate_file(tiny_img_clone)
         end
 
         target.tiny_mce_assets << tiny_img_clone
@@ -99,8 +96,6 @@ module TinyMceImages
 
           next if asset && asset.object == self && asset.team_id != asset_team_id
 
-          new_image = asset.generate_temp_file
-          new_image_filename = new_image.file_name
         else
           # We need implement size and type checks here
           new_image = URI.parse(image['src']).open
@@ -114,7 +109,11 @@ module TinyMceImages
 
         new_asset.transaction do
           new_asset.save!
-          new_asset.image.attach(io: new_image, filename: new_image_filename)
+          if image['data-mce-token']
+            asset.duplicate_file(new_asset)
+          else
+            new_asset.image.attach(io: new_image, filename: new_image_filename)
+          end
         end
 
         image['src'] = ''

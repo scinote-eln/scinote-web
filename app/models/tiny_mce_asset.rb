@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TinyMceAsset < ApplicationRecord
+  include ActiveStorage::Downloading
   extend ProtocolsExporter
   attr_accessor :reference
   before_create :set_reference, optional: true
@@ -191,12 +192,15 @@ class TinyMceAsset < ApplicationRecord
     obj.reassign_tiny_mce_image_references(cloned_img_ids)
   end
 
-  def generate_temp_file
-    tempfile = Tempfile.new
-    tempfile.binmode
-    image.blob.download { |chunk| tempfile.write(chunk) }
-    tempfile.rewind
-    tempfile
+  def blob
+    image&.blob
+  end
+
+  def duplicate_file(to_asset)
+    download_blob_to_tempfile do |tmp_file|
+      to_asset.image.attach(io: tmp_file.open, filename: file_name)
+    end
+    TinyMceAsset.update_estimated_size(to_asset.id)
   end
 
   private
