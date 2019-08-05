@@ -2,14 +2,17 @@ class AddForeignKeysToTables < ActiveRecord::Migration[4.2]
   def change
     %i(
       assets checklists checklist_items my_module_groups
-      my_module_tags my_modules teams projects tables tags
+      my_module_tags my_modules teams projects
+      sample_groups sample_types tables tags
     ).each do |table_name|
       add_foreign_key table_name, :users, column: :created_by_id
     end
 
     %i(
-      assets checklists checklist_items comments custom_fields
-      my_modules teams projects reports results steps tables tags
+      assets checklists checklist_items comments
+      custom_fields my_modules teams projects
+      reports results sample_groups sample_types samples
+      steps tables tags
     ).each do |table_name|
       add_foreign_key table_name, :users, column: :last_modified_by_id
     end
