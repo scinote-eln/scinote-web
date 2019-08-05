@@ -302,6 +302,7 @@ class Protocol < ApplicationRecord
       step.assets.each do |asset|
         asset2 = asset.dup
         asset2.save!
+        asset.duplicate_file(asset2)
         step2.assets << asset2
         assets_to_clone << [asset.id, asset2.id]
       end
