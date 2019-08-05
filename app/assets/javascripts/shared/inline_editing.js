@@ -85,6 +85,7 @@ function initInlineEditing(title) {
       if (inputString.disabled) {
         saveAllEditFields();
         editBlock.dataset.editMode = 1;
+        $editBlock.closest('.inline_scroll_block').scrollTop(editBlock.offsetTop);
         inputString.disabled = false;
         $inputString.removeClass('hidden');
         $editBlock.find('.view-mode').addClass('hidden');

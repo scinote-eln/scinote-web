@@ -119,9 +119,18 @@ class RepositoryDatatableService
       end
     elsif sortable_columns[column_id - 1] == 'repository_cell.value'
       id = @mappings.key(column_id.to_s)
-      type = RepositoryColumn.find_by_id(id)
-      return records unless type
-      return select_type(type.data_type, records, id, dir)
+      sorting_column = RepositoryColumn.find_by_id(id)
+      return records unless sorting_column
+
+      sorting_data_type = sorting_column.data_type.constantize
+
+      cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
+                            .where('repository_cells.repository_column_id': sorting_column.id)
+                            .select("repository_cells.repository_row_id,
+                                    #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
+
+      records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
+             .order("values.value #{dir}")
     elsif sortable_columns[column_id - 1] == 'users.full_name'
       # We don't need join user table, because it already joined in fetch_row method
       return records.order("users.full_name #{dir}")
@@ -149,19 +158,6 @@ class RepositoryDatatableService
        ids.join(',') + ',']
     )
     records.order(order_by_index)
-  end
-
-  def select_type(type, records, id, dir)
-    case type
-    when 'RepositoryTextValue'
-      filter_by_text_value(records, id, dir)
-    when 'RepositoryListValue'
-      filter_by_list_value(records, id, dir)
-    when 'RepositoryAssetValue'
-      filter_by_asset_value(records, id, dir)
-    else
-      records
-    end
   end
 
   def sort_null_direction(val)

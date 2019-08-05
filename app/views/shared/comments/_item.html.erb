@@ -1,6 +1,8 @@
- <% user_comment = comment.user == current_user %>
+<% report = false unless defined?(report) %>
+<% readonly = false unless defined?(readonly) %>
+<% edit_mode = (comment.user == current_user && !readonly) %>
   <div 
-    class="comment-container <%= user_comment ? 'comment-editable-field' : '' %>"
+    class="comment-container <%= edit_mode ? 'comment-editable-field' : '' %> <%= report ? 'report' : '' %>" 
     data-field-to-update="message"
     data-params-group="comment"
     data-path-to-update="<%= comment_action_url(comment) %>"
@@ -10,15 +12,19 @@
     error="false"
   >
     <div class="avatar-placehodler">
-      <span class='global-avatar-container'> 
-        <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+      <span class='global-avatar-container'>
+        <% if report %>
+          <%= image_tag comment.user.avatar_base64(:icon_small), class: 'avatar' %>
+        <% else %>
+          <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+        <% end %>
       </span>
     </div>
     <div class="content-placeholder">
       <div class="comment-name"><%= comment.user.full_name %></div>
       <div class="comment-right">
         <div class="comment-datetime"><%= l(comment.created_at, format: :full) %></div>
-        <% if user_comment %>
+        <% if edit_mode %>
           <div class="comment-actions">
             <div class="edit-buttons">
               <span class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
@@ -39,7 +45,7 @@
       </div>
       <div class="comment-message">
            <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team, simple_format: true).html_safe %></div>
-            <% if user_comment %>
+            <% if edit_mode %>
               <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
             <% end %>
       </div>

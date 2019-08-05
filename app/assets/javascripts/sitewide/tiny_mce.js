@@ -1,4 +1,8 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n globalConstants */
+
+/* global _ hljs tinyMCE SmartAnnotation MarvinJsEditor globalConstants */
+
+/* global _  I18n */
+
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -16,11 +20,63 @@ var TinyMCE = (function() {
     });
   }
 
+
+  function initImageToolBar(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    var editorContainer = $(editor.getContainer());
+    var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
+    var editorToolbar = editorForm.find('.mce-top-part');
+    var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
+    $('<div class="tinymce-active-object-handler" style="display:none">'
+                + '<a class="file-download-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-donwload"></i></a>'
+                + '<span class="file-edit-link tool-button" href="#" data-turbolinks="false"><i class="mce-ico mce-i-pencil"></i></span>'
+              + '</div>').appendTo(editorToolbar.find('.mce-stack-layout'));
+    editorIframe.contents().click(function() {
+      var marvinJsEdit;
+      setTimeout(() => {
+        var image = editorIframe.contents().find('img[data-mce-selected="1"]');
+        var editLink;
+        var imageEditorLink;
+        if (image.length > 0) {
+          image.on('load', function() {
+            editor.fire('Dirty');
+          });
+          editorContainer.find('.tinymce-active-object-handler').css('display', 'block');
+          editorContainer.find('.tinymce-active-object-handler .file-download-link')
+            .attr('href', '/tiny_mce_assets/' + image.data('mceToken') + '/download');
+
+          // Edit link
+          editLink = editorContainer.find('.tinymce-active-object-handler .file-edit-link');
+          if (image[0].dataset.sourceType) {
+            editLink.css('display', 'inline-block');
+            marvinJsEdit = (image[0].dataset.sourceType === 'marvinjs' && typeof (MarvinJsEditor) !== 'undefined');
+            if (!marvinJsEdit) editLink.css('display', 'none');
+            editLink.on('click', function() {
+              if (marvinJsEdit) {
+                MarvinJsEditor.open({
+                  mode: 'edit-tinymce',
+                  marvinUrl: '/tiny_mce_assets/' + image[0].dataset.mceToken + '/marvinjs',
+                  image: image
+                });
+              }
+            });
+          } else {
+            editLink.css('display', 'none');
+            editLink.off('click');
+          }
+        } else {
+          editorContainer.find('.tinymce-active-object-handler').css('display', 'none');
+        }
+      }, 100);
+    });
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
+      var plugins;
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
@@ -28,15 +84,16 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-
-
+        plugins = 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
+        if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
           menubar: 'file edit view insert format',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
-          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor placeholder colorpicker textpattern',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          plugins: plugins,
           autoresize_bottom_margin: 20,
+
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -109,9 +166,14 @@ var TinyMCE = (function() {
           ],
           init_instance_callback: function(editor) {
             var editorForm = $(editor.getContainer()).closest('form');
+            var editorContainer = $(editor.getContainer());
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
+
+            var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
+
             var editorToolbaroffset;
+
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
             setTimeout(() => {
@@ -139,6 +201,9 @@ var TinyMCE = (function() {
             }
             editorToolbar.css('top', editorToolbaroffset + 'px');
 
+            // Init image toolbar
+            initImageToolBar(editor);
+
             // Update scroll position after exit
             function updateScrollPosition() {
               if (editorForm.offset().top < $(window).scrollTop()) {
@@ -165,6 +230,7 @@ var TinyMCE = (function() {
               .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
+                editor.plugins.autosave.removeDraft();
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
@@ -250,6 +316,16 @@ var TinyMCE = (function() {
     getContent: function() {
       return tinyMCE.editors[0].getContent();
     },
+    updateImages(editor) {
+      var images;
+      var iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
+      images = $.map($('img', iframe), e => {
+        return e.dataset.mceToken;
+      });
+      $('#' + editor.id).next()[0].value = JSON.stringify(images);
+      return JSON.stringify(images);
+    },
+
     highlight: initHighlightjs
   });
 }());

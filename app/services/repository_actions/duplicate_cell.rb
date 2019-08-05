@@ -10,7 +10,7 @@ module RepositoryActions
     end
 
     def call
-      self.send("duplicate_#{@cell.value_type.underscore}")
+      __send__("duplicate_#{@cell.value_type.split('::').last.underscore}")
     end
 
     private

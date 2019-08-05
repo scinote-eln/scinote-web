@@ -5,8 +5,11 @@
   border: solid 1px;
   border-color: $color-white;
   border-radius: 3px;
+  float: left;
+  margin-bottom: 10px;
   min-height: 100px;
   padding: 3px;
+  width: 100%;
 
   &:hover {
     border-color: $color-gainsboro;
@@ -62,5 +65,51 @@
 
 .mce-toolbar {
   background: $color-white !important;
+}
+
+.mce-stack-layout {
+  .tinymce-active-object-handler {
+    border-top: 1px solid rgb(226, 228, 231);
+    height: 33px;
+    width: 100%;
+
+    .tool-button {
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-block;
+      line-height: 27px;
+      margin: 2px;
+      text-align: center;
+      width: 30px;
+
+      &:hover {
+        border: 1px solid rgb(226, 228, 231);
+      }
+    }
+
+    .mce-i-donwload::before {
+      content: "\F019";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      line-height: 16px;
+      position: absolute;
+    }
+
+    .mce-i-pencil::before {
+      content: "\F303";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      line-height: 16px;
+      position: absolute;
+    }
+
+    .mce-i-image::before {
+      content: "\F03E";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      line-height: 16px;
+      position: absolute;
+    }
+  }
 }
 // scss-lint:enable ImportantRule

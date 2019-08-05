@@ -2,6 +2,7 @@ class Step < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include TinyMceImages
+  include ViewableModel
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -62,6 +63,16 @@ class Step < ApplicationRecord
       new_query
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
+    end
+  end
+
+  def default_view_state
+    { 'assets' => { 'sort' => 'new' } }
+  end
+
+  def validate_view_state(view_state)
+    unless %w(new old atoz ztoa).include?(view_state.state.dig('assets', 'sort'))
+      view_state.errors.add(:state, :wrong_state)
     end
   end
 

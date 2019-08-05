@@ -122,6 +122,7 @@
         SmartAnnotation.preventPropagation('.atwho-user-popover');
         TinyMCE.destroyAll();
         DragNDropSteps.clearFiles();
+        MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
       }, 1000);
 
     })
@@ -374,7 +375,7 @@
   }
 
   function initCallBacks() {
-    applyCreateWopiFileCallback();
+    applyCreateWopiFileCallback()
     applyCheckboxCallBack();
     applyStepCompletedCallBack();
     applyEditCallBack();
@@ -502,10 +503,9 @@
             $('#new-step-main-tab a')
               .on('shown.bs.tab', function() {
                 $('#step_name').focus();
-                TinyMCE.init('#step_description_textarea');
-              }).on('hidden.bs.tab', function() {
                 tinyMCE.editors.step_description_textarea.remove();
-              });
+                TinyMCE.init('#step_description_textarea');
+              })
 
             TinyMCE.init('#step_description_textarea');
           });
@@ -536,7 +536,7 @@
     var nameValid = textValidator(ev, $nameInput, 1,
       <%= Constants::NAME_MAX_LENGTH %>);
     var $descrTextarea = $form.find("#step_description_textarea");
-    var $tinyMCEInput = TinyMCE.getContent();
+    var $tinyMCEInput = tinyMCE.editors.step_description_textarea.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
     var tableNamesValidArray = [];
@@ -577,7 +577,7 @@
 
       animateSpinner(null, true);
       var data = DragNDropSteps.appendFilesToForm(ev);
-      data.append('step[description]', TinyMCE.getContent());
+      data.append('step[description]', $tinyMCEInput);
       $.ajax({
         url: $form.attr('action'),
         method: 'POST',
@@ -601,7 +601,7 @@
           SmartAnnotation.preventPropagation('.atwho-user-popover');
 
           tinyMCE.editors.step_description_textarea.remove();
-
+          MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
           //Rerender tables
           $new_step.find("div.step-result-hot-table").each(function()  {
             $(this).handsontable("render");
@@ -611,6 +611,7 @@
           FilePreviewModal.init();
           $.initTooltips();
           if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
+          if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {
@@ -664,13 +665,20 @@
   }
 
   // Reorder attachments
-  global.reorderAttachments = function reorderAtt(stepId, sortType) {
+  global.reorderAttachments = function reorderAtt(elem, stepId, sortType) {
     var label_value = $("#dd-att-step-" + stepId + "> .dropdown-menu > li > a[data-order=" + sortType + "]").html();
     $("#dd-att-step-" + stepId + "-label").html(label_value);
     $('#att-' + stepId + ' a.file-preview-link').each(function(){
       var elm = $(this)
       elm.parent().css('order', elm.attr('data-order-' + sortType));
-    })
+    });
+
+    $.post(
+      $(elem).closest('.dropdown-menu').data('stateSavePath'),
+      { assets: { order: sortType } },
+      null,
+      'json',
+    );
   }
 
     // On init
