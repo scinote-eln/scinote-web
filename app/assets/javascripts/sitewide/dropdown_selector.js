@@ -1,6 +1,7 @@
 var dropdownSelector = (function() {
   function generateDropdown(selector){
     var selectElement = $(selector)
+    var optionContainer;
     var dropdownContainer = selectElement.after('<div class="dropdown-selector-container"></div>').next()
     $(`
       <div class="input-field"></div>
@@ -11,7 +12,11 @@ var dropdownSelector = (function() {
     ps = new PerfectScrollbar(dropdownContainer.find('.dropdown-container')[0])
     activePSB.push(ps)
 
+    optionContainer = dropdownContainer.find('.dropdown-container')
+
     dropdownContainer.find('.input-field').click(() => {
+      optionContainer.find('.dropdown-group, .dropdown-option').remove()
+      optionContainer.scrollTo(0)
       dropdownContainer.toggleClass("open")
       if (dropdownContainer.hasClass("open")) {
         loadData(selectElement , dropdownContainer)
@@ -20,10 +25,6 @@ var dropdownSelector = (function() {
     })
     $(window).resize(function(){
       updateDropdownDirection(dropdownContainer)
-    })
-
-    dropdownContainer.blur(function() {
-      console.log(1)
     })
 
     $(window).click(() => {
@@ -52,53 +53,55 @@ var dropdownSelector = (function() {
 
   function loadData(selector, container) {
 
-    container.find('.dropdown-container .dropdown-group').remove()
-    container.find('.dropdown-container .dropdown-option').remove()
+    function drawOption(option) {
+      return $(`
+        <div class="dropdown-option checkbox-icon"
+          data-label="${option.innerHTML}"
+          data-value="${option.value}">
+          ${option.innerHTML}
+        </div>"
+      `)
+    }
+
+    function drawGroup(group) {
+      return $(`
+        <div class="dropdown-group">
+          <div class="group-name checkbox-icon">${group.label}</div>
+        </div>
+      `)
+    }
+
+    function clickOption() {
+      $(this).toggleClass('select')
+      saveData(selector, container)
+    }
+    
 
     if (selector.data('select-by-group')){
       var groups = selector.find('optgroup')
       $.each(groups, function(gi, group) {
-        var groupElement = $(`
-          <div class="dropdown-group">
-            <div class="group-name checkbox-icon">`+ group.label + `</div>
-          </div>
-        `)
+        var groupElement = drawGroup(group)
         $.each($(group).find('option'), function(oi, option) {
-          optionElement = $(`
-            <div class="dropdown-option checkbox-icon" data-value="` + option.value + `">
-              ` + option.innerHTML + `
-            </div>"
-          `)
-          optionElement.click(function() {
-            $(this).toggleClass('select')
-            saveData(container)
-          })
+          optionElement = drawOption(option)
+          optionElement.click(clickOption)
           optionElement.appendTo(groupElement)
         })
         groupElement.find('.group-name').click(function() {
             var groupContainer = $(this).parent()
-            groupContainer.toggleClass('select')
-            if (groupContainer.hasClass('select')) {
+            if (groupContainer.toggleClass('select').hasClass('select')) {
               groupContainer.find('.dropdown-option').addClass('select')
             }else{
               groupContainer.find('.dropdown-option').removeClass('select')
             }
-            saveData(container)
+            saveData(selector, container)
           })
         groupElement.appendTo(container.find('.dropdown-container'))
       })
     } else {
       options = selector.find('option')
       $.each(options, function(oi, option) {
-        optionElement = $(`
-          <div class="dropdown-option checkbox-icon" data-value="` + option.value + `">
-            ` + option.innerHTML + `
-          </div>"
-        `)
-        optionElement.click(function() {
-          $(this).toggleClass('select')
-          saveData(container)
-        })
+        optionElement = drawOption(option)
+        optionElement.click(clickOption)
         optionElement.appendTo(container.find('.dropdown-container'))
       })
     }
@@ -106,7 +109,7 @@ var dropdownSelector = (function() {
     PerfectSb().update_all()
 
     $.each(JSON.parse(container.find('.data-field').val()), function(i, selectedOption) {
-      container.find('.dropdown-container .dropdown-option[data-value="' + selectedOption + '"]').addClass('select')
+      container.find('.dropdown-container .dropdown-option[data-value="' + selectedOption.value + '"]').addClass('select')
     })
     if (selector.data('select-by-group')){
       $.each(container.find('.dropdown-group'), function(gi, group) {
@@ -117,14 +120,69 @@ var dropdownSelector = (function() {
     }
   }
 
-  function saveData(container) {
-    var selectArray = []
+  function saveData(selector, container) {
+    var oldSelect = JSON.parse(container.find('.data-field').val())
+    var newSelect = []
     $.each(container.find('.dropdown-container .dropdown-option.select'), function(oi ,option){
-      selectArray.push(option.dataset.value)
+      newSelect.push({
+        label: option.dataset.label,
+        value: option.dataset.value
+      })
     })
+
+    $.each(oldSelect, function(oldValue){
+      
+    })
+
     container.find('.data-field').val(JSON.stringify(selectArray))
+
+    updateTags(selector, container)
   }
 
+  function updateTags(selector, container) {
+    selectedOptions = JSON.parse(container.find('.data-field').val())
+
+    function drawTag(label, tagId) {
+      var tag = $(`<div class="ds-tags" >
+                  <div class="tag-label" data-ds-tag-id=${tagId}>${label}</div>
+                  <i class="fas fa-times"></i>
+                </div>`).appendTo(container.find('.input-field'))
+
+      tag.click((e) => {e.stopPropagation()});
+      tag.find('.fa-times').click(function(e) {
+        var label = $(this).closest('.tag-label')
+        e.stopPropagation()
+        if (selector.data('combine-tags')) {
+          container.find('.data-field').val('[]')
+          $(this).parent().remove()
+        } else {
+
+        }
+        updateDropdownDirection($(selector).next())
+      });
+
+      updateDropdownDirection($(selector).next())
+    }
+
+
+    if (selector.data('combine-tags')){
+      container.find('.ds-tags').remove()
+      if (selectedOptions.length === 1) {
+        drawTag(selectedOptions[0].label, selectedOptions[0].value)
+      } else if (allOptionsSelected(selector, container)) {
+        drawTag(selector.data('select-multiple-all-selected'), 0)
+      } else if (selectedOptions.length > 1) {
+        drawTag(selectedOptions.length + ' ' + selector.data('select-multiple-name'), 0)
+      }
+    } else {
+
+    }
+  }
+
+
+  function allOptionsSelected(selector, container){
+    return container.find('.data-field').val().length === selector.find('option').length && !(selector.data('ajax-data'))
+  }
 
 
   return {
