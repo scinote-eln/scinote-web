@@ -5,7 +5,7 @@ module Repositories
     extend Service
     include Canaid::Helpers::PermissionsHelper
 
-    attr_reader :repository, :user, :errors
+    attr_reader :repository, :user, :warnings, :errors
 
     def initialize(repository_id:,
                    user_id:,
@@ -19,7 +19,8 @@ module Repositories
       @team_ids_for_share = team_ids_for_share
       @team_ids_for_unshare = team_ids_for_unshare
       @team_ids_for_update = team_ids_for_update
-      @errors = { shares: [] }
+      @errors = {}
+      @warnings = []
     end
 
     def call
@@ -33,20 +34,20 @@ module Repositories
         if team_repository.save
           log_activity(:share_inventory, team_repository)
         else
-          @errors[:shares] << I18n.t('repositories.multiple_share_service.unable_to_share',
-                                     repository: @repository.name, team: share[:id])
+          warnings << I18n.t('repositories.multiple_share_service.unable_to_share',
+                             repository: @repository.name, team: share[:id])
         end
       end
 
-      @team_ids_for_unshare.each do |unshare|
-        team_repository = TeamRepository.where(repository: @repository, team_id: unshare[:id]).first
+      @team_ids_for_unshare.each do |team_id|
+        team_repository = TeamRepository.where(repository: @repository, team_id: team_id).first
 
         if team_repository
           log_activity(:unshare_inventory, team_repository)
           team_repository.destroy
         else
-          @errors[:shares] << I18n.t('repositories.multiple_share_service.unable_to_unshare',
-                                     repository: @repository.name, team: unshare[:id])
+          warnings << I18n.t('repositories.multiple_share_service.unable_to_unshare',
+                             repository: @repository.name, team: team_id)
         end
       end
 
@@ -57,8 +58,8 @@ module Repositories
         if team_repository&.save
           log_activity(:update_share_inventory, team_repository)
         else
-          @errors[:shares] << I18n.t('repositories.multiple_share_service.unable_to_update',
-                                     repository: @repository.name, team: update[:id])
+          warnings << I18n.t('repositories.multiple_share_service.unable_to_update',
+                             repository: @repository.name, team: update[:id])
         end
       end
 
@@ -66,8 +67,7 @@ module Repositories
     end
 
     def succeed?
-      # Shares are not errors but more like warnings.
-      @errors.except(:shares).none?
+      @errors.none?
     end
 
     private

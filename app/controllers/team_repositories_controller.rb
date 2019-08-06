@@ -33,6 +33,21 @@ class TeamRepositoriesController < ApplicationController
     end
   end
 
+  # POST :team_id/repositories/:repository_id/multiple_update
+  def multiple_update
+    service_call = Repositories::MultipleShareUpdateService.call(repository_id: @repository.id,
+                                                                 user_id: current_user.id,
+                                                                 team_id: current_team.id,
+                                                                 team_ids_for_share: teams_to_share,
+                                                                 team_ids_for_unshare: teams_to_unshare,
+                                                                 team_ids_for_update: teams_to_update)
+    if service_call.succeed?
+      render json: { warnings: service_call.warnings.join(', ') }, status: :ok
+    else
+      render json: { errors: service_call.errors.map { |_, v| v }.join(', ') }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_vars
@@ -49,8 +64,33 @@ class TeamRepositoriesController < ApplicationController
     params.permit(:team_id, :id)
   end
 
+  def multiple_update_params
+    params.permit(:permission_changes, share_team_ids: [], write_permissions: [])
+  end
+
   def check_sharing_permissions
     render_403 unless can_manage_repository?(@repository)
+  end
+
+  def teams_to_share
+    existing_shares = @repository.teams_shared_with.pluck(:id)
+    teams_to_share = multiple_update_params[:share_team_ids]&.map(&:to_i).to_a - existing_shares
+    wp = multiple_update_params[:write_permissions]&.map(&:to_i)
+
+    teams_to_share.map { |e| { id: e, permission_level: wp&.include?(e) ? 'write' : 'read' } }
+  end
+
+  def teams_to_unshare
+    existing_shares = @repository.teams_shared_with.pluck(:id)
+    existing_shares - multiple_update_params[:share_team_ids]&.map(&:to_i).to_a
+  end
+
+  def teams_to_update
+    teams_to_update = JSON.parse(multiple_update_params[:permission_changes]).keys.map(&:to_i).to_a &
+                      multiple_update_params[:share_team_ids]&.map(&:to_i).to_a
+    wp = multiple_update_params[:write_permissions]&.map(&:to_i)
+
+    teams_to_update.map { |e| { id: e, permission_level: wp&.include?(e) ? 'write' : 'read' } }
   end
 
   def log_activity(type_of, team_repository)

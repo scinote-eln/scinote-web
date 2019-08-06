@@ -104,6 +104,7 @@ en:
       delete_inventory_html: "%{user} deleted inventory %{repository}."
       share_inventory_html: "%{user} shared inventory %{repository} with team %{team} with %{permission_level} permission."
       unshare_inventory_html: "%{user} stopped sharing inventory %{repository} with team %{team}."
+      update_share_inventory_html: "%{user} set permission to %{permission_level} for sharing inventory %{repository} with team %{team}."
       create_item_inventory_html: "%{user} created inventory item %{repository_row}."
       edit_item_inventory_html: "%{user} edited inventory item %{repository_row}."
       delete_item_inventory_html: "%{user} deleted inventory item %{repository_row}."

@@ -56,7 +56,7 @@ describe Repositories::MultipleShareUpdateService do
       end
 
       it 'returns error' do
-        expect(service_call.errors[:shares].count).to eq(1)
+        expect(service_call.warnings.count).to eq(1)
       end
     end
   end
@@ -66,7 +66,7 @@ describe Repositories::MultipleShareUpdateService do
       Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
                                                     user_id: user.id,
                                                     team_id: team.id,
-                                                    team_ids_for_unshare: [{ id: team2.id }])
+                                                    team_ids_for_unshare: [team2.id])
     end
 
     it 'removes TeamRepository record' do
@@ -86,11 +86,11 @@ describe Repositories::MultipleShareUpdateService do
         Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
                                                       user_id: user.id,
                                                       team_id: team.id,
-                                                      team_ids_for_unshare: [{ id: -1 }])
+                                                      team_ids_for_unshare: [-1])
       end
 
       it 'returns error' do
-        expect(service_call.errors[:shares].count).to eq(1)
+        expect(service_call.warnings.count).to eq(1)
       end
     end
   end
@@ -124,7 +124,7 @@ describe Repositories::MultipleShareUpdateService do
       end
 
       it 'returns error' do
-        expect(service_call.errors[:shares].count).to eq(1)
+        expect(service_call.warnings.count).to eq(1)
       end
     end
   end
