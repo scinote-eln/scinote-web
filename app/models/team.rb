@@ -215,7 +215,7 @@ class Team < ApplicationRecord
       query = query.where(id: users_team)
     end
     query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
-    query.select(:id, :name).map { |i| { id: i[:id], name: ApplicationController.helpers.escape_input(i[:name]) } }
+    query.select(:id, :name).map { |i| { value: i[:id], label: ApplicationController.helpers.escape_input(i[:name]) } }
   end
 
   def self.find_by_object(obj)
