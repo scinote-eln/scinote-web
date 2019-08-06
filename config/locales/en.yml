@@ -1100,6 +1100,10 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
+    multiple_share_service:
+      unable_to_share: "Unable to share %{repository} inventory with %{team} team."
+      unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."
+      unable_to_update: "Unable to update sharing %{repository} inventory with %{team} team."
 
   libraries:
     manange_modal_column:
