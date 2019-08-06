@@ -4,7 +4,6 @@
   <div class="select-container">
     <select name="team"
       data-select-all-button= "<%= t('global_activities.index.all_teams_btn') %>"
-      data-dropdown-position = 'left'
       data-placeholder = "<%= t('global_activities.index.select_teams') %>"
       data-select-all = "false"
       data-ajax-url = "<%= team_filter_global_activities_path %>"
@@ -51,6 +50,7 @@
       'data-select-multiple-all-selected': t('global_activities.index.all_activities'),
       'data-select-by-group': 'true',
       'data-combine-tags': 'true',
+      'data-container-scroll': '.ga-side',
       'data-placeholder': t('global_activities.index.select_activity_types')
     } %>
   </div>
@@ -62,9 +62,9 @@
   <div class="select-container">
     <select name="user"
       data-select-all-button= "<%= t('global_activities.index.all_users_btn') %>"
-      data-dropdown-position = 'left'
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
       data-select-all = "false"
+      data-combine-tags = "true"
       data-ajax-url = "<%= user_filter_global_activities_path %>"
     ></select>
   </div>
@@ -74,8 +74,12 @@
   <h4 class="title"><%= t('global_activities.index.object') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
-    <select name="subject" data-select-all="false" data-dropdown-position="left"  data-placeholder="<%= t('global_activities.index.select_objects') %>"
-      data-select-all-button= "<%= t('global_activities.index.deselect_all_objects') %>"
+    <select name="subject" 
+      data-select-all="false" 
+      data-placeholder="<%= t('global_activities.index.select_objects') %>"
+      data-select-all-button = "<%= t('global_activities.index.deselect_all_objects') %>"
+      data-select-by-group = "true"
+      data-ajax-url = "/global_activities/search_subjects"
     ></select>
   </div>
 </div>

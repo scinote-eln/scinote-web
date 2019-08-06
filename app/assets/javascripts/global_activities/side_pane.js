@@ -22,12 +22,12 @@ function GlobalActivitiesFiltersGetDates() {
 }
 
 function GlobalActivitiesFilterPrepareArray() {
-  var teamFilter = ($('.ga-side .team-selector select').val() || [])
-    .map(e => { return parseInt(e, 10); });
-  var userFilter = ($('.ga-side .user-selector select').val() || [])
-    .map(e => { return parseInt(e, 10); });
-  var activityFilter = ($('.ga-side .activity-selector select').val() || [])
-    .map(e => { return parseInt(e, 10); });
+  //var teamFilter = ($('.ga-side .team-selector select').val() || [])
+  //  .map(e => { return parseInt(e, 10); });
+  //var userFilter = ($('.ga-side .user-selector select').val() || [])
+  //  .map(e => { return parseInt(e, 10); });
+  //var activityFilter = ($('.ga-side .activity-selector select').val() || [])
+  //  .map(e => { return parseInt(e, 10); });
   var subjectFilter = {};
   $.each(($('.ga-side .subject-selector select').val() || []), function(index, object) {
     var splitObject = object.split('_');
@@ -36,14 +36,14 @@ function GlobalActivitiesFilterPrepareArray() {
   });
 
   // Clear request parameters if all options are selected
-  if (activityFilter.length === $('.ga-side .activity-selector option').length) {
-    activityFilter = [];
-  }
+  //if (activityFilter.length === $('.ga-side .activity-selector option').length) {
+  //  activityFilter = [];
+  //}
 
   return {
-    teams: teamFilter,
-    users: userFilter,
-    types: activityFilter,
+    teams: [],
+    users: [],
+    types: [],
     subjects: subjectFilter,
     from_date: GlobalActivitiesFiltersGetDates().from,
     to_date: GlobalActivitiesFiltersGetDates().to
@@ -52,7 +52,7 @@ function GlobalActivitiesFilterPrepareArray() {
 
 $(function() {
   var updateRunning = false;
-  var selectors = ['user', 'team'];
+  var selectors = [];
   // Ajax request for object search
   var subjectAjaxQuery = {
     url: '/global_activities/search_subjects',
@@ -88,7 +88,25 @@ $(function() {
     return (state.label ? state.label + ': ' : '') + state.text;
   };
 
-  dropdownSelector.init('.activity-selector #activity')
+  var ajaxParams = function(params) {
+    var filter = GlobalActivitiesFilterPrepareArray();
+    filter.query = params.query;
+    return filter;
+  }
+
+  dropdownSelector.init('.activity-selector select')
+  dropdownSelector.init('.user-selector select', {
+    ajaxParams: ajaxParams
+  })
+  dropdownSelector.init('.team-selector select', {
+    ajaxParams: ajaxParams
+  })
+  dropdownSelector.init('.subject-selector select', {
+    tagLabel: function(data) {
+      return I18n.t('global_activities.subject_name.' + data.group.toLowerCase()) + ': ' + data.label
+    },
+    ajaxParams: ajaxParams
+  })
 
   var ajaxQuery = {};
   $.each(selectors, (index, e) => {
@@ -242,7 +260,7 @@ $(function() {
   });
 
   // Object selection intialize
-  $('.ga-side .subject-selector select').select2Multiple({
+  /*$('.ga-side .subject-selector select').select2Multiple({
     ajax: subjectAjaxQuery,
     customSelection: subjectCustomDisplay,
     unlimitedSize: true
@@ -253,6 +271,7 @@ $(function() {
   $('.ga-side .subject-selector .clear').click(function() {
     $('.ga-side .subject-selector select').select2MultipleClearAll();
   });
+  */
 
   $('.ga-tags-container .clear-container span').click(function() {
     updateRunning = true;
