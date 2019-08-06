@@ -23,7 +23,7 @@
   </div>
 
   <div class="panel-body">
-    <% if experiment.workflowimg? %>
+    <% if experiment.workflowimg.attached? %>
       <div class="workflowimg-container">
         <%= image_tag(
               experiment.workflowimg.expiring_url(

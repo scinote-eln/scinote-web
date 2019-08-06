@@ -49,7 +49,7 @@ class ZipExport < ApplicationRecord
   end
 
   def zip_file_name
-    return '' unless file.attached?
+    return '' unless zip_file.attached?
 
     zip_file.blob&.filename&.to_s
   end

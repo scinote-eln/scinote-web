@@ -4,9 +4,7 @@ source 'http://rubygems.org'
 
 ruby '2.6.3'
 
-
 gem 'bootsnap', require: false
-gem 'webpacker', '~> 3.5'
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.6.2'
@@ -19,6 +17,7 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
+gem 'webpacker', '~> 3.5'
 gem 'yomu'
 
 # Gems for OAuth2 subsystem
@@ -29,6 +28,7 @@ gem 'omniauth-linkedin-oauth2'
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
 gem 'json-jwt'
+gem 'jsonapi-renderer', '= 0.2.0'
 gem 'jwt', '~> 1.5'
 gem 'kaminari'
 gem 'rack-attack'
@@ -82,12 +82,12 @@ gem 'wkhtmltopdf-heroku', '2.12.4'
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
-gem 'mini_magick'
-gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
+gem 'mini_magick'
+gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'

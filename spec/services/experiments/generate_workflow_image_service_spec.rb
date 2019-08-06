@@ -15,7 +15,6 @@ describe Experiments::GenerateWorkflowImageService do
       old_filename = experiment.workflowimg_file_name
       described_class.call(params)
       experiment.reload
-
       expect(experiment.workflowimg_file_name).not_to be == old_filename
     end
   end
