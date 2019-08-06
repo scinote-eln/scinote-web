@@ -218,19 +218,22 @@ class Extends
     export_protocol_from_task: 106,
     import_inventory_items: 107,
     create_tag: 108,
-    delete_tag: 109
+    delete_tag: 109,
+    edit_image_on_result: 110,
+    edit_image_on_step: 111,
+    edit_image_on_step_in_repository: 112,
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110],
     task: [8, 58, 9, 59, 10, 11, 12, 13, 14, 35, 36, 37, 53, 54, *60..64, *66..69, 106],
-    task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 45, 46, 47],
+    task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47],
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
     reports: [48, 50, 49],
     inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107],
-    protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101],
+    protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101, 112],
     team: [92, 94, 93, 97, 104]
   }.freeze
 end

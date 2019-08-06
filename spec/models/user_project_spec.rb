@@ -30,7 +30,7 @@ describe UserProject, type: :model do
   describe 'Relations' do
     it { should belong_to :user }
     it { should belong_to :project }
-    it { should belong_to(:assigned_by).class_name('User') }
+    it { should belong_to(:assigned_by).class_name('User').optional }
   end
 
   describe 'Should be a valid object' do

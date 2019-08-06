@@ -41,6 +41,7 @@ class Team < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :activities, inverse_of: :team, dependent: :destroy
+  has_many :assets, inverse_of: :team, dependent: :destroy
 
   attr_accessor :without_templates
   attr_accessor :without_intro_demo
@@ -55,6 +56,13 @@ class Team < ApplicationRecord
             'start' => 0,
             'length' => 10 },
         'filter' => 'active' } }
+  end
+
+  def validate_view_state(view_state)
+    unless %w(new old atoz ztoa).include?(view_state.state.dig('projects', 'cards', 'sort')) &&
+           %w(active archived).include?(view_state.state.dig('projects', 'filter'))
+      view_state.errors.add(:state, :wrong_state)
+    end
   end
 
   def search_users(query = nil)

@@ -8,6 +8,7 @@ class User < ApplicationRecord
   include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
+  include ActiveStorage::Downloading
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -248,6 +249,8 @@ class User < ApplicationRecord
   end
 
   def avatar_variant(style)
+    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style) unless avatar.attached?
+
     format = case style.to_sym
              when :medium
                Constants::MEDIUM_PIC_FORMAT
@@ -561,6 +564,28 @@ class User < ApplicationRecord
         .search(false, search_query)
         .select(:full_name, :id)
         .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
+  end
+
+  def file_name
+    return '' unless avatar.attached?
+
+    avatar.blob&.filename&.sanitized
+  end
+
+  def avatar_base64(style)
+    unless avatar.present?
+      missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
+      return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
+    end
+
+    avatar_uri = if avatar.options[:storage].to_sym == :s3
+                   URI.parse(avatar.url(style)).open.to_a.join
+                 else
+                   File.open(avatar.path(style)).to_a.join
+                 end
+
+    encoded_data = Base64.strict_encode64(avatar_uri)
+    "data:#{avatar_content_type};base64,#{encoded_data}"
   end
 
   protected

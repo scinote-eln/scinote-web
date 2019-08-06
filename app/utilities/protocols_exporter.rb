@@ -56,6 +56,7 @@ module ProtocolsExporter
                   "fileRef=\"#{asset_file_name}\">\n"
       asset_xml << "<fileName>#{img.file_name}</fileName>\n"
       asset_xml << "<fileType>#{img.content_type}</fileType>\n"
+      asset_xml << "<fileMetadata><!--[CDATA[  #{img.image.metadata.to_json}  ]]--></fileMetadata>\n"
       asset_xml << "</tinyMceAsset>\n"
       tiny_assets_xml << asset_xml
     end
@@ -104,6 +105,7 @@ module ProtocolsExporter
                         "fileRef=\"#{asset_file_name}\">\n"
             asset_xml << "<fileName>#{asset.file_name}</fileName>\n"
             asset_xml << "<fileType>#{asset.content_type}</fileType>\n"
+            asset_xml << "<fileMetadata><!--[CDATA[  #{asset.file.metadata.to_json}  ]]--></fileMetadata>\n"
             asset_xml << "</asset>\n"
             step_xml << asset_xml
           end

@@ -433,6 +433,7 @@ Rails.application.routes.draw do
         post 'toggle_step_state'
         get 'move_down'
         get 'move_up'
+        post 'update_view_state'
       end
     end
 
@@ -448,7 +449,16 @@ Rails.application.routes.draw do
     end
 
     # tinyMCE image uploader endpoint
-    post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
+    resources :tiny_mce_assets, only: [:create] do
+      member do
+        get :download
+        get :marvinjs, to: 'tiny_mce_assets#marvinjs_show'
+        put :marvinjs, to: 'tiny_mce_assets#marvinjs_update'
+      end
+      collection do
+        post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
+      end
+    end
 
     resources :results, only: [:update, :destroy] do
       resources :result_comments,
@@ -516,6 +526,7 @@ Rails.application.routes.draw do
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
+        get 'recent_protocols'
       end
     end
 
@@ -589,6 +600,7 @@ Rails.application.routes.draw do
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',
          as: 'create_wopi_file'
+    post 'files/:id/start_edit_image', to: 'assets#create_start_edit_image_activity', as: 'start_edit_image'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
@@ -669,6 +681,12 @@ Rails.application.routes.draw do
       get :search_subjects
       get :team_filter
       get :user_filter
+    end
+  end
+
+  resources :marvin_js_assets, only: %i(create update destroy show) do
+    collection do
+      get :team_sketches
     end
   end
 

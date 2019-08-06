@@ -1,12 +1,17 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
 /* eslint-disable no-underscore-dangle */
-/* global Uint8Array fabric tui animateSpinner I18n PerfectScrollbar*/
+/* global Uint8Array fabric tui animateSpinner Assets
+   I18n PerfectScrollbar MarvinJsEditor refreshProtocolStatusBar  */
+
 
 var FilePreviewModal = (function() {
   'use strict';
 
   var readOnly = false;
+  var CHECK_READY_DELAY = 5000;
+  var CHECK_READY_TRIES_LIMIT = 60;
+  var checkReadyCntr;
 
   function initPreviewModal(options = {}) {
     var name;
@@ -17,10 +22,11 @@ var FilePreviewModal = (function() {
     $('.file-preview-link').off('click');
     $('.file-preview-link').click(function(e) {
       e.preventDefault();
-      name = $(this).find('p').text();
+      name = $(this).find('.attachment-label').text();
       url = $(this).data('preview-url');
       downloadUrl = $(this).attr('href');
       openPreviewModal(name, url, downloadUrl);
+      return true;
     });
   }
 
@@ -402,8 +408,33 @@ var FilePreviewModal = (function() {
         imageEditor = {};
         $('#tui-image-editor').html('');
         $('#fileEditModal').modal('hide');
-        if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
       });
+
+      if (data.mode === 'tinymce') {
+        $.ajax({
+          type: 'PUT',
+          url: data.url,
+          data: dataUpload,
+          contentType: false,
+          processData: false,
+          success: function(res) {
+            data.image.src = res.url;
+          }
+        }).done(function() { closeEditor(); });
+      } else {
+        $.ajax({
+          type: 'POST',
+          url: '/files/' + data.id + '/update_image',
+          data: dataUpload,
+          contentType: false,
+          processData: false,
+          success: function(res) {
+            $('#modal_link' + data.id).parent().html(res.html);
+            Assets.setupAssetsLoading();
+          }
+        }).done(function() { closeEditor(); });
+      }
+      if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
 
     window.onresize = function() {
@@ -420,8 +451,7 @@ var FilePreviewModal = (function() {
       dataType: 'json',
       success: function(data) {
         var link = modal.find('.file-download-link');
-        modal.find('.file-preview-container').empty();
-        modal.find('.file-wopi-controls').empty();
+        clearPrevieModal();
         if (Object.prototype.hasOwnProperty.call(data, 'wopi-controls')) {
           modal.find('.file-wopi-controls').html(data['wopi-controls']);
         }
@@ -443,6 +473,7 @@ var FilePreviewModal = (function() {
             if (!readOnly && data.editable) {
               modal.find('.file-edit-link').css('display', '');
               modal.find('.file-edit-link').off().click(function(ev) {
+                $.post('/files/' + data.id + '/start_edit_image');
                 ev.preventDefault();
                 ev.stopPropagation();
                 modal.modal('hide');
@@ -452,6 +483,8 @@ var FilePreviewModal = (function() {
               modal.find('.file-edit-link').css('display', 'none');
             }
           }
+        } else if (data.type === 'marvinjs') {
+          openMarvinEditModal(data, modal);
         } else {
           modal.find('.file-edit-link').css('display', 'none');
           modal.find('.file-preview-container').html(data['preview-icon']);
@@ -460,10 +493,13 @@ var FilePreviewModal = (function() {
           modal.find('#wopi_file_edit_button').remove();
         }
         if (data.processing) {
-          checkFileReady(url, modal);
+          setTimeout(function() {
+            checkFileReady(url, modal);
+          }, CHECK_READY_DELAY);
         }
         modal.find('.file-name').text(name);
         modal.find('.preview-close').click(function() {
+          checkReadyCntr = CHECK_READY_TRIES_LIMIT;
           modal.modal('hide');
           if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
         });
@@ -472,6 +508,7 @@ var FilePreviewModal = (function() {
           ev.preventDefault();
         });
         $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
+        checkReadyCntr = 0;
       },
       error: function() {
         // TODO
@@ -492,9 +529,11 @@ var FilePreviewModal = (function() {
             ev.preventDefault();
             ev.stopPropagation();
           });
-        setTimeout(function() {
-          checkFileReady(url, modal);
-        }, 10000);
+        if (checkReadyCntr < CHECK_READY_TRIES_LIMIT) {
+          setTimeout(function() {
+            checkFileReady(url, modal);
+          }, CHECK_READY_DELAY);
+        }
       } else {
         if (data.type === 'image') {
           modal.find('.file-preview-container').empty();
@@ -518,9 +557,45 @@ var FilePreviewModal = (function() {
           .off();
       }
     });
+
+    checkReadyCntr += 1;
+  }
+
+  function clearPrevieModal() {
+    var modal = $('#filePreviewModal');
+    modal.find('.file-preview-container').empty();
+    modal.find('.file-wopi-controls').empty();
+    modal.find('.file-edit-link').css('display', 'none');
+  }
+
+  function openMarvinEditModal(data, modal) {
+    modal.find('.file-preview-container')
+      .append($('<img>')
+        .attr('src', data['large-preview-url'])
+        .attr('alt', data.name)
+        .click(function(ev) {
+          ev.stopPropagation();
+        }));
+    if (!readOnly && data.editable) {
+      modal.find('.file-edit-link').css('display', '');
+      modal.find('.file-edit-link').off().click(function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        modal.modal('hide');
+        MarvinJsEditor.open({
+          mode: 'edit',
+          data: data.description,
+          name: data.name,
+          marvinUrl: data['update-url']
+        });
+      });
+    } else {
+      modal.find('.file-edit-link').css('display', 'none');
+    }
   }
 
   return Object.freeze({
-    init: initPreviewModal
+    init: initPreviewModal,
+    imageEditor: initImageEditor
   });
 }(window));

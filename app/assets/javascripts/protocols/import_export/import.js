@@ -500,7 +500,14 @@ function importProtocolFromFile(
       var tinyMceAsset = {};
       var fileRef = $(this).attr('fileRef');
       tinyMceAsset.tokenId = $(this).attr('tokenId');
+      tinyMceAsset.fileName = $(this).children('fileName').text();
       tinyMceAsset.fileType = $(this).children('fileType').text();
+      if ($(this).children('fileMetadata').html() !== undefined) {
+        tinyMceAsset.fileMetadata = $(this).children('fileMetadata').html()
+          .replace('<!--[CDATA[', '')
+          .replace('  ]]-->', '')
+          .replace(']]&gt;', '');
+      }
       tinyMceAsset.bytes = getAssetBytes(
         protocolFolders[index],
         stepGuid,
@@ -579,6 +586,12 @@ function importProtocolFromFile(
         stepAssetJson.id = assetId;
         stepAssetJson.fileName = fileName;
         stepAssetJson.fileType = $(this).children('fileType').text();
+        if ($(this).children('fileMetadata').html() !== undefined) {
+          stepAssetJson.fileMetadata = $(this).children('fileMetadata').html()
+            .replace('<!--[CDATA[', '')
+            .replace('  ]]-->', '')
+            .replace(']]&gt;', '');
+        }
         stepAssetJson.bytes = getAssetBytes(
           protocolFolders[index],
           stepGuid,

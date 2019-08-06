@@ -283,7 +283,7 @@ GEM
     json_matchers (0.11.0)
       json_schema
     json_schema (0.20.6)
-    jsonapi-renderer (0.2.1)
+    jsonapi-renderer (0.2.0)
     jwt (1.5.6)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
@@ -558,7 +558,7 @@ GEM
     websocket-extensions (0.1.4)
     whacamole (1.2.0)
     wicked_pdf (1.1.0)
-    wkhtmltopdf-heroku (2.12.5.0)
+    wkhtmltopdf-heroku (2.12.4.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yomu (0.2.4)
@@ -616,6 +616,7 @@ DEPENDENCIES
   js_cookie_rails
   json-jwt
   json_matchers
+  jsonapi-renderer (= 0.2.0)
   jwt (~> 1.5)
   kaminari
   listen (~> 3.0)
@@ -671,7 +672,7 @@ DEPENDENCIES
   webpacker (~> 3.5)
   whacamole
   wicked_pdf (~> 1.1.0)
-  wkhtmltopdf-heroku
+  wkhtmltopdf-heroku (= 2.12.4)
   yomu
 
 RUBY VERSION

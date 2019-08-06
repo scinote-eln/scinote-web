@@ -1,14 +1,15 @@
+# frozen_string_literal: true
+
 module DelayedUploaderDemo
   # Get asset from demo_files folder
   def self.get_asset(user, team, file_name)
-    Asset.new(
-      file: File.open(
-        "#{Rails.root}/app/assets/demo_files/#{file_name}", 'r'
-      ),
+    asset = Asset.create(
       created_by: user,
       team: team,
       last_modified_by: user
     )
+    asset.file.attach(io: File.open("#{Rails.root}/app/assets/demo_files/#{file_name}", 'r'), filename: file_name)
+    asset
   end
 
   # Generates results asset for given module, file_name assumes file is located
@@ -32,7 +33,6 @@ module DelayedUploaderDemo
     )
 
     temp_result.save
-    temp_asset.save
 
     # Generate comment if it exists
     generate_result_comment(temp_result, current_user, comment) if comment

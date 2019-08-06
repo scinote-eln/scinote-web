@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 class AssetsController < ApplicationController
   include WopiUtil
+  include AssetsActions
   # include ActionView::Helpers
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TextHelper
@@ -10,14 +13,14 @@ class AssetsController < ApplicationController
   include FileIconsHelper
 
   before_action :load_vars, except: :create_wopi_file
+
   before_action :check_read_permission
   before_action :check_edit_permission, only: :edit
 
   def file_preview
     response_json = {
       'id' => @asset.id,
-      'type' => (@asset.image? ? 'image' : 'file'),
-
+      'type' => @asset.file.metadata[:asset_type] || (@asset.image? ? 'image' : 'file'),
       'filename' => truncate(escape_input(@asset.file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
       'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
@@ -30,17 +33,25 @@ class AssetsController < ApplicationController
                elsif @assoc.class == RepositoryCell
                  can_manage_repository_rows?(@repository.team)
                end
-
-    if @asset.image?
-      if ['image/jpeg', 'image/pjpeg'].include? @asset.content_type
+    if response_json['type'] == 'image'
+      if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
         response_json['quality'] = @asset.file_image_quality || 90
       end
       response_json.merge!(
         'editable' =>  @asset.editable_image? && can_edit,
         'mime-type' => @asset.file.content_type,
-        'large-preview-url' => @asset.large_preview
+        'large-preview-url' => rails_representation_url(@asset.large_preview)
+      )
+    elsif response_json['type'] == 'marvinjs'
+      response_json.merge!(
+        'editable' => can_edit,
+        'large-preview-url' => rails_representation_url(@asset.large_preview),
+        'update-url' => marvin_js_asset_path(@asset.id),
+        'description' => @asset.file.metadata[:description],
+        'name' => @asset.file.metadata[:name]
       )
     else
+
       response_json['preview-icon'] = render_to_string(partial: 'shared/file_preview_icon.html.erb',
                                                        locals: { asset: @asset })
     end
@@ -115,6 +126,10 @@ class AssetsController < ApplicationController
     render layout: false
   end
 
+  def create_start_edit_image_activity
+    create_edit_image_activity(@asset, current_user, :start_editing)
+  end
+
   def update_image
     @asset = Asset.find(params[:id])
     orig_file_size = @asset.file_size
@@ -123,6 +138,7 @@ class AssetsController < ApplicationController
 
     @asset.file.attach(io: params.require(:image), filename: orig_file_name)
     @asset.save!
+    create_edit_image_activity(@asset, current_user, :finish_editing)
     # release previous image space
     @asset.team.release_space(orig_file_size)
     # Post process file here

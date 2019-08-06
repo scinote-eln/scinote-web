@@ -38,12 +38,12 @@ describe MyModule, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :experiment }
-    it { should belong_to :my_module_group }
-    it { should belong_to(:created_by).class_name('User') }
-    it { should belong_to(:last_modified_by).class_name('User') }
-    it { should belong_to(:archived_by).class_name('User') }
-    it { should belong_to(:restored_by).class_name('User') }
+    it { should belong_to(:experiment) }
+    it { should belong_to(:my_module_group).optional }
+    it { should belong_to(:created_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
+    it { should belong_to(:archived_by).class_name('User').optional }
+    it { should belong_to(:restored_by).class_name('User').optional }
     it { should have_many :results }
     it { should have_many :my_module_tags }
     it { should have_many :tags }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryListValue < ApplicationRecord
   belongs_to :repository_list_item
   belongs_to :created_by,
@@ -12,10 +14,11 @@ class RepositoryListValue < ApplicationRecord
   validates :repository_cell, presence: true
   validates_inclusion_of :repository_list_item,
                          in: (lambda do |list_value|
-                           list_value.repository_cell
-                                     .repository_column
-                                     .repository_list_items
+                           list_value.repository_cell&.repository_column&.repository_list_items || []
                          end)
+
+  SORTABLE_COLUMN_NAME = 'repository_list_items.data'
+  SORTABLE_VALUE_INCLUDE = { repository_list_value: :repository_list_item }.freeze
 
   def formatted
     data.to_s

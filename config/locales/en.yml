@@ -75,6 +75,8 @@ en:
           attributes:
             viewable_id:
               not_unique: "State already exists for this user and parent object"
+            state:
+              wrong_state: "Wrong parameters"
 
   helpers:
     label:
@@ -606,6 +608,7 @@ en:
       no_description: "No task description"
       description_label: "Description"
       empty_description_edit_label: "Click here to enter Task Description (optional)"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
@@ -1331,6 +1334,9 @@ en:
     wupi_file_editing:
       started: "editing started"
       finished: "editing finished"
+    file_editing:
+      started: "editing started"
+      finished: "editing finished"
     protocols:
       my_to_team_message: 'My protocols to Team protocols'
       team_to_my_message: 'Team protocols to My protocols'
@@ -1759,10 +1765,11 @@ en:
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
       attachments:
-        sort_new: "Newest first &#8595;"
-        sort_old: "Oldest first &#8593;"
-        sort_atoz: "Name &#8595;"
-        sort_ztoa: "Name &#8593;"
+        sort:
+          new_html: "Newest first &#8595;"
+          old_html: "Oldest first &#8593;"
+          atoz_html: "Name &#8595;"
+          ztoa_html: "Name &#8593;"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -2147,3 +2154,9 @@ en:
         new: "https://support.scinote.net/hc/en-us/articles/360004627792"
         visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
         manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
+  marvinjs:
+    new_sketch: "New structure"
+    new_button: "New structure"
+    structure_placeholder: "Click here to enter structure name"
+    modal_name_title: "Structure name:"
+    checmical_drawing: "Chemical drawings"

@@ -2,8 +2,14 @@
 /* eslint-disable no-restricted-globals, no-alert */
 var Comments = (function() {
   function changeCounter(comment, value) {
-    var currnetCount = $('#comment-counter-' + comment.closest('.comments-container').attr('data-object-id'));
-    currnetCount.html(parseInt(currnetCount.html(), 10) + value);
+    var currentCount = $('#comment-counter-' + comment.closest('.comments-container').attr('data-object-id'));
+    var newValue = parseInt(currentCount.html(), 10) + value;
+    currentCount.html(newValue);
+    if (newValue === 0) {
+      currentCount.addClass('hidden');
+    } else {
+      currentCount.removeClass('hidden');
+    }
   }
 
   function scrollBottom(container) {
@@ -76,6 +82,7 @@ var Comments = (function() {
           $el.find('#message').val('');
           $el.find('.new-comment-button').removeClass('show');
           newButton.disable = false;
+          $el.find('textarea').focus().blur();
         })
           .error((error) => {
             errorField.html(error.responseJSON.errors.message);
