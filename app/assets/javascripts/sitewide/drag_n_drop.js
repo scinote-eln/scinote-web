@@ -1,6 +1,7 @@
 /* global Promise ActiveStorage animateSpinner copyFromClipboard I18n
    Results ResultAssets FilePreviewModal Comments truncateLongString
-   DragNDropSteps DragNDropResults initFormSubmitLinks dragNdropAssetsInit */
+   DragNDropSteps DragNDropResults initFormSubmitLinks dragNdropAssetsInit
+   GLOBAL_CONSTANTS */
 
 (function(global) {
   'use strict';
@@ -95,24 +96,30 @@
 
     // Generate modal html and hook callbacks
     function clipboardPasteModal() {
-      var html = '<div id="clipboardPreviewModal" class="modal fade" ';
-      html += 'tabindex="-1" role="dialog" aria-hidden="true">';
-      html += '<div class="modal-dialog" role="document">';
-      html += '<div class="modal-content"><div class="modal-header">';
-      html += '<button type="button" class="close" data-dismiss="modal"';
-      html += ' aria-label="Close"><span aria-hidden="true">&times;</span>';
-      html += '</button><h4 class="modal-title">' + I18n.t('assets.from_clipboard.modal_title') + '</h4>';
-      html += '</div><div class="modal-body"><p><strong>' + I18n.t('assets.from_clipboard.image_preview') + '</strong></p>';
-      html += '<canvas style="border:1px solid grey;max-width:400px;max-height:300px" id="clipboardPreview" />';
-      html += '<p><strong>' + I18n.t('assets.from_clipboard.file_name') + '</strong></p>';
-      html += '<div class="input-group">';
-      html += '<input id="clipboardImageName" type="text" class="form-control" ';
-      html += 'placeholder="' + I18n.t('assets.from_clipboard.file_name_placeholder') + '" aria-describedby="image-name">';
-      html += '<span class="input-group-addon" id="image-name"></span></div>';
-      html += '</div><div class="modal-footer">';
-      html += '<button type="button" class="btn btn-default" data-dismiss="modal">' + I18n.t('general.cancel') + '</button>';
-      html += '<button type="button" class="btn btn-success" data-action="addImageFormClipboard">' + I18n.t('assets.from_clipboard.add_image') + '</button>';
-      html += '</div></div></div></div><!-- /.modal -->';
+      var html = `<div id="clipboardPreviewModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content"><div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">${I18n.t('assets.from_clipboard.modal_title')}</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p><strong>${I18n.t('assets.from_clipboard.image_preview')}</strong></p>
+                        <canvas style="border:1px solid grey;max-width:400px;max-height:300px" id="clipboardPreview" />
+                        <p><strong>${I18n.t('assets.from_clipboard.file_name')}</strong></p>
+                        <div class="input-group">
+                        <input id="clipboardImageName" type="text" class="form-control"
+                               placeholder="${I18n.t('assets.from_clipboard.file_name_placeholder')}" aria-describedby="image-name">
+                        <span class="input-group-addon" id="image-name"></span></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.t('general.cancel')}</button>
+                        <button type="button" class="btn btn-success" data-action="addImageFormClipboard">${I18n.t('assets.from_clipboard.add_image')}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /.modal -->`;
       return $(html).appendTo($('body')).promise().done(function() {
         // display modal
         $('#clipboardPreviewModal').modal('show');
@@ -290,21 +297,21 @@
     }
 
     function uploadedAssetPreview(asset, i) {
-      var html = '<div class="attachment-placeholder pull-left new">';
-      html += '<div class="attachment-thumbnail no-shadow new %>">';
-      html += '<i class="fas fa-image"></i>';
-      html += '</div>';
-      html += '<div class="attachment-label">';
-      html += truncateLongString(asset.name, $(document.body).data('filename-max-length'));
-      html += '</div>';
-      html += '<div class="spencer-bonnet-modif">';
-      html += '</div>';
-      html += '<div class="remove-icon pull-right">';
-      html += '<a data-item-id="' + i + '" href="#">';
-      html += '<span class="fas fa-trash"></span>';
-      html += '</a>  </div>';
-      html += validateFilesSize(asset);
-      html += '</div>';
+      var html = `<div class="attachment-placeholder pull-left new">
+                    <div class="attachment-thumbnail no-shadow new %>">
+                      <i class="fas fa-image"></i>
+                    </div>
+                    <div class="attachment-label">
+                      ${truncateLongString(asset.name, GLOBAL_CONSTANTS.FILENAME_TRUNCATION_LENGTH)}
+                    </div>
+                    <div class="spencer-bonnet-modif"></div>
+                    <div class="remove-icon pull-right">
+                      <a data-item-id="${i}" href="#">
+                        <span class="fas fa-trash"></span>
+                      </a>
+                    </div>
+                    ${validateFilesSize(asset)}
+                  </div>`;
 
       return html;
     }
@@ -342,7 +349,7 @@
     }
 
     function init(files) {
-      fileMaxSizeMb = $(document.body).data('file-max-size-mb');
+      fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for (let i = 0; i < files.length; i += 1) {
         droppedFiles.push(files[i]);
@@ -497,9 +504,9 @@
     }
 
     function validateTextSize(input) {
-      if (input.value.length > $(document.body).data('name-max-length')) {
+      if (input.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
         $(input).parent().find('.dnd-error').remove();
-        $(input).after("<p class='dnd-error'>" + I18n.t('general.text.length_too_long', { max_length: $(document.body).data('name-max-length') }) + '</p>');
+        $(input).after("<p class='dnd-error'>" + I18n.t('general.text.length_too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH }) + '</p>');
         isValid = false;
       } else {
         $(input).parent().find('.dnd-error').remove();
@@ -508,23 +515,29 @@
     }
 
     function uploadedAssetPreview(asset, i) {
-      var html = '<div class="panel panel-default panel-result-attachment-new">';
-      html += '<div class="panel-heading">';
-      html += '<span class="fas fa-paperclip"></span>';
-      html += I18n.t('assets.drag_n_drop.file_label');
-      html += '<div class="pull-right">';
-      html += '<a data-item-id="' + i + '" href="#">';
-      html += '<span class="fas fa-times"></span></a></div></div>';
-      html += '<div class="panel-body"><div class="form-group">';
-      html += '<label class="control-label">Name</label>';
-      html += '<input type="text" class="form-control" ';
-      html += 'onChange="DragNDropResults.validateTextSize(this)"';
-      html += ' rel="results[name]" name="results[name][' + i + ']">';
-      html += '</div><div class="form-group"><label class="control-label">';
-      html += I18n.t('assets.drag_n_drop.file_label') + ':</label> ';
-      html += truncateLongString(asset.name, $(document.body).data('filename-max-length'));
-      html += validateFilesSize(asset);
-      html += '</div></div>';
+      var html = `<div class="panel panel-default panel-result-attachment-new">
+                    <div class="panel-heading">
+                      <span class="fas fa-paperclip"></span>
+                      ${I18n.t('assets.drag_n_drop.file_label')}
+                      <div class="pull-right">
+                        <a data-item-id="' + ${i} + '" href="#">
+                          <span class="fas fa-times"></span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="panel-body">
+                      <div class="form-group">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
+                               rel="results[name]" name="results[name][' + ${i} + ']">
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label">${I18n.t('assets.drag_n_drop.file_label')}:</label>
+                        ${truncateLongString(asset.name, GLOBAL_CONSTANTS.FILENAME_TRUNCATION_LENGTH)}
+                        ${validateFilesSize(asset)}
+                      </div>
+                    </div>
+                  </div>`;
       return html;
     }
 
@@ -577,7 +590,7 @@
     }
 
     function init(files) {
-      fileMaxSizeMb = $(document.body).data('file-max-size-mb');
+      fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for (let i = 0; i < files.length; i += 1) {
         droppedFiles.push(files[i]);

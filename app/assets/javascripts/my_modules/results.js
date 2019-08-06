@@ -1,6 +1,7 @@
 /*
  global Results ActiveStorage animateSpinner Comments ResultAssets FilePreviewModal
         TinyMCE getParam applyCreateWopiFileCallback initFormSubmitLinks textValidator
+        GLOBAL_CONSTANTS
 */
 
 (function(global) {
@@ -158,10 +159,10 @@
           handleResultFileSubmit($form, ev);
           break;
         case ResultTypeEnum.TABLE:
-          textValidator(ev, $form.find('#result_name'), 0, $form.data('name-max-length'));
+          textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
           break;
         case ResultTypeEnum.TEXT:
-          textValidator(ev, $form.find('#result_name'), 0, $form.data('name-max-length'));
+          textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
           textValidator(
             ev, $form.find('#result_text_attributes_textarea'), 1,
             $form.data('rich-text-max-length'), false, TinyMCE.getContent()
@@ -205,10 +206,9 @@
       $(function() {
         $('#results-collapse-btn').click(function() {
           $('.result .panel-collapse').collapse('hide');
-          $(document).find('span.collapse-result-icon').each(function() {
-            $(this).addClass('fa-caret-square-down');
-            $(this).removeClass('fa-caret-square-up');
-          });
+          $(document).find('span.collapse-result-icon')
+            .addClass('fa-caret-square-down')
+            .removeClass('fa-caret-square-up');
         });
 
         $('#results-expand-btn').click(expandAllResults);

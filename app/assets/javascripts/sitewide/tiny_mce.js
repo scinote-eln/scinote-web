@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n globalConstants */
+/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -132,7 +132,7 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
-            if (globalConstants.is_safari) {
+            if (GLOBAL_CONSTANTS.IS_SAFARI) {
               editorToolbar.css('position', '-webkit-sticky');
             } else {
               editorToolbar.css('position', 'sticky');

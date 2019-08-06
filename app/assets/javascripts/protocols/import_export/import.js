@@ -632,7 +632,7 @@ function importProtocolFromFile(
     $.extend(dataJson, params);
 
     roughSize = roughSizeOfObject(dataJson);
-    if (roughSize > ($(document.body).data('file-max-size-mb') * 1024 * 1024)) {
+    if (roughSize > (GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024)) {
       // Call the callback function
       resultCallback({ name: protocolJson.name, new_name: null, status: 'size_too_large' });
       return;

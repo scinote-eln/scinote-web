@@ -66,38 +66,25 @@ var RepositoryDatatable = (function(global) {
   // Enable/disable edit button
   function updateButtons() {
     if (currentMode === 'viewMode') {
-      $('#addRepositoryRecord').removeClass('disabled');
-      $('#addRepositoryRecord').prop('disabled', false);
+      $('#addRepositoryRecord').removeClass('disabled').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
-      $('#repository-acitons-dropdown').removeClass('disabled');
-      $('#repository-acitons-dropdown').prop('disabled', false);
-      $('#addNewColumn').removeClass('disabled');
-      $('#addNewColumn').prop('disabled', false);
-      $('#repository-columns-dropdown')
-        .find('.dropdown-toggle')
-        .prop('disabled', false);
+      $('#repository-acitons-dropdown').removeClass('disabled').prop('disabled', false);
+      $('#addNewColumn').removeClass('disabled').prop('disabled', false);
+      $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', false);
       $('th').removeClass('disable-click');
-      $('.repository-row-selector').removeClass('disabled');
-      $('.repository-row-selector').prop('disabled', false);
+      $('.repository-row-selector').removeClass('disabled').prop('disabled', false);
       if (rowsSelected.length === 0) {
-        $('#copyRepositoryRecords').prop('disabled', true);
-        $('#copyRepositoryRecords').addClass('disabled');
-        $('#editRepositoryRecord').prop('disabled', true);
-        $('#editRepositoryRecord').addClass('disabled');
-        $('#deleteRepositoryRecordsButton').prop('disabled', true);
-        $('#deleteRepositoryRecordsButton').addClass('disabled');
+        $('#copyRepositoryRecords').prop('disabled', true).addClass('disabled');
+        $('#editRepositoryRecord').prop('disabled', true).addClass('disabled');
+        $('#deleteRepositoryRecordsButton').prop('disabled', true).addClass('disabled');
         $('#exportRepositoriesButton').parent('li').addClass('disabled');
-        $('#exportRepositoriesButton').prop('disabled', true);
-        $('#exportRepositoriesButton').off('click');
+        $('#exportRepositoriesButton').prop('disabled', true).off('click');
         $('#export-repositories').off('click');
-        $('#assignRepositoryRecords').addClass('disabled');
-        $('#assignRepositoryRecords').prop('disabled', true);
-        $('#unassignRepositoryRecords').addClass('disabled');
-        $('#unassignRepositoryRecords').prop('disabled', true);
+        $('#assignRepositoryRecords').addClass('disabled').prop('disabled', true);
+        $('#unassignRepositoryRecords').addClass('disabled').prop('disabled', true);
       } else {
         if (rowsSelected.length === 1 && $('#exportRepositoriesButton').get(0)) {
-          $('#editRepositoryRecord').prop('disabled', false);
-          $('#editRepositoryRecord').removeClass('disabled');
+          $('#editRepositoryRecord').prop('disabled', false).removeClass('disabled');
 
           // If we switched from 2 selections to 1, then this is not needed
           let events = $.data($('#exportRepositoriesButton').get(0), 'events');
@@ -113,40 +100,27 @@ var RepositoryDatatable = (function(global) {
             });
           }
         } else {
-          $('#editRepositoryRecord').prop('disabled', true);
-          $('#editRepositoryRecord').addClass('disabled');
+          $('#editRepositoryRecord').prop('disabled', true).addClass('disabled');
         }
-        $('#deleteRepositoryRecordsButton').prop('disabled', false);
-        $('#deleteRepositoryRecordsButton').removeClass('disabled');
-        $('#copyRepositoryRecords').prop('disabled', false);
-        $('#copyRepositoryRecords').removeClass('disabled');
-        $('#assignRepositoryRecords').removeClass('disabled');
-        $('#assignRepositoryRecords').prop('disabled', false);
-        $('#unassignRepositoryRecords').removeClass('disabled');
-        $('#unassignRepositoryRecords').prop('disabled', false);
+        $('#deleteRepositoryRecordsButton').prop('disabled', false).removeClass('disabled');
+        $('#copyRepositoryRecords').prop('disabled', false).removeClass('disabled');
+        $('#assignRepositoryRecords').removeClass('disabled').prop('disabled', false);
+        $('#unassignRepositoryRecords').removeClass('disabled').prop('disabled', false);
       }
     } else if (currentMode === 'editMode') {
-      $('#repository-acitons-dropdown').addClass('disabled');
-      $('#repository-acitons-dropdown').prop('disabled', true);
+      $('#repository-acitons-dropdown').addClass('disabled').prop('disabled', true);
       $('.dataTables_length select').prop('disabled', true);
-      $('#addRepositoryRecord').addClass('disabled');
-      $('#addRepositoryRecord').prop('disabled', true);
-      $('#editRepositoryRecord').addClass('disabled');
-      $('#editRepositoryRecord').prop('disabled', true);
-      $('#addNewColumn').addClass('disabled');
-      $('#addNewColumn').prop('disabled', true);
-      $('#deleteRepositoryRecordsButton').addClass('disabled');
-      $('#deleteRepositoryRecordsButton').prop('disabled', true);
+      $('#addRepositoryRecord').addClass('disabled').prop('disabled', true);
+      $('#editRepositoryRecord').addClass('disabled').prop('disabled', true);
+      $('#addNewColumn').addClass('disabled').prop('disabled', true);
+      $('#deleteRepositoryRecordsButton').addClass('disabled').prop('disabled', true);
       $('#exportRepositoriesButton').off('click');
       $('#export-repositories').off('click');
-      $('#assignRepositoryRecords').addClass('disabled');
-      $('#assignRepositoryRecords').prop('disabled', true);
-      $('#unassignRepositoryRecords').addClass('disabled');
-      $('#unassignRepositoryRecords').prop('disabled', true);
+      $('#assignRepositoryRecords').addClass('disabled').prop('disabled', true);
+      $('#unassignRepositoryRecords').addClass('disabled').prop('disabled', true);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
       $('th').addClass('disable-click');
-      $('.repository-row-selector').addClass('disabled');
-      $('.repository-row-selector').prop('disabled', true);
+      $('.repository-row-selector').addClass('disabled').prop('disabled', true);
     }
   }
 
@@ -183,10 +157,10 @@ var RepositoryDatatable = (function(global) {
 
   // Helper functions
   function listItemDropdown(options, currentValue, columnId) {
-    var html = '<select class="form-control selectpicker repository-dropdown" ';
-    html += 'data-abs-min-length="2" data-live-search="true" ';
-    html += 'data-container="body" column_id="' + columnId + '">';
-    html += '<option value="-1"></option>';
+    var html = `<select class="form-control selectpicker repository-dropdown"
+                data-abs-min-length="2" data-live-search="true"
+                data-container="body" column_id="${columnId}">
+                <option value="-1"></option>`;
     $.each(options, function(index, value) {
       var selected = (currentValue === value[1]) ? 'selected' : '';
       html += '<option value="' + value[0] + '" ' + selected + '>';
@@ -458,10 +432,11 @@ var RepositoryDatatable = (function(global) {
   // Clear all has-error tags
   function clearAllErrors() {
     // Remove any validation errors
-    $(selectedRecord).find('.has-error').each(function() {
-      $(this).removeClass('has-error');
-      $(this).find('span').remove();
-    });
+    $(selectedRecord)
+      .find('.has-error')
+      .removeClass('has-error')
+      .find('span')
+      .remove();
     // Remove any alerts
     $('#alert-container').find('div').remove();
   }
