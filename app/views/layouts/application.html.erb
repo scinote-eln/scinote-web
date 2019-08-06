@@ -37,7 +37,6 @@
     data-atwho-repositories-url="<%= atwho_repositories_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
-    data-file-max-size-mb="<%= Rails.configuration.x.file_max_size_mb %>"
     data-tooltips-enabled="<%= current_user.settings[:tooltips_enabled] %>"
     <% end %>
   >
@@ -51,7 +50,7 @@
     <%= render "shared/file_edit_modal.html.erb" %>
     <%= render "shared/marvinjs_modal.html.erb" %>
     <%= render "shared/navigation" %>
-    
+
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
       <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: current_user.user_system_notifications.show_on_login(true) } %>
     <% else %>
