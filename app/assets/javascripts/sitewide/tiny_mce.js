@@ -21,6 +21,7 @@ var TinyMCE = (function() {
     init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
+      var plugins;
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
@@ -28,6 +29,8 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
+        plugins = 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
+        if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
 
         tinyMCE.init({
@@ -35,7 +38,7 @@ var TinyMCE = (function() {
           selector: selector,
           menubar: 'file edit view insert format',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
-          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor placeholder colorpicker textpattern',
+          plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
             { text: 'R', value: 'r' },
