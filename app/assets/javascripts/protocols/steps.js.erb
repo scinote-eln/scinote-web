@@ -564,10 +564,10 @@
         tableNamesValid ) {
 
       $form.find("[data-role='editable-table']").each(function() {
-        var hot = $(this).find(".hot").handsontable('getInstance');
-        var contents = $(this).find('.hot-contents');
-        var data = JSON.stringify({data: hot.getData()});
-        contents.attr("value", data);
+        let hot = $(this).find(".hot").handsontable('getInstance');
+        let contents = $(this).find('.hot-contents');
+        let tableData = JSON.stringify({tableData: hot.getData()});
+        contents.attr("value", tableData);
       });
 
       setTimeout(function() {
@@ -576,56 +576,58 @@
       }, 1000);
 
       animateSpinner(null, true);
-      var data = DragNDropSteps.appendFilesToForm(ev);
-      data.append('step[description]', $tinyMCEInput);
-      $.ajax({
-        url: $form.attr('action'),
-        method: 'POST',
-        data: data,
-        contentType: false,
-        processData: false,
-        beforeSend: function() {
-          $(".nested_step_checklists ul").each(function () {
-            reorderCheckboxData(this);
-          });
-        },
-        success: function(data) {
-          $($form.closest('.well')).after(data.html);
-          var $new_step = $($form.closest('.well')).next();
-          $($form.closest('.well')).remove();
-
-          initCallBacks();
-          initHandsOnTable($new_step);
-          expandStep($new_step);
-          toggleButtons(true);
-          SmartAnnotation.preventPropagation('.atwho-user-popover');
-
-          tinyMCE.editors.step_description_textarea.remove();
-          MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
-          //Rerender tables
-          $new_step.find("div.step-result-hot-table").each(function()  {
-            $(this).handsontable("render");
-          });
-          animateSpinner(null, false);
-          DragNDropSteps.clearFiles();
-          FilePreviewModal.init();
-          $.initTooltips();
-          if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
-          if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
-        },
-        error: function(xhr) {
-          if (xhr.responseJSON['assets.file']) {
-            $('#new-step-assets-group').addClass('has-error');
-            $('#new-step-assets-tab').addClass('has-error');
-            $.each(xhr.responseJSON['assets.file'], function(_, value) {
-               $('#new-step-assets-group').prepend('<span class="help-block">' + value + '</span>');
+      DragNDropSteps.appendFilesToForm(ev).then(formData => {
+        // formData.append('step[description]', TinyMCE.getContent());
+        $.ajax({
+          url: $form.attr('action'),
+          method: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          beforeSend: function() {
+            $(".nested_step_checklists ul").each(function () {
+              reorderCheckboxData(this);
             });
+          },
+          success: function(data) {
+            $($form.closest('.well')).after(data.html);
+            var $new_step = $($form.closest('.well')).next();
+            $($form.closest('.well')).remove();
+
+            initCallBacks();
+            initHandsOnTable($new_step);
+            expandStep($new_step);
+            toggleButtons(true);
+            SmartAnnotation.preventPropagation('.atwho-user-popover');
+
+            tinyMCE.editors.step_description_textarea.remove();
+            MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
+
+            //Rerender tables
+            $new_step.find("div.step-result-hot-table").each(function()  {
+              $(this).handsontable("render");
+            });
+            animateSpinner(null, false);
+            DragNDropSteps.clearFiles();
+            FilePreviewModal.init();
+            $.initTooltips();
+            if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
+            if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
+          },
+          error: function(xhr) {
+            if (xhr.responseJSON['assets.file']) {
+              $('#new-step-assets-group').addClass('has-error');
+              $('#new-step-assets-tab').addClass('has-error');
+              $.each(xhr.responseJSON['assets.file'], function(_, value) {
+                 $('#new-step-assets-group').prepend('<span class="help-block">' + value + '</span>');
+              });
+            }
+            animateSpinner(null, false);
+            SmartAnnotation.preventPropagation('.atwho-user-popover');
           }
-          animateSpinner(null, false);
-          SmartAnnotation.preventPropagation('.atwho-user-popover');
-        }
+        });
+        newStepHandler();
       });
-      newStepHandler();
     }
   }
 

@@ -24,9 +24,9 @@ describe Checklist, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :step }
-    it { should belong_to(:created_by).class_name('User') }
-    it { should belong_to(:last_modified_by).class_name('User') }
+    it { should belong_to(:step) }
+    it { should belong_to(:created_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should have_many :report_elements }
     it { should have_many :checklist_items }
   end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Api::V1::InventoriesController", type: :request do
+RSpec.describe 'Api::V1::InventoriesController', type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -55,6 +55,7 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
                                 id: @teams.first.repositories.first.id),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
+
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(@teams.first.repositories.first,

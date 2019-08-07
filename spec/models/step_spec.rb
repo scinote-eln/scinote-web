@@ -29,7 +29,7 @@ describe Step, type: :model do
   describe 'Relations' do
     it { should belong_to :user }
     it { should belong_to :protocol }
-    it { should belong_to(:last_modified_by).class_name('User') }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should have_many :checklists }
     it { should have_many :step_comments }
     it { should have_many :step_assets }
@@ -50,7 +50,7 @@ describe Step, type: :model do
     end
     it do
       should validate_length_of(:description)
-               .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
+        .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
     end
     it { should validate_inclusion_of(:completed).in_array([true, false]) }
   end

@@ -6,7 +6,7 @@ class Repository < ApplicationRecord
 
   attribute :discarded_by_id, :integer
 
-  belongs_to :team, optional: true
+  belongs_to :team
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_columns, dependent: :destroy
   has_many :repository_rows, dependent: :destroy

@@ -1,8 +1,4 @@
-
-/* global _ hljs tinyMCE SmartAnnotation MarvinJsEditor globalConstants */
-
-/* global _  I18n */
-
+/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -19,7 +15,6 @@ var TinyMCE = (function() {
       hljs.highlightBlock(block);
     });
   }
-
 
   function initImageToolBar(editor) {
     var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
@@ -51,14 +46,15 @@ var TinyMCE = (function() {
         tinyMceContainer.addClass('hidden');
         plugins = 'custom_image_toolbar autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
         if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
+
+
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
           menubar: 'file edit view insert format',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
           plugins: plugins,
           autoresize_bottom_margin: 20,
-
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -131,14 +127,9 @@ var TinyMCE = (function() {
           ],
           init_instance_callback: function(editor) {
             var editorForm = $(editor.getContainer()).closest('form');
-            var editorContainer = $(editor.getContainer());
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
-
-            var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
-
             var editorToolbaroffset;
-
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
             setTimeout(() => {
@@ -159,15 +150,12 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
-            if (globalConstants.is_safari) {
+            if (GLOBAL_CONSTANTS.IS_SAFARI) {
               editorToolbar.css('position', '-webkit-sticky');
             } else {
               editorToolbar.css('position', 'sticky');
             }
             editorToolbar.css('top', editorToolbaroffset + 'px').css('z-index', '100');
-
-            // Init image toolbar
-            initImageToolBar(editor);
 
             // Update scroll position after exit
             function updateScrollPosition() {
@@ -195,7 +183,6 @@ var TinyMCE = (function() {
               .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
-                editor.plugins.autosave.removeDraft();
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
@@ -281,16 +268,6 @@ var TinyMCE = (function() {
     getContent: function() {
       return tinyMCE.editors[0].getContent();
     },
-    updateImages(editor) {
-      var images;
-      var iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
-      images = $.map($('img', iframe), e => {
-        return e.dataset.mceToken;
-      });
-      $('#' + editor.id).next()[0].value = JSON.stringify(images);
-      return JSON.stringify(images);
-    },
-
     highlight: initHighlightjs
   });
 }());

@@ -21,8 +21,8 @@ describe TinyMceAsset, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :team }
-    it { should belong_to :object }
+    it { should belong_to(:team).optional }
+    it { should belong_to(:object).optional }
   end
 
   describe 'Should be a valid object' do
@@ -49,8 +49,8 @@ describe TinyMceAsset, type: :model do
 
     describe '#generate_url' do
       it 'create new url' do
-        image
-        expect(TinyMceAsset.generate_url(result_text.text)).to include 'sample_file.jpg'
+        image.update(object: result_text)
+        expect(TinyMceAsset.generate_url(result_text.text, result_text)).to include 'test.jpg'
       end
     end
 

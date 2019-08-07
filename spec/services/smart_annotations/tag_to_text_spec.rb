@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SmartAnnotations::TagToText do
@@ -29,9 +31,9 @@ describe SmartAnnotations::TagToText do
 
   describe '#fetch_object/2' do
     it 'rises an error if type is not valid' do
-      expect {
+      expect do
         subject.send(:fetch_object, 'banana', project.id)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns the required object' do
@@ -52,7 +54,7 @@ describe SmartAnnotations::TagToText do
       random_text = "Sec:[@#{user_two.full_name}~#{user_two.id.base62_encode}]"
       expect(
         subject.send(:parse_users_annotations, user, team, random_text)
-      ).to eq "Sec:"
+      ).to eq 'Sec:'
     end
   end
 end

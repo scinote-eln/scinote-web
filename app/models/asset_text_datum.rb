@@ -5,7 +5,7 @@ class AssetTextDatum < ApplicationRecord
 
   validates :data, presence: true
   validates :asset, presence: true, uniqueness: true
-  belongs_to :asset, inverse_of: :asset_text_datum, optional: true
+  belongs_to :asset, inverse_of: :asset_text_datum
 
   after_save :update_ts_index
 

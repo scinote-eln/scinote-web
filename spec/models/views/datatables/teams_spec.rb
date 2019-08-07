@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Views::Datatables::DatatablesTeam, type: :model do
@@ -14,10 +16,10 @@ RSpec.describe Views::Datatables::DatatablesTeam, type: :model do
   describe 'is readonly' do
     let(:user) { create :user }
     it do
-      expect {
+      expect do
         Views::Datatables::DatatablesTeam.create!(user_id: user.id)
-      }.to raise_error(ActiveRecord::ReadOnlyRecord,
-                       'Views::Datatables::DatatablesTeam is marked as readonly')
+      end.to raise_error(ActiveRecord::ReadOnlyRecord,
+                         'Views::Datatables::DatatablesTeam is marked as readonly')
     end
   end
 end

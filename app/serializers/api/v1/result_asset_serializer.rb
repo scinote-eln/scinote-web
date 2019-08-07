@@ -19,10 +19,10 @@ module Api
       end
 
       def url
-        if !object.asset&.file&.exists?
+        if !object.asset&.file&.attached?
           nil
         else
-          rails_blob_path(object.asset.file, disposition: 'attachment')
+          Rails.application.routes.url_helpers.rails_blob_path(object.asset.file, disposition: 'attachment')
         end
       end
     end
