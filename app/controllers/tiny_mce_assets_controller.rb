@@ -96,6 +96,8 @@ class TinyMceAssetsController < ApplicationController
                                can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == ResultText || @assoc.class == MyModule
       return render_403 unless can_read_experiment?(@my_module.experiment)
+    elsif @assoc.nil?
+      return render_403 unless current_team == @asset.team
     else
       render_403
     end
@@ -107,6 +109,8 @@ class TinyMceAssetsController < ApplicationController
                                can_manage_protocol_in_repository?(@protocol)
     elsif @assoc.class == ResultText || @assoc.class == MyModule
       return render_403 unless can_manage_module?(@my_module)
+    elsif @assoc.nil?
+      return render_403 unless current_team == @asset.team
     else
       render_403
     end
