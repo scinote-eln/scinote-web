@@ -13,8 +13,7 @@ class AssetsController < ApplicationController
   include FileIconsHelper
 
   before_action :load_vars, except: :create_wopi_file
-
-  before_action :check_read_permission
+  before_action :check_read_permission, except: :edit
   before_action :check_edit_permission, only: :edit
 
   def file_preview
@@ -23,7 +22,7 @@ class AssetsController < ApplicationController
       'type' => @asset.file.metadata[:asset_type] || (@asset.image? ? 'image' : 'file'),
       'filename' => truncate(escape_input(@asset.file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
+      'download-url' => rails_blob_path(@asset.file, disposition: 'attachment')
     }
 
     can_edit = if @assoc.class == Step
@@ -92,14 +91,6 @@ class AssetsController < ApplicationController
               end
     end
     return edit_supported, title
-  end
-
-  def download
-    if !@asset.file.attached?
-      render_404
-    else
-      redirect_to rails_blob_path(@asset.file, disposition: 'attachment')
-    end
   end
 
   def edit

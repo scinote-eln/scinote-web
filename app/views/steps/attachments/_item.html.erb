@@ -1,6 +1,6 @@
 
 <div class="pseudo-attachment-container" style="order: <%= assets_count - i %>">
-    <%= link_to download_asset_path(asset),
+    <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
             class: 'file-preview-link',
             id: "modal_link#{asset.id}",
             data: { no_turbolink: true,
