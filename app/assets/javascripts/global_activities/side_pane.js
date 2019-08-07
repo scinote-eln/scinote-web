@@ -22,17 +22,16 @@ function GlobalActivitiesFiltersGetDates() {
 }
 
 function GlobalActivitiesFilterPrepareArray() {
-  //var teamFilter = ($('.ga-side .team-selector select').val() || [])
-  //  .map(e => { return parseInt(e, 10); });
-  //var userFilter = ($('.ga-side .user-selector select').val() || [])
-  //  .map(e => { return parseInt(e, 10); });
-  //var activityFilter = ($('.ga-side .activity-selector select').val() || [])
-  //  .map(e => { return parseInt(e, 10); });
+  var teamFilter = dropdownSelector.getValues('.team-selector select')
+    .map(e => { return parseInt(e, 10); });
+  var userFilter = dropdownSelector.getValues('.user-selector select')
+    .map(e => { return parseInt(e, 10); });
+  var activityFilter = dropdownSelector.getValues('.activity-selector select')
+    .map(e => { return parseInt(e, 10); });
   var subjectFilter = {};
-  $.each(($('.ga-side .subject-selector select').val() || []), function(index, object) {
-    var splitObject = object.split('_');
-    if (subjectFilter[splitObject[0]] === undefined) subjectFilter[splitObject[0]] = [];
-    subjectFilter[splitObject[0]].push(parseInt(splitObject[1], 10));
+  $.each(dropdownSelector.getAllData('.subject-selector select'), function(index, object) {
+    if (subjectFilter[object.group] === undefined) subjectFilter[object.group] = [];
+    subjectFilter[object.group].push(parseInt(object.value, 10));
   });
 
   // Clear request parameters if all options are selected
@@ -41,9 +40,9 @@ function GlobalActivitiesFilterPrepareArray() {
   //}
 
   return {
-    teams: [],
-    users: [],
-    types: [],
+    teams: teamFilter,
+    users: userFilter,
+    types: activityFilter,
     subjects: subjectFilter,
     from_date: GlobalActivitiesFiltersGetDates().from,
     to_date: GlobalActivitiesFiltersGetDates().to
@@ -94,18 +93,23 @@ $(function() {
     return filter;
   }
 
-  dropdownSelector.init('.activity-selector select')
+  dropdownSelector.init('.activity-selector select',{
+    onChange: reloadActivities
+  })
   dropdownSelector.init('.user-selector select', {
-    ajaxParams: ajaxParams
+    ajaxParams: ajaxParams,
+    onChange: reloadActivities
   })
   dropdownSelector.init('.team-selector select', {
-    ajaxParams: ajaxParams
+    ajaxParams: ajaxParams,
+    onChange: reloadActivities
   })
   dropdownSelector.init('.subject-selector select', {
     tagLabel: function(data) {
       return I18n.t('global_activities.subject_name.' + data.group.toLowerCase()) + ': ' + data.label
     },
-    ajaxParams: ajaxParams
+    ajaxParams: ajaxParams,
+    onChange: reloadActivities
   })
 
   var ajaxQuery = {};
