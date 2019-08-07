@@ -21,7 +21,7 @@ module ActiveStorage
       when 'User'
         # No read restrictions for avatars
         true
-      when 'ZipExport'
+      when 'ZipExport', 'TeamZipExport'
         check_zip_export_read_permissions
       else
         render_403
