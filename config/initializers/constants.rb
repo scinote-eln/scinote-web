@@ -101,6 +101,26 @@ class Constants
   HANDSONTABLE_INIT_COLS_CNT = 5
   HANDSONTABLE_INIT_ROWS_CNT = 5
 
+  # Word reports format. All units in Twips.
+  # A twip is 1/20 of a point. Word documents are printed at 72dpi. 1in == 72pt == 1440 twips.
+  # Here is default A4
+  REPORT_DOCX_WIDTH = 12240
+  REPORT_DOCX_HEIGHT = 15840
+  REPORT_DOCX_MARGIN_TOP = 720
+  REPORT_DOCX_MARGIN_RIGHT = 720
+  REPORT_DOCX_MARGIN_BOTTOM = 720
+  REPORT_DOCX_MARGIN_LEFT = 720
+
+  # Word borders in eighth point units.
+  # A eighth point is 1/8 of a point. A border size of 4 is equivalent to 0.5pt.
+  REPORT_DOCX_TABLE_BORDER_SIZE = 4
+
+  # All font size in half points
+  REPORT_DOCX_EXPERIMENT_TITLE_SIZE = 28
+  REPORT_DOCX_MY_MODULE_TITLE_SIZE = 24
+  REPORT_DOCX_STEP_TITLE_SIZE = 22
+  REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE = 20
+
   #=============================================================================
   # Styling
   #=============================================================================
@@ -185,9 +205,56 @@ class Constants
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
   SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
-  WEBINARS_URL = (HTTP + 'goo.gl/T2QYAd').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
+
+  ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
+  ACADEMY_TR_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20TR&utm_medium=SciNote%20software%20TR'.freeze
+
+  #=============================================================================
+  # Protocol importers
+  #=============================================================================
+
+  PROTOCOLS_ENDPOINTS = {
+    protocolsio: {
+      v3: 'ProtocolsIO::V3'
+    }
+  }.freeze
+
+  PROTOCOLS_IO_URL = 'https://www.protocols.io/'.freeze
+
+  PROTOCOLS_IO_V3_API = {
+    base_uri: 'https://www.protocols.io/api/v3/',
+    default_timeout: 10,
+    debug_level: :debug,
+    sort_mappings: {
+      alpha_asc: { order_field: :name, order_dir: :asc },
+      alpha_desc: { order_field: :name, order_dir: :desc },
+      newest: { order_field: :date, order_dir: :desc },
+      oldest: { order_field: :date, order_dir: :asc }
+    },
+    endpoints: {
+      protocols: {
+        default_query_params: {
+          filter: :public,
+          key: '',
+          order_field: :activity,
+          order_dir: :desc,
+          page_size: 50,
+          page_id: 1,
+          fields: 'id,title,authors,created_on,uri,stats,published_on'
+        }
+      },
+      publications: {
+        default_query_params: {
+          latest: 50
+        }
+      }
+    },
+    source_id: 'protocolsio/v3'
+  }.freeze
+
+  PROTOCOLS_DESC_TAGS = %w(a img i br).freeze
 
   #=============================================================================
   # Other

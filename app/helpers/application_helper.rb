@@ -124,7 +124,12 @@ module ApplicationHelper
   # Check if text have smart annotations of resources
   # and outputs a link to resource
   def smart_annotation_filter_resources(text, team)
-    SmartAnnotations::TagToHtml.new(current_user, team, text).html
+    user = if !defined?(current_user) && @user
+             @user
+           else
+             current_user
+           end
+    SmartAnnotations::TagToHtml.new(user, team, text).html
   end
 
   # Check if text have smart annotations of users

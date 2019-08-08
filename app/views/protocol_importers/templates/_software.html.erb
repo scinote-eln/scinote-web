@@ -1,0 +1,11 @@
+<p class="step-description-component-software"><b><%= t('protocol_importers.templates.software.title') %></b><br>
+  <% if item[:name].present? %>
+    <%= "#{t('protocol_importers.templates.software.name')}: #{item[:name]}" %>
+  <% end %>
+  <br>
+  <% if item[:source].present? %>
+    <%= t('protocol_importers.templates.software.link') %>: <a href="<%= item[:source] %>" target="_blank"><%= item[:source] %></a>
+  <% end %>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>
+

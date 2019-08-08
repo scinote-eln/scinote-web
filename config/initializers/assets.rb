@@ -56,6 +56,7 @@ Rails.application.config.assets.precompile +=
   %w(experiments/dropdown_actions.js)
 Rails.application.config.assets.precompile += %w(reports/new.js)
 Rails.application.config.assets.precompile += %w(protocols/index.js)
+Rails.application.config.assets.precompile += %w(protocols/external_protocols_tab.js)
 Rails.application.config.assets.precompile += %w(protocols/header.js)
 Rails.application.config.assets.precompile += %w(protocols/steps.js)
 Rails.application.config.assets.precompile += %w(protocols/edit.js)

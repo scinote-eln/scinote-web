@@ -178,7 +178,18 @@ var FilePreviewModal = (function() {
     };
   }
 
-  function initImageEditor(data) {
+  function preInitImageEditor(data) {
+    $.ajax({
+      url: data['download-url'],
+      type: 'get',
+      success: function(responseData) {
+        var fileUrl = responseData;
+        initImageEditor(data, fileUrl);
+      }
+    });
+  }
+
+  function initImageEditor(data, fileUrl) {
     var imageEditor;
     var ps;
     var blackTheme = {
@@ -264,10 +275,11 @@ var FilePreviewModal = (function() {
       'colorpicker.title.color': '#fff'
     };
 
+    animateSpinner(null, true);
     imageEditor = new tui.ImageEditor('#tui-image-editor', {
       includeUI: {
         loadImage: {
-          path: data['download-url'],
+          path: fileUrl,
           name: data.filename
         },
         theme: blackTheme,
@@ -290,6 +302,7 @@ var FilePreviewModal = (function() {
 
     imageEditor.on('image_loaded', () => {
       $('.file-save-link').css('display', '');
+      animateSpinner(null, false);
     });
 
     ps = new PerfectScrollbar($('.tui-image-editor-wrap')[0], { wheelSpeed: 0.5 });
@@ -482,7 +495,7 @@ var FilePreviewModal = (function() {
                 ev.preventDefault();
                 ev.stopPropagation();
                 modal.modal('hide');
-                initImageEditor(data);
+                preInitImageEditor(data);
               });
             } else {
               modal.find('.file-edit-link').css('display', 'none');
@@ -535,7 +548,7 @@ var FilePreviewModal = (function() {
           }, CHECK_READY_DELAY);
         }
       } else {
-        if (data.type === 'image') {
+        if (data.type === 'image' || (data.type === 'file' && data['preview-icon'])) {
           modal.find('.file-preview-container').empty();
           modal.find('.file-preview-container')
             .append($('<img>')

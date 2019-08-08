@@ -1,0 +1,119 @@
+{
+  "protocols": [
+    {
+      "id": 22532,
+      "title": "Producing rooted cassava plantlets for use in pot experiments",
+      "source": "protocolsio/v3",
+      "created_on": 1556012701,
+      "published_on": 1556312593,
+      "authors": "Matema Imakumbili",
+      "nr_of_steps": 13,
+      "nr_of_views": 37,
+      "uri": "producing-rooted-cassava-plantlets-for-use-in-pot-z9cf92w"
+    },
+    {
+      "id": 832,
+      "title": "Preparation of Virus DNA from Seawater for Metagenomics",
+      "source": "protocolsio/v3",
+      "created_on": 1434495014,
+      "published_on": 1451931897,
+      "authors": "Matthew Sullivan Lab",
+      "nr_of_steps": 11,
+      "nr_of_views": 457,
+      "uri": "Preparation-of-Virus-DNA-from-Seawater-for-Metagen-c28yhv"
+    },
+    {
+      "id": 14506,
+      "title": "MALE CIRCUMCISION FOR PREVENTION OF HETEROSEXUAL TRANSMISSION OF HIV IN ADULT MALES IN SOWETO, what do indicators and incidence rates show?untitled protocol",
+      "source": "protocolsio/v3",
+      "created_on": 1533553359,
+      "published_on": 1552061162,
+      "authors": "Hillary Mukudu, Neil Martinson, Benn Sartorius",
+      "nr_of_steps": 0,
+      "nr_of_views": 5,
+      "uri": "male-circumcision-for-prevention-of-heterosexual-t-seiebce"
+    },
+    {
+      "id": 10927,
+      "title": "physiological and biochemical parameters",
+      "source": "protocolsio/v3",
+      "created_on": 1521454618,
+      "published_on": 1521463354,
+      "authors": "Amor Slama, Elhem Mallek-Maalej, Hatem Ben Mohamed, Thouraya Rhim, Leila Radhouane, Amor SLAMA",
+      "nr_of_steps": 0,
+      "nr_of_views": 34,
+      "uri": "physiological-and-biochemical-parameters-nwpdfdn"
+    },
+    {
+      "id": 822,
+      "title": "Iron Chloride Precipitation of Viruses from Seawater",
+      "source": "protocolsio/v3",
+      "created_on": 1434402745,
+      "published_on": 1437416188,
+      "authors": "Seth John,  Bonnie Poulos,  Christine Schirmer",
+      "nr_of_steps": 17,
+      "nr_of_views": 1805,
+      "uri": "Iron-Chloride-Precipitation-of-Viruses-from-Seawat-c2wyfd"
+    },
+    {
+      "id": 12115,
+      "title": "Measuring specific leaf area and water content",
+      "source": "protocolsio/v3",
+      "created_on": 1526074093,
+      "published_on": 1526329408,
+      "authors": "Etienne Laliberté",
+      "nr_of_steps": 33,
+      "nr_of_views": 259,
+      "uri": "measuring-specific-leaf-area-and-water-content-p3tdqnn"
+    },
+    {
+      "id": 1842,
+      "title": "Purification of viral assemblages from seawater in CsCl gradients",
+      "source": "protocolsio/v3",
+      "created_on": 1445287995,
+      "published_on": 1447702883,
+      "authors": "Janice E. Lawrence and Grieg F. Steward",
+      "nr_of_steps": 23,
+      "nr_of_views": 116,
+      "uri": "Purification-of-viral-assemblages-from-seawater-in-d2s8ed"
+    },
+    {
+      "id": 12540,
+      "title": "An improved primer set and PCR amplification protocol with increased specificity and sensitivity targeting the Symbiodinium ITS2 region using the SymVar primer pair",
+      "source": "protocolsio/v3",
+      "created_on": 1527418313,
+      "published_on": 1527422155,
+      "authors": "Benjamin Hume, Maren Ziegler, Christian Voolstra, Julie Poulain, Xavier Pochon, Sarah Romac, Emilie Boissin, Colomban de Vargas, Serge Planes, Patrick Wincker",
+      "nr_of_steps": 1,
+      "nr_of_views": 234,
+      "uri": "an-improved-primer-set-and-pcr-amplification-proto-qg4dtyw"
+    },
+    {
+      "id": 985,
+      "title": "NATURAL SEAWATER-BASED PRO99 MEDIUM",
+      "source": "protocolsio/v3",
+      "created_on": 1435347035,
+      "published_on": 1451931384,
+      "authors": "Chisholm Lab",
+      "nr_of_steps": 10,
+      "nr_of_views": 85,
+      "uri": "NATURAL-SEAWATER-BASED-PRO99-MEDIUM-c7zzp5"
+    },
+    {
+      "id": 1033,
+      "title": "SN Maintenance Medium for Synechococcus",
+      "source": "protocolsio/v3",
+      "created_on": 1435778857,
+      "published_on": 1451931479,
+      "authors": "JB Waterbury \u0026 JM Willey",
+      "nr_of_steps": 6,
+      "nr_of_views": 33,
+      "uri": "SN-Maintenance-Medium-for-Synechococcus-c9hz35"
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 6,
+    "page_size": 10
+  }
+}

@@ -1,0 +1,10 @@
+<p class="step-description-component-note"><b><%= t('protocol_importers.templates.note.title') %></b><br/>
+  <% if item[:author].present? %>
+    <%= "#{t('protocol_importers.templates.note.author')}: #{item[:author]}" %><br/>
+  <% end %>
+
+  <% if item[:body].present? %>
+    <%= item[:body] %>
+  <% end %>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

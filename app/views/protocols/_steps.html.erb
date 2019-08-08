@@ -28,6 +28,19 @@
   <% end %>
 </div>
 
+<div class="row">
+  <div class="pull-left" style="margin: 0 0 20px 15px;">
+    <a href="#"
+       class="btn btn-primary"
+       data-action="new-step"
+       data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>"
+       style="<%= @protocol.steps.empty? ? 'display: none;' : '' %>">
+      <span class="fas fa-plus" aria-hidden="true"></span>
+      <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
+    </a>
+  </div>
+</div>
+
 <%= javascript_include_tag "handsontable.full.min" %>
 
 <!-- Libraries for formulas -->

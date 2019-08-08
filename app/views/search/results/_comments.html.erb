@@ -32,30 +32,73 @@
 
   <p>
     <% if comment.is_a?(ProjectComment) && comment.project.present? %>
-      <span>
-        <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb",
-                    locals: { project: comment.project, link_to_page: :root } %>
-      </span>
+      <% project = comment.project %>
     <% elsif comment.is_a?(TaskComment) && comment.my_module.present? %>
-      <span>
-        <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb",
-                    locals: { my_module: comment.my_module, link_to_page: :canvas } %>
-      </span>
+      <% my_module = comment.my_module %>
+      <% experiment = my_module.experiment %>
+      <% project = experiment.project %>
     <% elsif comment.is_a?(StepComment) && comment.step.present? %>
-      <span>
-        <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb",
-                   locals: { step: comment.step, target: :comment } %>
-      </span>
+      <% step = comment.step %>
+      <% my_module = step.protocol.my_module %>
+      <% experiment = my_module.experiment %>
+      <% project = experiment.project %>
     <% elsif comment.is_a?(ResultComment) && comment.result.present? %>
+      <% result = comment.result %>
+      <% my_module = result.my_module %>
+      <% experiment = my_module.experiment %>
+      <% project = experiment.project %>
+    <% end %>
+
+
+
+
+    <% if result %>
       <span>
         <%=t "search.index.result" %>
         <%= render partial: "search/results/partials/result_text.html.erb",
-                   locals: { result: comment.result, target: :comment } %>
+                   locals: { result: result, target: :comment } %>
       </span>
+      <br>
     <% end %>
+
+    <% if step %>
+      <span>
+        <%=t "search.index.step" %>
+        <%= render partial: "search/results/partials/step_text.html.erb",
+                   locals: { step: step, target: :comment } %>
+      </span>
+      <br>
+    <% end %>
+
+    <% if my_module %>
+      <span>
+        <%=t "search.index.module" %>
+        <%= render partial: "search/results/partials/my_module_text.html.erb",
+                   locals: { my_module: my_module, link_to_page: :canvas } %>
+      </span>
+      <br>
+    <% end %>
+
+    <% if experiment %>
+      <span>
+        <%=t "search.index.experiment" %>
+        <%= render partial: "search/results/partials/experiment_text.html.erb",
+                   locals: { experiment: experiment } %>
+      </span>
+      <br>
+    <% end %>
+
+    <span>
+      <%=t "search.index.project" %>
+      <%= render partial: "search/results/partials/project_text.html.erb",
+                 locals: { project: project, link_to_page: :show } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.team" %>
+      <%= render partial: "search/results/partials/team_text.html.erb",
+                 locals: { team: project.team } %>
+    </span>
   </p>
 
   <hr>

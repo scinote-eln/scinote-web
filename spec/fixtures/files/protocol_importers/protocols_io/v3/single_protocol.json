@@ -1,0 +1,1496 @@
+{
+  "protocol": {
+    "id": 9451,
+    "title": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+    "title_html": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+    "image": {
+      "source": "https://s3.amazonaws.com/pr-journal/rzxfw26.png",
+      "placeholder": "https://s3.amazonaws.com/pr-journal/rzxfw26.png"
+    },
+    "doi": "dx.doi.org/10.17504/protocols.io.mgjc3un",
+    "doi_status": 2,
+    "uri": "cut-run-targeted-in-situ-genome-wide-profiling-wit-mgjc3un",
+    "type_id": 1,
+    "published_on": 1516132805,
+    "stats": {
+      "number_of_views": 17928,
+      "number_of_steps": 66,
+      "number_of_bookmarks": 65,
+      "number_of_comments": 122,
+      "number_of_exports": 397,
+      "number_of_runs": 39
+    },
+    "version_id": 0,
+    "created_on": 1515173338,
+    "categories": null,
+    "creator": {
+      "name": "Steven Henikoff",
+      "affiliation": "Fred Hutchinson Cancer Research Center",
+      "username": "steven-henikoff",
+      "link": "https://www.biorxiv.org/content/early/2017/09/24/193219",
+      "image": {
+        "source": "https://s3.amazonaws.com/pr-journal/s3pitfe.png",
+        "placeholder": "https://s3.amazonaws.com/pr-journal/s3pitfe.png"
+      },
+      "badges": [
+        {
+          "id": 2,
+          "image": {
+            "source": "/img/badges/bronze.svg",
+            "placeholder": "/img/badges/bronze.svg"
+          },
+          "name": "Author"
+        },
+        {
+          "id": 6,
+          "image": {
+            "source": "/img/badges/socialbutterfly.svg",
+            "placeholder": "/img/badges/socialbutterfly.svg"
+          },
+          "name": "Social butterfly"
+        }
+      ],
+      "research_interests": null
+    },
+    "journal": null,
+    "journal_name": null,
+    "journal_link": null,
+    "public": 1,
+    "has_versions": 1,
+    "link": "https://www.biorxiv.org/content/early/2017/09/24/193219",
+    "total_collections": 0,
+    "number_of_steps": 66,
+    "authors": [
+      {
+        "name": "Peter J. Skene",
+        "affiliation": "Howard Hughes Medical Institute, Basic Sciences Division, Fred Hutchinson Cancer Research Center, 1100 Fairview Ave N, Seattle, Washington, USA 98109",
+        "username": null,
+        "link": null,
+        "image": {
+          "source": null,
+          "placeholder": null
+        },
+        "badges": [],
+        "research_interests": null
+      },
+      {
+        "name": "Steven Henikoff",
+        "affiliation": "Howard Hughes Medical Institute, Basic Sciences Division, Fred Hutchinson Cancer Research Center, 1100 Fairview Ave N, Seattle, Washington, USA 98109",
+        "username": null,
+        "link": null,
+        "image": {
+          "source": null,
+          "placeholder": null
+        },
+        "badges": [],
+        "research_interests": null
+      }
+    ],
+    "versions": [
+      {
+        "id": 9451,
+        "title": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+        "title_html": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+        "image": {
+          "source": "https://s3.amazonaws.com/pr-journal/rzxfw26.png",
+          "placeholder": "https://s3.amazonaws.com/pr-journal/rzxfw26.png"
+        },
+        "doi": null,
+        "doi_status": 0,
+        "uri": "cut-run-targeted-in-situ-genome-wide-profiling-wit-mgjc3un",
+        "type_id": 0,
+        "published_on": 1516132805,
+        "stats": {
+          "number_of_views": 0,
+          "number_of_steps": 0,
+          "number_of_bookmarks": 0,
+          "number_of_comments": 122,
+          "number_of_exports": 0,
+          "number_of_runs": 0
+        },
+        "version_id": 0,
+        "created_on": 1515173338,
+        "categories": null,
+        "creator": {
+          "name": "Steven Henikoff",
+          "affiliation": "Fred Hutchinson Cancer Research Center",
+          "username": "steven-henikoff",
+          "link": null,
+          "image": {
+            "source": "https://s3.amazonaws.com/pr-journal/s3pitfe.png",
+            "placeholder": "https://s3.amazonaws.com/pr-journal/s3pitfe.png"
+          },
+          "badges": [],
+          "research_interests": null
+        },
+        "journal": null,
+        "journal_name": null,
+        "journal_link": null
+      },
+      {
+        "id": 11190,
+        "title": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+        "title_html": "CUT\u0026amp;RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+        "image": {
+          "source": "https://s3.amazonaws.com/pr-journal/rzxfw26.png",
+          "placeholder": "https://s3.amazonaws.com/pr-journal/rzxfw26.png"
+        },
+        "doi": null,
+        "doi_status": 0,
+        "uri": "cut-amp-run-targeted-in-situ-genome-wide-profiling-n6wdhfe",
+        "type_id": 0,
+        "published_on": 1551890606,
+        "stats": {
+          "number_of_views": 0,
+          "number_of_steps": 0,
+          "number_of_bookmarks": 0,
+          "number_of_comments": 30,
+          "number_of_exports": 0,
+          "number_of_runs": 0
+        },
+        "version_id": 1,
+        "created_on": 1522601124,
+        "categories": null,
+        "creator": {
+          "name": "Steven Henikoff",
+          "affiliation": "Fred Hutchinson Cancer Research Center",
+          "username": "steven-henikoff",
+          "link": null,
+          "image": {
+            "source": "https://s3.amazonaws.com/pr-journal/s3pitfe.png",
+            "placeholder": "https://s3.amazonaws.com/pr-journal/s3pitfe.png"
+          },
+          "badges": [],
+          "research_interests": null
+        },
+        "journal": null,
+        "journal_name": null,
+        "journal_link": null
+      },
+      {
+        "id": 21615,
+        "title": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+        "title_html": "CUT\u0026amp;RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+        "image": {
+          "source": "https://s3.amazonaws.com/pr-journal/rzxfw26.png",
+          "placeholder": "https://s3.amazonaws.com/pr-journal/rzxfw26.png"
+        },
+        "doi": null,
+        "doi_status": 0,
+        "uri": "cut-amp-run-targeted-in-situ-genome-wide-profiling-zcpf2vn",
+        "type_id": 0,
+        "published_on": 1557428439,
+        "stats": {
+          "number_of_views": 0,
+          "number_of_steps": 0,
+          "number_of_bookmarks": 0,
+          "number_of_comments": 12,
+          "number_of_exports": 0,
+          "number_of_runs": 0
+        },
+        "version_id": 2,
+        "created_on": 1553027602,
+        "categories": null,
+        "creator": {
+          "name": "Derek Janssens",
+          "affiliation": null,
+          "username": "derek-janssens",
+          "link": null,
+          "image": {
+            "source": "/img/avatars/017.png",
+            "placeholder": "/img/avatars/017.png"
+          },
+          "badges": [],
+          "research_interests": null
+        },
+        "journal": null,
+        "journal_name": null,
+        "journal_link": null
+      }
+    ],
+    "groups": [
+      {
+        "id": 523,
+        "uri": "hca",
+        "title": "Human Cell Atlas Method Development Community",
+        "image": {
+          "source": "https://s3.amazonaws.com/pr-journal/psucz36.png",
+          "placeholder": "https://s3.amazonaws.com/pr-journal/psucz36.png"
+        },
+        "tech_support": {
+          "email": null,
+          "phone": null,
+          "hide_contact": 0,
+          "use_email": 0
+        },
+        "is_member": 0,
+        "request": {
+          "id": 523,
+          "uri": "hca",
+          "title": "Human Cell Atlas Method Development Community",
+          "image": {
+            "source": "https://s3.amazonaws.com/pr-journal/psucz36.png",
+            "placeholder": "https://s3.amazonaws.com/pr-journal/psucz36.png"
+          },
+          "tech_support": {
+            "email": null,
+            "phone": null,
+            "hide_contact": 0,
+            "use_email": 0
+          },
+          "is_member": 0,
+          "description": null,
+          "research_interests": null,
+          "website": null,
+          "location": null,
+          "affiliation": null,
+          "status": {
+            "is_visible": true,
+            "access_level": 0
+          },
+          "stats": {
+            "files": [],
+            "total_members": 0,
+            "total_followers": 0,
+            "total_child_groups": 0,
+            "total_parent_groups": 0,
+            "has_collaborations": 0
+          },
+          "user_status": {
+            "is_member": false,
+            "is_confirmed": true,
+            "is_invited": false,
+            "is_owner": false,
+            "is_admin": false,
+            "is_following": false
+          },
+          "join_link": null,
+          "token": null,
+          "owner": {
+            "name": "Steven Henikoff",
+            "affiliation": null,
+            "username": "steven-henikoff",
+            "link": null,
+            "image": {
+              "source": "https://s3.amazonaws.com/pr-journal/s3pitfe.png",
+              "placeholder": "https://s3.amazonaws.com/pr-journal/s3pitfe.png"
+            },
+            "badges": [],
+            "research_interests": null
+          },
+          "is_protocol_requested": 0,
+          "is_group_requested": 0,
+          "is_my": false,
+          "is_request": true,
+          "is_confirmed": 1,
+          "is_declined": 0,
+          "requester": {
+            "name": "Steven Henikoff",
+            "affiliation": null,
+            "affiliation_url": null,
+            "username": "steven-henikoff",
+            "link": null
+          },
+          "protocol": {
+            "id": 0,
+            "title": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+            "title_html": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+            "image": {
+              "source": null,
+              "placeholder": null
+            },
+            "doi": null,
+            "doi_status": 0,
+            "uri": "cut-run-targeted-in-situ-genome-wide-profiling-wit-mgjc3un",
+            "type_id": 1,
+            "published_on": null,
+            "stats": {
+              "number_of_views": 0,
+              "number_of_steps": 0,
+              "number_of_bookmarks": 0,
+              "number_of_comments": 0,
+              "number_of_exports": 0,
+              "number_of_runs": 0
+            }
+          },
+          "created_on": 1516132805,
+          "resolve_on": 0,
+          "resolved_user": {
+            "name": " ",
+            "affiliation": null,
+            "username": null,
+            "link": null,
+            "image": {
+              "source": null,
+              "placeholder": null
+            },
+            "badges": [],
+            "research_interests": null
+          },
+          "shared": false
+        }
+      }
+    ],
+    "has_subprotocols": 0,
+    "is_subprotocol": 0,
+    "is_bookmarked": 0,
+    "can_be_copied": 0,
+    "can_remove_fork": 1,
+    "forks_count": {
+      "private": 27,
+      "public": 0
+    },
+    "access": {
+      "can_view": 0,
+      "can_remove": 0,
+      "can_add": 0,
+      "can_edit": 0,
+      "can_publish": 0,
+      "can_get_doi": 0,
+      "can_share": 0,
+      "can_move": 0,
+      "can_move_outside": 0,
+      "can_transfer": 0,
+      "can_download": 1,
+      "is_locked": 0
+    },
+    "steps": [
+      {
+        "id": 601564,
+        "guid": "F9349635A9AB4395AD1A410F66F785CF",
+        "previous_id": null,
+        "previous_guid": null,
+        "modified_on": 0,
+        "protocol_id": 0,
+        "components": [
+          {
+            "id": 1054723,
+            "guid": "B4239EB74A144551AD46C1ADC6707144",
+            "order_id": 1,
+            "type_id": 6,
+            "title": "Section",
+            "source": {
+              "title": "Binding cells to beads"
+            }
+          },
+          {
+            "id": 1054724,
+            "guid": "BA370A7410C749C580F428A9A8B515D7",
+            "order_id": 1,
+            "type_id": 1,
+            "title": "description",
+            "source": {
+              "description": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003e\u003cspan style = \":justify;\"\u003eHarvest fresh culture(s) at room temperature and count cells. The same protocol can be used for 100 to 250,000 mammalian cells per sample and/or digestion time point.\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "9165EC7527BD42D4B49D91025D410E2F",
+            "order_id": 5,
+            "type_id": 3,
+            "title": "amount",
+            "source": {
+              "amount": 123,
+              "unit": "µl",
+              "title": "of MGH"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "53B3062E48EC4B2CACE6F40940F733E0",
+            "order_id": 9,
+            "type_id": 4,
+            "title": "duration",
+            "source": {
+              "duration": 11,
+              "title": "boil"
+            }
+          },
+          {
+            "id": 12312312,
+            "guid": "53B3062E48ECAKCIQCE6F40940F733E0",
+            "order_id": 10,
+            "type_id": 7,
+            "title": "link",
+            "source": {
+              "link": "www.google.com/protocols/123"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "9F03B1015AC84F9E907B070672FF28E2",
+            "order_id": 14,
+            "type_id": 8,
+            "title": "software",
+            "source": {
+              "name": "RubyMine",
+              "developer": "JozaHans",
+              "repository": "www.github.com/rubymine/",
+              "link": "www.rubymine.com",
+              "os_name": "OSX and Linux.",
+              "os_version": "os 12.1"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "A85D4EBC0F394B38A4C8D65D5CB6877F",
+            "order_id": 4,
+            "type_id": 9,
+            "title": "dataset",
+            "source": {
+              "name": "WiFi passwords dictionary",
+              "link": "www.passwords.com/wifi"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "7A73C481C6A941DB918388C5445E57DC",
+            "order_id": 6,
+            "type_id": 15,
+            "title": "command",
+            "source": {
+              "name": "Terminal",
+              "command": "curl",
+              "os_name": "OSX and Linux"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "4FAF665BD86640D5902C91126205E70C",
+            "order_id": 10,
+            "type_id": 17,
+            "title": "result",
+            "source": {
+              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is expected result with HTML.\u003c/div\u003e\u003c/div\u003e"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "96A41B1AA3D142A8B44207A966D389C3",
+            "order_id": 13,
+            "type_id": 19,
+            "title": "safety",
+            "source": {
+              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is WARNING with HTML.\u003c/div\u003e\u003c/div\u003e",
+              "link": "www.warnings.com/be_careful"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "7F3C20217A1748849CCBD12FDF505088",
+            "order_id": 12,
+            "type_id": 20,
+            "title": "reagents",
+            "source": {
+              "id": 116672,
+              "mol_weight": 0.1,
+              "name": "2 mg Gastrin I, human",
+              "linfor": "C130H204N38O31S",
+              "url": "https://www.biorbyt.com/gastrin-i-human-orb321073",
+              "sku": "",
+              "public": 0,
+              "vendor": {
+                "name": "Contributed by users",
+                "affiliation": null,
+                "username": null,
+                "link": "https://www.biorbyt.com/gastrin-i-human-orb321073",
+                "image": {
+                  "source": "https:\/\/www.protocols.iohttps:\/\/www.protocols.io\/img\/vendors\/1.png",
+                  "placeholder": "https:\/\/www.protocols.iohttps:\/\/www.protocols.io\/img\/vendors\/1.png"
+                },
+                "badges": [],
+                "research_interests": null,
+                "id": 1
+              },
+              "can_edit": 1,
+              "stats": {
+                "total_protocols": 0
+              }
+            }
+          },
+          {
+            "id": 1055261,
+            "guid": "96A41B1AA3D142A8B44207A966D389C3",
+            "order_id": 13,
+            "type_id": 22,
+            "title": "gotostep",
+            "source": {
+              "title": "In case of someting, go to step",
+              "step_guid": 601565
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "F62B273C91EF4D1D841BCDDD87B15C18",
+            "order_id": 15,
+            "type_id": 24,
+            "title": "temperature",
+            "source": {
+              "temperature": 55,
+              "unit": "\u00b0C",
+              "title": "boil"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "61EDE338246C4393A56595D037F2FAE8",
+            "order_id": 3,
+            "type_id": 25,
+            "title": "concentration",
+            "source": {
+              "concentration": 12,
+              "unit": "g/L",
+              "title": "Name of concentration"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "2CCE644F1ED949949A13759539FE768F",
+            "order_id": 11,
+            "type_id": 26,
+            "title": "notes",
+            "source": {
+              "id": 0,
+              "parent_id": 0,
+              "uri": "",
+              "title": "",
+              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is expected result with HTML.\u003c/div\u003e\u003c/div\u003e",
+              "created_on": 0,
+              "changed_on": 0,
+              "creator": {
+                "name": "Frank Jones",
+                "affiliation": "",
+                "username": "",
+                "link": null,
+                "image": {
+                  "source": "",
+                  "placeholder": ""
+                },
+                "badges": [],
+                "research_interests": null
+              },
+              "comments": []
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "A85D4EBC0F394B38A4C8D65D5CB6877F",
+            "order_id": 4,
+            "type_id": 23,
+            "title": "file",
+            "source": {
+              "original_name": "First file",
+              "source": "https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "A85D4EBC0F394B38A4C8D65D5CB6877F",
+            "order_id": 4,
+            "type_id": 23,
+            "title": "file",
+            "source": {
+              "original_name": "Second file",
+              "source": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg"
+            }
+          },
+          {
+            "id": 1054723,
+            "guid": "A85D4EBC0F394B38A4C8D65D5CB6877F",
+            "order_id": 4,
+            "type_id": 23,
+            "title": "file",
+            "source": {
+              "source": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg"
+            }
+          }
+        ],
+        "cases": null,
+        "data": null,
+        "section": null,
+        "section_color": null,
+        "duration": 0
+      },
+      {
+        "id": 601565,
+        "guid": "533BCACB836840EEA0AFEB15424F1208",
+        "previous_id": 601564,
+        "previous_guid": "F9349635A9AB4395AD1A410F66F785CF",
+        "modified_on": 0,
+        "protocol_id": 0,
+        "components": [
+          {
+            "id": 1054723,
+            "guid": "F96FA71527B64CE0941CBB92181E74B7",
+            "order_id": 1,
+            "type_id": 6,
+            "title": "Section",
+            "source": {
+              "title": "Binding cells to beads 2"
+            }
+          },
+          {
+            "id": 1054724,
+            "guid": "E8A6A960B6204912A8F6697C44845E78",
+            "order_id": 1,
+            "type_id": 1,
+            "title": "description",
+            "source": {
+              "description": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min 600 x g at room temperature and withdraw liquid.\u003c/div\u003e\u003c/div\u003e"
+            }
+          }
+        ],
+        "cases": null,
+        "data": null,
+        "section": null,
+        "section_color": null,
+        "duration": 0
+      }
+    ],
+    "materials": [
+      {
+        "id": 119441,
+        "mol_weight": 0,
+        "name": "Cell suspension. We have used human K562 cells, Drosophila S2 cells and dissected Drosophila tissues such as brains and imaginal disks, and spheroplasted yeast.",
+        "linfor": null,
+        "url": "",
+        "sku": "",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Contributed by users",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.protocols.io",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/1.png",
+            "placeholder": "https://www.protocols.io/img/vendors/1.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 1
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119442,
+        "mol_weight": 0,
+        "name": "Concanavalin-coated magnetic beads ",
+        "linfor": null,
+        "url": "",
+        "sku": "BP531",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Bangs Laboratories",
+          "affiliation": null,
+          "username": null,
+          "link": "http://www.bangslabs.com/",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 278
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119443,
+        "mol_weight": 0,
+        "name": "Antibody to an epitope of interest. For example, rabbit α-CTCF polyclonal antibody (Millipore 07-729) for mapping 1D and 3D interactions by CUT\u0026RUN",
+        "linfor": null,
+        "url": "",
+        "sku": "",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Contributed by users",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.protocols.io",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/1.png",
+            "placeholder": "https://www.protocols.io/img/vendors/1.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 1
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119444,
+        "mol_weight": 0,
+        "name": "Positive control antibody to an abundant epitope, e.g. α-H3K27me3 rabbit monoclonal antibody (Cell Signaling Technology, cat. no. 9733)",
+        "linfor": null,
+        "url": "",
+        "sku": "",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Contributed by users",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.protocols.io",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/1.png",
+            "placeholder": "https://www.protocols.io/img/vendors/1.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 1
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119445,
+        "mol_weight": 0,
+        "name": "Negative control antibody to an absent epitope, e.g. guinea pig α-rabbit antibody",
+        "linfor": null,
+        "url": "",
+        "sku": "",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Contributed by users",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.protocols.io",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/1.png",
+            "placeholder": "https://www.protocols.io/img/vendors/1.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 1
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119446,
+        "mol_weight": 0,
+        "name": "5% Digitonin ",
+        "linfor": null,
+        "url": "",
+        "sku": "300410",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Emd Millipore",
+          "affiliation": null,
+          "username": null,
+          "link": "http://www.emdmillipore.com/",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 8
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119447,
+        "mol_weight": 0,
+        "name": "Protein A–Micrococcal Nuclease (pA-MNase) fusion protein (provided in 50% glycerol by the authors upon request). Store at -20 oC.",
+        "linfor": null,
+        "url": "",
+        "sku": "",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Contributed by users",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.protocols.io",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/1.png",
+            "placeholder": "https://www.protocols.io/img/vendors/1.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 1
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119448,
+        "mol_weight": 0,
+        "name": "Spike-in DNA (e.g., from Saccharomyces cerevisiae micrococcal nuclease-treated chromatin, provided by authors upon request)",
+        "linfor": null,
+        "url": "",
+        "sku": "",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Contributed by users",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.protocols.io",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/1.png",
+            "placeholder": "https://www.protocols.io/img/vendors/1.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 1
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119449,
+        "mol_weight": 0,
+        "name": "Distilled, deionized or RNAse-free H2O (dH2O e.g., Promega, cat. no. P1197)",
+        "linfor": null,
+        "url": "",
+        "sku": "P1197",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Promega",
+          "affiliation": null,
+          "username": null,
+          "link": "http://www.promega.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 23
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119450,
+        "mol_weight": 0,
+        "name": "1 M Manganese Chloride (MnCl2)",
+        "linfor": null,
+        "url": "",
+        "sku": "203734",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119451,
+        "mol_weight": 0,
+        "name": "1 M Calcium Chloride (CaCl2)",
+        "linfor": null,
+        "url": "",
+        "sku": "BP510",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Fisher Scientific",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.fishersci.com/us/en/home.html",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 31
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119452,
+        "mol_weight": 0,
+        "name": "1 M Potassium Chloride (KCl)",
+        "linfor": null,
+        "url": "",
+        "sku": "P3911",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119453,
+        "mol_weight": 0,
+        "name": "1 M Hydroxyethyl piperazineethanesulfonic acid pH 7.5 (HEPES (Na ))",
+        "linfor": null,
+        "url": "",
+        "sku": "H3375",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119454,
+        "mol_weight": 0,
+        "name": "1 M Hydroxyethyl piperazineethanesulfonic acid pH 7.9 (HEPES (K ))",
+        "linfor": null,
+        "url": "",
+        "sku": "H3375",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119455,
+        "mol_weight": 0,
+        "name": "5 M Sodium chloride (NaCl)",
+        "linfor": null,
+        "url": "",
+        "sku": "S5150-1L",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119456,
+        "mol_weight": 0,
+        "name": "0.5 M Ethylenediaminetetraacetic acid (EDTA)",
+        "linfor": null,
+        "url": "",
+        "sku": "3002E",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Research Organics",
+          "affiliation": null,
+          "username": null,
+          "link": "http://www.sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 279
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119457,
+        "mol_weight": 0,
+        "name": "0.2 M Ethylene glycol-bis(β-aminoethyl ether)-N,N,N,N-tetraacetic acid (EGTA)",
+        "linfor": null,
+        "url": "",
+        "sku": "E3889",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119458,
+        "mol_weight": 0,
+        "name": "2 M Spermidine ",
+        "linfor": null,
+        "url": "",
+        "sku": "S2501",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119459,
+        "mol_weight": 0,
+        "name": "Roche Complete Protease Inhibitor EDTA-Free tablets ",
+        "linfor": null,
+        "url": "",
+        "sku": "5056489001",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119460,
+        "mol_weight": 0,
+        "name": "2 mg/ml Glycogen (1:10 dilution)",
+        "linfor": null,
+        "url": "",
+        "sku": "10930193001",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119461,
+        "mol_weight": 0,
+        "name": "RNase A, DNase and protease-free (10 mg/ml)",
+        "linfor": null,
+        "url": "",
+        "sku": "EN0531",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Thermo Fisher Scientific",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.thermofisher.com/us/en/home.html",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 95
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119462,
+        "mol_weight": 0,
+        "name": "Gel and PCR Clean-up kit ",
+        "linfor": null,
+        "url": "",
+        "sku": "740609.250",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Macherey and Nagel",
+          "affiliation": null,
+          "username": null,
+          "link": "http://www.mn-net.com/",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 133
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119463,
+        "mol_weight": 0,
+        "name": "Agencourt AMPure XP magnetic beads ",
+        "linfor": null,
+        "url": "",
+        "sku": "A63880",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Beckman Coulter",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.beckmancoulter.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 32
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119464,
+        "mol_weight": 0,
+        "name": "10% Sodium dodecyl sulfate (SDS)",
+        "linfor": null,
+        "url": "",
+        "sku": "L4509",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma Aldrich",
+          "affiliation": null,
+          "username": null,
+          "link": "http://sigmaaldrich.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 17
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119465,
+        "mol_weight": 0,
+        "name": "Proteinase K",
+        "linfor": null,
+        "url": "",
+        "sku": "EO0492",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Thermo Fisher Scientific",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.thermofisher.com/us/en/home.html",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 95
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119466,
+        "mol_weight": 0,
+        "name": "Phenol-chloroform-isoamyl alcohol 25:24:1 (PCI)",
+        "linfor": null,
+        "url": "",
+        "sku": "15593049",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Invitrogen - Thermo Fisher",
+          "affiliation": null,
+          "username": null,
+          "link": "http://www.thermofisher.com/us/en/home/brands/invitrogen.html",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 191
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119467,
+        "mol_weight": 0,
+        "name": "Chloroform",
+        "linfor": null,
+        "url": "",
+        "sku": "366919-1L",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Sigma",
+          "affiliation": null,
+          "username": null,
+          "link": "www.sigma.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 114
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119468,
+        "mol_weight": 0,
+        "name": "1 M Tris-HCl pH 8.0",
+        "linfor": null,
+        "url": "",
+        "sku": "",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Contributed by users",
+          "affiliation": null,
+          "username": null,
+          "link": "https://www.protocols.io",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/1.png",
+            "placeholder": "https://www.protocols.io/img/vendors/1.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 1
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119469,
+        "mol_weight": 0,
+        "name": "Ethanol ",
+        "linfor": null,
+        "url": "",
+        "sku": "2716",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Decon Labs",
+          "affiliation": null,
+          "username": null,
+          "link": "http://deconlabs.com/",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 280
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      },
+      {
+        "id": 119470,
+        "mol_weight": 0,
+        "name": "Qubit dsDNA HS kit ",
+        "linfor": null,
+        "url": "",
+        "sku": "Q32851",
+        "cas_number": "",
+        "rrid": "",
+        "public": 0,
+        "vendor": {
+          "name": "Life Technologies",
+          "affiliation": null,
+          "username": null,
+          "link": "http://www.lifetechnologies.com",
+          "image": {
+            "source": "https://www.protocols.io/img/vendors/placeholder.png",
+            "placeholder": "https://www.protocols.io/img/vendors/placeholder.png"
+          },
+          "badges": [],
+          "research_interests": null,
+          "id": 11
+        },
+        "can_edit": 0,
+        "stats": {
+          "total_protocols": 0
+        }
+      }
+    ],
+    "description": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCleavage Under Targets and Release Using Nuclease (CUT\u0026RUN) is an epigenomic profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. As only the targeted fragments enter into solution, and the vast majority of DNA is left behind, CUT\u0026RUN has exceptionally low background levels. CUT\u0026RUN outperforms the most widely used Chromatin Immunoprecipitation (ChIP) protocols in resolution, signal-to-noise, and depth of sequencing required. In contrast to ChIP, CUT\u0026RUN is free of solubility and DNA accessibility artifacts and can be used to profile insoluble chromatin and to detect long-range 3D contacts without cross-linking. Here we present an improved CUT\u0026RUN protocol that does not require isolation of nuclei and provides high-quality data starting with only 100 cells for a histone modification and 1000 cells for a transcription factor. From cells to purified DNA CUT\u0026RUN requires less than a day at the lab bench.\u003c/div\u003e\u003cdiv class = \"text-block\"\u003eIn summary, CUT\u0026RUN has several advantages over ChIP-seq: (1) The method is performed in situ in non-crosslinked cells and does not require chromatin fragmentation or solubilization; (2) The intrinsically low background allows low sequence depth and identification of low signal genomic features invisible to ChIP; (3) The simple procedure can be completed within a day and is suitable for robotic automation; (4) The method can be used with low cell numbers compared to existing methodologies; (5) A simple spike-in strategy can be used for accurate quantitation of protein-DNA interactions. As such, CUT\u0026RUN represents an attractive replacement for ChIPseq, which is one of the most popular methods in biological research.\u003c/div\u003e\u003c/div\u003e",
+    "changed_on": 1522231932
+  },
+  "status_code": 0
+}

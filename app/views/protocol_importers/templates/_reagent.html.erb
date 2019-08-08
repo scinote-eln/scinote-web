@@ -1,0 +1,15 @@
+<p class="step-description-component-reagent">
+  <b><%= t('protocol_importers.templates.reagent.title') %></b>
+  <br/>
+  <%= "#{t('protocol_importers.templates.reagent.name')}: #{item[:name]}" %> <br />
+  <%  if item[:link].present? %>
+    <%= t('protocol_importers.templates.reagent.link') %>:
+    <a href="<%= item[:link] %>" target="_blank"><%= item[:link] %></a>
+  <% end %>
+</p>
+<%= render(
+    partial: 'protocol_importers/templates/details',
+    locals: { item: item }
+  )
+%>
+

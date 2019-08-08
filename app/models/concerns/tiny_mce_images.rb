@@ -94,7 +94,7 @@ module TinyMceImages
         if image['data-mce-token']
           asset = TinyMceAsset.find_by_id(Base62.decode(image['data-mce-token']))
 
-          next if asset && asset.object == self && asset.team_id != asset_team_id
+          next if asset && (asset.object == self || asset_team_id != asset.team_id)
 
         else
           # We need implement size and type checks here
