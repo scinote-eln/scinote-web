@@ -1,18 +1,15 @@
 FROM ruby:2.6.3-buster
 MAINTAINER BioSistemika <info@biosistemika.com>
 
-RUN echo deb "http://http.debian.net/debian buster-backports main" >> /etc/apt/sources.list
-
 # additional dependecies
 # libSSL-1.0 is required by wkhtmltopdf binary
 # libreoffice for file preview generation
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-  apt-get update -qq && \
+RUN apt-get update -qq && \
   apt-get install -y \
   libjemalloc2 \
   libssl-dev \
   nodejs \
-  yarnpkg \
+  npm \
   groff-base \
   awscli \
   postgresql-client \
@@ -20,8 +17,9 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   default-jre-headless \
   poppler-utils \
   sudo graphviz --no-install-recommends \
+  libreoffice \
   libfile-mimeinfo-perl && \
-  apt-get install -y --no-install-recommends -t buster-backports libreoffice && \
+  npm install -g yarn && \
   rm -rf /var/lib/apt/lists/*
 
 ENV RAILS_ENV production
