@@ -688,7 +688,13 @@ Rails.application.routes.draw do
 
   resources :global_activities, only: [:index] do
     collection do
-      get :search_subjects
+      get :project_filter
+      get :experiment_filter
+      get :my_module_filter
+      get :inventory_filter
+      get :inventory_item_filter
+      get :report_filter
+      get :protocol_filter
       get :team_filter
       get :user_filter
     end

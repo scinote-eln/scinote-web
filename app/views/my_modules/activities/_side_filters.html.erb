@@ -30,29 +30,25 @@
 <div class="activity-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.activity_type') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
-  <div class="select-container">
+  <div class="select-container group-activity">
+    <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
+      'data-placeholder': 'Select Activity groups'
+    } %>
+  </div>
+  <div class="select-container activity">
     <%= select_tag "activity", grouped_options_for_select(@activity_types),{
-      'data-select-all-button': t('global_activities.index.all_activities_btn'),
-      'data-select-all': 'true',
-      'data-select-multiple-name': t('global_activities.index.l_activities'),
-      'data-select-multiple-all-selected': t('global_activities.index.all_activities'),
-      'data-dropdown-position': 'left',
       'data-select-by-group': 'true',
       'data-placeholder': t('global_activities.index.select_activity_types')
     } %>
   </div>
 </div>
 
-
 <div class="user-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
   <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <select name="user"
-      data-select-all-button= "<%= t('global_activities.index.all_users_btn') %>"
-      data-dropdown-position = 'left'
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
-      data-select-all = "false"
       data-ajax-url = "<%= user_filter_global_activities_path(my_module_id: @my_module.id) %>"
     ></select>
   </div>

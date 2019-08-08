@@ -1,5 +1,5 @@
-/* global animateSpinner I18n gaUrlQueryParams PerfectSb */
-/* eslint-disable no-extend-native, no-underscore-dangle */
+/* global animateSpinner gaUrlQueryParams PerfectSb dropdownSelector */
+/* eslint-disable no-extend-native, no-underscore-dangle, no-use-before-define */
 // Common code
 
 
@@ -22,28 +22,21 @@ function GlobalActivitiesFiltersGetDates() {
 }
 
 function GlobalActivitiesFilterPrepareArray() {
-  var teamFilter = dropdownSelector.getValues('.team-selector select')
-    .map(e => { return parseInt(e, 10); });
-  var userFilter = dropdownSelector.getValues('.user-selector select')
-    .map(e => { return parseInt(e, 10); });
-  var activityFilter = dropdownSelector.getValues('.activity-selector select')
-    .map(e => { return parseInt(e, 10); });
-  var subjectFilter = {};
-  $.each(dropdownSelector.getAllData('.subject-selector select'), function(index, object) {
-    if (subjectFilter[object.group] === undefined) subjectFilter[object.group] = [];
-    subjectFilter[object.group].push(parseInt(object.value, 10));
-  });
-
-  // Clear request parameters if all options are selected
-  //if (activityFilter.length === $('.ga-side .activity-selector option').length) {
-  //  activityFilter = [];
-  //}
+  var convertToInt = (array) => { return array.map(e => { return parseInt(e, 10); }); };
 
   return {
-    teams: teamFilter,
-    users: userFilter,
-    types: activityFilter,
-    subjects: subjectFilter,
+    teams: convertToInt(dropdownSelector.getValues('select[name=team]') || []),
+    users: convertToInt(dropdownSelector.getValues('select[name=user]') || []),
+    types: convertToInt(dropdownSelector.getValues('select[name=activity]') || []),
+    subjects: {
+      Project: convertToInt(dropdownSelector.getValues('select[name=project]') || []),
+      Experiment: convertToInt(dropdownSelector.getValues('select[name=experiment]') || []),
+      MyModule: convertToInt(dropdownSelector.getValues('select[name=task]') || []),
+      Repository: convertToInt(dropdownSelector.getValues('select[name=inventory]') || []),
+      RepositoryRow: convertToInt(dropdownSelector.getValues('select[name=inventory-item]') || []),
+      Protocol: convertToInt(dropdownSelector.getValues('select[name=protocol]') || []),
+      Report: convertToInt(dropdownSelector.getValues('select[name=report]') || [])
+    },
     from_date: GlobalActivitiesFiltersGetDates().from,
     to_date: GlobalActivitiesFiltersGetDates().to
   };
@@ -51,135 +44,117 @@ function GlobalActivitiesFilterPrepareArray() {
 
 $(function() {
   var updateRunning = false;
-  var selectors = [];
-  // Ajax request for object search
-  var subjectAjaxQuery = {
-    url: '/global_activities/search_subjects',
-    dataType: 'json',
-    data: function(params) {
-      var filter = GlobalActivitiesFilterPrepareArray();
-      filter.query = params.term;
-      return filter;
-    },
-    // preparing results
-    processResults: function(data) {
-      var result = [];
-      $.each(data, (key, items) => {
-        var updateItems = items.map(item => {
-          return {
-            id: key + '_' + item.id,
-            text: item.name,
-            label: I18n.t('global_activities.subject_name.' + key.toLowerCase())
-          };
-        });
-        result.push({
-          text: I18n.t('global_activities.subject_name.' + key.toLowerCase()),
-          children: updateItems
-        });
-      });
-      return {
-        results: result
-      };
-    }
-  };
-    // custom display function
-  var subjectCustomDisplay = (state) => {
-    return (state.label ? state.label + ': ' : '') + state.text;
-  };
 
   var ajaxParams = function(params) {
     var filter = GlobalActivitiesFilterPrepareArray();
     filter.query = params.query;
     return filter;
-  }
+  };
 
-  dropdownSelector.init('.activity-selector select',{
-    onChange: reloadActivities
-  })
-  dropdownSelector.init('.user-selector select', {
-    ajaxParams: ajaxParams,
-    onChange: reloadActivities
-  })
-  dropdownSelector.init('.team-selector select', {
-    ajaxParams: ajaxParams,
-    onChange: reloadActivities
-  })
-  dropdownSelector.init('.subject-selector select', {
-    tagLabel: function(data) {
-      return I18n.t('global_activities.subject_name.' + data.group.toLowerCase()) + ': ' + data.label
-    },
-    ajaxParams: ajaxParams,
-    onChange: reloadActivities
-  })
+  var defaultOnChangeActions = function() {
+    GlobalActivitiesUpdateTopPaneTags();
+    reloadActivities();
+  };
 
-  var ajaxQuery = {};
-  $.each(selectors, (index, e) => {
-    var selector = $('.ga-side .' + e + '-selector select')[0];
-    if (e !== 'activity' && selector) {
-      ajaxQuery[e] = {
-        url: selector.dataset.ajaxUrl,
-        dataType: 'json',
-        data: function(params) {
-          var filter = GlobalActivitiesFilterPrepareArray();
-          filter.query = params.term;
-          return filter;
-        },
-        processResults: function(data) {
-          var result = [];
-          if (typeof (data.data) === 'object') return { results: result };
-          $.each(data, (key, obj) => {
-            result.push({
-              id: String(obj.id),
-              text: obj.name
-            });
-          });
-          return { results: result };
-        }
-      };
+  dropdownSelector.init('select[name=group_activity]', {
+    onChange: defaultOnChangeActions
+  });
+  dropdownSelector.init('select[name=activity]', {
+    onChange: defaultOnChangeActions,
+    localFilter: function(data) {
+      var groupFilter = dropdownSelector.getValues('select[name=group_activity]');
+      if (groupFilter.length === 0) return data;
+      if (groupFilter.indexOf(data.parent().attr('label')) !== -1) {
+        return data;
+      }
+      return [];
     }
   });
+  dropdownSelector.init('select[name=user]', {
+    ajaxParams: ajaxParams,
+    onChange: defaultOnChangeActions
+  });
+  dropdownSelector.init('select[name=team]', {
+    ajaxParams: ajaxParams,
+    onChange: defaultOnChangeActions
+  });
+  dropdownSelector.init('select[name=project]', {
+    ajaxParams: ajaxParams,
+    onChange: () => {
+      var selectedValues = dropdownSelector.getValues('select[name=project]');
+      if (selectedValues.length > 0) {
+        dropdownSelector.disableSelector('select[name=experiment]', false);
+      } else {
+        dropdownSelector.disableSelector('select[name=experiment]', true);
+        dropdownSelector.disableSelector('select[name=task]', true);
+      }
+      defaultOnChangeActions();
+    }
+  });
+  dropdownSelector.init('.select-container.experiment select', {
+    ajaxParams: ajaxParams,
+    onChange: () => {
+      var selectedValues = dropdownSelector.getValues('select[name=experiment]');
+      dropdownSelector.disableSelector('select[name=task]', (selectedValues.length === 0));
+      defaultOnChangeActions();
+    }
+  });
+  dropdownSelector.init('select[name=task]', {
+    ajaxParams: ajaxParams,
+    onChange: defaultOnChangeActions
+  });
+  dropdownSelector.init('select[name=inventory]', {
+    ajaxParams: ajaxParams,
+    onChange: () => {
+      var selectedValues = dropdownSelector.getValues('select[name=inventory]');
+      dropdownSelector.disableSelector('select[name=inventory-item]', (selectedValues.length === 0));
+      defaultOnChangeActions();
+    }
+  });
+  dropdownSelector.init('select[name=inventory-item]', {
+    ajaxParams: ajaxParams,
+    onChange: defaultOnChangeActions
+  });
+  dropdownSelector.init('select[name=protocol]', {
+    ajaxParams: ajaxParams,
+    onChange: defaultOnChangeActions
+  });
+  dropdownSelector.init('select[name=report]', {
+    ajaxParams: ajaxParams,
+    onChange: defaultOnChangeActions
+  });
+
+  $('.ga-side').scroll(() => {
+    var selectors = ['group_activity', 'activity', 'user', 'team', 'project',
+      'experiment', 'task', 'inventory', 'inventory-item', 'protocol', 'report'];
+    $.each(selectors, (i, selector) => { dropdownSelector.updateDropdownDirection(`select[name=${selector}]`); });
+  });
+
   function GlobalActivitiesUpdateTopPaneTags() {
     var dateContainer = $('.ga-side .date-selector.filter-block');
     if (updateRunning) return false;
     $('.ga-top .ga-tags').children().remove();
     if (dateContainer[0].dataset.periodSelect) {
-      $('<li class="select2-selection__choice">'
-          + dateContainer[0].dataset.periodLabel
-          + $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect
-        + '</li>').appendTo('.ga-top .ga-tags');
+      $(`<div class="ds-tags">
+          <div class="tag-label">
+            ${dateContainer[0].dataset.periodLabel}
+            ${$('.ga-side .date-selector.filter-block')[0].dataset.periodSelect}
+          </div>
+        </div>`).appendTo('.ga-top .ga-tags');
     }
-    $.each($('.ga-side .select2-selection__choice'), function(index, tag) {
+    $.each($('.ga-side .ds-tags'), function(index, tag) {
       var newTag = $(tag.outerHTML).appendTo('.ga-top .ga-tags');
-      var selectedValues = [];
-      var parentSelector = $(tag).parents('.select2-container').prev();
-      var elementToDelete = null;
-      newTag.find('.select2-selection__choice__remove')
+      newTag.find('.fa-times')
         .click(() => {
-          var parentTag = $(tag).find('span.select2-block-body')[0];
-          if (parentTag) {
-            // Adding remove action for native blocks
-            selectedValues = parentSelector.val();
-            elementToDelete = parentTag.dataset.selectId;
-            selectedValues = $.grep(selectedValues, v => { return v !== elementToDelete; });
-            parentSelector.val(selectedValues).change();
-          } else {
-            $(tag).find('.select2-selection__choice__remove').click();
-          }
+          $(tag).find('.fa-times').click();
         });
     });
-    PerfectSb().update_all();
   }
 
   function preloadFilters(filters) {
     updateRunning = true;
     if (filters.types) {
       $('.ga-side .activity-selector select').val(filters.types).trigger('change');
-    }
-    if (filters.teams) {
-      $('.ga-side .team-selector select').val(filters.teams).trigger('change');
-    }
-    if (filters.users) {
-      $('.ga-side .user-selector select').val(filters.users).trigger('change');
     }
     if (filters.from_date) {
       $('#calendar-from-date').data('DateTimePicker').date(new Date(filters.from_date));
@@ -188,11 +163,11 @@ $(function() {
       $('#calendar-to-date').data('DateTimePicker').date(new Date(filters.to_date));
     }
     if (filters.subject_labels) {
-      $.each(filters.subject_labels, function(index, subject) {
-        var subjectHash = JSON.parse(subject);
-        $('<option data-label="test" value="' + subjectHash.id + '" selected >' + subjectHash.label + '</option>').appendTo('.ga-side .subject-selector select');
+      $.each(filters.subject_labels, (i, subject) => {
+        var currentData = dropdownSelector.getData(`select[name=${subject.object}]`);
+        currentData.push(subject);
+        dropdownSelector.setData(`select[name=${subject.object}]`, currentData);
       });
-      $('.ga-side .subject-selector select').trigger('change');
     }
     updateRunning = false;
     GlobalActivitiesUpdateTopPaneTags();
@@ -205,7 +180,7 @@ $(function() {
     if (updateRunning) return false;
     updateRunning = true;
     $('.ga-activities-list .activities-day').remove();
-    animateSpinner(null, true);
+    animateSpinner('.ga-main', true);
     $.ajax({
       url: $('.ga-activities-list').data('activities-url'),
       data: GlobalActivitiesFilterPrepareArray(),
@@ -226,14 +201,14 @@ $(function() {
         }
         $('.ga-activities-list').data('starting-timestamp', json.starting_timestamp);
         updateRunning = false;
-        animateSpinner(null, false);
+        animateSpinner('.ga-main', false);
 
         $('.ga-main').scrollTop(0);
         PerfectSb().update_all();
       },
       error: function() {
         updateRunning = false;
-        animateSpinner(null, false);
+        animateSpinner('.ga-main', false);
       }
     });
     return true;
@@ -245,42 +220,8 @@ $(function() {
     });
   }
 
-  // Common selection intialize
-  $.each(selectors, (index, e) => {
-    var selectorParams;
-    if (e === 'activity') {
-      selectorParams = { singleDisplay: true };
-    } else {
-      selectorParams = { ajax: ajaxQuery[e], unlimitedSize: true };
-    }
-    $('.ga-side .' + e + '-selector select').select2Multiple(selectorParams)
-      .on('change', function() {
-        GlobalActivitiesUpdateTopPaneTags();
-        reloadActivities();
-      });
-    $('.ga-side .' + e + '-selector .clear').click(function() {
-      $('.ga-side .' + e + '-selector select').select2MultipleClearAll();
-    });
-  });
-
-  // Object selection intialize
-  /*$('.ga-side .subject-selector select').select2Multiple({
-    ajax: subjectAjaxQuery,
-    customSelection: subjectCustomDisplay,
-    unlimitedSize: true
-  }).on('change select2:select', function() {
-    GlobalActivitiesUpdateTopPaneTags();
-    reloadActivities();
-  });
-  $('.ga-side .subject-selector .clear').click(function() {
-    $('.ga-side .subject-selector select').select2MultipleClearAll();
-  });
-  */
-
   $('.ga-tags-container .clear-container span').click(function() {
     updateRunning = true;
-    $.each(selectors, (index, e) => { $('.ga-side .' + e + '-selector select').select2MultipleClearAll(); });
-    $('.ga-side .subject-selector select').select2MultipleClearAll();
     $('#calendar-from-date').data('DateTimePicker').clear();
     $('#calendar-to-date').data('DateTimePicker').clear();
     $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect = '';
