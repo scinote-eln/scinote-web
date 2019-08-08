@@ -14,12 +14,23 @@
               <% end %>
 
               <% if repository.shared_with?(current_team) %>
-                <% if repository.team_repositories.where(team: current_team).take[:permission_level] == 'write' %>
+                <% if repository.team_repositories.where(team: current_team).take.write? %>
                   <%= draw_custom_icon('shared-edit') %>
-                <% elsif repository.team_repositories.where(team: current_team).take[:permission_level] == 'read' %>
+                <% else %>
                   <%= draw_custom_icon('shared-read') %>
                 <% end %>
               <% end %>
+            </span>
+          </li>
+        <% end %>
+        <% if can_create_repositories?(current_team) %>
+          <li>
+            <span class="tree-link link-wrap no-indent">
+              <a class="sidebar-button" id="create-new-repository" data-remote="true"
+                 href="<%= create_modal_team_repositories_path(@repository.team) %>">
+                <span class="fas fa-plus"></span>
+                <%= t('libraries.index.no_libraries.create_new_button') %>
+              </a>
             </span>
           </li>
         <% end %>
