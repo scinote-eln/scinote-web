@@ -1,5 +1,5 @@
 /* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString globalConstants */
-/* global HelperModule */
+/* global HelperModule GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
 //= require my_modules
@@ -414,7 +414,7 @@ function initImport() {
         } else {
           if (data.status === 'size_too_large') {
             alert(I18n.t('my_modules.protocols.load_from_file_size_error',
-              { size: $(document.body).data('file-max-size-mb') }));
+              { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
           } else {
             alert(I18n.t('my_modules.protocols.load_from_file_error'));
           }
