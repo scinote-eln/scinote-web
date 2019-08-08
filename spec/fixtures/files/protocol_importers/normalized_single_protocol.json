@@ -1,0 +1,134 @@
+{
+  "protocol": {
+    "uri": "https://www.protocols.io/api/v3/protocols/9451",
+    "source": "protocolsio/v3",
+    "doi": "dx.doi.org/10.17504/protocols.io.mgjc3un",
+    "published_on": 1516132805,
+    "version": 0,
+    "source_id": 9451,
+    "name": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+    "description": {
+      "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCleavage Under Targets and Release Using Nuclease (CUT\u0026RUN) is an epigenomic profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. As only the targeted fragments enter into solution, and the vast majority of DNA is left behind, CUT\u0026RUN has exceptionally low background levels. CUT\u0026RUN outperforms the most widely used Chromatin Immunoprecipitation (ChIP) protocols in resolution, signal-to-noise, and depth of sequencing required. In contrast to ChIP, CUT\u0026RUN is free of solubility and DNA accessibility artifacts and can be used to profile insoluble chromatin and to detect long-range 3D contacts without cross-linking. Here we present an improved CUT\u0026RUN protocol that does not require isolation of nuclei and provides high-quality data starting with only 100 cells for a histone modification and 1000 cells for a transcription factor. From cells to purified DNA CUT\u0026RUN requires less than a day at the lab bench.\u003c/div\u003e\u003cdiv class = \"text-block\"\u003eIn summary, CUT\u0026RUN has several advantages over ChIP-seq: (1) The method is performed in situ in non-crosslinked cells and does not require chromatin fragmentation or solubilization; (2) The intrinsically low background allows low sequence depth and identification of low signal genomic features invisible to ChIP; (3) The simple procedure can be completed within a day and is suitable for robotic automation; (4) The method can be used with low cell numbers compared to existing methodologies; (5) A simple spike-in strategy can be used for accurate quantitation of protein-DNA interactions. As such, CUT\u0026RUN represents an attractive replacement for ChIPseq, which is one of the most popular methods in biological research.\u003c/div\u003e\u003c/div\u003e",
+      "image": "https://s3.amazonaws.com/pr-journal/rzxfw26.png",
+      "extra_content": []
+    },
+    "authors": "Peter J. Skene, Steven Henikoff",
+    "steps": [
+      {
+        "source_id": 601564,
+        "name": "Binding cells to beads",
+        "description": {
+          "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003e\u003cspan style = \":justify;\"\u003eHarvest fresh culture(s) at room temperature and count cells. The same protocol can be used for 100 to 250,000 mammalian cells per sample and/or digestion time point.\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e",
+          "components": [
+            {
+              "type": "amount",
+              "value": 123,
+              "unit": "µl",
+              "name": "of MGH"
+            },
+            {
+              "type": "duration",
+              "value": 11,
+              "name": "boil"
+            },
+            {
+              "type": "link",
+              "source": "www.google.com/protocols/123"
+            },
+            {
+              "type": "software",
+              "name": "RubyMine",
+              "source": "www.rubymine.com",
+              "details": {
+                "repository_link": "www.github.com/rubymine/",
+                "developer": "JozaHans",
+                "os_name": "OSX and Linux."
+              }
+            },
+            {
+              "type": "dataset",
+              "name": "WiFi passwords dictionary",
+              "source": "www.passwords.com/wifi"
+            },
+            {
+              "type": "command",
+              "software_name": "Terminal",
+              "command": "curl",
+              "details": {
+                "os_name": "OSX and Linux"
+              }
+            },
+            {
+              "type": "result",
+              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is expected result with HTML.\u003c/div\u003e\u003c/div\u003e"
+            },
+            {
+              "type": "warning",
+              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is WARNING with HTML.\u003c/div\u003e\u003c/div\u003e",
+              "details": {
+                "link": "www.warnings.com/be_careful"
+              }
+            },
+            {
+              "type": "reagent",
+              "name": "2 mg Gastrin I, human",
+              "link": "https://www.biorbyt.com/gastrin-i-human-orb321073",
+              "details": {
+                "catalog_number": "",
+                "linear_formula": "C130H204N38O31S",
+                "mol_weight": 0.1
+              }
+            },
+            {
+              "type": "gotostep",
+              "value": "In case of someting, go to step",
+              "step_id": 601565
+            },
+            {
+              "type": "temperature",
+              "value": 55,
+              "unit": "°C",
+              "name": "boil"
+            },
+            {
+              "type": "concentration",
+              "value": 12,
+              "unit": "g/L",
+              "name": "Name of concentration"
+            },
+            {
+              "type": "note",
+              "author": "Frank Jones",
+              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is expected result with HTML.\u003c/div\u003e\u003c/div\u003e"
+            }
+          ]
+        },
+        "attachments": [
+          {
+            "url": "https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg",
+            "name": "First file"
+          },
+          {
+            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
+            "name": "Second file"
+          },
+          {
+            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
+            "name": "14506718045_5b3e71dacd_o.jpg"
+          }
+        ],
+        "position": 0
+      },
+      {
+        "source_id": 601565,
+        "name": "Binding cells to beads 2",
+        "description": {
+          "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min 600 x g at room temperature and withdraw liquid.\u003c/div\u003e\u003c/div\u003e",
+          "components": []
+        },
+        "attachments": [],
+        "position": 1
+      }
+    ]
+  }
+}

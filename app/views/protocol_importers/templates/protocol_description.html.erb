@@ -1,0 +1,16 @@
+<% if @description[:body].present? %>
+  <p> <%= sanitize(@description[:body], tags: Constants::PROTOCOLS_DESC_TAGS) %> </p>
+  <br/>
+<% end %>
+<% if @description[:image].present? %>
+  <br/>
+  <img src='<%= @description[:image] %>' />
+  <br/>
+<% end %>
+
+<% @description[:extra_content]&.each do |i| %>
+  <% if i[:body].present? %>
+    <br/><b><%= strip_tags i[:title] %>:</b> <br/>
+    <%= sanitize(i[:body], tags: Constants::PROTOCOLS_DESC_TAGS) %><br/>
+  <% end %>
+<% end %>

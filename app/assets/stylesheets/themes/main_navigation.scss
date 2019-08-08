@@ -432,3 +432,31 @@
     }
   }
 }
+
+.academy-link.flag {
+  background: $brand-academy;
+  border: 16px solid $brand-academy;
+  border-bottom: 10px solid $color-white;
+  display: inline-block;
+  height: 0;
+  margin: 0 6px 8px;
+  padding: 12px 0 0;
+  position: relative;
+  width: 0;
+
+  .icon-container {
+    align-items: center;
+    display: flex;
+    height: 28px;
+    justify-content: center;
+    left: -16px;
+    position: absolute;
+    top: -16px;
+    width: 32px;
+
+    .fas {
+      color: $color-white;
+      font-size: 16px;
+    }
+  }
+}

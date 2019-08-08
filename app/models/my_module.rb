@@ -390,6 +390,28 @@ class MyModule < ApplicationRecord
     { data: data, headers: headers }
   end
 
+  def repository_json(repository_id, order, user)
+    headers = [
+      I18n.t('repositories.table.id'),
+      I18n.t('repositories.table.row_name'),
+      I18n.t('repositories.table.added_on'),
+      I18n.t('repositories.table.added_by')
+    ]
+    repository = Repository.find_by_id(repository_id)
+    return false unless repository
+
+    repository.repository_columns.order(:id).each do |column|
+      headers.push(column.name)
+    end
+
+    params = { assigned: 'assigned', search: {}, order: { values: { column: '1', dir: order } } }
+    records = RepositoryDatatableService.new(repository,
+                                             params,
+                                             user,
+                                             self)
+    { headers: headers, data: records }
+  end
+
   def deep_clone(current_user)
     deep_clone_to_experiment(current_user, experiment)
   end

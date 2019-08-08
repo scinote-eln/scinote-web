@@ -43,7 +43,7 @@
   display: inline-block;
 }
 
-.get-report-pdf-form {
+#download-report {
   display: inline-block;
 }
 
@@ -65,6 +65,28 @@ label {
   .ht_master .wtHolder {
     height: auto !important;
     width: auto !important;
+  }
+}
+
+.report-common-table-format {
+  width: 100%;
+
+  tr {
+
+    td,
+    th {
+      border: 1px solid $color-silver;
+      padding: 5px;
+
+      span {
+        display: inline-block;
+        min-height: 19px;
+      }
+    }
+
+    th {
+      background: $color-concrete;
+    }
   }
 }
 

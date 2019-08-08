@@ -99,6 +99,7 @@ en:
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
     title: "SciNote"
+    academy_tooltip: "SciNote Academy"
     user:
       settings: "Settings"
       logout: "Log out"
@@ -130,11 +131,11 @@ en:
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
+    academy: "Academy"
     support: "Support"
     support_links:
       support: "Support Center"
       tutorials: "Video tutorials"
-      webinars: "Webinars"
 
   sidebar:
     title: "Navigation"
@@ -368,7 +369,9 @@ en:
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"
-        nav_pdf: "Download PDF"
+        nav_download: "Download"
+        nav_pdf: "PDF Report"
+        nav_docx: "DOCX Report"
         save_PDF_to_inventory: "Save PDF to Inventory"
         nav_save: "Save"
         nav_close: "Cancel"
@@ -467,6 +470,7 @@ en:
           move_up: "Move report element up"
           move_down: "Move report element down"
           remove: "Remove report element from the report"
+          scinote_link: "SciNote link"
         new_element:
           title: "Add new report element/s here"
         project_header:
@@ -523,6 +527,7 @@ en:
         step_checklist:
           checklist_name: "[ %{name} ]"
           user_time: "Checklist created on %{timestamp}."
+          checked: "checked"
         result_comments:
           sidebar_name: "Comments"
           name: "Comments for result %{result}"
@@ -1594,6 +1599,7 @@ en:
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
+        published_on_label: "Published on"
         created_at_label: "Created at"
         updated_at_label: "Last modified at"
         preview_title: "Protocol preview"
@@ -1602,6 +1608,8 @@ en:
         import_current: "Load Current"
         import_all: "Load All"
         import: "Load"
+        import_to_team_protocols_label: "Import to Team Protocols"
+        import_to_private_protocols_label: "Import to My Protocols"
     export:
       export_results:
         title: "Export results"
@@ -1636,6 +1644,7 @@ en:
       navigation:
         public: "Team protocols"
         private: "My protocols"
+        external_protocols: "External protocols"
         archive: "Archive"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
@@ -1736,6 +1745,26 @@ en:
         row_failed: "Failed"
         row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
+      external_protocols:
+        search_bar_placeholder: 'Search for protocols'
+        protocolsio_title: 'Protocols.io'
+        sort_by:
+          title: 'Show first:'
+          alphabetically-asc: 'A-Z'
+          alphabetically-desc: 'Z-A'
+          newest: 'newest'
+          oldest: 'oldest'
+        list_panel:
+          empty_text: 'Search for protocols above to list them here'
+        preview_panel:
+          empty_title: 'PROTOCOL PREVIEW'
+          empty_subtext: 'Click on the protocol in the list to preview it here'
+          banner_text: 'Protocol Preview'
+        import:
+          public: "Team protocols"
+          private: "My protocols"
+          success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
+
     steps:
       completed: 'Completed'
       uncompleted: 'Uncompleted'
@@ -1856,7 +1885,7 @@ en:
       download_text: "Click the link to download the file."
       email_subject: "Your SciNote export is ready!"
       email_body_1: "The export of SciNote data that you requested is ready!"
-      email_body_2: "You can find the link to download the file below or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons."
+      email_body_2: "You can find the link to download the file below, or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons."
     show_all: "Show all notifications"
     show_more: "Show more notifications"
     no_notifications: "No notifications."

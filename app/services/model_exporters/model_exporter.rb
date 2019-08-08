@@ -28,7 +28,9 @@ module ModelExporters
           tempfile.path,
           File.join(dir, a.file_name)
         )
-        tempfile.close!
+      ensure
+        tempfile.close
+        tempfile.unlink
       end
     end
 

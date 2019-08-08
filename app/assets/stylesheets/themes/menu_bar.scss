@@ -27,12 +27,13 @@
       font-size: $font-size-h6;
       margin-left: auto;
       margin-right: auto;
-      padding: 10px;
+      padding: 10px 0;
       text-align: center;
       word-break: normal;
 
-      & > span {
-        padding-top: 4px;
+      .fas {
+        font-size: 18px;
+        padding-bottom: 5px;
       }
     }
 
@@ -58,6 +59,10 @@
     padding-bottom: 16px;
     position: fixed;
     width: inherit;
+
+    .academy-color {
+      color: $brand-academy-dark;
+    }
   }
 
   .dropup {

@@ -139,6 +139,7 @@ function initializeReportElements(parentElement) {
   // Initialize handsontable containers
   _.each(parentElement.findWithSelf(".hot-table-container"), function(el) {
     initializeHandsonTable($(el));
+    reportHandsonTableConverter();
   });
 
   // Add event listeners element to controls
@@ -409,31 +410,28 @@ function initializePrintPopup() {
 }
 
 /**
- * Initialize the save to PDF functionality.
+ * Initialize the save to File functionality.
  */
-function initializeSaveToPdf() {
-  var saveToPdfForm = $(".get-report-pdf-form");
-  var hiddenInput = saveToPdfForm.find("input[type='hidden']");
-  var saveToPdfBtn = saveToPdfForm.find("#get-report-pdf");
+function initializeSaveToFile(format) {
+  var saveToFileBtn = $('#get-report-' + format);
 
-  saveToPdfBtn.click(function(e) {
-    var content = $(REPORT_CONTENT);
-
-    // Fill hidden input element
-    hiddenInput.attr("value", content.html());
-
-    // Fire form submission
-    saveToPdfForm.submit();
-
-    // Clear form
-    hiddenInput.attr("value", "");
-
-    // Prevent page reload
+  saveToFileBtn.click(function(e) {
+    var content;
+    var $form = $('<form target="_blank" action="' + saveToFileBtn[0].href + '" accept-charset="UTF-8" method="post"></form>');
+    if (format === 'pdf') {
+      content = $(REPORT_CONTENT).html();
+    } else if (format === 'docx') {
+      content = JSON.stringify(constructReportContentsJson());
+    }
+    $form.append('<input type="hidden" name="data" value="">');
+    $form.find('input').attr('value', content);
+    $form.appendTo('body').submit().remove();
     e.preventDefault();
     e.stopPropagation();
     return false;
   });
 }
+
 
 function initializeUnsavedWorkDialog() {
   var dh = $('#data-holder');
@@ -468,7 +466,8 @@ function init() {
   initializeReportElements($(REPORT_CONTENT));
   initializeGlobalReportSort();
   initializePrintPopup();
-  initializeSaveToPdf();
+  initializeSaveToFile('pdf');
+  initializeSaveToFile('docx');
   initializeSaveReport();
   initializeAddContentsModal();
   initializeUnsavedWorkDialog();
@@ -945,4 +944,17 @@ function constructElementContentsJson(el) {
 // Check if we are actually at new report page
 if ($(REPORT_CONTENT).length) {
   init();
+}
+
+/** Convert Handsone table to normal table **/
+function reportHandsonTableConverter() {
+  setTimeout(() => {
+    $.each($('.hot-table-container'), function(index, value) {
+      var table = $(value);
+      var header = table.find('.ht_master thead');
+      var body = table.find('.ht_master tbody');
+      table.next().append(header).append(body);
+      table.remove();
+    });
+  }, 0);
 }

@@ -37,6 +37,7 @@ var TinyMCE = (function() {
       var tinyMceContainer;
       var tinyMceInitSize;
       var plugins;
+      var textAreaObject = $(selector);
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
         tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
@@ -46,6 +47,10 @@ var TinyMCE = (function() {
         tinyMceContainer.addClass('hidden');
         plugins = 'custom_image_toolbar autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
         if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
+
+        if (textAreaObject.data('objectType') === 'step') {
+          document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
+        }
 
 
         tinyMCE.init({
@@ -78,7 +83,8 @@ var TinyMCE = (function() {
           removed_menuitems: 'newdocument',
           object_resizing: true,
           elementpath: false,
-          forced_root_block: false,
+          forced_root_block: 'div',
+          force_p_newlines: false,
           default_link_target: '_blank',
           target_list: [
             { title: 'New page', value: '_blank' },

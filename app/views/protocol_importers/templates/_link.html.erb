@@ -1,0 +1,4 @@
+<p class="step-description-component-link"><b><%= t('protocol_importers.templates.link.title') %></b><br>
+  <a href="<%= item[:source] %>" target="_blank"><%= item[:source] %></a>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

@@ -9,13 +9,14 @@ RUN apt-get update -qq && \
   libjemalloc2 \
   libssl-dev \
   nodejs \
-  yarnpkg \
+  npm \
   postgresql-client \
   default-jre-headless \
   poppler-utils \
   sudo graphviz --no-install-recommends \
   libreoffice \
   libfile-mimeinfo-perl && \
+  npm install -g yarn && \
   rm -rf /var/lib/apt/lists/*
 
 # heroku tools

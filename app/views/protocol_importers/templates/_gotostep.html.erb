@@ -1,0 +1,5 @@
+<p class="step-description-component-gotostep"><b><%= t('protocol_importers.templates.gotostep.title') %></b><br/>
+  <%= "#{t('protocol_importers.templates.gotostep.number')}: #{item[:step_id]}" %><br/>
+  <%= "#{t('protocol_importers.templates.gotostep.reason')}: #{item[:value]}" %><br/>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

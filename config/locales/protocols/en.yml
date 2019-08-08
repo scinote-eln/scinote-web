@@ -1,0 +1,53 @@
+en:
+  protocol_importers:
+    errors:
+      cannot_import_protocol: "We weren't able to import the protocol because something went wrong"
+    new:
+      modal_title: 'Import protocol - %{protocol_name}'
+    card:
+      views_and_steps: '%{nr_of_views} views • %{nr_of_steps} steps'
+      import_button_text: 'Import...'
+    show_more_button:
+      title: 'Show more protocols'
+    templates:
+      amount:
+        title: 'Amount'
+      command:
+        title: 'Command'
+        name: 'Name'
+        code: 'Command'
+      concentration:
+        title: 'Concentration'
+      dataset:
+        title: 'Dataset'
+        name: 'Name'
+        link: 'Link'
+      details:
+        title: 'Details'
+      duration:
+        title: 'Duration'
+        unit: 'seconds'
+      gotostep:
+        title: 'Go to step'
+        number: 'Step nr'
+        reason: 'When'
+      link:
+        title: 'Link'
+      note:
+        title: 'Note'
+        author: 'Author'
+      reagent:
+        title: 'Reagent'
+        name: 'Name'
+        mol_weight: 'Molecular weight'
+        link: 'Link'
+      result:
+        title: 'Expected result'
+      software:
+        title: 'Software'
+        name: 'Name'
+        link: 'Link'
+      temperature:
+        title: 'Temperature'
+      warning:
+        title: 'Warning'

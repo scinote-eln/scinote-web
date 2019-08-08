@@ -1,3 +1,5 @@
+// * Licensed under the MIT license
+
 this.j$ = this.jStat = (function(Math, undefined) {
 
 // For quick reference.

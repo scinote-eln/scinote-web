@@ -129,7 +129,8 @@ class ReportsController < ApplicationController
 
     report_ids.each do |report_id|
       report = Report.find_by_id(report_id)
-      next unless report.present? && can_manage_reports?(current_team)
+      next unless report.present? && can_manage_reports?(report.project.team)
+
       # record an activity
       log_activity(:delete_report, report)
       report.destroy
@@ -141,7 +142,7 @@ class ReportsController < ApplicationController
   # Generation action
   # Currently, only .PDF is supported
   def generate
-    content = params[:html]
+    content = params[:data]
     content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
     respond_to do |format|
       format.pdf do
@@ -149,6 +150,13 @@ class ReportsController < ApplicationController
                               locals: { content: content },
                               template: 'reports/report.pdf.erb',
                               disable_javascript: true
+      end
+      format.docx do
+        @user = current_user
+        @team = current_team
+        @scinote_url = root_url
+        @data = params[:data]
+        headers["Content-Disposition"] = 'attachment; filename="scinote_report.docx"'
       end
     end
   end
@@ -178,7 +186,7 @@ class ReportsController < ApplicationController
   # Modal for saving the existsing/new report
   def save_modal
     # Assume user is updating existing report
-    @report = Report.find_by_id(params[:id])
+    @report = @project.reports.find_by_id(params[:id])
     @method = :put
 
     # Case when saving a new report
@@ -221,7 +229,7 @@ class ReportsController < ApplicationController
 
   # Experiment for adding contents into experiment element
   def experiment_contents_modal
-    experiment = Experiment.find_by_id(params[:experiment_id])
+    experiment = @project.experiments.find_by_id(params[:experiment_id])
 
     respond_to do |format|
       if experiment.blank?
@@ -244,6 +252,7 @@ class ReportsController < ApplicationController
   # Modal for adding contents into module element
   def module_contents_modal
     my_module = MyModule.find_by_id(params[:my_module_id])
+    return render_403 unless my_module.experiment.project == @project
 
     respond_to do |format|
       if my_module.blank?
@@ -266,6 +275,7 @@ class ReportsController < ApplicationController
   # Modal for adding contents into step element
   def step_contents_modal
     step = Step.find_by_id(params[:step_id])
+    return render_403 unless step.my_module.experiment.project == @project
 
     respond_to do |format|
       if step.blank?
@@ -288,6 +298,7 @@ class ReportsController < ApplicationController
   # Modal for adding contents into result element
   def result_contents_modal
     result = Result.find_by_id(params[:result_id])
+    return render_403 unless result.experiment.project == @project
 
     respond_to do |format|
       if result.blank?
@@ -325,8 +336,9 @@ class ReportsController < ApplicationController
   end
 
   def experiment_contents
-    experiment = Experiment.find_by_id(params[:id])
-    modules = (params[:modules].select { |_, p| p == "1" })
+    experiment = @project.experiments.find_by_id(params[:id])
+    exp_module_ids = experiment.my_modules.pluck(:id)
+    modules = (params[:modules].select { |k, p| exp_module_ids.include?(k.to_i) && p == '1' })
               .keys
               .collect(&:to_i)
 
@@ -354,6 +366,7 @@ class ReportsController < ApplicationController
 
   def module_contents
     my_module = MyModule.find_by_id(params[:id])
+    return render_403 unless my_module.experiment.project == @project
 
     respond_to do |format|
       if my_module.blank?
@@ -377,6 +390,7 @@ class ReportsController < ApplicationController
 
   def step_contents
     step = Step.find_by_id(params[:id])
+    return render_403 unless step.my_module.experiment.project == @project
 
     respond_to do |format|
       if step.blank?
@@ -400,6 +414,7 @@ class ReportsController < ApplicationController
 
   def result_contents
     result = Result.find_by_id(params[:id])
+    return render_403 unless result.my_module.experiment.project == @project
 
     respond_to do |format|
       if result.blank?
@@ -443,6 +458,7 @@ class ReportsController < ApplicationController
   def load_vars_nested
     @project = Project.find_by_id(params[:project_id])
     render_404 unless @project
+    render_403 unless can_read_project?(@project)
   end
 
   def check_manage_permissions

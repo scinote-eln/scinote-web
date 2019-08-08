@@ -1,0 +1,49 @@
+<%= form_for :protocol, url: team_import_external_protocol_path(team_id: current_team.id),
+             method: :post, remote: true  do |f|%>
+  <div class="general-error has-error">
+    <span class="has-error help-block"></span>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :name, t('protocols.import_export.import_modal.name_label') %>
+    <%= f.text_field :name, class: 'form-control', value: protocol.name %>
+    <span class="help-block"></span>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :authors, t('protocols.import_export.import_modal.authors_label') %>
+    <%= f.text_field :authors, class: 'form-control', value: protocol.authors %>
+  </div>
+
+  <div class="import-protocol-preview-description">
+    <%= custom_auto_link(protocol.description, simple_format: false, team: current_team) %>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <%= f.label :published_on_label, t('protocols.import_export.import_modal.published_on_label')%>
+        <%= f.text_field :published_on_label, value: I18n.l(protocol.published_on, format: :full),  class: 'form-control', disabled: true %>
+      </div>
+    </div>
+  </div>
+
+  <%= f.hidden_field(:steps, value: steps_json) %>
+  <%= f.hidden_field(:published_on, value: protocol.published_on) %>
+  <%= f.hidden_field(:description, value: protocol.description) %>
+  <%= f.hidden_field(:protocol_type, value: protocol.protocol_type) %>
+
+<% end %>
+
+<div data-role="steps-container">
+  <div class="row">
+    <div class="col-xs-8">
+      <h2><%= t("protocols.steps.subtitle") %></h2>
+    </div>
+  </div>
+  <div id="steps">
+    <% protocol.steps.sort_by{ |s| s.position }.each do |step| %>
+      <%= render partial: "steps/step.html.erb", locals: { step: step, steps_assets: steps_assets, preview: true, import: true } %>
+    <% end %>
+  </div>
+</div>
