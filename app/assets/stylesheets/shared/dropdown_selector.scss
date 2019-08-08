@@ -23,8 +23,7 @@
     .seacrh-field {
       border: 0;
       flex-basis: 50px;
-      flex-grow: 1;
-      flex-shrink: 1;
+      flex-grow: 2000;
       line-height: 24px;
       min-width: 50px;
       outline: 0;
@@ -42,14 +41,15 @@
       box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-shrink: 0;
-      line-height: 14px;
+      line-height: 13px;
       margin: 2px 3px;
       max-width: calc(100% - 6px);
       padding: 5px 7px;
       user-select: none;
 
       &.stretch {
-        flex-grow: 1
+        flex-grow: 1;
+        flex-shrink: 1;
       }
 
       .tag-label {
@@ -70,7 +70,7 @@
       .fas {
         cursor: pointer;
         flex-grow: 1;
-        font-size: 14px;
+        font-size: 13px;
         opacity: 0.7;
         text-align: right;
       }
@@ -88,6 +88,7 @@
     position: absolute;
     top: calc(100% - 30px);
     transition: .2s;
+    transition-property: top, bottom, box-shadow;
     width: 100%;
     z-index: 10;
 
@@ -212,6 +213,18 @@
         box-shadow: 0px -1px 2px 0px rgba(0,0,0, 0.2);
         position: fixed;
         top: auto;
+      }
+    }
+  }
+
+  &.disabled {
+
+    .input-field {
+      background: $color-concrete;
+
+      .seacrh-field:disabled {
+        background: inherit;
+        user-select: none;
       }
     }
   }

@@ -17,11 +17,11 @@
   function initExpandCollapseButton() {
     $('.ga-activities-list').on('hidden.bs.collapse', function(ev) {
       $(ev.target.dataset.buttonLink)
-        .find('.fas').removeClass('fa-caret-down').addClass('fa-caret-right');
+        .find('.fas').removeClass('fa-chevron-down').addClass('fa-chevron-right');
     });
     $('.ga-activities-list').on('shown.bs.collapse', function(ev) {
       $(ev.target.dataset.buttonLink)
-        .find('.fas').removeClass('fa-caret-right').addClass('fa-caret-down');
+        .find('.fas').removeClass('fa-chevron-right').addClass('fa-chevron-down');
     });
   }
   function initShowMoreButton() {
