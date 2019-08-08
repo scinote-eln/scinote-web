@@ -14,9 +14,9 @@
               <% end %>
 
               <% if repository.shared_with?(current_team) %>
-                <% if repository.team_repositories.where(team: current_team).take[:permission_level] == 'write' %>
+                <% if repository.team_repositories.where(team: current_team).take.write? %>
                   <%= draw_custom_icon('shared-edit') %>
-                <% elsif repository.team_repositories.where(team: current_team).take[:permission_level] == 'read' %>
+                <% else %>
                   <%= draw_custom_icon('shared-read') %>
                 <% end %>
               <% end %>
