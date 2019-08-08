@@ -55,7 +55,7 @@ var RepositoryDatatable = (function(global) {
     originalHeader = $(TABLE_ID + ' thead').children().clone();
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-9-custom toolbar'><'col-sm-3-custom'lf>>tpi",
+      dom: "R<'row'<'col-sm-6 toolbar'><'col-sm-6'lf>>tpi",
       stateSave: true,
       processing: true,
       serverSide: true,
