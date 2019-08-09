@@ -14,7 +14,7 @@
               <tr>
                 <th>Share with Team</th><th>Can Edit</th>
               </tr>
-              <% current_user.teams.each do |t| %>
+              <% (current_user.teams - [@repository.team]).each do |t| %>
                 <tr>
                   <td>
                     <%= check_box_tag 'share_team_ids[]', t.id, @repository.shared_with?(t), {id: "shared_#{t.id}"} %>
