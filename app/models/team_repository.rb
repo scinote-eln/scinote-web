@@ -8,4 +8,5 @@ class TeamRepository < ApplicationRecord
 
   validates :permission_level, presence: true
   validates :repository, uniqueness: { scope: :team_id }
+  validates :team_id, inclusion: { in: proc { |object| Team.pluck(:id) - [object.repository&.team&.id] } }
 end
