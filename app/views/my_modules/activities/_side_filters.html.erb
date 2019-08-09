@@ -1,6 +1,6 @@
 
 
-<div class="date-selector filter-block small-right"
+<div class="date-selector filter-block small-right first"
      data-period-label="<%= t('global_activities.index.period_label') %>"
      data-period-select="">
   <h4 class="title"><%= t('global_activities.index.activity') %></h4>
@@ -29,7 +29,7 @@
 
 <div class="activity-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.activity_type') %></h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <h6 class="activity clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container group-activity">
     <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
       'data-placeholder': 'Select Activity groups'
@@ -45,7 +45,7 @@
 
 <div class="user-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <h6 class="user clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <select name="user"
       data-placeholder = "<%= t('global_activities.index.select_users') %>"

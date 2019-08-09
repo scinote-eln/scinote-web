@@ -127,11 +127,12 @@ class GlobalActivitiesController < ApplicationController
     matched = subject.search_by_name(current_user, teams, query, whole_phrase: true)
                      .where.not(name: nil).where.not(name: '')
                      .filter_by_teams(filter_teams)
+                     .order(name: :asc)
 
     selected_subject = subject_search_params[:subjects]
-    matched = matched.where(:project_id => selected_subject['Project']) if subject == Experiment
-    matched = matched.where(:experiment_id => selected_subject['Experiment']) if subject == MyModule
-    matched = matched.where(:repository_id => selected_subject['Repository']) if subject == RepositoryRow
+    matched = matched.where(project_id: selected_subject['Project']) if subject == Experiment
+    matched = matched.where(experiment_id: selected_subject['Experiment']) if subject == MyModule
+    matched = matched.where(repository_id: selected_subject['Repository']) if subject == RepositoryRow
 
     matched = matched.limit(Constants::SEARCH_LIMIT).pluck(:id, :name)
     matched.map { |pr| { value: pr[0], label: escape_input(pr[1]) } }

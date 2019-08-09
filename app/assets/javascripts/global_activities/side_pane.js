@@ -23,11 +23,20 @@ function GlobalActivitiesFiltersGetDates() {
 
 function GlobalActivitiesFilterPrepareArray() {
   var convertToInt = (array) => { return array.map(e => { return parseInt(e, 10); }); };
+  var typesFilter = convertToInt(dropdownSelector.getValues('select[name=activity]') || []);
+  var typesGroups = dropdownSelector.getValues('select[name=group_activity]') || [];
+  if (typesFilter.length === 0 && typesGroups.length > 0) {
+    $.each(typesGroups, (ig, group) => {
+      $.each($('select[name=activity]').find(`optgroup[label="${group}"] option`), (io, option) => {
+        typesFilter.push(parseInt(option.value, 10));
+      });
+    });
+  }
 
   return {
     teams: convertToInt(dropdownSelector.getValues('select[name=team]') || []),
     users: convertToInt(dropdownSelector.getValues('select[name=user]') || []),
-    types: convertToInt(dropdownSelector.getValues('select[name=activity]') || []),
+    types: typesFilter,
     subjects: {
       Project: convertToInt(dropdownSelector.getValues('select[name=project]') || []),
       Experiment: convertToInt(dropdownSelector.getValues('select[name=experiment]') || []),
@@ -44,6 +53,12 @@ function GlobalActivitiesFilterPrepareArray() {
 
 $(function() {
   var updateRunning = false;
+
+  var filterSelectors = ['group_activity', 'activity', 'user', 'team', 'project',
+    'experiment', 'task', 'inventory', 'inventory-item', 'protocol', 'report'];
+  var clearSelectors = ['group_activity', 'activity', 'user', 'team', 'project',
+    'inventory', 'protocol', 'report'];
+
 
   var ajaxParams = function(params) {
     var filter = GlobalActivitiesFilterPrepareArray();
@@ -70,14 +85,23 @@ $(function() {
       return [];
     }
   });
+  $('.activity.clear').click(() => {
+    updateRunning = true;
+    dropdownSelector.clearData('select[name=group_activity]');
+    updateRunning = false;
+    dropdownSelector.clearData('select[name=activity]');
+  });
+
   dropdownSelector.init('select[name=user]', {
     ajaxParams: ajaxParams,
     onChange: defaultOnChangeActions
-  });
+  }).initClearButton('select[name=user]', '.user.clear');
+
   dropdownSelector.init('select[name=team]', {
     ajaxParams: ajaxParams,
     onChange: defaultOnChangeActions
-  });
+  }).initClearButton('select[name=team]', '.team.clear');
+
   dropdownSelector.init('select[name=project]', {
     ajaxParams: ajaxParams,
     onChange: () => {
@@ -90,7 +114,8 @@ $(function() {
       }
       defaultOnChangeActions();
     }
-  });
+  }).initClearButton('select[name=project]', '.project.clear');
+
   dropdownSelector.init('.select-container.experiment select', {
     ajaxParams: ajaxParams,
     onChange: () => {
@@ -99,10 +124,12 @@ $(function() {
       defaultOnChangeActions();
     }
   });
+
   dropdownSelector.init('select[name=task]', {
     ajaxParams: ajaxParams,
     onChange: defaultOnChangeActions
   });
+
   dropdownSelector.init('select[name=inventory]', {
     ajaxParams: ajaxParams,
     onChange: () => {
@@ -110,24 +137,42 @@ $(function() {
       dropdownSelector.disableSelector('select[name=inventory-item]', (selectedValues.length === 0));
       defaultOnChangeActions();
     }
-  });
+  }).initClearButton('select[name=inventory]', '.inventory.clear');
+
   dropdownSelector.init('select[name=inventory-item]', {
     ajaxParams: ajaxParams,
     onChange: defaultOnChangeActions
   });
+
   dropdownSelector.init('select[name=protocol]', {
     ajaxParams: ajaxParams,
     onChange: defaultOnChangeActions
-  });
+  }).initClearButton('select[name=protocol]', '.protocol.clear');
+
   dropdownSelector.init('select[name=report]', {
     ajaxParams: ajaxParams,
     onChange: defaultOnChangeActions
-  });
+  }).initClearButton('select[name=report]', '.report.clear');
 
   $('.ga-side').scroll(() => {
-    var selectors = ['group_activity', 'activity', 'user', 'team', 'project',
-      'experiment', 'task', 'inventory', 'inventory-item', 'protocol', 'report'];
-    $.each(selectors, (i, selector) => { dropdownSelector.updateDropdownDirection(`select[name=${selector}]`); });
+    $.each(filterSelectors, (i, selector) => { dropdownSelector.updateDropdownDirection(`select[name=${selector}]`); });
+  });
+
+  $('.clear-container').click(() => {
+    var selectorsCount = $('select[name=project]').length === 1 ? clearSelectors.length - 1 : 1;
+    updateRunning = true;
+
+    $('#calendar-from-date').data('DateTimePicker').clear();
+    $('#calendar-to-date').data('DateTimePicker').clear();
+    $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect = '';
+
+
+    $.each(clearSelectors, (i, selector) => {
+      if (i === selectorsCount) updateRunning = false;
+      dropdownSelector.clearData(`select[name=${selector}]`);
+    });
+
+    resetHotButtonsBackgroundColor();
   });
 
   function GlobalActivitiesUpdateTopPaneTags() {
@@ -219,18 +264,6 @@ $(function() {
       $(this).removeClass('selected');
     });
   }
-
-  $('.ga-tags-container .clear-container span').click(function() {
-    updateRunning = true;
-    $('#calendar-from-date').data('DateTimePicker').clear();
-    $('#calendar-to-date').data('DateTimePicker').clear();
-    $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect = '';
-
-    updateRunning = false;
-    GlobalActivitiesUpdateTopPaneTags();
-    reloadActivities();
-    resetHotButtonsBackgroundColor();
-  });
 
   $('#calendar-to-date').on('dp.change', function(e) {
     var dateContainer = $('.ga-side .date-selector.filter-block');
