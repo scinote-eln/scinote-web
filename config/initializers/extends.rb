@@ -244,4 +244,9 @@ class Extends
     read: 0,
     write: 1
   }.freeze
+
+  SHARED_INVENTORIES_PL_MAPPINGS = {
+    read: 'view-only',
+    write: 'edit'
+  }.freeze
 end

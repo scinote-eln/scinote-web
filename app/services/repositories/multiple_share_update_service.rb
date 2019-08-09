@@ -101,7 +101,8 @@ module Repositories
               team: @team,
               message_items: { repository: team_repository.repository.id,
                                team: team_repository.team.id,
-                               permission_level: team_repository.permission_level })
+                               permission_level:
+                                 Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_repository.permission_level.to_sym] })
     end
   end
 end
