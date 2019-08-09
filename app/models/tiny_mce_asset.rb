@@ -56,7 +56,7 @@ class TinyMceAsset < ApplicationRecord
       create_delete_marvinjs_activity(image_to_delete, current_user)
       image_to_delete.destroy
     end
-    
+
     object.delay(queue: :assets).copy_unknown_tiny_mce_images
   rescue StandardError => e
     Rails.logger.error e.message

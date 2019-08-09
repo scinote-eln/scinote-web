@@ -10,7 +10,7 @@ module DrawStepAsset
     color = @color
     @docx.p
     @docx.p do
-      text (I18n.t 'projects.reports.elements.step_asset.file_name', file: asset.file_file_name), italic: true
+      text (I18n.t 'projects.reports.elements.step_asset.file_name', file: asset.file_name), italic: true
       text ' '
       text I18n.t('projects.reports.elements.step_asset.user_time',
                   timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

@@ -13,12 +13,12 @@ module MyModulesHelper
     view_state = step.current_view_state(current_user)
     sort = case view_state.state.dig('assets', 'sort')
            when 'old' then { created_at: :asc }
-           when 'atoz' then { file_file_name: :asc }
-           when 'ztoa' then { file_file_name: :desc }
+           when 'atoz' then { 'active_storage_blobs.filename': :asc }
+           when 'ztoa' then { 'active_storage_blobs.filename': :desc }
            else { created_at: :desc }
            end
 
-    step.assets.order(sort)
+    step.assets.joins(file_attachment: :blob).order(sort)
   end
 
   def az_ordered_assets_index(step, asset_id)
@@ -26,7 +26,7 @@ module MyModulesHelper
         .joins(file_attachment: :blob)
         .order(Arel.sql('LOWER(active_storage_blobs.filename)'))
         .pluck(:id)
-        .index(asset_id)
+        .index(asset_id) || 0
   end
 
   def number_of_samples(my_module)

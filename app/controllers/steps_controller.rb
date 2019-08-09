@@ -73,7 +73,7 @@ class StepsController < ApplicationController
       end
 
       # link tiny_mce_assets to the step
-      TinyMceAsset.update_images(@step, params[:tiny_mce_images])
+      TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
 
       create_annotation_notifications(@step)
 
