@@ -190,12 +190,12 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def load_asset_type_columns
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
     @asset_columns = load_asset_columns(search_params[:q])
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository_columns?(@repository.team)
+    render_403 unless can_create_repository_columns?(@repository)
   end
 
   def check_manage_permissions

@@ -101,6 +101,55 @@
     });
   }
 
+  function initShareModal() {
+    var form = $('#share-repo-modal').find('form');
+    var sharedCBs = form.find("input[name='share_team_ids[]']");
+    var permissionCBs = form.find("input[name='write_permissions[]']");
+    var permissionChanges = form.find("input[name='permission_changes']");
+    var submitBtn = form.find('input[type="submit"]');
+
+    sharedCBs.change(function() {
+      var permissionCB = $('#editable_' + this.value);
+
+      if (this.checked) {
+        permissionCB.removeClass('hidden');
+        permissionCB.attr('disabled', false);
+      } else {
+        permissionCB.addClass('hidden');
+        permissionCB.attr('disabled', true);
+      }
+    });
+
+    permissionCBs.change(function() {
+      var changes = JSON.parse(permissionChanges.val());
+      changes[this.value] = 'true';
+      permissionChanges.val(JSON.stringify(changes));
+    });
+
+    submitBtn.on('click', function(event) {
+      event.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: form.serialize(),
+        success: function(data) {
+          if (data.warnings) {
+            alert(data.warnings);
+          }
+          $('#share-repo-modal').modal('hide');
+        },
+        error: function(data) {
+          alert(data.responseJSON.errors);
+          $('#share-repo-modal').modal('hide');
+        }
+      });
+    });
+  }
+
+  $('#shareRepoBtn').on('ajax:success', function() {
+    initShareModal();
+  });
+
   $('#create-new-repository').initializeModal('#create-repo-modal');
   loadRepositoryTab();
   initImportRecordsModal();

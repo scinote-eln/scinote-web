@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Repository < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
@@ -6,7 +8,7 @@ class Repository < ApplicationRecord
 
   attribute :discarded_by_id, :integer
 
-  belongs_to :team, optional: true
+  belongs_to :team
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_columns, dependent: :destroy
   has_many :repository_rows, dependent: :destroy
@@ -14,6 +16,8 @@ class Repository < ApplicationRecord
            inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
   has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
+  has_many :team_repositories, inverse_of: :repository, dependent: :destroy
+  has_many :teams_shared_with, through: :team_repositories, source: :team
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -24,6 +28,11 @@ class Repository < ApplicationRecord
   validates :created_by, presence: true
 
   default_scope -> { kept }
+  scope :accessible_by_teams, lambda { |teams|
+    left_outer_joins(:team_repositories)
+      .where('repositories.team_id IN (?) OR team_repositories.team_id IN (?)', teams, teams)
+      .uniq.sort_by(&:created_at)
+  }
 
   def self.search(
     user,
@@ -32,7 +41,8 @@ class Repository < ApplicationRecord
     repository = nil,
     options = {}
   )
-    repositories = repository || Repository.where(team: user.teams)
+    repositories = repository ||
+                   Repository.accessible_by_teams(user.teams.pluck(:id))
 
     includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
     searchable_attributes = ['repository_rows.name', 'users.full_name'] +
@@ -60,6 +70,14 @@ class Repository < ApplicationRecord
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def shared_with?(team)
+    team_repositories.where(team: team).any?
+  end
+
+  def shared_with_write?(team)
+    team_repositories.where(team: team, permission_level: :write).any?
   end
 
   def self.viewable_by_user(_user, teams)

@@ -983,10 +983,12 @@ en:
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" inventory was successfully copied from \"%{old}\"!"
-      visibility: "Visibility"
-      advanced: "Advanced"
+      columns: "Columns"
+      edit_inventory: "Edit Inventory"
+      share_inventory: "Share"
+      title_label: "Inventory:"
+      view_only_permission_label: "This team has a view-only permission"
       options_dropdown:
-        header: "Edit inventory"
         manage_columns: 'Manage columns'
         import_items: 'Import items'
         export_items: 'Export items'
@@ -1017,6 +1019,9 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
+      modal_share:
+        title: 'Share Inventory'
+        submit: 'Share'
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -1039,7 +1044,7 @@ en:
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
     edit_record: "Edit"
-    copy_record: "Copy"
+    copy_record: "Duplicate"
     delete_record: "Delete"
     save_record: "Save"
     cancel_save: "Cancel"
@@ -1095,6 +1100,10 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
+    multiple_share_service:
+      unable_to_share: "Unable to share %{repository} inventory with %{team} team."
+      unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."
+      unable_to_update: "Unable to update sharing %{repository} inventory with %{team} team."
 
   libraries:
     manange_modal_column:

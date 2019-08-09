@@ -10,9 +10,18 @@
 .repository-table {
   margin-top: 20px;
 
+  .btn {
+    border: 0;
+  }
   // Datatables generated name
   .dataTables_length {
     display: inline-block;
+    float: right;
+    margin-left: 10px;
+  }
+
+  .dataTables_filter {
+    float: right;
   }
 
   // hack only for firefox
@@ -39,4 +48,62 @@
 .breadcrumb.breadcrumb-repository {
   background-color: $color-concrete;
   margin-bottom: 15px;
+}
+
+#repository-toolbar {
+  display: flex;
+
+  .repository-title {
+    align-items: center;
+    display: flex;
+    flex-grow: 1;
+    font-size: 18px;
+    font-weight: 500;
+    margin-right: 20px;
+    overflow: hidden;
+
+    span {
+      white-space: nowrap;
+    }
+
+    .repository-label {
+      flex-shrink: 0;
+      margin-right: 5px;
+      opacity: .8;
+    }
+
+    .repository-share-icon {
+      flex-shrink: 0;
+      margin-left: 5px;
+    }
+
+    .repository-name {
+      display: inline-block;
+      overflow: hidden;
+    }
+
+  }
+
+  .datatables-buttons {
+    flex-shrink: 0;
+  }
+}
+
+.toolbarButtonsDatatable {
+  .view-only-label {
+    opacity: .6;
+  }
+}
+
+.sidebar-button {
+  color: $brand-primary !important;
+
+  span {
+    display: inline-block !important;
+    padding: 0 !important;
+  }
+
+  .fas {
+    margin-right: 5px;
+  }
 }

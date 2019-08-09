@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190520135317) do
+ActiveRecord::Schema.define(version: 2019_07_15_150326) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "pg_trgm"
   enable_extension "btree_gist"
+  enable_extension "pg_trgm"
+  enable_extension "plpgsql"
 
   create_table "activities", force: :cascade do |t|
     t.bigint "my_module_id"
@@ -718,6 +718,17 @@ ActiveRecord::Schema.define(version: 20190520135317) do
     t.index ["project_id"], name: "index_tags_on_project_id"
   end
 
+  create_table "team_repositories", force: :cascade do |t|
+    t.bigint "team_id"
+    t.bigint "repository_id"
+    t.integer "permission_level", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["repository_id"], name: "index_team_repositories_on_repository_id"
+    t.index ["team_id", "repository_id"], name: "index_team_repositories_on_team_id_and_repository_id", unique: true
+    t.index ["team_id"], name: "index_team_repositories_on_team_id"
+  end
+
   create_table "teams", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -1049,6 +1060,8 @@ ActiveRecord::Schema.define(version: 20190520135317) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
+  add_foreign_key "team_repositories", "repositories"
+  add_foreign_key "team_repositories", "teams"
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"
   add_foreign_key "tokens", "users"
