@@ -2,6 +2,17 @@
   <div id="slide-panel" class="visible">
     <div id="repo-tree" class="tree">
       <ul>
+        <% if can_create_repositories?(current_team) %>
+          <li>
+            <span class="tree-link link-wrap no-indent">
+              <a class="sidebar-button" id="create-new-repository" data-remote="true"
+                 href="<%= create_modal_team_repositories_path(@repository.team) %>">
+                <span class="fas fa-plus"></span>
+                <%= t('libraries.index.no_libraries.create_new_button') %>
+              </a>
+            </span>
+          </li>
+        <% end %>
         <% repositories.each do |repository| %>
           <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
             <span class="tree-link line-wrap no-indent">
@@ -20,17 +31,6 @@
                   <%= draw_custom_icon('shared-read') %>
                 <% end %>
               <% end %>
-            </span>
-          </li>
-        <% end %>
-        <% if can_create_repositories?(current_team) %>
-          <li>
-            <span class="tree-link link-wrap no-indent">
-              <a class="sidebar-button" id="create-new-repository" data-remote="true"
-                 href="<%= create_modal_team_repositories_path(@repository.team) %>">
-                <span class="fas fa-plus"></span>
-                <%= t('libraries.index.no_libraries.create_new_button') %>
-              </a>
             </span>
           </li>
         <% end %>
