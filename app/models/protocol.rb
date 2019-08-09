@@ -100,7 +100,7 @@ class Protocol < ApplicationRecord
   belongs_to :my_module,
              inverse_of: :protocols,
              optional: true
-  belongs_to :team, inverse_of: :protocols, optional: true
+  belongs_to :team, inverse_of: :protocols
   belongs_to :parent,
              foreign_key: 'parent_id',
              class_name: 'Protocol',
@@ -302,6 +302,7 @@ class Protocol < ApplicationRecord
       step.assets.each do |asset|
         asset2 = asset.dup
         asset2.save!
+        asset.duplicate_file(asset2)
         step2.assets << asset2
         assets_to_clone << [asset.id, asset2.id]
       end
@@ -387,17 +388,20 @@ class Protocol < ApplicationRecord
     self.restored_by = nil
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    save
+    result = save
 
-    Activities::CreateActivityService
-      .call(activity_type: :move_protocol_in_repository,
-            owner: user,
-            subject: self,
-            team: team,
-            message_items: {
-              protocol: id,
-              storage: I18n.t('activities.protocols.team_to_my_message')
-            })
+    if result
+      Activities::CreateActivityService
+        .call(activity_type: :move_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id,
+                storage: I18n.t('activities.protocols.team_to_my_message')
+              })
+    end
+    result
   end
 
   # This publish action simply moves the protocol from
@@ -414,17 +418,20 @@ class Protocol < ApplicationRecord
     self.restored_by = nil
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    save
+    result = save
 
-    Activities::CreateActivityService
-      .call(activity_type: :move_protocol_in_repository,
-            owner: user,
-            subject: self,
-            team: team,
-            message_items: {
-              protocol: id,
-              storage: I18n.t('activities.protocols.my_to_team_message')
-            })
+    if result
+      Activities::CreateActivityService
+        .call(activity_type: :move_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id,
+                storage: I18n.t('activities.protocols.my_to_team_message')
+              })
+    end
+    result
   end
 
   def archive(user)
@@ -480,16 +487,19 @@ class Protocol < ApplicationRecord
     else
       self.protocol_type = Protocol.protocol_types[:in_repository_private]
     end
-    save
+    result = save
 
-    Activities::CreateActivityService
-      .call(activity_type: :restore_protocol_in_repository,
-            owner: user,
-            subject: self,
-            team: team,
-            message_items: {
-              protocol: id
-            })
+    if result
+      Activities::CreateActivityService
+        .call(activity_type: :restore_protocol_in_repository,
+              owner: user,
+              subject: self,
+              team: team,
+              message_items: {
+                protocol: id
+              })
+    end
+    result
   end
 
   def update_keywords(keywords)

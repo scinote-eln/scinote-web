@@ -1,0 +1,13 @@
+<% protocols[:protocols].each do |protocol| %>
+	<%= render partial: 'protocol_importers/protocol_card',
+		locals: { protocol: protocol, show_import_button: show_import_button } %>
+<% end %>
+
+<% if protocols[:pagination][:current_page] + 1 <= protocols[:pagination][:total_pages] %>
+	<div class='show-more-protocols-btn text-center'>
+		<button class='btn btn-default'
+			data-next-page-id='<%= protocols[:pagination][:current_page] + 1 %>'>
+			<%= t('protocol_importers.show_more_button.title') %>
+		</button>
+	</div>
+<% end %>

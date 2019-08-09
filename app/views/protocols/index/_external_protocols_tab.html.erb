@@ -1,0 +1,103 @@
+<div class='external-protocols-tab'>
+  <%= form_tag team_list_external_protocol_path(@current_team.id),
+    method: :get,
+    class: 'protocols-search-bar',
+    remote: true do %>
+    <div class='header'>
+      <div class='protocols-search-bar-panel'>
+        <div class='service-provider'>
+          <%= image_tag 'external_protocols/protocolsio_logo.png',
+            class: 'protocolsio-logo' %>
+          <a class='protocolsio-title' href='<%= Constants::PROTOCOLS_IO_URL %>' target='_blank'>
+            <%= t('protocols.index.external_protocols.protocolsio_title') %></a>
+          <%= hidden_field_tag 'protocol_source', 'protocolsio/v3' %>
+          <%= hidden_field_tag 'page_id', 1, id: 'page-id' %>
+        </div>
+
+        <div class='input-group'>
+          <input class='form-control'
+          type='text'
+          name='key'
+          placeholder="<%= t('protocols.index.external_protocols.search_bar_placeholder') %>" >
+          </input>
+
+          <span class='input-group-addon'><i class='fas fa-search '></i></span>
+        </div>
+      </div>
+
+      <div class='protocol-sort'>
+        <span><%= t('protocols.index.external_protocols.sort_by.title') %></span>
+        <div class='btn-group' data-toggle='buttons'>
+          <label class='btn btn-link active'>
+            <input type='radio' name='sort_by' id='alphabetically-asc' value='alpha_asc' checked>
+            <%= t('protocols.index.external_protocols.sort_by.alphabetically-asc') %>
+          </label>
+          <label class='btn btn-link'>
+            <input type='radio' name='sort_by' id='alphabetically-desc' value='alpha_desc'>
+            <%= t('protocols.index.external_protocols.sort_by.alphabetically-desc') %>
+          </label>
+          <label class='btn btn-link'>
+            <input type='radio' name='sort_by' id='newest' value='newest'>
+            <%= t('protocols.index.external_protocols.sort_by.newest') %>
+          </label>
+          <label class='btn btn-link'>
+            <input type='radio' name='sort_by' id='oldest' value='oldest'>
+            <%= t('protocols.index.external_protocols.sort_by.oldest') %>
+          </label>
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+
+  <div class='main-protocol-panel'>
+    <div class='protocol-list-side-panel'>
+
+      <div class='row empty-text'>
+        <%= t('protocols.index.external_protocols.list_panel.empty_text') %>
+      </div>
+
+      <div class='list-wrapper perfect-scrollbar'></div>
+    </div>
+
+    <div class='protocol-preview-panel'>
+      <div class='empty-preview-panel'>
+
+        <div class='row'>
+          <div class='text-rows protocol-preview-text'>
+            <%= t('protocols.index.external_protocols.preview_panel.empty_title') %>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='text-separator'> <hr> </div>
+        </div>
+
+        <div class='row'>
+          <div class='text-rows protocol-preview-subtext'>
+            <%= t('protocols.index.external_protocols.preview_panel.empty_subtext') %>
+          </div>
+        </div>
+      </div>
+
+      <div class='full-preview-panel' style='display: none;'>
+        <div class='row preview-banner'>
+          <div class='col-md-6 txt-holder'>
+            <span>
+              <%= t('protocols.index.external_protocols.preview_panel.banner_text') %>
+            </span>
+          </div>
+          <div class='col-md-6 btn-holder'>
+          </div>
+        </div>
+        <div class='preview-holder perfect-scrollbar'>
+          <iframe scrolling="no" class='preview-iframe'></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='footer'></div>
+</div>
+
+<%= javascript_include_tag "protocols/external_protocols_tab.js" %>

@@ -1,0 +1,26 @@
+<div class='protocol-card'
+  data-id='<%= protocol[:id] %>'
+  data-protocol-source='<%= protocol[:source] %>'
+  data-url='<%= team_build_external_protocol_path(current_team.id,) %>'
+  data-show-url='<%= team_show_external_protocol_path(current_team.id) %>'
+  data-show-protocol-id='<%= protocol[:uri] %>'>
+
+  <p class='protocol-title'><%= protocol[:title] %></p>
+
+  <div class='info-line'>
+    <% if protocol[:published_on] %>
+      <%= l(Time.at(protocol[:published_on]).to_datetime, format: :full_date) %> •
+    <% end %>
+    <%= protocol[:authors] %>
+  </div>
+  <div class='card-footer'>
+    <div class='info-line'>
+        <%= t('protocol_importers.card.views_and_steps', nr_of_views: protocol[:nr_of_views], nr_of_steps: protocol[:nr_of_steps]) %>
+    </div>
+    <div class='info-line button'>
+      <% if show_import_button %>
+        <button type="button" class='external-import-btn btn btn-primary pull-right'><%= t('protocol_importers.card.import_button_text') %></button>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -520,17 +520,21 @@ function importProtocolFromFile(
 
   function importSingleProtocol(index, replaceVals, resultCallback) {
     // Retrieve general protocol info
-    var name = $('#import_protocol_name').val();
-    var authors = $('#protocol_authors').val();
+    var name;
+    var authors;
     var createdAt = '';
     var updatedAt = '';
     var descriptionAssetsJson = [];
     var protocolDescription;
     var protocolJson = {};
-    var steps = $(protocolXmls[index]).find('protocol > steps > step');
+    var steps;
     var stepsJson = [];
 
     previewProtocol(index, replaceVals);
+
+    name = $('#import_protocol_name').val();
+    authors = $('#protocol_authors').val();
+    steps = $(protocolXmls[index]).find('protocol > steps > step');
 
     $(protocolXmls[index]).find('protocol').each(function() {
       createdAt = $(this).find('created_at').text();
@@ -645,7 +649,7 @@ function importProtocolFromFile(
     $.extend(dataJson, params);
 
     roughSize = roughSizeOfObject(dataJson);
-    if (roughSize > ($(document.body).data('file-max-size-mb') * 1024 * 1024)) {
+    if (roughSize > (GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024)) {
       // Call the callback function
       resultCallback({ name: protocolJson.name, new_name: null, status: 'size_too_large' });
       return;

@@ -1,0 +1,9 @@
+<p class="step-description-component-dataset"><b><%= t('protocol_importers.templates.dataset.title') %></b><br>
+  <% if item[:name].present? %>
+    <%= "#{t('protocol_importers.templates.dataset.name')}: #{item[:name]}" %> <br />
+  <% end %>
+  <% if item[:source].present? %>
+    <%= t('protocol_importers.templates.dataset.link') %>: <a href="<%= item[:source] %>" target="_blank"><%= item[:source] %></a>
+  <% end %>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

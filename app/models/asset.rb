@@ -241,7 +241,7 @@ class Asset < ApplicationRecord
     download_blob_to_tempfile do |tmp_file|
       to_asset.file.attach(io: tmp_file.open, filename: file_name)
     end
-    new_asset.post_process_file(new_asset.team)
+    to_asset.post_process_file(to_asset.team)
   end
 
   def extract_image_quality

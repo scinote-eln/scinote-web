@@ -8,6 +8,7 @@ class User < ApplicationRecord
   include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
+  include ActiveStorage::Downloading
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -248,6 +249,8 @@ class User < ApplicationRecord
   end
 
   def avatar_variant(style)
+    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style) unless avatar.attached?
+
     format = case style.to_sym
              when :medium
                Constants::MEDIUM_PIC_FORMAT
@@ -561,6 +564,12 @@ class User < ApplicationRecord
         .search(false, search_query)
         .select(:full_name, :id)
         .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
+  end
+
+  def file_name
+    return '' unless avatar.attached?
+
+    avatar.blob&.filename&.sanitized
   end
 
   def avatar_base64(style)

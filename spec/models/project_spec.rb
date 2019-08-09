@@ -33,11 +33,11 @@ describe Project, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :team }
-    it { should belong_to(:created_by).class_name('User') }
-    it { should belong_to(:last_modified_by).class_name('User') }
-    it { should belong_to(:archived_by).class_name('User') }
-    it { should belong_to(:restored_by).class_name('User') }
+    it { should belong_to(:team) }
+    it { should belong_to(:created_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
+    it { should belong_to(:archived_by).class_name('User').optional }
+    it { should belong_to(:restored_by).class_name('User').optional }
     it { should have_many :user_projects }
     it { should have_many :users }
     it { should have_many :experiments }

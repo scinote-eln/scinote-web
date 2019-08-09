@@ -1,23 +1,25 @@
-@import 'constants';
+// scss-lint:disable SelectorDepth, NestingDepth, SelectorFormat, ImportantRule, QualifyingElement, IdSelector
+
+@import "constants";
 
 .btn-open-file {
-  position: relative;
   overflow: hidden;
+  position: relative;
 
-  & > input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
+  > input[type=file] {
+    background: $color-white;
     cursor: inherit;
     display: block;
+    filter: alpha(opacity = 0);
+    font-size: 100px;
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    outline: none;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
   }
 }
 
@@ -57,6 +59,367 @@
 
   .tab-pane-settings {
     border: 0;
-    padding: 25px 20px;
+    height: calc(100vh - 167px);
+  }
+}
+
+.tab-pane.external_protocols {
+  padding-bottom: 0;
+}
+
+.external-protocols-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+
+  .ps__rail-y {
+    opacity: .6;
+  }
+
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+
+    .protocols-search-bar-panel {
+      align-items: center;
+      display: flex;
+      flex-basis: 500px;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding-right: 0;
+
+      .service-provider {
+        align-items: center;
+        display: flex;
+        width: 120px;
+      }
+
+      .protocolsio-logo {
+        height: 30px;
+        width: 30px;
+      }
+
+      .protocolsio-title {
+        font-size: 14px;
+        margin-left: 3px;
+        vertical-align: middle;
+      }
+
+      .input-group {
+        margin-bottom: 0;
+        width: calc(100% - 130px);
+
+        .form-control {
+          border-radius: 4px;
+          padding-right: 34px;
+        }
+
+        .input-group-addon {
+          align-items: center;
+          background: transparent;
+          border: 0;
+          color: $color-silver-chalice;
+          display: flex;
+          height: 34px;
+          justify-content: center;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 34px;
+          z-index: 5;
+        }
+      }
+    }
+
+    .protocol-sort {
+      padding-left: 7px;
+
+      span {
+        color: $color-silver-chalice;
+        font-size: 14px;
+      }
+
+      .btn-group {
+        margin-bottom: 10px;
+        margin-top: 6px;
+        padding-left: 3px;
+
+        label {
+          padding-bottom: 0;
+          padding-top: 0;
+
+          &.active {
+            background: $color-gainsboro;
+            border-radius: 5px !important;
+            color: $color-emperor;
+            outline: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .main-protocol-panel {
+    display: flex;
+    flex-grow: 1;
+    left: -15px;
+    position: relative;
+    width: calc(100% + 30px);
+  }
+
+  .protocol-list-side-panel {
+    background-color: $color-white;
+    border-right: 1px solid $color-alto;
+    border-top: 1px solid $color-alto;
+    flex-grow: 1;
+    max-width: 600px;
+    min-width: 400px;
+    padding-left: 15px;
+    padding-right: 0;
+    position: relative;
+    width: calc(100% / 3);
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    // When no search result is present
+    .empty-text {
+      color: $color-silver-chalice;
+      font-size: 13px;
+      margin-top: 20px;
+      text-align: center;
+      width: calc(100% - 15px);
+    }
+
+    .list-wrapper {
+      height: 100%;
+      overflow: hidden;
+      position: absolute;
+      width: calc(100% - 15px);
+    }
+
+    .protocol-card {
+      border: 2px solid transparent;
+      box-shadow: 0 0 0 0 $color-alto;
+      cursor: pointer;
+      margin-right: 15px;
+      padding: 12px;
+      position: relative;
+      transition: .3s;
+
+      &::after {
+        background: $color-gainsboro;
+        bottom: -2px;
+        content: "";
+        height: 1px;
+        left: 0;
+        position: absolute;
+        width: 100%;
+
+      }
+
+      .card-footer {
+        align-items: center;
+        display: flex;
+        height: 30px;
+
+        .info-line.button {
+          flex-grow: 1;
+        }
+      }
+
+      &.active {
+        border: 2px solid $brand-primary;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px 0 $color-alto;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      &:hover {
+        background-color: $brand-primary-light;
+      }
+
+      .external-import-btn {
+        display: none;
+      }
+
+      &:hover .external-import-btn,
+      &.active .external-import-btn {
+        display: block;
+        float: right;
+      }
+
+    }
+
+    .protocol-title {
+      color: $brand-primary;
+      font-size: 16px;
+    }
+
+    .info-line {
+      color: $color-dove-gray;
+      font-size: 13px;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .show-more-protocols-btn {
+      margin: 15px 0;
+      width: calc(100% - 15px);
+    }
+
+  }
+
+  .protocol-preview-panel {
+    background-color: $color-concrete;
+    border-top: 1px solid $color-alto;
+    flex-grow: 2;
+    padding-left: 0;
+    padding-right: 0;
+    position: relative;
+    width: calc((100% / 3) * 2);
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    // Empty texts on the right
+    .empty-preview-panel {
+      padding-top: 79px;
+      user-select: none;
+
+      .protocol-preview-text {
+        color: $color-silver-chalice;
+        font-size: 24px;
+      }
+
+      .protocol-preview-subtext {
+        color: $color-silver-chalice;
+        font-size: 14px;
+      }
+
+      .text-rows {
+        text-align: center;
+      }
+
+      .text-separator hr {
+        border: 1px solid $color-alto;
+        width: 120px;
+      }
+    }
+
+    .full-preview-panel {
+      height: 100%;
+
+    }
+
+    .preview-banner {
+      align-items: center;
+      background-color: $color-white;
+      border-bottom: 1px solid $color-alto;
+      color: $color-dove-gray;
+      display: flex;
+      font-size: 16px;
+      height: 40px;
+      padding-left: 21px;
+
+      .txt-holder {
+        padding-left: 0;
+      }
+
+      .btn-holder {
+        padding-right: 21px;
+      }
+    }
+
+    .preview-holder {
+      height: calc(100% - 40px);
+      margin: 0 21px 40px;
+      max-width: 900px;
+      overflow: hidden;
+      position: absolute;
+      width: calc(100% - 42px);
+
+      .preview-iframe {
+        border: 0;
+        width: 100%;
+      }
+    }
+  }
+
+  .external-import-btn {
+    background-color: $brand-primary;
+    border: 0;
+    color: $color-white;
+    font-size: 12px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+  }
+
+  .footer {
+    background: $color-white;
+    bottom: -30px;
+    box-shadow: 0 -1px 4px 0 $color-gainsboro;
+    height: 30px;
+    left: -15px;
+    position: absolute;
+    width: calc(100% + 30px);
+  }
+}
+
+@media (max-width: 900px) {
+  .external-protocols-tab {
+    .header {
+      .protocol-sort {
+        padding-left: 0;
+      }
+
+      .protocols-search-bar-panel {
+        flex-basis: 100%;
+      }
+    }
+
+    .main-protocol-panel {
+      display: block;
+      left: -15px;
+      position: relative;
+      width: calc(100% + 30px);
+
+      .protocol-list-side-panel {
+        border-right: 0;
+        height: 200px;
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .protocol-preview-panel {
+        height: calc(100% - 200px);
+        position: relative;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (min-width: 1520px) {
+  .external-protocols-tab {
+
+    .main-protocol-panel {
+
+      .protocol-preview-panel {
+
+        .preview-holder {
+          margin: 0 calc(50% - 450px) 40px;
+        }
+      }
+    }
   }
 }

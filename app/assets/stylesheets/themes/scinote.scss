@@ -12,6 +12,10 @@ body,
   min-width: 320px;
 }
 
+#content-wrapper .container #notifications {
+  margin-left: -15px;
+}
+
 // Word wrapping everywhere, except for table header of "datatables.js"
 body,
 table.dataTable td {
@@ -403,7 +407,6 @@ a[data-toggle="tooltip"] {
   border-left: 1px solid $color-alto;
   border-right: 1px solid $color-alto;
   border-bottom: 1px solid $color-alto;
-  margin-bottom: 50px;
 }
 
 .breadcrumb-teams {
@@ -1077,6 +1080,10 @@ ul.content-activities {
     margin-left: 20px;
     background-color: inherit;
   }
+}
+
+.drag-n-drop-file-input {
+  display: none !important;
 }
 
 .dnd-error,

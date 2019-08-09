@@ -1,0 +1,16 @@
+<% if @step_description[:body].present? %>
+  <p> <%= sanitize(@step_description[:body], tags: Constants::PROTOCOLS_DESC_TAGS) %> </p>
+<% end %>
+
+<% @step_description[:components]&.each do |component| %>
+  <% sanitized_component = component.except('type') %>
+  <% sanitized_component[:body] = sanitize(component[:body], tags: Constants::PROTOCOLS_DESC_TAGS) if component[:body] %>
+  <%= render partial: "protocol_importers/templates/#{component[:type]}", locals: { item: sanitized_component } %>
+<% end %>
+
+<% @step_description[:extra_content]&.each do |i| %>
+  <b><%= strip_tags i[:title] %>:</b> <br/>
+  <%= sanitize(i[:body], tags: Constants::PROTOCOLS_DESC_TAGS) %><br/>
+<% end %>
+
+

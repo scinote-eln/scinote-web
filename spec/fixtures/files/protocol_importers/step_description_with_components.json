@@ -1,0 +1,22 @@
+{
+  "description": {
+    "body": "original desc",
+    "components": [
+      {
+        "type": "note",
+        "author": "First extra",
+        "body": "Body of first extra."
+      },
+      {
+        "type": "note",
+        "author": "Second extra",
+        "body": "<script>alert('boom')</script><div class='col-5'><h5>Text only</h5>"
+      },
+      {
+        "type": "note",
+        "author": "Third extra",
+        "body": "Body of third extra."
+      }
+    ]
+  }
+}

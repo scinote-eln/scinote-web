@@ -1,7 +1,7 @@
 (function(global) {
   'use strict';
 
-  global.ResutlAssets = (function() {
+  global.ResultAssets = (function() {
     // New result asset behaviour
     function initNewResultAsset() {
       $('#new-result-asset').on('click', function(event) {
@@ -96,7 +96,7 @@
     return publicAPI;
   })();
 
-  ResutlAssets.initNewResultAsset();
-  ResutlAssets.applyEditResultAssetCallback();
+  ResultAssets.initNewResultAsset();
+  ResultAssets.applyEditResultAssetCallback();
   FilePreviewModal.init();
 }(window));

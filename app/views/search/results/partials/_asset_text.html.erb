@@ -7,7 +7,7 @@
   <% if can_read_protocol_in_module?(protocol) ||
         can_read_protocol_in_repository?(protocol) %>
     <% asset_read_allowed = true %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
+    <a href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>">
       <%= text %>
     </a>
   <% else %>
@@ -16,7 +16,7 @@
 <% elsif asset.result %>
   <% if can_read_experiment?(asset.result.my_module.experiment) %>
     <% asset_read_allowed = true %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
+    <a href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>">
       <%= text %>
     </a>
   <% else %>
@@ -25,7 +25,7 @@
 <% elsif asset.repository_asset_value %>
   <% if can_read_team?(asset.repository_asset_value.repository_cell.repository_row.repository.team) %>
     <% asset_read_allowed = true %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
+    <a href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>">
       <%= text %>
     </a>
   <% else %>

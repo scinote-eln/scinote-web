@@ -28,14 +28,14 @@ namespace :i18n do
 
     all_good = true
     all_keys.each do |key|
-      output = `grep -rn #{key} .`
-      if !$?.success?
-        if all_good
-          all_good = false
-          puts "Following keys are unused (for locale #{lang}):"
-        end
-        puts "  #{key}"
+      `grep -rn #{key} .`
+      next if $CHILD_STATUS.successful?
+
+      if all_good
+        all_good = false
+        puts "Following keys are unused (for locale #{lang}):"
       end
+      puts "  #{key}"
     end
 
     if all_good

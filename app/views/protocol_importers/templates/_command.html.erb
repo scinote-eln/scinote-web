@@ -1,0 +1,11 @@
+<p class="step-description-component-command"><b><%= t('protocol_importers.templates.command.title') %></b><br>
+  <% if item[:name].present? %>
+    <%= "#{t('protocol_importers.templates.command.name')}: #{item[:name]}" %> <br/>
+  <% end %>
+
+  <% if item[:command].present? %>
+    <%= t('protocol_importers.templates.command.code') %>: <br/>
+    <code> <%= item[:command] %> </code>
+<% end %>
+</p>
+<%= render partial: 'protocol_importers/templates/details', locals: { item: item } %>

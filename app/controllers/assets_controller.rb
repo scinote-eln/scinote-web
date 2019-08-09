@@ -11,10 +11,10 @@ class AssetsController < ApplicationController
   include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
+  include MyModulesHelper
 
   before_action :load_vars, except: :create_wopi_file
-
-  before_action :check_read_permission
+  before_action :check_read_permission, except: :edit
   before_action :check_edit_permission, only: :edit
 
   def file_preview
@@ -23,7 +23,7 @@ class AssetsController < ApplicationController
       'type' => @asset.file.metadata[:asset_type] || (@asset.image? ? 'image' : 'file'),
       'filename' => truncate(escape_input(@asset.file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => download_asset_path(@asset, timestamp: Time.now.to_i)
+      'download-url' => rails_blob_path(@asset.file, disposition: 'attachment')
     }
 
     can_edit = if @assoc.class == Step
@@ -94,14 +94,6 @@ class AssetsController < ApplicationController
     return edit_supported, title
   end
 
-  def download
-    if !@asset.file.attached?
-      render_404
-    else
-      redirect_to rails_blob_path(@asset.file, disposition: 'attachment')
-    end
-  end
-
   def edit
     action = @asset.file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
     @action_url = append_wd_params(@asset.get_action_url(current_user, action, false))
@@ -146,6 +138,9 @@ class AssetsController < ApplicationController
     @asset.step&.protocol&.update(updated_at: Time.now)
 
     render_html = if @asset.step
+                    assets = @asset.step.assets
+                    order_atoz = az_ordered_assets_index(assets, @asset.id)
+                    order_ztoa = assets.length - az_ordered_assets_index(assets, @asset.id)
                     asset_position = @asset.step.asset_position(@asset)
                     render_to_string(
                       partial: 'steps/attachments/item.html.erb',
@@ -153,7 +148,9 @@ class AssetsController < ApplicationController
                         asset: @asset,
                         i: asset_position[:pos],
                         assets_count: asset_position[:count],
-                        step: @asset.step
+                        step: @asset.step,
+                        order_atoz: order_atoz,
+                        order_ztoa: order_ztoa
                       },
                       formats: :html
                     )

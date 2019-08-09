@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TinyMceAsset < ApplicationRecord
+  include ActiveStorage::Downloading
   extend ProtocolsExporter
   extend MarvinJsActions
   attr_accessor :reference
@@ -45,17 +46,17 @@ class TinyMceAsset < ApplicationRecord
     end
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
-      unless image_to_update.object
-        image_to_update&.update(object: object, saved: true)
-        create_create_marvinjs_activity(image_to_update, current_user)
-      end
+      next if image_to_update.object || image_to_update.team_id != Team.find_by_object(object)
+
+      image_to_update&.update(object: object, saved: true)
+      create_create_marvinjs_activity(image_to_update, current_user)
     end
 
     where(id: images_to_delete).each do |image_to_delete|
       create_delete_marvinjs_activity(image_to_delete, current_user)
       image_to_delete.destroy
     end
-
+    
     object.delay(queue: :assets).copy_unknown_tiny_mce_images
   rescue StandardError => e
     Rails.logger.error e.message
@@ -178,7 +179,7 @@ class TinyMceAsset < ApplicationRecord
 
     tiny_img_clone.transaction do
       tiny_img_clone.save!
-      tiny_img_clone.image.attach(io: image.download, filename: image.filename.sanitized)
+      duplicate_file(tiny_img_clone)
     end
 
     return false unless tiny_img_clone.persisted?
@@ -194,6 +195,17 @@ class TinyMceAsset < ApplicationRecord
 
     # reassign images
     obj.reassign_tiny_mce_image_references(cloned_img_ids)
+  end
+
+  def blob
+    image&.blob
+  end
+
+  def duplicate_file(to_asset)
+    download_blob_to_tempfile do |tmp_file|
+      to_asset.image.attach(io: tmp_file.open, filename: file_name)
+    end
+    TinyMceAsset.update_estimated_size(to_asset.id)
   end
 
   private

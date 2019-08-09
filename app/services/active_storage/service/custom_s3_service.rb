@@ -21,8 +21,6 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-gem 'aws-sdk-s3', '~> 1.14'
-
 require 'aws-sdk-s3'
 require 'active_support/core_ext/numeric/bytes'
 
@@ -62,8 +60,6 @@ module ActiveStorage
       else
         instrument :download, key: key do
           object_for(key).get.body.string.force_encoding(Encoding::BINARY)
-        rescue Aws::S3::Errors::NoSuchKey
-          raise ActiveStorage::FileNotFoundError
         end
       end
     end
@@ -74,8 +70,6 @@ module ActiveStorage
                        .body
                        .string
                        .force_encoding(Encoding::BINARY)
-      rescue Aws::S3::Errors::NoSuchKey
-        raise ActiveStorage::FileNotFoundError
       end
     end
 
@@ -113,6 +107,8 @@ module ActiveStorage
     end
 
     def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:)
+      raise ActiveStorage::IntegrityError if content_length > Rails.configuration.x.file_max_size_mb.megabytes
+
       instrument :url, key: key do |payload|
         generated_url = object_for(key).presigned_url :put, expires_in: expires_in.to_i,
           content_type: content_type, content_length: content_length, content_md5: checksum
@@ -158,8 +154,6 @@ module ActiveStorage
       chunk_size = 5.megabytes
       offset = 0
 
-      raise ActiveStorage::FileNotFoundError unless object.exists?
-
       while offset < object.content_length
         yield object.get(range: "bytes=#{offset}-#{offset + chunk_size - 1}")
                     .body
@@ -168,5 +162,17 @@ module ActiveStorage
         offset += chunk_size
       end
     end
+  end
+
+  module S3SignerModifier
+    def build_signer(cfg)
+      signer = super(cfg)
+      signer.unsigned_headers.delete('content-length')
+      signer
+    end
+  end
+
+  Aws::S3::Presigner.class_eval do
+    prepend S3SignerModifier
   end
 end

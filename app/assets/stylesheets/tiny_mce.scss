@@ -86,30 +86,57 @@
         border: 1px solid rgb(226, 228, 231);
       }
     }
+  }
+}
 
-    .mce-i-donwload::before {
-      content: "\F019";
-      font-family: "Font Awesome 5 Free";
-      font-weight: 900;
-      line-height: 16px;
-      position: absolute;
+.mce-i-download::before {
+  content: "\F019";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 16px;
+  position: absolute;
+}
+
+.mce-i-pencil::before {
+  content: "\F303";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 16px;
+  position: absolute;
+}
+
+.mce-floatpanel[aria-label="Inline toolbar"] {
+  border: 0;
+  box-shadow: 0;
+  height: 0 !important;
+  opacity: 1;
+  z-index: 10 !important;
+
+
+  &::before,
+  &::after {
+    display: none;
+  }
+
+  .mce-container-body.mce-abs-layout {
+    background: $brand-primary;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    top: -45px;
+
+    .mce-container,
+    .mce-widget {
+      background: transparent !important;
     }
 
-    .mce-i-pencil::before {
-      content: "\F303";
-      font-family: "Font Awesome 5 Free";
-      font-weight: 900;
-      line-height: 16px;
-      position: absolute;
+    .mce-btn:hover {
+      border-color: transparent;
     }
 
-    .mce-i-image::before {
-      content: "\F03E";
-      font-family: "Font Awesome 5 Free";
-      font-weight: 900;
-      line-height: 16px;
-      position: absolute;
+    .mce-ico {
+      color: $color-white;
     }
   }
 }
+
 // scss-lint:enable ImportantRule

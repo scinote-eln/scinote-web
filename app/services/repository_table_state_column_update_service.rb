@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryTableStateColumnUpdateService
   # We're using Constants::REPOSITORY_TABLE_DEFAULT_STATE as a reference for
   # default table state; this Ruby Hash makes heavy use of Ruby symbols
@@ -56,9 +58,7 @@ class RepositoryTableStateColumnUpdateService
 
       state['order'].reject! { |_, v| v[0] == old_column_index }
       state['order'].each do |k, v|
-        if v[0].to_i > old_column_index.to_i
-          state['order'][k] = [(v[0].to_i - 1).to_s, v[1]]
-        end
+        state['order'][k] = [(v[0].to_i - 1).to_s, v[1]] if v[0].to_i > old_column_index.to_i
       end
       if state['order'].empty?
         # Fallback to default order if user had table ordered by

@@ -4,9 +4,7 @@ source 'http://rubygems.org'
 
 ruby '2.6.3'
 
-
 gem 'bootsnap', require: false
-gem 'webpacker', '~> 3.5'
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.6.2'
@@ -16,9 +14,10 @@ gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
 gem 'rails', '~> 5.2.3'
 gem 'recaptcha', require: 'recaptcha/rails'
-gem 'sanitize', '~> 4.4'
+gem 'sanitize', '~> 5.0'
 gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
+gem 'webpacker', '~> 4.0.0'
 gem 'yomu'
 
 # Gems for OAuth2 subsystem
@@ -26,9 +25,14 @@ gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 
+# TODO: remove this when omniauth gem resolves CVE issues
+# Prevents CVE-2015-9284 (https://github.com/omniauth/omniauth/wiki/FAQ#cve-2015-9284-warnings)
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
+
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
 gem 'json-jwt'
+gem 'jsonapi-renderer', '= 0.2.0'
 gem 'jwt', '~> 1.5'
 gem 'kaminari'
 gem 'rack-attack'
@@ -55,18 +59,20 @@ gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
+gem 'caracal-rails' # Build docx report
 gem 'commit_param_routing' # Enables different submit actions in the same form
 gem 'deface', '~> 1.0'
 gem 'delayed_paperclip',
     git: 'https://github.com/jrgifford/delayed_paperclip.git',
     ref: 'fcf574c'
 gem 'faker' # Generate fake data
+gem 'fastimage' # Light gem to get image resolution
 gem 'httparty', '~> 0.13.1'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.8.1' # HTML/XML parser
+gem 'nokogiri', '~> 1.10.3' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
@@ -82,12 +88,12 @@ gem 'wkhtmltopdf-heroku', '2.12.4'
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
-gem 'mini_magick'
-gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
+gem 'mini_magick'
+gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'

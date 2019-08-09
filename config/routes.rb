@@ -204,6 +204,13 @@ Rails.application.routes.draw do
         get 'atwho_my_modules', to: 'at_who#my_modules'
         get 'atwho_menu_items', to: 'at_who#menu_items'
       end
+
+      # External protocols routes
+      get 'list_external_protocol', to: 'external_protocols#index'
+      get 'show_external_protocol', to: 'external_protocols#show'
+      get 'build_external_protocol', to: 'external_protocols#new'
+      post 'import_external_protocol', to: 'external_protocols#create'
+
       match '*path',
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
@@ -245,7 +252,7 @@ Rails.application.routes.draw do
         collection do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
-          post 'generate', to: 'reports#generate'
+          post 'generate', to: 'reports#generate', format: %w(docx pdf)
           get 'new/', to: 'reports#new'
           get 'new/project_contents_modal',
               to: 'reports#project_contents_modal',
@@ -473,8 +480,6 @@ Rails.application.routes.draw do
     get 'result_texts/:id/download' => 'result_texts#download',
       as: :result_text_download
     resources :result_assets, only: [:edit, :update, :destroy]
-    get 'result_assets/:id/download' => 'result_assets#download',
-      as: :result_asset_download
     resources :result_tables, only: [:edit, :update, :destroy]
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
@@ -591,7 +596,6 @@ Rails.application.routes.draw do
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
-    get 'files/:id/download', to: 'assets#download', as: 'download_asset'
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'

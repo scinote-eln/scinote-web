@@ -3,6 +3,7 @@
 module Paperclip
   class CustomFilePreview < Processor
     def make
+      pdftoppm_path = ENV['PDFTOPPM_PATH'] || 'pdftoppm'
       libreoffice_path = ENV['LIBREOFFICE_PATH'] || 'soffice'
       directory = File.dirname(@file.path)
       basename  = File.basename(@file.path, '.*')
@@ -10,10 +11,17 @@ module Paperclip
       dst = TempfileFactory.new.generate("#{basename}.#{options[:format]}")
 
       begin
-        Paperclip.run(
-          libreoffice_path,
-          "--headless --invisible --convert-to png --outdir #{directory} #{@file.path}"
-        )
+        if @file.content_type == 'application/pdf'
+          Paperclip.run(
+            pdftoppm_path,
+            "-singlefile -r 72 -png #{@file.path} #{File.join(directory, basename)}"
+          )
+        else
+          Paperclip.run(
+            libreoffice_path,
+            "--headless --invisible --convert-to png --outdir #{directory} #{@file.path}"
+          )
+        end
 
         convert(
           ":source -resize '#{options[:geometry]}' -format #{options[:format]} #{options[:convert_options]} :dest",

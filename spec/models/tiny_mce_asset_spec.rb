@@ -21,8 +21,8 @@ describe TinyMceAsset, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :team }
-    it { should belong_to :object }
+    it { should belong_to(:team).optional }
+    it { should belong_to(:object).optional }
   end
 
   describe 'Should be a valid object' do
@@ -30,27 +30,37 @@ describe TinyMceAsset, type: :model do
   end
 
   describe 'Methods' do
-    let(:result_text) do
-      create :result_text,
-             text: '<img data-mce-token=1  src=""/>'
+    let(:team) { create :team }
+    let(:my_module) { create :my_module }
+    let(:result) do
+      create :result, name: 'test result', my_module: my_module
     end
-    let(:image) { create :tiny_mce_asset, id: 1 }
+
+    let(:result_text) do
+      create :result_text, text: '<img data-mce-token=1  src=""/>', result: result
+    end
+    let(:image) { create :tiny_mce_asset, id: 1, team_id: team.id }
 
     describe '#update_images' do
       it 'save new image' do
-        new_image = image
-        new_result_text = result_text
-        TinyMceAsset.update_images(new_result_text, [Base62.encode(new_image.id)].to_s)
-        updated_image = TinyMceAsset.find(new_image.id)
+        create :protocol, my_module: result_text.result.my_module
+        result_text.result.my_module.protocol.update(team_id: image.team_id)
+        TinyMceAsset.update_images(result_text, [Base62.encode(image.id)].to_s)
+        updated_image = TinyMceAsset.find(image.id)
         expect(updated_image.object_type).to eq 'ResultText'
-        expect(ResultText.find(new_result_text.id).text).not_to include 'fake-path'
+        expect(ResultText.find(result_text.id).text).not_to include 'fake-path'
       end
     end
 
     describe '#generate_url' do
       it 'create new url' do
+        image.update(object: result_text)
+        expect(TinyMceAsset.generate_url(result_text.text, result_text)).to include 'test.jpg'
+      end
+
+      it 'restrict acces to image' do
         image
-        expect(TinyMceAsset.generate_url(result_text.text)).to include 'sample_file.jpg'
+        expect(TinyMceAsset.generate_url(result_text.text, result_text)).not_to include 'sample_file.jpg'
       end
     end
 

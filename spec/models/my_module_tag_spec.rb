@@ -20,9 +20,9 @@ describe MyModuleTag, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :my_module }
-    it { should belong_to(:created_by).class_name('User') }
-    it { should belong_to :tag }
+    it { should belong_to(:my_module) }
+    it { should belong_to(:created_by).class_name('User').optional }
+    it { should belong_to(:tag) }
   end
 
   describe 'Validations' do

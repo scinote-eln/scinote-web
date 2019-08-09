@@ -1,0 +1,19 @@
+{
+  "description": {
+    "body": "original desc",
+    "extra_content": [
+      {
+        "title": "First extra",
+        "body": "Body of first extra."
+      },
+      {
+        "title": "Second extra",
+        "body": "Body of second extra."
+      },
+      {
+        "title": "Third extra",
+        "body": "Body of third extra."
+      }
+    ]
+  }
+}

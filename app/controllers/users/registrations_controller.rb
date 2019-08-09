@@ -31,7 +31,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
     elsif params.include? :change_avatar
       params.delete(:change_avatar)
-      if !params.include?(:avatar)
+      if !params.include?(:avatar) || (params[:avatar].length > Constants::AVATAR_MAX_SIZE_MB.megabytes * 2)
         resource.errors.add(:avatar, :blank)
         false
       else
