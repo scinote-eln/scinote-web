@@ -28,13 +28,11 @@
     <div id="datatables-buttons" class="datatables-buttons" style="display: inline;">
       <div class="new-repository-button">
         <% if can_manage_repository?(@repository) %>
-          <a class="btn btn-default"
-             id="share-repository"
-             data-remote="true"
-             href="#">
+          <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
+                      class: 'btn btn-default share-repo-option', remote: true, id: 'shareRepoBtn' do %>
             <span class="fas fa-user-plus"></span>
             <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
-          </a>
+          <% end %>
         <% end %>
       </div>
       <%= render partial: "columns_reorder_dropdown", formats: :html %>

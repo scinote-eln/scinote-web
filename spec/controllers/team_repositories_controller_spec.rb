@@ -118,4 +118,59 @@ describe TeamRepositoriesController, type: :controller do
       end
     end
   end
+
+  describe 'POST multiple_update' do
+    context 'when have valid params' do
+      before do
+        service = double('success_service')
+        allow(service).to(receive(:succeed?)).and_return(true)
+        allow(service).to(receive(:warnings)).and_return([])
+
+        allow_any_instance_of(Repositories::MultipleShareUpdateService).to(receive(:call)).and_return(service)
+      end
+
+      let(:params) do
+        {
+          repository_id: repository.id,
+          team_id: team.id,
+          permission_changes: '{"5":true}',
+          share_team_ids: %w(1 2 3),
+          write_permissions: %w(3)
+        }
+      end
+
+      it 'renders status ok' do
+        post :multiple_update, params: params
+
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when have invalid params' do
+      before do
+        service = double('unsuccess_service')
+        allow(service).to(receive(:succeed?)).and_return(false)
+        allow(service).to(receive(:errors)).and_return({})
+
+        allow_any_instance_of(Repositories::MultipleShareUpdateService).to(receive(:call)).and_return(service)
+      end
+
+      let(:new_repository) { create :repository }
+      let(:params) do
+        {
+          repository_id: new_repository.id,
+          team_id: team.id,
+          permission_changes: '{"5":true}',
+          share_team_ids: %w(1 2 3),
+          write_permissions: %w(3)
+        }
+      end
+
+      it 'renders status 422' do
+        post :multiple_update, params: params
+
+        expect(response).to have_http_status(422)
+      end
+    end
+  end
 end

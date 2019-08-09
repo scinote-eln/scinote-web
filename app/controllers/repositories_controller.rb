@@ -7,7 +7,7 @@ class RepositoriesController < ApplicationController
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: %i(export_repository show)
   before_action :check_manage_permissions, only:
-    %i(destroy destroy_modal rename_modal update)
+    %i(destroy destroy_modal rename_modal update share_modal)
   before_action :check_create_permissions, only:
     %i(create_modal create copy_modal copy)
 
@@ -32,6 +32,14 @@ class RepositoriesController < ApplicationController
             partial: 'create_repository_modal.html.erb'
           )
         }
+      end
+    end
+  end
+
+  def share_modal
+    respond_to do |format|
+      format.json do
+        render json: { html: render_to_string(partial: 'share_repository_modal.html.erb') }
       end
     end
   end
