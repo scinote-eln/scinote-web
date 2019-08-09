@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 @import "constants";
 
 .dropdown-selector-container {
@@ -15,10 +18,22 @@
     flex-wrap: wrap;
     min-height: 36px;
     overflow: hidden;
-    padding: 3px;
+    padding: 3px 36px 3px 3px;
     position: relative;
     transition: .2s;
     width: 100%;
+
+    .fa-caret-down {
+      color: $color-silver-chalice;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 18px;
+      position: absolute;
+      right: 8px;
+      text-align: center;
+      top: 8px;
+      width: 18px;
+    }
 
     .seacrh-field {
       border: 0;
@@ -30,7 +45,7 @@
       padding-left: 5px;
 
       &::placeholder {
-        opacity: 0.7;
+        opacity: .7;
       }
     }
 
@@ -38,7 +53,7 @@
       align-items: center;
       background: $color-concrete;
       border-radius: 12px;
-      box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
       display: flex;
       flex-shrink: 0;
       line-height: 13px;
@@ -46,11 +61,6 @@
       max-width: calc(100% - 6px);
       padding: 5px 7px;
       user-select: none;
-
-      &.stretch {
-        flex-grow: 1;
-        flex-shrink: 1;
-      }
 
       .tag-label {
         display: inline-block;
@@ -63,6 +73,7 @@
         width: auto;
 
         &.closing {
+          margin-right: 0;
           max-width: 0;
         }
       }
@@ -71,7 +82,7 @@
         cursor: pointer;
         flex-grow: 1;
         font-size: 13px;
-        opacity: 0.7;
+        opacity: .7;
         text-align: right;
       }
     }
@@ -81,8 +92,7 @@
     background: $color-white;
     border: 1px solid $color-alto;
     border-radius: 0 0 4px 4px;
-    border-top: 0;
-    box-shadow: 0px 0px 0px 0px rgba(0,0,0, 0.2);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, .2);
     display: none;
     overflow: hidden;
     position: absolute;
@@ -92,7 +102,7 @@
     width: 100%;
     z-index: 10;
 
-    .dropdown-select-all{
+    .dropdown-select-all {
       background: $color-white;
       border: 0;
       border-bottom: 1px solid $color-alto;
@@ -118,12 +128,13 @@
       }
 
       &.select {
+
         &::before {
           content: "\f14a";
         }
       }
     }
- 
+
     .dropdown-option {
       align-items: center;
       cursor: pointer;
@@ -167,8 +178,10 @@
       }
 
       &.select {
+
         .group-name.checkbox-icon {
           background: $color-concrete;
+
           &::before {
             content: "\f14a";
           }
@@ -188,13 +201,18 @@
   &.open {
 
     .input-field {
-      border-radius: 4px 4px 0 0;
       border-bottom: 1px solid $brand-primary;
+      border-radius: 4px 4px 0 0;
       z-index: 12;
+
+      .fa-caret-down {
+        transform: rotate(180deg);
+      }
     }
 
     .dropdown-container {
-      box-shadow: 0px 1px 2px 0px rgba(0,0,0, 0.2);
+      border-top: 0;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
       display: block;
       top: 100%;
     }
@@ -202,15 +220,16 @@
     &.inverse {
 
       .input-field {
-        border-radius: 0 0 4px 4px;
         border-bottom: 1px solid $color-alto;
-        border-top: 1px solid $brand-primary
+        border-radius: 0 0 4px 4px;
+        border-top: 1px solid $brand-primary;
       }
 
       .dropdown-container {
+        border-bottom: 0;
         border-radius: 4px 4px 0 0;
         bottom: 100%;
-        box-shadow: 0px -1px 2px 0px rgba(0,0,0, 0.2);
+        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .2);
         position: fixed;
         top: auto;
       }
