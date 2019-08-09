@@ -223,12 +223,6 @@ class Experiment < ApplicationRecord
     workflowimg.service.exist?(workflowimg.blob.key)
   end
 
-  def workflowimg_file_name
-    return '' unless workflowimg.attached?
-
-    workflowimg.blob&.filename&.sanitized
-  end
-
   # Get projects where user is either owner or user in the same team
   # as this experiment
   def projects_with_role_above_user(current_user)

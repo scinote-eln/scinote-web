@@ -23,7 +23,7 @@ class AssetsController < ApplicationController
       'type' => @asset.file.metadata[:asset_type] || (@asset.image? ? 'image' : 'file'),
       'filename' => truncate(escape_input(@asset.file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => rails_blob_path(@asset.file, disposition: 'attachment')
+      'download-url' => asset_file_url_path(@asset)
     }
 
     can_edit = if @assoc.class == Step
@@ -94,6 +94,12 @@ class AssetsController < ApplicationController
     return edit_supported, title
   end
 
+  def file_url
+    return render_404 unless @asset.file.attached?
+
+    render plain: @asset.file.blob.service_url
+  end
+
   def edit
     action = @asset.file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
     @action_url = append_wd_params(@asset.get_action_url(current_user, action, false))
@@ -139,8 +145,8 @@ class AssetsController < ApplicationController
 
     render_html = if @asset.step
                     assets = @asset.step.assets
-                    order_atoz = az_ordered_assets_index(assets, @asset.id)
-                    order_ztoa = assets.length - az_ordered_assets_index(assets, @asset.id)
+                    order_atoz = az_ordered_assets_index(@asset.step, @asset.id)
+                    order_ztoa = assets.length - az_ordered_assets_index(@asset.step, @asset.id)
                     asset_position = @asset.step.asset_position(@asset)
                     render_to_string(
                       partial: 'steps/attachments/item.html.erb',

@@ -12,10 +12,10 @@ describe Experiments::GenerateWorkflowImageService do
     end
 
     it 'worklfow image of experiment is updated' do
-      old_filename = experiment.workflowimg_file_name
+      old_filename = experiment.workflowimg.blob.filename
       described_class.call(params)
       experiment.reload
-      expect(experiment.workflowimg_file_name).not_to be == old_filename
+      expect(experiment.workflowimg.blob.filename).not_to be == old_filename
     end
   end
 end
