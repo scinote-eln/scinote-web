@@ -26,7 +26,7 @@ module MyModulesHelper
         .joins(file_attachment: :blob)
         .order(Arel.sql('LOWER(active_storage_blobs.filename)'))
         .pluck(:id)
-        .index(asset_id)
+        .index(asset_id) || 0
   end
 
   def number_of_samples(my_module)
