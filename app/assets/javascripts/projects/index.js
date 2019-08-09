@@ -625,7 +625,7 @@
   function dataTableInit() {
     var TABLE_ID = '#projects-overview-table';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
+      dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>><'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
       stateSave: true,
       stateDuration: 0,
       processing: true,
