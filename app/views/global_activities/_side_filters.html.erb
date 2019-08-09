@@ -1,6 +1,6 @@
 <div class="team-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.teams') %></h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <h6 class="team clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <select name="team"
       data-placeholder = "<%= t('global_activities.index.select_teams') %>"
@@ -37,10 +37,10 @@
 
 <div class="activity-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.activity_type') %></h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <h6 class="activity clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container group-activity">
     <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
-      'data-placeholder': 'Select Activity groups'
+      'data-placeholder': t('global_activities.index.select_activity_groups')
     } %>
   </div>
   <div class="select-container activity">
@@ -53,7 +53,7 @@
 
 <div class="user-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <h6 class="user clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <select name="user"
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
@@ -63,57 +63,57 @@
 </div>
 
 <div class="filter-block small-left">
-  <h4 class="title">Projects, Experiments, Tasks</h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <h4 class="title"><%= t('global_activities.index.projects_experiments_tasks') %></h4>
+  <h6 class="project clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container project">
     <select name="project"
-      data-placeholder = "Select Projects"
+      data-placeholder = "<%= t('global_activities.index.select_projects') %>"
       data-ajax-url = "<%= project_filter_global_activities_path %>"
     ></select>
   </div>
   <div class="select-container experiment">
     <select name="experiment"
-      data-placeholder = "Select Experiments"
+      data-placeholder = "<%= t('global_activities.index.select_experiments') %>"
       data-disable-on-load = "true"
-      data-disable-placeholder = "Select Projects to enable Experiments"
+      data-disable-placeholder = "<%= t('global_activities.index.disable_experiments') %>"
       data-ajax-url = "<%= experiment_filter_global_activities_path %>"
     ></select>
   </div>
   <div class="select-container task">
     <select name="task"
-      data-placeholder = "Select Tasks"
+      data-placeholder = "<%= t('global_activities.index.select_tasks') %>"
       data-disable-on-load = "true"
-      data-disable-placeholder = "Select Experiments to enable Tasks"
+      data-disable-placeholder = "<%= t('global_activities.index.disable_tasks') %>"
       data-ajax-url = "<%= my_module_filter_global_activities_path %>"
     ></select>
   </div>
 </div>
 
 <div class="filter-block small-left">
-  <h4 class="title">Inventories</h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+  <h4 class="title"><%= t('global_activities.index.inventories') %></h4>
+  <h6 class="inventory clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container inventory">
     <select name="inventory"
-      data-placeholder = "Select Inventory"
+      data-placeholder = "<%= t('global_activities.index.select_inventories') %>"
       data-ajax-url = "<%= inventory_filter_global_activities_path %>"
     ></select>
   </div>
   <div class="select-container inventory-item">
     <select name="inventory-item"
-      data-placeholder = "Select Inventory item"
+      data-placeholder = "<%= t('global_activities.index.select_inventory_items') %>"
       data-disable-on-load = "true"
-      data-disable-placeholder = "Select Inventories to enable Inventory items"
+      data-disable-placeholder = "<%= t('global_activities.index.disable_inventory_items') %>"
       data-ajax-url = "<%= inventory_item_filter_global_activities_path %>"
     ></select>
   </div>
 </div>
 
-<div class="team-selector filter-block small-left">
-  <h4 class="title">Protocols</h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+<div class="filter-block small-left">
+  <h4 class="title"><%= t('global_activities.index.protocols') %></h4>
+  <h6 class="protocol clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <select name="protocol"
-      data-placeholder = "Select Protocol"
+      data-placeholder = "<%= t('global_activities.index.select_protocols') %>"
       data-select-all = "false"
       data-ajax-url = "<%= protocol_filter_global_activities_path %>"
     ></select>
@@ -121,12 +121,12 @@
 </div>
 
 
-<div class="team-selector filter-block small-left">
-  <h4 class="title">Reports</h4>
-  <h6 class="clear"><%= t('global_activities.index.clear') %></h6>
+<div class="filter-block small-left">
+  <h4 class="title"><%= t('global_activities.index.reports') %></h4>
+  <h6 class="report clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
     <select name="report"
-      data-placeholder = "Select Report"
+      data-placeholder = "<%= t('global_activities.index.select_reports') %>"
       data-select-all = "false"
       data-ajax-url = "<%= report_filter_global_activities_path %>"
     ></select>

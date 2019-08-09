@@ -93,7 +93,7 @@ var dropdownSelector = (function() {
     var ps;
     var dropdownContainer;
 
-    if (selectElement.length === 0) return;
+    if (selectElement.length === 0 || selectElement.next().hasClass('dropdown-selector-container')) return;
 
     dropdownContainer = selectElement.after('<div class="dropdown-selector-container"></div>').next();
 
@@ -103,6 +103,7 @@ var dropdownSelector = (function() {
       <div class="dropdown-container"></div>
       <div class="input-field">
         <input type="text" class="seacrh-field" placeholder="${selectElement.data('placeholder')}"></input>
+        <i class="fas fa-caret-down"></i>
       </div>
       <input type="hidden" class="data-field" value="[]">
       
@@ -120,7 +121,8 @@ var dropdownSelector = (function() {
           saveData(selectElement, dropdownContainer);
         });
     }
-    dropdownContainer.find('.seacrh-field').keyup(() => {
+    dropdownContainer.find('.seacrh-field').keyup((e) => {
+      e.stopPropagation();
       loadData(selectElement, dropdownContainer);
     }).click((e) =>{
       e.stopPropagation();
@@ -163,6 +165,8 @@ var dropdownSelector = (function() {
   // Load data to dropdown list
   function loadData(selector, container, ajaxData = null) {
     var data;
+    var containerDropdown = container.find('.dropdown-container');
+    containerDropdown.css('height', `${containerDropdown.height()}px`);
     if (ajaxData) {
       data = ajaxData;
     } else {
@@ -227,6 +231,7 @@ var dropdownSelector = (function() {
 
     PerfectSb().update_all();
     refreshDropdownSelection(selector, container);
+    containerDropdown.css('height', 'auto');
   }
 
   // Save data to local field
@@ -299,7 +304,7 @@ var dropdownSelector = (function() {
             updateCurrentData(container, selectedOptions);
             updateTags(selector, container);
           }
-        }, 150);
+        }, 300);
       });
     }
 
@@ -375,17 +380,37 @@ var dropdownSelector = (function() {
 
   return {
     // Dropdown initialization
-    init: (selector, config) => {
+    init: function(selector, config) {
       generateDropdown(selector, config);
+
+      return this;
+    },
+
+    // Clear button initialization
+    initClearButton: function(selector, clearButton) {
+      var container;
+
+      if ($(selector).length === 0) return false;
+
+      container = $(selector).next();
+      $(clearButton).click(() => {
+        updateCurrentData(container, []);
+        refreshDropdownSelection($(selector), container);
+        updateTags($(selector), container);
+      });
+
+      return this;
     },
     // Update dropdown position
-    updateDropdownDirection: (selector) => {
+    updateDropdownDirection: function(selector) {
       if ($(selector).length === 0) return false;
 
       updateDropdownDirection($(selector), $(selector).next());
+
+      return this;
     },
     // Get only values
-    getValues: (selector) => {
+    getValues: function(selector) {
       if ($(selector).length === 0) return false;
 
       return $.map(getCurrentData($(selector).next()), (v) => {
@@ -393,24 +418,38 @@ var dropdownSelector = (function() {
       });
     },
     // Get all data
-    getData: (selector) => {
+    getData: function(selector) {
       if ($(selector).length === 0) return false;
 
       return getCurrentData($(selector).next());
     },
 
-    setData: (selector, data) => {
+    // Set data to selector
+    setData: function(selector, data) {
       if ($(selector).length === 0) return false;
 
       updateCurrentData($(selector).next(), data);
       refreshDropdownSelection($(selector), $(selector).next());
       updateTags($(selector), $(selector).next());
+
+      return this;
     },
 
-    disableSelector: (selector, mode) => {
+    // Clear selector
+    clearData: function(selector) {
+      if ($(selector).length === 0) return false;
+
+      dropdownSelector.setData(selector, []);
+      return this;
+    },
+
+    // Disable selector
+    disableSelector: function(selector, mode) {
       if ($(selector).length === 0) return false;
 
       disableDropdown($(selector), $(selector).next(), mode);
+
+      return this;
     }
   };
 }());
