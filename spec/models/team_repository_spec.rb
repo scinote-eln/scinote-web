@@ -16,6 +16,16 @@ describe TeamRepository, type: :model do
     describe '#repository' do
       it { expect(team_repository).to validate_uniqueness_of(:repository).scoped_to(:team_id) }
     end
+    describe '#team' do
+      it { expect(team_repository).to validate_uniqueness_of(:repository).scoped_to(:team_id) }
+
+      it 'invalid when repo team is same as sharring team' do
+        repo = create :repository
+        invalid_team_repository = build :team_repository, :read, repository: repo, team: repo.team
+
+        expect(invalid_team_repository).to be_invalid
+      end
+    end
   end
 
   describe 'Associations' do

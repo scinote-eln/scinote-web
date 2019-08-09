@@ -74,7 +74,9 @@ describe TeamRepositoriesController, type: :controller do
   end
 
   describe 'DELETE destroy' do
-    let(:team_repository) { create :team_repository, :read, team: team, repository: repository }
+    let(:second_team) { create :team }
+    let!(:second_user_team) { create :user_team, user: user, team: second_team }
+    let(:team_repository) { create :team_repository, :read, team: second_team, repository: repository }
 
     context 'when resource can be deleted' do
       let(:action) do
