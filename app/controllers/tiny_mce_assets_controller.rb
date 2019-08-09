@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TinyMceAssetsController < ApplicationController
+  include MarvinJsActions
+
   before_action :load_vars, only: %i(marvinjs_show marvinjs_update download)
 
   before_action :check_read_permission, only: %i(marvinjs_show marvinjs_update download)
@@ -41,6 +43,8 @@ class TinyMceAssetsController < ApplicationController
     asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
     return render_404 unless asset
 
+    create_edit_marvinjs_activity(asset, current_user, :start_editing) if params[:show_action] == 'start_edit'
+
     render json: {
       name: asset.image.metadata[:name],
       description: asset.image.metadata[:description]
@@ -65,6 +69,7 @@ class TinyMceAssetsController < ApplicationController
   def marvinjs_update
     asset = MarvinJsService.update_sketch(marvin_params, current_user, current_team)
     if asset
+      create_edit_marvinjs_activity(asset, current_user, :finish_editing)
       render json: { url: rails_representation_url(asset.preview), id: asset.id }
     else
       render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity

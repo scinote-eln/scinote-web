@@ -595,6 +595,7 @@ var FilePreviewModal = (function() {
         ev.preventDefault();
         ev.stopPropagation();
         modal.modal('hide');
+        $.post(data['update-url'] + '/start_editing');
         MarvinJsEditor.open({
           mode: 'edit',
           data: data.description,

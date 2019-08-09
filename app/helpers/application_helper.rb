@@ -214,8 +214,8 @@ module ApplicationHelper
   end
 
   def missing_avatar(user, style)
-    user.avatar(style) == '/images/icon_small/missing.png' ||
-      user.avatar(style) == '/images/thumb/missing.png'
+    user.avatar == '/images/icon_small/missing.png' ||
+      user.avatar == '/images/thumb/missing.png'
   end
 
   def wopi_enabled?

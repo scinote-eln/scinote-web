@@ -692,6 +692,9 @@ Rails.application.routes.draw do
     collection do
       get :team_sketches
     end
+    member do
+      post :start_editing
+    end
   end
 
   post 'global_activities', to: 'global_activities#index'

@@ -2,6 +2,7 @@ class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include StepsActions
+  include MarvinJsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state)
   before_action :load_vars_nested, only: [:new, :create]
@@ -59,6 +60,10 @@ class StepsController < ApplicationController
           checklist_item.checked = false
         end
       end
+
+
+      # link tiny_mce_assets to the step
+      TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
 
       @step.save!
 
@@ -168,7 +173,7 @@ class StepsController < ApplicationController
       end
       if @step.save
 
-        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
         @step.reload
 
         # generates notification on step upadate

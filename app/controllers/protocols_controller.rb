@@ -232,7 +232,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         if @protocol.update(description: params.require(:protocol)[:description])
-          TinyMceAsset.update_images(@protocol, params[:tiny_mce_images])
+          TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
           render json: {
             html: custom_auto_link(
               @protocol.tinymce_render(:description),
@@ -266,7 +266,7 @@ class ProtocolsController < ApplicationController
 
         log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
 
-        TinyMceAsset.update_images(@protocol, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
         format.json do
           render json: {
             url: edit_protocol_path(
