@@ -304,7 +304,7 @@ class RepositoriesController < ApplicationController
 
   def load_vars
     repository_id = params[:id] || params[:repository_id]
-    @repository = current_team.repositories.find_by_id(repository_id)
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(repository_id)
     render_404 unless @repository
   end
 
