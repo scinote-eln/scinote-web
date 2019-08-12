@@ -1,7 +1,7 @@
 //= require repositories/import/records_importer.js
 
 /*
-  global animateSpinner repositoryRecordsImporter getParam RepositoryDatatable
+  global animateSpinner repositoryRecordsImporter getParam RepositoryDatatable PerfectScrollbar
 */
 
 (function(global) {
@@ -10,7 +10,7 @@
   global.pageReload = function() {
     animateSpinner();
     location.reload();
-  }
+  };
 
   function handleErrorSubmit(XHR) {
     var formGroup = $('#form-records-file').find('.form-group');
@@ -102,23 +102,26 @@
   }
 
   function initShareModal() {
-    var form = $('#share-repo-modal').find('form');
+    var form = $('.share-repo-modal').find('form');
     var sharedCBs = form.find("input[name='share_team_ids[]']");
     var permissionCBs = form.find("input[name='write_permissions[]']");
     var permissionChanges = form.find("input[name='permission_changes']");
     var submitBtn = form.find('input[type="submit"]');
+    var selectAllCheckbox = form.find('.all-teams .simple-checkbox');
+
+    selectAllCheckbox.change(function() {
+      form.find('.teams-list input.simple-checkbox').toggleClass('hidden', this.checked);
+      form.find('.teams-list .permission-selector').toggleClass('hidden', this.checked);
+      form.find('.all-teams .trigger-checkbox').toggleClass('hidden', !this.checked)
+        .attr('disabled', !this.checked);
+    });
 
     sharedCBs.change(function() {
-      var permissionCB = $('#editable_' + this.value);
-
-      if (this.checked) {
-        permissionCB.removeClass('hidden');
-        permissionCB.attr('disabled', false);
-      } else {
-        permissionCB.addClass('hidden');
-        permissionCB.attr('disabled', true);
-      }
+      $('#editable_' + this.value).toggleClass('hidden', !this.checked)
+        .attr('disabled', !this.checked);
     });
+
+    new PerfectScrollbar(form.find('.teams-list')[0]);
 
     permissionCBs.change(function() {
       var changes = JSON.parse(permissionChanges.val());
@@ -136,11 +139,11 @@
           if (data.warnings) {
             alert(data.warnings);
           }
-          $('#share-repo-modal').modal('hide');
+          $('.share-repo-modal').modal('hide');
         },
         error: function(data) {
           alert(data.responseJSON.errors);
-          $('#share-repo-modal').modal('hide');
+          $('.share-repo-modal').modal('hide');
         }
       });
     });
