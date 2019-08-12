@@ -8,6 +8,8 @@ describe 'RepositoryPermissions' do
   let(:user) { create :user }
   let(:repository) { build :repository, team: team }
   let(:team) { create :team }
+  let(:write_shared_repository) { create :repository, :write_shared }
+  let(:read_shared_repository) { create :repository, :read_shared }
 
   describe 'create_repository_rows, manage_repository_rows, create_repository_columns' do
     context 'when team\'s repositroy' do
@@ -62,6 +64,19 @@ describe 'RepositoryPermissions' do
         expect(can_create_repository_rows?(user, new_repository)).to be_falsey
       end
     end
+
+    context 'when shared with all organization' do
+      it 'should be true when repo has write permission' do
+        create :user_team, :normal_user, user: user, team: team
+        allow_any_instance_of(User).to receive(:current_team).and_return(team)
+
+        expect(can_create_repository_rows?(user, write_shared_repository)).to be_truthy
+      end
+
+      it 'should be false when repo has read permission' do
+        expect(can_create_repository_rows?(user, read_shared_repository)).to be_falsey
+      end
+    end
   end
 
   describe 'read_repository' do
@@ -89,6 +104,16 @@ describe 'RepositoryPermissions' do
         create :team_repository, :read, team: team
 
         expect(can_read_repository?(user, new_repository)).to be_falsey
+      end
+    end
+
+    context 'when shared with all organization' do
+      it 'should be true when repo has write permission' do
+        expect(can_read_repository?(user, write_shared_repository)).to be_truthy
+      end
+
+      it 'should be true when repo has read permission' do
+        expect(can_read_repository?(user, read_shared_repository)).to be_truthy
       end
     end
   end

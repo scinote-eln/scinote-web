@@ -6,6 +6,8 @@ class Repository < ApplicationRecord
   include RepositoryImportParser
   include Discard::Model
 
+  enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
+
   attribute :discarded_by_id, :integer
 
   belongs_to :team
@@ -30,7 +32,9 @@ class Repository < ApplicationRecord
   default_scope -> { kept }
   scope :accessible_by_teams, lambda { |teams|
     left_outer_joins(:team_repositories)
-      .where('repositories.team_id IN (?) OR team_repositories.team_id IN (?)', teams, teams)
+      .where('repositories.team_id IN (?) '\
+             'OR team_repositories.team_id IN (?) '\
+             'OR repositories.shared = true', teams, teams)
       .distinct
       .order(:created_at)
   }
@@ -74,11 +78,21 @@ class Repository < ApplicationRecord
   end
 
   def shared_with?(team)
-    team_repositories.where(team: team).any?
+    return false if self.team == team
+
+    shared? || team_repositories.where(team: team).any?
   end
 
   def shared_with_write?(team)
-    team_repositories.where(team: team, permission_level: :write).any?
+    return false if self.team == team
+
+    shared? && write? || team_repositories.where(team: team, permission_level: :write).any?
+  end
+
+  def shared_with_read?(team)
+    return false if self.team == team
+
+    shared? && read? || team_repositories.where(team: team, permission_level: :read).any?
   end
 
   def self.viewable_by_user(_user, teams)

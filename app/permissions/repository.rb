@@ -3,7 +3,9 @@
 Canaid::Permissions.register_for(Repository) do
   # repository: read/export
   can :read_repository do |user, repository|
-    user.teams.include?(repository.team) || repository.team_repositories.where(team: user.teams).any?
+    user.teams.include?(repository.team) ||
+      repository.shared? ||
+      repository.team_repositories.where(team: user.teams).any?
   end
 
   # repository: update, delete
@@ -15,6 +17,8 @@ Canaid::Permissions.register_for(Repository) do
   can :create_repository_rows do |user, repository|
     if user.teams.include?(repository.team)
       user.is_normal_user_or_admin_of_team?(repository.team)
+    elsif repository.shared? && repository.write?
+      user.is_normal_user_or_admin_of_team?(user.current_team)
     elsif (write_team_repos = repository
                                 .team_repositories
                                 .where(team_id: user.teams.pluck(:id))

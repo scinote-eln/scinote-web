@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_15_150326) do
+ActiveRecord::Schema.define(version: 2019_08_12_072649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -416,7 +416,11 @@ ActiveRecord::Schema.define(version: 2019_07_15_150326) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "discarded_at"
+    t.boolean "shared", default: false, null: false
+    t.integer "permission_level", default: 0, null: false
     t.index ["discarded_at"], name: "index_repositories_on_discarded_at"
+    t.index ["permission_level"], name: "index_repositories_on_permission_level"
+    t.index ["shared"], name: "index_repositories_on_shared"
     t.index ["team_id"], name: "index_repositories_on_team_id"
   end
 
@@ -721,9 +725,10 @@ ActiveRecord::Schema.define(version: 2019_07_15_150326) do
   create_table "team_repositories", force: :cascade do |t|
     t.bigint "team_id"
     t.bigint "repository_id"
-    t.integer "permission_level", null: false
+    t.integer "permission_level", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["permission_level"], name: "index_team_repositories_on_permission_level"
     t.index ["repository_id"], name: "index_team_repositories_on_repository_id"
     t.index ["team_id", "repository_id"], name: "index_team_repositories_on_team_id_and_repository_id", unique: true
     t.index ["team_id"], name: "index_team_repositories_on_team_id"
