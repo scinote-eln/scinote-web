@@ -31,7 +31,8 @@ class Repository < ApplicationRecord
   scope :accessible_by_teams, lambda { |teams|
     left_outer_joins(:team_repositories)
       .where('repositories.team_id IN (?) OR team_repositories.team_id IN (?)', teams, teams)
-      .uniq.sort_by(&:created_at)
+      .distinct
+      .order(:created_at)
   }
 
   def self.search(

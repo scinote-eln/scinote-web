@@ -173,14 +173,14 @@ class RepositoryColumnsController < ApplicationController
   AvailableRepositoryColumn = Struct.new(:id, :name)
 
   def load_vars
-    @repository = current_team.repositories.find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
     render_404 unless @repository
     @repository_column = @repository.repository_columns.find_by_id(params[:id])
     render_404 unless @repository_column
   end
 
   def load_vars_nested
-    @repository = current_team.repositories.find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
     render_404 unless @repository
   end
 

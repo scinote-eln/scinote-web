@@ -348,9 +348,10 @@ class RepositoryRowsController < ApplicationController
   end
 
   def load_vars
-    @repository = current_team.repositories
-                              .eager_load(:repository_columns)
-                              .find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team)
+                            .eager_load(:repository_columns)
+                            .find_by_id(params[:repository_id])
+
     @record = @repository.repository_rows
                          .eager_load(:repository_columns)
                          .find_by_id(params[:id])
@@ -358,7 +359,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def load_repository
-    @repository = current_team.repositories.find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
     render_404 unless @repository
     render_403 unless can_read_repository?(@repository)
   end
