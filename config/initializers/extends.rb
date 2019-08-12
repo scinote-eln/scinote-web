@@ -93,12 +93,12 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team Repository Project Experiment MyModule Result Protocol Report
-  ).freeze
+  )
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
     Repository Project Experiment MyModule Result Protocol Step Report
-  ).freeze
-
+  )
+  
   ACTIVITY_SUBJECT_CHILDREN = {
     Repository: nil,
     Report: nil,
@@ -108,11 +108,10 @@ class Extends
     Result: nil,
     Protocol: [:steps],
     Step: nil
-  }.freeze
+  }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset)
-    .freeze
 
   ACTIVITY_TYPES = {
     create_project: 0,
@@ -225,7 +224,7 @@ class Extends
     share_inventory: 113,
     unshare_inventory: 114,
     update_share_inventory: 133
-  }.freeze
+  }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
@@ -238,7 +237,7 @@ class Extends
     inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107, 113, 114, 133],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101, 112],
     team: [92, 94, 93, 97, 104]
-  }.freeze
+  }
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
     read: 0,
