@@ -1,13 +1,19 @@
 <div class="attachment-placeholder pull-left">
-  <div class="attachment-thumbnail <%= asset.previewable? ? '' : 'no-shadow' %>">
+
+  <div class="attachment-thumbnail <%= asset.previewable? ? '' : 'no-shadow' %> <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
     <% if asset.previewable? %>
+
       <%= image_tag asset.medium_preview %>
     <% else %>
       <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
     <% end %>
   </div>
   <div class="attachment-label">
-    <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    <% if asset.file.attached? && asset&.file&.metadata['asset_type'] %>
+      <%= truncate(asset.file.metadata['name'], length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    <% else %>
+      <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    <% end %>
   </div>
   <div class="spencer-bonnet-modif">
     <%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %>  <br>
