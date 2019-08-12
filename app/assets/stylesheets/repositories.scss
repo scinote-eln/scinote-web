@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
 @import "constants";
 
 .repositories-dropdown-menu {
@@ -105,5 +108,77 @@
 
   .fas {
     margin-right: 5px;
+  }
+}
+
+.share-repo-modal {
+
+  .modal-dialog {
+    width: 350px;
+  }
+
+  .share-repo-container {
+    padding: 15px 30px;
+
+    // Main structure css
+    .header,
+    .data-list {
+      display: flex;
+      width: 100%;
+    }
+
+    .data-list {
+      flex-direction: column;
+    }
+
+    .all-teams,
+    .teams-list {
+      display: flex;
+      width: 100%;
+    }
+
+    .teams-list {
+      flex-direction: column;
+      max-height: 400px;
+      position: relative;
+
+      .team-container {
+        align-items: center;
+        display: flex;
+        padding: 5px 0;
+      }
+    }
+
+    .permission-selector {
+      display: flex;
+      flex-basis: 100px;
+      flex-shrink: 0;
+      justify-content: center;
+    }
+
+    .team-selector {
+      align-items: center;
+      display: flex;
+      flex-grow: 1;
+
+      .checkbox-label {
+        margin-right: 5px;
+      }
+    }
+
+    // header
+    .header {
+      align-items: center;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 5px 0;
+    }
+
+    .all-teams {
+      align-items: center;
+      border-bottom: 1px solid $color-gainsboro;
+      padding: 5px 0;
+      user-select: none;
+    }
   }
 }

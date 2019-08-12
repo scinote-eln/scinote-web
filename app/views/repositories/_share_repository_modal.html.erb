@@ -1,4 +1,4 @@
-<div class="modal" id="share-repo-modal" tabindex="-1" role="dialog" >
+<div class="modal share-repo-modal" tabindex="-1" role="dialog" >
   <%= form_for :shares, url: multiple_update_team_repository_team_repositories_path(current_team, @repository), remote: :true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -8,22 +8,41 @@
             <%= t("repositories.index.modal_share.title") %>
           </h4>
         </div>
-        <div class="modal-body">
-          <div>
-            <table style="width: 80%; margin: 0 auto">
-              <tr>
-                <th>Share with Team</th><th>Can Edit</th>
-              </tr>
+        <div class="modal-body share-repo-container">
+          <div class="header">
+            <span class="team-selector">Share with Team</span>
+            <span class="permission-selector">Can Edit</span>
+          </div>
+          <div class="data-list">
+            <div class="all-teams">
+              <span class="team-selector">
+                <%= check_box_tag 'select_all_teams', 0, false, {class: "simple-checkbox"} %>
+                <span class="checkbox-label"></span>
+                All teams in the organization
+              </span>
+              <span class="permission-selector">
+                <%= check_box_tag 'select_all_write_permission', 0, false, {class: 'hidden trigger-checkbox'}%>
+                <span class="checkbox-label"></span>
+              </span>
+            </div>
+            <div class="teams-list">
               <% (current_user.teams - [@repository.team]).each do |t| %>
-                <tr>
-                  <td>
-                    <%= check_box_tag 'share_team_ids[]', t.id, @repository.shared_with?(t), {id: "shared_#{t.id}"} %>
-                    <%= t.name %>
-                  </td>
-                  <td><%= check_box_tag 'write_permissions[]', t.id, @repository.shared_with_write?(t), {id: "editable_#{t.id}", class: ('hidden' unless @repository.shared_with?(t))}.compact %></td>
-                </tr>
+              <div class="team-container">
+                <div class="team-selector">
+                  <%= check_box_tag 'share_team_ids[]', t.id, @repository.shared_with?(t), {id: "shared_#{t.id}", class: "simple-checkbox"} %>
+                  <span class="checkbox-label"></span>
+                  <%= t.name %>
+                </div>
+                <div class="permission-selector">
+                  <%= check_box_tag 'write_permissions[]', t.id, @repository.shared_with_write?(t), {
+                    id: "editable_#{t.id}", 
+                    class: (@repository.shared_with?(t) ? 'trigger-checkbox' : 'trigger-checkbox hidden')
+                  }.compact %>
+                  <span class="checkbox-label"></span>
+                </div>
+              </div>
               <% end %>
-            </table>
+            </div>
           </div>
         </div>
         <%= hidden_field_tag 'permission_changes', {}%>
