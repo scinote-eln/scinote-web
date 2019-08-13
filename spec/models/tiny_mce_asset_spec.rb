@@ -30,6 +30,7 @@ describe TinyMceAsset, type: :model do
   end
 
   describe 'Methods' do
+    let(:user) { create :user }
     let(:team) { create :team }
     let(:my_module) { create :my_module }
     let(:result) do
@@ -45,7 +46,7 @@ describe TinyMceAsset, type: :model do
       it 'save new image' do
         create :protocol, my_module: result_text.result.my_module
         result_text.result.my_module.protocol.update(team_id: image.team_id)
-        TinyMceAsset.update_images(result_text, [Base62.encode(image.id)].to_s)
+        TinyMceAsset.update_images(result_text, [Base62.encode(image.id)].to_s, user)
         updated_image = TinyMceAsset.find(image.id)
         expect(updated_image.object_type).to eq 'ResultText'
         expect(ResultText.find(result_text.id).text).not_to include 'fake-path'
@@ -60,14 +61,14 @@ describe TinyMceAsset, type: :model do
 
       it 'restrict acces to image' do
         image
-        expect(TinyMceAsset.generate_url(result_text.text, result_text)).not_to include 'sample_file.jpg'
+        expect(TinyMceAsset.generate_url(result_text.text, result_text)).not_to include 'test.jpg'
       end
     end
 
     describe '#reassign_tiny_mce_image_references' do
       it 'change image token in rich text field' do
         new_result_text = result_text
-        TinyMceAsset.update_images(new_result_text, [Base62.encode(image.id)].to_s)
+        TinyMceAsset.update_images(new_result_text, [Base62.encode(image.id)].to_s, user)
         create :tiny_mce_asset, id: 2, object: new_result_text
         new_result_text.reassign_tiny_mce_image_references([[1, 2]])
         expect(ResultText.find(new_result_text.id).text).to include 'data-mce-token="2"'
