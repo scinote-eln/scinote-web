@@ -5,7 +5,7 @@ module DrawStepAsset
     asset = Asset.find_by_id(subject['id']['asset_id'])
     return unless asset
 
-    is_image = asset.is_image?
+    is_image = asset.image?
     timestamp = asset.created_at
     color = @color
     @docx.p
