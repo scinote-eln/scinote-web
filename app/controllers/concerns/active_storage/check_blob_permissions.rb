@@ -49,6 +49,7 @@ module ActiveStorage
     def check_tinymce_asset_read_permissions
       asset = @blob.attachments.first.record
       return render_403 unless asset
+      return true if asset.object.nil? && asset.team == current_team
 
       case asset.object_type
       when 'MyModule'

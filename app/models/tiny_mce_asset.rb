@@ -46,7 +46,7 @@ class TinyMceAsset < ApplicationRecord
     end
     images.each do |image|
       image_to_update = find_by_id(Base62.decode(image))
-      next if image_to_update.object || image_to_update.team_id != Team.find_by_object(object)
+      next if image_to_update.object || image_to_update.team_id != Team.find_by_object(object).id
 
       image_to_update&.update(object: object, saved: true)
       create_create_marvinjs_activity(image_to_update, current_user)

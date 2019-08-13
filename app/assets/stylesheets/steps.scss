@@ -164,10 +164,6 @@
   text-align: center;
   width: 220px;
 
-  .attachment-thumbnail {
-    width: calc(100% - 20px);
-  }
-
   a {
     color: inherit;
   }
@@ -179,14 +175,43 @@
   .attachment-thumbnail {
     display: inline-block;
     height: 160px;
-    margin: 16px 10px 5px;
+    margin: 16px 0 5px;
     overflow: hidden;
+    padding: 0 10px;
+    position: relative;
     text-align: center;
+    width: 100%;
 
     img {
       border-radius: 5px;
       max-height: 100%;
       max-width: 100%;
+    }
+
+    &.marvinjs {
+
+      &::before,
+      &::after {
+        content: "";
+        border-radius: 16px 0 0 16px;
+        display: block;
+        height: 32px;
+        right: 0;
+        line-height: 32px;
+        position: absolute;
+        bottom: 10px;
+        width: 36px;
+      }
+
+      &::before {
+        background: $marvinjs-color;
+      }
+
+      &::after {
+        background-image: url("icon_small/marvinjs-white.svg");
+        right: 4px;
+        width: 32px;
+      }
     }
 
     i.fas {
