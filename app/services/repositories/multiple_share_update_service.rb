@@ -12,7 +12,9 @@ module Repositories
                    team_id:,
                    team_ids_for_share: [],
                    team_ids_for_unshare: [],
-                   team_ids_for_update: [])
+                   team_ids_for_update: [],
+                   shared_with_all: nil,
+                   shared_permissions_level: nil)
       @repository = Repository.find_by_id repository_id
       @user = User.find_by_id user_id
       @team = Team.find_by_id team_id
@@ -21,10 +23,22 @@ module Repositories
       @team_ids_for_update = team_ids_for_update
       @errors = {}
       @warnings = []
+      @shared_with_all = shared_with_all
+      @shared_permission_level = shared_permissions_level
     end
 
     def call
       return self unless valid?
+
+      if !@shared_with_all.nil? && !@shared_permission_level.nil?
+        @repository.shared = @shared_with_all
+        @repository.permission_level = @shared_permission_level
+
+        if @repository.changed?
+          change_type = @repository.changes.key?('shared') ? 'share' : 'update_permission_level'
+          log_activity_share_all(change_type, @repository) if @repository.save
+        end
+      end
 
       @team_ids_for_share.each do |share|
         team_repository = TeamRepository.new(repository: @repository,
@@ -103,6 +117,24 @@ module Repositories
                                team: team_repository.team.id,
                                permission_level:
                                  Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_repository.permission_level.to_sym] })
+    end
+
+    def log_activity_share_all(change_type, repository)
+      type = if change_type == 'share'
+               @repository.shared ? :share_inventory_with_all : :unshare_inventory_with_all
+             else
+               :update_share_with_all_permission_level
+             end
+
+      Activities::CreateActivityService
+        .call(activity_type: type,
+              owner: @user,
+              subject: repository,
+              team: @team,
+              message_items: { repository: repository.id,
+                               team: @team.id,
+                               permission_level:
+                                 Extends::SHARED_INVENTORIES_PL_MAPPINGS[repository.permission_level.to_sym] })
     end
   end
 end

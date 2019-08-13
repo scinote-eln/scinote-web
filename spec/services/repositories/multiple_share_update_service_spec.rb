@@ -128,4 +128,22 @@ describe Repositories::MultipleShareUpdateService do
       end
     end
   end
+
+  context 'when share_with_all' do
+    let(:service_call) do
+      Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
+                                                    user_id: user.id,
+                                                    team_id: team.id,
+                                                    shared_with_all: true,
+                                                    shared_permissions_level: :write)
+    end
+
+    it 'updates permission for share record' do
+      expect { service_call }.to(change { repository.reload.permission_level })
+    end
+
+    it 'adds Activity record' do
+      expect { service_call }.to(change { Activity.all.count }.by(1))
+    end
+  end
 end

@@ -95,6 +95,14 @@ class Repository < ApplicationRecord
     shared? && read? || team_repositories.where(team: team, permission_level: :read).any?
   end
 
+  def private_shared_with?(team)
+    team_repositories.where(team: team).any?
+  end
+
+  def private_shared_with_write?(team)
+    team_repositories.where(team: team, permission_level: :write).any?
+  end
+
   def self.viewable_by_user(_user, teams)
     where(team: teams)
   end
