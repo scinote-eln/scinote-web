@@ -6,7 +6,6 @@ module DrawResultAsset
     return unless result
 
     asset = result.asset
-    is_image = result.asset.image?
     timestamp = asset.created_at
     color = @color
     @docx.p
@@ -18,7 +17,7 @@ module DrawResultAsset
                         user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
 
-    asset_image_preparing(asset) if is_image
+    asset_image_preparing(asset) if asset.image?
 
     subject['children'].each do |child|
       public_send("draw_#{child['type_of']}", child)
