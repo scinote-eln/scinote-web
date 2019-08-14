@@ -795,10 +795,19 @@ class TeamImporter
 
   # returns asset object
   def create_asset(asset_json, team, user_id = nil)
-    asset = Asset.new(asset_json['asset'])
+    ### Fix for support templates
+    asset_info = asset_json['asset'] || asset_json
+
+    asset = Asset.new(asset_info)
     asset_blob = asset_json['asset_blob']
+    ### Fix for support templates
+    asset_file_name = if asset_blob
+                        asset_blob['filename']
+                      else
+                        asset_json['file_file_name']
+                      end
     File.open(
-      "#{@import_dir}/assets/#{asset.id}/#{asset_blob['filename']}"
+      "#{@import_dir}/assets/#{asset.id}/#{asset_file_name}"
     ) do |file|
       orig_asset_id = asset.id
       asset.id = nil
