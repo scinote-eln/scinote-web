@@ -98,7 +98,7 @@ class Extends
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
     Repository Project Experiment MyModule Result Protocol Step Report
   )
-  
+
   ACTIVITY_SUBJECT_CHILDREN = {
     Repository: nil,
     Report: nil,
@@ -223,7 +223,10 @@ class Extends
     edit_image_on_step_in_repository: 112,
     share_inventory: 113,
     unshare_inventory: 114,
-    update_share_inventory: 133
+    update_share_inventory: 133,
+    share_inventory_with_all: 134,
+    unshare_inventory_with_all: 135,
+    update_share_with_all_permission_level: 136
   }
 
   ACTIVITY_GROUPS = {
@@ -234,7 +237,7 @@ class Extends
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
     reports: [48, 50, 49],
-    inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107, 113, 114, 133],
+    inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101, 112],
     team: [92, 94, 93, 97, 104]
   }

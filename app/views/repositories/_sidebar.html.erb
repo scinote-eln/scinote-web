@@ -25,7 +25,7 @@
               <% end %>
 
               <% if repository.shared_with?(current_team) %>
-                <% if repository.team_repositories.where(team: current_team).take.write? %>
+                <% if repository.shared_with_write?(current_team) %>
                   <%= draw_custom_icon('shared-edit') %>
                 <% else %>
                   <%= draw_custom_icon('shared-read') %>

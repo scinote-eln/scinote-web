@@ -109,9 +109,15 @@
     var submitBtn = form.find('input[type="submit"]');
     var selectAllCheckbox = form.find('.all-teams .simple-checkbox');
 
+    form.find('.teams-list').find('input.simple-checkbox, .permission-selector')
+      .toggleClass('hidden', selectAllCheckbox.is(':checked'));
+    form.find('.all-teams .trigger-checkbox')
+      .toggleClass('hidden', !selectAllCheckbox.is(':checked'))
+      .attr('disabled', !selectAllCheckbox.is(':checked'));
+
     selectAllCheckbox.change(function() {
-      form.find('.teams-list input.simple-checkbox').toggleClass('hidden', this.checked);
-      form.find('.teams-list .permission-selector').toggleClass('hidden', this.checked);
+      form.find('.teams-list').find('input.simple-checkbox, .permission-selector')
+        .toggleClass('hidden', this.checked);
       form.find('.all-teams .trigger-checkbox').toggleClass('hidden', !this.checked)
         .attr('disabled', !this.checked);
     });

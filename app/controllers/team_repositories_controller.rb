@@ -40,7 +40,8 @@ class TeamRepositoriesController < ApplicationController
                                                                  team_id: current_team.id,
                                                                  team_ids_for_share: teams_to_share,
                                                                  team_ids_for_unshare: teams_to_unshare,
-                                                                 team_ids_for_update: teams_to_update)
+                                                                 team_ids_for_update: teams_to_update,
+                                                                 **share_all_params)
     if service_call.succeed?
       render json: { warnings: service_call.warnings.join(', ') }, status: :ok
     else
@@ -91,6 +92,13 @@ class TeamRepositoriesController < ApplicationController
     wp = multiple_update_params[:write_permissions]&.map(&:to_i)
 
     teams_to_update.map { |e| { id: e, permission_level: wp&.include?(e) ? 'write' : 'read' } }
+  end
+
+  def share_all_params
+    {
+      shared_with_all: params[:select_all_teams].present?,
+      shared_permissions_level: params[:select_all_write_permission].present? ? 'write' : 'read'
+    }
   end
 
   def log_activity(type_of, team_repository)
