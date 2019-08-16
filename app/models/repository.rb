@@ -36,7 +36,6 @@ class Repository < ApplicationRecord
              'OR team_repositories.team_id IN (?) '\
              'OR repositories.shared = true', teams, teams)
       .distinct
-      .order(:created_at)
   }
 
   def self.search(

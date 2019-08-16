@@ -311,7 +311,7 @@ class RepositoriesController < ApplicationController
   def load_parent_vars
     @team = current_team
     render_404 unless @team
-    @repositories = Repository.accessible_by_teams(@team)
+    @repositories = Repository.accessible_by_teams(@team).order('repositories.created_at ASC')
   end
 
   def check_team
