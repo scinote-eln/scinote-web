@@ -10,9 +10,6 @@
 .repository-table {
   margin-top: 20px;
 
-  .btn {
-    border: 0;
-  }
   // Datatables generated name
   .dataTables_length {
     display: inline-block;
@@ -92,6 +89,10 @@
 .toolbarButtonsDatatable {
   .view-only-label {
     opacity: .6;
+  }
+
+  .btn {
+    border: 0;
   }
 }
 
