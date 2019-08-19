@@ -102,7 +102,7 @@ var RepositoryDatatable = (function(global) {
         }
       }],
       oLanguage: {
-        sSearch: I18n.t('general.filter')
+        sSearch: I18n.t('general.filter_dots')
       },
       rowCallback: function(row, data) {
         // Get row ID
@@ -226,6 +226,12 @@ var RepositoryDatatable = (function(global) {
         initHeaderTooltip();
       }
     });
+
+    // hack to replace filter placeholder
+    $('.dataTables_filter .form-control').attr('placeholder', $('.dataTables_filter label').text())
+    $('.dataTables_filter label').contents().filter(function(){
+      return this.nodeType === 3;
+    }).remove();
 
     // Handle click on table cells with checkboxes
     $(TABLE_ID).on('click', 'tbody td', function(e) {

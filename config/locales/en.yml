@@ -2042,6 +2042,7 @@ en:
     no_name: "(no name)"
     error: "An error has occurred, please try again later."
     filter: "Filter:"
+    filter_dots: "Filter..."
     no_teams:
       title: "Your dashboard is empty!"
       text: "It seems you're not a member of any team."
