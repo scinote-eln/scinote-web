@@ -13,7 +13,7 @@
   <div id="repository-toolbar">
     <div class="repository-title">
       <span class="repository-share-icon">
-        <% if true || @repository.shared_with?(current_team) %>
+        <% if @repository.shared_with?(current_team) %>
           <% if @repository.shared_with_write?(current_team) %>
             <%= draw_custom_icon('shared-edit') %>
           <% else %>

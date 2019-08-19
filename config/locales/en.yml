@@ -986,7 +986,6 @@ en:
       columns: "Columns"
       edit_inventory: "Edit Inventory"
       share_inventory: "Share"
-      title_label: "Inventory:"
       view_only_permission_label: "You have veiw-only permission"
 
       options_dropdown:
