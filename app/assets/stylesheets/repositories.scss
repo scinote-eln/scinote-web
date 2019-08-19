@@ -3,6 +3,11 @@
 
 @import "constants";
 
+.content-pane.repository-show {
+  margin-top: 15px;
+  padding-top: 0;
+}
+
 .repositories-dropdown-menu {
   height: auto;
   max-height: 400px;
@@ -51,7 +56,12 @@
 }
 
 #repository-toolbar {
+  align-items: center;
+  border-bottom: 1px solid $color-gainsboro;
   display: flex;
+  margin-left: -20px;
+  padding: 5px 20px;
+  width: calc(100% + 40px);
 
   .repository-title {
     align-items: center;
@@ -60,26 +70,28 @@
     font-size: 18px;
     font-weight: 500;
     margin-right: 20px;
-    overflow: hidden;
 
     span {
       white-space: nowrap;
     }
 
-    .repository-label {
-      flex-shrink: 0;
-      margin-right: 5px;
-      opacity: .8;
-    }
-
     .repository-share-icon {
       flex-shrink: 0;
-      margin-left: 5px;
+      margin-right: 13px;
+      margin-top: -2px;
     }
 
     .repository-name {
-      display: inline-block;
-      overflow: hidden;
+      display: block;
+      flex-grow: 1;
+      margin-left: -10px;
+
+      .inline-editing-container {
+
+        input {
+          line-height: 26px;
+        }
+      }
     }
 
   }

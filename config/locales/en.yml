@@ -988,6 +988,7 @@ en:
       share_inventory: "Share"
       title_label: "Inventory:"
       view_only_permission_label: "You have veiw-only permission"
+
       options_dropdown:
         manage_columns: 'Manage columns'
         import_items: 'Import items'

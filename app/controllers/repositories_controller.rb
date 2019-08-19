@@ -10,6 +10,7 @@ class RepositoriesController < ApplicationController
     %i(destroy destroy_modal rename_modal update share_modal)
   before_action :check_create_permissions, only:
     %i(create_modal create copy_modal copy)
+  before_action :set_inline_name_editing, only: %i(show)
 
   layout 'fluid'
 
@@ -109,10 +110,7 @@ class RepositoriesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        if @repository.save
-          flash[:success] = t('repositories.index.rename_flash',
-                              old_name: old_name, new_name: @repository.name)
-
+        if @repository.save 
           log_activity(:rename_inventory) # Acton only for renaming
 
           render json: {
@@ -316,6 +314,16 @@ class RepositoriesController < ApplicationController
 
   def check_team
     render_404 unless params[:team_id].to_i == current_team.id
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_repository?(@repository)
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'repository',
+      field_to_udpate: 'name',
+      path_to_update: team_repository_path(@repository)
+    }
   end
 
   def check_view_all_permissions

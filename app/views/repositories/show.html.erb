@@ -9,18 +9,25 @@
 <%= render partial: "sidebar", locals: { repositories: @repositories } %>
 <div id="alert-container"></div>
 
-<div class="content-pane">
+<div class="content-pane repository-show">
   <div id="repository-toolbar">
     <div class="repository-title">
-      <span class="repository-label"><%= t('repositories.index.title_label') %> </span>
-      <span class="repository-name" title="<%= @repository.name %>"><%= @repository.name %></span>
       <span class="repository-share-icon">
-        <% if @repository.shared_with?(current_team) %>
+        <% if true || @repository.shared_with?(current_team) %>
           <% if @repository.shared_with_write?(current_team) %>
             <%= draw_custom_icon('shared-edit') %>
           <% else %>
             <%= draw_custom_icon('shared-read') %>
           <% end %>
+        <% end %>
+      </span>
+      <span class="repository-name">
+        <% if @inline_editable_title_config.present? %>
+          <%= render partial: "shared/inline_editing",
+                     locals: { initial_value: @repository.name } %>
+        <% else %>
+          <%= truncate(@repository.name,
+                     length: Constants::MAX_EDGE_LENGTH) %>
         <% end %>
       </span>
     </div>
@@ -102,9 +109,7 @@
         <% end %>
     </div>
   </div>
-
-  <hr/>
-
+  
   <div class="btn-group inline" id="saveCancel" data-toggle="buttons" style="display:none">
     <button type="button" class="btn btn-success" id="saveRecord" onclick="onClickSave()">
       <span class="fas fa-save"></span>
