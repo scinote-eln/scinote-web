@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoriesController < ApplicationController
   before_action :load_vars,
                 except: %i(index create create_modal parse_sheet)
@@ -15,14 +17,11 @@ class RepositoriesController < ApplicationController
   layout 'fluid'
 
   def index
-    unless @repositories.length.zero? && current_team
-      redirect_to repository_path(@repositories.first) and return
-    end
+    redirect_to repository_path(@repositories.first) and return unless @repositories.length.zero? && current_team
     render 'repositories/index'
   end
 
-  def show
-  end
+  def show; end
 
   def create_modal
     @repository = Repository.new
@@ -110,7 +109,7 @@ class RepositoriesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        if @repository.save 
+        if @repository.save
           log_activity(:rename_inventory) # Acton only for renaming
 
           render json: {
@@ -318,6 +317,7 @@ class RepositoriesController < ApplicationController
 
   def set_inline_name_editing
     return unless can_manage_repository?(@repository)
+
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'repository',
