@@ -76,6 +76,10 @@ class Repository < ApplicationRecord
     end
   end
 
+  def i_shared?(team)
+    (shared? || team_repositories.any?) && self.team == team
+  end
+
   def shared_with?(team)
     return false if self.team == team
 
