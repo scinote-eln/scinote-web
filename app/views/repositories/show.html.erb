@@ -80,14 +80,6 @@
               </a>
             </li>
             <% end %>
-            <% if can_manage_repository?(@repository) %>
-              <li>
-                <%= link_to t('repositories.index.options_dropdown.rename'),
-                            team_repository_rename_modal_path(current_team, repository_id: @repository),
-                            class: "rename-repo-option",
-                            remote: true %>
-              </li>
-            <% end %>
             <% if can_create_repositories?(@repository.team) %>
               <li>
                 <%= link_to t('repositories.index.options_dropdown.copy'),
