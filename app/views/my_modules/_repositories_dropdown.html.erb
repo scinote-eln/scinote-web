@@ -1,4 +1,4 @@
-<% @my_module.experiment.project.team.repositories.order(created_at: :asc).each do |repository| %>
+<% Repository.accessible_by_teams(current_team).order(created_at: :asc).each do |repository| %>
   <li>
     <a class="dropdown-item <%= "active-item" if @repository == repository %> help_tooltips"
        data-tooltiplink="<%= I18n.t('tooltips.link.protocol.inventories') %>"

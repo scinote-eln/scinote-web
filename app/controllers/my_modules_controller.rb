@@ -301,7 +301,6 @@ class MyModulesController < ApplicationController
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_403 if @repository.nil? || !can_read_repository?(@repository)
-    current_team_switch(@repository.team)
   end
 
   def archive
