@@ -5,8 +5,8 @@
         <% if can_create_repositories?(current_team) %>
           <li>
             <span class="tree-link link-wrap no-indent">
-              <a class="sidebar-button" id="create-new-repository" data-remote="true"
-                 href="<%= create_modal_team_repositories_path(@repository.team) %>">
+              <a class="sidebar-button create-new-repository" data-remote="true"
+                 href="<%= create_modal_team_repositories_path(current_team) %>">
                 <span class="fas fa-plus"></span>
                 <%= t('libraries.index.no_libraries.create_new_button') %>
               </a>

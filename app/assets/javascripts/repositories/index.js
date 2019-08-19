@@ -159,7 +159,7 @@
     initShareModal();
   });
 
-  $('#create-new-repository').initializeModal('#create-repo-modal');
+  $('.create-new-repository').initializeModal('#create-repo-modal');
   loadRepositoryTab();
   initImportRecordsModal();
 }(window));
