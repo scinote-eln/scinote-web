@@ -154,8 +154,7 @@
           <%= render partial: "shared/inline_editing",
                      locals: { initial_value: title_element.name } %>
         <% else %>
-          <%= truncate(title_element.name,
-                     length: Constants::MAX_EDGE_LENGTH) %>
+          <%= title_element.name %>
         <% end %>
       </h4>
 

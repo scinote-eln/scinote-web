@@ -320,7 +320,12 @@ a[data-toggle="tooltip"] {
   }
 
   .nav-name {
+    height: 54px;
+    line-height: 44px;
+    overflow: hidden;
     padding: 5px 0;
+    text-overflow: ellipsis;
+    white-space: nowrap
   }
 
   .navbar-nav > li > .dropdown-menu {
