@@ -19,6 +19,8 @@
           <% else %>
             <%= draw_custom_icon('shared-read') %>
           <% end %>
+        <% elsif @repository.i_shared?(current_team) %>
+          <%= draw_custom_icon('i-shared') %>
         <% end %>
       </span>
       <span class="repository-name">
