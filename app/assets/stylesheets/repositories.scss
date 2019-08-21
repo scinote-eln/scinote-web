@@ -68,37 +68,32 @@
   border-bottom: 1px solid $color-gainsboro;
   display: flex;
   margin-left: -20px;
-  padding: 5px 20px;
+  padding: 5px 15px;
   width: calc(100% + 40px);
 
+  .repository-share-icon {
+    flex-shrink: 0;
+    margin-top: -2px;
+
+    .fas-custom {
+      margin-right: 5px;
+    }
+  }
+
   .repository-title {
-    align-items: center;
-    display: flex;
     flex-grow: 1;
     font-size: 18px;
-    font-weight: 500;
+    line-height: 50px;
     margin-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
-    span {
-      white-space: nowrap;
-    }
+    .inline-editing-container {
+      width: 100%;
 
-    .repository-share-icon {
-      flex-shrink: 0;
-      margin-right: 13px;
-      margin-top: -2px;
-    }
-
-    .repository-name {
-      display: block;
-      flex-grow: 1;
-      margin-left: -10px;
-
-      .inline-editing-container {
-
-        input {
-          line-height: 26px;
-        }
+      input {
+        line-height: 26px;
       }
     }
 

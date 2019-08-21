@@ -11,27 +11,24 @@
 
 <div class="content-pane repository-show">
   <div id="repository-toolbar">
-    <div class="repository-title">
-      <span class="repository-share-icon">
-        <% if @repository.shared_with?(current_team) %>
-          <% if @repository.shared_with_write?(current_team) %>
-            <%= draw_custom_icon('shared-edit') %>
-          <% else %>
-            <%= draw_custom_icon('shared-read') %>
-          <% end %>
-        <% elsif @repository.i_shared?(current_team) %>
-          <%= draw_custom_icon('i-shared') %>
-        <% end %>
-      </span>
-      <span class="repository-name">
-        <% if @inline_editable_title_config.present? %>
-          <%= render partial: "shared/inline_editing",
-                     locals: { initial_value: @repository.name } %>
+    <span class="repository-share-icon">
+      <% if @repository.shared_with?(current_team) %>
+        <% if @repository.shared_with_write?(current_team) %>
+          <%= draw_custom_icon('shared-edit') %>
         <% else %>
-          <%= truncate(@repository.name,
-                     length: Constants::MAX_EDGE_LENGTH) %>
+          <%= draw_custom_icon('shared-read') %>
         <% end %>
-      </span>
+      <% elsif @repository.i_shared?(current_team) %>
+        <%= draw_custom_icon('i-shared') %>
+      <% end %>
+    </span>
+    <div class="repository-title">
+      <% if @inline_editable_title_config.present? %>
+        <%= render partial: "shared/inline_editing",
+                     locals: { initial_value: @repository.name } %>
+      <% else %>
+        <%= @repository.name %>
+      <% end %>
     </div>
 
     <div id="datatables-buttons" class="datatables-buttons" style="display: inline;">
