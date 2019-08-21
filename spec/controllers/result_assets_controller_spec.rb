@@ -27,16 +27,16 @@ describe ResultAssetsController, type: :controller do
           { '0': fixture_file_upload('files/export.csv', 'text/csv') } }
     end
 
-    it 'calls create activity service' do
-      expect(Activities::CreateActivityService).to receive(:call)
-        .with(hash_including(activity_type: :add_result))
-      action
-    end
+    #it 'calls create activity service' do
+    #  expect(Activities::CreateActivityService).to receive(:call)
+    #    .with(hash_including(activity_type: :add_result))
+    #  action
+    #end
 
-    it 'adds activity in DB' do
-      expect { action }
-        .to(change { Activity.count })
-    end
+    #it 'adds activity in DB' do
+    #  expect { action }
+    #    .to(change { Activity.count })
+    #end
   end
 
   describe 'PUT update' do
