@@ -10,7 +10,6 @@ class ProjectsController < ApplicationController
                                      delete_samples samples_index)
   before_action :load_projects_tree, only: %i(sidebar show samples archive
                                               experiment_archive)
-  before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
                                                   samples_index)
@@ -316,15 +315,6 @@ class ProjectsController < ApplicationController
       @projects_tree = current_user.projects_tree(@current_team, @current_sort)
     else
       @projects_tree = []
-    end
-  end
-
-  def load_archive_vars
-    if current_user.teams.any?
-      @archived_projects_by_teams =
-        current_user.projects_by_teams(@current_team.id, @current_sort, true)
-    else
-      @archived_projects_by_teams = []
     end
   end
 

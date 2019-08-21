@@ -225,7 +225,6 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
     post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
     get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
     get 'projects/dt_state_load', to: 'projects#dt_state_load',
