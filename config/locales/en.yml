@@ -281,8 +281,6 @@ en:
       options_header: "Options"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
-      no_archived_projects: "No archived projects!"
-      back_to_projects_index: "Back to home"
       modal_new_project:
         modal_title: "Create new project"
         create: "Create"
@@ -331,7 +329,6 @@ en:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
     archive:
-      head_title: "Projects Archive"
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
     restore:
