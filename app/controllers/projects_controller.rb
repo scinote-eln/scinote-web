@@ -81,10 +81,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def archive
-    index
-  end
-
   def new
     @project = Project.new
   end
