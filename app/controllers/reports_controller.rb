@@ -477,10 +477,10 @@ class ReportsController < ApplicationController
   end
 
   def load_available_repositories
-    repositories = current_team.repositories
-                               .name_like(search_params[:q])
-                               .limit(Constants::SEARCH_LIMIT)
-                               .select(:id, :name)
+    repositories = Repository.accessible_by_teams(current_team)
+                             .name_like(search_params[:q])
+                             .limit(Constants::SEARCH_LIMIT)
+                             .select(:id, :name)
     @available_repositories = repositories.collect do |repository|
       AvailableRepository.new(repository.id,
                               ellipsize(repository.name, 75, 50))
