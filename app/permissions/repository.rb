@@ -13,6 +13,11 @@ Canaid::Permissions.register_for(Repository) do
     user.is_admin_of_team?(repository.team)
   end
 
+  # repository: share
+  can :share_repository do |user, repository|
+    user.is_admin_of_team?(repository.team)
+  end
+
   # repository: create/import record
   can :create_repository_rows do |user, repository|
     if user.teams.include?(repository.team)

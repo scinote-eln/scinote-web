@@ -8,7 +8,8 @@ class RepositoriesController < ApplicationController
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: %i(export_repository show)
   before_action :check_manage_permissions, only:
-    %i(destroy destroy_modal rename_modal update share_modal)
+    %i(destroy destroy_modal rename_modal update)
+  before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only:
     %i(create_modal create copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
@@ -342,6 +343,10 @@ class RepositoriesController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_repository?(@repository)
+  end
+
+  def check_share_permissions
+    render_403 unless can_share_repository?(@repository)
   end
 
   def repository_params
