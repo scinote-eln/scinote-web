@@ -70,6 +70,7 @@
     overflow: hidden;
     padding: 8px 5px;
     padding-right: 36px;
+    text-overflow: ellipsis;
     white-space: nowrap;
     width: calc(100% - 36px);
   }
