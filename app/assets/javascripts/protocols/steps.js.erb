@@ -568,7 +568,7 @@
       $form.find("[data-role='editable-table']").each(function() {
         let hot = $(this).find(".hot").handsontable('getInstance');
         let contents = $(this).find('.hot-contents');
-        let tableData = JSON.stringify({tableData: hot.getData()});
+        let tableData = JSON.stringify({data: hot.getData()});
         contents.attr("value", tableData);
       });
 
@@ -579,7 +579,7 @@
 
       animateSpinner(null, true);
       DragNDropSteps.appendFilesToForm(ev).then(formData => {
-        // formData.append('step[description]', TinyMCE.getContent());
+        formData.append('step[description]', TinyMCE.getContent());
         $.ajax({
           url: $form.attr('action'),
           method: 'POST',
