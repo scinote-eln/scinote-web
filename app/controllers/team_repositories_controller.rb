@@ -70,7 +70,7 @@ class TeamRepositoriesController < ApplicationController
   end
 
   def check_sharing_permissions
-    render_403 unless can_manage_repository?(@repository)
+    render_403 unless can_share_repository?(@repository)
   end
 
   def teams_to_share
