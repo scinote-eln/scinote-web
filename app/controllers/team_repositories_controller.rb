@@ -43,7 +43,7 @@ class TeamRepositoriesController < ApplicationController
                                                                  team_ids_for_update: teams_to_update,
                                                                  **share_all_params)
     if service_call.succeed?
-      render json: { warnings: service_call.warnings.join(', ') }, status: :ok
+      render json: { warnings: service_call.warnings.join(', '), status: @repository.i_shared?(current_team) }, status: :ok
     else
       render json: { errors: service_call.errors.map { |_, v| v }.join(', ') }, status: :unprocessable_entity
     end

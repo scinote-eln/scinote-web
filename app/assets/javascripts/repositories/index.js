@@ -145,6 +145,7 @@
           if (data.warnings) {
             alert(data.warnings);
           }
+          $('.repository-share-status').toggleClass('hidden', !data.status);
           $('.share-repo-modal').modal('hide');
         },
         error: function(data) {
