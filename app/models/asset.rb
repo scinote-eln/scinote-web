@@ -437,9 +437,7 @@ class Asset < ApplicationRecord
   end
 
   def update_contents(new_file)
-    new_file.class.class_eval { attr_accessor :original_filename }
-    new_file.original_filename = file_name
-    file.attach(io: new_file, filename: original_filename)
+    file.attach(io: new_file, filename: file_name)
     self.version = version.nil? ? 1 : version + 1
     save
   end
@@ -473,14 +471,14 @@ class Asset < ApplicationRecord
 
   def wopi_filename_valid
     # Check that filename without extension is not blank
-    unless file.original_filename[0..-6].present?
+    unless file_name[0..-6].present?
       errors.add(
         :file,
         I18n.t('general.text.not_blank')
       )
     end
     # Check maximum filename length
-    if file.original_filename.length > Constants::FILENAME_MAX_LENGTH
+    if file_name.length > Constants::FILENAME_MAX_LENGTH
       errors.add(
         :file,
         I18n.t(

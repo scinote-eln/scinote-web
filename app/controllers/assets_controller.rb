@@ -209,7 +209,7 @@ class AssetsController < ApplicationController
       render_403 and return unless can_manage_module?(my_module)
 
       # First create result and then the asset
-      result = Result.create(name: file.original_filename,
+      result = Result.create(name: asset.file_name,
                              my_module: my_module,
                              user: current_user)
       result_asset = ResultAsset.create!(result: result, asset: asset)
