@@ -5,7 +5,6 @@ class RepositoriesController < ApplicationController
                 except: %i(index create create_modal parse_sheet)
   before_action :load_parent_vars, except:
     %i(repository_table_index parse_sheet)
-  before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: %i(export_repository show)
   before_action :check_manage_permissions, only:
@@ -105,7 +104,6 @@ class RepositoriesController < ApplicationController
   end
 
   def update
-    old_name = @repository.name
     @repository.update_attributes(repository_params)
 
     respond_to do |format|
@@ -191,7 +189,9 @@ class RepositoriesController < ApplicationController
   end
 
   def parse_sheet
-    repository = current_team.repositories.find_by_id(import_params[:id])
+    repository = Repository.accessible_by_teams(current_team).find_by_id(import_params[:id])
+
+    render_403 unless can_create_repository_rows?(repository)
 
     unless import_params[:file]
       repository_response(t('teams.parse_sheet.errors.no_file_selected'))
@@ -241,6 +241,9 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
+    render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
+                                                            .find_by_id(import_params[:id]))
+
     respond_to do |format|
       format.json do
         # Check if there exist mapping for repository record (it's mandatory)
@@ -293,7 +296,7 @@ class RepositoriesController < ApplicationController
   def repostiory_import_actions
     ImportRepository::ImportRecords.new(
       temp_file: TempFile.find_by_id(import_params[:file_id]),
-      repository: current_team.repositories.find_by_id(import_params[:id]),
+      repository: Repository.accessible_by_teams(current_team).find_by_id(import_params[:id]),
       mappings: import_params[:mappings],
       session: session,
       user: current_user
@@ -310,10 +313,6 @@ class RepositoriesController < ApplicationController
     @team = current_team
     render_404 unless @team
     @repositories = Repository.accessible_by_teams(@team).order('repositories.created_at ASC')
-  end
-
-  def check_team
-    render_404 unless params[:team_id].to_i == current_team.id
   end
 
   def set_inline_name_editing

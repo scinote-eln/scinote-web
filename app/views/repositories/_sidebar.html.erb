@@ -25,7 +25,7 @@
               <% end %>
 
               <% if repository.shared_with?(current_team) %>
-                <% if repository.shared_with_write?(current_team) %>
+                <% if repository.shared_with_write?(current_team) || can_manage_repository?(@repository) %>
                   <%= draw_custom_icon('shared-edit') %>
                 <% else %>
                   <%= draw_custom_icon('shared-read') %>
