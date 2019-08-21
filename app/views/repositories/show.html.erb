@@ -33,7 +33,7 @@
 
     <div id="datatables-buttons" class="datatables-buttons" style="display: inline;">
       <div class="new-repository-button">
-        <% if can_share_repository?(@repository) %>
+        <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
           <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
                       class: 'btn btn-default share-repo-option', remote: true, id: 'shareRepoBtn' do %>
             <span class="fas fa-user-plus"></span>
