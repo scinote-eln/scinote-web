@@ -10,7 +10,7 @@ require 'capybara/cucumber'
 require 'capybara/email'
 Capybara.default_max_wait_time = 30
 # Capybara.asset_host = 'http://localhost:3001'
-# Capybara.server_port = 3001
+Capybara.server_port = 3000
 require 'selenium/webdriver'
 # enables email helper methods
 World(Capybara::Email::DSL)
