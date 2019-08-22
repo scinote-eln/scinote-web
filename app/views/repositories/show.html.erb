@@ -14,10 +14,14 @@
     <span class="repository-share-icon">
       <% if @repository.shared_with?(current_team) %>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <% if can_manage_repository_rows?(@repository) %>
 =======
         <% if can_manage_repository_rows?(repository) %>
 >>>>>>> Update shared inventory permissions
+=======
+        <% if can_manage_repository_rows?(@repository) %>
+>>>>>>> Fix tests and simplify condition for placeholder
           <%= draw_custom_icon('shared-edit') %>
         <% else %>
           <%= draw_custom_icon('shared-read') %>
