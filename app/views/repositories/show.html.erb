@@ -13,7 +13,7 @@
   <div id="repository-toolbar">
     <span class="repository-share-icon">
       <% if @repository.shared_with?(current_team) %>
-        <% if @repository.shared_with_write?(current_team) || can_manage_repository?(@repository) %>
+        <% if can_manage_repository_rows?(repository) %>
           <%= draw_custom_icon('shared-edit') %>
         <% else %>
           <%= draw_custom_icon('shared-read') %>
@@ -143,7 +143,8 @@
         <span class="fas fa-copy"></span>
         <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
       </button>
-    <% elsif @repository.shared_with_read?(current_team) %>
+    <% elsif @repository.shared_with_read?(current_team) ||
+        (@repository.shared_with_write?(current_team) && !current_user.is_normal_user_or_admin_of_team?(current_team)) %>
       <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
     <% end %>
   </div>
