@@ -13,7 +13,11 @@
   <div id="repository-toolbar">
     <span class="repository-share-icon">
       <% if @repository.shared_with?(current_team) %>
+<<<<<<< HEAD
         <% if can_manage_repository_rows?(@repository) %>
+=======
+        <% if can_manage_repository_rows?(repository) %>
+>>>>>>> Update shared inventory permissions
           <%= draw_custom_icon('shared-edit') %>
         <% else %>
           <%= draw_custom_icon('shared-read') %>
