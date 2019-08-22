@@ -5,7 +5,7 @@ require 'rails_helper'
 describe 'RepositoryPermissions' do
   include Canaid::Helpers::PermissionsHelper
 
-  let(:user) { create :user }
+  let(:user) { create :user, current_team_id: team.id }
   let(:repository) { build :repository, team: team }
   let(:team) { create :team }
   let(:write_shared_repository) { create :repository, :write_shared }
