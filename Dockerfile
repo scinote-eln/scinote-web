@@ -15,7 +15,8 @@ RUN apt-get update -qq && \
   poppler-utils \
   sudo graphviz --no-install-recommends \
   libreoffice \
-  libfile-mimeinfo-perl && \
+  libfile-mimeinfo-perl \
+  chromium-driver && \
   npm install -g yarn && \
   rm -rf /var/lib/apt/lists/*
 
