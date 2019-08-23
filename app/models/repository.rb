@@ -83,13 +83,13 @@ class Repository < ApplicationRecord
   def shared_with?(team)
     return false if self.team == team
 
-    shared? || team_repositories.where(team: team).any?
+    shared? || private_shared_with?(team)
   end
 
   def shared_with_write?(team)
     return false if self.team == team
 
-    shared? && write? || team_repositories.where(team: team, permission_level: :write).any?
+    shared? && write? || private_shared_with_write?(team)
   end
 
   def shared_with_read?(team)
@@ -125,6 +125,7 @@ class Repository < ApplicationRecord
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
       next unless rc.importable?
+
       fields[rc.id] = rc.name
     end
     fields
