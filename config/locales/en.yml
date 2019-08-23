@@ -1133,7 +1133,7 @@ en:
       head_title: "Information for item '%{repository_row}'"
       added_on: "Added on"
       added_by: "Added by"
-      custom_field: "%{cf}: "
+      column_name: "%{cf}: "
       title: "This item is assigned to %{nr} tasks."
       no_tasks: "This item in not assigned to any task."
   activities:
