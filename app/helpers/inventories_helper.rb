@@ -8,8 +8,14 @@ module InventoriesHelper
       else
         draw_custom_icon('shared-read')
       end
-    elsif inventory.shared_with_anybody?
-      draw_custom_icon('i-shared')
+    else
+      # The icon should be hiden if repo is not shared (we're updating it dinamically)
+      css_classes = ["repository-share-status"]
+      css_classes.push("hidden") unless inventory.i_shared?(current_team)
+
+      content_tag :span, class: css_classes.join(" ") do
+        draw_custom_icon('i-shared')
+      end
     end
   end
 end

@@ -22,9 +22,8 @@
 
 <% Repository.used_on_task_but_unshared(@my_module, current_team).each do |repository| %>
   <li>
-    <a class="disabled dropdown-item <%= "active-item" if @repository == repository %> help_tooltips"
-       data-tooltiplink="<%= I18n.t('tooltips.link.protocol.inventories') %>"
-       data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.inventories') %>"
+    <a class="disabled dropdown-item help_tooltips"
+       data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.unshared_inventory') + repository.team.name %>"
        title="<%= repository.name %>">
       <% if enable_counters %>
         <% cache [repository, @my_module] do %>
