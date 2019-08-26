@@ -1,4 +1,4 @@
-/* global animateSpinner GlobalActivitiesFilterPrepareArray */
+/* global animateSpinner globalActivities */
 
 'use strict';
 
@@ -27,7 +27,7 @@
   function initShowMoreButton() {
     var moreButton = $('.btn-more-activities');
     moreButton.on('click', function(ev) {
-      var filters = GlobalActivitiesFilterPrepareArray();
+      var filters = globalActivities.getFilters();
       ev.preventDefault();
       animateSpinner(null, true);
       filters.page = moreButton.data('next-page');

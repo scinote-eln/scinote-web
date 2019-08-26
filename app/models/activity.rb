@@ -68,7 +68,7 @@ class Activity < ApplicationRecord
       filters[:subjects].each do |object, values|
         values.each do |value|
           label = object.to_s.constantize.find_by_id(value).name
-          subject_labels.push({value: value, label: label, object: object.downcase, group: ''}.as_json)
+          subject_labels.push({ value: value, label: label, object: object.downcase, group: '' }.as_json)
         end
       end
       result.push(subject_labels.to_query('subject_labels'))
