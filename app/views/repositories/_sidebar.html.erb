@@ -31,7 +31,7 @@
                   <%= draw_custom_icon('shared-read') %>
                 <% end %>
               <% else  %>
-                <span class="repository-share-status <%= "hidden" unless @repository.i_shared?(current_team) %>"  >
+                <span class="repository-share-status <%= "hidden" unless repository.i_shared?(current_team) %>"  >
                   <%= draw_custom_icon('i-shared') %>
                 </span>
               <% end %>
