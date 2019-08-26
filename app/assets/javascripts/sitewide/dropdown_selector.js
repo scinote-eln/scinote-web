@@ -1,4 +1,4 @@
-/* global PerfectScrollbar activePSB PerfectSb */
+/* global PerfectScrollbar activePSB PerfectSb I18n */
 /* eslint-disable no-unused-vars, no-use-before-define */
 
 var dropdownSelector = (function() {
@@ -15,7 +15,7 @@ var dropdownSelector = (function() {
     var bottomSpace = windowHeight - containerPosition - containerHeight;
     if (bottomSpace < 280) {
       container.addClass('inverse');
-      container.find('.dropdown-container').css('max-height', `${(containerPosition - 82)}px`)
+      container.find('.dropdown-container').css('max-height', `${(containerPosition - 122)}px`)
         .css('margin-bottom', `${(containerPosition * -1)}px`)
         .css('width', `${containerWidth}px`);
     } else {
@@ -38,7 +38,7 @@ var dropdownSelector = (function() {
   // Search filter for non-ajax data
   function filterOptions(selector, container, options) {
     var customFilter = selector.data('config').localFilter;
-    var searchQuery = container.find('.seacrh-field').val();
+    var searchQuery = container.find('.search-field').val();
 
     var data = customFilter ? customFilter(options) : options;
     if (searchQuery.length === 0) return data;
@@ -68,17 +68,18 @@ var dropdownSelector = (function() {
     }
   }
 
-  function disableDropdown(selector, container, mode) {
-    var searchFieldValue = container.find('.seacrh-field');
+  function disableEnableDropdown(selector, container, mode) {
+    var searchFieldValue = container.find('.search-field');
     if (mode) {
       updateCurrentData(container, []);
       updateTags(selector, container, { skipChange: true });
       searchFieldValue.attr('placeholder', selector.data('disable-placeholder'));
       container.addClass('disabled').removeClass('open')
-        .find('.seacrh-field').prop('disabled', true);
+        .find('.search-field').val('')
+        .prop('disabled', true);
     } else {
       container.removeClass('disabled')
-        .find('.seacrh-field').prop('disabled', false);
+        .find('.search-field').prop('disabled', false);
       updateTags(selector, container, { skipChange: true });
     }
   }
@@ -90,7 +91,7 @@ var dropdownSelector = (function() {
   function generateDropdown(selector, config = {}) {
     var selectElement = $(selector);
     var optionContainer;
-    var ps;
+    var perfectScroll;
     var dropdownContainer;
 
     if (selectElement.length === 0 || selectElement.next().hasClass('dropdown-selector-container')) return;
@@ -102,7 +103,7 @@ var dropdownSelector = (function() {
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input type="text" class="seacrh-field" placeholder="${selectElement.data('placeholder')}"></input>
+        <input type="text" class="search-field" placeholder="${selectElement.data('placeholder')}"></input>
         <i class="fas fa-caret-down"></i>
       </div>
       <input type="hidden" class="data-field" value="[]">
@@ -121,7 +122,7 @@ var dropdownSelector = (function() {
           saveData(selectElement, dropdownContainer);
         });
     }
-    dropdownContainer.find('.seacrh-field').keyup((e) => {
+    dropdownContainer.find('.search-field').keyup((e) => {
       e.stopPropagation();
       loadData(selectElement, dropdownContainer);
     }).click((e) =>{
@@ -133,8 +134,8 @@ var dropdownSelector = (function() {
       }
     });
 
-    ps = new PerfectScrollbar(dropdownContainer.find('.dropdown-container')[0]);
-    activePSB.push(ps);
+    perfectScroll = new PerfectScrollbar(dropdownContainer.find('.dropdown-container')[0]);
+    activePSB.push(perfectScroll);
 
     optionContainer = dropdownContainer.find('.dropdown-container');
 
@@ -158,7 +159,7 @@ var dropdownSelector = (function() {
 
     selectElement.css('display', 'none');
 
-    if (selectElement.data('disable-on-load')) disableDropdown(selectElement, dropdownContainer, true);
+    if (selectElement.data('disable-on-load')) disableEnableDropdown(selectElement, dropdownContainer, true);
     updateDropdownDirection(selectElement, dropdownContainer);
   }
 
@@ -199,34 +200,38 @@ var dropdownSelector = (function() {
       saveData(selector, container);
     }
 
-    container.find('.dropdown-group, .dropdown-option').remove();
-    if (!data || !data.length) return;
+    container.find('.dropdown-group, .dropdown-option, .empty-dropdown').remove();
+    if (!data) return;
 
-    if (selector.data('select-by-group')) {
-      $.each(data, function(gi, group) {
-        var groupElement = drawGroup(group);
-        $.each(group.options, function(oi, option) {
-          var optionElement = drawOption(option, group);
+    if (data.length > 0) {
+      if (selector.data('select-by-group')) {
+        $.each(data, function(gi, group) {
+          var groupElement = drawGroup(group);
+          $.each(group.options, function(oi, option) {
+            var optionElement = drawOption(option, group);
+            optionElement.click(clickOption);
+            optionElement.appendTo(groupElement);
+          });
+          groupElement.find('.group-name').click(function() {
+            var groupContainer = $(this).parent();
+            if (groupContainer.toggleClass('select').hasClass('select')) {
+              groupContainer.find('.dropdown-option').addClass('select');
+            } else {
+              groupContainer.find('.dropdown-option').removeClass('select');
+            }
+            saveData(selector, container);
+          });
+          groupElement.appendTo(container.find('.dropdown-container'));
+        });
+      } else {
+        $.each(data, function(oi, option) {
+          var optionElement = drawOption(option);
           optionElement.click(clickOption);
-          optionElement.appendTo(groupElement);
+          optionElement.appendTo(container.find('.dropdown-container'));
         });
-        groupElement.find('.group-name').click(function() {
-          var groupContainer = $(this).parent();
-          if (groupContainer.toggleClass('select').hasClass('select')) {
-            groupContainer.find('.dropdown-option').addClass('select');
-          } else {
-            groupContainer.find('.dropdown-option').removeClass('select');
-          }
-          saveData(selector, container);
-        });
-        groupElement.appendTo(container.find('.dropdown-container'));
-      });
+      }
     } else {
-      $.each(data, function(oi, option) {
-        var optionElement = drawOption(option);
-        optionElement.click(clickOption);
-        optionElement.appendTo(container.find('.dropdown-container'));
-      });
+      $(`<div class="empty-dropdown">${I18n.t('dropdown_selector.nothing_found')}</div>`).appendTo(container.find('.dropdown-container'));
     }
 
     PerfectSb().update_all();
@@ -243,7 +248,7 @@ var dropdownSelector = (function() {
         && x.group === option.dataset.group));
     }
 
-    container.find('.seacrh-field').val('');
+    container.find('.search-field').val('');
 
     $.each(container.find('.dropdown-container .dropdown-option'), function(oi, option) {
       var alreadySelected;
@@ -271,7 +276,7 @@ var dropdownSelector = (function() {
   // Refresh tags in input field
   function updateTags(selector, container, config = {}) {
     var selectedOptions = getCurrentData(container);
-    var searchFieldValue = container.find('.seacrh-field');
+    var searchFieldValue = container.find('.search-field');
 
     // Draw tag and assign event
     function drawTag(data) {
@@ -283,7 +288,7 @@ var dropdownSelector = (function() {
                     ${customLabel ? customLabel(data) : data.label}
                   </div>
                   <i class="fas fa-times"></i>
-                </div>`).insertBefore(container.find('.input-field .seacrh-field'));
+                </div>`).insertBefore(container.find('.input-field .search-field'));
 
       tag.click((e) => { e.stopPropagation(); });
       tag.find('.fa-times').click(function(e) {
@@ -348,7 +353,7 @@ var dropdownSelector = (function() {
     var customParams;
     var ajaxParams;
     if (selector.data('ajax-url')) {
-      defaultParams = { query: container.find('.seacrh-field').val() };
+      defaultParams = { query: container.find('.search-field').val() };
       customParams = selector.data('config').ajaxParams;
       ajaxParams = customParams ? customParams(defaultParams) : defaultParams;
 
@@ -443,11 +448,20 @@ var dropdownSelector = (function() {
       return this;
     },
 
-    // Disable selector
-    disableSelector: function(selector, mode) {
+    // Enable selector
+    enableSelector: function(selector) {
       if ($(selector).length === 0) return false;
 
-      disableDropdown($(selector), $(selector).next(), mode);
+      disableEnableDropdown($(selector), $(selector).next(), false);
+
+      return this;
+    },
+
+    // Disable selector
+    disableSelector: function(selector) {
+      if ($(selector).length === 0) return false;
+
+      disableEnableDropdown($(selector), $(selector).next(), true);
 
       return this;
     }
