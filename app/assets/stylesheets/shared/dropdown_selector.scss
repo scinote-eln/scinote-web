@@ -35,7 +35,7 @@
       width: 18px;
     }
 
-    .seacrh-field {
+    .search-field {
       border: 0;
       flex-basis: 50px;
       flex-grow: 2000;
@@ -101,6 +101,12 @@
     transition-property: top, bottom, box-shadow;
     width: 100%;
     z-index: 10;
+
+    .empty-dropdown {
+      opacity: .6;
+      padding: 7px;
+      text-align: center
+    }
 
     .dropdown-select-all {
       background: $color-white;
@@ -241,7 +247,7 @@
     .input-field {
       background: $color-concrete;
 
-      .seacrh-field:disabled {
+      .search-field:disabled {
         background: inherit;
         user-select: none;
       }
