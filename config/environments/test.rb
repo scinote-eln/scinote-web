@@ -55,12 +55,14 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  config.action_mailer.perform_deliveries = true
+
   Rails.application.routes.default_url_options = {
     host: Rails.application.secrets.mail_server_url
   }
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random
