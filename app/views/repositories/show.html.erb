@@ -12,17 +12,7 @@
 <div class="content-pane repository-show">
   <div id="repository-toolbar">
     <span class="repository-share-icon">
-      <% if @repository.shared_with?(current_team) %>
-        <% if @repository.shared_with_write?(current_team) || can_manage_repository?(@repository) %>
-          <%= draw_custom_icon('shared-edit') %>
-        <% else %>
-          <%= draw_custom_icon('shared-read') %>
-        <% end %>
-      <% else  %>
-        <span class="repository-share-status <%= "hidden" unless @repository.i_shared?(current_team) %>"  >
-          <%= draw_custom_icon('i-shared') %>
-        </span>
-      <% end %>
+      <%= inventory_shared_status_icon(@repository, current_team) %>
     </span>
     <div class="repository-title">
       <% if @inline_editable_title_config.present? %>
@@ -102,7 +92,7 @@
         <% end %>
     </div>
   </div>
-  
+
   <div class="btn-group inline" id="saveCancel" data-toggle="buttons" style="display:none">
     <button type="button" class="btn btn-success" id="saveRecord" onclick="onClickSave()">
       <span class="fas fa-save"></span>

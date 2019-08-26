@@ -23,18 +23,7 @@
                             repository_path(repository),
                             data: { 'no-turbolink' => 'true' } %>
               <% end %>
-
-              <% if repository.shared_with?(current_team) %>
-                <% if repository.shared_with_write?(current_team) || can_manage_repository?(@repository) %>
-                  <%= draw_custom_icon('shared-edit') %>
-                <% else %>
-                  <%= draw_custom_icon('shared-read') %>
-                <% end %>
-              <% else  %>
-                <span class="repository-share-status <%= "hidden" unless @repository.i_shared?(current_team) %>"  >
-                  <%= draw_custom_icon('i-shared') %>
-                </span>
-              <% end %>
+              <%= inventory_shared_status_icon(repository, current_team) %>
             </span>
           </li>
         <% end %>
