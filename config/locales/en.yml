@@ -2161,6 +2161,7 @@ en:
         complete: "You can complete the task if you are done working on it."
         inventories: "You can assign inventory items to your task."
         num_linked: "This number represents how many tasks are linked to the selected protocol."
+        unshared_inventory: "This Inventory has been unshared with your Team by "
       inventory:
         new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
         visibility: "You can make inventory columns visible or hidden."
