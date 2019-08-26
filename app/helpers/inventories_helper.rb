@@ -3,7 +3,7 @@
 module InventoriesHelper
   def inventory_shared_status_icon(inventory, team)
     if inventory.shared_with?(team)
-      if inventory.shared_with_write?(team)
+      if can_manage_repository_rows?(inventory)
         draw_custom_icon('shared-edit')
       else
         draw_custom_icon('shared-read')
