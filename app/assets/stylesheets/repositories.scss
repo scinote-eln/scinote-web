@@ -16,9 +16,14 @@
   max-height: 400px;
   overflow-x: hidden;
   text-transform: initial;
+  width: 300px;
 
   li:not(:first-child) {
     border-top: 1px solid $color-gainsboro;
+  }
+
+  .fas-custom{
+    float: right;
   }
 }
 

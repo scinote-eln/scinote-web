@@ -38,6 +38,12 @@ class Repository < ApplicationRecord
       .distinct
   }
 
+  scope :used_on_task_but_unshared, lambda { |task, team|
+    where(id: task.repository_rows
+      .select(:repository_id))
+      .where.not(id: accessible_by_teams(team.id).select(:id)).distinct
+  }
+
   def self.search(
     user,
     query = nil,
@@ -77,7 +83,11 @@ class Repository < ApplicationRecord
   end
 
   def i_shared?(team)
-    (shared? || team_repositories.any?) && self.team == team
+    shared_with_anybody? && self.team == team
+  end
+
+  def shared_with_anybody?
+    (shared? || team_repositories.any?)
   end
 
   def shared_with?(team)
