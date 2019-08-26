@@ -311,7 +311,7 @@ var globalActivities = (function() {
       var yesterday = new Date(new Date().setDate(today.getDate() - 1));
       var weekDay = today.getDay();
       var monday = new Date(new Date()
-        .setDate(today.getDate() - weekDay + (weekDay === 0 ? -6 : 1)));
+        .setDate(today.getDate() - weekDay - (weekDay === 0 ? 6 : -1)));
       var lastWeekEnd = new Date(new Date().setDate(monday.getDate() - 1));
       var lastWeekStart = new Date(new Date().setDate(monday.getDate() - 7));
       var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
