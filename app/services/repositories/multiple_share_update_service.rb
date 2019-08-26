@@ -98,7 +98,7 @@ module Repositories
         return false
       end
 
-      if can_manage_repository?(@user, @repository)
+      if can_share_repository?(@user, @repository)
         true
       else
         @errors[:user_without_permissions] =
