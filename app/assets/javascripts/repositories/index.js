@@ -1,7 +1,8 @@
 //= require repositories/import/records_importer.js
 
 /*
-  global animateSpinner repositoryRecordsImporter getParam RepositoryDatatable PerfectScrollbar
+  global animateSpinner repositoryRecordsImporter getParam
+  RepositoryDatatable PerfectScrollbar HelperModule
 */
 
 (function(global) {
@@ -148,6 +149,7 @@
           $(`#slide-panel li.active .repository-share-status,
              #repository-toolbar .repository-share-status
           `).toggleClass('hidden', !data.status);
+          HelperModule.flashAlertMsg(form.data('success-message'), 'success');
           $('.share-repo-modal').modal('hide');
         },
         error: function(data) {

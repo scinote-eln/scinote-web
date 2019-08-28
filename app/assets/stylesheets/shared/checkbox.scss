@@ -4,36 +4,39 @@
 @import "constants";
 @import "mixins";
 
+:root {
+  --checkbox-size: 16px;
+}
+
 input[type="checkbox"].simple-checkbox {
   cursor: pointer;
   flex-shrink: 0;
-  height: 14px;
+  height: var(--checkbox-size) ;
   margin: 0;
   opacity: 0;
   position: relative;
-  width: 14px;
+  width: var(--checkbox-size) ;
   z-index: 2;
 
   + .checkbox-label {
-
     display: inline-block;
     flex-shrink: 0;
-    height: 14px;
-    margin-left: -15px;
+    height: var(--checkbox-size);
+    margin-left: calc((var(--checkbox-size) * -1) - 1px);
     position: relative;
-    width: 14px;
+    width: var(--checkbox-size);
 
     &::before {
       content: "\f0c8";
       font-family: "Font Awesome 5 Free";
-      font-size: 14px;
+      font-size: var(--checkbox-size);
       font-weight: 400;
       left: 0;
-      line-height: 14px;
+      line-height: var(--checkbox-size);
       position: absolute;
       text-align: center;
       top: 1px;
-      width: 14px;
+      width: var(--checkbox-size)
     }
   }
 
