@@ -71,7 +71,7 @@
               </a>
             </li>
             <% end %>
-            <% if can_create_repositories?(current_team) %>
+            <% if can_create_repositories?(current_team) && !@repository.shared_with?(current_team) %>
               <li>
                 <%= link_to t('repositories.index.options_dropdown.copy'),
                             team_repository_copy_modal_path(current_team, repository_id: @repository),
