@@ -68,6 +68,7 @@ gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.8.1' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
+gem 'spreadsheet', '~> 1.1.4' # @@@20190719JS Spreadsheet required before roo?
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rubyzip'
 gem 'scenic', '~> 1.4'
