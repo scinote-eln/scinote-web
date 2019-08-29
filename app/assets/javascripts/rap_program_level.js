@@ -13,6 +13,8 @@ function selectRapProgramLevel(el, edit_suffix){
         success: function (data) {
             resetRapProgramLevelChildren();
             generateTopicDropdown(data, edit_suffix);
+            if(programLevelID === "RAP Not Required")
+                autoSelectTopicDropdown(programLevelID);
         },
         error: function (err) {
           // TODO

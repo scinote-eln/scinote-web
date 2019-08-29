@@ -1,6 +1,11 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+// RAP Not Required was selected, so select that here and cascade down for all RAP fields.
+function autoSelectTopicDropdown(id){
+    $('#rapTopicLevelSelect').val(id);
+}
+
 // Build the HTML select dropdown for Topic Levels
 function generateTopicDropdown(data, edit_suffix){
     // Generate option fields
@@ -38,6 +43,8 @@ function selectRapTopicLevel(el, edit_suffix){
         success: function (data) {
             resetRapTopicLevelChildren();
             generateProjectDropdown(data, edit_suffix);
+            if(topicLevelID === "RAP Not Required")
+                autoSelectProjectDropdown(topicLevelID);
         },
         error: function (err) {
           // TODO

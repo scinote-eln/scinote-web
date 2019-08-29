@@ -1,6 +1,11 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+// RAP Not Required was selected, so select that here and cascade down for all RAP fields.
+function autoSelectTaskDropdown(id){
+    $('#rapTaskLevelSelect').val(id);
+}
+
 // Build the HTML select dropdown for Task Levels
 function generateTaskDropdown(data, edit_suffix){
     // Generate option fields
