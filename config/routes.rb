@@ -179,9 +179,9 @@ Rails.application.routes.draw do
              defaults: { format: 'json' }
         get :share_modal
 
-        resources :team_repositories, only: %i(create destroy) do
+        resources :team_repositories, only: %i(destroy) do
           collection do
-            post 'multiple_update'
+            post 'update'
           end
         end
       end

@@ -34,7 +34,12 @@ class Repository < ApplicationRecord
     left_outer_joins(:team_repositories)
       .where('repositories.team_id IN (?) '\
              'OR team_repositories.team_id IN (?) '\
-             'OR repositories.shared = true', teams, teams)
+             'OR repositories.permission_level = ? '\
+             'OR repositories.permission_level = ? ',
+             teams,
+             teams,
+             Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
+             Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write])
       .distinct
   }
 
@@ -87,25 +92,25 @@ class Repository < ApplicationRecord
   end
 
   def shared_with_anybody?
-    (shared? || team_repositories.any?)
+    (!not_shared? || team_repositories.any?)
   end
 
   def shared_with?(team)
     return false if self.team == team
 
-    shared? || private_shared_with?(team)
+    !not_shared? || private_shared_with?(team)
   end
 
   def shared_with_write?(team)
     return false if self.team == team
 
-    shared? && write? || private_shared_with_write?(team)
+    shared_write? || private_shared_with_write?(team)
   end
 
   def shared_with_read?(team)
     return false if self.team == team
 
-    shared? && read? || team_repositories.where(team: team, permission_level: :read).any?
+    shared_read? || team_repositories.where(team: team, permission_level: :shared_read).any?
   end
 
   def private_shared_with?(team)
@@ -113,7 +118,7 @@ class Repository < ApplicationRecord
   end
 
   def private_shared_with_write?(team)
-    team_repositories.where(team: team, permission_level: :write).any?
+    team_repositories.where(team: team, permission_level: :shared_write).any?
   end
 
   def self.viewable_by_user(_user, teams)

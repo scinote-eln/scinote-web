@@ -416,11 +416,9 @@ ActiveRecord::Schema.define(version: 2019_08_12_072649) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "discarded_at"
-    t.boolean "shared", default: false, null: false
     t.integer "permission_level", default: 0, null: false
     t.index ["discarded_at"], name: "index_repositories_on_discarded_at"
     t.index ["permission_level"], name: "index_repositories_on_permission_level"
-    t.index ["shared"], name: "index_repositories_on_shared"
     t.index ["team_id"], name: "index_repositories_on_team_id"
   end
 

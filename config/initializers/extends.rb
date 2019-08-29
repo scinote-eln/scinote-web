@@ -243,12 +243,13 @@ class Extends
   }
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
-    read: 0,
-    write: 1
+    not_shared: 0,
+    shared_read: 1,
+    shared_write: 2
   }.freeze
 
   SHARED_INVENTORIES_PL_MAPPINGS = {
-    read: 'view-only',
-    write: 'edit'
+    shared_read: 'view-only',
+    shared_write: 'edit'
   }.freeze
 end

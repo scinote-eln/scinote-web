@@ -2,7 +2,6 @@
 
 class AddShareFlagToRepository < ActiveRecord::Migration[5.2]
   def change
-    add_column :repositories, :shared, :boolean, null: false, default: false
     add_column :repositories, :permission_level, :integer, null: false, default: 0
   end
 end

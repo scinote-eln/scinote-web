@@ -7,17 +7,17 @@ module Repositories
 
     attr_reader :repository, :user, :warnings, :errors
 
-    def initialize(repository_id:,
-                   user_id:,
-                   team_id:,
+    def initialize(repository:,
+                   user:,
+                   team:,
                    team_ids_for_share: [],
                    team_ids_for_unshare: [],
                    team_ids_for_update: [],
                    shared_with_all: nil,
                    shared_permissions_level: nil)
-      @repository = Repository.find_by_id repository_id
-      @user = User.find_by_id user_id
-      @team = Team.find_by_id team_id
+      @repository = repository
+      @user = user
+      @team = team
       @team_ids_for_share = team_ids_for_share
       @team_ids_for_unshare = team_ids_for_unshare
       @team_ids_for_update = team_ids_for_update
@@ -31,12 +31,10 @@ module Repositories
       return self unless valid?
 
       if !@shared_with_all.nil? && !@shared_permission_level.nil?
-        @repository.shared = @shared_with_all
-        @repository.permission_level = @shared_permission_level
-
+        old_permission_level = @repository.permission_level
+        @repository.permission_level = @shared_with_all ? @shared_permission_level : :not_shared
         if @repository.changed?
-          change_type = @repository.changes.key?('shared') ? 'share' : 'update_permission_level'
-          log_activity_share_all(change_type, @repository) if @repository.save
+          log_activity_share_all(@repository.permission_level, old_permission_level, @repository) if @repository.save
         end
       end
 
@@ -93,18 +91,11 @@ module Repositories
             'user': @user,
             'team': @team }
           .map do |key, value|
-            "Can't find #{key.capitalize}" if value.nil?
+            I18n.t('repositories.multiple_share_service.invalid_arguments', key: key.capitalize) if value.nil?
           end.compact
         return false
       end
-
-      if can_share_repository?(@user, @repository)
-        true
-      else
-        @errors[:user_without_permissions] =
-          ['You are not allowed to share this repository']
-        false
-      end
+      true
     end
 
     def log_activity(type_of, team_repository)
@@ -119,11 +110,16 @@ module Repositories
                                  Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_repository.permission_level.to_sym] })
     end
 
-    def log_activity_share_all(change_type, repository)
-      type = if change_type == 'share'
-               @repository.shared ? :share_inventory_with_all : :unshare_inventory_with_all
-             else
-               :update_share_with_all_permission_level
+    def log_activity_share_all(permission_level, old_permission_level, repository)
+      type = case permission_level.to_sym
+             when :shared_read, :shared_write
+               if old_permission_level.to_sym == :not_shared
+                 :share_inventory_with_all
+               else
+                 :update_share_with_all_permission_level
+               end
+             when :not_shared
+               :unshare_inventory_with_all
              end
 
       Activities::CreateActivityService
