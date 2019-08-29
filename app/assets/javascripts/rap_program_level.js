@@ -4,6 +4,10 @@
 // After selecting a RAP Program Level, retrieve all its Topic Levels
 function selectRapProgramLevel(el, edit_suffix){
     var programLevelID = el.value;
+    if(programLevelID === "RAP Not Required"){
+        autoSelectTopicDropdown(programLevelID, edit_suffix);
+        return;
+    }
     // Get all RapTopicLevels for this programLevelID
     var url = window.location.protocol + "//" + window.location.host + "/rap_topic_level/" + programLevelID;
     $.ajax({
@@ -13,8 +17,6 @@ function selectRapProgramLevel(el, edit_suffix){
         success: function (data) {
             resetRapProgramLevelChildren();
             generateTopicDropdown(data, edit_suffix);
-            if(programLevelID === "RAP Not Required")
-                autoSelectTopicDropdown(programLevelID);
         },
         error: function (err) {
           // TODO
