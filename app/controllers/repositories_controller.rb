@@ -11,7 +11,9 @@ class RepositoriesController < ApplicationController
     %i(destroy destroy_modal rename_modal update)
   before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only:
-    %i(create_modal create copy_modal copy)
+    %i(create_modal create)
+  before_action :check_copy_permissions, only:
+    %i(copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
 
   layout 'fluid'
@@ -339,6 +341,12 @@ class RepositoriesController < ApplicationController
            @team.repositories.count < Rails.configuration.x.repositories_limit
       render_403
     end
+  end
+
+  def check_copy_permissions
+    render_403 if !can_create_repositories?(@team) ||
+                  @team.repositories.count >= Rails.configuration.x.repositories_limit ||
+                  @repository.shared_with?(current_team)
   end
 
   def check_manage_permissions
