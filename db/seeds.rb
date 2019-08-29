@@ -31,6 +31,34 @@ if User.count.zero?
   )
 end
 
+#########################################################################
+# Try to insert the REGIONAL requirement for RAP data, RAP Not Required #
+#########################################################################
+unless RapProgramLevel.exists?(:name => "programLevelName")
+  create_rap_program_level("programLevelName")
+end
+
+unless RapTopicLevel.exists?(:name => topicLevelName)
+  # Get the corresponding parent rap_program_level_id before creating a new RapTopicLevel
+  # program_id = RapProgramLevel.find(:name => programLevelName).id
+  program_id = RapProgramLevel.where(name: programLevelName).take.id
+  create_rap_topic_level(topicLevelName, program_id)
+end
+
+unless RapProjectLevel.exists?(:name => projectLevelName)
+  # Get the corresponding parent rap_topic_level_id before creating a new RapProjectLevel
+  # topic_id = RapTopicLevel.find(:name => topicLevelName).id
+  topic_id = RapTopicLevel.where(name: topicLevelName).take.id
+  create_rap_project_level(projectLevelName, topic_id)
+end
+
+unless RapTaskLevel.exists?(:name => taskLevelName)
+  # Get the corresponding parent rap_project_level_id before creating a new RapTaskLevel
+  # project_id = RapProjectLevel.find(:name => projectLevelName).id
+  project_id = RapProjectLevel.where(name: projectLevelName).take.id
+  create_rap_task_level(taskLevelName, project_id)
+end
+
 # Seed RAP data, copy logic from the ruby SQL generator script inside 'manual_scripts'
 # rap_program_level is the highest point of the RAP hierarchy, so if that's 0 then the rest must be 0 as well
 if RapProgramLevel.count.zero?
