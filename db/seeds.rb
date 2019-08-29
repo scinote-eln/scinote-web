@@ -34,29 +34,30 @@ end
 #########################################################################
 # Try to insert the REGIONAL requirement for RAP data, RAP Not Required #
 #########################################################################
-unless RapProgramLevel.exists?(:name => "programLevelName")
-  create_rap_program_level("programLevelName")
+rapNotRequired = "RAP Not Required"
+unless RapProgramLevel.exists?(:name => rapNotRequired)
+  create_rap_program_level(rapNotRequired)
 end
 
-unless RapTopicLevel.exists?(:name => topicLevelName)
+unless RapTopicLevel.exists?(:name => rapNotRequired)
   # Get the corresponding parent rap_program_level_id before creating a new RapTopicLevel
   # program_id = RapProgramLevel.find(:name => programLevelName).id
-  program_id = RapProgramLevel.where(name: programLevelName).take.id
-  create_rap_topic_level(topicLevelName, program_id)
+  program_id = RapProgramLevel.where(name: rapNotRequired).take.id
+  create_rap_topic_level(rapNotRequired, program_id)
 end
 
-unless RapProjectLevel.exists?(:name => projectLevelName)
+unless RapProjectLevel.exists?(:name => rapNotRequired)
   # Get the corresponding parent rap_topic_level_id before creating a new RapProjectLevel
   # topic_id = RapTopicLevel.find(:name => topicLevelName).id
-  topic_id = RapTopicLevel.where(name: topicLevelName).take.id
-  create_rap_project_level(projectLevelName, topic_id)
+  topic_id = RapTopicLevel.where(name: rapNotRequired).take.id
+  create_rap_project_level(rapNotRequired, topic_id)
 end
 
-unless RapTaskLevel.exists?(:name => taskLevelName)
+unless RapTaskLevel.exists?(:name => rapNotRequired)
   # Get the corresponding parent rap_project_level_id before creating a new RapTaskLevel
   # project_id = RapProjectLevel.find(:name => projectLevelName).id
-  project_id = RapProjectLevel.where(name: projectLevelName).take.id
-  create_rap_task_level(taskLevelName, project_id)
+  project_id = RapProjectLevel.where(name: rapNotRequired).take.id
+  create_rap_task_level(rapNotRequired, project_id)
 end
 
 # Seed RAP data, copy logic from the ruby SQL generator script inside 'manual_scripts'
