@@ -1017,8 +1017,13 @@ en:
         submit: "Create"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
       modal_share:
-        title: 'Share Inventory'
-        submit: 'Share'
+        title: "Share Inventory"
+        submit: "Save sharing options"
+        share_with_team: "Share with Team"
+        can_edit: "Can Edit"
+        all_teams: "All teams (current & new)"
+        all_teams_tooltip: "This will disable individual team settings"
+        success_message: “Selected sharing options for the Inventory %{inventory_name} have been saved.” 
     table:
       id: 'ID'
       assigned: "Assigned"

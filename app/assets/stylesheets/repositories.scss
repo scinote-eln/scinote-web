@@ -145,8 +145,12 @@
     width: 350px;
   }
 
+  .modal-footer {
+    text-align: center;
+  }
+
   .share-repo-container {
-    padding: 15px 30px;
+    padding: 0 30px;
 
     // Main structure css
     .header,
@@ -174,12 +178,21 @@
         align-items: center;
         display: flex;
         padding: 5px 0;
+
+        .simple-checkbox.hidden {
+          display: inline-block !important;
+
+          + .checkbox-label {
+            display: inline-block;
+            opacity: 0;
+          }
+        }
       }
     }
 
     .permission-selector {
       display: flex;
-      flex-basis: 100px;
+      flex-basis: 55px;
       flex-shrink: 0;
       justify-content: center;
     }
@@ -199,14 +212,16 @@
       align-items: center;
       font-size: 14px;
       font-weight: bold;
-      padding: 5px 0;
+      padding: 5px 0 0;
     }
 
     .all-teams {
       align-items: center;
       border-bottom: 1px solid $color-gainsboro;
-      padding: 5px 0;
+      margin-left: -10px;
+      padding: 5px 10px;
       user-select: none;
+      width: calc(100% + 20px);
     }
   }
 }
