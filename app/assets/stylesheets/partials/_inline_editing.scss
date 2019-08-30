@@ -8,8 +8,8 @@
   position: relative;
 
   .button-container {
-    height: 44px;
-    line-height: 44px;
+    height: 32px;
+    line-height: 32px;
     overflow: hidden;
     position: absolute;
     right: 0;
@@ -34,9 +34,8 @@
     bottom: 3px;
     color: $brand-danger;
     display: none;
-    font-size: $font-size-small;
-    left: 5px;
-    line-height: 12px;
+    font-size: 11px;
+    line-height: 11px;
     position: absolute;
 
   }
@@ -48,7 +47,9 @@
     }
 
     input {
-      padding-bottom: 16px;
+      font-size: 16px;
+      line-height: 20px;
+      padding-bottom: 10px;
       padding-top: 0;
     }
   }
@@ -56,6 +57,7 @@
   &:hover input,
   &:hover .view-mode {
     border: 1px solid $color-silver;
+    border-radius: 3px;
 
     &:disabled {
       border: 1px solid $color-gainsboro;
@@ -67,22 +69,24 @@
     cursor: pointer;
     flex-wrap: nowrap;
     line-height: 26px;
+    margin-left: -5px;
     overflow: hidden;
-    padding: 8px 5px;
+    padding: 2px 4px;
     padding-right: 36px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: calc(100% - 36px);
+    width: calc(100% - 32px);
   }
 
   input {
     border: 1px solid $color-silver;
     border-radius: $border-radius-small;
     cursor: pointer;
-    line-height: 20px;
-    padding: 8px 5px;
+    line-height: 26px;
+    margin-left: -5px;
+    padding: 2px 4px;
     padding-right: 36px;
-    width: calc(100% - 36px);
+    width: calc(100% - 32px);
 
     &:focus {
       outline: 0;
@@ -97,19 +101,7 @@
 
       + .button-container {
         display: none;
-
       }
-    }
-  }
-}
-
-.nav-name.editable {
-  margin: 0;
-
-  .inline-editing-container {
-
-    input {
-      line-height: 26px;
     }
   }
 }

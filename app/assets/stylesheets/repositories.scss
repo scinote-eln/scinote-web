@@ -79,6 +79,7 @@
   align-items: center;
   border-bottom: 1px solid $color-gainsboro;
   display: flex;
+  height: 55px;
   margin-left: -20px;
   padding: 5px 15px;
   width: calc(100% + 40px);
@@ -88,27 +89,36 @@
     margin-top: -2px;
 
     .fas-custom {
-      margin-right: 5px;
+      margin-left: 5px;
     }
   }
 
-  .repository-title {
+  .repository-title-container {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% + 40px);
+  }
+
+  .repository-title-name {
     flex-grow: 1;
     font-size: 18px;
-    line-height: 50px;
+    line-height: 32px;
     margin-right: 20px;
     overflow: hidden;
+    padding-left: 5px;
     text-overflow: ellipsis;
     white-space: nowrap;
 
     .inline-editing-container {
       width: 100%;
-
-      input {
-        line-height: 26px;
-      }
     }
+  }
 
+  .repository-subtitle {
+    color: $color-silver-chalice;
+    font-size: 12px;
+    line-height: 12px;
+    padding-left: 5px;
   }
 
   .datatables-buttons {

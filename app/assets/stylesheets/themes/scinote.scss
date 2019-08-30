@@ -320,11 +320,13 @@ a[data-toggle="tooltip"] {
   }
 
   .nav-name {
+    align-items: center;
+    display: flex;
     height: 54px;
     line-height: 44px;
     margin: 0;
     overflow: hidden;
-    padding: 5px 0;
+    padding: 5px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

@@ -976,7 +976,12 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
+    subtitle: "Owned by %{team_name}"
     repository: "Inventory: %{name}"
+    icon_title:
+      i_shared: "Shared inventory (owned by your Team)"
+      shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
+      shared_read: "Shared inventory (owned by %{team_name}). You can view."
     index:
       head_title: "Inventories"
       title: "Inventories"
