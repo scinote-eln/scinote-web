@@ -67,6 +67,9 @@
         var hot = $container.handsontable('getInstance');
         var data = JSON.parse(contents.attr('value'));
         hot.loadData(data.data);
+        setTimeout(() => {
+          hot.render()
+        }, 0)
       });
     }
 
