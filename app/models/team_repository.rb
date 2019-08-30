@@ -8,5 +8,11 @@ class TeamRepository < ApplicationRecord
 
   validates :permission_level, presence: true
   validates :repository, uniqueness: { scope: :team_id }
-  validates :team_id, inclusion: { in: proc { |object| Team.pluck(:id) - [object.repository&.team&.id] } }
+  validate :team_cannot_be_the_same
+
+  private
+
+  def team_cannot_be_the_same
+    errors.add(:team_id, :same_team) if repository&.team_id == team_id
+  end
 end

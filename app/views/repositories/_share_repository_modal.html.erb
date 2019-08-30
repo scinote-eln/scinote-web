@@ -1,6 +1,6 @@
 <div class="modal share-repo-modal" tabindex="-1" role="dialog" >
-  <%= form_for :shares, url: multiple_update_team_repository_team_repositories_path(current_team, @repository), remote: :true, 
-    data: {success_message: t("repositories.index.modal_share.success_message", inventory_name: @repository.name)} do |f| %>
+  <%= form_for :shares, url: team_repository_team_repositories_path(current_team, @repository), remote: :true,
+               data: { success_message: t("repositories.index.modal_share.success_message", inventory_name: @repository.name) } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -16,13 +16,13 @@
           </div>
           <div class="data-list">
             <div class="all-teams">
-              <span class="team-selector" title="<%= t("repositories.index.modal_share.all_teams_tooltip") %>" >
-                <%= check_box_tag 'select_all_teams', 0, @repository.shared, {class: "simple-checkbox"} %>
+              <span class="team-selector" title="<%= t("repositories.index.modal_share.all_teams_tooltip") %>">
+                <%= check_box_tag 'select_all_teams', 0, @repository.shared_read? || @repository.shared_write?, { class: 'simple-checkbox' } %>
                 <span class="checkbox-label"></span>
                 <%= t("repositories.index.modal_share.all_teams") %>
               </span>
               <span class="permission-selector">
-                <%= check_box_tag 'select_all_write_permission', 0, @repository.write?, {class: 'hidden trigger-checkbox'}%>
+                <%= check_box_tag 'select_all_write_permission', 0, @repository.shared_write?, { class: 'hidden trigger-checkbox' }%>
                 <span class="checkbox-label"></span>
               </span>
             </div>

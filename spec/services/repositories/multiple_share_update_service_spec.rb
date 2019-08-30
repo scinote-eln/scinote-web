@@ -10,33 +10,12 @@ describe Repositories::MultipleShareUpdateService do
   let(:team3) { create :team }
   let(:repository) { create :repository, team: team }
 
-  context 'when user do not have permissions' do
-    it 'returns error about permissions' do
-      new_repo = create :repository
-      service_call = Repositories::MultipleShareUpdateService.call(repository_id: new_repo.id,
-                                                                   user_id: user.id,
-                                                                   team_id: team.id)
-
-      expect(service_call.errors).to have_key(:user_without_permissions)
-    end
-  end
-
-  context 'when repository not found' do
-    it 'returns error about repository' do
-      service_call = Repositories::MultipleShareUpdateService.call(repository_id: -1,
-                                                                   user_id: user.id,
-                                                                   team_id: team.id)
-
-      expect(service_call.errors).to have_key(:invalid_arguments)
-    end
-  end
-
   context 'when share' do
     let(:service_call) do
-      Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
-                                                    user_id: user.id,
-                                                    team_id: team.id,
-                                                    team_ids_for_share: [{ id: team2.id, permission_level: 'read' }])
+      Repositories::MultipleShareUpdateService.call(repository: repository,
+                                                    user: user,
+                                                    team: team,
+                                                    team_ids_for_share: [{ id: team2.id, permission_level: :shared_read }])
     end
 
     it 'adds TeamRepository record' do
@@ -49,10 +28,10 @@ describe Repositories::MultipleShareUpdateService do
 
     context 'when cannot generate share' do
       let(:service_call) do
-        Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
-                                                      user_id: user.id,
-                                                      team_id: team.id,
-                                                      team_ids_for_share: [{ id: -1, permission_level: 'read' }])
+        Repositories::MultipleShareUpdateService.call(repository: repository,
+                                                      user: user,
+                                                      team: team,
+                                                      team_ids_for_share: [{ id: -1, permission_level: :shared_read }])
       end
 
       it 'returns error' do
@@ -63,9 +42,9 @@ describe Repositories::MultipleShareUpdateService do
 
   context 'when unshare' do
     let(:service_call) do
-      Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
-                                                    user_id: user.id,
-                                                    team_id: team.id,
+      Repositories::MultipleShareUpdateService.call(repository: repository,
+                                                    user: user,
+                                                    team: team,
                                                     team_ids_for_unshare: [team2.id])
     end
 
@@ -83,9 +62,9 @@ describe Repositories::MultipleShareUpdateService do
 
     context 'when cannot delete share' do
       let(:service_call) do
-        Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
-                                                      user_id: user.id,
-                                                      team_id: team.id,
+        Repositories::MultipleShareUpdateService.call(repository: repository,
+                                                      user: user,
+                                                      team: team,
                                                       team_ids_for_unshare: [-1])
       end
 
@@ -97,10 +76,12 @@ describe Repositories::MultipleShareUpdateService do
 
   context 'when updates share permissions' do
     let(:service_call) do
-      Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
-                                                    user_id: user.id,
-                                                    team_id: team.id,
-                                                    team_ids_for_update: [{ id: team2.id, permission_level: 'read' }])
+      Repositories::MultipleShareUpdateService.call(
+        repository: repository,
+        user: user,
+        team: team,
+        team_ids_for_update: [{ id: team2.id, permission_level: :shared_read }]
+      )
     end
 
     it 'updates permission for share record' do
@@ -117,10 +98,10 @@ describe Repositories::MultipleShareUpdateService do
 
     context 'when cannot update share' do
       let(:service_call) do
-        Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
-                                                      user_id: user.id,
-                                                      team_id: team.id,
-                                                      team_ids_for_update: [{ id: -1, permission_level: 'read' }])
+        Repositories::MultipleShareUpdateService.call(repository: repository,
+                                                      user: user,
+                                                      team: team,
+                                                      team_ids_for_update: [{ id: -1, permission_level: :shared_read }])
       end
 
       it 'returns error' do
@@ -131,11 +112,11 @@ describe Repositories::MultipleShareUpdateService do
 
   context 'when share_with_all' do
     let(:service_call) do
-      Repositories::MultipleShareUpdateService.call(repository_id: repository.id,
-                                                    user_id: user.id,
-                                                    team_id: team.id,
+      Repositories::MultipleShareUpdateService.call(repository: repository,
+                                                    user: user,
+                                                    team: team,
                                                     shared_with_all: true,
-                                                    shared_permissions_level: :write)
+                                                    shared_permissions_level: :shared_write)
     end
 
     it 'updates permission for share record' do

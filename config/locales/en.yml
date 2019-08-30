@@ -77,6 +77,10 @@ en:
               not_unique: "State already exists for this user and parent object"
             state:
               wrong_state: "Wrong parameters"
+        team_repository:
+          attributes:
+            team_id:
+              same_team: "Inventory can't be shared to the same team as it belongs to"
 
   helpers:
     label:
@@ -1106,7 +1110,9 @@ en:
       unable_to_share: "Unable to share %{repository} inventory with %{team} team."
       unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."
       unable_to_update: "Unable to update sharing %{repository} inventory with %{team} team."
-
+      not_allowed: "You are not allowed to share this repository!"
+      invalid_arguments: "Can't find %{key}"
+      nothing_to_delete: "Can't find sharing relation for destroy"
   libraries:
     manange_modal_column:
       colum_type: "Column type"

@@ -5,10 +5,10 @@ FactoryBot.define do
     team
     repository
     trait :read do
-      permission_level { :read }
+      permission_level { :shared_read }
     end
     trait :write do
-      permission_level { :write }
+      permission_level { :shared_write }
     end
   end
 end

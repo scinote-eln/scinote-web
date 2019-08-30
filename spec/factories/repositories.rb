@@ -6,12 +6,10 @@ FactoryBot.define do
     created_by { create :user }
     team
     trait :write_shared do
-      shared { true }
-      permission_level { :write }
+      permission_level { :shared_write }
     end
     trait :read_shared do
-      shared { true }
-      permission_level { :read }
+      permission_level { :shared_read }
     end
   end
 end
