@@ -11,15 +11,23 @@
 
 <div class="content-pane repository-show">
   <div id="repository-toolbar">
-    <span class="repository-share-icon">
-      <%= inventory_shared_status_icon(@repository, current_team) %>
-    </span>
-    <div class="repository-title">
-      <% if @inline_editable_title_config.present? %>
-        <%= render partial: "shared/inline_editing",
-                     locals: { initial_value: @repository.name } %>
-      <% else %>
-        <%= @repository.name %>
+    <div class="repository-title-container">
+
+      <div class="repository-title-name">
+        <% if @inline_editable_title_config.present? %>
+          <%= render partial: "shared/inline_editing",
+                       locals: { initial_value: @repository.name } %>
+        <% else %>
+          <%= @repository.name %>
+          <span class="repository-share-icon">
+            <%= inventory_shared_status_icon(@repository, current_team) %>
+          </span>
+        <% end %>
+      </div>
+
+      <% if @repository.shared_with_anybody? %>
+        <% team_name = @repository.team == current_team ? 'your Team' : @repository.team.name %>
+        <div class="repository-subtitle"><%= t('repositories.subtitle', team_name: team_name) %></div>
       <% end %>
     </div>
 

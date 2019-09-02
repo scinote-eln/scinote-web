@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class RepositoriesController < ApplicationController
+  include InventoriesHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Context
+  include IconsHelper
+
   before_action :load_vars,
                 except: %i(index create create_modal parse_sheet)
   before_action :load_parent_vars, except:
@@ -324,7 +329,8 @@ class RepositoriesController < ApplicationController
       name: 'title',
       params_group: 'repository',
       field_to_udpate: 'name',
-      path_to_update: team_repository_path(@repository)
+      path_to_update: team_repository_path(@repository),
+      label_after: "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"
     }
   end
 
