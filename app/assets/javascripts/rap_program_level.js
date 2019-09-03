@@ -1,12 +1,12 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function hiddenRapProgramLevelTrigger() {
+function rapProgramLevelTrigger(hidden) {
     var opt = $('select option:contains("RAP Not Required")');
     opt.prop('checked', true);
     opt.prop('selected', true);
-    var e = document.getElementById('rapProgramLevelSelectHidden');
-    selectRapProgramLevel(e, '', 'hidden');
+    var e = document.getElementById('rapProgramLevelSelector');
+    selectRapProgramLevel(e, '', hidden);
 }
 
 // After selecting a RAP Program Level, retrieve all its Topic Levels

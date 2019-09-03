@@ -1,12 +1,12 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function hiddenRapProjectLevelTrigger() {
+function rapProjectLevelTrigger(hidden) {
     var opt = $('select option:contains("RAP Not Required")');
     opt.prop('checked', true);
     opt.prop('selected', true);
-    var e = document.getElementById('rapProjectLevelSelectHidden');
-    selectRapProjectLevel(e, '', 'hidden');
+    var e = document.getElementById('rapProjectLevelSelector');
+    selectRapProjectLevel(e, '', hidden);
 }
 
 // RAP Not Required was selected, so select that here and cascade down for all RAP fields.
@@ -40,8 +40,8 @@ function generateProjectDropdown(data, edit_suffix, hidden, notReq){
     var dropdownHTML = [
         '<div id="rapProjectLevelSelect', edit_suffix, '" class="form-group" ', hidden, '>',
         '<label class="control-label" for="rap_project_level">RAP Project Level</label>',
-        '<select id="rapProjectLevelSelectHidden" class="form-control" onchange="selectRapProjectLevel(this, \'',
-        edit_suffix, '\')" required>', '<option value="" selected disabled hidden></option>', options, "</select></div>"
+        '<select id="rapProjectLevelSelector" class="form-control" onchange="selectRapProjectLevel(this, \'',
+        edit_suffix, '\')" required>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Project Level Select HTML
     var remDivID = '#rapProjectLevelSelect' + edit_suffix
@@ -49,7 +49,7 @@ function generateProjectDropdown(data, edit_suffix, hidden, notReq){
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
     
-    if(notReq) hiddenRapProjectLevelTrigger();
+    if(notReq) rapProjectLevelTrigger(hidden);
 }
 
 function selectRapProjectLevel(el, edit_suffix, hidden){

@@ -1,12 +1,12 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function hiddenRapTopicLevelTrigger() {
+function rapTopicLevelTrigger(hidden) {
     var opt = $('select option:contains("RAP Not Required")');
     opt.prop('checked', true);
     opt.prop('selected', true);
-    var e = document.getElementById('rapTopicLevelSelectHidden');
-    selectRapTopicLevel(e, '', 'hidden');
+    var e = document.getElementById('rapTopicLevelSelector');
+    selectRapTopicLevel(e, '', hidden);
 }
 
 // RAP Not Required was selected, so select that here and cascade down for all RAP fields.
@@ -14,7 +14,7 @@ function autoSelectTopicDropdown(id, edit_suffix, hidden){
     var dropdownHTML = [
         '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group" ', hidden, '>',
         '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
-        '<select class="form-control">',
+        '<select id="rapTopicLevelSelector" class="form-control">',
         '<option value="', id, '" selected>', id, '</option></select></div>'
     ]
     // Remove in case it already exists, then insert new Topic Level Select HTML
@@ -40,9 +40,8 @@ function generateTopicDropdown(data, edit_suffix, hidden, notReq){
     var dropdownHTML = [
         '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group" ', hidden, '>',
         '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
-        '<select id="rapTopicLevelSelectHidden" class="form-control" onchange="selectRapTopicLevel(this, \'',
-        edit_suffix, '\')" required>',
-        '<option value="" selected disabled hidden></option>', options, "</select></div>"
+        '<select id="rapTopicLevelSelector" class="form-control" onchange="selectRapTopicLevel(this, \'',
+        edit_suffix, '\')" required>',options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Topic Level Select HTML
     var remDivID = '#rapTopicLevelSelect' + edit_suffix
@@ -50,7 +49,7 @@ function generateTopicDropdown(data, edit_suffix, hidden, notReq){
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
 
-    if(notReq) hiddenRapTopicLevelTrigger();
+    if(notReq) rapTopicLevelTrigger(hidden);
 }
 
 function selectRapTopicLevel(el, edit_suffix, hidden){
