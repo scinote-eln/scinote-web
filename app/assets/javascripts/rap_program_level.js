@@ -12,10 +12,10 @@ function hiddenRapProgramLevelTrigger() {
 // After selecting a RAP Program Level, retrieve all its Topic Levels
 function selectRapProgramLevel(el, edit_suffix, hidden){
     var text = el.options[el.selectedIndex].text;
-    if(text === "RAP Not Required"){
-        autoSelectTopicDropdown(text, edit_suffix, hidden);
-        return;
-    }
+    // if(text === "RAP Not Required"){
+    //     autoSelectTopicDropdown(text, edit_suffix, hidden);
+    //     return;
+    // }
     var programLevelID = el.value;
     // Get all RapTopicLevels for this programLevelID
     var url = window.location.protocol + "//" + window.location.host + "/rap_topic_level/" + programLevelID;
@@ -25,7 +25,7 @@ function selectRapProgramLevel(el, edit_suffix, hidden){
         dataType: "json",
         success: function (data) {
             resetRapProgramLevelChildren();
-            generateTopicDropdown(data, edit_suffix);
+            generateTopicDropdown(data, edit_suffix, hidden, text === "RAP Not Required");
         },
         error: function (err) {
           // TODO

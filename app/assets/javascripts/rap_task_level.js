@@ -1,6 +1,14 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+function hiddenRapProgramLevelTrigger() {
+    var opt = $('select option:contains("RAP Not Required")');
+    opt.prop('checked', true);
+    opt.prop('selected', true);
+    var e = document.getElementById('rapProgramLevelSelectHidden');
+    selectRapProgramLevel(e, '', 'hidden');
+}
+
 // RAP Not Required was selected, so select that here and cascade down for all RAP fields.
 function autoSelectTaskDropdown(id, edit_suffix, hidden){
     var dropdownHTML = [
@@ -17,7 +25,7 @@ function autoSelectTaskDropdown(id, edit_suffix, hidden){
 }
 
 // Build the HTML select dropdown for Task Levels
-function generateTaskDropdown(data, edit_suffix){
+function generateTaskDropdown(data, edit_suffix, hidden, notReq){
     // Generate option fields
     var options = [];
     for(var i in data){
@@ -29,10 +37,10 @@ function generateTaskDropdown(data, edit_suffix){
         }
     }
     var dropdownHTML = [
-        '<div id="rapTaskLevelSelect', edit_suffix, '" class="form-group">',
+        '<div id="rapTaskLevelSelect', edit_suffix, '" class="form-group"', hidden, '>',
         '<label class="control-label" for="rap_task_level">RAP Task Level</label>',
-        '<select name="project[rap_task_level_id]" class="form-control" onchange="selectRapTaskLevel(this, \'',
-        edit_suffix, '\')">',
+        '<select id="rapTaskLevelSelectHidden" name="project[rap_task_level_id]" class="form-control" ',
+        'onchange="selectRapTaskLevel(this, \'', edit_suffix, '\')">',
         '<option value="" selected disabled hidden></option>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Task Level Select HTML
@@ -40,6 +48,8 @@ function generateTaskDropdown(data, edit_suffix){
     var addDivID = '#rapProjectLevelSelect' + edit_suffix;
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
+    
+    if(notReq) hiddenRapProgramLevelTrigger();
 }
 
 function selectRapTaskLevel(el, edit_suffix){
