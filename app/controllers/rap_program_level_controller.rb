@@ -1,6 +1,5 @@
 class RapProgramLevelController < ApplicationController
   respond_to :html, :js
-#  include RapProgramLevel
 
   def render_dropdown_partial
     @programs_from_controller = RapProgramLevel.pluck(:name)

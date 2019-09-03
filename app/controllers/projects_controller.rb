@@ -316,7 +316,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.require(:project).permit(:name, :team_id, :visibility, :archived)
+    params.require(:project).permit(:name, :team_id, :visibility, :archived, :rap_task_level_id)
   end
 
   def load_vars
