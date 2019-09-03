@@ -55,3 +55,5 @@ WOPI_DISCOVERY_URL: "https://ffc-onenote.officeapps.live.com/hosting/discovery"
 WOPI_ENDPOINT_URL: "scinote.engineering4sustainability.com/wopi/files"
 WOPI_SUBDOMAIN: "engineering4sustainability.com"
 WOPI_BREADCRUMBS_HOST: "scinote.engineering4sustainability.com"
+
+EPA_RAP_ENABLED: "false"

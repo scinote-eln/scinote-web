@@ -95,6 +95,9 @@ Rails.application.configure do
 
   # disable sign in with LinkedIn account
   config.x.linkedin_signin_enabled = false
+  
+  # Enable RAP Selection in projects:
+  config.x.epa_rap_enabled = true
 
   # enable assets compiling
   config.assets.compile = true
