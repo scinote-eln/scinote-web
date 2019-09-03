@@ -1,12 +1,22 @@
 <%- if Rails.configuration.x.epa_rap_enabled %>
   <div id="rapProgramLevelSelect" class="form-group">
-    <label class="control-label" for="rap_program_level">RAP Program Level</label>
+    <label class="control-label" for="rap_program_level">TRUE - RAP Program Level</label>
     <select class="form-control" onchange="selectRapProgramLevel(this, '')" required>
       <option value="" selected disabled hidden></option>
       <%= @programs.each do |program| %>
         <option value="<%= program.id %>"><%= program.name %></option>
       <% end %>
     </select>
+  </div>
+  <%- else %>
+  <div id="rapProgramLevelSelect" class="form-group" hidden>
+    <label class="control-label" for="rap_program_level">Hidden - RAP Program Level</label>
+    <select id="rapProgramLevelSelectHidden" class="form-control" onchange="selectRapProgramLevel(this, '')">
+      <%= @programs.each do |program| %>
+        <option value="<%= program.id %>"><%= program.name %></option>
+      <% end %>
+    </select>
+    <script>$(document).ready(function() { hiddenRapProgramLevelTrigger() });</script>
   </div>
 <% end -%>
 

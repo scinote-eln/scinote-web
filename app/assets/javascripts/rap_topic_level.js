@@ -2,9 +2,9 @@
 // All this logic will automatically be available in application.js.
 
 // RAP Not Required was selected, so select that here and cascade down for all RAP fields.
-function autoSelectTopicDropdown(id, edit_suffix){
+function autoSelectTopicDropdown(id, edit_suffix, hidden){
     var dropdownHTML = [
-        '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group">',
+        '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group" ', hidden, '>',
         '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
         '<select class="form-control" required>',
         '<option value="', id, '" selected>', id, '</option></select></div>'
@@ -14,7 +14,7 @@ function autoSelectTopicDropdown(id, edit_suffix){
     var addDivID = '#rapProgramLevelSelect' + edit_suffix;
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
-    autoSelectProjectDropdown(id, edit_suffix);
+    autoSelectProjectDropdown(id, edit_suffix, hidden);
 }
 
 // Build the HTML select dropdown for Topic Levels

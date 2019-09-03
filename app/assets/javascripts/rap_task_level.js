@@ -2,9 +2,9 @@
 // All this logic will automatically be available in application.js.
 
 // RAP Not Required was selected, so select that here and cascade down for all RAP fields.
-function autoSelectTaskDropdown(id, edit_suffix){
+function autoSelectTaskDropdown(id, edit_suffix, hidden){
     var dropdownHTML = [
-        '<div id="rapTaskLevelSelect', edit_suffix, '" class="form-group">',
+        '<div id="rapTaskLevelSelect', edit_suffix, '" class="form-group"', hidden, '>',
         '<label class="control-label" for="rap_task_level">RAP Task Level</label>',
         '<select name="project[rap_task_level_id]" class="form-control">',
         '<option value="', id, '" selected disabled hidden>', id, '</option></select></div>'
