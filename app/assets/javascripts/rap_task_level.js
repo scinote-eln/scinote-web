@@ -6,8 +6,7 @@ function autoSelectTaskDropdown(id, edit_suffix){
     var dropdownHTML = [
         '<div id="rapTaskLevelSelect', edit_suffix, '" class="form-group">',
         '<label class="control-label" for="rap_task_level">RAP Task Level</label>',
-        '<select name="project[rap_task_level_id]" class="form-control" onchange="selectRapTaskLevel(this, \'',
-        edit_suffix, '\')">',
+        '<select name="project[rap_task_level_id]" class="form-control">',
         '<option value="', id, '" selected disabled hidden>', id, '</option></select></div>'
     ]
     // Remove in case it already exists, then insert new Task Level Select HTML

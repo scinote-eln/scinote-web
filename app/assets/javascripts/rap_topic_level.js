@@ -6,8 +6,7 @@ function autoSelectTopicDropdown(id, edit_suffix){
     var dropdownHTML = [
         '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group">',
         '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
-        '<select class="form-control" onchange="selectRapTopicLevel(this, \'', edit_suffix,
-        '\')" required>',
+        '<select class="form-control" required>',
         '<option value="', id, '" selected>', id, '</option></select></div>'
     ]
     // Remove in case it already exists, then insert new Topic Level Select HTML
@@ -15,6 +14,7 @@ function autoSelectTopicDropdown(id, edit_suffix){
     var addDivID = '#rapProgramLevelSelect' + edit_suffix;
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
+    autoSelectProjectDropdown(id, edit_suffix);
 }
 
 // Build the HTML select dropdown for Topic Levels
@@ -41,7 +41,6 @@ function generateTopicDropdown(data, edit_suffix){
     var addDivID = '#rapProgramLevelSelect' + edit_suffix;
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
-    autoSelectProjectDropdown(topicLevelID, edit_suffix);
 }
 
 function selectRapTopicLevel(el, edit_suffix){
