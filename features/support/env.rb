@@ -8,6 +8,9 @@ require 'cucumber/rails'
 require 'capybara'
 require 'capybara/cucumber'
 require 'capybara/email'
+
+include FirstTimeDataGenerator
+
 Capybara.default_max_wait_time = 30
 # Capybara.asset_host = 'http://localhost:3001'
 Capybara.server_port = 3000
