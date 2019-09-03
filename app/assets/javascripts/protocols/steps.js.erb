@@ -138,7 +138,6 @@
       var $edit_step = $step.after(data.html);
       var $form = $step.next();
       $step.remove();
-
       formCallback($form);
       initEditableHandsOnTable($form);
       applyCancelCallBack();
@@ -358,7 +357,6 @@
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      console.log(1)
       var $form = $(this).closest("form");
       $form.parent().remove().promise().done(function() {
         newStepHandler();
