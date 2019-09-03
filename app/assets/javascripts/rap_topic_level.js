@@ -14,7 +14,7 @@ function autoSelectTopicDropdown(id, edit_suffix, hidden){
     var dropdownHTML = [
         '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group" ', hidden, '>',
         '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
-        '<select class="form-control" required>',
+        '<select class="form-control">',
         '<option value="', id, '" selected>', id, '</option></select></div>'
     ]
     // Remove in case it already exists, then insert new Topic Level Select HTML

@@ -14,7 +14,7 @@ function autoSelectProjectDropdown(id, edit_suffix, hidden){
     var dropdownHTML = [
         '<div id="rapProjectLevelSelect', edit_suffix, '" class="form-group"', hidden, '>',
         '<label class="control-label" for="rap_project_level">RAP Project Level</label>',
-        '<select class="form-control" required>',
+        '<select class="form-control">',
         '<option value="', id, '" selected>', id, '</option></select></div>'
     ]
     // Remove in case it already exists, then insert new Project Level Select HTML
