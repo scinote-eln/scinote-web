@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Extends class holds the arrays for the models enum fields
 # so that can be extended in sub modules.
 
@@ -16,10 +18,10 @@ class Extends
   NOTIFICATIONS_TYPES = { assignment: 0,
                           recent_changes: 1,
                           system_message: 2, # DEPRECATED
-                          deliver: 5 }
+                          deliver: 5 }.freeze
 
   TASKS_STATES = { uncompleted: 0,
-                   completed: 1 }
+                   completed: 1 }.freeze
 
   REPORT_ELEMENT_TYPES = { project_header: 0,
                            my_module: 1,
@@ -39,103 +41,101 @@ class Extends
                            experiment: 15,
                            # Higher number because of addons
                            my_module_repository: 17,
-                           my_module_protocol: 18 }
+                           my_module_protocol: 18 }.freeze
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
                             RepositoryDateValue: 1,
                             RepositoryListValue: 2,
-                            RepositoryAssetValue: 3 }
+                            RepositoryAssetValue: 3 }.freeze
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES
-  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue)
+  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue).freeze
 
   # Extra attributes used for search in repositories, text columns
   # are only supported
   REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
                                   'repository_list_items.data',
-                                  'assets.file_file_name']
+                                  'assets.file_file_name'].freeze
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
                                 repository_list_value: :repository_list_item,
-                                repository_asset_value: :asset]
+                                repository_asset_value: :asset].freeze
 
   # List of implemented core API versions
-  API_VERSIONS = ['v1']
+  API_VERSIONS = %w(v1).freeze
 
   # Array used for injecting names of additional authentication methods for API
-  API_PLUGABLE_AUTH_METHODS = [:azure_jwt_auth]
+  API_PLUGABLE_AUTH_METHODS = [:azure_jwt_auth].freeze
 
   API_REPOSITORY_DATA_TYPE_MAPPINGS = { 'RepositoryTextValue' => 'text',
                                         'RepositoryDateValue' => 'date',
                                         'RepositoryListValue' => 'list',
-                                        'RepositoryAssetValue' => 'file' }
+                                        'RepositoryAssetValue' => 'file' }.freeze
 
-  OMNIAUTH_PROVIDERS = [:linkedin]
+  OMNIAUTH_PROVIDERS = [:linkedin].freeze
 
-  INITIAL_USER_OPTIONS = {}
+  INITIAL_USER_OPTIONS = {}.freeze
 
   # Hash used for mapping file extensions to custom icons,
   # 'extension' => 'path_to_the_icon'
-  FILE_ICON_MAPPINGS = {}
+  FILE_ICON_MAPPINGS = {}.freeze
 
   # Hash used for mapping file extensions to custom font awesome icon classes,
   # 'extension' => 'fa class'
-  FILE_FA_ICON_MAPPINGS = {}
+  FILE_FA_ICON_MAPPINGS = {}.freeze
 
   # Mapping of rich text fileds to specific model
   RICH_TEXT_FIELD_MAPPINGS = { 'Step' => :description,
                                'ResultText' => :text,
                                'Protocol' => :description,
-                               'MyModule' => :description }
+                               'MyModule' => :description }.freeze
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team Repository Project Experiment MyModule Result Protocol Report
-  )
+  ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
     Repository Project Experiment MyModule Result Protocol Step Report
-  )
+  ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {
     Repository: nil,
     Report: nil,
     Project: nil,
     Experiment: [:my_modules],
-    MyModule: [:results,:protocols],
+    MyModule: %i(results protocols),
     Result: nil,
     Protocol: [:steps],
     Step: nil
-  }
+  }.freeze
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset)
 
-
   # All message items
-  # action, assetname, experiment, experimentnew, experimentoriginal, mymodule, mymoduleduedate, mymodulenew, 
-  # mymoduleoriginal, mymodules, numofitems, permissionlevel, project, projectnew, projectoriginal, projects, 
-  # protocol, protocolnew, protocoloriginal, protocolrepository, protocols, recordnames, repository, repositorycolumn, 
-  # repositorynew, repositoryoriginal, repositoryrow, repositoryrownew, repositoryroworiginal, result, role, step, 
+  # action, assetname, experiment, experimentnew, experimentoriginal, mymodule, mymoduleduedate, mymodulenew,
+  # mymoduleoriginal, mymodules, numofitems, permissionlevel, project, projectnew, projectoriginal, projects,
+  # protocol, protocolnew, protocoloriginal, protocolrepository, protocols, recordnames, repository, repositorycolumn,
+  # repositorynew, repositoryoriginal, repositoryrow, repositoryrownew, repositoryroworiginal, result, role, step,
   # stepposition, storage, team, typeofresult, user, userchangeds, userinvited, userremoved, usertarget, usertargets, visibility
 
   ACTIVITY_MESSAGE_ITEMS = [
-    {table: 'assets', items: %w(assetname), search_field: 'file_file_name'},
-    {table: 'experiments', items: %w(experiment experimentnew experimentoriginal), search_field: 'name'},
-    {table: 'my_modules', items: %w(mymodule mymoduleduedate mymodulenew mymoduleoriginal mymodules), search_field: 'name'},
-    {table: 'projects', items: %w(project projectnew projectoriginal projects), search_field: 'name'},
-    {table: 'protocols', items: %w(protocol protocolnew protocoloriginal protocolrepository protocols), search_field: 'name'},
-    {table: 'repositories', items: %w(repository repositorynew repositoryoriginal), search_field: 'name'},
-    {table: 'repository_rows', items: %w(repositoryrow repositoryrownew repositoryroworiginal), search_field: 'name'},
-    {table: 'repository_columns', items: %w(repositorycolumn), search_field: 'name'},
-    {table: 'results', items: %w(result), search_field: 'name'},
-    {table: 'steps', items: %w(step), search_field: 'name'},
-    {table: 'teams', items: %w(team), search_field: 'name'},
-    {table: 'users', items: %w(user userchangeds userinvited userremoved usertarget usertargets), search_field: 'full_name'}
-  ]
-
+    { table: 'assets', items: %w(assetname), search_field: 'file_file_name' },
+    { table: 'experiments', items: %w(experiment experimentnew experimentoriginal), search_field: 'name' },
+    { table: 'my_modules', items: %w(mymodule mymoduleduedate mymodulenew mymoduleoriginal mymodules), search_field: 'name' },
+    { table: 'projects', items: %w(project projectnew projectoriginal projects), search_field: 'name' },
+    { table: 'protocols', items: %w(protocol protocolnew protocoloriginal protocolrepository protocols), search_field: 'name' },
+    { table: 'repositories', items: %w(repository repositorynew repositoryoriginal), search_field: 'name' },
+    { table: 'repository_rows', items: %w(repositoryrow repositoryrownew repositoryroworiginal), search_field: 'name' },
+    { table: 'repository_columns', items: %w(repositorycolumn), search_field: 'name' },
+    { table: 'results', items: %w(result), search_field: 'name' },
+    { table: 'steps', items: %w(step), search_field: 'name' },
+    { table: 'teams', items: %w(team), search_field: 'name' },
+    { table: 'users', items: %w(user userchangeds userinvited userremoved usertarget usertargets), search_field: 'full_name' }
+  ].freeze
 
   ACTIVITY_TYPES = {
     create_project: 0,
@@ -251,7 +251,7 @@ class Extends
     share_inventory_with_all: 134,
     unshare_inventory_with_all: 135,
     update_share_with_all_permission_level: 136
-  }
+  }.freeze
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
@@ -264,7 +264,7 @@ class Extends
     inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82, 83, 101, 112],
     team: [92, 94, 93, 97, 104]
-  }
+  }.freeze
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
     read: 0,

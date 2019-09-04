@@ -25,10 +25,10 @@ class ActivitiesService
 
     if filters[:query]
       # Search through localization file
-      activities_translation = I18n.t('.')[:global_activities][:content].map{|k,v|
-        k.to_s.split('_html')[0] if filters[:query].split(' ').any? {|word| v.include? word}
-      }.compact
-      search_translations_filter = Activity.type_ofs.map{|k,v| v if activities_translation.include? k}.compact
+      activities_translation = I18n.t('.')[:global_activities][:content].map do |k, v|
+        k.to_s.split('_html')[0] if filters[:query].split(' ').any? { |word| v.include? word }
+      end.compact
+      search_translations_filter = Activity.type_ofs.map { |k, v| v if activities_translation.include? k }.compact
 
       # Search through object names
       message_items_counter = 1
@@ -45,10 +45,10 @@ class ActivitiesService
       end
 
       query = query\
-        .joins(message_joins.join(' '))
-        .where(" 
+              .joins(message_joins.join(' '))
+              .where("
           (#{message_search.join(' OR ')}) AND type_of IN (:translations)
-        ", {query: filters[:query].split(' ').join('|'), translations: search_translations_filter})
+        ", query: filters[:query].split(' ').join('|'), translations: search_translations_filter)
     end
 
     query = query.where(owner_id: filters[:users]) if filters[:users]
