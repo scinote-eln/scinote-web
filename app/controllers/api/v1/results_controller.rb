@@ -56,13 +56,14 @@ module Api
                 raise ActiveRecord::RecordInvalid,
                       I18n.t('api.core.errors.result_wrong_tinymce.detail')
               end
-              image = Paperclip.io_adapters.for(image_params[:file_data])
-              image.original_filename = image_params[:file_name]
               tiny_image = TinyMceAsset.create!(
-                image: image,
                 team: @team,
                 object: result_text,
                 saved: true
+              )
+              tiny_image.image.attach(
+                io: StringIO.new(Base64.decode64(image_params[:file_data].split(',')[1])),
+                filename: image_params[:file_name]
               )
               result_text.text.sub!("data-mce-token=\"#{token}\"", "data-mce-token=\"#{Base62.encode(tiny_image.id)}\"")
             end
