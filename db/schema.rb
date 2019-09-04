@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_12_072649) do
+ActiveRecord::Schema.define(version: 2019_09_03_145834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2019_08_12_072649) do
     t.bigint "subject_id"
     t.bigint "team_id"
     t.integer "group_type"
-    t.json "values"
+    t.jsonb "values"
     t.index ["created_at"], name: "index_activities_on_created_at"
     t.index ["experiment_id"], name: "index_activities_on_experiment_id"
     t.index ["my_module_id"], name: "index_activities_on_my_module_id"
