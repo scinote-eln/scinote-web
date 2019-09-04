@@ -63,9 +63,11 @@ Paperclip::Attachment.class_eval do
   end
 
   def previewable_document?
-    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(content_type)
+    extensions = %w(.txt .pdf .xlsx .docx .pptx .xls .rtf .doc .ppt .odt .ods .odp)
 
-    extensions = %w(.xlsx .docx .pptx .xls .doc .ppt)
+    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(content_type) &&
+                  extensions.include?(File.extname(original_filename))
+
     # Mimetype sometimes recognizes Office files as zip files
     # In this case we also check the extension of the given file
     # Otherwise the conversion should fail if the file is being something else
