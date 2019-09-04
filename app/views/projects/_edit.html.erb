@@ -5,7 +5,7 @@
     <div id="rapProgramLevelSelectEdit" class="form-group">
       <!-- opt_rap_programs dropdown -->
       <label class="control-label" for="rap_program_level">RAP Program Level</label>
-      <select class="form-control" onchange="selectRapProgramLevel(this, 'Edit')" required>
+      <select id="rapProgramLevelSelector" class="form-control" onchange="selectRapProgramLevel(this, 'Edit')" required>
         <%= opt_rap_programs.each do |program| %>
           <% if program.id == sel_rap_ids[0] %>
             <option value="<%= program.id %>" selected><%= program.name %></option>
@@ -19,7 +19,7 @@
     <div id="rapTopicLevelSelectEdit" class="form-group">
       <!-- opt_rap_topics dropdown -->
       <label class="control-label" for="rap_topic_level">RAP Topic Level</label>
-      <select class="form-control" onchange="selectRapTopicLevel(this, 'Edit')" required>
+      <select id="rapTopicLevelSelector" class="form-control" onchange="selectRapTopicLevel(this, 'Edit')" required>
         <%= opt_rap_topics.each do |topic| %>
           <% if topic.id == sel_rap_ids[1] %>
             <option value="<%= topic.id %>" selected><%= topic.name %></option>
@@ -33,7 +33,7 @@
     <div id="rapProjectLevelSelectEdit" class="form-group">
       <!-- opt_rap_projects dropdown -->
       <label class="control-label" for="rap_project_level">RAP Project Level</label>
-      <select class="form-control" onchange="selectRapProjectLevel(this, 'Edit')" required>
+      <select id="rapProjectLevelSelector" class="form-control" onchange="selectRapProjectLevel(this, 'Edit')" required>
         <%= opt_rap_projects.each do |project| %>
           <% if project.id == sel_rap_ids[2] %>
             <option value="<%= project.id %>" selected><%= project.name %></option>
@@ -47,7 +47,7 @@
     <div id="rapTaskLevelSelectEdit" class="form-group">
       <!-- opt_rap_tasks dropdown -->
       <label class="control-label" for="rap_task_level">RAP Task Level</label>
-      <select class="form-control" onchange="selectRapTaskLevel(this, 'Edit')" required>
+      <select id="rapTaskLevelSelector" class="form-control" onchange="selectRapTaskLevel(this, 'Edit')" required>
         <%= opt_rap_tasks.each do |task| %>
           <% if task.id == sel_rap_ids[3] %>
             <option value="<%= task.id %>" selected><%= task.name %></option>

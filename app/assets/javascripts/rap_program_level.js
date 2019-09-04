@@ -1,21 +1,17 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function rapProgramLevelTrigger(hidden) {
+function rapProgramLevelTrigger(edit_suffix, hidden) {
     var opt = $('select option:contains("RAP Not Required")');
     opt.prop('checked', true);
     opt.prop('selected', true);
     var e = document.getElementById('rapProgramLevelSelector');
-    selectRapProgramLevel(e, '', hidden);
+    selectRapProgramLevel(e, edit_suffix, hidden);
 }
 
 // After selecting a RAP Program Level, retrieve all its Topic Levels
 function selectRapProgramLevel(el, edit_suffix, hidden){
     var text = el.options[el.selectedIndex].text;
-    // if(text === "RAP Not Required"){
-    //     autoSelectTopicDropdown(text, edit_suffix, hidden);
-    //     return;
-    // }
     var programLevelID = el.value;
     // Get all RapTopicLevels for this programLevelID
     var url = window.location.protocol + "//" + window.location.host + "/rap_topic_level/" + programLevelID;

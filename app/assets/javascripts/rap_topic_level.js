@@ -1,34 +1,18 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function rapTopicLevelTrigger(hidden) {
+function rapTopicLevelTrigger(edit_suffix, hidden) {
     var opt = $('select option:contains("RAP Not Required")');
     opt.prop('checked', true);
     opt.prop('selected', true);
     var e = document.getElementById('rapTopicLevelSelector');
-    selectRapTopicLevel(e, '', hidden);
-}
-
-// RAP Not Required was selected, so select that here and cascade down for all RAP fields.
-function autoSelectTopicDropdown(id, edit_suffix, hidden){
-    var dropdownHTML = [
-        '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group" ', hidden, '>',
-        '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
-        '<select id="rapTopicLevelSelector" class="form-control">',
-        '<option value="', id, '" selected>', id, '</option></select></div>'
-    ]
-    // Remove in case it already exists, then insert new Topic Level Select HTML
-    var remDivID = '#rapTopicLevelSelect' + edit_suffix
-    var addDivID = '#rapProgramLevelSelect' + edit_suffix;
-    $(remDivID).remove();
-    $(addDivID).after(dropdownHTML.join(""));
-    autoSelectProjectDropdown(id, edit_suffix, hidden);
+    selectRapTopicLevel(e, edit_suffix, hidden);
 }
 
 // Build the HTML select dropdown for Topic Levels
 function generateTopicDropdown(data, edit_suffix, hidden, notReq){
     // Generate option fields
-    var options = [];
+    var options = ['<option value=""></option>'];
     for(var i in data){
         if(data[i].id){
             var option = [
@@ -49,7 +33,7 @@ function generateTopicDropdown(data, edit_suffix, hidden, notReq){
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
 
-    if(notReq) rapTopicLevelTrigger(hidden);
+    if(notReq) rapTopicLevelTrigger(edit_suffix, hidden);
 }
 
 function selectRapTopicLevel(el, edit_suffix, hidden){

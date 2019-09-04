@@ -1,34 +1,20 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function rapProjectLevelTrigger(hidden) {
+function rapProjectLevelTrigger(edit_suffix, hidden) {
+    console.log('rapProjectLevelTrigger');
     var opt = $('select option:contains("RAP Not Required")');
     opt.prop('checked', true);
     opt.prop('selected', true);
     var e = document.getElementById('rapProjectLevelSelector');
-    selectRapProjectLevel(e, '', hidden);
-}
-
-// RAP Not Required was selected, so select that here and cascade down for all RAP fields.
-function autoSelectProjectDropdown(id, edit_suffix, hidden){
-    var dropdownHTML = [
-        '<div id="rapProjectLevelSelect', edit_suffix, '" class="form-group"', hidden, '>',
-        '<label class="control-label" for="rap_project_level">RAP Project Level</label>',
-        '<select class="form-control">',
-        '<option value="', id, '" selected>', id, '</option></select></div>'
-    ]
-    // Remove in case it already exists, then insert new Project Level Select HTML
-    var remDivID = '#rapProjectLevelSelect' + edit_suffix
-    var addDivID = '#rapTopicLevelSelect' + edit_suffix;
-    $(remDivID).remove();
-    $(addDivID).after(dropdownHTML.join(""));
-    autoSelectTaskDropdown(id, edit_suffix, hidden);
+    console.log(e);
+    selectRapProjectLevel(e, edit_suffix, hidden);
 }
 
 // Build the HTML select dropdown for Project Levels
 function generateProjectDropdown(data, edit_suffix, hidden, notReq){
     // Generate option fields
-    var options = [];
+    var options = ['<option value=""></option>'];
     for(var i in data){
         if(data[i].id){
             var option = [
@@ -49,7 +35,7 @@ function generateProjectDropdown(data, edit_suffix, hidden, notReq){
     $(remDivID).remove();
     $(addDivID).after(dropdownHTML.join(""));
     
-    if(notReq) rapProjectLevelTrigger(hidden);
+    if(notReq) rapProjectLevelTrigger(edit_suffix, hidden);
 }
 
 function selectRapProjectLevel(el, edit_suffix, hidden){
