@@ -23,6 +23,34 @@ class ActivitiesService
       query = query.where(where_condition, *where_arguments)
     end
 
+    if filters[:query]
+      # Search through localization file
+      activities_translation = I18n.t('.')[:global_activities][:content].map{|k,v|
+        k.to_s.split('_html')[0] if filters[:query].split(' ').any? {|word| v.include? word}
+      }.compact
+      search_translations_filter = Activity.type_ofs.map{|k,v| v if activities_translation.include? k}.compact
+
+      # Search through object names
+      message_items_counter = 1
+      message_search = []
+      message_joins = []
+
+      Extends::ACTIVITY_MESSAGE_ITEMS.each do |message_item_group|
+        message_item_group[:items].each do |message_item|
+          message_joins.push("LEFT JOIN #{message_item_group[:table]} t#{message_items_counter} "\
+            "ON t#{message_items_counter}.id = (activities.values -> 'message_items' -> '#{message_item}' ->> 'id')::INT")
+          message_search.push("t#{message_items_counter}.#{message_item_group[:search_field]} ~* :query")
+          message_items_counter += 1
+        end
+      end
+
+      query = query\
+        .joins(message_joins.join(' '))
+        .where(" 
+          (#{message_search.join(' OR ')}) AND type_of IN (:translations)
+        ", {query: filters[:query].split(' ').join('|'), translations: search_translations_filter})
+    end
+
     query = query.where(owner_id: filters[:users]) if filters[:users]
     query = query.where(type_of: filters[:types]) if filters[:types]
     query = query.where('created_at <= ?', Time.at(filters[:starting_timestamp].to_i)) if filters[:starting_timestamp]

@@ -113,6 +113,30 @@ class Extends
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset)
 
+
+  # All message items
+  # action, assetname, experiment, experimentnew, experimentoriginal, mymodule, mymoduleduedate, mymodulenew, 
+  # mymoduleoriginal, mymodules, numofitems, permissionlevel, project, projectnew, projectoriginal, projects, 
+  # protocol, protocolnew, protocoloriginal, protocolrepository, protocols, recordnames, repository, repositorycolumn, 
+  # repositorynew, repositoryoriginal, repositoryrow, repositoryrownew, repositoryroworiginal, result, role, step, 
+  # stepposition, storage, team, typeofresult, user, userchangeds, userinvited, userremoved, usertarget, usertargets, visibility
+
+  ACTIVITY_MESSAGE_ITEMS = [
+    {table: 'assets', items: %w(assetname), search_field: 'file_file_name'},
+    {table: 'experiments', items: %w(experiment experimentnew experimentoriginal), search_field: 'name'},
+    {table: 'my_modules', items: %w(mymodule mymoduleduedate mymodulenew mymoduleoriginal mymodules), search_field: 'name'},
+    {table: 'projects', items: %w(project projectnew projectoriginal projects), search_field: 'name'},
+    {table: 'protocols', items: %w(protocol protocolnew protocoloriginal protocolrepository protocols), search_field: 'name'},
+    {table: 'repositories', items: %w(repository repositorynew repositoryoriginal), search_field: 'name'},
+    {table: 'repository_rows', items: %w(repositoryrow repositoryrownew repositoryroworiginal), search_field: 'name'},
+    {table: 'repository_columns', items: %w(repositorycolumn), search_field: 'name'},
+    {table: 'results', items: %w(result), search_field: 'name'},
+    {table: 'steps', items: %w(step), search_field: 'name'},
+    {table: 'teams', items: %w(team), search_field: 'name'},
+    {table: 'users', items: %w(user userchangeds userinvited userremoved usertarget usertargets), search_field: 'full_name'}
+  ]
+
+
   ACTIVITY_TYPES = {
     create_project: 0,
     rename_project: 1,
