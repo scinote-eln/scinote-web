@@ -1,14 +1,23 @@
 FROM ruby:2.5.5
 MAINTAINER BioSistemika <info@biosistemika.com>
 
+# NOTE This is necessary if installing yarn from apt-get install of npm:
+#RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+#RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+#RUN apt-get update && apt-get install yarn
+
+
 # additional dependecies
 # libSSL-1.0 is required by wkhtmltopdf binary
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   apt-get update -qq && \
   apt-get install -y \
-  libjemalloc1 \
-  libssl1.0-dev \
+#  libjemalloc1 \
+#  libssl1.0-dev \
   nodejs \
+  # NOTE npm is supposed to installed with nodejs, but apparently isn't sometimes
+  # If the npm installation at line 22 fails, then comment out this npm and move onto the next comment...
+  npm \
   groff-base \
   awscli \
   postgresql-client \
@@ -16,7 +25,9 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   default-jre-headless \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
+  # NOTE if this npm install fails, comment it out and try the apt-get install option:
   npm install -g yarn && \
+  # apt-get install -y --no-install-recommends -t $(cat /tmp/lsb_release)-backports libreoffice && \
   rm -rf /var/lib/apt/lists/*
 
 ENV RAILS_ENV production
@@ -41,3 +52,4 @@ RUN DATABASE_URL=postgresql://postgres@db/scinote_production \
   bash -c "rake assets:precompile && rake deface:precompile"
 
 CMD rails s -b 0.0.0.0
+
