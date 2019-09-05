@@ -71,7 +71,7 @@ describe Activities::CreateActivityService do
         a = service_call.activity
 
         expect(a.message_items[:project].keys)
-          .to contain_exactly('type', 'value', 'id', 'value_for')
+          .to contain_exactly(:type, :value, :id, :value_for)
       end
 
       it 'adds object project to message items as hash' do
