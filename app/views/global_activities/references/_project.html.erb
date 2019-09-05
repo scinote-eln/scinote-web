@@ -9,8 +9,8 @@
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                             title: subject.name) %>
   <% else %>
-    <span title="<%= breadcrumbs[:project] %>">
-      <%= breadcrumbs[:project]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    <span title="<%= breadcrumbs['project'] %>">
+      <%= breadcrumbs['project']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
   <% end %>
 </div>
