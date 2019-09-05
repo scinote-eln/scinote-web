@@ -2,12 +2,10 @@
 // All this logic will automatically be available in application.js.
 
 function rapProjectLevelTrigger(edit_suffix, hidden) {
-    console.log('rapProjectLevelTrigger');
     var opt = $('select option:contains("RAP Not Required")');
     opt.prop('checked', true);
     opt.prop('selected', true);
     var e = document.getElementById('rapProjectLevelSelector');
-    console.log(e);
     selectRapProjectLevel(e, edit_suffix, hidden);
 }
 
