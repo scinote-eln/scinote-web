@@ -623,6 +623,12 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def unshared_inventory
+    render_403 unless Repository.used_on_task_but_unshared(@my_module, current_team).pluck(:id).include?(params[:inventory_id].to_i)
+    @inventory = Repository.find(params[:inventory_id])
+    @inventory_admin = @inventory.created_by
+  end
+
   private
 
   def task_completion_activity

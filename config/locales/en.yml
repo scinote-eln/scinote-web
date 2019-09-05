@@ -757,6 +757,9 @@ en:
         task_and_downstream: 'Task & Downstream'
         unassign_title: "Unassign %{repository_name} items from task %{my_module_name}"
         unassign_message: "Do you want to unassign %{size} items only from this task, or unassign them from this task & downstream tasks in the workflow as well?"
+    unshared_inventory:
+      title: The inventory %{inventory_name} is no longer shared with your team.
+      body: This inventory has been ushared with your team by the inventory’s owner (%{team_name} team). To view the item/s that are assigned to your task/s contact the %{team_name} team administrator (%{admin_name}, %{admin_email}).
   experiments:
     new:
       create: 'New Experiment'
@@ -1032,7 +1035,7 @@ en:
         can_edit: "Can Edit"
         all_teams: "All teams (current & new)"
         all_teams_tooltip: "This will disable individual team settings"
-        success_message: “Selected sharing options for the Inventory %{inventory_name} have been saved.” 
+        success_message: “Selected sharing options for the Inventory %{inventory_name} have been saved.”
     table:
       id: 'ID'
       assigned: "Assigned"

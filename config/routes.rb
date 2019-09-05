@@ -405,6 +405,9 @@ Rails.application.routes.draw do
         post 'unassign_repository_records/:repository_id',
              to: 'my_modules#unassign_repository_records',
              as: :unassign_repository_records
+        get 'unshared_inventory/:inventory_id',
+          to: "my_modules#unshared_inventory",
+          as: :unshared_inventory
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
