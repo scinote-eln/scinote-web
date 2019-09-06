@@ -17,7 +17,6 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 #  libjemalloc1 \
 #  libssl1.0-dev \
   nodejs \
-  npm \
   postgresql-client \
   default-jre-headless \
   unison \

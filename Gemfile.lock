@@ -477,6 +477,7 @@ GEM
     rubocop-performance (1.2.0)
       rubocop (>= 0.68.0)
     ruby-graphviz (1.2.4)
+    ruby-ole (1.2.12.2)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
@@ -667,6 +668,7 @@ DEPENDENCIES
   simplecov
   sneaky-save!
   spinjs-rails
+  spreadsheet (~> 1.1.4)
   timecop
   tinymce-rails (~> 4.9.3)
   turbolinks (~> 5.1.1)
