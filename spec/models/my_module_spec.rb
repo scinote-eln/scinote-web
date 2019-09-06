@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe MyModule, type: :model do
+  let(:my_module) { build :my_module }
+
+  it 'is valid' do
+    expect(my_module).to be_valid
+  end
+
   it 'should be of class MyModule' do
     expect(subject.class).to eq MyModule
   end
@@ -67,7 +75,7 @@ describe MyModule, type: :model do
     end
     it do
       should validate_length_of(:description)
-        .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
     end
   end
 end

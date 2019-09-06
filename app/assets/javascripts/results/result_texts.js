@@ -27,15 +27,14 @@
             formAjaxResultText($form);
             Results.initCancelFormButton($form, initNewReslutText);
             Results.toggleResultEditButtons(false);
-            TinyMCE.refresh();
-            TinyMCE.highlight();
+            TinyMCE.init('#result_text_attributes_textarea');
             $('#result_name').focus();
           },
           error: function() {
             animateSpinner(null, false);
             initNewReslutText();
           }
-        })
+        });
       });
     }
 
@@ -55,10 +54,11 @@
           $form.after($prevResult);
           $form.remove();
           applyEditResultTextCallback();
+          TinyMCE.destroyAll();
           Results.toggleResultEditButtons(true);
         });
         Results.toggleResultEditButtons(false);
-        TinyMCE.refresh();
+        TinyMCE.init('#result_text_attributes_textarea');
         $('#result_name').focus();
       });
     }
@@ -76,7 +76,7 @@
         Results.toggleResultEditButtons(true);
         Results.expandResult(newResult);
         TinyMCE.destroyAll();
-        Comments.initialize();
+        Comments.init();
         initNewReslutText();
       });
       $form.on('ajax:error', function(e, xhr) {

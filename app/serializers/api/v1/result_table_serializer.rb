@@ -11,7 +11,7 @@ module Api
       end
 
       def table_contents
-        object.table&.contents
+        object.table&.contents&.force_encoding(Encoding::UTF_8)
       end
     end
   end

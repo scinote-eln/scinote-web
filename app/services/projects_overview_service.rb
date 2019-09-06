@@ -9,6 +9,7 @@ class ProjectsOverviewService
     if @view_state.state.dig('projects', 'filter') != @params[:filter] &&
        %w(active archived all).include?(@params[:filter])
       @view_state.state['projects']['filter'] = @params[:filter]
+      @view_state.save!
     end
   end
 
@@ -45,7 +46,12 @@ class ProjectsOverviewService
                else
                  10
                end
-    table_state['length'] = per_page if table_state['length'] != per_page
+    if table_state['length'] != per_page
+      table_state['length'] = per_page
+      table_state['time'] = Time.now.to_i
+      @view_state.state['projects']['table'] = table_state
+      @view_state.save!
+    end
     page = @params[:start] ? (@params[:start].to_i / per_page) + 1 : 1
     records = fetch_dt_records
     records = records.where(archived: true) if @params[:filter] == 'archived'
@@ -53,10 +59,6 @@ class ProjectsOverviewService
     search_value = @params.dig(:search, :value)
     records = search(records, search_value) if search_value.present?
     records = sort(records).page(page).per(per_page)
-    if @view_state.changed?
-      @view_state.state['projects']['table']['time'] = Time.now.to_i
-      @view_state.save!
-    end
     records
   end
 
@@ -84,7 +86,9 @@ class ProjectsOverviewService
     ).joins(
       "LEFT OUTER JOIN (#{due_modules.to_sql}) due_modules "\
       "ON due_modules.experiment_id = experiments.id"
-    ).left_outer_joins(:user_projects, :project_comments)
+    ).joins(
+      'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
+    ).left_outer_joins(:project_comments)
 
     # Only admins see all projects of the team
     unless @user.is_admin_of_team?(@team)

@@ -12,7 +12,11 @@ describe 'RepositoryPermissions' do
   let(:read_shared_repository) { create :repository, :read_shared }
 
   describe 'create_repository_rows, manage_repository_rows, create_repository_columns' do
+<<<<<<< HEAD
     context 'when team\'s repository' do
+=======
+    context 'when team\'s repositroy' do
+>>>>>>> Finished merging. Test on dev machine (iMac).
       it 'should be true for admin' do
         create :user_team, :admin, user: user, team: team
 
@@ -80,7 +84,11 @@ describe 'RepositoryPermissions' do
   end
 
   describe 'read_repository' do
+<<<<<<< HEAD
     context 'when team\'s repository' do
+=======
+    context 'when team\'s repositroy' do
+>>>>>>> Finished merging. Test on dev machine (iMac).
       it 'should be true' do
         create :user_team, :normal_user, user: user, team: team
 

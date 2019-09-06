@@ -274,11 +274,10 @@ class RepositoryRowsController < ApplicationController
     if selected_params
       selected_params.each do |row_id|
         row = @repository.repository_rows.find_by_id(row_id)
-        if row && can_manage_repository_rows?(@repository.team)
-          log_activity(:delete_item_inventory, row)
+        next unless row && can_manage_repository_rows?(@repository)
 
-          row.destroy && deleted_count += 1
-        end
+        log_activity(:delete_item_inventory, row)
+        row.destroy && deleted_count += 1
       end
       if deleted_count.zero?
         flash = t('repositories.destroy.no_deleted_records_flash',
@@ -345,29 +344,32 @@ class RepositoryRowsController < ApplicationController
       my_module: [{ experiment: :project }]
     ).where(repository_row: @repository_row)
     render_404 and return unless @repository_row
-    render_403 unless can_read_team?(@repository_row.repository.team)
+    render_403 unless can_read_repository?(@repository_row.repository)
   end
 
   def load_vars
-    @repository = Repository.eager_load(:repository_columns)
+    @repository = Repository.accessible_by_teams(current_team)
+                            .eager_load(:repository_columns)
                             .find_by_id(params[:repository_id])
-    @record = RepositoryRow.eager_load(:repository_columns)
-                           .find_by_id(params[:id])
+
+    @record = @repository.repository_rows
+                         .eager_load(:repository_columns)
+                         .find_by_id(params[:id])
     render_404 unless @repository && @record
   end
 
   def load_repository
-    @repository = Repository.find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
     render_404 unless @repository
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository_rows?(@repository.team)
+    render_403 unless can_create_repository_rows?(@repository)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_repository_rows?(@repository.team)
+    render_403 unless can_manage_repository_rows?(@repository)
   end
 
   def record_params
@@ -429,6 +431,7 @@ class RepositoryRowsController < ApplicationController
                       .where(repository_column: cell.repository_column)
                       .limit(Constants::SEARCH_LIMIT)
                       .pluck(:id, :data)
+                      .map { |li| [li[0], escape_input(li[1])] }
   end
 
   def fetch_columns_list_items
@@ -442,6 +445,7 @@ class RepositoryRowsController < ApplicationController
         list_items: column.repository_list_items
                           .limit(Constants::SEARCH_LIMIT)
                           .pluck(:id, :data)
+                          .map { |li| [li[0], escape_input(li[1])] }
       }
     end
     collection

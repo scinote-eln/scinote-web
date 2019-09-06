@@ -16,23 +16,29 @@ module SmartAnnotations
       end
 
       def validate_exp_permissions(user, team, object)
-        can_read_experiment?(user, object) && validate_prj_permissions(user, team, object.project)
+        object.project.team.id == team.id && can_read_experiment?(user, object)
       end
 
       def validate_tsk_permissions(user, team, object)
-        can_read_my_module?(user, object) && validate_exp_permissions(user, team, object.experiment)
+        object.experiment.project.team.id == team.id &&
+          can_read_experiment?(user, object.experiment)
       end
 
       def validate_rep_item_permissions(user, team, object)
         if object.repository
-          return Repository.accessible_by_teams(team).find_by(id: object.repository_id).present? &&
+          return (object.repository.team.id == team.id ||
+                 object.repository.team_repositories.where(team_id: team.id).any?) &&
                  can_read_repository?(user, object.repository)
         end
 
         # handles discarded repositories
-        repository = Repository.with_discarded.find_by(id: object.repository_id)
+        repository = Repository.with_discarded.find_by_id(object.repository_id)
         # evaluate to false if repository not found
         return false unless repository
+
+        (repository.team.id == team.id ||
+          repository.team_repositories.where(team_id: team.id).any?) &&
+          can_read_repository?(user, repository)
       end
     end
   end

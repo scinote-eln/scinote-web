@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryTextValue, type: :model do
+  let(:repository_text_value) { build :repository_text_value }
+
+  it 'is valid' do
+    expect(repository_text_value).to be_valid
+  end
+
   it 'should be of class RepositoryTextValue' do
     expect(subject.class).to eq RepositoryTextValue
   end
@@ -19,7 +27,7 @@ describe RepositoryTextValue, type: :model do
     it { should have_one :repository_cell }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :repository_cell }
     it { should validate_presence_of :data }
     it do

@@ -53,7 +53,6 @@ Rails.application.routes.draw do
         to: 'rap_task_level#show',
         as: 'rap_task_level'
 
-
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
     # get '/settings/*all', to: 'client_api/settings#index'
@@ -205,6 +204,13 @@ Rails.application.routes.draw do
             defaults: { format: 'json' }
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
+        get :share_modal
+
+        resources :team_repositories, only: %i(destroy) do
+          collection do
+            post 'update'
+          end
+        end
       end
       # resources :samples, only: [:new, :create]
       # resources :sample_types, except: [:show, :new] do
@@ -234,12 +240,18 @@ Rails.application.routes.draw do
         get 'atwho_my_modules', to: 'at_who#my_modules'
         get 'atwho_menu_items', to: 'at_who#menu_items'
       end
+
+      # External protocols routes
+      get 'list_external_protocol', to: 'external_protocols#index'
+      get 'show_external_protocol', to: 'external_protocols#show'
+      get 'build_external_protocol', to: 'external_protocols#new'
+      post 'import_external_protocol', to: 'external_protocols#create'
+
       match '*path',
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
     end
 
-    get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
     post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
     get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
     get 'projects/dt_state_load', to: 'projects#dt_state_load',
@@ -275,7 +287,7 @@ Rails.application.routes.draw do
         collection do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
-          post 'generate', to: 'reports#generate'
+          post 'generate', to: 'reports#generate', format: %w(docx pdf)
           get 'new/', to: 'reports#new'
           get 'new/project_contents_modal',
               to: 'reports#project_contents_modal',
@@ -367,7 +379,14 @@ Rails.application.routes.draw do
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
-      resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy]
+      resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
+        collection do
+          get :search_tags
+        end
+        member do
+          post :destroy_by_tag_id
+        end
+      end
       resources :user_my_modules, path: '/users',
                 only: [:index, :create, :destroy]
       resources :my_module_comments,
@@ -385,6 +404,12 @@ Rails.application.routes.draw do
         post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
+        patch 'description',
+              to: 'my_modules#update_description',
+              as: 'update_description'
+        patch 'protocol_description',
+              to: 'my_modules#update_protocol_description',
+              as: 'update_protocol_description'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         # get 'samples' # Samples view for single module
@@ -450,6 +475,7 @@ Rails.application.routes.draw do
         post 'toggle_step_state'
         get 'move_down'
         get 'move_up'
+        post 'update_view_state'
       end
     end
 
@@ -493,6 +519,7 @@ Rails.application.routes.draw do
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'
         get 'preview', to: 'protocols#preview'
+        patch 'description', to: 'protocols#update_description'
         patch 'metadata', to: 'protocols#update_metadata'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
@@ -532,6 +559,7 @@ Rails.application.routes.draw do
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
+        get 'recent_protocols'
       end
     end
 
@@ -598,11 +626,16 @@ Rails.application.routes.draw do
         to: 'assets#file_preview',
         as: 'asset_file_preview'
     get 'files/:id/download', to: 'assets#download', as: 'download_asset'
+    get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
+    post 'files/create_wopi_file',
+         to: 'assets#create_wopi_file',
+         as: 'create_wopi_file'
+    post 'files/:id/start_edit_image', to: 'assets#create_start_edit_image_activity', as: 'start_edit_image'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
@@ -611,7 +644,6 @@ Rails.application.routes.draw do
       # @@@20190520JS - Sessions controller doesn't require pre-authentication,
       #                 so we will do the factsheet download here:
       get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
-
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       post 'users/complete_sign_up_provider' =>
            'users/registrations#create_with_provider'

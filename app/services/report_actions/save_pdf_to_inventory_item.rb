@@ -33,7 +33,7 @@ module ReportActions
       @repository        = load_repository
       @repository_column = load_repository_column
       @repository_item   = load_repository_item
-      unless can_create_repository_rows?(@user, @repository.team)
+      unless can_create_repository_rows?(@user, @repository)
         raise ReportActions::RepositoryPermissionError,
                 I18n.t('projects.reports.new.no_permissions')
       end

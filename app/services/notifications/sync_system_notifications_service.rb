@@ -24,6 +24,14 @@ module Notifications
       @errors.none?
     end
 
+    def self.available?
+      channel = Rails.application.secrets.system_notifications_channel
+      query = { query: { last_sync_timestamp: Time.now.to_i, channels_slug: channel },
+                headers: { 'accept': 'application/vnd.system-notifications.1+json' } }
+      response = get('/api/system_notifications', query)
+      response.code < Rack::Utils::SYMBOL_TO_STATUS_CODE[:bad_request]
+    end
+
     private
 
     def call_api

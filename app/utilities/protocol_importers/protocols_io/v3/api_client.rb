@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
 module ProtocolImporters
+<<<<<<< HEAD
   module ProtocolsIo
     module V3
       class ApiClient
         include HTTParty
+=======
+  module ProtocolsIO
+    module V3
+      class ApiClient
+        include HTTParty
+        require 'protocol_importers/protocols_io/v3/errors'
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
         CONSTANTS = Constants::PROTOCOLS_IO_V3_API
 
@@ -12,9 +20,18 @@ module ProtocolImporters
         default_timeout CONSTANTS[:default_timeout]
         logger Rails.logger, CONSTANTS[:debug_level]
 
+<<<<<<< HEAD
         def initialize
           # Set default headers
           self.class.headers('Authorization' => "Bearer #{ENV.fetch('PROTOCOLS_IO_ACCESS_TOKEN')}")
+=======
+        def initialize(token = nil)
+          # Currently we support public tokens only (no token needed for public data)
+          @auth = { token: token }
+
+          # Set default headers
+          self.class.headers('Authorization': "Bearer #{@auth[:token]}") if @auth[:token].present?
+>>>>>>> Finished merging. Test on dev machine (iMac).
         end
 
         # Query params available are:
@@ -39,7 +56,10 @@ module ProtocolImporters
         #     id of page.
         #     Default is 1.
         def protocol_list(query_params = {})
+<<<<<<< HEAD
           local_sorting = false
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
           response = with_handle_network_errors do
             sort_mappings = CONSTANTS[:sort_mappings]
             query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
@@ -53,7 +73,10 @@ module ProtocolImporters
             # If key is blank access show latest publications, otherwise use
             # normal endpoint
             if query['key'].blank?
+<<<<<<< HEAD
               local_sorting = true
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
               query = CONSTANTS.dig(:endpoints, :publications, :default_query_params)
               self.class.get('/publications', query: query)
             else
@@ -61,10 +84,13 @@ module ProtocolImporters
             end
           end
           check_for_response_errors(response)
+<<<<<<< HEAD
           if local_sorting && %w(alpha_asc alpha_desc newest oldest).include?(query_params[:sort_by])
             response.parsed_response[:local_sorting] = query_params[:sort_by]
           end
           response
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
         end
 
         # Returns full representation of given protocol ID
@@ -91,7 +117,11 @@ module ProtocolImporters
         rescue StandardError => e
           Rails.logger.error "Error: #{e.class}, message: #{e.message}"
 
+<<<<<<< HEAD
           raise ProtocolImporters::ProtocolsIo::V3::NetworkError.new(e.class),
+=======
+          raise ProtocolImporters::ProtocolsIO::V3::NetworkError.new(e.class),
+>>>>>>> Finished merging. Test on dev machine (iMac).
                 I18n.t('protocol_importers.errors.cannot_import_protocol')
         end
 
@@ -102,6 +132,7 @@ module ProtocolImporters
           when 0
             return response
           when 1
+<<<<<<< HEAD
             raise ProtocolImporters::ProtocolsIo::V3::ArgumentError.new(:missing_or_empty_parameters), error_message
           when 1218
             raise ProtocolImporters::ProtocolsIo::V3::UnauthorizedError.new(:invalid_token), error_message
@@ -109,6 +140,15 @@ module ProtocolImporters
             raise ProtocolImporters::ProtocolsIo::V3::UnauthorizedError.new(:token_expires), error_message
           else
             raise ProtocolImporters::ProtocolsIo::V3::Error.new(:api_response_error), response.parsed_response
+=======
+            raise ProtocolImporters::ProtocolsIO::V3::ArgumentError.new(:missing_or_empty_parameters), error_message
+          when 1218
+            raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:invalid_token), error_message
+          when 1219
+            raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:token_expires), error_message
+          else
+            raise ProtocolImporters::ProtocolsIO::V3::Error.new(:api_response_error), response.parsed_response
+>>>>>>> Finished merging. Test on dev machine (iMac).
           end
         end
       end

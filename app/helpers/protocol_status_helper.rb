@@ -3,11 +3,11 @@ module ProtocolStatusHelper
   def protocol_status_href(protocol)
     parent = protocol.parent
     res = ''
-    res << '<a href="#" data-toggle="popover" data-html="true" '
+    res << '<a href="#" data-toggle="popover" data-html="true" class="preview-protocol"'
     res << 'data-trigger="focus" data-placement="bottom" title="'
     res << protocol_status_popover_title(parent) +
            '" data-content="' + protocol_status_popover_content(parent) +
-           '">' + protocol_name(parent) + '</a>'
+           '">' + protocol_name(parent).truncate(Constants::NAME_TRUNCATION_LENGTH) + '</a>'
     res.html_safe
   end
 
@@ -49,26 +49,19 @@ module ProtocolStatusHelper
 
   def protocol_status_popover_content(protocol)
     if protocol_private_for_current_user?(protocol)
-      res = "<p><em>" + I18n.t("my_modules.protocols.protocol_status_bar.private_protocol_desc") + "</em></p>"
+      res = '<p><em>' + I18n.t('my_modules.protocols.protocol_status_bar.private_protocol_desc') + '</em></p>'
     else
-      res = "<p>"
-      if protocol.description.present?
-        res << protocol.description
-      else
-        res << "<em>" + I18n.t("my_modules.protocols.protocol_status_bar.no_description") + "</em>"
-      end
-      res << "</p>"
-      res << "<p><b>" + I18n.t("my_modules.protocols.protocol_status_bar.keywords") + ":</b>&nbsp;"
-      if protocol.protocol_keywords.size > 0
+      res = '<p><b>' + I18n.t('my_modules.protocols.protocol_status_bar.keywords') + ':</b>&nbsp;'
+      if protocol.protocol_keywords.size.positive?
         protocol.protocol_keywords.each do |kw|
-          res << kw.name + ", "
+          res << kw.name + ', '
         end
         res = res[0..-3]
       else
-        res << "<em>" + I18n.t("my_modules.protocols.protocol_status_bar.no_keywords") + "</em>"
+        res << '<em>' + I18n.t('my_modules.protocols.protocol_status_bar.no_keywords') + '</em>'
       end
-      res << "</p>"
+      res << '</p>'
     end
-    sanitize_input(res)
+    escape_input(res)
   end
 end

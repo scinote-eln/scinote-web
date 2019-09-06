@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::UrlHelper
@@ -22,6 +24,7 @@ module ApplicationHelper
 
   def display_tooltip(message, len = Constants::NAME_TRUNCATION_LENGTH)
     return '' unless message
+
     if message.strip.length > len
       sanitize_input("<div class='modal-tooltip'> \
       #{truncate(message.strip, length: len)} \
@@ -95,6 +98,7 @@ module ApplicationHelper
     annotated_users.uniq.each do |user_id|
       target_user = User.find_by_id(user_id)
       next unless target_user
+
       generate_annotation_notification(target_user, title, message)
     end
   end
@@ -105,9 +109,7 @@ module ApplicationHelper
       title: sanitize_input(title),
       message: sanitize_input(message)
     )
-    if target_user.assignments_notification
-      UserNotification.create(notification: notification, user: target_user)
-    end
+    UserNotification.create(notification: notification, user: target_user) if target_user.assignments_notification
   end
 
   def smart_annotation_parser(text, team = nil)
@@ -122,7 +124,12 @@ module ApplicationHelper
   # Check if text have smart annotations of resources
   # and outputs a link to resource
   def smart_annotation_filter_resources(text, team)
-    SmartAnnotations::TagToHtml.new(current_user, team, text).html
+    user = if !defined?(current_user) && @user
+             @user
+           else
+             current_user
+           end
+    SmartAnnotations::TagToHtml.new(user, team, text).html
   end
 
   # Check if text have smart annotations of users
@@ -133,6 +140,7 @@ module ApplicationHelper
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       next unless user
+
       popover_for_user_name(user, team)
     end
     new_text
@@ -172,9 +180,9 @@ module ApplicationHelper
     html = if skip_avatar
              ''
            else
-             raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+             raw("<span class=\"global-avatar-container smart-annotation\"><img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
              "alt='avatar' class='atwho-user-img-popover'" \
-             " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>")
+             " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'></span>")
            end
 
     html =
@@ -185,40 +193,27 @@ module ApplicationHelper
         'data-placement="top" data-toggle="popover" data-content="') +
       raw(user_description) + raw('" >') + user_name + raw('</a>')
 
-    unless skip_user_status || user_still_in_team
-      html << " #{I18n.t('atwho.res.removed')}"
-    end
+    html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user_still_in_team
+    html = '<span class="atwho-user-container">' + html + '</span>'
     html
   end
 
-  # Dirty, dirty hack for displaying images in reports
+  # No more dirty hack
   def user_avatar_absolute_url(user, style)
-    prefix = ''
-    if ENV['PAPERCLIP_STORAGE'].present? &&
-       ENV['MAIL_SERVER_URL'].present? &&
-       ENV['PAPERCLIP_STORAGE'] != 'filesystem'
-      prefix = ENV['MAIL_SERVER_URL']
+    begin
+      return user.avatar_base64(style) unless missing_avatar(user, style)
+    rescue StandardError => e
+      Rails.logger.error e.message
     end
-    # for development
-    prefix = 'localhost:3000' if ENV['MAIL_SERVER_URL'] == 'localhost'
-    if !prefix.empty? &&
-       !prefix.include?('http://') &&
-       !prefix.include?('https://')
-      prefix = if respond_to?(:request) && request.ssl?
-                 "https://#{prefix}"
-               else
-                 "http://#{prefix}"
-               end
-    end
-
-    unless missing_avatar(user, style)
-      return user.avatar(style, timeout: Constants::URL_LONG_EXPIRE_TIME)
-    end
-    url_for(prefix + "/images/#{style}/missing.png")
+    url_for("/images/#{style}/missing.png")
   end
 
   def missing_avatar(user, style)
     user.avatar(style) == '/images/icon_small/missing.png' ||
       user.avatar(style) == '/images/thumb/missing.png'
+  end
+
+  def wopi_enabled?
+    ENV['WOPI_ENABLED'] == 'true'
   end
 end

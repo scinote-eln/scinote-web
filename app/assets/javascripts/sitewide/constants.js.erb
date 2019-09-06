@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const GLOBAL_CONSTANTS = {
   NAME_TRUNCATION_LENGTH: <%= Constants::NAME_TRUNCATION_LENGTH %>,
   NAME_MAX_LENGTH: <%= Constants::NAME_MAX_LENGTH %>,
@@ -10,3 +11,9 @@ const GLOBAL_CONSTANTS = {
   REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN: <%= Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN %>,
   HAS_UNSAVED_DATA_CLASS_NAME: 'has-unsaved-data'
 };
+=======
+const globalConstants = {
+  name_truncation_length: <%= Constants::NAME_TRUNCATION_LENGTH %>,
+  is_safari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+}
+>>>>>>> Finished merging. Test on dev machine (iMac).

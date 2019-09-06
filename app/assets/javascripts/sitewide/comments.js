@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* global inlineEditing PerfectScrollbar HelperModule I18n */
+=======
+/* global initInlineEditing PerfectScrollbar */
+>>>>>>> Finished merging. Test on dev machine (iMac).
 /* eslint-disable no-restricted-globals, no-alert */
 var Comments = (function() {
   function changeCounter(comment, value) {
@@ -19,16 +23,28 @@ var Comments = (function() {
   function newCommentValidation(textarea, submitBtn) {
     textarea.off().on('focus', function() {
       $(this).addClass('border');
+<<<<<<< HEAD
       if (this.value.trim().length > 0) {
         submitBtn.addClass('show');
       }
     }).on('blur', function() {
       if (this.value.trim().length === 0) {
+=======
+      if (this.value.length > 0) {
+        submitBtn.addClass('show');
+      }
+    }).on('blur', function() {
+      if (this.value.length === 0) {
+>>>>>>> Finished merging. Test on dev machine (iMac).
         $(this).removeClass('border');
         submitBtn.removeClass('show');
       }
     }).on('keyup', function() {
+<<<<<<< HEAD
       if (this.value.trim().length > 0) {
+=======
+      if (this.value.length > 0) {
+>>>>>>> Finished merging. Test on dev machine (iMac).
         submitBtn.addClass('show');
       } else {
         submitBtn.removeClass('show');
@@ -49,11 +65,15 @@ var Comments = (function() {
             $this.closest('.comment-container').remove();
           },
           error: (error) => {
+<<<<<<< HEAD
             if (error.status === 403) {
               HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
             } else {
               alert(error.responseJSON.errors.message);
             }
+=======
+            alert(error.responseJSON.errors.message);
+>>>>>>> Finished merging. Test on dev machine (iMac).
           }
         });
       }
@@ -79,7 +99,11 @@ var Comments = (function() {
         }, (result) => {
           $el.parent().find('.comments-list').append(result.html);
           changeCounter($el, 1);
+<<<<<<< HEAD
           inlineEditing.init();
+=======
+          initInlineEditing('comment');
+>>>>>>> Finished merging. Test on dev machine (iMac).
           initDeleteComment();
           scrollBottom($el.parent().find('.content-comments'));
           errorField.html('');
@@ -89,9 +113,12 @@ var Comments = (function() {
           $el.find('textarea').focus().blur();
         })
           .error((error) => {
+<<<<<<< HEAD
             if (error.status === 403) {
               HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
             }
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
             errorField.html(error.responseJSON.errors.message);
             newButton.disable = false;
           });
@@ -105,7 +132,11 @@ var Comments = (function() {
         var moreBtn = $(this);
         if (result.moreUrl) {
           moreBtn.closest('.comments-container').find('.comments-list').prepend(result.html);
+<<<<<<< HEAD
           inlineEditing.init();
+=======
+          initInlineEditing('comment');
+>>>>>>> Finished merging. Test on dev machine (iMac).
           initDeleteComment();
           if (result.resultsNumber < result.perPage) {
             moreBtn.remove();
@@ -138,6 +169,10 @@ var Comments = (function() {
     init: (mode) => {
       if ($('.comments-container').length > 0) {
         initCreateComment();
+<<<<<<< HEAD
+=======
+        initInlineEditing('comment');
+>>>>>>> Finished merging. Test on dev machine (iMac).
         initDeleteComment();
         initMoreButton();
         checkContainerSize(mode);

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   include SearchableModel
   include SettingsModel
@@ -5,6 +7,7 @@ class User < ApplicationRecord
   include User::TeamRoles
   include User::ProjectRoles
   include TeamBySubjectModel
+  include InputSanitizeHelper
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -34,7 +37,8 @@ class User < ApplicationRecord
 
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte }
+    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
+            message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications_settings
@@ -70,7 +74,7 @@ class User < ApplicationRecord
   has_many :user_my_modules, inverse_of: :user
   has_many :my_modules, through: :user_my_modules
   has_many :comments, inverse_of: :user
-  has_many :activities, inverse_of: :owner
+  has_many :activities, inverse_of: :owner, foreign_key: 'owner_id'
   has_many :results, inverse_of: :user
   has_many :samples, inverse_of: :user
   has_many :samples_tables, inverse_of: :user, dependent: :destroy
@@ -552,7 +556,23 @@ class User < ApplicationRecord
     User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
-        .map { |i| { name: i[:full_name], id: i[:id] } }
+        .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
+  end
+
+  def avatar_base64(style)
+    unless avatar.present?
+      missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
+      return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
+    end
+
+    avatar_uri = if avatar.options[:storage].to_sym == :s3
+                   URI.parse(avatar.url(style)).open.to_a.join
+                 else
+                   File.open(avatar.path(style)).to_a.join
+                 end
+
+    encoded_data = Base64.strict_encode64(avatar_uri)
+    "data:#{avatar_content_type};base64,#{encoded_data}"
   end
 
   protected

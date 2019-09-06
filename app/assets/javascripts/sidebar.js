@@ -268,6 +268,8 @@
     var offset;
     if ($('#slide-panel .active').length) {
       offset = $('#slide-panel .active').offset().top - 50;
+      //@@@20190906JS - Is this causing the offset issues w/ top navbar? Check it...
+      if (offset < 0) offset = 0;
       $('#slide-panel .tree').scrollTo(offset, 10);
     }
   }

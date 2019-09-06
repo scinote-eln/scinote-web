@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserMyModule, type: :model do
+  let(:user_my_module) { build :user_my_module }
+
+  it 'is valid' do
+    expect(user_my_module).to be_valid
+  end
+
   it 'should be of class UserMyModule' do
     expect(subject.class).to eq UserMyModule
   end
@@ -19,7 +27,7 @@ describe UserMyModule, type: :model do
     it { should belong_to(:assigned_by).class_name('User') }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :user }
     it { should validate_presence_of :my_module }
   end

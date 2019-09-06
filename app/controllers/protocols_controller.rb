@@ -3,9 +3,13 @@ class ProtocolsController < ApplicationController
   include RenamingUtil
   include ProtocolsImporter
   include ProtocolsExporter
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
   include InputSanitizeHelper
   include ProtocolsIoHelper
   include TeamsHelper
+  include CommentHelper
 
   before_action :check_create_permissions, only: %i(
     create_new_modal
@@ -29,6 +33,7 @@ class ProtocolsController < ApplicationController
     edit
     update_metadata
     update_keywords
+    update_description
     edit_name_modal
     edit_keywords_modal
     edit_authors_modal
@@ -99,6 +104,14 @@ class ProtocolsController < ApplicationController
         }
       end
     end
+  end
+
+  def recent_protocols
+    render json: Protocol.recent_protocols(
+      current_user,
+      current_team,
+      Constants::RECENT_PROTOCOL_LIMIT
+    ).select(:id, :name)
   end
 
   def linked_children
@@ -175,7 +188,7 @@ class ProtocolsController < ApplicationController
               partial: 'protocols/header/authors_label.html.erb'
             ),
             description_label: render_to_string(
-              partial: 'protocols/header/description_label.html.erb'
+              partial: 'protocols/header/description_label.html.erb', locals: { edit_mode: true }
             )
           }
         end
@@ -215,6 +228,25 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def update_description
+    respond_to do |format|
+      format.json do
+        if @protocol.update(description: params.require(:protocol)[:description])
+          TinyMceAsset.update_images(@protocol, params[:tiny_mce_images])
+          render json: {
+            html: custom_auto_link(
+              @protocol.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team)
+          }
+        else
+          render json: @protocol.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   def create
     @protocol = Protocol.new(
       team: @current_team,
@@ -231,8 +263,10 @@ class ProtocolsController < ApplicationController
 
     respond_to do |format|
       if @protocol.save
+
         log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
 
+        TinyMceAsset.update_images(@protocol, params[:tiny_mce_images])
         format.json do
           render json: {
             url: edit_protocol_path(
@@ -601,7 +635,7 @@ class ProtocolsController < ApplicationController
 
         format.json do
           render json: {
-            name: p_name, new_name: protocol.name, status: :ok
+            name: escape_input(p_name), new_name: escape_input(protocol.name), status: :ok
           },
           status: :ok
         end
@@ -752,6 +786,7 @@ class ProtocolsController < ApplicationController
             protocol_dir = get_guid(protocol.id).to_s
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
+            ostream = protocol.tiny_mce_assets.save_to_eln(ostream, protocol_dir)
             # Add assets to protocol folder
             next if protocol.steps.count <= 0
             protocol.steps.order(:id).each do |step|
@@ -769,19 +804,7 @@ class ProtocolsController < ApplicationController
                   input_file.close
                 end
               end
-              if step.tiny_mce_assets.exists?
-                step.tiny_mce_assets.order(:id).each do |tiny_mce_asset|
-                  asset_guid = get_guid(tiny_mce_asset.id)
-                  asset_file_name =
-                  "rte-#{asset_guid.to_s +
-                         File.extname(tiny_mce_asset.image_file_name).to_s}"
-
-                  ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-                  input_file = tiny_mce_asset.open
-                  ostream.print(input_file.read)
-                  input_file.close
-                end
-              end
+              ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
             end
           end
         end

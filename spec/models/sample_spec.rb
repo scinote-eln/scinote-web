@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Sample, type: :model do
+  let(:sample) { build :sample }
+
+  it 'is valid' do
+    expect(sample).to be_valid
+  end
+
   it 'should be of class Sample' do
     expect(subject.class).to eq Sample
   end
@@ -29,12 +37,18 @@ describe Sample, type: :model do
     it { should have_many :custom_fields }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :name }
-    it { should validate_presence_of :user }
-    it { should validate_presence_of :team }
-    it do
-      should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  describe 'Validations' do
+    describe '#name' do
+      it { is_expected.to validate_presence_of :name }
+      it { is_expected.to validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH) }
+    end
+
+    describe '#user' do
+      it { is_expected.to validate_presence_of :user }
+    end
+
+    describe '#team' do
+      it { is_expected.to validate_presence_of :team }
     end
   end
 end

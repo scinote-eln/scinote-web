@@ -1,3 +1,4 @@
+// * Licensed under the MIT license
 (function(Handsontable) {
   'use strict';
 
@@ -285,10 +286,7 @@
       };
     };
 
-    var afterCreateRow = function(row, amount, auto) {
-      if (auto) {
-        return;
-      }
+    var afterCreateRow = function(row, amount) {
 
       var instance = this;
 
@@ -445,10 +443,13 @@
         instance.plugin.init();
         instance.plugin.custom = custom;
 
-        Handsontable.cellTypes['formula'] = formulaCell;
+        Handsontable.cellTypes.registerCellType('formula', {
+          editor: Handsontable.editors.TextEditor,
+          renderer: formulaRenderer
+        });
 
-        Handsontable.TextCell.renderer = formulaRenderer;
-        Handsontable.NumericCell.renderer = formulaRenderer;
+        Handsontable.cellTypes.text.renderer = formulaRenderer;
+        Handsontable.cellTypes.numeric.renderer = formulaRenderer;
 
         // [MODIFICATION] (sci 2588)
         // This hook is new

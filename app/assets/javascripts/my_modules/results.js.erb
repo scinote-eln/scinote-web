@@ -1,5 +1,4 @@
 //= require assets
-//= require comments
 
 (function(global) {
   'use strict';
@@ -16,12 +15,10 @@
       initHandsOnTables($(document));
       _expandAllResults();
       applyCollapseLinkCallBack();
+      applyCreateWopiFileCallback();
+      Assets.setupAssetsLoading();
 
-      Comments.initialize();
 
-      Comments.initCommentOptions('ul.content-comments');
-      Comments.initEditComments('#results');
-      Comments.initDeleteComments('#results');
 
       $(function () {
         $('#results-collapse-btn').click(function () {
@@ -70,6 +67,9 @@
         var hot = $container.handsontable('getInstance');
         var data = JSON.parse(contents.attr('value'));
         hot.loadData(data.data);
+        setTimeout(() => {
+          hot.render()
+        }, 0)
       });
     }
 
@@ -115,7 +115,7 @@
       });
       _renderTable($(result).find('div.step-result-hot-table'));
       animateSpinner(null, false);
-      setupAssetsLoading();
+      Assets.setupAssetsLoading();
     }
 
     function _renderTable(table) {
@@ -145,7 +145,7 @@
           var $nameInput = $form.find('#result_name');
           var nameValid = textValidator(ev, $nameInput, 0,
             <%= Constants::NAME_MAX_LENGTH %>);
-          var $descrTextarea = $form.find("#result_result_text_attributes_text");
+          var $descrTextarea = $form.find("#result_text_attributes_textarea");
           var $tinyMCEInput = TinyMCE.getContent();
           textValidator(ev, $descrTextarea, 1, <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
           break;
@@ -185,9 +185,10 @@
               initFormSubmitLinks($(this));
               ResutlAssets.applyEditResultAssetCallback();
               applyCollapseLinkCallBack();
+              applyCreateWopiFileCallback();
               toggleResultEditButtons(true);
               FilePreviewModal.init();
-              Comments.initialize();
+              Comments.init();
               ResutlAssets.initNewResultAsset();
               expandResult($(this));
             });
@@ -214,6 +215,7 @@
         event.stopImmediatePropagation();
         $(form).remove();
         toggleResultEditButtons(true);
+        TinyMCE.destroyAll();
         callback();
       });
     }

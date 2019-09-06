@@ -2,6 +2,7 @@ class MyModule < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include TinyMceImages
 
   enum state: Extends::TASKS_STATES
 
@@ -11,7 +12,7 @@ class MyModule < ApplicationRecord
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
-  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true,
@@ -387,6 +388,28 @@ class MyModule < ApplicationRecord
       I18n.t('repositories.table.added_by')
     ]
     { data: data, headers: headers }
+  end
+
+  def repository_json(repository_id, order, user)
+    headers = [
+      I18n.t('repositories.table.id'),
+      I18n.t('repositories.table.row_name'),
+      I18n.t('repositories.table.added_on'),
+      I18n.t('repositories.table.added_by')
+    ]
+    repository = Repository.find_by_id(repository_id)
+    return false unless repository
+
+    repository.repository_columns.order(:id).each do |column|
+      headers.push(column.name)
+    end
+
+    params = { assigned: 'assigned', search: {}, order: { values: { column: '1', dir: order } } }
+    records = RepositoryDatatableService.new(repository,
+                                             params,
+                                             user,
+                                             self)
+    { headers: headers, data: records }
   end
 
   def deep_clone(current_user)

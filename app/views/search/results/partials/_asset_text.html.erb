@@ -23,7 +23,7 @@
     <%= text %>
   <% end %>
 <% elsif asset.repository_asset_value %>
-  <% if can_read_team?(asset.repository_asset_value.repository_cell.repository_row.repository.team) %>
+  <% if can_read_repository?(asset.repository_asset_value.repository_cell.repository_row.repository) %>
     <% asset_read_allowed = true %>
     <a href="<%= download_asset_path asset %>" target="_blank">
       <%= text %>

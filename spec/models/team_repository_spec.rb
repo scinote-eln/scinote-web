@@ -6,7 +6,10 @@ describe TeamRepository, type: :model do
   let(:team_repository) { build :team_repository, :read }
 
   it 'is valid' do
+<<<<<<< HEAD
     team_repository.team = create :team
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
     expect(team_repository).to be_valid
   end
 

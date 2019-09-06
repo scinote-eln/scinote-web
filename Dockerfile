@@ -17,6 +17,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 #  libjemalloc1 \
 #  libssl1.0-dev \
   nodejs \
+  npm \
   postgresql-client \
   default-jre-headless \
   unison \
@@ -38,4 +39,3 @@ RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
 CMD rails s -b 0.0.0.0
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Sample < ApplicationRecord
   include SearchableModel
 
@@ -7,12 +9,9 @@ class Sample < ApplicationRecord
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :user, :team, presence: true
 
-  belongs_to :user, inverse_of: :samples, optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :team, inverse_of: :samples, optional: true
+  belongs_to :user, inverse_of: :samples
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
+  belongs_to :team, inverse_of: :samples
   belongs_to :sample_group, inverse_of: :samples, optional: true
   belongs_to :sample_type, inverse_of: :samples, optional: true
   has_many :sample_my_modules, inverse_of: :sample, dependent: :destroy

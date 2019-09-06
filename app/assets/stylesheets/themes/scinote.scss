@@ -12,6 +12,10 @@ body,
   min-width: 320px;
 }
 
+#content-wrapper .container #notifications {
+  margin-left: -15px;
+}
+
 // Word wrapping everywhere, except for table header of "datatables.js"
 body,
 table.dataTable td {
@@ -34,7 +38,7 @@ table {
 }
 
 #alert-container {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 #project-archive-btn {
@@ -317,7 +321,15 @@ a[data-toggle="tooltip"] {
   }
 
   .nav-name {
-    padding: 5px 0;
+    align-items: center;
+    display: flex;
+    height: 54px;
+    line-height: 44px;
+    margin: 0;
+    overflow: hidden;
+    padding: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .navbar-nav > li > .dropdown-menu {
@@ -404,7 +416,6 @@ a[data-toggle="tooltip"] {
   border-left: 1px solid $color-alto;
   border-right: 1px solid $color-alto;
   border-bottom: 1px solid $color-alto;
-  margin-bottom: 50px;
 }
 
 .breadcrumb-teams {
@@ -916,12 +927,44 @@ ul.content-activities {
   border-radius: 0;
 }
 
-.panel-protocol-status {
-  display: inline-block;
+.protocol-status-container {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
   margin-bottom: 5px;
 
-  & > .panel-body {
-    padding: 5px 5px 5px 15px;
+  .protocol-button {
+    margin-bottom: 5px;
+  }
+
+  .protocol-status-bar {
+    display: flex;
+    height: 33px;
+    margin-bottom: 5px;
+    margin-right: 15px;
+  }
+
+  .panel-protocol-status {
+    border-color: $color-silver;
+    box-shadow: none;
+    display: inline-block;
+    height: 33px;
+
+    & > .panel-body {
+      padding: 0 0 0 15px;
+    }
+
+    .link-button {
+      border-radius: 0;
+    }
+
+    .link-button,
+    .link-toggle {
+      height: 33px;
+      position: relative;
+      right: -1px;
+      top: -1px;
+    }
   }
 }
 
@@ -941,21 +984,15 @@ ul.content-activities {
   }
 }
 
-#protocol-preview-modal .modal-dialog {
-  .modal-body {
-    max-height: 75vh;
-    overflow-y: auto;
-    width: 100%;
-
-    .ql-editor {
-      min-height: initial;
-    }
-  }
-}
-
 /* Import protocol/s modal */
 #import-protocol-modal .modal-dialog {
   width: 70%;
+}
+
+#import-protocol-modal #import_protocol_description {
+  border: 1px solid $color-silver;
+  border-radius: 4px;
+  padding: 10px;
 }
 
 .import-protocols-modal-preview-container {
@@ -1021,12 +1058,6 @@ ul.content-activities {
     }
   }
 }
-/* Steps and Results */
-#steps {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAAIUlEQVQImWNgoD5gZGBgMILSjKRo/P//vwiSGQwMDAwMAEnaA0jgHoquAAAAAElFTkSuQmCC");
-  background-repeat: repeat-y;
-  background-position: -3px 0;
-}
 
 .badge-icon {
   background-color: $color-silver;
@@ -1048,6 +1079,16 @@ ul.content-activities {
   margin-top: 20px;
   padding-bottom: 30px;
   padding-top: 30px;
+  background-color: $color-concrete;
+
+  .new-asset-upload-icon{
+    margin-right: 6px;
+  }
+
+  .new-asset-upload-button {
+    margin-left: 20px;
+    background-color: inherit;
+  }
 }
 
 .dnd-error,
@@ -1168,7 +1209,7 @@ table.dataTable {
 
   thead > tr > th,
   thead > tr > td {
-    padding: 6px;
+    padding: 8px;
   }
 
   tbody > tr.selected,
@@ -1207,7 +1248,6 @@ table.dataTable {
 
 .toolbarButtons {
   display: inline-block;
-  padding-left: 20px;
 }
 
 /* Pills with arrow */
@@ -1794,10 +1834,15 @@ th.custom-field .modal-tooltiptext {
     margin: auto;
 
     li {
-      display: block;
-      padding: 5px 10px;
+      align-items: center;
       border-bottom: 1px solid $color-emperor;
       cursor: pointer;
+      display: flex;
+      padding: 5px 10px;
+
+      .global-avatar-container {
+        margin-right: 5px;
+      }
     }
   }
 }
@@ -1855,16 +1900,6 @@ th.custom-field .modal-tooltiptext {
   }
 }
 
-.atwho-li-user {
-
-  .avatar {
-    border-radius: 50%;
-    margin-left: 5px;
-    margin-right: 10px;
-    height: 20px;
-    width: 20px;
-  }
-}
 
 .atwho-li-res {
 
@@ -1907,9 +1942,24 @@ th.custom-field .modal-tooltiptext {
   }
 }
 
+.atwho-user-container {
+  align-items: center;
+  display: inline-flex;
+
+  .global-avatar-container {
+    line-height: 30px;
+    margin: 0 2px 0 4px;
+
+    img {
+      position: relative;
+      top: -2px;
+    }
+  }
+}
+
 .atwho-user-popover {
   cursor: pointer;
-  padding-left: 5px;
+  display: inline-block;
 }
 
 .atwho-user-img-popover {
@@ -2035,6 +2085,7 @@ a.disabled-with-click-events {
   .doorkeeper-actions-right {
     padding-left: 3px;
   }
+
 }
 
 /* 2018JS Add this to overwrite default bootstrap behavior */

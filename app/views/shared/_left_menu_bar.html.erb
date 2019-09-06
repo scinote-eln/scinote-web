@@ -75,16 +75,16 @@
           <span><%= t('left_menu_bar.support') %></span>
         </a>
         <ul class="dropdown-menu" data-hook="support-dropdown">
-          <li href="<%= contact_path %>">
-            <%= link_to t('nav.help.contact'), contact_path %>
-          </li>
-          <li href=""
-            <%= about_path %>">
-            <%= link_to t('nav.help.about'), about_path %>
-          </li>
-          <li href="<%= training_path %>">
-            <%= link_to t('nav.help.training'), training_path %>
-          </li>
+        <li href="<%= contact_path %>">
+          <%= link_to t('nav.help.contact'), contact_path %>
+        </li>
+        <li href=""
+          <%= about_path %>">
+          <%= link_to t('nav.help.about'), about_path %>
+        </li>
+        <li href="<%= training_path %>">
+          <%= link_to t('nav.help.training'), training_path %>
+        </li>
         </ul>
       </li>
       <li class="<%= "active" if settings_are_selected? %>">

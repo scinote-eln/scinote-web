@@ -1,12 +1,17 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
-/* global Uint8Array fabric tui animateSpinner setupAssetsLoading I18n*/
+/* eslint-disable no-underscore-dangle */
+/* global Uint8Array fabric tui animateSpinner */
+/* global Assets I18n PerfectScrollbar refreshProtocolStatusBar */
 //= require assets
 
 var FilePreviewModal = (function() {
   'use strict';
 
   var readOnly = false;
+  var CHECK_READY_DELAY = 5000;
+  var CHECK_READY_TRIES_LIMIT = 60;
+  var checkReadyCntr;
 
   function initPreviewModal(options = {}) {
     var name;
@@ -167,8 +172,20 @@ var FilePreviewModal = (function() {
     };
   }
 
-  function initImageEditor(data) {
+  function preInitImageEditor(data) {
+    $.ajax({
+      url: data['download-url'],
+      type: 'get',
+      success: function(responseData) {
+        var fileUrl = responseData;
+        initImageEditor(data, fileUrl);
+      }
+    });
+  }
+
+  function initImageEditor(data, fileUrl) {
     var imageEditor;
+    var ps;
     var blackTheme = {
       'common.bi.image': '',
       'common.bisize.width': '0',
@@ -252,17 +269,18 @@ var FilePreviewModal = (function() {
       'colorpicker.title.color': '#fff'
     };
 
+    animateSpinner(null, true);
     imageEditor = new tui.ImageEditor('#tui-image-editor', {
       includeUI: {
         loadImage: {
-          path: data['download-url'],
+          path: fileUrl,
           name: data.filename
         },
         theme: blackTheme,
         initMenu: 'draw',
         menuBarPosition: 'bottom'
       },
-      cssMaxWidth: 700, 
+      cssMaxWidth: 700,
       cssMaxHeight: 500,
       selectionStyle: {
         cornerSize: 20,
@@ -275,22 +293,55 @@ var FilePreviewModal = (function() {
       },
       usageStatistics: false
     });
+
     imageEditor.on('image_loaded', () => {
       $('.file-save-link').css('display', '');
+      animateSpinner(null, false);
     });
-/*    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
-      var wDelta = e.originalEvent.wheelDelta;
+
+    ps = new PerfectScrollbar($('.tui-image-editor-wrap')[0], { wheelSpeed: 0.5 });
+    $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
+      var imageOriginalSize = {
+        width: imageEditor._graphics.canvasImage.width,
+        height: imageEditor._graphics.canvasImage.height
+      };
+      var wDelta = e.originalEvent.wheelDelta || e.originalEvent.deltaY;
       var imageEditorWindow = e.currentTarget;
+      var scrollContainer = $('.tui-image-editor-wrap');
       var initWidth = imageEditorWindow.style.width;
       var initHeight = imageEditorWindow.style.height;
+
+      var scrollContainerInitial = {
+        top: scrollContainer.scrollTop(),
+        left: scrollContainer.scrollLeft(),
+        height: scrollContainer[0].scrollHeight,
+        width: scrollContainer[0].scrollWidth
+      };
+
+      var mousePosition = {
+        top: e.clientY - (imageEditorWindow.offsetTop - scrollContainerInitial.top),
+        left: e.clientX - $(imageEditorWindow).offset().left
+      };
+
+
       var newWidth;
       var newHeight;
+      var offsetY;
+      var offsetX;
       if (wDelta > 0) {
         newWidth = parseInt(initWidth, 10) * 1.1;
         newHeight = parseInt(initHeight, 10) * 1.1;
+        if (newWidth > imageOriginalSize.width || newHeight > imageOriginalSize.height) {
+          newWidth = imageOriginalSize.width;
+          newHeight = imageOriginalSize.height;
+        }
       } else {
         newWidth = parseInt(initWidth, 10) * 0.9;
         newHeight = parseInt(initHeight, 10) * 0.9;
+        if (parseInt(imageEditorWindow.dataset.minWidth, 10) * 0.5 > parseInt(newWidth, 10)) {
+          newWidth = parseInt(imageEditorWindow.dataset.minWidth, 10) * 0.5;
+          newHeight = parseInt(imageEditorWindow.dataset.minHeight, 10) * 0.5;
+        }
       }
       imageEditorWindow.style.width = newWidth + 'px';
       imageEditorWindow.style.height = newHeight + 'px';
@@ -301,10 +352,22 @@ var FilePreviewModal = (function() {
         imageEditorWindow.dataset.minHeight = initHeight;
         imageEditorWindow.dataset.minWidth = initWidth;
       }
+
+      offsetY = (scrollContainer[0].scrollHeight - scrollContainerInitial.height)
+      * (mousePosition.top / scrollContainerInitial.height);
+      offsetX = (scrollContainer[0].scrollWidth - scrollContainerInitial.width)
+      * (mousePosition.left / scrollContainerInitial.width);
+
+      scrollContainer.scrollTop(scrollContainerInitial.top + offsetY);
+      scrollContainer.scrollLeft(scrollContainerInitial.left + offsetX);
+
+      ps.update();
+
       e.preventDefault();
       e.stopPropagation();
     });
-    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; }; */
+    $('.tui-image-editor-wrap')[0].onwheel = function() { return false; };
+    $('.tui-image-editor-wrap').css('height', 'calc(100% - 150px)');
 
     $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
     $('#fileEditModal').modal('show');
@@ -350,7 +413,7 @@ var FilePreviewModal = (function() {
         processData: false,
         success: function(res) {
           $('#modal_link' + data.id).parent().html(res.html);
-          setupAssetsLoading();
+          Assets.setupAssetsLoading();
         }
       }).done(function() {
         animateSpinner(null, false);
@@ -358,6 +421,7 @@ var FilePreviewModal = (function() {
         imageEditor = {};
         $('#tui-image-editor').html('');
         $('#fileEditModal').modal('hide');
+        if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
       });
     });
 
@@ -385,7 +449,7 @@ var FilePreviewModal = (function() {
         link.attr('data-status', 'asset-present');
         if (data.type === 'image') {
           if (data.processing) {
-            animateSpinner('.file-preview-container', true);
+            modal.find('.file-preview-container').append(data['processing-img']);
           } else {
             animateSpinner('.file-preview-container', false);
             modal.find('.file-preview-container')
@@ -398,10 +462,11 @@ var FilePreviewModal = (function() {
             if (!readOnly && data.editable) {
               modal.find('.file-edit-link').css('display', '');
               modal.find('.file-edit-link').off().click(function(ev) {
+                $.post('/files/' + data.id + '/start_edit_image');
                 ev.preventDefault();
                 ev.stopPropagation();
                 modal.modal('hide');
-                initImageEditor(data);
+                preInitImageEditor(data);
               });
             } else {
               modal.find('.file-edit-link').css('display', 'none');
@@ -415,17 +480,22 @@ var FilePreviewModal = (function() {
           modal.find('#wopi_file_edit_button').remove();
         }
         if (data.processing) {
-          checkFileReady(url, modal);
+          setTimeout(function() {
+            checkFileReady(url, modal);
+          }, CHECK_READY_DELAY);
         }
         modal.find('.file-name').text(name);
         modal.find('.preview-close').click(function() {
+          checkReadyCntr = CHECK_READY_TRIES_LIMIT;
           modal.modal('hide');
+          if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
         });
         modal.modal();
         modal.find('a[disabled=disabled]').click(function(ev) {
           ev.preventDefault();
         });
         $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
+        checkReadyCntr = 0;
       },
       error: function() {
         // TODO
@@ -446,11 +516,13 @@ var FilePreviewModal = (function() {
             ev.preventDefault();
             ev.stopPropagation();
           });
-        setTimeout(function() {
-          checkFileReady(url, modal);
-        }, 10000);
+        if (checkReadyCntr < CHECK_READY_TRIES_LIMIT) {
+          setTimeout(function() {
+            checkFileReady(url, modal);
+          }, CHECK_READY_DELAY);
+        }
       } else {
-        if (data.type === 'image') {
+        if (data.type === 'image' || (data.type === 'file' && data['preview-icon'])) {
           modal.find('.file-preview-container').empty();
           modal.find('.file-preview-container')
             .append($('<img>')
@@ -472,6 +544,8 @@ var FilePreviewModal = (function() {
           .off();
       }
     });
+
+    checkReadyCntr += 1;
   }
 
   return Object.freeze({

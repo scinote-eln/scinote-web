@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe StepTable, type: :model do
+  let(:step_table) { build :step_table }
+
+  it 'is valid' do
+    expect(step_table).to be_valid
+  end
+
   it 'should be of class StepTable' do
     expect(subject.class).to eq StepTable
   end
@@ -15,7 +23,7 @@ describe StepTable, type: :model do
     it { should belong_to :table }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :step }
   end
 end

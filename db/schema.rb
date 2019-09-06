@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190424113216) do
+ActiveRecord::Schema.define(version: 2019_08_12_072649) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "pg_trgm"
   enable_extension "btree_gist"
+  enable_extension "pg_trgm"
+  enable_extension "plpgsql"
 
   create_table "activities", force: :cascade do |t|
     t.bigint "my_module_id"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at"
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.datetime "updated_at", null: false
     t.string "workflowimg_file_name"
     t.string "workflowimg_content_type"
-    t.integer "workflowimg_file_size"
+    t.bigint "workflowimg_file_size"
     t.datetime "workflowimg_updated_at"
     t.uuid "uuid"
     t.index ["archived_by_id"], name: "index_experiments_on_archived_by_id"
@@ -452,7 +452,9 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "discarded_at"
+    t.integer "permission_level", default: 0, null: false
     t.index ["discarded_at"], name: "index_repositories_on_discarded_at"
+    t.index ["permission_level"], name: "index_repositories_on_permission_level"
     t.index ["team_id"], name: "index_repositories_on_team_id"
   end
 
@@ -754,6 +756,18 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.index ["project_id"], name: "index_tags_on_project_id"
   end
 
+  create_table "team_repositories", force: :cascade do |t|
+    t.bigint "team_id"
+    t.bigint "repository_id"
+    t.integer "permission_level", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["permission_level"], name: "index_team_repositories_on_permission_level"
+    t.index ["repository_id"], name: "index_team_repositories_on_repository_id"
+    t.index ["team_id", "repository_id"], name: "index_team_repositories_on_team_id_and_repository_id", unique: true
+    t.index ["team_id"], name: "index_team_repositories_on_team_id"
+  end
+
   create_table "teams", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -773,14 +787,14 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at"
   end
 
   create_table "tiny_mce_assets", force: :cascade do |t|
     t.string "image_file_name"
     t.string "image_content_type"
-    t.integer "image_file_size"
+    t.bigint "image_file_size"
     t.datetime "image_updated_at"
     t.integer "estimated_size", default: 0, null: false
     t.integer "step_id"
@@ -788,6 +802,10 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.integer "result_text_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "saved", default: true
+    t.string "object_type"
+    t.bigint "object_id"
+    t.index ["object_type", "object_id"], name: "index_tiny_mce_assets_on_object_type_and_object_id"
     t.index ["result_text_id"], name: "index_tiny_mce_assets_on_result_text_id"
     t.index ["step_id"], name: "index_tiny_mce_assets_on_step_id"
     t.index ["team_id"], name: "index_tiny_mce_assets_on_team_id"
@@ -889,7 +907,7 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.datetime "updated_at", null: false
     t.string "avatar_file_name"
     t.string "avatar_content_type"
-    t.integer "avatar_file_size"
+    t.bigint "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
@@ -956,8 +974,9 @@ ActiveRecord::Schema.define(version: 20190424113216) do
     t.datetime "updated_at", null: false
     t.string "zip_file_file_name"
     t.string "zip_file_content_type"
-    t.integer "zip_file_file_size"
+    t.bigint "zip_file_file_size"
     t.datetime "zip_file_updated_at"
+    t.string "type"
     t.index ["user_id"], name: "index_zip_exports_on_user_id"
   end
 
@@ -1084,6 +1103,8 @@ ActiveRecord::Schema.define(version: 20190424113216) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
+  add_foreign_key "team_repositories", "repositories"
+  add_foreign_key "team_repositories", "teams"
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"
   add_foreign_key "tokens", "users"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryCell < ActiveRecord::Base
   attr_accessor :importing
 
@@ -57,7 +59,7 @@ class RepositoryCell < ActiveRecord::Base
   private
 
   def repository_column_data_type
-    if value_type != repository_column.data_type
+    if !repository_column || value_type != repository_column.data_type
       errors.add(:value_type, 'must match column data type')
     end
   end

@@ -11,7 +11,11 @@ if defined?(Rails::Server).present? && ENV['WOPI_ENABLED'] == 'true'
     missing_vars << var_name if ENV[var_name].blank?
   end
 
+<<<<<<< HEAD
   unless missing_vars.blank?
+=======
+  unless missing_vars.empty?
+>>>>>>> Finished merging. Test on dev machine (iMac).
     puts "WARNING: Due to WOPI_ENABLED == 'true', " \
          "following env. variables MUST also be specified: " \
          "#{missing_vars.join(', ')}; " \

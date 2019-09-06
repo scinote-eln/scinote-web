@@ -102,6 +102,7 @@ $(function() {
         },
         processResults: function(data) {
           var result = [];
+          if (typeof (data.data) === 'object') return { results: result };
           $.each(data, (key, obj) => {
             result.push({
               id: String(obj.id),

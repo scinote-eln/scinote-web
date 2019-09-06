@@ -1,8 +1,28 @@
-<% tags = my_module.tags %>
-  <% tags.each do |tag| %>
-    <span class="fas fa-tag" style="color: <%= tag.color %>"></span>
-    <strong><%= tag.name %></strong>
-  <% end %>
-<% if tags.count == 0 %>
-  <em><%=t "my_modules.module_header.no_tags" %></em>
-<% end %>
+<div class="select-container">
+  <div class="edit-button-container hidden">
+    <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_url(@my_module, format: :json) %>">
+        <i class="fas fa-cog"></i>
+        <span><%= t("my_modules.module_header.manage_tags") %></span>
+    </a>
+  </div>
+  <%= select_tag "activity",
+  options_for_select(my_module.tags.map{|i|
+    [
+      i[:name],
+      i[:id],
+     {'data-color'=> i[:color]}
+   ]
+  }),
+  {
+    'data-select-all': 'true',
+    id: 'module-tags-selector',
+    'data-editable': editable,
+    'data-module-id': my_module.id ,
+    'data-project-id': my_module.experiment.project_id ,
+    'data-placeholder': t("my_modules.module_header.no_tags"),
+    'data-tags-create-url': project_tags_path(project_id: my_module.experiment.project_id),
+    'data-search-tag-url': search_tags_my_module_my_module_tags_path(@my_module),
+    'data-update-module-tags-url': my_module_my_module_tags_path(@my_module)
+
+  } %>
+</div>

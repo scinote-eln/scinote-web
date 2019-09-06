@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS HelperModule */
+=======
+/* global _ hljs tinyMCE SmartAnnotation I18n globalConstants */
+>>>>>>> Finished merging. Test on dev machine (iMac).
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -16,6 +20,7 @@ var TinyMCE = (function() {
     });
   }
 
+<<<<<<< HEAD
   // Get LocalStorage auto save path
   function getAutoSavePrefix(editor) {
     var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
@@ -120,12 +125,17 @@ var TinyMCE = (function() {
     updateScrollPosition(editorForm);
   }
 
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
+<<<<<<< HEAD
       var plugins;
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
       var textAreaObject = $(selector);
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
@@ -134,6 +144,7 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
+<<<<<<< HEAD
         plugins = 'custom_image_toolbar table autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
         if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
@@ -149,6 +160,20 @@ var TinyMCE = (function() {
           menubar: 'file edit view insert format table',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
+=======
+
+        if (textAreaObject.data('objectType') === 'step') {
+          document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
+        }
+
+
+        tinyMCE.init({
+          cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
+          selector: selector,
+          menubar: 'file edit view insert format',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
+          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor placeholder colorpicker textpattern',
+>>>>>>> Finished merging. Test on dev machine (iMac).
           autoresize_bottom_margin: 20,
           codesample_languages: [
             { text: 'R', value: 'r' },
@@ -168,8 +193,12 @@ var TinyMCE = (function() {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
+<<<<<<< HEAD
           autosave_restore_when_empty: false,
           autosave_interval: '1s',
+=======
+          autosave_interval: '15s',
+>>>>>>> Finished merging. Test on dev machine (iMac).
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
           object_resizing: true,
@@ -226,7 +255,10 @@ var TinyMCE = (function() {
             var editorForm = $(editor.getContainer()).closest('form');
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
+<<<<<<< HEAD
 
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
             var editorToolbaroffset;
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
@@ -248,15 +280,30 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
+<<<<<<< HEAD
             if (GLOBAL_CONSTANTS.IS_SAFARI) {
+=======
+            if (globalConstants.is_safari) {
+>>>>>>> Finished merging. Test on dev machine (iMac).
               editorToolbar.css('position', '-webkit-sticky');
             } else {
               editorToolbar.css('position', 'sticky');
             }
+<<<<<<< HEAD
             editorToolbar.css('top', editorToolbaroffset + 'px').css('z-index', '100');
 
             // Init image toolbar
             initImageToolBar(editor);
+=======
+            editorToolbar.css('top', editorToolbaroffset + 'px');
+
+            // Update scroll position after exit
+            function updateScrollPosition() {
+              if (editorForm.offset().top < $(window).scrollTop()) {
+                $(window).scrollTop(editorForm.offset().top - 150);
+              }
+            }
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
             // Init Save button
             editorForm
@@ -265,7 +312,15 @@ var TinyMCE = (function() {
               .appendTo(menuBar)
               .on('click', function(event) {
                 event.preventDefault();
+<<<<<<< HEAD
                 saveAction(editor);
+=======
+                editorForm.clearFormErrors();
+                editor.setProgressState(1);
+                editor.save();
+                editorForm.submit();
+                updateScrollPosition();
+>>>>>>> Finished merging. Test on dev machine (iMac).
               });
 
             // After save action
@@ -273,19 +328,29 @@ var TinyMCE = (function() {
               .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
+<<<<<<< HEAD
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
                 editor.plugins.autosave.removeDraft();
                 removeDraft(editor, textAreaObject);
+=======
+                editor.plugins.autosave.removeDraft();
+                editorForm.find('.tinymce-status-badge').removeClass('hidden');
+                editor.remove();
+                editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+>>>>>>> Finished merging. Test on dev machine (iMac).
                 if (onSaveCallback) { onSaveCallback(); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
                 editor.setProgressState(0);
+<<<<<<< HEAD
                 if (data.status === 403) {
                   HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
                 }
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
               });
 
             // Init Cancel button
@@ -301,14 +366,22 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+<<<<<<< HEAD
                 updateScrollPosition(editorForm);
+=======
+                updateScrollPosition();
+>>>>>>> Finished merging. Test on dev machine (iMac).
               })
               .removeClass('hidden');
 
             // Set cursor to the end of the content
+<<<<<<< HEAD
             if (editor.settings.id !== 'step_description_textarea') {
               editor.focus();
             }
+=======
+            editor.focus();
+>>>>>>> Finished merging. Test on dev machine (iMac).
             editor.selection.select(editor.getBody(), true);
             editor.selection.collapse(false);
 
@@ -334,6 +407,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('Dirty', function() {
+<<<<<<< HEAD
               makeItDirty(editor);
             });
 
@@ -344,6 +418,12 @@ var TinyMCE = (function() {
               if (storedDrafts.includes(draftName) || !draftName) return;
               storedDrafts.push(draftName);
               sessionStorage.setItem(location, JSON.stringify(storedDrafts));
+=======
+              var editorForm = $(editor.getContainer()).closest('form');
+              editorForm.find('.tinymce-status-badge').addClass('hidden');
+              $(editor.getContainer())
+                .find('.tinymce-save-button').removeClass('hidden');
+>>>>>>> Finished merging. Test on dev machine (iMac).
             });
 
             editor.on('remove', function() {
@@ -351,6 +431,7 @@ var TinyMCE = (function() {
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
             });
+<<<<<<< HEAD
 
             editor.on('blur', function(e) {
               if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
@@ -370,6 +451,10 @@ var TinyMCE = (function() {
           },
           codesample_content_css: $(selector).data('highlightjs-path'),
           save_onsavecallback: function(editor) { saveAction(editor); }
+=======
+          },
+          codesample_content_css: $(selector).data('highlightjs-path')
+>>>>>>> Finished merging. Test on dev machine (iMac).
         });
       }
     },
@@ -388,6 +473,7 @@ var TinyMCE = (function() {
     getContent: function() {
       return tinyMCE.editors[0].getContent();
     },
+<<<<<<< HEAD
     updateImages(editor) {
       var images;
       var iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
@@ -414,6 +500,9 @@ var TinyMCE = (function() {
         }, 2000);
       }
     }
+=======
+    highlight: initHighlightjs
+>>>>>>> Finished merging. Test on dev machine (iMac).
   });
 }());
 

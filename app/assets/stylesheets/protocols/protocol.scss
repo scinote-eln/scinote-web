@@ -4,6 +4,7 @@
 @import "constants";
 @import "mixins";
 
+<<<<<<< HEAD
 .protocol-repository-header {
 
   .protocol-info {
@@ -95,5 +96,11 @@
         }
       }
     }
+=======
+.protocol-info {
+  
+  .protocol-description {
+    padding: 0 48px;
+>>>>>>> Finished merging. Test on dev machine (iMac).
   }
 }

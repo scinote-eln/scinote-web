@@ -3,7 +3,7 @@ class UserRepositoriesController < ApplicationController
 
   def save_table_state
     service = RepositoryTableStateService.new(current_user, @repository)
-    service.update_state(params[:state])
+    service.update_state(params.require(:state).permit!.to_h)
     respond_to do |format|
       format.json do
         render json: {
@@ -31,6 +31,6 @@ class UserRepositoriesController < ApplicationController
 
   def load_vars
     @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_read_team?(@repository.team)
+    render_403 if @repository.nil? || !can_read_repository?(@repository)
   end
 end

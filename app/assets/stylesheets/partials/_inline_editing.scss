@@ -1,6 +1,7 @@
 @import "constants";
 @import "mixins";
 
+<<<<<<< HEAD
 .inline-editing-container {
   line-height: 32px;
   position: relative;
@@ -8,6 +9,15 @@
 
   .button-container {
     font-size: 16px;
+=======
+
+.inline-editing-container {
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+
+  .button-container {
+>>>>>>> Finished merging. Test on dev machine (iMac).
     height: 32px;
     line-height: 32px;
     overflow: hidden;
@@ -20,7 +30,10 @@
       color: $color-silver;
       cursor: pointer;
       display: inline-block;
+<<<<<<< HEAD
       line-height: 32px;
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
       position: absolute;
       text-align: center;
       width: 36px;
@@ -41,13 +54,21 @@
 
   }
 
+<<<<<<< HEAD
   &.error {
+=======
+  &[data-error="true"] {
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
     .error-block {
       display: block;
     }
 
+<<<<<<< HEAD
     .input-field {
+=======
+    input {
+>>>>>>> Finished merging. Test on dev machine (iMac).
       font-size: 16px;
       line-height: 20px;
       padding-bottom: 10px;
@@ -68,39 +89,54 @@
   .view-mode {
     border: 1px solid transparent;
     cursor: pointer;
+<<<<<<< HEAD
     line-height: 26px;
     margin-left: -5px;
     min-height: 30px;
+=======
+    flex-wrap: nowrap;
+    line-height: 26px;
+    margin-left: -5px;
+>>>>>>> Finished merging. Test on dev machine (iMac).
     overflow: hidden;
     padding: 2px 4px;
     padding-right: 36px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: calc(100% - 32px);
+<<<<<<< HEAD
 
     &:empty:not(:focus):before {
       color: $color-silver-chalice;
       content: attr(data-placeholder);
       font-weight: normal;
     }
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
   }
 
   input {
     border: 1px solid $color-silver;
     border-radius: $border-radius-small;
     cursor: pointer;
+<<<<<<< HEAD
     display: block;
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
     line-height: 26px;
     margin-left: -5px;
     padding: 2px 4px;
     padding-right: 36px;
     width: calc(100% - 32px);
 
+<<<<<<< HEAD
     &::placeholder {
       color: $color-silver-chalice;
       font-weight: normal;
     }
 
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
     &:focus {
       outline: 0;
     }

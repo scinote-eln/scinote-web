@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReportElement < ApplicationRecord
   enum type_of: Extends::REPORT_ELEMENT_TYPES
 
@@ -12,7 +14,7 @@ class ReportElement < ApplicationRecord
   validates :type_of, presence: true
   validate :has_one_of_referenced_elements
 
-  belongs_to :report, inverse_of: :report_elements, optional: true
+  belongs_to :report, inverse_of: :report_elements
 
   # Hierarchical structure representation
   has_many :children,

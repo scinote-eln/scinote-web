@@ -11,13 +11,16 @@ class Users::SessionsController < Devise::SessionsController
     )
   end
 
+  rescue_from ActionController::InvalidAuthenticityToken do
+    redirect_to new_user_session_path
+  end
+
   # GET /resource/sign_in
   def new
     # If user was redirected here from OAuth's authorize/new page (Doorkeeper
     # endpoint for authorizing an OAuth client), 3rd party sign-in buttons
     # (e.g. LinkedIn) should be hidden. See config/initializers/devise.rb.
     @oauth_authorize = session['oauth_authorize'] == true
-    # @pdf = ActionController::Base.helpers.asset_path("testdownload.pdf")
     super
   end
 

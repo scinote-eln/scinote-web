@@ -1,3 +1,5 @@
+// Copyright (C) 2011 by Sébastien Loisel and is distributed under the MIT license
+
 "use strict";
 
 var numeric = (typeof exports === "undefined")?(function numeric() {}):(exports);

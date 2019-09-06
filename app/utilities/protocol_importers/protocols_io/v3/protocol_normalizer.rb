@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
 module ProtocolImporters
+<<<<<<< HEAD
   module ProtocolsIo
     module V3
       class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
+=======
+  module ProtocolsIO
+    module V3
+      class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
+        require 'protocol_importers/protocols_io/v3/errors'
+
+>>>>>>> Finished merging. Test on dev machine (iMac).
         def normalize_protocol(client_data)
           # client_data is HttpParty ApiReponse object
           protocol_hash = client_data.parsed_response.with_indifferent_access[:protocol]
@@ -65,7 +73,11 @@ module ProtocolImporters
 
           { protocol: normalized_data }
         rescue StandardError => e
+<<<<<<< HEAD
           raise ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
+=======
+          raise ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
+>>>>>>> Finished merging. Test on dev machine (iMac).
         end
 
         def normalize_list(client_data)
@@ -73,6 +85,7 @@ module ProtocolImporters
           protocols_hash = client_data.parsed_response.with_indifferent_access[:items]
           pagination = client_data.parsed_response.with_indifferent_access[:pagination]
 
+<<<<<<< HEAD
           if client_data.parsed_response[:local_sorting]
             protocols_hash =
               case client_data.parsed_response[:local_sorting]
@@ -87,6 +100,8 @@ module ProtocolImporters
               end
           end
 
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
           normalized_data = {}
           normalized_data[:protocols] = protocols_hash.map do |e|
             {
@@ -120,7 +135,11 @@ module ProtocolImporters
 
           normalized_data
         rescue StandardError => e
+<<<<<<< HEAD
           raise ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
+=======
+          raise ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
+>>>>>>> Finished merging. Test on dev machine (iMac).
         end
       end
     end

@@ -59,6 +59,10 @@ module ReportExtends
 
   # Module contents element
   MODULE_CONTENTS = [
+    ModuleElement.new([:protocol],
+                      :protocol,
+                      false,
+                      [:my_module]),
     ModuleElement.new(%i(completed_steps uncompleted_steps),
                       :steps,
                       true,
@@ -114,6 +118,7 @@ module ReportExtends
                        result_comments)
   # sets local :my_module to the listed my_module child elements
   MY_MODULE_ELEMENTS = %w(my_module
+                          my_module_protocol
                           my_module_activity
                           my_module_repository)
 
@@ -153,6 +158,7 @@ module ReportExtends
     ElementReference.new(
       proc do |report_element|
         report_element.my_module? ||
+          report_element.my_module_protocol? ||
           report_element.my_module_activity? ||
           report_element.my_module_samples?
       end,
@@ -198,6 +204,7 @@ module ReportExtends
     ElementReference.new(
       proc do |report_element|
         report_element.my_module? ||
+          report_element.my_module_protocol? ||
           report_element.my_module_activity? ||
           report_element.my_module_samples?
       end,

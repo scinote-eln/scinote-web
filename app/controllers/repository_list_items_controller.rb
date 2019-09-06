@@ -23,6 +23,6 @@ class RepositoryListItemsController < ApplicationController
     unless @repository_column&.data_type == 'RepositoryListValue'
       render_404 and return
     end
-    render_403 unless can_manage_repository_rows?(repository.team)
+    render_403 unless can_manage_repository_rows?(repository)
   end
 end

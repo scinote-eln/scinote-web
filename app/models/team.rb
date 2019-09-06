@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
@@ -39,6 +41,8 @@ class Team < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :activities, inverse_of: :team, dependent: :destroy
+  has_many :team_repositories, inverse_of: :team, dependent: :destroy
+  has_many :shared_repositories, through: :team_repositories, source: :repository
 
   attr_accessor :without_templates
   attr_accessor :without_intro_demo
@@ -53,6 +57,13 @@ class Team < ApplicationRecord
             'start' => 0,
             'length' => 10 },
         'filter' => 'active' } }
+  end
+
+  def validate_view_state(view_state)
+    unless %w(new old atoz ztoa).include?(view_state.state.dig('projects', 'cards', 'sort')) &&
+           %w(all active archived).include?(view_state.state.dig('projects', 'filter'))
+      view_state.errors.add(:state, :wrong_state)
+    end
   end
 
   def search_users(query = nil)
@@ -321,7 +332,18 @@ class Team < ApplicationRecord
       query = query.where(id: users_team)
     end
     query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
-    query.select(:id, :name)
+    query.select(:id, :name).map { |i| { id: i[:id], name: ApplicationController.helpers.escape_input(i[:name]) } }
+  end
+
+  def self.find_by_object(obj)
+    case obj.class.name
+    when 'Protocol'
+      obj.team_id
+    when 'MyModule', 'Step'
+      obj.protocol.team_id
+    when 'ResultText'
+      obj.result.my_module.protocol.team_id
+    end
   end
 
   private

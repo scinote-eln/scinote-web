@@ -1,9 +1,20 @@
 # frozen_string_literal: true
 
+<<<<<<< HEAD
 module Reports::Docx::DrawMyModuleActivity
   def draw_my_module_activity(my_module)
     activities = ActivitiesService.my_module_activities(my_module).order(created_at: :desc)
     return false if activities.blank?
+=======
+module DrawMyModuleActivity
+  def draw_my_module_activity(subject)
+    my_module = MyModule.find_by_id(subject['id']['my_module_id'])
+    return unless my_module
+
+    activities = ActivitiesService.my_module_activities(my_module).order(created_at: subject['sort_order'])
+
+    return false unless activities.any?
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
     color = @color
     @docx.p
@@ -14,10 +25,17 @@ module Reports::Docx::DrawMyModuleActivity
       activity_text = if activity.old_activity?
                         sanitize_input(activity.message)
                       else
+<<<<<<< HEAD
                         sanitize_input(generate_activity_content(activity, no_links: true))
                       end
       @docx.p I18n.l(activity_ts, format: :full), color: color[:gray]
       Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(activity_text)
+=======
+                        sanitize_input(generate_activity_content(activity, true))
+                      end
+      @docx.p I18n.l(activity_ts, format: :full), color: color[:gray]
+      html_to_word_converter(activity_text)
+>>>>>>> Finished merging. Test on dev machine (iMac).
       @docx.p
     end
   end

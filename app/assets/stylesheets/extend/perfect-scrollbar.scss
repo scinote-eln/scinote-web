@@ -35,6 +35,7 @@
   /* please don't change 'position' */
   position: absolute;
   cursor: pointer;
+  z-index: 5;
 }
 
 .ps--active-x > .ps__rail-x,

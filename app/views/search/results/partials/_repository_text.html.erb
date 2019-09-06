@@ -1,4 +1,4 @@
-<% if can_read_team?(repository.team) %>
+<% if can_read_repository?(repository) %>
   <%= route_to_other_team repository_path(id: repository.id),
                           repository.team,
                           repository.name %>

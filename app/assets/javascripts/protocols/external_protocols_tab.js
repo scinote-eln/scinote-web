@@ -176,6 +176,13 @@ function expandAllSteps() {
   $(document).find("[data-role='step-hot-table']").each(function() {
     renderTable($(this));
   });
+<<<<<<< HEAD
+=======
+  $(document).find('span.collapse-step-icon').each(function() {
+    $(this).addClass('fa-caret-square-up');
+    $(this).removeClass('fa-caret-square-down');
+  });
+>>>>>>> Finished merging. Test on dev machine (iMac).
 }
 
 function handleFormSubmit(modal) {

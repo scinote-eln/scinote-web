@@ -3,22 +3,19 @@
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="content-pane" id="result-archive">
-  <div class="row" style="margin-top: 10px;">
-    <div class="col-xs-3">
-      <% i = 0 %>
+  <div class="row">
+    <% if @archived_results.any? %>
       <% @archived_results.each do |result| %>
-        <%= render partial: "my_modules/archive/result.html.erb", locals: { result: result } %>
-        <% i = i + 1 %>
+        <div class="col-xs-3">
+          <%= render partial: "my_modules/archive/result.html.erb", locals: { result: result } %>
+        </div>
       <% end %>
-    </div>
-  </div>
-  <% if i == 0 %>
-    <div class="row" style="margin-bottom: 10px;">
+    <% else %>
       <div class="col-xs-12">
         <em><%=t "my_modules.module_archive.no_archived_results" %></em>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
 
 <script>FilePreviewModal.init()</script>

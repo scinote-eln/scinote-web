@@ -28,7 +28,7 @@ module RepositoryActions
     def duplicate_row(id)
       row = RepositoryRow.find_by_id(id)
       new_row = RepositoryRow.new(
-        row.attributes.merge(new_row_attributes(row.name))
+        row.attributes.merge(new_row_attributes(row.name, @user.id))
       )
 
       if new_row.save
@@ -46,10 +46,11 @@ module RepositoryActions
       end
     end
 
-    def new_row_attributes(name)
+    def new_row_attributes(name, user_id)
       timestamp = DateTime.now
       { id: nil,
         name: "#{name} (1)",
+        created_by_id: user_id,
         created_at: timestamp,
         updated_at: timestamp }
     end

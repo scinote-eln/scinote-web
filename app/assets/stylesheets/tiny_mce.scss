@@ -1,11 +1,14 @@
 // scss-lint:disable ImportantRule
 @import "constants";
 
+<<<<<<< HEAD
 @font-face {
   font-family: "tinymce";
   src: asset-url("tinymce/skins/lightgray/fonts/tinymce.woff");
 }
 
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
 .tinymce-view {
   border: solid 1px;
   border-color: $color-white;
@@ -71,6 +74,7 @@
 .mce-toolbar {
   background: $color-white !important;
 }
+<<<<<<< HEAD
 
 
 
@@ -196,4 +200,6 @@
   }
 }
 
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
 // scss-lint:enable ImportantRule

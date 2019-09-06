@@ -2,8 +2,14 @@
 
 require 'rails_helper'
 
+<<<<<<< HEAD
 describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
   CONSTANTS = Constants::PROTOCOLS_IO_V3_API
+=======
+describe ProtocolImporters::ProtocolsIO::V3::ApiClient do
+  CONSTANTS = Constants::PROTOCOLS_IO_V3_API
+  TOKEN = 'test_token'
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
   describe '#protocol_list' do
     context 'when search key is not given' do
@@ -59,7 +65,11 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
       it 'raises NetworkError on timeout' do
         stub_protocols.to_timeout
 
+<<<<<<< HEAD
         expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIo::V3::NetworkError)
+=======
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
+>>>>>>> Finished merging. Test on dev machine (iMac).
       end
 
       it 'raises ArgumentError when status_code = 1' do
@@ -67,7 +77,11 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
                                  body: JSON.generate(status_code: 1, error_message: 'Argument error'),
                                  headers: { 'Content-Type': 'application/json' })
 
+<<<<<<< HEAD
         expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIo::V3::ArgumentError)
+=======
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::ArgumentError)
+>>>>>>> Finished merging. Test on dev machine (iMac).
       end
 
       it 'raises UnauthorizedError when status_code = 1218' do
@@ -75,7 +89,11 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
                                  body: JSON.generate(status_code: 1218, error_message: 'Argument error'),
                                  headers: { 'Content-Type': 'application/json' })
 
+<<<<<<< HEAD
         expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIo::V3::UnauthorizedError)
+=======
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
+>>>>>>> Finished merging. Test on dev machine (iMac).
       end
 
       it 'raises UnauthorizedError when status_code = 1219' do
@@ -83,7 +101,11 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
                     body: JSON.generate(status_code: 1219, error_message: 'Argument error'),
                     headers: { 'Content-Type': 'application/json' })
 
+<<<<<<< HEAD
         expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIo::V3::UnauthorizedError)
+=======
+        expect { protocol_list_call }.to raise_error(ProtocolImporters::ProtocolsIO::V3::UnauthorizedError)
+>>>>>>> Finished merging. Test on dev machine (iMac).
       end
 
       it 'requests server with default query parameters if none are given' do
@@ -113,6 +135,20 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
         subject.protocol_list(query)
         expect(WebMock).to have_requested(:get, URL).with(query: query)
       end
+<<<<<<< HEAD
+=======
+
+      it 'should send authorization token if provided on initialization' do
+        headers = { 'Authorization': "Bearer #{TOKEN}" }
+        stub_protocols.with(headers: headers, query: default_query_params_with_key)
+                      .to_return(status: 200,
+                                body: JSON.generate(status_code: 0),
+                                headers: { 'Content-Type': 'application/json' })
+
+        ProtocolImporters::ProtocolsIO::V3::ApiClient.new(TOKEN).protocol_list(key_query)
+        expect(WebMock).to have_requested(:get, URL).with(headers: headers, query: default_query_params_with_key)
+      end
+>>>>>>> Finished merging. Test on dev machine (iMac).
     end
   end
 
@@ -138,7 +174,19 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
     it 'raises NetworkError on timeout' do
       stub_request(:get, SINGLE_PROTOCOL_URL).to_timeout
 
+<<<<<<< HEAD
       expect { subject.single_protocol(PROTOCOL_ID) }.to raise_error(ProtocolImporters::ProtocolsIo::V3::NetworkError)
+=======
+      expect { subject.single_protocol(PROTOCOL_ID) }.to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
+    end
+
+    it 'should send authorization token if provided on initialization' do
+      headers = { 'Authorization': "Bearer #{TOKEN}" }
+      stub_single_protocol.with(headers: headers)
+
+      ProtocolImporters::ProtocolsIO::V3::ApiClient.new(TOKEN).single_protocol(PROTOCOL_ID)
+      expect(WebMock).to have_requested(:get, SINGLE_PROTOCOL_URL).with(headers: headers)
+>>>>>>> Finished merging. Test on dev machine (iMac).
     end
   end
 
@@ -160,7 +208,11 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
       stub_html_preview.to_timeout
 
       expect { subject.protocol_html_preview(PROTOCOL_URI) }
+<<<<<<< HEAD
         .to raise_error(ProtocolImporters::ProtocolsIo::V3::NetworkError)
+=======
+        .to raise_error(ProtocolImporters::ProtocolsIO::V3::NetworkError)
+>>>>>>> Finished merging. Test on dev machine (iMac).
     end
   end
 end

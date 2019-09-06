@@ -149,9 +149,13 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <h4 class="nav-name">
-        <%= truncate(title_element.name,
-                     length: Constants::MAX_EDGE_LENGTH) %>
+      <h4 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
+        <% if @inline_editable_title_config.present? %>
+          <%= render partial: "shared/inline_editing",
+                     locals: { initial_value: title_element.name } %>
+        <% else %>
+          <%= title_element.name %>
+        <% end %>
       </h4>
 
     </div>

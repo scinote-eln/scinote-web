@@ -96,7 +96,7 @@ class RepositoryColumnsController < ApplicationController
               id: @repository_column.id,
               name: escape_input(@repository_column.name),
               message: t('libraries.repository_columns.update.success_flash',
-                         name: @repository_column.name)
+                         name: escape_input(@repository_column.name))
             }, status: :ok
           else
             render json: {
@@ -137,7 +137,7 @@ class RepositoryColumnsController < ApplicationController
         if @repository_column.destroy
           render json: {
             message: t('libraries.repository_columns.destroy.success_flash',
-                       name: column_name),
+                       name: escape_input(column_name)),
             id: column_id,
             status: :ok
           }
@@ -173,14 +173,14 @@ class RepositoryColumnsController < ApplicationController
   AvailableRepositoryColumn = Struct.new(:id, :name)
 
   def load_vars
-    @repository = Repository.find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
     render_404 unless @repository
-    @repository_column = RepositoryColumn.find_by_id(params[:id])
+    @repository_column = @repository.repository_columns.find_by_id(params[:id])
     render_404 unless @repository_column
   end
 
   def load_vars_nested
-    @repository = Repository.find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
     render_404 unless @repository
   end
 
@@ -190,12 +190,12 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def load_asset_type_columns
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
     @asset_columns = load_asset_columns(search_params[:q])
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository_columns?(@repository.team)
+    render_403 unless can_create_repository_columns?(@repository)
   end
 
   def check_manage_permissions

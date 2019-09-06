@@ -1,6 +1,7 @@
 class MyModulesController < ApplicationController
   include SampleActions
   include TeamsHelper
+  include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
@@ -15,7 +16,7 @@ class MyModulesController < ApplicationController
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
                          assign_repository_records_modal
-                         repositories_dropdown)
+                         repositories_dropdown update_description update_protocol_description)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -25,7 +26,8 @@ class MyModulesController < ApplicationController
   before_action :load_projects_tree, only: %i(protocols results activities
                                               samples repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
-  before_action :check_manage_permissions, only: %i(description due_date)
+  before_action :check_manage_permissions,
+                only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive repositories_dropdown)
@@ -37,6 +39,7 @@ class MyModulesController < ApplicationController
                          unassign_repository_records
                          assign_samples
                          unassign_samples)
+  before_action :set_inline_name_editing, only: %i(protocols results activities repository archive)
 
   layout 'fluid'.freeze
 
@@ -168,6 +171,7 @@ class MyModulesController < ApplicationController
       if saved
         if description_changed
           log_activity(:change_module_description)
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
         end
 
         if due_date_changes
@@ -187,7 +191,6 @@ class MyModulesController < ApplicationController
         end
       end
     end
-
     respond_to do |format|
       if restored
         format.html do
@@ -231,8 +234,55 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def update_description
+    respond_to do |format|
+      format.json do
+        if @my_module.update(description: params.require(:my_module)[:description])
+          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images])
+          render json: {
+            html: custom_auto_link(
+              @my_module.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
+        else
+          render json: @my_module.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def update_protocol_description
+    protocol = @my_module.protocol
+    return render_404 unless protocol
+    respond_to do |format|
+      format.json do
+        if protocol.update(description: params.require(:protocol)[:description])
+          TinyMceAsset.update_images(protocol, params[:tiny_mce_images])
+          render json: {
+            html: custom_auto_link(
+              protocol.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
+        else
+          render json: protocol.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   def protocols
     @protocol = @my_module.protocol
+    @recent_protcols_positive = Protocol.recent_protocols(
+      current_user,
+      current_team,
+      Constants::RECENT_PROTOCOL_LIMIT
+    ).any?
     current_team_switch(@protocol.team)
   end
 
@@ -250,8 +300,7 @@ class MyModulesController < ApplicationController
 
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_read_team?(@repository.team)
-    current_team_switch(@repository.team)
+    render_403 if @repository.nil? || !can_read_repository?(@repository)
   end
 
   def archive
@@ -414,6 +463,7 @@ class MyModulesController < ApplicationController
                        repository: @repository.id,
                        record_names: dowmstream_records[my_module.id].join(', '))
         end
+        records_names.map! { |n| escape_input(n) }
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
         flash = I18n.t('repositories.assigned_records_downstream_flash',
@@ -471,7 +521,7 @@ class MyModulesController < ApplicationController
                      record_names: records.map(&:name).join(', '))
 
         flash = I18n.t('repositories.unassigned_records_flash',
-                       records: records.map(&:name).join(', '))
+                       records: records.map { |r| escape_input(r.name) }.join(', '))
         respond_to do |format|
           format.json { render json: { flash: flash }, status: :ok }
         end
@@ -619,7 +669,7 @@ class MyModulesController < ApplicationController
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_404 unless @repository
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
   end
 
   def load_projects_tree
@@ -656,6 +706,16 @@ class MyModulesController < ApplicationController
 
   def check_complete_module_permission
     render_403 unless can_complete_module?(@my_module)
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_module?(@my_module)
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'my_module',
+      field_to_udpate: 'name',
+      path_to_update: my_module_path(@my_module)
+    }
   end
 
   def my_module_params

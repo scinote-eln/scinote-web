@@ -62,3 +62,13 @@
   transition-property: transform;
   @include rotate($degrees);
 }
+
+
+// Material design mixins
+
+@mixin md-card-style {
+  background-color: $color-white;
+  border: 1px solid $color-concrete;
+  border-radius: 5px;
+  transition: $md-transaction;
+}

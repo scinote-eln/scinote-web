@@ -14,9 +14,15 @@ module CommentHelper
     end
   end
 
+<<<<<<< HEAD
   def comment_index_helper(comments, more_url, partial = nil)
     partial ||= 'shared/comments/list.html.erb'
     render json: {
+=======
+  def comment_index_helper(comments, more_url, partial = false)
+    partial ||= 'shared/comments/list.html.erb'
+    render  json: {
+>>>>>>> Finished merging. Test on dev machine (iMac).
       perPage: @per_page,
       resultsNumber: comments.size,
       moreUrl: more_url,
@@ -26,6 +32,7 @@ module CommentHelper
     }
   end
 
+<<<<<<< HEAD
   def comment_create_helper(comment, partial = 'item')
     if comment.save
       case comment.type
@@ -41,17 +48,39 @@ module CommentHelper
       when 'TaskComment'
         my_module_comment_annotation_notification(comment)
         log_my_module_activity(:add_comment_to_module, comment)
+=======
+  def comment_create_helper(comment)
+    if comment.save
+      case comment.type
+      when 'StepComment'
+        step_comment_annotation_notification
+        log_activity(:add_comment_to_step)
+      when 'ResultComment'
+        result_comment_annotation_notification
+        log_activity(:add_comment_to_result)
+      when 'ProjectComment'
+        project_comment_annotation_notification
+        log_activity(:add_comment_to_project)
+      when 'TaskComment'
+        my_module_comment_annotation_notification
+        log_activity(:add_comment_to_module)
+>>>>>>> Finished merging. Test on dev machine (iMac).
       end
 
       render json: {
         html: render_to_string(
+<<<<<<< HEAD
           partial: "/shared/comments/#{partial}.html.erb",
+=======
+          partial: '/shared/comments/item.html.erb',
+>>>>>>> Finished merging. Test on dev machine (iMac).
           locals: {
             comment: comment
           }
         )
       }
     else
+<<<<<<< HEAD
       render json: { errors: comment.errors.to_hash(true) }, status: :unprocessable_entity
     end
   end
@@ -116,6 +145,31 @@ module CommentHelper
         message = custom_auto_link(comment.message, team: current_team, simple_format: true)
         render json: { comment: message }, status: :ok
       end
+=======
+      render json: { errors: comment.errors.to_hash(true) }, status: :error
+    end
+  end
+
+  def comment_update_helper(comment, old_text)
+    if comment.save
+      case comment.type
+      when 'StepComment'
+        step_comment_annotation_notification(old_text)
+        log_activity(:edit_step_comment)
+      when 'ResultComment'
+        result_comment_annotation_notification(old_text)
+        log_activity(:edit_result_comment)
+      when 'ProjectComment'
+        project_comment_annotation_notification(old_text)
+        log_activity(:edit_project_comment)
+      when 'TaskComment'
+        my_module_comment_annotation_notification(old_text)
+        log_activity(:edit_module_comment)
+      end
+
+      message = custom_auto_link(comment.message, team: current_team, simple_format: true)
+      render json: { comment: message }, status: :ok
+>>>>>>> Finished merging. Test on dev machine (iMac).
     else
       render json: { errors: comment.errors.to_hash(true) },
                  status: :unprocessable_entity
@@ -126,6 +180,7 @@ module CommentHelper
     if comment.destroy
       case comment.type
       when 'StepComment'
+<<<<<<< HEAD
         log_step_activity(:delete_step_comment, comment)
       when 'ResultComment'
         log_result_activity(:delete_result_comment, comment)
@@ -133,6 +188,15 @@ module CommentHelper
         log_project_activity(:delete_project_comment, comment)
       when 'TaskComment'
         log_my_module_activity(:delete_module_comment, comment)
+=======
+        log_activity(:delete_step_comment)
+      when 'ResultComment'
+        log_activity(:delete_result_comment)
+      when 'ProjectComment'
+        log_activity(:delete_project_comment)
+      when 'TaskComment'
+        log_activity(:delete_module_comment)
+>>>>>>> Finished merging. Test on dev machine (iMac).
       end
       render json: {}, status: :ok
     else
@@ -140,6 +204,7 @@ module CommentHelper
                  status: :unprocessable_entity
     end
   end
+<<<<<<< HEAD
 
   def result_comment_annotation_notification(comment, old_text = nil)
     result = comment.result
@@ -276,4 +341,6 @@ module CommentHelper
   def has_unseen_comments?(commentable)
     commentable.comments.any? { |comment| comment.unseen_by.include?(current_user.id) }
   end
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
 end

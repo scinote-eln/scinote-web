@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <div class="comments-container" data-object-id = <%= object.id %>>
+=======
+<div class="comments-container" data-object-id = <%= object.id %>> 
+>>>>>>> Finished merging. Test on dev machine (iMac).
   <% per_page = Constants::COMMENTS_SEARCH_LIMIT %>
   <div class="content-comments inline_scroll_block">
     <% if comments.size == per_page %>
@@ -12,16 +16,29 @@
     <% end %>
     <div class="comments-list">
       <%= render partial: 'shared/comments/list.html.erb', locals: { comments: comments} %>
+<<<<<<< HEAD
       <% comments.mark_as_seen_by(current_user) %>
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
     </div>
   </div>
   <% if can_create_comments %>
   <div class="new-message-container" data-create-url="<%= create_url %>">
+<<<<<<< HEAD
     <%= text_area_tag 'message', '',  placeholder: t('general.comment_placeholder_new'),
                                       class: 'form-control  smart-text-area textarea-sm',
                                       data: { 'atwho-edit' => '' } %>
+=======
+    <%= text_area_tag 'message', '',  placeholder: t('general.comment_placeholder_new'), 
+                                        class: 'form-control  smart-text-area textarea-sm', 
+                                        data: { 'atwho-edit' => '' } %>
+>>>>>>> Finished merging. Test on dev machine (iMac).
     <i class="fas fa-paper-plane new-comment-button"></i>
     <span class="new-message-error"></span>
   </div>
   <% end %>
+<<<<<<< HEAD
 </div>
+=======
+</div>
+>>>>>>> Finished merging. Test on dev machine (iMac).

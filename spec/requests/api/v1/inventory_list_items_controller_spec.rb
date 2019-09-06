@@ -328,8 +328,8 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
     end
   end
 
-  describe 'DELETE inventory_columns, #destroy' do
-    it 'Destroys inventory column' do
+  describe 'DELETE inventory_list_item, #destroy' do
+    it 'Destroys inventory list item' do
       deleted_id = @list_column.repository_list_items.last.id
       delete api_v1_team_inventory_column_list_item_path(
         id: deleted_id,

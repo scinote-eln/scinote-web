@@ -9,9 +9,11 @@
         <% if i > 0 %><hr><% end %>
         <div class="row">
           <div class="col-xs-2">
-            <%= image_tag avatar_path(user, :icon_small), class: 'img-circle pull-left' %>
+            <span class='global-avatar-container'>
+              <%= image_tag avatar_path(user, :icon_small), class: 'img-circle pull-left' %>
+            </span>
           </div>
-          <div class="col-xs-10">
+          <div class="col-xs-10" style="line-height: 15px">
             <span><%= user.full_name %></span>
             <br><span class="text-muted"><%= t('user_projects.enums.role.'<< user_proj.role.to_s) %></span>
           </div>

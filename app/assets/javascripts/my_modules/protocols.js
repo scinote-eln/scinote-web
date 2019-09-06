@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 /* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString */
 /* global HelperModule GLOBAL_CONSTANTS */
+=======
+/* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString globalConstants */
+/* global HelperModule */
+>>>>>>> Finished merging. Test on dev machine (iMac).
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
 //= require my_modules
@@ -10,6 +15,7 @@ var selectedRow = null;
 
 
 function initEditMyModuleDescription() {
+<<<<<<< HEAD
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
     if ($(e.target).hasClass('record-info-link')) return;
@@ -31,6 +37,17 @@ function initEditProtocolDescription() {
     e.stopPropagation();
   });
   TinyMCE.initIfHasDraft(viewObject);
+=======
+  $('#my_module_description_view').on('click', function() {
+    TinyMCE.init('#my_module_description_textarea');
+  });
+}
+
+function initEditProtocolDescription() {
+  $('#protocol_description_view').on('click', function() {
+    TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
+  });
+>>>>>>> Finished merging. Test on dev machine (iMac).
 }
 
 // Initialize edit description modal window
@@ -72,6 +89,7 @@ function initEditDescription() {
 }
 
 function initCopyToRepository() {
+<<<<<<< HEAD
   var link = "[data-action='copy-to-repository']";
   var modal = '#copy-to-repository-modal';
   var modalBody = '.modal-body';
@@ -80,18 +98,38 @@ function initCopyToRepository() {
     .on('ajax:success', link, function(e, data) {
       $(modal).find(modalBody).html(data.html);
       $(modal).find(modalBody).find("[data-role='copy-to-repository']")
+=======
+  var link = $("[data-action='copy-to-repository']");
+  var modal = $('#copy-to-repository-modal');
+  var modalBody = modal.find('.modal-body');
+  var submitBtn = modal.find(".modal-footer [data-action='submit']");
+
+  link
+    .on('ajax:success', function(e, data) {
+      modalBody.html(data.html);
+
+      modalBody.find("[data-role='copy-to-repository']")
+>>>>>>> Finished merging. Test on dev machine (iMac).
         .on('ajax:success', function(e2, data2) {
           if (data2.refresh !== null) {
             // Reload page
             location.reload();
           } else {
             // Simply hide the modal
+<<<<<<< HEAD
             $(modal).modal('hide');
+=======
+            modal.modal('hide');
+>>>>>>> Finished merging. Test on dev machine (iMac).
           }
         })
         .on('ajax:error', function(e2, data2) {
           // Display errors in form
+<<<<<<< HEAD
           $(modal).find(submitBtn)[0].disabled = false;
+=======
+          submitBtn[0].disabled = false;
+>>>>>>> Finished merging. Test on dev machine (iMac).
           if (data2.status === 422) {
             $(this).renderFormErrors('protocol', data2.responseJSON);
           } else {
@@ -100,6 +138,7 @@ function initCopyToRepository() {
           }
         });
 
+<<<<<<< HEAD
       $(modal).modal('show');
       $(modal).find(submitBtn)[0].disabled = false;
     })
@@ -112,6 +151,20 @@ function initCopyToRepository() {
   });
 
   $(modal).find(modalBody).on('click', "[data-role='link-check']", function() {
+=======
+      modal.modal('show');
+      submitBtn[0].disabled = false;
+    })
+    .on('ajax:error', function() {});
+
+  submitBtn.on('click', function() {
+    // Submit the embedded form
+    submitBtn[0].disabled = true;
+    modalBody.find('form').submit();
+  });
+
+  modalBody.on('click', "[data-role='link-check']", function() {
+>>>>>>> Finished merging. Test on dev machine (iMac).
     var text = $(this).closest('.modal-body').find("[data-role='link-text']");
     if ($(this).prop('checked')) {
       text.show();
@@ -120,11 +173,19 @@ function initCopyToRepository() {
     }
   });
 
+<<<<<<< HEAD
   $(modal).on('hidden.bs.modal', function() {
     $(modal).find(modalBody).find("[data-role='copy-to-repository']")
       .off('ajax:success ajax:error');
 
     $(modal).find(modalBody).html('');
+=======
+  modal.on('hidden.bs.modal', function() {
+    modalBody.find("[data-role='copy-to-repository']")
+      .off('ajax:success ajax:error');
+
+    modalBody.html('');
+>>>>>>> Finished merging. Test on dev machine (iMac).
   });
 }
 
@@ -186,8 +247,13 @@ function initLoadFromRepository() {
 
       modal.modal('show');
 
+<<<<<<< HEAD
       // Init Datatable on recent tab
       initLoadFromRepositoryTable(modalBody.find('#recent-tab'));
+=======
+      // Init Datatable on public tab
+      initLoadFromRepositoryTable(modalBody.find('#public-tab'));
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
       modalBody.find("a[data-toggle='tab']")
         .on('hide.bs.tab', function(el) {
@@ -220,7 +286,13 @@ function initLoadFromRepository() {
 
 function initLoadFromRepositoryTable(content) {
   var tableEl = content.find("[data-role='datatable']");
+<<<<<<< HEAD
   var datatable = tableEl.DataTable({
+=======
+
+  var datatable = tableEl.DataTable({
+    order: [[1, 'asc']],
+>>>>>>> Finished merging. Test on dev machine (iMac).
     dom: "RBfl<'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
     sScrollX: '100%',
     sScrollXInner: '100%',
@@ -228,7 +300,10 @@ function initLoadFromRepositoryTable(content) {
     processing: true,
     serverSide: true,
     responsive: true,
+<<<<<<< HEAD
     order: tableEl.data('default-order') || [[1, 'asc']],
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
     ajax: {
       url: tableEl.data('source'),
       type: 'POST'
@@ -369,6 +444,7 @@ function loadFromRepository() {
         // Simply reload page
         location.reload();
       },
+<<<<<<< HEAD
       error: function(response) {
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
@@ -376,6 +452,13 @@ function loadFromRepository() {
           alert(response.responseJSON.message);
         }
 
+=======
+      error: function(ev) {
+        // Display error message in alert()
+        alert(ev.responseJSON.message);
+
+        // Hide modal
+>>>>>>> Finished merging. Test on dev machine (iMac).
         modal.modal('hide');
       }
     });
@@ -392,7 +475,11 @@ function refreshProtocolStatusBar() {
     type: 'GET',
     dataType: 'json',
     success: function(data) {
+<<<<<<< HEAD
       $('.my-module-protocol-status').replaceWith(data.html);
+=======
+      $("[data-role='protocol-status-bar']").html(data.html);
+>>>>>>> Finished merging. Test on dev machine (iMac).
       initLinkUpdate();
     }
   });
@@ -427,7 +514,11 @@ function initImport() {
         } else {
           if (data.status === 'size_too_large') {
             alert(I18n.t('my_modules.protocols.load_from_file_size_error',
+<<<<<<< HEAD
               { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
+=======
+              { size: $(document.body).data('file-max-size-mb') }));
+>>>>>>> Finished merging. Test on dev machine (iMac).
           } else {
             alert(I18n.t('my_modules.protocols.load_from_file_error'));
           }
@@ -440,6 +531,7 @@ function initImport() {
   });
 }
 
+<<<<<<< HEAD
 
 
 function initProtocolSectionOpenEvent() {
@@ -450,6 +542,45 @@ function initProtocolSectionOpenEvent() {
       hot.render();
     });
   });
+=======
+function initRecentProtocols() {
+  var recentProtocolContainer = $('.my-module-recent-protocols');
+  var dropDownList = recentProtocolContainer.find('.dropdown-menu');
+  recentProtocolContainer.find('.dropdown-button').click(function() {
+    dropDownList.find('.protocol').remove();
+    $.get('/protocols/recent_protocols', result => {
+      $.each(result, (i, protocol) => {
+        $('<div class="protocol"><i class="fas fa-file-alt"></i>'
+          + truncateLongString(protocol.name, globalConstants.name_truncation_length)
+          + '</div>').appendTo(dropDownList)
+          .click(() => {
+            $.post(recentProtocolContainer.data('updateUrl'), { source_id: protocol.id })
+              .success(() => {
+                location.reload();
+              })
+              .error(ev => {
+                HelperModule.flashAlertMsg(ev.responseJSON.message, 'warning');
+              });
+          });
+      });
+    });
+  });
+
+  $('.protocol-description-content').on('ajax:success', () => {
+    updateRecentProtocolsStatus();
+  });
+}
+
+function updateRecentProtocolsStatus() {
+  var recentProtocolContainer = $('.my-module-recent-protocols');
+  var steps = $('.step');
+  var protocolDescription = $('#protocol_description_view').html();
+  if (steps.length === 0 && protocolDescription.length === 0) {
+    recentProtocolContainer.css('display', '');
+  } else {
+    recentProtocolContainer.css('display', 'none');
+  }
+>>>>>>> Finished merging. Test on dev machine (iMac).
 }
 
 /**
@@ -464,7 +595,11 @@ function init() {
   initLoadFromRepository();
   refreshProtocolStatusBar();
   initImport();
+<<<<<<< HEAD
   initProtocolSectionOpenEvent();
+=======
+  initRecentProtocols();
+>>>>>>> Finished merging. Test on dev machine (iMac).
 }
 
 init();

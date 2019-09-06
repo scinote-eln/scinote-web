@@ -51,7 +51,7 @@
           Results.initHandsOnTables($result);
           Results.toggleResultEditButtons(true);
           Results.expandResult($result);
-          Comments.initialize();
+          Comments.init();
           initNewResultTable();
         });
         $form.on('ajax:error', function(e, xhr, status, error) {

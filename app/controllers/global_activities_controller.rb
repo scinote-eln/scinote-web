@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GlobalActivitiesController < ApplicationController
+  include InputSanitizeHelper
+
   def index
     # Preload filter format
     #   {
@@ -103,13 +105,13 @@ class GlobalActivitiesController < ApplicationController
     subject_types.each do |subject|
       matched = subject.constantize
                        .search_by_name(current_user, teams, query, whole_phrase: true)
-                       .where.not(name: nil)
+                       .where.not(name: nil).where.not(name: '')
                        .filter_by_teams(filter_teams)
                        .limit(Constants::SEARCH_LIMIT)
                        .pluck(:id, :name)
       next if matched.length.zero?
 
-      results[subject] = matched.map { |pr| { id: pr[0], name: pr[1] } }
+      results[subject] = matched.map { |pr| { id: pr[0], name: escape_input(pr[1]) } }
     end
     respond_to do |format|
       format.json do

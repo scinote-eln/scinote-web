@@ -27,7 +27,7 @@ class MyModuleTagsController < ApplicationController
         render json: {
           html_module_header: render_to_string(
             partial: 'my_modules/tags.html.erb',
-            locals: { my_module: @my_module }
+            locals: { my_module: @my_module, editable: can_manage_module?(@my_module) }
           )
         }
       end
@@ -55,11 +55,14 @@ class MyModuleTagsController < ApplicationController
   end
 
   def create
+    return render_403 unless params[:my_module_tag] && mt_params[:tag_id]
+
     @mt = MyModuleTag.new(mt_params.merge(my_module: @my_module))
     @mt.created_by = current_user
     @mt.save
 
     my_module = @mt.my_module
+
     Activities::CreateActivityService
       .call(activity_type: :add_task_tag,
             owner: current_user,
@@ -83,6 +86,8 @@ class MyModuleTagsController < ApplicationController
   def destroy
     @mt = MyModuleTag.find_by_id(params[:id])
 
+    return render_404 unless @mt
+
     Activities::CreateActivityService
       .call(activity_type: :remove_task_tag,
             owner: current_user,
@@ -103,6 +108,28 @@ class MyModuleTagsController < ApplicationController
                     status: 303
       end
     end
+  end
+
+  def search_tags
+    assigned_tags = @my_module.my_module_tags.pluck(:tag_id)
+    tags = @my_module.experiment.project.tags\
+                     .where.not(id: assigned_tags)
+                     .search(
+                       current_user,
+                       false,
+                       params[:query]
+                     ).select(:id, :name, :color).limit(6)
+    tags = [{ id: 0, name: params[:query], color: nil }] if tags.count.zero?
+    render json: tags
+  end
+
+  def destroy_by_tag_id
+    tag = @my_module.my_module_tags.find_by_tag_id(params[:id])
+
+    return render_404 unless tag
+
+    tag.destroy
+    render json: { result: tag }
   end
 
   private

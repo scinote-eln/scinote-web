@@ -2,6 +2,10 @@ When(/^I click "(.+)" button$/) do |button|
   click_button(button)
 end
 
+Then("I trigger click {string}") do |string|
+  find(string).trigger('click')
+end
+
 Given(/^Show me the page$/) do
   save_and_open_page
 end

@@ -43,9 +43,11 @@
               <div data-part="edit" style="display: none;">
                 <div class="well">
                   <h4><%=t "users.registrations.edit.avatar_title" %></h4>
+                  <div class="new-avatar-preview-container" style="display:none"></div>
                   <div class="form-group avatar-file-upload">
                     <%= f.label :avatar, t("users.registrations.edit.avatar_edit_label") %>
-                    <%= f.file_field :avatar, class: "btn btn-default" %>
+                    <%= f.file_field :raw_avatar, class: "btn btn-default" %>
+                    <%= hidden_field_tag "user[avatar]", "" %>
                   </div>
                   <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
@@ -233,5 +235,8 @@
   </div>
 </div>
 
+<%= javascript_pack_tag 'custom/croppie' %>
+<%= stylesheet_pack_tag 'custom/croppie_styles' %>
 <%= javascript_include_tag("canvas-to-blob.min") %>
 <%= javascript_include_tag "users/registrations/edit" %>
+

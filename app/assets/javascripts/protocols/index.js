@@ -28,8 +28,10 @@ function initProtocolsTable() {
 
   protocolsDatatable = protocolsTableEl.DataTable({
     order: [[1, "asc"]],
-    dom: "RBfltpi",
+    dom: "RBfl<'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
     stateSave: true,
+    sScrollX: '100%',
+    sScrollXInner: '100%',
     buttons: [],
     processing: true,
     serverSide: true,

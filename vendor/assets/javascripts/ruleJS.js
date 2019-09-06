@@ -1,3 +1,5 @@
+// * Licensed under the MIT license
+
 var ruleJS = (function (root) {
   'use strict';
 

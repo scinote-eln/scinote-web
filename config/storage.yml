@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 test:
   service: CustomDisk
   root: <%= Rails.root.join("tmp/storage") %>
@@ -13,6 +14,23 @@ amazon:
   region: <%= ENV["AWS_REGION"] %>
   bucket: <%= ENV["S3_BUCKET"] %>
   subfolder: <%= ENV["S3_SUBFOLDER"] %>
+=======
+# test:
+#   service: Disk
+#   root: <%= Rails.root.join("tmp/storage") %>
+#
+# local:
+#   service: Disk
+#   root: <%= Rails.root.join("storage") %>
+
+# Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
+# amazon:
+#   service: S3
+#   access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+#   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+#   region: us-east-1
+#   bucket: your_own_bucket
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:

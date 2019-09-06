@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
   around_action :set_time_zone, if: :current_user
   layout 'main'
 
+  rescue_from ActionController::InvalidAuthenticityToken do
+    redirect_to root_path
+  end
+
   def respond_422(message = t('client_api.permission_error'))
     respond_to do |format|
       format.json do

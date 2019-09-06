@@ -1,7 +1,6 @@
 //= require Sortable.min
 //= require canvas-to-blob.min
 //= require assets
-//= require comments
 
 (function(global) {
   'use strict';
@@ -150,18 +149,21 @@
       animateSpinner(null, false);
       FilePreviewModal.init();
       DragNDropSteps.clearFiles();
-      TinyMCE.refresh();
+      if (tinyMCE.editors.step_description_textarea) tinyMCE.editors.step_description_textarea.remove();
+      TinyMCE.init('#step_description_textarea');
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
         enableCheckboxSorting(this);
       });
       $("#step_name").focus();
       $("#new-step-main-tab a").on("shown.bs.tab", function() {
         $("#step_name").focus();
+        tinyMCE.editors.step_description_textarea.remove();
+        TinyMCE.init('#step_description_textarea');
       });
     });
   }
 
-  // Set callback for click on edit button
+  // Set callback for click on move step
   function applyMoveStepCallBack() {
     $("[data-action='move-step']").off("ajax:success");
     $("[data-action='move-step']")
@@ -183,10 +185,12 @@
       // Switch position of top and bottom steps
       if (!_.isUndefined($stepDown) && !_.isUndefined($stepUp)) {
         $stepDown.insertAfter($stepUp);
-        $stepDown.find(".badge").html(stepDownPosition+1);
-        $stepUp.find(".badge").html(stepUpPosition+1);
+        $stepDown.find(".step-number").html(stepDownPosition + 1);
+        $stepUp.find(".step-number").html(stepUpPosition + 1);
         $("html, body").animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
       }
+
+      if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
   }
 
@@ -217,7 +221,7 @@
     });
   }
 
-  // Init ajax success/error for edit form
+    // Init ajax success/error for edit form
   function formEditAjax($form) {
     $form
     .on("ajax:beforeSend", function () {
@@ -241,10 +245,10 @@
       $new_step.find(".panel-collapse:first").addClass("collapse in");
 
       //Rerender tables
-      $new_step.find("[data-role='step-hot-table']").each(function()  {
+      $new_step.find("[data-role='step-hot-table']").each(function() {
         renderTable($(this));
       });
-      setupAssetsLoading();
+      Assets.setupAssetsLoading();
     })
     .on("ajax:error", function(e, xhr, status, error) {
       $form.renderFormErrors('step', xhr.responseJSON, true, e);
@@ -253,11 +257,10 @@
       initEditableHandsOnTable($form);
       applyCancelCallBack();
 
-      TinyMCE.refresh();
       SmartAnnotation.preventPropagation('.atwho-user-popover');
 
       //Rerender tables
-      $form.find("[data-role='step-hot-table']").each(function()  {
+      $form.find("[data-role='step-hot-table']").each(function() {
         renderTable($(this));
       });
     });
@@ -267,20 +270,9 @@
     if (show) {
       $("[data-action='new-step']").show();
       $("[data-action='edit-step']").show();
-
-      // Also show "no steps" label if no steps are present
-      if (!$(".step").length) {
-        $("[data-role='no-steps-text']").show();
-      } else {
-        $("[data-role='no-steps-text']").hide();
-      }
-
     } else {
       $("[data-action='new-step']").hide();
       $("[data-action='edit-step']").hide();
-
-      // Also hide "no steps" label if no steps are present
-      $("[data-role='no-steps-text']").hide();
     }
   }
 
@@ -313,6 +305,9 @@
       if (contents.attr("value")) {
         var data = JSON.parse(contents.attr("value"));
         hot.loadData(data.data);
+        setTimeout(() => {
+          hot.render()
+        }, 0)
       }
     });
   }
@@ -373,6 +368,7 @@
       });
       toggleButtons(true);
       DragNDropSteps.clearFiles();
+      tinyMCE.editors.step_description_textarea.remove();
     });
   }
 
@@ -385,6 +381,7 @@
   }
 
   function initCallBacks() {
+    if (typeof(applyCreateWopiFileCallback) === 'function') applyCreateWopiFileCallback();
     applyCheckboxCallBack();
     applyStepCompletedCallBack();
     applyEditCallBack();
@@ -509,11 +506,14 @@
             initializeCheckboxSorting();
 
             $('#step_name').focus();
-            $('#new-step-main-tab a').on('shown.bs.tab', function() {
-              $('#step_name').focus();
-            });
+            $('#new-step-main-tab a')
+              .on('shown.bs.tab', function() {
+                $('#step_name').focus();
+                tinyMCE.editors.step_description_textarea.remove();
+                TinyMCE.init('#step_description_textarea');
+              })
 
-            TinyMCE.refresh();
+            TinyMCE.init('#step_description_textarea');
           });
 
         },
@@ -541,8 +541,8 @@
     var $nameInput = $form.find("#step_name");
     var nameValid = textValidator(ev, $nameInput, 1,
       <%= Constants::NAME_MAX_LENGTH %>);
-    var $descrTextarea = $form.find("#step_description");
-    var $tinyMCEInput = TinyMCE.getContent();
+    var $descrTextarea = $form.find("#step_description_textarea");
+    var $tinyMCEInput = tinyMCE.editors.step_description_textarea.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::RICH_TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
     var tableNamesValidArray = [];
@@ -583,7 +583,7 @@
 
       animateSpinner(null, true);
       var data = DragNDropSteps.appendFilesToForm(ev);
-      data.append('step[description]', TinyMCE.getContent());
+      data.append('step[description]', $tinyMCEInput);
       $.ajax({
         url: $form.attr('action'),
         method: 'POST',
@@ -606,15 +606,20 @@
           toggleButtons(true);
           SmartAnnotation.preventPropagation('.atwho-user-popover');
 
+          tinyMCE.editors.step_description_textarea.plugins.autosave.removeDraft();
+          tinyMCE.editors.step_description_textarea.remove();
+
           //Rerender tables
           $new_step.find("div.step-result-hot-table").each(function()  {
             $(this).handsontable("render");
           });
           animateSpinner(null, false);
-          setupAssetsLoading();
+          Assets.setupAssetsLoading();
           DragNDropSteps.clearFiles();
           FilePreviewModal.init();
           $.initTooltips();
+          if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
+          if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {
@@ -664,18 +669,31 @@
   }
 
   function initStepsComments() {
-    Comments.initialize();
-    Comments.initCommentOptions("ul.content-comments");
-    Comments.initEditComments("#steps");
-    Comments.initDeleteComments("#steps");
+    Comments.init();
   }
 
-  // On init
+  // Reorder attachments
+  global.reorderAttachments = function reorderAtt(elem, stepId, sortType) {
+    var label_value = $("#dd-att-step-" + stepId + "> .dropdown-menu > li > a[data-order=" + sortType + "]").html();
+    $("#dd-att-step-" + stepId + "-label").html(label_value);
+    $('#att-' + stepId + ' a.file-preview-link').each(function(){
+      var elm = $(this)
+      elm.parent().css('order', elm.attr('data-order-' + sortType));
+    });
+
+    $.post(
+      $(elem).closest('.dropdown-menu').data('stateSavePath'),
+      { assets: { order: sortType } },
+      null,
+      'json',
+    );
+  }
+
+    // On init
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();
-  setupAssetsLoading();
-  initStepsComments();
+  Assets.setupAssetsLoading();
   FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');

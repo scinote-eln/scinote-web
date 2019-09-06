@@ -32,9 +32,15 @@ describe ProtocolImporters::BuildProtocolFromClientService do
 
   context 'when raise api client error' do
     it 'return api errors' do
+<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:single_protocol)
         .and_raise(ProtocolImporters::ProtocolsIo::V3::ArgumentError
+=======
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:single_protocol)
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::ArgumentError
+>>>>>>> Finished merging. Test on dev machine (iMac).
           .new(:missing_or_empty_parameters), 'Missing Or Empty Parameters Error'))
 
       expect(service_call.errors).to have_key(:missing_or_empty_parameters)
@@ -45,6 +51,7 @@ describe ProtocolImporters::BuildProtocolFromClientService do
     it 'return normalizer errors' do
       client_data = double('api_response')
 
+<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:single_protocol)
         .and_return(client_data))
@@ -52,6 +59,15 @@ describe ProtocolImporters::BuildProtocolFromClientService do
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
         .to(receive(:normalize_protocol).with(client_data)
         .and_raise(ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
+=======
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:single_protocol)
+        .and_return(client_data))
+
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
+        .to(receive(:normalize_protocol).with(client_data)
+        .and_raise(ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
+>>>>>>> Finished merging. Test on dev machine (iMac).
 
       expect(service_call.errors).to have_key(:nil_protocol)
     end
@@ -61,11 +77,19 @@ describe ProtocolImporters::BuildProtocolFromClientService do
     before do
       client_data = double('api_response')
 
+<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:single_protocol)
         .and_return(client_data))
 
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
+=======
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+        .to(receive(:single_protocol)
+        .and_return(client_data))
+
+      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
+>>>>>>> Finished merging. Test on dev machine (iMac).
         .to(receive(:normalize_protocol).with(client_data)
         .and_return(normalized_response))
 

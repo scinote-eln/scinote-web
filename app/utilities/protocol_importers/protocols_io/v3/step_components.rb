@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 module ProtocolImporters
+<<<<<<< HEAD
   module ProtocolsIo
+=======
+  module ProtocolsIO
+>>>>>>> Finished merging. Test on dev machine (iMac).
     module V3
       class StepComponents
         AVAILABLE_COMPONENTS = {

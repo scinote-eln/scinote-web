@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Comment, type: :model do
+  let(:comment) { build :comment }
+
+  it 'is valid' do
+    expect(comment).to be_valid
+  end
+
   it 'should be of class Comment' do
     expect(subject.class).to eq Comment
   end
@@ -21,7 +29,7 @@ describe Comment, type: :model do
     it { should belong_to(:last_modified_by).class_name('User') }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :message }
     it { should validate_length_of(:message).is_at_most(Constants::TEXT_MAX_LENGTH) }
     it { should validate_presence_of :user }

@@ -11,12 +11,12 @@ class ProjectsController < ApplicationController
                                      delete_samples samples_index)
   before_action :load_projects_tree, only: %i(sidebar show samples archive
                                               experiment_archive)
-  before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
                                                   samples_index)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
+  before_action :set_inline_name_editing, only: %i(show experiment_archive)
 
   # except parameter could be used but it is not working.
   layout 'fluid'
@@ -84,10 +84,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def archive
-    index
-  end
-
   def new
     @project = Project.new
     # Get all RAP Program Level values for dropdown.
@@ -111,7 +107,7 @@ class ProjectsController < ApplicationController
       up.save
       log_activity(:create_project)
 
-      message = t('projects.create.success_flash', name: @project.name)
+      message = t('projects.create.success_flash', name: escape_input(@project.name))
       respond_to do |format|
         format.json {
           render json: { message: message }, status: :ok
@@ -158,7 +154,7 @@ class ProjectsController < ApplicationController
 
   def update
     return_error = false
-    flash_error = t('projects.update.error_flash', name: @project.name)
+    flash_error = t('projects.update.error_flash', name: escape_input(@project.name))
 
     # Check archive permissions if archiving/restoring
     if project_params.include? :archived
@@ -169,7 +165,7 @@ class ProjectsController < ApplicationController
         return_error = true
         is_archive = project_params[:archived] == 'true' ? 'archive' : 'restore'
         flash_error =
-          t("projects.#{is_archive}.error_flash", name: @project.name)
+          t("projects.#{is_archive}.error_flash", name: escape_input(@project.name))
       end
     elsif !can_manage_project?(@project)
       render_403 && return
@@ -199,11 +195,11 @@ class ProjectsController < ApplicationController
       log_activity(:archive_project) if project_params[:archived] == 'true'
       log_activity(:restore_project) if project_params[:archived] == 'false'
 
-      flash_success = t('projects.update.success_flash', name: @project.name)
+      flash_success = t('projects.update.success_flash', name: escape_input(@project.name))
       if project_params[:archived] == 'true'
-        flash_success = t('projects.archive.success_flash', name: @project.name)
+        flash_success = t('projects.archive.success_flash', name: escape_input(@project.name))
       elsif project_params[:archived] == 'false'
-        flash_success = t('projects.restore.success_flash', name: @project.name)
+        flash_success = t('projects.restore.success_flash', name: escape_input(@project.name))
       end
       respond_to do |format|
         format.html do
@@ -340,15 +336,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def load_archive_vars
-    if current_user.teams.any?
-      @archived_projects_by_teams =
-        current_user.projects_by_teams(@current_team.id, @current_sort, true)
-    else
-      @archived_projects_by_teams = []
-    end
-  end
-
   def check_view_permissions
     render_403 unless can_read_project?(@project)
   end
@@ -359,6 +346,16 @@ class ProjectsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_project?(@project)
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_project?(@project)
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'project',
+      field_to_udpate: 'name',
+      path_to_update: project_path(@project)
+    }
   end
 
   def log_activity(type_of, message_items = {})

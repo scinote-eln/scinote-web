@@ -5,18 +5,30 @@
   display: none !important;
 
   + .image-selection-container {
+<<<<<<< HEAD
     height: 36px;
+=======
+    height: 28px;
+>>>>>>> Finished merging. Test on dev machine (iMac).
     left: 140px;
     position: absolute;
     top: 0;
     width: 338px;
 
     .select_button {
+<<<<<<< HEAD
       background-color: $brand-primary;
       border-color: $brand-primary;
       color: $color-white;
       cursor: pointer;
       line-height: 18px;
+=======
+      background-color: $brand-success;
+      border-color: $brand-success;
+      color: $color-white;
+      cursor: pointer;
+      line-height: 20px;
+>>>>>>> Finished merging. Test on dev machine (iMac).
       padding: 6px 12px;
       position: relative;
       text-align: center;
@@ -25,7 +37,11 @@
     }
 
     input[type=text] {
+<<<<<<< HEAD
       border: 1px solid $color-concrete;
+=======
+      border: 1px solid $color-gainsboro;
+>>>>>>> Finished merging. Test on dev machine (iMac).
       border-radius: 4px;
       height: 30px;
       left: -5px;
@@ -33,6 +49,7 @@
       position: relative;
       width: calc(100% - 100px);
     }
+<<<<<<< HEAD
 
     &.error {
       &::after {
@@ -57,6 +74,11 @@
   color: $color-white !important;
 }
 
+=======
+  }
+}
+
+>>>>>>> Finished merging. Test on dev machine (iMac).
 .ql-editor {
   font-size: 16px;
 }
@@ -65,6 +87,7 @@
   z-index: 5;
 }
 
+<<<<<<< HEAD
 .mce-widget.mce-btn {
   border-color: transparent !important;
 
@@ -103,3 +126,23 @@
 .mce-menu.mce-animate {
   transform: none !important;
 }
+=======
+.mce-widget.mce-btn[aria-label="Restore last draft"] {
+  background: $brand-primary;
+  border-radius: 4px;
+  transition: $md-transaction;
+
+  i {
+    color: $color-white;
+    transition: $md-transaction;
+  }
+
+  &.mce-disabled {
+    background: transparent;
+
+    i {
+      color: inherit;
+    }
+  }
+}
+>>>>>>> Finished merging. Test on dev machine (iMac).

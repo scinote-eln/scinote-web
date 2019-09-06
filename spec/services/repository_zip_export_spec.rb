@@ -59,11 +59,14 @@ describe RepositoryZipExport, type: :background_job do
     end
 
     it 'generates a new zip export object' do
+      ZipExport.skip_callback(:create, :after, :self_destruct)
       RepositoryZipExport.generate_zip(params, repository, user)
       expect(ZipExport.count).to eq 1
+      ZipExport.set_callback(:create, :after, :self_destruct)
     end
 
     it 'generates a zip with csv file with exported rows' do
+      ZipExport.skip_callback(:create, :after, :self_destruct)
       RepositoryZipExport.generate_zip(params, repository, user)
       csv_zip_file = ZipExport.first.zip_file
       parsed_csv_content = Zip::File.open(csv_zip_file.path) do |zip_file|
@@ -80,6 +83,7 @@ describe RepositoryZipExport, type: :background_job do
         expect(row_hash.fetch('Name')).to eq "row #{index}"
         index += 1
       end
+      ZipExport.set_callback(:create, :after, :self_destruct)
     end
   end
 end

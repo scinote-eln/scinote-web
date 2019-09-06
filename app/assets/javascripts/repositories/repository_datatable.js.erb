@@ -55,7 +55,7 @@ var RepositoryDatatable = (function(global) {
     originalHeader = $(TABLE_ID + ' thead').children().clone();
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
+      dom: "R<'row'<'col-sm-6 toolbar'><'col-sm-6'lf>><'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
       stateSave: true,
       processing: true,
       serverSide: true,
@@ -102,7 +102,7 @@ var RepositoryDatatable = (function(global) {
         }
       }],
       oLanguage: {
-        sSearch: I18n.t('general.filter')
+        sSearch: I18n.t('general.filter_dots')
       },
       rowCallback: function(row, data) {
         // Get row ID
@@ -227,6 +227,12 @@ var RepositoryDatatable = (function(global) {
       }
     });
 
+    // hack to replace filter placeholder
+    $('.dataTables_filter .form-control').attr('placeholder', $('.dataTables_filter label').text())
+    $('.dataTables_filter label').contents().filter(function(){
+      return this.nodeType === 3;
+    }).remove();
+
     // Handle click on table cells with checkboxes
     $(TABLE_ID).on('click', 'tbody td', function(e) {
       if ($(e.target).is('.repository-row-selector')) {
@@ -252,6 +258,10 @@ var RepositoryDatatable = (function(global) {
       TABLE.columns.adjust();
 
       // Append button to inner toolbar in table
+      $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
+      $('div.toolbarButtonsDatatable').show();
+
+      // Append buttons for task inventory
       $('div.toolbarButtons').appendTo('div.toolbar');
       $('div.toolbarButtons').show();
     }, 10);

@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe Activity, type: :model do
-  subject(:activity) { create :activity }
-  let(:old_activity) { create :activity, :old }
+  let(:activity) { build :activity }
+  let(:old_activity) { build :activity, :old }
 
   it 'should be of class Activity' do
     expect(subject.class).to eq Activity
@@ -39,11 +39,16 @@ describe Activity, type: :model do
   end
 
   describe 'Validations' do
-    it { should validate_presence_of :type_of }
-    it { should validate_presence_of :owner }
+    describe '#type_of' do
+      it { is_expected.to validate_presence_of :type_of }
+    end
 
-    Extends::ACTIVITY_SUBJECT_TYPES.each do |value|
-      it { is_expected.to allow_values(value).for(:subject_type) }
+    describe '#owner' do
+      it { is_expected.to validate_presence_of :owner }
+    end
+
+    describe '#subject_type' do
+      it { is_expected.to validate_inclusion_of(:subject_type).in_array(Extends::ACTIVITY_SUBJECT_TYPES) }
     end
   end
 
@@ -58,7 +63,7 @@ describe Activity, type: :model do
 
   describe '.save' do
     it 'adds user to message items' do
-      create :activity
+      activity.save
 
       expect(activity.message_items).to include(user: be_an(Hash))
     end

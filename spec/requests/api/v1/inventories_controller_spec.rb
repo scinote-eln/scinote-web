@@ -75,7 +75,7 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
 
     it 'When invalid request, non existing inventory' do
       hash_body = nil
-      get api_v1_team_inventory_path(team_id: @teams.first.id, id: 123),
+      get api_v1_team_inventory_path(team_id: @teams.first.id, id: -1),
           headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
@@ -131,7 +131,7 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
     it 'When invalid request, non-existent team' do
       hash_body = nil
       post api_v1_team_inventories_path(
-        team_id: 123
+        team_id: -1
       ), params: @request_body.to_json, headers: @valid_headers
       expect(response).to have_http_status 404
       expect { hash_body = json }.not_to raise_exception
@@ -230,7 +230,7 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
       updated_inventory[:data][:attributes][:name] =
         Faker::Name.unique.name
       patch api_v1_team_inventory_path(
-        id: 123,
+        id: -1,
         team_id: @teams.first.id
       ), params: updated_inventory.to_json,
       headers: @valid_headers
@@ -270,7 +270,7 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
 
     it 'Invalid request, non existing inventory' do
       delete api_v1_team_inventory_path(
-        id: 123,
+        id: -1,
         team_id: @teams.first.id
       ), headers: @valid_headers
       expect(response).to have_http_status(404)

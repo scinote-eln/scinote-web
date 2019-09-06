@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryRow, type: :model do
+  let(:repository_row) { build :repository_row }
+
+  it 'is valid' do
+    expect(repository_row).to be_valid
+  end
+
   it 'should be of class RepositoryRow' do
     expect(subject.class).to eq RepositoryRow
   end
@@ -24,11 +32,14 @@ describe RepositoryRow, type: :model do
     it { should have_many :my_modules }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :name }
-    it { should validate_presence_of :created_by }
-    it do
-      should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  describe 'Validations' do
+    describe '#name' do
+      it { is_expected.to validate_presence_of :name }
+      it { is_expected.to(validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)) }
+    end
+
+    describe '#created_by' do
+      it { is_expected.to validate_presence_of :created_by }
     end
   end
 end

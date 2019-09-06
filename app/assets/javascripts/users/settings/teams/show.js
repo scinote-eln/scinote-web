@@ -89,7 +89,6 @@
   function initUsersTable() {
     usersDatatable = $('#users-table').DataTable({
       order: [[1, 'asc']],
-      dom: 'RBfltpi',
       stateSave: true,
       buttons: [],
       processing: true,

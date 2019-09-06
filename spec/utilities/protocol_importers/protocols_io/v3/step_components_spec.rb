@@ -2,7 +2,11 @@
 
 require 'rails_helper'
 
+<<<<<<< HEAD
 describe ProtocolImporters::ProtocolsIo::V3::StepComponents do
+=======
+describe ProtocolImporters::ProtocolsIO::V3::StepComponents do
+>>>>>>> Finished merging. Test on dev machine (iMac).
   let(:components) do
     [
       { type_id: 1, source: { description: 'Description' } },

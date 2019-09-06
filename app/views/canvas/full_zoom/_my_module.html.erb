@@ -63,7 +63,7 @@
         <li role="presentation">
           <a class="btn btn-link task-card-view-comments" href="<%= my_module_my_module_comments_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_comments" role="tab" data-remote="true">
             <span class="fas fa-comment" aria-hidden="true"></span>
-            <span class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments.count.positive? %>"
+            <span id="comment-counter-<%= my_module.id %>" class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments.count.positive? %>"
                   data-linked-id="<%= my_module.id %>">
               <%= my_module.task_comments.count %>
             </span>

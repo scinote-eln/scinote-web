@@ -45,7 +45,7 @@
     <%= render "shared/file_preview_modal.html.erb" %>
     <%= render "shared/file_edit_modal.html.erb" %>
     <%= render "shared/navigation" %>
-    
+
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
       <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: current_user.user_system_notifications.show_on_login(true) } %>
     <% else %>
@@ -67,7 +67,6 @@
           <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
         </div>
       <% else %>
-        <%= yield :flash_messages_div %>
         <%= yield :content %>
       <% end %>
     </div>

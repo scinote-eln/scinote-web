@@ -27,6 +27,7 @@ tinymce.PluginManager.add('placeholder', function(editor) {
   editor.on('init', function() {
     var label = new Label();
 
+<<<<<<< HEAD
     // Correct top css property due to notification bar
     function calculatePlaceholderPosition() {
       var editorForm = $(editor.getContainer()).closest('form');
@@ -40,13 +41,19 @@ tinymce.PluginManager.add('placeholder', function(editor) {
 
     function checkPlaceholder() {
       // Show/hide depending on the content
+=======
+    function checkPlaceholder() {
+>>>>>>> Finished merging. Test on dev machine (iMac).
       if (editor.getContent() === '') {
         label.show();
       } else {
         label.hide();
       }
+<<<<<<< HEAD
 
       calculatePlaceholderPosition();
+=======
+>>>>>>> Finished merging. Test on dev machine (iMac).
     }
 
     function onKeydown() {

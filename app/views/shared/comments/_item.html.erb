@@ -1,21 +1,35 @@
 <% report = false unless defined?(report) %>
 <% readonly = false unless defined?(readonly) %>
+<<<<<<< HEAD
 <% edit_mode = (!readonly && comment_editable?(comment)) %>
   <div
     class="comment-container <%= edit_mode ? 'inline-init-handler' : '' %> <%= report ? 'report' : '' %>"
+=======
+<% edit_mode = (comment.user == current_user && !readonly) %>
+  <div 
+    class="comment-container <%= edit_mode ? 'comment-editable-field' : '' %> <%= report ? 'report' : '' %>" 
+>>>>>>> Finished merging. Test on dev machine (iMac).
     data-field-to-update="message"
     data-params-group="comment"
     data-path-to-update="<%= comment_action_url(comment) %>"
     data-original-name="<%= comment.message %>"
     data-response-field="comment"
     data-smart-annotation="true"
+<<<<<<< HEAD
     data-edit-mode="0"
+=======
+    error="false"
+>>>>>>> Finished merging. Test on dev machine (iMac).
   >
     <div class="avatar-placehodler">
       <span class='global-avatar-container'>
         <% if report %>
+<<<<<<< HEAD
           <% base64_encoded = defined?(export_all) && export_all %>
           <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, base64_encoded), class: 'avatar' %>
+=======
+          <%= image_tag comment.user.avatar_base64(:icon_small), class: 'avatar' %>
+>>>>>>> Finished merging. Test on dev machine (iMac).
         <% else %>
           <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
         <% end %>
@@ -53,3 +67,7 @@
       <div class="error-block"></div>
     </div>
   </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> Finished merging. Test on dev machine (iMac).

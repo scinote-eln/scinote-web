@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 require 'rails_helper'
 
-RSpec.describe "Api::V1::ResultsController", type: :request do
+RSpec.describe 'Api::V1::ResultsController', type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -126,7 +127,9 @@ RSpec.describe "Api::V1::ResultsController", type: :request do
         included: [
           { type: 'result_texts',
             attributes: {
-              text: 'Result text 1 [~tiny_mce_id:a1]'
+              text: 'Result text 1 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
+                         'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
+                         'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg==" data-mce-token="a1">'
             } },
           { type: 'tiny_mce_assets',
             attributes: {
@@ -185,6 +188,21 @@ RSpec.describe "Api::V1::ResultsController", type: :request do
                include: :text)
           .as_json[:included]
       )
+      expect(ResultText.last.text).to include "data-mce-token=\"#{Base62.encode(TinyMceAsset.last.id)}\""
+    end
+
+    it 'Response correct with old TinyMCE images' do
+      hash_body = nil
+      @valid_tinymce_hash_body[:included][0][:attributes][:text] = 'Result text 1 [~tiny_mce_id:a1]'
+      post api_v1_team_project_experiment_task_results_path(
+        team_id: @teams.first.id,
+        project_id: @valid_project,
+        experiment_id: @valid_experiment,
+        task_id: @valid_task
+      ), params: @valid_tinymce_hash_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 201
+      expect { hash_body = json }.not_to raise_exception
+      expect(ResultText.last.text).to include "data-mce-token=\"#{Base62.encode(TinyMceAsset.last.id)}\""
     end
 
     it 'When invalid request, mismatching file token' do
@@ -312,3 +330,4 @@ RSpec.describe "Api::V1::ResultsController", type: :request do
     end
   end
 end
+# rubocop:enable Metrics/LineLength

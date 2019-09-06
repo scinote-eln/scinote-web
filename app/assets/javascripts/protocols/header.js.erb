@@ -155,37 +155,8 @@ function initEditAuthors() {
 }
 
 function initEditDescription() {
-  var link = $("a[data-action='edit-description']");
-
-  link
-  .on("ajax:success", function(ev, data, status) {
-    var modalBody = editMetadataModal.find(".modal-body");
-
-    // Set modal body & title
-    modalBody.html(data.html);
-    editMetadataModal
-    .find(".modal-title")
-    .text(data.title);
-
-    // Bind on form submission
-    modalBody.find("form")
-    .on("ajax:success", function(ev2, data2, status2) {
-      updatedAtLabel.html(data2.updated_at_label);
-      descriptionLabel.html(data2.description_label);
-
-      editMetadataModal.modal("hide");
-    })
-    .on("ajax:error", function(ev2, data2, status2) {
-      // Display errors if needed
-      $(this).renderFormErrors("protocol", data2.responseJSON);
-    });
-
-    // Show modal
-    editMetadataModal.modal("show");
-    modalBody.find("textarea").focus();
-  })
-  .on("ajax:error", function(ev, data, status) {
-    // TODO
+  $('#protocol_description_view').on('click', function(){
+    TinyMCE.init('#protocol_description_textarea');
   });
 }
 

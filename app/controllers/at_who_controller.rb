@@ -1,4 +1,6 @@
 class AtWhoController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars
   before_action :check_users_permissions
 
@@ -32,7 +34,7 @@ class AtWhoController < ApplicationController
   def rep_items
     repository = Repository.find_by_id(params[:repository_id])
     items =
-      if repository && can_read_team?(repository.team)
+      if repository && can_read_repository?(repository)
         SmartAnnotation.new(current_user, current_team, @query)
                        .repository_rows(repository)
       else
@@ -49,13 +51,12 @@ class AtWhoController < ApplicationController
   end
 
   def repositories
-    repositories =
-      @team.repositories.limit(Rails.configuration.x.repositories_limit)
+    repositories = Repository.accessible_by_teams(@team)
     respond_to do |format|
       format.json do
         render json: {
           repositories: repositories.map do |r|
-            [r.id, r.name.truncate(Constants::ATWHO_REP_NAME_LIMIT)]
+            [r.id, escape_input(r.name.truncate(Constants::ATWHO_REP_NAME_LIMIT))]
           end.to_h,
           status: :ok
         }
@@ -122,9 +123,8 @@ class AtWhoController < ApplicationController
     res.each do |obj|
       tmp = {}
       tmp['id'] = obj[0].base62_encode
-      tmp['full_name'] =
-        obj[1].truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
-      tmp['email'] = obj[2]
+      tmp['full_name'] = escape_input(obj[1].truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN))
+      tmp['email'] = escape_input(obj[2])
       tmp['img_url'] = avatar_path(obj[0], :icon_small)
       data << tmp
     end

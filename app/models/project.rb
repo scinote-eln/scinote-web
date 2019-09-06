@@ -9,7 +9,7 @@ class Project < ApplicationRecord
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :team, case_sensitive: false }
+            uniqueness: { scope: :team_id, case_sensitive: false }
   validates :visibility, presence: true
   validates :team, presence: true
 
@@ -30,9 +30,9 @@ class Project < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :rap_task_level,
-             foreign_key: 'rap_task_level_id',
-             class_name: 'RapTaskLevel',
-             optional: false
+            foreign_key: 'rap_task_level_id',
+            class_name: 'RapTaskLevel',
+            optional: false
   belongs_to :team, inverse_of: :projects, touch: true, optional: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
@@ -51,7 +51,7 @@ class Project < ApplicationRecord
                           .where(
                             'visibility = 1 OR user_projects.user_id = :id',
                             id: user.id
-                          )
+                          ).distinct
                         end
                       end)
 

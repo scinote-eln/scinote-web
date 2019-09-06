@@ -6,5 +6,21 @@ FactoryBot.define do
     created_by { create :user }
     repository
     data_type :RepositoryTextValue
+
+    trait :text_type do
+      data_type :RepositoryTextValue
+    end
+
+    trait :date_type do
+      data_type :RepositoryDateValue
+    end
+
+    trait :list_type do
+      data_type :RepositoryListValue
+    end
+
+    trait :asset_type do
+      data_type :RepositoryAssetValue
+    end
   end
 end

@@ -75,6 +75,12 @@ en:
           attributes:
             viewable_id:
               not_unique: "State already exists for this user and parent object"
+            state:
+              wrong_state: "Wrong parameters"
+        team_repository:
+          attributes:
+            team_id:
+              same_team: "Inventory can't be shared to the same team as it belongs to"
 
   helpers:
     label:
@@ -97,6 +103,7 @@ en:
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
     title: "SciNote"
+    academy_tooltip: "SciNote Academy"
     user:
       settings: "Settings"
       logout: "Log out"
@@ -136,11 +143,11 @@ en:
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
+    academy: "Academy"
     support: "Support"
     support_links:
       support: "Support Center"
       tutorials: "Video tutorials"
-      webinars: "Webinars"
 
   sidebar:
     title: "Navigation"
@@ -241,7 +248,6 @@ en:
     training:
       head_title: "Training"
 
-
   projects:
     index:
       head_title: "Home"
@@ -263,7 +269,7 @@ en:
       no_comments: "No comments!"
       no_users: "No users!"
       manage_users: "Manage users"
-      no_notifications: "No notifications!"
+      no_notifications: "There are no overdue tasks at the moment"
       module_overdue_html: "Task <em>%{module}</em> is overdue (%{days})."
       module_overdue_days:
         one: "1 day"
@@ -284,7 +290,7 @@ en:
       start_date: "Start date:"
       activity_tab: "Activity"
       users_tab: "Users"
-      notifications_tab: "Notifications"
+      notifications_tab: "Due dates"
       comment_tab: "Comments"
       new_comment: "New comment"
       content_loading: "Loading..."
@@ -295,8 +301,6 @@ en:
       options_header: "Options"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
-      no_archived_projects: "No archived projects!"
-      back_to_projects_index: "Back to home"
       modal_new_project:
         modal_title: "Create new project"
         create: "Create"
@@ -341,12 +345,10 @@ en:
       visibility_visible: "All team members"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
-      name_taken: "This Project name has to be unique inside a team (this includes the archive)."
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
     archive:
-      head_title: "Projects Archive"
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
     restore:
@@ -354,7 +356,6 @@ en:
       error_flash: "Project <strong>%{name}</strong> not restored."
     show:
       head_title: "%{project}"
-      page_title: "Project's experiments"
     samples:
       head_title: "%{project} | Sample inventory"
     reports:
@@ -385,7 +386,9 @@ en:
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"
-        nav_pdf: "Download PDF"
+        nav_download: "Download"
+        nav_pdf: "PDF Report"
+        nav_docx: "DOCX Report"
         save_PDF_to_inventory: "Save PDF to Inventory"
         nav_save: "Save"
         nav_close: "Cancel"
@@ -429,6 +432,7 @@ en:
           module_contents_inner:
             instructions: "Select the information from your task that you would like to include to your report."
             check_all: "All tasks content"
+            protocol: "Protocol"
             steps: "Steps"
             completed_steps: "Completed"
             uncompleted_steps: "Uncompleted"
@@ -483,6 +487,7 @@ en:
           move_up: "Move report element up"
           move_down: "Move report element down"
           remove: "Remove report element from the report"
+          scinote_link: "SciNote link"
         new_element:
           title: "Add new report element/s here"
         project_header:
@@ -495,6 +500,8 @@ en:
           no_description: "No description"
           tags_header: "Task tags:"
           no_tags: "No tags"
+          protocol:
+            user_time: "Protocol created on %{timestamp}."
         experiment:
           user_time: "Experiment created on %{timestamp}."
           no_description: "No description"
@@ -537,6 +544,7 @@ en:
         step_checklist:
           checklist_name: "[ %{name} ]"
           user_time: "Checklist created on %{timestamp}."
+          checked: "checked"
         result_comments:
           sidebar_name: "Comments"
           name: "Comments for result %{result}"
@@ -606,9 +614,6 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Sucessfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
-      table_log: "%{user} deleted table result <strong>%{result}</strong> on %{date}"
-      text_log: "%{user} deleted text result <strong>%{result}</strong> on %{date}"
-      asset_log: "%{user} deleted file result <strong>%{result}</strong> on %{date}"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
@@ -619,8 +624,13 @@ en:
       start_date: "Start date:"
       due_date: "Due date:"
       tags: "Tags:"
-      no_tags: "No tags"
-      no_description: "No description"
+      no_tags: "Add new Task Tags (optional)"
+      manage_tags: "Manage tags"
+      create_new_tag: "create new"
+      no_description: "No task description"
+      description_label: "Description"
+      empty_description_edit_label: "Click here to enter Task Description (optional)"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
@@ -631,7 +641,8 @@ en:
         added_by: "Added by"
         added_by_tooltip: "Added at %{ts}"
         private_protocol_desc: "The parent protocol is private. Only its author can manage it."
-        no_description: "no description"
+        no_description: "No protocol description"
+        empty_description_edit_label: "Click here to enter Protocol Description (optional)"
         keywords: "Keywords"
         no_keywords: "no keywords"
         btns:
@@ -981,7 +992,12 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
+    subtitle: "Owned by %{team_name}"
     repository: "Inventory: %{name}"
+    icon_title:
+      i_shared: "Shared inventory (owned by your Team)"
+      shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
+      shared_read: "Shared inventory (owned by %{team_name}). You can view."
     index:
       head_title: "Inventories"
       title: "Inventories"
@@ -989,10 +1005,12 @@ en:
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" inventory was successfully copied from \"%{old}\"!"
-      visibility: "Visibility"
-      advanced: "Advanced"
+      columns: "Columns"
+      edit_inventory: "Edit Inventory"
+      share_inventory: "Share"
+      view_only_permission_label: "You have veiw-only permission"
+
       options_dropdown:
-        header: "Edit inventory"
         manage_columns: 'Manage columns'
         import_items: 'Import items'
         export_items: 'Export items'
@@ -1023,6 +1041,14 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
+      modal_share:
+        title: "Share Inventory"
+        submit: "Save sharing options"
+        share_with_team: "Share with Team"
+        can_edit: "Can Edit"
+        all_teams: "All teams (current & new)"
+        all_teams_tooltip: "This will disable individual team settings"
+        success_message: “Selected sharing options for the Inventory %{inventory_name} have been saved.” 
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -1045,7 +1071,7 @@ en:
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
     edit_record: "Edit"
-    copy_record: "Copy"
+    copy_record: "Duplicate"
     delete_record: "Delete"
     save_record: "Save"
     cancel_save: "Cancel"
@@ -1101,7 +1127,13 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
-
+    multiple_share_service:
+      unable_to_share: "Unable to share %{repository} inventory with %{team} team."
+      unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."
+      unable_to_update: "Unable to update sharing %{repository} inventory with %{team} team."
+      not_allowed: "You are not allowed to share this repository!"
+      invalid_arguments: "Can't find %{key}"
+      nothing_to_delete: "Can't find sharing relation for destroy"
   libraries:
     manange_modal_column:
       colum_type: "Column type"
@@ -1344,6 +1376,9 @@ en:
       table: "table"
       asset: "file"
     wupi_file_editing:
+      started: "editing started"
+      finished: "editing finished"
+    file_editing:
       started: "editing started"
       finished: "editing finished"
     protocols:
@@ -1603,6 +1638,7 @@ en:
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
+        published_on_label: "Published on"
         created_at_label: "Created at"
         updated_at_label: "Last modified at"
         preview_title: "Protocol preview"
@@ -1611,6 +1647,8 @@ en:
         import_current: "Load Current"
         import_all: "Load All"
         import: "Load"
+        import_to_team_protocols_label: "Import to Team Protocols"
+        import_to_private_protocols_label: "Import to My Protocols"
     export:
       export_results:
         title: "Export results"
@@ -1645,6 +1683,7 @@ en:
       navigation:
         public: "Team protocols"
         private: "My protocols"
+        external_protocols: "External protocols"
         archive: "Archive"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
@@ -1745,20 +1784,41 @@ en:
         row_failed: "Failed"
         row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
+      external_protocols:
+        search_bar_placeholder: 'Search for protocols'
+        protocolsio_title: 'Protocols.io'
+        sort_by:
+          title: 'Show first:'
+          alphabetically-asc: 'A-Z'
+          alphabetically-desc: 'Z-A'
+          newest: 'newest'
+          oldest: 'oldest'
+        list_panel:
+          empty_text: 'Search for protocols above to list them here'
+        preview_panel:
+          empty_title: 'PROTOCOL PREVIEW'
+          empty_subtext: 'Click on the protocol in the list to preview it here'
+          banner_text: 'Protocol Preview'
+        import:
+          public: "Team protocols"
+          private: "My protocols"
+          success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
+
     steps:
       completed: 'Completed'
       uncompleted: 'Uncompleted'
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New Step"
-      subtitle: "Protocol steps"
+      subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
       published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
       info_tab: "Info"
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Files"
+      files: "Attachments (%{count})"
+      comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
       options:
@@ -1772,6 +1832,13 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
+      attachments:
+        sort:
+          new_html: "Newest first &#8595;"
+          old_html: "Oldest first &#8593;"
+          atoz_html: "Name &#8595;"
+          ztoa_html: "Name &#8593;"
+        modified_label: "Modified:"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1858,7 +1925,7 @@ en:
       download_text: "Click the link to download the file."
       email_subject: "Your SciNote export is ready!"
       email_body_1: "The export of SciNote data that you requested is ready!"
-      email_body_2: "You can find the link to download the file below or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons."
+      email_body_2: "You can find the link to download the file below, or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons."
     show_all: "Show all notifications"
     show_more: "Show more notifications"
     no_notifications: "No notifications."
@@ -1898,8 +1965,8 @@ en:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"
     drag_n_drop:
-      label_html: 'Drag &amp; drop files here, CTRL+V (for images from clipboard) or '
-      browse_label: 'Browse to add'
+      label_html: 'Drag &amp; drop here. Copy &amp Paste images.'
+      browse_label: 'Select to Upload...'
       drop_label: 'Drop to add to Step'
       file_label: 'File'
     from_clipboard:
@@ -1911,6 +1978,18 @@ en:
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
+    create_wopi_file:
+      button_text: 'New Office file'
+      modal_title: 'Create new Microsoft Office Online document'
+      text_field_label: 'Document name & type'
+      text_field_placeholder: 'New Document'
+      ms_word: 'Word<br/>Online'
+      ms_excel: 'Excel<br/>Online'
+      ms_powerpoint: 'PowerPoint<br/>Online'
+      create_document_button: 'Create Document'
+      errors:
+        forbidden: 'You do not have permission to add files.'
+        not_found: 'Element not found.'
   atwho:
     no_results: "No results found"
     users:
@@ -1944,9 +2023,13 @@ en:
   tiny_mce:
     upload_window_title: 'Insert an image from your computer'
     upload_window_label: 'Choose an image'
+    choose_file: 'Choose file'
+    no_image_chosen: 'No image chosen'
     insert_btn: 'Insert'
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
+    saved_label: "Saved"
+    leaving_warning: "You have made some changes, are you sure you want to leave this page?"
   general:
     save: "Save"
     update: "Update"
@@ -1958,6 +2041,7 @@ en:
     no_comments: "No comments!"
     more_comments: "More comments"
     comment_placeholder: "Your Message"
+    comment_placeholder_new: "Add new comment…"
     module:
       one: "task"
       other: "tasks"
@@ -1973,6 +2057,7 @@ en:
       blank: "You didn't select any file"
       uploading: "If you leave this page, the file(s) that is/are currently uploading will not be saved! Are you sure you want to continue?"
       upload_failure: "Upload connection error. Try again or contact the administrator."
+      file_name_too_long: 'is too long (maximum is %{limit} characters, with extension)'
     text:
       not_blank: "can't be blank"
       length_too_long_general: "is too long"
@@ -1986,6 +2071,7 @@ en:
     no_name: "(no name)"
     error: "An error has occurred, please try again later."
     filter: "Filter:"
+    filter_dots: "Filter..."
     no_teams:
       title: "Your dashboard is empty!"
       text: "It seems you're not a member of any team."
@@ -2107,6 +2193,7 @@ en:
         complete: "You can complete the task if you are done working on it."
         inventories: "You can assign inventory items to your task."
         num_linked: "This number represents how many tasks are linked to the selected protocol."
+        unshared_inventory: "This Inventory has been unshared with your Team by "
       inventory:
         new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
         visibility: "You can make inventory columns visible or hidden."

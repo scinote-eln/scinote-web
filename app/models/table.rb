@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Table < ApplicationRecord
   include SearchableModel
 
@@ -26,7 +28,6 @@ class Table < ApplicationRecord
 
   after_save :update_ts_index
   after_save { result&.touch; step&.touch }
-  #accepts_nested_attributes_for :table
 
   def self.search(user,
                   include_archived,

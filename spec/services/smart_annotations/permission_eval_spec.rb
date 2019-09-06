@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'smart_annotations/permision_eval'
 
 describe SmartAnnotations::PermissionEval do
   let(:subject) { described_class }

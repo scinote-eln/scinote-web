@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class SamplesTable < ApplicationRecord
-  belongs_to :user, inverse_of: :samples_tables, optional: true
-  belongs_to :team, inverse_of: :samples_tables, optional: true
+  belongs_to :user, inverse_of: :samples_tables
+  belongs_to :team, inverse_of: :samples_tables
 
   validates :user, :team, presence: true
 

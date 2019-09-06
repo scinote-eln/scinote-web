@@ -129,9 +129,11 @@
            .done(function() {
              initDeleteColumnModal();
              initEditCoumnModal();
+             //@@@20190906JS - This was removed in latest merge, might impact the modal background opacity issue
              // remove create new modal window
-             $('#manageRepositoryColumn').remove();
-             $('.modal-backdrop').remove();
+             //$('#manageRepositoryColumn').remove();
+             //$('.modal-backdrop').remove();
+             //@@@20190906JS - End section
            });
     // remove 'no column' list item
     $('[data-attr="no-columns"]').remove();

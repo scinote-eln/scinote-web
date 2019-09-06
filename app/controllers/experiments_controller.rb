@@ -20,6 +20,7 @@ class ExperimentsController < ApplicationController
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
+  before_action :set_inline_name_editing, only: %i(canvas module_archive)
 
   layout 'fluid'.freeze
 
@@ -104,24 +105,24 @@ class ExperimentsController < ApplicationController
       log_activity(activity_type)
 
       @experiment.touch(:workflowimg_updated_at)
-      flash[:success] = t('experiments.update.success_flash',
-                          experiment: @experiment.name)
 
       respond_to do |format|
         format.json do
           render json: {}, status: :ok
         end
         format.html do
+          flash[:success] = t('experiments.update.success_flash',
+                          experiment: @experiment.name)
           redirect_to project_path(@experiment.project)
         end
       end
     else
-      flash[:alert] = t('experiments.update.error_flash')
       respond_to do |format|
         format.json do
           render json: @experiment.errors, status: :unprocessable_entity
         end
         format.html do
+          flash[:alert] = t('experiments.update.error_flash')
           redirect_back(fallback_location: root_path)
         end
       end
@@ -309,6 +310,16 @@ class ExperimentsController < ApplicationController
 
   def check_move_permissions
     render_403 unless can_move_experiment?(@experiment)
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_experiment?(@experiment)
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'experiment',
+      field_to_udpate: 'name',
+      path_to_update: experiment_path(@experiment)
+    }
   end
 
   def experiment_annotation_notification(old_text = nil)

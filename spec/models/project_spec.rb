@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 describe Project, type: :model do
+  let(:project) { build :project }
+
+  it 'is valid' do
+    expect(project).to be_valid
+  end
+
   it 'should be of class Project' do
     expect(subject.class).to eq Project
   end
@@ -44,27 +50,21 @@ describe Project, type: :model do
 
   describe 'Validations' do
     describe '#visibility' do
-      it { should validate_presence_of :visibility }
+      it { is_expected.to validate_presence_of :visibility }
     end
 
     describe '#team' do
-      it { should validate_presence_of :team }
+      it { is_expected.to validate_presence_of :team }
     end
 
     describe '#name' do
-      it 'should be at least 2 long and max 255 long' do
-        should validate_length_of(:name)
-          .is_at_least(Constants::NAME_MIN_LENGTH)
-          .is_at_most(Constants::NAME_MAX_LENGTH)
+      it do
+        is_expected.to(validate_length_of(:name)
+                         .is_at_least(Constants::NAME_MIN_LENGTH)
+                         .is_at_most(Constants::NAME_MAX_LENGTH))
       end
-
-      it 'should be uniq per project and team' do
-        first_project = create :project
-        second_project = build :project,
-                               name: first_project.name,
-                               team: first_project.team
-
-        expect(second_project).to_not be_valid
+      it do
+        expect(project).to validate_uniqueness_of(:name).scoped_to(:team_id).case_insensitive
       end
     end
   end

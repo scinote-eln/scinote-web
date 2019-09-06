@@ -14,7 +14,7 @@ module RepositoryImportParser
 
     def get_value(value, record_row)
       return unless @column
-      send("new_#{@column.data_type.underscore}", value, record_row)
+      __send__("new_#{@column.data_type.split('::').last.underscore}", value, record_row)
     end
 
     private

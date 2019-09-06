@@ -69,6 +69,7 @@ module ReportActions
 
   def generate_module_contents_json(my_module)
     res = []
+
     ReportExtends::MODULE_CONTENTS.each do |contents|
       elements = []
       contents.values.each do |element|

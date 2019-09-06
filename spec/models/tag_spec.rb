@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 describe Tag, type: :model do
+  let(:tag) { build :tag }
+
+  it 'is valid' do
+    expect(tag).to be_valid
+  end
+
   it 'should be of class Tag' do
     expect(subject.class).to eq Tag
   end
@@ -27,24 +33,20 @@ describe Tag, type: :model do
 
   describe 'Validations' do
     describe '#name' do
-      it { should validate_presence_of :name }
-      it do
-        should validate_length_of(:name)
-          .is_at_most(Constants::NAME_MAX_LENGTH)
-      end
+      it { is_expected.to validate_presence_of :name }
+      it { is_expected.to validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH) }
     end
 
     describe '#color' do
-      it { should validate_presence_of :color }
-      it do
-        should validate_length_of(:color)
-          .is_at_most(Constants::COLOR_MAX_LENGTH)
-      end
+      it { is_expected.to validate_presence_of :color }
+      it { is_expected.to validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH) }
     end
+
     describe '#projects' do
-      it { should validate_presence_of :project }
+      it { is_expected.to validate_presence_of :project }
     end
   end
+
   describe '.clone_to_project_or_return_existing' do
     let(:project) { create :project }
     let(:tag) { create :tag }

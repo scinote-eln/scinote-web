@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <%= bootstrap_form_for @my_module, url: update_description_my_module_path(@my_module, format: :json), remote: :true, html: {class: 'tiny-mce-editor'} do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
   <div id="my_module_description_view"
@@ -21,4 +22,32 @@
                           object_id: @my_module.id,
                           highlightjs_path: asset_path('highlightjs-github-theme.css'),
                           last_updated: @my_module.updated_at.to_i * 1000 } ) %>
+=======
+<%= bootstrap_form_for @my_module, url: update_description_my_module_path(@my_module, format: :json), remote: :true do |f| %>
+  <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
+  <% if @my_module.description.present? %>
+    <div id="my_module_description_view"
+         class="ql-editor tinymce-view"
+         data-placeholder="<%= t('my_modules.module_header.empty_description_edit_label') %>">
+        <%= custom_auto_link(@my_module.tinymce_render(:description),
+                             simple_format: false,
+                             tags: %w(img),
+                             team: current_team) %>
+    </div>
+  <% else %>
+    <div id="my_module_description_view"
+         class="ql-editor tinymce-view"
+         data-placeholder="<%= t('my_modules.module_header.empty_description_edit_label') %>"></div>
+  <% end %>
+  <%= f.tiny_mce_editor(:description,
+                        id: :my_module_description_textarea,
+                        class: 'hidden',
+                        placeholder:  t('my_modules.module_header.empty_description_edit_label'),
+                        hide_label: true,
+                        value: sanitize_input(@my_module.tinymce_render(:description)),
+                        data: {
+                          object_type: 'my_module',
+                          object_id: @my_module.id,
+                          highlightjs_path: asset_path('highlightjs-github-theme.css') } ) %>
+>>>>>>> Finished merging. Test on dev machine (iMac).
 <% end %>

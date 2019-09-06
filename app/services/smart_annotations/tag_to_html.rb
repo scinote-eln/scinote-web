@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'smart_annotations/permision_eval'
-require 'smart_annotations/html_preview'
-
 module SmartAnnotations
   class TagToHtml
     attr_reader :html

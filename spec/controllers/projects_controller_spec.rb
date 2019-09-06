@@ -90,18 +90,6 @@ describe ProjectsController, type: :controller do
     end
   end
 
-  describe '#archive' do
-    context 'in JSON format' do
-      let(:params) { { team: team.id, sort: 'atoz' } }
-
-      it 'returns success response' do
-        get :archive, params: params, format: :json
-        expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
-      end
-    end
-  end
-
   describe 'POST create' do
     context 'in JSON format' do
       let(:params) do

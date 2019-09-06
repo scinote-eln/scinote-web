@@ -1,6 +1,13 @@
 // Place all the styles related to the Steps controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
+@import "constants";
+@import "mixins";
 
 #new_step,
 .panel-step-attachment {
@@ -8,9 +15,7 @@
     list-style: none;
 
     li {
-      margin-bottom: 10px;
-
-      & > div > span.pull-left {
+      > div > span.pull-left {
         margin-top: 10px;
       }
     }
@@ -28,4 +33,246 @@
       }
     }
   }
+
+  .step {
+    .panel {
+      margin-left: 0;
+    }
+  }
+
+  .complete-step-btn {
+    display: inline-block;
+    line-height: 39px;
+
+    button {
+      display: block;
+      font-size: 12px;
+      margin: auto 0;
+      padding: 3px 10px;
+
+      span {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .panel-heading {
+    height: 39px;
+    padding-bottom: 0;
+    padding-top: 0;
+
+    .panel-options {
+      bottom: 0;
+      line-height: 39px;
+    }
+
+    span.step-number {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 10px;
+      min-width: fit-content;
+    }
+
+    .left-floats {
+      align-items: center;
+      display: flex;
+      height: 39px;
+      padding-right: 15px;
+
+      .step-name-link {
+        display: flex;
+        flex-shrink: 1;
+        line-height: 39px;
+        overflow: hidden;
+
+        .name-block {
+          display: flex;
+          flex-shrink: 1;
+          height: 39px;
+          overflow: hidden;
+
+          @media (max-width: 1188px) {
+            min-width: 100px;
+          }
+
+          strong {
+            font-size: 16px;
+            white-space: nowrap;
+          }
+        }
+
+        .delimiter {
+          padding: 0 5px;
+        }
+
+        .author-block {
+          display: inline-block;
+          flex-shrink: 0;
+          font-size: 16px;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+.attachments {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+  .pseudo-attachment-container {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.attachment-placeholder {
+  @include md-card-style;
+  color: $color-silver-chalice;
+  height: 280px;
+  margin: 8px;
+  text-align: center;
+  width: 220px;
+
+  a {
+    color: inherit;
+  }
+
+  .attachment-thumbnail {
+    display: inline-block;
+    height: 160px;
+    margin: 16px 10px 5px;
+    overflow: hidden;
+    text-align: center;
+
+    img {
+      border-radius: 5px;
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    i.fas {
+      font-size: 100px;
+      line-height: 160px;
+    }
+  }
+
+  .no-shadow {
+    box-shadow: none;
+  }
+
+  .attachment-label {
+    background: $color-white;
+    color: $brand-primary;
+    font-family: Lato;
+    font-size: 16px;
+    height: 40px;
+    line-height: 18px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    top: 20px;
+    transition: $md-transaction;
+    width: 190px;
+    z-index: 2;
+  }
+
+  .spencer-bonnet-modif {
+    align-items: center;
+    color: $color-silver-chalice;
+    display: flex;
+    font-family: Lato;
+    font-size: 12px;
+    height: 40px;
+    justify-content: center;
+    line-height: 15px;
+    margin: 0 auto 5px;
+    position: relative;
+    text-align: center;
+    top: -20px;
+    transition: $md-transaction;
+    width: 149px;
+  }
+
+  .remove-icon {
+    bottom: 15px;
+    display: none;
+    position: relative;
+    right: 10px;
+  }
+
+  &:hover {
+    box-shadow: $md-shadow;
+
+    .remove-icon {
+      display: inline-block;
+    }
+
+    .attachment-label {
+      top: 0;
+    }
+
+    .spencer-bonnet-modif {
+      top: 0;
+    }
+  }
+
+  &.new {
+    background-color: rgba(95, 95, 95, .1);
+
+    .attachment-label {
+      background-color: transparent;
+    }
+
+    .dnd-error {
+      bottom: 15px;
+      float: left;
+      padding-left: 5px;
+      position: relative;
+    }
+
+    &:hover {
+      .attachment-label {
+        top: 20px;
+      }
+    }
+  }
+}
+
+.attachments-order {
+  display: inline-block;
+}
+
+.attachments-actions {
+  align-items: center;
+  display: flex;
+
+  .title {
+    flex-grow: 1;
+  }
+
+  .attachments-order {
+    color: $color-silver-chalice;
+    min-width: 140px;
+  }
+
+  .btn-default {
+    border: 0;
+    color: inherit;
+    margin-left: 10px;
+
+    &:hover {
+      background: inherit;
+    }
+  }
+}
+
+.step .textarea-sm {
+  border-radius: 0;
+}
+
+.comments-title {
+  color: $color-emperor;
 }

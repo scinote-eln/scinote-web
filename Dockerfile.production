@@ -1,14 +1,11 @@
-FROM ruby:2.5.5
+FROM ruby:2.5.5-stretch
 MAINTAINER BioSistemika <info@biosistemika.com>
 
-# NOTE This is necessary if installing yarn from apt-get install of npm:
-#RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-#RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-#RUN apt-get update && apt-get install yarn
-
+RUN echo deb "http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list
 
 # additional dependecies
 # libSSL-1.0 is required by wkhtmltopdf binary
+# libreoffice for file preview generation
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   apt-get update -qq && \
   apt-get install -y \
@@ -23,6 +20,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   postgresql-client \
   netcat \
   default-jre-headless \
+  poppler-utils \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
   # NOTE if this npm install fails, comment it out and try the apt-get install option:
@@ -52,4 +50,3 @@ RUN DATABASE_URL=postgresql://postgres@db/scinote_production \
   bash -c "rake assets:precompile && rake deface:precompile"
 
 CMD rails s -b 0.0.0.0
-

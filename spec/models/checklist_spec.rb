@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Checklist, type: :model do
+  let(:checklist) { build :checklist }
+
+  it 'is valid' do
+    expect(checklist).to be_valid
+  end
+
   it 'should be of class Checklist' do
     expect(subject.class).to eq Checklist
   end

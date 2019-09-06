@@ -1,6 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ProtocolKeyword, type: :model do
+  let(:protocol_keyword) { build :protocol_keyword }
+
+  it 'is valid' do
+    expect(protocol_keyword).to be_valid
+  end
+
   it 'should be of class ProtocolKeyword' do
     expect(subject.class).to eq ProtocolKeyword
   end
@@ -19,7 +27,7 @@ describe ProtocolKeyword, type: :model do
     it { should have_many :protocols }
   end
 
-  describe 'Should be a valid object' do
+  describe 'Validations' do
     it { should validate_presence_of :team }
     it do
       should validate_length_of(:name)
