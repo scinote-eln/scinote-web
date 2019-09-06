@@ -75,3 +75,4 @@ spec/addons
 # RVM/rbenv ruby version for local development
 .ruby-version
 /.vs
+.vscode/settings.json
