@@ -624,12 +624,7 @@ class MyModulesController < ApplicationController
   end
 
   def unshared_inventory
-    #binding.pry
-    render_403 unless Repository.used_on_task_but_unshared(@my_module, current_team)
-                      .where(id: params[:inventory_id])
-                      .any?
-
-    @inventory = Repository.find(params[:inventory_id])
+    @inventory = Repository.used_on_task_but_unshared(@my_module, current_team).find(params[:inventory_id])
     @inventory_admin = @inventory.created_by
   end
 
