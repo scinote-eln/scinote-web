@@ -25,7 +25,7 @@
     <a class="muted dropdown-item help_tooltips"
        data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.unshared_inventory') + repository.team.name %>"
        title="<%= repository.name %>"
-       href="<%= unshared_inventory_my_module_url(inventory_id: repository.id)%>">
+       href="<%= unshared_inventory_my_module_path(inventory_id: repository.id)%>">
 
       <% if enable_counters %>
         <% cache [repository, @my_module] do %>
