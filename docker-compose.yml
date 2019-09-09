@@ -5,6 +5,8 @@ services:
     image: postgres:9.6
     volumes:
       - scinote_development_postgres:/var/lib/postgresql/data
+    ports:
+      - "6543:5432"
 
   web:
     build:
