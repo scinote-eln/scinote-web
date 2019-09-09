@@ -26,9 +26,7 @@ module SmartAnnotations
 
       def validate_rep_item_permissions(user, team, object)
         if object.repository
-          return (object.repository.team.id == team.id ||
-                 object.repository.team_repositories.where(team_id: team.id).any?) &&
-                 can_read_repository?(user, object.repository)
+          return can_read_repository?(user, object.repository)
         end
 
         # handles discarded repositories
