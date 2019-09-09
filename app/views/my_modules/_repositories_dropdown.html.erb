@@ -22,13 +22,15 @@
 
 <% Repository.used_on_task_but_unshared(@my_module, current_team).each do |repository| %>
   <li>
-    <a class="disabled dropdown-item help_tooltips"
+    <a class="muted dropdown-item help_tooltips"
        data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.unshared_inventory') + repository.team.name %>"
-       title="<%= repository.name %>">
+       title="<%= repository.name %>"
+       href="<%= unshared_inventory_my_module_path(inventory_id: repository.id)%>">
+
       <% if enable_counters %>
         <% cache [repository, @my_module] do %>
           <%= truncate(repository.name) %>
-          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count(repository)})" %></span>
+          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count()})" %></span>
         <% end %>
       <% else %>
         <%= truncate(repository.name) %>

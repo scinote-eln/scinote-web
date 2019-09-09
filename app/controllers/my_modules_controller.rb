@@ -16,7 +16,7 @@ class MyModulesController < ApplicationController
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
                          assign_repository_records_modal
-                         repositories_dropdown update_description update_protocol_description)
+                         repositories_dropdown update_description update_protocol_description unshared_inventory)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -24,7 +24,7 @@ class MyModulesController < ApplicationController
                                            assign_repository_records_modal
                                            repository_index)
   before_action :load_projects_tree, only: %i(protocols results activities
-                                              samples repository archive)
+                                              samples repository archive unshared_inventory)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions,
                 only: %i(description due_date update_description update_protocol_description)
@@ -621,6 +621,11 @@ class MyModulesController < ApplicationController
         format.json { render json: {}, status: :unprocessable_entity }
       end
     end
+  end
+
+  def unshared_inventory
+    @inventory = Repository.used_on_task_but_unshared(@my_module, current_team).find(params[:inventory_id])
+    @inventory_admin = @inventory.created_by
   end
 
   private
