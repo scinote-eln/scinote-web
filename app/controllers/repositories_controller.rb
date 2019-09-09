@@ -289,13 +289,17 @@ class RepositoriesController < ApplicationController
   end
 
   def export_repository
-    if params[:row_ids] && params[:header_ids]
-      RepositoryZipExport.generate_zip(params, @repository, current_user)
-      log_activity(:export_inventory_items)
-    else
-      flash[:alert] = t('zip_export.export_error')
+    respond_to do |format|
+      format.json do
+        if params[:row_ids] && params[:header_ids]
+          RepositoryZipExport.generate_zip(params, @repository, current_user)
+          log_activity(:export_inventory_items)
+          render json: { message: t('zip_export.export_request_success') }, status: :ok
+        else
+          render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
+        end
+      end
     end
-    redirect_back(fallback_location: root_path)
   end
 
   private
