@@ -75,6 +75,20 @@ module ProtocolImporters
           protocols_hash = client_data.parsed_response.with_indifferent_access[:items]
           pagination = client_data.parsed_response.with_indifferent_access[:pagination]
 
+          if client_data.parsed_response[:local_sorting]
+            protocols_hash =
+              case client_data.parsed_response[:local_sorting]
+              when 'alpha_asc'
+                protocols_hash.sort_by { |p| p[:title] }
+              when 'alpha_desc'
+                protocols_hash.sort_by { |p| p[:title] }.reverse
+              when 'oldest'
+                protocols_hash.sort_by { |p| p[:created_on] }
+              else
+                protocols_hash.sort_by { |p| p[:created_on] }.reverse
+              end
+          end
+
           normalized_data = {}
           normalized_data[:protocols] = protocols_hash.map do |e|
             {
