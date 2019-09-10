@@ -30,7 +30,7 @@
       <% if enable_counters %>
         <% cache [repository, @my_module] do %>
           <%= truncate(repository.name) %>
-          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count()})" %></span>
+          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count(repository)})" %></span>
         <% end %>
       <% else %>
         <%= truncate(repository.name) %>
