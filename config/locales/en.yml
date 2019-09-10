@@ -758,8 +758,8 @@ en:
         unassign_title: "Unassign %{repository_name} items from task %{my_module_name}"
         unassign_message: "Do you want to unassign %{size} items only from this task, or unassign them from this task & downstream tasks in the workflow as well?"
     unshared_inventory:
-      title: The inventory %{inventory_name} is no longer shared with your team.
-      body: This inventory has been ushared with your team by the inventory’s owner (%{team_name} team). To view the item/s that are assigned to your task/s contact the %{team_name} team administrator (%{admin_name}, %{admin_email}).
+      title: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
+      body: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
   experiments:
     new:
       create: 'New Experiment'
