@@ -233,11 +233,7 @@
                                search_id: @search_id}.to_query %>">
                   <span class="badge pull-right"><%= values[:count] %></span>
                   <%= repository %>
-                  <% if values[:shared] == 'write' %>
-                    <%= draw_custom_icon('shared-edit') %>
-                  <% elsif values[:shared] == 'read' %>
-                    <%= draw_custom_icon('shared-read') %>
-                  <% end %>
+                  <%= inventory_shared_status_icon(values[:repository], results[:team]) %>
                 </a>
               </li>
             <% end %>
