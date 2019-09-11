@@ -8,12 +8,12 @@
 
 <div id="content">
   <div class="content-pane">
-    <h4><%= t("my_modules.unshared_inventory.title", inventory_name: @inventory.name).html_safe %></h4>
-    <%= t("my_modules.unshared_inventory.body",
+    <h4><%= t("my_modules.unshared_inventory.title_html", inventory_name: @inventory.name) %></h4>
+    <%= t("my_modules.unshared_inventory.body_html",
           inventory_name: @inventory.name,
           team_name: @inventory.team.name,
           admin_name: @inventory_admin.name,
-          admin_email: @inventory_admin.email).html_safe %>
+          admin_email: @inventory_admin.email) %>
 
   </div>
 </div>
