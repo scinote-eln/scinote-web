@@ -14,7 +14,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   nodejs \
   # NOTE npm is supposed to installed with nodejs, but apparently isn't sometimes
   # If the npm installation at line 22 fails, then comment out this npm and move onto the next comment...
-  npm \
+#  npm \
   groff-base \
   awscli \
   postgresql-client \
