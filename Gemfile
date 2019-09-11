@@ -105,7 +105,7 @@ gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 
 # Permission helper Gem
-gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'master'
+gem 'canaid', git: 'https://github.com/biosistemika/canaid', tag: '1.0.4'
 
 group :development, :test do
   gem 'awesome_print'
