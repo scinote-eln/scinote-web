@@ -5,6 +5,7 @@
 .inline-editing-container {
   display: flex;
   flex-grow: 1;
+  max-width: 100%;
   position: relative;
 
   .button-container {
