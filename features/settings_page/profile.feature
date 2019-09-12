@@ -22,7 +22,7 @@ Background:
 Scenario: Unsuccessful avatar image upload, file is too big
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
-  And I attach a "Moon.png" file to "user_raw_avatar" field
+  And I attach a "Moon.png" file to "#user_raw_avatar" field
   And I trigger click '#user-avatar-field .btn-success'
   And I should see "Your avatar file cannot be larger than 0.2 MB. (Please try again with a smaller file.)" error message
 
@@ -30,7 +30,7 @@ Scenario: Unsuccessful avatar image upload, file is too big
 Scenario: Successful upload avatar image
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
-  And I attach a "Star.png" file to "user_raw_avatar" field
+  And I attach a "Star.png" file to "#user_raw_avatar" field
   Then I click "Upload" button
   And I should see "Your account has been updated successfully" flash message
 

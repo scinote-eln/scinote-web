@@ -18,6 +18,10 @@ Given(/^I click "(.+)" link$/) do |link|
   click_link link
 end
 
+Given(/^I click first "(.+)" link$/) do |link_text|
+  first(:link, link_text).click
+end
+
 Given(/^I click "(.+)" link within "(.+)"$/) do |link, element|
   within(element) do
     click_link link
@@ -43,6 +47,12 @@ Given(/^the "([^"]*)" team exists$/) do |team_name|
   FactoryBot.create(:team, name: team_name)
 end
 
+Given(/^Demo project exists for the "([^"]*)" team$/) do |team_name|
+  team = Team.find_by_name(team_name)
+  user = team.user_teams.where(role: :admin).take.user
+  seed_demo_data(user, team)
+end
+
 Given(/^I'm on the home page of "([^"]*)" team$/) do |team_name|
   team = Team.find_by_name(team_name)
   @current_user.update_attribute(:current_team_id, team.id)
@@ -59,7 +69,7 @@ end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
   wait_for_ajax
-  attach_file(field_id, Rails.root.join('features', 'assets', file))
+  find(field_id).attach_file(Rails.root.join('features', 'assets', file))
   # "expensive" operation needs some time :=)
   sleep(0.5)
 end
@@ -97,6 +107,12 @@ Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, input_id|
   page.find("#{input_id} input[type=\"text\"]").set(text)
 end
 
+Then(/^I fill in "([^"]*)" in "([^"]*)" rich text editor field$/) do |text, input_id|
+  within_frame(find(input_id + '_ifr')) do
+    find('#tinymce').set(text)
+  end
+end
+
 Then(/^I fill in "([^"]*)" in "([^"]*)" field$/) do |text, input_id|
   page.find(input_id).set(text)
 end
@@ -112,6 +128,10 @@ end
 
 Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
   find(selector).click
+end
+
+Then(/^I attach file "([^"]*)" to the drag-n-drop field$/) do |file_name|
+  find('#drag-n-drop-assets', visible: false).send_keys(Rails.root.join('features', 'assets', file_name))
 end
 
 Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" input field$/) do |old_text, new_text, container_id|
