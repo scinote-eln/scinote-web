@@ -15,12 +15,15 @@
     <% ['handsontable.full.min.js', 'lodash.js', 'numeral.js', 'numeric.js',
         'md5.js', 'jstat.js', 'formula.js', 'parser.js', 'ruleJS.js',
         'handsontable.formula.js', 'big.min.js' ].each do |js_asset| %>
-        <%= javascript_tag Rails.application
+        <script type="text/javascript">
+          <%= j Rails.application
                    .assets_manifest
                    .find_sources(js_asset)
                    .first
+                   .to_s
                    .force_encoding(Encoding::UTF_8)
                    .html_safe %>
+        </script>
     <% end %>
 
     <!-- Init Handsontables -->
