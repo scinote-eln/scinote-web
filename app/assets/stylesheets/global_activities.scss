@@ -103,15 +103,23 @@
         .ds-tags {
           align-items: center;
           background: $color-concrete;
-          border-radius: 12px;
+          border-radius: 5px;
           box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
           display: flex;
           flex-shrink: 0;
           line-height: 13px;
           margin: 2px 3px;
-          max-width: calc(100% - 6px);
+          max-width: 250px;
+          overflow: hidden;
           padding: 5px 7px;
+          transition: .3s;
           user-select: none;
+
+          &.closing {
+            margin: 2px 0;
+            max-width: 0;
+            padding: 5px 0;
+          }
 
           &.stretch {
             flex-grow: 1;
@@ -124,13 +132,9 @@
             margin-right: 5px;
             max-width: 500px;
             overflow: hidden;
-            transition: .3s;
+            text-overflow: ellipsis;
             white-space: nowrap;
             width: auto;
-
-            &.closing {
-              max-width: 0;
-            }
           }
 
           .fas {
@@ -294,12 +298,12 @@
 }
 
 .ga-side {
-  flex-basis: 320px;
+  flex-basis: 450px;
   flex-shrink: 0;
   height: 100%;
   margin-right: -15px;
   overflow: hidden;
-  padding: 0 15px 20px;
+  padding: 15px 20px;
   position: relative;
 
   .filter-block {
@@ -387,6 +391,24 @@
       margin: 16px 10px;
       position: relative;
       width: 10px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .ga-side {
+    flex-basis: 350px;
+  }
+}
+
+@media (max-height: 800px) {
+  .ga-side {
+    .date-selector {
+      .hot-buttons {
+        .hot-button {
+          margin: 5px 0;
+        }
+      }
     }
   }
 }
