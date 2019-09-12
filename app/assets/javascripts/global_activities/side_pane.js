@@ -102,6 +102,17 @@ var globalActivities = (function() {
       dropdownSelector.clearData(activityFilter);
     });
 
+    $('.date-selector .date.clear').click(() => {
+      updateRunning = true;
+      $('#calendar-from-date').data('DateTimePicker').clear();
+      $('#calendar-to-date').data('DateTimePicker').clear();
+      $('.ga-side .date-selector.filter-block')[0].dataset.periodSelect = '';
+      resetHotButtonsBackgroundColor();
+      updateRunning = false;
+      GlobalActivitiesUpdateTopPaneTags();
+      reloadActivities();
+    });
+
     dropdownSelector.init(userFilter, {
       ajaxParams: ajaxParams,
       onChange: defaultOnChangeActions
@@ -203,12 +214,17 @@ var globalActivities = (function() {
               ${dateContainer[0].dataset.periodLabel}
               ${$('.ga-side .date-selector.filter-block')[0].dataset.periodSelect}
             </div>
-          </div>`).appendTo('.ga-top .ga-tags');
+            <i class="fas fa-times"></i>
+          </div>`).appendTo('.ga-top .ga-tags')
+          .find('.fa-times').click(() => {
+            $('.date-selector .date.clear').click();
+          });
       }
       $.each($('.ga-side .ds-tags'), function(index, tag) {
         var newTag = $(tag.outerHTML).appendTo('.ga-top .ga-tags');
         newTag.find('.fa-times')
-          .click(() => {
+          .click(function() {
+            newTag.addClass('closing');
             $(tag).find('.fa-times').click();
           });
       });
