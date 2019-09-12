@@ -123,6 +123,10 @@ module ActiveStorage
       { 'Content-Type' => content_type, 'Content-MD5' => checksum }
     end
 
+    def path_for(key)
+      subfolder.present? ? File.join(subfolder, key) : key
+    end
+
     private
 
     MAXIMUM_UPLOAD_PARTS_COUNT = 10000
