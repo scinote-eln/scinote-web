@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class TinyMceAsset < ApplicationRecord
-  include ActiveStorage::Downloading
   extend ProtocolsExporter
   extend MarvinJsActions
   attr_accessor :reference
-  before_create :set_reference, optional: true
+  before_create :set_reference
   after_create :calculate_estimated_size, :self_destruct
   after_destroy :release_team_space
 
@@ -98,7 +97,7 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def preview
-    image.variant(resize: Constants::LARGE_PIC_FORMAT)
+    image.variant(resize_to_limit: Constants::LARGE_PIC_FORMAT)
   end
 
   def self.delete_unsaved_image(id)

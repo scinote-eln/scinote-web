@@ -50,7 +50,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
         included:  [
           { type: 'result_texts',
             attributes: {
-              text: Faker::Lorem.sentence(25)
+              text: Faker::Lorem.sentence(word_count: 25)
             } }
         ] }
 

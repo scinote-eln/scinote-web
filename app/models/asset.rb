@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Asset < ApplicationRecord
-  include ActiveStorage::Downloading
   include SearchableModel
   include DatabaseHelper
   include Encryptor
@@ -199,15 +198,15 @@ class Asset < ApplicationRecord
   end
 
   def medium_preview
-    return file.variant(resize: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
+    return file.variant(resize_to_limit: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
 
-    file.preview(resize: Constants::MEDIUM_PIC_FORMAT)
+    file.preview(resize_to_limit: Constants::MEDIUM_PIC_FORMAT)
   end
 
   def large_preview
-    return file.variant(resize: Constants::LARGE_PIC_FORMAT) if previewable_image?
+    return file.variant(resize_to_limit: Constants::LARGE_PIC_FORMAT) if previewable_image?
 
-    file.preview(resize: Constants::LARGE_PIC_FORMAT)
+    file.preview(resize_to_limit: Constants::LARGE_PIC_FORMAT)
   end
 
   def file_name

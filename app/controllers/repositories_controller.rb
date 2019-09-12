@@ -97,7 +97,7 @@ class RepositoriesController < ApplicationController
 
   def update
     old_name = @repository.name
-    @repository.update_attributes(repository_params)
+    @repository.update(repository_params)
 
     respond_to do |format|
       format.json do

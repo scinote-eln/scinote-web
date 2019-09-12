@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ProtocolImporters
-  module ProtocolsIO
+  module ProtocolsIo
     module V3
       class Error < StandardError
         attr_reader :error_type

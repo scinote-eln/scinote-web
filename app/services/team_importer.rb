@@ -335,33 +335,32 @@ class TeamImporter
       tiny_mce_asset = TinyMceAsset.new(tiny_mce_asset_json['tiny_mce_asset'])
       tiny_mce_asset_blob = tiny_mce_asset_json['tiny_mce_asset_blob']
       # Try to find and load file
-      File.open(
-        File.join(@import_dir, 'tiny_mce_assets', tiny_mce_asset.id.to_s,
-                  tiny_mce_asset_blob['filename'])
-      ) do |tiny_mce_file|
-        orig_tmce_id = tiny_mce_asset.id
-        tiny_mce_asset.id = nil
-        if tiny_mce_asset.object_id.present?
-          mappings = instance_variable_get("@#{tiny_mce_asset.object_type.underscore}_mappings")
-          tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
-        end
-        tiny_mce_asset.team = team
-        tiny_mce_asset.save!
-        tiny_mce_asset.image.attach(io: tiny_mce_file, filename: File.basename(tiny_mce_file))
-        @mce_asset_counter += 1
-        if tiny_mce_asset.object_id.present?
-          object = tiny_mce_asset.object
-          object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
-          encoded_id = Base62.encode(tiny_mce_asset.id)
-          object.public_send(object_field).sub!("data-mce-token=\"#{Base62.encode(orig_tmce_id)}\"",
-                                                "data-mce-token=\"#{encoded_id}\"")
-          # Check for old fields
-          new_asset_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{encoded_id}\"/>"
-          object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                                                new_asset_format)
-          object.save!
-        end
+      tiny_mce_file = File.open(File.join(@import_dir,
+                                          'tiny_mce_assets',
+                                          tiny_mce_asset.id.to_s,
+                                          tiny_mce_asset_blob['filename']))
+      orig_tmce_id = tiny_mce_asset.id
+      tiny_mce_asset.id = nil
+      if tiny_mce_asset.object_id.present?
+        mappings = instance_variable_get("@#{tiny_mce_asset.object_type.underscore}_mappings")
+        tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
       end
+      tiny_mce_asset.team = team
+      tiny_mce_asset.save!
+      tiny_mce_asset.image.attach(io: tiny_mce_file, filename: File.basename(tiny_mce_file))
+      @mce_asset_counter += 1
+      next unless tiny_mce_asset.object_id.present?
+
+      object = tiny_mce_asset.object
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
+      encoded_id = Base62.encode(tiny_mce_asset.id)
+      object.public_send(object_field).sub!("data-mce-token=\"#{Base62.encode(orig_tmce_id)}\"",
+                                            "data-mce-token=\"#{encoded_id}\"")
+      # Check for old fields
+      new_asset_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{encoded_id}\"/>"
+      object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                            new_asset_format)
+      object.save!
     end
   end
 
@@ -806,22 +805,19 @@ class TeamImporter
                       else
                         asset_json['file_file_name']
                       end
-    File.open(
-      "#{@import_dir}/assets/#{asset.id}/#{asset_file_name}"
-    ) do |file|
-      orig_asset_id = asset.id
-      asset.id = nil
-      asset.created_by_id = user_id || find_user(asset.created_by_id)
-      asset.last_modified_by_id =
-        user_id || find_user(asset.last_modified_by_id)
-      asset.team = team
-      asset.in_template = true if @is_template
-      asset.save!
-      asset.file.attach(io: file, filename: File.basename(file))
-      asset.post_process_file(team)
-      @asset_mappings[orig_asset_id] = asset.id
-      @asset_counter += 1
-    end
+    file = File.open("#{@import_dir}/assets/#{asset.id}/#{asset_file_name}")
+    orig_asset_id = asset.id
+    asset.id = nil
+    asset.created_by_id = user_id || find_user(asset.created_by_id)
+    asset.last_modified_by_id =
+      user_id || find_user(asset.last_modified_by_id)
+    asset.team = team
+    asset.in_template = true if @is_template
+    asset.save!
+    asset.file.attach(io: file, filename: File.basename(file))
+    asset.post_process_file(team)
+    @asset_mappings[orig_asset_id] = asset.id
+    @asset_counter += 1
     asset
   end
 

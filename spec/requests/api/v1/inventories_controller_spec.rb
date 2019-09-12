@@ -201,7 +201,7 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       updated_inventory[:data][:attributes][:name] =
         Faker::Name.unique.name
       patch api_v1_team_inventory_path(
-        id: @teams.first.repositories.first.id,
+        id: updated_inventory[:data][:id],
         team_id: @teams.first.id
       ), params: updated_inventory.to_json,
       headers: @valid_headers

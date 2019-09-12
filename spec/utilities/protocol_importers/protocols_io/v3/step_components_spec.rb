@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe ProtocolImporters::ProtocolsIO::V3::StepComponents do
+describe ProtocolImporters::ProtocolsIo::V3::StepComponents do
   let(:components) do
     [
       { type_id: 1, source: { description: 'Description' } },
