@@ -151,6 +151,7 @@ var dropdownSelector = (function() {
       if (dropdownContainer.hasClass('open')) {
         loadData(selectElement, dropdownContainer);
         updateDropdownDirection(selectElement, dropdownContainer);
+        dropdownContainer.find('.search-field').focus();
       }
     });
     $(window).resize(function() { updateDropdownDirection(selectElement, dropdownContainer); });
@@ -271,6 +272,7 @@ var dropdownSelector = (function() {
     });
     updateCurrentData(container, selectArray);
     updateTags(selector, container);
+    loadData(selector, container);
   }
 
   // Refresh tags in input field
@@ -284,18 +286,17 @@ var dropdownSelector = (function() {
       var tag = $(`<div class="ds-tags" >
                   <div class="tag-label"
                     data-ds-tag-group="${data.group}"
-                    data-ds-tag-id=${data.value}>
+                    data-ds-tag-id="${data.value}">
                     ${customLabel ? customLabel(data) : data.label}
                   </div>
                   <i class="fas fa-times"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
-      tag.click((e) => { e.stopPropagation(); });
       tag.find('.fa-times').click(function(e) {
         var tagLabel = $(this).prev();
         var toDelete;
         e.stopPropagation();
-        tagLabel.addClass('closing');
+        $(this).parent().addClass('closing');
         setTimeout(() => {
           if (selector.data('combine-tags')) {
             container.find('.data-field').val('[]');
@@ -303,13 +304,13 @@ var dropdownSelector = (function() {
           } else {
             selectedOptions = getCurrentData(container);
             toDelete = selectedOptions.findIndex(x => (String(x.value) === String(tagLabel.data('ds-tag-id'))
-              && String(x.group) === String(tagLabel.data('ds-tag-group'))
+              && (String(x.group) === String(tagLabel.data('ds-tag-group')) || !selector.data('select-by-group'))
             ));
             selectedOptions.splice(toDelete, 1);
             updateCurrentData(container, selectedOptions);
             updateTags(selector, container);
           }
-        }, 300);
+        }, 350);
       });
     }
 
