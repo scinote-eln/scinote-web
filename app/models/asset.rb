@@ -7,6 +7,7 @@ class Asset < ApplicationRecord
   include Encryptor
   include WopiUtil
   include ActiveStorageFileUtil
+  include ImageVariantProcessing
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -444,6 +445,10 @@ class Asset < ApplicationRecord
 
   def editable_image?
     !locked? && %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type
+  end
+
+  def generate_base64(style)
+    return convert_variant_to_base64(medium_preview) if style == :medium
   end
 
   private

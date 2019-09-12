@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReportsHelper
   include StringUtility
 
@@ -85,21 +87,19 @@ module ReportsHelper
     # ReportExtends is located in config/initializers/extends/report_extends.rb
     ReportElement.type_ofs.keys.each do |type|
       next unless element.public_send("#{type}?")
+
       element.element_references.each do |el_ref|
         locals[el_ref.class.name.underscore.to_sym] = el_ref
       end
-      if type.in? ReportExtends::SORTED_ELEMENTS
-        locals[:order] = element.sort_order
-      end
+      locals[:order] = element.sort_order if type.in? ReportExtends::SORTED_ELEMENTS
     end
 
     (render partial: view, locals: locals).html_safe
   end
 
   # "Hack" to omit file preview URL because of WKHTML issues
-  def report_image_asset_url(asset, type = :asset, klass = nil)
-    url = type == :tiny_mce_asset ? asset.preview : asset.large_preview
-    image_tag(url, class: klass)
+  def report_image_asset_url(asset, _type = :asset, klass = nil)
+    image_tag(asset.generate_base64(:medium), class: klass)
   end
 
   # "Hack" to load Glyphicons css directly from the CDN
@@ -107,6 +107,7 @@ module ReportsHelper
   def bootstrap_cdn_link_tag
     specs = Gem.loaded_specs['bootstrap-sass']
     return '' unless specs.present?
+
     stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/" \
                         "#{specs.version.version}/css/bootstrap.min.css",
                         media: 'all')

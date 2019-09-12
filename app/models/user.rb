@@ -9,6 +9,7 @@ class User < ApplicationRecord
   include TeamBySubjectModel
   include InputSanitizeHelper
   include ActiveStorage::Downloading
+  include ImageVariantProcessing
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -573,19 +574,12 @@ class User < ApplicationRecord
   end
 
   def avatar_base64(style)
-    unless avatar.present?
+    unless avatar.attached?
       missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
       return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
     end
 
-    avatar_uri = if avatar.options[:storage].to_sym == :s3
-                   URI.parse(avatar.url(style)).open.to_a.join
-                 else
-                   File.open(avatar.path(style)).to_a.join
-                 end
-
-    encoded_data = Base64.strict_encode64(avatar_uri)
-    "data:#{avatar_content_type};base64,#{encoded_data}"
+    convert_variant_to_base64(avatar_variant(style))
   end
 
   protected
