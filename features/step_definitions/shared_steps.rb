@@ -3,7 +3,7 @@ When(/^I click "(.+)" button$/) do |button|
 end
 
 Then("I trigger click {string}") do |string|
-  find(string).trigger('click')
+  page.execute_script("$('#{string}').trigger('click')")
 end
 
 Given(/^Show me the page$/) do

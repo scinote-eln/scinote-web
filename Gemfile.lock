@@ -174,7 +174,6 @@ GEM
     childprocess (1.0.1)
       rake (< 13.0)
     climate_control (0.2.0)
-    cliver (0.3.2)
     coderay (1.1.2)
     coffee-rails (5.0.0)
       coffee-script (>= 2.2.0)
@@ -341,7 +340,7 @@ GEM
       rails (>= 3.2.0)
     newrelic_rpm (6.5.0.357)
     nio4r (2.4.0)
-    nokogiri (1.10.3)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.1)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -379,11 +378,6 @@ GEM
     pg_search (2.3.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
-    phantomjs (2.1.1.0)
-    poltergeist (1.18.1)
-      capybara (>= 2.1, < 4)
-      cliver (~> 0.3.1)
-      websocket-driver (>= 0.2.0)
     polyglot (0.3.5)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -424,7 +418,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.1.0)
+    rails-html-sanitizer (1.2.0)
       loofah (~> 2.2, >= 2.2.2)
     rails_12factor (0.0.3)
       rails_serve_static_assets
@@ -513,6 +507,9 @@ GEM
       railties (>= 4.0.0)
     sdoc (1.0.0)
       rdoc (>= 5.0)
+    selenium-webdriver (3.142.3)
+      childprocess (>= 0.5, < 2.0)
+      rubyzip (~> 1.2, >= 1.2.2)
     shoulda-matchers (4.1.2)
       activesupport (>= 4.2.0)
     silencer (1.0.1)
@@ -604,7 +601,7 @@ DEPENDENCIES
   capybara-email
   caracal-rails
   commit_param_routing
-  cucumber-rails (~> 1.5)
+  cucumber-rails (~> 1.7)
   database_cleaner
   deface (~> 1.0)
   delayed_job_active_record
@@ -645,8 +642,6 @@ DEPENDENCIES
   paperclip (~> 6.1)
   pg (~> 1.1)
   pg_search
-  phantomjs
-  poltergeist
   pry
   pry-byebug
   pry-rails
@@ -669,6 +664,7 @@ DEPENDENCIES
   sassc-rails
   scenic (~> 1.4)
   sdoc (~> 1.0)
+  selenium-webdriver
   shoulda-matchers
   silencer
   simple_token_authentication (~> 1.15.1)

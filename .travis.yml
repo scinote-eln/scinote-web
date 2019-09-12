@@ -3,6 +3,8 @@ env:
 
 sudo: required
 language: ruby
+addons:
+  chrome: stable
 install: true
 services:
   - docker
