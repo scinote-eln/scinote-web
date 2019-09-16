@@ -2,29 +2,19 @@ Rails.application.routes.draw do
   use_doorkeeper do
     skip_controllers :applications, :authorized_applications, :token_info
   end
-  require 'subdomain'
 
   def draw(routes_name)
     instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
   end
 
   constraints UserSubdomain do
-    devise_for :users,
-               controllers: { registrations: 'users/registrations',
-                              sessions: 'users/sessions',
-                              invitations: 'users/invitations',
-                              confirmations: 'users/confirmations',
-                              omniauth_callbacks: 'users/omniauth_callbacks' }
+    devise_for :users, controllers: { registrations: 'users/registrations',
+                                      sessions: 'users/sessions',
+                                      invitations: 'users/invitations',
+                                      confirmations: 'users/confirmations',
+                                      omniauth_callbacks: 'users/omniauth_callbacks' }
 
-    devise_scope :user do
-      authenticated :user do
-        root 'projects#index'
-      end
-
-      unauthenticated do
-        root 'users/sessions#new'
-      end
-    end
+    root 'projects#index'
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'

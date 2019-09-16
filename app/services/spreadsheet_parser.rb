@@ -3,13 +3,8 @@
 class SpreadsheetParser
   # Based on file's extension opens file (used for importing)
   def self.open_spreadsheet(file)
-    if file.class == ActionDispatch::Http::UploadedFile
-      filename = file.original_filename
-      file_path = file.path
-    else
-      filename = file.filename.to_s
-      file_path = file.service_url
-    end
+    filename = file.original_filename
+    file_path = file.path
 
     case File.extname(filename)
     when '.csv'

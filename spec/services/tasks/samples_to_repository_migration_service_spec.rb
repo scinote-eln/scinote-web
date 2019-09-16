@@ -113,7 +113,7 @@ describe Tasks::SamplesToRepositoryMigrationService do
         end
 
         it 'generates valid list_items' do
-          generated_list_items = subject.second.repository_list_items
+          generated_list_items = subject.second.repository_list_items.order(:id)
           expect(generated_list_items.count).to eq 10
           generated_list_items.each_with_index do |item, index|
             expect(item.data).to eq "Sample Type Item (#{index})"
@@ -168,7 +168,7 @@ describe Tasks::SamplesToRepositoryMigrationService do
         end
 
         it 'generates valid list_items' do
-          generated_list_items = subject.first.repository_list_items
+          generated_list_items = subject.first.repository_list_items.order(:id)
           expect(generated_list_items.count).to eq 10
           generated_list_items.each_with_index do |item, index|
             expect(item.data).to eq "Sample Group Item (#{index})"

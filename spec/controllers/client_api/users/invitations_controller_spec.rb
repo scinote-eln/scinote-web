@@ -34,7 +34,7 @@ describe ClientApi::Users::InvitationsController, type: :controller, broken: tru
                           format: :json
       expect(response).to_not be_success
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.content_type).to eq 'application/json'
+      expect(response.media_type).to eq 'application/json'
     end
   end
 end

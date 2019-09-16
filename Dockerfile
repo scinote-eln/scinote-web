@@ -1,4 +1,4 @@
-FROM ruby:2.6.3-buster
+FROM ruby:2.6.4-buster
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 # additional dependecies
@@ -13,11 +13,14 @@ RUN apt-get update -qq && \
   postgresql-client \
   default-jre-headless \
   poppler-utils \
+  librsvg2-2 \
+  libvips42 \
   sudo graphviz --no-install-recommends \
   libreoffice \
   libfile-mimeinfo-perl \
   chromium-driver && \
   npm install -g yarn && \
+  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 
 # heroku tools

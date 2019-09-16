@@ -91,7 +91,7 @@ class ExperimentsController < ApplicationController
                                 end
 
     old_text = @experiment.description
-    @experiment.update_attributes(experiment_params)
+    @experiment.update(experiment_params)
     @experiment.last_modified_by = current_user
 
     if @experiment.save

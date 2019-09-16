@@ -34,9 +34,9 @@ describe ProtocolImporters::SearchProtocolsService do
 
   context 'when raise api client error' do
     it 'return api errors' do
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_list)
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::ArgumentError
+        .and_raise(ProtocolImporters::ProtocolsIo::V3::ArgumentError
           .new(:missing_or_empty_parameters), 'Missing Or Empty Parameters Error'))
 
       expect(service_call.errors).to have_key(:missing_or_empty_parameters)
@@ -47,13 +47,13 @@ describe ProtocolImporters::SearchProtocolsService do
     it 'return normalizer errors' do
       client_data = double('api_response')
 
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_list)
         .and_return(client_data))
 
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
         .to(receive(:normalize_list).with(client_data)
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
+        .and_raise(ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
 
       expect(service_call.errors).to have_key(:nil_protocol)
     end
@@ -63,11 +63,11 @@ describe ProtocolImporters::SearchProtocolsService do
     before do
       client_data = double('api_response')
 
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_list)
               .and_return(client_data))
 
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
         .to(receive(:normalize_list).with(client_data)
               .and_return(normalized_list))
     end

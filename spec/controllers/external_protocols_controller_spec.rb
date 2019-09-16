@@ -46,7 +46,7 @@ describe ExternalProtocolsController, type: :controller do
     it 'returns JSON, 200 response when protocol parsing was valid' do
       action
       expect(response).to have_http_status(:success)
-      expect(response.content_type).to eq 'application/json'
+      expect(response.media_type).to eq 'application/json'
     end
 
     it 'contains html key in the response' do
@@ -79,17 +79,17 @@ describe ExternalProtocolsController, type: :controller do
     end
 
     it 'returns JSON, 200 response when preview was successfully returned' do
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_html_preview)).and_return(html_preview)
 
       # Call action
       action
       expect(response).to have_http_status(:success)
-      expect(response.content_type).to eq 'application/json'
+      expect(response.media_type).to eq 'application/json'
     end
 
     it 'should return html preview in the JSON' do
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_html_preview)).and_return(html_preview)
 
       # Call action
@@ -98,7 +98,7 @@ describe ExternalProtocolsController, type: :controller do
     end
 
     it 'returns error JSON and 400 response when something went wrong' do
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
+      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_html_preview)).and_raise(StandardError)
 
       # Call action
@@ -139,7 +139,7 @@ describe ExternalProtocolsController, type: :controller do
       it 'returns JSON, 200 response when protocol parsing was valid' do
         action
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
 
       it 'should return html form in the JSON' do
@@ -160,7 +160,7 @@ describe ExternalProtocolsController, type: :controller do
       # Call action
       action
       expect(response).to have_http_status(:bad_request)
-      expect(response.content_type).to eq 'application/json'
+      expect(response.media_type).to eq 'application/json'
     end
   end
 
@@ -189,7 +189,7 @@ describe ExternalProtocolsController, type: :controller do
         # Call action
         action
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
 
       it 'returns JSON, 400 response when protocol parsing was invalid' do
@@ -203,7 +203,7 @@ describe ExternalProtocolsController, type: :controller do
         # Call action
         action
         expect(response).to have_http_status(:bad_request)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
     end
 

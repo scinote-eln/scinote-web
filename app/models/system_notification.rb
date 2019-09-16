@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SystemNotification < ApplicationRecord
-  include PgSearch
+  include PgSearch::Model
 
   scope :modals, -> { select(:modal_title, :modal_body, :id) }
   # Full text postgreSQL search configuration

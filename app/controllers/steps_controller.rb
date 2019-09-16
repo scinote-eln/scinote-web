@@ -492,7 +492,7 @@ class StepsController < ApplicationController
     update_params = {}
     delete_step_tables(params)
     extract_destroy_params(params, update_params)
-    @step.update_attributes(update_params) unless update_params.empty?
+    @step.update(update_params) unless update_params.empty?
   end
 
   # Delete the step table

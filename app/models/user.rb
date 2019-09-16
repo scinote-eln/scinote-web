@@ -8,7 +8,6 @@ class User < ApplicationRecord
   include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
-  include ActiveStorage::Downloading
   include ImageVariantProcessing
 
   acts_as_token_authenticatable
@@ -264,7 +263,7 @@ class User < ApplicationRecord
              else
                Constants::ICON_SMALL_PIC_FORMAT
              end
-    avatar.variant(resize: format)
+    avatar.variant(resize_to_limit: format)
   end
 
   def avatar_url(style)
