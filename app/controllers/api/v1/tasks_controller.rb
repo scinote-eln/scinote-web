@@ -23,6 +23,16 @@ module Api
         render jsonapi: @task, serializer: TaskSerializer
       end
 
+      def create
+        raise PermissionError.new(MyModule, :create) unless can_manage_experiment?(@experiment)
+
+        my_module = @experiment.my_modules.create!(my_module_params)
+
+        render jsonapi: my_module,
+               serializer: TaskSerializer,
+               status: :created
+      end
+
       def activities
         activities = ActivitiesService.my_module_activities(@task)
                                       .page(params.dig(:page, :number))
@@ -33,6 +43,14 @@ module Api
       end
 
       private
+
+      def my_module_params
+        raise TypeError unless params.require(:data).require(:type) == 'tasks'
+
+        attr_list = %i(name x y)
+        params.require(:data).require(:attributes).require(attr_list)
+        params.require(:data).require(:attributes).permit(attr_list + [:description])
+      end
 
       # Made the method below because its more elegant than changing parameters
       # in routes file, and here. It exists because when we call input or output
