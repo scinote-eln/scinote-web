@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'smart_annotations/html_preview'
 
 describe SmartAnnotations::HtmlPreview do
   let(:subject) { described_class }
