@@ -1,7 +1,18 @@
  <%= content_for :sidebar do %>
   <div id="slide-panel" class="visible">
-    <div class="tree">
+    <div id="repo-tree" class="tree">
       <ul>
+        <% if can_create_repositories?(current_team) %>
+          <li>
+            <span class="tree-link link-wrap no-indent">
+              <a class="sidebar-button create-new-repository" data-remote="true"
+                 href="<%= create_modal_team_repositories_path(current_team) %>">
+                <span class="fas fa-plus"></span>
+                <%= t('libraries.index.no_libraries.create_new_button') %>
+              </a>
+            </span>
+          </li>
+        <% end %>
         <% repositories.each do |repository| %>
           <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
             <span class="tree-link line-wrap no-indent">
@@ -12,6 +23,7 @@
                             repository_path(repository),
                             data: { 'no-turbolink' => 'true' } %>
               <% end %>
+              <%= inventory_shared_status_icon(repository, current_team) %>
             </span>
           </li>
         <% end %>

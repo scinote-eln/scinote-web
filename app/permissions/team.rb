@@ -1,6 +1,6 @@
 Canaid::Permissions.register_for(Team) do
   # team: leave, read users, read projects, read/export samples,
-  #       read protocols, read/export repositories
+  #       read protocols
   #
   can :read_team do |user, team|
     user.is_member_of_team?(team)
@@ -45,21 +45,6 @@ Canaid::Permissions.register_for(Team) do
   can :create_repositories do |user, team|
     user.is_admin_of_team?(team) &&
       team.repositories.count < Rails.configuration.x.repositories_limit
-  end
-
-  # repository: create/import record
-  can :create_repository_rows do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
-  end
-
-  # repository: update/delete records
-  can :manage_repository_rows do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
-  end
-
-  # repository: create field
-  can :create_repository_columns do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
   end
 
   # this permission is scattered around the application
@@ -114,19 +99,5 @@ Canaid::Permissions.register_for(CustomField) do
   # sample: update/delete field
   can :manage_sample_column do |user, custom_field|
     can_create_sample_columns?(user, custom_field.team)
-  end
-end
-
-Canaid::Permissions.register_for(Repository) do
-  # repository: update, delete
-  can :manage_repository do |user, repository|
-    user.is_admin_of_team?(repository.team)
-  end
-end
-
-Canaid::Permissions.register_for(RepositoryColumn) do
-  # repository: update/delete field
-  can :manage_repository_column do |user, repository_column|
-    can_create_repository_columns?(user, repository_column.repository.team)
   end
 end

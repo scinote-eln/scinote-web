@@ -1,27 +1,34 @@
+# frozen_string_literal: true
+
 class RepositoriesController < ApplicationController
+  include InventoriesHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Context
+  include IconsHelper
+
   before_action :load_vars,
                 except: %i(index create create_modal parse_sheet)
   before_action :load_parent_vars, except:
     %i(repository_table_index parse_sheet)
-  before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: %i(export_repository show)
   before_action :check_manage_permissions, only:
     %i(destroy destroy_modal rename_modal update)
+  before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only:
-    %i(create_modal create copy_modal copy)
+    %i(create_modal create)
+  before_action :check_copy_permissions, only:
+    %i(copy_modal copy)
+  before_action :set_inline_name_editing, only: %i(show)
 
   layout 'fluid'
 
   def index
-    unless @repositories.length.zero? && current_team
-      redirect_to repository_path(@repositories.first) and return
-    end
+    redirect_to repository_path(@repositories.first) and return unless @repositories.length.zero? && current_team
     render 'repositories/index'
   end
 
-  def show
-  end
+  def show; end
 
   def create_modal
     @repository = Repository.new
@@ -32,6 +39,14 @@ class RepositoriesController < ApplicationController
             partial: 'create_repository_modal.html.erb'
           )
         }
+      end
+    end
+  end
+
+  def share_modal
+    respond_to do |format|
+      format.json do
+        render json: { html: render_to_string(partial: 'share_repository_modal.html.erb') }
       end
     end
   end
@@ -96,15 +111,11 @@ class RepositoriesController < ApplicationController
   end
 
   def update
-    old_name = @repository.name
     @repository.update(repository_params)
 
     respond_to do |format|
       format.json do
         if @repository.save
-          flash[:success] = t('repositories.index.rename_flash',
-                              old_name: old_name, new_name: @repository.name)
-
           log_activity(:rename_inventory) # Acton only for renaming
 
           render json: {
@@ -169,7 +180,7 @@ class RepositoriesController < ApplicationController
 
   # AJAX actions
   def repository_table_index
-    if @repository.nil? || !can_read_team?(@repository.team)
+    if @repository.nil? || !can_read_repository?(@repository)
       render_403
     else
       respond_to do |format|
@@ -185,7 +196,9 @@ class RepositoriesController < ApplicationController
   end
 
   def parse_sheet
-    repository = current_team.repositories.find_by_id(import_params[:id])
+    repository = Repository.accessible_by_teams(current_team).find_by_id(import_params[:id])
+
+    render_403 unless can_create_repository_rows?(repository)
 
     unless import_params[:file]
       repository_response(t('teams.parse_sheet.errors.no_file_selected'))
@@ -235,6 +248,9 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
+    render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
+                                                            .find_by_id(import_params[:id]))
+
     respond_to do |format|
       format.json do
         # Check if there exist mapping for repository record (it's mandatory)
@@ -273,13 +289,17 @@ class RepositoriesController < ApplicationController
   end
 
   def export_repository
-    if params[:row_ids] && params[:header_ids]
-      RepositoryZipExport.generate_zip(params, @repository, current_user)
-      log_activity(:export_inventory_items)
-    else
-      flash[:alert] = t('zip_export.export_error')
+    respond_to do |format|
+      format.json do
+        if params[:row_ids] && params[:header_ids]
+          RepositoryZipExport.generate_zip(params, @repository, current_user)
+          log_activity(:export_inventory_items)
+          render json: { message: t('zip_export.export_request_success') }, status: :ok
+        else
+          render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
+        end
+      end
     end
-    redirect_back(fallback_location: root_path)
   end
 
   private
@@ -287,7 +307,7 @@ class RepositoriesController < ApplicationController
   def repostiory_import_actions
     ImportRepository::ImportRecords.new(
       temp_file: TempFile.find_by_id(import_params[:file_id]),
-      repository: current_team.repositories.find_by_id(import_params[:id]),
+      repository: Repository.accessible_by_teams(current_team).find_by_id(import_params[:id]),
       mappings: import_params[:mappings],
       session: session,
       user: current_user
@@ -296,18 +316,26 @@ class RepositoriesController < ApplicationController
 
   def load_vars
     repository_id = params[:id] || params[:repository_id]
-    @repository = current_team.repositories.find_by_id(repository_id)
+    @repository = Repository.accessible_by_teams(current_team).find_by_id(repository_id)
     render_404 unless @repository
   end
 
   def load_parent_vars
     @team = current_team
     render_404 unless @team
-    @repositories = @team.repositories.order(created_at: :asc)
+    @repositories = Repository.accessible_by_teams(@team).order('repositories.created_at ASC')
   end
 
-  def check_team
-    render_404 unless params[:team_id].to_i == current_team.id
+  def set_inline_name_editing
+    return unless can_manage_repository?(@repository)
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'repository',
+      field_to_udpate: 'name',
+      path_to_update: team_repository_path(@repository),
+      label_after: "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"
+    }
   end
 
   def check_view_all_permissions
@@ -315,7 +343,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
   end
 
   def check_create_permissions
@@ -325,8 +353,18 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def check_copy_permissions
+    render_403 if !can_create_repositories?(@team) ||
+                  @team.repositories.count >= Rails.configuration.x.repositories_limit ||
+                  @repository.shared_with?(current_team)
+  end
+
   def check_manage_permissions
     render_403 unless can_manage_repository?(@repository)
+  end
+
+  def check_share_permissions
+    render_403 if !can_share_repository?(@repository) || current_user.teams.count <= 1
   end
 
   def repository_params

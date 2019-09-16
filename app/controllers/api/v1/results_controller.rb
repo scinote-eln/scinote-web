@@ -45,9 +45,19 @@ module Api
       end
 
       def create_text_result
-        result_text_params[:text] = convert_old_tiny_mce_format(result_text_params[:text])
-        result_text = ResultText.new(text: result_text_params[:text])
-        result_text.transaction do
+        Result.transaction do
+          @result = Result.create!(
+            user: current_user,
+            my_module: @task,
+            name: result_params[:name],
+            last_modified_by: current_user
+          )
+
+          result_text = ResultText.create!(
+            result: @result,
+            text: convert_old_tiny_mce_format(result_text_params[:text])
+          )
+
           if tiny_mce_asset_params.present?
             tiny_mce_asset_params.each do |t|
               image_params = t[:attributes]
@@ -67,13 +77,8 @@ module Api
               )
               result_text.text.sub!("data-mce-token=\"#{token}\"", "data-mce-token=\"#{Base62.encode(tiny_image.id)}\"")
             end
+            result_text.save!
           end
-          @result = Result.new(user: current_user,
-                               my_module: @task,
-                               name: result_params[:name],
-                               result_text: result_text,
-                               last_modified_by: current_user)
-          @result.save! && result_text.save!
         end
       end
 

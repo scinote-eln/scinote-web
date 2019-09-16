@@ -62,10 +62,10 @@ module RepositoryDatatableHelper
   end
 
   def can_perform_repository_actions(repository)
-    team = repository.team
-    can_manage_repository?(repository) ||
-      can_create_repositories?(team) ||
-      can_manage_repository_rows?(team)
+    can_read_repository?(repository) ||
+      can_manage_repository?(repository) ||
+      can_create_repositories?(repository.team) ||
+      can_manage_repository_rows?(repository)
   end
 
   # The order must be converted from Ruby Hash into a JS array -

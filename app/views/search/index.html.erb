@@ -233,6 +233,7 @@
                                search_id: @search_id}.to_query %>">
                   <span class="badge pull-right"><%= values[:count] %></span>
                   <%= repository %>
+                  <%= inventory_shared_status_icon(values[:repository], results[:team]) %>
                 </a>
               </li>
             <% end %>

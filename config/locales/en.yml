@@ -77,6 +77,10 @@ en:
               not_unique: "State already exists for this user and parent object"
             state:
               wrong_state: "Wrong parameters"
+        team_repository:
+          attributes:
+            team_id:
+              same_team: "Inventory can't be shared to the same team as it belongs to"
 
   helpers:
     label:
@@ -281,8 +285,6 @@ en:
       options_header: "Options"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
-      no_archived_projects: "No archived projects!"
-      back_to_projects_index: "Back to home"
       modal_new_project:
         modal_title: "Create new project"
         create: "Create"
@@ -331,7 +333,6 @@ en:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
     archive:
-      head_title: "Projects Archive"
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
     restore:
@@ -756,6 +757,9 @@ en:
         task_and_downstream: 'Task & Downstream'
         unassign_title: "Unassign %{repository_name} items from task %{my_module_name}"
         unassign_message: "Do you want to unassign %{size} items only from this task, or unassign them from this task & downstream tasks in the workflow as well?"
+    unshared_inventory:
+      title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
+      body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
   experiments:
     new:
       create: 'New Experiment'
@@ -975,7 +979,12 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
+    subtitle: "Owned by %{team_name}"
     repository: "Inventory: %{name}"
+    icon_title:
+      i_shared: "Shared inventory (owned by your Team)"
+      shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
+      shared_read: "Shared inventory (owned by %{team_name}). You can view."
     index:
       head_title: "Inventories"
       title: "Inventories"
@@ -983,10 +992,12 @@ en:
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" inventory was successfully copied from \"%{old}\"!"
-      visibility: "Visibility"
-      advanced: "Advanced"
+      columns: "Columns"
+      edit_inventory: "Edit Inventory"
+      share_inventory: "Share"
+      view_only_permission_label: "You have veiw-only permission"
+
       options_dropdown:
-        header: "Edit inventory"
         manage_columns: 'Manage columns'
         import_items: 'Import items'
         export_items: 'Export items'
@@ -1017,6 +1028,14 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
+      modal_share:
+        title: "Share Inventory"
+        submit: "Save sharing options"
+        share_with_team: "Share with Team"
+        can_edit: "Can Edit"
+        all_teams: "All teams (current & new)"
+        all_teams_tooltip: "This will disable individual team settings"
+        success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -1039,7 +1058,7 @@ en:
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
     edit_record: "Edit"
-    copy_record: "Copy"
+    copy_record: "Duplicate"
     delete_record: "Delete"
     save_record: "Save"
     cancel_save: "Cancel"
@@ -1095,7 +1114,13 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
-
+    multiple_share_service:
+      unable_to_share: "Unable to share %{repository} inventory with %{team} team."
+      unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."
+      unable_to_update: "Unable to update sharing %{repository} inventory with %{team} team."
+      not_allowed: "You are not allowed to share this repository!"
+      invalid_arguments: "Can't find %{key}"
+      nothing_to_delete: "Can't find sharing relation for destroy"
   libraries:
     manange_modal_column:
       colum_type: "Column type"
@@ -1973,11 +1998,11 @@ en:
     notification_title: 'Your requested export package is ready!'
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
-    modal_label: 'Export request received'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
     repository_header_html: 'You are about to export selected items in inventory %{repository}.'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    export_request_success: "Export request received!"
     export_error: "Error when creating zip export."
 
   # This section contains general words that can be used in any parts of
@@ -2033,6 +2058,7 @@ en:
     no_name: "(no name)"
     error: "An error has occurred, please try again later."
     filter: "Filter:"
+    filter_dots: "Filter..."
     no_teams:
       title: "Your dashboard is empty!"
       text: "It seems you're not a member of any team."
@@ -2154,6 +2180,7 @@ en:
         complete: "You can complete the task if you are done working on it."
         inventories: "You can assign inventory items to your task."
         num_linked: "This number represents how many tasks are linked to the selected protocol."
+        unshared_inventory: "This Inventory has been unshared with your Team by "
       inventory:
         new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
         visibility: "You can make inventory columns visible or hidden."

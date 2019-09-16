@@ -25,12 +25,20 @@ function initInlineEditing(title) {
       $('.inline-edit-active').find('.save-button').click();
     }
 
+    function appendAfterLabel() {
+      if (editBlock.dataset.labelAfter) {
+        $(editBlock.dataset.labelAfter).appendTo($editBlock.find('.view-mode'));
+      }
+    }
+    appendAfterLabel();
+
     function updateField() {
       var params = {};
 
       if (inputString.value === editBlock.dataset.originalName) {
         inputString.disabled = true;
         editBlock.dataset.editMode = 0;
+        editBlock.dataset.error = false;
         $inputString.addClass('hidden');
         $editBlock.find('.view-mode').removeClass('hidden');
         return false;
@@ -58,6 +66,7 @@ function initInlineEditing(title) {
           editBlock.dataset.error = false;
           $inputString.addClass('hidden');
           $editBlock.find('.view-mode').html(viewData).removeClass('hidden');
+          appendAfterLabel();
 
           inputString.disabled = true;
           editBlock.dataset.editMode = 0;
@@ -108,6 +117,12 @@ function initInlineEditing(title) {
       updateField();
       e.stopPropagation();
     });
+
+    $inputString.keyup((e) => {
+      if(e.keyCode === 13 && $inputString.is('input')) {
+        updateField();
+      }
+    })
 
     $($editBlock.find('.cancel-button')).click(e => {
       inputString.disabled = true;

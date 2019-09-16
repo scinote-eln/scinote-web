@@ -3,10 +3,10 @@ GIT
   revision: 8c87ae49648f4ca2c37313b0d9b9c561a10a71a2
   branch: rails_6
   specs:
-    canaid (1.0.3)
-      devise (>= 3.4.1)
+    canaid (1.0.4)
+      devise (~> 4.6.2)
       docile (>= 1.1.0)
-      rails (>= 4)
+      rails (~> 5.2.3)
 
 GIT
   remote: https://github.com/biosistemika/jquery-scrollto-rails

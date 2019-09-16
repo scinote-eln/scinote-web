@@ -450,7 +450,7 @@ var RepositoryDatatable = (function(global) {
   function dataTableInit() {
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
+      dom: "R<'row'<'col-sm-6 toolbar'><'col-sm-6'lf>><'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
       stateSave: true,
       processing: true,
       serverSide: true,
@@ -497,7 +497,7 @@ var RepositoryDatatable = (function(global) {
         }
       }],
       oLanguage: {
-        sSearch: I18n.t('general.filter')
+        sSearch: I18n.t('general.filter_dots')
       },
       rowCallback: function(row, data) {
         // Get row ID
@@ -618,6 +618,12 @@ var RepositoryDatatable = (function(global) {
         initHeaderTooltip();
       }
     });
+
+    // hack to replace filter placeholder
+    $('.dataTables_filter .form-control').attr('placeholder', $('.dataTables_filter label').text())
+    $('.dataTables_filter label').contents().filter(function(){
+      return this.nodeType === 3;
+    }).remove();
 
     // Handle click on table cells with checkboxes
     $(TABLE_ID).on('click', 'tbody td', function(e) {

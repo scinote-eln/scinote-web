@@ -1,4 +1,4 @@
-<% @my_module.experiment.project.team.repositories.order(created_at: :asc).each do |repository| %>
+<% Repository.accessible_by_teams(current_team).order(created_at: :asc).each do |repository| %>
   <li>
     <a class="dropdown-item <%= "active-item" if @repository == repository %> help_tooltips"
        data-tooltiplink="<%= I18n.t('tooltips.link.protocol.inventories') %>"
@@ -14,9 +14,28 @@
         <%= truncate(repository.name) %>
         <span class="assigned-items-counter"><i class="fas fa-spinner fa-spin"></i></span>
       <% end %>
+      <%= inventory_shared_status_icon(repository, current_team) %>
     </a>
   </li>
-  <% unless @my_module.experiment.project.team.repositories.last == repository %>
-    <li class="divider"></li>
-  <% end %>
+<% end %>
+
+
+<% Repository.used_on_task_but_unshared(@my_module, current_team).each do |repository| %>
+  <li>
+    <a class="muted dropdown-item help_tooltips"
+       data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.unshared_inventory') + repository.team.name %>"
+       title="<%= repository.name %>"
+       href="<%= unshared_inventory_my_module_path(inventory_id: repository.id)%>">
+
+      <% if enable_counters %>
+        <% cache [repository, @my_module] do %>
+          <%= truncate(repository.name) %>
+          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count(repository)})" %></span>
+        <% end %>
+      <% else %>
+        <%= truncate(repository.name) %>
+        <span class="assigned-items-counter"><i class="fas fa-spinner fa-spin"></i></span>
+      <% end %>
+    </a>
+  </li>
 <% end %>

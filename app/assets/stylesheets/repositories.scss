@@ -1,10 +1,42 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
 @import "constants";
 
+.content-pane.repository-show {
+  margin-top: 15px;
+  padding-top: 0;
+}
+
 .repositories-dropdown-menu {
+  border: 1px solid $color-gainsboro;
+  border-top: 0;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
   height: auto;
   max-height: 400px;
   overflow-x: hidden;
   text-transform: initial;
+  width: 300px;
+
+  li:not(:first-child) {
+    border-top: 1px solid $color-gainsboro;
+  }
+
+  .fas-custom{
+    float: right;
+  }
+
+  a.muted {
+    opacity: .7;
+  }
+}
+
+.repository-share-status {
+  display: contents !important;
+
+  &.hidden {
+    display: none !important;
+  }
 }
 
 .repository-table {
@@ -13,6 +45,12 @@
   // Datatables generated name
   .dataTables_length {
     display: inline-block;
+    float: right;
+    margin-left: 10px;
+  }
+
+  .dataTables_filter {
+    float: right;
   }
 
   // hack only for firefox
@@ -39,4 +77,181 @@
 .breadcrumb.breadcrumb-repository {
   background-color: $color-concrete;
   margin-bottom: 15px;
+}
+
+#repository-toolbar {
+  align-items: center;
+  border-bottom: 1px solid $color-gainsboro;
+  display: flex;
+  height: 55px;
+  margin-left: -20px;
+  padding: 5px 15px;
+  width: calc(100% + 40px);
+
+  .repository-share-icon {
+    flex-shrink: 0;
+    margin-top: -2px;
+
+    .fas-custom {
+      margin-left: 5px;
+    }
+  }
+
+  .repository-title-name {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    font-size: 18px;
+    line-height: 32px;
+    margin-right: 20px;
+    overflow: hidden;
+    padding-left: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .name-container {
+      align-items: center;
+      display: inline-flex;
+      height: 32px;
+
+      .read-only-name {
+        display: inline-block;
+        line-height: 32px;
+        max-width: calc(100% - 30px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .inline-editing-container {
+        width: 100%;
+      }
+    }
+  }
+
+  .repository-subtitle {
+    color: $color-silver-chalice;
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  .datatables-buttons {
+    flex-shrink: 0;
+  }
+}
+
+.toolbarButtonsDatatable {
+  .view-only-label {
+    opacity: .6;
+  }
+
+  .btn {
+    border: 0;
+  }
+}
+
+.sidebar-button {
+  color: $brand-primary !important;
+
+  span {
+    display: inline-block !important;
+    padding: 0 !important;
+  }
+
+  .fas {
+    margin-right: 5px;
+  }
+}
+
+.share-repo-modal {
+
+  .modal-dialog {
+    width: 350px;
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
+
+  .share-repo-container {
+    padding: 15px 30px;
+
+    // Main structure css
+    .header,
+    .data-list {
+      display: flex;
+      width: 100%;
+    }
+
+    .data-list {
+      flex-direction: column;
+    }
+
+    .all-teams,
+    .teams-list {
+      display: flex;
+      width: 100%;
+    }
+
+    .teams-list {
+      flex-direction: column;
+      max-height: 400px;
+      position: relative;
+
+      .team-container {
+        align-items: center;
+        display: flex;
+        padding: 5px 0;
+
+        .simple-checkbox.hidden {
+          display: inline-block !important;
+
+          + .checkbox-label {
+            display: inline-block;
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    .permission-selector {
+      display: flex;
+      flex-basis: 55px;
+      flex-shrink: 0;
+      justify-content: center;
+    }
+
+    .team-selector {
+      align-items: center;
+      display: flex;
+      flex-grow: 1;
+
+      .checkbox-label {
+        margin-right: 5px;
+      }
+    }
+
+    // header
+    .header {
+      align-items: center;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 5px 0 0;
+    }
+
+    .all-teams {
+      align-items: center;
+      border-bottom: 1px solid $color-gainsboro;
+      margin-left: -10px;
+      padding: 5px 10px;
+      user-select: none;
+      width: calc(100% + 20px);
+    }
+  }
+}
+
+#repository_row-info-table {
+  .fas {
+    color: $color-silver-chalice;
+  }
 }

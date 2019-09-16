@@ -42,6 +42,7 @@ module ProtocolImporters
         #     id of page.
         #     Default is 1.
         def protocol_list(query_params = {})
+          local_sorting = false
           response = with_handle_network_errors do
             sort_mappings = CONSTANTS[:sort_mappings]
             query = CONSTANTS.dig(:endpoints, :protocols, :default_query_params)
@@ -55,6 +56,7 @@ module ProtocolImporters
             # If key is blank access show latest publications, otherwise use
             # normal endpoint
             if query['key'].blank?
+              local_sorting = true
               query = CONSTANTS.dig(:endpoints, :publications, :default_query_params)
               self.class.get('/publications', query: query)
             else
@@ -62,6 +64,10 @@ module ProtocolImporters
             end
           end
           check_for_response_errors(response)
+          if local_sorting && %w(alpha_asc alpha_desc newest oldest).include?(query_params[:sort_by])
+            response.parsed_response[:local_sorting] = query_params[:sort_by]
+          end
+          response
         end
 
         # Returns full representation of given protocol ID

@@ -42,6 +42,8 @@ class Team < ApplicationRecord
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :activities, inverse_of: :team, dependent: :destroy
   has_many :assets, inverse_of: :team, dependent: :destroy
+  has_many :team_repositories, inverse_of: :team, dependent: :destroy
+  has_many :shared_repositories, through: :team_repositories, source: :repository
 
   attr_accessor :without_templates
   attr_accessor :without_intro_demo
