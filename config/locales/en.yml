@@ -81,6 +81,12 @@ en:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+        my_module:
+          attributes:
+            x:
+             not_unique: "and Y position has already been taken by another task in the experiment."
+
+
 
   helpers:
     label:
