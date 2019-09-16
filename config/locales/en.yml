@@ -266,11 +266,6 @@ en:
       delete_user_confirm: "Are you sure you wish to remove user %{user} from project %{project}?"
       team_filter: "Show projects from"
       all_filter: "All"
-      sort: "Sort by"
-      sort_new: "Newest first"
-      sort_old: "Oldest first"
-      sort_atoz: "From A to Z"
-      sort_ztoa: "From Z to A"
       start_date: "Start date:"
       activity_tab: "Activity"
       users_tab: "Users"
@@ -1820,11 +1815,6 @@ en:
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
       attachments:
-        sort:
-          new_html: "Newest first &#8595;"
-          old_html: "Oldest first &#8593;"
-          atoz_html: "Name &#8595;"
-          ztoa_html: "Name &#8593;"
         modified_label: "Modified:"
       new:
         add_step_title: "Add new step"
@@ -2029,6 +2019,11 @@ en:
     more_comments: "More comments"
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
+    sort:
+      new_html: "Newest first &#8595;"
+      old_html: "Oldest first &#8593;"
+      atoz_html: "Name &#8595;"
+      ztoa_html: "Name &#8593;"
     module:
       one: "task"
       other: "tasks"

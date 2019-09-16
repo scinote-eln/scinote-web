@@ -232,7 +232,7 @@ class ProjectsController < ApplicationController
     end
     # This is the "info" view
     current_team_switch(@project.team)
-    @current_sort = @project.experiments_order
+    @current_sort = @project.experiments_order || :new
   end
 
   def notifications

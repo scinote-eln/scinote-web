@@ -19,7 +19,7 @@
       <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
         <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span id="dd-att-step-<%= step.id %>-label">
-            <%= t("protocols.steps.attachments.sort.#{step.current_view_state(current_user).state.dig('assets', 'sort')}_html") %>
+            <%= t("general.sort.#{step.current_view_state(current_user).state.dig('assets', 'sort')}_html") %>
           </span>
           <span class="caret"></span>
         </button>
@@ -27,7 +27,7 @@
           <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
             <li>
               <a data-order="<%= sort %>" onClick="reorderAttachments(this, '<%= step.id %>', '<%= sort %>')">
-                <%= t("protocols.steps.attachments.sort.#{sort}_html") %>
+                <%= t("general.sort.#{sort}_html") %>
               </a>
             </li>
           <% end %>
