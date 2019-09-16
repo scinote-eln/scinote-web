@@ -17,7 +17,6 @@ class MyModule < ApplicationRecord
   validates :experiment, presence: true
   validates :my_module_group, presence: true,
             if: proc { |mm| !mm.my_module_group_id.nil? }
-
   validates_uniqueness_of :x, scope: %i(y experiment_id), message: :not_unique
 
   belongs_to :created_by,
@@ -426,7 +425,7 @@ class MyModule < ApplicationRecord
       description: self.description,
       x: self.x,
       y: self.y)
-    clone.save
+    clone.save(validate: false)
 
     # Remove the automatically generated protocol,
     # & clone the protocol instead

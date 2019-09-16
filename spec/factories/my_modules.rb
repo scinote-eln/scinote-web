@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :my_module do
     sequence(:name) { |n| "Task-#{n}" }
     x { Faker::Number.between(from: 1, to: 100) }
-    y { Faker::Number.between(from: 1, to: 100) }
+    sequence(:y) { |n| n }
     workflow_order { MyModule.where(experiment_id: experiment.id).count + 1 }
     experiment
     my_module_group { create :my_module_group, experiment: experiment }
