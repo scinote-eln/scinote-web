@@ -340,6 +340,7 @@ var dropdownSelector = (function() {
 
     updateDropdownDirection(selector, container);
     refreshDropdownSelection(selector, container);
+    if (container.hasClass('open')) container.find('.search-field').focus();
     if (selector.data('config').onChange && !config.skipChange) {
       selector.data('config').onChange();
     }
