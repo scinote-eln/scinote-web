@@ -63,19 +63,40 @@ describe MyModule, type: :model do
     it { should have_many(:my_module_antecessors).class_name('MyModule') }
   end
 
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :x }
-    it { should validate_presence_of :y }
-    it { should validate_presence_of :workflow_order }
-    it { should validate_presence_of :experiment }
-    it do
-      should validate_length_of(:name)
-        .is_at_least(Constants::NAME_MIN_LENGTH)
-        .is_at_most(Constants::NAME_MAX_LENGTH)
+  describe 'Validations' do
+    describe '#name' do
+      it do
+        is_expected.to(validate_length_of(:name)
+                         .is_at_least(Constants::NAME_MIN_LENGTH)
+                         .is_at_most(Constants::NAME_MAX_LENGTH))
+      end
     end
-    it do
-      should validate_length_of(:description)
-        .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
+
+    describe '#description' do
+      it do
+        is_expected.to(validate_length_of(:description)
+                         .is_at_most(Constants::RICH_TEXT_MAX_LENGTH))
+      end
+    end
+
+    describe '#x, #y scoped to experiment' do
+      it { is_expected.to validate_presence_of :x }
+      it { is_expected.to validate_presence_of :y }
+
+      it do
+        expect(my_module)
+          .to(validate_uniqueness_of(:x)
+                .scoped_to(%i(y experiment_id))
+                .with_message('and Y position has already been taken by another task in the experiment.'))
+      end
+    end
+
+    describe '#workflow_order' do
+      it { is_expected.to validate_presence_of :workflow_order }
+    end
+
+    describe '#experiment' do
+      it { is_expected.to validate_presence_of :experiment }
     end
   end
 end
