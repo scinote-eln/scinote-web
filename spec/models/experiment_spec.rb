@@ -120,7 +120,7 @@ describe Experiment, type: :model do
             { id: 'n' + i.to_s,
               name: t.name + '_new',
               x: 50,
-              y: 50 }
+              y: 50 + i }
           end
       end
       let(:to_clone) do
