@@ -107,3 +107,16 @@
     }
   }
 }
+
+#repo-tree {
+  .fas-custom {
+    float: right;
+    top: 2px;
+  }
+
+  .active {
+    .fas-custom {
+      fill: $color-white;
+    }
+  }
+}

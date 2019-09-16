@@ -122,7 +122,7 @@
 
           <li data-hook="secondary-navigation-tabs"></li>
           <% if can_read_team?(@my_module.experiment.project.team) &&
-                @my_module.experiment.project.team.repositories.exists? %>
+                Repository.accessible_by_teams(current_team).exists? %>
             <li id="repositories-nav-tab"
                 class="<%= "active" if module_repository_page? %> dropdown repositories-dropdown"
                 data-url="<%= module_repository_page? ? repositories_dropdown_repository_tab_my_module_path(repository: @repository) : repositories_dropdown_my_module_path %>">
@@ -154,8 +154,7 @@
           <%= render partial: "shared/inline_editing",
                      locals: { initial_value: title_element.name } %>
         <% else %>
-          <%= truncate(title_element.name,
-                     length: Constants::MAX_EDGE_LENGTH) %>
+          <%= title_element.name %>
         <% end %>
       </h4>
 

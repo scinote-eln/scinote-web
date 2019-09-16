@@ -849,7 +849,7 @@ function bindEditTagsAjax(elements) {
       });
     manageTagsModalBody.find(".edit-tag-form")
       .on("ajax:success", function (e, data) {
-        initTagsModalBody(data);
+        if (data.my_module) initTagsModalBody(data);
       })
       .on("ajax:error", function (e, data) {
         $(this).renderFormErrors("tag", data.responseJSON);

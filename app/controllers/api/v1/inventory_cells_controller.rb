@@ -60,9 +60,7 @@ module Api
       end
 
       def check_manage_permissions
-        unless can_manage_repository_rows?(@team)
-          raise PermissionError.new(RepositoryRow, :manage)
-        end
+        raise PermissionError.new(RepositoryRow, :manage) unless can_manage_repository_rows?(@inventory)
       end
 
       def inventory_cell_params

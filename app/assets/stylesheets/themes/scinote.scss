@@ -38,7 +38,7 @@ table {
 }
 
 #alert-container {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 #project-archive-btn {
@@ -320,7 +320,15 @@ a[data-toggle="tooltip"] {
   }
 
   .nav-name {
-    padding: 5px 0;
+    align-items: center;
+    display: flex;
+    height: 54px;
+    line-height: 44px;
+    margin: 0;
+    overflow: hidden;
+    padding: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .navbar-nav > li > .dropdown-menu {
@@ -1204,7 +1212,7 @@ table.dataTable {
 
   thead > tr > th,
   thead > tr > td {
-    padding: 6px;
+    padding: 8px;
   }
 
   tbody > tr.selected,
@@ -1243,7 +1251,6 @@ table.dataTable {
 
 .toolbarButtons {
   display: inline-block;
-  padding-left: 20px;
 }
 
 /* Pills with arrow */

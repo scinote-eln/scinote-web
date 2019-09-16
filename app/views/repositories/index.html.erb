@@ -13,8 +13,7 @@
       <% if can_create_repositories?(current_team) %>
         <h2><strong><%=t 'libraries.index.no_libraries.title' %><strong></h2>
         <br />
-        <a class="btn btn-primary btn-lg"
-           id="create-new-repository"
+        <a class="btn btn-primary btn-lg create-new-repository"
            data-remote="true"
            href="<%= create_modal_team_repositories_path(current_team) %>">
           <span class="fas fa-plus"></span>

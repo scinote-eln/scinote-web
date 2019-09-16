@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
 class Repository < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include RepositoryImportParser
   include Discard::Model
+
+  enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 
   attribute :discarded_by_id, :integer
 
@@ -14,6 +18,8 @@ class Repository < ApplicationRecord
            inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
   has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
+  has_many :team_repositories, inverse_of: :repository, dependent: :destroy
+  has_many :teams_shared_with, through: :team_repositories, source: :team
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -24,6 +30,24 @@ class Repository < ApplicationRecord
   validates :created_by, presence: true
 
   default_scope -> { kept }
+  scope :accessible_by_teams, lambda { |teams|
+    left_outer_joins(:team_repositories)
+      .where('repositories.team_id IN (?) '\
+             'OR team_repositories.team_id IN (?) '\
+             'OR repositories.permission_level = ? '\
+             'OR repositories.permission_level = ? ',
+             teams,
+             teams,
+             Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
+             Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write])
+      .distinct
+  }
+
+  scope :used_on_task_but_unshared, lambda { |task, team|
+    where(id: task.repository_rows
+      .select(:repository_id))
+      .where.not(id: accessible_by_teams(team.id).select(:id)).distinct
+  }
 
   def self.search(
     user,
@@ -32,7 +56,8 @@ class Repository < ApplicationRecord
     repository = nil,
     options = {}
   )
-    repositories = repository || Repository.where(team: user.teams)
+    repositories = repository ||
+                   Repository.accessible_by_teams(user.teams.pluck(:id))
 
     includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
     searchable_attributes = ['repository_rows.name', 'users.full_name'] +
@@ -62,6 +87,40 @@ class Repository < ApplicationRecord
     end
   end
 
+  def i_shared?(team)
+    shared_with_anybody? && self.team == team
+  end
+
+  def shared_with_anybody?
+    (!not_shared? || team_repositories.any?)
+  end
+
+  def shared_with?(team)
+    return false if self.team == team
+
+    !not_shared? || private_shared_with?(team)
+  end
+
+  def shared_with_write?(team)
+    return false if self.team == team
+
+    shared_write? || private_shared_with_write?(team)
+  end
+
+  def shared_with_read?(team)
+    return false if self.team == team
+
+    shared_read? || team_repositories.where(team: team, permission_level: :shared_read).any?
+  end
+
+  def private_shared_with?(team)
+    team_repositories.where(team: team).any?
+  end
+
+  def private_shared_with_write?(team)
+    team_repositories.where(team: team, permission_level: :shared_write).any?
+  end
+
   def self.viewable_by_user(_user, teams)
     where(team: teams)
   end
@@ -81,6 +140,7 @@ class Repository < ApplicationRecord
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
       next unless rc.importable?
+
       fields[rc.id] = rc.name
     end
     fields

@@ -7,6 +7,9 @@
 }
 
 #notifications-dropdown {
+  margin-left: 15px;
+  padding-left: 15px;
+
   .fa-bell {
     font-size: $font-size-large;
   }
@@ -21,6 +24,7 @@
     margin-left: 12px;
     padding: 1px 6px;
     position: relative;
+    top: -10px;
     z-index: 1;
   }
 }
@@ -164,6 +168,22 @@
 
   .repository-search {
     padding-left: 15px;
+
+    .fas-custom {
+      fill: $brand-primary;
+    }
+
+    &.active {
+      .fas-custom {
+        fill: $color-white !important;
+      }
+    }
+
+    &.disabled {
+      .fas-custom {
+        fill: $color-silver-chalice;
+      }
+    }
   }
 }
 
@@ -399,6 +419,7 @@
     margin-left: 12px;
     padding: 1px 6px;
     position: relative;
+    top: -10px;
     z-index: 1;
   }
 }

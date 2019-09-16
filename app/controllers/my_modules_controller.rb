@@ -16,7 +16,7 @@ class MyModulesController < ApplicationController
                          assign_repository_records unassign_repository_records
                          unassign_repository_records_modal
                          assign_repository_records_modal
-                         repositories_dropdown update_description update_protocol_description)
+                         repositories_dropdown update_description update_protocol_description unshared_inventory)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
@@ -24,7 +24,7 @@ class MyModulesController < ApplicationController
                                            assign_repository_records_modal
                                            repository_index)
   before_action :load_projects_tree, only: %i(protocols results activities
-                                              samples repository archive)
+                                              samples repository archive unshared_inventory)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions,
                 only: %i(description due_date update_description update_protocol_description)
@@ -300,8 +300,7 @@ class MyModulesController < ApplicationController
 
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_read_team?(@repository.team)
-    current_team_switch(@repository.team)
+    render_403 if @repository.nil? || !can_read_repository?(@repository)
   end
 
   def archive
@@ -624,6 +623,11 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def unshared_inventory
+    @inventory = Repository.used_on_task_but_unshared(@my_module, current_team).find(params[:inventory_id])
+    @inventory_admin = @inventory.created_by
+  end
+
   private
 
   def task_completion_activity
@@ -670,7 +674,7 @@ class MyModulesController < ApplicationController
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_404 unless @repository
-    render_403 unless can_read_team?(@repository.team)
+    render_403 unless can_read_repository?(@repository)
   end
 
   def load_projects_tree

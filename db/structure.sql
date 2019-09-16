@@ -44,11 +44,8 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
     LANGUAGE sql
     AS $$
-        SELECT regexp_replace(input,
-          E'<[^>]*>|\\[#.*\\]|\\[@.*\\]',
-          '',
-          'g');
-        $$;
+      SELECT regexp_replace(input, E'<[^>]*>', '', 'g');
+      $$;
 
 
 SET default_tablespace = '';
@@ -1088,7 +1085,8 @@ CREATE TABLE public.repositories (
     name character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    discarded_at timestamp without time zone
+    discarded_at timestamp without time zone,
+    permission_level integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1990,6 +1988,39 @@ CREATE SEQUENCE public.tags_id_seq
 --
 
 ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
+
+
+--
+-- Name: team_repositories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.team_repositories (
+    id bigint NOT NULL,
+    team_id bigint,
+    repository_id bigint,
+    permission_level integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: team_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.team_repositories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: team_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.team_repositories_id_seq OWNED BY public.team_repositories.id;
 
 
 --
@@ -2904,6 +2935,13 @@ ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id
 
 
 --
+-- Name: team_repositories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_repositories ALTER COLUMN id SET DEFAULT nextval('public.team_repositories_id_seq'::regclass);
+
+
+--
 -- Name: teams id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3453,6 +3491,14 @@ ALTER TABLE ONLY public.tables
 
 ALTER TABLE ONLY public.tags
     ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: team_repositories team_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_repositories
+    ADD CONSTRAINT team_repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -4326,6 +4372,13 @@ CREATE INDEX index_repositories_on_discarded_at ON public.repositories USING btr
 
 
 --
+-- Name: index_repositories_on_permission_level; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_permission_level ON public.repositories USING btree (permission_level);
+
+
+--
 -- Name: index_repositories_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4865,6 +4918,34 @@ CREATE INDEX index_tags_on_project_id ON public.tags USING btree (project_id);
 
 
 --
+-- Name: index_team_repositories_on_permission_level; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_repositories_on_permission_level ON public.team_repositories USING btree (permission_level);
+
+
+--
+-- Name: index_team_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_repositories_on_repository_id ON public.team_repositories USING btree (repository_id);
+
+
+--
+-- Name: index_team_repositories_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_repositories_on_team_id ON public.team_repositories USING btree (team_id);
+
+
+--
+-- Name: index_team_repositories_on_team_id_and_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_team_repositories_on_team_id_and_repository_id ON public.team_repositories USING btree (team_id, repository_id);
+
+
+--
 -- Name: index_teams_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5221,6 +5302,14 @@ ALTER TABLE ONLY public.steps
 
 ALTER TABLE ONLY public.tables
     ADD CONSTRAINT fk_rails_147b6eced4 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: team_repositories fk_rails_15daa6a6bf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_repositories
+    ADD CONSTRAINT fk_rails_15daa6a6bf FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -6248,6 +6337,14 @@ ALTER TABLE ONLY public.tags
 
 
 --
+-- Name: team_repositories fk_rails_f99472b670; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_repositories
+    ADD CONSTRAINT fk_rails_f99472b670 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: sample_groups fk_rails_fc2ab1a001; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6433,6 +6530,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190520135317'),
 ('20190613094834'),
 ('20190613134100'),
+('20190711125513'),
+('20190715150326'),
+('20190812065432'),
+('20190812072649'),
+('20190830141257'),
 ('20190910125740');
 
 

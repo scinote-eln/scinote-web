@@ -31,7 +31,7 @@ class AssetsController < ApplicationController
                elsif @assoc.class == Result
                  can_manage_module?(@my_module)
                elsif @assoc.class == RepositoryCell
-                 can_manage_repository_rows?(@repository.team)
+                 can_manage_repository_rows?(@repository)
                end
     if response_json['type'] == 'image'
       if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
@@ -252,7 +252,7 @@ class AssetsController < ApplicationController
     elsif @assoc.class == Result
       render_403 and return unless can_read_experiment?(@my_module.experiment)
     elsif @assoc.class == RepositoryCell
-      render_403 and return unless can_read_team?(@repository.team)
+      render_403 and return unless can_read_repository?(@repository)
     end
   end
 
@@ -263,7 +263,7 @@ class AssetsController < ApplicationController
     elsif @assoc.class == Result
       render_403 and return unless can_manage_module?(@my_module)
     elsif @assoc.class == RepositoryCell
-      render_403 and return unless can_manage_repository_rows?(@repository.team)
+      render_403 and return unless can_manage_repository_rows?(@repository)
     end
   end
 

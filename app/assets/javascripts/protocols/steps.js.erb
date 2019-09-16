@@ -106,7 +106,6 @@
     $("[data-action='cancel-edit']")
     .on("ajax:success", function(e, data) {
       var $form = $(this).closest("form");
-
       $form.after(data.html);
       var $new_step = $(this).next();
       $(this).remove();
@@ -139,7 +138,6 @@
       var $edit_step = $step.after(data.html);
       var $form = $step.next();
       $step.remove();
-
       formCallback($form);
       initEditableHandsOnTable($form);
       applyCancelCallBack();
@@ -267,8 +265,9 @@
 
   function toggleButtons(show) {
     if (show) {
-      $("[data-action='new-step']").show();
+      $("[data-action='new-step']:first").show();
       $("[data-action='edit-step']").show();
+      if ($('#steps .step').length > 0) $("[data-action='new-step']:last").show();
     } else {
       $("[data-action='new-step']").hide();
       $("[data-action='edit-step']").hide();
@@ -304,6 +303,9 @@
       if (contents.attr("value")) {
         var data = JSON.parse(contents.attr("value"));
         hot.loadData(data.data);
+        setTimeout(() => {
+          hot.render()
+        }, 0)
       }
     });
   }
@@ -357,7 +359,6 @@
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-
       var $form = $(this).closest("form");
       $form.parent().remove().promise().done(function() {
         newStepHandler();

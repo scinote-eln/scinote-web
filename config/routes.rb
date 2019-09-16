@@ -167,6 +167,13 @@ Rails.application.routes.draw do
             defaults: { format: 'json' }
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
+        get :share_modal
+
+        resources :team_repositories, only: %i(destroy) do
+          collection do
+            post 'update'
+          end
+        end
       end
       # resources :samples, only: [:new, :create]
       # resources :sample_types, except: [:show, :new] do
@@ -206,7 +213,6 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
     post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
     get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
     get 'projects/dt_state_load', to: 'projects#dt_state_load',
@@ -385,8 +391,11 @@ Rails.application.routes.draw do
             to: 'my_modules#unassign_repository_records_modal',
             as: :unassign_repository_records_modal
         post 'unassign_repository_records/:repository_id',
-             to: 'my_modules#unassign_repository_records',
-             as: :unassign_repository_records
+            to: 'my_modules#unassign_repository_records',
+            as: :unassign_repository_records
+        get 'unshared_inventory/:inventory_id',
+            to: 'my_modules#unshared_inventory',
+            as: :unshared_inventory
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
