@@ -2,6 +2,7 @@
 
 class Activity < ApplicationRecord
   include ActivityValuesModel
+  include GlobalActivitiesHelper
 
   enum type_of: Extends::ACTIVITY_TYPES
 
@@ -27,6 +28,10 @@ class Activity < ApplicationRecord
     message_items: {},
     breadcrumbs: {}
   )
+
+  def get_activity_text
+    generate_activity_text(self)
+  end
 
   def self.activity_types_list
     activity_list = type_ofs.map do |key, value|

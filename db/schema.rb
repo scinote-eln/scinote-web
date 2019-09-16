@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_03_145834) do
+ActiveRecord::Schema.define(version: 2019_09_12_145834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2019_09_03_145834) do
     t.bigint "team_id"
     t.integer "group_type"
     t.jsonb "values"
+    t.string "search_index"
     t.index ["created_at"], name: "index_activities_on_created_at"
     t.index ["experiment_id"], name: "index_activities_on_experiment_id"
     t.index ["my_module_id"], name: "index_activities_on_my_module_id"
@@ -416,11 +417,9 @@ ActiveRecord::Schema.define(version: 2019_09_03_145834) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "discarded_at"
-    t.boolean "shared", default: false, null: false
     t.integer "permission_level", default: 0, null: false
     t.index ["discarded_at"], name: "index_repositories_on_discarded_at"
     t.index ["permission_level"], name: "index_repositories_on_permission_level"
-    t.index ["shared"], name: "index_repositories_on_shared"
     t.index ["team_id"], name: "index_repositories_on_team_id"
   end
 

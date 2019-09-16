@@ -27,6 +27,21 @@ module GlobalActivitiesHelper
     I18n.t('global_activities.index.content_generation_error', activity_id: activity.id)
   end
 
+  def generate_activity_text(activity)
+    parameters = {}
+    activity.message_items.each do |key, value|
+      parameters[key] =
+        if value.is_a? String
+          value
+        elsif value['type'] == 'Time' # use saved date for printing
+          l(Time.at(value['value']), format: :full_date)
+        else
+          generate_name(value)
+        end
+    end
+    I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys)
+  end
+
   def generate_link(message_item, activity)
     obj = message_item['type'].constantize.find_by_id(message_item['id'])
     return message_item['value'] unless obj
