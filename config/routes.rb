@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     skip_controllers :applications, :authorized_applications, :token_info
   end
 
+  # Addons
+
   def draw(routes_name)
     instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
   end
