@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawExperiment
+module Reports::Docx::DrawExperiment
   def draw_experiment(subject)
     color = @color
     link_style = @link_style

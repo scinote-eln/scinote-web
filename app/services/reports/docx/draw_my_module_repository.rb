@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawMyModuleRepository
+module Reports::Docx::DrawMyModuleRepository
   def draw_my_module_repository(subject)
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
     return unless my_module

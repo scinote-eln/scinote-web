@@ -9,9 +9,9 @@ Bundler.require(*Rails.groups)
 module Scinote
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 5.2
 
-    config.add_autoload_paths_to_load_path = false
+    # config.add_autoload_paths_to_load_path = false
 
     config.active_record.schema_format = :sql
 

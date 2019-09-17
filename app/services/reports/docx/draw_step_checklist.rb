@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawStepChecklist
+module Reports::Docx::DrawStepChecklist
   def draw_step_checklist(subject)
     team = @report_team
     user = @user

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawMyModuleProtocol
+module Reports::Docx::DrawMyModuleProtocol
   def draw_my_module_protocol(subject)
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
     return unless my_module

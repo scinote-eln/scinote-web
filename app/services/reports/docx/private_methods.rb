@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PrivateMethods
+module Reports::Docx::PrivateMethods
   private
 
   # RTE fields support

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawStepAsset
+module Reports::Docx::DrawStepAsset
   def draw_step_asset(subject)
     asset = Asset.find_by_id(subject['id']['asset_id'])
     return unless asset

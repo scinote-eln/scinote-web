@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawStep
+module Reports::Docx::DrawStep
   def draw_step(subject)
     color = @color
     step = Step.find_by_id(subject['id']['step_id'])

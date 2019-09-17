@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawResultText
+module Reports::Docx::DrawResultText
   def draw_result_text(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result

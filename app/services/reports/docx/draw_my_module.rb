@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawMyModule
+module Reports::Docx::DrawMyModule
   def draw_my_module(subject)
     color = @color
     link_style = @link_style
