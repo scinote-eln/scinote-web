@@ -497,6 +497,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.4.1)
       rubocop (>= 0.71.0)
+    rubocop-rails (2.3.2)
+      rack (>= 1.1)
+      rubocop (>= 0.72.0)
     ruby-graphviz (1.2.4)
     ruby-progressbar (1.10.1)
     ruby-vips (2.0.15)
@@ -677,6 +680,7 @@ DEPENDENCIES
   rspec-rails (>= 4.0.0.beta2)
   rubocop (>= 0.59.0)
   rubocop-performance
+  rubocop-rails
   ruby-graphviz (~> 1.2)
   rubyzip
   rufus-scheduler (~> 3.5)
