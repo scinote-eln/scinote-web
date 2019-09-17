@@ -169,6 +169,7 @@ var MarvinJsEditorApi = (function() {
       }
       $(marvinJsModal).modal('hide');
       FilePreviewModal.init();
+      config.button.dataset.inProgress = false;
     });
   }
 
@@ -187,12 +188,12 @@ var MarvinJsEditorApi = (function() {
         if (config.objectType === 'TinyMceAsset') {
           config.image[0].src = json.url;
           config.image[0].dataset.mceSrc = json.url;
-          $(marvinJsModal).modal('hide');
         } else {
-          $(marvinJsModal).modal('hide');
           $('#modal_link' + json.id + ' img').attr('src', json.url);
           $('#modal_link' + json.id + ' .attachment-label').html(json.file_name);
         }
+        $(marvinJsModal).modal('hide');
+        config.button.dataset.inProgress = false;
       }
     });
   }
@@ -218,7 +219,11 @@ var MarvinJsEditorApi = (function() {
       $(marvinJsObject)
         .css('width', marvinJsContainer.width() + 'px')
         .css('height', marvinJsContainer.height() + 'px');
-      marvinJsModal.find('.file-save-link').off('click').on('click', () => {
+      marvinJsModal.find('.file-save-link').off('click').on('click', function() {
+        if (this.dataset.inProgress === 'true') return;
+
+        this.dataset.inProgress = true;
+        config.button = this;
         if (config.mode === 'new') {
           MarvinJsEditor.save(config);
         } else if (config.mode === 'edit') {

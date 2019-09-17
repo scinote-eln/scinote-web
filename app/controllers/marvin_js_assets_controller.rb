@@ -47,7 +47,9 @@ class MarvinJsAssetsController < ApplicationController
     create_edit_marvinjs_activity(asset, current_user, :finish_editing)
 
     if asset
-      render json: { url: rails_representation_url(asset.medium_preview), id: asset.id, file_name: asset.file_name }
+      render json: { url: rails_representation_url(asset.medium_preview),
+                     id: asset.id,
+                     file_name: asset.blob.metadata['name'] }
     else
       render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
     end
