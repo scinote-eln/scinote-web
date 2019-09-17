@@ -25,6 +25,13 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
 
     transaction do
       models.each do |model|
+        table_exists = ActiveRecord::Base.connection.execute("SELECT EXISTS (
+          SELECT 1
+          FROM   information_schema.tables
+          WHERE  table_name = '#{model.table_name}'
+        )").as_json[0]['exists']
+        next unless table_exists
+
         attachments = model.column_names.map do |c|
           $1 if c =~ /(.+)_file_name$/
         end.compact
