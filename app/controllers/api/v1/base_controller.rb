@@ -110,20 +110,26 @@ module Api
 
       def load_project(key = :project_id)
         @project = @team.projects.find(params.require(key))
-        unless can_read_project?(@project)
-          raise PermissionError.new(Project, :read)
-        end
+        raise PermissionError.new(Project, :read) unless can_read_project?(@project)
       end
 
       def load_experiment(key = :experiment_id)
         @experiment = @project.experiments.find(params.require(key))
-        unless can_read_experiment?(@experiment)
-          raise PermissionError.new(Experiment, :read)
-        end
+        raise PermissionError.new(Experiment, :read) unless can_read_experiment?(@experiment)
       end
 
       def load_task(key = :task_id)
         @task = @experiment.my_modules.find(params.require(key))
+      end
+
+      def load_protocol(key = :protocol_id)
+        @protocol = @task.protocols.find(params.require(key))
+        raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@protocol)
+      end
+
+      def load_step(key = :step_id)
+        @step = @protocol.steps.find(params.require(key))
+        raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
       end
     end
   end
