@@ -24,6 +24,7 @@ class MarvinJsService
                           team_id: current_team.id)
       attach_file(asset.file, file, params)
       asset.save!
+      asset.post_process_file(current_team)
       connect_asset(asset, params, current_user)
     end
 
@@ -39,6 +40,7 @@ class MarvinJsService
 
       file = generate_image(params)
       attach_file(attachment, file, params)
+      asset.post_process_file(current_team)
       asset
     end
 
