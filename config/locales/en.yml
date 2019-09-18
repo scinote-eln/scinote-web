@@ -2211,7 +2211,7 @@ en:
         visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
         manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
   marvinjs:
-    new_sketch: "Create Chemical Drawing"
+    new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
