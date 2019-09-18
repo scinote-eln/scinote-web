@@ -10,8 +10,7 @@
         <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
       </a>
   </div>
-  <% unless @protocol.steps.empty? %>
-  <div class="pull-right" style="margin: 0 15px 20px 0;">
+  <div class="pull-right expand-all-steps" style="margin: 0 15px 20px 0; display: <%= 'none' if @protocol.steps.empty? %>">
     <a class="btn btn-default" data-action="collapse-steps">
       <span class="fas fa-caret-square-up"></span>
       <span class="hidden-xs"><%= t("protocols.steps.collapse_label") %></a></span>
@@ -19,7 +18,6 @@
       <span class="fas fa-caret-square-down"></span>
       <span class="hidden-xs"><%= t("protocols.steps.expand_label") %></a></span>
   </div>
-  <% end %>
 </div>
 <% end %>
 <div id="steps">
