@@ -26,9 +26,7 @@
     <% if experiment.workflowimg.attached? %>
       <div class="workflowimg-container">
         <%= image_tag(
-              experiment.workflowimg.expiring_url(
-                Constants::URL_SHORT_EXPIRE_TIME
-              ),
+              experiment.workflowimg,
               class: 'img-responsive center-block') %>
       </div>
     <% end %>
