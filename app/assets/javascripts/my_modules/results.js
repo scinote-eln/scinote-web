@@ -40,7 +40,7 @@
         });
         let hot = $container.handsontable('getInstance');
         let data = JSON.parse(contents.attr('value'));
-        hot.loadData(data.data);
+        if (Array.isArray(data.data)) hot.loadData(data.data);
         setTimeout(() => {
           hot.render()
         }, 0)
