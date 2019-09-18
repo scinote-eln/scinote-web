@@ -26,6 +26,7 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
     transaction do
       models.each do |model|
         next unless ActiveRecord::Base.connection.table_exists?(model.table_name)
+        next if model.name == 'TeamZipExport'
 
         attachments = model.column_names.map do |c|
           $1 if c =~ /(.+)_file_name$/
