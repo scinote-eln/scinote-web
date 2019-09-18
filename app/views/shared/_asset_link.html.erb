@@ -5,5 +5,5 @@
           id: true,
           status: 'asset-present',
           'preview-url': asset_file_preview_path(asset) } do %>
-  <%= render partial: 'shared/asset_placeholder.html.erb', locals: { edit_page: false, asset: asset } %>
+  <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
 <% end %>
