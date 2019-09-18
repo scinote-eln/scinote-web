@@ -650,6 +650,10 @@ var RepositoryDatatable = (function(global) {
       TABLE.columns.adjust();
 
       // Append button to inner toolbar in table
+      $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
+      $('div.toolbarButtonsDatatable').show();
+
+      // Append buttons for task inventory
       $('div.toolbarButtons').appendTo('div.toolbar');
       $('div.toolbarButtons').show();
     }, 10);
