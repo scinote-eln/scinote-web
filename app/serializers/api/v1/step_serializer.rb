@@ -7,6 +7,7 @@ module Api
       attributes :id, :name, :description, :position, :completed
       attribute :completed_on, if: :completed?
       belongs_to :protocol, serializer: ProtocolSerializer
+      has_many :assets, serializer: AssetSerializer
 
       def completed?
         object.completed
