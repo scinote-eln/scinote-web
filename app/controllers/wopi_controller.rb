@@ -12,7 +12,7 @@ class WopiController < ActionController::Base
   def file_contents_get_endpoint
     # get_file
     response.headers['X-WOPI-ItemVersion'] = @asset.version
-    response.body = Paperclip.io_adapters.for(@asset.file).read
+    response.body = @asset.file.download
     send_data response.body, disposition: 'inline', content_type: 'text/plain'
   end
 
