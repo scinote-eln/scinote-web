@@ -666,7 +666,9 @@ Rails.application.routes.draw do
                             path: 'tags',
                             as: :tags
                   resources :protocols, only: %i(index) do
-                    resources :steps, only: %i(index show create)
+                    resources :steps, only: %i(index show create) do
+                      resources :assets, only: %i(index show create), path: 'attachments'
+                    end
                   end
                   resources :results, only: %i(index create show)
                   get 'activities', to: 'tasks#activities'
