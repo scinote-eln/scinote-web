@@ -1,6 +1,7 @@
 class WopiController < ActionController::Base
   include WopiUtil
 
+  skip_before_action :verify_authenticity_token
   before_action :load_vars, :authenticate_user_from_token!
   before_action :verify_proof!
 
