@@ -22,6 +22,6 @@ class ZipExportsController < ApplicationController
 
   def load_var
     @zip_export = current_user.zip_exports.find_by_id(params[:id])
-    redirect_to(file_expired_url, status: 301) and return unless @zip_export&.zip_file&.exists?
+    redirect_to(file_expired_url, status: :moved_permanently) and return unless @zip_export&.zip_file&.attached?
   end
 end
