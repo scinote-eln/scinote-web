@@ -3,6 +3,8 @@
 class TinyMceAsset < ApplicationRecord
   extend ProtocolsExporter
   extend MarvinJsActions
+  include ActiveStorageConcerns
+
   attr_accessor :reference
   before_create :set_reference
   after_create :calculate_estimated_size, :self_destruct
@@ -44,14 +46,14 @@ class TinyMceAsset < ApplicationRecord
       (images.include? Base62.encode(x))
     end
     images.each do |image|
-      image_to_update = find_by_id(Base62.decode(image))
-      next if image_to_update.object || image_to_update.team_id != Team.find_by_object(object).id
+      image_to_update = find_by(id: Base62.decode(image))
+      next if image_to_update.object || image_to_update.team_id != Team.find_by(object: object).id
 
       image_to_update&.update(object: object, saved: true)
       create_create_marvinjs_activity(image_to_update, current_user)
     end
 
-    where(id: images_to_delete).each do |image_to_delete|
+    where(id: images_to_delete).find_each do |image_to_delete|
       create_delete_marvinjs_activity(image_to_delete, current_user)
       image_to_delete.destroy
     end
@@ -69,7 +71,7 @@ class TinyMceAsset < ApplicationRecord
     tm_assets = description.css('img[data-mce-token]')
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
-      new_asset = obj.tiny_mce_assets.find_by_id(Base62.decode(asset_id))
+      new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))
       if new_asset
         tm_asset.attributes['src'].value = Rails.application.routes.url_helpers.url_for(new_asset.image)
         tm_asset['class'] = 'img-responsive'
@@ -101,12 +103,12 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def self.delete_unsaved_image(id)
-    asset = find_by_id(id)
+    asset = find_by(id: id)
     asset.destroy if asset && !asset.saved
   end
 
   def self.update_estimated_size(id)
-    asset = find_by_id(id)
+    asset = find_by(id: id)
     return unless asset&.image&.attached?
 
     size = asset.image.blob.byte_size
@@ -127,7 +129,7 @@ class TinyMceAsset < ApplicationRecord
       old_format = /\[~tiny_mce_id:#{token}\]/
       new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
 
-      asset = find_by_id(token)
+      asset = find_by(id: token)
       # impor flag only for import from file cases, because we don't have image in DB
       unless asset || import
         # remove tag if asset deleted
@@ -201,16 +203,14 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def duplicate_file(to_asset)
-    download_blob_to_tempfile do |tmp_file|
-      to_asset.image.attach(io: tmp_file.open, filename: file_name)
-    end
+    copy_attachment(to_asset.image)
     TinyMceAsset.update_estimated_size(to_asset.id)
   end
 
   private
 
   def self_destruct
-    TinyMceAsset.delay(queue: :assets, run_at: 1.days.from_now).delete_unsaved_image(id)
+    TinyMceAsset.delay(queue: :assets, run_at: 1.day.from_now).delete_unsaved_image(id)
   end
 
   def calculate_estimated_size

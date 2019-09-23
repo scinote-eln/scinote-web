@@ -6,7 +6,7 @@ class Asset < ApplicationRecord
   include Encryptor
   include WopiUtil
   include ActiveStorageFileUtil
-  include ImageVariantProcessing
+  include ActiveStorageConcerns
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -238,9 +238,7 @@ class Asset < ApplicationRecord
   end
 
   def duplicate_file(to_asset)
-    download_blob_to_tempfile do |tmp_file|
-      to_asset.file.attach(io: tmp_file.open, filename: file_name)
-    end
+    copy_attachment(to_asset.file)
     to_asset.post_process_file(to_asset.team)
   end
 
@@ -290,7 +288,7 @@ class Asset < ApplicationRecord
   end
 
   def self.extract_asset_text_delayed(asset_id, in_template = false)
-    asset = find_by_id(asset_id)
+    asset = find_by(id: asset_id)
     return unless asset.present? && asset.file.attached?
 
     asset.extract_asset_text(in_template)
@@ -306,7 +304,7 @@ class Asset < ApplicationRecord
     else
       # Start Tika as a server
       Yomu.server(:text) if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
-      download_blob_to_tempfile do |tmp_file|
+      blob.open do |tmp_file|
         text_data = Yomu.new(tmp_file.path).text
       end
     end
@@ -486,7 +484,7 @@ class Asset < ApplicationRecord
 
   def wopi_filename_valid
     # Check that filename without extension is not blank
-    unless file_name[0..-6].present?
+    if file_name[0..-6].blank?
       errors.add(
         :file,
         I18n.t('general.text.not_blank')
