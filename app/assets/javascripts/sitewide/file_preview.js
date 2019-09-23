@@ -1,17 +1,14 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
 /* eslint-disable no-underscore-dangle */
-/* global Uint8Array fabric tui animateSpinner Assets
-   I18n PerfectScrollbar MarvinJsEditor refreshProtocolStatusBar  */
+/* global Uint8Array fabric tui animateSpinner Assets ActiveStoragePreviews
+   PerfectScrollbar MarvinJsEditor refreshProtocolStatusBar  */
 
 
 var FilePreviewModal = (function() {
   'use strict';
 
   var readOnly = false;
-  var CHECK_READY_DELAY = 5000;
-  var CHECK_READY_TRIES_LIMIT = 60;
-  var checkReadyCntr;
 
   function initPreviewModal(options = {}) {
     var name;
@@ -30,6 +27,7 @@ var FilePreviewModal = (function() {
     });
 
     $('#filePreviewModal').find('.preview-close').click(function() {
+      $('#filePreviewModal').find('.file-preview-container').html('');
       $('#filePreviewModal').modal('hide');
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
@@ -477,29 +475,28 @@ var FilePreviewModal = (function() {
         link.attr('data-no-turbolink', true);
         link.attr('data-status', 'asset-present');
         if (data.type === 'image') {
-          if (data.processing) {
-            modal.find('.file-preview-container').append(data['processing-img']);
-          } else {
-            animateSpinner('.file-preview-container', false);
-            modal.find('.file-preview-container')
-              .append($('<img>')
-                .attr('src', data['large-preview-url'])
-                .attr('alt', name)
-                .click(function(ev) {
-                  ev.stopPropagation();
-                }));
-            if (!readOnly && data.editable) {
-              modal.find('.file-edit-link').css('display', '');
-              modal.find('.file-edit-link').off().click(function(ev) {
-                $.post('/files/' + data.id + '/start_edit_image');
-                ev.preventDefault();
+          animateSpinner('.file-preview-container', false);
+          modal.find('.file-preview-container')
+            .append($('<img>')
+              .css('opacity', 0)
+              .attr('src', data['large-preview-url'])
+              .attr('alt', name)
+              .on('error', ActiveStoragePreviews.reCheckPreview)
+              .on('load', ActiveStoragePreviews.showPreview)
+              .click(function(ev) {
                 ev.stopPropagation();
-                modal.modal('hide');
-                preInitImageEditor(data);
-              });
-            } else {
-              modal.find('.file-edit-link').css('display', 'none');
-            }
+              }));
+          if (!readOnly && data.editable) {
+            modal.find('.file-edit-link').css('display', '');
+            modal.find('.file-edit-link').off().click(function(ev) {
+              $.post('/files/' + data.id + '/start_edit_image');
+              ev.preventDefault();
+              ev.stopPropagation();
+              modal.modal('hide');
+              preInitImageEditor(data);
+            });
+          } else {
+            modal.find('.file-edit-link').css('display', 'none');
           }
         } else if (data.type === 'marvinjs') {
           openMarvinEditModal(data, modal);
@@ -510,68 +507,17 @@ var FilePreviewModal = (function() {
         if (readOnly) {
           modal.find('#wopi_file_edit_button').remove();
         }
-        if (data.processing) {
-          setTimeout(function() {
-            checkFileReady(url, modal);
-          }, CHECK_READY_DELAY);
-        }
         modal.find('.file-name').text(name);
         modal.modal();
         modal.find('a[disabled=disabled]').click(function(ev) {
           ev.preventDefault();
         });
         $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
-        checkReadyCntr = 0;
       },
       error: function() {
         // TODO
       }
     });
-  }
-
-  function checkFileReady(url, modal) {
-    $.get(url, function(data) {
-      if (data.processing) {
-        $('.file-download-link')
-          .addClass('disabled-with-click-events')
-          .attr(
-            'title',
-            I18n.t('general.file.processing')
-          )
-          .click(function(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-          });
-        if (checkReadyCntr < CHECK_READY_TRIES_LIMIT) {
-          setTimeout(function() {
-            checkFileReady(url, modal);
-          }, CHECK_READY_DELAY);
-        }
-      } else {
-        if (data.type === 'image' || (data.type === 'file' && data['preview-icon'])) {
-          modal.find('.file-preview-container').empty();
-          modal.find('.file-preview-container')
-            .append($('<img>')
-              .attr('src', data['large-preview-url'])
-              .attr('alt', data.filename)
-              .click(function(ev) {
-                ev.stopPropagation();
-              }));
-          modal.find('.file-name').text(data.filename);
-          modal.find('.modal-body').click(function() {
-            modal.modal('hide');
-          });
-          modal.modal();
-          $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
-        }
-        $('.file-download-link')
-          .removeClass('disabled-with-click-events')
-          .removeAttr('title')
-          .off();
-      }
-    });
-
-    checkReadyCntr += 1;
   }
 
   function clearPrevieModal() {
@@ -584,8 +530,11 @@ var FilePreviewModal = (function() {
   function openMarvinEditModal(data, modal) {
     modal.find('.file-preview-container')
       .append($('<img>')
+        .css('opacity', 0)
         .attr('src', data['large-preview-url'])
         .attr('alt', data.name)
+        .on('error', ActiveStoragePreviews.reCheckPreview)
+        .on('load', ActiveStoragePreviews.showPreview)
         .click(function(ev) {
           ev.stopPropagation();
         }));

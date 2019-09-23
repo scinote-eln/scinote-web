@@ -198,15 +198,11 @@ class Asset < ApplicationRecord
   end
 
   def medium_preview
-    return file.variant(resize_to_limit: Constants::MEDIUM_PIC_FORMAT) if previewable_image?
-
-    file.preview(resize_to_limit: Constants::MEDIUM_PIC_FORMAT)
+    file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT)
   end
 
   def large_preview
-    return file.variant(resize_to_limit: Constants::LARGE_PIC_FORMAT) if previewable_image?
-
-    file.preview(resize_to_limit: Constants::LARGE_PIC_FORMAT)
+    file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT)
   end
 
   def file_name

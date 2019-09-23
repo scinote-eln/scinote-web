@@ -1,8 +1,4 @@
 <div>
-  <% if asset.previewable? %>
-    <%= image_tag(asset.large_preview) %>
-  <% else %>
-    <i class="fas fa-10x <%= file_fa_icon_class(asset) %>"></i>
-  <% end %>
+  <i class="fas fa-10x <%= file_fa_icon_class(asset) %>"></i>
   <h3 class="file-name"></h3>
 </div>
