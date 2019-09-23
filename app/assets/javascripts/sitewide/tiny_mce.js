@@ -16,6 +16,59 @@ var TinyMCE = (function() {
     });
   }
 
+
+
+  // Get LocalStorage auto save path
+  function getAutoSavePrefix(editor) {
+    var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
+
+    prefix = prefix.replace(/\{path\}/g, document.location.pathname);
+    prefix = prefix.replace(/\{query\}/g, document.location.search);
+    prefix = prefix.replace(/\{hash\}/g, document.location.hash);
+    prefix = prefix.replace(/\{id\}/g, editor.id);
+
+    return prefix;
+  }
+
+  // Handles autosave notification if draft is available in the local storage
+  function restoreDraftNotification(selector, editor) {
+    var prefix = getAutoSavePrefix(editor);
+    var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
+    var lastUpdated = $(selector).data('last-updated');
+
+    var restoreBtn = $('<button type="button" class="btn pull-right">Restore Draft</button>');
+    var cancelBtn = $('<div class="tinymce-cancel-button pull-right">' +
+      '<button type="button">' +
+      '<span class="fas fa-times"></span>' +
+      '</button></div>');
+
+    // Check whether we have draft stored
+    if (editor.plugins.autosave.hasDraft()) {
+      var notificationBar = $('<div class="restore-draft-notification"></div>');
+
+      if (lastDraftTime < lastUpdated) {
+        notificationBar.text('Older version of the text below has been saved in the browser. Do you want to restore it?');
+      } else {
+        notificationBar.text('Newer version of the text below has been saved in the browser. Do you want to restore it?');
+      }
+
+      // Add notification bar
+      $(notificationBar).append(cancelBtn);
+      $(notificationBar).append(restoreBtn);
+      $(editor.contentAreaContainer).before(notificationBar);
+
+      $(restoreBtn).click(function() {
+        editor.plugins.autosave.restoreDraft();
+        editor.plugins.autosave.removeDraft();
+        notificationBar.remove();
+      });
+
+      $(cancelBtn).click(function() {
+        notificationBar.remove();
+      });
+    }
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
@@ -60,7 +113,8 @@ var TinyMCE = (function() {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
-          autosave_interval: '15s',
+          autosave_restore_when_empty: false,
+          autosave_interval: '1s',
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
           object_resizing: true,
@@ -117,6 +171,7 @@ var TinyMCE = (function() {
             var editorForm = $(editor.getContainer()).closest('form');
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
+
             var editorToolbaroffset;
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
@@ -236,6 +291,10 @@ var TinyMCE = (function() {
               var menuBar = $(editor.getContainer()).find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
+            });
+
+            editor.on('init', function(e) {
+              restoreDraftNotification(selector, editor);
             });
           },
           codesample_content_css: $(selector).data('highlightjs-path')

@@ -66,4 +66,13 @@
 .mce-toolbar {
   background: $color-white !important;
 }
+
+.restore-draft-notification {
+  background: $state-info-bg !important;
+  height: 25px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  padding-top: 5px !important;
+}
+
 // scss-lint:enable ImportantRule
