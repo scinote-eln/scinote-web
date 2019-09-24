@@ -31,6 +31,12 @@ var TinyMCE = (function() {
       + '</style>');
   }
 
+  function makeItDirty(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    editorForm.find('.tinymce-status-badge').addClass('hidden');
+    $(editor.getContainer()).find('.tinymce-save-button').removeClass('hidden');
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
@@ -246,10 +252,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('Dirty', function() {
-              var editorForm = $(editor.getContainer()).closest('form');
-              editorForm.find('.tinymce-status-badge').addClass('hidden');
-              $(editor.getContainer())
-                .find('.tinymce-save-button').removeClass('hidden');
+              makeItDirty(editor);
             });
 
             editor.on('remove', function() {
@@ -285,6 +288,9 @@ var TinyMCE = (function() {
       });
       $('#' + editor.id).next()[0].value = JSON.stringify(images);
       return JSON.stringify(images);
+    },
+    makeItDirty: function(editor) {
+      makeItDirty(editor);
     },
     highlight: initHighlightjs
   });

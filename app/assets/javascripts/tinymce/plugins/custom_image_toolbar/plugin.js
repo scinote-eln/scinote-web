@@ -17,6 +17,7 @@ tinymce.PluginManager.add('custom_image_toolbar', function(editor) {
       MarvinJsEditor.open({
         mode: 'edit-tinymce',
         marvinUrl: '/tiny_mce_assets/' + image[0].dataset.mceToken + '/marvinjs',
+        editor: editor,
         image: image
       });
     }

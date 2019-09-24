@@ -186,6 +186,7 @@ var MarvinJsEditorApi = (function() {
       type: 'PUT',
       success: function(json) {
         if (config.objectType === 'TinyMceAsset') {
+          TinyMCE.makeItDirty(config.editor);
           config.image[0].src = json.url;
           config.image[0].dataset.mceSrc = json.url;
         } else {
