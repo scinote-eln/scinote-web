@@ -8,7 +8,7 @@ class User < ApplicationRecord
   include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
-  include ImageVariantProcessing
+  include ActiveStorageConcerns
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,

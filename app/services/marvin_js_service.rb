@@ -40,7 +40,7 @@ class MarvinJsService
 
       file = generate_image(params)
       attach_file(attachment, file, params)
-      asset.post_process_file(current_team)
+      asset.post_process_file(current_team) if asset.class == Asset
       asset
     end
 
@@ -51,7 +51,7 @@ class MarvinJsService
         object = params[:object_type].constantize.find(params[:object_id])
         object.assets << asset
       elsif params[:object_type] == 'Result'
-        my_module = MyModule.find_by_id(params[:object_id])
+        my_module = MyModule.find_by(id: params[:object_id])
         return unless my_module
 
         object = Result.create(user: current_user,
