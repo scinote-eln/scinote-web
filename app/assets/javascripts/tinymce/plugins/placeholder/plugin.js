@@ -27,12 +27,26 @@ tinymce.PluginManager.add('placeholder', function(editor) {
   editor.on('init', function() {
     var label = new Label();
 
+    // Correct top css property due to notification bar
+    function calculatePlaceholderPosition() {
+      var editorForm = $(editor.getContainer()).closest('form');
+      var editorToolbar = editorForm.find('.mce-top-part');
+
+      var restoreDraftNotification = $(editorForm).find('.restore-draft-notification');
+      var restoreDraftHeight = restoreDraftNotification.context ? restoreDraftNotification.height() : 0;
+      var newTop = $(editorToolbar).height() + restoreDraftHeight;
+      $(label.el).css('top', newTop + 'px');
+    }
+
     function checkPlaceholder() {
+      // Show/hide depending on the content
       if (editor.getContent() === '') {
         label.show();
       } else {
         label.hide();
       }
+
+      calculatePlaceholderPosition();
     }
 
     function onKeydown() {
