@@ -65,7 +65,6 @@ var TinyMCE = (function() {
 
       $(restoreBtn).click(function() {
         editor.plugins.autosave.restoreDraft();
-        editor.plugins.autosave.removeDraft();
         refreshSaveButton(editor);
         notificationBar.remove();
       });
