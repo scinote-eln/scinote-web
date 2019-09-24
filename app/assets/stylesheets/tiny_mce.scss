@@ -67,12 +67,31 @@
   background: $color-white !important;
 }
 
+.tinymce-cancel-notification-button {
+  cursor: pointer;
+
+  .fas {
+    color: $color-silver-chalice;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 501;
+    margin-left: 10px;
+    margin-top: 4px;
+  }
+}
+
 .restore-draft-notification {
   background: $state-info-bg !important;
   height: 25px !important;
   padding-left: 10px !important;
   padding-right: 10px !important;
   padding-top: 5px !important;
+
+  .restore-draft-btn {
+    border: 1px solid $color-silver-chalice;
+    font-size: 12px;
+    margin-top: -2px;
+    padding: 3px 10px 3px 10px;
+  }
 }
 
 // scss-lint:enable ImportantRule

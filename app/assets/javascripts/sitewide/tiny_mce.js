@@ -16,6 +16,12 @@ var TinyMCE = (function() {
     });
   }
 
+  function refreshSaveButton(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    editorForm.find('.tinymce-status-badge').addClass('hidden');
+    $(editor.getContainer())
+      .find('.tinymce-save-button').removeClass('hidden');
+  }
 
 
   // Get LocalStorage auto save path
@@ -36,8 +42,8 @@ var TinyMCE = (function() {
     var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
     var lastUpdated = $(selector).data('last-updated');
 
-    var restoreBtn = $('<button type="button" class="btn pull-right">Restore Draft</button>');
-    var cancelBtn = $('<div class="tinymce-cancel-button pull-right">' +
+    var restoreBtn = $('<button class="btn restore-draft-btn pull-right">Restore Draft</button>');
+    var cancelBtn = $('<div class="tinymce-cancel-notification-button pull-right">' +
       '<button type="button">' +
       '<span class="fas fa-times"></span>' +
       '</button></div>');
@@ -60,6 +66,7 @@ var TinyMCE = (function() {
       $(restoreBtn).click(function() {
         editor.plugins.autosave.restoreDraft();
         editor.plugins.autosave.removeDraft();
+        refreshSaveButton(editor);
         notificationBar.remove();
       });
 
@@ -281,10 +288,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('Dirty', function() {
-              var editorForm = $(editor.getContainer()).closest('form');
-              editorForm.find('.tinymce-status-badge').addClass('hidden');
-              $(editor.getContainer())
-                .find('.tinymce-save-button').removeClass('hidden');
+              refreshSaveButton(editor);
             });
 
             editor.on('remove', function() {
