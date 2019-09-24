@@ -129,14 +129,13 @@ class SearchController < ApplicationController
 
         current_user.teams.includes(:repositories).each do |team|
           team_results = {}
+          team_results[:team] = team
           team_results[:count] = 0
           team_results[:repositories] = {}
           Repository.accessible_by_teams(team).each do |repository|
             repository_results = {}
             repository_results[:id] = repository.id
-            if (shared_repo = repository.team_repositories.where(team: team).take)
-              repository_results[:shared] = shared_repo[:permission_level]
-            end
+            repository_results[:repository] = repository
             repository_results[:count] = 0
             search_results.each do |result|
               if repository.id == result.id

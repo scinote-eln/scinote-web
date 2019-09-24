@@ -25,6 +25,10 @@
   .fas-custom{
     float: right;
   }
+
+  a.muted {
+    opacity: .7;
+  }
 }
 
 .repository-share-status {
@@ -93,13 +97,9 @@
     }
   }
 
-  .repository-title-container {
+  .repository-title-name {
     display: flex;
     flex-direction: column;
-    width: calc(100% + 40px);
-  }
-
-  .repository-title-name {
     flex-grow: 1;
     font-size: 18px;
     line-height: 32px;
@@ -109,8 +109,23 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    .inline-editing-container {
-      width: 100%;
+    .name-container {
+      align-items: center;
+      display: inline-flex;
+      height: 32px;
+
+      .read-only-name {
+        display: inline-block;
+        line-height: 32px;
+        max-width: calc(100% - 30px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .inline-editing-container {
+        width: 100%;
+      }
     }
   }
 
@@ -118,7 +133,6 @@
     color: $color-silver-chalice;
     font-size: 12px;
     line-height: 12px;
-    padding-left: 5px;
   }
 
   .datatables-buttons {

@@ -247,7 +247,7 @@ en:
       head_title: "About"
     training:
       head_title: "Training"
-
+      
   projects:
     index:
       head_title: "Home"
@@ -773,6 +773,9 @@ en:
         task_and_downstream: 'Task & Downstream'
         unassign_title: "Unassign %{repository_name} items from task %{my_module_name}"
         unassign_message: "Do you want to unassign %{size} items only from this task, or unassign them from this task & downstream tasks in the workflow as well?"
+    unshared_inventory:
+      title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
+      body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
   experiments:
     new:
       create: 'New Experiment'
@@ -1048,7 +1051,7 @@ en:
         can_edit: "Can Edit"
         all_teams: "All teams (current & new)"
         all_teams_tooltip: "This will disable individual team settings"
-        success_message: “Selected sharing options for the Inventory %{inventory_name} have been saved.” 
+        success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -2011,11 +2014,11 @@ en:
     notification_title: 'Your requested export package is ready!'
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
-    modal_label: 'Export request received'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
     repository_header_html: 'You are about to export selected items in inventory %{repository}.'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    export_request_success: "Export request received!"
     export_error: "Error when creating zip export."
 
   # This section contains general words that can be used in any parts of

@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SmartAnnotations::PermissionEval do
   let(:subject) { described_class }
   let(:user) { create :user }
+  let(:another_user) { create :user }
   let(:team) { create :team }
   let(:another_team) { create :team }
   let!(:user_team) { create :user_team, user: user, team: team, role: :admin }
@@ -75,8 +78,8 @@ describe SmartAnnotations::PermissionEval do
       expect(value).to be_in([true, false])
     end
 
-    it 'returns false on wrong team' do
-      value = subject.__send__(:validate_rep_item_permissions, user, another_team, repository_item)
+    it 'returns false on wrong user' do
+      value = subject.__send__(:validate_rep_item_permissions, another_user, another_team, repository_item)
       expect(value).to be false
     end
 

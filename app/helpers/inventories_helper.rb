@@ -11,11 +11,7 @@ module InventoriesHelper
     else
       # The icon should be hiden if repo is not shared (we're updating it dinamically)
       css_classes = ["repository-share-status"]
-<<<<<<< HEAD
       css_classes.push("hidden") unless inventory.i_shared?(team)
-=======
-      css_classes.push("hidden") unless inventory.i_shared?(current_team)
->>>>>>> Finished merging. Test on dev machine (iMac).
       css_title = t('repositories.icon_title.i_shared')
 
       content_tag :span, title: css_title, class: css_classes.join(" ") do

@@ -2,15 +2,6 @@ class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
   after_action :after_sign_in, only: :create
 
-  # GET /Users/download_factsheet
-  def download_factsheet
-    send_file(
-      "#{Rails.root}/public/downloads/G-LMMD-0031316-FS-1-0.docx",
-      filename: "SciNote Fact Sheet.docx",
-      type: "application/docx"
-    )
-  end
-
   rescue_from ActionController::InvalidAuthenticityToken do
     redirect_to new_user_session_path
   end

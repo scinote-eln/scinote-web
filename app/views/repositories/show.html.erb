@@ -11,27 +11,26 @@
 
 <div class="content-pane repository-show">
   <div id="repository-toolbar">
-    <div class="repository-title-container">
-
-      <div class="repository-title-name">
+    <div class="repository-title-name">
+      <span class="name-container">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
-                       locals: { initial_value: @repository.name } %>
+                     locals: { initial_value: @repository.name } %>
         <% else %>
-          <%= @repository.name %>
+          <div class="read-only-name">
+            <%= @repository.name %>
+          </div>
           <span class="repository-share-icon">
             <%= inventory_shared_status_icon(@repository, current_team) %>
           </span>
         <% end %>
-      </div>
-
+      </span>
       <% if @repository.shared_with_anybody? %>
         <% team_name = @repository.team == current_team ? 'your Team' : @repository.team.name %>
         <div class="repository-subtitle"><%= t('repositories.subtitle', team_name: team_name) %></div>
       <% end %>
     </div>
-
-    <div id="datatables-buttons" class="datatables-buttons" style="display: inline;">
+    <div id="datatables-buttons" class="datatables-buttons">
       <div class="new-repository-button">
         <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
           <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),

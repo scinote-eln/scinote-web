@@ -1,0 +1,19 @@
+<% provide(:head_title, t("my_modules.repository.head_title",
+                          project: h(@project.name),
+                          module: h(@my_module.name),
+                          repository: h(@inventory.name)).html_safe) %>
+
+<%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<div id="content">
+  <div class="content-pane">
+    <h4><%= t("my_modules.unshared_inventory.title_html", inventory_name: @inventory.name) %></h4>
+    <%= t("my_modules.unshared_inventory.body_html",
+          inventory_name: @inventory.name,
+          team_name: @inventory.team.name,
+          admin_name: @inventory_admin.name,
+          admin_email: @inventory_admin.email) %>
+
+  </div>
+</div>
