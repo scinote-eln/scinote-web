@@ -53,9 +53,9 @@ var TinyMCE = (function() {
       var notificationBar = $('<div class="restore-draft-notification"></div>');
 
       if (lastDraftTime < lastUpdated) {
-        notificationBar.text('Older version of the text below has been saved in the browser. Do you want to restore it?');
+        notificationBar.text(I18n.t('tiny_mce.older_version_available'));
       } else {
-        notificationBar.text('Newer version of the text below has been saved in the browser. Do you want to restore it?');
+        notificationBar.text(I18n.t('tiny_mce.newer_version_available'));
       }
 
       // Add notification bar
