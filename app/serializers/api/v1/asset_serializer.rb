@@ -9,9 +9,6 @@ module Api
       attributes :id, :file_name, :file_size, :file_type, :file_url
       belongs_to :step, serializer: StepSerializer
 
-      delegate :file_name, to: :object
-      delegate :file_size, to: :object
-
       def file_type
         object.content_type
       end

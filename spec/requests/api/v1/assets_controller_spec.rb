@@ -126,7 +126,7 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
              protocol_id: @protocol.id,
              step_id: @step.id
            ),
-           params: request_body.to_json,
+           params: request_body,
            headers: @valid_headers)
     end
 

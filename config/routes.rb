@@ -670,7 +670,7 @@ Rails.application.routes.draw do
                       resources :assets, only: %i(index show create), path: 'attachments'
                     end
                   end
-                  resources :results, only: %i(index create show)
+                  resources :results, only: %i(index create show update)
                   get 'activities', to: 'tasks#activities'
                 end
               end
