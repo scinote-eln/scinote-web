@@ -335,7 +335,20 @@ var RepositoryDatatable = (function(global) {
           appendInput(form, rowId, 'row_ids[]');
         });
       }
-    });
+    })
+      .on('ajax:beforeSend', function() {
+        animateSpinner(null, true);
+      })
+      .on('ajax:complete', function() {
+        $('#exportRepositoryModal').modal('hide');
+        animateSpinner(null, false);
+      })
+      .on('ajax:success', function(ev, data) {
+        HelperModule.flashAlertMsg(data.message, 'success');
+      })
+      .on('ajax:error', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
   }
 
   function disableCheckboxToggleOnAssetDownload() {
