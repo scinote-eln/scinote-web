@@ -1,4 +1,4 @@
-/* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString globalConstants */
+/* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString */
 /* global HelperModule GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
@@ -437,7 +437,7 @@ function initRecentProtocols() {
     $.get('/protocols/recent_protocols', result => {
       $.each(result, (i, protocol) => {
         $('<div class="protocol"><i class="fas fa-file-alt"></i>'
-          + truncateLongString(protocol.name, globalConstants.name_truncation_length)
+          + truncateLongString(protocol.name, GLOBAL_CONSTANTS.NAME_TRUNCATION_LENGTH)
           + '</div>').appendTo(dropDownList)
           .click(() => {
             $.post(recentProtocolContainer.data('updateUrl'), { source_id: protocol.id })
