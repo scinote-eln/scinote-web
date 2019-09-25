@@ -29,6 +29,7 @@ Rails.application.configure do
     from: Rails.application.secrets.mailer_from,
     reply_to: Rails.application.secrets.mailer_reply_to
   }
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
 
@@ -41,7 +42,6 @@ Rails.application.configure do
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
-  #config.action_mailer.perform_deliveries = false
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
@@ -81,10 +81,6 @@ Rails.application.configure do
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
-
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

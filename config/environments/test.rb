@@ -57,6 +57,7 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.default_url_options = { host: Rails.application.secrets.mail_server_url }
   config.action_mailer.default_options = { from: Rails.application.secrets.mail_from }
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
   # config.action_mailer.delivery_method = :smtp
 
@@ -69,7 +70,6 @@ Rails.application.configure do
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
-  #config.action_mailer.perform_deliveries = false
 
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random
