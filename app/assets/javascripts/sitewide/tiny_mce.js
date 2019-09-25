@@ -89,10 +89,10 @@ var TinyMCE = (function() {
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
 
-        if (textAreaObject.data('objectType') === 'step') {
+        if (textAreaObject.data('objectType') === 'step'
+          || textAreaObject.data('objectType') === 'result_text') {
           document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
         }
-
 
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
