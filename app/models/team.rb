@@ -218,7 +218,7 @@ class Team < ApplicationRecord
     query.select(:id, :name).map { |i| { id: i[:id], name: ApplicationController.helpers.escape_input(i[:name]) } }
   end
 
-  def self.find_by_object(obj)
+  def self.search_by_object(obj)
     find(
       case obj.class.name
       when 'Protocol'

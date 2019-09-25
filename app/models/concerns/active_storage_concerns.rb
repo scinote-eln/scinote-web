@@ -24,5 +24,7 @@ module ActiveStorageConcerns
     temp_file.flush
     temp_file.rewind
     target.attach(io: temp_file, filename: blob.filename, metadata: blob.metadata)
+  rescue StandardError => e
+    Rails.logger.error e.message
   end
 end
