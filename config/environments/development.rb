@@ -29,7 +29,7 @@ Rails.application.configure do
   }
 
   if ENV['CUCUMBER'] == 'cucumber'
-    # Special mailer config for test environment
+    # Special mailer config for Cucumber test environment
     config.action_mailer.delivery_method = :test
     config.action_mailer.default_url_options = {
       host: Rails.application.secrets.mail_server_url,
