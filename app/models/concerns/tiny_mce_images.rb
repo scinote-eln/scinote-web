@@ -83,7 +83,7 @@ module TinyMceImages
     end
 
     def copy_unknown_tiny_mce_images
-      asset_team_id = Team.find_by_object(self).id
+      asset_team_id = Team.search_by_object(self).id
       return unless asset_team_id
 
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
