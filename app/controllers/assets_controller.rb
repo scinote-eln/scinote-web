@@ -160,6 +160,19 @@ class AssetsController < ApplicationController
                       },
                       formats: :html
                     )
+                  elsif @asset.result
+                    render_to_string(
+                      partial: 'steps/attachments/item.html.erb',
+                      locals: {
+                        asset: @asset,
+                        i: 0,
+                        assets_count: 0,
+                        step: nil,
+                        order_atoz: 0,
+                        order_ztoa: 0
+                      },
+                      formats: :html
+                    )
                   else
                     render_to_string(
                       partial: 'shared/asset_link',
