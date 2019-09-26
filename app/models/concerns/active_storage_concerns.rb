@@ -24,6 +24,8 @@ module ActiveStorageConcerns
     temp_file.flush
     temp_file.rewind
     target.attach(io: temp_file, filename: blob.filename, metadata: blob.metadata)
+    # I dont know why, but he don't upload file on attach, so i force him to do it.
+    target.blob.upload(temp_file)
   rescue StandardError => e
     Rails.logger.error e.message
   end

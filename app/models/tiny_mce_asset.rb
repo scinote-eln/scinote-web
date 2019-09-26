@@ -72,7 +72,7 @@ class TinyMceAsset < ApplicationRecord
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))
-      if new_asset
+      if new_asset&.image&.attached?
         tm_asset.attributes['src'].value = Rails.application.routes.url_helpers.url_for(new_asset.image)
         tm_asset['class'] = 'img-responsive'
       end
