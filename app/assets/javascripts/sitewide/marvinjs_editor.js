@@ -189,6 +189,8 @@ var MarvinJsEditorApi = (function() {
           TinyMCE.makeItDirty(config.editor);
           config.image[0].src = json.url;
           config.image[0].dataset.mceSrc = json.url;
+          $(`img[data-mce-token=${config.image[0].dataset.mceToken}]`)
+            .attr('src', json.url);
         } else {
           $('#modal_link' + json.id + ' img').attr('src', json.url);
           $('#modal_link' + json.id + ' .attachment-label').html(json.file_name);
