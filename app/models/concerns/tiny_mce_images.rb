@@ -18,9 +18,8 @@ module TinyMceImages
       description = TinyMceAsset.update_old_tinymce(description, self)
 
       tiny_mce_assets.each do |tm_asset|
-        tm_asset_key = tm_asset.preview.key
-        encoded_tm_asset = Base64.strict_encode64(tm_asset.image.service.download(tm_asset_key))
-        new_tm_asset_src = "data:image/jpg;base64,#{encoded_tm_asset}"
+        next unless tm_asset&.image&.attached?
+        new_tm_asset_src = tm_asset.convert_variant_to_base64(tm_asset.preview)
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
           "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
