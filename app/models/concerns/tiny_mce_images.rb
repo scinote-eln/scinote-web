@@ -19,6 +19,7 @@ module TinyMceImages
 
       tiny_mce_assets.each do |tm_asset|
         next unless tm_asset&.image&.attached?
+
         new_tm_asset_src = tm_asset.convert_variant_to_base64(tm_asset.preview)
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
