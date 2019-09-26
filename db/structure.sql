@@ -10,6 +10,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
 -- Name: btree_gist; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -2088,14 +2102,14 @@ CREATE TABLE public.tiny_mce_assets (
     image_file_size bigint,
     image_updated_at timestamp without time zone,
     estimated_size integer DEFAULT 0 NOT NULL,
-    step_id integer,
     team_id integer,
-    result_text_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     saved boolean DEFAULT true,
     object_type character varying,
-    object_id bigint
+    object_id bigint,
+    step_id bigint,
+    result_text_id bigint
 );
 
 
@@ -3179,6 +3193,14 @@ ALTER TABLE ONLY public.my_module_repository_rows
 
 ALTER TABLE ONLY public.my_module_tags
     ADD CONSTRAINT my_module_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_modules my_module_unique_position_for_non_archive; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_modules
+    ADD CONSTRAINT my_module_unique_position_for_non_archive EXCLUDE USING btree (x WITH =, y WITH =, experiment_id WITH =) WHERE ((archived <> true)) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6535,6 +6557,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190812065432'),
 ('20190812072649'),
 ('20190830141257'),
-('20190910125740');
+('20190910125740'),
+('20190926065336');
 
 
