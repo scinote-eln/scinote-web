@@ -79,15 +79,23 @@ describe MyModule, type: :model do
       end
     end
 
-    describe '#x, #y scoped to experiment' do
+    describe '#x, #y scoped to experiment for active modules' do
       it { is_expected.to validate_presence_of :x }
       it { is_expected.to validate_presence_of :y }
 
-      it do
-        expect(my_module)
-          .to(validate_uniqueness_of(:x)
-                .scoped_to(%i(y experiment_id))
-                .with_message('and Y position has already been taken by another task in the experiment.'))
+      it 'should be invalid for same x, y, and experiment' do
+        my_module.save
+        new_my_module = my_module.dup
+
+        expect(new_my_module).not_to be_valid
+      end
+
+      it 'should be valid when module with same x, y and expriment is archived' do
+        my_module.save
+        new_my_module = my_module.dup
+        my_module.update_column(:archived, true)
+
+        expect(new_my_module).to be_valid
       end
     end
 
