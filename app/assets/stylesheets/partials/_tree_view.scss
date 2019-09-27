@@ -109,6 +109,8 @@
 }
 
 #repo-tree {
+  height: calc(100% - 50px);
+
   .fas-custom {
     float: right;
     top: 2px;
