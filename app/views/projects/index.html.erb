@@ -122,17 +122,16 @@
             <!-- project sort -->
             <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span class="hidden-xs"><%= t'projects.index.sort' %></span>
-                <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
+                <span><%= t("general.sort.#{@current_sort}_html") %></span>
                 <span class="caret"></span>
               </button>
               <ul id="sortMenuDropdown" class="dropdown-menu" aria-labelledby="sortMenu">
               <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
                 <li>
                   <% if @current_sort != sort %>
-                    <a href="#" data-sort="<%= sort %>"><%= t('projects.index.sort_' + sort) %></a>
+                    <a href="#" data-sort="<%= sort %>"><%= t("general.sort.#{sort}_html") %></a>
                   <% else %>
-                    <a class="disabled" href="#" data-sort="<%= sort %>"><%= t('projects.index.sort_' + sort) %></a>
+                    <a class="disabled" href="#" data-sort="<%= sort %>"><%= t("general.sort.#{sort}_html") %></a>
                   <% end %>
                 </li>
               <% end %>
