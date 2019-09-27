@@ -15,8 +15,7 @@ class MyModule < ApplicationRecord
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
-  validates :my_module_group, presence: true,
-            if: proc { |mm| !mm.my_module_group_id.nil? }
+  validates :my_module_group, presence: true, if: proc { |mm| !mm.my_module_group_id.nil? }
   validate :coordinates_uniqueness_check, if: :active?
 
   belongs_to :created_by,
@@ -419,13 +418,12 @@ class MyModule < ApplicationRecord
 
   def deep_clone_to_experiment(current_user, experiment)
     # Copy the module
-    clone = MyModule.new(
-      name: self.name,
-      experiment: experiment,
-      description: self.description,
-      x: self.x,
-      y: self.y)
-    clone.save(validate: false)
+    clone = MyModule.new(name: name, experiment: experiment, description: description, x: x, y: y)
+
+    # set new position if cloning in the same experiment
+    clone.attributes = get_new_position if clone.experiment == experiment
+
+    clone.save!
 
     # Remove the automatically generated protocol,
     # & clone the protocol instead
@@ -434,17 +432,18 @@ class MyModule < ApplicationRecord
 
     # Update the cloned protocol if neccesary
     clone_tinymce_assets(clone, clone.experiment.project.team)
-    clone.protocols << self.protocol.deep_clone_my_module(self, current_user)
+    clone.protocols << protocol.deep_clone_my_module(self, current_user)
     clone.reload
 
     # fixes linked protocols
     clone.protocols.each do |protocol|
       next unless protocol.linked?
+
       protocol.updated_at = protocol.parent_updated_at
       protocol.save
     end
 
-    return clone
+    clone
   end
 
   # Find an empty position for the restored module. It's
