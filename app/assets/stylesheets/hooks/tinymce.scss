@@ -44,21 +44,36 @@
   z-index: 5;
 }
 
-.mce-widget.mce-btn[aria-label="Restore last draft"] {
-  background: $brand-primary;
-  border-radius: 4px;
-  transition: $md-transaction;
+.mce-widget.mce-btn {
+  border-color: $color-white !important;
 
-  i {
-    color: $color-white;
-    transition: $md-transaction;
-  }
-
-  &.mce-disabled {
-    background: transparent;
-
+  &:not(.mce-active):hover,
+  &:not(.mce-active):active {
+    span,
     i {
-      color: inherit;
+      color: $brand-primary;
     }
   }
+
+  &.mce-active,
+  &.mce-active:hover,
+  &.mce-active:active,
+  &.mce-active:focus {
+    background-color: $brand-primary;
+
+    span,
+    i {
+      color: $color-white;
+    }
+  }
+}
+
+// Caret symbol has unneeded border-left
+.mce-splitbtn:hover .mce-open {
+  border-left: $color-white !important;
+}
+
+// Selected item list should be $brand-primary
+.mce-menu-item.mce-active.mce-menu-item-normal {
+  background-color: $brand-primary !important;
 }
