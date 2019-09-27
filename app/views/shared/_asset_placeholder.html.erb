@@ -2,8 +2,10 @@
 
   <div class="attachment-thumbnail <%= asset.previewable? ? '' : 'no-shadow' %> <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
     <% if asset.previewable? %>
-
-      <%= image_tag asset.medium_preview %>
+      <%= image_tag asset.medium_preview,
+                    onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
+                    onload: 'ActiveStoragePreviews.showPreview(event)',
+                    style: 'opacity: 0' %>
     <% else %>
       <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
     <% end %>
