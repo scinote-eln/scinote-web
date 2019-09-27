@@ -239,8 +239,8 @@ var RepositoryDatatable = (function(global) {
         // Skip if clicking on selector checkbox
         return;
       }
-      if (!$(e.target).is('.record-info-link')) {
-        // Skip if clicking on samples info link
+      if (!$(e.target).is('.record-info-link') && !$(e.target).parent().is('.file-preview-link')) {
+        // Skip if clicking on samples info link or file preview link
         $(this).parent().find('.repository-row-selector').trigger('click');
       }
     });
