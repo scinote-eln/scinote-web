@@ -9,7 +9,9 @@ Bundler.require(*Rails.groups)
 module Scinote
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
+    config.load_defaults 6.0
+
+    Rails.autoloaders.main.ignore(Rails.root.join('addons', '*', 'app', 'decorators'))
 
     # config.add_autoload_paths_to_load_path = false
 
