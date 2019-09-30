@@ -16,6 +16,65 @@ var TinyMCE = (function() {
     });
   }
 
+  function makeItDirty(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    editorForm.find('.tinymce-status-badge').addClass('hidden');
+    $(editor.getContainer())
+      .find('.tinymce-save-button').removeClass('hidden');
+  }
+
+
+  // Get LocalStorage auto save path
+  function getAutoSavePrefix(editor) {
+    var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
+
+    prefix = prefix.replace(/\{path\}/g, document.location.pathname);
+    prefix = prefix.replace(/\{query\}/g, document.location.search);
+    prefix = prefix.replace(/\{hash\}/g, document.location.hash);
+    prefix = prefix.replace(/\{id\}/g, editor.id);
+
+    return prefix;
+  }
+
+  // Handles autosave notification if draft is available in the local storage
+  function restoreDraftNotification(selector, editor) {
+    var prefix = getAutoSavePrefix(editor);
+    var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
+    var lastUpdated = $(selector).data('last-updated');
+
+    var restoreBtn = $('<button class="btn restore-draft-btn pull-right">Restore Draft</button>');
+    var cancelBtn = $(`<div class="tinymce-cancel-notification-button pull-right">
+                        <button type="button">
+                          <span class="fas fa-times"></span>
+                        </button>
+                       </div>`);
+
+    // Check whether we have draft stored
+    if (editor.plugins.autosave.hasDraft()) {
+      var notificationBar = $('<div class="restore-draft-notification"></div>');
+
+      if (lastDraftTime < lastUpdated) {
+        notificationBar.text(I18n.t('tiny_mce.older_version_available'));
+      } else {
+        notificationBar.text(I18n.t('tiny_mce.newer_version_available'));
+      }
+
+      // Add notification bar
+      $(notificationBar).append(cancelBtn).append(restoreBtn);
+      $(editor.contentAreaContainer).before(notificationBar);
+
+      $(restoreBtn).click(function() {
+        editor.plugins.autosave.restoreDraft();
+        makeItDirty(editor);
+        notificationBar.remove();
+      });
+
+      $(cancelBtn).click(function() {
+        notificationBar.remove();
+      });
+    }
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
@@ -30,16 +89,16 @@ var TinyMCE = (function() {
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
 
-        if (textAreaObject.data('objectType') === 'step') {
+        if (textAreaObject.data('objectType') === 'step'
+          || textAreaObject.data('objectType') === 'result_text') {
           document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
         }
-
 
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
           menubar: 'file edit view insert format table',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol ',
+          toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
           plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor placeholder colorpicker textpattern table',
           autoresize_bottom_margin: 20,
           codesample_languages: [
@@ -60,7 +119,8 @@ var TinyMCE = (function() {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
-          autosave_interval: '15s',
+          autosave_restore_when_empty: false,
+          autosave_interval: '1s',
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
           object_resizing: true,
@@ -117,6 +177,7 @@ var TinyMCE = (function() {
             var editorForm = $(editor.getContainer()).closest('form');
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
+
             var editorToolbaroffset;
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
@@ -226,16 +287,17 @@ var TinyMCE = (function() {
             });
 
             editor.on('Dirty', function() {
-              var editorForm = $(editor.getContainer()).closest('form');
-              editorForm.find('.tinymce-status-badge').addClass('hidden');
-              $(editor.getContainer())
-                .find('.tinymce-save-button').removeClass('hidden');
+              makeItDirty(editor);
             });
 
             editor.on('remove', function() {
               var menuBar = $(editor.getContainer()).find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
+            });
+
+            editor.on('init', function(e) {
+              restoreDraftNotification(selector, editor);
             });
           },
           codesample_content_css: $(selector).data('highlightjs-path')
