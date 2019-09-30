@@ -16,7 +16,7 @@ var TinyMCE = (function() {
     });
   }
 
-  function refreshSaveButton(editor) {
+  function makeItDirty(editor) {
     var editorForm = $(editor.getContainer()).closest('form');
     editorForm.find('.tinymce-status-badge').addClass('hidden');
     $(editor.getContainer())
@@ -43,10 +43,11 @@ var TinyMCE = (function() {
     var lastUpdated = $(selector).data('last-updated');
 
     var restoreBtn = $('<button class="btn restore-draft-btn pull-right">Restore Draft</button>');
-    var cancelBtn = $('<div class="tinymce-cancel-notification-button pull-right">' +
-      '<button type="button">' +
-      '<span class="fas fa-times"></span>' +
-      '</button></div>');
+    var cancelBtn = $(`<div class="tinymce-cancel-notification-button pull-right">
+                        <button type="button">
+                          <span class="fas fa-times"></span>
+                        </button>
+                       </div>`);
 
     // Check whether we have draft stored
     if (editor.plugins.autosave.hasDraft()) {
@@ -59,13 +60,12 @@ var TinyMCE = (function() {
       }
 
       // Add notification bar
-      $(notificationBar).append(cancelBtn);
-      $(notificationBar).append(restoreBtn);
+      $(notificationBar).append(cancelBtn).append(restoreBtn);
       $(editor.contentAreaContainer).before(notificationBar);
 
       $(restoreBtn).click(function() {
         editor.plugins.autosave.restoreDraft();
-        refreshSaveButton(editor);
+        makeItDirty(editor);
         notificationBar.remove();
       });
 
@@ -287,7 +287,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('Dirty', function() {
-              refreshSaveButton(editor);
+              makeItDirty(editor);
             });
 
             editor.on('remove', function() {
