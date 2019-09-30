@@ -321,17 +321,15 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        begin
-          @new = @protocol.copy_to_repository(
-            copy_to_repository_params[:name],
-            copy_to_repository_params[:protocol_type],
-            link_protocols,
-            current_user
-          )
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
-        end
+        @new = @protocol.copy_to_repository(
+          copy_to_repository_params[:name],
+          copy_to_repository_params[:protocol_type],
+          link_protocols,
+          current_user
+        )
+      rescue StandardError
+        transaction_error = true
+        raise ActiveRecord:: Rollback
       end
 
       if transaction_error

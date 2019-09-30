@@ -236,20 +236,19 @@ class Protocol < ApplicationRecord
   # Deep-clone given array of assets
   def self.deep_clone_assets(assets_to_clone)
     assets_to_clone.each do |src_id, dest_id|
-      src = Asset.find_by_id(src_id)
-      dest = Asset.find_by_id(dest_id)
+      src = Asset.find_by(id: src_id)
+      dest = Asset.find_by(id: dest_id)
       dest.destroy! if src.blank? && dest.present?
       next unless src.present? && dest.present?
 
       # Clone file
-      src.duplicate_file(dst)
+      src.duplicate_file(dest)
     end
   end
 
   def self.clone_contents(src, dest, current_user, clone_keywords)
     assets_to_clone = []
     dest.update(description: src.description)
-    src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
     if clone_keywords
@@ -302,7 +301,6 @@ class Protocol < ApplicationRecord
       step.assets.each do |asset|
         asset2 = asset.dup
         asset2.save!
-        asset.duplicate_file(asset2)
         step2.assets << asset2
         assets_to_clone << [asset.id, asset2.id]
       end
