@@ -472,7 +472,7 @@ class Asset < ApplicationRecord
 
   def unlock_expired
     with_lock do
-      if !lock_ttl.nil? && lock_ttl <= Time.now.to_i
+      if !lock_ttl.nil? && lock_ttl < Time.now.to_i
         self.lock = nil
         self.lock_ttl = nil
         save!
