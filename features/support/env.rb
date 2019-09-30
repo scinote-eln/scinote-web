@@ -6,6 +6,7 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+ENV['RAILS_ENV'] = 'test'
 ENV['CR_REMOVE_RACK_TEST_HELPERS'] = 'true'
 
 require 'cucumber/rails'
@@ -16,7 +17,7 @@ require 'capybara/email'
 include FirstTimeDataGenerator
 
 Capybara.default_max_wait_time = 30
-# Capybara.asset_host = 'http://localhost:3001'
+#Capybara.asset_host = 'http://localhost:3001'
 Capybara.server_port = 3000
 require 'selenium/webdriver'
 # enables email helper methods

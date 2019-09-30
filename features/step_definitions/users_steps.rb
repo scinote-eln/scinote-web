@@ -37,8 +37,9 @@ Given("I click on Reset Password link in the reset password email for user {stri
   visit new_user_password_path
   fill_in 'user_email', with: email
   click_button 'Send me reset password instruction'
+
   Delayed::Worker.new.work_off
-  sleep 10
+  sleep 1
   open_email(email)
   current_email.click_link 'Change my password'
 end
