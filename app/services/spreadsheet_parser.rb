@@ -3,7 +3,7 @@
 class SpreadsheetParser
   # Based on file's extension opens file (used for importing)
   def self.open_spreadsheet(file)
-    if file.class == ActionDispatch::Http::UploadedFile
+    if file.class.name.split('::')[-1] == 'UploadedFile'
       filename = file.original_filename
       file_path = file.path
     else
