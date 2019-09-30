@@ -449,19 +449,18 @@ class Asset < ApplicationRecord
   # locked?, lock_asset and refresh_lock rely on the asset
   # being locked in the database to prevent race conditions
   def locked?
+    unlock_expired
     !lock.nil?
   end
 
   def lock_asset(lock_string)
     self.lock = lock_string
     self.lock_ttl = Time.now.to_i + LOCK_DURATION
-    delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
     save!
   end
 
   def refresh_lock
     self.lock_ttl = Time.now.to_i + LOCK_DURATION
-    delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
     save!
   end
 
@@ -473,7 +472,7 @@ class Asset < ApplicationRecord
 
   def unlock_expired
     with_lock do
-      if !lock_ttl.nil? && lock_ttl >= Time.now.to_i
+      if !lock_ttl.nil? && lock_ttl < Time.now.to_i
         self.lock = nil
         self.lock_ttl = nil
         save!
