@@ -5,6 +5,7 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
 
   ID_PARTITION_LIMIT = 1_000_000_000
   DIGEST = OpenSSL::Digest.const_get('SHA1').new
+  MODELS = [Asset, Experiment, TempFile, TinyMceAsset, User, ZipExport].freeze
 
   def up
     ActiveRecord::Base.connection.raw_connection.prepare('active_storage_blob_statement', <<-SQL)
@@ -20,13 +21,9 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
       ) VALUES ($1, $2, $3, $4, $5)
     SQL
 
-    Rails.application.eager_load!
-    models = ApplicationRecord.descendants.reject(&:abstract_class?)
-
     transaction do
-      models.each do |model|
+      MODELS.each do |model|
         next unless ActiveRecord::Base.connection.table_exists?(model.table_name)
-        next if model.name == 'TeamZipExport'
 
         attachments = model.column_names.map do |c|
           $1 if c =~ /(.+)_file_name$/
@@ -97,24 +94,10 @@ class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
   end
 
   def key(instance, attachment)
-    # SecureRandom.uuid
-    # Alternatively:
-    if ENV['PAPERCLIP_STORAGE'] == 's3'
-      interpolate(':class/:attachment/:id_partition/:hash/original/:filename', instance, attachment)
-    else
-      instance.class.generate_unique_secure_token
-      # File.join('storage', key.first(2), key.first(4).last(2))
-    end
+    interpolate(':class/:attachment/:id_partition/:hash/original/:filename', instance, attachment)
   end
 
   def checksum(_attachment)
     'dummy'
-    # local files stored on disk:
-    # url = attachment.path
-    # Digest::MD5.base64digest(File.read(url))
-
-    # remote files stored on another person's computer:
-    # url = attachment.url
-    # Digest::MD5.base64digest(Net::HTTP.get(URI(url)))
   end
 end
