@@ -1,6 +1,9 @@
-<% query ||= nil %>
-<% asset_read_allowed = false %>
-<% text = query.present? ? highlight(asset.file_name, query.strip.split(/\s+/)) : asset.file_name %>
+<% 
+  query ||= nil
+  asset_read_allowed = false
+  file_name = asset.blob.metadata["asset_type"] ? asset.blob.metadata["name"] : asset.file_name
+  text = query.present? ? highlight(file_name, query.strip.split(/\s+/)) : file_name
+%>
 
 <% if asset.step %>
   <% protocol = asset.step.protocol %>

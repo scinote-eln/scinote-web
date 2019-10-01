@@ -144,6 +144,16 @@
 
 #search-container {
   padding-left: 45px;
+  
+  .mce-i-marvinjs {
+    position: relative;
+
+    &::before {
+      display: inline-block;
+      left: 0;
+      top: 10px;
+    }
+  }
 }
 
 /** Search */
