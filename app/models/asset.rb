@@ -60,8 +60,8 @@ class Asset < ApplicationRecord
   # This could cause some problems if you create empty asset and want to
   # assign it to result
   validate :step_or_result_or_repository_asset_value
-  validate :wopi_filename_valid,
-           on: :wopi_file_creation
+  validate :wopi_filename_valid, on: :wopi_file_creation
+  validate :check_file_size, on: :on_api_upload
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -490,6 +490,14 @@ class Asset < ApplicationRecord
           limit: Constants::FILENAME_MAX_LENGTH
         )
       )
+    end
+  end
+
+  def check_file_size
+    if file.attached?
+      if file.blob.byte_size > Rails.application.config.x.file_max_size_mb.megabytes
+        errors.add(:file, I18n.t('activerecord.errors.models.asset.attributes.file.too_big'))
+      end
     end
   end
 end
