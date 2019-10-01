@@ -3,7 +3,6 @@
 module ProtocolImporters
   class SearchProtocolsService
     extend Service
-    require 'protocol_importers/protocols_io/v3/errors'
 
     attr_reader :errors, :protocols_list
 

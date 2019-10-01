@@ -43,7 +43,7 @@ class UserDataDeletion
             my_module.user_my_modules.destroy_all
             my_module.report_elements.destroy_all
             my_module.sample_my_modules.destroy_all
-            my_module.protocols.each { |p| p.update_attributes(parent_id: nil) }
+            my_module.protocols.each { |p| p.update(parent_id: nil) }
             my_module.protocols.each do |protocol|
               destroy_protocol(protocol)
             end
@@ -65,7 +65,7 @@ class UserDataDeletion
 
         project.delete
       end
-      team.protocols.each { |p| p.update_attributes(parent_id: nil) }
+      team.protocols.each { |p| p.update(parent_id: nil) }
       team.protocols.where(my_module: nil).each do |protocol|
         destroy_protocol(protocol)
       end

@@ -31,11 +31,11 @@ describe Activity, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :project }
-    it { should belong_to :experiment }
-    it { should belong_to :my_module }
+    it { should belong_to(:project).optional }
+    it { should belong_to(:experiment).optional }
+    it { should belong_to(:my_module).optional }
     it { should belong_to :owner }
-    it { should belong_to :subject }
+    it { should belong_to(:subject).optional }
   end
 
   describe 'Validations' do

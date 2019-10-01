@@ -1,11 +1,8 @@
 Rails.application.configure do
+  # Verifies that versions and hashed value of the package contents in the project's package.json
+  config.webpacker.check_yarn_integrity = false
 
   # Settings specified here will take precedence over those in config/application.rb.
-  config.after_initialize do
-    Bullet.enable        = true
-    Bullet.bullet_logger = true
-    Bullet.raise         = true # raise an error if n+1 query occurs
-  end
 
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
@@ -43,6 +40,9 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
+  # Store uploaded files on the local file system in a temporary directory
+  config.active_storage.service = :test
+
   config.action_mailer.perform_caching = false
 
   # Tell Action Mailer not to deliver emails to the real world.
@@ -50,26 +50,14 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  config.action_mailer.perform_deliveries = true
+
   Rails.application.routes.default_url_options = {
     host: Rails.application.secrets.mail_server_url
   }
 
   # Don't care if the mailer can't send.
-  config.action_mailer.default_url_options = { host: Rails.application.secrets.mail_server_url }
-  config.action_mailer.default_options = { from: Rails.application.secrets.mail_from }
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = false
-  # config.action_mailer.delivery_method = :smtp
-
-  config.action_mailer.smtp_settings = {
-    address: Rails.application.secrets.mailer_address,
-    port: Rails.application.secrets.mailer_port,
-    domain: Rails.application.secrets.mailer_domain,
-    authentication: Rails.application.secrets.mailer_authentication,
-    enable_starttls_auto: true,
-    user_name: Rails.application.secrets.mailer_user_name,
-    password: Rails.application.secrets.mailer_password
-  }
+  config.action_mailer.raise_delivery_errors = true
 
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random

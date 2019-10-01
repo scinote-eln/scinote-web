@@ -26,7 +26,7 @@ describe CustomField, type: :model do
   describe 'Relations' do
     it { should belong_to :user }
     it { should belong_to :team }
-    it { should belong_to(:last_modified_by).class_name('User') }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should have_many :sample_custom_fields }
   end
 
@@ -44,7 +44,6 @@ describe CustomField, type: :model do
 
         expect(custom_field).to validate_uniqueness_of(:name).scoped_to(:team_id)
       end
-
     end
 
     describe '#user' do

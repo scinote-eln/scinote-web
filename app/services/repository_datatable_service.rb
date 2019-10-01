@@ -163,4 +163,51 @@ class RepositoryDatatableService
   def sort_null_direction(val)
     val == 'ASC' ? 'LAST' : 'FIRST'
   end
+
+  def filter_by_asset_value(records, id, dir)
+    records.joins(
+      "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
+        active_storage_blobs.filename AS value
+      FROM repository_cells
+      INNER JOIN repository_asset_values
+      ON repository_asset_values.id = repository_cells.value_id
+      INNER JOIN assets
+      ON repository_asset_values.asset_id = assets.id
+      INNER JOIN active_storage_attachments
+      ON active_storage_attachments.record_id = assets.id
+         AND active_storage_attachments.record_type = 'Asset'
+         AND active_storage_attachments.name = 'file'
+      INNER JOIN active_storage_blobs
+      ON active_storage_blobs.id = active_storage_attachments.blob_id
+      WHERE repository_cells.repository_column_id = #{id}) AS values
+      ON values.repository_row_id = repository_rows.id"
+    ).order("values.value #{dir}")
+  end
+
+  def filter_by_text_value(records, id, dir)
+    records.joins(
+      "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
+        repository_text_values.data AS value
+      FROM repository_cells
+      INNER JOIN repository_text_values
+      ON repository_text_values.id = repository_cells.value_id
+      WHERE repository_cells.repository_column_id = #{id}) AS values
+      ON values.repository_row_id = repository_rows.id"
+    ).order("values.value #{dir}")
+  end
+
+  def filter_by_list_value(records, id, dir)
+    records.joins(
+      "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
+        repository_list_items.data AS value
+      FROM repository_cells
+      INNER JOIN repository_list_values
+      ON repository_list_values.id = repository_cells.value_id
+      INNER JOIN repository_list_items
+      ON repository_list_values.repository_list_item_id =
+      repository_list_items.id
+      WHERE repository_cells.repository_column_id = #{id}) AS values
+      ON values.repository_row_id = repository_rows.id"
+    ).order("values.value #{dir}")
+  end
 end

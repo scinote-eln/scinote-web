@@ -2,7 +2,6 @@
 
 module ProtocolImporters
   class BuildProtocolFromClientService
-    require 'protocol_importers/protocols_io/v3/errors'
     extend Service
 
     attr_reader :errors, :built_protocol, :steps_assets

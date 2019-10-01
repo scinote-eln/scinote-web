@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n globalConstants */
+/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -15,14 +15,6 @@ var TinyMCE = (function() {
       hljs.highlightBlock(block);
     });
   }
-
-  function makeItDirty(editor) {
-    var editorForm = $(editor.getContainer()).closest('form');
-    editorForm.find('.tinymce-status-badge').addClass('hidden');
-    $(editor.getContainer())
-      .find('.tinymce-save-button').removeClass('hidden');
-  }
-
 
   // Get LocalStorage auto save path
   function getAutoSavePrefix(editor) {
@@ -75,11 +67,33 @@ var TinyMCE = (function() {
     }
   }
 
+  function initImageToolBar(editor) {
+    var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
+    editorIframe.contents().find('head').append('<style type="text/css">'
+      + 'img::-moz-selection{background:0 0}'
+      + 'img::selection{background:0 0}'
+      + '.mce-content-body img[data-mce-selected]{outline:2px solid #37a0d9}'
+      + '.mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}'
+      + '.mce-content-body div.mce-resizehandle:hover{background:transparent}'
+      + '.mce-content-body div#mceResizeHandlenw{border-left: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
+      + '.mce-content-body div#mceResizeHandlene{border-right: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
+      + '.mce-content-body div#mceResizeHandlesw{border-left: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
+      + '.mce-content-body div#mceResizeHandlese{border-right: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
+      + '</style>');
+  }
+
+  function makeItDirty(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    editorForm.find('.tinymce-status-badge').addClass('hidden');
+    $(editor.getContainer()).find('.tinymce-save-button').removeClass('hidden');
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
+      var plugins;
       var textAreaObject = $(selector);
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
@@ -88,6 +102,8 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
+        plugins = 'custom_image_toolbar autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
+        if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
         if (textAreaObject.data('objectType') === 'step'
           || textAreaObject.data('objectType') === 'result_text') {
@@ -97,9 +113,9 @@ var TinyMCE = (function() {
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
-          menubar: 'file edit view insert format table',
-          toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
-          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor placeholder colorpicker textpattern table',
+          menubar: 'file edit view insert format',
+          toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
             { text: 'R', value: 'r' },
@@ -199,12 +215,15 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
-            if (globalConstants.is_safari) {
+            if (GLOBAL_CONSTANTS.IS_SAFARI) {
               editorToolbar.css('position', '-webkit-sticky');
             } else {
               editorToolbar.css('position', 'sticky');
             }
-            editorToolbar.css('top', editorToolbaroffset + 'px');
+            editorToolbar.css('top', editorToolbaroffset + 'px').css('z-index', '100');
+
+            // Init image toolbar
+            initImageToolBar(editor);
 
             // Update scroll position after exit
             function updateScrollPosition() {
@@ -232,7 +251,6 @@ var TinyMCE = (function() {
               .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
-                editor.plugins.autosave.removeDraft();
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
@@ -318,6 +336,18 @@ var TinyMCE = (function() {
     },
     getContent: function() {
       return tinyMCE.editors[0].getContent();
+    },
+    updateImages(editor) {
+      var images;
+      var iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
+      images = $.map($('img', iframe), e => {
+        return e.dataset.mceToken;
+      });
+      $('#' + editor.id).next()[0].value = JSON.stringify(images);
+      return JSON.stringify(images);
+    },
+    makeItDirty: function(editor) {
+      makeItDirty(editor);
     },
     highlight: initHighlightjs
   });

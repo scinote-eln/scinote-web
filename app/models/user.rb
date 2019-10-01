@@ -8,6 +8,7 @@ class User < ApplicationRecord
   include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
+  include ActiveStorageConcerns
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -15,14 +16,17 @@ class User < ApplicationRecord
          :timeoutable, :omniauthable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
-  has_attached_file :avatar,
-                    styles: {
-                      medium: Constants::MEDIUM_PIC_FORMAT,
-                      thumb: Constants::THUMB_PIC_FORMAT,
-                      icon: Constants::ICON_PIC_FORMAT,
-                      icon_small: Constants::ICON_SMALL_PIC_FORMAT
-                    },
-                    default_url: Constants::DEFAULT_AVATAR_URL
+
+  has_one_attached :avatar
+
+  # has_attached_file :avatar,
+  #                   styles: {
+  #                     medium: Constants::MEDIUM_PIC_FORMAT,
+  #                     thumb: Constants::THUMB_PIC_FORMAT,
+  #                     icon: Constants::ICON_PIC_FORMAT,
+  #                     icon_small: Constants::ICON_SMALL_PIC_FORMAT
+  #                   },
+  #                   default_url: Constants::DEFAULT_AVATAR_URL
 
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
@@ -35,10 +39,10 @@ class User < ApplicationRecord
             presence: true,
             length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  validates_attachment :avatar,
-    :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
-            message: I18n.t('client_api.user.avatar_too_big') }
+  # validates_attachment :avatar,
+  #   :content_type => { :content_type => ["image/jpeg", "image/png"] },
+  #   size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
+  #           message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications_settings
@@ -226,11 +230,6 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
-  # If other errors besides parameter "avatar" exist,
-  # they will propagate to "avatar" also, so remove them
-  # and put all other (more specific ones) in it
-  after_validation :filter_paperclip_errors
-
   before_destroy :destroy_notifications
 
   def name
@@ -247,6 +246,28 @@ class User < ApplicationRecord
     # avatar_file_name == "face.png"
     # avatar_content_type == "image/png"
     @avatar_remote_url = url_value
+  end
+
+  def avatar_variant(style)
+    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style) unless avatar.attached?
+
+    format = case style.to_sym
+             when :medium
+               Constants::MEDIUM_PIC_FORMAT
+             when :thumb
+               Constants::THUMB_PIC_FORMAT
+             when :icon
+               Constants::ICON_PIC_FORMAT
+             when :icon_small
+               Constants::ICON_SMALL_PIC_FORMAT
+             else
+               Constants::ICON_SMALL_PIC_FORMAT
+             end
+    avatar.variant(resize_to_limit: format)
+  end
+
+  def avatar_url(style)
+    Rails.application.routes.url_helpers.url_for(avatar_variant(style))
   end
 
   def date_format
@@ -309,20 +330,6 @@ class User < ApplicationRecord
     self.avatar_file_name = name
     self.avatar_content_type = Rack::Mime.mime_type(".#{file_ext}")
     self.avatar_file_size = size.to_i
-  end
-
-  def filter_paperclip_errors
-    if errors.key? :avatar
-      errors.delete(:avatar)
-      messages = []
-      errors.each do |attribute|
-        errors.full_messages_for(attribute).each do |message|
-          messages << message.split(' ').drop(1).join(' ')
-        end
-      end
-      errors.clear
-      errors.add(:avatar, messages.join(','))
-    end
   end
 
   # Whether user is active (= confirmed) or not
@@ -559,20 +566,19 @@ class User < ApplicationRecord
         .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
   end
 
+  def file_name
+    return '' unless avatar.attached?
+
+    avatar.blob&.filename&.sanitized
+  end
+
   def avatar_base64(style)
-    unless avatar.present?
+    unless avatar.attached?
       missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
       return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
     end
 
-    avatar_uri = if avatar.options[:storage].to_sym == :s3
-                   URI.parse(avatar.url(style)).open.to_a.join
-                 else
-                   File.open(avatar.path(style)).to_a.join
-                 end
-
-    encoded_data = Base64.strict_encode64(avatar_uri)
-    "data:#{avatar_content_type};base64,#{encoded_data}"
+    convert_variant_to_base64(avatar_variant(style))
   end
 
   protected

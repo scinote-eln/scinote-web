@@ -14,27 +14,23 @@ module ModelExporters
 
     def copy_files(assets, attachment_name, dir_name)
       assets.flatten.each do |a|
-        next unless a.public_send(attachment_name).present?
+        next unless a.public_send(attachment_name).attached?
 
-        unless a.public_send(attachment_name).exists?
-          raise StandardError,
-                "File id:#{a.id} of type #{attachment_name} is missing"
-        end
         yield if block_given?
         dir = FileUtils.mkdir_p(File.join(dir_name, a.id.to_s)).first
-        if defined?(S3_BUCKET)
-          s3_asset =
-            S3_BUCKET.object(a.public_send(attachment_name).path.remove(%r{^/}))
-          file_name = a.public_send(attachment_name).original_filename
-          File.open(File.join(dir, file_name), 'wb') do |f|
-            s3_asset.get(response_target: f)
-          end
-        else
-          FileUtils.cp(
-            a.public_send(attachment_name).path,
-            File.join(dir, a.public_send(attachment_name).original_filename)
-          )
-        end
+
+        tempfile = Tempfile.new
+        tempfile.binmode
+        a.public_send(attachment_name).blob.download { |chunk| tempfile.write(chunk) }
+        tempfile.flush
+        tempfile.rewind
+        FileUtils.cp(
+          tempfile.path,
+          File.join(dir, a.file_name)
+        )
+      ensure
+        tempfile.close
+        tempfile.unlink
       end
     end
 
@@ -57,9 +53,18 @@ module ModelExporters
         checklists: step.checklists.map { |c| checklist(c) },
         step_comments: step.step_comments,
         step_assets: step.step_assets,
-        assets: step.assets,
+        assets: step.assets.map { |a| assets_data(a) },
         step_tables: step.step_tables,
         tables: step.tables.map { |t| table(t) }
+      }
+    end
+
+    def assets_data(asset)
+      return unless asset.file.attached?
+
+      {
+        asset: asset,
+        asset_blob: asset.file.blob
       }
     end
 

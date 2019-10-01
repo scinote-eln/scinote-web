@@ -1,3 +1,5 @@
+/* global Promise _ ActiveStorage RepositoryItemEditForm */
+
 //= require sugar.min
 //= require jquerymy-1.2.14.min
 
@@ -71,7 +73,7 @@
     $.each(itemData.repository_row.repository_cells, function(i, cell) {
       var tableCellId = 'colId-' + cell.cell_column_id;
       if(cell.type === 'RepositoryAssetValue') {
-        formBindingsData[tableCellId] = new File([""], cell.value.file_file_name);
+        formBindingsData[tableCellId] = new File([""], cell.value.file_name);
       } else {
         formBindingsData[tableCellId] = cell.value;
       }
@@ -116,54 +118,77 @@
     var formData = this.formData;
     var formDataObj = new FormData();
     var removeFileColumns = [];
+    var filesToUploadCntr = 0;
+    var filesUploadedCntr = 0;
+    const directUploadUrl = $(tableID).data('directUploadUrl');
+
     formDataObj.append('request_url', $(tableID).data('current-uri'));
     formDataObj.append('repository_row_id', $(selectedRecord).attr('id'));
 
-    $(_.keys(this.formData)).each(function(_, element) {
-      var value = formData[element];
-      if (element === "rowName") {
-        formDataObj.append('repository_row_name', value);
-      } else {
-        var colId = element.replace('colId-', '');
-        var $el   = $('#' + element);
-        // don't save anything if element is not visible
-        if($el.length == 0) {
-          return true;
-        }
-        if($el.attr('type') === 'file') {
-          // handle deleting of element
-          if($el.attr('remove') === "true") {
-            removeFileColumns.push(colId);
-            formDataObj.append('repository_cells[' + colId + ']', null);
-          } else {
-            formDataObj.append('repository_cells[' +  colId + ']',
-                               getFileValue($el));
+    return new Promise((resolve, reject) => {
+      $(_.keys(this.formData)).each(function(_, element) {
+        var value = formData[element];
+        if (element === 'rowName') {
+          formDataObj.append('repository_row_name', value);
+        } else {
+          let colId = element.replace('colId-', '');
+          let $el = $('#' + element);
+          // don't save anything if element is not visible
+          if ($el.length === 0) {
+            return;
           }
-        } else if(value.length >= 0) {
-          formDataObj.append('repository_cells[' +  colId + ']', value);
+          if ($el.attr('type') === 'file') {
+            // handle deleting of element
+            if ($el.attr('remove') === 'true') {
+              removeFileColumns.push(colId);
+              formDataObj.append('repository_cells[' + colId + ']', null);
+            } else if ($el[0].files.length > 0) {
+              filesToUploadCntr += 1;
+            }
+          } else if (value.length >= 0) {
+            formDataObj.append('repository_cells[' + colId + ']', value);
+          }
         }
+      });
+
+      formDataObj.append('remove_file_columns', JSON.stringify(removeFileColumns));
+
+      // No files for upload, so return earlier
+      if (filesToUploadCntr === 0) {
+        resolve(formDataObj);
+        return;
       }
+
+      // Second run, just for files
+      $(_.keys(this.formData)).each(function(_, element) {
+        let $el = $('#' + element);
+        let colId = element.replace('colId-', '');
+
+        if ($el.attr('type') === 'file' && $el.attr('remove') !== 'true') {
+          let upload = new ActiveStorage.DirectUpload($el[0].files[0], directUploadUrl);
+
+          upload.create(function(error, blob) {
+            if (error) {
+              reject(error);
+            } else {
+              formDataObj.append('repository_cells[' + colId + ']', blob.signed_id);
+              filesUploadedCntr += 1;
+
+              if (filesUploadedCntr === filesToUploadCntr) {
+                resolve(formDataObj);
+              }
+            }
+          });
+        }
+      });
     });
-    formDataObj.append('remove_file_columns', JSON.stringify(removeFileColumns));
-    return formDataObj;
-  }
+  };
+
   /**
    *  |-----------------|
    *  | Private methods |
    *  |-----------------|
    */
-
-   /**
-    * Resolves the file cell on FormData creation
-    *
-    * @param {Object} elementId
-    *
-    * @returns (String | Object)
-    */
-  function getFileValue(element) {
-    var file = element[0].files[0];
-    return (file) ? file : '';
-  }
 
   /**
    * Takes object and surrounds it with input
@@ -176,8 +201,8 @@
    *  @returns (String)
    */
   function changeToInputField(object, name, value, id) {
-    return "<div class='form-group'><input class='form-control' data-object='" +
-        object + "' name='" + name + "' value='" + value + "' id='" + id +  "'></input></div>";
+    return "<div class='form-group'><input class='form-control' data-object='"
+        + object + "' name='" + name + "' value='" + value + "' id='" + id + "'></input></div>";
   }
 
   /**
@@ -193,7 +218,7 @@
    *  @returns (String)
    */
   function changeToInputFileField(object, name, value, id) {
-    var fileName    = (value.file_file_name) ? value.file_file_name : I18n.t('general.file.no_file_chosen');
+    var fileName    = (value.file_name) ? value.file_name : I18n.t('general.file.no_file_chosen');
     var buttonLabel = I18n.t('general.file.choose');
     var html        = "<div class='repository-input-file-field'>" +
       "<div class='form-group'><div><input type='file' name='" + name + "' id='" +
@@ -202,7 +227,7 @@
       "' data-id='" + id + "'>" + buttonLabel +
       "</button></div><div><p class='file-name-label'>" + truncateLongString(fileName, 20) +
       "</p></div>";
-    if(value.file_file_name) {
+    if(value.file_name) {
       html += "<div><a data-action='removeAsset' ";
       html += "onClick='clearFileInput(this)'><i class='fas fa-times'></i></a>";
     } else {
@@ -368,4 +393,4 @@
       formData[generateInputFieldReference(columnId)] = undefined;
     }
   }
-})(window);
+}(window));

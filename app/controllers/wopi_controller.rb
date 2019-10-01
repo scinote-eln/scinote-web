@@ -1,6 +1,7 @@
 class WopiController < ActionController::Base
   include WopiUtil
 
+  skip_before_action :verify_authenticity_token
   before_action :load_vars, :authenticate_user_from_token!
   before_action :verify_proof!
 
@@ -12,7 +13,7 @@ class WopiController < ActionController::Base
   def file_contents_get_endpoint
     # get_file
     response.headers['X-WOPI-ItemVersion'] = @asset.version
-    response.body = Paperclip.io_adapters.for(@asset.file).read
+    response.body = @asset.file.download
     send_data response.body, disposition: 'inline', content_type: 'text/plain'
   end
 
@@ -52,9 +53,9 @@ class WopiController < ActionController::Base
     asset_owner_id = @asset.created_by_id.to_s if @asset.created_by_id
 
     msg = {
-      BaseFileName:                @asset.file_file_name,
+      BaseFileName:                @asset.file_name,
       OwnerId:                     asset_owner_id,
-      Size:                        @asset.file_file_size,
+      Size:                        @asset.file_size,
       UserId:                      @user.id.to_s,
       Version:                     @asset.version.to_s,
       SupportsExtendedLockLength:  true,
@@ -68,7 +69,7 @@ class WopiController < ActionController::Base
       UserCanWrite:                  @can_write,
       UserCanNotWriteRelative:       true,
       CloseUrl:                      @close_url,
-      DownloadUrl: url_for(controller: 'assets', action: 'download',
+      DownloadUrl: url_for(controller: 'assets', action: 'file_url',
                            id: @asset.id, host: ENV['WOPI_USER_HOST']),
       HostEditUrl: url_for(controller: 'assets', action: 'edit',
                            id: @asset.id, host: ENV['WOPI_USER_HOST']),
@@ -218,7 +219,7 @@ class WopiController < ActionController::Base
           response.headers['X-WOPI-Lock'] = @asset.lock
           render body: nil, status: 409 and return
         end
-      elsif !@asset.file_file_size.nil? && @asset.file_file_size.zero?
+      elsif !@asset.file_size.nil? && @asset.file_size.zero?
         logger.warn 'WOPI: initializing empty file'
 
         @team.release_space(@asset.estimated_size)

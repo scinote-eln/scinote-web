@@ -50,7 +50,7 @@ describe TemplatesService do
             tmpl_res = tmpl_task.results.find_by_name(demo_res.name)
             expect(tmpl_res.name).to eq(demo_res.name)
             if demo_res.asset
-              expect(tmpl_res.asset.file.exists?).to eq(true)
+              expect(tmpl_res.asset.file.attached?).to eq(true)
               expect(demo_res.asset.file_file_name)
                 .to eq(tmpl_res.asset.file_file_name)
             elsif demo_res.table
@@ -65,6 +65,7 @@ describe TemplatesService do
                  demo_task.protocol.steps.size.positive?
             next
           end
+
           demo_task.protocol.steps.each do |demo_step|
             tmpl_step = tmpl_task.protocol.steps.find_by_name(demo_step.name)
             expect(demo_step.name).to eq(tmpl_step.name)
@@ -74,7 +75,7 @@ describe TemplatesService do
                 .to match_array(tmpl_step.assets.pluck(:file_file_name))
             end
             tmpl_step.assets.each do |asset|
-              expect(asset.file.exists?).to eq(true)
+              expect(asset.file.attached?).to eq(true)
             end
             if demo_step.tables.present?
               expect(demo_step.tables.pluck(:contents))
@@ -88,7 +89,6 @@ describe TemplatesService do
               .to eq(tmpl_step.step_comments.size)
           end
         end
-        Asset.all.each(&:paperclip_delete)
         FileUtils.remove_dir(tmplts_dir)
       end
     end

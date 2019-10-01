@@ -1,4 +1,1 @@
-<%= image_tag(@experiment.workflowimg.expiring_url(
-                        Constants::URL_SHORT_EXPIRE_TIME
-                      ),
-                      class: 'img-responsive center-block') %>
+<%= image_tag url_for(@experiment.workflowimg), class: 'img-responsive center-block' %>

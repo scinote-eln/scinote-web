@@ -1,0 +1,47 @@
+<% if MarvinJsService.enabled? %>
+  <div id="MarvinJsModal"
+       class="modal modal-marvin-js"
+       role="dialog"
+       aria-labelledby="marvinJsModal"
+       aria-hidden="true"
+       data-backdrop="static"
+       data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
+          <span class="file-name">
+            <%= t('marvinjs.modal_name_title') %>
+            <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder') %>
+          </span>
+          <p class="file-save-link"><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
+        </div>
+        <div class="modal-body">
+          <div id="marvinjs-editor" data-marvinjs-mode="<%= ENV['MARVINJS_API_KEY'] ? 'remote' : 'local' %>">
+            <% if ENV['MARVINJS_API_KEY'] %>
+              <div id="marvinjs-sketch" style="width: 600px; height: 480px"></div>
+            <% elsif ENV['MARVINJS_URL'] %>
+              <iframe id="marvinjs-sketch" src="<%= MarvinJsService.url %>" frameBorder="0"></iframe>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="modal modal-promo-marvin-js" id="MarvinJsPromoModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            MarvinJS Promo Title
+          </h4>
+        </div>
+        <div class="modal-body">
+          MarvinJS Promo Description
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'repository_actions/duplicate_cell'
-
 module RepositoryActions
   class DuplicateRows
     attr_reader :number_of_duplicated_items

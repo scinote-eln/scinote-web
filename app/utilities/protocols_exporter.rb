@@ -51,12 +51,12 @@ module ProtocolsExporter
       next unless img
 
       img_guid = get_guid(img.id)
-      asset_file_name = "rte-#{img_guid}" \
-                        "#{File.extname(img.image_file_name)}"
+      asset_file_name = "rte-#{img_guid}#{File.extname(img.file_name)}"
       asset_xml = "<tinyMceAsset tokenId=\"#{match[1]}\" id=\"#{img.id}\" guid=\"#{img_guid}\" " \
                   "fileRef=\"#{asset_file_name}\">\n"
-      asset_xml << "<fileName>#{img.image_file_name}</fileName>\n"
-      asset_xml << "<fileType>#{img.image_content_type}</fileType>\n"
+      asset_xml << "<fileName>#{img.file_name}</fileName>\n"
+      asset_xml << "<fileType>#{img.content_type}</fileType>\n"
+      asset_xml << "<fileMetadata><!--[CDATA[  #{img.image.metadata.to_json}  ]]--></fileMetadata>\n"
       asset_xml << "</tinyMceAsset>\n"
       tiny_assets_xml << asset_xml
     end
@@ -100,11 +100,12 @@ module ProtocolsExporter
           step.assets.order(:id).each do |asset|
             asset_guid = get_guid(asset.id)
             asset_file_name = "#{asset_guid}" \
-                              "#{File.extname(asset.file_file_name)}"
+                              "#{File.extname(asset.file_name)}"
             asset_xml = "<asset id=\"#{asset.id}\" guid=\"#{asset_guid}\" " \
                         "fileRef=\"#{asset_file_name}\">\n"
-            asset_xml << "<fileName>#{asset.file_file_name}</fileName>\n"
-            asset_xml << "<fileType>#{asset.file_content_type}</fileType>\n"
+            asset_xml << "<fileName>#{asset.file_name}</fileName>\n"
+            asset_xml << "<fileType>#{asset.content_type}</fileType>\n"
+            asset_xml << "<fileMetadata><!--[CDATA[  #{asset.file.metadata.to_json}  ]]--></fileMetadata>\n"
             asset_xml << "</asset>\n"
             step_xml << asset_xml
           end

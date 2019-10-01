@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class SpreadsheetParser
   # Based on file's extension opens file (used for importing)
   def self.open_spreadsheet(file)
-    filename = file.original_filename
-    file_path = file.path
-
-    if file.class == Paperclip::Attachment && file.is_stored_on_s3?
-      fa = file.fetch
-      file_path = fa.path
+    if file.class.name.split('::')[-1] == 'UploadedFile'
+      filename = file.original_filename
+      file_path = file.path
+    else
+      filename = file.filename.to_s
+      file_path = file.service_url
     end
 
     case File.extname(filename)

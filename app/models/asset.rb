@@ -1,53 +1,60 @@
+# frozen_string_literal: true
+
 class Asset < ApplicationRecord
   include SearchableModel
   include DatabaseHelper
   include Encryptor
   include WopiUtil
+  include ActiveStorageFileUtil
+  include ActiveStorageConcerns
 
   require 'tempfile'
   # Lock duration set to 30 minutes
-  LOCK_DURATION = 60*30
+  LOCK_DURATION = 60 * 30
+
+  # ActiveStorage configuration
+  has_one_attached :file
 
   # Paperclip validation
-  has_attached_file :file,
-                    styles: lambda { |a|
-                      if a.previewable_document?
-                        {
-                          large: { processors: [:custom_file_preview],
-                                   geometry: Constants::LARGE_PIC_FORMAT,
-                                   format: :jpg },
-                          medium: { processors: [:custom_file_preview],
-                                    geometry: Constants::MEDIUM_PIC_FORMAT,
-                                    format: :jpg }
-                        }
-                      else
-                        {
-                          large: [Constants::LARGE_PIC_FORMAT, :jpg],
-                          medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
-                        }
-                      end
-                    },
-                    convert_options: {
-                      medium: '-quality 70 -strip',
-                      all: '-background "#d2d2d2" -flatten +matte'
-                    }
+  # has_attached_file :file,
+  #                   styles: lambda { |a|
+  #                     if a.previewable_document?
+  #                       {
+  #                         large: { processors: [:custom_file_preview],
+  #                                  geometry: Constants::LARGE_PIC_FORMAT,
+  #                                  format: :jpg },
+  #                         medium: { processors: [:custom_file_preview],
+  #                                   geometry: Constants::MEDIUM_PIC_FORMAT,
+  #                                   format: :jpg }
+  #                       }
+  #                     else
+  #                       {
+  #                         large: [Constants::LARGE_PIC_FORMAT, :jpg],
+  #                         medium: [Constants::MEDIUM_PIC_FORMAT, :jpg]
+  #                       }
+  #                     end
+  #                   },
+  #                   convert_options: {
+  #                     medium: '-quality 70 -strip',
+  #                     all: '-background "#d2d2d2" -flatten +matte'
+  #                   }
 
-  before_post_process :previewable?
-  before_post_process :extract_image_quality
+  # before_post_process :previewable?
+  # before_post_process :extract_image_quality
 
   # adds image processing in background job
-  process_in_background :file, processing_image_url: '/images/:style/processing.gif'
+  # process_in_background :file, processing_image_url: '/images/:style/processing.gif'
 
-  validates_attachment :file,
-                       presence: true,
-                       size: {
-                         less_than: Rails.configuration.x.file_max_size_mb.megabytes
-                       }
-  validates :estimated_size, presence: true
-  validates :file_present, inclusion: { in: [true, false] }
+  # validates_attachment :file,
+  #                      presence: true,
+  #                      size: {
+  #                        less_than: Rails.configuration.x.file_max_size_mb.megabytes
+  #                      }
+  # validates :estimated_size, presence: true
+  # validates :file_present, inclusion: { in: [true, false] }
 
   # Should be checked for any security leaks
-  do_not_validate_attachment_file_type :file
+  # do_not_validate_attachment_file_type :file
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -75,30 +82,9 @@ class Asset < ApplicationRecord
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
 
-  # Specific file errors propagate to "file" error hash key,
-  # so use just these errors
-  after_validation :filter_paperclip_errors
-  # Needed because Paperclip validatates on creation
-  after_initialize :filter_paperclip_errors, if: :new_record?
-  before_destroy :paperclip_delete, prepend: true
   after_save { result&.touch; step&.touch }
 
-  attr_accessor :file_content, :file_info, :preview_cached, :in_template
-
-  def file_empty(name, size)
-    file_ext = name.split(".").last
-    self.file_file_name = name
-    self.file_content_type = Rack::Mime.mime_type(".#{file_ext}")
-    self.file_file_size = size
-    self.file_updated_at = DateTime.now
-    self.file_present = false
-  end
-
-  def self.new_empty(name, size)
-    asset = self.new
-    asset.file_empty name, size
-    asset
-  end
+  attr_accessor :file_content, :file_info, :in_template
 
   def self.search(
     user,
@@ -133,6 +119,7 @@ class Asset < ApplicationRecord
                   assets_in_steps, assets_in_results, assets_in_inventories)
 
     new_query = Asset.left_outer_joins(:asset_text_datum)
+                     .joins(file_attachment: :blob)
                      .from(assets, 'assets')
 
     a_query = s_query = ''
@@ -157,7 +144,7 @@ class Asset < ApplicationRecord
       s_query = s_query.tr('\'', '"')
 
       new_query = new_query.where(
-        "(trim_html_tags(assets.file_file_name) #{like} ? " \
+        "(active_storage_blobs.filename #{like} ? " \
         "OR asset_text_data.data_vector @@ to_tsquery(?))",
         a_query,
         s_query
@@ -178,7 +165,7 @@ class Asset < ApplicationRecord
                      .join('|')
                      .tr('\'', '"')
       new_query = new_query.where(
-        "(trim_html_tags(assets.file_file_name) #{like} ANY (array[?]) " \
+        "(active_storage_blobs.filename #{like} ANY (array[?]) " \
         "OR asset_text_data.data_vector @@ to_tsquery(?))",
         a_query,
         s_query
@@ -200,8 +187,59 @@ class Asset < ApplicationRecord
     end
   end
 
+  def blob
+    file&.blob
+  end
+
+  def previewable?
+    return false unless file.attached?
+
+    previewable_document?(blob) || previewable_image?
+  end
+
+  def medium_preview
+    file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT)
+  end
+
+  def large_preview
+    file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT)
+  end
+
+  def file_name
+    return '' unless file.attached?
+
+    file.blob&.filename&.sanitized
+  end
+
+  def file_size
+    return 0 unless file.attached?
+
+    file.blob&.byte_size
+  end
+
+  def content_type
+    return '' unless file.attached?
+
+    file&.blob&.content_type
+  end
+
+  def duplicate
+    new_asset = dup
+    return unless new_asset.save
+
+    return new_asset unless file.attached?
+
+    duplicate_file(new_asset)
+    new_asset
+  end
+
+  def duplicate_file(to_asset)
+    copy_attachment(to_asset.file)
+    to_asset.post_process_file(to_asset.team)
+  end
+
   def extract_image_quality
-    return unless ['image/jpeg', 'image/pjpeg'].include? file_content_type
+    return unless ['image/jpeg', 'image/pjpeg'].include? content_type
 
     tempfile = file.queued_for_write[:original]
     unless tempfile.nil?
@@ -212,36 +250,23 @@ class Asset < ApplicationRecord
     Rails.logger.info "There was an error extracting image quality - #{e}"
   end
 
-  def previewable?
-    file.previewable_image? || file.previewable_document?
-  end
-
-  def is_image?
-    %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}} ===
-      file.content_type
+  def image?
+    content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
   end
 
   def text?
     Constants::TEXT_EXTRACT_FILE_TYPES.any? do |v|
-      file_content_type.start_with? v
+      file&.blob&.content_type&.start_with? v
     end
   end
 
-  # TODO: get the current_user
-  # before_save do
-  #   if current_user
-  #     self.created_by ||= current_user
-  #     self.last_modified_by = current_user if self.changed?
-  #   end
-  # end
-
-  def is_stored_on_s3?
-    file.options[:storage].to_sym == :s3
+  def marvinjs?
+    file.metadata[:asset_type] == 'marvinjs'
   end
 
   def post_process_file(team = nil)
     # Update self.empty
-    self.update(file_present: true)
+    update(file_present: true)
 
     # Extract asset text if it's of correct type
     if text?
@@ -249,80 +274,63 @@ class Asset < ApplicationRecord
       # The extract_asset_text also includes
       # estimated size calculation
       Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
-           .extract_asset_text(id, in_template)
+           .extract_asset_text_delayed(id, in_template)
+    elsif marvinjs?
+      extract_asset_text
     else
       # Update asset's estimated size immediately
       update_estimated_size(team)
     end
   end
 
-  def self.extract_asset_text(asset_id, in_template = false)
-    asset = find_by_id(asset_id)
-    return unless asset.present? && asset.file.present?
-    asset.in_template = in_template
+  def self.extract_asset_text_delayed(asset_id, in_template = false)
+    asset = find_by(id: asset_id)
+    return unless asset.present? && asset.file.attached?
 
-    begin
-      file_path = asset.file.path
+    asset.extract_asset_text(in_template)
+  end
 
-      if asset.file.is_stored_on_s3?
-        fa = asset.file.fetch
-        file_path = fa.path
-      end
+  def extract_asset_text(in_template = false)
+    self.in_template = in_template
 
+    if marvinjs?
+      mjs_doc = Nokogiri::XML(file.metadata[:description])
+      mjs_doc.remove_namespaces!
+      text_data = mjs_doc.search("//Field[@name='text']").collect(&:text).join(' ')
+    else
       # Start Tika as a server
-      if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
-        Yomu.server(:text)
+      Yomu.server(:text) if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
+      blob.open do |tmp_file|
+        text_data = Yomu.new(tmp_file.path).text
       end
-
-      y = Yomu.new file_path
-      text_data = y.text
-
-      if asset.asset_text_datum.present?
-        # Update existing text datum if it exists
-        asset.asset_text_datum.update(data: text_data)
-      else
-        # Create new text datum
-        AssetTextDatum.create(data: text_data, asset: asset)
-      end
-
-      Rails.logger.info "Asset #{asset.id}: Asset file successfully extracted"
-
-      # Finally, update asset's estimated size to include
-      # the data vector
-      asset.update_estimated_size(asset.team)
-    rescue StandardError => e
-      Rails.logger.fatal(
-        "Asset #{asset.id}: Error extracting contents from asset "\
-        "file #{asset.file.path}: #{e.message}"
-      )
-    ensure
-      File.delete file_path if fa
     end
-  end
 
-  # Workaround for making Paperclip work with asset deletion (might be because
-  # of how the asset models are implemented)
-  def paperclip_delete
-    report_elements.destroy_all
-    asset_text_datum.destroy if asset_text_datum.present?
-    # Nullify needed to force paperclip file deletion
-    file = nil
-    save && reload
-  end
+    if asset_text_datum.present?
+      # Update existing text datum if it exists
+      asset_text_datum.update(data: text_data)
+    else
+      # Create new text datum
+      AssetTextDatum.create(data: text_data, asset: self)
+    end
 
-  def destroy
-    super()
-    # Needed, otherwise the object isn't deleted, because of how the asset
-    # models are implemented
-    delete
+    Rails.logger.info "Asset #{id}: Asset file successfully extracted"
+
+    # Finally, update asset's estimated size to include
+    # the data vector
+    update_estimated_size(team)
+  rescue StandardError => e
+    Rails.logger.fatal(
+      "Asset #{id}: Error extracting contents from asset "\
+      "file #{file.blob.key}: #{e.message}"
+    )
   end
 
   # If team is provided, its space_taken
   # is updated as well
   def update_estimated_size(team = nil)
-    return if file_file_size.blank? || in_template
+    return if file_size.blank? || in_template
 
-    es = file_file_size
+    es = file_size
     if asset_text_datum.present? && asset_text_datum.persisted?
       asset_text_datum.reload
       es += get_octet_length_record(asset_text_datum, :data)
@@ -339,66 +347,18 @@ class Asset < ApplicationRecord
     end
   end
 
-  def url(style = :original, timeout: Constants::URL_SHORT_EXPIRE_TIME)
-    if file.is_stored_on_s3? && !file.processing?
-      presigned_url(style, timeout: timeout)
-    else
-      file.url(style)
-    end
-  end
-
-  # When using S3 file upload, we can limit file accessibility with url signing
-  def presigned_url(style = :original,
-                    download: false,
-                    timeout: Constants::URL_SHORT_EXPIRE_TIME)
-    if file.is_stored_on_s3?
-      if download
-        download_arg = 'attachment; filename=' + URI.escape(file_file_name)
-      else
-        download_arg = nil
-      end
-
-      signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
-      signer.presigned_url(:get_object,
-        bucket: S3_BUCKET.name,
-        key: file.path(style)[1..-1],
-        expires_in: timeout,
-        # this response header forces object download
-        response_content_disposition: download_arg)
-    end
-  end
-
-  def open
-    if file.is_stored_on_s3?
-      Kernel.open(presigned_url, "rb")
-    else
-      File.open(file.path, "rb")
-    end
-  end
-
-  # Preserving attachments (on client-side) between failed validations
-  # (only usable for small/few files!).
-  # Needs to be called before save method and view needs to have
-  # :file_content and :file_info hidden field.
-  # If file is an image, it can be viewed on front-end
-  # using @preview_cached with image_tag tag.
-  def preserve(file_data)
-    if file_data[:file_content].present?
-      restore_cached(file_data[:file_content], file_data[:file_info])
-    end
-    cache
-  end
-
   def can_perform_action(action)
     if ENV['WOPI_ENABLED'] == 'true'
-      file_ext = file_file_name.split('.').last
+      file_ext = file_name.split('.').last
 
       if file_ext == 'wopitest' &&
          (!ENV['WOPI_TEST_ENABLED'] || ENV['WOPI_TEST_ENABLED'] == 'false')
         return false
       end
+
       action = get_action(file_ext, action)
       return false if action.nil?
+
       true
     else
       false
@@ -406,7 +366,7 @@ class Asset < ApplicationRecord
   end
 
   def get_action_url(user, action, with_tokens = true)
-    file_ext = file_file_name.split('.').last
+    file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
     if !action.nil?
       action_url = action.urlsrc
@@ -429,7 +389,7 @@ class Asset < ApplicationRecord
       )
       action_url += "WOPISrc=#{rest_url}"
       if with_tokens
-      	token = user.get_wopi_token
+        token = user.get_wopi_token
         action_url + "&access_token=#{token.token}"\
         "&access_token_ttl=#{(token.ttl * 1000)}"
       else
@@ -441,7 +401,7 @@ class Asset < ApplicationRecord
   end
 
   def favicon_url(action)
-    file_ext = file_file_name.split('.').last
+    file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
     action.wopi_app.icon if action.try(:wopi_app)
   end
@@ -481,9 +441,7 @@ class Asset < ApplicationRecord
   end
 
   def update_contents(new_file)
-    new_file.class.class_eval { attr_accessor :original_filename }
-    new_file.original_filename = file_file_name
-    self.file = new_file
+    file.attach(io: new_file, filename: file_name)
     self.version = version.nil? ? 1 : version + 1
     save
   end
@@ -493,48 +451,17 @@ class Asset < ApplicationRecord
   end
 
   def generate_base64(style)
-    image = if file.options[:storage].to_sym == :s3
-              URI.parse(url(style)).open.to_a.join
-            else
-              File.open(file.path(style)).to_a.join
-            end
-    encoded_data = Base64.strict_encode64(image)
-    "data:#{file_content_type};base64,#{encoded_data}"
-  end
-
-  protected
-
-  # Checks if attachments is an image (in post processing imagemagick will
-  # generate styles)
-  def allow_styles_on_images
-    if !(file.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$})
-      return false
-    end
+    return convert_variant_to_base64(medium_preview) if style == :medium
   end
 
   private
 
-  def filter_paperclip_errors
-    if errors.size > 1
-      temp_errors = errors[:file]
-      errors.clear
-      errors.add(:file, temp_errors)
-    end
+  def tempdir
+    Rails.root.join('tmp')
   end
 
-  def file_changed?
-    previous_changes.present? and
-    (
-      (
-        previous_changes.key? "file_file_name" and
-        previous_changes["file_file_name"].first !=
-          previous_changes["file_file_name"].last
-      ) or (
-        previous_changes.key? "file_file_size" and
-        previous_changes["file_file_size"].first !=
-          previous_changes["file_file_size"].last
-      )
-    )
+  def previewable_image?
+    file.blob&.content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
   end
 
   def step_or_result_or_repository_asset_value
@@ -552,14 +479,14 @@ class Asset < ApplicationRecord
 
   def wopi_filename_valid
     # Check that filename without extension is not blank
-    unless file.original_filename[0..-6].present?
+    if file_name[0..-6].blank?
       errors.add(
         :file,
         I18n.t('general.text.not_blank')
       )
     end
     # Check maximum filename length
-    if file.original_filename.length > Constants::FILENAME_MAX_LENGTH
+    if file_name.length > Constants::FILENAME_MAX_LENGTH
       errors.add(
         :file,
         I18n.t(
@@ -568,31 +495,5 @@ class Asset < ApplicationRecord
         )
       )
     end
-  end
-
-  def cache
-    fetched_file = file.fetch
-    file_content = fetched_file.read
-    @file_content = encrypt(file_content)
-    @file_info = %Q[{"content_type" : "#{file.content_type}", "original_filename" : "#{file.original_filename}"}]
-    @file_info = encrypt(@file_info)
-    if !(file.content_type =~ /^image/).nil?
-      @preview_cached = "data:image/png;base64," + Base64.encode64(file_content)
-    end
-  end
-
-  def restore_cached(file_content, file_info)
-    decoded_data = decrypt(file_content)
-    decoded_data_info = decrypt(file_info)
-    decoded_data_info = JSON.parse decoded_data_info
-
-    data = StringIO.new(decoded_data)
-    data.class_eval do
-      attr_accessor :content_type, :original_filename
-    end
-    data.content_type = decoded_data_info['content_type']
-    data.original_filename = File.basename(decoded_data_info['original_filename'])
-
-    self.file = data
   end
 end

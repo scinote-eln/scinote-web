@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :team_repository do
-    team
     repository
     trait :read do
       permission_level { :shared_read }

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Api::V1::InventoriesController", type: :request do
+RSpec.describe 'Api::V1::InventoriesController', type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -55,6 +55,7 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
                                 id: @teams.first.repositories.first.id),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
+
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(@teams.first.repositories.first,
@@ -200,7 +201,7 @@ RSpec.describe "Api::V1::InventoriesController", type: :request do
       updated_inventory[:data][:attributes][:name] =
         Faker::Name.unique.name
       patch api_v1_team_inventory_path(
-        id: @teams.first.repositories.first.id,
+        id: updated_inventory[:data][:id],
         team_id: @teams.first.id
       ), params: updated_inventory.to_json,
       headers: @valid_headers

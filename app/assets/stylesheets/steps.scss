@@ -124,6 +124,35 @@
   .pseudo-attachment-container {
     display: flex;
     justify-content: center;
+    overflow: hidden;
+
+    .file-preview-link {
+      position: relative;
+    }
+
+    &.new {
+      order: 0 !important;
+
+      .file-preview-link {
+        transition: .5s;
+      }
+
+      .attachment-placeholder {
+        border: 1px solid $brand-primary;
+
+        &::before {
+          background: $brand-primary;
+          border-radius: 0 5px;
+          bottom: 16px;
+          color: $color-white;
+          content: "NEW";
+          left: 8px;
+          line-height: 20px;
+          position: absolute;
+          width: 50px;
+        }
+      }
+    }
   }
 }
 
@@ -131,7 +160,7 @@
   @include md-card-style;
   color: $color-silver-chalice;
   height: 280px;
-  margin: 8px;
+  margin: 4px 8px 16px;
   text-align: center;
   width: 220px;
 
@@ -139,17 +168,50 @@
     color: inherit;
   }
 
+  &.new {
+    background-color: rgba(95, 95, 95, .1);
+  }
+
   .attachment-thumbnail {
     display: inline-block;
     height: 160px;
-    margin: 16px 10px 5px;
+    margin: 16px 0 5px;
     overflow: hidden;
+    padding: 0 10px;
+    position: relative;
     text-align: center;
+    width: 100%;
 
     img {
       border-radius: 5px;
       max-height: 100%;
       max-width: 100%;
+    }
+
+    &.marvinjs {
+
+      &::before,
+      &::after {
+        content: "";
+        border-radius: 16px 0 0 16px;
+        display: block;
+        height: 32px;
+        right: 0;
+        line-height: 32px;
+        position: absolute;
+        bottom: 10px;
+        width: 36px;
+      }
+
+      &::before {
+        background: $marvinjs-color;
+      }
+
+      &::after {
+        background-image: url("/images/icon_small/marvinjs-white.svg");
+        right: 4px;
+        width: 32px;
+      }
     }
 
     i.fas {
@@ -198,6 +260,7 @@
 
   .remove-icon {
     bottom: 15px;
+    cursor: pointer;
     display: none;
     position: relative;
     right: 10px;

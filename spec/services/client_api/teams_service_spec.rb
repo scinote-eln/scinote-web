@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ClientApi::TeamsService do
@@ -5,21 +7,21 @@ describe ClientApi::TeamsService do
   let(:user_one) { create :user }
 
   it 'should raise an ClientApi::CustomTeamError if user is not assigned' do
-    expect {
+    expect do
       ClientApi::TeamsService.new(team_id: team_one.id)
-    }.to raise_error(ClientApi::CustomTeamError)
+    end.to raise_error(ClientApi::CustomTeamError)
   end
 
   it 'should raise an ClientApi::CustomTeamError if team is not assigned' do
-    expect {
+    expect do
       ClientApi::TeamsService.new(current_user: user_one)
-    }.to raise_error(ClientApi::CustomTeamError)
+    end.to raise_error(ClientApi::CustomTeamError)
   end
 
   it 'should raise an ClientApi::CustomTeamError if team is not user team' do
-    expect {
+    expect do
       ClientApi::TeamsService.new(current_user: user_one, team_id: team_one.id)
-    }.to raise_error(ClientApi::CustomTeamError)
+    end.to raise_error(ClientApi::CustomTeamError)
   end
 
   describe '#change_current_team!' do
@@ -75,9 +77,9 @@ describe ClientApi::TeamsService do
           description: "super long: #{'a' * Constants::TEXT_MAX_LENGTH}"
         }
       )
-      expect {
+      expect do
         team_service.update_team!
-      }.to raise_error(ClientApi::CustomTeamError)
+      end.to raise_error(ClientApi::CustomTeamError)
     end
 
     it 'should update the team description if the input is valid' do

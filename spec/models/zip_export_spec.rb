@@ -24,6 +24,6 @@ describe ZipExport, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :user }
+    it { should belong_to(:user).optional }
   end
 end
