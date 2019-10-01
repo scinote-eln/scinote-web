@@ -235,6 +235,11 @@
   </div>
 </div>
 
+<%= render partial: 'users/shared/user_avatars_modal' %>
+<script>
+  $('.modal-user-avatar').modal('show')
+</script>
+
 <%= javascript_pack_tag 'custom/croppie' %>
 <%= stylesheet_pack_tag 'custom/croppie_styles' %>
 <%= javascript_include_tag("canvas-to-blob.min") %>
