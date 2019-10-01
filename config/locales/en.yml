@@ -85,6 +85,10 @@ en:
           attributes:
             x:
              not_unique: "and Y position has already been taken by another task in the experiment."
+        asset:
+          attributes:
+            file:
+              too_big: "is too big"
 
 
 
