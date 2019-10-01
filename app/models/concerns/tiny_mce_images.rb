@@ -65,17 +65,13 @@ module TinyMceImages
     def clone_tinymce_assets(target, team)
       cloned_img_ids = []
       tiny_mce_assets.each do |tiny_img|
-        tiny_img_clone = TinyMceAsset.new(
+        tiny_img_clone = TinyMceAsset.create(
           estimated_size: tiny_img.estimated_size,
           object: target,
           team: team
         )
 
-        tiny_img_clone.transaction do
-          tiny_img_clone.save!
-          tiny_img.duplicate_file(tiny_img_clone)
-        end
-
+        tiny_img.duplicate_file(tiny_img_clone)
         target.tiny_mce_assets << tiny_img_clone
         cloned_img_ids << [tiny_img.id, tiny_img_clone.id]
       end

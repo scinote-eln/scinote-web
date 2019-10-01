@@ -227,14 +227,19 @@ class Asset < ApplicationRecord
     new_asset = dup
     return unless new_asset.save
 
-    return new_asset unless file.attached?
-
     duplicate_file(new_asset)
     new_asset
   end
 
   def duplicate_file(to_asset)
-    copy_attachment(to_asset.file)
+    return unless file.attached?
+
+    raise ArgumentError, 'Destination asset should be persisted first!' unless to_asset.persisted?
+
+    file.blob.open do |tmp_file|
+      to_blob = ActiveStorage::Blob.create_after_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
+      to_asset.file.attach(to_blob)
+    end
     to_asset.post_process_file(to_asset.team)
   end
 

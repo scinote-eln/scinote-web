@@ -72,7 +72,7 @@ class TinyMceAsset < ApplicationRecord
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))
-      if new_asset
+      if new_asset&.image&.attached?
         tm_asset.attributes['src'].value = Rails.application.routes.url_helpers.url_for(new_asset.image)
         tm_asset['class'] = 'img-responsive'
       end
@@ -203,7 +203,14 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def duplicate_file(to_asset)
-    copy_attachment(to_asset.image)
+    return unless image.attached?
+
+    raise ArgumentError, 'Destination TinyMce asset should be persisted first!' unless to_asset.persisted?
+
+    image.blob.open do |tmp_file|
+      to_blob = ActiveStorage::Blob.create_after_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
+      to_asset.image.attach(to_blob)
+    end
     TinyMceAsset.update_estimated_size(to_asset.id)
   end
 
