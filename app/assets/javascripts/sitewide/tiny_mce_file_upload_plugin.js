@@ -310,6 +310,10 @@
         if (imageContainer === undefined) {
           createImageHiddenField();
         }
+
+        // Small fix for ResultText when you cancel after change MarvinJS
+        if (imageContainer === undefined) return [];
+
         imageContainer.value = JSON.stringify(images);
         return JSON.stringify(images);
       }
