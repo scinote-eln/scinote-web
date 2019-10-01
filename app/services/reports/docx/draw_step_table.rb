@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawStepTable
+module Reports::Docx::DrawStepTable
   def draw_step_table(subject)
     table = Table.find_by_id(subject['id']['table_id'])
     return unless table

@@ -201,7 +201,12 @@ module ApplicationHelper
   # No more dirty hack
   def user_avatar_absolute_url(user, style)
     begin
-      return user.avatar_base64(style) unless missing_avatar(user, style)
+      unless missing_avatar(user, style)
+        image = File.open(user.avatar_variant(style))
+        encoded_data = Base64.strict_encode64(image)
+        avatar_base64 = "data:#{user.avatar_content_type};base64,#{encoded_data}"
+        return avatar_base64
+      end
     rescue StandardError => e
       Rails.logger.error e.message
     end
@@ -209,8 +214,8 @@ module ApplicationHelper
   end
 
   def missing_avatar(user, style)
-    user.avatar(style) == '/images/icon_small/missing.png' ||
-      user.avatar(style) == '/images/thumb/missing.png'
+    user.avatar == '/images/icon_small/missing.png' ||
+      user.avatar == '/images/thumb/missing.png'
   end
 
   def wopi_enabled?

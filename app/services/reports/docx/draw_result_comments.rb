@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawResultComments
+module Reports::Docx::DrawResultComments
   def draw_result_comments(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result

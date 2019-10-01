@@ -14,7 +14,7 @@ module AssetsActions
       default_step_items =
         { step: asset.step.id,
           step_position: { id: asset.step.id, value_for: 'position_plus_one' },
-          asset_name: { id: asset.id, value_for: 'file_file_name' },
+          asset_name: { id: asset.id, value_for: 'file_name' },
           action: action }
       if protocol.in_module?
         project = protocol.my_module.experiment.project
@@ -45,7 +45,7 @@ module AssetsActions
               project: my_module.experiment.project,
               message_items: {
                 result: asset.result.id,
-                asset_name: { id: asset.id, value_for: 'file_file_name' },
+                asset_name: { id: asset.id, value_for: 'file_name' },
                 action: action
               })
     end

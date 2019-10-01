@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :user_notification do
-    checked false
+    checked { false }
   end
 end

@@ -42,7 +42,7 @@ class ResultTextsController < ApplicationController
     respond_to do |format|
       if @result.save && @result_text.save
         # link tiny_mce_assets to the text result
-        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
 
         result_annotation_notification
         log_activity(:add_result)
@@ -99,7 +99,7 @@ class ResultTextsController < ApplicationController
 
         log_activity(:archive_result)
 
-        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
 
       end
     elsif @result.archived_changed?(from: true, to: false)
@@ -111,7 +111,7 @@ class ResultTextsController < ApplicationController
 
         log_activity(:edit_result)
 
-        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
 
       end
     end

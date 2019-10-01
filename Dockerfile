@@ -1,30 +1,26 @@
-FROM ruby:2.5.5-stretch
+FROM ruby:2.6.4-buster
 MAINTAINER BioSistemika <info@biosistemika.com>
-
-# Get version of Debian (lsb_release substitute) and save it to /tmp/lsb_release for further commands
-RUN cat /etc/os-release | grep -Po "VERSION=.*\(\K\w+" | tee /tmp/lsb_release
-
-# Add Debian stretch backports repository
-RUN echo "deb http://http.debian.net/debian $(cat /tmp/lsb_release)-backports main" \
-  | tee /etc/apt/sources.list.d/$(cat /tmp/lsb_release)-backports.list
 
 # additional dependecies
 # libSSL-1.0 is required by wkhtmltopdf binary
 # libreoffice for file preview generation
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-  apt-get update -qq && \
+RUN apt-get update -qq && \
   apt-get install -y \
-  libjemalloc1 \
-  libssl1.0-dev \
+  libjemalloc2 \
+  libssl-dev \
   nodejs \
+  npm \
   postgresql-client \
   default-jre-headless \
-  unison \
   poppler-utils \
+  librsvg2-2 \
+  libvips42 \
   sudo graphviz --no-install-recommends \
-  libfile-mimeinfo-perl && \
-  apt-get install -y --no-install-recommends -t $(cat /tmp/lsb_release)-backports libreoffice && \
+  libreoffice \
+  libfile-mimeinfo-perl \
+  chromium-driver && \
   npm install -g yarn && \
+  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 
 # heroku tools
@@ -34,6 +30,7 @@ ENV BUNDLE_PATH /usr/local/bundle/
 
 # create app directory
 ENV APP_HOME /usr/src/app
+ENV PATH $APP_HOME/bin:$PATH
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 

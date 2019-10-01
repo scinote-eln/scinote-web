@@ -3,8 +3,7 @@
 class TempFile < ApplicationRecord
   validates :session_id, presence: true
 
-  has_attached_file :file
-  do_not_validate_attachment_file_type :file
+  has_one_attached :file
 
   class << self
     def destroy_obsolete(temp_file_id)

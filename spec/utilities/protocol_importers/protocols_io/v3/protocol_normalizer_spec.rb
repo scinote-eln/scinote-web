@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
+describe ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer do
   let(:client_data) { double('api_response') }
 
   let(:protocols_io_single_protocol) do
@@ -48,7 +48,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
         .and_return({})
 
       expect { subject.normalize_protocol(client_data) }
-        .to raise_error(ProtocolImporters::ProtocolsIO::V3::NormalizerError)
+        .to raise_error(ProtocolImporters::ProtocolsIo::V3::NormalizerError)
     end
 
     context 'when do not have name' do
@@ -73,7 +73,7 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
         .and_return({})
 
       expect { subject.normalize_list(client_data) }
-        .to raise_error(ProtocolImporters::ProtocolsIO::V3::NormalizerError)
+        .to raise_error(ProtocolImporters::ProtocolsIo::V3::NormalizerError)
     end
   end
 end

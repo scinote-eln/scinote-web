@@ -61,29 +61,6 @@ Paperclip::Attachment.class_eval do
   def fetch
     Paperclip.io_adapters.for self
   end
-
-  def previewable_document?
-    extensions = %w(.txt .pdf .xlsx .docx .pptx .xls .rtf .doc .ppt .odt .ods .odp)
-
-    previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(content_type) &&
-                  extensions.include?(File.extname(original_filename))
-
-    # Mimetype sometimes recognizes Office files as zip files
-    # In this case we also check the extension of the given file
-    # Otherwise the conversion should fail if the file is being something else
-    previewable ||= (content_type == 'application/zip' && extensions.include?(File.extname(original_filename)))
-
-    # Mimetype also sometimes recognizes '.xls' and '.ppt' files as
-    # application/x-ole-storage (https://github.com/minad/mimemagic/issues/50)
-    previewable ||=
-      (content_type == 'application/x-ole-storage' && %w(.xls .ppt).include?(File.extname(original_filename)))
-
-    previewable
-  end
-
-  def previewable_image?
-    content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
-  end
 end
 
 module Paperclip

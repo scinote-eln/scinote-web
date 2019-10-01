@@ -1,6 +1,6 @@
 <% result ||= @result %>
 <% asset = result.asset %>
-<% is_image = result.asset.is_image? %>
+<% is_image = result.asset.image? %>
 <% comments = result.result_comments %>
 <% timestamp = asset.created_at %>
 <% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
@@ -24,7 +24,7 @@
           </a>
         <% else %>
           <em><%=t "projects.reports.elements.result_asset.file_name",
-                   file: truncate(asset.file_file_name,
+                   file: truncate(asset.file_name,
                                   length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
         <% end %>
       </div>

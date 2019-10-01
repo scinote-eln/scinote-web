@@ -38,16 +38,15 @@ describe ReportElement, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :report }
-    it { should belong_to :project }
-    it { should belong_to :experiment }
-    it { should belong_to :my_module }
-    it { should belong_to :step }
-    it { should belong_to :result }
-    it { should belong_to :checklist }
-    it { should belong_to :asset }
-    it { should belong_to :table }
-    it { should belong_to :repository }
+    it { should belong_to(:project).optional }
+    it { should belong_to(:experiment).optional }
+    it { should belong_to(:my_module).optional }
+    it { should belong_to(:step).optional }
+    it { should belong_to(:result).optional }
+    it { should belong_to(:checklist).optional }
+    it { should belong_to(:asset).optional }
+    it { should belong_to(:table).optional }
+    it { should belong_to(:repository).optional }
     it { should belong_to(:report) }
     it { should have_many(:children).class_name('ReportElement') }
   end

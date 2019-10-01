@@ -35,6 +35,9 @@ ehthumbs.db
 # Ignore temporary files
 public/system/*
 
+# Ignore ActiveStorage Disc service storage directory
+storage/
+
 # Ignore robots.txt
 public/robots.txt
 
@@ -74,3 +77,8 @@ spec/addons
 
 # RVM/rbenv ruby version for local development
 .ruby-version
+
+#ignore marvinJs
+
+public/marvinjs
+public/marvin4js-license.cxl

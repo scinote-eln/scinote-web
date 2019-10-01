@@ -1290,7 +1290,6 @@ en:
       scinote_columns_html: "<em>SciNote</em> columns:"
       file_columns: "Imported columns:"
       example_value: "Imported file content:"
-      import_samples: "Import samples"
       do_not_include_column: "Do not include this column"
       errors:
         invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."
@@ -1816,6 +1815,11 @@ en:
         uncomplete_title: "Uncomplete Step"
       attachments:
         modified_label: "Modified:"
+        sort:
+          new_html: "Newest first &#8595;"
+          old_html: "Oldest first &#8593;"
+          atoz_html: "Name &#8595;"
+          ztoa_html: "Name &#8593;"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1952,6 +1956,8 @@ en:
       add_image: 'Add'
       file_name: 'File name'
       file_name_placeholder: 'Image'
+    placeholder:
+      modified_label: "Modified:"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
@@ -2207,3 +2213,9 @@ en:
         new: "https://support.scinote.net/hc/en-us/articles/360004627792"
         visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
         manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
+  marvinjs:
+    new_sketch: "New Chemical Drawing"
+    new_button: "Create Chemical Drawing"
+    structure_placeholder: "Click here to enter Chemical Drawing name"
+    modal_name_title: "Chemical Drawing name:"
+    checmical_drawing: "Chemical drawings"

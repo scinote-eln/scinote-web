@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawResultTable
+module Reports::Docx::DrawResultTable
   def draw_result_table(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result

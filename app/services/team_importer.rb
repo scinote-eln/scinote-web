@@ -90,6 +90,7 @@ class TeamImporter
           user_notification.notification_id =
             @notification_mappings[user_notification.notification_id]
           next if user_notification.notification_id.blank?
+
           user_notification.save!
         end
 
@@ -241,6 +242,7 @@ class TeamImporter
             comment.save! if update_annotation(comment.message)
           end
           next unless res.result_text
+
           res.save! if update_annotation(res.result_text.text)
         end
       end
@@ -250,6 +252,7 @@ class TeamImporter
   # Returns true if text was updated
   def update_annotation(text)
     return false if text.nil?
+
     updated = false
     %w(prj exp tsk rep_item).each do |name|
       text.scan(/~#{name}~\w+\]/).each do |text_match|
@@ -267,6 +270,7 @@ class TeamImporter
             @repository_row_mappings[orig_id]
           end
         next unless new_id
+
         new_id_encoded = new_id.base62_encode
         text.sub!("~#{name}~#{orig_id_encoded}]", "~#{name}~#{new_id_encoded}]")
         updated = true
@@ -276,6 +280,7 @@ class TeamImporter
       orig_id_encoded = user_match.match(/\[@[\w+-@?! ]+~(\w+)\]/)[1]
       orig_id = orig_id_encoded.base62_decode
       next unless @user_mappings[orig_id]
+
       new_id_encoded = @user_mappings[orig_id].base62_encode
       text.sub!("~#{orig_id_encoded}]", "~#{new_id_encoded}]")
       updated = true
@@ -327,35 +332,35 @@ class TeamImporter
 
   def create_tiny_mce_assets(tmce_assets_json, team)
     tmce_assets_json.each do |tiny_mce_asset_json|
-      tiny_mce_asset = TinyMceAsset.new(tiny_mce_asset_json)
+      tiny_mce_asset = TinyMceAsset.new(tiny_mce_asset_json['tiny_mce_asset'])
+      tiny_mce_asset_blob = tiny_mce_asset_json['tiny_mce_asset_blob']
       # Try to find and load file
-      File.open(
-        File.join(@import_dir, 'tiny_mce_assets', tiny_mce_asset.id.to_s,
-                  tiny_mce_asset.image_file_name)
-      ) do |tiny_mce_file|
-        orig_tmce_id = tiny_mce_asset.id
-        tiny_mce_asset.id = nil
-        if tiny_mce_asset.object_id.present?
-          mappings = instance_variable_get("@#{tiny_mce_asset.object_type.underscore}_mappings")
-          tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
-        end
-        tiny_mce_asset.team = team
-        tiny_mce_asset.image = tiny_mce_file
-        tiny_mce_asset.save!
-        @mce_asset_counter += 1
-        if tiny_mce_asset.object_id.present?
-          object = tiny_mce_asset.object
-          object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
-          encoded_id = Base62.encode(tiny_mce_asset.id)
-          object.public_send(object_field).sub!("data-mce-token=\"#{Base62.encode(orig_tmce_id)}\"",
-                                                "data-mce-token=\"#{encoded_id}\"")
-          # Check for old fields
-          new_asset_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{encoded_id}\"/>"
-          object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                                                new_asset_format)
-          object.save!
-        end
+      tiny_mce_file = File.open(File.join(@import_dir,
+                                          'tiny_mce_assets',
+                                          tiny_mce_asset.id.to_s,
+                                          tiny_mce_asset_blob['filename']))
+      orig_tmce_id = tiny_mce_asset.id
+      tiny_mce_asset.id = nil
+      if tiny_mce_asset.object_id.present?
+        mappings = instance_variable_get("@#{tiny_mce_asset.object_type.underscore}_mappings")
+        tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
       end
+      tiny_mce_asset.team = team
+      tiny_mce_asset.save!
+      tiny_mce_asset.image.attach(io: tiny_mce_file, filename: File.basename(tiny_mce_file))
+      @mce_asset_counter += 1
+      next unless tiny_mce_asset.object_id.present?
+
+      object = tiny_mce_asset.object
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
+      encoded_id = Base62.encode(tiny_mce_asset.id)
+      object.public_send(object_field).sub!("data-mce-token=\"#{Base62.encode(orig_tmce_id)}\"",
+                                            "data-mce-token=\"#{encoded_id}\"")
+      # Check for old fields
+      new_asset_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{encoded_id}\"/>"
+      object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                            new_asset_format)
+      object.save!
     end
   end
 
@@ -368,12 +373,10 @@ class TeamImporter
       user.password = user_json['user']['encrypted_password']
       user.current_team_id = team.id
       user.invited_by_id = @user_mappings[user.invited_by_id]
-      if user.avatar.present?
+      if user_json['user']['avatar']
         avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s,
-                                user.avatar_file_name)
-        if File.exist?(avatar_path)
-          File.open(avatar_path) { |f| user.avatar = f }
-        end
+                                user_json['user']['avatar']['filename'])
+        File.open(avatar_path) { |f| user.avatar = f } if File.exist?(avatar_path)
       end
       user.save!
       @user_counter += 1
@@ -394,6 +397,7 @@ class TeamImporter
     notifications_json.each do |notification_json|
       notification = Notification.new(notification_json)
       next if notification.type_of.blank?
+
       orig_notification_id = notification.id
       notification.id = nil
       notification.generator_user_id = find_user(notification.generator_user_id)
@@ -415,7 +419,6 @@ class TeamImporter
       @repository_mappings[orig_repository_id] = repository.id
       @repository_counter += 1
       repository_json['repository_columns'].each do |repository_column_json|
-
         repository_column = RepositoryColumn.new(
           repository_column_json['repository_column']
         )
@@ -427,6 +430,7 @@ class TeamImporter
         repository_column.save!
         @repository_column_mappings[orig_rep_col_id] = repository_column.id
         next unless repository_column.data_type == 'RepositoryListValue'
+
         repository_column_json['repository_list_items'].each do |list_item|
           created_by_id = find_user(repository_column.created_by_id)
           repository_list_item = RepositoryListItem.new(data: list_item['data'])
@@ -662,9 +666,7 @@ class TeamImporter
       protocol.archived_by_id = find_user(protocol.archived_by_id)
       protocol.restored_by_id = find_user(protocol.restored_by_id)
       protocol.my_module = my_module unless protocol.my_module_id.nil?
-      unless protocol.parent_id.nil?
-        protocol.parent_id = @protocol_mappings[protocol.parent_id]
-      end
+      protocol.parent_id = @protocol_mappings[protocol.parent_id] unless protocol.parent_id.nil?
       protocol.save!
       @protocol_counter += 1
       @protocol_mappings[orig_protocol_id] = protocol.id
@@ -792,23 +794,30 @@ class TeamImporter
 
   # returns asset object
   def create_asset(asset_json, team, user_id = nil)
-    asset = Asset.new(asset_json)
-    File.open(
-      "#{@import_dir}/assets/#{asset.id}/#{asset.file_file_name}"
-    ) do |file|
-      orig_asset_id = asset.id
-      asset.id = nil
-      asset.created_by_id = user_id || find_user(asset.created_by_id)
-      asset.last_modified_by_id =
-        user_id || find_user(asset.last_modified_by_id)
-      asset.team = team
-      asset.file = file
-      asset.in_template = true if @is_template
-      asset.save!
-      asset.post_process_file(team)
-      @asset_mappings[orig_asset_id] = asset.id
-      @asset_counter += 1
-    end
+    ### Fix for support templates
+    asset_info = asset_json['asset'] || asset_json
+
+    asset = Asset.new(asset_info)
+    asset_blob = asset_json['asset_blob']
+    ### Fix for support templates
+    asset_file_name = if asset_blob
+                        asset_blob['filename']
+                      else
+                        asset_json['file_file_name']
+                      end
+    file = File.open("#{@import_dir}/assets/#{asset.id}/#{asset_file_name}")
+    orig_asset_id = asset.id
+    asset.id = nil
+    asset.created_by_id = user_id || find_user(asset.created_by_id)
+    asset.last_modified_by_id =
+      user_id || find_user(asset.last_modified_by_id)
+    asset.team = team
+    asset.in_template = true if @is_template
+    asset.save!
+    asset.file.attach(io: file, filename: File.basename(file))
+    asset.post_process_file(team)
+    @asset_mappings[orig_asset_id] = asset.id
+    @asset_counter += 1
     asset
   end
 
@@ -864,22 +873,14 @@ class TeamImporter
           report_element.my_module_id =
             @my_module_mappings[report_element.my_module_id]
         end
-        if report_element.step_id
-          report_element.step_id = @step_mappings[report_element.step_id]
-        end
-        if report_element.result_id
-          report_element.result_id = @result_mappings[report_element.result_id]
-        end
+        report_element.step_id = @step_mappings[report_element.step_id] if report_element.step_id
+        report_element.result_id = @result_mappings[report_element.result_id] if report_element.result_id
         if report_element.checklist_id
           report_element.checklist_id =
             @checklist_mappings[report_element.checklist_id]
         end
-        if report_element.asset_id
-          report_element.asset_id = @asset_mappings[report_element.asset_id]
-        end
-        if report_element.table_id
-          report_element.table_id = @table_mappings[report_element.table_id]
-        end
+        report_element.asset_id = @asset_mappings[report_element.asset_id] if report_element.asset_id
+        report_element.table_id = @table_mappings[report_element.table_id] if report_element.table_id
         if report_element.experiment_id
           report_element.experiment_id =
             @experiment_mappings[report_element.experiment_id]
@@ -902,7 +903,8 @@ class TeamImporter
 
   def find_user(user_id)
     return nil if user_id.nil?
-    @user_mappings[user_id] ? @user_mappings[user_id] : @admin_id
+
+    @user_mappings[user_id] || @admin_id
   end
 
   def find_list_item_id(list_item_id)

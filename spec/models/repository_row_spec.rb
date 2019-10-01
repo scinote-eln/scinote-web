@@ -23,7 +23,7 @@ describe RepositoryRow, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :repository }
+    it { should belong_to(:repository).optional }
     it { should belong_to(:created_by).class_name('User') }
     it { should belong_to(:last_modified_by).class_name('User') }
     it { should have_many :repository_cells }

@@ -111,9 +111,10 @@ module ProtocolsImporter
         )
 
         # Decode the file bytes
-        asset.file = StringIO.new(Base64.decode64(asset_json['bytes']))
-        asset.file_file_name = asset_json['fileName']
-        asset.file_content_type = asset_json['fileType']
+        asset.file.attach(io: StringIO.new(Base64.decode64(asset_json['bytes'])),
+                          filename: asset_json['fileName'],
+                          content_type: asset_json['fileType'],
+                          metadata: JSON.parse(asset_json['fileMetadata'] || '{}'))
         asset.save!
         asset_ids << asset.id
 
@@ -145,19 +146,21 @@ module ProtocolsImporter
   def populate_rte(object_json, object, team)
     return populate_rte_legacy(object_json) unless object_json['descriptionAssets']
 
-    description = TinyMceAsset.update_old_tinymce(object_json['description'], nil, true)
+    description = TinyMceAsset.update_old_tinymce(object_json['description'], nil)
     object_json['descriptionAssets'].values.each do |tiny_mce_img_json|
       tiny_mce_img = TinyMceAsset.new(
         object: object,
         team_id: team.id,
         saved: true
       )
-      # Decode the file bytes
-      tiny_mce_img.image = StringIO.new(
-        Base64.decode64(tiny_mce_img_json['bytes'])
-      )
-      tiny_mce_img.image_content_type = tiny_mce_img_json['fileType']
       tiny_mce_img.save!
+
+      # Decode the file bytes
+      file = StringIO.new(Base64.decode64(tiny_mce_img_json['bytes']))
+      tiny_mce_img.image.attach(io: file,
+                                filename: tiny_mce_img_json['fileName'],
+                                content_type: tiny_mce_img_json['fileType'],
+                                metadata: JSON.parse(tiny_mce_img_json['fileMetadata'] || '{}'))
       if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
                            "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
       else

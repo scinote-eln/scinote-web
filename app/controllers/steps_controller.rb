@@ -2,6 +2,7 @@ class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include StepsActions
+  include MarvinJsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state)
   before_action :load_vars_nested, only: [:new, :create]
@@ -28,50 +29,67 @@ class StepsController < ApplicationController
   end
 
   def create
-    @step = Step.new(step_params)
-    # gerate a tag that replaces img tag in database
-    @step.completed = false
-    @step.position = @protocol.number_of_steps
-    @step.protocol = @protocol
-    @step.user = current_user
-    @step.last_modified_by = current_user
-    @step.assets.each do |asset|
-      asset.created_by = current_user
-      asset.team = current_team
-    end
-    @step.tables.each do |table|
-      table.created_by = current_user
-      table.team = current_team
-    end
-    # Update default checked state
-    @step.checklists.each do |checklist|
-      checklist.checklist_items.each do |checklist_item|
-        checklist_item.checked = false
+    @step = Step.new
+    @step.transaction do
+      new_step_params = step_params
+
+      # Attach newly uploaded files, and than remove their blob ids from the parameters
+      new_step_params[:assets_attributes]&.each do |key, value|
+        next unless value[:signed_blob_id]
+
+        asset = Asset.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+        asset.file.attach(value[:signed_blob_id])
+        @step.assets << asset
+        new_step_params[:assets_attributes].delete(key)
       end
+
+      @step.assign_attributes(new_step_params)
+      # gerate a tag that replaces img tag in database
+      @step.completed = false
+      @step.position = @protocol.number_of_steps
+      @step.protocol = @protocol
+      @step.user = current_user
+      @step.last_modified_by = current_user
+      @step.tables.each do |table|
+        table.created_by = current_user
+        table.team = current_team
+      end
+      # Update default checked state
+      @step.checklists.each do |checklist|
+        checklist.checklist_items.each do |checklist_item|
+          checklist_item.checked = false
+        end
+      end
+
+
+      # link tiny_mce_assets to the step
+      TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
+
+      @step.save!
+
+      # Post process all assets
+      @step.assets.each do |asset|
+        asset.post_process_file(@protocol.team)
+      end
+
+      # link tiny_mce_assets to the step
+      TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
+
+      create_annotation_notifications(@step)
+
+      # Generate activity
+      if @protocol.in_module?
+        log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
+      else
+        log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
+      end
+
+      # Update protocol timestamp
+      update_protocol_ts(@step)
     end
 
     respond_to do |format|
-      if @step.save
-        # Post process all assets
-        @step.assets.each do |asset|
-          asset.post_process_file(@protocol.team)
-        end
-
-        # link tiny_mce_assets to the step
-        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
-
-        create_annotation_notifications(@step)
-
-        # Generate activity
-        if @protocol.in_module?
-          log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
-        else
-          log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
-        end
-
-        # Update protocol timestamp
-        update_protocol_ts(@step)
-
+      if @step.errors.empty?
         format.json do
           render json: {
             html: render_to_string(
@@ -128,6 +146,17 @@ class StepsController < ApplicationController
       # NOTE - step_params_all variable is updated
       destroy_attributes(step_params_all)
 
+      # Attach newly uploaded files, and than remove their blob ids from the parameters
+      step_params_all[:assets_attributes]&.each do |key, value|
+        next unless value[:signed_blob_id]
+
+        @step.assets
+             .create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+             .file
+             .attach(value[:signed_blob_id])
+        step_params_all[:assets_attributes].delete(key)
+      end
+
       @step.assign_attributes(step_params_all)
       @step.last_modified_by = current_user
 
@@ -144,7 +173,7 @@ class StepsController < ApplicationController
       end
       if @step.save
 
-        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
         @step.reload
 
         # generates notification on step upadate
@@ -160,7 +189,7 @@ class StepsController < ApplicationController
 
         # Post process step assets
         @step.assets.each do |asset|
-          asset.post_process_file(team)
+          asset.post_process_file(team) if asset.changed?
         end
 
         # Generate activity
@@ -463,7 +492,7 @@ class StepsController < ApplicationController
     update_params = {}
     delete_step_tables(params)
     extract_destroy_params(params, update_params)
-    @step.update_attributes(update_params) unless update_params.empty?
+    @step.update(update_params) unless update_params.empty?
   end
 
   # Delete the step table
@@ -479,14 +508,12 @@ class StepsController < ApplicationController
 
   # Checks if hash contains destroy parameter '_destroy' and returns
   # boolean value.
-  def has_destroy_params(params)
-    for key, values in params do
-      if values.respond_to?(:each)
-        for pos, attrs in params[key] do
-          if attrs[:_destroy] == '1'
-            return true
-          end
-        end
+  def has_destroy_params?(params)
+    params.each do |key, values|
+      next unless values.respond_to?(:each)
+
+      params[key].each do |_, attrs|
+        return true if attrs[:_destroy] == '1'
       end
     end
 
@@ -497,26 +524,26 @@ class StepsController < ApplicationController
   # values that contains destroy parameters from original variable and
   # puts them into update_params variable.
   def extract_destroy_params(params, update_params)
-    for key, values in params do
-      if values.respond_to?(:each)
-        update_params[key] = {} unless update_params[key]
-        attr_params = update_params[key]
+    params.each do |key, values|
+      next unless values.respond_to?(:each)
 
-        for pos, attrs in params[key] do
-          if attrs[:_destroy] == '1'
-            if attrs[:id].present?
-              asset = Asset.find_by_id(attrs[:id])
-              if asset.try(&:locked?)
-                asset.errors.add(:base, 'This file is locked.')
-              else
-                attr_params[pos] = { id: attrs[:id], _destroy: '1' }
-              end
+      update_params[key] = {} unless update_params[key]
+      attr_params = update_params[key]
+
+      params[key].each do |pos, attrs|
+        if attrs[:_destroy] == '1'
+          if attrs[:id].present?
+            asset = Asset.find_by_id(attrs[:id])
+            if asset.try(&:locked?)
+              asset.errors.add(:base, 'This file is locked.')
+            else
+              attr_params[pos] = { id: attrs[:id], _destroy: '1' }
             end
-            params[key].delete(pos)
-          elsif has_destroy_params(params[key][pos])
-            attr_params[pos] = { id: attrs[:id] }
-            extract_destroy_params(params[key][pos], attr_params[pos])
           end
+          params[key].delete(pos)
+        elsif has_destroy_params?(params[key][pos])
+          attr_params[pos] = { id: attrs[:id] }
+          extract_destroy_params(params[key][pos], attr_params[pos])
         end
       end
     end
@@ -597,15 +624,19 @@ class StepsController < ApplicationController
       ],
       assets_attributes: [
         :id,
-        :file,
-        :_destroy
+        :_destroy,
+        :signed_blob_id
       ],
       tables_attributes: [
         :id,
         :name,
         :contents,
         :_destroy
-      ]
+      ],
+      marvin_js_assets_attributes: %i(
+        id
+        _destroy
+      )
     )
   end
 

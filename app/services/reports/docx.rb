@@ -12,9 +12,8 @@ class Reports::Docx
   include RepositoryDatatableHelper
 
   Dir[File.join(File.dirname(__FILE__), 'docx') + '**/*.rb'].each do |file|
-    require file
     include_module = File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join
-    include include_module.constantize
+    include "Reports::Docx::#{include_module}".constantize
   end
 
   def initialize(json, docx, options)

@@ -91,7 +91,7 @@ class ExperimentsController < ApplicationController
                                 end
 
     old_text = @experiment.description
-    @experiment.update_attributes(experiment_params)
+    @experiment.update(experiment_params)
     @experiment.last_modified_by = current_user
 
     if @experiment.save
@@ -238,14 +238,13 @@ class ExperimentsController < ApplicationController
   end
 
   def updated_img
-    if @experiment.workflowimg.present? && !@experiment.workflowimg.exists?
-      @experiment.workflowimg = nil
-      @experiment.save
+    if @experiment.workflowimg.attached? && !@experiment.workflowimg_exists?
+      @experiment.workflowimg.purge
       @experiment.generate_workflow_img
     end
     respond_to do |format|
       format.json do
-        if @experiment.workflowimg.present?
+        if @experiment.workflowimg.attached?
           render json: {}, status: 200
         else
           render json: {}, status: 404

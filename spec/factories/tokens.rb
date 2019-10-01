@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :token do
-    token { Faker::Lorem.characters(100) }
+    token { Faker::Lorem.characters(number: 100) }
     ttl { 60 }
     user
   end

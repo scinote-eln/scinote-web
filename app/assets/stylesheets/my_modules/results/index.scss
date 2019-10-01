@@ -1,0 +1,17 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
+@import "constants";
+@import "mixins";
+
+#results-toolbar {
+  .help_tooltips {
+    .btn-default {
+      border: 0;
+      color: inherit;
+      margin-left: 10px;
+    }
+  }
+}

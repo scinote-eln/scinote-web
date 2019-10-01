@@ -24,7 +24,7 @@ describe Notification, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to(:generator_user).class_name('User') }
+    it { should belong_to(:generator_user).class_name('User').optional }
     it { should have_many :users }
     it { should have_many :user_notifications }
   end

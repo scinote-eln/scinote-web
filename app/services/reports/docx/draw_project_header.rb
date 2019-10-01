@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DrawProjectHeader
+module Reports::Docx::DrawProjectHeader
   def draw_project_header(subject)
     project = Project.find_by_id(subject['id']['project_id'])
     return unless project

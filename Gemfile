@@ -2,21 +2,21 @@
 
 source 'http://rubygems.org'
 
-ruby '2.5.5'
+ruby '2.6.4'
 
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap_form', '~> 2.7.0'
-gem 'devise', '~> 4.6.2'
+gem 'devise', '~> 4.7.1'
 gem 'devise_invitable'
 gem 'figaro'
-gem 'pg', '~> 1.1.4'
+gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0.0'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.0'
 gem 'sassc-rails'
-gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
+gem 'simple_token_authentication', '~> 1.16.0' # Token authentication for Devise
 gem 'webpacker', '~> 4.0.0'
 gem 'yomu'
 
@@ -32,6 +32,7 @@ gem 'omniauth-rails_csrf_protection', '~> 0.1'
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
 gem 'json-jwt'
+gem 'jsonapi-renderer', '~> 0.2.2'
 gem 'jwt', '~> 1.5'
 gem 'kaminari'
 gem 'rack-attack'
@@ -83,14 +84,16 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
 gem 'wicked_pdf', '~> 1.1.0'
-gem 'wkhtmltopdf-heroku'
+gem 'wkhtmltopdf-heroku', '2.12.4'
 
+gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
-gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
+gem 'image_processing', '~> 1.2'
+gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
@@ -105,7 +108,7 @@ gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 
 # Permission helper Gem
-gem 'canaid', git: 'https://github.com/biosistemika/canaid', tag: '1.0.4'
+gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'rails_6'
 
 group :development, :test do
   gem 'awesome_print'
@@ -120,20 +123,20 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rails-controller-testing'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '>= 4.0.0.beta2'
   gem 'rubocop', '>= 0.59.0', require: false
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'timecop'
 end
 
 group :test do
   gem 'capybara'
   gem 'capybara-email'
-  gem 'cucumber-rails', '~> 1.5', require: false
+  gem 'cucumber-rails', '~> 1.8', require: false
   gem 'database_cleaner'
   gem 'json_matchers'
-  gem 'phantomjs', require: 'phantomjs/poltergeist'
-  gem 'poltergeist'
+  gem 'selenium-webdriver'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
   gem 'webmock'

@@ -36,7 +36,7 @@ namespace :paperclip do
       assets = assets.where('updated_at < ?', eval(args[:before]))
     end
     assets.find_each(batch_size: 100) do |asset|
-      next unless asset.is_image?
+      next unless asset.image?
       begin
         asset.file.reprocess! :medium, :large
       rescue

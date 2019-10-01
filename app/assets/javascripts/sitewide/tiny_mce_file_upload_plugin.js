@@ -88,7 +88,7 @@
         form = createElement('form', {
           action: editor.getParam(
             'customimageuploader_form_url',
-            '/tinymce_assets'
+            '/tiny_mce_assets'
           ),
           target: iframe._id,
           method: 'POST',
