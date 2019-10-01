@@ -18,9 +18,11 @@ class AssetsController < ApplicationController
   before_action :check_edit_permission, only: :edit
 
   def file_preview
+    file_type = 'previewable' if @asset.previewable?
+    file_type ||= @asset.file.metadata[:asset_type]
     response_json = {
       'id' => @asset.id,
-      'type' => @asset.file.metadata[:asset_type] || (@asset.image? ? 'image' : 'file'),
+      'type' => file_type,
       'filename' => truncate(escape_input(@asset.file_name),
                              length: Constants::FILENAME_TRUNCATION_LENGTH),
       'download-url' => asset_file_url_path(@asset)
@@ -33,7 +35,7 @@ class AssetsController < ApplicationController
                elsif @assoc.class == RepositoryCell
                  can_manage_repository_rows?(@repository)
                end
-    if response_json['type'] == 'image'
+    if response_json['type'] == 'previewable'
       if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
         response_json['quality'] = @asset.file_image_quality || 90
       end
