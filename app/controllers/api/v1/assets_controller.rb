@@ -21,9 +21,10 @@ module Api
       def create
         raise PermissionError.new(Asset, :create) unless can_manage_protocol_in_module?(@protocol)
 
-        asset = @step.assets.create!(asset_params)
+        asset = @step.assets.new(asset_params)
+        asset.save!(context: :on_api_upload)
 
-        asset.reload
+        asset.post_process_file
 
         render jsonapi: asset,
                serializer: AssetSerializer,
@@ -42,6 +43,7 @@ module Api
 
       def load_asset
         @asset = @step.assets.find(params.require(:id))
+        raise PermissionError.new(Asset, :read) unless can_read_protocol_in_module?(@asset.step.protocol)
       end
     end
   end

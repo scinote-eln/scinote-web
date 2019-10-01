@@ -89,6 +89,22 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
         expect(response).to have_http_status(404)
       end
     end
+
+    context 'when asset is not found' do
+      it 'renders 404' do
+        get(api_v1_team_project_experiment_task_protocol_step_asset_path(
+              team_id: @team.id,
+              project_id: @project.id,
+              experiment_id: @experiment.id,
+              task_id: @task.id,
+              protocol_id: @protocol.id,
+              step_id: @step.id,
+              id: -1
+            ), headers: @valid_headers)
+
+        expect(response).to have_http_status(404)
+      end
+    end
   end
 
   describe 'POST step, #create' do
@@ -98,6 +114,7 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
 
     before :each do
       @file = fixture_file_upload('files/test.jpg', 'image/jpg')
+      allow_any_instance_of(Asset).to receive(:post_process_file)
     end
 
     let(:action) do
@@ -133,6 +150,12 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
         action
 
         expect(response).to have_http_status 201
+      end
+
+      it 'calls post_process_file function for text extraction' do
+        expect_any_instance_of(Asset).to receive(:post_process_file)
+
+        action
       end
     end
 
