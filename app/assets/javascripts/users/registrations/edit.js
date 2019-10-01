@@ -68,7 +68,7 @@
       $(this).renderFormErrors('user', data.responseJSON);
     });
 
-  $('#user_raw_avatar').change(function() {
+  /*$('#user_raw_avatar').change(function() {
     var reader = new FileReader();
     var inputField = this;
     var croppieContainer;
@@ -79,7 +79,7 @@
       $('.new-avatar-preview-container').css('display', '').children().remove();
       $('<img class="new-avatar-cropping-preview" src="' + reader.result + '"></img>').appendTo('.new-avatar-preview-container');
       croppieContainer = $('.new-avatar-cropping-preview');
-      croppieContainer.croppie({ viewport: { type: 'circle' } });
+      croppieContainer.croppie({ viewport: { width: 150, height: 150, type: 'circle' } });
       $('.new-avatar-preview-container').off('update.croppie').on('update.croppie', function() {
         croppieContainer.croppie('result', { type: 'base64', format: 'jpeg', circle: false })
           .then(function(image) {
@@ -87,7 +87,7 @@
           });
       });
     };
-  });
+  });*/
 
   $('#user-avatar-field :submit').click(function(ev) {
     var $form = $(ev.target.form);

@@ -1,0 +1,37 @@
+<div class="modal modal-user-avatar" tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"  aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            Change your profile photo
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="upload-block">
+              <div class="current-avatar">
+                <%= image_tag avatar_path(current_user, :medium) %>
+                <%= file_field_tag :raw_avatar, style: "display:none" %>
+                <%= hidden_field_tag :new_avatar, "" %>
+              </div>
+              <div class="avatar-preview-container" style="display:none"></div>
+              <div class="btn btn-default upload-photo">Upload a photo</div>
+          </div>
+          <div class="option-text">
+            or<br>Select a profile icon below
+          </div>
+          <div class="avatar-collection perfect-scrollbar">
+            <% Dir["public/images/avatars/*.png"].each do |avatar| %>
+              <% avatar_name = avatar.split('/')[-1] %>
+              <div class="avatar" data-avatar="<%= avatar_name %>">
+                <%= image_tag "/images/avatars/#{avatar_name}" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-primary">Save</div>
+        </div>
+      </div>
+    </div>
+  </div>
