@@ -59,7 +59,12 @@ module Reports::Docx::PrivateMethods
         end
       elsif elem[:type] == 'image'
         style = elem[:style]
-        @docx.img elem[:data], width: style[:width], height: style[:height], align: (style[:align] || :left)
+        @docx.img elem[:data] do
+          data elem[:blob].download
+          width style[:width]
+          height style[:height]
+          align style[:align] || :left
+        end
       end
     end
   end
@@ -90,18 +95,17 @@ module Reports::Docx::PrivateMethods
 
       if elem.name == 'img' && elem.attributes['data-mce-token']
 
-        image = TinyMceAsset.find_by_id(Base62.decode(elem.attributes['data-mce-token'].value))
+        image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
         next unless image
 
         image_path = image_path(image)
-
         dimension = FastImage.size(image_path)
-
         style = image_styling(elem, dimension)
 
         elements.push(
           type: 'image',
-          data: image_path,
+          data: image_path.split('&')[0],
+          blob: image.blob,
           style: style
         )
         next
@@ -146,7 +150,7 @@ module Reports::Docx::PrivateMethods
     result[:style] = elem.name if elem.name.include? 'h'
     result[:bold] = true if elem.name == 'strong'
     result[:italic] = true if elem.name == 'em'
-    style_keys = ['text-align', 'color']
+    style_keys = %w(text-align color)
 
     if style
       style_keys.each do |key|
@@ -209,7 +213,11 @@ module Reports::Docx::PrivateMethods
       y = y * 300 / x
       x = 300
     end
-    @docx.img image_path, width: x, height: y
+    @docx.img image_path.split('&')[0] do
+      data asset.blob.download
+      width x
+      height y
+    end
   end
 
   def initial_document_load
@@ -290,7 +298,6 @@ module Reports::Docx::PrivateMethods
             else
               asset.image
             end
-
     image.service_url
   end
 
