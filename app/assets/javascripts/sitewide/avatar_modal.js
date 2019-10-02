@@ -1,12 +1,24 @@
-/* global initInlineEditing PerfectScrollbar */
+
 /* eslint-disable no-restricted-globals, no-alert */
 var avatarsModal = (function() {
-  var modal = '.modal-user-avatar'
+  var modal = '.modal-user-avatar';
 
   function initUploadPhotoButton() {
     $(modal).find('.upload-photo').click(() => {
-      $(modal).find('#raw_avatar').click()
-    })
+      $(modal).find('#raw_avatar').click();
+    });
+  }
+
+  function getBase64Image(img) {
+    var ctx;
+    var dataURL;
+    var canvas = document.createElement('canvas');
+    canvas.width = 200;
+    canvas.height = 200;
+    ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    dataURL = canvas.toDataURL('image/png');
+    return dataURL;
   }
 
   function initCropTool() {
@@ -18,8 +30,10 @@ var avatarsModal = (function() {
       $(modal).find('.current-avatar').hide();
       reader.readAsDataURL(inputField.files[0]);
       reader.onload = function() {
+        var avatarContainer = $(modal).find('.avatar-preview-container');
+        $(modal).find('.save-button').removeClass('disabled');
         $(modal).find('#new_avatar').val(reader.result);
-        var avatarContainer = $(modal).find('.avatar-preview-container')
+
         avatarContainer.show().children().remove();
         $('<img class="avatar-cropping-preview" src="' + reader.result + '"></img>').appendTo(avatarContainer);
         croppieContainer = $('.avatar-cropping-preview');
@@ -36,29 +50,48 @@ var avatarsModal = (function() {
 
   function initPredefinedAvatars() {
     $(modal).find('.avatar-collection .avatar').click(function() {
+      $(modal).find('.save-button').removeClass('disabled');
+      $(modal).find('#raw_avatar')[0].value = null;
       $(modal).find('.avatar-preview-container').hide();
       $(modal).find('.current-avatar').show().find('img')
-        .attr('src',$(this).find('img').attr('src'));
-      $(modal).find('#new_avatar').val(getBase64Image($(this).find('img')[0]))
-    })
+        .attr('src', $(this).find('img').attr('src'));
+      $(modal).find('#new_avatar').val(getBase64Image($(this).find('img')[0]));
+    });
   }
 
-  function getBase64Image(img) {
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
-    return dataURL;
+  function initUpdateButton() {
+    $(modal).find('.save-button').click(function() {
+      if ($(this).hasClass('disabled')) return;
+
+      $(this).addClass('disabled');
+      $.ajax({
+        url: $(modal).data('update-url'),
+        type: 'PUT',
+        data: {
+          'user[avatar]': $(modal).find('#new_avatar').val(),
+          'user[change_avatar]': true
+        },
+        dataType: 'json',
+        success: () => {
+          location.reload();
+        },
+        error: () => {
+          $(this).removeClass('disabled');
+        }
+      });
+    });
   }
 
   return {
-    init: (mode) => {
+    init: () => {
       if ($('.modal-user-avatar').length > 0) {
-        initUploadPhotoButton()
-        initCropTool()
-        initPredefinedAvatars()
+        initUploadPhotoButton();
+        initCropTool();
+        initPredefinedAvatars();
+        initUpdateButton();
+        $('.user-settings-edit-avatar').click(() => {
+          $(modal).modal('show');
+        });
       }
     }
   };

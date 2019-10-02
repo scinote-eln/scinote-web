@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
 @import "constants";
 @import "mixins";
 
@@ -47,7 +50,7 @@
       height: 100px;
       margin-bottom: 5px;
       transition: $md-transaction;
-      width:80px;
+      width: 80px;
 
       &:hover {
         box-shadow: $md-shadow;
@@ -69,7 +72,7 @@
 
     .current-avatar {
       height: 150px;
-      margin: 35px 0;
+      margin: 25px 0 45px;
       width: 150px;
 
       img {
@@ -93,6 +96,6 @@
   }
 
   .modal-footer {
-    text-align: center
+    text-align: center;
   }
 }

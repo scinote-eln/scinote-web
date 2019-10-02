@@ -1,10 +1,12 @@
-<div class="modal modal-user-avatar" tabindex="-1" role="dialog" >
+<div class="modal modal-user-avatar" tabindex="-1" role="dialog"
+  data-update-url="<%= registration_path(resource_name) %>"
+>
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"  aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal"  aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
-            Change your profile photo
+            <%= t('users.registrations.edit.avatar_modal.title') %>
           </h4>
         </div>
         <div class="modal-body">
@@ -15,10 +17,10 @@
                 <%= hidden_field_tag :new_avatar, "" %>
               </div>
               <div class="avatar-preview-container" style="display:none"></div>
-              <div class="btn btn-default upload-photo">Upload a photo</div>
+              <div class="btn btn-default upload-photo"><%= t('users.registrations.edit.avatar_modal.upload_button') %></div>
           </div>
           <div class="option-text">
-            or<br>Select a profile icon below
+            <%= t('users.registrations.edit.avatar_modal.option_text_html') %>
           </div>
           <div class="avatar-collection perfect-scrollbar">
             <% Dir["public/images/avatars/*.png"].each do |avatar| %>
@@ -30,7 +32,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <div class="btn btn-primary">Save</div>
+          <div class="btn btn-primary save-button disabled"><%= t('general.save') %></div>
         </div>
       </div>
     </div>
