@@ -69,7 +69,7 @@ end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
   wait_for_ajax
-  find(field_id).attach_file(Rails.root.join('features', 'assets', file))
+  find(field_id, :visible => false).attach_file(Rails.root.join('features', 'assets', file))
   # "expensive" operation needs some time :=)
   sleep(0.5)
 end
