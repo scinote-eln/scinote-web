@@ -1476,7 +1476,7 @@ table.dataTable {
     line-height: 160px;
   }
 
-  &:not(.new) {
+  &.processing {
     background-image: url("/images/medium/processing.gif");
     background-position: center;
     background-repeat: no-repeat;
@@ -1525,9 +1525,6 @@ table.dataTable {
 
   .file-preview-container {
     align-items: center;
-    background-image: url("/images/medium/processing.gif");
-    background-position: center;
-    background-repeat: no-repeat;
     color: $gray-dark;
     display: -moz-flex;
     display: -webkit-flex;
@@ -1536,6 +1533,12 @@ table.dataTable {
     justify-content: center;
     text-align: center;
     width: 60%;
+
+    &.processing {
+      background-image: url("/images/medium/processing.gif");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
 
     .file-name {
       color: $color-black;

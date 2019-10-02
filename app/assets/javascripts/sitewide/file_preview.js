@@ -474,7 +474,7 @@ var FilePreviewModal = (function() {
         link.attr('href', downloadUrl);
         link.attr('data-no-turbolink', true);
         link.attr('data-status', 'asset-present');
-        if (data.type === 'image') {
+        if (data.type === 'previewable') {
           animateSpinner('.file-preview-container', false);
           modal.find('.file-preview-container')
             .append($('<img>')

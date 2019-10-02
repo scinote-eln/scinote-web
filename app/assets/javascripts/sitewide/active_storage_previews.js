@@ -17,6 +17,8 @@ var ActiveStoragePreviews = (function() {
 
       if (img.retryCount >= RETRY_COUNT) return;
 
+      if (!$(img).parent().hasClass('processing')) $(img).parent().addClass('processing');
+
       setTimeout(() => {
         img.src = src;
         img.retryCount += 1;
@@ -24,6 +26,7 @@ var ActiveStoragePreviews = (function() {
     },
     showPreview: function(ev) {
       $(ev.target).css('opacity', 1);
+      $(ev.target).parent().removeClass('processing');
     }
   });
 }());
