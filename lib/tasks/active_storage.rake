@@ -24,6 +24,8 @@ namespace :active_storage do
       end
       puts 'Finished'
     elsif ENV['PAPERCLIP_STORAGE'] == 's3' || ENV['ACTIVESTORAGE_SERVICE'] == 'amazon'
+      S3_BUCKET = Aws::S3::Resource.new.bucket(ENV['S3_BUCKET'])
+
       ActiveStorage::Blob.find_each do |blob|
         next unless blob.key.match?(%r{assets|experiments|temp_files|tiny_mce_assets|users|zip_exports\/})
 

@@ -47,7 +47,6 @@ module ProtocolImporters
       # Serialize steps with nested attributes for Tables and NOT nasted attributes for Assets
       # We want to avoid creating (downloading) Assets instances on building first time and again on importing/creating,
       # when both actions are not in a row.
-      # Also serialization does not work properly with paperclip attrs
       return nil unless built_protocol
 
       built_protocol.steps.map do |step|

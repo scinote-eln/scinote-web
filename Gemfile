@@ -62,9 +62,6 @@ gem 'bcrypt', '~> 3.1.10'
 gem 'caracal-rails' # Build docx report
 gem 'commit_param_routing' # Enables different submit actions in the same form
 gem 'deface', '~> 1.0'
-gem 'delayed_paperclip',
-    git: 'https://github.com/jrgifford/delayed_paperclip.git',
-    ref: 'fcf574c'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'httparty', '~> 0.13.1'
@@ -93,7 +90,6 @@ gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
 gem 'image_processing', '~> 1.2'
-gem 'paperclip', '~> 6.1' # File attachment, image attachment library
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
