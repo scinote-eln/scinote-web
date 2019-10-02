@@ -102,6 +102,12 @@ class TinyMceAsset < ApplicationRecord
     image.variant(resize_to_limit: Constants::LARGE_PIC_FORMAT)
   end
 
+  def file_service_url
+    ActiveStorage::Current.set(host: Rails.application.secrets.mail_server_url) do
+      image.service_url
+    end
+  end
+
   def self.delete_unsaved_image(id)
     asset = find_by(id: id)
     asset.destroy if asset && !asset.saved

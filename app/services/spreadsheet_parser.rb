@@ -8,7 +8,7 @@ class SpreadsheetParser
       file_path = file.path
     else
       filename = file.filename.to_s
-      file_path = file.service_url
+      file_path = file.file_service_url
     end
 
     case File.extname(filename)

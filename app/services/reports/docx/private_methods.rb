@@ -293,12 +293,7 @@ module Reports::Docx::PrivateMethods
   end
 
   def image_path(asset)
-    image = if asset.class == Asset
-              asset.file
-            else
-              asset.image
-            end
-    image.service_url
+    asset.file_service_url
   end
 
   def calculate_color_hsp(color)
