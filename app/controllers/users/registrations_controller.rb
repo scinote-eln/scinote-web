@@ -37,10 +37,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
       else
         temp_file = Tempfile.new('avatar', Rails.root.join('tmp'))
         begin
+          check_extension = params[:avatar].split(';')[0].split('/')[1]
           temp_file.binmode
-          temp_file.write(Base64.decode64(params[:avatar].sub(%r{^data:image\/jpeg\;base64,}, '')))
+          temp_file.write(Base64.decode64(params[:avatar].split(',')[1]))
           temp_file.rewind
-          resource.avatar.attach(io: temp_file, filename: 'avatar.jpg')
+          resource.avatar.attach(io: temp_file, filename: "avatar.#{check_extension}")
         ensure
           temp_file.close
           temp_file.unlink
