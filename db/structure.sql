@@ -2088,9 +2088,7 @@ CREATE TABLE public.tiny_mce_assets (
     image_file_size bigint,
     image_updated_at timestamp without time zone,
     estimated_size integer DEFAULT 0 NOT NULL,
-    step_id integer,
     team_id integer,
-    result_text_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     saved boolean DEFAULT true,
@@ -4974,20 +4972,6 @@ CREATE INDEX index_tiny_mce_assets_on_object_type_and_object_id ON public.tiny_m
 
 
 --
--- Name: index_tiny_mce_assets_on_result_text_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_tiny_mce_assets_on_result_text_id ON public.tiny_mce_assets USING btree (result_text_id);
-
-
---
--- Name: index_tiny_mce_assets_on_step_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_tiny_mce_assets_on_step_id ON public.tiny_mce_assets USING btree (step_id);
-
-
---
 -- Name: index_tiny_mce_assets_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6535,6 +6519,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190812065432'),
 ('20190812072649'),
 ('20190830141257'),
-('20190910125740');
+('20190910125740'),
+('20191001133557');
 
 
