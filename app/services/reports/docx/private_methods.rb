@@ -98,7 +98,7 @@ module Reports::Docx::PrivateMethods
         image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
         next unless image
 
-        image_path = image_path(image)
+        image_path = image_path(image.image)
         dimension = FastImage.size(image_path)
         style = image_styling(elem, dimension)
 
@@ -204,7 +204,7 @@ module Reports::Docx::PrivateMethods
   def asset_image_preparing(asset)
     return unless asset
 
-    image_path = image_path(asset)
+    image_path = image_path(asset.file)
 
     dimension = FastImage.size(image_path)
     x = dimension[0]
@@ -292,13 +292,8 @@ module Reports::Docx::PrivateMethods
     }
   end
 
-  def image_path(asset)
-    image = if asset.class == Asset
-              asset.file
-            else
-              asset.image
-            end
-    image.service_url
+  def image_path(attachment)
+    attachment.service_url
   end
 
   def calculate_color_hsp(color)

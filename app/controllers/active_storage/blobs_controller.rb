@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ActiveStorage
-  class BlobsController < BaseController
+  class BlobsController < CustomBaseController
     include ActiveStorage::SetBlob
     include ActiveStorage::CheckBlobPermissions
 
