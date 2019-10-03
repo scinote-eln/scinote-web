@@ -425,10 +425,11 @@ var FilePreviewModal = (function() {
         processData: false,
         success: function(res) {
           $('#modal_link' + data.id).parent().html(res.html);
+          initPreviewModal();
         }
       }).done(function() {
         closeEditor();
-        location.reload();
+        
       });
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
