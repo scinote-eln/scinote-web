@@ -318,6 +318,7 @@ $(document).on('turbolinks:load', function() {
   if (MarvinJsEditor.enabled()) {
     if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
+        marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;
       });
     }
