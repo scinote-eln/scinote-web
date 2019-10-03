@@ -18,8 +18,7 @@ class AssetsController < ApplicationController
   before_action :check_edit_permission, only: :edit
 
   def file_preview
-    file_type = 'previewable' if @asset.previewable?
-    file_type ||= @asset.file.metadata[:asset_type]
+    file_type = @asset.file.metadata[:asset_type] || (@asset.previewable? ? 'previewable' : false)
     response_json = {
       'id' => @asset.id,
       'type' => file_type,
