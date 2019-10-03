@@ -243,12 +243,6 @@ class Asset < ApplicationRecord
     to_asset.post_process_file(to_asset.team)
   end
 
-  def file_service_url
-    ActiveStorage::Current.set(host: Rails.application.secrets.mail_server_url) do
-      file.service_url
-    end
-  end
-
   def extract_image_quality
     return unless ['image/jpeg', 'image/pjpeg'].include? content_type
 

@@ -1,9 +1,9 @@
 test:
-  service: Disk
+  service: CustomDisk
   root: <%= Rails.root.join("tmp/storage") %>
 
 local:
-  service: Disk
+  service: CustomDisk
   root: <%= Rails.root.join("storage") %>
 
 amazon:
