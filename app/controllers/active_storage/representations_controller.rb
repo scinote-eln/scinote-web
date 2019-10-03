@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ActiveStorage
-  class RepresentationsController < BaseController
+  class RepresentationsController < CustomBaseController
     include ActiveStorage::SetBlob
     include ActiveStorage::CheckBlobPermissions
 

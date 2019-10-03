@@ -2,7 +2,7 @@
 
 # The base controller for all ActiveStorage controllers.
 module ActiveStorage
-  class BaseController < ApplicationController
+  class CustomBaseController < ApplicationController
     include ActiveStorage::SetCurrent
 
     before_action do
