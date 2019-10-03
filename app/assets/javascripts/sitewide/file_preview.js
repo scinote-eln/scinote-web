@@ -407,6 +407,14 @@ var FilePreviewModal = (function() {
 
       imageBlob = new Blob([blobArray]);
 
+      function closeEditor() {
+        animateSpinner(null, false);
+        imageEditor.destroy();
+        imageEditor = {};
+        $('#tui-image-editor').html('');
+        $('#fileEditModal').modal('hide');
+      }
+
       dataUpload.append('image', imageBlob);
       animateSpinner(null, true);
       $.ajax({
@@ -419,37 +427,9 @@ var FilePreviewModal = (function() {
           $('#modal_link' + data.id).parent().html(res.html);
         }
       }).done(function() {
-        animateSpinner(null, false);
-        imageEditor.destroy();
-        imageEditor = {};
-        $('#tui-image-editor').html('');
-        $('#fileEditModal').modal('hide');
+        closeEditor();
+        location.reload();
       });
-
-      if (data.mode === 'tinymce') {
-        $.ajax({
-          type: 'PUT',
-          url: data.url,
-          data: dataUpload,
-          contentType: false,
-          processData: false,
-          success: function(res) {
-            data.image.src = res.url;
-          }
-        }).done(function() { closeEditor(); });
-      } else {
-        $.ajax({
-          type: 'POST',
-          url: '/files/' + data.id + '/update_image',
-          data: dataUpload,
-          contentType: false,
-          processData: false,
-          success: function(res) {
-            $('#modal_link' + data.id).parent().html(res.html);
-            Assets.setupAssetsLoading();
-          }
-        }).done(function() { closeEditor(); });
-      }
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
 
