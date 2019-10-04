@@ -23,13 +23,6 @@
   </div>
 
   <div class="panel-body">
-    <% if experiment.workflowimg.attached? %>
-      <div class="workflowimg-container">
-        <%= image_tag(
-              experiment.workflowimg,
-              class: 'img-responsive center-block') %>
-      </div>
-    <% end %>
     <div class="row">
       <div class="col-xs-4">
         <%=t "projects.experiment_archive.archived_on" %>
