@@ -644,128 +644,6 @@ var RepositoryDatatable = (function(global) {
         // Skip if clicking on selector checkbox
         return;
       }
-      if (!$(e.target).is('.record-info-link') && !$(e.target).parent().is('.file-preview-link')) {
-        // Skip if clicking on samples info link or file preview link
-        $(this).parent().find('.repository-row-selector').trigger('click');
-      }
-    });
-
-    TABLE.on('column-reorder', function() {
-      initRowSelection();
-    });
-
-    $('#assignRepositories, #unassignRepositories').click(function() {
-      animateLoading();
-    });
-
-    // Timeout for table header scrolling
-    setTimeout(function() {
-      TABLE.columns.adjust();
-
-      // Append button to inner toolbar in table
-      $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
-      $('div.toolbarButtonsDatatable').show();
-
-      // Append buttons for task inventory
-      $('div.toolbarButtons').appendTo('div.toolbar');
-      $('div.toolbarButtons').show();
-    }, 10);
-
-    return TABLE;
-  }
-
-  function bindExportActions() {
-    $('form#form-export').submit(function() {
-      var form = this;
-      if (currentMode === 'viewMode') {
-        // Remove all hidden fields
-        $(form).find('input[name=row_ids\\[\\]]').remove();
-        $(form).find('input[name=header_ids\\[\\]]').remove();
-
-        // Append visible column information
-        $('table' + TABLE_ID + ' thead tr th').each(function() {
-          var th = $(this);
-          var val;
-          switch ($(th).attr('id')) {
-            case 'checkbox':
-              val = -1;
-              break;
-            case 'assigned':
-              val = -2;
-              break;
-            case 'row-id':
-              val = -3;
-              break
-            case 'row-name':
-              val = -4;
-              break;
-            case 'added-by':
-              val = -5;
-              break;
-            case 'added-on':
-              val = -6;
-              break;
-            default:
-              val = th.attr('id');
-          }
-
-          if (val) {
-            appendInput(form, val, 'header_ids[]');
-          }
-        });
-
-        // Append records
-        $.each(rowsSelected, function(index, rowId) {
-          appendInput(form, rowId, 'row_ids[]');
-        });
-      }
-    }).on('ajax:beforeSend', function() {
-      animateSpinner(null, true);
-    }).on('ajax:complete', function() {
-      $('#exportRepositoryModal').modal('hide');
-      animateSpinner(null, false);
-    }).on('ajax:success', function(ev, data) {
-      HelperModule.flashAlertMsg(data.message, 'success');
-    }).on('ajax:error', function(ev, data) {
-      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-    });
-  }
-
-  function disableCheckboxToggleOnAssetDownload() {
-    $('.file-preview-link').on('click', function(ev) {
-      ev.stopPropagation();
-    });
-  }
-
-  function appendInput(form, val, name) {
-    $(form).append(
-      $('<input>')
-      .attr('type', 'hidden')
-      .attr('name', name)
-      .val(val)
-    );
-  }
-
-  function initRowSelection() {
-    // Handle clicks on checkbox
-    $('.dt-body-center .repository-row-selector').change(function(e) {
-      if (currentMode !== 'viewMode') {
-        return false;
-      }
-    });
-
-    // hack to replace filter placeholder
-    $('.dataTables_filter .form-control').attr('placeholder', $('.dataTables_filter label').text())
-    $('.dataTables_filter label').contents().filter(function(){
-      return this.nodeType === 3;
-    }).remove();
-
-    // Handle click on table cells with checkboxes
-    $(TABLE_ID).on('click', 'tbody td', function(e) {
-      if ($(e.target).is('.repository-row-selector')) {
-        // Skip if clicking on selector checkbox
-        return;
-      }
       if (!$(e.target).is('.record-info-link')) {
         // Skip if clicking on samples info link
         $(this).parent().find('.repository-row-selector').trigger('click');
@@ -1468,8 +1346,8 @@ var RepositoryDatatable = (function(global) {
   function redrawTableOnSidebarToggle() {
     $('#sidebar-arrow').on('click', function() {
       setTimeout(function() {
-        adjustTableHeader();
-      }, 400);
+        TABLE.draw();
+      }, 250);
     });
   }
 
