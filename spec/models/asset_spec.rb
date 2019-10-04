@@ -17,10 +17,6 @@ describe Asset, type: :model do
     it { should have_db_column :id }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
-    it { should have_db_column :file_file_name }
-    it { should have_db_column :file_content_type }
-    it { should have_db_column :file_file_size }
-    it { should have_db_column :file_updated_at }
     it { should have_db_column :created_by_id }
     it { should have_db_column :last_modified_by_id }
     it { should have_db_column :estimated_size }

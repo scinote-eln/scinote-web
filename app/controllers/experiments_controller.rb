@@ -104,8 +104,6 @@ class ExperimentsController < ApplicationController
                       end
       log_activity(activity_type)
 
-      @experiment.touch(:workflowimg_updated_at)
-
       respond_to do |format|
         format.json do
           render json: {}, status: :ok

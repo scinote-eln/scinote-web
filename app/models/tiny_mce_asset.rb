@@ -18,20 +18,6 @@ class TinyMceAsset < ApplicationRecord
 
   has_one_attached :image
 
-  # has_attached_file :image,
-  #                   styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg] },
-  #                   convert_options: { large: '-quality 100 -strip' }
-
-  # validates_attachment_content_type :image,
-  #                                   content_type: %r{^image/#{ Regexp.union(
-  #                                     Constants::WHITELISTED_IMAGE_TYPES
-  #                                   ) }}
-  # validates_attachment :image,
-  #                      presence: true,
-  #                      size: {
-  #                        less_than: Rails.configuration.x\
-  #                                        .file_max_size_mb.megabytes
-  #                      }
   validates :estimated_size, presence: true
 
   def self.update_images(object, images, current_user)

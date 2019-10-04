@@ -27,10 +27,6 @@ describe Experiment, type: :model do
     it { should have_db_column :restored_on }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
-    it { should have_db_column :workflowimg_file_name }
-    it { should have_db_column :workflowimg_content_type }
-    it { should have_db_column :workflowimg_file_size }
-    it { should have_db_column :workflowimg_updated_at }
     it { should have_db_column :uuid }
   end
 
