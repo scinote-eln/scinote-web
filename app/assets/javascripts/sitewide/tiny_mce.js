@@ -278,7 +278,9 @@ var TinyMCE = (function() {
               .removeClass('hidden');
 
             // Set cursor to the end of the content
-            editor.focus();
+            if (editor.settings.id !== 'step_description_textarea') {
+              editor.focus();
+            }
             editor.selection.select(editor.getBody(), true);
             editor.selection.collapse(false);
 
