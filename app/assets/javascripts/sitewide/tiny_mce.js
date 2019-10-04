@@ -114,7 +114,7 @@ var TinyMCE = (function() {
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
           menubar: 'file edit view insert format',
-          toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
@@ -135,8 +135,7 @@ var TinyMCE = (function() {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
-          autosave_restore_when_empty: false,
-          autosave_interval: '1s',
+          autosave_interval: '15s',
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
           object_resizing: true,
@@ -314,9 +313,9 @@ var TinyMCE = (function() {
               menuBar.find('.tinymce-cancel-button').remove();
             });
 
-            editor.on('init', function(e) {
+            /* editor.on('init', function(e) {
               restoreDraftNotification(selector, editor);
-            });
+            });*/
           },
           codesample_content_css: $(selector).data('highlightjs-path')
         });
