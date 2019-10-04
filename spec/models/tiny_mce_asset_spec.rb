@@ -8,10 +8,6 @@ describe TinyMceAsset, type: :model do
   end
 
   describe 'Database table' do
-    it { should have_db_column :image_file_name }
-    it { should have_db_column :image_content_type }
-    it { should have_db_column :image_file_size }
-    it { should have_db_column :image_updated_at }
     it { should have_db_column :estimated_size }
     it { should have_db_column :object_id }
     it { should have_db_column :object_type }

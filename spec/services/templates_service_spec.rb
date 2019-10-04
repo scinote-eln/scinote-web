@@ -51,8 +51,8 @@ describe TemplatesService do
             expect(tmpl_res.name).to eq(demo_res.name)
             if demo_res.asset
               expect(tmpl_res.asset.file.attached?).to eq(true)
-              expect(demo_res.asset.file_file_name)
-                .to eq(tmpl_res.asset.file_file_name)
+              expect(demo_res.asset.file_name)
+                .to eq(tmpl_res.asset.file_name)
             elsif demo_res.table
               expect(demo_res.table.contents).to eq(tmpl_res.table.contents)
             elsif demo_res.result_text
@@ -71,8 +71,8 @@ describe TemplatesService do
             expect(demo_step.name).to eq(tmpl_step.name)
             expect(demo_step.description).to eq(tmpl_step.description)
             if demo_step.assets.present?
-              expect(demo_step.assets.pluck(:file_file_name))
-                .to match_array(tmpl_step.assets.pluck(:file_file_name))
+              expect(demo_step.assets.map(&:file_name))
+                .to match_array(tmpl_step.assets.map(&:file_name))
             end
             tmpl_step.assets.each do |asset|
               expect(asset.file.attached?).to eq(true)
