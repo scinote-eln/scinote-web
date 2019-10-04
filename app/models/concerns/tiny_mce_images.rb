@@ -65,6 +65,8 @@ module TinyMceImages
     def clone_tinymce_assets(target, team)
       cloned_img_ids = []
       tiny_mce_assets.each do |tiny_img|
+        next unless tiny_img.image.service.exist?(tiny_img.image.blob.key)
+
         tiny_img_clone = TinyMceAsset.create(
           estimated_size: tiny_img.estimated_size,
           object: target,
