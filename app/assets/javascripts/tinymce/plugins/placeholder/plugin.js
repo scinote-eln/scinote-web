@@ -46,7 +46,7 @@ tinymce.PluginManager.add('placeholder', function(editor) {
         label.hide();
       }
 
-      calculatePlaceholderPosition();
+      // calculatePlaceholderPosition();
     }
 
     function onKeydown() {
