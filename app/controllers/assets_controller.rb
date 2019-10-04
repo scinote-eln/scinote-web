@@ -198,7 +198,7 @@ class AssetsController < ApplicationController
     render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
 
     # Asset validation
-    asset = Asset.new(created_by: current_user)
+    asset = Asset.new(created_by: current_user, team: current_team)
     asset.file.attach(io: StringIO.new,
                       filename: "#{params[:file_name]}.#{params[:file_type]}",
                       content_type: wopi_content_type(params[:file_type]))
