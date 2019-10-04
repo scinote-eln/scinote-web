@@ -68,7 +68,9 @@ module ActiveStorage
     end
 
     def check_experiment_read_permissions
-      render_403 && return unless can_read_experiment?(@blob.attachments.first.record)
+      experiment = @blob.attachments.first.record
+      experiment.archived = false if experiment.archived
+      render_403 && return unless can_read_experiment?(experiment)
     end
 
     def check_zip_export_read_permissions
