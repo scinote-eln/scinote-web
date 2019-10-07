@@ -157,10 +157,11 @@ module ProtocolsImporter
 
       # Decode the file bytes
       file = StringIO.new(Base64.decode64(tiny_mce_img_json['bytes']))
-      tiny_mce_img.image.attach(io: file,
+      to_blob = ActiveStorage::Blob.create_after_upload!(io: file,
                                 filename: tiny_mce_img_json['fileName'],
                                 content_type: tiny_mce_img_json['fileType'],
                                 metadata: JSON.parse(tiny_mce_img_json['fileMetadata'] || '{}'))
+      tiny_mce_img.image.attach(to_blob)
       if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
                            "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
       else
