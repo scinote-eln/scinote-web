@@ -44,7 +44,7 @@ module ActiveStorage
       end
 
       def libreoffice_path
-        ENV['LIBREOFFICE_PATH'] || 'libreoffice'
+        ENV['LIBREOFFICE_PATH'] || 'soffice'
       end
     end
   end
