@@ -14,7 +14,6 @@
     background: $color-white;
     border: 1px solid $color-alto;
     border-radius: 4px;
-    box-shadow: inset 0 1px 2px 0 $md-color-shadow-light;
     display: flex;
     flex-wrap: wrap;
     min-height: 36px;
@@ -95,7 +94,7 @@
     background: $color-white;
     border: 1px solid $color-alto;
     border-radius: 0 0 4px 4px;
-    box-shadow: 0 0 0 0 $md-color-shadow-dark;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
     display: none;
     overflow: hidden;
     position: absolute;
@@ -227,7 +226,7 @@
 
     .dropdown-container {
       border-top: 0;
-      box-shadow: 0 1px 2px 0 $md-color-shadow-dark;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
       display: block;
       top: 100%;
     }
