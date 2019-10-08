@@ -2,8 +2,10 @@
 
 module ActiveStorage
   class Analyzer::CustomImageAnalyzer < Analyzer::ImageAnalyzer
+    JPEG_MIME_TYPES = ['image/jpeg', 'image/pjpeg'].freeze
+
     def self.accept?(blob)
-      ['image/jpeg', 'image/pjpeg'].include?(blob.content_type) && blob.attachments.take.record_type == 'Asset'
+      blob.content_type.in?(JPEG_MIME_TYPES) && blob.attachments.take.record_type == 'Asset'
     end
 
     def metadata
