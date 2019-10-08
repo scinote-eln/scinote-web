@@ -472,7 +472,7 @@
       });
 
       resultNames.reverse();
-
+      var counter = 0;
       for (let i = 0; i < numberOfFiles; i += 1) {
         let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
 
@@ -482,7 +482,8 @@
           } else {
             fd.append('results_names[' + i + ']', resultNames[i]);
             fd.append('results_files[' + i + '][signed_blob_id]', blob.signed_id);
-            if ((i + 1) === numberOfFiles) {
+            counter += 1;
+            if (counter === numberOfFiles) {
               submitResultForm($(ev.target).attr('data-href'), fd);
               destroyAll();
             }
