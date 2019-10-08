@@ -52,10 +52,10 @@ class UserDataDeletion
             end
             my_module.delete
           end
+
           # Destroy workflow image
-          if experiment.workflowimg.exists?
-            experiment.workflowimg.clear(:original)
-          end
+          experiment.workflowimg.purge
+
           experiment.activities.destroy_all
           experiment.report_elements.destroy_all
           experiment.my_module_groups.delete_all
