@@ -22,5 +22,9 @@ FactoryBot.define do
     trait :asset_type do
       data_type { :RepositoryAssetValue }
     end
+
+    trait :status_type do
+      data_type { :RepositoryStatusValue }
+    end
   end
 end

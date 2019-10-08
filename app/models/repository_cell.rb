@@ -33,6 +33,13 @@ class RepositoryCell < ActiveRecord::Base
              end),
              optional: true, foreign_key: :value_id
 
+  belongs_to :repository_status_value,
+             (lambda do
+               includes(:repository_cell)
+                 .where(repository_cells: { value_type: 'RepositoryStatusValue' })
+             end),
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+
   validates_inclusion_of :repository_column,
                          in: (lambda do |cell|
                            cell.repository_row&.repository&.repository_columns || []

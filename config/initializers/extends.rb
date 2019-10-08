@@ -45,7 +45,8 @@ class Extends
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
                             RepositoryDateValue: 1,
                             RepositoryListValue: 2,
-                            RepositoryAssetValue: 3 }
+                            RepositoryAssetValue: 3,
+                            RepositoryStatusValue: 4 }
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES

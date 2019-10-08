@@ -31,5 +31,12 @@ FactoryBot.define do
         repository_cell.value ||= build(:repository_asset_value, repository_cell: repository_cell)
       end
     end
+
+    trait :status_value do
+      repository_column { create :repository_column, :status_type, repository: repository_row.repository }
+      after(:build) do |repository_cell|
+        repository_cell.value ||= build(:repository_status_value, repository_cell: repository_cell)
+      end
+    end
   end
 end
