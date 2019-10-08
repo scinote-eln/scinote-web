@@ -15,8 +15,6 @@ class Asset < ApplicationRecord
   # ActiveStorage configuration
   has_one_attached :file
 
-  # before_post_process :extract_image_quality
-
   # Asset validation
   # This could cause some problems if you create empty asset and want to
   # assign it to result
@@ -202,18 +200,6 @@ class Asset < ApplicationRecord
       to_asset.file.attach(to_blob)
     end
     to_asset.post_process_file(to_asset.team)
-  end
-
-  def extract_image_quality
-    return unless ['image/jpeg', 'image/pjpeg'].include? content_type
-
-    tempfile = file.queued_for_write[:original]
-    unless tempfile.nil?
-      quality = Paperclip::Processor.new(tempfile).identify(" -format '%Q' #{tempfile.path}")
-      self.file_image_quality = quality.to_i
-    end
-  rescue StandardError => e
-    Rails.logger.info "There was an error extracting image quality - #{e}"
   end
 
   def image?

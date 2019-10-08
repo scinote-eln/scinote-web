@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 require 'active_storage/previewer/libreoffice_previewer'
+require 'active_storage/analyzer/custom_image_analyzer'
 require 'active_storage/downloader'
 
 Rails.application.config.active_storage.previewers = [ActiveStorage::Previewer::PopplerPDFPreviewer,
                                                       ActiveStorage::Previewer::LibreofficePreviewer]
+
+Rails.application.config.active_storage.analyzers.prepend(ActiveStorage::Analyzer::CustomImageAnalyzer)
 
 Rails.application.config.active_storage.variable_content_types << 'image/svg+xml'
 
