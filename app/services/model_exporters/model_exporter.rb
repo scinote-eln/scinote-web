@@ -6,7 +6,6 @@ module ModelExporters
   class ModelExporter
     attr_accessor :assets_to_copy
     attr_accessor :tiny_mce_assets_to_copy
-    include ActiveStorage::Downloading
 
     def initialize
       @assets_to_copy = []
@@ -21,7 +20,6 @@ module ModelExporters
         destination_path = File.join(dir, a.file_name)
 
         blob.open do |file|
-          system '/path/to/virus/scanner', file.path
           FileUtils.cp(file.path, destination_path)
         end
 
