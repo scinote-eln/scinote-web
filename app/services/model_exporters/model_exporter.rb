@@ -6,7 +6,7 @@ module ModelExporters
   class ModelExporter
     attr_accessor :assets_to_copy
     attr_accessor :tiny_mce_assets_to_copy
-    include ActiveStorage::Downloading
+
 
     def initialize
       @assets_to_copy = []

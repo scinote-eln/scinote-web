@@ -8,6 +8,11 @@ class Asset < ApplicationRecord
   include ActiveStorageFileUtil
   include ActiveStorageConcerns
 
+  attr_accessor :file_file_name
+  attr_accessor :file_file_size
+  attr_accessor :file_content_type
+  attr_accessor :file_updated_at
+
   require 'tempfile'
   # Lock duration set to 30 minutes
   LOCK_DURATION = 60 * 30
