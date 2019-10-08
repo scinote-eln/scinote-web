@@ -67,9 +67,8 @@ class Activity < ApplicationRecord
       subject_labels = []
       filters[:subjects].each do |object, values|
         values.each do |value|
-          label = I18n.t('global_activities.subject_name.' + object.downcase.to_s)\
-                + ': ' + object.to_s.constantize.find_by_id(value).name
-          subject_labels.push("{\"id\": \"#{object}_#{value}\", \"label\": \"#{label}\"}")
+          label = object.to_s.constantize.find_by_id(value).name
+          subject_labels.push({ value: value, label: label, object: object.downcase, group: '' }.as_json)
         end
       end
       result.push(subject_labels.to_query('subject_labels'))

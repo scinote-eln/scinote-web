@@ -563,7 +563,7 @@ class User < ApplicationRecord
     User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
-        .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
+        .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
   end
 
   def file_name
