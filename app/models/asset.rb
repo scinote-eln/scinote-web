@@ -396,8 +396,7 @@ class Asset < ApplicationRecord
   end
 
   def update_contents(new_file)
-    to_blob = ActiveStorage::Blob.create_after_upload!(io: new_file, filename: file_name)
-    file.attach(to_blob)
+    file.attach(io: new_file, filename: file_name)
     self.version = version.nil? ? 1 : version + 1
     save
   end
