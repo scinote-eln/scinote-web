@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'fileutils'
-require 'active_storage/downloading'
 
 module ModelExporters
   class ModelExporter
