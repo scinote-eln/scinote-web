@@ -8,6 +8,7 @@ describe RepositoryCell, type: :model do
   let(:repository_cell_d) { build :repository_cell, :date_value }
   let(:repository_cell_l) { build :repository_cell, :list_value }
   let(:repository_cell_a) { build :repository_cell, :asset_value }
+  let(:repository_cell_s) { build :repository_cell, :status_value }
 
   context 'when do not have value' do
     it 'is not valid' do
@@ -30,6 +31,10 @@ describe RepositoryCell, type: :model do
 
     it 'is valid for asset value' do
       expect(repository_cell_a).to be_valid
+    end
+
+    it 'is valid for asset value' do
+      expect(repository_cell_s).to be_valid
     end
   end
 
