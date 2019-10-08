@@ -15,22 +15,15 @@ module ModelExporters
     def copy_files(assets, attachment_name, dir_name)
       assets.flatten.each do |a|
         next unless a.public_send(attachment_name).attached?
+        blob = a.public_send(attachment_name).blob
+        dir = FileUtils.mkdir_p(File.join(dir_name, a.id.to_s)).first
+        destination_path = File.join(dir, a.file_name)
+
+        blob.open do |file|
+          FileUtils.cp(file.path, destination_path)
+        end
 
         yield if block_given?
-        dir = FileUtils.mkdir_p(File.join(dir_name, a.id.to_s)).first
-
-        tempfile = Tempfile.new
-        tempfile.binmode
-        a.public_send(attachment_name).blob.download { |chunk| tempfile.write(chunk) }
-        tempfile.flush
-        tempfile.rewind
-        FileUtils.cp(
-          tempfile.path,
-          File.join(dir, a.file_name)
-        )
-      ensure
-        tempfile.close
-        tempfile.unlink
       end
     end
 
