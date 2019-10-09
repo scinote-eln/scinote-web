@@ -44,6 +44,9 @@ class UpdateIndexesForFasterSearch < ActiveRecord::Migration[4.2]
       if index_name_exists? :reports, :index_reports_on_description
         remove_index :reports, name: :index_reports_on_description
       end
+      if index_name_exists?(:assets, :index_assets_on_file_file_name)
+        remove_index :assets, name: :index_assets_on_file_file_name
+      end
       if index_name_exists? :samples, :index_samples_on_name
         remove_index :samples, name: :index_samples_on_name
       end
@@ -112,6 +115,7 @@ class UpdateIndexesForFasterSearch < ActiveRecord::Migration[4.2]
       add_gin_index_without_tags :result_texts, :text
       add_gin_index_without_tags :reports, :name
       add_gin_index_without_tags :reports, :description
+      add_gin_index_without_tags :assets, :file_file_name
       add_gin_index_without_tags :samples, :name
       add_gin_index_without_tags :sample_types, :name
       add_gin_index_without_tags :sample_groups, :name
@@ -147,6 +151,7 @@ class UpdateIndexesForFasterSearch < ActiveRecord::Migration[4.2]
       remove_index :result_texts, :text
       remove_index :reports, :name
       remove_index :reports, :description
+      remove_index :assets, :file_file_name
       remove_index :samples, :name
       remove_index :sample_types, :name
       remove_index :sample_groups, :name
