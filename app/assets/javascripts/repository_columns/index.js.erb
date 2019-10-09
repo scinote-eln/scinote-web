@@ -20,13 +20,16 @@
               $('.modal-backdrop').remove();
             });
 
-            _initTagInput();
+            _initColumnTypeSelector();
+            $('#repository_column_data_type').val($(modalID).attr('data-edit-type')).trigger('click');;
+            $('#repository_column_data_type').prop('disabled', true);
             setTimeout(function() {
               $('#repository_column_name').focus();
             }, 500)
 
             if($(modalID).attr('data-edit-type') === 'RepositoryListValue') {
               var values = JSON.parse($(tagsInputID).attr('data-value'));
+              $('#repository_column_data_type').val('RepositoryListValue');
               $(colRadID).click().promise().done(function() {
                 $.each(values, function(index, element) {
                   $(tagsInputID).tagsinput('add', element);
@@ -35,7 +38,7 @@
             }
 
             $('[data-action="save"]').on('click', function() {
-              if($(colRadID).is(':checked')) {
+              if($('#repository_column_data_type').val() === 'RepositoryListValue') {
                 $('#list_items').val($(tagsInputID).val());
               }
 
@@ -85,19 +88,28 @@
               $('.modal-backdrop').remove();
             });
 
-            _initTagInput();
+            _initColumnTypeSelector();
+            $('[data-column-type="RepositoryTextValue"]').show();
             setTimeout(function() {
               $('#repository_column_name').focus();
             }, 500);
 
             $('[data-action="save"]').on('click', function() {
-              var colRad = '#repository_column_data_type_repositorylistvalue';
-              if($(colRad).is(':checked')) {
-                $('#list_items')
-                  .val($('[data-role="tagsinput"]').val());
-              }
-              var form = $('[data-role="manage-repository-column-form"]');
-              _processResponse(form, 'create', modalID);
+              var url = $('#repository_column_data_type').find(':selected').data('create-url')
+              $.ajax({
+                url: url,
+                data: { repository_column: { name: $('#repository_column_name').val() }},
+                type: 'POST',
+                success: function(data) {
+                  _insertNewListItem(data);
+                  HelperModule.flashAlertMsg(data.message, 'success');
+                  if (modalID) {
+                    $(modalID).modal('hide');
+                  }
+                },
+                error: function(xhr) {
+                }
+              });
             });
           });
         });
@@ -139,21 +151,18 @@
       .find('span.pull-left').text(column.name);
   }
 
-  function _initTagInput() {
+  function _initColumnTypeSelector() {
     $('[name="repository_column[data_type]"]')
       .on('click', function() {
-        var listValueId = 'repository_column_data_type_repositorylistvalue';
-        if($(this).attr('id') === listValueId) {
-          $('[data-role="tagsinput"]').tagsinput({
-            maxChars: <%= Constants::NAME_MAX_LENGTH %>,
-            trimValue: true
-          });
-          $('.bootstrap-tagsinput').show();
-          $('[data-role="tagsimput-label"]').show();
-        } else {
-          $('.bootstrap-tagsinput').hide();
-          $('[data-role="tagsimput-label"]').hide();
-        }
+        $('.column-type').hide();
+        $('[data-column-type="'+$(this).val()+'"]').show();
+    });
+  }
+
+  function _initTagInput() {
+    $('[data-role="tagsinput"]').tagsinput({
+      maxChars: <%= Constants::NAME_MAX_LENGTH %>,
+      trimValue: true
     });
   }
 
