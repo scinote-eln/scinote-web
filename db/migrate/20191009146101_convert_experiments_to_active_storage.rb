@@ -33,6 +33,7 @@ class ConvertExperimentsToActiveStorage < ActiveRecord::Migration[5.2]
 
         model.find_each.each do |instance|
           attachments.each do |attachment|
+            next if instance.workflowimg.attached?
             next if instance.__send__("#{attachment}_file_name").blank?
 
             res = ActiveRecord::Base.connection.raw_connection.exec_prepared(
