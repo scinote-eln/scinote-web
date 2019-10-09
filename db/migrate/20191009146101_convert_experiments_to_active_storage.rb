@@ -8,14 +8,14 @@ class ConvertExperimentsToActiveStorage < ActiveRecord::Migration[5.2]
   MODELS = [Experiment].freeze
 
   def up
-    ActiveRecord::Base.connection.raw_connection.prepare('active_storage_blob_statement', <<-SQL)
+    ActiveRecord::Base.connection.raw_connection.prepare('active_storage_exp_blob_statement', <<-SQL)
       INSERT INTO active_storage_blobs (
         key, filename, content_type, metadata, byte_size, checksum, created_at
       ) VALUES ($1, $2, $3, '{}', $4, $5, $6)
       RETURNING id;
     SQL
 
-    ActiveRecord::Base.connection.raw_connection.prepare('active_storage_attachment_statement', <<-SQL)
+    ActiveRecord::Base.connection.raw_connection.prepare('active_storage_exp_attachment_statement', <<-SQL)
       INSERT INTO active_storage_attachments (
         name, record_type, record_id, blob_id, created_at
       ) VALUES ($1, $2, $3, $4, $5)
@@ -36,7 +36,7 @@ class ConvertExperimentsToActiveStorage < ActiveRecord::Migration[5.2]
             next if instance.__send__("#{attachment}_file_name").blank?
 
             res = ActiveRecord::Base.connection.raw_connection.exec_prepared(
-              'active_storage_blob_statement', [
+              'active_storage_exp_blob_statement', [
                 key(instance, attachment),
                 instance.__send__("#{attachment}_file_name"),
                 instance.__send__("#{attachment}_content_type"),
@@ -47,7 +47,7 @@ class ConvertExperimentsToActiveStorage < ActiveRecord::Migration[5.2]
             )
 
             ActiveRecord::Base.connection.raw_connection.exec_prepared(
-              'active_storage_attachment_statement', [
+              'active_storage_exp_attachment_statement', [
                 attachment,
                 model.name,
                 instance.id,
