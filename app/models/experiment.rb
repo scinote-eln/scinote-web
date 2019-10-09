@@ -2,11 +2,6 @@ class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
-  attr_accessor :workflowimg_file_name
-  attr_accessor :workflowimg_file_size
-  attr_accessor :workflowimg_content_type
-  attr_accessor :workflowimg_updated_at
-
 
   belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
