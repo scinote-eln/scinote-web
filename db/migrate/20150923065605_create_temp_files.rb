@@ -5,5 +5,6 @@ class CreateTempFiles < ActiveRecord::Migration[4.2]
 
       t.timestamps null: false
     end
+    add_attachment :temp_files, :file
   end
 end
