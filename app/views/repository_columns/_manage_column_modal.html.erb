@@ -17,47 +17,60 @@
         </h4>
       </div>
       <div class="modal-body">
-        <%= bootstrap_form_for @repository_column,
-                               url: form_url(@repository, @repository_column),
-                               remote: true,
-                               data: { role: "manage-repository-column-form" } do |f| %>
-          <%= hidden_field_tag :list_items %>
-          <%= f.text_field :name %>
-          <%= f.form_group :data_type, label: { text: t('libraries.manange_modal_column.colum_type') } do %>
-            <br />
-            <span id="repository-column-types-list">
-              <%= f.radio_button :data_type,
-                                 'RepositoryTextValue'.freeze,
-                                 label: t('libraries.manange_modal_column.labels.text'),
-                                 inline: true,
-                                 checked: checked?(@repository_column, 'RepositoryTextValue'.freeze),
-                                 disabled: disabled?(@repository_column, 'RepositoryTextValue'.freeze) %>
-              <%= f.radio_button :data_type,
-                                 'RepositoryAssetValue'.freeze,
-                                 label: t('libraries.manange_modal_column.labels.file'),
-                                 inline: true,
-                                 checked: checked?(@repository_column, 'RepositoryAssetValue'.freeze),
-                                 disabled: disabled?(@repository_column, 'RepositoryAssetValue'.freeze) %>
-              <%= f.radio_button :data_type,
-                                 'RepositoryListValue'.freeze,
-                                 label: t('libraries.manange_modal_column.labels.dropdown'),
-                                 inline: true,
-                                 checked: checked?(@repository_column, 'RepositoryListValue'.freeze),
-                                 disabled: disabled?(@repository_column, 'RepositoryListValue'.freeze) %>
-            </span>
-          <% end %>
-          <input class="form-control"
-                 data-role="tagsinput"
-                 style="display: none"
-                 data-value="<%= @repository_column.repository_list_items.pluck(:data) %>"
-                 />
-          <br />
-          <span style="display: none" data-role="tagsimput-label"><%=t 'libraries.manange_modal_column.dropdown_item_descirption' %></span>
-        <% end %>
+        <div class="form-horizontal" id="new_repository_column">
+          <div class="form-group">
+            <label class="control-label col-sm-3" for="repository_column_name">
+              <%= t('libraries.manange_modal_column.name') %>
+            </label>
+            <div class="col-sm-9">
+              <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
+                     class="form-control"
+                     type="text"
+                     name="repository_column[name]"
+                     id="repository_column_name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3" for="repository_column_data_type">
+              <%= t('libraries.manange_modal_column.colum_type') %>
+            </label>
+            <div class="col-sm-9">
+              <select class="form-control" name="repository_column[data_type]" id="repository_column_data_type">
+                <option data-create-url="<%= repository_create_text_path(@repository) %>" value="RepositoryTextValue">
+                  <%= t('libraries.manange_modal_column.select.repository_text_value') %>
+                </option>
+                <option data-create-url="<%= repository_create_date_path(@repository) %>" value="RepositoryDateValue">
+                  <%= t('libraries.manange_modal_column.select.repository_date_value') %>
+                </option>
+                <option data-create-url="<%= repository_create_list_path(@repository) %>" value="RepositoryListValue">
+                  <%= t('libraries.manange_modal_column.select.repository_list_value') %>
+                </option>
+                <option data-create-url="<%= repository_create_asset_path(@repository) %>" value="RepositoryAssetValue">
+                  <%= t('libraries.manange_modal_column.select.repository_asset_value') %>
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <hr/>
+          <span style="display: none" class="column-type" data-column-type="RepositoryTextValue">
+            <%= render partial: "repository_columns/manage_column_partials/text.html.erb" %>
+          </span>
+          <span style="display: none" class="column-type" data-column-type="RepositoryAssetValue">
+            <%= render partial: "repository_columns/manage_column_partials/asset.html.erb" %>
+          </span>
+          <span style="display: none" class="column-type" data-column-type="RepositoryListValue">
+            <%= render partial: "repository_columns/manage_column_partials/list.html.erb" %>
+          </span>
+          <span style="display: none" class="column-type" data-column-type="RepositoryDateValue">
+            <%= render partial: "repository_columns/manage_column_partials/date.html.erb" %>
+          </span>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
-        <button type="button" class="btn btn-success" data-action="save"><%= t("general.save") %></button>
+        <button class="btn btn-success" data-action="save">
+          <%= t("libraries.manange_modal_column.new.button") %>
+        </button>
       </div>
     </div>
   </div>
