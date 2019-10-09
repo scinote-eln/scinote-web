@@ -50,9 +50,6 @@ class Asset < ApplicationRecord
 
   attr_accessor :file_content, :file_info, :in_template
 
-  attr_accessor :file_file_name
-  attr_accessor :file_file_size
-
   def self.search(
     user,
     include_archived,
