@@ -236,11 +236,6 @@ class ExperimentsController < ApplicationController
   end
 
   def updated_img
-    if @experiment.workflowimg_file_name.present? && !@experiment.workflowimg.attached?
-      @experiment.generate_workflow_img
-      @experiment.update(workflowimg_file_name: nil)
-    end
-
     if @experiment.workflowimg.attached? && !@experiment.workflowimg_exists?
       @experiment.workflowimg.purge
       @experiment.generate_workflow_img
