@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
+class ConvertExperimentsToActiveStorage < ActiveRecord::Migration[5.2]
   require 'open-uri'
 
   ID_PARTITION_LIMIT = 1_000_000_000
   DIGEST = OpenSSL::Digest.const_get('SHA1').new
-  MODELS = [Asset, TempFile, TinyMceAsset, User, ZipExport].freeze
+  MODELS = [Experiment].freeze
 
   def up
     ActiveRecord::Base.connection.raw_connection.prepare('active_storage_blob_statement', <<-SQL)
