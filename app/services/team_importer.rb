@@ -799,13 +799,7 @@ class TeamImporter
 
     asset = Asset.new(asset_info)
     asset_blob = asset_json['asset_blob']
-    ### Fix for support templates
-    asset_file_name = if asset_blob
-                        asset_blob['filename']
-                      else
-                        asset_json['file_file_name']
-                      end
-    file = File.open("#{@import_dir}/assets/#{asset.id}/#{asset_file_name}")
+    file = File.open("#{@import_dir}/assets/#{asset.id}/#{asset_blob['filename']}")
     orig_asset_id = asset.id
     asset.id = nil
     asset.created_by_id = user_id || find_user(asset.created_by_id)
