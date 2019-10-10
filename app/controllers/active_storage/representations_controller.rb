@@ -30,7 +30,7 @@ module ActiveStorage
       return true if preview_exists
 
       unless processing
-        ActiveStorage::PreviewJob.perform_later(@blob.id, params[:variation_key])
+        ActiveStorage::PreviewJob.perform_later(@blob.id)
         @blob.attachments.take.record.update(file_processing: true)
       end
 
