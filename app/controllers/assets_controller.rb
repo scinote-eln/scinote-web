@@ -203,6 +203,9 @@ class AssetsController < ApplicationController
                       filename: "#{params[:file_name]}.#{params[:file_type]}",
                       content_type: wopi_content_type(params[:file_type]))
 
+    # Prepare file preview in advance
+    asset.medium_preview.processed && asset.large_preview.processed
+
     unless asset.valid?(:wopi_file_creation)
       render json: {
         message: asset.errors
