@@ -80,6 +80,7 @@ module ActiveStorage
     end
 
     def delete_prefixed(prefix)
+      prefix = subfolder.present? ? File.join(subfolder, prefix) : prefix
       instrument :delete_prefixed, prefix: prefix do
         bucket.objects(prefix: prefix).batch_delete!
       end
