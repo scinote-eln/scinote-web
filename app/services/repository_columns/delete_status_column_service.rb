@@ -7,6 +7,16 @@ module RepositoryColumns
       @column = column
     end
 
-    def call; end
+    def call
+      ActiveRecord::Base.transaction do
+        log_activity(:delete_column_inventory)
+        @column.destroy!
+      rescue ActiveRecord::RecordNotDestroyed
+        errors[:repository_column] = 'record cannot be destroyed'
+        raise ActiveRecord::Rollback
+      end
+
+      self
+    end
   end
 end
