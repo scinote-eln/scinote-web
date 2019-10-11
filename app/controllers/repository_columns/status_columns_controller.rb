@@ -51,7 +51,7 @@ module RepositoryColumns
                 .call(user: current_user,
                       team: current_team,
                       column: @repository_column,
-                      params: repository_column_params)
+                      params: update_repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :ok
@@ -85,6 +85,14 @@ module RepositoryColumns
 
     private
 
+    def repository_column_params
+      params.require(:repository_column).permit(:name, repository_status_items_attributes: %i(status icon))
+    end
+
+    def update_repository_column_params
+      params.require(:repository_column).permit(repository_status_items_attributes: %i(id status icon _destroy))
+    end
+
     def load_repository
       @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id])
       render_404 unless @repository
@@ -93,10 +101,6 @@ module RepositoryColumns
     def load_column
       @repository_column = @repository.repository_columns.find_by(id: params[:id])
       render_404 unless @repository_column
-    end
-
-    def repository_column_params
-      params.require(:repository_column).permit(:name, repository_status_items_attributes: %i(status icon))
     end
 
     def check_create_permissions
