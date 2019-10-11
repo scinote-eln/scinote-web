@@ -16,46 +16,23 @@
                 <%= devise_error_messages! %>
               </div>
             <% end %>
-            <%= form_for(resource,
-                         as: resource_name,
-                         url: registration_path(resource_name),
-                         html: { method: :put, "data-for" => "avatar", id: 'user-avatar-field' }) do |f| %>
-              <%= hidden_field_tag "user[change_avatar]", "true" %>
               <div data-part="view">
-                <div class="form-group">
-                  <%= f.label t("users.registrations.edit.avatar_label") %><br />
+                <div class="form-group user-settings-edit-avatar">
+                  <%= t("users.registrations.edit.avatar_label") %><br>
                   <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
                   <div class="avatar-container">
-                    <a href="#" data-action="edit">
-                      <div class="avatar-image">
+                    <div class="avatar-image">
                         <%= image_tag @user_avatar_url %>
-                      </div>
-                      <div class="avatar-edit">
+                    </div>
+                    <div class="avatar-edit">
                         <div class="btn btn-grey btn-sm">
                           <span class="fas fa-pencil-alt"></span>
-                          <%=t "users.registrations.edit.avatar_btn" %>
-                        </div>
+                        <%=t "users.registrations.edit.avatar_btn" %>
                       </div>
-                    </a>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div data-part="edit" style="display: none;">
-                <div class="well">
-                  <h4><%=t "users.registrations.edit.avatar_title" %></h4>
-                  <div class="new-avatar-preview-container" style="display:none"></div>
-                  <div class="form-group avatar-file-upload">
-                    <%= f.label :avatar, t("users.registrations.edit.avatar_edit_label") %>
-                    <%= f.file_field :raw_avatar, class: "btn btn-default" %>
-                    <%= hidden_field_tag "user[avatar]", "" %>
-                  </div>
-                  <div class="align-right">
-                    <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-success' %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
             <%= form_for(resource,
                          as: resource_name,
                          url: registration_path(resource_name, format: :json),
@@ -234,6 +211,8 @@
     </div>
   </div>
 </div>
+
+<%= render partial: 'users/shared/user_avatars_modal' %>
 
 <%= javascript_pack_tag 'custom/croppie' %>
 <%= stylesheet_pack_tag 'custom/croppie_styles' %>

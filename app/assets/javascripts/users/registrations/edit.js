@@ -68,27 +68,6 @@
       $(this).renderFormErrors('user', data.responseJSON);
     });
 
-  $('#user_raw_avatar').change(function() {
-    var reader = new FileReader();
-    var inputField = this;
-    var croppieContainer;
-
-    reader.readAsDataURL(inputField.files[0]);
-    reader.onload = function() {
-      $('#user_avatar').val(reader.result);
-      $('.new-avatar-preview-container').css('display', '').children().remove();
-      $('<img class="new-avatar-cropping-preview" src="' + reader.result + '"></img>').appendTo('.new-avatar-preview-container');
-      croppieContainer = $('.new-avatar-cropping-preview');
-      croppieContainer.croppie({ viewport: { type: 'circle' } });
-      $('.new-avatar-preview-container').off('update.croppie').on('update.croppie', function() {
-        croppieContainer.croppie('result', { type: 'base64', format: 'jpeg', circle: false })
-          .then(function(image) {
-            $('#user_avatar').val(image);
-          });
-      });
-    };
-  });
-
   $('#user-avatar-field :submit').click(function(ev) {
     var $form = $(ev.target.form);
     var $fileInput = $form.find('input[type=file]');
