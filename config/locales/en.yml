@@ -1410,8 +1410,8 @@ en:
       edit:
         head_title: "My profile"
         title: "My profile"
-        avatar_label: "Avatar"
-        avatar_btn: "Edit Avatar"
+        avatar_label: "Profile photo"
+        avatar_btn: "Edit photo"
         avatar_modal:
           title: 'Change your profile photo'
           upload_button: 'Upload a photo'
