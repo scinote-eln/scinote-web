@@ -3,7 +3,6 @@
 module RepositoryColumns
   class CreateColumnService
     extend Service
-    include Canaid::Helpers::PermissionsHelper
 
     attr_reader :errors, :column
 
