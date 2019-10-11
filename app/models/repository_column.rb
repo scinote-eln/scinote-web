@@ -8,7 +8,7 @@ class RepositoryColumn < ApplicationRecord
   has_many :repository_list_items, dependent: :destroy
   has_many :repository_status_items, dependent: :destroy, index_errors: true
 
-  accepts_nested_attributes_for :repository_status_items
+  accepts_nested_attributes_for :repository_status_items, allow_destroy: true
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
