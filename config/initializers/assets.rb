@@ -93,7 +93,6 @@ Rails.application.config.assets.precompile +=
   %w(repositories/my_module_repository.js)
 Rails.application.config.assets.precompile += %w(activities/index.js)
 Rails.application.config.assets.precompile += %w(global_activities/index.js)
-Rails.application.config.assets.precompile += %w(repository_columns/index.js)
 Rails.application.config.assets.precompile += %w(repositories/show.js)
 Rails.application.config.assets.precompile += %w(sidebar_toggle.js)
 Rails.application.config.assets.precompile += %w(reports/reports_datatable.js)
