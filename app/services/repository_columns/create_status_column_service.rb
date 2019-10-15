@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class CreateStatusColumnService < RepositoryColumns::CreateColumnService
+  class CreateStatusColumnService < RepositoryColumns::ColumnService
     def initialize(user:, repository:, params:, team:)
       super(user: user, repository: repository, team: team, column_name: params[:name])
       @params = params

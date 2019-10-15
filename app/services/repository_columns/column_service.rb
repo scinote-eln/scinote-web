@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class CreateColumnService
+  class ColumnService
     extend Service
 
     attr_reader :errors, :column

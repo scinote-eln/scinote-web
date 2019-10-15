@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class CreateListColumnService < CreateColumnService
+  class CreateListColumnService < ColumnService
     def initialize(user, repository_id, name, list_items)
       super(user, repository_id, name)
       @list_items = list_items
