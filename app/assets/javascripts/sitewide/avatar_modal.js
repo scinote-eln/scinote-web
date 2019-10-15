@@ -84,7 +84,7 @@ var avatarsModal = (function() {
 
   return {
     init: () => {
-      if ($('.modal-user-avatar').length > 0) {
+      if ($(modal).length > 0) {
         initUploadPhotoButton();
         initCropTool();
         initPredefinedAvatars();
