@@ -577,6 +577,9 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
+      namespace :repository_columns do
+        resources :status_columns, only: %i(create update destroy)
+      end
     end
 
     post 'available_rows', to: 'repository_rows#available_rows',

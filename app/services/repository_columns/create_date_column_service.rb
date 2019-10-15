@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class CreateDateColumnService < CreateColumnService
+  class CreateDateColumnService < ColumnService
     def initialize(user, repository_id, name)
       super(user, repository_id, name)
     end

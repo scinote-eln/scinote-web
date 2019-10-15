@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class CreateColumnService
+  class ColumnService
     extend Service
-    include Canaid::Helpers::PermissionsHelper
 
-    attr_reader :errors
+    attr_reader :errors, :column
 
-    def initialize(user, repository, name)
+    def initialize(user:, repository:, column_name:, team:)
       @user = user
       @repository = repository
-      @name = name
+      @column_name = column_name
+      @team = team
       @errors = {}
+      @column = nil
     end
 
     def call
@@ -34,18 +35,28 @@ module RepositoryColumns
           end.compact
       end
 
-      @errors[:user_without_permissions] = :forbidden unless can_create_repository_columns?(@user, @repository)
-
       succeed?
     end
 
     def create_base_column(type)
       @column = RepositoryColumn.new(
-        repository_id: @repository_id,
+        repository: @repository,
         created_by: @user,
-        name: @name,
+        name: @column_name,
         data_type: type
       )
+    end
+
+    def log_activity(type)
+      Activities::CreateActivityService
+        .call(activity_type: type,
+              owner: @user,
+              subject: @repository,
+              team: @team,
+              message_items: {
+                repository_column: @column.id,
+                repository: @repository.id
+              })
     end
   end
 end

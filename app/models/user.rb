@@ -214,6 +214,26 @@ class User < ApplicationRecord
   has_many :assigned_my_module_repository_rows,
            class_name: 'MyModuleRepositoryRow',
            foreign_key: 'assigned_by_id'
+  has_many :created_repositroy_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repositroy_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repositroy_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repositroy_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
