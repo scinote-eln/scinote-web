@@ -7,20 +7,6 @@ module RepositoryColumns
     before_action :check_create_permissions, only: :create
     before_action :check_manage_permissions, only: %i(update destroy)
 
-    # modal popup
-    # def new
-    #   @repository_column = RepositoryColumn.new
-    #   respond_to do |format|
-    #     format.json do
-    #       render json: {
-    #         html: render_to_string(
-    #           partial: 'repository_columns/manage_column_modal.html.erb'
-    #         )
-    #       }
-    #     end
-    #   end
-    # end
-
     def create
       service = RepositoryColumns::CreateStatusColumnService
                 .call(user: current_user, repository: @repository, team: current_team, params: repository_column_params)
@@ -31,19 +17,6 @@ module RepositoryColumns
         render json: service.errors, status: :unprocessable_entity
       end
     end
-
-    # modal popup
-    # def edit
-    #   respond_to do |format|
-    #     format.json do
-    #       render json: {
-    #         html: render_to_string(
-    #           partial: 'repository_columns/manage_column_modal.html.erb'
-    #         )
-    #       }
-    #     end
-    #   end
-    # end
 
     def update
       service = RepositoryColumns::UpdateStatusColumnService
@@ -58,18 +31,6 @@ module RepositoryColumns
         render json: service.errors, status: :unprocessable_entity
       end
     end
-
-    # def destroy_html
-    #   respond_to do |format|
-    #     format.json do
-    #       render json: {
-    #         html: render_to_string(
-    #           partial: 'repository_columns/delete_column_modal_body.html.erb'
-    #         )
-    #       }
-    #     end
-    #   end
-    # end
 
     def destroy
       service = RepositoryColumns::DeleteStatusColumnService
