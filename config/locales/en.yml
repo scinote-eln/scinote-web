@@ -1990,6 +1990,9 @@ en:
       removed: "(removed)"
       deleted: "(deleted)"
 
+  dropdown_selector:
+    nothing_found: "Nothing found..."
+
   zip_export:
     modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
