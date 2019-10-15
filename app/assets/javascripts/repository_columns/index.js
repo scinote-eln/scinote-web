@@ -233,9 +233,11 @@ var RepositoryColumns = (function() {
 
   return {
     init: () => {
-      initEditCoumnModal();
-      initDeleteColumnModal();
-      initNewColumnModal();
+      if ($('#manageRepositoryColumn').length > 0) {
+        initEditCoumnModal();
+        initDeleteColumnModal();
+        initNewColumnModal();
+      }
     }
   };
 }());
