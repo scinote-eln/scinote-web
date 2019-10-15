@@ -12,7 +12,8 @@
         <h2><strong><%=t 'libraries.repository_columns.index.manage_column' %></strong></h2>
       </div>
       <div class="col-md-6 text-right">
-        <button class="btn btn-primary help_tooltips"
+        <button id="new-repo-column-modal"
+                class="btn btn-primary help_tooltips"
                 data-modal-url="<%= repository_columns_create_html_path(@repository) %>"
                 data-action="new-column-modal"
                 data-tooltiplink="<%= I18n.t('tooltips.link.inventory.manage_columns') %>"
@@ -41,11 +42,11 @@
               </div>
               <div class="col-xs-4">
                 <span class="controlls pull-right">
-                  <button class="btn btn-default" data-action="edit">
+                  <button class="btn btn-default edit-repo-column" data-action="edit">
                     <span class="fas fa-pencil-alt"></span>
                     <%=t 'libraries.repository_columns.index.edit_column'%>
                   </button>&nbsp;
-                  <button class="btn btn-default delete-column" data-action="destroy">
+                  <button class="btn btn-default delete-repo-column" data-action="destroy">
                     <span class="fas fa-trash-alt"></span>
                     <%=t 'libraries.repository_columns.index.delete_column'%>
                   </button>
