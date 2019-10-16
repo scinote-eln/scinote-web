@@ -371,6 +371,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     context 'when resultType is file' do
       let(:result_file) { @valid_task.results.last }
       let(:file) { fixture_file_upload('files/test.jpg', 'image/jpg') }
+      let(:second_file) { fixture_file_upload('files/apple.jpg', 'image/jpg') }
       let(:request_body) do
         {
           data: {
@@ -406,6 +407,37 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
 
         it 'returns status 200' do
           action
+
+          expect(response).to have_http_status 200
+        end
+      end
+
+      context 'when has new image for update' do
+        let(:request_body_with_same_name_new_file) do
+          {
+            data: {
+              type: 'results',
+              attributes: {
+                name: result_file.reload.name
+              }
+            },
+            included: [
+              { type: 'result_files',
+                attributes: {
+                  file: second_file
+                } }
+            ]
+          }
+        end
+
+        it 'returns status 200' do
+          put(api_v1_team_project_experiment_task_result_path(
+                team_id: @teams.first.id,
+                project_id: @valid_project,
+                experiment_id: @valid_experiment,
+                task_id: @valid_task,
+                id: result_file.id
+              ), params: request_body_with_same_name_new_file, headers: @valid_headers)
 
           expect(response).to have_http_status 200
         end
