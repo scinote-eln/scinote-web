@@ -578,6 +578,10 @@ Rails.application.routes.draw do
         post 'import_records'
       end
       namespace :repository_columns do
+        resources :text_columns, only: %i(create update destroy)
+        resources :list_columns, only: %i(create update destroy)
+        resources :asset_columns, only: %i(create update destroy)
+        resources :date_columns, only: %i(create update destroy)
         resources :status_columns, only: %i(create update destroy)
       end
     end
