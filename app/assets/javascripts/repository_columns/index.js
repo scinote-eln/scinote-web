@@ -102,9 +102,7 @@ var RepositoryColumns = (function() {
 
         initEditSubmitAction(modalHtml);
       }).fail(function() {
-        HelperModule.flashAlertMsg(
-          I18n.t('libraries.repository_columns.no_permissions'), 'danger'
-        );
+        HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
       });
     });
   }
@@ -141,9 +139,7 @@ var RepositoryColumns = (function() {
         modalHtml.modal('show');
         initDeleteSubmitAction(modalHtml, $(modalHtml.find('form')));
       }).fail(function() {
-        HelperModule.flashAlertMsg(
-          I18n.t('libraries.repository_columns.no_permissions'), 'danger'
-        );
+        HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
       });
     });
   }
