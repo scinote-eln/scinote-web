@@ -579,6 +579,7 @@ Rails.application.routes.draw do
       end
       namespace :repository_columns do
         resources :status_columns, only: %i(create update destroy)
+        resources :list_columns, only: %i(create update destroy)
       end
     end
 

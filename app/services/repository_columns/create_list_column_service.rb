@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class CreateListColumnService < ColumnService
-    def initialize(user, repository_id, name, list_items)
-      super(user, repository_id, name)
-      @list_items = list_items
+  class CreateListColumnService < RepositoryColumns::ColumnService
+    def initialize(user:, repository:, params:, team:)
+      super(user: user, repository: repository, team: team, column_name: params[:name])
+      @params = params
     end
 
     def call
       return self unless valid?
 
-      ActiveRecord::Base.transaction do
-        create_base_column(Extends::REPOSITORY_DATA_TYPES[:RepositoryListValue])
+      @column = RepositoryColumn.new(repository_list_items_attributes)
 
-        # TODO
+      if @column.save
+        log_activity(:create_column_inventory)
+      else
+        errors[:repository_column] = @column.errors.messages
       end
 
       self
@@ -21,8 +23,11 @@ module RepositoryColumns
 
     private
 
-    def valid?
-
+    def repository_list_items_attributes
+      @params[:repository_list_items_attributes]&.map do |m|
+        m.merge!(repository_id: @repository.id, created_by_id: @user.id, last_modified_by_id: @user.id)
+      end
+      @params.merge(repository_id: @repository.id, created_by_id: @user.id, data_type: :RepositoryListValue)
     end
   end
 end
