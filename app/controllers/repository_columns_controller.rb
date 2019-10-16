@@ -21,7 +21,7 @@ class RepositoryColumnsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'repository_columns/manage_column_modal.html.erb'
+            partial: 'repository_columns/manage_column_modal_body.html.erb'
           )
         }
       end
@@ -77,7 +77,7 @@ class RepositoryColumnsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'repository_columns/manage_column_modal.html.erb'
+            partial: 'repository_columns/manage_column_modal_body.html.erb'
           )
         }
       end
