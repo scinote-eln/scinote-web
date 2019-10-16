@@ -2,16 +2,16 @@
 
 require 'rails_helper'
 
-describe RepositoryColumns::DeleteListColumnService do
+describe RepositoryColumns::DeleteColumnService do
   let(:user) { create :user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:team) { create :team }
   let(:repository) { create :repository, team: team }
   let(:repository_column) { create :repository_column, :list_type }
 
-  context 'when deletes list column' do
+  context 'when deletes column' do
     let(:service_call) do
-      RepositoryColumns::DeleteListColumnService.call(user: user, team: team, column: repository_column)
+      RepositoryColumns::DeleteColumnService.call(user: user, team: team, column: repository_column)
     end
 
     it 'removes RepositoryColumn record' do
@@ -35,11 +35,23 @@ describe RepositoryColumns::DeleteListColumnService do
         expect { service_call }.to(change { RepositoryListItem.count }.by(-3))
       end
     end
+
+    context 'when RepositoryColumn has RepositoryStatusItems' do
+      before do
+        3.times do
+          create(:repository_status_item, repository: repository, repository_column: repository_column)
+        end
+      end
+
+      it 'removes RepositoryStatusItem records as well' do
+        expect { service_call }.to(change { RepositoryStatusItem.count }.by(-3))
+      end
+    end
   end
 
   context 'when column cannot be deleted' do
     let(:service_call) do
-      RepositoryColumns::DeleteListColumnService.call(user: user, team: team, column: repository_column)
+      RepositoryColumns::DeleteColumnService.call(user: user, team: team, column: repository_column)
     end
 
     before do

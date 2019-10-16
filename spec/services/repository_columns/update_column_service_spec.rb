@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe RepositoryColumns::UpdateStatusColumnService do
+describe RepositoryColumns::UpdateColumnService do
   let(:user) { create :user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:team) { create :team }
@@ -10,7 +10,7 @@ describe RepositoryColumns::UpdateStatusColumnService do
   let(:column) { create :repository_column, :status_type }
   let(:status_item) { create(:repository_status_item, repository: repository, repository_column: column) }
   let(:service_call) do
-    RepositoryColumns::UpdateStatusColumnService.call(column: column,
+    RepositoryColumns::UpdateColumnService.call(column: column,
                                                       user: user,
                                                       team: team,
                                                       params: params)
@@ -74,6 +74,39 @@ describe RepositoryColumns::UpdateStatusColumnService do
 
       it 'returns succeed false' do
         expect(service_call.succeed?).to be_falsey
+      end
+    end
+  end
+
+  context 'when updates column\'s list items' do
+    let(:column) { create :repository_column, :list_type }
+    let(:list_item) { create(:repository_list_item, repository: repository, repository_column: column) }
+
+    let(:params) do
+      {
+        repository_list_items_attributes: [
+          { id: list_item.id, data: 'new data' }
+        ]
+      }
+    end
+
+    it 'updates data' do
+      expect { service_call }.to(change { list_item.reload.data })
+    end
+
+    context 'when deletes list items' do
+      let(:params) do
+        {
+          repository_list_items_attributes: [
+            { id: list_item.id, _destroy: true }
+          ]
+        }
+      end
+
+      it 'removes RepositoryStatusItem record' do
+        list_item
+
+        expect { service_call }.to(change { RepositoryListItem.count }.by(-1))
       end
     end
   end

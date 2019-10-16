@@ -38,15 +38,6 @@ module RepositoryColumns
       succeed?
     end
 
-    def create_base_column(type)
-      @column = RepositoryColumn.new(
-        repository: @repository,
-        created_by: @user,
-        name: @column_name,
-        data_type: type
-      )
-    end
-
     def log_activity(type)
       Activities::CreateActivityService
         .call(activity_type: type,

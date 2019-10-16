@@ -8,8 +8,9 @@ module RepositoryColumns
     before_action :check_manage_permissions, only: %i(update destroy)
 
     def create
-      service = RepositoryColumns::CreateStatusColumnService
-                .call(user: current_user, repository: @repository, team: current_team, params: repository_column_params)
+      service = RepositoryColumns::CreateColumnService
+                .call(user: current_user, repository: @repository, team: current_team,
+                      column_type: :RepositoryAssetValue, params: repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :created
@@ -19,7 +20,7 @@ module RepositoryColumns
     end
 
     def update
-      service = RepositoryColumns::UpdateStatusColumnService
+      service = RepositoryColumns::UpdateColumnService
                 .call(user: current_user,
                       team: current_team,
                       column: @repository_column,
@@ -33,7 +34,7 @@ module RepositoryColumns
     end
 
     def destroy
-      service = RepositoryColumns::DeleteStatusColumnService
+      service = RepositoryColumns::DeleteColumnService
                 .call(user: current_user, team: current_team, column: @repository_column)
 
       if service.succeed?
