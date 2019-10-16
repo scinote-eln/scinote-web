@@ -71,11 +71,11 @@ var RepositoryColumns = (function() {
     $('.repository-columns-body').off('click', '.edit-repo-column').on('click', '.edit-repo-column', function() {
       var editUrl = $(this).closest('li').attr('data-edit-url');
       $.get(editUrl, function(data) {
-        $(data.html).appendTo('body');
+        $(modalID).find('.modal-content').html(data.html);
         $(modalID).modal('show');
 
         initColumnTypeSelector();
-        $('#repository_column_data_type').val($(modalID).attr('data-edit-type')).trigger('click');
+        $('#repository_column_data_type').val($(modalID).find('#new_repository_column').attr('data-edit-type')).trigger('click');
         $('#repository_column_data_type').prop('disabled', true);
         setTimeout(function() {
           $('#repository_column_name').focus();
@@ -178,7 +178,7 @@ var RepositoryColumns = (function() {
     $('.repository-columns-header').off('click', '#new-repo-column-modal').on('click', '#new-repo-column-modal', function() {
       var modalUrl = $(this).attr('data-modal-url');
       $.get(modalUrl, function(data) {
-        $(data.html).appendTo('body');
+        $(modalID).find('.modal-content').html(data.html);
         $(modalID).modal('show');
 
         initColumnTypeSelector();
