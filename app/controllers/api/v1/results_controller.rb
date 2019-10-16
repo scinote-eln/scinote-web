@@ -113,7 +113,6 @@ module Api
         old_checksum, new_checksum = nil
         Result.transaction do
           old_checksum = @result.asset.file.blob.checksum
-          @result.asset.file.purge
           @result.asset.file.attach(result_file_params[:file])
           new_checksum = @result.asset.file.blob.checksum
         end
