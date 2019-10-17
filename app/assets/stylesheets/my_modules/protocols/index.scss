@@ -205,6 +205,35 @@
   }
 }
 
+.my-module-white-tags {
+    color: $color-white;
+}
+
+.my-module-tags-container.dropdown-selector-container {
+
+
+  .my-module-tags-color {
+    border-radius: 8px;
+    display: inline-block;
+    height: 16px;
+    margin-right: 5px;
+    width: 16px;
+  }
+
+  .my-module-tags-create-new {
+    opacity: .6;
+  }
+
+  .input-field {
+    border: 1px solid transparent;
+  }
+
+  &.open {
+    .input-field {
+     border: 1px solid $color-alto;
+    }
+  }
+}
 
 .select2-dropdown.module-tags-selector-dropdown {
 
