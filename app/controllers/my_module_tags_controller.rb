@@ -119,7 +119,11 @@ class MyModuleTagsController < ApplicationController
                        false,
                        params[:query]
                      ).select(:id, :name, :color).limit(6)
-    tags = [{ id: 0, name: params[:query], color: nil }] if tags.count.zero?
+    if tags.count.zero?
+      tags = [{ value: 0, label: params[:query], params: {color: nil} }]
+    else
+      tags = tags.map{|i| {value: i.id, label: i.name, params: {color: i.color}}}
+    end
     render json: tags
   end
 

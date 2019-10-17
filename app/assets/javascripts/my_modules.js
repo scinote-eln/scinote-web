@@ -286,8 +286,57 @@ function initTagsSelector() {
     return $('<div class="add-tags">' + result + '</div>');
   }
 
+  dropdownSelector.init('#module-tags-selector',{
+    tagClass: 'my-module-white-tags',
+    tagStyle: (data) => {
+      return `background: ${data.params.color}`
+    },
+    optionLabel: (data) => {
+      if (data.value > 0) {
+        return `<span class="my-module-tags-color" style="background:${data.params.color}"></span>${data.label}`
+      } else {
+        return `${data.label}<span class="my-module-tags-create-new"> (${I18n.t('my_modules.module_header.create_new_tag')})</span>`;
+      }
+    },
+    onSelect: function() {
+      var selectElement = $('#module-tags-selector');
+      var lastTag = selectElement.next().find('.ds-tags').last();
+      var lastTagId = lastTag.find('.tag-label').data('ds-tag-id');
 
-  $('#module-tags-selector').select2Multiple({
+      if (lastTagId  > 0) {
+      newTag = { my_module_tag: { tag_id: lastTagId } };
+        $.post(selectElement.data('update-module-tags-url'), newTag)
+          .fail(function() {
+            lastTag.remove();
+          });
+      } else {
+        newTag = {
+          tag: {
+            name: lastTag.find('.tag-label').html(),
+            project_id: selectElement.data('project-id'),
+            color: null
+          },
+          my_module_id: selectElement.data('module-id'),
+          simple_creation: true
+        };
+        $.post(selectElement.data('tags-create-url'), newTag, function(result) {
+          var selectedValues = dropdownSelector.getData(selectElement)
+          lastTag.css('background', result.tag.color)
+          lastTag.find('.tag-label')[0].dataset.dsTagId = result.tag.id
+          selectedValues[selectedValues.length - 1].value = result.tag.id
+          selectedValues[selectedValues.length - 1].params.color = result.tag.color
+          dropdownSelector.setData(selectElement, selectedValues)
+        });
+      }
+      dropdownSelector.closeDropdown('#module-tags-selector')
+    },
+    onUnSelect: (id) => {
+      $.post(`${$('#module-tags-selector').data('update-module-tags-url')}/${id}/destroy_by_tag_id`);
+      dropdownSelector.closeDropdown('#module-tags-selector');
+    }
+  }).getContainer('#module-tags-selector').addClass('my-module-tags-container');
+
+  /*$('#module-tags-selector').select2Multiple({
     ajax: tagsAjaxQuery,
     unlimitedSize: true,
     colorField: 'color',
@@ -349,7 +398,7 @@ function initTagsSelector() {
     inputLine[0].disabled = false;
     inputLine.focus();
     return true;
-  });
+  });*/
 }
 
 applyTaskCompletedCallBack();
