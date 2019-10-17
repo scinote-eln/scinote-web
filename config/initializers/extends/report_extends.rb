@@ -78,21 +78,21 @@ module ReportExtends
                       true,
                       [:result],
                       proc do |my_module|
-                        my_module.results.joins(:result_asset).select { |r| r.active? }
+                        my_module.results.joins(:result_asset).select(&:active?)
                       end),
     ModuleElement.new([:result_tables],
                       :result_tables,
                       true,
                       [:result],
                       proc do |my_module|
-                        my_module.results.joins(:result_table).select { |r| r.active? }
+                        my_module.results.joins(:result_table).select(&:active?)
                       end),
     ModuleElement.new([:result_texts],
                       :result_texts,
                       true,
                       [:result],
                       proc do |my_module|
-                        my_module.results.joins(:result_text).select { |r| r.active? }
+                        my_module.results.joins(:result_text).select(&:active?)
                       end),
     ModuleElement.new([:activity],
                       :activity,
