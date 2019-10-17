@@ -4,7 +4,14 @@
 <% comments = result.result_comments %>
 <% timestamp = asset.created_at %>
 <% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
-<div class="report-element report-result-element report-result-asset-element" data-ts="<%= timestamp.to_i %>" data-type="result_asset" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= result.name %>" data-icon-class="<%= icon_class %>">
+<div class="report-element report-result-element report-result-asset-element"
+     data-ts="<%= timestamp.to_i %>"
+     data-type="result_asset"
+     data-id='{ "result_id": <%= result.id %> }'
+     data-scroll-id="<%= result.id %>"
+     data-modal-title="<%= t("projects.reports.elements.modals.result_contents.head_title", result: result.name) %>"
+     data-name="<%= result.name %>"
+     data-icon-class="<%= icon_class %>">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left result-icon">
@@ -13,23 +20,21 @@
       <div class="pull-left result-name">
         <%= result.name %>
         <% if result.archived? %>
-          <span class="label label-warning"><%=t 'search.index.archived' %></span>
+          <span class="label label-warning"><%= t('search.index.archived') %></span>
         <% end %>
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
           <a href="<%= path %>">
-            <em><%=t "projects.reports.elements.result_asset.file_name",
-                     file: filename %></em>
+            <em><%= t("projects.reports.elements.result_asset.file_name", file: filename) %></em>
           </a>
         <% else %>
-          <em><%=t "projects.reports.elements.result_asset.file_name",
-                   file: truncate(asset.file_name,
-                                  length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+          <em><%= t("projects.reports.elements.result_asset.file_name",
+                    file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %></em>
         <% end %>
       </div>
       <div class="pull-left user-time">
-        <%=t "projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full) %>
+        <%= t("projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>
       </div>
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb" %>

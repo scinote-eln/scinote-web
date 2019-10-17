@@ -48,7 +48,7 @@
       <div class="pull-left">
         <%=t "projects.reports.elements.module.tags_header" %>
       </div>
-      <% if my_module.tags.count > 0 %>
+      <% if my_module.tags.any? %>
         <% my_module.tags.each do |tag| %>
           <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
             <%= tag.name %>
