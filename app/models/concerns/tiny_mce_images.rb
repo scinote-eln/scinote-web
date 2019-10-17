@@ -20,7 +20,7 @@ module TinyMceImages
       tiny_mce_assets.each do |tm_asset|
         next unless tm_asset&.image&.attached?
 
-        new_tm_asset_src = tm_asset.convert_variant_to_base64(tm_asset.preview)
+        new_tm_asset_src = tm_asset.preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
           "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"

@@ -42,7 +42,7 @@ module ReportActions
           'reports/elements/experiment_element.html.erb',
           experiment: experiment
         )
-        selected_modules = experiment.my_modules.where(id: module_ids)
+        selected_modules = experiment.my_modules.includes(:tags).where(id: module_ids)
         el[:children] = generate_experiment_contents_json(selected_modules)
         res << el
       end

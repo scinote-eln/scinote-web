@@ -19,7 +19,7 @@
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12 activity-container">
-        <% if activities.count > 0 %>
+        <% if activities.any? %>
           <!-- TODO: This might become potentially very big! -->
           <ul class="no-style activity-list">
             <% activities.each do |activity| %>
