@@ -10,7 +10,8 @@ module RepositoryColumns
     def create
       service = RepositoryColumns::CreateColumnService
                 .call(user: current_user, repository: @repository, team: current_team,
-                      column_type: :RepositoryAssetValue, params: repository_column_params)
+                      column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryAssetValue],
+                      params: repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :created
