@@ -9,7 +9,8 @@ module RepositoryColumns
     def create
       service = RepositoryColumns::CreateColumnService
                 .call(user: current_user, repository: @repository, team: current_team,
-                      column_type: :RepositoryListValue, params: repository_column_params)
+                      column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryListValue],
+                      params: repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :created
@@ -23,7 +24,7 @@ module RepositoryColumns
                 .call(user: current_user,
                         team: current_team,
                         column: @repository_column,
-                        params: repository_column_params)
+                        params: update_repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :ok
@@ -50,7 +51,7 @@ module RepositoryColumns
     end
 
     def update_repository_column_params
-      params.require(:repository_column).permit(repository_list_items_attributes: %i(id data _destroy))
+      params.require(:repository_column).permit(:name, repository_list_items_attributes: %i(id data _destroy))
     end
   end
 end
