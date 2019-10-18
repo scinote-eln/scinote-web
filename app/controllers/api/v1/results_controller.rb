@@ -130,14 +130,18 @@ module Api
       # https://github.com/json-api/json-api/pull/1197
       def result_text_params
         prms = params[:included]&.select { |el| el[:type] == 'result_texts' }&.first
-        prms&.require(:attributes)&.require(:text)
-        prms&.dig(:attributes)&.permit(:text)
+        return nil unless prms
+
+        prms.require(:attributes).require(:text)
+        prms.dig(:attributes).permit(:text)
       end
 
       def result_file_params
         prms = params[:included]&.select { |el| el[:type] == 'result_files' }&.first
-        prms&.require(:attributes)&.require(:file)
-        prms&.dig(:attributes)&.permit(:file)
+        return nil unless prms
+
+        prms.require(:attributes).require(:file)
+        prms.dig(:attributes).permit(:file)
       end
 
       def tiny_mce_asset_params
