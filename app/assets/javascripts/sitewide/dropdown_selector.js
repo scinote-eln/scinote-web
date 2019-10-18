@@ -87,21 +87,48 @@ var dropdownSelector = (function() {
   // Read option to JSON
   function convertOptionToJson(option) {
     return {
-            label: option.innerHTML,
-            value: option.value,
-            group: option.dataset.group,
-            params: JSON.parse(option.dataset.params)
-           }
+      label: option.innerHTML,
+      value: option.value,
+      group: option.dataset.group,
+      params: JSON.parse(option.dataset.params)
+    };
   }
 
   // Ajax intial values, we will use default options //
   function ajaxInitialValues(selector, container) {
-    var intialData = []
+    var intialData = [];
     $(selector).find('option').each((i, option) => {
-      intialData.push(convertOptionToJson(option))
-    })
-    updateCurrentData(container, intialData)
+      intialData.push(convertOptionToJson(option));
+    });
+    updateCurrentData(container, intialData);
     updateTags(selector, container, { skipChange: true });
+  }
+
+  // Prepare custom dropdown icon
+  function prepareCustomDropdownIcon(config) {
+    if (config.customDropdownIcon) {
+      return config.customDropdownIcon();
+    }
+    return '<i class="fas fa-caret-down"></i>';
+  }
+
+  // Set new data
+  function setData(selector, data, skipSelect) {
+    updateCurrentData(selector.next(), data);
+    refreshDropdownSelection(selector, selector.next());
+    updateTags(selector, selector.next(), { select: true, skipSelect: skipSelect });
+  }
+
+
+  // Delete specific value
+  function deleteValue(selector, container, value, group = '', skipUnselect = false) {
+    var selectedOptions = getCurrentData(container);
+    var toDelete = selectedOptions.findIndex(x => (String(x.value) === String(value)
+      && (String(x.group) === String(group) || !selector.data('select-by-group'))
+    ));
+    selectedOptions.splice(toDelete, 1);
+    updateCurrentData(container, selectedOptions);
+    updateTags(selector, container, { unselect: true, tagId: value, skipUnselect: skipUnselect });
   }
 
   // //////////////////////
@@ -125,7 +152,7 @@ var dropdownSelector = (function() {
       <div class="dropdown-container"></div>
       <div class="input-field">
         <input type="text" class="search-field" placeholder="${selectElement.data('placeholder')}"></input>
-        <i class="fas fa-caret-down"></i>
+        ${prepareCustomDropdownIcon(config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
       
@@ -145,7 +172,7 @@ var dropdownSelector = (function() {
     }
 
     if (selectElement.data('ajax-url')) {
-      ajaxInitialValues(selectElement, dropdownContainer)
+      ajaxInitialValues(selectElement, dropdownContainer);
     }
 
 
@@ -179,12 +206,27 @@ var dropdownSelector = (function() {
         loadData(selectElement, dropdownContainer);
         updateDropdownDirection(selectElement, dropdownContainer);
         dropdownContainer.find('.search-field').focus();
+
+        // onOpen event
+        if (config.onOpen) {
+          config.onOpen();
+        }
       } else {
-        dropdownContainer.find('.search-field').blur()
+        dropdownContainer.find('.search-field').blur();
+
+        // onClose event
+        if (config.onClose) {
+          config.onClose();
+        }
       }
     });
     $(window).resize(function() { updateDropdownDirection(selectElement, dropdownContainer); });
-    $(window).click(() => { dropdownContainer.removeClass('open'); });
+    $(window).click(() => { 
+      dropdownContainer.removeClass('open');
+      if (config.onClose) {
+        config.onClose();
+      }
+    });
     dropdownContainer.click((e) => { e.stopPropagation(); });
 
     selectElement.css('display', 'none');
@@ -204,13 +246,13 @@ var dropdownSelector = (function() {
       data = dataSource(selector, container);
     }
     // Draw option object
-    function drawOption(selector, option, group = null) {
-      var customLabel = selector.data('config').optionLabel;
-      var customClass = selector.data('config').optionClass || '';
-      var customStyle = selector.data('config').optionStyle;
+    function drawOption(selector2, option, group = null) {
+      var customLabel = selector2.data('config').optionLabel;
+      var customClass = selector2.data('config').optionClass || '';
+      var customStyle = selector2.data('config').optionStyle;
       return $(`
         <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          data-params='${JSON.stringify(option.params)}'
+          data-params='${JSON.stringify(option.params || {})}'
           data-label="${option.label}"
           data-group="${group ? group.value : ''}"
           data-value="${option.value}">
@@ -284,6 +326,7 @@ var dropdownSelector = (function() {
 
     container.find('.search-field').val('');
 
+
     $.each(container.find('.dropdown-container .dropdown-option'), function(oi, option) {
       var alreadySelected;
       var toDelete;
@@ -305,7 +348,7 @@ var dropdownSelector = (function() {
       }
     });
     updateCurrentData(container, selectArray);
-    updateTags(selector, container, {select: true});
+    updateTags(selector, container, { select: true });
     loadData(selector, container);
   }
 
@@ -338,13 +381,7 @@ var dropdownSelector = (function() {
             container.find('.data-field').val('[]');
             updateTags(selector, container);
           } else {
-            selectedOptions = getCurrentData(container);
-            toDelete = selectedOptions.findIndex(x => (String(x.value) === String(tagLabel.data('ds-tag-id'))
-              && (String(x.group) === String(tagLabel.data('ds-tag-group')) || !selector.data('select-by-group'))
-            ));
-            selectedOptions.splice(toDelete, 1);
-            updateCurrentData(container, selectedOptions);
-            updateTags(selector, container, {unselect: true, tagId: tagLabel.data('ds-tag-id')});
+            deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
           }
         }, 350);
       });
@@ -378,7 +415,7 @@ var dropdownSelector = (function() {
     refreshDropdownSelection(selector, container);
     if (container.hasClass('open')) container.find('.search-field').focus();
 
-    if (selector.data('config').onSelect && !config.skipChange && config.select) {
+    if (selector.data('config').onSelect && !config.skipChange && config.select && !config.skipSelect) {
       selector.data('config').onSelect();
     }
 
@@ -386,7 +423,7 @@ var dropdownSelector = (function() {
       selector.data('config').onChange();
     }
 
-    if (selector.data('config').onUnSelect && !config.skipChange && config.unselect) {
+    if (selector.data('config').onUnSelect && !config.skipChange && config.unselect && !config.skipUnselect) {
       selector.data('config').onUnSelect(config.tagId);
     }
   }
@@ -480,9 +517,7 @@ var dropdownSelector = (function() {
     setData: function(selector, data) {
       if ($(selector).length === 0) return false;
 
-      updateCurrentData($(selector).next(), data);
-      refreshDropdownSelection($(selector), $(selector).next());
-      updateTags($(selector), $(selector).next());
+      setData($(selector), []);
 
       return this;
     },
@@ -491,7 +526,26 @@ var dropdownSelector = (function() {
     clearData: function(selector) {
       if ($(selector).length === 0) return false;
 
-      dropdownSelector.setData(selector, []);
+      setData($(selector), []);
+      return this;
+    },
+
+    removeValue: function(selector, value, group = '', skip_event = false) {
+      var dropdownContainer;
+      if ($(selector).length === 0) return false;
+      dropdownContainer = $(selector).next();
+
+      deleteValue($(selector), dropdownContainer, value, null, skip_event);
+      return this;
+    },
+
+    addValue: function(selector, value, skip_event = false) {
+      var currentData;
+      if ($(selector).length === 0) return false;
+      currentData = getCurrentData($(selector).next());
+      currentData.push(value);
+      setData($(selector), currentData, skip_event);
+
       return this;
     },
 
@@ -518,19 +572,18 @@ var dropdownSelector = (function() {
       var dropdownContainer;
 
       if ($(selector).length === 0) return false;
-      dropdownContainer = $(selector).next()
+      dropdownContainer = $(selector).next();
       if (dropdownContainer.hasClass('open')) {
-        dropdownContainer.find('.input-field').click()
+        dropdownContainer.find('.input-field').click();
       }
 
       return this;
     },
 
-    // get dropdown container 
+    // get dropdown container
     getContainer: function(selector) {
       if ($(selector).length === 0) return false;
-      dropdownContainer = $(selector).next();
-      return dropdownContainer
+      return $(selector).next();
     }
   };
 }());
