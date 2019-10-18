@@ -221,7 +221,7 @@ var dropdownSelector = (function() {
       }
     });
     $(window).resize(function() { updateDropdownDirection(selectElement, dropdownContainer); });
-    $(window).click(() => { 
+    $(window).click(() => {
       dropdownContainer.removeClass('open');
       if (config.onClose) {
         config.onClose();
