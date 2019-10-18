@@ -80,10 +80,12 @@ var globalActivities = (function() {
     };
 
     dropdownSelector.init(groupActivityFilter, {
+      optionClass: 'checkbox-icon',
       onChange: defaultOnChangeActions
     });
 
     dropdownSelector.init(activityFilter, {
+      optionClass: 'checkbox-icon',
       onChange: defaultOnChangeActions,
       localFilter: function(data) {
         var groupFilter = dropdownSelector.getValues(groupActivityFilter);
@@ -114,16 +116,19 @@ var globalActivities = (function() {
     });
 
     dropdownSelector.init(userFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: defaultOnChangeActions
     }).initClearButton(userFilter, '.user.clear');
 
     dropdownSelector.init(teamFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: defaultOnChangeActions
     }).initClearButton(teamFilter, '.team.clear');
 
     dropdownSelector.init(projectFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: () => {
         var selectedValues = dropdownSelector.getValues(projectFilter);
@@ -138,6 +143,7 @@ var globalActivities = (function() {
     }).initClearButton(projectFilter, '.project.clear');
 
     dropdownSelector.init(experimentFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: () => {
         var selectedValues = dropdownSelector.getValues(experimentFilter);
@@ -151,11 +157,13 @@ var globalActivities = (function() {
     });
 
     dropdownSelector.init(taskFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: defaultOnChangeActions
     });
 
     dropdownSelector.init(inventoryFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: () => {
         var selectedValues = dropdownSelector.getValues(inventoryFilter);
@@ -169,16 +177,19 @@ var globalActivities = (function() {
     }).initClearButton(inventoryFilter, '.inventory.clear');
 
     dropdownSelector.init(inventoryItemFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: defaultOnChangeActions
     });
 
     dropdownSelector.init(protocolFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: defaultOnChangeActions
     }).initClearButton(protocolFilter, '.protocol.clear');
 
     dropdownSelector.init(reportFilter, {
+      optionClass: 'checkbox-icon',
       ajaxParams: ajaxParams,
       onChange: defaultOnChangeActions
     }).initClearButton(reportFilter, '.report.clear');
