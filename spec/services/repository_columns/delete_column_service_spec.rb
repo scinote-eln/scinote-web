@@ -2,16 +2,16 @@
 
 require 'rails_helper'
 
-describe RepositoryColumns::DeleteStatusColumnService do
+describe RepositoryColumns::DeleteColumnService do
   let(:user) { create :user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:team) { create :team }
   let(:repository) { create :repository, team: team }
-  let(:repository_column) { create :repository_column, :status_type }
+  let(:repository_column) { create :repository_column, :list_type }
 
-  context 'when deletes status column' do
+  context 'when deletes column' do
     let(:service_call) do
-      RepositoryColumns::DeleteStatusColumnService.call(user: user, team: team, column: repository_column)
+      RepositoryColumns::DeleteColumnService.call(user: user, team: team, column: repository_column)
     end
 
     it 'removes RepositoryColumn record' do
@@ -22,6 +22,18 @@ describe RepositoryColumns::DeleteStatusColumnService do
 
     it 'adds Activity record' do
       expect { service_call }.to(change { Activity.count }.by(1))
+    end
+
+    context 'when RepositoryColumn has RepositoryListItems' do
+      before do
+        3.times do
+          create(:repository_list_item, repository: repository, repository_column: repository_column)
+        end
+      end
+
+      it 'removes RepositoryListItem records as well' do
+        expect { service_call }.to(change { RepositoryListItem.count }.by(-3))
+      end
     end
 
     context 'when RepositoryColumn has RepositoryStatusItems' do
@@ -39,7 +51,7 @@ describe RepositoryColumns::DeleteStatusColumnService do
 
   context 'when column cannot be deleted' do
     let(:service_call) do
-      RepositoryColumns::DeleteStatusColumnService.call(user: user, team: team, column: repository_column)
+      RepositoryColumns::DeleteColumnService.call(user: user, team: team, column: repository_column)
     end
 
     before do

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe RepositoryColumns::StatusColumnsController, type: :controller do
+RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
   login_user
 
   let(:user) { subject.current_user }
@@ -11,7 +11,7 @@ RSpec.describe RepositoryColumns::StatusColumnsController, type: :controller do
   let(:repository) { create :repository, created_by: user, team: team }
   let(:repository_column) { create(:repository_column, :status_type, repository: repository) }
 
-  describe 'POST repository_status_columns, #create' do
+  describe 'POST repository_list_columns, #create' do
     let(:action) { post :create, params: params }
     let(:params) do
       {
@@ -85,7 +85,7 @@ RSpec.describe RepositoryColumns::StatusColumnsController, type: :controller do
     end
   end
 
-  describe 'PUT repository_status_column, #update' do
+  describe 'PUT repository_list_column, #update' do
     let(:action) { patch :update, params: params }
 
     let(:params) do
@@ -162,7 +162,7 @@ RSpec.describe RepositoryColumns::StatusColumnsController, type: :controller do
     end
   end
 
-  describe 'DELETE repository_status_column, #delete' do
+  describe 'DELETE repository_list_column, #delete' do
     let(:action) { delete :destroy, params: params }
 
     let(:params) do

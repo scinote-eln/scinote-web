@@ -2,16 +2,16 @@
 
 require 'rails_helper'
 
-RSpec.describe RepositoryColumns::StatusColumnsController, type: :controller do
+RSpec.describe RepositoryColumns::AssetColumnsController, type: :controller do
   login_user
 
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:repository) { create :repository, created_by: user, team: team }
-  let(:repository_column) { create(:repository_column, :status_type, repository: repository) }
+  let(:repository_column) { create(:repository_column, :asset_type, repository: repository) }
 
-  describe 'POST repository_status_columns, #create' do
+  describe 'POST repository_asset_columns, #create' do
     let(:action) { post :create, params: params }
     let(:params) do
       {

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class StatusColumnsController < BaseColumnsController
-    include InputSanitizeHelper
+  class ListColumnsController < BaseColumnsController
     before_action :load_column, only: %i(update destroy)
     before_action :check_create_permissions, only: :create
     before_action :check_manage_permissions, only: %i(update destroy)
@@ -10,7 +9,7 @@ module RepositoryColumns
     def create
       service = RepositoryColumns::CreateColumnService
                 .call(user: current_user, repository: @repository, team: current_team,
-                      column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryStatusValue],
+                      column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryListValue],
                       params: repository_column_params)
 
       if service.succeed?
@@ -23,9 +22,9 @@ module RepositoryColumns
     def update
       service = RepositoryColumns::UpdateColumnService
                 .call(user: current_user,
-                      team: current_team,
-                      column: @repository_column,
-                      params: update_repository_column_params)
+                        team: current_team,
+                        column: @repository_column,
+                        params: update_repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :ok
@@ -48,11 +47,11 @@ module RepositoryColumns
     private
 
     def repository_column_params
-      params.require(:repository_column).permit(:name, repository_status_items_attributes: %i(status icon))
+      params.require(:repository_column).permit(:name, repository_list_items_attributes: %i(data))
     end
 
     def update_repository_column_params
-      params.require(:repository_column).permit(:name, repository_status_items_attributes: %i(id status icon _destroy))
+      params.require(:repository_column).permit(:name, repository_list_items_attributes: %i(id data _destroy))
     end
   end
 end
