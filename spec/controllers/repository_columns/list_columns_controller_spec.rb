@@ -25,7 +25,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
     before do
       service = double('success_service')
       allow(service).to(receive(:succeed?)).and_return(true)
-      allow(service).to(receive(:column)).and_return(:repository_column)
+      allow(service).to(receive(:column)).and_return(repository_column)
 
       allow_any_instance_of(RepositoryColumns::CreateColumnService).to(receive(:call)).and_return(service)
     end
@@ -101,7 +101,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
     before do
       service = double('success_service')
       allow(service).to(receive(:succeed?)).and_return(true)
-      allow(service).to(receive(:column)).and_return(:repository_column)
+      allow(service).to(receive(:column)).and_return(repository_column)
 
       allow_any_instance_of(RepositoryColumns::UpdateColumnService).to(receive(:call)).and_return(service)
     end

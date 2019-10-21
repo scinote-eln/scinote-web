@@ -2,16 +2,16 @@
 
 require 'rails_helper'
 
-RSpec.describe RepositoryColumns::AssetColumnsController, type: :controller do
+RSpec.describe RepositoryColumns::TextColumnsController, type: :controller do
   login_user
 
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:repository) { create :repository, created_by: user, team: team }
-  let(:repository_column) { create(:repository_column, :asset_type, repository: repository) }
+  let(:repository_column) { create(:repository_column, :text_type, repository: repository) }
 
-  describe 'POST repository_asset_columns, #create' do
+  describe 'POST repository_text_columns, #create' do
     let(:action) { post :create, params: params }
     let(:params) do
       {
@@ -30,7 +30,7 @@ RSpec.describe RepositoryColumns::AssetColumnsController, type: :controller do
       allow_any_instance_of(RepositoryColumns::CreateColumnService).to(receive(:call)).and_return(service)
     end
 
-    context 'when columnd is created' do
+    context 'when column is created' do
       it 'respons with status 201' do
         action
 
@@ -85,7 +85,7 @@ RSpec.describe RepositoryColumns::AssetColumnsController, type: :controller do
     end
   end
 
-  describe 'PUT repository_status_column, #update' do
+  describe 'PUT repository_text_column, #update' do
     let(:action) { patch :update, params: params }
 
     let(:params) do
@@ -106,7 +106,7 @@ RSpec.describe RepositoryColumns::AssetColumnsController, type: :controller do
       allow_any_instance_of(RepositoryColumns::UpdateColumnService).to(receive(:call)).and_return(service)
     end
 
-    context 'when columnd is updated' do
+    context 'when column is updated' do
       it 'respons with status 200' do
         action
 
@@ -162,7 +162,7 @@ RSpec.describe RepositoryColumns::AssetColumnsController, type: :controller do
     end
   end
 
-  describe 'DELETE repository_status_column, #delete' do
+  describe 'DELETE repository_text_column, #delete' do
     let(:action) { delete :destroy, params: params }
 
     let(:params) do
