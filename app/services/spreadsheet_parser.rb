@@ -33,7 +33,7 @@ class SpreadsheetParser
     if sheet.is_a?(Roo::CSV)
       sheet
     elsif sheet.is_a?(Roo::Excelx)
-      sheet.each_row_streaming
+      sheet.each_row_streaming(pad_cells: true)
     else
       sheet.rows
     end
@@ -60,7 +60,7 @@ class SpreadsheetParser
     if row.is_a?(Hash)
       row.values.map(&:to_s)
     elsif sheet.is_a?(Roo::Excelx)
-      row.map { |cell| cell.value.to_s }
+      row.map { |cell| cell&.value&.to_s }
     else
       row.map(&:to_s)
     end
