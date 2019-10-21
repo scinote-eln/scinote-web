@@ -10,10 +10,10 @@
 </div>
 <div class="modal-body">
   <div class="form-horizontal"
-       id="new_repository_column"
+       id="new-repository-column"
        data-edit-type="<%= @repository_column.data_type unless @repository_column.new_record? %>">
     <div class="form-group">
-      <label class="control-label col-sm-3" for="repository_column_name">
+      <label class="control-label col-sm-3" for="repository-column-name">
         <%= t('libraries.manange_modal_column.name') %>
       </label>
       <div class="col-sm-9">
@@ -21,15 +21,15 @@
                class="form-control"
                type="text"
                name="repository_column[name]"
-               id="repository_column_name">
+               id="repository-column-name">
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-3" for="repository_column_data_type">
+      <label class="control-label col-sm-3" for="repository-column-data-type">
         <%= t('libraries.manange_modal_column.colum_type') %>
       </label>
       <div class="col-sm-9">
-        <select class="form-control" name="repository_column[data_type]" id="repository_column_data_type">
+        <select class="form-control" name="repository_column[data_type]" id="repository-column-data-type">
           <option data-create-url="<%= repository_repository_columns_text_columns_path(@repository) %>" value="RepositoryTextValue">
             <%= t('libraries.manange_modal_column.select.repository_text_value') %>
           </option>
