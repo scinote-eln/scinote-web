@@ -8,7 +8,6 @@ module RepositoryColumns
     before_action :check_manage_permissions, only: %i(update destroy)
 
     def create
-      byebug
       service = RepositoryColumns::CreateColumnService
                 .call(user: current_user, repository: @repository, team: current_team,
                       column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryTextValue],
@@ -24,8 +23,6 @@ module RepositoryColumns
     end
 
     def update
-      byebug
-
       service = RepositoryColumns::UpdateColumnService
                 .call(user: current_user,
                       team: current_team,
@@ -40,7 +37,6 @@ module RepositoryColumns
     end
 
     def destroy
-      byebug
       service = RepositoryColumns::DeleteColumnService
                 .call(user: current_user, team: current_team, column: @repository_column)
 
