@@ -628,7 +628,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Api.configuration.core_api_v1_enabled
+      if Api.configuration.core_api_v1_enabled || Rails.env.development?
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
@@ -641,6 +641,10 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
+                resources :inventory_status_items,
+                          only: %i(index create show update destroy),
+                          path: 'status_items',
+                          as: :status_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),
