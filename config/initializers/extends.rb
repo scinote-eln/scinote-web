@@ -72,7 +72,8 @@ class Extends
   API_REPOSITORY_DATA_TYPE_MAPPINGS = { 'RepositoryTextValue' => 'text',
                                         'RepositoryDateValue' => 'date',
                                         'RepositoryListValue' => 'list',
-                                        'RepositoryAssetValue' => 'file' }
+                                        'RepositoryAssetValue' => 'file',
+                                        'RepositoryStatusValue' => 'status' }
 
   OMNIAUTH_PROVIDERS = [:linkedin]
 
