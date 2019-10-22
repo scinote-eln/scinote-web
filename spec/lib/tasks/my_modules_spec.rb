@@ -12,7 +12,7 @@ describe 'my_modules:fix_positions' do
       create :my_module, experiment: experiment
     end
 
-    # set 30 tasks same position
+    # set 10 tasks same position
     my_modules_with_same_position = MyModule.limit(10)
     my_modules_with_same_position.update_all(x: 0, y: 0)
 
@@ -20,10 +20,11 @@ describe 'my_modules:fix_positions' do
     my_modules_with_same_position.second.update_column(:name, 'a')
 
     my_modules_with_same_position.third.update_column(:archived, true)
+    @my_module_id = my_modules_with_same_position.fourth.id
   end
   context 'when record is valid except position' do
     it 'changes position for my_module' do
-      expect { subject.invoke }.to(change { MyModule.find(5).y })
+      expect { subject.invoke }.to(change { MyModule.find(@my_module_id).y })
     end
   end
 
