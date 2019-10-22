@@ -34,7 +34,7 @@ describe 'my_modules:fix_positions' do
       my_module.valid?
 
       expect(my_module.errors.messages[:position])
-        .to(eq ['and Y position has already been taken by another task in the experiment.'])
+        .to(eq ['X and Y position has already been taken by another task in the experiment.'])
     end
   end
 end
