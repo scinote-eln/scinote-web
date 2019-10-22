@@ -9,7 +9,7 @@ namespace :my_modules do
     query = MyModule.select('COUNT(*) as duplicates', :x, :y, :experiment_id)
                     .where(archived: false)
                     .group(:x, :y, :experiment_id)
-                    .having('COUNT(*)>1')
+                    .having('COUNT(my_modules.id)>1')
 
     Rails.logger.info '*********************************************************************************'
     Rails.logger.info "You have to relocate #{query.sum { |a| a.duplicates - 1 }} tasks"
