@@ -24,7 +24,7 @@ tinymce.PluginManager.add('custom_image_toolbar', function(editor) {
   });
 
   function isImage(elem) {
-    return editor.dom.is(elem, 'img');
+    return editor.dom.is(elem, 'img') && elem.dataset.mceToken;
   }
   function isMarvinJs(elem) {
     return elem.dataset.sourceType === 'marvinjs';
