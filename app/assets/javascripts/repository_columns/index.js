@@ -45,7 +45,7 @@ var RepositoryColumns = (function() {
     var html = `<li class="list-group-item row" data-id="${column.id}">
 
                   <div class="col-xs-8">
-                    <span class="pull-left column-name">${column.name}</span>
+                    <span class="pull-left column-name">${column.attributes.name}</span>
                   </div>
                   <div class="col-xs-4">
                     <span class="controlls pull-right">
@@ -54,14 +54,14 @@ var RepositoryColumns = (function() {
                               data-modal-url="${column.destroy_html_url}"
                       >
                       <span class="fas fa-pencil-alt"></span>
-                        <%= I18n.t "libraries.repository_columns.index.edit_column" %>
+                        ${ I18n.t('libraries.repository_columns.index.edit_column')}
                       </button>
                       <button class="btn btn-default delete-repo-column" 
                               data-action="destroy"
                               data-modal-url="${column.destroy_html_url}"
                       >
                         <span class="fas fa-trash-alt"></span>
-                        <%= I18n.t "libraries.repository_columns.index.delete_column" %>
+                        ${ I18n.t('libraries.repository_columns.index.delete_column')}
                       </button>
                     </span>
                   </div>
@@ -79,13 +79,13 @@ var RepositoryColumns = (function() {
     $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
-      $.post(url, params, (data) => {
-        insertNewListItem(data);
-        HelperModule.flashAlertMsg(data.message, 'success');
+      $.post(url, params, (result) => {
+        insertNewListItem(result.data);
+        HelperModule.flashAlertMsg(result.data.message, 'success');
         $manageModal.modal('hide');
       }).error((error) => {
         $('#new_repository_column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
-      })
+      });
     });
   }
 
