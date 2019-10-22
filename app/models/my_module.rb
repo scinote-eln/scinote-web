@@ -17,7 +17,7 @@ class MyModule < ApplicationRecord
   validates :experiment, presence: true
   validates :my_module_group, presence: true,
             if: proc { |mm| !mm.my_module_group_id.nil? }
-  validates_uniqueness_of :x, scope: %i(y experiment_id), message: :not_unique
+  validate :coordinates_uniqueness_check, if: :active?
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -499,5 +499,11 @@ class MyModule < ApplicationRecord
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
+  end
+
+  def coordinates_uniqueness_check
+    if experiment && experiment.my_modules.active.where(x: x, y: y).where.not(id: id).any?
+      errors.add(:position, I18n.t('activerecord.errors.models.my_module.attributes.position.not_unique'))
+    end
   end
 end
