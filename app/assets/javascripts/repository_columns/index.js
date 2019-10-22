@@ -42,23 +42,24 @@ var RepositoryColumns = (function() {
 
 
   function insertNewListItem(column) {
+    var attributes = column.attributes;
     var html = `<li class="list-group-item row" data-id="${column.id}">
 
                   <div class="col-xs-8">
-                    <span class="pull-left column-name">${column.attributes.name}</span>
+                    <span class="pull-left column-name">${attributes.name}</span>
                   </div>
                   <div class="col-xs-4">
                     <span class="controlls pull-right">
-                      <button class="btn btn-default edit-repo-column" 
+                      <button class="btn btn-default edit-repo-column manage-repo-column" 
                               data-action="edit"
-                              data-modal-url="${column.destroy_html_url}"
+                              data-modal-url="${attributes.edit_html_url}"
                       >
                       <span class="fas fa-pencil-alt"></span>
                         ${ I18n.t('libraries.repository_columns.index.edit_column')}
                       </button>
-                      <button class="btn btn-default delete-repo-column" 
+                      <button class="btn btn-default delete-repo-column manage-repo-column" 
                               data-action="destroy"
-                              data-modal-url="${column.destroy_html_url}"
+                              data-modal-url="${attributes.destroy_html_url}"
                       >
                         <span class="fas fa-trash-alt"></span>
                         ${ I18n.t('libraries.repository_columns.index.delete_column')}
@@ -80,8 +81,9 @@ var RepositoryColumns = (function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       $.post(url, params, (result) => {
-        insertNewListItem(result.data);
-        HelperModule.flashAlertMsg(result.data.message, 'success');
+        var data = result.data;
+        insertNewListItem(data);
+        HelperModule.flashAlertMsg(data.message, 'success');
         $manageModal.modal('hide');
       }).error((error) => {
         $('#new_repository_column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
