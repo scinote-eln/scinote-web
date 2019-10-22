@@ -83,10 +83,10 @@ var RepositoryColumns = (function() {
       $.post(url, params, (result) => {
         var data = result.data;
         insertNewListItem(data);
-        HelperModule.flashAlertMsg(data.message, 'success');
+        HelperModule.flashAlertMsg(data.attributes.message, 'success');
         $manageModal.modal('hide');
       }).error((error) => {
-        $('#new_repository_column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
+        $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
       });
     });
   }
