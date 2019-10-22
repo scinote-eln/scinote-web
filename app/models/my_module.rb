@@ -370,6 +370,7 @@ class MyModule < ApplicationRecord
   def repository_json_hot(repository_id, order)
     data = []
     repository_rows
+      .includes(:created_by)
       .where(repository_id: repository_id)
       .order(created_at: order).find_each do |row|
       row_json = []

@@ -12,7 +12,6 @@ var repositoryType;
 function init() {
   updateButtons();
   initProtocolsTable();
-  initRowSelection();
   initKeywordFiltering();
   initProtocolPreviewModal();
   initLinkedChildrenModal();
@@ -99,6 +98,7 @@ function initProtocolsTable() {
     },
     fnDrawCallback: function(settings, json) {
       animateSpinner(this, false);
+      initRowSelection();
       $.initTooltips();
     },
     preDrawCallback: function(settings) {
@@ -129,6 +129,8 @@ function initProtocolsTable() {
 }
 
 function initRowSelection() {
+  let protocolsTableScrollHead = protocolsTableEl.closest('.dataTables_scroll').find('.dataTables_scrollHead');
+
   // Handle click on table cells with checkboxes
   protocolsTableEl.on("click", "tbody td, thead th:first-child", function(e) {
     $(this).parent().find("input[type='checkbox']").trigger("click");
@@ -164,11 +166,11 @@ function initRowSelection() {
   });
 
   // Handle click on "Select all" control
-  protocolsTableEl.find("thead input[name='select_all']").on("click", function(e) {
+  protocolsTableScrollHead.find("thead input[name='select_all']").on('click', function(e) {
     if (this.checked) {
-      protocolsTableEl.find("tbody input[type='checkbox']:not(:checked)").trigger("click");
+      protocolsTableEl.find("tbody input[type='checkbox']:not(:checked)").trigger('click');
     } else {
-      protocolsTableEl.find("tbody input[type='checkbox']:checked").trigger("click");
+      protocolsTableEl.find("tbody input[type='checkbox']:checked").trigger('click');
     }
 
     // Prevent click event from propagating to parent

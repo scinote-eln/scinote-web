@@ -80,8 +80,8 @@ gem 'silencer' # Silence certain Rails logs
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
-gem 'wicked_pdf', '~> 1.1.0'
-gem 'wkhtmltopdf-heroku', '2.12.4'
+gem 'wicked_pdf', '~> 1.4.0'
+gem 'wkhtmltopdf-heroku', '2.12.5'
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'

@@ -325,22 +325,20 @@ class ReportsController < ApplicationController
       if elements_empty? elements
         format.json { render json: {}, status: :no_content }
       else
-        format.json {
+        format.json do
           render json: {
             status: :ok,
             elements: elements
           }
-        }
+        end
       end
     end
   end
 
   def experiment_contents
-    experiment = @project.experiments.find_by_id(params[:id])
-    exp_module_ids = experiment.my_modules.pluck(:id)
-    modules = (params[:modules].select { |k, p| exp_module_ids.include?(k.to_i) && p == '1' })
-              .keys
-              .collect(&:to_i)
+    experiment = @project.experiments.find_by(id: params[:id])
+    module_ids = (params[:modules].select { |_, p| p == '1' }).keys.collect(&:to_i)
+    selected_modules = experiment.my_modules.where(id: module_ids)
 
     respond_to do |format|
       if experiment.blank?
@@ -348,7 +346,7 @@ class ReportsController < ApplicationController
       elsif modules.blank?
         format.json { render json: {}, status: :no_content }
       else
-        elements = generate_experiment_contents_json(experiment, modules)
+        elements = generate_experiment_contents_json(selected_modules)
       end
 
       if elements_empty? elements
@@ -451,12 +449,12 @@ class ReportsController < ApplicationController
   AvailableRepository = Struct.new(:id, :name)
 
   def load_vars
-    @report = Report.find_by_id(params[:id])
+    @report = current_team.reports.find_by(id: params[:id])
     render_404 unless @report
   end
 
   def load_vars_nested
-    @project = Project.find_by_id(params[:project_id])
+    @project = current_team.projects.find_by(id: params[:project_id])
     render_404 unless @project
     render_403 unless can_read_project?(@project)
   end
