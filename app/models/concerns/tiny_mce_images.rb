@@ -98,7 +98,11 @@ module TinyMceImages
           # We need implement size and type checks here
           url = image['src']
           image_type = FastImage.type(url).to_s
+          next unless image_type
+
           new_image = URI.parse(url).open
+          next if new_image.size > Rails.configuration.x.file_max_size_mb.megabytes
+
           new_image_filename = Asset.generate_unique_secure_token + '.' + image_type
         end
 
