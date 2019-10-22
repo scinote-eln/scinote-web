@@ -96,8 +96,10 @@ module TinyMceImages
 
         else
           # We need implement size and type checks here
-          new_image = URI.parse(image['src']).open
-          new_image_filename = asset.class.generate_unique_secure_token + '.jpg'
+          url = image['src']
+          image_type = FastImage.type(url).to_s
+          new_image = URI.parse(url).open
+          new_image_filename = Asset.generate_unique_secure_token + '.' + image_type
         end
 
         new_asset = TinyMceAsset.create(
