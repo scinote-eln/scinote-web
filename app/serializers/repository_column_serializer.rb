@@ -3,13 +3,13 @@
 class RepositoryColumnSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :name, :message, :edit_url, :update_url, :destroy_html_url
+  attributes :id, :name, :message, :edit_html_url, :update_url, :destroy_html_url
 
   def message
     I18n.t('libraries.repository_columns.create.success_flash', name: object.name)
   end
 
-  def edit_url
+  def edit_html_url
     edit_repository_repository_column_path(object.repository, object)
   end
 
