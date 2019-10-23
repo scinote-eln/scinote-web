@@ -166,6 +166,6 @@ Then("I wait for {int} sec") do |sec|
   sleep sec
 end
 
-Given("default screen size") do
-  page.driver.browser.manage.window.resize_to(1920,1080) if defined?(page.driver.browser.manage)
+Given('default screen size') do
+  page.driver.browser.manage.window.resize_to(1920, 1080) if defined?(page.driver.browser.manage)
 end
