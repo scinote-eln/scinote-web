@@ -18,7 +18,7 @@ include FirstTimeDataGenerator
 
 Capybara.default_max_wait_time = 30
 #Capybara.asset_host = 'http://localhost:3001'
-Capybara.server_port = 3000
+Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'] || 3000
 require 'selenium/webdriver'
 # enables email helper methods
 World(Capybara::Email::DSL)
@@ -26,6 +26,7 @@ World(Capybara::Email::DSL)
 Capybara.register_driver :chrome do |app|
   service = Selenium::WebDriver::Chrome::Service.new(args: ['--whitelisted-ips'])
   options = Selenium::WebDriver::Chrome::Options.new(args: %w(no-sandbox headless disable-dev-shm-usage disable-gpu))
+  options.add_emulation(device_metrics: { width: 1920, height: 1080, touch: false })
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, service: service)
 end
