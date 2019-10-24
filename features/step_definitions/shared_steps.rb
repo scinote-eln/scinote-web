@@ -165,3 +165,7 @@ end
 Then("I wait for {int} sec") do |sec|
   sleep sec
 end
+
+Then('I click button with icon and label {string}') do |label|
+  find('.btn', text: label).click
+end

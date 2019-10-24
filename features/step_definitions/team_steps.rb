@@ -46,9 +46,4 @@ end
 
 Given('team settings page') do
   visit teams_path
-  page.save_screenshot(full: true)
-end
-
-Then('I click leave team button') do
-  find("a[data-action='leave-user-team']").click
 end
