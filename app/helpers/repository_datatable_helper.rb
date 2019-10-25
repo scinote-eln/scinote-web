@@ -6,7 +6,7 @@ module RepositoryDatatableHelper
   def prepare_row_columns(repository_rows,
                           repository,
                           columns_mappings,
-                          team,
+                          _team,
                           assigned_rows)
     parsed_records = []
     repository_rows.each do |record|
@@ -34,7 +34,7 @@ module RepositoryDatatableHelper
       # Add custom columns
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell, team)
+          display_cell_value(cell)
       end
       parsed_records << row
     end
@@ -71,30 +71,7 @@ module RepositoryDatatableHelper
     end.to_json
   end
 
-  def display_cell_value(cell, team)
-    cell_type = cell.value_type.underscore
-    data = if DisplayCellValue.respond_to? cell_type
-             DisplayCellValue.public_send(cell_type, cell, team)
-           else
-             custom_auto_link(display_tooltip(cell.value.data, Constants::NAME_MAX_LENGTH),
-                              simple_format: true,
-                              team: team)
-           end
-    {
-      cell_type: cell.value_type,
-      data: data
-    }
-  end
-
-  class DisplayCellValue
-    def self.repository_asset_value(cell, _team)
-      asset = cell.value.asset
-      {
-        id: asset.id,
-        url: Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment'),
-        preview_url: Rails.application.routes.url_helpers.asset_file_preview_path(asset),
-        file_name: asset.file_name
-      }
-    end
+  def display_cell_value(cell)
+    "RepositoryDatatable::#{cell.value_type}Serializer".constantize.new(cell).serializable_hash
   end
 end
