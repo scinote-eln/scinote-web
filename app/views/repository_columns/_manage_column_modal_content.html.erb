@@ -21,7 +21,7 @@
                class="form-control"
                type="text"
                name="repository_column[name]"
-               id="repository-column-name">
+               id="repository-column-name" value="<%= @repository_column.name unless @repository_column.new_record? %>">
       </div>
     </div>
     <div class="form-group">
@@ -29,17 +29,30 @@
         <%= t('libraries.manange_modal_column.colum_type') %>
       </label>
       <div class="col-sm-9">
-        <select class="form-control" name="repository_column[data_type]" id="repository-column-data-type">
-          <option data-create-url="<%= repository_repository_columns_text_columns_path(@repository) %>" value="RepositoryTextValue">
+        <select class="form-control" name="repository_column[data_type]" id="repository-column-data-type"
+                <%= 'disabled' unless @repository_column.new_record? %>>
+          <option data-create-url="<%= repository_repository_columns_text_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_text_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryTextValue"
+                  <%= 'selected' if @repository_column.RepositoryTextValue? %> >
             <%= t('libraries.manange_modal_column.select.repository_text_value') %>
           </option>
-          <option data-create-url="<%= repository_repository_columns_date_columns_path(@repository) %>" value="RepositoryDateValue">
-            <%= t('libraries.manange_modal_column.select.repository_date_value') %>
+          <option data-create-url="<%= repository_repository_columns_status_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_status_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryStatusValue"
+                  <%= 'selected' if @repository_column.RepositoryStatusValue? %> >
+            <%= t('libraries.manange_modal_column.select.repository_status_value') %>
           </option>
-          <option data-create-url="<%= repository_repository_columns_list_columns_path(@repository) %>" value="RepositoryListValue">
+          <option data-create-url="<%= repository_repository_columns_list_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_list_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryListValue"
+                  <%= 'selected' if @repository_column.RepositoryListValue? %> >
             <%= t('libraries.manange_modal_column.select.repository_list_value') %>
           </option>
-          <option data-create-url="<%= repository_repository_columns_asset_columns_path(@repository) %>" value="RepositoryAssetValue">
+          <option data-create-url="<%= repository_repository_columns_asset_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_asset_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryAssetValue"
+                  <%= 'selected' if @repository_column.RepositoryAssetValue? %> >
             <%= t('libraries.manange_modal_column.select.repository_asset_value') %>
           </option>
         </select>
@@ -56,13 +69,16 @@
     <span style="display: none" class="column-type" data-column-type="RepositoryListValue">
       <%= render partial: "repository_columns/manage_column_partials/list.html.erb" %>
     </span>
-    <span style="display: none" class="column-type" data-column-type="RepositoryDateValue">
-      <%= render partial: "repository_columns/manage_column_partials/date.html.erb" %>
+    <span style="display: none" class="column-type" data-column-type="RepositoryStatusValue">
+      <%= render partial: "repository_columns/manage_column_partials/status.html.erb" %>
     </span>
   </div>
 </div>
 <div class="modal-footer">
-  <button id="new-repo-column-submit" class="btn btn-success" data-action="save">
+  <button id="new-repo-column-submit" class="btn btn-success" data-action="save" style="display: none;">
     <%= t("libraries.manange_modal_column.new.button") %>
+  </button>
+  <button id="update-repo-column-submit" class="btn btn-success" data-action="save"  style="display: none;">
+    <%= t("libraries.manange_modal_column.edit.button") %>
   </button>
 </div>

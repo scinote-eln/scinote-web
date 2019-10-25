@@ -14,7 +14,7 @@ module RepositoryColumns
                       params: repository_column_params)
 
       if service.succeed?
-        render json: service.column, status: :created
+        render json: service.column, status: :created, creating: true
       else
         render json: service.errors, status: :unprocessable_entity
       end
@@ -28,7 +28,7 @@ module RepositoryColumns
                       params: repository_column_params)
 
       if service.succeed?
-        render json: service.column, status: :ok
+        render json: service.column, status: :ok, updating: true
       else
         render json: service.errors, status: :unprocessable_entity
       end

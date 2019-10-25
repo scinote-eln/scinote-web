@@ -5,7 +5,7 @@ var RepositoryColumns = (function() {
 
   function initColumnTypeSelector() {
     var $manageModal = $(manageModal);
-    $manageModal.off('click', '#repository-column-data-type').on('click', '#repository-column-data-type', function() {
+    $manageModal.off('change', '#repository-column-data-type').on('change', '#repository-column-data-type', function() {
       $('.column-type').hide();
       $('[data-column-type="' + $(this).val() + '"]').show();
     });
@@ -75,6 +75,11 @@ var RepositoryColumns = (function() {
     $('[data-attr="no-columns"]').remove();
   }
 
+  function updateListItem(column) {
+    var name = column.attributes.name;
+    $('li[data-id=' + column.id + ']').find('span').first().text(name);
+  }
+
   function initCreateSubmitAction() {
     var $manageModal = $(manageModal);
     $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
@@ -93,8 +98,23 @@ var RepositoryColumns = (function() {
 
   function initEditSubmitAction() {
     var $manageModal = $(manageModal);
-    $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
-      // TODO
+    $manageModal.off('click', '#update-repo-column-submit').on('click', '#update-repo-column-submit', function() {
+      var url = $('#repository-column-data-type').find(':selected').data('edit-url');
+      var params = { repository_column: { name: $('#repository-column-name').val() } };
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        data: params,
+        success: function(result) {
+          var data = result.data;
+          updateListItem(data);
+          HelperModule.flashAlertMsg(data.attributes.message, 'success');
+          $manageModal.modal('hide');
+        },
+        error: function(error) {
+          $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
+        }
+      });
     });
   }
 
@@ -110,6 +130,9 @@ var RepositoryColumns = (function() {
 
         if (button.data('action') === 'new') {
           $('[data-column-type="RepositoryTextValue"]').show();
+          $('#new-repo-column-submit').show();
+        } else {
+          $('#update-repo-column-submit').show();
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
