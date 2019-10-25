@@ -269,3 +269,26 @@
     text-align: right;
   }
 }
+
+.dropdown-preview {
+  align-items: center;
+  background-color: $color-concrete;
+  border: 1px solid $color-gainsboro;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 100px 5px;
+  position: relative;
+
+  .field-name {
+    color: $color-silver-chalice;
+    left: 0;
+    padding: 0 5px;
+    position: absolute;
+    top: 0;
+  }
+
+  .preview-block {
+    flex-basis: 200px;
+  }
+}

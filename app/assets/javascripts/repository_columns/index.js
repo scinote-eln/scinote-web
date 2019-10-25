@@ -1,4 +1,4 @@
-/* global I18n HelperModule animateSpinner */
+/* global I18n HelperModule animateSpinner RepositoryListColumnType */
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
   var manageModal = '#manageRepositoryColumn';
@@ -148,6 +148,7 @@ var RepositoryColumns = (function() {
         initCreateSubmitAction();
         initDeleteSubmitAction();
         initManageColumnModal();
+        RepositoryListColumnType.init();
       }
     }
   };

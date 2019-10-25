@@ -1144,6 +1144,9 @@ en:
       edit:
         title: "Edit %{name} Column"
         button: "Update column"
+      list_type:
+        delimiter_label: "Delimiter"
+        dropdown_items_label: "Dropdown items"
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
