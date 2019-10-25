@@ -6,75 +6,105 @@ Feature: Home page
   I want to add user, comment to a project
 
 Background:
-Given the following users is registered:
- | name                 | email              | password        | team                 | role        |
- |Karli Novak (creator)| nonadmin@myorg.com | mypassword1234  | BioSistemika Process | Administrator|
- |Marija Novak         | marija@myorg.com   | mypassword5555  | BioSistemika Process |  Normal user |
+  Given default screen size
+  Given the "BioSistemika Process" team exists
+  Given the following users are registered
+     | name         | email              | password       | password_confirmation |
+     | Karli Novak  | nonadmin@myorg.com | mypassword1234 | mypassword1234        |
+     | Marija Novak | marija@myorg.com   | mypassword5555 | mypassword5555        |
+  And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
+  And "marija@myorg.com" is in "BioSistemika Process" team as a "normal_user"
+  And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
+ @javascript
  Scenario: Successful create new project
-   Given home page of BioSistemika Process team of a Karli Novak user
-   And I click to "New project" button
-   Then I fill in "Mangart" to Project name field of "Create new project" modal window
-   And I click to "Public" button
-   And I click on "Create project" button
+   Given I'm on the home page of "BioSistemika Process" team
+   And I click "New Project" Scinote button
+   Then I fill in "Mangart" to "Project name" field of "Create new project" modal window
+   And I click "All team members" Scinote button
+   And I click "Create" button
    Then I should see "Project Mangart successfully created." flash message
-   Then I should see "Golica" public project card in "BioSistemika Process" team page
+   Then I should see "Mangart" public project card in "BioSistemika Process" team page
 
+ @javascript
  Scenario: Unsuccessful create new project
-   Given home page of BioSistemika Process team of a Karli Novak user
-   And I click to "New project" button
-   And I click on "Create project" button
-   Then I should see "is too short (minimum is 2 charaacters)" red Project name error message of "Create new project" modal window
-   Then I fill in "Golica" to Project name field of "Create new project" modal window
-   And I click on "Create project" button
-   Then I should see "This project name has to be unique inside a team (this includes the archive)" red Project name error message of "Create new project" modal window
-   And I click on "Cancel" button
+   Given I had project "Mangart" for team "BioSistemika Process"
+   Given I'm on the home page of "BioSistemika Process" team
+   And I click "New Project" Scinote button
+   And I click "Create" button
+   Then I should see "is too short (minimum is 2 characters)" error message of "Create new project" modal window
+   Then I fill in "Mangart" to "Project name" field of "Create new project" modal window
+   And I click "Create" button
+   Then I should see "This project name has to be unique inside a team (this includes the archive)" error message of "Create new project" modal window
+   And I click "Cancel" Scinote button
 
+ @javascript
  Scenario: Successful edit project
-   Given home page of BioSistemika Process team of a Karli Novak user
+   Given I had project "Mangart" for team "BioSistemika Process"
+   And user "Karli Novak" owner of project "Mangart"
+   Given I'm on the home page of "BioSistemika Process" team
    And I click to down arrow of a "Mangart" project card
    And I click to "Edit" of a Options modal window
-   Then I change "Mangart" Project name with "Golica" Project name of "Edit project Mangart" modal window
-   And I click to "Privat" button
-   And I click on "Update project" button
-   Then I should see "Golica" privat project card in "BioSistemika Process" team page
+   Then I change "Mangart" with "Golica" of field "Project name" of "Edit project Mangart" modal window
+   And I click "Project members only" Scinote button
+   And I click "Save" button
+   Then I should see "Golica" private project card in "BioSistemika Process" team page
 
+ @javascript
  Scenario: Successful add user to a project
-   Given home page of BioSistemika Process team of a Karli Novak user
-   And I click to avatar of a "Golica" project card
-   Then I click to "Manage users" on "Golica" project card
-   And I click to "Marija Novak" in users dropdown menu of a "Manage users for Golica" modal window
-   And I click to "User" in Select Role dropdown menu of a "Manage users for Golica" modal window
-   And I click to "Add" button of a "Manage users for Golica" modal window
-   And I click to "Close" button
-   Then I should see "Marija Novak" in Users list of "Golica" project card
+   Given I had project "Mangart" for team "BioSistemika Process"
+   And user "Karli Novak" owner of project "Mangart"
+   And I'm on the home page of "BioSistemika Process" team
+   And I click "users" icon on "Mangart" project card
+   And I click "Manage users" link
+   And I select user "Marija Novak" in user dropdown of user manage modal for project "Mangart"
+   And I select role "User" in role dropdown of user manage modal for project "Mangart"
+   And I click "Add" Scinote button
+   And I click "Close" Scinote button
+   Then I should see "Marija Novak" with role "User" in Users list of "Mangart" project card
 
+  @javascript
   Scenario: Successful change user role to a project
-   Given home page of BioSistemika Process team of a Karli Novak user
-   And I click to avatar of a "Golica" project card
-   Then I click to "Manage users" on "Golica" project card
-   And I click to "Owner" in Change Role dropdown menu of a "Manage users for Golica" modal window
-   And I click to "Close" button
-   Then I should see "Owner" under Marija Novak in Users list of "Golica" project card
+   Given I had project "Mangart" for team "BioSistemika Process"
+   And user "Karli Novak" owner of project "Mangart"
+   And user "Marija Novak" normal user of project "Mangart"
+   And I'm on the home page of "BioSistemika Process" team
+   And I click "users" icon on "Mangart" project card
+   And I click "Manage users" link
+   And I change role "Owner" in role dropdown for user "Marija Nova" of user manage modal for project "Mangart"
+   And I click "Close" Scinote button
+   Then I should see "Marija Novak" with role "Owner" in Users list of "Mangart" project card
 
+  @javascript
   Scenario: Successful add new SciNote user to a project
-   Given home page of BioSistemika Process team of a Karli Novak user
-   And I click to avatar of a "Golica" project card
-   Then I click to "Manage users" on "Golica" project card
-   And I click to "Invite users" link of a "Manage users for Golica" modal window
-   Then I should see team BioSistemika Process settings page of a Karli Novak user
+   Given I had project "Mangart" for team "BioSistemika Process"
+   And user "Karli Novak" owner of project "Mangart"
+   And I'm on the home page of "BioSistemika Process" team
+   
+   And I click "users" icon on "Mangart" project card
+   And I click "Manage users" link
+   And I click "Invite users" link
+   Then I should see team "BioSistemika Process" settings page of a current user
 
+ @javascript
  Scenario: Unsuccessful adding user to a project
-   Given home page of BioSistemika Process team of a Karli Novak user
-   And I click to avatar of a "Golica" project card
-   Then I click to "Manage users" on "Golica" project card
-   And I click to "Marija Novak" in users dropdown menu of a "Manage users for Golica" modal window
-   And I click to "Add" button of a "Manage users for Golica" modal window
-   Then I should see error message "Plese select a user role."
-   And I click to "Close" button
+   Given I had project "Mangart" for team "BioSistemika Process"
+   And user "Karli Novak" owner of project "Mangart"
+   And I'm on the home page of "BioSistemika Process" team
 
+   And I click "users" icon on "Mangart" project card
+   And I click "Manage users" link
+   And I select user "Marija Novak" in user dropdown of user manage modal for project "Mangart"
+   And I click "Add" Scinote button
+   Then I should see "Please select a user role." error message
+   And I click "Close" Scinote button
+
+ @javascript
  Scenario: Removing user from a project
-   Given home page of BioSistemika Process team of a Karli Novak user
+   Given I had project "Mangart" for team "BioSistemika Process"
+   And user "Karli Novak" owner of project "Mangart"
+   And I'm on the home page of "BioSistemika Process" team
+
    And I click to avatar of a "Golica" project card
    Then I click to "Manage users" on "Golica" project card
    And I click to "X" sign at "Marija Novak" user in dropdown menu of a "Manage users for Golica" modal window

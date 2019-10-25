@@ -2,6 +2,10 @@ When(/^I click "(.+)" button$/) do |button|
   click_button(button)
 end
 
+Then("I click {string} Scinote button") do |button|
+  find('.btn', text: button).click
+end
+
 Then("I trigger click {string}") do |string|
   page.execute_script("$('#{string}').trigger('click')")
 end
@@ -113,6 +117,14 @@ Then(/^I fill in "([^"]*)" in "([^"]*)" rich text editor field$/) do |text, inpu
   end
 end
 
+Then("I fill in {string} to {string} field of {string} modal window") do |value, field, modal|
+  page.find('.modal-content', text: modal).find_field(field, with: '').set(value)
+end
+
+Then("I change {string} with {string} of field {string} of {string} modal window") do |old_value, new_value, field, modal|
+  page.find('.modal-content', text: modal).find_field(field, with: old_value).set(new_value)
+end
+
 Then(/^I fill in "([^"]*)" in "([^"]*)" field$/) do |text, input_id|
   page.find(input_id).set(text)
 end
@@ -164,4 +176,12 @@ end
 
 Then("I wait for {int} sec") do |sec|
   sleep sec
+end
+
+Given('default screen size') do
+  page.driver.browser.manage.window.resize_to(1920, 1080) if defined?(page.driver.browser.manage)
+end
+
+Then('I make screenshot') do
+  page.save_screenshot(full: true)
 end
