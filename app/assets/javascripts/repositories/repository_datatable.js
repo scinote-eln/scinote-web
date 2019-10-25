@@ -511,8 +511,8 @@ var RepositoryDatatable = (function(global) {
       }, {
         targets: '_all',
         render: function(data) {
-          if (typeof data === 'object' && $.fn.dataTable.render[data.cell_type]) {
-            return $.fn.dataTable.render[data.cell_type](data);
+          if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
+            return $.fn.dataTable.render[data.value_type](data);
           }
           return data;
         }
