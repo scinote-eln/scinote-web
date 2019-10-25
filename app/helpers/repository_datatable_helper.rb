@@ -89,13 +89,12 @@ module RepositoryDatatableHelper
   class DisplayCellValue
     def self.repository_asset_value(cell, _team)
       asset = cell.value.asset
-      data = {
+      {
         id: asset.id,
         url: Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment'),
+        preview_url: Rails.application.routes.url_helpers.asset_file_preview_path(asset),
         file_name: asset.file_name
       }
-      data[:preview_url] = Rails.application.routes.url_helpers.asset_file_preview_path(asset)
-      data
     end
   end
 end
