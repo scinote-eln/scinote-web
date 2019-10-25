@@ -2,6 +2,7 @@
 
 module RepositoryDatatableHelper
   include InputSanitizeHelper
+
   def prepare_row_columns(repository_rows,
                           repository,
                           columns_mappings,
@@ -71,29 +72,30 @@ module RepositoryDatatableHelper
   end
 
   def display_cell_value(cell, team)
-    value_type = cell.value_type.underscore
-    if (DisplayCellValue.respond_to? value_type) && defined?(render)
-      render DisplayCellValue.public_send(value_type, cell, team)
-    elsif DisplayCellValue.respond_to? "#{value_type}_text"
-      DisplayCellValue.public_send("#{value_type}_text", cell, team)
-    else
-      custom_auto_link(display_tooltip(cell.value.data, Constants::NAME_MAX_LENGTH),
-                       simple_format: true,
-                       team: team)
-    end
+    cell_type = cell.value_type.underscore
+    data = if DisplayCellValue.respond_to? cell_type
+             DisplayCellValue.public_send(cell_type, cell, team)
+           else
+             custom_auto_link(display_tooltip(cell.value.data, Constants::NAME_MAX_LENGTH),
+                              simple_format: true,
+                              team: team)
+           end
+    {
+      cell_type: cell.value_type,
+      data: data
+    }
   end
 
   class DisplayCellValue
     def self.repository_asset_value(cell, _team)
-      {
-        partial: 'shared/asset_link',
-        locals: { asset: cell.value.asset, display_image_tag: false },
-        formats: :html
+      asset = cell.value.asset
+      data = {
+        id: asset.id,
+        url: Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment'),
+        file_name: asset.file_name
       }
-    end
-
-    def self.repository_asset_value_text(cell, _team)
-      cell.value.asset.file_name
+      data[:preview_url] = Rails.application.routes.url_helpers.asset_file_preview_path(asset)
+      data
     end
   end
 end
