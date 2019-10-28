@@ -508,6 +508,14 @@ var RepositoryDatatable = (function(global) {
           return "<a href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
         }
+      }, {
+        targets: '_all',
+        render: function(data) {
+          if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
+            return $.fn.dataTable.render[data.value_type](data);
+          }
+          return data;
+        }
       }],
       oLanguage: {
         sSearch: I18n.t('general.filter_dots')

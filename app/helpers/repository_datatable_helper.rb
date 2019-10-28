@@ -2,10 +2,11 @@
 
 module RepositoryDatatableHelper
   include InputSanitizeHelper
+
   def prepare_row_columns(repository_rows,
                           repository,
                           columns_mappings,
-                          team,
+                          _team,
                           assigned_rows)
     parsed_records = []
     repository_rows.each do |record|
@@ -33,7 +34,7 @@ module RepositoryDatatableHelper
       # Add custom columns
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell, team)
+          display_cell_value(cell)
       end
       parsed_records << row
     end
@@ -70,30 +71,7 @@ module RepositoryDatatableHelper
     end.to_json
   end
 
-  def display_cell_value(cell, team)
-    value_type = cell.value_type.underscore
-    if (DisplayCellValue.respond_to? value_type) && defined?(render)
-      render DisplayCellValue.public_send(value_type, cell, team)
-    elsif DisplayCellValue.respond_to? "#{value_type}_text"
-      DisplayCellValue.public_send("#{value_type}_text", cell, team)
-    else
-      custom_auto_link(display_tooltip(cell.value.data, Constants::NAME_MAX_LENGTH),
-                       simple_format: true,
-                       team: team)
-    end
-  end
-
-  class DisplayCellValue
-    def self.repository_asset_value(cell, _team)
-      {
-        partial: 'shared/asset_link',
-        locals: { asset: cell.value.asset, display_image_tag: false },
-        formats: :html
-      }
-    end
-
-    def self.repository_asset_value_text(cell, _team)
-      cell.value.asset.file_name
-    end
+  def display_cell_value(cell)
+    "RepositoryDatatable::#{cell.value_type}Serializer".constantize.new(cell).serializable_hash
   end
 end
