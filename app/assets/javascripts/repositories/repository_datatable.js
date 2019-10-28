@@ -533,7 +533,7 @@ var RepositoryDatatable = (function(global) {
       columns: (function() {
         var columns = $(TABLE_ID).data('default-table-columns');
         var customColumns = $(TABLE_ID).find('thead th[data-type]');
-        for (let i = 0; i < columns; i += 1) {
+        for (let i = 0; i < columns.length; i += 1) {
           columns[i].data = String(i);
           columns[i].defaultContent = '';
         }
