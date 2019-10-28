@@ -1,3 +1,4 @@
+
 $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   var asset = data.data;
   return `
@@ -14,11 +15,22 @@ $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   `;
 };
 
+$.fn.dataTable.render.defaultRepositoryAssetValue = function() {
+  return '';
+};
 
 $.fn.dataTable.render.RepositoryTextValue = function(data) {
   return data.data;
 };
 
+$.fn.dataTable.render.defaultRepositoryTextValue = function() {
+  return '';
+};
+
 $.fn.dataTable.render.RepositoryListValue = function(data) {
   return data.data;
+};
+
+$.fn.dataTable.render.defaultRepositoryListValue = function() {
+  return '';
 };
