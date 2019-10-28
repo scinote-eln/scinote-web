@@ -531,16 +531,20 @@ var RepositoryDatatable = (function(global) {
       },
       order: $(TABLE_ID).data('default-order'),
       columns: (function() {
-        var numOfColumns = $(TABLE_ID).data('num-columns');
         var columns = $(TABLE_ID).data('default-table-columns');
-        for (let i = 0; i < numOfColumns; i += 1) {
-          if (columns[i] === undefined) {
-            // This should only occur for custom columns
-            columns[i] = { visible: true, searchable: true };
-          }
+        var customColumns = $(TABLE_ID).find('thead th[data-type]');
+        for (let i = 0; i < columns.length; i += 1) {
           columns[i].data = String(i);
           columns[i].defaultContent = '';
         }
+        customColumns.each((i, column) => {
+          columns.push({
+            visible: true,
+            searchable: true,
+            data: String(columns.length),
+            defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
+          });
+        });
         return columns;
       }()),
       fnDrawCallback: function() {
