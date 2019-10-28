@@ -243,8 +243,8 @@ class User < ApplicationRecord
   def avatar_remote_url=(url_value)
     self.avatar = URI.parse(url_value)
     # Assuming url_value is http://example.com/photos/face.png
-    # avatar_file_name == "face.png"
-    # avatar_content_type == "image/png"
+    # avatar.filename == "face.png"
+    # avatar.content_type == "image/png"
     @avatar_remote_url = url_value
   end
 
@@ -323,13 +323,6 @@ class User < ApplicationRecord
     result
       .where_attributes_like([:full_name, :email], query)
       .distinct
-  end
-
-  def empty_avatar(name, size)
-    file_ext = name.split(".").last
-    self.avatar_file_name = name
-    self.avatar_content_type = Rack::Mime.mime_type(".#{file_ext}")
-    self.avatar_file_size = size.to_i
   end
 
   # Whether user is active (= confirmed) or not
