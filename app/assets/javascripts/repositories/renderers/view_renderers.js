@@ -1,4 +1,3 @@
-
 $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   var asset = data.data;
   return `
