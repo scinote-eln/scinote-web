@@ -249,7 +249,7 @@ class User < ApplicationRecord
   end
 
   def avatar_variant(style)
-    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style) unless avatar.attached?
+    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style.to_s) unless avatar.attached?
 
     format = case style.to_sym
              when :medium
