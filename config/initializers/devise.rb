@@ -288,8 +288,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   if Rails.configuration.x.enable_user_registration
-    config.omniauth :linkedin, ENV['LINKEDIN_KEY'], ENV['LINKEDIN_SECRET'],
-                    scope: %w(r_basicprofile r_emailaddress)
+    config.omniauth :linkedin, ENV['LINKEDIN_KEY'], ENV['LINKEDIN_SECRET'], scope: 'r_liteprofile r_emailaddress'
   end
 
   # ==> Warden configuration
