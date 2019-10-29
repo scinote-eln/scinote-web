@@ -5,7 +5,7 @@ source 'http://rubygems.org'
 ruby '2.6.4'
 
 gem 'bootsnap', require: false
-gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.7.1'
 gem 'devise_invitable'
