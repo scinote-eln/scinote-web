@@ -41,13 +41,17 @@ module Users
         redirect_to after_omniauth_failure_path_for(resource_name)
       else
         # Create new user and identity; and redirect to complete sign up form
+        full_name = "#{auth_hash['info']['first_name']} #{auth_hash['info']['last_name']}"
         @user = User.new(
-          full_name: auth_hash['info']['name'],
-          initials: generate_initials(auth_hash['info']['name']),
+          full_name: full_name,
+          initials: generate_initials(full_name),
           email: auth_hash['info']['email'],
           password: generate_user_password
         )
-        @user.avatar_remote_url = (auth_hash['info']['image'])
+        if auth_hash['info']['picture_url']
+          avatar = URI.open(auth_hash['info']['picture_url'])
+          @user.avatar.attach(io: avatar, filename: 'linkedin_avatar.jpg')
+        end
         user_identity = UserIdentity.new(user: @user,
                                          provider: auth_hash['provider'],
                                          uid: auth_hash['uid'])
