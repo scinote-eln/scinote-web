@@ -1387,44 +1387,41 @@ table.dataTable {
   height: 100px;
   position: relative;
   width: 100px;
-}
 
-.avatar-container:hover {
   .avatar-edit {
-    display: block;
+    background-color: $color-silver-chalice;
+    border-radius: inherit;
+    cursor: pointer;
+    display: none;
+    height: inherit;
+    opacity: .8;
+    position: absolute;
+    width: inherit;
   }
 
   .avatar-edit-text {
-    display: block;
+    color: $color-white;
+    cursor: pointer;
+    display: none;
+    padding-top: 40%;
+    position: absolute;
+    text-align: center;
+    width: inherit;
   }
-}
 
-.avatar-image {
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
+  &:hover {
+    .avatar-edit,
+    .avatar-edit-text {
+      display: block;
+    }
+  }
 
-.avatar-edit {
-  background-color: $color-silver-chalice;
-  border-radius: inherit;
-  cursor: pointer;
-  display: none;
-  height: inherit;
-  opacity: .8;
-  position: absolute;
-  width: inherit;
-}
-
-.avatar-edit-text {
-  color: $color-white;
-  cursor: pointer;
-  display: none;
-  padding-top: 40%;
-  position: absolute;
-  text-align: center;
-  width: inherit;
+  .avatar-image {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .avatar-file-upload input[type=file] {
