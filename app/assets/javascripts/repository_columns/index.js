@@ -80,11 +80,21 @@ var RepositoryColumns = (function() {
     $('li[data-id=' + column.id + ']').find('span').first().text(name);
   }
 
+  function loadSpecificParams(type, params) {
+    var newParams = params;
+    if (type === 'RepositoryListValue') {
+      newParams.repository_column.list_items = $('#dropdown_options').val();
+    }
+    return newParams;
+  }
+
   function initCreateSubmitAction() {
     var $manageModal = $(manageModal);
     $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
+      var selectedType = $('#repository-column-data-type').find(':selected').val();
+      params = loadSpecificParams(selectedType, params);
       $.post(url, params, (result) => {
         var data = result.data;
         insertNewListItem(data);
@@ -101,6 +111,8 @@ var RepositoryColumns = (function() {
     $manageModal.off('click', '#update-repo-column-submit').on('click', '#update-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('edit-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
+      var selectedType = $('#repository-column-data-type').find(':selected').val();
+      params = loadSpecificParams(selectedType, params);
       $.ajax({
         url: url,
         type: 'PUT',

@@ -1,6 +1,11 @@
+/* global GLOBAL_CONSTANTS */
 /* eslint-disable no-unused-vars */
 var RepositoryListColumnType = (function() {
   var manageModal = '#manageRepositoryColumn';
+
+  function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
 
   function textToItems(text, delimiter) {
     var res = [];
@@ -26,7 +31,12 @@ var RepositoryListColumnType = (function() {
       }
     });
 
-    return res.filter(Boolean);
+    res = res.filter(Boolean).filter(onlyUnique);
+
+    $.each(res, (index, option) => {
+      res[index] = option.slice(0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
+    });
+    return res;
   }
 
   function drawDropdownPreview(items) {
@@ -47,11 +57,15 @@ var RepositoryListColumnType = (function() {
     var dropdownDelimiter = 'select#delimiter';
 
     $manageModal.off('change keyup paste', listItemsTextarea).on('change keyup paste', listItemsTextarea, function() {
-      drawDropdownPreview(textToItems($(listItemsTextarea).val(), $(dropdownDelimiter).val()));
+      var items = textToItems($(listItemsTextarea).val(), $(dropdownDelimiter).val());
+      drawDropdownPreview(items);
+      $('#dropdown_options').val(items);
     });
 
     $manageModal.off('change', dropdownDelimiter).on('change', dropdownDelimiter, function() {
-      drawDropdownPreview(textToItems($(listItemsTextarea).val(), $(dropdownDelimiter).val()));
+      var items = textToItems($(listItemsTextarea).val(), $(dropdownDelimiter).val());
+      drawDropdownPreview(items);
+      $('#dropdown_options').val(items);
     });
   }
 
