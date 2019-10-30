@@ -1389,8 +1389,14 @@ table.dataTable {
   width: 100px;
 }
 
-.avatar-container:hover .avatar-edit {
-  display: block;
+.avatar-container:hover {
+  .avatar-edit {
+    display: block;
+  }
+
+  .avatar-edit-text {
+    display: block;
+  }
 }
 
 .avatar-image {
@@ -1403,11 +1409,20 @@ table.dataTable {
 .avatar-edit {
   background-color: $color-silver-chalice;
   border-radius: inherit;
-  color: $color-white;
+  cursor: pointer;
   display: none;
   height: inherit;
   opacity: .8;
+  position: absolute;
+  width: inherit;
+}
+
+.avatar-edit-text {
+  color: $color-white;
+  cursor: pointer;
+  display: none;
   padding-top: 40%;
+  position: absolute;
   text-align: center;
   width: inherit;
 }
