@@ -24,6 +24,7 @@ class TeamImporter
     @result_mappings = {}
     @checklist_mappings = {}
     @table_mappings = {}
+    @report_mappings = {}
 
     @project_counter = 0
     @repository_counter = 0
@@ -851,12 +852,14 @@ class TeamImporter
       report_el_parent_mappings = {}
       report_element_mappings = {}
       report = Report.new(report_json['report'])
+      orig_report_id = report.id
       report.id = nil
       report.project_id = @project_mappings[report.project_id]
       report.user_id = find_user(report.user_id)
       report.last_modified_by_id = find_user(report.last_modified_by_id)
       report.team_id = team.id
       report.save!
+      @report_mappings[orig_report_id] = report.id
       @report_counter += 1
       report_json['report_elements'].each do |report_element_json|
         report_element = ReportElement.new(report_element_json)
