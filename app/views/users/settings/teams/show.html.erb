@@ -15,17 +15,23 @@
     <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
 
     <!-- TITLE -->
-    <% if can_update_team?(@team) %>
-      <%= link_to team_name_path(@team, format: :json),
-                  remote: true,
-                  class: 'name-link name-refresh',
-                  style: 'color: inherit' do %>
-        <h3 id="team-name"><%= @team.name %></h3>
+    <h3 id="team-name">
+      <% if can_update_team?(@team) %>
+        <%= render partial: "shared/inline_editing",
+                   locals: {
+                     initial_value: @team.name,
+                     local_config: {
+                       name: 'team_name',
+                       params_group: 'team',
+                       field_to_udpate: 'name',
+                       path_to_update: update_team_path(@team, format: :json)
+                     }
+                   } %>
+      <% else %>
+        <%= @team.name %>
       <% end %>
-    <% else %>
-      <h3 id="team-name"><%= @team.name %></h3>
-    <% end %>
-    <br />
+    </h3>
+    <br>
     <!-- End of TITLE -->
 
     <!-- HEADER -->
@@ -122,7 +128,6 @@
   </div>
 </div>
 
-<%= render partial: 'users/settings/teams/name_modal.html.erb' %>
 <%= render partial: 'users/settings/teams/description_modal.html.erb' %>
 <%= render(
       partial: 'shared/invite_users_modal.html.erb',

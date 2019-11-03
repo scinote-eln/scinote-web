@@ -29,26 +29,26 @@ Scenario: Successful upload avatar image
 @javascript
 Scenario: Successfully changes user full name
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-full-name" input field
+  Then I click on ".settings-page-full-name" element
   And I fill in "Karli Novak Novakovic" in ".settings-page-full-name" input field
-  Then I click "Save" button
-  And I should see "Karli Novak Novakovic" in ".settings-page-full-name" input field
+  Then I click on ".save-button" element
+  And I should see "Karli Novak Novakovic" on ".settings-page-full-name" element
 
 @javascript
 Scenario: Unsuccessfully changes user initials, text is too long
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-initials" input field
+  Then I click on ".settings-page-initials" element
   And I fill in "KNOCK" in ".settings-page-initials" input field
-  Then I click "Save" button
+  Then I click on ".save-button" element
   And I should see "is too long (maximum is 4 characters)" error message
 
 @javascript
 Scenario: Successfully changes user initials
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-initials" input field
+  Then I click on ".settings-page-initials" element
   And I fill in "KN" in ".settings-page-initials" input field
-  Then I click "Save" button
-  And I should see "KN" in ".settings-page-initials" input field
+  Then I click on ".save-button" element
+  And I should see "KN" on ".settings-page-initials" element
 
 @javascript
 Scenario: Successfully changes user email
