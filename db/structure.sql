@@ -50,11 +50,8 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
-<<<<<<< HEAD
-=======
 SET default_with_oids = false;
 
->>>>>>> Initial commit of 1.17.2 merge
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -100,12 +97,7 @@ CREATE TABLE public.active_storage_blobs (
     metadata text,
     byte_size bigint NOT NULL,
     checksum character varying NOT NULL,
-<<<<<<< HEAD
-    created_at timestamp without time zone NOT NULL,
-    service_name character varying NOT NULL
-=======
     created_at timestamp without time zone NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -129,39 +121,6 @@ ALTER SEQUENCE public.active_storage_blobs_id_seq OWNED BY public.active_storage
 
 
 --
-<<<<<<< HEAD
--- Name: active_storage_variant_records; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.active_storage_variant_records (
-    id bigint NOT NULL,
-    blob_id bigint NOT NULL,
-    variation_digest character varying NOT NULL
-);
-
-
---
--- Name: active_storage_variant_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.active_storage_variant_records_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: active_storage_variant_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.active_storage_variant_records_id_seq OWNED BY public.active_storage_variant_records.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: activities; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -179,11 +138,7 @@ CREATE TABLE public.activities (
     subject_id bigint,
     team_id bigint,
     group_type integer,
-<<<<<<< HEAD
-    "values" jsonb
-=======
     "values" json
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -192,10 +147,6 @@ CREATE TABLE public.activities (
 --
 
 CREATE SEQUENCE public.activities_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -211,54 +162,14 @@ ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 
 
 --
-<<<<<<< HEAD
--- Name: activity_filters; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.activity_filters (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    filter jsonb NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: activity_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.activity_filters_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: activity_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.activity_filters_id_seq OWNED BY public.activity_filters.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-<<<<<<< HEAD
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
-=======
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -281,10 +192,6 @@ CREATE TABLE public.asset_text_data (
 --
 
 CREATE SEQUENCE public.asset_text_data_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -307,11 +214,6 @@ CREATE TABLE public.assets (
     id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-<<<<<<< HEAD
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    estimated_size integer DEFAULT 0 NOT NULL,
-=======
     file_file_name character varying,
     file_content_type character varying,
     file_file_size bigint,
@@ -320,19 +222,12 @@ CREATE TABLE public.assets (
     last_modified_by_id bigint,
     estimated_size integer DEFAULT 0 NOT NULL,
     file_present boolean DEFAULT false NOT NULL,
->>>>>>> Initial commit of 1.17.2 merge
     lock character varying(1024),
     lock_ttl integer,
     version integer DEFAULT 1,
     file_processing boolean,
     team_id integer,
-<<<<<<< HEAD
-    file_image_quality integer,
-    view_mode integer DEFAULT 0 NOT NULL,
-    pdf_preview_processing boolean DEFAULT false
-=======
     file_image_quality integer
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -341,10 +236,6 @@ CREATE TABLE public.assets (
 --
 
 CREATE SEQUENCE public.assets_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -360,42 +251,6 @@ ALTER SEQUENCE public.assets_id_seq OWNED BY public.assets.id;
 
 
 --
-<<<<<<< HEAD
--- Name: bmt_filters; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.bmt_filters (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    filters json NOT NULL,
-    created_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: bmt_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.bmt_filters_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: bmt_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.bmt_filters_id_seq OWNED BY public.bmt_filters.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: checklist_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -417,10 +272,6 @@ CREATE TABLE public.checklist_items (
 --
 
 CREATE SEQUENCE public.checklist_items_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -455,10 +306,6 @@ CREATE TABLE public.checklists (
 --
 
 CREATE SEQUENCE public.checklists_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -485,12 +332,7 @@ CREATE TABLE public.comments (
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
     type character varying,
-<<<<<<< HEAD
-    associated_id integer,
-    unseen_by bigint[] DEFAULT '{}'::bigint[]
-=======
     associated_id integer
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -499,10 +341,6 @@ CREATE TABLE public.comments (
 --
 
 CREATE SEQUENCE public.comments_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -533,10 +371,6 @@ CREATE TABLE public.connections (
 --
 
 CREATE SEQUENCE public.connections_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -552,8 +386,6 @@ ALTER SEQUENCE public.connections_id_seq OWNED BY public.connections.id;
 
 
 --
-<<<<<<< HEAD
-=======
 -- Name: custom_fields; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -588,7 +420,6 @@ ALTER SEQUENCE public.custom_fields_id_seq OWNED BY public.custom_fields.id;
 
 
 --
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: teams; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -665,10 +496,6 @@ CREATE TABLE public.delayed_jobs (
 --
 
 CREATE SEQUENCE public.delayed_jobs_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -701,13 +528,10 @@ CREATE TABLE public.experiments (
     restored_on timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-<<<<<<< HEAD
-=======
     workflowimg_file_name character varying,
     workflowimg_content_type character varying,
     workflowimg_file_size bigint,
     workflowimg_updated_at timestamp without time zone,
->>>>>>> Initial commit of 1.17.2 merge
     uuid uuid
 );
 
@@ -717,10 +541,6 @@ CREATE TABLE public.experiments (
 --
 
 CREATE SEQUENCE public.experiments_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -736,84 +556,6 @@ ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
 
 
 --
-<<<<<<< HEAD
--- Name: label_printers; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.label_printers (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    description character varying,
-    type_of integer NOT NULL,
-    language_type integer NOT NULL,
-    host character varying,
-    port integer,
-    fluics_api_key character varying,
-    fluics_lid character varying,
-    current_print_job_ids character varying[] DEFAULT '{}'::character varying[],
-    status integer DEFAULT 0,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: label_printers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.label_printers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: label_printers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.label_printers_id_seq OWNED BY public.label_printers.id;
-
-
---
--- Name: label_templates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.label_templates (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    content text NOT NULL,
-    language_type integer,
-    "default" boolean DEFAULT false NOT NULL,
-    size character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: label_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.label_templates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: label_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.label_templates_id_seq OWNED BY public.label_templates.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: my_module_groups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -831,10 +573,6 @@ CREATE TABLE public.my_module_groups (
 --
 
 CREATE SEQUENCE public.my_module_groups_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -868,10 +606,6 @@ CREATE TABLE public.my_module_repository_rows (
 --
 
 CREATE SEQUENCE public.my_module_repository_rows_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -887,17 +621,6 @@ ALTER SEQUENCE public.my_module_repository_rows_id_seq OWNED BY public.my_module
 
 
 --
-<<<<<<< HEAD
--- Name: my_module_status_conditions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.my_module_status_conditions (
-    id bigint NOT NULL,
-    my_module_status_id bigint,
-    type character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
 -- Name: my_module_tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -906,22 +629,14 @@ CREATE TABLE public.my_module_tags (
     my_module_id integer,
     tag_id integer,
     created_by_id bigint
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: my_module_status_conditions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.my_module_status_conditions_id_seq
-=======
 -- Name: my_module_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.my_module_tags_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -930,24 +645,6 @@ CREATE SEQUENCE public.my_module_tags_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: my_module_status_conditions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.my_module_status_conditions_id_seq OWNED BY public.my_module_status_conditions.id;
-
-
---
--- Name: my_module_status_consequences; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.my_module_status_consequences (
-    id bigint NOT NULL,
-    my_module_status_id bigint,
-    type character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
 -- Name: my_module_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -980,315 +677,6 @@ CREATE TABLE public.my_modules (
     experiment_id bigint DEFAULT 0 NOT NULL,
     state smallint DEFAULT 0,
     completed_on timestamp without time zone
->>>>>>> Initial commit of 1.17.2 merge
-);
-
-
---
-<<<<<<< HEAD
--- Name: my_module_status_consequences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.my_module_status_consequences_id_seq
-=======
--- Name: my_modules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.my_modules_id_seq
->>>>>>> Initial commit of 1.17.2 merge
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
-<<<<<<< HEAD
--- Name: my_module_status_consequences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.my_module_status_consequences_id_seq OWNED BY public.my_module_status_consequences.id;
-
-
---
--- Name: my_module_status_flows; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.my_module_status_flows (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    description character varying,
-    visibility integer DEFAULT 0,
-    team_id bigint,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
--- Name: my_modules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.my_modules_id_seq OWNED BY public.my_modules.id;
-
-
---
--- Name: notifications; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.notifications (
-    id bigint NOT NULL,
-    title character varying,
-    message character varying,
-    type_of integer NOT NULL,
-    generator_user_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
-);
-
-
---
-<<<<<<< HEAD
--- Name: my_module_status_flows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.my_module_status_flows_id_seq
-=======
--- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.notifications_id_seq
->>>>>>> Initial commit of 1.17.2 merge
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
-<<<<<<< HEAD
--- Name: my_module_status_flows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.my_module_status_flows_id_seq OWNED BY public.my_module_status_flows.id;
-
-
---
--- Name: my_module_status_implications; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.my_module_status_implications (
-    id bigint NOT NULL,
-    my_module_status_id bigint,
-    type character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
--- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
-
-
---
--- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.oauth_access_grants (
-    id bigint NOT NULL,
-    resource_owner_id bigint NOT NULL,
-    application_id bigint NOT NULL,
-    token character varying NOT NULL,
-    expires_in integer NOT NULL,
-    redirect_uri text NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    revoked_at timestamp without time zone,
-    scopes character varying
->>>>>>> Initial commit of 1.17.2 merge
-);
-
-
---
-<<<<<<< HEAD
--- Name: my_module_status_implications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.my_module_status_implications_id_seq
-=======
--- Name: oauth_access_grants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.oauth_access_grants_id_seq
->>>>>>> Initial commit of 1.17.2 merge
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
-<<<<<<< HEAD
--- Name: my_module_status_implications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.my_module_status_implications_id_seq OWNED BY public.my_module_status_implications.id;
-
-
---
--- Name: my_module_statuses; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.my_module_statuses (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    description character varying,
-    color character varying NOT NULL,
-    my_module_status_flow_id bigint,
-    previous_status_id bigint,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
--- Name: oauth_access_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.oauth_access_grants_id_seq OWNED BY public.oauth_access_grants.id;
-
-
---
--- Name: oauth_access_tokens; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.oauth_access_tokens (
-    id bigint NOT NULL,
-    resource_owner_id bigint,
-    application_id bigint,
-    token text NOT NULL,
-    refresh_token character varying,
-    expires_in integer,
-    revoked_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    scopes character varying,
-    previous_refresh_token character varying DEFAULT ''::character varying NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
-);
-
-
---
-<<<<<<< HEAD
--- Name: my_module_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.my_module_statuses_id_seq
-=======
--- Name: oauth_access_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.oauth_access_tokens_id_seq
->>>>>>> Initial commit of 1.17.2 merge
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
-<<<<<<< HEAD
--- Name: my_module_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.my_module_statuses_id_seq OWNED BY public.my_module_statuses.id;
-
-
---
--- Name: my_module_tags; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.my_module_tags (
-    id bigint NOT NULL,
-    my_module_id integer,
-    tag_id integer,
-    created_by_id bigint
-=======
--- Name: oauth_access_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.oauth_access_tokens_id_seq OWNED BY public.oauth_access_tokens.id;
-
-
---
--- Name: oauth_applications; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.oauth_applications (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    uid character varying NOT NULL,
-    secret character varying NOT NULL,
-    redirect_uri text NOT NULL,
-    scopes character varying DEFAULT ''::character varying NOT NULL,
-    confidential boolean DEFAULT true NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
-);
-
-
---
-<<<<<<< HEAD
--- Name: my_module_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.my_module_tags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: my_module_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.my_module_tags_id_seq OWNED BY public.my_module_tags.id;
-
-
---
--- Name: my_modules; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.my_modules (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    due_date timestamp without time zone,
-    description character varying,
-    x integer DEFAULT 0 NOT NULL,
-    y integer DEFAULT 0 NOT NULL,
-    my_module_group_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    archived boolean DEFAULT false NOT NULL,
-    archived_on timestamp without time zone,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    archived_by_id bigint,
-    restored_by_id bigint,
-    restored_on timestamp without time zone,
-    workflow_order integer DEFAULT '-1'::integer NOT NULL,
-    experiment_id bigint DEFAULT 0 NOT NULL,
-    state smallint DEFAULT 0,
-    completed_on timestamp without time zone,
-    started_on timestamp without time zone,
-    my_module_status_id bigint,
-    status_changing boolean DEFAULT false,
-    changing_from_my_module_status_id bigint
 );
 
 
@@ -1297,7 +685,6 @@ CREATE TABLE public.my_modules (
 --
 
 CREATE SEQUENCE public.my_modules_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1332,7 +719,6 @@ CREATE TABLE public.notifications (
 --
 
 CREATE SEQUENCE public.notifications_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1360,7 +746,7 @@ CREATE TABLE public.oauth_access_grants (
     redirect_uri text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     revoked_at timestamp without time zone,
-    scopes character varying DEFAULT ''::character varying NOT NULL
+    scopes character varying
 );
 
 
@@ -1442,12 +828,6 @@ CREATE TABLE public.oauth_applications (
 --
 
 CREATE SEQUENCE public.oauth_applications_id_seq
-=======
--- Name: oauth_applications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.oauth_applications_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1463,47 +843,6 @@ ALTER SEQUENCE public.oauth_applications_id_seq OWNED BY public.oauth_applicatio
 
 
 --
-<<<<<<< HEAD
--- Name: project_folders; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.project_folders (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    team_id bigint NOT NULL,
-    parent_folder_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    archived boolean DEFAULT false,
-    archived_by_id bigint,
-    archived_on timestamp without time zone,
-    restored_by_id bigint,
-    restored_on timestamp without time zone
-);
-
-
---
--- Name: project_folders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.project_folders_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: project_folders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.project_folders_id_seq OWNED BY public.project_folders.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1523,14 +862,9 @@ CREATE TABLE public.projects (
     restored_by_id bigint,
     restored_on timestamp without time zone,
     experiments_order character varying,
+    rap_task_level_id integer NOT NULL,
     template boolean,
-<<<<<<< HEAD
-    demo boolean DEFAULT false NOT NULL,
-    project_folder_id bigint,
-    default_public_user_role_id bigint
-=======
     demo boolean DEFAULT false NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -1539,10 +873,6 @@ CREATE TABLE public.projects (
 --
 
 CREATE SEQUENCE public.projects_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1576,10 +906,6 @@ CREATE TABLE public.protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_keywords_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1610,10 +936,6 @@ CREATE TABLE public.protocol_protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_protocol_keywords_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1659,10 +981,6 @@ CREATE TABLE public.protocols (
 --
 
 CREATE SEQUENCE public.protocols_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1675,6 +993,133 @@ CREATE SEQUENCE public.protocols_id_seq
 --
 
 ALTER SEQUENCE public.protocols_id_seq OWNED BY public.protocols.id;
+
+
+--
+-- Name: rap_program_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_program_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_program_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_program_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_program_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_program_levels_id_seq OWNED BY public.rap_program_levels.id;
+
+
+--
+-- Name: rap_project_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_project_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_topic_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_project_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_project_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_project_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_project_levels_id_seq OWNED BY public.rap_project_levels.id;
+
+
+--
+-- Name: rap_task_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_task_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_project_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_task_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_task_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_task_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_task_levels_id_seq OWNED BY public.rap_task_levels.id;
+
+
+--
+-- Name: rap_topic_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_topic_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_program_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_topic_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_topic_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_topic_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_topic_levels_id_seq OWNED BY public.rap_topic_levels.id;
 
 
 --
@@ -1707,10 +1152,6 @@ CREATE TABLE public.report_elements (
 --
 
 CREATE SEQUENCE public.report_elements_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1726,43 +1167,6 @@ ALTER SEQUENCE public.report_elements_id_seq OWNED BY public.report_elements.id;
 
 
 --
-<<<<<<< HEAD
--- Name: report_template_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.report_template_values (
-    id bigint NOT NULL,
-    report_id bigint NOT NULL,
-    view_component character varying NOT NULL,
-    name character varying NOT NULL,
-    value jsonb DEFAULT '{}'::jsonb NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: report_template_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.report_template_values_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: report_template_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.report_template_values_id_seq OWNED BY public.report_template_values.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: reports; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1775,14 +1179,7 @@ CREATE TABLE public.reports (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
-<<<<<<< HEAD
-    team_id bigint,
-    pdf_file_status integer DEFAULT 0,
-    docx_file_status integer DEFAULT 0,
-    settings jsonb DEFAULT '{}'::jsonb NOT NULL
-=======
     team_id bigint
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -1791,10 +1188,6 @@ CREATE TABLE public.reports (
 --
 
 CREATE SEQUENCE public.reports_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1821,21 +1214,7 @@ CREATE TABLE public.repositories (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     discarded_at timestamp without time zone,
-<<<<<<< HEAD
-    permission_level integer DEFAULT 0 NOT NULL,
-    type character varying,
-    parent_id bigint,
-    status integer,
-    selected boolean,
-    my_module_id bigint,
-    archived boolean DEFAULT false NOT NULL,
-    archived_on timestamp without time zone,
-    restored_on timestamp without time zone,
-    archived_by_id bigint,
-    restored_by_id bigint
-=======
     permission_level integer DEFAULT 0 NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -1844,10 +1223,6 @@ CREATE TABLE public.repositories (
 --
 
 CREATE SEQUENCE public.repositories_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1915,10 +1290,6 @@ CREATE TABLE public.repository_cells (
 --
 
 CREATE SEQUENCE public.repository_cells_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1934,107 +1305,6 @@ ALTER SEQUENCE public.repository_cells_id_seq OWNED BY public.repository_cells.i
 
 
 --
-<<<<<<< HEAD
--- Name: repository_checklist_items; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_checklist_items (
-    id bigint NOT NULL,
-    data character varying NOT NULL,
-    repository_column_id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: repository_checklist_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_checklist_items_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: repository_checklist_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_checklist_items_id_seq OWNED BY public.repository_checklist_items.id;
-
-
---
--- Name: repository_checklist_items_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_checklist_items_values (
-    id bigint NOT NULL,
-    repository_checklist_value_id bigint,
-    repository_checklist_item_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: repository_checklist_items_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_checklist_items_values_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: repository_checklist_items_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_checklist_items_values_id_seq OWNED BY public.repository_checklist_items_values.id;
-
-
---
--- Name: repository_checklist_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_checklist_values (
-    id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: repository_checklist_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_checklist_values_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: repository_checklist_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_checklist_values_id_seq OWNED BY public.repository_checklist_values.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: repository_columns; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2045,13 +1315,7 @@ CREATE TABLE public.repository_columns (
     name character varying,
     data_type integer NOT NULL,
     created_at timestamp without time zone,
-<<<<<<< HEAD
-    updated_at timestamp without time zone,
-    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
-    parent_id bigint
-=======
     updated_at timestamp without time zone
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -2060,10 +1324,6 @@ CREATE TABLE public.repository_columns (
 --
 
 CREATE SEQUENCE public.repository_columns_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2079,79 +1339,24 @@ ALTER SEQUENCE public.repository_columns_id_seq OWNED BY public.repository_colum
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_range_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_date_time_range_values (
-    id bigint NOT NULL,
-    start_time timestamp without time zone,
-    end_time timestamp without time zone,
-    last_modified_by_id bigint,
-    created_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    type character varying
-);
-
-
---
--- Name: repository_date_time_range_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_date_time_range_values_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: repository_date_time_range_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_date_time_range_values_id_seq OWNED BY public.repository_date_time_range_values.id;
-
-
---
--- Name: repository_date_time_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_date_time_values (
-=======
 -- Name: repository_date_values; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.repository_date_values (
->>>>>>> Initial commit of 1.17.2 merge
     id bigint NOT NULL,
     data timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     created_by_id bigint NOT NULL,
-<<<<<<< HEAD
-    last_modified_by_id bigint NOT NULL,
-    type character varying
-=======
     last_modified_by_id bigint NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_date_time_values_id_seq
-    AS integer
-=======
 -- Name: repository_date_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.repository_date_values_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2160,17 +1365,10 @@ CREATE SEQUENCE public.repository_date_values_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.repository_date_time_values.id;
-=======
 -- Name: repository_date_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.repository_date_values_id_seq OWNED BY public.repository_date_values.id;
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -2179,10 +1377,7 @@ ALTER SEQUENCE public.repository_date_values_id_seq OWNED BY public.repository_d
 
 CREATE TABLE public.repository_list_items (
     id bigint NOT NULL,
-<<<<<<< HEAD
-=======
     repository_id bigint,
->>>>>>> Initial commit of 1.17.2 merge
     repository_column_id bigint,
     data text NOT NULL,
     created_by_id bigint,
@@ -2245,18 +1440,6 @@ ALTER SEQUENCE public.repository_list_values_id_seq OWNED BY public.repository_l
 
 
 --
-<<<<<<< HEAD
--- Name: repository_number_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_number_values (
-    id bigint NOT NULL,
-    data numeric,
-    last_modified_by_id bigint,
-    created_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
 -- Name: repository_rows; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2268,22 +1451,14 @@ CREATE TABLE public.repository_rows (
     name character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_number_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_number_values_id_seq
-=======
 -- Name: repository_rows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.repository_rows_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2292,33 +1467,6 @@ CREATE SEQUENCE public.repository_rows_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_number_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_number_values_id_seq OWNED BY public.repository_number_values.id;
-
-
---
--- Name: repository_rows; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_rows (
-    id bigint NOT NULL,
-    repository_id integer,
-    created_by_id bigint NOT NULL,
-    last_modified_by_id bigint NOT NULL,
-    name character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    parent_id bigint,
-    archived boolean DEFAULT false NOT NULL,
-    archived_on timestamp without time zone,
-    restored_on timestamp without time zone,
-    archived_by_id bigint,
-    restored_by_id bigint,
-    external_id character varying
-=======
 -- Name: repository_rows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2369,23 +1517,14 @@ CREATE TABLE public.repository_text_values (
     updated_at timestamp without time zone,
     created_by_id bigint NOT NULL,
     last_modified_by_id bigint NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_rows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_rows_id_seq
-    AS integer
-=======
 -- Name: repository_text_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.repository_text_values_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2394,27 +1533,6 @@ CREATE SEQUENCE public.repository_text_values_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_rows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_rows_id_seq OWNED BY public.repository_rows.id;
-
-
---
--- Name: repository_status_items; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_status_items (
-    id bigint NOT NULL,
-    status character varying NOT NULL,
-    icon character varying NOT NULL,
-    repository_column_id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
 -- Name: repository_text_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2429,22 +1547,14 @@ CREATE TABLE public.result_assets (
     id bigint NOT NULL,
     result_id bigint NOT NULL,
     asset_id bigint NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_status_items_id_seq
-=======
 -- Name: result_assets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.result_assets_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2453,25 +1563,6 @@ CREATE SEQUENCE public.result_assets_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_status_items_id_seq OWNED BY public.repository_status_items.id;
-
-
---
--- Name: repository_status_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_status_values (
-    id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    repository_status_item_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
 -- Name: result_assets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2486,22 +1577,14 @@ CREATE TABLE public.result_tables (
     id bigint NOT NULL,
     result_id bigint NOT NULL,
     table_id bigint NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_status_values_id_seq
-=======
 -- Name: result_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.result_tables_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2510,26 +1593,6 @@ CREATE SEQUENCE public.result_tables_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository_status_values.id;
-
-
---
--- Name: repository_table_filter_elements; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_table_filter_elements (
-    id bigint NOT NULL,
-    repository_table_filter_id bigint,
-    repository_column_id bigint,
-    operator integer,
-    parameters jsonb DEFAULT '{}'::jsonb NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
 -- Name: result_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2544,22 +1607,14 @@ CREATE TABLE public.result_texts (
     id bigint NOT NULL,
     text character varying NOT NULL,
     result_id bigint NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_table_filter_elements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_table_filter_elements_id_seq
-=======
 -- Name: result_texts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.result_texts_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2568,26 +1623,6 @@ CREATE SEQUENCE public.result_texts_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_table_filter_elements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_table_filter_elements_id_seq OWNED BY public.repository_table_filter_elements.id;
-
-
---
--- Name: repository_table_filters; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_table_filters (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    default_columns jsonb DEFAULT '{}'::jsonb NOT NULL,
-    repository_id bigint,
-    created_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-=======
 -- Name: result_texts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2611,22 +1646,14 @@ CREATE TABLE public.results (
     archived_by_id bigint,
     restored_by_id bigint,
     restored_on timestamp without time zone
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_table_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_table_filters_id_seq
-=======
 -- Name: results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.results_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2635,23 +1662,6 @@ CREATE SEQUENCE public.results_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_table_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_table_filters_id_seq OWNED BY public.repository_table_filters.id;
-
-
---
--- Name: repository_table_states; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_table_states (
-    id bigint NOT NULL,
-    state jsonb NOT NULL,
-    user_id integer NOT NULL,
-    repository_id integer NOT NULL,
-=======
 -- Name: results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2667,25 +1677,16 @@ CREATE TABLE public.sample_custom_fields (
     value character varying NOT NULL,
     custom_field_id bigint NOT NULL,
     sample_id bigint,
->>>>>>> Initial commit of 1.17.2 merge
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_table_states_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_table_states_id_seq
-    AS integer
-=======
 -- Name: sample_custom_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.sample_custom_fields_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2694,25 +1695,6 @@ CREATE SEQUENCE public.sample_custom_fields_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_table_states_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_table_states_id_seq OWNED BY public.repository_table_states.id;
-
-
---
--- Name: repository_text_values; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_text_values (
-    id bigint NOT NULL,
-    data character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    created_by_id bigint NOT NULL,
-    last_modified_by_id bigint NOT NULL
-=======
 -- Name: sample_custom_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2732,23 +1714,14 @@ CREATE TABLE public.sample_groups (
     updated_at timestamp without time zone NOT NULL,
     created_by_id bigint,
     last_modified_by_id bigint
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: repository_text_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_text_values_id_seq
-    AS integer
-=======
 -- Name: sample_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.sample_groups_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2757,22 +1730,6 @@ CREATE SEQUENCE public.sample_groups_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: repository_text_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_text_values_id_seq OWNED BY public.repository_text_values.id;
-
-
---
--- Name: result_assets; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.result_assets (
-    id bigint NOT NULL,
-    result_id bigint NOT NULL,
-    asset_id bigint NOT NULL
-=======
 -- Name: sample_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2789,23 +1746,14 @@ CREATE TABLE public.sample_my_modules (
     my_module_id bigint NOT NULL,
     assigned_by_id bigint,
     assigned_on timestamp without time zone
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: result_assets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.result_assets_id_seq
-    AS integer
-=======
 -- Name: sample_my_modules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.sample_my_modules_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2814,22 +1762,6 @@ CREATE SEQUENCE public.sample_my_modules_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: result_assets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.result_assets_id_seq OWNED BY public.result_assets.id;
-
-
---
--- Name: result_tables; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.result_tables (
-    id bigint NOT NULL,
-    result_id bigint NOT NULL,
-    table_id bigint NOT NULL
-=======
 -- Name: sample_my_modules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2848,23 +1780,14 @@ CREATE TABLE public.sample_types (
     updated_at timestamp without time zone NOT NULL,
     created_by_id bigint,
     last_modified_by_id bigint
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: result_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.result_tables_id_seq
-    AS integer
-=======
 -- Name: sample_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.sample_types_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2873,22 +1796,6 @@ CREATE SEQUENCE public.sample_types_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: result_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.result_tables_id_seq OWNED BY public.result_tables.id;
-
-
---
--- Name: result_texts; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.result_texts (
-    id bigint NOT NULL,
-    text character varying NOT NULL,
-    result_id bigint NOT NULL
-=======
 -- Name: sample_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2910,23 +1817,14 @@ CREATE TABLE public.samples (
     sample_type_id bigint,
     last_modified_by_id bigint,
     nr_of_modules_assigned_to integer DEFAULT 0
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: result_texts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.result_texts_id_seq
-    AS integer
-=======
 -- Name: samples_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.samples_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2935,31 +1833,6 @@ CREATE SEQUENCE public.samples_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: result_texts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.result_texts_id_seq OWNED BY public.result_texts.id;
-
-
---
--- Name: results; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.results (
-    id bigint NOT NULL,
-    name character varying,
-    my_module_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    archived boolean DEFAULT false NOT NULL,
-    archived_on timestamp without time zone,
-    last_modified_by_id bigint,
-    archived_by_id bigint,
-    restored_by_id bigint,
-    restored_on timestamp without time zone
-=======
 -- Name: samples_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2977,23 +1850,14 @@ CREATE TABLE public.samples_tables (
     team_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
 --
-<<<<<<< HEAD
--- Name: results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.results_id_seq
-    AS integer
-=======
 -- Name: samples_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.samples_tables_id_seq
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3002,17 +1866,10 @@ CREATE SEQUENCE public.samples_tables_id_seq
 
 
 --
-<<<<<<< HEAD
--- Name: results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.results_id_seq OWNED BY public.results.id;
-=======
 -- Name: samples_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.samples_tables_id_seq OWNED BY public.samples_tables.id;
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -3040,10 +1897,6 @@ CREATE TABLE public.settings (
 --
 
 CREATE SEQUENCE public.settings_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3074,10 +1927,6 @@ CREATE TABLE public.step_assets (
 --
 
 CREATE SEQUENCE public.step_assets_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3108,10 +1957,6 @@ CREATE TABLE public.step_tables (
 --
 
 CREATE SEQUENCE public.step_tables_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3141,12 +1986,7 @@ CREATE TABLE public.steps (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
-<<<<<<< HEAD
-    protocol_id bigint NOT NULL,
-    assets_view_mode integer DEFAULT 0 NOT NULL
-=======
     protocol_id bigint NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -3155,10 +1995,6 @@ CREATE TABLE public.steps (
 --
 
 CREATE SEQUENCE public.steps_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3233,10 +2069,6 @@ CREATE TABLE public.tables (
 --
 
 CREATE SEQUENCE public.tables_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3272,10 +2104,6 @@ CREATE TABLE public.tags (
 --
 
 CREATE SEQUENCE public.tags_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3328,10 +2156,6 @@ ALTER SEQUENCE public.team_repositories_id_seq OWNED BY public.team_repositories
 --
 
 CREATE SEQUENCE public.teams_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3354,15 +2178,11 @@ CREATE TABLE public.temp_files (
     id bigint NOT NULL,
     session_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-<<<<<<< HEAD
-    updated_at timestamp without time zone NOT NULL
-=======
     updated_at timestamp without time zone NOT NULL,
     file_file_name character varying,
     file_content_type character varying,
     file_file_size bigint,
     file_updated_at timestamp without time zone
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -3371,10 +2191,6 @@ CREATE TABLE public.temp_files (
 --
 
 CREATE SEQUENCE public.temp_files_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3395,13 +2211,10 @@ ALTER SEQUENCE public.temp_files_id_seq OWNED BY public.temp_files.id;
 
 CREATE TABLE public.tiny_mce_assets (
     id bigint NOT NULL,
-<<<<<<< HEAD
-=======
     image_file_name character varying,
     image_content_type character varying,
     image_file_size bigint,
     image_updated_at timestamp without time zone,
->>>>>>> Initial commit of 1.17.2 merge
     estimated_size integer DEFAULT 0 NOT NULL,
     team_id integer,
     created_at timestamp without time zone NOT NULL,
@@ -3417,10 +2230,6 @@ CREATE TABLE public.tiny_mce_assets (
 --
 
 CREATE SEQUENCE public.tiny_mce_assets_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3452,10 +2261,6 @@ CREATE TABLE public.tokens (
 --
 
 CREATE SEQUENCE public.tokens_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3471,45 +2276,6 @@ ALTER SEQUENCE public.tokens_id_seq OWNED BY public.tokens.id;
 
 
 --
-<<<<<<< HEAD
--- Name: user_assignments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_assignments (
-    id bigint NOT NULL,
-    assignable_type character varying NOT NULL,
-    assignable_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    user_role_id bigint NOT NULL,
-    assigned_by_id bigint,
-    assigned integer DEFAULT 0 NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: user_assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.user_assignments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.user_assignments_id_seq OWNED BY public.user_assignments.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_identities; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3528,10 +2294,6 @@ CREATE TABLE public.user_identities (
 --
 
 CREATE SEQUENCE public.user_identities_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3565,10 +2327,6 @@ CREATE TABLE public.user_my_modules (
 --
 
 CREATE SEQUENCE public.user_my_modules_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3602,10 +2360,6 @@ CREATE TABLE public.user_notifications (
 --
 
 CREATE SEQUENCE public.user_notifications_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3640,10 +2394,6 @@ CREATE TABLE public.user_projects (
 --
 
 CREATE SEQUENCE public.user_projects_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3659,44 +2409,6 @@ ALTER SEQUENCE public.user_projects_id_seq OWNED BY public.user_projects.id;
 
 
 --
-<<<<<<< HEAD
--- Name: user_roles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_roles (
-    id bigint NOT NULL,
-    name character varying,
-    predefined boolean DEFAULT false,
-    permissions character varying[] DEFAULT '{}'::character varying[],
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: user_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.user_roles_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.user_roles_id_seq OWNED BY public.user_roles.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_system_notifications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3735,10 +2447,6 @@ ALTER SEQUENCE public.user_system_notifications_id_seq OWNED BY public.user_syst
 --
 
 CREATE SEQUENCE public.user_teams_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3773,13 +2481,10 @@ CREATE TABLE public.users (
     last_sign_in_ip character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-<<<<<<< HEAD
-=======
     avatar_file_name character varying,
     avatar_content_type character varying,
     avatar_file_size bigint,
     avatar_updated_at timestamp without time zone,
->>>>>>> Initial commit of 1.17.2 merge
     confirmation_token character varying,
     confirmed_at timestamp without time zone,
     confirmation_sent_at timestamp without time zone,
@@ -3795,17 +2500,7 @@ CREATE TABLE public.users (
     current_team_id bigint,
     authentication_token character varying(30),
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
-<<<<<<< HEAD
-    variables jsonb DEFAULT '{}'::jsonb NOT NULL,
-    two_factor_auth_enabled boolean DEFAULT false NOT NULL,
-    otp_secret character varying,
-    otp_recovery_codes jsonb,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    locked_at timestamp without time zone,
-    unlock_token character varying
-=======
     variables jsonb DEFAULT '{}'::jsonb NOT NULL
->>>>>>> Initial commit of 1.17.2 merge
 );
 
 
@@ -3814,10 +2509,6 @@ CREATE TABLE public.users (
 --
 
 CREATE SEQUENCE public.users_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3867,46 +2558,6 @@ ALTER SEQUENCE public.view_states_id_seq OWNED BY public.view_states.id;
 
 
 --
-<<<<<<< HEAD
--- Name: webhooks; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.webhooks (
-    id bigint NOT NULL,
-    activity_filter_id bigint NOT NULL,
-    active boolean DEFAULT true NOT NULL,
-    url character varying NOT NULL,
-    http_method integer NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    last_error text,
-    text text,
-    secret_key character varying
-);
-
-
---
--- Name: webhooks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.webhooks_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: webhooks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.webhooks_id_seq OWNED BY public.webhooks.id;
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: wopi_actions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3924,10 +2575,6 @@ CREATE TABLE public.wopi_actions (
 --
 
 CREATE SEQUENCE public.wopi_actions_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3959,10 +2606,6 @@ CREATE TABLE public.wopi_apps (
 --
 
 CREATE SEQUENCE public.wopi_apps_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3996,10 +2639,6 @@ CREATE TABLE public.wopi_discoveries (
 --
 
 CREATE SEQUENCE public.wopi_discoveries_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4023,13 +2662,10 @@ CREATE TABLE public.zip_exports (
     user_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-<<<<<<< HEAD
-=======
     zip_file_file_name character varying,
     zip_file_content_type character varying,
     zip_file_file_size bigint,
     zip_file_updated_at timestamp without time zone,
->>>>>>> Initial commit of 1.17.2 merge
     type character varying
 );
 
@@ -4039,10 +2675,6 @@ CREATE TABLE public.zip_exports (
 --
 
 CREATE SEQUENCE public.zip_exports_id_seq
-<<<<<<< HEAD
-    AS integer
-=======
->>>>>>> Initial commit of 1.17.2 merge
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4072,16 +2704,6 @@ ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
-<<<<<<< HEAD
--- Name: active_storage_variant_records id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAULT nextval('public.active_storage_variant_records_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: activities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4089,16 +2711,6 @@ ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.a
 
 
 --
-<<<<<<< HEAD
--- Name: activity_filters id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.activity_filters ALTER COLUMN id SET DEFAULT nextval('public.activity_filters_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: asset_text_data id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4113,16 +2725,6 @@ ALTER TABLE ONLY public.assets ALTER COLUMN id SET DEFAULT nextval('public.asset
 
 
 --
-<<<<<<< HEAD
--- Name: bmt_filters id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.bmt_filters ALTER COLUMN id SET DEFAULT nextval('public.bmt_filters_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: checklist_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4151,33 +2753,6 @@ ALTER TABLE ONLY public.connections ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
-<<<<<<< HEAD
--- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public.delayed_jobs_id_seq'::regclass);
-
-
---
--- Name: experiments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.experiments_id_seq'::regclass);
-
-
---
--- Name: label_printers id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.label_printers ALTER COLUMN id SET DEFAULT nextval('public.label_printers_id_seq'::regclass);
-
-
---
--- Name: label_templates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.label_templates ALTER COLUMN id SET DEFAULT nextval('public.label_templates_id_seq'::regclass);
-=======
 -- Name: custom_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4196,7 +2771,6 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.experiments_id_seq'::regclass);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -4214,44 +2788,6 @@ ALTER TABLE ONLY public.my_module_repository_rows ALTER COLUMN id SET DEFAULT ne
 
 
 --
-<<<<<<< HEAD
--- Name: my_module_status_conditions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_conditions ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_conditions_id_seq'::regclass);
-
-
---
--- Name: my_module_status_consequences id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_consequences ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_consequences_id_seq'::regclass);
-
-
---
--- Name: my_module_status_flows id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_flows ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_flows_id_seq'::regclass);
-
-
---
--- Name: my_module_status_implications id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_implications ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_implications_id_seq'::regclass);
-
-
---
--- Name: my_module_statuses id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_statuses ALTER COLUMN id SET DEFAULT nextval('public.my_module_statuses_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: my_module_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4294,16 +2830,6 @@ ALTER TABLE ONLY public.oauth_applications ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
-<<<<<<< HEAD
--- Name: project_folders id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_folders ALTER COLUMN id SET DEFAULT nextval('public.project_folders_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4332,6 +2858,34 @@ ALTER TABLE ONLY public.protocols ALTER COLUMN id SET DEFAULT nextval('public.pr
 
 
 --
+-- Name: rap_program_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_program_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_program_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_project_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_project_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_task_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_task_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_topic_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_topic_levels_id_seq'::regclass);
+
+
+--
 -- Name: report_elements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4339,16 +2893,6 @@ ALTER TABLE ONLY public.report_elements ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
-<<<<<<< HEAD
--- Name: report_template_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.report_template_values ALTER COLUMN id SET DEFAULT nextval('public.report_template_values_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4377,30 +2921,6 @@ ALTER TABLE ONLY public.repository_cells ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
-<<<<<<< HEAD
--- Name: repository_checklist_items id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_items ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_items_id_seq'::regclass);
-
-
---
--- Name: repository_checklist_items_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_items_values ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_items_values_id_seq'::regclass);
-
-
---
--- Name: repository_checklist_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_values ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_values_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: repository_columns id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4408,117 +2928,6 @@ ALTER TABLE ONLY public.repository_columns ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_range_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_date_time_range_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_time_range_values_id_seq'::regclass);
-
-
---
--- Name: repository_date_time_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_date_time_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_time_values_id_seq'::regclass);
-
-
---
--- Name: repository_list_items id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_list_items ALTER COLUMN id SET DEFAULT nextval('public.repository_list_items_id_seq'::regclass);
-
-
---
--- Name: repository_list_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_list_values ALTER COLUMN id SET DEFAULT nextval('public.repository_list_values_id_seq'::regclass);
-
-
---
--- Name: repository_number_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_number_values ALTER COLUMN id SET DEFAULT nextval('public.repository_number_values_id_seq'::regclass);
-
-
---
--- Name: repository_rows id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_rows ALTER COLUMN id SET DEFAULT nextval('public.repository_rows_id_seq'::regclass);
-
-
---
--- Name: repository_status_items id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_items ALTER COLUMN id SET DEFAULT nextval('public.repository_status_items_id_seq'::regclass);
-
-
---
--- Name: repository_status_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nextval('public.repository_status_values_id_seq'::regclass);
-
-
---
--- Name: repository_table_filter_elements id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_table_filter_elements ALTER COLUMN id SET DEFAULT nextval('public.repository_table_filter_elements_id_seq'::regclass);
-
-
---
--- Name: repository_table_filters id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_table_filters ALTER COLUMN id SET DEFAULT nextval('public.repository_table_filters_id_seq'::regclass);
-
-
---
--- Name: repository_table_states id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_table_states ALTER COLUMN id SET DEFAULT nextval('public.repository_table_states_id_seq'::regclass);
-
-
---
--- Name: repository_text_values id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_text_values ALTER COLUMN id SET DEFAULT nextval('public.repository_text_values_id_seq'::regclass);
-
-
---
--- Name: result_assets id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.result_assets ALTER COLUMN id SET DEFAULT nextval('public.result_assets_id_seq'::regclass);
-
-
---
--- Name: result_tables id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.result_tables ALTER COLUMN id SET DEFAULT nextval('public.result_tables_id_seq'::regclass);
-
-
---
--- Name: result_texts id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.result_texts ALTER COLUMN id SET DEFAULT nextval('public.result_texts_id_seq'::regclass);
-
-
---
--- Name: results id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.results ALTER COLUMN id SET DEFAULT nextval('public.results_id_seq'::regclass);
-=======
 -- Name: repository_date_values id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4628,7 +3037,6 @@ ALTER TABLE ONLY public.samples ALTER COLUMN id SET DEFAULT nextval('public.samp
 --
 
 ALTER TABLE ONLY public.samples_tables ALTER COLUMN id SET DEFAULT nextval('public.samples_tables_id_seq'::regclass);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -4716,16 +3124,6 @@ ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT nextval('public.token
 
 
 --
-<<<<<<< HEAD
--- Name: user_assignments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_assignments ALTER COLUMN id SET DEFAULT nextval('public.user_assignments_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_identities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4754,16 +3152,6 @@ ALTER TABLE ONLY public.user_projects ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
-<<<<<<< HEAD
--- Name: user_roles id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_roles ALTER COLUMN id SET DEFAULT nextval('public.user_roles_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_system_notifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4792,16 +3180,6 @@ ALTER TABLE ONLY public.view_states ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
-<<<<<<< HEAD
--- Name: webhooks id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.webhooks ALTER COLUMN id SET DEFAULT nextval('public.webhooks_id_seq'::regclass);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: wopi_actions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4846,17 +3224,6 @@ ALTER TABLE ONLY public.active_storage_blobs
 
 
 --
-<<<<<<< HEAD
--- Name: active_storage_variant_records active_storage_variant_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.active_storage_variant_records
-    ADD CONSTRAINT active_storage_variant_records_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: activities activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4865,17 +3232,6 @@ ALTER TABLE ONLY public.activities
 
 
 --
-<<<<<<< HEAD
--- Name: activity_filters activity_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.activity_filters
-    ADD CONSTRAINT activity_filters_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4900,17 +3256,6 @@ ALTER TABLE ONLY public.assets
 
 
 --
-<<<<<<< HEAD
--- Name: bmt_filters bmt_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.bmt_filters
-    ADD CONSTRAINT bmt_filters_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: checklist_items checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4943,8 +3288,6 @@ ALTER TABLE ONLY public.connections
 
 
 --
-<<<<<<< HEAD
-=======
 -- Name: custom_fields custom_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4953,7 +3296,6 @@ ALTER TABLE ONLY public.custom_fields
 
 
 --
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: delayed_jobs delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4970,25 +3312,6 @@ ALTER TABLE ONLY public.experiments
 
 
 --
-<<<<<<< HEAD
--- Name: label_printers label_printers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.label_printers
-    ADD CONSTRAINT label_printers_pkey PRIMARY KEY (id);
-
-
---
--- Name: label_templates label_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.label_templates
-    ADD CONSTRAINT label_templates_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: my_module_groups my_module_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5005,49 +3328,6 @@ ALTER TABLE ONLY public.my_module_repository_rows
 
 
 --
-<<<<<<< HEAD
--- Name: my_module_status_conditions my_module_status_conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_conditions
-    ADD CONSTRAINT my_module_status_conditions_pkey PRIMARY KEY (id);
-
-
---
--- Name: my_module_status_consequences my_module_status_consequences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_consequences
-    ADD CONSTRAINT my_module_status_consequences_pkey PRIMARY KEY (id);
-
-
---
--- Name: my_module_status_flows my_module_status_flows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_flows
-    ADD CONSTRAINT my_module_status_flows_pkey PRIMARY KEY (id);
-
-
---
--- Name: my_module_status_implications my_module_status_implications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_implications
-    ADD CONSTRAINT my_module_status_implications_pkey PRIMARY KEY (id);
-
-
---
--- Name: my_module_statuses my_module_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_statuses
-    ADD CONSTRAINT my_module_statuses_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: my_module_tags my_module_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5096,17 +3376,6 @@ ALTER TABLE ONLY public.oauth_applications
 
 
 --
-<<<<<<< HEAD
--- Name: project_folders project_folders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_folders
-    ADD CONSTRAINT project_folders_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5139,6 +3408,38 @@ ALTER TABLE ONLY public.protocols
 
 
 --
+-- Name: rap_program_levels rap_program_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_program_levels
+    ADD CONSTRAINT rap_program_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_project_levels rap_project_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels
+    ADD CONSTRAINT rap_project_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_task_levels rap_task_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels
+    ADD CONSTRAINT rap_task_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_topic_levels rap_topic_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels
+    ADD CONSTRAINT rap_topic_levels_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: report_elements report_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5147,17 +3448,6 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
-<<<<<<< HEAD
--- Name: report_template_values report_template_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.report_template_values
-    ADD CONSTRAINT report_template_values_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5190,33 +3480,6 @@ ALTER TABLE ONLY public.repository_cells
 
 
 --
-<<<<<<< HEAD
--- Name: repository_checklist_items repository_checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_items
-    ADD CONSTRAINT repository_checklist_items_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_checklist_items_values repository_checklist_items_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_items_values
-    ADD CONSTRAINT repository_checklist_items_values_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_checklist_values repository_checklist_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_values
-    ADD CONSTRAINT repository_checklist_values_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: repository_columns repository_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5225,27 +3488,11 @@ ALTER TABLE ONLY public.repository_columns
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_range_values repository_date_time_range_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_date_time_range_values
-    ADD CONSTRAINT repository_date_time_range_values_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_date_time_values repository_date_time_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_date_time_values
-    ADD CONSTRAINT repository_date_time_values_pkey PRIMARY KEY (id);
-=======
 -- Name: repository_date_values repository_date_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_date_values
     ADD CONSTRAINT repository_date_values_pkey PRIMARY KEY (id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -5265,101 +3512,6 @@ ALTER TABLE ONLY public.repository_list_values
 
 
 --
-<<<<<<< HEAD
--- Name: repository_number_values repository_number_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_number_values
-    ADD CONSTRAINT repository_number_values_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_rows repository_rows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_rows
-    ADD CONSTRAINT repository_rows_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_status_items repository_status_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_items
-    ADD CONSTRAINT repository_status_items_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_status_values repository_status_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_values
-    ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_table_filter_elements repository_table_filter_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_table_filter_elements
-    ADD CONSTRAINT repository_table_filter_elements_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_table_filters repository_table_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_table_filters
-    ADD CONSTRAINT repository_table_filters_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_table_states repository_table_states_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_table_states
-    ADD CONSTRAINT repository_table_states_pkey PRIMARY KEY (id);
-
-
---
--- Name: repository_text_values repository_text_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_text_values
-    ADD CONSTRAINT repository_text_values_pkey PRIMARY KEY (id);
-
-
---
--- Name: result_assets result_assets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.result_assets
-    ADD CONSTRAINT result_assets_pkey PRIMARY KEY (id);
-
-
---
--- Name: result_tables result_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.result_tables
-    ADD CONSTRAINT result_tables_pkey PRIMARY KEY (id);
-
-
---
--- Name: result_texts result_texts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.result_texts
-    ADD CONSTRAINT result_texts_pkey PRIMARY KEY (id);
-
-
---
--- Name: results results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.results
-    ADD CONSTRAINT results_pkey PRIMARY KEY (id);
-=======
 -- Name: repository_rows repository_rows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5461,7 +3613,6 @@ ALTER TABLE ONLY public.samples
 
 ALTER TABLE ONLY public.samples_tables
     ADD CONSTRAINT samples_tables_pkey PRIMARY KEY (id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -5569,17 +3720,6 @@ ALTER TABLE ONLY public.tokens
 
 
 --
-<<<<<<< HEAD
--- Name: user_assignments user_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_assignments
-    ADD CONSTRAINT user_assignments_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_identities user_identities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5612,17 +3752,6 @@ ALTER TABLE ONLY public.user_projects
 
 
 --
-<<<<<<< HEAD
--- Name: user_roles user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_roles
-    ADD CONSTRAINT user_roles_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_system_notifications user_system_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5655,17 +3784,6 @@ ALTER TABLE ONLY public.view_states
 
 
 --
-<<<<<<< HEAD
--- Name: webhooks webhooks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.webhooks
-    ADD CONSTRAINT webhooks_pkey PRIMARY KEY (id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: wopi_actions wopi_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5733,16 +3851,6 @@ CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_b
 
 
 --
-<<<<<<< HEAD
--- Name: index_active_storage_variant_records_uniqueness; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.active_storage_variant_records USING btree (blob_id, variation_digest);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_activities_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5750,16 +3858,6 @@ CREATE INDEX index_activities_on_created_at ON public.activities USING btree (cr
 
 
 --
-<<<<<<< HEAD
--- Name: index_activities_on_created_at_and_team_id_and_no_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_activities_on_created_at_and_team_id_and_no_project_id ON public.activities USING btree (created_at DESC, team_id) WHERE (project_id IS NULL);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_activities_on_experiment_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5837,26 +3935,6 @@ CREATE INDEX index_assets_on_created_by_id ON public.assets USING btree (created
 
 
 --
-<<<<<<< HEAD
--- Name: index_assets_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_assets_on_last_modified_by_id ON public.assets USING btree (last_modified_by_id);
-
-
---
--- Name: index_assets_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_assets_on_team_id ON public.assets USING btree (team_id);
-
-
---
--- Name: index_bmt_filters_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_bmt_filters_on_created_by_id ON public.bmt_filters USING btree (created_by_id);
-=======
 -- Name: index_assets_on_file_file_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5875,7 +3953,6 @@ CREATE INDEX index_assets_on_last_modified_by_id ON public.assets USING btree (l
 --
 
 CREATE INDEX index_assets_on_team_id ON public.assets USING btree (team_id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -5991,145 +4068,6 @@ CREATE INDEX index_connections_on_output_id ON public.connections USING btree (o
 
 
 --
-<<<<<<< HEAD
--- Name: index_experiments_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_archived_by_id ON public.experiments USING btree (archived_by_id);
-
-
---
--- Name: index_experiments_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_created_by_id ON public.experiments USING btree (created_by_id);
-
-
---
--- Name: index_experiments_on_description; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_description ON public.experiments USING gin (public.trim_html_tags(description) public.gin_trgm_ops);
-
-
---
--- Name: index_experiments_on_experiment_code; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_experiment_code ON public.experiments USING gin ((('EX'::text || id)) public.gin_trgm_ops);
-
-
---
--- Name: index_experiments_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_last_modified_by_id ON public.experiments USING btree (last_modified_by_id);
-
-
---
--- Name: index_experiments_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_name ON public.experiments USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_experiments_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_project_id ON public.experiments USING btree (project_id);
-
-
---
--- Name: index_experiments_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_experiments_on_restored_by_id ON public.experiments USING btree (restored_by_id);
-
-
---
--- Name: index_label_templates_on_language_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_label_templates_on_language_type ON public.label_templates USING btree (language_type);
-
-
---
--- Name: index_my_module_groups_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_groups_on_created_by_id ON public.my_module_groups USING btree (created_by_id);
-
-
---
--- Name: index_my_module_groups_on_experiment_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_groups_on_experiment_id ON public.my_module_groups USING btree (experiment_id);
-
-
---
--- Name: index_my_module_ids_repository_row_ids; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_ids_repository_row_ids ON public.my_module_repository_rows USING btree (my_module_id, repository_row_id);
-
-
---
--- Name: index_my_module_repository_rows_on_repository_row_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_repository_rows_on_repository_row_id ON public.my_module_repository_rows USING btree (repository_row_id);
-
-
---
--- Name: index_my_module_status_conditions_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_status_conditions_on_my_module_status_id ON public.my_module_status_conditions USING btree (my_module_status_id);
-
-
---
--- Name: index_my_module_status_consequences_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_status_consequences_on_my_module_status_id ON public.my_module_status_consequences USING btree (my_module_status_id);
-
-
---
--- Name: index_my_module_status_flows_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_status_flows_on_team_id ON public.my_module_status_flows USING btree (team_id);
-
-
---
--- Name: index_my_module_status_flows_on_visibility; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_status_flows_on_visibility ON public.my_module_status_flows USING btree (visibility);
-
-
---
--- Name: index_my_module_status_implications_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_status_implications_on_my_module_status_id ON public.my_module_status_implications USING btree (my_module_status_id);
-
-
---
--- Name: index_my_module_statuses_on_my_module_status_flow_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_module_statuses_on_my_module_status_flow_id ON public.my_module_statuses USING btree (my_module_status_flow_id);
-
-
---
--- Name: index_my_module_statuses_on_previous_status_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_my_module_statuses_on_previous_status_id ON public.my_module_statuses USING btree (previous_status_id);
-=======
 -- Name: index_custom_fields_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6218,7 +4156,6 @@ CREATE INDEX index_my_module_ids_repository_row_ids ON public.my_module_reposito
 --
 
 CREATE INDEX index_my_module_repository_rows_on_repository_row_id ON public.my_module_repository_rows USING btree (repository_row_id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -6285,16 +4222,6 @@ CREATE INDEX index_my_modules_on_my_module_group_id ON public.my_modules USING b
 
 
 --
-<<<<<<< HEAD
--- Name: index_my_modules_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_modules_on_my_module_status_id ON public.my_modules USING btree (my_module_status_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_my_modules_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6365,58 +4292,6 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 
 
 --
-<<<<<<< HEAD
--- Name: index_on_rep_status_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_on_rep_status_type_id ON public.repository_status_values USING btree (repository_status_item_id);
-
-
---
--- Name: index_on_repository_checklist_item_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_on_repository_checklist_item_id ON public.repository_checklist_items_values USING btree (repository_checklist_item_id);
-
-
---
--- Name: index_on_repository_checklist_value_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checklist_items_values USING btree (repository_checklist_value_id);
-
-
---
--- Name: index_on_repository_table_filter_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_on_repository_table_filter_id ON public.repository_table_filter_elements USING btree (repository_table_filter_id);
-
-
---
--- Name: index_project_folders_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_folders_on_name ON public.project_folders USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_project_folders_on_parent_folder_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_folders_on_parent_folder_id ON public.project_folders USING btree (parent_folder_id);
-
-
---
--- Name: index_project_folders_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_folders_on_team_id ON public.project_folders USING btree (team_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_projects_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6431,16 +4306,6 @@ CREATE INDEX index_projects_on_created_by_id ON public.projects USING btree (cre
 
 
 --
-<<<<<<< HEAD
--- Name: index_projects_on_default_public_user_role_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_on_default_public_user_role_id ON public.projects USING btree (default_public_user_role_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_projects_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6455,16 +4320,13 @@ CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_ht
 
 
 --
-<<<<<<< HEAD
--- Name: index_projects_on_project_folder_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_projects_on_rap_task_level_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_project_folder_id ON public.projects USING btree (project_folder_id);
+CREATE INDEX index_projects_on_rap_task_level_id ON public.projects USING btree (rap_task_level_id);
 
 
 --
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_projects_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6577,6 +4439,55 @@ CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id
 
 
 --
+-- Name: index_rap_program_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_program_levels_on_name ON public.rap_program_levels USING btree (name);
+
+
+--
+-- Name: index_rap_project_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_project_levels_on_name ON public.rap_project_levels USING btree (name);
+
+
+--
+-- Name: index_rap_project_levels_on_rap_topic_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_project_levels_on_rap_topic_level_id ON public.rap_project_levels USING btree (rap_topic_level_id);
+
+
+--
+-- Name: index_rap_task_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_task_levels_on_name ON public.rap_task_levels USING btree (name);
+
+
+--
+-- Name: index_rap_task_levels_on_rap_project_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_task_levels_on_rap_project_level_id ON public.rap_task_levels USING btree (rap_project_level_id);
+
+
+--
+-- Name: index_rap_topic_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_topic_levels_on_name ON public.rap_topic_levels USING btree (name);
+
+
+--
+-- Name: index_rap_topic_levels_on_rap_program_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_topic_levels_on_rap_program_level_id ON public.rap_topic_levels USING btree (rap_program_level_id);
+
+
+--
 -- Name: index_report_elements_on_asset_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6654,23 +4565,6 @@ CREATE INDEX index_report_elements_on_table_id ON public.report_elements USING b
 
 
 --
-<<<<<<< HEAD
--- Name: index_report_template_values_on_report_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_report_template_values_on_report_id ON public.report_template_values USING btree (report_id);
-
-
---
--- Name: index_report_template_values_on_view_component_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_report_template_values_on_view_component_name ON public.report_template_values USING btree (view_component, name);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_reports_on_description; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6713,16 +4607,6 @@ CREATE INDEX index_reports_on_user_id ON public.reports USING btree (user_id);
 
 
 --
-<<<<<<< HEAD
--- Name: index_repositories_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repositories_on_archived_by_id ON public.repositories USING btree (archived_by_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_repositories_on_discarded_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6730,16 +4614,6 @@ CREATE INDEX index_repositories_on_discarded_at ON public.repositories USING btr
 
 
 --
-<<<<<<< HEAD
--- Name: index_repositories_on_my_module_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repositories_on_my_module_id ON public.repositories USING btree (my_module_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_repositories_on_permission_level; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6747,16 +4621,6 @@ CREATE INDEX index_repositories_on_permission_level ON public.repositories USING
 
 
 --
-<<<<<<< HEAD
--- Name: index_repositories_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repositories_on_restored_by_id ON public.repositories USING btree (restored_by_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_repositories_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6792,16 +4656,6 @@ CREATE INDEX index_repository_cells_on_repository_column_id ON public.repository
 
 
 --
-<<<<<<< HEAD
--- Name: index_repository_cells_on_repository_row_and_repository_column; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_repository_cells_on_repository_row_and_repository_column ON public.repository_cells USING btree (repository_row_id, repository_column_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_repository_cells_on_repository_row_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6809,59 +4663,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
-<<<<<<< HEAD
--- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
-
-
---
--- Name: index_repository_checklist_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_checklist_items_on_created_by_id ON public.repository_checklist_items USING btree (created_by_id);
-
-
---
--- Name: index_repository_checklist_items_on_data; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_checklist_items_on_data ON public.repository_checklist_items USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_checklist_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_checklist_items_on_last_modified_by_id ON public.repository_checklist_items USING btree (last_modified_by_id);
-
-
---
--- Name: index_repository_checklist_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_checklist_items_on_repository_column_id ON public.repository_checklist_items USING btree (repository_column_id);
-
-
---
--- Name: index_repository_checklist_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_checklist_values_on_created_by_id ON public.repository_checklist_values USING btree (created_by_id);
-
-
---
--- Name: index_repository_checklist_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_checklist_values_on_last_modified_by_id ON public.repository_checklist_values USING btree (last_modified_by_id);
-=======
 -- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -6872,383 +4677,6 @@ CREATE INDEX index_repository_columns_on_repository_id ON public.repository_colu
 
 
 --
-<<<<<<< HEAD
--- Name: index_repository_date_time_range_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_created_by_id ON public.repository_date_time_range_values USING btree (created_by_id);
-
-
---
--- Name: index_repository_date_time_range_values_on_end_time_as_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date ON public.repository_date_time_range_values USING btree (((end_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
-
-
---
--- Name: index_repository_date_time_range_values_on_end_time_as_date_tim; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date_tim ON public.repository_date_time_range_values USING btree (end_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
-
-
---
--- Name: index_repository_date_time_range_values_on_end_time_as_time; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_end_time_as_time ON public.repository_date_time_range_values USING btree (((end_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
-
-
---
--- Name: index_repository_date_time_range_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_last_modified_by_id ON public.repository_date_time_range_values USING btree (last_modified_by_id);
-
-
---
--- Name: index_repository_date_time_range_values_on_start_time_as_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date ON public.repository_date_time_range_values USING btree (((start_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
-
-
---
--- Name: index_repository_date_time_range_values_on_start_time_as_date_t; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date_t ON public.repository_date_time_range_values USING btree (start_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
-
-
---
--- Name: index_repository_date_time_range_values_on_start_time_as_time; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_range_values_on_start_time_as_time ON public.repository_date_time_range_values USING btree (((start_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
-
-
---
--- Name: index_repository_date_time_values_on_data_as_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_values_on_data_as_date ON public.repository_date_time_values USING btree (((data)::date)) WHERE ((type)::text = 'RepositoryDateValue'::text);
-
-
---
--- Name: index_repository_date_time_values_on_data_as_date_time; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_values_on_data_as_date_time ON public.repository_date_time_values USING btree (data) WHERE ((type)::text = 'RepositoryDateTimeValue'::text);
-
-
---
--- Name: index_repository_date_time_values_on_data_as_time; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_date_time_values_on_data_as_time ON public.repository_date_time_values USING btree (((data)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeValue'::text);
-
-
---
--- Name: index_repository_list_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_items_on_created_by_id ON public.repository_list_items USING btree (created_by_id);
-
-
---
--- Name: index_repository_list_items_on_data; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_items_on_data ON public.repository_list_items USING gin (public.trim_html_tags(data) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_list_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_items_on_last_modified_by_id ON public.repository_list_items USING btree (last_modified_by_id);
-
-
---
--- Name: index_repository_list_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_items_on_repository_column_id ON public.repository_list_items USING btree (repository_column_id);
-
-
---
--- Name: index_repository_list_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_values_on_created_by_id ON public.repository_list_values USING btree (created_by_id);
-
-
---
--- Name: index_repository_list_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_values_on_last_modified_by_id ON public.repository_list_values USING btree (last_modified_by_id);
-
-
---
--- Name: index_repository_list_values_on_repository_list_item_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_values_on_repository_list_item_id ON public.repository_list_values USING btree (repository_list_item_id);
-
-
---
--- Name: index_repository_number_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_number_values_on_created_by_id ON public.repository_number_values USING btree (created_by_id);
-
-
---
--- Name: index_repository_number_values_on_data; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_number_values_on_data ON public.repository_number_values USING btree (data);
-
-
---
--- Name: index_repository_number_values_on_data_text; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_number_values_on_data_text ON public.repository_number_values USING gin (((data)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_number_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.repository_number_values USING btree (last_modified_by_id);
-
-
---
--- Name: index_repository_rows_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows USING btree (archived_by_id);
-
-
---
--- Name: index_repository_rows_on_archived_on_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_archived_on_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, archived_on));
-
-
---
--- Name: index_repository_rows_on_created_at_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_created_at_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, created_at));
-
-
---
--- Name: index_repository_rows_on_external_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_external_id ON public.repository_rows USING gin (public.trim_html_tags((external_id)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_rows_on_id_text; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_id_text ON public.repository_rows USING gin (((id)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_rows_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_name ON public.repository_rows USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_rows_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows USING btree (repository_id);
-
-
---
--- Name: index_repository_rows_on_repository_row_code; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_repository_row_code ON public.repository_rows USING gin ((('IT'::text || id)) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_rows_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_rows_on_restored_by_id ON public.repository_rows USING btree (restored_by_id);
-
-
---
--- Name: index_repository_status_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_status_items_on_created_by_id ON public.repository_status_items USING btree (created_by_id);
-
-
---
--- Name: index_repository_status_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_status_items_on_last_modified_by_id ON public.repository_status_items USING btree (last_modified_by_id);
-
-
---
--- Name: index_repository_status_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_status_items_on_repository_column_id ON public.repository_status_items USING btree (repository_column_id);
-
-
---
--- Name: index_repository_status_items_on_status; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_status_items_on_status ON public.repository_status_items USING gin (public.trim_html_tags((status)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_repository_status_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_status_values_on_created_by_id ON public.repository_status_values USING btree (created_by_id);
-
-
---
--- Name: index_repository_status_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.repository_status_values USING btree (last_modified_by_id);
-
-
---
--- Name: index_repository_table_filter_elements_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_table_filter_elements_on_repository_column_id ON public.repository_table_filter_elements USING btree (repository_column_id);
-
-
---
--- Name: index_repository_table_filters_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_table_filters_on_created_by_id ON public.repository_table_filters USING btree (created_by_id);
-
-
---
--- Name: index_repository_table_filters_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_table_filters_on_repository_id ON public.repository_table_filters USING btree (repository_id);
-
-
---
--- Name: index_repository_table_states_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_table_states_on_repository_id ON public.repository_table_states USING btree (repository_id);
-
-
---
--- Name: index_repository_table_states_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_table_states_on_user_id ON public.repository_table_states USING btree (user_id);
-
-
---
--- Name: index_repository_text_values_on_data; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_text_values_on_data ON public.repository_text_values USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_result_assets_on_result_id_and_asset_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_result_assets_on_result_id_and_asset_id ON public.result_assets USING btree (result_id, asset_id);
-
-
---
--- Name: index_result_tables_on_result_id_and_table_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_result_tables_on_result_id_and_table_id ON public.result_tables USING btree (result_id, table_id);
-
-
---
--- Name: index_result_texts_on_result_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_result_texts_on_result_id ON public.result_texts USING btree (result_id);
-
-
---
--- Name: index_result_texts_on_text; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_result_texts_on_text ON public.result_texts USING gin (public.trim_html_tags((text)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_results_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_results_on_archived_by_id ON public.results USING btree (archived_by_id);
-
-
---
--- Name: index_results_on_created_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_results_on_created_at ON public.results USING btree (created_at);
-
-
---
--- Name: index_results_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_results_on_last_modified_by_id ON public.results USING btree (last_modified_by_id);
-
-
---
--- Name: index_results_on_my_module_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_results_on_my_module_id ON public.results USING btree (my_module_id);
-
-
---
--- Name: index_results_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_results_on_name ON public.results USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_results_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_results_on_restored_by_id ON public.results USING btree (restored_by_id);
-
-
---
--- Name: index_results_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_results_on_user_id ON public.results USING btree (user_id);
-=======
 -- Name: index_repository_list_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7568,7 +4996,6 @@ CREATE INDEX index_samples_tables_on_team_id ON public.samples_tables USING btre
 --
 
 CREATE INDEX index_samples_tables_on_user_id ON public.samples_tables USING btree (user_id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -7796,37 +5223,6 @@ CREATE INDEX index_tiny_mce_assets_on_team_id ON public.tiny_mce_assets USING bt
 
 
 --
-<<<<<<< HEAD
--- Name: index_user_assignments_on_assignable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_assignments_on_assignable ON public.user_assignments USING btree (assignable_type, assignable_id);
-
-
---
--- Name: index_user_assignments_on_assigned_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_assignments_on_assigned_by_id ON public.user_assignments USING btree (assigned_by_id);
-
-
---
--- Name: index_user_assignments_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_assignments_on_user_id ON public.user_assignments USING btree (user_id);
-
-
---
--- Name: index_user_assignments_on_user_role_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_assignments_on_user_role_id ON public.user_assignments USING btree (user_role_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_user_identities_on_provider_and_uid; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7918,23 +5314,6 @@ CREATE UNIQUE INDEX index_user_projects_on_user_id_and_project_id ON public.user
 
 
 --
-<<<<<<< HEAD
--- Name: index_user_roles_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_roles_on_created_by_id ON public.user_roles USING btree (created_by_id);
-
-
---
--- Name: index_user_roles_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_roles_on_last_modified_by_id ON public.user_roles USING btree (last_modified_by_id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_user_system_notifications_on_read_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8054,16 +5433,6 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
-<<<<<<< HEAD
--- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: index_view_states_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8071,24 +5440,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
-<<<<<<< HEAD
--- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
-
-
---
--- Name: index_webhooks_on_activity_filter_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_webhooks_on_activity_filter_id ON public.webhooks USING btree (activity_filter_id);
-=======
 -- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8106,18 +5461,11 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
-<<<<<<< HEAD
--- Name: unique_index_repository_rows_on_external_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX unique_index_repository_rows_on_external_id ON public.repository_rows USING btree (external_id);
-=======
 -- Name: sample_custom_fields fk_rails_01916e6992; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sample_custom_fields
     ADD CONSTRAINT fk_rails_01916e6992 FOREIGN KEY (custom_field_id) REFERENCES public.custom_fields(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8145,17 +5493,14 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
-<<<<<<< HEAD
--- Name: project_folders fk_rails_05fe6e31fe; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: projects fk_rails_0710cff186; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.project_folders
-    ADD CONSTRAINT fk_rails_05fe6e31fe FOREIGN KEY (parent_folder_id) REFERENCES public.project_folders(id);
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_0710cff186 FOREIGN KEY (rap_task_level_id) REFERENCES public.rap_task_levels(id);
 
 
 --
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: assets fk_rails_0916329f9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8164,19 +5509,11 @@ ALTER TABLE ONLY public.assets
 
 
 --
-<<<<<<< HEAD
--- Name: user_assignments fk_rails_0b13c65ab0; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_assignments
-    ADD CONSTRAINT fk_rails_0b13c65ab0 FOREIGN KEY (user_id) REFERENCES public.users(id);
-=======
 -- Name: sample_types fk_rails_09fe39ddcf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sample_types
     ADD CONSTRAINT fk_rails_09fe39ddcf FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8196,17 +5533,6 @@ ALTER TABLE ONLY public.steps
 
 
 --
-<<<<<<< HEAD
--- Name: repositories fk_rails_111f913cb7; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repositories
-    ADD CONSTRAINT fk_rails_111f913cb7 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: tables fk_rails_147b6eced4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8231,19 +5557,11 @@ ALTER TABLE ONLY public.zip_exports
 
 
 --
-<<<<<<< HEAD
--- Name: user_assignments fk_rails_19dca62dfc; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_assignments
-    ADD CONSTRAINT fk_rails_19dca62dfc FOREIGN KEY (user_role_id) REFERENCES public.user_roles(id);
-=======
 -- Name: sample_my_modules fk_rails_1d7ba4676d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sample_my_modules
     ADD CONSTRAINT fk_rails_1d7ba4676d FOREIGN KEY (sample_id) REFERENCES public.samples(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8359,21 +5677,6 @@ ALTER TABLE ONLY public.my_modules
 
 
 --
-<<<<<<< HEAD
--- Name: oauth_access_grants fk_rails_330c32d8d9; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.oauth_access_grants
-    ADD CONSTRAINT fk_rails_330c32d8d9 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
-
-
---
--- Name: my_module_statuses fk_rails_357ee33309; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_statuses
-    ADD CONSTRAINT fk_rails_357ee33309 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-=======
 -- Name: sample_types fk_rails_316e1b5e2c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8395,7 +5698,6 @@ ALTER TABLE ONLY public.repository_list_items
 
 ALTER TABLE ONLY public.oauth_access_grants
     ADD CONSTRAINT fk_rails_330c32d8d9 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8415,37 +5717,6 @@ ALTER TABLE ONLY public.checklist_items
 
 
 --
-<<<<<<< HEAD
--- Name: step_assets fk_rails_38ebde94cb; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.step_assets
-    ADD CONSTRAINT fk_rails_38ebde94cb FOREIGN KEY (step_id) REFERENCES public.steps(id);
-
-
---
--- Name: repository_number_values fk_rails_3df53c9b27; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_number_values
-    ADD CONSTRAINT fk_rails_3df53c9b27 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: report_template_values fk_rails_423a0bad87; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.report_template_values
-    ADD CONSTRAINT fk_rails_423a0bad87 FOREIGN KEY (report_id) REFERENCES public.reports(id);
-
-
---
--- Name: my_modules fk_rails_4768515e2e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_modules
-    ADD CONSTRAINT fk_rails_4768515e2e FOREIGN KEY (changing_from_my_module_status_id) REFERENCES public.my_module_statuses(id);
-=======
 -- Name: samples fk_rails_3637d0e265; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8459,7 +5730,14 @@ ALTER TABLE ONLY public.samples
 
 ALTER TABLE ONLY public.step_assets
     ADD CONSTRAINT fk_rails_38ebde94cb FOREIGN KEY (step_id) REFERENCES public.steps(id);
->>>>>>> Initial commit of 1.17.2 merge
+
+
+--
+-- Name: rap_topic_levels fk_rails_474c9b818d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels
+    ADD CONSTRAINT fk_rails_474c9b818d FOREIGN KEY (rap_program_level_id) REFERENCES public.rap_program_levels(id);
 
 
 --
@@ -8487,17 +5765,6 @@ ALTER TABLE ONLY public.experiments
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_values
-    ADD CONSTRAINT fk_rails_4cf67f9f1e FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: experiments fk_rails_4d671c16af; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8514,17 +5781,10 @@ ALTER TABLE ONLY public.repository_list_items
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_values fk_rails_5d809fca2c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_date_time_values
-=======
 -- Name: repository_date_values fk_rails_5d809fca2c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_date_values
->>>>>>> Initial commit of 1.17.2 merge
     ADD CONSTRAINT fk_rails_5d809fca2c FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
@@ -8537,17 +5797,6 @@ ALTER TABLE ONLY public.tags
 
 
 --
-<<<<<<< HEAD
--- Name: webhooks fk_rails_61458d031d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.webhooks
-    ADD CONSTRAINT fk_rails_61458d031d FOREIGN KEY (activity_filter_id) REFERENCES public.activity_filters(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_my_modules fk_rails_62fa90cb51; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8556,17 +5805,6 @@ ALTER TABLE ONLY public.user_my_modules
 
 
 --
-<<<<<<< HEAD
--- Name: user_assignments fk_rails_6467e12fc3; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_assignments
-    ADD CONSTRAINT fk_rails_6467e12fc3 FOREIGN KEY (assigned_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: user_teams fk_rails_64c25f3fe6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8575,21 +5813,14 @@ ALTER TABLE ONLY public.user_teams
 
 
 --
-<<<<<<< HEAD
--- Name: repository_checklist_items fk_rails_664f0498be; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: rap_task_levels fk_rails_68120f8d8c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_checklist_items
-    ADD CONSTRAINT fk_rails_664f0498be FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.rap_task_levels
+    ADD CONSTRAINT fk_rails_68120f8d8c FOREIGN KEY (rap_project_level_id) REFERENCES public.rap_project_levels(id);
 
 
 --
--- Name: projects fk_rails_6981ffffd4; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_6981ffffd4 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
-=======
 -- Name: projects fk_rails_6981ffffd4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8603,7 +5834,6 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.sample_groups
     ADD CONSTRAINT fk_rails_69f6cb0677 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8615,19 +5845,11 @@ ALTER TABLE ONLY public.projects
 
 
 --
-<<<<<<< HEAD
--- Name: repository_rows fk_rails_6b4114fff4; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_rows
-    ADD CONSTRAINT fk_rails_6b4114fff4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
-=======
 -- Name: sample_my_modules fk_rails_6c0db0045d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sample_my_modules
     ADD CONSTRAINT fk_rails_6c0db0045d FOREIGN KEY (my_module_id) REFERENCES public.my_modules(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8695,33 +5917,6 @@ ALTER TABLE ONLY public.wopi_actions
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_items fk_rails_74e5e4cacc; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_items
-    ADD CONSTRAINT fk_rails_74e5e4cacc FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
-
-
---
--- Name: project_folders fk_rails_7931975dd0; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_folders
-    ADD CONSTRAINT fk_rails_7931975dd0 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
-
-
---
--- Name: project_folders fk_rails_795296de66; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_folders
-    ADD CONSTRAINT fk_rails_795296de66 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: results fk_rails_79fcaa8e37; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8746,21 +5941,6 @@ ALTER TABLE ONLY public.checklist_items
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_items fk_rails_7bc42f7363; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_items
-    ADD CONSTRAINT fk_rails_7bc42f7363 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
--- Name: activities fk_rails_7e11bb717f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.activities
-    ADD CONSTRAINT fk_rails_7e11bb717f FOREIGN KEY (owner_id) REFERENCES public.users(id);
-=======
 -- Name: activities fk_rails_7e11bb717f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8774,7 +5954,6 @@ ALTER TABLE ONLY public.activities
 
 ALTER TABLE ONLY public.sample_groups
     ADD CONSTRAINT fk_rails_7e3aa99d56 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -8810,25 +5989,14 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_range_values fk_rails_87cdb60fa9; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: rap_project_levels fk_rails_83bc72d987; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_time_range_values
-    ADD CONSTRAINT fk_rails_87cdb60fa9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: repository_checklist_items fk_rails_885781d47e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_items
-    ADD CONSTRAINT fk_rails_885781d47e FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.rap_project_levels
+    ADD CONSTRAINT fk_rails_83bc72d987 FOREIGN KEY (rap_topic_level_id) REFERENCES public.rap_topic_levels(id);
 
 
 --
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: checklist_items fk_rails_887d280d4d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8861,8 +6029,6 @@ ALTER TABLE ONLY public.comments
 
 
 --
-<<<<<<< HEAD
-=======
 -- Name: samples fk_rails_8e0800c2e2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8871,7 +6037,6 @@ ALTER TABLE ONLY public.samples
 
 
 --
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: wopi_apps fk_rails_8e13eee4a9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8888,17 +6053,6 @@ ALTER TABLE ONLY public.reports
 
 
 --
-<<<<<<< HEAD
--- Name: repository_number_values fk_rails_8f8a2f87f1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_number_values
-    ADD CONSTRAINT fk_rails_8f8a2f87f1 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: repository_list_values fk_rails_903285a9b0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8931,17 +6085,6 @@ ALTER TABLE ONLY public.tables
 
 
 --
-<<<<<<< HEAD
--- Name: repositories fk_rails_94481f7751; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repositories
-    ADD CONSTRAINT fk_rails_94481f7751 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: steps fk_rails_954ff833e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8966,25 +6109,6 @@ ALTER TABLE ONLY public.user_teams
 
 
 --
-<<<<<<< HEAD
--- Name: user_roles fk_rails_983264fab9; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_roles
-    ADD CONSTRAINT fk_rails_983264fab9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: repository_checklist_values fk_rails_98a7704432; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_values
-    ADD CONSTRAINT fk_rails_98a7704432 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: activities fk_rails_992865be13; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8993,17 +6117,6 @@ ALTER TABLE ONLY public.activities
 
 
 --
-<<<<<<< HEAD
--- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.active_storage_variant_records
-    ADD CONSTRAINT fk_rails_993965df05 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: reports fk_rails_9a0a9c9bec; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9012,25 +6125,6 @@ ALTER TABLE ONLY public.reports
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_items fk_rails_9acc03f846; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_items
-    ADD CONSTRAINT fk_rails_9acc03f846 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: projects fk_rails_9b9763cd55; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_9b9763cd55 FOREIGN KEY (default_public_user_role_id) REFERENCES public.user_roles(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: results fk_rails_9be849c454; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9039,25 +6133,6 @@ ALTER TABLE ONLY public.results
 
 
 --
-<<<<<<< HEAD
--- Name: my_module_status_flows fk_rails_9c3936bd7a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_flows
-    ADD CONSTRAINT fk_rails_9c3936bd7a FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
--- Name: repository_status_values fk_rails_9d357798c5; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_values
-    ADD CONSTRAINT fk_rails_9d357798c5 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: step_tables fk_rails_9e0e7dea0d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9082,17 +6157,6 @@ ALTER TABLE ONLY public.teams
 
 
 --
-<<<<<<< HEAD
--- Name: repository_checklist_items fk_rails_a08ff8e2ba; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_items
-    ADD CONSTRAINT fk_rails_a08ff8e2ba FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: my_module_groups fk_rails_a0acffc536; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9117,27 +6181,11 @@ ALTER TABLE ONLY public.teams
 
 
 --
-<<<<<<< HEAD
--- Name: repository_status_values fk_rails_a3a2aede5b; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_values
-    ADD CONSTRAINT fk_rails_a3a2aede5b FOREIGN KEY (repository_status_item_id) REFERENCES public.repository_status_items(id);
-
-
---
--- Name: my_module_statuses fk_rails_a3f7cd509a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_statuses
-    ADD CONSTRAINT fk_rails_a3f7cd509a FOREIGN KEY (previous_status_id) REFERENCES public.my_module_statuses(id);
-=======
 -- Name: custom_fields fk_rails_a25c0b1d1a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.custom_fields
     ADD CONSTRAINT fk_rails_a25c0b1d1a FOREIGN KEY (user_id) REFERENCES public.users(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -9173,21 +6221,6 @@ ALTER TABLE ONLY public.tokens
 
 
 --
-<<<<<<< HEAD
--- Name: repository_list_items fk_rails_ace46bca57; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_list_items
-    ADD CONSTRAINT fk_rails_ace46bca57 FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
-
-
---
--- Name: my_module_statuses fk_rails_b024d15104; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_statuses
-    ADD CONSTRAINT fk_rails_b024d15104 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-=======
 -- Name: custom_fields fk_rails_acb71de8cc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9201,7 +6234,6 @@ ALTER TABLE ONLY public.custom_fields
 
 ALTER TABLE ONLY public.repository_list_items
     ADD CONSTRAINT fk_rails_ace46bca57 FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -9245,19 +6277,11 @@ ALTER TABLE ONLY public.repository_asset_values
 
 
 --
-<<<<<<< HEAD
--- Name: my_module_status_flows fk_rails_c19dc6b9e9; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.my_module_status_flows
-    ADD CONSTRAINT fk_rails_c19dc6b9e9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-=======
 -- Name: sample_types fk_rails_c227b918b2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sample_types
     ADD CONSTRAINT fk_rails_c227b918b2 FOREIGN KEY (team_id) REFERENCES public.teams(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -9269,17 +6293,6 @@ ALTER TABLE ONLY public.protocols
 
 
 --
-<<<<<<< HEAD
--- Name: repository_table_filters fk_rails_c2b1aff901; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_table_filters
-    ADD CONSTRAINT fk_rails_c2b1aff901 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9328,17 +6341,6 @@ ALTER TABLE ONLY public.checklists
 
 
 --
-<<<<<<< HEAD
--- Name: user_roles fk_rails_c958cec38d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_roles
-    ADD CONSTRAINT fk_rails_c958cec38d FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: my_module_tags fk_rails_cb98be233f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9371,17 +6373,10 @@ ALTER TABLE ONLY public.result_texts
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_values fk_rails_cfb9b16b76; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_date_time_values
-=======
 -- Name: repository_date_values fk_rails_cfb9b16b76; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_date_values
->>>>>>> Initial commit of 1.17.2 merge
     ADD CONSTRAINT fk_rails_cfb9b16b76 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
@@ -9410,17 +6405,6 @@ ALTER TABLE ONLY public.user_notifications
 
 
 --
-<<<<<<< HEAD
--- Name: repository_checklist_values fk_rails_d2f015ade2; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_values
-    ADD CONSTRAINT fk_rails_d2f015ade2 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: activities fk_rails_d3946086d2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9437,8 +6421,6 @@ ALTER TABLE ONLY public.notifications
 
 
 --
-<<<<<<< HEAD
-=======
 -- Name: sample_custom_fields fk_rails_d58776cccd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9447,7 +6429,6 @@ ALTER TABLE ONLY public.sample_custom_fields
 
 
 --
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: experiments fk_rails_d683124fa4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9456,8 +6437,6 @@ ALTER TABLE ONLY public.experiments
 
 
 --
-<<<<<<< HEAD
-=======
 -- Name: samples fk_rails_d699eb2564; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9482,7 +6461,6 @@ ALTER TABLE ONLY public.sample_my_modules
 
 
 --
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: protocols fk_rails_d8007e2f63; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9515,19 +6493,11 @@ ALTER TABLE ONLY public.protocols
 
 
 --
-<<<<<<< HEAD
--- Name: bmt_filters fk_rails_de5b654b84; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.bmt_filters
-    ADD CONSTRAINT fk_rails_de5b654b84 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-=======
 -- Name: samples fk_rails_df64423f24; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.samples
     ADD CONSTRAINT fk_rails_df64423f24 FOREIGN KEY (team_id) REFERENCES public.teams(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -9555,19 +6525,11 @@ ALTER TABLE ONLY public.repository_text_values
 
 
 --
-<<<<<<< HEAD
--- Name: repository_rows fk_rails_e7c4398649; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_rows
-    ADD CONSTRAINT fk_rails_e7c4398649 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
-=======
 -- Name: samples fk_rails_ea3d01785c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.samples
     ADD CONSTRAINT fk_rails_ea3d01785c FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -9595,17 +6557,6 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 
 --
-<<<<<<< HEAD
--- Name: repository_date_time_range_values fk_rails_efe428fafe; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_date_time_range_values
-    ADD CONSTRAINT fk_rails_efe428fafe FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: protocol_protocol_keywords fk_rails_f04cc911dd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9614,17 +6565,6 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 
 --
-<<<<<<< HEAD
--- Name: project_folders fk_rails_f27fa590f4; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_folders
-    ADD CONSTRAINT fk_rails_f27fa590f4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
-
-
---
-=======
->>>>>>> Initial commit of 1.17.2 merge
 -- Name: report_elements fk_rails_f36eac136b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9665,19 +6605,11 @@ ALTER TABLE ONLY public.team_repositories
 
 
 --
-<<<<<<< HEAD
--- Name: projects fk_rails_fbf93d1a3d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_fbf93d1a3d FOREIGN KEY (project_folder_id) REFERENCES public.project_folders(id);
-=======
 -- Name: sample_groups fk_rails_fc2ab1a001; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sample_groups
     ADD CONSTRAINT fk_rails_fc2ab1a001 FOREIGN KEY (team_id) REFERENCES public.teams(id);
->>>>>>> Initial commit of 1.17.2 merge
 
 
 --
@@ -9712,10 +6644,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20150713060702'),
-<<<<<<< HEAD
-=======
 ('20150713061603'),
->>>>>>> Initial commit of 1.17.2 merge
 ('20150713063224'),
 ('20150713070738'),
 ('20150713071921'),
@@ -9799,10 +6728,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160704110900'),
 ('20160722082700'),
 ('20160803082801'),
-<<<<<<< HEAD
-=======
 ('20160808083040'),
->>>>>>> Initial commit of 1.17.2 merge
 ('20160809074757'),
 ('20160928114119'),
 ('20160928114915'),
@@ -9841,6 +6767,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180207095200'),
 ('20180308094354'),
 ('20180416114040'),
+('20180416171923'),
+('20180417062042'),
+('20180418123509'),
+('20180418123815'),
+('20180418124021'),
+('20180507160013'),
 ('20180524091143'),
 ('20180806115201'),
 ('20180813120338'),
@@ -9866,74 +6798,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190613134100'),
 ('20190711125513'),
 ('20190715150326'),
-<<<<<<< HEAD
-('20190726102200'),
 ('20190812065432'),
 ('20190812072649'),
 ('20190830141257'),
-('20190903145834'),
 ('20190910125740'),
 ('20191001133557'),
-('20191003091614'),
-('20191007144622'),
-('20191023162335'),
-('20191105143702'),
-('20191115143747'),
-('20191204112549'),
-('20191205133522'),
-('20191206105058'),
-('20191210103004'),
-('20191218072619'),
-('20200113143828'),
-('20200204100934'),
-('20200326114643'),
-('20200331183640'),
-('20200603125407'),
-('20200604210943'),
-('20200622140843'),
-('20200622155632'),
-('20200709142830'),
-('20200713142353'),
-('20200714082503'),
-('20200826143431'),
-('20200902093234'),
-('20200909121441'),
-('20201027133634'),
-('20201028103608'),
-('20201126203713'),
-('20201209165626'),
-('20201215161050'),
-('20210128105457'),
-('20210128105458'),
-('20210202214508'),
-('20210217114042'),
-('20210222123822'),
-('20210222123823'),
-('20210312185911'),
-('20210325152257'),
-('20210407143303'),
-('20210410100006'),
-('20210506125657'),
-('20210531114633'),
-('20210603152345'),
-('20210616071836'),
-('20210622101238'),
-('20210715125349'),
-('20210716124649'),
-('20210720112050'),
-('20210811103123'),
-('20210812095254'),
-('20210825112050'),
-('20210906132120'),
-('20211103115450'),
-('20211123103711'),
-('20220203122802');
-=======
-('20190812065432'),
-('20190812072649'),
-('20190830141257'),
-('20190910125740'),
-('20191001133557');
->>>>>>> Initial commit of 1.17.2 merge
+('20191009146101');
 
 

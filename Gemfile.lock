@@ -492,6 +492,7 @@ GEM
       rack (>= 1.1)
       rubocop (>= 0.72.0)
     ruby-graphviz (1.2.4)
+    ruby-ole (1.2.12.2)
     ruby-progressbar (1.10.1)
     ruby-vips (2.0.15)
       ffi (~> 1.9)
@@ -687,6 +688,7 @@ DEPENDENCIES
   simplecov
   sneaky-save!
   spinjs-rails
+  spreadsheet (~> 1.1.4)
   timecop
   tinymce-rails (~> 4.9.3)
   turbolinks (~> 5.1.1)
