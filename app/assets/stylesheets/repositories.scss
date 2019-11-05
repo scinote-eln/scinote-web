@@ -290,5 +290,31 @@
 
   .preview-block {
     flex-basis: 200px;
+    position: relative;
+  }
+
+  .limit-counter-container {
+    bottom: 0;
+    color: $color-silver-chalice;
+    left: 100%;
+    line-height: 34px;
+    margin-left: 15px;
+    position: absolute;
+    width: 100px;
+
+    .list-items-limit {
+      display: none;
+    }
+
+    &.error-to-many-items {
+      .list-items-count {
+        color: $brand-danger;
+        font-weight: bold;
+      }
+
+      .list-items-limit {
+        display: inline;
+      }
+    }
   }
 }
