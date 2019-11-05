@@ -10,8 +10,8 @@ describe UserSystemNotification do
   end
 
   describe 'Associations' do
-    it { is_expected.to belong_to(:user) }
-    it { is_expected.to belong_to(:system_notification) }
+    it { should belong_to :user }
+    it { should belong_to :system_notification }
   end
 
   describe 'Methods' do

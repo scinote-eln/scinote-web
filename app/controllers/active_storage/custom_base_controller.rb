@@ -3,6 +3,7 @@
 # The base controller for all ActiveStorage controllers.
 module ActiveStorage
   class CustomBaseController < ApplicationController
+<<<<<<< HEAD
     include TokenAuthentication
     include ActiveStorage::SetCurrent
 
@@ -13,6 +14,12 @@ module ActiveStorage
 
     def stream(_blob)
       raise NotImplementedError
+=======
+    include ActiveStorage::SetCurrent
+
+    before_action do
+      ActiveStorage::Current.host = request.base_url
+>>>>>>> Initial commit of 1.17.2 merge
     end
   end
 end

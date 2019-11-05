@@ -108,7 +108,7 @@ namespace :samples_to_repository_migration do
         # Update report elements
         team.reports.each do |r|
           r.report_elements.where(type_of: 7).each do |e|
-            e.update_attributes(type_of: 17, repository_id: repository.id)
+            e.update(type_of: 17, repository_id: repository.id)
           end
         end
 

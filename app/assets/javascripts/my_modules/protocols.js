@@ -1,10 +1,15 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString */
 /* global HelperModule GLOBAL_CONSTANTS */
 =======
 /* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString globalConstants */
 /* global HelperModule */
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+/* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString */
+/* global HelperModule GLOBAL_CONSTANTS */
+>>>>>>> Initial commit of 1.17.2 merge
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
 //= require my_modules
@@ -515,10 +520,14 @@ function initImport() {
           if (data.status === 'size_too_large') {
             alert(I18n.t('my_modules.protocols.load_from_file_size_error',
 <<<<<<< HEAD
+<<<<<<< HEAD
               { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
 =======
               { size: $(document.body).data('file-max-size-mb') }));
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+              { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
+>>>>>>> Initial commit of 1.17.2 merge
           } else {
             alert(I18n.t('my_modules.protocols.load_from_file_error'));
           }
@@ -551,7 +560,7 @@ function initRecentProtocols() {
     $.get('/protocols/recent_protocols', result => {
       $.each(result, (i, protocol) => {
         $('<div class="protocol"><i class="fas fa-file-alt"></i>'
-          + truncateLongString(protocol.name, globalConstants.name_truncation_length)
+          + truncateLongString(protocol.name, GLOBAL_CONSTANTS.NAME_TRUNCATION_LENGTH)
           + '</div>').appendTo(dropDownList)
           .click(() => {
             $.post(recentProtocolContainer.data('updateUrl'), { source_id: protocol.id })

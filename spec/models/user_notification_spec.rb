@@ -23,8 +23,8 @@ describe UserNotification, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :user }
-    it { should belong_to :notification }
+    it { should belong_to(:user).optional }
+    it { should belong_to(:notification).optional }
   end
 
   describe '#unseen_notification_count ' do
@@ -54,9 +54,9 @@ describe UserNotification, type: :model do
     end
 
     it 'set the check status to false' do
-      expect {
+      expect do
         UserNotification.seen_by_user(user)
-      }.to change { user_notification_one.reload.checked }.from(false).to(true)
+      end.to change { user_notification_one.reload.checked }.from(false).to(true)
     end
   end
 end

@@ -501,6 +501,9 @@ function importProtocolFromFile(
       var fileRef = $(this).attr('fileRef');
       tinyMceAsset.tokenId = $(this).attr('tokenId');
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Initial commit of 1.17.2 merge
       tinyMceAsset.fileName = $(this).children('fileName').text();
       tinyMceAsset.fileType = $(this).children('fileType').text();
       if ($(this).children('fileMetadata').html() !== undefined) {
@@ -509,9 +512,12 @@ function importProtocolFromFile(
           .replace('  ]]-->', '')
           .replace(']]&gt;', '');
       }
+<<<<<<< HEAD
 =======
       tinyMceAsset.fileType = $(this).children('fileType').text();
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Initial commit of 1.17.2 merge
       tinyMceAsset.bytes = getAssetBytes(
         protocolFolders[index],
         stepGuid,
@@ -595,14 +601,20 @@ function importProtocolFromFile(
         stepAssetJson.fileName = fileName;
         stepAssetJson.fileType = $(this).children('fileType').text();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Initial commit of 1.17.2 merge
         if ($(this).children('fileMetadata').html() !== undefined) {
           stepAssetJson.fileMetadata = $(this).children('fileMetadata').html()
             .replace('<!--[CDATA[', '')
             .replace('  ]]-->', '')
             .replace(']]&gt;', '');
         }
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Initial commit of 1.17.2 merge
         stepAssetJson.bytes = getAssetBytes(
           protocolFolders[index],
           stepGuid,
@@ -657,10 +669,14 @@ function importProtocolFromFile(
 
     roughSize = roughSizeOfObject(dataJson);
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (roughSize > (GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024)) {
 =======
     if (roughSize > ($(document.body).data('file-max-size-mb') * 1024 * 1024)) {
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    if (roughSize > (GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024)) {
+>>>>>>> Initial commit of 1.17.2 merge
       // Call the callback function
       resultCallback({ name: protocolJson.name, new_name: null, status: 'size_too_large' });
       return;

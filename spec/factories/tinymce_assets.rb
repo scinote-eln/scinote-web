@@ -4,6 +4,7 @@ FactoryBot.define do
   factory :tiny_mce_asset do
     association :team, factory: :team
 <<<<<<< HEAD
+<<<<<<< HEAD
     after(:create) do |tiny_mce_asset|
       tiny_mce_asset.image.attach(io: File.open(Rails.root.join('spec/fixtures/files/test.jpg')), filename: 'test.jpg')
     end
@@ -12,5 +13,10 @@ FactoryBot.define do
     image_content_type 'image/jpeg'
     image_file_size 69
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    image do
+      fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test.jpg'), 'image/jpg')
+    end
+>>>>>>> Initial commit of 1.17.2 merge
   end
 end

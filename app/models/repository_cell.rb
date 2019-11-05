@@ -35,7 +35,7 @@ class RepositoryCell < ActiveRecord::Base
 
   validates_inclusion_of :repository_column,
                          in: (lambda do |cell|
-                           cell.repository_row.repository.repository_columns
+                           cell.repository_row&.repository&.repository_columns || []
                          end)
   validates :repository_column, presence: true
   validate :repository_column_data_type

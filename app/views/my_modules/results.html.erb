@@ -41,6 +41,8 @@
         <span class="fas fa-paperclip"></span>
         <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
       </a>
+      <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
+                   locals: {  element_id: @my_module.id, element_type: 'Result',  sketch_container: "#results[data-module-id=#{@my_module.id}]" } %>
       <%= render partial: "assets/wopi/create_wopi_file_button",
                  locals: {  element_id: @my_module.id, element_type: 'Result' } %>
     </div>

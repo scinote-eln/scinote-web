@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :custom_field do
-    name 'My custom field'
+    name { 'My custom field' }
     user
     team
   end

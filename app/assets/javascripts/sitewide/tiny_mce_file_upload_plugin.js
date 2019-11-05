@@ -146,7 +146,7 @@
         form = createElement('form', {
           action: editor.getParam(
             'customimageuploader_form_url',
-            '/tinymce_assets'
+            '/tiny_mce_assets'
           ),
           target: iframe._id,
           method: 'POST',
@@ -380,12 +380,18 @@
           createImageHiddenField();
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Initial commit of 1.17.2 merge
 
         // Small fix for ResultText when you cancel after change MarvinJS
         if (imageContainer === undefined) return [];
 
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Initial commit of 1.17.2 merge
         imageContainer.value = JSON.stringify(images);
         return JSON.stringify(images);
       }

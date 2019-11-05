@@ -5,13 +5,13 @@ FactoryBot.define do
     user
     team
     trait :admin do
-      role 'admin'
+      role { 'admin' }
     end
     trait :guest do
-      role 'guest'
+      role { 'guest' }
     end
     trait :normal_user do # default enum by DB
-      role 'normal_user'
+      role { 'normal_user' }
     end
   end
 end

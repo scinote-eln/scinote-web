@@ -27,10 +27,6 @@ describe User, type: :model do
     it { should have_db_column :last_sign_in_ip }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
-    it { should have_db_column :avatar_file_name }
-    it { should have_db_column :avatar_content_type }
-    it { should have_db_column :avatar_file_size }
-    it { should have_db_column :avatar_updated_at }
     it { should have_db_column :confirmation_token }
     it { should have_db_column :confirmed_at }
     it { should have_db_column :confirmation_sent_at }

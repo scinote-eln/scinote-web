@@ -40,18 +40,18 @@
 
     // Edit result text button behaviour
     function applyEditResultTextCallback() {
-      $('.edit-result-text').on('ajax:success', function(e, data) {
+      $('.edit-result-text').off().on('ajax:success', function(e, data) {
         var $result = $(this).closest('.result');
         var $form = $(data.html);
         var $prevResult = $result;
         $result.after($form);
-        $result.remove();
+        $prevResult.hide();
 
-        formAjaxResultText($form);
+        formAjaxResultText($form, $prevResult);
 
         // Cancel button
         $form.find('.cancel-edit').click(function() {
-          $form.after($prevResult);
+          $prevResult.show();
           $form.remove();
           applyEditResultTextCallback();
           TinyMCE.destroyAll();
@@ -64,9 +64,10 @@
     }
 
     // Apply ajax callback to form
-    function formAjaxResultText($form) {
+    function formAjaxResultText($form, $prevResult) {
       $form.on('ajax:success', function(e, data) {
         var newResult;
+        if ($prevResult) $prevResult.remove();
         $form.after(data.html);
         newResult = $form.next();
         initFormSubmitLinks(newResult);

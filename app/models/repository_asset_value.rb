@@ -17,15 +17,15 @@ class RepositoryAssetValue < ApplicationRecord
 
   validates :asset, :repository_cell, presence: true
 
-  SORTABLE_COLUMN_NAME = 'assets.file_file_name'
-  SORTABLE_VALUE_INCLUDE = { repository_asset_value: :asset }.freeze
+  SORTABLE_COLUMN_NAME = 'active_storage_blobs.filename'
+  SORTABLE_VALUE_INCLUDE = { repository_asset_value: { asset: { file_attachment: :blob } } }.freeze
 
   def formatted
-    asset.file_file_name
+    asset.file_name
   end
 
   def data
-    asset.file_file_name
+    asset.file_name
   end
 
   def data_changed?(_new_data)
@@ -33,9 +33,8 @@ class RepositoryAssetValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    file = Paperclip.io_adapters.for(new_data[:file_data])
-    file.original_filename = new_data[:file_name]
-    asset.file = file
+    asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data].split(',')[1])),
+                      filename: new_data[:file_name])
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!
@@ -44,15 +43,15 @@ class RepositoryAssetValue < ApplicationRecord
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     team = value.repository_cell.repository_column.repository.team
-    file = Paperclip.io_adapters.for(payload[:file_data])
-    file.original_filename = payload[:file_name]
     value.asset = Asset.create!(
-      file: file,
       created_by: value.created_by,
       last_modified_by: value.created_by,
       team: team
     )
-    value.asset.post_process_file(team)
+    value.asset.file.attach(
+      io: StringIO.new(Base64.decode64(payload[:file_data].split(',')[1])),
+      filename: payload[:file_name]
+    )
     value
   end
 end

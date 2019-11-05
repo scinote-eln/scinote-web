@@ -145,6 +145,16 @@
 
 #search-container {
   padding-left: 45px;
+  
+  .mce-i-marvinjs {
+    position: relative;
+
+    &::before {
+      display: inline-block;
+      left: 0;
+      top: 10px;
+    }
+  }
 }
 
 /** Search */
@@ -421,6 +431,7 @@
     padding: 1px 6px;
     position: relative;
     top: -10px;
+    left: 4px;
     z-index: 1;
   }
 }

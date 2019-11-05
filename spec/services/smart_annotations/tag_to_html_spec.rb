@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SmartAnnotations::TagToHtml do
@@ -32,9 +34,9 @@ describe SmartAnnotations::TagToHtml do
 
   describe '#fetch_object/2' do
     it 'rises an error if type is not valid' do
-      expect {
+      expect do
         subject.send(:fetch_object, 'banana', project.id)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns the required object' do

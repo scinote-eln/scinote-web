@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::PrivateMethods
   private
 
 =======
 module PrivateMethods
+=======
+module Reports::Docx::PrivateMethods
+>>>>>>> Initial commit of 1.17.2 merge
   private
 
   # RTE fields support
@@ -64,7 +68,12 @@ module PrivateMethods
         end
       elsif elem[:type] == 'image'
         style = elem[:style]
-        @docx.img elem[:data], width: style[:width], height: style[:height], align: (style[:align] || :left)
+        @docx.img elem[:data] do
+          data elem[:blob].download
+          width style[:width]
+          height style[:height]
+          align style[:align] || :left
+        end
       end
     end
   end
@@ -95,18 +104,17 @@ module PrivateMethods
 
       if elem.name == 'img' && elem.attributes['data-mce-token']
 
-        image = TinyMceAsset.find_by_id(Base62.decode(elem.attributes['data-mce-token'].value))
+        image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
         next unless image
 
-        image_path = image_path(image)
-
+        image_path = image_path(image.image)
         dimension = FastImage.size(image_path)
-
         style = image_styling(elem, dimension)
 
         elements.push(
           type: 'image',
-          data: image_path,
+          data: image_path.split('&')[0],
+          blob: image.blob,
           style: style
         )
         next
@@ -151,7 +159,7 @@ module PrivateMethods
     result[:style] = elem.name if elem.name.include? 'h'
     result[:bold] = true if elem.name == 'strong'
     result[:italic] = true if elem.name == 'em'
-    style_keys = ['text-align', 'color']
+    style_keys = %w(text-align color)
 
     if style
       style_keys.each do |key|
@@ -205,7 +213,7 @@ module PrivateMethods
   def asset_image_preparing(asset)
     return unless asset
 
-    image_path = image_path(asset)
+    image_path = image_path(asset.file)
 
     dimension = FastImage.size(image_path)
     x = dimension[0]
@@ -214,7 +222,11 @@ module PrivateMethods
       y = y * 300 / x
       x = 300
     end
-    @docx.img image_path, width: x, height: y
+    @docx.img image_path.split('&')[0] do
+      data asset.blob.download
+      width x
+      height y
+    end
   end
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
@@ -316,12 +328,8 @@ module PrivateMethods
 <<<<<<< HEAD
 =======
 
-  def image_path(image)
-    if image.is_stored_on_s3?
-      image.url
-    else
-      image.open.path
-    end
+  def image_path(attachment)
+    attachment.service_url
   end
 
   def calculate_color_hsp(color)

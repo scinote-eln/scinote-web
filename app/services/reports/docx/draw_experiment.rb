@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawExperiment
 =======
 module DrawExperiment
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+module Reports::Docx::DrawExperiment
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_experiment(subject)
     color = @color
     link_style = @link_style

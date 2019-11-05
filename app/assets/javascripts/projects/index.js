@@ -529,6 +529,7 @@
       if (projectsViewSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('disabled');
         projectsViewSort = $(this).data('sort');
+        $('#sortMenu').html(I18n.t('general.sort.' + projectsViewSort + '_html'));
         loadCardsView();
         $(this).addClass('disabled');
         $('#sortMenu').dropdown('toggle');

@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawStepTable
   def draw_step_table(table)
 =======
 module DrawStepTable
+=======
+module Reports::Docx::DrawStepTable
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_step_table(subject)
     table = Table.find_by_id(subject['id']['table_id'])
     return unless table

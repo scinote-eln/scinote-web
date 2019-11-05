@@ -1,4 +1,4 @@
-module RapGenerator
+module RapGenerators
   def validate_rap_program_level(name, created_at, updated_at)
     new_rap_program = RapProgramLevel.new(
       name: name, created_at: created_at, updated_at: updated_at

@@ -247,7 +247,7 @@ en:
       head_title: "About"
     training:
       head_title: "Training"
-      
+
   projects:
     index:
       head_title: "Home"
@@ -282,11 +282,6 @@ en:
       delete_user_confirm: "Are you sure you wish to remove user %{user} from project %{project}?"
       team_filter: "Show projects from"
       all_filter: "All"
-      sort: "Sort by"
-      sort_new: "Newest first"
-      sort_old: "Oldest first"
-      sort_atoz: "From A to Z"
-      sort_ztoa: "From Z to A"
       start_date: "Start date:"
       activity_tab: "Activity"
       users_tab: "Users"
@@ -1311,7 +1306,6 @@ en:
       scinote_columns_html: "<em>SciNote</em> columns:"
       file_columns: "Imported columns:"
       example_value: "Imported file content:"
-      import_samples: "Import samples"
       do_not_include_column: "Do not include this column"
       errors:
         invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."
@@ -1836,12 +1830,12 @@ en:
         complete_title: "Complete Step"
         uncomplete_title: "Uncomplete Step"
       attachments:
+        modified_label: "Modified:"
         sort:
           new_html: "Newest first &#8595;"
           old_html: "Oldest first &#8593;"
           atoz_html: "Name &#8595;"
           ztoa_html: "Name &#8593;"
-        modified_label: "Modified:"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1978,6 +1972,8 @@ en:
       add_image: 'Add'
       file_name: 'File name'
       file_name_placeholder: 'Image'
+    placeholder:
+      modified_label: "Modified:"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
@@ -2033,6 +2029,8 @@ en:
     server_not_respond: "Didn't get a response from the server"
     saved_label: "Saved"
     leaving_warning: "You have made some changes, are you sure you want to leave this page?"
+    older_version_available: "Older version of the text below has been saved in the browser. Do you want to restore it?"
+    newer_version_available: "Newer version of the text below has been saved in the browser. Do you want to restore it?"
   general:
     save: "Save"
     update: "Update"
@@ -2045,6 +2043,11 @@ en:
     more_comments: "More comments"
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
+    sort:
+      new_html: "Newest first &#8595;"
+      old_html: "Oldest first &#8593;"
+      atoz_html: "Name &#8595;"
+      ztoa_html: "Name &#8593;"
     module:
       one: "task"
       other: "tasks"
@@ -2226,3 +2229,9 @@ en:
         new: "https://support.scinote.net/hc/en-us/articles/360004627792"
         visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
         manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
+  marvinjs:
+    new_sketch: "New Chemical Drawing"
+    new_button: "Create Chemical Drawing"
+    structure_placeholder: "Click here to enter Chemical Drawing name"
+    modal_name_title: "Chemical Drawing name:"
+    checmical_drawing: "Chemical drawings"

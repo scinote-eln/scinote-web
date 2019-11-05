@@ -25,9 +25,9 @@ describe Table, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :team }
-    it { should belong_to(:created_by).class_name('User') }
-    it { should belong_to(:last_modified_by).class_name('User') }
+    it { should belong_to(:team).optional }
+    it { should belong_to(:created_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should have_one :step_table }
     it { should have_one :step }
     it { should have_one :result_table }

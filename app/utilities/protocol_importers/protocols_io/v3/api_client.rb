@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module ProtocolImporters
-  module ProtocolsIO
+  module ProtocolsIo
     module V3
       class ApiClient
         include HTTParty
-        require 'protocol_importers/protocols_io/v3/errors'
 
         CONSTANTS = Constants::PROTOCOLS_IO_V3_API
 
@@ -95,7 +94,7 @@ module ProtocolImporters
         rescue StandardError => e
           Rails.logger.error "Error: #{e.class}, message: #{e.message}"
 
-          raise ProtocolImporters::ProtocolsIO::V3::NetworkError.new(e.class),
+          raise ProtocolImporters::ProtocolsIo::V3::NetworkError.new(e.class),
                 I18n.t('protocol_importers.errors.cannot_import_protocol')
         end
 
@@ -106,13 +105,13 @@ module ProtocolImporters
           when 0
             return response
           when 1
-            raise ProtocolImporters::ProtocolsIO::V3::ArgumentError.new(:missing_or_empty_parameters), error_message
+            raise ProtocolImporters::ProtocolsIo::V3::ArgumentError.new(:missing_or_empty_parameters), error_message
           when 1218
-            raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:invalid_token), error_message
+            raise ProtocolImporters::ProtocolsIo::V3::UnauthorizedError.new(:invalid_token), error_message
           when 1219
-            raise ProtocolImporters::ProtocolsIO::V3::UnauthorizedError.new(:token_expires), error_message
+            raise ProtocolImporters::ProtocolsIo::V3::UnauthorizedError.new(:token_expires), error_message
           else
-            raise ProtocolImporters::ProtocolsIO::V3::Error.new(:api_response_error), response.parsed_response
+            raise ProtocolImporters::ProtocolsIo::V3::Error.new(:api_response_error), response.parsed_response
           end
         end
       end

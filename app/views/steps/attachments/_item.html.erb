@@ -1,19 +1,10 @@
-<% if asset.file.processing? && (asset.is_image? || asset.file.previewable_document?) %>
-  <% asset_status = 'asset-loading' %>
-  <% present_url = file_present_asset_path(asset.id) %>
-<% else %>
-  <% asset_status = 'asset-present' %>
-  <% present_url = '' %>
-<% end %>
 
 <div class="pseudo-attachment-container" style="order: <%= assets_count - i %>">
-    <%= link_to download_asset_path(asset),
+    <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
             class: 'file-preview-link',
             id: "modal_link#{asset.id}",
             data: { no_turbolink: true,
                     id: true,
-                    status: asset_status,
-                    'present-url': present_url,
                     'preview-url': asset_file_preview_path(asset),
                     'order-atoz': order_atoz,
                     'order-ztoa': order_ztoa,
@@ -21,7 +12,6 @@
                     'order-new': assets_count - i,
             } do %>
 
-    <%= render partial: 'steps/attachments/placeholder.html.erb',
-             locals: { edit_page: false, asset: asset } %>
+    <%= render partial: 'shared/asset_placeholder.html.erb', locals: { edit_page: false, asset: asset } %>
     <% end %>
 </div>

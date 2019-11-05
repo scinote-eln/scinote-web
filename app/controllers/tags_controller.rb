@@ -73,7 +73,7 @@ class TagsController < ApplicationController
 
   def update
     @tag.last_modified_by = current_user
-    if @tag.update_attributes(tag_params)
+    if @tag.update(tag_params)
       log_activity(:edit_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
       respond_to do |format|
         format.html

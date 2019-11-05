@@ -7,7 +7,7 @@ FactoryBot.define do
     trait :text_value do
       repository_column { create :repository_column, :text_type, repository: repository_row.repository }
       after(:build) do |repository_cell|
-        repository_cell.value ||= build(:repository_text_value, repository_cell: repository_cell)
+        repository_cell.value ||= create(:repository_text_value, repository_cell: repository_cell)
       end
     end
 

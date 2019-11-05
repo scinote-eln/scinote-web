@@ -14,8 +14,6 @@ Api.configure do |config|
 
   config.core_api_v1_enabled = true if ENV['CORE_API_V1_ENABLED']
 
-  Paperclip::DataUriAdapter.register if ENV['CORE_API_V1_ENABLED']
-
   vars = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
   vars.each do |name, value|
     app_name = name.sub('_AZURE_AD_APP_ID', '')

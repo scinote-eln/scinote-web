@@ -34,7 +34,7 @@ class MyModule < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :experiment, inverse_of: :my_modules, touch: true, optional: true
+  belongs_to :experiment, inverse_of: :my_modules, touch: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
@@ -432,6 +432,7 @@ class MyModule < ApplicationRecord
     clone.reload
 
     # Update the cloned protocol if neccesary
+    clone_tinymce_assets(clone, clone.experiment.project.team)
     clone.protocols << self.protocol.deep_clone_my_module(self, current_user)
     clone.reload
 

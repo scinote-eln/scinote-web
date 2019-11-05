@@ -2,29 +2,21 @@ Rails.application.routes.draw do
   use_doorkeeper do
     skip_controllers :applications, :authorized_applications, :token_info
   end
-  require 'subdomain'
+
+  # Addons
 
   def draw(routes_name)
     instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
   end
 
   constraints UserSubdomain do
-    devise_for :users,
-               controllers: { registrations: 'users/registrations',
-                              sessions: 'users/sessions',
-                              invitations: 'users/invitations',
-                              confirmations: 'users/confirmations',
-                              omniauth_callbacks: 'users/omniauth_callbacks' }
+    devise_for :users, controllers: { registrations: 'users/registrations',
+                                      sessions: 'users/sessions',
+                                      invitations: 'users/invitations',
+                                      confirmations: 'users/confirmations',
+                                      omniauth_callbacks: 'users/omniauth_callbacks' }
 
-    devise_scope :user do
-      authenticated :user do
-        root 'projects#index'
-      end
-
-      unauthenticated do
-        root 'users/sessions#new'
-      end
-    end
+    root 'projects#index'
 
     # EPA Help routes: about, contact, and training pages
     get 'help/about', to: 'help#about', as: 'about'
@@ -226,8 +218,6 @@ Rails.application.routes.draw do
       # end
       member do
         post 'parse_sheet', defaults: { format: 'json' }
-        # post 'import_samples'
-        # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_projects'
         get 'export_projects_modal'
@@ -430,8 +420,11 @@ Rails.application.routes.draw do
             to: 'my_modules#unassign_repository_records_modal',
             as: :unassign_repository_records_modal
         post 'unassign_repository_records/:repository_id',
-             to: 'my_modules#unassign_repository_records',
-             as: :unassign_repository_records
+            to: 'my_modules#unassign_repository_records',
+            as: :unassign_repository_records
+        get 'unshared_inventory/:inventory_id',
+            to: 'my_modules#unshared_inventory',
+            as: :unshared_inventory
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
@@ -491,7 +484,16 @@ Rails.application.routes.draw do
     end
 
     # tinyMCE image uploader endpoint
-    post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
+    resources :tiny_mce_assets, only: [:create] do
+      member do
+        get :download
+        get :marvinjs, to: 'tiny_mce_assets#marvinjs_show'
+        put :marvinjs, to: 'tiny_mce_assets#marvinjs_update'
+      end
+      collection do
+        post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
+      end
+    end
 
     resources :results, only: [:update, :destroy] do
       resources :result_comments,
@@ -506,8 +508,6 @@ Rails.application.routes.draw do
     get 'result_texts/:id/download' => 'result_texts#download',
       as: :result_text_download
     resources :result_assets, only: [:edit, :update, :destroy]
-    get 'result_assets/:id/download' => 'result_assets#download',
-      as: :result_asset_download
     resources :result_tables, only: [:edit, :update, :destroy]
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
@@ -621,14 +621,12 @@ Rails.application.routes.draw do
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior
-    get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
-    get 'files/:id/download', to: 'assets#download', as: 'download_asset'
-    get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
+    get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
@@ -639,7 +637,6 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       # @@@20190520JS - Sessions controller doesn't require pre-authentication,
       #                 so we will do the factsheet download here:
@@ -720,6 +717,15 @@ Rails.application.routes.draw do
       get :search_subjects
       get :team_filter
       get :user_filter
+    end
+  end
+
+  resources :marvin_js_assets, only: %i(create update destroy show) do
+    collection do
+      get :team_sketches
+    end
+    member do
+      post :start_editing
     end
   end
 

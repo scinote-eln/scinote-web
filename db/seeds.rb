@@ -1,7 +1,7 @@
 include UsersGenerator
 # TODO is this right? Can't find the RapGenerator include...
 require "#{Rails.root}/app/utilities/rap_generators"
-include RapGenerator
+include RapGenerators
 
 if User.count.zero?
   if ENV['ADMIN_NAME'].present? &&

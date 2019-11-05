@@ -158,6 +158,10 @@
     function init(location) {
       LOCATION = location;
       global.addEventListener('paste', listener, false);
+<<<<<<< HEAD
+=======
+      $.initTooltips();
+>>>>>>> Initial commit of 1.17.2 merge
     }
 
     function destroy() {
@@ -177,6 +181,10 @@
     var totalSize = 0;
     var fileMaxSizeMb;
     var fileMaxSize;
+<<<<<<< HEAD
+=======
+    var uploadedFilesCounter = 0;
+>>>>>>> Initial commit of 1.17.2 merge
 
     // return the status of files if they are ready to submit
     function filesStatus() {
@@ -187,6 +195,17 @@
       droppedFiles = [];
     }
 
+<<<<<<< HEAD
+=======
+    function incrementUploadedFilesCounter() {
+      uploadedFilesCounter += 1;
+    }
+
+    function getUploadedFilesCounter() {
+      return uploadedFilesCounter;
+    }
+
+>>>>>>> Initial commit of 1.17.2 merge
     function dragNdropAssetsOff() {
       $('body').off('drag dragstart dragend dragover dragenter dragleave drop');
       $('.is-dragover').hide();
@@ -200,14 +219,23 @@
         const form = $(ev.target).closest('form').get(0);
         const url = $(form).find('#drag-n-drop-assets').data('directUploadUrl');
         const regex = /step\[assets_attributes\]\[[0-9]*\]\[id\]/;
+<<<<<<< HEAD
         const lastIndex = droppedFiles.length - 1;
+=======
+        const numberOfFiles = droppedFiles.length;
+>>>>>>> Initial commit of 1.17.2 merge
         let prevEls = $('input').filter(function() {
           return this.name.match(regex);
         });
 
         let fd = new FormData(form);
+<<<<<<< HEAD
         let index = 0;
 
+=======
+
+        uploadedFilesCounter = 0;
+>>>>>>> Initial commit of 1.17.2 merge
         fd.delete('step[file][]');
 
         if (droppedFiles.length === 0) {
@@ -215,13 +243,20 @@
           return;
         }
 
+<<<<<<< HEAD
         const uploadFile = (file) => {
           let upload = new ActiveStorage.DirectUpload(file, url);
+=======
+        for (let i = 0; i < droppedFiles.length; i += 1) {
+          let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
+          let index = i + prevEls.length;
+>>>>>>> Initial commit of 1.17.2 merge
 
           upload.create(function(error, blob) {
             if (error) {
               reject(error);
             } else {
+<<<<<<< HEAD
               fd.append('step[assets_attributes][' + (index + prevEls.length) + '][signed_blob_id]', blob.signed_id);
               if (index === lastIndex) {
                 resolve(fd);
@@ -234,6 +269,16 @@
         };
 
         uploadFile(droppedFiles[index]);
+=======
+              fd.append('step[assets_attributes][' + index + '][signed_blob_id]', blob.signed_id);
+              incrementUploadedFilesCounter();
+              if (getUploadedFilesCounter() === numberOfFiles) {
+                resolve(fd);
+              }
+            }
+          });
+        }
+>>>>>>> Initial commit of 1.17.2 merge
 
         filesValid = true;
         totalSize = 0;
@@ -273,9 +318,17 @@
       if (totalSize > fileMaxSize) {
         filesValid = false;
         disableSubmitButton();
+<<<<<<< HEAD
         $.each($('.attachment-placeholder.new'), function() {
           if (!$(this).find('p').hasClass('dnd-error')) {
             $(this).append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
+=======
+        $.each($('.panel-step-attachment-new'), function() {
+          if (!$(this).find('p').hasClass('dnd-total-error')) {
+            $(this)
+              .find('.panel-body')
+              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
+>>>>>>> Initial commit of 1.17.2 merge
           }
         });
       } else {
@@ -288,14 +341,23 @@
     }
 
     function uploadedAssetPreview(asset, i) {
+<<<<<<< HEAD
       var html = `<div class="attachment-container pull-left new">
                     <div class="attachment-preview no-shadow new %>">
+=======
+      var html = `<div class="attachment-placeholder pull-left new">
+                    <div class="attachment-thumbnail no-shadow new %>">
+>>>>>>> Initial commit of 1.17.2 merge
                       <i class="fas fa-image"></i>
                     </div>
                     <div class="attachment-label">
                       ${truncateLongString(asset.name, GLOBAL_CONSTANTS.FILENAME_TRUNCATION_LENGTH)}
                     </div>
+<<<<<<< HEAD
                     <div class="attachment-metadata"></div>
+=======
+                    <div class="spencer-bonnet-modif"></div>
+>>>>>>> Initial commit of 1.17.2 merge
                     <div class="remove-icon pull-right">
                       <a data-item-id="${i}" href="#">
                         <span class="fas fa-trash"></span>
@@ -324,7 +386,11 @@
     function listItems() {
       totalSize = 0;
       enableSubmitButton();
+<<<<<<< HEAD
       $('.attachment-container.new').remove();
+=======
+      $('.attachment-placeholder.new').remove();
+>>>>>>> Initial commit of 1.17.2 merge
       dragNdropAssetsOff();
 
       for (let i = 0; i < droppedFiles.length; i += 1) {
@@ -343,7 +409,10 @@
       fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for (let i = 0; i < files.length; i += 1) {
+<<<<<<< HEAD
         files[i].uuid = Math.random().toString(36);
+=======
+>>>>>>> Initial commit of 1.17.2 merge
         droppedFiles.push(files[i]);
       }
       listItems();
@@ -434,7 +503,13 @@
             $.each($('[data-container="new-reports"]').find('.result'), function() {
               initFormSubmitLinks($(this));
               ResultAssets.applyEditResultAssetCallback();
+<<<<<<< HEAD
               Results.toggleResultEditButtons(true);
+=======
+              Results.applyCollapseLinkCallBack();
+              Results.toggleResultEditButtons(true);
+              FilePreviewModal.init();
+>>>>>>> Initial commit of 1.17.2 merge
               Comments.init();
               ResultAssets.initNewResultAsset();
               Results.expandResult($(this));
@@ -453,6 +528,7 @@
     function appendFilesToForm(ev, fd) {
       const form = $(ev.target.form);
       const url = form.find('#drag-n-drop-assets').data('directUploadUrl');
+<<<<<<< HEAD
       const lastIndex = droppedFiles.length - 1;
 
       let index = 0;
@@ -485,6 +561,35 @@
       };
 
       uploadFile(droppedFiles[index]);
+=======
+      const numberOfFiles = droppedFiles.length;
+
+      let resultNames = [];
+
+      $.each($('input[rel="results[name]"]'), function() {
+        resultNames.push($(this).val());
+      });
+
+      resultNames.reverse();
+      var counter = 0;
+      for (let i = 0; i < numberOfFiles; i += 1) {
+        let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
+
+        upload.create(function(error, blob) {
+          if (error) {
+            // Handle the error
+          } else {
+            fd.append('results_names[' + i + ']', resultNames[i]);
+            fd.append('results_files[' + i + '][signed_blob_id]', blob.signed_id);
+            counter += 1;
+            if (counter === numberOfFiles) {
+              submitResultForm($(ev.target).attr('data-href'), fd);
+              destroyAll();
+            }
+          }
+        });
+      }
+>>>>>>> Initial commit of 1.17.2 merge
     }
 
     /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -516,7 +621,11 @@
                       <span class="fas fa-paperclip"></span>
                       ${I18n.t('assets.drag_n_drop.file_label')}
                       <div class="pull-right">
+<<<<<<< HEAD
                         <a data-item-id="${asset.uuid}" href="#">
+=======
+                        <a data-item-id="' + ${i} + '" href="#">
+>>>>>>> Initial commit of 1.17.2 merge
                           <span class="fas fa-times"></span>
                         </a>
                       </div>
@@ -525,7 +634,11 @@
                       <div class="form-group">
                         <label class="control-label">Name</label>
                         <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
+<<<<<<< HEAD
                                rel="results[name]" name="results[name][${i}]">
+=======
+                               rel="results[name]" name="results[name][' + ${i} + ']">
+>>>>>>> Initial commit of 1.17.2 merge
                       </div>
                       <div class="form-group">
                         <label class="control-label">${I18n.t('assets.drag_n_drop.file_label')}:</label>
@@ -550,12 +663,18 @@
       }
     }
 
+<<<<<<< HEAD
     function removeItemHandler(uuid) {
       $('[data-item-id="' + uuid + '"]').off('click').on('click', function(e) {
+=======
+    function removeItemHandler(id, callback) {
+      $('[data-item-id="' + id + '"]').off('click').on('click', function(e) {
+>>>>>>> Initial commit of 1.17.2 merge
         e.preventDefault();
         e.stopImmediatePropagation();
         e.stopPropagation();
         let $el = $(this);
+<<<<<<< HEAD
         let index = droppedFiles.findIndex((file) => {
           return file.uuid === $el.data('item-id');
         });
@@ -563,6 +682,12 @@
         droppedFiles.splice(index, 1);
         validateTotalSize();
         $el.closest('.panel-result-attachment-new').remove();
+=======
+        let index = $el.data('item-id');
+        totalSize -= parseInt(droppedFiles[index].size, 10);
+        droppedFiles.splice(index, 1);
+        callback();
+>>>>>>> Initial commit of 1.17.2 merge
       });
     }
 
@@ -580,7 +705,11 @@
             .after(uploadedAssetPreview(droppedFiles[i], i))
             .promise()
             .done(function() {
+<<<<<<< HEAD
               removeItemHandler(droppedFiles[i].uuid);
+=======
+              removeItemHandler(i, listItems);
+>>>>>>> Initial commit of 1.17.2 merge
             });
         }
         validateTotalSize();
@@ -591,10 +720,15 @@
     function init(files) {
       fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
+<<<<<<< HEAD
 
       for (let i = 0; i < files.length; i += 1) {
         files[i].uuid = Math.random().toString(36);
         droppedFiles.unshift(files[i]);
+=======
+      for (let i = 0; i < files.length; i += 1) {
+        droppedFiles.push(files[i]);
+>>>>>>> Initial commit of 1.17.2 merge
       }
       listItems();
     }

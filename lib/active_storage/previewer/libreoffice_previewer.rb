@@ -11,7 +11,11 @@ module ActiveStorage
         end
       end
 
+<<<<<<< HEAD
       def preview(**_options)
+=======
+      def preview
+>>>>>>> Initial commit of 1.17.2 merge
         download_blob_to_tempfile do |input|
           work_dir = File.dirname(input.path)
           basename = File.basename(input.path, '.*')
@@ -21,7 +25,11 @@ module ActiveStorage
 
           begin
             success = system(
+<<<<<<< HEAD
               libreoffice_path, '--headless', '--invisible', '--convert-to', 'png', '--outdir', work_dir, input.path
+=======
+              "#{libreoffice_path} --headless --invisible --convert-to png --outdir #{work_dir} #{input.path}"
+>>>>>>> Initial commit of 1.17.2 merge
             )
 
             unless success && File.file?(preview_file)

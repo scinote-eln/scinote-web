@@ -87,7 +87,7 @@ class RepositoryColumnsController < ApplicationController
   def update
     respond_to do |format|
       format.json do
-        @repository_column.update_attributes(repository_column_params)
+        @repository_column.update(repository_column_params)
         if @repository_column.save
           log_activity(:edit_column_inventory)
 

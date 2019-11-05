@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawStepComments
   def draw_step_comments(step)
     comments = step.step_comments.order(created_at: :desc)
     return if comments.blank?
 =======
 module DrawStepComments
+=======
+module Reports::Docx::DrawStepComments
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_step_comments(subject)
     step = Step.find_by_id(subject['id']['step_id'])
     return unless step

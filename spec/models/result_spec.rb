@@ -30,9 +30,9 @@ describe Result, type: :model do
   describe 'Relations' do
     it { should belong_to :user }
     it { should belong_to :my_module }
-    it { should belong_to(:archived_by).class_name('User') }
-    it { should belong_to(:last_modified_by).class_name('User') }
-    it { should belong_to(:restored_by).class_name('User') }
+    it { should belong_to(:archived_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
+    it { should belong_to(:restored_by).class_name('User').optional }
     it { should have_one :result_asset }
     it { should have_one :asset }
     it { should have_one :result_table }

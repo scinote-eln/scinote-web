@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MyModulesHelper
   def ordered_step_of(my_module)
     my_module.protocol.steps.order(:position)
@@ -11,16 +13,20 @@ module MyModulesHelper
     view_state = step.current_view_state(current_user)
     sort = case view_state.state.dig('assets', 'sort')
            when 'old' then { created_at: :asc }
-           when 'atoz' then { file_file_name: :asc }
-           when 'ztoa' then { file_file_name: :desc }
+           when 'atoz' then { 'active_storage_blobs.filename': :asc }
+           when 'ztoa' then { 'active_storage_blobs.filename': :desc }
            else { created_at: :desc }
            end
 
-    step.assets.order(sort)
+    step.assets.joins(file_attachment: :blob).order(sort)
   end
 
-  def az_ordered_assets_index(assets, asset_id)
-    assets.sort_by(&:file_file_name).map(&:id).index(asset_id)
+  def az_ordered_assets_index(step, asset_id)
+    step.assets
+        .joins(file_attachment: :blob)
+        .order(Arel.sql('LOWER(active_storage_blobs.filename)'))
+        .pluck(:id)
+        .index(asset_id) || 0
   end
 
   def number_of_samples(my_module)
@@ -43,11 +49,10 @@ module MyModulesHelper
   end
 
   def is_steps_page?
-    action_name == "steps"
+    action_name == 'steps'
   end
 
   def is_results_page?
-    action_name == "results"
+    action_name == 'results'
   end
-
 end

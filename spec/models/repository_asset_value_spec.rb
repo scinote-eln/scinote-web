@@ -22,8 +22,8 @@ describe RepositoryAssetValue, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to(:created_by).class_name('User') }
-    it { should belong_to(:last_modified_by).class_name('User') }
+    it { should belong_to(:created_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should belong_to(:asset).dependent(:destroy) }
     it { should have_one :repository_cell }
     it { should accept_nested_attributes_for(:repository_cell) }
@@ -36,10 +36,10 @@ describe RepositoryAssetValue, type: :model do
 
   describe '#data' do
     it 'returns the asset' do
-      asset = create :asset, file_file_name: 'my file'
+      asset = create :asset
       repository_asset_value = create :repository_asset_value, asset: asset
 
-      expect(repository_asset_value.reload.formatted).to eq 'my file'
+      expect(repository_asset_value.reload.formatted).to eq 'test.jpg'
     end
   end
 end

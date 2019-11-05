@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawResultComments
   def draw_result_comments(result)
     comments = result.result_comments.order(created_at: :desc)
     return if comments.blank?
 =======
 module DrawResultComments
+=======
+module Reports::Docx::DrawResultComments
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_result_comments(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result

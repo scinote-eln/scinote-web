@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawStepAsset
   def draw_step_asset(asset)
     timestamp = asset.created_at
@@ -15,22 +16,29 @@ module Reports::Docx::DrawStepAsset
       end
 =======
 module DrawStepAsset
+=======
+module Reports::Docx::DrawStepAsset
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_step_asset(subject)
     asset = Asset.find_by_id(subject['id']['asset_id'])
     return unless asset
 
-    is_image = asset.is_image?
     timestamp = asset.created_at
     color = @color
     @docx.p
     @docx.p do
+<<<<<<< HEAD
       text (I18n.t 'projects.reports.elements.step_asset.file_name', file: asset.file_file_name), italic: true
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      text (I18n.t 'projects.reports.elements.step_asset.file_name', file: asset.file_name), italic: true
+>>>>>>> Initial commit of 1.17.2 merge
       text ' '
       text I18n.t('projects.reports.elements.step_asset.user_time',
                   timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     begin
       Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
@@ -43,5 +51,8 @@ module DrawStepAsset
 =======
     asset_image_preparing(asset) if is_image
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    asset_image_preparing(asset) if asset.image?
+>>>>>>> Initial commit of 1.17.2 merge
   end
 end

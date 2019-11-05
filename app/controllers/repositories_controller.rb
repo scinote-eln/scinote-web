@@ -111,7 +111,7 @@ class RepositoriesController < ApplicationController
   end
 
   def update
-    @repository.update_attributes(repository_params)
+    @repository.update(repository_params)
 
     respond_to do |format|
       format.json do

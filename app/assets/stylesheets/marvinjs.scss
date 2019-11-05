@@ -10,9 +10,23 @@
 // MarvinJs modal
 .modal-marvin-js {
   background: transparent;
+<<<<<<< HEAD
   font-size: $font-size-base;
   padding: 0 !important;
 
+=======
+  font-size: $font-size-large;
+  padding: 0 !important;
+
+  .preview-close {
+    background: transparent;
+    border: 0;
+    color: $color-white;
+    display: inline-block;
+    float: right;
+  }
+
+>>>>>>> Initial commit of 1.17.2 merge
   .modal-dialog {
     height: 100%;
     margin: 0;
@@ -24,29 +38,45 @@
     background: transparent;
     border: 0;
     box-shadow: none;
+<<<<<<< HEAD
+=======
+    color: $color-white;
+>>>>>>> Initial commit of 1.17.2 merge
     height: 100%;
     width: auto;
   }
 
   .modal-header {
+<<<<<<< HEAD
     background: $color-white;
     display: flex;
+=======
+    background: $color-black;
+    border: 0;
+>>>>>>> Initial commit of 1.17.2 merge
     height: 60px;
     line-height: 40px;
     padding: 10px 15px;
     text-align: center;
 
     .file-save-link {
+<<<<<<< HEAD
       flex-shrink: 0;
+=======
+>>>>>>> Initial commit of 1.17.2 merge
       margin: 0 20px 0 0;
     }
 
     .file-name {
       align-items: center;
       display: flex;
+<<<<<<< HEAD
       flex-shrink: 0;
       float: left;
       margin-right: auto;
+=======
+      float: left;
+>>>>>>> Initial commit of 1.17.2 merge
 
       input {
         border-radius: 5px;
@@ -113,6 +143,17 @@
       }
     }
   }
+<<<<<<< HEAD
+=======
+
+  .file-save-link {
+    color: $color-white;
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+>>>>>>> Initial commit of 1.17.2 merge
 }
 
 #new-step-sketch {
@@ -126,10 +167,18 @@
 }
 
 .new-marvinjs-upload-button {
+<<<<<<< HEAD
   .new-marvinjs-upload-icon {
     display: inline-block;
     height: 1.5em;
     width: 1.5em;
+=======
+
+  .new-marvinjs-upload-icon {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+>>>>>>> Initial commit of 1.17.2 merge
 
     img {
       height: 100%;

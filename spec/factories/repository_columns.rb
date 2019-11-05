@@ -5,22 +5,22 @@ FactoryBot.define do
     sequence(:name) { |n| "My column-#{n}" }
     created_by { create :user }
     repository
-    data_type :RepositoryTextValue
+    data_type { :RepositoryTextValue }
 
     trait :text_type do
-      data_type :RepositoryTextValue
+      data_type { :RepositoryTextValue }
     end
 
     trait :date_type do
-      data_type :RepositoryDateValue
+      data_type { :RepositoryDateValue }
     end
 
     trait :list_type do
-      data_type :RepositoryListValue
+      data_type { :RepositoryListValue }
     end
 
     trait :asset_type do
-      data_type :RepositoryAssetValue
+      data_type { :RepositoryAssetValue }
     end
   end
 end

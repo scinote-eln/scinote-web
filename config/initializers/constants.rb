@@ -91,11 +91,11 @@ class Constants
   #=============================================================================
 
   # Picture size formats
-  LARGE_PIC_FORMAT = '800x600>'.freeze
-  MEDIUM_PIC_FORMAT = '300x300>'.freeze
-  THUMB_PIC_FORMAT = '100x100#'.freeze
-  ICON_PIC_FORMAT = '40x40#'.freeze
-  ICON_SMALL_PIC_FORMAT = '30x30#'.freeze
+  LARGE_PIC_FORMAT = [800, 600].freeze
+  MEDIUM_PIC_FORMAT = [300, 300].freeze
+  THUMB_PIC_FORMAT = [100, 100].freeze
+  ICON_PIC_FORMAT = [40, 40].freeze
+  ICON_SMALL_PIC_FORMAT = [30, 30].freeze
 
   # Hands-on-table number of starting columns and rows
   HANDSONTABLE_INIT_COLS_CNT = 5
@@ -217,7 +217,7 @@ class Constants
 
   PROTOCOLS_ENDPOINTS = {
     protocolsio: {
-      v3: 'ProtocolsIO::V3'
+      v3: 'ProtocolsIo::V3'
     }
   }.freeze
 

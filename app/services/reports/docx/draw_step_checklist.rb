@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawStepChecklist
   def draw_step_checklist(checklist)
     team = @report_team
     user = @user
 =======
 module DrawStepChecklist
+=======
+module Reports::Docx::DrawStepChecklist
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_step_checklist(subject)
     team = @report_team
     user = @user

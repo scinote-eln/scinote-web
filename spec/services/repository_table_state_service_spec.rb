@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryTableStateService do
@@ -12,7 +14,7 @@ describe RepositoryTableStateService do
     create :repository_column, name: 'My column 1',
                                repository: repository,
                                data_type: :RepositoryTextValue
-                              end
+  end
   let!(:repository_column_2) do
     create :repository_column, name: 'My column 2',
                                repository: repository,

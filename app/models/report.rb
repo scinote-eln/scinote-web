@@ -11,8 +11,8 @@ class Report < ApplicationRecord
   validates :project, presence: true
   validates :user, presence: true
 
-  belongs_to :project, inverse_of: :reports, optional: true
-  belongs_to :user, inverse_of: :reports, optional: true
+  belongs_to :project, inverse_of: :reports
+  belongs_to :user, inverse_of: :reports
   belongs_to :team, inverse_of: :reports
   belongs_to :last_modified_by,
              foreign_key: 'last_modified_by_id',

@@ -9,6 +9,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
+<<<<<<< HEAD
           <span class="file-name">
             <div class="sci-input-container ">
               <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder'), class: 'sci-input-field' %>
@@ -21,6 +22,14 @@
           <button class="preview-close btn btn-light icon-btn" data-dismiss="modal">
             <i class="fas fa-times"></i>
           </button>
+=======
+          <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
+          <span class="file-name">
+            <%= t('marvinjs.modal_name_title') %>
+            <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder') %>
+          </span>
+          <p class="file-save-link"><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
+>>>>>>> Initial commit of 1.17.2 merge
         </div>
         <div class="modal-body">
           <div id="marvinjs-editor" data-marvinjs-mode="<%= ENV['MARVINJS_API_KEY'] ? 'remote' : 'local' %>">

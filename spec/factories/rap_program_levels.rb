@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :rap_program_level do#, class RapProgramLevel do
-    name "TestRapProgramLevel"
+    name { "TestRapProgramLevel" }
   end
 end

@@ -47,6 +47,17 @@
       });
     }
 
+    function applyCollapseLinkCallBack() {
+      $('.result-panel-collapse-link')
+        .on('ajax:success', function() {
+          var collapseIcon = $(this).find('.collapse-result-icon');
+          var collapsed = $(this).hasClass('collapsed');
+          // Toggle collapse button
+          collapseIcon.toggleClass('fa-caret-square-up', !collapsed);
+          collapseIcon.toggleClass('fa-caret-square-down', collapsed);
+        });
+    }
+
     // Toggle editing buttons
     function toggleResultEditButtons(show) {
       if (show) {
@@ -69,6 +80,10 @@
     // Expand all results
     function expandAllResults() {
       $('.result .panel-collapse').collapse('show');
+      $(document).find('span.collapse-result-icon').each(function() {
+        $(this).addClass('fa-caret-square-up');
+        $(this).removeClass('fa-caret-square-down');
+      });
       $(document).find('div.step-result-hot-table').each(function() {
         renderTable(this);
       });
@@ -76,17 +91,16 @@
 
     function expandResult(result) {
       $('.panel-collapse', result).collapse('show');
+      $(result).find('span.collapse-result-icon').each(function() {
+        $(this).addClass('fa-caret-square-up');
+        $(this).removeClass('fa-caret-square-down');
+      });
       renderTable($(result).find('div.step-result-hot-table'));
       animateSpinner(null, false);
     }
 
     // create custom ajax request in order to fix issuses with remote: true from
     function handleResultFileSubmit(form, ev) {
-      if (!(form.find('#result_asset_attributes_file')[0].files.length > 0)) {
-        // Assuming that only result name is getting updated
-        return;
-      }
-
       ev.preventDefault();
       ev.stopPropagation();
 
@@ -116,8 +130,10 @@
                 $.each($('#results').find('.result'), function() {
                   initFormSubmitLinks($(this));
                   ResultAssets.applyEditResultAssetCallback();
+                  applyCollapseLinkCallBack();
                   applyCreateWopiFileCallback();
                   toggleResultEditButtons(true);
+                  FilePreviewModal.init();
                   Comments.init();
                   ResultAssets.initNewResultAsset();
                   expandResult($(this));
@@ -141,18 +157,15 @@
       var $form = $(ev.target.form);
       $form.clearFormErrors();
 
-      textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
-
       switch (resultTypeEnum) {
         case ResultTypeEnum.FILE:
           handleResultFileSubmit($form, ev);
           break;
         case ResultTypeEnum.TABLE:
-          $form
-            .find(`.${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}`)
-            .removeClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+          textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
           break;
         case ResultTypeEnum.TEXT:
+          textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
           textValidator(
             ev, $form.find('#result_text_attributes_textarea'), 1,
             $form.data('rich-text-max-length'), false, TinyMCE.getContent()
@@ -190,11 +203,15 @@
     function init() {
       initHandsOnTables($(document));
       expandAllResults();
+      applyCollapseLinkCallBack();
       applyCreateWopiFileCallback();
 
       $(function() {
         $('#results-collapse-btn').click(function() {
           $('.result .panel-collapse').collapse('hide');
+          $(document).find('span.collapse-result-icon')
+            .addClass('fa-caret-square-down')
+            .removeClass('fa-caret-square-up');
         });
 
         $('#results-expand-btn').click(expandAllResults);
@@ -211,6 +228,7 @@
     let publicAPI = Object.freeze({
       init: init,
       initHandsOnTables: initHandsOnTables,
+      applyCollapseLinkCallBack: applyCollapseLinkCallBack,
       toggleResultEditButtons: toggleResultEditButtons,
       expandResult: expandResult,
       processResult: processResult,

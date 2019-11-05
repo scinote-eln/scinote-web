@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 test:
   service: CustomDisk
   root: <%= Rails.root.join("tmp/storage") %>
@@ -31,6 +32,23 @@ amazon:
 #   region: us-east-1
 #   bucket: your_own_bucket
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+test:
+  service: CustomDisk
+  root: <%= Rails.root.join("tmp/storage") %>
+
+local:
+  service: CustomDisk
+  root: <%= Rails.root.join("storage") %>
+
+amazon:
+  service: CustomS3
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
+  region: <%= ENV["AWS_REGION"] %>
+  bucket: <%= ENV["S3_BUCKET"] %>
+  subfolder: <%= ENV["S3_SUBFOLDER"] %>
+>>>>>>> Initial commit of 1.17.2 merge
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ClientApi::InvitationsService do
@@ -7,40 +9,40 @@ describe ClientApi::InvitationsService do
 
   it 'raises an ClientApi::CustomInvitationsError if ' \
      'role is not assigned' do
-    expect {
+    expect do
       ClientApi::InvitationsService.new(user: user_one,
                                         team: team_one,
                                         emails: emails_one)
-    }.to raise_error(ClientApi::CustomInvitationsError)
+    end.to raise_error(ClientApi::CustomInvitationsError)
   end
 
   it 'raises an ClientApi::CustomInvitationsError if ' \
      'emails are not assigned' do
-    expect {
+    expect do
       ClientApi::InvitationsService.new(user: user_one,
                                         team: team_one,
                                         role: 'normal_user')
-    }.to raise_error(ClientApi::CustomInvitationsError)
+    end.to raise_error(ClientApi::CustomInvitationsError)
   end
 
   it 'raises an ClientApi::CustomInvitationsError if ' \
      'emails are not present' do
-    expect {
+    expect do
       ClientApi::InvitationsService.new(user: user_one,
                                         team: team_one,
                                         role: 'normal_user',
                                         emails: [])
-    }.to raise_error(ClientApi::CustomInvitationsError)
+    end.to raise_error(ClientApi::CustomInvitationsError)
   end
 
   it 'raises an ClientApi::CustomInvitationsError if ' \
      'role is not included in UserTeam.roles' do
-    expect {
+    expect do
       ClientApi::InvitationsService.new(user: user_one,
                                         team: team_one,
                                         role: 'abnormal_user',
                                         emails: emails_one)
-    }.to raise_error(ClientApi::CustomInvitationsError)
+    end.to raise_error(ClientApi::CustomInvitationsError)
   end
 
   describe '#invitation' do

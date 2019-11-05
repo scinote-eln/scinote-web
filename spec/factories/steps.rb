@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :step do
     name { Faker::Name.unique.name }
-    position { Faker::Number.between(1, 10) }
+    position { Faker::Number.between(from: 1, to: 10) }
     completed { true }
     user
     protocol

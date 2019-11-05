@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawProjectHeader
   def draw_project_header(subject)
     project = subject.project
     return unless project && can_read_project?(@user, project)
 =======
 module DrawProjectHeader
+=======
+module Reports::Docx::DrawProjectHeader
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_project_header(subject)
     project = Project.find_by_id(subject['id']['project_id'])
     return unless project

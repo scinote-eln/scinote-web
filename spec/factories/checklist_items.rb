@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :checklist_item do
-    text { Faker::Lorem.sentence(10) }
+    text { Faker::Lorem.sentence(word_count: 10) }
     checklist
     checked { false }
   end

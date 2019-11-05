@@ -3,10 +3,14 @@
 require 'rails_helper'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 describe ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer do
 =======
 describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+describe ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer do
+>>>>>>> Initial commit of 1.17.2 merge
   let(:client_data) { double('api_response') }
 
   let(:protocols_io_single_protocol) do
@@ -53,10 +57,14 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
 
       expect { subject.normalize_protocol(client_data) }
 <<<<<<< HEAD
+<<<<<<< HEAD
         .to raise_error(ProtocolImporters::ProtocolsIo::V3::NormalizerError)
 =======
         .to raise_error(ProtocolImporters::ProtocolsIO::V3::NormalizerError)
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        .to raise_error(ProtocolImporters::ProtocolsIo::V3::NormalizerError)
+>>>>>>> Initial commit of 1.17.2 merge
     end
 
     context 'when do not have name' do
@@ -82,10 +90,14 @@ describe ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer do
 
       expect { subject.normalize_list(client_data) }
 <<<<<<< HEAD
+<<<<<<< HEAD
         .to raise_error(ProtocolImporters::ProtocolsIo::V3::NormalizerError)
 =======
         .to raise_error(ProtocolImporters::ProtocolsIO::V3::NormalizerError)
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        .to raise_error(ProtocolImporters::ProtocolsIo::V3::NormalizerError)
+>>>>>>> Initial commit of 1.17.2 merge
     end
   end
 end

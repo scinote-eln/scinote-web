@@ -7,6 +7,11 @@
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
 
+    <% if ENV['MARVINJS_API_KEY'] %>
+      <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>
+      <script src="https://marvinjs.chemicalize.com/v1/client.js"></script>
+    <% end %>
+
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
@@ -32,7 +37,6 @@
     data-atwho-repositories-url="<%= atwho_repositories_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
-    data-file-max-size-mb="<%= Rails.configuration.x.file_max_size_mb %>"
     data-tooltips-enabled="<%= current_user.settings[:tooltips_enabled] %>"
     <% end %>
   >
@@ -44,6 +48,7 @@
     <%= render "shared/about_modal" %>
     <%= render "shared/file_preview_modal.html.erb" %>
     <%= render "shared/file_edit_modal.html.erb" %>
+    <%= render "shared/marvinjs_modal.html.erb" %>
     <%= render "shared/navigation" %>
 
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>

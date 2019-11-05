@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReportsHelper
   include StringUtility
 
@@ -85,12 +87,11 @@ module ReportsHelper
     # ReportExtends is located in config/initializers/extends/report_extends.rb
     ReportElement.type_ofs.keys.each do |type|
       next unless element.public_send("#{type}?")
+
       element.element_references.each do |el_ref|
         locals[el_ref.class.name.underscore.to_sym] = el_ref
       end
-      if type.in? ReportExtends::SORTED_ELEMENTS
-        locals[:order] = element.sort_order
-      end
+      locals[:order] = element.sort_order if type.in? ReportExtends::SORTED_ELEMENTS
     end
 
     (render partial: view, locals: locals).html_safe
@@ -106,6 +107,7 @@ module ReportsHelper
   def bootstrap_cdn_link_tag
     specs = Gem.loaded_specs['bootstrap-sass']
     return '' unless specs.present?
+
     stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/" \
                         "#{specs.version.version}/css/bootstrap.min.css",
                         media: 'all')
@@ -147,7 +149,7 @@ module ReportsHelper
 
   def obj_name_to_filename(obj, filename_suffix = '')
     obj_name = if obj.class == Asset
-                 obj_name, extension = obj.file_file_name.split('.')
+                 obj_name, extension = obj.file_name.split('.')
                  extension&.prepend('.')
                  obj_name
                elsif obj.class.in? [Table, Result, Repository]

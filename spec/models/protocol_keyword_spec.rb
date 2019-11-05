@@ -31,8 +31,8 @@ describe ProtocolKeyword, type: :model do
     it { should validate_presence_of :team }
     it do
       should validate_length_of(:name)
-              .is_at_least(Constants::NAME_MIN_LENGTH)
-              .is_at_most(Constants::NAME_MAX_LENGTH)
+        .is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
   end
 end

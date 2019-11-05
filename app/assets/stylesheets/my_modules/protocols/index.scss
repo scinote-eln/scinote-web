@@ -266,7 +266,8 @@
     display: flex;
     flex-wrap: wrap;
     float: left;
-    width: calc(100% - 180px);
+    //@@@20191105JS - This was 180px, not sure if EPA or Bio change...
+    width: calc(100% - 280px);
 
     .flex-block {
       display: flex;
@@ -280,7 +281,8 @@
 
   .complete-button-container {
     float: right;
-    width: 165px;
+    //@@@20191105JS - This was 165px, not sure if EPA or Bio change...
+    width: 260px;
 
     .my_module-state-buttons {
       padding-top: 0;
@@ -725,6 +727,7 @@
   }
 }
 
+<<<<<<< HEAD
 @media (max-width: 700px) {
   .my-module-protocol-status {
     .status-info-dropdown {
@@ -758,6 +761,8 @@
   border-radius: 0 5px 5px 0;
 }
 
+=======
+>>>>>>> Initial commit of 1.17.2 merge
 .my-module-recent-protocols {
   flex-grow: 1;
   margin-bottom: 5px;

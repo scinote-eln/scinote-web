@@ -48,6 +48,11 @@
                         data: {
                           object_type: 'my_module',
                           object_id: @my_module.id,
+<<<<<<< HEAD
                           highlightjs_path: asset_path('highlightjs-github-theme.css') } ) %>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+                          highlightjs_path: asset_path('highlightjs-github-theme.css'),
+                          last_updated: @my_module.updated_at.to_i * 1000 } ) %>
+>>>>>>> Initial commit of 1.17.2 merge
 <% end %>

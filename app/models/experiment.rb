@@ -3,15 +3,13 @@ class Experiment < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
-  belongs_to :project, inverse_of: :experiments, touch: true, optional: true
+  belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
-             class_name: 'User',
-             optional: true
+             class_name: 'User'
   belongs_to :last_modified_by,
              foreign_key: :last_modified_by_id,
-             class_name: 'User',
-             optional: true
+             class_name: 'User'
   belongs_to :archived_by,
              foreign_key: :archived_by_id, class_name: 'User', optional: true
   belongs_to :restored_by,
@@ -28,10 +26,7 @@ class Experiment < ApplicationRecord
   # Associations for old activity type
   has_many :activities, inverse_of: :experiment
 
-  has_attached_file :workflowimg
-  validates_attachment :workflowimg,
-                       content_type: { content_type: ['image/png'] },
-                       if: :workflowimg_check
+  has_one_attached :workflowimg
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -220,11 +215,12 @@ class Experiment < ApplicationRecord
   end
 
   def generate_workflow_img
-    if workflowimg.present?
-      self.workflowimg = nil
-      save
-    end
+    workflowimg.purge if workflowimg.attached?
     Experiments::GenerateWorkflowImageService.delay.call(experiment_id: id)
+  end
+
+  def workflowimg_exists?
+    workflowimg.service.exist?(workflowimg.blob.key)
   end
 
   # Get projects where user is either owner or user in the same team
@@ -611,12 +607,6 @@ class Experiment < ApplicationRecord
 
     my_module_groups.reload
     true
-  end
-
-  def workflowimg_check
-    workflowimg_content_type
-  rescue
-    false
   end
 
   def log_activity(type_of, current_user, my_module)

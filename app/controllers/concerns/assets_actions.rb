@@ -15,10 +15,14 @@ module AssetsActions
         { step: asset.step.id,
           step_position: { id: asset.step.id, value_for: 'position_plus_one' },
 <<<<<<< HEAD
+<<<<<<< HEAD
           asset_name: { id: asset.id, value_for: 'file_name' },
 =======
           asset_name: { id: asset.id, value_for: 'file_file_name' },
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+          asset_name: { id: asset.id, value_for: 'file_name' },
+>>>>>>> Initial commit of 1.17.2 merge
           action: action }
       if protocol.in_module?
         project = protocol.my_module.experiment.project
@@ -50,10 +54,14 @@ module AssetsActions
               message_items: {
                 result: asset.result.id,
 <<<<<<< HEAD
+<<<<<<< HEAD
                 asset_name: { id: asset.id, value_for: 'file_name' },
 =======
                 asset_name: { id: asset.id, value_for: 'file_file_name' },
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+                asset_name: { id: asset.id, value_for: 'file_name' },
+>>>>>>> Initial commit of 1.17.2 merge
                 action: action
               })
     end

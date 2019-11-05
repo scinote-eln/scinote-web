@@ -34,12 +34,11 @@ describe Protocol, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :my_module }
-    it { should belong_to :team }
-    it { should belong_to(:added_by).class_name('User') }
-    it { should belong_to(:parent).class_name('Protocol') }
-    it { should belong_to(:archived_by).class_name('User') }
-    it { should belong_to(:restored_by).class_name('User') }
+    it { should belong_to(:team) }
+    it { should belong_to(:added_by).class_name('User').optional }
+    it { should belong_to(:parent).class_name('Protocol').optional }
+    it { should belong_to(:archived_by).class_name('User').optional }
+    it { should belong_to(:restored_by).class_name('User').optional }
     it { should have_many(:linked_children).class_name('Protocol') }
     it { should have_many :protocol_protocol_keywords }
     it { should have_many :protocol_keywords }

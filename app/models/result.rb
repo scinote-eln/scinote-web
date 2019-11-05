@@ -45,9 +45,7 @@ class Result < ApplicationRecord
       .where_attributes_like(['results.name', 'result_texts.text'],
                              query, options)
 
-    unless include_archived
-      new_query = new_query.where('results.archived = ?', false)
-    end
+    new_query = new_query.where('results.archived = ?', false) unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -82,15 +80,15 @@ class Result < ApplicationRecord
   end
 
   def is_text
-    self.result_text.present?
+    result_text.present?
   end
 
   def is_table
-    self.table.present?
+    table.present?
   end
 
   def is_asset
-    self.asset.present?
+    asset.present?
   end
 
   def unlocked?(result)
@@ -99,5 +97,11 @@ class Result < ApplicationRecord
     else
       true
     end
+  end
+
+  def editable?
+    return false if is_asset && asset.file.metadata['asset_type'] == 'marvinjs'
+
+    true
   end
 end

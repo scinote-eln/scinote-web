@@ -23,6 +23,7 @@ module TinyMceImages
 
       tiny_mce_assets.each do |tm_asset|
 <<<<<<< HEAD
+<<<<<<< HEAD
         next unless tm_asset&.image&.attached?
 
         begin
@@ -35,6 +36,11 @@ module TinyMceImages
         rescue ActiveStorage::FileNotFoundError
           next
         end
+=======
+        next unless tm_asset&.image&.attached?
+
+        new_tm_asset_src = tm_asset.convert_variant_to_base64(tm_asset.preview)
+>>>>>>> Initial commit of 1.17.2 merge
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
           "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
@@ -43,6 +49,7 @@ module TinyMceImages
 
         tm_asset_to_update.attributes['src'].value = new_tm_asset_src
         description = html_description.css('body').inner_html.to_s
+<<<<<<< HEAD
 =======
         tmp_f = Tempfile.open(tm_asset.image_file_name, Rails.root.join('tmp'))
         begin
@@ -62,6 +69,8 @@ module TinyMceImages
           tmp_f.unlink
         end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Initial commit of 1.17.2 merge
       end
       description
     end
@@ -99,6 +108,7 @@ module TinyMceImages
       cloned_img_ids = []
       tiny_mce_assets.each do |tiny_img|
 <<<<<<< HEAD
+<<<<<<< HEAD
         next unless tiny_img.image.attached? && tiny_img.image.service.exist?(tiny_img.image.blob.key)
 
         tiny_img_clone = TinyMceAsset.create(
@@ -106,10 +116,16 @@ module TinyMceImages
         tiny_img_clone = TinyMceAsset.new(
           image: tiny_img.image,
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        next unless tiny_img.image.attached? && tiny_img.image.service.exist?(tiny_img.image.blob.key)
+
+        tiny_img_clone = TinyMceAsset.create(
+>>>>>>> Initial commit of 1.17.2 merge
           estimated_size: tiny_img.estimated_size,
           object: target,
           team: team
         )
+<<<<<<< HEAD
 <<<<<<< HEAD
 
         tiny_img.duplicate_file(tiny_img_clone)
@@ -117,6 +133,10 @@ module TinyMceImages
         tiny_img_clone.save!
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+
+        tiny_img.duplicate_file(tiny_img_clone)
+>>>>>>> Initial commit of 1.17.2 merge
         target.tiny_mce_assets << tiny_img_clone
         cloned_img_ids << [tiny_img.id, tiny_img_clone.id]
       end
@@ -125,10 +145,14 @@ module TinyMceImages
 
     def copy_unknown_tiny_mce_images
 <<<<<<< HEAD
+<<<<<<< HEAD
       asset_team_id = Team.search_by_object(self).id
 =======
       asset_team_id = Team.find_by_object(self)
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      asset_team_id = Team.search_by_object(self).id
+>>>>>>> Initial commit of 1.17.2 merge
       return unless asset_team_id
 
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
@@ -141,6 +165,7 @@ module TinyMceImages
 
           next if asset && (asset.object == self || asset_team_id != asset.team_id)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         else
           url = image['src']
@@ -160,18 +185,28 @@ module TinyMceImages
         new_asset = TinyMceAsset.create(
 =======
           new_image = asset.image
+=======
+>>>>>>> Initial commit of 1.17.2 merge
         else
-          new_image = URI.parse(image['src'])
+          # We need implement size and type checks here
+          new_image = URI.parse(image['src']).open
+          new_image_filename = asset.class.generate_unique_secure_token + '.jpg'
         end
 
         new_asset = TinyMceAsset.create(
+<<<<<<< HEAD
           image: new_image,
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Initial commit of 1.17.2 merge
           object: self,
           team_id: asset_team_id
         )
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Initial commit of 1.17.2 merge
         new_asset.transaction do
           new_asset.save!
           if image['data-mce-token']
@@ -181,8 +216,11 @@ module TinyMceImages
           end
         end
 
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Initial commit of 1.17.2 merge
         image['src'] = ''
         image['class'] = 'img-responsive'
         image['data-mce-token'] = Base62.encode(new_asset.id)

@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawMyModule
 =======
 module DrawMyModule
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+module Reports::Docx::DrawMyModule
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_my_module(subject)
     color = @color
     link_style = @link_style

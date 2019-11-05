@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawMyModuleActivity
   def draw_my_module_activity(my_module)
     activities = ActivitiesService.my_module_activities(my_module).order(created_at: :desc)
     return false if activities.blank?
 =======
 module DrawMyModuleActivity
+=======
+module Reports::Docx::DrawMyModuleActivity
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_my_module_activity(subject)
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
     return unless my_module

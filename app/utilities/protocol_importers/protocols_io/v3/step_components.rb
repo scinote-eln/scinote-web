@@ -2,10 +2,14 @@
 
 module ProtocolImporters
 <<<<<<< HEAD
+<<<<<<< HEAD
   module ProtocolsIo
 =======
   module ProtocolsIO
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  module ProtocolsIo
+>>>>>>> Initial commit of 1.17.2 merge
     module V3
       class StepComponents
         AVAILABLE_COMPONENTS = {

@@ -106,7 +106,7 @@ function checklistsValidator(ev, checklists, editMode) {
 }
 
 var FileTypeEnum = Object.freeze({
-  FILE: $(document.body).data('file-max-size-mb') * 1024 * 1024,
+  FILE: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024,
   AVATAR: <%= Constants::AVATAR_MAX_SIZE_MB.megabytes %>
 });
 
@@ -146,7 +146,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     if (file.size > fileTypeEnum) {
       switch (fileTypeEnum) {
         case FileTypeEnum.FILE:
-         return I18n.t('general.file.size_exceeded', { file_size: $(document.body).data('file-max-size-mb') }).strToErrorFormat();
+         return I18n.t('general.file.size_exceeded', { file_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }).strToErrorFormat();
         case FileTypeEnum.AVATAR:
           return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::AVATAR_MAX_SIZE_MB %>".strToErrorFormat();
       }
@@ -167,7 +167,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     if (size > fileTypeEnum) {
       switch (fileTypeEnum) {
         case FileTypeEnum.FILE:
-          return I18n.t('general.file.total_size', { size: $(document.body).data('file-max-size-mb') }).strToErrorFormat();
+          return I18n.t('general.file.total_size', { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }).strToErrorFormat();
         case FileTypeEnum.AVATAR:
           return "<%= I18n.t('users.registrations.edit.avatar_total_size', size: Constants::AVATAR_MAX_SIZE_MB) %>".strToErrorFormat();
       }

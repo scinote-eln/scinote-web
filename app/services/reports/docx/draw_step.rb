@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawStep
   def draw_step(step)
     color = @color
@@ -9,6 +10,9 @@ module Reports::Docx::DrawStep
     timestamp = step.completed ? step.completed_on : step.created_at
 =======
 module DrawStep
+=======
+module Reports::Docx::DrawStep
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_step(subject)
     color = @color
     step = Step.find_by_id(subject['id']['step_id'])

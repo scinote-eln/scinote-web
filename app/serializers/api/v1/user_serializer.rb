@@ -5,20 +5,20 @@ module Api
     class UserSerializer < ActiveModel::Serializer
       type :users
       attributes :full_name, :initials, :email
-      attribute :avatar_file_name, if: -> { object.avatar.present? }
-      attribute :avatar_file_size, if: -> { object.avatar.present? }
-      attribute :avatar_url, if: -> { object.avatar.present? }
+      attribute :avatar_file_name, if: -> { object.avatar.attached? }
+      attribute :avatar_file_size, if: -> { object.avatar.attached? }
+      attribute :avatar_url, if: -> { object.avatar.attached? }
 
       def avatar_file_name
-        object.avatar_file_name
+        object.avatar.blob.filename
       end
 
       def avatar_file_size
-        object.avatar.size
+        object.avatar.blob.byte_size
       end
 
       def avatar_url
-        object.avatar.url(:icon)
+        object.avatar_url(:icon)
       end
     end
   end

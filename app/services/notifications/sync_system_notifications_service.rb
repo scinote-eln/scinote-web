@@ -91,7 +91,7 @@ module Notifications
         if n.new_record?
           save_notification n
         elsif n.last_time_changed_at < attrs[:last_time_changed_at]
-          n.update_attributes!(attrs)
+          n.update!(attrs)
         end
       end
     end

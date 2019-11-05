@@ -88,6 +88,7 @@
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .mce-widget.mce-btn {
   border-color: transparent !important;
 
@@ -131,18 +132,42 @@
   background: $brand-primary;
   border-radius: 4px;
   transition: $md-transaction;
+=======
+.mce-widget.mce-btn {
+  border-color: $color-white !important;
+>>>>>>> Initial commit of 1.17.2 merge
 
-  i {
-    color: $color-white;
-    transition: $md-transaction;
+  &:not(.mce-active):hover,
+  &:not(.mce-active):active {
+    span,
+    i {
+      color: $brand-primary;
+    }
   }
 
-  &.mce-disabled {
-    background: transparent;
+  &.mce-active,
+  &.mce-active:hover,
+  &.mce-active:active,
+  &.mce-active:focus {
+    background-color: $brand-primary;
 
+    span,
     i {
-      color: inherit;
+      color: $color-white;
     }
   }
 }
+<<<<<<< HEAD
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+
+// Caret symbol has unneeded border-left
+.mce-splitbtn:hover .mce-open {
+  border-left: $color-white !important;
+}
+
+// Selected item list should be $brand-primary
+.mce-menu-item.mce-active.mce-menu-item-normal {
+  background-color: $brand-primary !important;
+}
+>>>>>>> Initial commit of 1.17.2 merge

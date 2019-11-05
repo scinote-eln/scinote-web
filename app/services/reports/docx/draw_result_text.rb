@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawResultText
   def draw_result_text(result)
 =======
 module DrawResultText
+=======
+module Reports::Docx::DrawResultText
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_result_text(subject)
     result = Result.find_by_id(subject['id']['result_id'])
     return unless result

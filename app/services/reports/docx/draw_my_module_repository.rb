@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Reports::Docx::DrawMyModuleRepository
   def draw_my_module_repository(subject)
     my_module = subject.my_module
@@ -17,6 +18,9 @@ module Reports::Docx::DrawMyModuleRepository
     table = prepare_row_columns(repository_data)
 =======
 module DrawMyModuleRepository
+=======
+module Reports::Docx::DrawMyModuleRepository
+>>>>>>> Initial commit of 1.17.2 merge
   def draw_my_module_repository(subject)
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
     return unless my_module

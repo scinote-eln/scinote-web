@@ -75,6 +75,7 @@
   background: $color-white !important;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 
@@ -107,6 +108,32 @@
     font-weight: 501;
     margin-left: 10px;
   }
+=======
+
+.tinymce-cancel-notification-button {
+  cursor: pointer;
+
+  .fas {
+    color: $color-silver-chalice;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 501;
+    margin-left: 10px;
+    margin-top: 4px;
+  }
+}
+
+.restore-draft-notification {
+  background: $state-info-bg !important;
+  height: 25px !important;
+  padding: 5px 10px 0 !important;
+
+  .restore-draft-btn {
+    border: 1px solid $color-silver-chalice;
+    font-size: 12px;
+    margin-top: -2px;
+    padding: 3px 10px 3px 10px;
+  }
+>>>>>>> Initial commit of 1.17.2 merge
 }
 
 .mce-stack-layout {
@@ -162,8 +189,14 @@
 
   .mce-container-body.mce-abs-layout {
     background: $brand-primary;
+<<<<<<< HEAD
     position: relative;
     top: -10px;
+=======
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    top: -45px;
+>>>>>>> Initial commit of 1.17.2 merge
 
     .mce-container,
     .mce-widget {
@@ -180,6 +213,7 @@
   }
 }
 
+<<<<<<< HEAD
 .mce-window {
 
   .mce-abs-layout {
@@ -202,4 +236,6 @@
 
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Initial commit of 1.17.2 merge
 // scss-lint:enable ImportantRule
