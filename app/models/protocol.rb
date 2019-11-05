@@ -249,6 +249,7 @@ class Protocol < ApplicationRecord
   def self.clone_contents(src, dest, current_user, clone_keywords)
     assets_to_clone = []
     dest.update(description: src.description)
+    src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
     if clone_keywords
