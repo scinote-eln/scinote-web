@@ -1,10 +1,15 @@
+<% delimiters = Constants::REPOSITORY_LIST_ITEMS_DELIMITERS
+                .split(',')
+                .map {|e| Hash[t('libraries.manange_modal_column.list_type.delimiters.' + e), e]}
+                .inject(:merge) %>
+
 <%= hidden_field_tag 'dropdown_options' %>
 <div class="form-group">
   <label class="control-label col-sm-3" for="repository-column-data-type">
     <%= t('libraries.manange_modal_column.list_type.delimiter_label') %>
   </label>
   <div class="col-sm-9">
-    <%= select_tag('delimiter', options_for_select(%w(auto return comma semicolon space pipe), 'auto'), class: 'form-control') %>
+    <%= select_tag('delimiter', options_for_select(delimiters, 'auto'), class: 'form-control') %>
   </div>
 </div>
 <div class="form-group">
@@ -12,15 +17,18 @@
     <%= t('libraries.manange_modal_column.list_type.dropdown_items_label') %>
   </label>
   <div class="col-sm-9">
-    <%= text_area_tag 'list-items-textarea', nil, rows: 10, class: 'form-control' %>
+    <%= text_area_tag 'list-items-textarea', column.repository_list_items.pluck(:data).join("\n"), rows: 10, class: 'form-control' %>
   </div>
 </div>
 <div class="dropdown-preview">
   <span class="field-name">Preview</span>
   <div class="preview-block">
-    <div class="preview-label">Test</div>
+    <div class="preview-label"><%= column.name %></div>
     <select class="form-control">
-      <option value="" disabled selected>Select option...</option>
     </select>
+    <div class="limit-counter-container">
+      <span class="list-items-count"></span>
+      <span class="list-items-limit">/<%= Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN %></span>
+      <span> items</span></div>
   </div>
 </div>

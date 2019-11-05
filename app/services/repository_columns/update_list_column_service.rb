@@ -21,7 +21,7 @@ module RepositoryColumns
       if @column.repository_list_items.size - to_be_deleted.size + to_be_created.size >=
          Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
 
-        @errors[:repository_column] = { repository_list_items: 'too many items dude!' }
+        @errors[:repository_column] = { repository_list_items: 'too many items' }
       end
       return self unless valid?
 

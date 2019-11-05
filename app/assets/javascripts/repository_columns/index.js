@@ -83,7 +83,7 @@ var RepositoryColumns = (function() {
   function loadSpecificParams(type, params) {
     var newParams = params;
     if (type === 'RepositoryListValue') {
-      newParams.repository_column.list_items = $('#dropdown_options').val();
+      newParams.repository_column.repository_list_items_attributes = JSON.parse($('#dropdown_options').val());
     }
     return newParams;
   }
@@ -95,13 +95,20 @@ var RepositoryColumns = (function() {
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').find(':selected').val();
       params = loadSpecificParams(selectedType, params);
-      $.post(url, params, (result) => {
-        var data = result.data;
-        insertNewListItem(data);
-        HelperModule.flashAlertMsg(data.attributes.message, 'success');
-        $manageModal.modal('hide');
-      }).error((error) => {
-        $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: JSON.stringify(params),
+        contentType: 'application/json',
+        success: function(result) {
+          var data = result.data;
+          insertNewListItem(data);
+          HelperModule.flashAlertMsg(data.attributes.message, 'success');
+          $manageModal.modal('hide');
+        },
+        error: function(error) {
+          $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
+        }
       });
     });
   }
@@ -116,7 +123,9 @@ var RepositoryColumns = (function() {
       $.ajax({
         url: url,
         type: 'PUT',
-        data: params,
+        data: JSON.stringify(params),
+        dataType: 'json',
+        contentType: 'application/json',
         success: function(result) {
           var data = result.data;
           updateListItem(data);
@@ -135,16 +144,20 @@ var RepositoryColumns = (function() {
     $('.repository-column-edtior').off('click', '.manage-repo-column').on('click', '.manage-repo-column', function() {
       var button = $(this);
       var modalUrl = button.data('modal-url');
+      var columnType;
       $.get(modalUrl, (data) => {
         $manageModal.modal('show').find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
+        $manageModal.trigger('columnModal::partialLoaded');
 
         if (button.data('action') === 'new') {
           $('[data-column-type="RepositoryTextValue"]').show();
           $('#new-repo-column-submit').show();
         } else {
+          columnType = $('#repository-column-data-type').find(':selected').val();
           $('#update-repo-column-submit').show();
+          $('[data-column-type=' + columnType + ']').show();
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');

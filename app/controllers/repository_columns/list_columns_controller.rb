@@ -20,11 +20,11 @@ module RepositoryColumns
     end
 
     def update
-      service = RepositoryColumns::UpdateColumnService
+      service = RepositoryColumns::UpdateListColumnService
                 .call(user: current_user,
-                        team: current_team,
-                        column: @repository_column,
-                        params: update_repository_column_params)
+                      team: current_team,
+                      column: @repository_column,
+                      params: repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :ok
@@ -48,10 +48,6 @@ module RepositoryColumns
 
     def repository_column_params
       params.require(:repository_column).permit(:name, repository_list_items_attributes: %i(data))
-    end
-
-    def update_repository_column_params
-      params.require(:repository_column).permit(:name, repository_list_items_attributes: %i(id data _destroy))
     end
   end
 end
