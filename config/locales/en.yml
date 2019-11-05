@@ -1413,7 +1413,7 @@ en:
         avatar_label: "Profile photo"
         avatar_btn: "Edit photo"
         avatar_modal:
-          title: 'Change your profile image'
+          title: 'Change your profile photo'
           upload_button: 'Upload a photo'
           option_text_html: 'or<br>Select your avatar below'
         name_label: "Full name"
