@@ -1413,9 +1413,9 @@ en:
         avatar_label: "Profile photo"
         avatar_btn: "Edit photo"
         avatar_modal:
-          title: 'Change your profile photo'
+          title: 'Change your profile image'
           upload_button: 'Upload a photo'
-          option_text_html: 'or<br>Select a profile icon below'
+          option_text_html: 'or<br>Select your avatar below'
         name_label: "Full name"
         name_title: "Change name"
         initials_label: "Initials"
