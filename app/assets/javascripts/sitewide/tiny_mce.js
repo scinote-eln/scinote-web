@@ -113,6 +113,7 @@ var TinyMCE = (function() {
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
+          convert_urls: false,
           menubar: 'file edit view insert format',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
