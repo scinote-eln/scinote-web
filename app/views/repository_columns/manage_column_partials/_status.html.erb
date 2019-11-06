@@ -1,1 +1,34 @@
-status
+<div class="form-group">
+  <label class="control-label col-sm-3" for="repository-column-data-type">
+    <%= t('libraries.manange_modal_column.status_type.status_options_label') %>
+  </label>
+  <div class="col-sm-9">
+    <%# fields_for column.repository_status_items do |item| %>
+<!--      <div class="field">-->
+        <%#= item.text_field :status %>
+<!--      </div>-->
+    <%# end %>
+
+    <%#= form_for column, url: '#' do |form| %>
+
+      <%#= form.fields_for :repository_status_items do |item| %>
+        <%#= item.text_field :status %>
+      <%# end %>
+
+    <%# end %>
+
+  <% column.repository_status_items.each do |item| %>
+        <div class="status-item-container">
+          <div class="status-item-icon"><%= item.icon %></div>
+          <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
+                 class="status-item-field"
+                 type="text"
+                 value="<%= item.status %>"/>
+          <span class="status-item-icon-trash fas fa-trash"></span>
+        </div>
+  <% end %>
+  <div class="add-status">
+    <span class="fas fa-plus"></span>
+    <span class="add-status-label"><%= t('libraries.manange_modal_column.status_type.add_status_label') %></span>
+  </div>
+</div>
