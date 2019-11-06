@@ -1147,6 +1147,7 @@ en:
       list_type:
         delimiter_label: "Delimiter"
         dropdown_items_label: "Dropdown items"
+        dropdown_item_select_option: "Select option..."
         delimiters:
           auto: "Auto"
           return: "Return"
