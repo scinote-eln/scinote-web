@@ -84,6 +84,7 @@ var RepositoryColumns = (function() {
     var newParams = params;
     if (type === 'RepositoryListValue') {
       newParams.repository_column.repository_list_items_attributes = JSON.parse($('#dropdown_options').val());
+      newParams.repository_column.delimiter = $('select#delimiter').data('used-delimiter');
     }
     return newParams;
   }

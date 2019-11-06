@@ -1,5 +1,7 @@
 class RepositoryColumnsController < ApplicationController
   include InputSanitizeHelper
+  include RepositoryColumnsHelper
+
   ACTIONS = %i(
     create index create_html available_asset_type_columns available_columns
   ).freeze
@@ -73,15 +75,7 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def edit
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repository_columns/manage_column_modal_content.html.erb'
-          )
-        }
-      end
-    end
+    render json: { html: render_to_string(partial: 'repository_columns/manage_column_modal_content.html.erb') }
   end
 
   def update

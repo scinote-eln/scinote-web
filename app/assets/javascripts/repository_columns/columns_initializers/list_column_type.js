@@ -1,4 +1,4 @@
-/* global GLOBAL_CONSTANTS */
+/* global GLOBAL_CONSTANTS  I18n */
 /* eslint-disable no-unused-vars */
 var RepositoryListColumnType = (function() {
   var manageModal = '#manageRepositoryColumn';
@@ -9,6 +9,7 @@ var RepositoryListColumnType = (function() {
 
   function textToItems(text, delimiter) {
     var res = [];
+    var usedDelimiter = '';
     var definedDelimiters = {
       return: '\n',
       comma: ',',
@@ -16,18 +17,23 @@ var RepositoryListColumnType = (function() {
       space: ' '
     };
 
-    var delimiters = []
+    var delimiters = [];
     if (delimiter === 'auto') {
-      delimiters = ['\n', ',', ';', '|', ' '];
+      delimiters = ['\n', ',', ';', ' '];
     } else {
       delimiters.push(definedDelimiters[delimiter]);
     }
 
     $.each(delimiters, (index, currentDelimiter) => {
       res = text.trim().split(currentDelimiter);
+      usedDelimiter = Object
+        .keys(definedDelimiters)
+        .find(key => definedDelimiters[key] === currentDelimiter);
+
       if (res.length > 1) {
         return false;
       }
+      return true;
     });
 
     res = res.filter(Boolean).filter(onlyUnique);
@@ -35,8 +41,15 @@ var RepositoryListColumnType = (function() {
     $.each(res, (index, option) => {
       res[index] = option.slice(0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
     });
+
+    $('select#delimiter').attr('data-used-delimiter', usedDelimiter);
     return res;
   }
+
+  function pluralizeWord(count, noun, suffix = 's') {
+    return `${noun}${count !== 1 ? suffix : ''}`;
+  }
+
 
   function drawDropdownPreview(items) {
     var $manageModal = $(manageModal);
@@ -48,6 +61,13 @@ var RepositoryListColumnType = (function() {
         text: item
       }));
     });
+
+    if (items.length === 0) {
+      $dropdownPreview.append($('<option>', {
+        value: '',
+        text: I18n.t('libraries.manange_modal_column.list_type.dropdown_item_select_option')
+      }));
+    }
   }
 
   function refreshCounter(number) {
@@ -77,6 +97,7 @@ var RepositoryListColumnType = (function() {
     });
 
     $('#dropdown_options').val(JSON.stringify(hashItems));
+    $('.limit-counter-container .items-label').html(pluralizeWord(items.length, 'item'));
   }
 
   function initDropdownItemsTextArea() {

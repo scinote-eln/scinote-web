@@ -5,6 +5,7 @@ module RepositoryColumns
     before_action :load_column, only: %i(update destroy)
     before_action :check_create_permissions, only: :create
     before_action :check_manage_permissions, only: %i(update destroy)
+    helper_method :delimiters
 
     def create
       service = RepositoryColumns::CreateColumnService
@@ -47,7 +48,14 @@ module RepositoryColumns
     private
 
     def repository_column_params
-      params.require(:repository_column).permit(:name, repository_list_items_attributes: %i(data))
+      params.require(:repository_column).permit(:name, :delimiter, repository_list_items_attributes: %i(data))
+    end
+
+    def delimiters
+      Constants::REPOSITORY_LIST_ITEMS_DELIMITERS
+        .split(',')
+        .map { |e| Hash[t('libraries.manange_modal_column.list_type.delimiters.' + e), e] }
+        .inject(:merge)
     end
   end
 end

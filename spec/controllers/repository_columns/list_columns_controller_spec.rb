@@ -103,7 +103,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
       allow(service).to(receive(:succeed?)).and_return(true)
       allow(service).to(receive(:column)).and_return(repository_column)
 
-      allow_any_instance_of(RepositoryColumns::UpdateColumnService).to(receive(:call)).and_return(service)
+      allow_any_instance_of(RepositoryColumns::UpdateListColumnService).to(receive(:call)).and_return(service)
     end
 
     context 'when columnd is updated' do
@@ -151,7 +151,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
         allow(service).to(receive(:succeed?)).and_return(false)
         allow(service).to(receive(:errors)).and_return({})
 
-        allow_any_instance_of(RepositoryColumns::UpdateColumnService).to(receive(:call)).and_return(service)
+        allow_any_instance_of(RepositoryColumns::UpdateListColumnService).to(receive(:call)).and_return(service)
       end
 
       it 'respons with status 422' do

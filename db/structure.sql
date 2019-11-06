@@ -1201,7 +1201,8 @@ CREATE TABLE public.repository_columns (
     name character varying,
     data_type integer NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    delimiter character varying
 );
 
 
@@ -6748,6 +6749,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191001133557'),
 ('20191003091614'),
 ('20191007144622'),
-('20191009146101');
+('20191009146101'),
+('20191105143702');
 
 

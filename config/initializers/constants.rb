@@ -977,7 +977,12 @@ class Constants
 
   REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
 
-  REPOSITORY_LIST_ITEMS_DELIMITERS = 'auto,return,comma,semicolon,space'.freeze
+  REPOSITORY_LIST_ITEMS_DELIMITERS_MAP = {
+    return: "\n",
+    comma: ',',
+    semicolon: ';',
+    space: ' '
+  }.freeze
 
   IMPORT_REPOSITORY_ITEMS_LIMIT = 2000
 
