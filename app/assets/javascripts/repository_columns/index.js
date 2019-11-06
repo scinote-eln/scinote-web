@@ -1,4 +1,4 @@
-/* global I18n HelperModule animateSpinner RepositoryListColumnType */
+/* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType*/
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
   var manageModal = '#manageRepositoryColumn';
@@ -175,6 +175,7 @@ var RepositoryColumns = (function() {
         initDeleteSubmitAction();
         initManageColumnModal();
         RepositoryListColumnType.init();
+        RepositoryStatusColumnType.init();
       }
     }
   };

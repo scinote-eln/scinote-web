@@ -1145,6 +1145,9 @@ en:
           space: "Space"
           semicolon: "Semicolon"
           comma: "Comma"
+      status_type:
+        status_options_label: "Status options"
+        add_status_label: "Add status option"
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
