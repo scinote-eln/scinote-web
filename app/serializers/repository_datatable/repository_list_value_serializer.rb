@@ -2,9 +2,9 @@
 
 module RepositoryDatatable
   class RepositoryListValueSerializer < ActiveModel::Serializer
-    attributes :data, :value_type
+    attributes :value, :value_type
 
-    def data
+    def value
       object.value.data
     end
   end
