@@ -377,8 +377,10 @@ class TeamImporter
       if user_json['user']['avatar']
         avatar_filename = user_json['user']['avatar']['filename']
         avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s, avatar_filename)
-        avatar = File.open(avatar_path)
-        user.avatar.attach(io: avatar, filename: avatar_filename)
+        if File.exist?(avatar_path)
+          avatar = File.open(avatar_path)
+          user.avatar.attach(io: avatar, filename: avatar_filename)
+        end
       end
       @user_counter += 1
       user.update_attribute('encrypted_password',
