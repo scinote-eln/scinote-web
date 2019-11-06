@@ -4,9 +4,9 @@ module RepositoryDatatable
   class RepositoryAssetValueSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
 
-    attributes :data, :value_type
+    attributes :value, :value_type
 
-    def data
+    def value
       asset = object.value.asset
       {
         id: asset.id,
