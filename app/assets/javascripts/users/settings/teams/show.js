@@ -3,44 +3,6 @@
 
   var usersDatatable = null;
 
-  // Initialize edit name modal window
-  function initEditName() {
-    var editNameModal = $('#team-name-modal');
-    var editNameModalBody = editNameModal.find('.modal-body');
-    var editNameModalSubmitBtn = editNameModal.find("[data-action='submit']");
-    $('.name-link').on('ajax:success', function(ev, data) {
-      // Set modal body
-      editNameModalBody.html(data.html);
-
-      editNameModalBody.find('form')
-        .on('ajax:success', function() {
-          // Reload page
-          location.reload();
-        })
-        .on('ajax:error', function(ev2, data2) {
-          // Display errors if needed
-          editNameModalBody
-            .find('form')
-            .renderFormErrors('team', data2.responseJSON);
-        });
-
-      // Show modal
-      editNameModal.modal('show');
-    }).on('ajax:error', function() {
-      // TODO
-    });
-
-    editNameModalSubmitBtn.on('click', function() {
-      // Submit the form inside the modal
-      editNameModalBody.find('form').submit();
-    });
-
-    editNameModal.on('hidden.bs.modal', function() {
-      editNameModalBody.find('form').off('ajax:success ajax:error');
-      editNameModalBody.html('');
-    });
-  }
-
   // Initialize edit description modal window
   function initEditDescription() {
     var editDescriptionModal = $('#team-description-modal');
@@ -236,7 +198,6 @@
     });
   }
 
-  initEditName();
   initEditDescription();
   initUsersTable();
   initUpdateRoles();
