@@ -40,6 +40,15 @@ var RepositoryColumns = (function() {
     });
   }
 
+  function checkData() {
+    var validators = {
+      RepositoryListValue: 'RepositoryListColumnType',
+      RepositoryStatusValue: 'RepositoryStatusColumnType'
+    };
+    var currentPartial = $('#repository-column-data-type').find(':selected').val();
+    return eval(validators[currentPartial]).checkValidation();
+  }
+
 
   function insertNewListItem(column) {
     var attributes = column.attributes;
@@ -80,11 +89,38 @@ var RepositoryColumns = (function() {
     $('li[data-id=' + column.id + ']').find('span').first().text(name);
   }
 
-  function loadSpecificParams(type, params) {
+  function loadSpecificParams(type, params, modal) {
+    var $modal = modal;
     var newParams = params;
+    var $statusItems;
+
     if (type === 'RepositoryListValue') {
       newParams.repository_column.repository_list_items_attributes = JSON.parse($('#dropdown_options').val());
       newParams.repository_column.delimiter = $('select#delimiter').data('used-delimiter');
+    } else if (type === 'RepositoryStatusValue') {
+      $statusItems = $modal.find('.status-item-container');
+      // Load all new items
+      // Load all existing items, delete flag included
+      newParams.repository_column.repository_status_items_attributes = [];
+
+      $.each($statusItems, function(index, value) {
+        var $item = $(value);
+        var id = $item.data('id');
+        var removed = $item.data('removed');
+        var icon = $item.find('.status-item-icon').data('icon');
+        var status = $item.find('input.status-item-field').val();
+
+        if (removed && id) { // flag as item for removing
+          newParams.repository_column.repository_status_items_attributes
+            .push({ id: id, _destroy: true });
+        } else if (id) { // existing element, maybe values needs to be updated
+          newParams.repository_column.repository_status_items_attributes
+            .push({ id: id, icon: icon, status: status });
+        } else { // new element
+          newParams.repository_column.repository_status_items_attributes
+            .push({ icon: icon, status: status });
+        }
+      });
     }
     return newParams;
   }
@@ -95,7 +131,9 @@ var RepositoryColumns = (function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').find(':selected').val();
-      params = loadSpecificParams(selectedType, params);
+      params = loadSpecificParams(selectedType, params, $manageModal);
+      // if (checkData() === false) return;
+
       $.ajax({
         url: url,
         type: 'POST',
@@ -120,7 +158,9 @@ var RepositoryColumns = (function() {
       var url = $('#repository-column-data-type').find(':selected').data('edit-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').find(':selected').val();
-      params = loadSpecificParams(selectedType, params);
+      params = loadSpecificParams(selectedType, params, $manageModal);
+      if (checkData() !== true) return;
+
       $.ajax({
         url: url,
         type: 'PUT',
@@ -150,7 +190,8 @@ var RepositoryColumns = (function() {
         $manageModal.modal('show').find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
-        $manageModal.trigger('columnModal::partialLoaded');
+        $manageModal.trigger('columnModal::partialLoadedForLists');
+        $manageModal.trigger('columnModal::partialLoadedForStatuses');
 
         if (button.data('action') === 'new') {
           $('[data-column-type="RepositoryTextValue"]').show();

@@ -73,13 +73,14 @@ var RepositoryListColumnType = (function() {
   function refreshCounter(number) {
     var $manageModal = $(manageModal);
     $manageModal.find('.list-items-count').html(number);
+    $manageModal.find('.list-items-count').attr('data-count', number);
 
-    if (number > GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
+    if (number >= GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
       $manageModal.find('.limit-counter-container').addClass('error-to-many-items');
-      $manageModal.find('button[data-action="save"]').prop('disabled', true);
+      $manageModal.find('button[data-action="save"]').addClass('disabled');
     } else {
       $manageModal.find('.limit-counter-container').removeClass('error-to-many-items');
-      $manageModal.find('button[data-action="save"]').prop('disabled', false);
+      $manageModal.find('button[data-action="save"]').removeClass('disabled');
     }
   }
 
@@ -114,7 +115,7 @@ var RepositoryListColumnType = (function() {
       refreshPreviewDropdownList();
     });
 
-    $manageModal.off('columnModal::partialLoaded').on('columnModal::partialLoaded', function() {
+    $manageModal.off('columnModal::partialLoadedForLists').on('columnModal::partialLoadedForLists', function() {
       refreshPreviewDropdownList();
     });
 
@@ -126,6 +127,11 @@ var RepositoryListColumnType = (function() {
   return {
     init: () => {
       initDropdownItemsTextArea();
+    },
+    checkValidation: () => {
+      var $manageModal = $(manageModal);
+      var count = $manageModal.find('.list-items-count').attr('data-count');
+      return count < GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN;
     }
   };
 }());
