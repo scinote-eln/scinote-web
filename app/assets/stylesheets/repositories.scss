@@ -337,6 +337,20 @@
   &[data-removed="true"] {
     display: none;
   }
+
+  &.error.error-highlight {
+    .status-item-icon {
+      border-bottom: 1px solid $brand-danger;
+      border-left: 1px solid $brand-danger;
+      border-top: 1px solid $brand-danger;
+    }
+
+    .status-item-field {
+      border-bottom: 1px solid $brand-danger;
+      border-right: 1px solid $brand-danger;
+      border-top: 1px solid $brand-danger;
+    }
+  }
 }
 
 .status-item-field {
@@ -352,11 +366,19 @@
 .status-item-icon {
   border: 1px solid #ccc;
   border-radius: 4px 0 0 4px;
+  cursor: pointer;
   display: inline-block;
   height: 34px;
   line-height: 32px;
   text-align: center;
   width: 34px;
+
+
+  &:not([data-icon])::before {
+    content: "\f06a";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+  }
 }
 
 .status-item-icon-trash {
