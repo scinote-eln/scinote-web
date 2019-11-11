@@ -144,6 +144,24 @@
   }
 }
 
+.asset-value-cell {
+  align-items: center;
+  display: flex;
+
+  .fas {
+    font-size: 18px;
+    min-width: 18px;
+  }
+
+  .image-icon {
+    width: 18px;
+  }
+
+  .file-preview-link {
+    padding-left: 5px;
+  }
+}
+
 .toolbarButtonsDatatable {
   .view-only-label {
     opacity: .6;
