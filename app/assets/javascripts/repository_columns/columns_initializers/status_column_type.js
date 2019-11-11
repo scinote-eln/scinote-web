@@ -1,7 +1,7 @@
 /* global GLOBAL_CONSTANTS I18n */
 /* eslint-disable no-unused-vars */
 var RepositoryStatusColumnType = (function() {
-  var manageModal = '#manageRepositoryColumn';
+  var manageModal = '#manage-repository-column';
 
   function statusTemplate() {
     return `

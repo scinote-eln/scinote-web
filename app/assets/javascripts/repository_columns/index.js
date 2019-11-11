@@ -1,7 +1,7 @@
 /* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType*/
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
-  var manageModal = '#manageRepositoryColumn';
+  var manageModal = '#manage-repository-column';
 
   function initColumnTypeSelector() {
     var $manageModal = $(manageModal);
