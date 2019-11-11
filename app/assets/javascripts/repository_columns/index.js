@@ -46,7 +46,12 @@ var RepositoryColumns = (function() {
       RepositoryStatusValue: 'RepositoryStatusColumnType'
     };
     var currentPartial = $('#repository-column-data-type').find(':selected').val();
-    return eval(validators[currentPartial]).checkValidation();
+
+    if (validators[currentPartial]) {
+      return eval(validators[currentPartial])
+        .checkValidation();
+    }
+    return true;
   }
 
 

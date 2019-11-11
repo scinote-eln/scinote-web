@@ -28,7 +28,7 @@ module RepositoryColumns
                       params: repository_column_params)
 
       if service.succeed?
-        render json: service.column, status: :ok, updating: true
+        render json: service.column, status: :ok, editing: true
       else
         render json: service.errors, status: :unprocessable_entity
       end
