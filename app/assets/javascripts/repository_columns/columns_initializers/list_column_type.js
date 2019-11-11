@@ -1,7 +1,7 @@
 /* global GLOBAL_CONSTANTS  I18n */
 /* eslint-disable no-unused-vars */
 var RepositoryListColumnType = (function() {
-  var manageModal = '#manageRepositoryColumn';
+  var manageModal = '#manage-repository-column';
 
   function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;

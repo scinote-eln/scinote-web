@@ -1,0 +1,14 @@
+// scss-lint:disable IdSelector
+
+@import "constants";
+
+#manage-repository-column {
+  .modal-footer {
+    text-align: center;
+  }
+
+  .delete-footer {
+    text-align: right;
+  }
+}
+
