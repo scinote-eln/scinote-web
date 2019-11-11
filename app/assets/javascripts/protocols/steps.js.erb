@@ -270,7 +270,7 @@
       if ($('#steps .step').length > 0) {
         $("[data-action='new-step']:last").show();
         $(".expand-all-steps").show();
-      } 
+      }
     } else {
       $("[data-action='new-step']").hide();
       $("[data-action='edit-step']").hide();
@@ -584,7 +584,7 @@
 
       animateSpinner(null, true);
       DragNDropSteps.appendFilesToForm(ev).then(formData => {
-        formData.append('step[description]', TinyMCE.getContent());
+        formData.append('step[description]', $tinyMCEInput);
         $.ajax({
           url: $form.attr('action'),
           method: 'POST',
