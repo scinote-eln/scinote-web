@@ -20,6 +20,7 @@
                         placeholder: t('my_modules.protocols.protocol_status_bar.empty_description_edit_label'),
                         hide_label: true,
                         value: sanitize_input(protocol.tinymce_render(:description)),
+                        autocomplete: 'off',
                         data: {
                           object_type: 'protocol',
                           object_id: protocol.id,
