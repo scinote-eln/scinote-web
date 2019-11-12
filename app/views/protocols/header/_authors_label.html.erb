@@ -1,5 +1,18 @@
 <% if @protocol.authors.present? %>
-  <strong><%= @protocol.authors %></strong>
+  <% if can_manage_protocol_in_repository?(@protocol) && editable %>
+   <%= render partial: "shared/inline_editing.html.erb",
+                   locals: {
+                     initial_value: @protocol.authors,
+                     config: {
+                       field_to_udpate: 'authors',
+                       params_group: 'protocol',
+                       path_to_update:  authors_protocol_path(@protocol)
+                     }
+                   } %>
+  <% else %>
+    <span class="view-mode"><%= @protocol.authors %></span>
+  <% end %>
+
 <% else %>
   <em><%= t("protocols.header.no_authors") %></em>
 <% end %>

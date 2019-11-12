@@ -4,6 +4,7 @@ class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
   include TeamBySubjectModel
+  include TinyMceImages
 
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions

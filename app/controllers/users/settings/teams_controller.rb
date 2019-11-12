@@ -1,6 +1,11 @@
 module Users
   module Settings
     class TeamsController < ApplicationController
+      include ActionView::Helpers::TextHelper
+      include ActionView::Helpers::UrlHelper
+      include ApplicationHelper
+      include InputSanitizeHelper
+
       before_action :load_user, only: [
         :index,
         :datatable,
@@ -110,9 +115,11 @@ module Users
             format.json do
               render json: {
                 status: :ok,
-                description_label: render_to_string(
-                  partial: 'users/settings/teams/description_label.html.erb',
-                  locals: { team: @team }
+                html: custom_auto_link(
+                  @team.tinymce_render(:description),
+                  simple_format: false,
+                  tags: %w(img),
+                  team: current_team
                 )
               }
             end

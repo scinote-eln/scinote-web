@@ -1,4 +1,4 @@
-<%= bootstrap_form_for protocol, url: update_url, remote: :true do |f| %>
+<%= bootstrap_form_for protocol, url: update_url, remote: :true, html: {class: 'tiny-mce-editor'} do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
   <% if protocol.description.present? %>
     <div id="protocol_description_view"

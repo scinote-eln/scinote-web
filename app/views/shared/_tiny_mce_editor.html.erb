@@ -1,0 +1,19 @@
+<%= bootstrap_form_for object, url: update_url, remote: :true, method: update_method, html: {class: 'tiny-mce-editor'} do |f| %>
+  <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
+  <div class="ql-editor tinymce-view"
+      data-placeholder="<%= placeholder %>"><%= custom_auto_link(object.tinymce_render(field),
+                         simple_format: false,
+                         tags: %w(img),
+                         team: current_team) if object[field].present? %></div>
+  <%= f.tiny_mce_editor(field,
+                        id: "#{object.class.to_s.underscore}_#{object.id}_textarea",
+                        class: 'hidden',
+                        placeholder: placeholder,
+                        hide_label: true,
+                        value: sanitize_input(object.tinymce_render(field)),
+                        data: {
+                          object_type: object.class.to_s.underscore,
+                          object_id: object.id,
+                          highlightjs_path: asset_path('highlightjs-github-theme.css'),
+                          last_updated: object.updated_at.to_i * 1000 } ) %>
+<% end %>

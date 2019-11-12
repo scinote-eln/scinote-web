@@ -31,9 +31,10 @@ class ProtocolsController < ApplicationController
   # read permission for the parent protocol
   before_action :check_manage_permissions, only: %i(
     edit
-    update_metadata
     update_keywords
     update_description
+    update_name
+    update_authors
     edit_name_modal
     edit_keywords_modal
     edit_authors_modal
@@ -161,46 +162,6 @@ class ProtocolsController < ApplicationController
     current_team_switch(@protocol.team)
   end
 
-  def update_metadata
-    @protocol.record_timestamps = false
-    @protocol.assign_attributes(metadata_params)
-
-    changes = @protocol.changes.keys
-
-    respond_to do |format|
-      if @protocol.save
-
-        changes.each do |key|
-          if %w(description authors keywords).include?(key)
-            log_activity("edit_#{key}_in_protocol_repository".to_sym, nil, protocol: @protocol.id)
-          end
-        end
-
-        format.json do
-          render json: {
-            updated_at_label: render_to_string(
-              partial: 'protocols/header/updated_at_label.html.erb'
-            ),
-            name_label: render_to_string(
-              partial: 'protocols/header/name_label.html.erb'
-            ),
-            authors_label: render_to_string(
-              partial: 'protocols/header/authors_label.html.erb'
-            ),
-            description_label: render_to_string(
-              partial: 'protocols/header/description_label.html.erb', locals: { edit_mode: true }
-            )
-          }
-        end
-      else
-        format.json do
-          render json: @protocol.errors,
-            status: :unprocessable_entity
-        end
-      end
-    end
-  end
-
   def update_keywords
     respond_to do |format|
       # sanitize user input
@@ -225,6 +186,22 @@ class ProtocolsController < ApplicationController
       else
         format.json { render json: {}, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def update_authors
+    if @protocol.update(authors: params.require(:protocol)[:authors])
+      render json: {}, status: :ok
+    else
+      render json: @protocol.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update_name
+    if @protocol.update(name: params.require(:protocol)[:name])
+      render json: {}, status: :ok
+    else
+      render json: @protocol.errors, status: :unprocessable_entity
     end
   end
 
@@ -1228,10 +1205,6 @@ class ProtocolsController < ApplicationController
 
   def create_params
     params.require(:protocol).permit(:name)
-  end
-
-  def metadata_params
-    params.require(:protocol).permit(:name, :authors, :description)
   end
 
   def check_protocolsio_import_permissions

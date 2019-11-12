@@ -33,13 +33,12 @@
                 </div>
               </div>
 
-            <span class="settings-page-full-name" style="padding-bottom: 30px; display: block;">
+            <span class="settings-page-full-name user-settings-block">
               <label><%= t("users.registrations.edit.name_label") %></label>
               <%= render partial: "shared/inline_editing",
                          locals: {
                            initial_value: @user.full_name,
-                           local_config: {
-                             name: 'user_full_name',
+                           config: {
                              params_group: 'user',
                              field_to_udpate: 'full_name',
                              path_to_update: registration_path(resource_name, format: :json)
@@ -47,13 +46,12 @@
                          } %>
             </span>
 
-            <span class="settings-page-initials" style="padding-bottom: 30px; display: block;">
+            <span class="settings-page-initials user-settings-block">
               <label><%= t("users.registrations.edit.initials_label") %></label>
               <%= render partial: "shared/inline_editing",
                          locals: {
                            initial_value: @user.initials,
-                           local_config: {
-                             name: 'user_initials',
+                           config: {
                              params_group: 'user',
                              field_to_udpate: 'initials',
                              path_to_update: registration_path(resource_name, format: :json)

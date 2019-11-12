@@ -1,0 +1,115 @@
+@import "constants";
+@import "mixins";
+
+.team-settings-pane{
+  .settings-team-name {
+    margin-bottom: 10px;
+    
+    .inline-editing-container {
+      .view-mode {
+        font-size: 18px;
+      }
+
+      .input-field {
+        font-size: 18px;
+      }
+
+      &.error {
+        .input-field {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .team-metadata {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    min-height: 40px;
+
+    .created-at,
+    .created-by,
+    .space-usage {
+      flex-grow: 1;
+      line-height: 40px;
+
+      .fas {
+        color: $color-silver;
+        margin-right: 10px;
+      }
+    }
+
+    .created-at,
+    .created-by {
+      margin-right: 20px
+    }
+
+    .created-by {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .team-description {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  .users-datatable {
+    .table-header {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+
+      .add-new-team-members {
+        flex-grow: 1;
+        padding: 5px 0;
+      }
+
+      .filter-table,
+      .display-limit {
+        flex-shrink: 0;
+        padding: 5px 0;
+      }
+
+      .add-new-team-members,
+      .filter-table {
+        margin-right: 15px;
+      }
+    }
+
+    .table-footer {
+      display: flex;
+      flex-wrap: wrap;
+
+      .page-info,
+      .page-selector {
+        flex-grow: 1;
+      }
+
+      .page-selector {
+        text-align: right;
+      }
+    }
+
+    .dropdown-teams-user {
+      .dropdown-menu li.user-team-role {
+        & > :first-child {
+          padding-left: 10px;
+        }
+
+        &:not(.disabled) span.fas {
+          color: transparent !important;
+        }
+      }
+    }
+  }
+}
