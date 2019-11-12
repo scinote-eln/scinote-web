@@ -20,6 +20,7 @@
                         placeholder:  t('my_modules.module_header.empty_description_edit_label'),
                         hide_label: true,
                         value: sanitize_input(@my_module.tinymce_render(:description)),
+                        autocomplete: 'off',
                         data: {
                           object_type: 'my_module',
                           object_id: @my_module.id,

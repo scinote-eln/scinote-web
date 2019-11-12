@@ -33,6 +33,7 @@
                             id: :step_description_textarea,
                             hide_label: false,
                             value: sanitize_input(@step.tinymce_render(:description)),
+                            autocomplete: 'off',
                             data: {
                               object_type: 'step',
                               object_id: @step.id,
