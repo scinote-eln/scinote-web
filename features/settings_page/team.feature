@@ -26,11 +26,11 @@ Feature: Team settings
   @javascript
   Scenario: Successfully changes team description
     Given I'm on "BioSistemika Process" team settings page
-    Then I click on ".description-label" element
-    Then I should not see "I was on Triglav one summer." on ".description-label" element
-    And I fill in "I was on Triglav one summer." in "team_description" textarea field
+    Then I click on ".team-description" element
+    Then I should not see "I was on Triglav one summer." on ".team-description" element
+    Then I fill in "I was on Triglav one summer." in "#team_1_textarea" rich text editor field
     Then I click "Save" button
-    And I should see "I was on Triglav one summer." on ".description-label" element
+    And I should see "I was on Triglav one summer." on ".team-description" element
 
   @javascript
   Scenario: Successfully changes user role
