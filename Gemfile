@@ -62,6 +62,7 @@ gem 'bcrypt', '~> 3.1.10'
 gem 'caracal-rails' # Build docx report
 gem 'commit_param_routing' # Enables different submit actions in the same form
 gem 'deface', '~> 1.0'
+gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'httparty', '~> 0.13.1'
