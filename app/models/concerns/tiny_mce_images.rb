@@ -95,13 +95,16 @@ module TinyMceImages
           next if asset && (asset.object == self || asset_team_id != asset.team_id)
 
         else
-          # We need implement size and type checks here
           url = image['src']
           image_type = FastImage.type(url).to_s
           next unless image_type
 
-          new_image = URI.parse(url).open
-          next if new_image.size > Rails.configuration.x.file_max_size_mb.megabytes
+          begin
+            new_image = Down.download(url, max_size: Rails.configuration.x.file_max_size_mb.megabytes)
+          rescue Down::TooLarge => e
+            Rails.logger.error e.message
+            next
+          end
 
           new_image_filename = Asset.generate_unique_secure_token + '.' + image_type
         end
