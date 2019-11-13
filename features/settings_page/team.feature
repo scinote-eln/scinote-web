@@ -4,6 +4,7 @@ Feature: Team settings
   So that I can manage my team
 
   Background:
+    Given default screen size
     Given the "BioSistemika Process" team exists
     Given the following users are registered
       | email                   | password           | password_confirmation | full_name     | initials  |
