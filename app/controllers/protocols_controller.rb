@@ -191,6 +191,7 @@ class ProtocolsController < ApplicationController
 
   def update_authors
     if @protocol.update(authors: params.require(:protocol)[:authors])
+      log_activity(:edit_authors_in_protocol_repository, nil, protocol: @protocol.id)
       render json: {}, status: :ok
     else
       render json: @protocol.errors, status: :unprocessable_entity
@@ -209,6 +210,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         if @protocol.update(description: params.require(:protocol)[:description])
+          log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
           TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
           render json: {
             html: custom_auto_link(
