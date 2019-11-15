@@ -77,9 +77,9 @@
     white-space: nowrap;
     width: calc(100% - 32px);
 
-    &:empty:not(:focus):before{
+    &:empty:not(:focus):before {
       color: $color-silver-chalice;
-      content:attr(data-placeholder);
+      content: attr(data-placeholder);
       font-weight: normal;
     }
   }
