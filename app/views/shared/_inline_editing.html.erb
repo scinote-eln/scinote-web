@@ -5,9 +5,10 @@
   data-path-to-update="<%= config[:path_to_update] %>"
   data-original-name="<%= initial_value %>"
   data-label-after='<%= config[:label_after]&.html_safe %>'
+  data-placeholder='<%= config[:placeholder] %>'
 >
-  <div class="view-mode"><%= initial_value %></div>
-  <input class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
+  <div class="view-mode" data-placeholder="<%= config[:placeholder] %>"><%= initial_value %></div>
+  <input placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container">
     <span class="save-button"><i class="fas fa-check"></i></span>
     <span class="cancel-button"><i class="fas fa-times"></i></span>

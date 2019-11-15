@@ -69,12 +69,19 @@
     cursor: pointer;
     line-height: 26px;
     margin-left: -5px;
+    min-height: 30px;
     overflow: hidden;
     padding: 2px 4px;
     padding-right: 36px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: calc(100% - 32px);
+
+    &:empty:not(:focus):before{
+      color: $color-silver-chalice;
+      content:attr(data-placeholder);
+      font-weight: normal;
+    }
   }
 
   input {
@@ -87,6 +94,11 @@
     padding: 2px 4px;
     padding-right: 36px;
     width: calc(100% - 32px);
+
+    &::placeholder {
+      color: $color-silver-chalice;
+      font-weight: normal;
+    }
 
     &:focus {
       outline: 0;

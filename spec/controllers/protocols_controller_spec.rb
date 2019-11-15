@@ -106,7 +106,7 @@ describe ProtocolsController, type: :controller do
     end
   end
 
-  describe 'POST metadata' do
+  describe 'PUT description' do
     let(:protocol) do
       create :protocol, :in_public_repository, team: team, added_by: user
     end

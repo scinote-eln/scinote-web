@@ -1,18 +1,15 @@
-<% if @protocol.authors.present? %>
-  <% if can_manage_protocol_in_repository?(@protocol) && editable %>
-   <%= render partial: "shared/inline_editing.html.erb",
-                   locals: {
-                     initial_value: @protocol.authors,
-                     config: {
-                       field_to_udpate: 'authors',
-                       params_group: 'protocol',
-                       path_to_update:  authors_protocol_path(@protocol)
-                     }
-                   } %>
-  <% else %>
-    <span class="view-mode"><%= @protocol.authors %></span>
-  <% end %>
-
+<% if can_manage_protocol_in_repository?(@protocol) && editable %>
+  <%= render partial: "shared/inline_editing.html.erb",
+                    locals: {
+                      initial_value: @protocol.authors,
+                        config: {
+                          field_to_udpate: 'authors',
+                          params_group: 'protocol',
+                          placeholder: t("protocols.header.no_authors"),
+                          path_to_update:  authors_protocol_path(@protocol)
+                        }
+                    } 
+  %>
 <% else %>
-  <em><%= t("protocols.header.no_authors") %></em>
+   <span class="view-mode"><%= @protocol.authors || t("protocols.header.no_authors") %></span>
 <% end %>
