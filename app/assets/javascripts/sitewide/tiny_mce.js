@@ -316,6 +316,16 @@ var TinyMCE = (function() {
               menuBar.find('.tinymce-cancel-button').remove();
             });
 
+            editor.on('blur', function(e) {
+              setTimeout(() => {
+                if (editor.isNotDirty === false) {
+                  $(editor.container).find('.tinymce-save-button').click();
+                } else {
+                  $(editor.container).find('.tinymce-cancel-button').click();
+                }
+              }, 0);
+            });
+
             /* editor.on('init', function(e) {
               restoreDraftNotification(selector, editor);
             });*/

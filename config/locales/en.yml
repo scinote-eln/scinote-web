@@ -1479,6 +1479,8 @@ en:
         breadcrumbs:
           all: "All teams"
           new_team: "New team"
+        show:
+          enter_description: "Enter Team description"
         index:
           description_label: "Team is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:

@@ -106,7 +106,7 @@ describe ProtocolsController, type: :controller do
     end
   end
 
-  describe 'POST metadata' do
+  describe 'PUT description' do
     let(:protocol) do
       create :protocol, :in_public_repository, team: team, added_by: user
     end
@@ -118,7 +118,7 @@ describe ProtocolsController, type: :controller do
         }
       }
     end
-    let(:action) { put :update_metadata, params: params, format: :json }
+    let(:action) { put :update_description, params: params, format: :json }
 
     it 'calls create activity for updating description' do
       expect(Activities::CreateActivityService)

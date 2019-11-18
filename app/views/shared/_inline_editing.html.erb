@@ -1,20 +1,17 @@
 <div
-  class="inline-editing-container <%= @inline_editable_title_config[:name] %>-editable-field"
-  data-field-to-update="<%= @inline_editable_title_config[:field_to_udpate] %>"
-  data-params-group="<%= @inline_editable_title_config[:params_group] %>"
-  data-path-to-update="<%= @inline_editable_title_config[:path_to_update] %>"
+  class="inline-editing-container inline-init-handler"
+  data-field-to-update="<%= config[:field_to_udpate] %>"
+  data-params-group="<%= config[:params_group] %>"
+  data-path-to-update="<%= config[:path_to_update] %>"
   data-original-name="<%= initial_value %>"
-  data-label-after='<%= @inline_editable_title_config[:label_after]&.html_safe %>'
-  error="false"
+  data-label-after='<%= config[:label_after]&.html_safe %>'
+  data-placeholder='<%= config[:placeholder] %>'
 >
-  <div class="view-mode"><%= initial_value %></div>
-  <input class="hidden" type="text" value="<%= initial_value %>" disabled/>
+  <div class="view-mode" data-placeholder="<%= config[:placeholder] %>"><%= initial_value %></div>
+  <input placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container">
     <span class="save-button"><i class="fas fa-check"></i></span>
     <span class="cancel-button"><i class="fas fa-times"></i></span>
   </div>
   <span class="error-block"></span>
 </div>
-<script>
-  initInlineEditing('<%= @inline_editable_title_config[:name] %>')
-</script>

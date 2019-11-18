@@ -4,9 +4,63 @@
 @import "constants";
 @import "mixins";
 
-.protocol-info {
-  
-  .protocol-description {
-    padding: 0 48px;
+.protocols-repository-edit-view {
+
+  .protocol-info {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 40px;
+    position: relative;
+
+    .created-at-block,
+    .last-modified-block,
+    .edit-authors-block,
+    .added-by-block, {
+      flex-grow: 1;
+      margin-bottom: 10px;
+      margin-right: 20px;
+
+      .block-icon {
+        color: $color-silver;
+        font-size: 18px;
+        margin-right: 5px;
+      }
+    }
+
+    .edit-authors-block {
+      align-items: center;
+      display: flex;
+      flex-basis: 30%;
+
+      .edit-authors-container {
+        display: flex;
+        flex-grow: 1;
+        margin-left: 10px;
+        position: relative;
+
+        .view-mode,
+        .input-field {
+          font-weight: bold;
+        }
+      }
+    }
+
+    .protocol-description {
+      flex-basis: 100%;
+      margin-bottom: 10px;
+
+      .form-group {
+        margin: 0;
+      }
+    }
+
+    .keywords-block {
+      flex-basis: 100%;
+    }
+  }
+
+  .repository-protocol-name {
+    font-size: 18px;
   }
 }

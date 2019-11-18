@@ -193,7 +193,7 @@
       }
     }
 
-    &[data-error="true"] {
+    &.error {
 
       .error-block {
         display: block;

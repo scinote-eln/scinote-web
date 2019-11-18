@@ -463,31 +463,6 @@ a[data-toggle="tooltip"] {
   padding-bottom: 0;
 }
 
-.users-datatable {
-  margin-bottom: 20px;
-
-  #users-table_filter {
-    float: right;
-    margin-top: 19px;
-  }
-
-  #users-table_paginate {
-    float: right;
-  }
-
-  .dropdown-teams-user {
-    .dropdown-menu li.user-team-role {
-      & > :first-child {
-        padding-left: 10px;
-      }
-
-      &:not(.disabled) span.fas {
-        color: transparent !important;
-      }
-    }
-  }
-}
-
 .user-statistics {
   .list-inline {
     margin-left: 15px;
