@@ -17,9 +17,9 @@
     data-columns-delete-text="<%= I18n.t('repositories.columns_delete') %>"
     data-available-columns="<%= repository_available_columns_path(repository) %>"
     data-columns-changed="<%= I18n.t('repositories.columns_changed') %>"
-    data-default-order="<%= default_table_order_as_js_array %>"
     data-default-table-columns="<%= default_table_columns %>"
-    data-list-items-path="<%= Rails.application.routes.url_helpers.repository_list_items_path %>">
+    data-list-items-path="<%= Rails.application.routes.url_helpers.repository_list_items_path %>"
+    data-editable="<%= can_manage_repository_rows?(repository) %>">
     <thead>
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
