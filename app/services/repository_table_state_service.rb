@@ -18,14 +18,17 @@ class RepositoryTableStateService
                                          loaded.state['order'] &&
                                          loaded.state['columns'] &&
                                          loaded.state['ColReorder'] &&
-                                         loaded.state.dig('columns', '1', 'visible') == 'true' &&
-                                         loaded.state.dig('columns', '3', 'visible') == 'true'
+                                         loaded.state.dig('columns', 1, 'visible') == true &&
+                                         loaded.state.dig('columns', 3, 'visible') == true
     loaded
   end
 
   def update_state(state)
     saved_state = load_state
+    state[:order][0] = [3, 'asc'] if state.dig(:order, 0, 0).to_i < 2
+
     return if saved_state.state.except('time') == state.except('time')
+
     saved_state.update(state: state)
   end
 
@@ -33,7 +36,7 @@ class RepositoryTableStateService
     # Destroy any state object before recreating a new one
     RepositoryTableState.where(user: @user, repository: @repository).destroy_all
 
-    return RepositoryTableState.create(
+    RepositoryTableState.create(
       user: @user,
       repository: @repository,
       state: generate_default_state
@@ -47,9 +50,7 @@ class RepositoryTableStateService
       Constants::REPOSITORY_TABLE_DEFAULT_STATE[:length]
 
     # This state should be strings-only
-    state = HashUtil.deep_stringify_keys_and_values(
-      Constants::REPOSITORY_TABLE_DEFAULT_STATE
-    )
+    state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.with_indifferent_access
     repository.repository_columns.each_with_index do |_, index|
       real_index = default_columns_num + index
       state['columns'][real_index.to_s] =
