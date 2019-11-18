@@ -26,5 +26,9 @@ FactoryBot.define do
     trait :status_type do
       data_type { :RepositoryStatusValue }
     end
+
+    trait :date_time_type do
+      data_type { :RepositoryDateTimeValue }
+    end
   end
 end
