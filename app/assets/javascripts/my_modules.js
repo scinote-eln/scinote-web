@@ -1,51 +1,5 @@
-/* global I18n */
+/* global I18n dropdownSelector */
 /* eslint-disable no-use-before-define */
-
-// Bind ajax for editing descriptions
-function bindEditDescriptionAjax() {
-  var editDescriptionModal = $('#manage-module-description-modal');
-  var editDescriptionModalBody = editDescriptionModal.find('.modal-body');
-  var editDescriptionModalSubmitBtn = editDescriptionModal.find('[data-action="submit"]');
-  $('.description-link')
-    .on('ajax:success', function(ev, data) {
-      var descriptionLink = $('.description-refresh');
-
-      // Set modal body & title
-      editDescriptionModalBody.html(data.html);
-      editDescriptionModal
-        .find('#manage-module-description-modal-label')
-        .text(data.title);
-
-      editDescriptionModalBody.find('form')
-        .on('ajax:success', function(ev2, data2) {
-          // Update module's description in the tab
-          descriptionLink.html(data2.description_label);
-
-          // Close modal
-          editDescriptionModal.modal('hide');
-        })
-        .on('ajax:error', function() {
-          // Display errors if needed
-          $(this).renderFormErrors('my_module', data.responseJSON);
-        });
-
-      // Show modal
-      editDescriptionModal.modal('show');
-    })
-    .on('ajax:error', function() {
-    // TODO
-    });
-
-  editDescriptionModalSubmitBtn.on('click', function() {
-    // Submit the form inside the modal
-    editDescriptionModalBody.find('form').submit();
-  });
-
-  editDescriptionModal.on('hidden.bs.modal', function() {
-    editDescriptionModalBody.find('form').off('ajax:success ajax:error');
-    editDescriptionModalBody.html('');
-  });
-}
 
 // Bind ajax for editing due dates
 function bindEditDueDateAjax() {
@@ -114,7 +68,16 @@ function bindEditTagsAjax() {
         return true;
       })
       .on('ajax:success', function(e, data) {
+        var newTag;
         initTagsModalBody(data);
+        newTag = $('#manage-module-tags-modal .list-group-item').last();
+        dropdownSelector.addValue('#module-tags-selector', {
+          value: newTag.data('tag-id'),
+          label: newTag.data('name'),
+          params: {
+            color: newTag.data('color')
+          }
+        }, true);
       });
   }
 
@@ -153,10 +116,12 @@ function bindEditTagsAjax() {
       });
     manageTagsModalBody.find('.remove-tag-link')
       .on('ajax:success', function(e, data) {
+        dropdownSelector.removeValue('#module-tags-selector', this.dataset.tagId, '', true);
         initTagsModalBody(data);
       });
     manageTagsModalBody.find('.delete-tag-form')
       .on('ajax:success', function(e, data) {
+        dropdownSelector.removeValue('#module-tags-selector', this.dataset.tagId, '', true);
         initTagsModalBody(data);
       });
     manageTagsModalBody.find('.edit-tag-form')
@@ -256,104 +221,74 @@ function applyTaskCompletedCallBack() {
 }
 
 function initTagsSelector() {
-  var tagsAjaxQuery = {
-    url: $('#module-tags-selector')[0].dataset.searchTagUrl,
-    dataType: 'json',
-    data: function(params) {
-      return {
-        query: params.term // search term
-      };
+  var myModuleTagsSelector = '#module-tags-selector';
+
+  dropdownSelector.init(myModuleTagsSelector, {
+    tagClass: 'my-module-white-tags',
+    tagStyle: (data) => {
+      return `background: ${data.params.color}`;
     },
-    // preparing results
-    processResults: function(data) {
-      var output = [];
-      $.each(data, (index, option) => {
-        var el = option;
-        el.text = option.name;
-        if (option.text.length > 0) {
-          output.push(el);
-        }
-      });
-      return {
-        results: output
-      };
-    }
-  };
+    customDropdownIcon: () => {
+      return '';
+    },
+    optionLabel: (data) => {
+      if (data.value > 0) {
+        return `<span class="my-module-tags-color" style="background:${data.params.color}"></span>
+                ${data.label}`;
+      }
+      return `<span class="my-module-tags-color"></span>
+              ${data.label + ' '}
+              <span class="my-module-tags-create-new"> (${I18n.t('my_modules.module_header.create_new_tag')})</span>`;
+    },
+    onOpen: function() {
+      $('.select-container .edit-button-container').removeClass('hidden');
+    },
+    onClose: function() {
+      $('.select-container .edit-button-container').addClass('hidden');
+    },
+    onSelect: function() {
+      var selectElement = $(myModuleTagsSelector);
+      var lastTag = selectElement.next().find('.ds-tags').last();
+      var lastTagId = lastTag.find('.tag-label').data('ds-tag-id');
+      var newTag;
 
-  function tagsCustomResult(state) {
-    var result = state.id > 0 ? state.text : state.text + ' <span class="create-new">(' + I18n.t('my_modules.module_header.create_new_tag') + ')</span>';
-    result = '<span class="tag-color" style="background: ' + state.color + '"></span><span>' + result + '</span>';
-    return $('<div class="add-tags">' + result + '</div>');
-  }
-
-
-  $('#module-tags-selector').select2Multiple({
-    ajax: tagsAjaxQuery,
-    unlimitedSize: true,
-    colorField: 'color',
-    templateResult: tagsCustomResult,
-    closeOnSelect: true,
-    withoutArrow: true,
-    dynamicCreation: true,
-    dynamicCreationDelimiter: [','],
-    placeholderSize: '250px'
-  }).on('select2:select', (e) => {
-    var params = e.params.data;
-    var newTag = null;
-    var selectElement = e.target;
-    if (params.id > 0) {
-      newTag = { my_module_tag: { tag_id: e.params.data.id } };
-      $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl, newTag)
-        .fail(function() {
-          $('.module-tags .select2-selection__choice').last().remove();
+      if (lastTagId > 0) {
+        newTag = { my_module_tag: { tag_id: lastTagId } };
+        $.post(selectElement.data('update-module-tags-url'), newTag)
+          .fail(function() {
+            dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
+          });
+      } else {
+        newTag = {
+          tag: {
+            name: lastTag.find('.tag-label').html(),
+            project_id: selectElement.data('project-id'),
+            color: null
+          },
+          my_module_id: selectElement.data('module-id'),
+          simple_creation: true
+        };
+        $.post(selectElement.data('tags-create-url'), newTag, function(result) {
+          dropdownSelector.removeValue(myModuleTagsSelector, 0, '', true);
+          dropdownSelector.addValue(myModuleTagsSelector, {
+            value: result.tag.id,
+            label: result.tag.name,
+            params: {
+              color: result.tag.color
+            }
+          }, true);
         });
-    } else {
-      newTag = {
-        tag: {
-          name: params.text,
-          project_id: selectElement.dataset.projectId,
-          color: null
-        },
-        my_module_id: selectElement.dataset.moduleId,
-        simple_creation: true
-      };
-      $.post(selectElement.dataset.tagsCreateUrl, newTag, function(result) {
-        var newOption = '<option data-color="' + result.tag.color + '" value="' + result.tag.id + '">' + result.tag.name + '</option>';
-        var selectedValues = $(selectElement).val();
-        $(newOption).appendTo($(selectElement));
-        $(selectElement).find('option[value=0]').remove();
-        selectedValues.splice(-1, 1);
-        selectedValues.push(result.tag.id);
-        $(selectElement).val(selectedValues).change();
-      });
+      }
+      dropdownSelector.closeDropdown(myModuleTagsSelector);
+    },
+    onUnSelect: (id) => {
+      $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`);
+      dropdownSelector.closeDropdown(myModuleTagsSelector);
     }
-  }).on('select2:unselect', (e)=>{
-    var deleteTag = e.params.data.id;
-    $(e.target).find('option[value="' + deleteTag + '"]').remove();
-    $.post($('#module-tags-selector')[0].dataset.updateModuleTagsUrl + '/' + deleteTag + '/destroy_by_tag_id');
-  })
-    .prop('disabled', true);
-
-  $(window).click(()=>{
-    $('#module-tags-selector').prop('disabled', true);
-    $('.select-container .edit-button-container').addClass('hidden');
-  });
-
-  $('#module-tags-selector').next().find('.select2-selection, input').click(e => {
-    var inputLine = $('#module-tags-selector').next().find('input');
-    $('#module-tags-selector').select2('open');
-    if ($('#module-tags-selector')[0].dataset.editable !== 'true') return false;
-    $('#module-tags-selector').prop('disabled', false);
-    $('.select-container .edit-button-container').removeClass('hidden');
-    e.stopPropagation();
-    inputLine[0].disabled = false;
-    inputLine.focus();
-    return true;
-  });
+  }).getContainer(myModuleTagsSelector).addClass('my-module-tags-container');
 }
 
 applyTaskCompletedCallBack();
 bindEditDueDateAjax();
-bindEditDescriptionAjax();
 initTagsSelector();
 bindEditTagsAjax();

@@ -138,7 +138,7 @@ CREATE TABLE public.activities (
     subject_id bigint,
     team_id bigint,
     group_type integer,
-    "values" json
+    "values" jsonb
 );
 
 
@@ -168,8 +168,8 @@ ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -6519,6 +6519,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190812065432'),
 ('20190812072649'),
 ('20190830141257'),
+('20190903145834'),
 ('20190910125740'),
 ('20191001133557'),
 ('20191009146101');
