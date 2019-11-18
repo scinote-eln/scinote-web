@@ -369,7 +369,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
 
   describe 'PUT result, #update' do
     context 'when resultType is file' do
-      let(:result_file) { @valid_task.results.last }
+      let(:result_file) { @valid_task.results.joins(:result_asset).last }
       let(:file) { fixture_file_upload('files/test.jpg', 'image/jpg') }
       let(:second_file) { fixture_file_upload('files/apple.jpg', 'image/jpg') }
       let(:request_body) do
@@ -481,10 +481,10 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
             ), params: @valid_text_hash_body.to_json, headers: @valid_headers)
       end
 
-      it 'returns status 500' do
+      it 'returns status 200' do
         action
 
-        expect(response).to have_http_status 500
+        expect(response).to have_http_status 200
       end
     end
   end
