@@ -1226,6 +1226,41 @@ ALTER SEQUENCE public.repository_columns_id_seq OWNED BY public.repository_colum
 
 
 --
+-- Name: repository_date_time_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_date_time_values (
+    id bigint NOT NULL,
+    start_time timestamp without time zone,
+    end_time timestamp without time zone,
+    datetime_type integer,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_date_time_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_date_time_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_date_time_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.repository_date_time_values.id;
+
+
+--
 -- Name: repository_date_values; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2856,6 +2891,13 @@ ALTER TABLE ONLY public.repository_columns ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: repository_date_time_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_time_values_id_seq'::regclass);
+
+
+--
 -- Name: repository_date_values id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3395,6 +3437,14 @@ ALTER TABLE ONLY public.repository_cells
 
 ALTER TABLE ONLY public.repository_columns
     ADD CONSTRAINT repository_columns_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_date_time_values repository_date_time_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values
+    ADD CONSTRAINT repository_date_time_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4554,6 +4604,41 @@ CREATE INDEX index_repository_columns_on_repository_id ON public.repository_colu
 
 
 --
+-- Name: index_repository_date_time_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_created_by_id ON public.repository_date_time_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_date_time_values_on_datetime_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_datetime_type ON public.repository_date_time_values USING btree (datetime_type);
+
+
+--
+-- Name: index_repository_date_time_values_on_end_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_end_time ON public.repository_date_time_values USING btree (end_time);
+
+
+--
+-- Name: index_repository_date_time_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_last_modified_by_id ON public.repository_date_time_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_date_time_values_on_start_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_start_time ON public.repository_date_time_values USING btree (start_time);
+
+
+--
 -- Name: index_repository_list_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5707,6 +5792,14 @@ ALTER TABLE ONLY public.repository_list_items
 
 
 --
+-- Name: repository_date_time_values fk_rails_54bbbbe979; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values
+    ADD CONSTRAINT fk_rails_54bbbbe979 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: repository_date_values fk_rails_5d809fca2c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6000,6 +6093,14 @@ ALTER TABLE ONLY public.repository_columns
 
 ALTER TABLE ONLY public.result_tables
     ADD CONSTRAINT fk_rails_9269d5e204 FOREIGN KEY (result_id) REFERENCES public.results(id);
+
+
+--
+-- Name: repository_date_time_values fk_rails_92c52d4449; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values
+    ADD CONSTRAINT fk_rails_92c52d4449 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6751,6 +6852,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191003091614'),
 ('20191007144622'),
 ('20191009146101'),
-('20191105143702');
+('20191105143702'),
+('20191115143747');
 
 

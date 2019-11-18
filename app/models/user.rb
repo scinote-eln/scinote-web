@@ -234,6 +234,16 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify
+  has_many :created_repositroy_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repositroy_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
