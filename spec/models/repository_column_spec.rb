@@ -48,5 +48,19 @@ describe RepositoryColumn, type: :model do
     describe '#data_type' do
       it { is_expected.to validate_presence_of :data_type }
     end
+
+    describe '#range' do
+      it do
+        allow(subject).to receive(:repository_date_time_value?).and_return(true)
+
+        expect(subject).to allow_value([true, false]).for(:range)
+      end
+
+      it do
+        allow(subject).to receive(:repository_date_time_value?).and_return(false)
+
+        expect(subject).to allow_value(nil).for(:range)
+      end
+    end
   end
 end

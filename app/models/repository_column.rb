@@ -15,12 +15,11 @@ class RepositoryColumn < ApplicationRecord
 
   auto_strip_attributes :name, nullify: false
   validates :name,
-            presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :repository_id, case_sensitive: true }
-  validates :created_by, presence: true
-  validates :repository, presence: true
-  validates :data_type, presence: true
+  validates :name, :data_type, :repository, :created_by, presence: true
+  validates :range, inclusion: { in: [true, false] }, if: :repository_date_time_value?
+  validates :range, absence: true, unless: :repository_date_time_value?
 
   after_create :update_repository_table_states_with_new_column
   around_destroy :update_repository_table_states_with_removed_column
@@ -31,6 +30,13 @@ class RepositoryColumn < ApplicationRecord
 
   def self.name_like(query)
     where('repository_columns.name ILIKE ?', "%#{query}%")
+  end
+
+  # Add enum check method with underscores (eg repository_list_value)
+  data_types.each do |k, _|
+    define_method "#{k.underscore}?" do
+      public_send "#{k}?"
+    end
   end
 
   def update_repository_table_states_with_new_column
