@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 When(/^I click "(.+)" button$/) do |button|
   click_button(button)
 end
 
-Then("I trigger click {string}") do |string|
+Then('I click {string} Scinote button') do |button|
+  find('.btn', text: button).click
+end
+
+Then('I trigger click {string}') do |string|
   page.execute_script("$('#{string}').trigger('click')")
 end
 
-Given(/^Show me the page$/) do
-  save_and_open_page
-end
-
 Then(/^I should be redirected to the homepage$/) do
-  current_path.should =~ /^\/$/
+  current_path.should =~ %r{^/$}
 end
 
 Given(/^I click "(.+)" link$/) do |link|
@@ -48,20 +50,20 @@ Given(/^the "([^"]*)" team exists$/) do |team_name|
 end
 
 Given(/^Demo project exists for the "([^"]*)" team$/) do |team_name|
-  team = Team.find_by_name(team_name)
+  team = Team.find_by(name: team_name)
   user = team.user_teams.where(role: :admin).take.user
   seed_demo_data(user, team)
 end
 
 Given(/^I'm on the home page of "([^"]*)" team$/) do |team_name|
-  team = Team.find_by_name(team_name)
-  @current_user.update_attribute(:current_team_id, team.id)
+  team = Team.find_by(name: team_name)
+  @current_user.update(current_team_id: team.id)
   visit root_path
 end
 
 Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_name, role|
-  team = Team.find_by_name(team_name)
-  user = User.find_by_email(user_email)
+  team = Team.find_by(name: team_name)
+  user = User.find_by(email: user_email)
   FactoryBot.create(:user_team, user: user,
                     team: team, role:
                     UserTeam.roles.fetch(role))
@@ -69,7 +71,7 @@ end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
   wait_for_ajax
-  find(field_id, :visible => false).attach_file(Rails.root.join('features', 'assets', file))
+  find(field_id, visible: false).attach_file(Rails.root.join('features', 'assets', file))
   # "expensive" operation needs some time :=)
   sleep(0.5)
 end
@@ -113,6 +115,14 @@ Then(/^I fill in "([^"]*)" in "([^"]*)" rich text editor field$/) do |text, inpu
   end
 end
 
+Then('I fill in {string} to {string} field of {string} modal window') do |value, field, modal|
+  page.find('.modal-content', text: modal).find_field(field, with: '').set(value)
+end
+
+Then('I change {string} with {string} of field {string} of {string} modal window') do |old_value, new_value, field, modal|
+  page.find('.modal-content', text: modal).find_field(field, with: old_value).set(new_value)
+end
+
 Then(/^I fill in "([^"]*)" in "([^"]*)" field$/) do |text, input_id|
   page.find(input_id).set(text)
 end
@@ -122,7 +132,7 @@ Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id
   expect(container).to have_xpath("//input[@value='#{text}']")
 end
 
-Given("I click {string} icon") do |id|
+Given('I click {string} icon') do |id|
   find(:css, id).click
 end
 
@@ -162,10 +172,22 @@ Then(/^I should see "([^"]*)" on "([^"]*)" element$/) do |text, element|
   expect(find(element)).to have_content(text)
 end
 
-Then("I wait for {int} sec") do |sec|
+Then('I wait for {int} sec') do |sec|
   sleep sec
 end
 
 Given('default screen size') do
   page.driver.browser.manage.window.resize_to(1920, 1080) if defined?(page.driver.browser.manage)
+end
+
+Then('I make screenshot') do
+  page.save_screenshot(full: true)
+end
+
+Given('I click to Cancel on confirm dialog') do
+  page.driver.browser.switch_to.alert.dismiss
+end
+
+Given('I click to OK on confirm dialog') do
+  page.driver.browser.switch_to.alert.accept
 end
