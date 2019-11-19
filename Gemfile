@@ -5,7 +5,7 @@ source 'http://rubygems.org'
 ruby '2.6.4'
 
 gem 'bootsnap', require: false
-gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.7.1'
 gem 'devise_invitable'
@@ -62,6 +62,7 @@ gem 'bcrypt', '~> 3.1.10'
 gem 'caracal-rails' # Build docx report
 gem 'commit_param_routing' # Enables different submit actions in the same form
 gem 'deface', '~> 1.0'
+gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'httparty', '~> 0.13.1'

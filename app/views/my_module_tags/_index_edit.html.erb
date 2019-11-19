@@ -4,7 +4,7 @@
 <% else %>
   <ul class="list-group">
     <% @my_module_tags.each_with_index do |mmt, i| tag = mmt.tag %>
-      <li class="list-group-item" style="background-color: <%= tag.color %>" data-color="<%= tag.color %>" data-name="<%= tag.name %>">
+      <li class="list-group-item" style="background-color: <%= tag.color %>" data-color="<%= tag.color %>" data-tag-id="<%= tag.id %>" data-name="<%= tag.name %>">
 
         <div class="row tag-show">
           <div class="col-xs-8">
@@ -14,10 +14,10 @@
               <%= link_to "", remote: true, class: 'btn btn-link edit-tag-link', title: t("experiments.canvas.modal_manage_tags.edit_tag") do %>
                 <span class="fas fa-pencil-alt"></span>
               <% end %>
-              <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name) do %>
+              <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name), data: {tag_id: tag.id} do %>
                 <span class="fas fa-times"></span>
               <% end %>
-              <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :delete, html: { class: "delete-tag-form"} do |f| %>
+              <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), data: {tag_id: tag.id}, method: :delete, html: { class: "delete-tag-form"} do |f| %>
                 <%= hidden_field_tag :my_module_id, @my_module.id %>
                 <%= f.button class: 'btn btn-link delete-tag-link', title: t("experiments.canvas.modal_manage_tags.delete_tag") do %>
                   <span class="fas fa-trash-alt"></span>

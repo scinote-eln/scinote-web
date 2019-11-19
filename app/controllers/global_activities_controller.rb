@@ -78,20 +78,43 @@ class GlobalActivitiesController < ApplicationController
     render json: current_user.global_activity_filter(filter, params[:query])
   end
 
-  def search_subjects
+  def project_filter
+    render json: get_objects(Project)
+  end
+
+  def experiment_filter
+    render json: get_objects(Experiment)
+  end
+
+  def my_module_filter
+    render json: get_objects(MyModule)
+  end
+
+  def inventory_filter
+    render json: get_objects(Repository)
+  end
+
+  def inventory_item_filter
+    render json: get_objects(RepositoryRow)
+  end
+
+  def protocol_filter
+    render json: get_objects(Protocol)
+  end
+
+  def report_filter
+    render json: get_objects(Report)
+  end
+
+  private
+
+  def get_objects(subject)
     query = subject_search_params[:query]
     teams =
       if subject_search_params[:teams].present?
         current_user.teams.where(id: subject_search_params[:teams])
       else
         current_user.teams
-      end
-    subject_types =
-      if subject_search_params[:subject_types].present?
-        Extends::SEARCHABLE_ACTIVITY_SUBJECT_TYPES &
-          subject_search_params[:subject_types]
-      else
-        Extends::SEARCHABLE_ACTIVITY_SUBJECT_TYPES
       end
     filter_teams =
       if subject_search_params[:users].present?
@@ -101,26 +124,19 @@ class GlobalActivitiesController < ApplicationController
       else
         teams
       end
-    results = {}
-    subject_types.each do |subject|
-      matched = subject.constantize
-                       .search_by_name(current_user, teams, query, whole_phrase: true)
-                       .where.not(name: nil).where.not(name: '')
-                       .filter_by_teams(filter_teams)
-                       .limit(Constants::SEARCH_LIMIT)
-                       .pluck(:id, :name)
-      next if matched.length.zero?
+    matched = subject.search_by_name(current_user, teams, query, whole_phrase: true)
+                     .where.not(name: nil).where.not(name: '')
+                     .filter_by_teams(filter_teams)
+                     .order(name: :asc)
 
-      results[subject] = matched.map { |pr| { id: pr[0], name: escape_input(pr[1]) } }
-    end
-    respond_to do |format|
-      format.json do
-        render json: results
-      end
-    end
+    selected_subject = subject_search_params[:subjects]
+    matched = matched.where(project_id: selected_subject['Project']) if subject == Experiment
+    matched = matched.where(experiment_id: selected_subject['Experiment']) if subject == MyModule
+    matched = matched.where(repository_id: selected_subject['Repository']) if subject == RepositoryRow
+
+    matched = matched.limit(Constants::SEARCH_LIMIT).pluck(:id, :name)
+    matched.map { |pr| { value: pr[0], label: escape_input(pr[1]) } }
   end
-
-  private
 
   def activity_filters
     params.permit(
@@ -129,6 +145,6 @@ class GlobalActivitiesController < ApplicationController
   end
 
   def subject_search_params
-    params.permit(:query, teams: [], subject_types: [], users: [])
+    params.permit(:query, teams: [], subject_types: [], users: [], subjects: {})
   end
 end

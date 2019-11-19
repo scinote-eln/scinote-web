@@ -192,13 +192,14 @@
   }
 
   function initializeModalsToggle() {
-    $("[data-trigger='invite-users']").on('click', function(event) {
-      var id = $(this).attr('data-modal-id');
-      event.preventDefault();
-      event.stopPropagation();
-      $('[data-role=invite-users-modal][data-id=' + id + ']')
-        .modal('show');
-    });
+    $(document).off('click', "[data-trigger='invite-users']")
+      .on('click', "[data-trigger='invite-users']", function(event) {
+        var id = $(this).attr('data-modal-id');
+        event.preventDefault();
+        event.stopPropagation();
+        $('[data-role=invite-users-modal][data-id=' + id + ']')
+          .modal('show');
+      });
   }
 
   $(document).on('turbolinks:load', function() {

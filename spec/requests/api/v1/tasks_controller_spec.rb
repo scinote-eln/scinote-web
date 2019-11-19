@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Api::V1::TasksController", type: :request do
+RSpec.describe 'Api::V1::TasksController', type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -137,6 +137,103 @@ RSpec.describe "Api::V1::TasksController", type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
+    end
+  end
+
+  describe 'POST tasks, #create' do
+    before :all do
+      create :user_project, :normal_user, user: @user, project: @valid_project
+      @valid_headers['Content-Type'] = 'application/json'
+    end
+
+    let(:request_body) do
+      {
+        data: {
+          type: 'tasks',
+          attributes: {
+            name: 'task name',
+            x: 1,
+            y: 4
+          }
+        }
+      }
+    end
+
+    context 'when has valid params' do
+      let(:action) do
+        post(api_v1_team_project_experiment_tasks_path(
+               team_id: @teams.first.id,
+               project_id: @valid_project.id,
+               experiment_id: @valid_experiment.id
+             ),
+             params: request_body.to_json,
+             headers: @valid_headers)
+      end
+
+      it 'creates new my module' do
+        expect { action }.to change { MyModule.count }.by(1)
+      end
+
+      it 'returns status 201' do
+        action
+
+        expect(response).to have_http_status 201
+      end
+
+      it 'returns well formated response' do
+        action
+
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'tasks',
+              attributes: hash_including(name: 'task name'),
+              relationships: hash_including(outputs: { data: [] }, inputs: { data: [] })
+            )
+          )
+        )
+      end
+    end
+
+    context 'when has not valid params' do
+      it 'renders 404 when project not found' do
+        post(api_v1_team_project_experiment_tasks_path(
+               team_id: @teams.first.id,
+               project_id: -1,
+               experiment_id: @valid_experiment.id
+             ),
+             params: request_body.to_json,
+             headers: @valid_headers)
+
+        expect(response).to have_http_status(404)
+      end
+
+      it 'renders 403 when user is not member of the team' do
+        post(api_v1_team_project_experiment_tasks_path(
+               team_id: @teams.second.id,
+               project_id: @valid_project.id,
+               experiment_id: @valid_experiment.id
+             ),
+             params: request_body.to_json,
+             headers: @valid_headers)
+
+        expect(response).to have_http_status(403)
+      end
+
+      it 'renders 403 for use with view permissions' do
+        up = UserProject.where(user: @user, project: @valid_project).first
+        up.update_attribute(:role, :viewer)
+
+        post(api_v1_team_project_experiment_tasks_path(
+               team_id: @teams.first.id,
+               project_id: @valid_project.id,
+               experiment_id: @valid_experiment.id
+             ),
+             params: request_body.to_json,
+             headers: @valid_headers)
+
+        expect(response).to have_http_status(403)
+      end
     end
   end
 end

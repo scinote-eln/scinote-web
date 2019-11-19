@@ -104,7 +104,7 @@ GEM
     ast (2.4.0)
     auto_strip_attributes (2.5.0)
       activerecord (>= 4.0)
-    autoprefixer-rails (9.6.1.1)
+    autoprefixer-rails (9.7.0)
       execjs
     autosize-rails (1.18.17)
       rails (>= 3.1)
@@ -143,9 +143,9 @@ GEM
       debug_inspector (>= 0.0.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
-    bootstrap-sass (3.3.7)
+    bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
-      sass (>= 3.3.4)
+      sassc (>= 2.0.0)
     bootstrap-select-rails (1.12.4)
     bootstrap3-datetimepicker-rails (4.15.35)
       momentjs-rails (>= 2.8.1)
@@ -190,7 +190,7 @@ GEM
     concurrent-ruby (1.1.5)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.4)
+    crass (1.0.5)
     cucumber (3.1.2)
       builder (>= 2.1.2)
       cucumber-core (~> 3.2.0)
@@ -240,6 +240,8 @@ GEM
     docile (1.3.2)
     doorkeeper (5.1.0)
       railties (>= 5)
+    down (5.0.0)
+      addressable (~> 2.5)
     erubi (1.8.0)
     et-orbi (1.2.2)
       tzinfo
@@ -290,7 +292,7 @@ GEM
     js_cookie_rails (2.2.0)
       railties (>= 3.1)
     json (1.8.6)
-    json-jwt (1.10.2)
+    json-jwt (1.11.0)
       activesupport (>= 4.2)
       aes_key_wrap
       bindata
@@ -320,7 +322,7 @@ GEM
     logging (2.0.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    loofah (2.2.3)
+    loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -335,7 +337,7 @@ GEM
     mini_magick (4.9.5)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
+    minitest (5.13.0)
     momentjs-rails (2.17.1)
       railties (>= 3.1)
     msgpack (1.3.1)
@@ -496,7 +498,7 @@ GEM
     ruby-vips (2.0.15)
       ffi (~> 1.9)
     ruby_dep (1.5.0)
-    rubyzip (1.2.4)
+    rubyzip (1.3.0)
     rufus-scheduler (3.6.0)
       fugit (~> 1.1, >= 1.1.6)
     safe_yaml (1.0.5)
@@ -504,11 +506,6 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
     sassc (2.2.1)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -585,7 +582,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yomu (0.1.5)
-    zeitwerk (2.1.10)
+    zeitwerk (2.2.1)
 
 PLATFORMS
   ruby
@@ -605,7 +602,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap
-  bootstrap-sass (~> 3.3.7)
+  bootstrap-sass (~> 3.4.1)
   bootstrap-select-rails (~> 1.12.4)
   bootstrap3-datetimepicker-rails (~> 4.15.35)
   bootstrap_form (~> 2.7.0)
@@ -625,6 +622,7 @@ DEPENDENCIES
   devise_invitable
   discard (~> 1.0)
   doorkeeper (>= 4.6)
+  down (~> 5.0)
   factory_bot_rails
   faker
   fastimage

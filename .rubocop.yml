@@ -478,6 +478,11 @@ Rails/ScopeArgs:
   Include:
     - app/models/**/*.rb
 
+Rails/SkipsModelValidations:
+  Exclude:
+    - spec/**/*_spec.rb
+    - spec/factories/*.rb
+
 Rails/TimeZone:
   EnforcedStyle: flexible
 

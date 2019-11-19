@@ -113,6 +113,7 @@ var TinyMCE = (function() {
         tinyMCE.init({
           cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
           selector: selector,
+          convert_urls: false,
           menubar: 'file edit view insert format',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
@@ -313,6 +314,16 @@ var TinyMCE = (function() {
               var menuBar = $(editor.getContainer()).find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
+            });
+
+            editor.on('blur', function(e) {
+              setTimeout(() => {
+                if (editor.isNotDirty === false) {
+                  $(editor.container).find('.tinymce-save-button').click();
+                } else {
+                  $(editor.container).find('.tinymce-cancel-button').click();
+                }
+              }, 0);
             });
 
             /* editor.on('init', function(e) {

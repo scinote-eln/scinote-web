@@ -1,6 +1,6 @@
 <div class="select-container">
   <div class="edit-button-container hidden">
-    <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_url(@my_module, format: :json) %>">
+    <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_path(@my_module, format: :json) %>">
         <i class="fas fa-cog"></i>
         <span><%= t("my_modules.module_header.manage_tags") %></span>
     </a>
@@ -10,18 +10,16 @@
     [
       i[:name],
       i[:id],
-     {'data-color'=> i[:color]}
+      {'data-params' => {color: i[:color]}.to_json}
    ]
   }),
   {
-    'data-select-all': 'true',
     id: 'module-tags-selector',
-    'data-editable': editable,
-    'data-module-id': my_module.id ,
-    'data-project-id': my_module.experiment.project_id ,
+    'data-module-id': my_module.id,
+    'data-project-id': my_module.experiment.project_id,
     'data-placeholder': t("my_modules.module_header.no_tags"),
     'data-tags-create-url': project_tags_path(project_id: my_module.experiment.project_id),
-    'data-search-tag-url': search_tags_my_module_my_module_tags_path(@my_module),
+    'data-ajax-url': search_tags_my_module_my_module_tags_path(@my_module),
     'data-update-module-tags-url': my_module_my_module_tags_path(@my_module)
 
   } %>

@@ -2,6 +2,7 @@
 
 class RepositoryRow < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
 
   belongs_to :repository, optional: true
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
@@ -17,6 +18,10 @@ class RepositoryRow < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :created_by, presence: true
+
+  def self.viewable_by_user(user, teams)
+    where(repository: Repository.viewable_by_user(user, teams))
+  end
 
   def self.assigned_on_my_module(ids, my_module)
     where(id: ids).joins(:my_module_repository_rows)

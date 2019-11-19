@@ -24,6 +24,7 @@ class TeamImporter
     @result_mappings = {}
     @checklist_mappings = {}
     @table_mappings = {}
+    @report_mappings = {}
 
     @project_counter = 0
     @repository_counter = 0
@@ -373,12 +374,15 @@ class TeamImporter
       user.password = user_json['user']['encrypted_password']
       user.current_team_id = team.id
       user.invited_by_id = @user_mappings[user.invited_by_id]
-      if user_json['user']['avatar']
-        avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s,
-                                user_json['user']['avatar']['filename'])
-        File.open(avatar_path) { |f| user.avatar = f } if File.exist?(avatar_path)
-      end
       user.save!
+      if user_json['user']['avatar']
+        avatar_filename = user_json['user']['avatar']['filename']
+        avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s, avatar_filename)
+        if File.exist?(avatar_path)
+          avatar = File.open(avatar_path)
+          user.avatar.attach(io: avatar, filename: avatar_filename)
+        end
+      end
       @user_counter += 1
       user.update_attribute('encrypted_password',
                             user_json['user']['encrypted_password'])
@@ -851,12 +855,14 @@ class TeamImporter
       report_el_parent_mappings = {}
       report_element_mappings = {}
       report = Report.new(report_json['report'])
+      orig_report_id = report.id
       report.id = nil
       report.project_id = @project_mappings[report.project_id]
       report.user_id = find_user(report.user_id)
       report.last_modified_by_id = find_user(report.last_modified_by_id)
       report.team_id = team.id
       report.save!
+      @report_mappings[orig_report_id] = report.id
       @report_counter += 1
       report_json['report_elements'].each do |report_element_json|
         report_element = ReportElement.new(report_element_json)

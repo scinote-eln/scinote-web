@@ -1346,8 +1346,8 @@ var RepositoryDatatable = (function(global) {
   function redrawTableOnSidebarToggle() {
     $('#sidebar-arrow').on('click', function() {
       setTimeout(function() {
-        TABLE.draw();
-      }, 250);
+        adjustTableHeader();
+      }, 400);
     });
   }
 
