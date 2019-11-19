@@ -15,7 +15,10 @@
       <span class="name-container">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
-                     locals: { initial_value: @repository.name } %>
+                     locals: { 
+                        initial_value: @repository.name,
+                        config: @inline_editable_title_config
+                     } %>
         <% else %>
           <div class="read-only-name">
             <%= @repository.name %>

@@ -1,93 +1,41 @@
+/* global TinyMCE I18n */
 (function() {
   'use strict';
 
   var usersDatatable = null;
 
-  // Initialize edit name modal window
-  function initEditName() {
-    var editNameModal = $('#team-name-modal');
-    var editNameModalBody = editNameModal.find('.modal-body');
-    var editNameModalSubmitBtn = editNameModal.find("[data-action='submit']");
-    $('.name-link').on('ajax:success', function(ev, data) {
-      // Set modal body
-      editNameModalBody.html(data.html);
-
-      editNameModalBody.find('form')
-        .on('ajax:success', function() {
-          // Reload page
-          location.reload();
-        })
-        .on('ajax:error', function(ev2, data2) {
-          // Display errors if needed
-          editNameModalBody
-            .find('form')
-            .renderFormErrors('team', data2.responseJSON);
-        });
-
-      // Show modal
-      editNameModal.modal('show');
-    }).on('ajax:error', function() {
-      // TODO
-    });
-
-    editNameModalSubmitBtn.on('click', function() {
-      // Submit the form inside the modal
-      editNameModalBody.find('form').submit();
-    });
-
-    editNameModal.on('hidden.bs.modal', function() {
-      editNameModalBody.find('form').off('ajax:success ajax:error');
-      editNameModalBody.html('');
+  // Initialize edit description modal window
+  function initEditDescription() {
+    $('.team-description .tinymce-view').off('click').on('click', function() {
+      TinyMCE.init(`#${$(this).next().find('textarea').attr('id')}`);
     });
   }
 
-  // Initialize edit description modal window
-  function initEditDescription() {
-    var editDescriptionModal = $('#team-description-modal');
-    var editDescriptionModalBody = editDescriptionModal.find('.modal-body');
-    var editDescriptionModalSubmitBtn = editDescriptionModal
-      .find("[data-action='submit']");
-    $('.description-link').on('ajax:success', function(ev, data) {
-      var descriptionLink = $('.description-refresh');
-
-      // Set modal body
-      editDescriptionModalBody.html(data.html);
-
-      editDescriptionModalBody.find('form')
-        .on('ajax:success', function(ev2, data2) {
-          // Update module's description in the tab
-          descriptionLink.html(data2.description_label);
-
-          // Close modal
-          editDescriptionModal.modal('hide');
-        })
-        .on('ajax:error', function(ev2, data2) {
-          // Display errors if needed
-          editDescriptionModalBody
-            .find('form')
-            .renderFormErrors('team', data2.responseJSON);
-        });
-
-      // Show modal
-      editDescriptionModal.modal('show');
-    }).on('ajax:error', function() {
-      // TODO
-    });
-
-    editDescriptionModalSubmitBtn.on('click', function() {
-      // Submit the form inside the modal
-      editDescriptionModalBody.find('form').submit();
-    });
-
-    editDescriptionModal.on('hidden.bs.modal', function() {
-      editDescriptionModalBody.find('form').off('ajax:success ajax:error');
-      editDescriptionModalBody.html('');
-    });
+  function AddUserButtonTemplate() {
+    return `
+      <a href="#" class="btn btn-primary" data-trigger="invite-users"
+         data-turbolinks="false" data-modal-id="team-invite-users-modal"
+      >
+        <span class="fas fa-plus"></span>
+        ${I18n.t('users.settings.teams.edit.add_user')}
+      </a>
+    `;
   }
 
   // Initialize users DataTable
   function initUsersTable() {
     usersDatatable = $('#users-table').DataTable({
+      dom: `R
+        <'table-header'
+          <'add-new-team-members'>
+          <'filter-table'f>
+          <'display-limit'l>
+        >
+        <'table-body't>
+        <'table-footer'
+          <'page-info'i>
+          <'page-selector'p>
+        >`,
       order: [[1, 'asc']],
       stateSave: true,
       buttons: [],
@@ -122,6 +70,8 @@
         sSearch: I18n.t('general.filter')
       }
     });
+    $('.users-datatable .add-new-team-members').html(AddUserButtonTemplate());
+    setTimeout(() => { $('#users-table').css('width', '100%'); }, 300);
   }
 
   function initUpdateRoles() {
@@ -236,10 +186,19 @@
     });
   }
 
-  initEditName();
+  function initNameUpdateEvent() {
+    $('.settings-team-name').off('inlineEditing:fieldUpdated', '.inline-editing-container')
+      .on('inlineEditing:fieldUpdated', '.inline-editing-container', function() {
+        var newName = $(this).find('.view-mode').html();
+        $('.breadcrumb-teams .active').html(newName);
+        $('#team-switch .selected-team').html(newName);
+      });
+  }
+
   initEditDescription();
   initUsersTable();
   initUpdateRoles();
   initRemoveUsers();
   initReloadPageAfterInviteUsers();
+  initNameUpdateEvent();
 }());

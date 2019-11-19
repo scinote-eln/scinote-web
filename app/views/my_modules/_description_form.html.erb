@@ -1,4 +1,4 @@
-<%= bootstrap_form_for @my_module, url: update_description_my_module_path(@my_module, format: :json), remote: :true do |f| %>
+<%= bootstrap_form_for @my_module, url: update_description_my_module_path(@my_module, format: :json), remote: :true, html: {class: 'tiny-mce-editor'} do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
   <% if @my_module.description.present? %>
     <div id="my_module_description_view"
@@ -20,6 +20,7 @@
                         placeholder:  t('my_modules.module_header.empty_description_edit_label'),
                         hide_label: true,
                         value: sanitize_input(@my_module.tinymce_render(:description)),
+                        autocomplete: 'off',
                         data: {
                           object_type: 'my_module',
                           object_id: @my_module.id,

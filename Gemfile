@@ -5,7 +5,7 @@ source 'http://rubygems.org'
 ruby '2.6.4'
 
 gem 'bootsnap', require: false
-gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.7.1'
 gem 'devise_invitable'
@@ -62,6 +62,7 @@ gem 'bcrypt', '~> 3.1.10'
 gem 'caracal-rails' # Build docx report
 gem 'commit_param_routing' # Enables different submit actions in the same form
 gem 'deface', '~> 1.0'
+gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'httparty', '~> 0.13.1'
@@ -80,8 +81,8 @@ gem 'silencer' # Silence certain Rails logs
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
-gem 'wicked_pdf', '~> 1.1.0'
-gem 'wkhtmltopdf-heroku', '2.12.4'
+gem 'wicked_pdf', '~> 1.4.0'
+gem 'wkhtmltopdf-heroku', '2.12.5'
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'

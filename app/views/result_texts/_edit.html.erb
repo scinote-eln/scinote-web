@@ -7,6 +7,7 @@
       <%= ff.tiny_mce_editor(:text,
                              id: :result_text_attributes_textarea,
                              value: @result.result_text.tinymce_render(:text),
+                             autocomplete: 'off',
                              data: { object_type: 'result_text',
                                      object_id: @result.result_text.id,
                                      highlightjs_path: asset_path('highlightjs-github-theme.css'),

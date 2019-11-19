@@ -15,8 +15,8 @@ class MyModule < ApplicationRecord
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
-  validates :my_module_group, presence: true,
-            if: proc { |mm| !mm.my_module_group_id.nil? }
+  validates :my_module_group, presence: true, if: proc { |mm| !mm.my_module_group_id.nil? }
+  validate :coordinates_uniqueness_check, if: :active?
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -370,6 +370,7 @@ class MyModule < ApplicationRecord
   def repository_json_hot(repository_id, order)
     data = []
     repository_rows
+      .includes(:created_by)
       .where(repository_id: repository_id)
       .order(created_at: order).find_each do |row|
       row_json = []
@@ -418,13 +419,12 @@ class MyModule < ApplicationRecord
 
   def deep_clone_to_experiment(current_user, experiment)
     # Copy the module
-    clone = MyModule.new(
-      name: self.name,
-      experiment: experiment,
-      description: self.description,
-      x: self.x,
-      y: self.y)
-    clone.save
+    clone = MyModule.new(name: name, experiment: experiment, description: description, x: x, y: y)
+
+    # set new position if cloning in the same experiment
+    clone.attributes = get_new_position if clone.experiment == experiment
+
+    clone.save!
 
     # Remove the automatically generated protocol,
     # & clone the protocol instead
@@ -433,17 +433,18 @@ class MyModule < ApplicationRecord
 
     # Update the cloned protocol if neccesary
     clone_tinymce_assets(clone, clone.experiment.project.team)
-    clone.protocols << self.protocol.deep_clone_my_module(self, current_user)
+    clone.protocols << protocol.deep_clone_my_module(self, current_user)
     clone.reload
 
     # fixes linked protocols
     clone.protocols.each do |protocol|
       next unless protocol.linked?
+
       protocol.updated_at = protocol.parent_updated_at
       protocol.save
     end
 
-    return clone
+    clone
   end
 
   # Find an empty position for the restored module. It's
@@ -498,5 +499,11 @@ class MyModule < ApplicationRecord
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
+  end
+
+  def coordinates_uniqueness_check
+    if experiment && experiment.my_modules.active.where(x: x, y: y).where.not(id: id).any?
+      errors.add(:position, I18n.t('activerecord.errors.models.my_module.attributes.position.not_unique'))
+    end
   end
 end

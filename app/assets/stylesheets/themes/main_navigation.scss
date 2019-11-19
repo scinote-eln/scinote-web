@@ -294,9 +294,12 @@
     border-bottom: 0;
   }
 
-  .btn-default:not(.dropdown-toggle) {
+  .selected-team {
     margin-left: 15px;
+    overflow: hidden;
     text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     width: 300px;
   }
 

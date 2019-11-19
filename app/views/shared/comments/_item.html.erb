@@ -2,19 +2,19 @@
 <% readonly = false unless defined?(readonly) %>
 <% edit_mode = (comment.user == current_user && !readonly) %>
   <div 
-    class="comment-container <%= edit_mode ? 'comment-editable-field' : '' %> <%= report ? 'report' : '' %>" 
+    class="comment-container inline-init-handler <%= edit_mode ? 'comment-editable-field' : '' %> <%= report ? 'report' : '' %>" 
     data-field-to-update="message"
     data-params-group="comment"
     data-path-to-update="<%= comment_action_url(comment) %>"
     data-original-name="<%= comment.message %>"
     data-response-field="comment"
     data-smart-annotation="true"
-    error="false"
+    data-edit-mode="0"
   >
     <div class="avatar-placehodler">
       <span class='global-avatar-container'>
         <% if report %>
-          <%= image_tag comment.user.avatar_base64(:icon_small), class: 'avatar' %>
+          <%= image_tag user_avatar_absolute_url(comment.user, :icon_small), class: 'avatar' %>
         <% else %>
           <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
         <% end %>

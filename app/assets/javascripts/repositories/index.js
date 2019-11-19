@@ -128,7 +128,7 @@
         .attr('disabled', !this.checked);
     });
 
-    new PerfectScrollbar(form.find('.teams-list')[0]);
+    if (form.find('.teams-list').length) new PerfectScrollbar(form.find('.teams-list')[0]);
 
     permissionCBs.change(function() {
       var changes = JSON.parse(permissionChanges.val());

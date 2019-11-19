@@ -1,13 +1,14 @@
 FROM ruby:2.6.4-buster
 MAINTAINER BioSistemika <info@biosistemika.com>
 
+ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
+
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
     echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list && \
-    wget -O /usr/bin/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/77.0.3865.40/chromedriver_linux64.zip && \
+    wget -q -O /usr/bin/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip && \
     unzip /usr/bin/chromedriver_linux64.zip -d /usr/bin/
 
 # additional dependecies
-# libSSL-1.0 is required by wkhtmltopdf binary
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
   apt-get install -y \
@@ -23,7 +24,10 @@ RUN apt-get update -qq && \
   sudo graphviz --no-install-recommends \
   libreoffice \
   libfile-mimeinfo-perl \
-  google-chrome-stable=77.* && \
+  google-chrome-stable=78.* && \
+  wget -q -O /tmp/wkhtmltox_amd64.deb $WKHTMLTOPDF_PACKAGE_URL && \
+  apt-get install -y /tmp/wkhtmltox_amd64.deb && \
+  rm /tmp/wkhtmltox_amd64.deb && \
   npm install -g yarn && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*

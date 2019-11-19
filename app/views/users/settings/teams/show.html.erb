@@ -10,110 +10,79 @@
 <%= render partial: "users/settings/sidebar.html.erb" %>
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
-  <div class="tab-pane content-pane active" role="tabpanel">
+  <div class="tab-pane content-pane active team-settings-pane" role="tabpanel">
 
     <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
 
     <!-- TITLE -->
-    <% if can_update_team?(@team) %>
-      <%= link_to team_name_path(@team, format: :json),
-                  remote: true,
-                  class: 'name-link name-refresh',
-                  style: 'color: inherit' do %>
-        <h3 id="team-name"><%= @team.name %></h3>
+    <div id="team-name" class="settings-team-name">
+      <% if can_update_team?(@team) %>
+        <%= render partial: "shared/inline_editing",
+                   locals: {
+                     initial_value: @team.name,
+                     config: {
+                       field_to_udpate: 'name',
+                       params_group: 'team',
+                       path_to_update: update_team_path(@team, format: :json)
+                     }
+                   } %>
+      <% else %>
+        <span class="view-mode"><%= @team.name %></span>
       <% end %>
-    <% else %>
-      <h3 id="team-name"><%= @team.name %></h3>
-    <% end %>
-    <br />
+    </div>
     <!-- End of TITLE -->
 
     <!-- HEADER -->
-    <div class="row">
-      <div class="col-xs-6 col-sm-3">
-        <div class="badge-icon">
-          <span class="fas fa-calendar-alt"></span>
-        </div>
-        <div class="well well-sm">
-          <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
-          <strong><%= l(@team.created_at, format: :full_date) %></strong>
-        </div>
+    <div class="team-metadata">
+
+      <div class="created-at">
+       <span class="fas fa-calendar-alt"></span>
+       <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
+       <b><%= l(@team.created_at, format: :full_date) %></b>
       </div>
 
-      <div class="col-xs-10 col-sm-5">
-        <div class="badge-icon">
-          <span class="fas fa-user fa-lg"></span>
-        </div>
-        <div class="well well-sm">
-          <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
-          <strong><%= t("users.settings.teams.edit.header_created_by_name_email", name: team_created_by(@team).name, email: team_created_by(@team).email) %></strong>
-        </div>
+      <div class="created-by">
+        <span class="fas fa-user fa-lg"></span>
+        <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
+        <b><%= t("users.settings.teams.edit.header_created_by_name_email", name: team_created_by(@team).name, email: team_created_by(@team).email) %></b>
       </div>
 
-      <div class="col-xs-8 col-sm-4">
-        <div class="badge-icon">
-          <span class="fas fa-hdd"></span>
-        </div>
-        <div class="well well-sm">
-          <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
-          <strong data-hook="team-space-taken"><%= "#{number_to_human_size(@team.space_taken)}" %></strong>
-        </div>
+      <div class="space-usage">
+        <span class="fas fa-hdd"></span>
+        <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
+        <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.space_taken)}" %></b>
       </div>
     </div>
 
     <div data-hook="team-header-second-row"></div>
 
-    <div class="row">
-      <div class="col-xs-24 col-sm-12" data-hook="team-header-description">
-        <div class="badge-icon">
-          <%= link_to team_description_path(@team, format: :json),
-                      remote: true,
-                      class: 'description-link',
-                      style: 'color: inherit' do %>
-            <span class="fas fa-info-circle"></span>
-          <% end %>
-        </div>
-        <div class="well well-sm">
-          <%= link_to team_description_path(@team, format: :json),
-                      remote: true,
-                      class: 'description-label description-link description-refresh',
-                      style: 'color: inherit' do %>
-            <%= render partial: "users/settings/teams/description_label.html.erb", locals: { team: @team } %>
-          <% end %>
-        </div>
-      </div>
+    <div class="team-description">
+      <%= render partial: "shared/tiny_mce_editor.html.erb",
+                 locals: { 
+                    object: @team,
+                    update_url: update_team_path(@team, format: :json),
+                    update_method: :put,
+                    field: :description,
+                    placeholder: t("users.settings.teams.show.enter_description")
+                  } %>
     </div>
     <!-- End of HEADER -->
 
     <!-- USERS TABLE -->
-    <div class="panel panel-default panel-team-users">
-      <div class="panel-heading">
-        <%= t("users.settings.teams.edit.team_members_title") %>
-      </div>
-      <div class="panel-body">
-        <div class="col-xs-24 col-sm-12">
-          <a href="#" class="btn btn-primary pull-right row" data-trigger="invite-users"
-             data-turbolinks="false" data-modal-id="team-invite-users-modal">
-            <span class="fas fa-plus"></span>
-            <%= t("users.settings.teams.edit.add_user") %>
-          </a>
-        </div>
-        <div class="users-datatable">
-          <table id="users-table" class="table" data-source="<%= team_users_datatable_path(@team, format: :json) %>">
-            <thead>
-              <tr>
-                <th id="user-name"><%= t("users.settings.teams.edit.thead_user_name") %></th>
-                <th id="email"><%= t("users.settings.teams.edit.thead_email") %></th>
-                <th id="user-role"><%= t("users.settings.teams.edit.thead_role") %></th>
-                <th id="joined-on"><%= t("users.settings.teams.edit.thead_joined_on") %></th>
-                <th id="status"><%= t("users.settings.teams.edit.thead_status") %></th>
-                <th id="options"><%= t("users.settings.teams.edit.thead_actions") %></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+    <div class="users-datatable">
+      <table id="users-table" class="table" data-source="<%= team_users_datatable_path(@team, format: :json) %>">
+        <thead>
+          <tr>
+            <th id="user-name"><%= t("users.settings.teams.edit.thead_user_name") %></th>
+            <th id="email"><%= t("users.settings.teams.edit.thead_email") %></th>
+            <th id="user-role"><%= t("users.settings.teams.edit.thead_role") %></th>
+            <th id="joined-on"><%= t("users.settings.teams.edit.thead_joined_on") %></th>
+            <th id="status"><%= t("users.settings.teams.edit.thead_status") %></th>
+            <th id="options"><%= t("users.settings.teams.edit.thead_actions") %></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
     <!-- End of USERS TABLE -->
 
@@ -122,7 +91,6 @@
   </div>
 </div>
 
-<%= render partial: 'users/settings/teams/name_modal.html.erb' %>
 <%= render partial: 'users/settings/teams/description_modal.html.erb' %>
 <%= render(
       partial: 'shared/invite_users_modal.html.erb',

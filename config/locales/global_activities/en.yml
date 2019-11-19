@@ -1,7 +1,7 @@
 en:
   global_activities:
     index:
-      teams: "Team"
+      teams: "Teams"
       activity: "Activity created"
       period_label: "Activity created: "
       today: "Today"
@@ -10,24 +10,30 @@ en:
       last_week: "Last week"
       this_month: "This month"
       last_month: "Last month"
-      custom_dates_label: "Select custom dates"
       from_label: "Select end date"
       to_label: "Select start date"
       clear: "Clear"
-      activity_type: "Activity type"
-      user: "User"
-      object: "Object"
-      all_teams_btn: "Deselect All Teams"
-      all_users_btn: "Deselect All Users"
-      all_activities: "All activities"
-      all_activities_btn: "Select All Activities"
-      l_activities: "activities"
+      activity_type: "Activity types"
+      user: "Users"
       clear_filters: "Clear filters"
       select_teams: "Select Teams"
+      select_activity_groups: "Select Activity groups"
       select_activity_types: "Select Activity types"
       select_users: "Select Users"
-      select_objects: "Select Objects"
-      deselect_all_objects: "Deselect All Objects"
+      projects_experiments_tasks: "Projects, Experiments, Tasks"
+      select_projects: "Select Projects"
+      select_experiments: "Select Experiments"
+      disable_experiments: "Select Projects to enable Experiments"
+      select_tasks: "Select Tasks"
+      disable_tasks: "Select Experiments to enable Tasks"
+      inventories: "Inventories"
+      select_inventories: "Select Inventories"
+      select_inventory_items: "Select Inventory items"
+      disable_inventory_items: "Select Inventory to enable Inventory items"
+      protocols: Protocols
+      select_protocols: Select Protocols
+      reports: Reports
+      select_reports: Select Reports
       no_name: "(unnamed)"
       content_generation_error: "Failed to render activity content with id: %{activity_id}"
     content:

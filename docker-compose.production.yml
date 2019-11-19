@@ -24,6 +24,7 @@ services:
       - RAILS_ENV=production
     volumes:
       - scinote_production_files:/usr/src/app/public/system
+      - scinote_production_storage:/usr/src/app/storage
 
   jobs:
     image: scinote_web_production

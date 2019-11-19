@@ -463,31 +463,6 @@ a[data-toggle="tooltip"] {
   padding-bottom: 0;
 }
 
-.users-datatable {
-  margin-bottom: 20px;
-
-  #users-table_filter {
-    float: right;
-    margin-top: 19px;
-  }
-
-  #users-table_paginate {
-    float: right;
-  }
-
-  .dropdown-teams-user {
-    .dropdown-menu li.user-team-role {
-      & > :first-child {
-        padding-left: 10px;
-      }
-
-      &:not(.disabled) span.fas {
-        color: transparent !important;
-      }
-    }
-  }
-}
-
 .user-statistics {
   .list-inline {
     margin-left: 15px;
@@ -1383,41 +1358,45 @@ table.dataTable {
 //edit avatar
 .avatar-container {
   background-color: lighten($color-concrete, 2%);
+  border-radius: 50%;
   height: 100px;
+  margin-top: 5px;
   position: relative;
   width: 100px;
-}
 
-.avatar-container:hover .avatar-edit {
-  display: block;
-}
-
-.avatar-image {
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.avatar-edit {
-  display: none;
-  margin-top: 70%;
-  opacity: .8;
-  position: absolute;
-  z-index: 10;
-
-  .btn-grey {
+  .avatar-edit {
     background-color: $color-silver-chalice;
-    border-color: $color-silver-chalice;
-    border-radius: 0;
-    color: $color-white;
-    width: 100px;
+    border-radius: inherit;
+    cursor: pointer;
+    display: none;
+    height: inherit;
+    opacity: .8;
+    position: absolute;
+    width: inherit;
+  }
 
-    &:hover,
-    &:focus {
-      background-color: darken($color-silver-chalice, 15%);
-      border-color: darken($color-silver-chalice, 15%);
-      color: $color-white;
+  .avatar-edit-text {
+    color: $color-white;
+    cursor: pointer;
+    display: none;
+    padding-top: 40%;
+    position: absolute;
+    text-align: center;
+    width: inherit;
+  }
+
+  &:hover {
+    .avatar-edit,
+    .avatar-edit-text {
+      display: block;
+    }
+  }
+
+  .avatar-image {
+    position: absolute;
+
+    img {
+      border-radius: 50%;
     }
   }
 }
@@ -1999,7 +1978,7 @@ th.custom-field .modal-tooltiptext {
 }
 
 .atwho-user-img-popover {
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .atwho-no-results {

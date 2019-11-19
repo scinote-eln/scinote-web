@@ -89,7 +89,7 @@ var avatarsModal = (function() {
         initCropTool();
         initPredefinedAvatars();
         initUpdateButton();
-        $('.user-settings-edit-avatar img, .user-settings-edit-avatar').click(() => {
+        $('.user-settings-edit-avatar img, .avatar-container').click(() => {
           $(modal).modal('show');
         });
       }

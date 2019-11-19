@@ -182,7 +182,7 @@ module ApplicationHelper
            else
              raw("<span class=\"global-avatar-container smart-annotation\"><img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
              "alt='avatar' class='atwho-user-img-popover'" \
-             " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'></span>")
+             " ref='#{'missing-img' unless user.avatar.attached?}'></span>")
            end
 
     html =
@@ -200,22 +200,14 @@ module ApplicationHelper
 
   # No more dirty hack
   def user_avatar_absolute_url(user, style)
-    begin
-      unless missing_avatar(user, style)
-        image = File.open(user.avatar_variant(style))
-        encoded_data = Base64.strict_encode64(image)
-        avatar_base64 = "data:#{user.avatar_content_type};base64,#{encoded_data}"
-        return avatar_base64
-      end
-    rescue StandardError => e
-      Rails.logger.error e.message
+    avatar_link = user.avatar_variant(style)
+    if user.avatar.attached?
+      avatar_link.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+    else
+      avatar_link
     end
-    url_for("/images/#{style}/missing.png")
-  end
-
-  def missing_avatar(user, style)
-    user.avatar == '/images/icon_small/missing.png' ||
-      user.avatar == '/images/thumb/missing.png'
+  rescue StandardError => e
+    Rails.logger.error e.message
   end
 
   def wopi_enabled?

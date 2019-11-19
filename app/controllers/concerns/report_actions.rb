@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReportActions
   extend ActiveSupport::Concern
 
@@ -30,19 +32,18 @@ module ReportActions
   def generate_project_contents_json
     res = []
     if params.include? :modules
-      modules = (params[:modules].select { |_, p| p == '1' })
-                .keys
-                .collect(&:to_i)
+      module_ids = (params[:modules].select { |_, p| p == '1' }).keys.collect(&:to_i)
 
       # Get unique experiments from given modules
-      experiments = MyModule.where(id: modules).map(&:experiment).uniq
+      experiments = @project.experiments.distinct.joins(:my_modules).where('my_modules.id': module_ids)
       experiments.each do |experiment|
         res << generate_new_el(false)
         el = generate_el(
           'reports/elements/experiment_element.html.erb',
           experiment: experiment
         )
-        el[:children] = generate_experiment_contents_json(experiment, modules)
+        selected_modules = experiment.my_modules.includes(:tags).where(id: module_ids)
+        el[:children] = generate_experiment_contents_json(selected_modules)
         res << el
       end
     end
@@ -50,11 +51,9 @@ module ReportActions
     res
   end
 
-  def generate_experiment_contents_json(experiment, selected_modules)
+  def generate_experiment_contents_json(selected_modules)
     res = []
-    experiment.my_modules.order(:workflow_order).each do |my_module|
-      next unless selected_modules.include?(my_module.id)
-
+    selected_modules.order(:workflow_order).each do |my_module|
       res << generate_new_el(false)
       el = generate_el(
         'reports/elements/my_module_element.html.erb',
@@ -75,13 +74,12 @@ module ReportActions
       contents.values.each do |element|
         if contents.has_many
           elements = params.select { |k| k.starts_with?("module_#{element}") }
-          elements = elements.select { |_,v| v == '1' }.keys
-          elements.map! { |el| el.gsub('module_', '')}.map!{|el| el.split('_') }
+          elements = elements.select { |_, v| v == '1' }.keys
+          elements.map! { |el| el.gsub('module_', '') }.map! { |el| el.split('_') }
           elements.map! { |el| [el[0].to_sym, el[1].to_i] }
           break unless elements.empty?
         else
-          present = in_params?("module_#{element}".to_sym) ||
-                    in_params?(element.to_sym)
+          present = in_params?("module_#{element}".to_sym) || in_params?(element.to_sym)
           if present
             elements << [element.to_sym, nil]
             break
@@ -131,8 +129,7 @@ module ReportActions
       step.checklists.asc.each do |checklist|
         res << generate_new_el(false)
         res << generate_el(
-          'reports/elements/step_checklist_element.html.erb',
-          { checklist: checklist }
+          'reports/elements/step_checklist_element.html.erb', checklist: checklist
         )
       end
     end
@@ -140,8 +137,7 @@ module ReportActions
       step.assets.each do |asset|
         res << generate_new_el(false)
         res << generate_el(
-          'reports/elements/step_asset_element.html.erb',
-          { asset: asset }
+          'reports/elements/step_asset_element.html.erb', asset: asset
         )
       end
     end
@@ -149,16 +145,14 @@ module ReportActions
       step.tables.each do |table|
         res << generate_new_el(false)
         res << generate_el(
-          'reports/elements/step_table_element.html.erb',
-          { table: table }
+          'reports/elements/step_table_element.html.erb', table: table
         )
       end
     end
     if in_params? :step_comments
       res << generate_new_el(false)
       res << generate_el(
-        'reports/elements/step_comments_element.html.erb',
-        { step: step, order: :asc }
+        'reports/elements/step_comments_element.html.erb', step: step, order: :asc
       )
     end
     res << generate_new_el(false)
@@ -170,8 +164,7 @@ module ReportActions
     if in_params? :result_comments
       res << generate_new_el(true)
       res << generate_el(
-        'reports/elements/result_comments_element.html.erb',
-        { result: result, order: :asc }
+        'reports/elements/result_comments_element.html.erb', result: result, order: :asc
       )
     else
       res << generate_new_el(false)
@@ -180,11 +173,12 @@ module ReportActions
   end
 
   def elements_empty?(elements)
-    return true if elements.blank? || elements.count == 0
+    return true if elements.blank? || elements.count.zero?
 
     if elements.count == 1
       el = elements[0]
       return true if el.include?(:new_element) && el[:new_element]
+
       return false
     end
     false

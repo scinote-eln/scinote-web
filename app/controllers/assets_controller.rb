@@ -4,6 +4,7 @@ class AssetsController < ApplicationController
   include WopiUtil
   include AssetsActions
   # include ActionView::Helpers
+  include ActiveStorage::SetCurrent
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper

@@ -81,6 +81,15 @@ en:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+        my_module:
+          attributes:
+            position:
+             not_unique: "X and Y position has already been taken by another task in the experiment."
+        asset:
+          attributes:
+            file:
+              too_big: "is too big"
+
 
   helpers:
     label:
@@ -1415,7 +1424,7 @@ en:
         avatar_modal:
           title: 'Change your profile photo'
           upload_button: 'Upload a photo'
-          option_text_html: 'or<br>Select a profile icon below'
+          option_text_html: 'or<br>Select your avatar below'
         name_label: "Full name"
         name_title: "Change name"
         initials_label: "Initials"
@@ -1479,6 +1488,8 @@ en:
         breadcrumbs:
           all: "All teams"
           new_team: "New team"
+        show:
+          enter_description: "Enter Team description"
         index:
           description_label: "Team is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:
@@ -1989,6 +2000,9 @@ en:
       archived: "(archived)"
       removed: "(removed)"
       deleted: "(deleted)"
+
+  dropdown_selector:
+    nothing_found: "Nothing found..."
 
   zip_export:
     modal_label: 'Export inventory'

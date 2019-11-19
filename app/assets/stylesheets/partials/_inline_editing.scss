@@ -1,12 +1,10 @@
 @import "constants";
 @import "mixins";
 
-
 .inline-editing-container {
-  display: flex;
-  flex-grow: 1;
-  max-width: 100%;
+  line-height: 32px;
   position: relative;
+  width: 100%;
 
   .button-container {
     height: 32px;
@@ -21,6 +19,7 @@
       color: $color-silver;
       cursor: pointer;
       display: inline-block;
+      line-height: 32px;
       position: absolute;
       text-align: center;
       width: 36px;
@@ -41,13 +40,13 @@
 
   }
 
-  &[data-error="true"] {
+  &.error {
 
     .error-block {
       display: block;
     }
 
-    input {
+    .input-field {
       font-size: 16px;
       line-height: 20px;
       padding-bottom: 10px;
@@ -68,26 +67,38 @@
   .view-mode {
     border: 1px solid transparent;
     cursor: pointer;
-    flex-wrap: nowrap;
     line-height: 26px;
     margin-left: -5px;
+    min-height: 30px;
     overflow: hidden;
     padding: 2px 4px;
     padding-right: 36px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: calc(100% - 32px);
+
+    &:empty:not(:focus):before {
+      color: $color-silver-chalice;
+      content: attr(data-placeholder);
+      font-weight: normal;
+    }
   }
 
   input {
     border: 1px solid $color-silver;
     border-radius: $border-radius-small;
     cursor: pointer;
+    display: block;
     line-height: 26px;
     margin-left: -5px;
     padding: 2px 4px;
     padding-right: 36px;
     width: calc(100% - 32px);
+
+    &::placeholder {
+      color: $color-silver-chalice;
+      font-weight: normal;
+    }
 
     &:focus {
       outline: 0;
