@@ -2,6 +2,7 @@
 
 class TinyMceAssetsController < ApplicationController
   include MarvinJsActions
+  include ActiveStorage::SetCurrent
 
   before_action :load_vars, only: %i(marvinjs_show marvinjs_update download)
 
