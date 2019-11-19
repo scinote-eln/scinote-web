@@ -136,6 +136,12 @@ var RepositoryListColumnType = (function() {
       var $manageModal = $(manageModal);
       var count = $manageModal.find('.list-items-count').attr('data-count');
       return count < GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN;
+    },
+    loadParams: () => {
+      var repositoryColumnParams = {};
+      repositoryColumnParams.repository_list_items_attributes = JSON.parse($('#dropdown_options').val());
+      repositoryColumnParams.delimiter = $('#delimiter').data('used-delimiter');
+      return repositoryColumnParams;
     }
   };
 }());

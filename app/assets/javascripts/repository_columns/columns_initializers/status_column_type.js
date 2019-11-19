@@ -136,6 +136,37 @@ var RepositoryStatusColumnType = (function() {
     checkValidation: () => {
       highlightErrors();
       return !($(manageModal).find('.error').length > 0);
+    },
+    loadParams: () => {
+      var $modal = $(manageModal);
+      var $statusItems;
+      var repositoryColumnParams = {};
+
+      $statusItems = $modal.find('.status-item-container');
+      // Load all new items
+      // Load all existing items, delete flag included
+      repositoryColumnParams.repository_status_items_attributes = [];
+
+      $.each($statusItems, function(index, value) {
+        var $item = $(value);
+        var id = $item.data('id');
+        var removed = $item.data('removed');
+        var icon = $item.find('.status-item-icon').data('icon');
+        var status = $item.find('input.status-item-field').val();
+
+        if (removed && id) { // flag as item for removing
+          repositoryColumnParams.repository_status_items_attributes
+            .push({ id: id, _destroy: true });
+        } else if (id) { // existing element, maybe values needs to be updated
+          repositoryColumnParams.repository_status_items_attributes
+            .push({ id: id, icon: icon, status: status });
+        } else { // new element
+          repositoryColumnParams.repository_status_items_attributes
+            .push({ icon: icon, status: status });
+        }
+      });
+
+      return repositoryColumnParams;
     }
   };
 }());
