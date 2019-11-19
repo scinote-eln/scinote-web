@@ -45,7 +45,7 @@ var RepositoryColumns = (function() {
       RepositoryListValue: 'RepositoryListColumnType',
       RepositoryStatusValue: 'RepositoryStatusColumnType'
     };
-    var currentPartial = $('#repository-column-data-type').find(':selected').val();
+    var currentPartial = $('#repository-column-data-type').val();
 
     if (validators[currentPartial]) {
       return eval(validators[currentPartial])
@@ -91,7 +91,7 @@ var RepositoryColumns = (function() {
 
   function updateListItem(column) {
     var name = column.attributes.name;
-    $('li[data-id=' + column.id + ']').find('span').first().text(name);
+    $('li[data-id=' + column.id + ']').find('span').first().html(name);
   }
 
   function loadSpecificParams(type, params, modal) {
@@ -101,7 +101,7 @@ var RepositoryColumns = (function() {
 
     if (type === 'RepositoryListValue') {
       newParams.repository_column.repository_list_items_attributes = JSON.parse($('#dropdown_options').val());
-      newParams.repository_column.delimiter = $('select#delimiter').data('used-delimiter');
+      newParams.repository_column.delimiter = $('#delimiter').data('used-delimiter');
     } else if (type === 'RepositoryStatusValue') {
       $statusItems = $modal.find('.status-item-container');
       // Load all new items
@@ -135,7 +135,7 @@ var RepositoryColumns = (function() {
     $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
-      var selectedType = $('#repository-column-data-type').find(':selected').val();
+      var selectedType = $('#repository-column-data-type').val();
       params = loadSpecificParams(selectedType, params, $manageModal);
       // if (checkData() === false) return;
 
@@ -162,7 +162,7 @@ var RepositoryColumns = (function() {
     $manageModal.off('click', '#update-repo-column-submit').on('click', '#update-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('edit-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
-      var selectedType = $('#repository-column-data-type').find(':selected').val();
+      var selectedType = $('#repository-column-data-type').val();
       params = loadSpecificParams(selectedType, params, $manageModal);
       if (checkData() !== true) return;
 
@@ -195,14 +195,13 @@ var RepositoryColumns = (function() {
         $manageModal.modal('show').find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
-        $manageModal.trigger('columnModal::partialLoadedForLists');
-        $manageModal.trigger('columnModal::partialLoadedForStatuses');
+        $manageModal.trigger('columnModal::partialLoadedForLists columnModal::partialLoadedForStatuses');
 
         if (button.data('action') === 'new') {
           $('[data-column-type="RepositoryTextValue"]').show();
           $('#new-repo-column-submit').show();
         } else {
-          columnType = $('#repository-column-data-type').find(':selected').val();
+          columnType = $('#repository-column-data-type').val();
           $('#update-repo-column-submit').show();
           $('[data-column-type=' + columnType + ']').show();
         }
