@@ -72,21 +72,23 @@ var RepositoryListColumnType = (function() {
 
   function refreshCounter(number) {
     var $manageModal = $(manageModal);
-    $manageModal.find('.list-items-count').html(number);
-    $manageModal.find('.list-items-count').attr('data-count', number);
+    var $counterContainer = $manageModal.find('.limit-counter-container');
+    var $btn = $manageModal.find('.column-save-btn');
+
+    $manageModal.find('.list-items-count').html(number).attr('data-count', number);
 
     if (number >= GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
-      $manageModal.find('.limit-counter-container').addClass('error-to-many-items');
-      $manageModal.find('button[data-action="save"]').addClass('disabled');
+      $counterContainer.addClass('error-to-many-items');
+      $btn.addClass('disabled');
     } else {
-      $manageModal.find('.limit-counter-container').removeClass('error-to-many-items');
-      $manageModal.find('button[data-action="save"]').removeClass('disabled');
+      $counterContainer.removeClass('error-to-many-items');
+      $btn.removeClass('disabled');
     }
   }
 
   function refreshPreviewDropdownList() {
-    var listItemsTextarea = '[data-column-type="RepositoryListValue"] #list-items-textarea';
-    var dropdownDelimiter = 'select#delimiter';
+    var listItemsTextarea = '.list-column-type #list-items-textarea';
+    var dropdownDelimiter = '#delimiter';
 
     var items = textToItems($(listItemsTextarea).val(), $(dropdownDelimiter).val());
     var hashItems = [];
@@ -103,25 +105,27 @@ var RepositoryListColumnType = (function() {
 
   function initDropdownItemsTextArea() {
     var $manageModal = $(manageModal);
-    var listItemsTextarea = '[data-column-type="RepositoryListValue"] #list-items-textarea';
-    var dropdownDelimiter = 'select#delimiter';
-    var columnNameInput = 'input#repository-column-name';
+    var listItemsTextarea = '.list-column-type #list-items-textarea';
+    var dropdownDelimiter = '#delimiter';
+    var columnNameInput = '#repository-column-name';
 
-    $manageModal.off('change keyup paste', listItemsTextarea).on('change keyup paste', listItemsTextarea, function() {
-      refreshPreviewDropdownList();
-    });
-
-    $manageModal.off('change', dropdownDelimiter).on('change', dropdownDelimiter, function() {
-      refreshPreviewDropdownList();
-    });
-
-    $manageModal.off('columnModal::partialLoadedForLists').on('columnModal::partialLoadedForLists', function() {
-      refreshPreviewDropdownList();
-    });
-
-    $manageModal.off('keyup change', columnNameInput).on('keyup change', columnNameInput, function() {
-      $manageModal.find('.preview-label').html($manageModal.find(columnNameInput).val());
-    });
+    $manageModal
+      .off('change keyup paste', listItemsTextarea)
+      .off('change', dropdownDelimiter)
+      .off('columnModal::partialLoadedForLists')
+      .off('keyup change', columnNameInput)
+      .on('change keyup paste', listItemsTextarea, function() {
+        refreshPreviewDropdownList();
+      })
+      .on('change', dropdownDelimiter, function() {
+        refreshPreviewDropdownList();
+      })
+      .on('columnModal::partialLoadedForLists', function() {
+        refreshPreviewDropdownList();
+      })
+      .on('keyup change', columnNameInput, function() {
+        $manageModal.find('.preview-label').html($manageModal.find(columnNameInput).val());
+      });
   }
 
   return {

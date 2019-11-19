@@ -25,10 +25,11 @@ var RepositoryStatusColumnType = (function() {
   function validateForm() {
     var $manageModal = $(manageModal);
     var $statusRows = $manageModal.find('.status-item-container:not([data-removed])');
+    var $btn = $manageModal.find('.column-save-btn');
 
     $.each($statusRows, (index, statusRow) => {
       var $row = $(statusRow);
-      var $statusField = $row.find('input.status-item-field');
+      var $statusField = $row.find('.status-item-field');
       var $icon = $row.find('.status-item-icon');
       var stringLength = $statusField.val().length;
 
@@ -42,9 +43,9 @@ var RepositoryStatusColumnType = (function() {
     });
 
     if ($manageModal.find('.error').length > 0) {
-      $manageModal.find('button[data-action="save"]').addClass('disabled');
+      $btn.addClass('disabled');
     } else {
-      $manageModal.find('button[data-action="save"]').removeClass('disabled');
+      $btn.removeClass('disabled');
     }
   }
 
@@ -113,21 +114,19 @@ var RepositoryStatusColumnType = (function() {
       $iconField.trigger('data-attribute-changed', $iconField);
     });
 
-    $manageModal.off('keyup change', statusInput).on('keyup change', statusInput, function() {
-      validateForm();
-    });
-
-    $manageModal.off('data-attribute-changed').on('data-attribute-changed', function() {
-      validateForm();
-    });
-
-    $manageModal.off('columnModal::partialLoadedForStatuses').on('columnModal::partialLoadedForStatuses', function() {
-      validateForm();
-    });
-
-    $manageModal.off('click', buttonWrapper).on('click', buttonWrapper, function() {
-      highlightErrors();
-    });
+    $manageModal
+      .off('keyup change', statusInput)
+      .off('data-attribute-changed columnModal::partialLoadedForStatuses')
+      .off('click', buttonWrapper)
+      .on('keyup change', statusInput, function() {
+        validateForm();
+      })
+      .on('data-attribute-changed columnModal::partialLoadedForStatuses', function(e) {
+        validateForm();
+      })
+      .on('click', buttonWrapper, function() {
+        highlightErrors();
+      });
   }
 
   return {

@@ -60,25 +60,25 @@
     </div>
 
     <hr/>
-    <span style="display: none" class="column-type" data-column-type="RepositoryTextValue">
+    <span style="display: none" class="column-type text-column-type" data-column-type="RepositoryTextValue">
       <%= render partial: "repository_columns/manage_column_partials/text.html.erb" %>
     </span>
-    <span style="display: none" class="column-type" data-column-type="RepositoryAssetValue">
+    <span style="display: none" class="column-type asset-column-type" data-column-type="RepositoryAssetValue">
       <%= render partial: "repository_columns/manage_column_partials/asset.html.erb" %>
     </span>
-    <span style="display: none" class="column-type" data-column-type="RepositoryListValue">
+    <span style="display: none" class="column-type list-column-type" data-column-type="RepositoryListValue">
       <%= render partial: "repository_columns/manage_column_partials/list.html.erb", locals: { column: @repository_column } %>
     </span>
-    <span style="display: none" class="column-type" data-column-type="RepositoryStatusValue">
+    <span style="display: none" class="column-type status-column-type" data-column-type="RepositoryStatusValue">
       <%= render partial: "repository_columns/manage_column_partials/status.html.erb", locals: { column: @repository_column } %>
     </span>
   </div>
 </div>
 <div class="modal-footer">
-  <button id="new-repo-column-submit" class="btn btn-success" data-action="save" style="display: none;">
+  <button id="new-repo-column-submit" class="btn btn-success column-save-btn" data-action="save" style="display: none;">
     <%= t("libraries.manange_modal_column.new.button") %>
   </button>
-  <button id="update-repo-column-submit" class="btn btn-success" data-action="save"  style="display: none;">
+  <button id="update-repo-column-submit" class="btn btn-success column-save-btn" data-action="save"  style="display: none;">
     <%= t("libraries.manange_modal_column.edit.button") %>
   </button>
 </div>
