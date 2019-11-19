@@ -25,7 +25,7 @@ class RepositoryTableStateService
 
   def update_state(state)
     saved_state = load_state
-    state[:order][0] = [3, 'asc'] if state.dig(:order, 0, 0).to_i < 2
+    state['order'][0] = [3, 'asc'] if state.dig('order', 0, 0).to_i < 2
 
     return if saved_state.state.except('time') == state.except('time')
 
@@ -46,21 +46,17 @@ class RepositoryTableStateService
   private
 
   def generate_default_state
-    default_columns_num =
-      Constants::REPOSITORY_TABLE_DEFAULT_STATE[:length]
+    default_columns_num = Constants::REPOSITORY_TABLE_DEFAULT_STATE['length']
 
     # This state should be strings-only
-    state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.with_indifferent_access
+    state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
     repository.repository_columns.each_with_index do |_, index|
       real_index = default_columns_num + index
-      state['columns'][real_index.to_s] =
-        HashUtil.deep_stringify_keys_and_values(
-          Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
-        )
-      state['ColReorder'] << real_index.to_s
+      state['columns'][real_index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
+      state['ColReorder'] << real_index
     end
-    state['length'] = state['columns'].length.to_s
-    state['time'] = Time.new.to_i.to_s
+    state['length'] = state['columns'].length
+    state['time'] = Time.new.to_i
     state
   end
 end
