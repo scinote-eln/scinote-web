@@ -41,12 +41,12 @@ class RepositoryColumn < ApplicationRecord
     # Calculate old_column_index - this can only be done before
     # record is deleted when we still have its index
     old_column_index = (
-      Constants::REPOSITORY_TABLE_DEFAULT_STATE[:length] +
+      Constants::REPOSITORY_TABLE_DEFAULT_STATE['length'] +
       repository.repository_columns
                 .order(id: :asc)
                 .pluck(:id)
                 .index(id)
-    ).to_s
+    )
 
     # Perform the destroy itself
     yield
