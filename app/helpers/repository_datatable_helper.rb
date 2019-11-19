@@ -57,10 +57,7 @@ module RepositoryDatatableHelper
   end
 
   def default_table_columns
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns].keys.sort.map do |k|
-      col = Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns][k]
-      col.slice(:visible, :searchable)
-    end.to_json
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
   end
 
   def display_cell_value(cell)
