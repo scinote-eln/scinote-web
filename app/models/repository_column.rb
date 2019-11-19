@@ -27,6 +27,7 @@ class RepositoryColumn < ApplicationRecord
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
   scope :asset_type, -> { where(data_type: 'RepositoryAssetValue') }
+  scope :status_type, -> { where(data_type: 'RepositoryStatusValue') }
 
   def self.name_like(query)
     where('repository_columns.name ILIKE ?', "%#{query}%")

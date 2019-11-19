@@ -1,0 +1,34 @@
+{
+  "id": "file:/item.json#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "icon": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "icon",
+        "status"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": ["id", "type", "attributes"]
+}
+
+
+
+
