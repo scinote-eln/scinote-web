@@ -2,6 +2,10 @@
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
   var manageModal = '#manage-repository-column';
+  var columnTypeClassNames = {
+    RepositoryListValue: 'RepositoryListColumnType',
+    RepositoryStatusValue: 'RepositoryStatusColumnType'
+  };
 
   function initColumnTypeSelector() {
     var $manageModal = $(manageModal);
@@ -41,19 +45,29 @@ var RepositoryColumns = (function() {
   }
 
   function checkData() {
-    var validators = {
-      RepositoryListValue: 'RepositoryListColumnType',
-      RepositoryStatusValue: 'RepositoryStatusColumnType'
-    };
     var currentPartial = $('#repository-column-data-type').val();
 
-    if (validators[currentPartial]) {
-      return eval(validators[currentPartial])
+    if (columnTypeClassNames[currentPartial]) {
+      return eval(columnTypeClassNames[currentPartial])
         .checkValidation();
     }
     return true;
   }
 
+  function addSpecificParams(type, params) {
+    var allParams = params;
+    var columnParams;
+    var specificParams;
+    var currentPartial = $('#repository-column-data-type').val();
+
+    if (columnTypeClassNames[currentPartial]) {
+      specificParams = eval(columnTypeClassNames[currentPartial]).loadParams();
+      columnParams = Object.assign(params.repository_column, specificParams);
+      allParams.repository_column = columnParams;
+    }
+
+    return allParams;
+  }
 
   function insertNewListItem(column) {
     var attributes = column.attributes;
@@ -94,49 +108,13 @@ var RepositoryColumns = (function() {
     $('li[data-id=' + column.id + ']').find('span').first().html(name);
   }
 
-  function loadSpecificParams(type, params, modal) {
-    var $modal = modal;
-    var newParams = params;
-    var $statusItems;
-
-    if (type === 'RepositoryListValue') {
-      newParams.repository_column.repository_list_items_attributes = JSON.parse($('#dropdown_options').val());
-      newParams.repository_column.delimiter = $('#delimiter').data('used-delimiter');
-    } else if (type === 'RepositoryStatusValue') {
-      $statusItems = $modal.find('.status-item-container');
-      // Load all new items
-      // Load all existing items, delete flag included
-      newParams.repository_column.repository_status_items_attributes = [];
-
-      $.each($statusItems, function(index, value) {
-        var $item = $(value);
-        var id = $item.data('id');
-        var removed = $item.data('removed');
-        var icon = $item.find('.status-item-icon').data('icon');
-        var status = $item.find('input.status-item-field').val();
-
-        if (removed && id) { // flag as item for removing
-          newParams.repository_column.repository_status_items_attributes
-            .push({ id: id, _destroy: true });
-        } else if (id) { // existing element, maybe values needs to be updated
-          newParams.repository_column.repository_status_items_attributes
-            .push({ id: id, icon: icon, status: status });
-        } else { // new element
-          newParams.repository_column.repository_status_items_attributes
-            .push({ icon: icon, status: status });
-        }
-      });
-    }
-    return newParams;
-  }
-
   function initCreateSubmitAction() {
     var $manageModal = $(manageModal);
     $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').val();
-      params = loadSpecificParams(selectedType, params, $manageModal);
+      params = addSpecificParams(selectedType, params);
       // if (checkData() === false) return;
 
       $.ajax({
@@ -163,7 +141,7 @@ var RepositoryColumns = (function() {
       var url = $('#repository-column-data-type').find(':selected').data('edit-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').val();
-      params = loadSpecificParams(selectedType, params, $manageModal);
+      params = addSpecificParams(selectedType, params);
       if (checkData() !== true) return;
 
       $.ajax({
@@ -195,7 +173,9 @@ var RepositoryColumns = (function() {
         $manageModal.modal('show').find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
-        $manageModal.trigger('columnModal::partialLoadedForLists columnModal::partialLoadedForStatuses');
+        $manageModal
+          .trigger('columnModal::partialLoadedForStatuses')
+          .trigger('columnModal::partialLoadedForLists');
 
         if (button.data('action') === 'new') {
           $('[data-column-type="RepositoryTextValue"]').show();
