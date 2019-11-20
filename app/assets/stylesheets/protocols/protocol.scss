@@ -4,7 +4,7 @@
 @import "constants";
 @import "mixins";
 
-.protocols-repository-edit-view {
+.protocol-repository-header {
 
   .protocol-info {
     align-items: center;
@@ -16,6 +16,7 @@
     .created-at-block,
     .last-modified-block,
     .edit-authors-block,
+    .keywords-block,
     .added-by-block, {
       flex-grow: 1;
       margin-bottom: 10px;
@@ -25,6 +26,12 @@
         color: $color-silver;
         font-size: 18px;
         margin-right: 5px;
+      }
+
+      .block-label {
+        align-items: center;
+        display: flex;
+        flex-shrink: 0;
       }
     }
 
@@ -56,7 +63,37 @@
     }
 
     .keywords-block {
+      align-items: center;
+      display: flex;
       flex-basis: 100%;
+
+      .key-words-container {
+        display: inline-block;
+        flex-grow: 1;
+        margin-left: 5px;
+
+        .dropdown-selector-container {
+          .input-field {
+            border-color: transparent;
+
+            &:hover {
+              border-color: $color-alto;
+            }
+          }
+
+          &.active {
+            .input-field {
+              border-color: $color-alto;
+            }
+          }
+
+          &.view-mode {
+            .input-field {
+              border-color: transparent;
+            }
+          }
+        }
+      }
     }
   }
 
