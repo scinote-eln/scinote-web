@@ -182,8 +182,8 @@ ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1202,11 +1202,8 @@ CREATE TABLE public.repository_columns (
     data_type integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-<<<<<<< HEAD
+    range boolean,
     delimiter character varying
-=======
-    range boolean
->>>>>>> eedcec279... Add range column to RepositoryColumn
 );
 
 
