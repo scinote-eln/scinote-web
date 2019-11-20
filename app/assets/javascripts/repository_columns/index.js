@@ -115,7 +115,7 @@ var RepositoryColumns = (function() {
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').val();
       params = addSpecificParams(selectedType, params);
-      // if (checkData() === false) return;
+      if (!checkData()) return;
 
       $.ajax({
         url: url,
@@ -142,7 +142,7 @@ var RepositoryColumns = (function() {
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').val();
       params = addSpecificParams(selectedType, params);
-      if (checkData() !== true) return;
+      if (!checkData()) return;
 
       $.ajax({
         url: url,
