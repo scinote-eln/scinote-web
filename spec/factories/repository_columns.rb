@@ -29,6 +29,7 @@ FactoryBot.define do
 
     trait :date_time_type do
       data_type { :RepositoryDateTimeValue }
+      range { false }
     end
   end
 end
