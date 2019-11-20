@@ -13,4 +13,15 @@ class RepositoryDateTimeValue < ApplicationRecord
   validates :repository_cell, :datetime_type, :start_time, presence: true
   validates :end_time, presence: true, if: ->(record) { record.datetime_type.to_s.include?('_range') }
   validates :end_time, absence: true, unless: ->(record) { record.datetime_type.to_s.include?('_range') }
+
+  SORTABLE_COLUMN_NAME = 'repository_date_time_values.start_time'
+  SORTABLE_VALUE_INCLUDE = :repository_date_time_value
+
+  def formatted
+    data
+  end
+
+  def data
+    [start_time, end_time].compact.join(' - ')
+  end
 end
