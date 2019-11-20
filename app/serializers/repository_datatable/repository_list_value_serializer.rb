@@ -5,7 +5,7 @@ module RepositoryDatatable
     attributes :value, :value_type
 
     def value
-      object.value.data
+      object.repository_list_value.data
     end
   end
 end

@@ -6,8 +6,8 @@ module RepositoryDatatable
 
     def value
       {
-        icon: object.value.repository_status_item.icon,
-        status: object.value.repository_status_item.status
+        icon: object.repository_status_value.repository_status_item.icon,
+        status: object.repository_status_value.repository_status_item.status
       }
     end
   end
