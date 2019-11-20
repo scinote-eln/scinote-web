@@ -9,7 +9,9 @@ module RepositoryDatatableHelper
                           _team,
                           assigned_rows)
     parsed_records = []
-    repository_rows.each do |record|
+    includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
+
+    repository_rows.includes(includes_json).each do |record|
       row = {
         'DT_RowId': record.id,
         '1': assigned_row(record, assigned_rows),
