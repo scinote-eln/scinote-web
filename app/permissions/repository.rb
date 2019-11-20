@@ -30,6 +30,14 @@ Canaid::Permissions.register_for(Repository) do
     can_create_repository_rows?(user, repository)
   end
 
+  can :update_repository_rows do |user, repository|
+    can_manage_repository_rows?(user, repository)
+  end
+
+  can :delete_repository_rows do |user, repository|
+    can_manage_repository_rows?(user, repository)
+  end
+
   # repository: create field
   can :create_repository_columns do |user, repository|
     can_create_repository_rows?(user, repository) unless repository.shared_with?(user.current_team)

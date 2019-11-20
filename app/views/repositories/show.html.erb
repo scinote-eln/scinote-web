@@ -128,21 +128,30 @@
     <% end %>
 
     <% if can_manage_repository_rows?(@repository) %>
-      <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
-        <span class="fas fa-pencil-alt"></span>
-        <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
-      </button>
-      <button type="button" class="btn btn-default"
-        id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
-        <span class="fas fa-trash"></span>
-        <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
-          <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
-          delete_repository_records_submit" %>
-      </button>
-      <button type="button" class="btn btn-default copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
-        <span class="fas fa-copy"></span>
-        <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
-      </button>
+      
+      <%if @display_edit_button %>
+        <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
+          <span class="fas fa-pencil-alt"></span>
+          <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
+        </button>
+      <% end %>
+      
+      <%if @display_delete_button %>
+        <button type="button" class="btn btn-default"
+          id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
+          <span class="fas fa-trash"></span>
+          <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
+            <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
+            delete_repository_records_submit" %>
+        </button>
+      <% end %>
+      
+      <%if @display_duplicate_button %>
+        <button type="button" class="btn btn-default copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
+          <span class="fas fa-copy"></span>
+          <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
+        </button>
+      <%end%>
     <% elsif @repository.shared_with?(current_team) %>
       <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
     <% end %>

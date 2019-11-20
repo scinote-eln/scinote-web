@@ -270,6 +270,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def delete_records
+    render_403 unless can_delete_repository_rows?(@repository)
     deleted_count = 0
     if selected_params
       selected_params.each do |row_id|
