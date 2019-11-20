@@ -25,7 +25,7 @@ class RepositoryTableStateService
 
   def update_state(state)
     saved_state = load_state
-    state['order'][0] = [3, 'asc'] if state.dig('order', 0, 0).to_i < 2
+    state['order'] = Constants::REPOSITORY_TABLE_DEFAULT_STATE['order'] if state.dig('order', 0, 0).to_i < 1
 
     return if saved_state.state.except('time') == state.except('time')
 

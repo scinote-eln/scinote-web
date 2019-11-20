@@ -509,7 +509,7 @@ var RepositoryDatatable = (function(global) {
       sScrollXInner: '100%',
       scrollY: '64vh',
       scrollCollapse: true,
-      order: [[2, 'asc']],
+      order: $(TABLE_ID).data('default-order'),
       colReorder: {
         fixedColumnsLeft: 2,
         realtime: false
@@ -526,6 +526,7 @@ var RepositoryDatatable = (function(global) {
       columnDefs: [{
         // Checkbox column needs special handling
         targets: 0,
+        visible: true,
         searchable: false,
         orderable: false,
         className: 'dt-body-center',
@@ -536,6 +537,7 @@ var RepositoryDatatable = (function(global) {
       }, {
         // Assigned column is not searchable
         targets: 1,
+        visible: true,
         searchable: false,
         orderable: true,
         sWidth: '1%',
@@ -578,6 +580,10 @@ var RepositoryDatatable = (function(global) {
       columns: (function() {
         var columns = $(TABLE_ID).data('default-table-columns');
         var customColumns = $(TABLE_ID).find('thead th[data-type]');
+        for (let i = 0; i < columns.length; i += 1) {
+          columns[i].data = String(i);
+          columns[i].defaultContent = '';
+        }
         customColumns.each((i, column) => {
           columns.push({
             visible: true,
@@ -674,19 +680,6 @@ var RepositoryDatatable = (function(global) {
     $('#assignRepositories, #unassignRepositories').click(function() {
       animateLoading();
     });
-
-    // Timeout for table header scrolling
-    setTimeout(function() {
-      TABLE.columns.adjust();
-
-      // Append button to inner toolbar in table
-      $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
-      $('div.toolbarButtonsDatatable').show();
-
-      // Append buttons for task inventory
-      $('div.toolbarButtons').appendTo('div.toolbar');
-      $('div.toolbarButtons').show();
-    }, 100);
 
     return TABLE;
   }

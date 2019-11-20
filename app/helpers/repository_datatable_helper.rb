@@ -56,6 +56,10 @@ module RepositoryDatatableHelper
       can_manage_repository_rows?(repository)
   end
 
+  def default_table_order_as_js_array
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE['order'].to_json
+  end
+
   def default_table_columns
     Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
   end

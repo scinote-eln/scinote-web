@@ -60,18 +60,18 @@ var RepositoryDatatableRowEditor = (function() {
     const formId = 'repositoryNewRowForm';
     let actionUrl = $(TABLE.table().node()).data('createRecord');
     let rowForm = $(`
-      <form id="${formId}"
-            class="repository-row-edit-form"
-            action="${actionUrl}"
-            method="post"
-            data-remote="true">
-      </form>
+      <td>
+        <form id="${formId}"
+              class="repository-row-edit-form"
+              action="${actionUrl}"
+              method="post"
+              data-remote="true">
+        </form>
+      </td>
     `);
 
-    $row.prepend(rowForm);
-
     // First two columns are always present and visible
-    $row.append($(TABLE_CELL));
+    $row.append(rowForm);
     $row.append($(TABLE_CELL));
 
     table.columns().every(function() {
@@ -117,7 +117,7 @@ var RepositoryDatatableRowEditor = (function() {
       </form>
     `);
 
-    $row.prepend(rowForm);
+    $row.find('td').first().append(rowForm);
 
     TABLE.cells(row.index(), row.columns().eq(0)).every(function() {
       let columnId = $(TABLE.columns(this.index().column).header()).attr('id');
