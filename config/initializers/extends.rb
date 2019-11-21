@@ -47,7 +47,11 @@ class Extends
                             RepositoryListValue: 2,
                             RepositoryAssetValue: 3,
                             RepositoryStatusValue: 4,
-                            RepositoryDateTimeValue: 5 }
+                            RepositoryDateTimeValue: 5,
+                            RepositoryTimeValue: 6,
+                            RepositoryDateTimeRangeValue: 7,
+                            RepositoryTimeRangeValue: 8,
+                            RepositoryDateRangeValue: 9 }
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES

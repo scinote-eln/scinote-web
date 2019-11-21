@@ -11,10 +11,10 @@ FactoryBot.define do
       end
     end
 
-    trait :date_value do
-      repository_column { create :repository_column, :date_type, repository: repository_row.repository }
+    trait :date_time_value do
+      repository_column { create :repository_column, :date_time_type, repository: repository_row.repository }
       after(:build) do |repository_cell|
-        repository_cell.value ||= build(:repository_date_value, repository_cell: repository_cell)
+        repository_cell.value ||= build(:repository_date_time_value, repository_cell: repository_cell)
       end
     end
 
@@ -39,10 +39,10 @@ FactoryBot.define do
       end
     end
 
-    trait :date_time_value do
-      repository_column { create :repository_column, :date_time_type, repository: repository_row.repository }
+    trait :date_time_range_value do
+      repository_column { create :repository_column, :date_time_range_type, repository: repository_row.repository }
       after(:build) do |repository_cell|
-        repository_cell.value ||= build(:repository_date_time_value, repository_cell: repository_cell)
+        repository_cell.value ||= build(:repository_date_time_range_value, repository_cell: repository_cell)
       end
     end
   end

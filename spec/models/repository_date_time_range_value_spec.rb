@@ -2,11 +2,11 @@
 
 require 'rails_helper'
 
-describe RepositoryDateTimeValue, type: :model do
-  let(:repository_date_time_value) { create :repository_date_time_value }
+describe RepositoryDateTimeRangeValue, type: :model do
+  let(:repository_date_time_range_value) { create :repository_date_time_range_value }
 
   it 'is valid' do
-    expect(repository_date_time_value).to be_valid
+    expect(repository_date_time_range_value).to be_valid
   end
 
   describe 'Validations' do
@@ -14,8 +14,12 @@ describe RepositoryDateTimeValue, type: :model do
       it { is_expected.to validate_presence_of(:repository_cell) }
     end
 
-    describe '#data' do
-      it { is_expected.to validate_presence_of(:data) }
+    describe '#start_time' do
+      it { is_expected.to validate_presence_of(:start_time) }
+    end
+
+    describe '#end_time' do
+      it { is_expected.to validate_presence_of(:end_time) }
     end
   end
 
