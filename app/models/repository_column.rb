@@ -18,8 +18,6 @@ class RepositoryColumn < ApplicationRecord
             length: { maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :repository_id, case_sensitive: true }
   validates :name, :data_type, :repository, :created_by, presence: true
-  validates :range, inclusion: { in: [true, false] }, if: :repository_date_time_value?
-  validates :range, absence: true, unless: :repository_date_time_value?
 
   after_create :update_repository_table_states_with_new_column
   around_destroy :update_repository_table_states_with_removed_column
