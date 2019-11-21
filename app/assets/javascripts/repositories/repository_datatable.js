@@ -1,7 +1,6 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal truncateLongString animateSpinner Promise
-  HelperModule animateLoading onClickCancel
-  hideAssignUnasignModal RepositoryDatatableRowEditor
+  HelperModule animateLoading hideAssignUnasignModal RepositoryDatatableRowEditor
 */
 
 //= require jquery-ui/widgets/sortable
@@ -51,63 +50,44 @@ var RepositoryDatatable = (function(global) {
     if (currentMode === 'viewMode') {
       $('#saveCancel').hide();
       $('#editDeleteCopy').show();
-      $('#addRepositoryRecord').removeClass('disabled').prop('disabled', false);
+      $('#addRepositoryRecord').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
-      $('#repository-acitons-dropdown').removeClass('disabled').prop('disabled', false);
-      $('#addNewColumn').removeClass('disabled').prop('disabled', false);
+      $('#repository-acitons-dropdown').prop('disabled', false);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', false);
       $('th').removeClass('disable-click');
-      $('.repository-row-selector').removeClass('disabled').prop('disabled', false);
+      $('.repository-row-selector').prop('disabled', false);
       if (rowsSelected.length === 0) {
-        $('#copyRepositoryRecords').prop('disabled', true).addClass('disabled');
-        $('#editRepositoryRecord').prop('disabled', true).addClass('disabled');
-        $('#deleteRepositoryRecordsButton').prop('disabled', true).addClass('disabled');
-        $('#exportRepositoriesButton').parent('li').addClass('disabled');
-        $('#exportRepositoriesButton').prop('disabled', true).off('click');
-        $('#export-repositories').off('click');
-        $('#assignRepositoryRecords').addClass('disabled').prop('disabled', true);
-        $('#unassignRepositoryRecords').addClass('disabled').prop('disabled', true);
+        $('#exportRepositoriesButton').addClass('disabled');
+        $('#copyRepositoryRecords').prop('disabled', true);
+        $('#editRepositoryRecord').prop('disabled', true);
+        $('#deleteRepositoryRecordsButton').prop('disabled', true);
+        $('#assignRepositoryRecords').prop('disabled', true);
+        $('#unassignRepositoryRecords').prop('disabled', true);
       } else {
-        if (rowsSelected.length === 1 && $('#exportRepositoriesButton').get(0)) {
-          $('#editRepositoryRecord').prop('disabled', false).removeClass('disabled');
-
-          // If we switched from 2 selections to 1, then this is not needed
-          let events = $.data($('#exportRepositoriesButton').get(0), 'events');
-          if (!events || !events.click) {
-            $('#exportRepositoriesButton').parent('li').removeClass('disabled');
-            $('#exportRepositoriesButton').prop('disabled', false);
-            $('#exportRepositoriesButton').off('click').on('click', function() {
-              $('#exportRepositoryModal').modal('show');
-            });
-            $('#export-repositories').off('click').on('click', function() {
-              animateSpinner(null, true);
-              $('#form-export').submit();
-            });
-          }
+        if (rowsSelected.length === 1) {
+          $('#editRepositoryRecord').prop('disabled', false);
         } else {
-          $('#editRepositoryRecord').prop('disabled', true).addClass('disabled');
+          $('#editRepositoryRecord').prop('disabled', true);
         }
-        $('#deleteRepositoryRecordsButton').prop('disabled', false).removeClass('disabled');
-        $('#copyRepositoryRecords').prop('disabled', false).removeClass('disabled');
-        $('#assignRepositoryRecords').removeClass('disabled').prop('disabled', false);
-        $('#unassignRepositoryRecords').removeClass('disabled').prop('disabled', false);
+        $('#exportRepositoriesButton').removeClass('disabled');
+        $('#deleteRepositoryRecordsButton').prop('disabled', false);
+        $('#copyRepositoryRecords').prop('disabled', false);
+        $('#assignRepositoryRecords').prop('disabled', false);
+        $('#unassignRepositoryRecords').prop('disabled', false);
       }
     } else if (currentMode === 'editMode') {
       $('#editDeleteCopy').hide();
       $('#saveCancel').show();
-      $('#repository-acitons-dropdown').addClass('disabled').prop('disabled', true);
+      $('#repository-acitons-dropdown').prop('disabled', true);
       $('.dataTables_length select').prop('disabled', true);
-      $('#addRepositoryRecord').addClass('disabled').prop('disabled', true);
-      $('#editRepositoryRecord').addClass('disabled').prop('disabled', true);
-      $('#addNewColumn').addClass('disabled').prop('disabled', true);
-      $('#deleteRepositoryRecordsButton').addClass('disabled').prop('disabled', true);
-      $('#exportRepositoriesButton').off('click');
-      $('#export-repositories').off('click');
-      $('#assignRepositoryRecords').addClass('disabled').prop('disabled', true);
-      $('#unassignRepositoryRecords').addClass('disabled').prop('disabled', true);
+      $('#addRepositoryRecord').prop('disabled', true);
+      $('#editRepositoryRecord').prop('disabled', true);
+      $('#deleteRepositoryRecordsButton').prop('disabled', true);
+      $('#assignRepositoryRecords').prop('disabled', true);
+      $('#unassignRepositoryRecords').prop('disabled', true);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
       $('th').addClass('disable-click');
-      $('.repository-row-selector').addClass('disabled').prop('disabled', true);
+      $('.repository-row-selector').prop('disabled', true);
     }
   }
 
@@ -274,17 +254,21 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function resetTableView() {
+    if ($('#assigned').text().length === 0) {
+      TABLE.column(1).visible(false);
+    }
+    TABLE.ajax.reload(function() {
+      initRowSelection();
+    }, false);
+    changeToViewMode();
+    SmartAnnotation.closePopup();
+    animateSpinner(null, false);
+  }
+
   function initCancelButton() {
     TABLE_WRAPPER.on('click', '#cancelSave', function() {
-      if ($('#assigned').text().length === 0) {
-        TABLE.column(1).visible(false);
-      }
-      TABLE.ajax.reload(function() {
-        initRowSelection();
-      }, false);
-      changeToViewMode();
-      SmartAnnotation.closePopup();
-      animateSpinner(null, false);
+      resetTableView();
     });
   }
 
@@ -342,6 +326,15 @@ var RepositoryDatatable = (function(global) {
   }
 
   function bindExportActions() {
+    $('#export-repositories').on('click', function() {
+      animateSpinner(null, true);
+    });
+
+    $('#exportRepositoriesButton').on('click', function() {
+      $('#exportRepositoryModal').modal('show');
+    });
+
+
     $('form#form-export').submit(function() {
       var form = this;
       if (currentMode === 'viewMode') {
@@ -750,13 +743,13 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       },
       error: function(data) {
         hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       }
     });
@@ -785,13 +778,13 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       },
       error: function(data) {
         hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       }
     });
@@ -807,7 +800,7 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         HelperModule.flashAlertMsg(data.flash, data.color);
         rowsSelected = [];
-        onClickCancel();
+        resetTableView();
       },
       error: function(ev) {
         if (ev.status === 403) {
@@ -829,7 +822,7 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         rowsSelected = [];
-        onClickCancel();
+        resetTableView();
       },
       error: function(ev) {
         if (ev.status === 403) {
