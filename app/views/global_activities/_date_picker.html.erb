@@ -2,7 +2,7 @@
   <% if label %>
     <label class="control-label required" for="calendar-<%= id %>"><%= label %></label>
   <% end %>
-  <input type="datetime" class="form-control" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" />
+  <input type="datetime" class="form-control" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" value="<%= defined?(setDate) ? setDate : '' %>"/>
   <%
     js_format = I18n.backend.date_format.dup
       js_format.gsub!(/%-d/, 'D')
@@ -17,7 +17,6 @@
     $(function () {
       var dt = $('#calendar-<%= id %>');
       dt.datetimepicker({ useCurrent: <%= use_current %>, ignoreReadonly: true, locale: '<%= I18n.locale %>', format: '<%= js_format %>' });
-      $('#calendar-<%= id %>').data('DateTimePicker').date(null);
     });
   </script>
 </div>

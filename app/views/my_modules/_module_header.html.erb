@@ -1,58 +1,32 @@
 <div class="header-container">
   <div class="flex-block date-block">
-    <div class="badge-icon">
-      <span class="fas fa-calendar-alt"></span>
-    </div>
-    <div class="well well-sm">
+    <div class="flex-block-label">
+      <span class="fas block-icon fa-calendar-alt"></span>
       <span class="hidden-xs hidden-sm hidden-md"><%=t "my_modules.module_header.start_date" %></span>
-      <strong><%= l(@my_module.created_at, format: :full) %></strong>
     </div>
+    <strong><%= l(@my_module.created_at, format: :full) %></strong>
   </div>
-
+  
   <div class="flex-block date-block" >
-    <span class="help_tooltips"
-          data-tooltiplink="<%= I18n.t('tooltips.link.task.due_date_specific') %>"
-          data-tooltipcontent="<%= I18n.t('tooltips.text.task.due_date_specific') %>">
-      <div class="badge-icon">
-        <% if can_manage_module?(@my_module) %>
-          <%= link_to due_date_my_module_path(@my_module, format: :json), remote: true, class: "due-date-link", style: "color: inherit" do %>
-            <span class="fas fa-calendar-alt"></span>
-          <% end %>
-        <% else %>
-          <span class="fas fa-calendar-alt"></span>
-        <% end %>
-      </div>
-      <div class="well well-sm">
-        <span class="hidden-xs hidden-sm  hidden-md"><%=t "my_modules.module_header.due_date" %></span>
-        <% if can_manage_module?(@my_module) %>
-          <%= link_to due_date_my_module_path(@my_module, format: :json), remote: true, class: "due-date-link", style: "color: inherit" do %>
-            <span class="task-due-date">
-              <%= render partial: "module_header_due_date_label.html.erb",
-                locals: { my_module: @my_module } %>
-            </span>
-          <% end %>
-        <% else %>
-          <span class="task-due-date">
-            <%= render partial: "module_header_due_date_label.html.erb",
-              locals: { my_module: @my_module } %>
-          </span>
-        <% end %>
-      </div>
-    </span>
+    <span class="fas block-icon fa-calendar-alt"></span>
+    <span class="hidden-xs hidden-sm  hidden-md"><%=t "my_modules.module_header.due_date" %></span>
+    <div class="due-date-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
+      <%= render partial: "module_header_due_date_label.html.erb",
+        locals: { my_module: @my_module } %>
+    </div>
   </div>
 
 
 
   <div class="flex-block">
-    <div class="badge-icon">
-      <span class="fas fa-tachometer-alt"></span>
+    <div class="flex-block-label">
+      <span class="fas block-icon fa-tachometer-alt"></span>
+      <%= t('my_modules.states.state_label') %>
     </div>
-    <div class="well well-sm">
-      <span class="task-state-label">
+    <span class="task-state-label">
       <%= render partial: "module_state_label.html.erb",
         locals: { my_module: @my_module } %>
-      </span>
-    </div>
+    </span>
   </div>
 </div>
 
@@ -62,9 +36,7 @@
 
 <div class="module-tags">
   <div id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
-    <div class="badge-icon">
-      <span class="fas fa-tags"></span>
-    </div>
+    <span class="fas block-icon fa-tags"></span>
     <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span>
     <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: can_manage_module?(@my_module) } %>
   </div>
@@ -88,13 +60,6 @@
       <% end %>
     </div>
 </div>
-
-<!-- Edit description modal -->
-<%= render partial: "my_modules/modals/manage_description_modal" %>
-
-<!-- Edit due date modal -->
-<%= render partial: "my_modules/modals/manage_due_date_modal" %>
-
 
 <!-- Manage tags modal -->
 <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: @my_module } %>
