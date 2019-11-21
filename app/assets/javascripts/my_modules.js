@@ -258,6 +258,4 @@ function initTagsSelector() {
 applyTaskCompletedCallBack();
 initTagsSelector();
 bindEditTagsAjax();
-$(document).on('turbolinks:load', function() {
-  initDueDatePicker();
-});
+initDueDatePicker();
