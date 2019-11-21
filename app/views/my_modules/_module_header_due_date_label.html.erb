@@ -1,23 +1,22 @@
-<% if my_module.due_date.blank? %>
-  <%=t "experiments.canvas.full_zoom.no_due_date" %>
-<% else %>
-  <strong>
-    <% if my_module.completed? %>
-      <span class="alert-green">
-        <%= l(my_module.due_date.utc, format: :full) %>
-      </span>
-    <% elsif my_module.is_one_day_prior? %>
-      <span class="alert-yellow">
-        <%= l(my_module.due_date.utc, format: :full) %>
-        (<%= t('my_modules.states.due_soon') %>)
-      </span>
-    <% elsif my_module.is_overdue? %>
-      <span class="alert-red">
-        <%= l(my_module.due_date.utc, format: :full) %>
-        (<%= t('my_modules.states.overdue') %>)
-      </span>
-    <% else %>
-      <%= l(my_module.due_date.utc, format: :full) %>
-    <% end %>
-  </strong>
-<% end %>
+<% 
+if my_module.completed? 
+  date_class = "alert-green"
+elsif my_module.is_one_day_prior? 
+  date_class = "alert-yellow"
+  label = "(#{t('my_modules.states.due_soon')})"
+elsif my_module.is_overdue?
+  date_class = "alert-red"
+  label = "(#{t('my_modules.states.overdue')})"
+end
+%>
+<span class="date-text <%= date_class %>">
+  <span class="view-block"><%= l(my_module.due_date.utc, format: :full) %></span>
+  <%= render partial: "global_activities/date_picker.html.erb", locals: { 
+                id: 'due-date', 
+                use_current: 'false',
+                setDate: l(my_module.due_date.utc, format: :full),
+                placeholder: t("experiments.canvas.full_zoom.no_due_date"), 
+                label: nil 
+  } %>
+  <%= label %>
+</span>

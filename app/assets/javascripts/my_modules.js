@@ -2,56 +2,22 @@
 /* eslint-disable no-use-before-define */
 
 // Bind ajax for editing due dates
-function bindEditDueDateAjax() {
-  var editDueDateModal = null;
-  var editDueDateModalBody = null;
-  var editDueDateModalTitle = null;
-  var editDueDateModalSubmitBtn = null;
-
-  editDueDateModal = $('#manage-module-due-date-modal');
-  editDueDateModalBody = editDueDateModal.find('.modal-body');
-  editDueDateModalTitle = editDueDateModal.find('#manage-module-due-date-modal-label');
-  editDueDateModalSubmitBtn = editDueDateModal.find("[data-action='submit']");
-
-  $('.due-date-link')
-    .on('ajax:success', function(ev, data) {
-      var dueDateLink = $('.task-due-date');
-
-      // Load contents
-      editDueDateModalBody.html(data.html);
-      editDueDateModalTitle.text(data.title);
-
-      // Add listener to form inside modal
-      editDueDateModalBody.find('form')
-        .on('ajax:success', function(ev2, data2) {
-          // Update module's due date
-          dueDateLink.html(data2.module_header_due_date_label);
-
-          // Close modal
-          editDueDateModal.modal('hide');
-        })
-        .on('ajax:error', function() {
-          // Display errors if needed
-          $(this).renderFormErrors('my_module', data.responseJSON);
-        });
-
-      // Open modal
-      editDueDateModal.modal('show');
-    })
-    .on('ajax:error', function() {
-    // TODO
+function initDueDatePicker() {
+  $('#calendar-due-date').on('dp.change', function() {
+    var updateUrl = $('.due-date-container').data('update-url');
+    $.ajax({
+      url: updateUrl,
+      type: 'PATCH',
+      dataType: 'json',
+      data: { my_module: { due_date: $('#calendar-due-date').val() } },
+      success: function(result) {
+        $('.due-date-container').html($(result.module_header_due_date_label));
+        initDueDatePicker();
+      }
     });
-
-  editDueDateModalSubmitBtn.on('click', function() {
-    // Submit the form inside the modal
-    editDueDateModalBody.find('form').submit();
-  });
-
-  editDueDateModal.on('hidden.bs.modal', function() {
-    editDueDateModalBody.find('form').off('ajax:success ajax:error');
-    editDueDateModalBody.html('');
   });
 }
+
 
 // Bind ajax for editing tags
 function bindEditTagsAjax() {
@@ -210,7 +176,8 @@ function applyTaskCompletedCallBack() {
             button.find('.btn')
               .removeClass('btn-default').addClass('btn-primary');
           }
-          $('.task-due-date').html(data.module_header_due_date_label);
+          $('.due-date-container').html(data.module_header_due_date_label);
+          initDueDatePicker();
           $('.task-state-label').html(data.module_state_label);
           button.find('button').replaceWith(data.new_btn);
         },
@@ -289,6 +256,6 @@ function initTagsSelector() {
 }
 
 applyTaskCompletedCallBack();
-bindEditDueDateAjax();
 initTagsSelector();
 bindEditTagsAjax();
+initDueDatePicker();

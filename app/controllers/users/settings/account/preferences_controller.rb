@@ -15,10 +15,7 @@ module Users
         def update
           respond_to do |format|
             if @user.update(update_params)
-              flash[:notice] =
-                t('users.settings.account.preferences.update_flash')
               format.json do
-                flash.keep
                 render json: { status: :ok }
               end
             else

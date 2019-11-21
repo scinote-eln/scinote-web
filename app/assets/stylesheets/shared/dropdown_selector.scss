@@ -49,6 +49,15 @@
       }
     }
 
+    .ds-simple {
+      font-size: 14px;
+      line-height: 28px;
+      padding-left: 5px;
+      position: relative;
+      transition: .3s;
+      z-index: 2;
+    }
+
     .ds-tags {
       align-items: center;
       background: $color-concrete;
@@ -209,6 +218,18 @@
     }
   }
 
+  &.simple-mode {
+    .input-field {
+      display: block;
+
+      .search-field {
+        bottom: 3px;
+        display: none;
+        position: absolute;
+      }
+    }
+  }
+
   &.open {
 
     .input-field {
@@ -247,6 +268,19 @@
         top: auto;
       }
     }
+
+    &.simple-mode {
+      .search-field {
+        display: block;
+        line-height: 14px;
+      }
+
+      .ds-simple {
+        color: $color-silver-chalice;
+        font-size: 12px;
+        line-height: 14px;
+      }
+    }
   }
 
   &.disabled {
@@ -258,6 +292,28 @@
         background: inherit;
         user-select: none;
       }
+    }
+  }
+
+  &.view-mode {
+    .input-field {
+      background: $color-white;
+
+      .ds-tags .fa-times {
+        display: none;
+      }
+    }
+  }
+
+  &.success {
+    .input-field {
+      border-color: $brand-success !important;
+    }
+  }
+
+  &.error {
+    .input-field {
+      border-color: $brand-danger !important;
     }
   }
 }
