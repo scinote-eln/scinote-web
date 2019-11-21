@@ -173,7 +173,7 @@ class ProtocolsController < ApplicationController
       if @protocol.update_keywords(params[:keywords])
         format.json do
           log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
-          render json: {status: :ok}
+          render json: { status: :ok }
         end
       else
         format.json { render json: {}, status: :unprocessable_entity }

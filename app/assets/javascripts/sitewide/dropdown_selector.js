@@ -1,7 +1,7 @@
 /* global PerfectScrollbar activePSB PerfectSb I18n */
 /* eslint-disable no-unused-vars, no-use-before-define */
 
-/* 
+/*
 
   Data options for SELECT:
     data-ajax-url // Url for GET ajax request
