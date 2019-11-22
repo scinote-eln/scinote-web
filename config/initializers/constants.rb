@@ -944,34 +944,34 @@ class Constants
 
   # Repository default table state
   REPOSITORY_TABLE_DEFAULT_STATE = {
-    time: 0,
-    start: 0,
-    length: 6,
-    order: { 0 => [2, 'asc'] }, # Default sorting by 'ID' column
-    search: { search: '',
-              smart: true,
-              regex: false,
-              caseInsensitive: true },
-    columns: {},
-    assigned: 'assigned',
-    ColReorder: [*0..5]
+    'time' => 0,
+    'start' => 0,
+    'length' => 6,
+    'order' => [[2, 'asc']], # Default sorting by 'ID' column
+    'search' => { 'search' => '',
+                  'smart' => true,
+                  'regex' => false,
+                  'caseInsensitive' => true },
+    'columns' => [],
+    'assigned' => 'assigned',
+    'ColReorder' => [*0..5]
   }
   6.times do |i|
-    REPOSITORY_TABLE_DEFAULT_STATE[:columns][i] = {
-      visible: true,
-      searchable: i >= 1, # Checkboxes column is not searchable
-      search: { search: '',
-                smart: true,
-                regex: false,
-                caseInsensitive: true }
+    REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
+      'visible' => true,
+      'searchable' => (i >= 1), # Checkboxes column is not searchable
+      'search' => { 'search' => '',
+                    'smart' => true,
+                    'regex' => false,
+                    'caseInsensitive' => true }
     }
   end
   REPOSITORY_TABLE_DEFAULT_STATE.freeze
   # For default custom column template, any searchable default
   # column can be reused
   REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
-    REPOSITORY_TABLE_DEFAULT_STATE[:columns][1].deep_dup
-                                               .freeze
+    REPOSITORY_TABLE_DEFAULT_STATE['columns'][1].deep_dup
+                                                .freeze
 
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
 

@@ -100,17 +100,6 @@
     </div>
   </div>
 
-  <div class="btn-group inline" id="saveCancel" data-toggle="buttons" style="display:none">
-    <button type="button" class="btn btn-success" id="saveRecord" onclick="onClickSave()">
-      <span class="fas fa-save"></span>
-      <%= t("repositories.save_record") %>
-    </button>
-    <button type="button" class="btn btn-default" id="cancelSave" onclick="onClickCancel()">
-      <span class="fas fa-times visible-xs-inline"></span>
-      <span class="hidden-xs"><%= t("repositories.cancel_save") %></span>
-    </button>
-  </div>
-
   <!-- These buttons are appended to table in javascript, after table initialization -->
   <div class="toolbarButtonsDatatable" style="display:none">
 
@@ -125,21 +114,34 @@
     <% end %>
 
     <% if can_manage_repository_rows?(@repository) %>
-      <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
-        <span class="fas fa-pencil-alt"></span>
-        <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
-      </button>
-      <button type="button" class="btn btn-default"
-        id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
-        <span class="fas fa-trash"></span>
-        <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
-          <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
-          delete_repository_records_submit" %>
-      </button>
-      <button type="button" class="btn btn-default copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
-        <span class="fas fa-copy"></span>
-        <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
-      </button>
+      <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
+        <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
+          <span class="fas fa-pencil-alt"></span>
+          <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
+        </button>
+        <button type="button" class="btn btn-default"
+          id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
+          <span class="fas fa-trash"></span>
+          <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
+            <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
+            delete_repository_records_submit" %>
+        </button>
+        <button type="button" class="btn btn-default copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
+          <span class="fas fa-copy"></span>
+          <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
+        </button>
+      </span>
+
+      <span id="saveCancel" data-toggle="buttons" style="display:none">
+        <button type="button" class="btn btn-success" id="saveRecord">
+          <span class="fas fa-save"></span>
+          <%= t("repositories.save_record") %>
+        </button>
+        <button type="button" class="btn btn-default" id="cancelSave">
+          <span class="fas fa-times-circle"></span>
+          <%= t("repositories.cancel_save") %>
+        </button>
+      </span>
     <% elsif @repository.shared_with?(current_team) %>
       <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
     <% end %>
