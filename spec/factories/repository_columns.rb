@@ -11,10 +11,6 @@ FactoryBot.define do
       data_type { :RepositoryTextValue }
     end
 
-    trait :date_type do
-      data_type { :RepositoryDateValue }
-    end
-
     trait :list_type do
       data_type { :RepositoryListValue }
     end
@@ -25,6 +21,30 @@ FactoryBot.define do
 
     trait :status_type do
       data_type { :RepositoryStatusValue }
+    end
+
+    trait :date_time_type do
+      data_type { :RepositoryDateTimeValue }
+    end
+
+    trait :date_type do
+      data_type { :RepositoryDateValue }
+    end
+
+    trait :time_type do
+      data_type { :RepositoryTimeValue }
+    end
+
+    trait :date_time_range_type do
+      data_type { :RepositoryDateTimeRangeValue }
+    end
+
+    trait :date_range_type do
+      data_type { :RepositoryDateRangeValue }
+    end
+
+    trait :time_range_type do
+      data_type { :RepositoryTimeRangeValue }
     end
   end
 end
