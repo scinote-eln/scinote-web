@@ -26,27 +26,18 @@
   }
 
   .team-metadata {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+    grid-gap: 20px;
     font-size: 14px;
-    min-height: 40px;
+    margin-bottom: 20px;
 
-    .created-at,
-    .created-by,
-    .space-usage {
-      flex-grow: 1;
-      line-height: 40px;
+    .grid-block {
 
       .fas {
         color: $color-silver;
-        margin-right: 10px;
+        margin-right: 5px;
       }
-    }
-
-    .created-at,
-    .created-by {
-      margin-right: 20px
     }
 
     .created-by {
