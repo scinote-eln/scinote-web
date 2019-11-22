@@ -10,11 +10,13 @@ elsif my_module.is_overdue?
 end
 %>
 <span class="date-text <%= date_class %>">
-  <span class="view-block"><%= l(my_module.due_date.utc, format: :full) %></span>
+  <span class="view-block">
+    <%= my_module.due_date ? l(my_module.due_date.utc, format: :full) : t("experiments.canvas.full_zoom.no_due_date") %>
+  </span>
   <%= render partial: "global_activities/date_picker.html.erb", locals: { 
                 id: 'due-date', 
                 use_current: 'false',
-                setDate: l(my_module.due_date.utc, format: :full),
+                setDate: my_module.due_date ? l(my_module.due_date.utc, format: :full) : '',
                 placeholder: t("experiments.canvas.full_zoom.no_due_date"), 
                 label: nil 
   } %>

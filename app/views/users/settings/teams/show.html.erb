@@ -35,26 +35,24 @@
     <!-- HEADER -->
     <div class="team-metadata">
 
-      <div class="created-at">
+      <div class="created-at grid-block">
        <span class="fas fa-calendar-alt"></span>
        <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
        <b><%= l(@team.created_at, format: :full_date) %></b>
       </div>
 
-      <div class="created-by">
+      <div class="created-by grid-block">
         <span class="fas fa-user fa-lg"></span>
         <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
         <b><%= t("users.settings.teams.edit.header_created_by_name_email", name: team_created_by(@team).name, email: team_created_by(@team).email) %></b>
       </div>
 
-      <div class="space-usage">
+      <div class="space-usage grid-block">
         <span class="fas fa-hdd"></span>
         <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
         <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.space_taken)}" %></b>
       </div>
     </div>
-
-    <div data-hook="team-header-second-row"></div>
 
     <div class="team-description">
       <%= render partial: "shared/tiny_mce_editor.html.erb",
