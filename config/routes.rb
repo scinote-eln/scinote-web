@@ -585,6 +585,7 @@ Rails.application.routes.draw do
         resources :status_columns, only: %i(create update destroy)
         resources :list_columns, only: %i(create update destroy)
         resources :asset_columns, only: %i(create update destroy)
+        resources :date_time_columns, only: %i(create update destroy)
       end
     end
 
@@ -641,6 +642,10 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
+                resources :inventory_status_items,
+                          only: %i(index create show update destroy),
+                          path: 'status_items',
+                          as: :status_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),

@@ -6,7 +6,11 @@ class RepositoryColumnSerializer < ActiveModel::Serializer
   attributes :id, :name, :message, :edit_html_url, :update_url, :destroy_html_url
 
   def message
-    I18n.t('libraries.repository_columns.create.success_flash', name: object.name)
+    if instance_options[:creating]
+      I18n.t('libraries.repository_columns.create.success_flash', name: object.name)
+    elsif instance_options[:editing]
+      I18n.t('libraries.repository_columns.update.success_flash', name: object.name)
+    end
   end
 
   def edit_html_url

@@ -57,7 +57,7 @@ module RepositoryActions
 
     def duplicate_repository_date_value
       old_value = @cell.value
-      RepositoryDateValue.create(
+      RepositoryDateTimeValue.create(
         old_value.attributes.merge(
           id: nil, created_by: @user, last_modified_by: @user,
           repository_cell_attributes: {

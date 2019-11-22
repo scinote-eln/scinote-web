@@ -14,12 +14,12 @@ class RepositoryCell < ActiveRecord::Base
                .where(repository_cells: { value_type: 'RepositoryTextValue' })
              end),
              optional: true, foreign_key: :value_id
-  belongs_to :repository_date_value,
+  belongs_to :repository_date_time_value,
              (lambda do
                includes(:repository_cell)
                .where(repository_cells: { value_type: 'RepositoryDateValue' })
              end),
-             optional: true, foreign_key: :value_id
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
   belongs_to :repository_list_value,
              (lambda do
                includes(:repository_cell)
@@ -37,6 +37,20 @@ class RepositoryCell < ActiveRecord::Base
              (lambda do
                includes(:repository_cell)
                  .where(repository_cells: { value_type: 'RepositoryStatusValue' })
+             end),
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+
+  belongs_to :repository_date_time_value,
+             (lambda do
+               includes(:repository_cell)
+                 .where(repository_cells: { value_type: 'RepositoryDateTimeValue' })
+             end),
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+
+  belongs_to :repository_date_time_range_value,
+             (lambda do
+               includes(:repository_cell)
+                 .where(repository_cells: { value_type: 'RepositoryDateTimeRangeValue' })
              end),
              optional: true, foreign_key: :value_id, inverse_of: :repository_cell
 

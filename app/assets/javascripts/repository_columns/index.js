@@ -1,11 +1,15 @@
-/* global I18n HelperModule animateSpinner */
+/* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType*/
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
-  var manageModal = '#manageRepositoryColumn';
+  var manageModal = '#manage-repository-column';
+  var columnTypeClassNames = {
+    RepositoryListValue: 'RepositoryListColumnType',
+    RepositoryStatusValue: 'RepositoryStatusColumnType'
+  };
 
   function initColumnTypeSelector() {
     var $manageModal = $(manageModal);
-    $manageModal.off('click', '#repository-column-data-type').on('click', '#repository-column-data-type', function() {
+    $manageModal.off('change', '#repository-column-data-type').on('change', '#repository-column-data-type', function() {
       $('.column-type').hide();
       $('[data-column-type="' + $(this).val() + '"]').show();
     });
@@ -40,6 +44,30 @@ var RepositoryColumns = (function() {
     });
   }
 
+  function checkData() {
+    var currentPartial = $('#repository-column-data-type').val();
+
+    if (columnTypeClassNames[currentPartial]) {
+      return eval(columnTypeClassNames[currentPartial])
+        .checkValidation();
+    }
+    return true;
+  }
+
+  function addSpecificParams(type, params) {
+    var allParams = params;
+    var columnParams;
+    var specificParams;
+    var currentPartial = $('#repository-column-data-type').val();
+
+    if (columnTypeClassNames[currentPartial]) {
+      specificParams = eval(columnTypeClassNames[currentPartial]).loadParams();
+      columnParams = Object.assign(params.repository_column, specificParams);
+      allParams.repository_column = columnParams;
+    }
+
+    return allParams;
+  }
 
   function insertNewListItem(column) {
     var attributes = column.attributes;
@@ -75,26 +103,63 @@ var RepositoryColumns = (function() {
     $('[data-attr="no-columns"]').remove();
   }
 
+  function updateListItem(column) {
+    var name = column.attributes.name;
+    $('li[data-id=' + column.id + ']').find('span').first().html(name);
+  }
+
   function initCreateSubmitAction() {
     var $manageModal = $(manageModal);
     $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
-      $.post(url, params, (result) => {
-        var data = result.data;
-        insertNewListItem(data);
-        HelperModule.flashAlertMsg(data.attributes.message, 'success');
-        $manageModal.modal('hide');
-      }).error((error) => {
-        $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
+      var selectedType = $('#repository-column-data-type').val();
+      params = addSpecificParams(selectedType, params);
+      if (!checkData()) return;
+
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: JSON.stringify(params),
+        contentType: 'application/json',
+        success: function(result) {
+          var data = result.data;
+          insertNewListItem(data);
+          HelperModule.flashAlertMsg(data.attributes.message, 'success');
+          $manageModal.modal('hide');
+        },
+        error: function(error) {
+          $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
+        }
       });
     });
   }
 
   function initEditSubmitAction() {
     var $manageModal = $(manageModal);
-    $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
-      // TODO
+    $manageModal.off('click', '#update-repo-column-submit').on('click', '#update-repo-column-submit', function() {
+      var url = $('#repository-column-data-type').find(':selected').data('edit-url');
+      var params = { repository_column: { name: $('#repository-column-name').val() } };
+      var selectedType = $('#repository-column-data-type').val();
+      params = addSpecificParams(selectedType, params);
+      if (!checkData()) return;
+
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        data: JSON.stringify(params),
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function(result) {
+          var data = result.data;
+          updateListItem(data);
+          HelperModule.flashAlertMsg(data.attributes.message, 'success');
+          $manageModal.modal('hide');
+        },
+        error: function(error) {
+          $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
+        }
+      });
     });
   }
 
@@ -103,13 +168,22 @@ var RepositoryColumns = (function() {
     $('.repository-column-edtior').off('click', '.manage-repo-column').on('click', '.manage-repo-column', function() {
       var button = $(this);
       var modalUrl = button.data('modal-url');
+      var columnType;
       $.get(modalUrl, (data) => {
         $manageModal.modal('show').find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
+        $manageModal
+          .trigger('columnModal::partialLoadedForStatuses')
+          .trigger('columnModal::partialLoadedForLists');
 
         if (button.data('action') === 'new') {
           $('[data-column-type="RepositoryTextValue"]').show();
+          $('#new-repo-column-submit').show();
+        } else {
+          columnType = $('#repository-column-data-type').val();
+          $('#update-repo-column-submit').show();
+          $('[data-column-type=' + columnType + ']').show();
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
@@ -125,6 +199,8 @@ var RepositoryColumns = (function() {
         initCreateSubmitAction();
         initDeleteSubmitAction();
         initManageColumnModal();
+        RepositoryListColumnType.init();
+        RepositoryStatusColumnType.init();
       }
     }
   };

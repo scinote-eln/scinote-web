@@ -14,6 +14,7 @@ module Api
       def index
         columns = @inventory.repository_columns
                             .includes(:repository_list_items)
+                            .includes(:repository_status_items)
                             .page(params.dig(:page, :number))
                             .per(params.dig(:page, :size))
         render jsonapi: columns,

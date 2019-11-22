@@ -2,22 +2,23 @@
 
 require 'rails_helper'
 
-RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
+RSpec.describe RepositoryColumns::DateTimeColumnsController, type: :controller do
   login_user
 
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:repository) { create :repository, created_by: user, team: team }
-  let(:repository_column) { create(:repository_column, :status_type, repository: repository) }
+  let(:repository_column) { create(:repository_column, :date_time_type, repository: repository) }
 
-  describe 'POST repository_list_columns, #create' do
+  describe 'POST repository_date_time_columns, #create' do
     let(:action) { post :create, params: params }
     let(:params) do
       {
         repository_id: repository.id,
         repository_column: {
-          name: 'name'
+          name: 'name',
+          range: true
         }
       }
     end
@@ -85,7 +86,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
     end
   end
 
-  describe 'PUT repository_list_column, #update' do
+  describe 'PUT repository_date_time_column, #update' do
     let(:action) { patch :update, params: params }
 
     let(:params) do
@@ -103,7 +104,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
       allow(service).to(receive(:succeed?)).and_return(true)
       allow(service).to(receive(:column)).and_return(repository_column)
 
-      allow_any_instance_of(RepositoryColumns::UpdateListColumnService).to(receive(:call)).and_return(service)
+      allow_any_instance_of(RepositoryColumns::UpdateColumnService).to(receive(:call)).and_return(service)
     end
 
     context 'when columnd is updated' do
@@ -151,7 +152,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
         allow(service).to(receive(:succeed?)).and_return(false)
         allow(service).to(receive(:errors)).and_return({})
 
-        allow_any_instance_of(RepositoryColumns::UpdateListColumnService).to(receive(:call)).and_return(service)
+        allow_any_instance_of(RepositoryColumns::UpdateColumnService).to(receive(:call)).and_return(service)
       end
 
       it 'respons with status 422' do
@@ -162,7 +163,7 @@ RSpec.describe RepositoryColumns::ListColumnsController, type: :controller do
     end
   end
 
-  describe 'DELETE repository_list_column, #delete' do
+  describe 'DELETE repository_date_time_column, #delete' do
     let(:action) { delete :destroy, params: params }
 
     let(:params) do
