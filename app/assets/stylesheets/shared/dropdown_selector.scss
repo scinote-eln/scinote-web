@@ -166,6 +166,7 @@
         background: $color-concrete;
       }
 
+      &.highlight,
       &:hover {
         background: $brand-primary-light;
       }

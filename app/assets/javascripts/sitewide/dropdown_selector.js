@@ -35,7 +35,7 @@
     onUnSelect: function(), // Run action after unselect
     customDropdownIcon: function(), // Add custom dropdown icon
     inputTagMode: boolean, // Use as simple input tag field
-    selectKeys: array, // array of keys id which use for fast select
+    selectKeys: array, // array of keys id which use for fast select // default - [13]
     noEmptyOption: boolean, // use defaut select (only for single option select). default 'false'
     singleSelect: boolean, // disable multiple select. default 'false'
     selectAppearance: string, // 'tag' or 'simple'. Default 'tag'
@@ -209,6 +209,29 @@ var dropdownSelector = (function() {
     updateTags(selector, container, { select: true });
   }
 
+  // intialization keyboard control
+  function initKeyboardControl(container) {
+    container.find('.search-field').keydown(function(e) {
+      var dropdownContainer = container.find('.dropdown-container');
+      var pressedKey = e.keyCode;
+      var selectedOption = dropdownContainer.find('.highlight');
+
+      if (selectedOption.length === 0 && (pressedKey === 38 || pressedKey === 40)) {
+        dropdownContainer.find('.dropdown-option').first().addClass('highlight');
+      }
+
+      if (pressedKey === 38) {
+        if (selectedOption.prev('.dropdown-option').length) {
+          selectedOption.removeClass('highlight').prev('.dropdown-option').addClass('highlight');
+        }
+      } else if (pressedKey === 40) {
+        if (selectedOption.next('.dropdown-option').length) {
+          selectedOption.removeClass('highlight').next('.dropdown-option').addClass('highlight');
+        }
+      }
+    });
+  }
+
   // //////////////////////
   // Private functions ///
   // /////////////////////
@@ -265,13 +288,22 @@ var dropdownSelector = (function() {
     // When we start typing it will dynamically update data
     dropdownContainer.find('.search-field')
       .keyup((e) => {
+        if (e.keyCode === 38
+          || e.keyCode === 40
+          || (config.selectKeys || []).includes(e.keyCode)) {
+          return;
+        }
         e.stopPropagation();
         loadData(selectElement, dropdownContainer);
       })
       .keypress((e) => {
-        if ((config.selectKeys || []).includes(e.keyCode)) {
+        if ((config.selectKeys || [13]).includes(e.keyCode)) {
           if (config.inputTagMode) {
             addNewTag(selectElement, dropdownContainer);
+          } else if (dropdownContainer.find('.highlight').length) {
+            dropdownContainer.find('.highlight').click();
+          } else {
+            dropdownContainer.find('.dropdown-option').first().click();
           }
         }
       }).click((e) =>{
@@ -332,6 +364,7 @@ var dropdownSelector = (function() {
     // When user will click away, we must close dropdown
     $(window).click(() => {
       if (dropdownContainer.hasClass('open') && config.onClose) {
+        dropdownContainer.find('.search-field').val('');
         config.onClose();
       }
       dropdownContainer.removeClass('open active');
@@ -361,6 +394,9 @@ var dropdownSelector = (function() {
     if (config.selectAppearance === 'simple') {
       dropdownContainer.addClass('simple-mode');
     }
+
+    // initialization keyboard controll
+    initKeyboardControl(dropdownContainer);
 
     // In some case dropdown position not correclty calculated
     updateDropdownDirection(selectElement, dropdownContainer);
