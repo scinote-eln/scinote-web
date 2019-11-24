@@ -59,6 +59,7 @@
         border: 1px solid transparent;
         font-weight: bold;
         line-height: 34px;
+        margin-right: 25px;
         padding: 0 3px;
         position: relative;
 
@@ -73,6 +74,18 @@
         &.alert-red {
           color: $brand-danger;
         }
+
+        .clear-date {
+          color: $color-silver;
+          cursor: pointer;
+          display: none;
+          font-size: 20px;
+          line-height: 34px;
+          left: 100%;
+          margin-left: 5px;
+          position: absolute;
+          top: 0;
+        }
       }
 
       .datetime-picker-container {
@@ -86,12 +99,16 @@
           opacity: 0;
         }
       }
-    }
 
-    &:hover {
-      .date-text {
-        border-color: $color-silver;
-        border-radius: 3px;
+      &:hover {
+        .date-text[data-editable=true] {
+          border-color: $color-silver;
+          border-radius: 3px;
+
+          .clear-date {
+            display: inline;
+          }
+        }
       }
     }
   }
