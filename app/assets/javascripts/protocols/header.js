@@ -3,7 +3,6 @@ var ProtocolRepositoryHeader = (function() {
   function initEditKeywords() {
     dropdownSelector.init('#keyword-input-field', {
       inputTagMode: true,
-      selectKeys: [13],
       onChange: function() {
         $.ajax({
           url: $('#keyword-input-field').data('update-url'),
