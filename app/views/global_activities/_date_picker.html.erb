@@ -2,7 +2,8 @@
   <% if label %>
     <label class="control-label required" for="calendar-<%= id %>"><%= label %></label>
   <% end %>
-  <input type="datetime" class="form-control" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" value="<%= defined?(setDate) ? setDate : '' %>"/>
+  <span class="fas fa-calendar-alt"></span>
+  <input type="datetime" class="form-control calendar-input" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" value="<%= defined?(setDate) ? setDate : '' %>"/>
   <%
     js_format = I18n.backend.date_format.dup
       js_format.gsub!(/%-d/, 'D')
