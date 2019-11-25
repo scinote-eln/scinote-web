@@ -29,9 +29,9 @@ class RepositoriesController < ApplicationController
   end
 
   def show
-    @display_edit_button = can_create_repository_rows?(current_user, @repository)
-    @display_delete_button = can_delete_repository_rows?(current_user, @repository)
-    @display_duplicate_button = can_create_repository_rows?(current_user, @repository)
+    @display_edit_button = can_create_repository_rows?(@repository)
+    @display_delete_button = can_delete_repository_rows?(@repository)
+    @display_duplicate_button = can_create_repository_rows?(@repository)
   end
 
   def create_modal
