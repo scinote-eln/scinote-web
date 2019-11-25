@@ -373,7 +373,6 @@ class RepositoryRowsController < ApplicationController
     render_403 unless can_manage_repository_rows?(@repository)
   end
 
-
   def check_delete_permissions
     render_403 unless can_delete_repository_rows?(@repository)
   end
