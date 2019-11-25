@@ -9,16 +9,21 @@ elsif my_module.is_overdue?
   label = "(#{t('my_modules.states.overdue')})"
 end
 %>
-<span class="date-text <%= date_class %>">
+<span class="date-text <%= date_class if my_module.due_date %>" data-editable="<%= can_manage_module?(my_module) %>">
   <span class="view-block">
     <%= my_module.due_date ? l(my_module.due_date.utc, format: :full) : t("experiments.canvas.full_zoom.no_due_date") %>
   </span>
-  <%= render partial: "global_activities/date_picker.html.erb", locals: { 
-                id: 'due-date', 
-                use_current: 'false',
-                setDate: my_module.due_date ? l(my_module.due_date.utc, format: :full) : '',
-                placeholder: t("experiments.canvas.full_zoom.no_due_date"), 
-                label: nil 
-  } %>
+  <% if can_manage_module?(my_module) %>
+    <%= render partial: "global_activities/date_picker.html.erb", locals: { 
+                  id: 'due-date', 
+                  use_current: 'false',
+                  setDate: my_module.due_date ? l(my_module.due_date.utc, format: :full) : '',
+                  placeholder: t("experiments.canvas.full_zoom.no_due_date"), 
+                  label: nil 
+    } %>
+  <% end %>
   <%= label %>
+  <% if my_module.due_date && can_manage_module?(my_module) %>
+    <span class="fas fa-times clear-date"></span>
+  <% end %>
 </span>

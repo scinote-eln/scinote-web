@@ -3,18 +3,26 @@
 
 // Bind ajax for editing due dates
 function initDueDatePicker() {
-  $('#calendar-due-date').on('dp.change', function() {
+  function updateDueDate(val) {
     var updateUrl = $('.due-date-container').data('update-url');
     $.ajax({
       url: updateUrl,
       type: 'PATCH',
       dataType: 'json',
-      data: { my_module: { due_date: $('#calendar-due-date').val() } },
+      data: { my_module: { due_date: val } },
       success: function(result) {
         $('.due-date-container').html($(result.module_header_due_date_label));
         initDueDatePicker();
       }
     });
+  }
+
+  $('#calendar-due-date').on('dp.change', function() {
+    updateDueDate($('#calendar-due-date').val());
+  });
+
+  $('.flex-block.date-block .clear-date').off('click').on('click', function() {
+    updateDueDate(null);
   });
 }
 
