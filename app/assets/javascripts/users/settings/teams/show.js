@@ -191,7 +191,9 @@
       .on('inlineEditing:fieldUpdated', '.inline-editing-container', function() {
         var newName = $(this).find('.view-mode').html();
         $('.breadcrumb-teams .active').html(newName);
-        $('#team-switch .selected-team').html(newName);
+        if ($('.settings-team-name').data('current-team')) {
+          $('#team-switch .selected-team').html(newName);
+        }
       });
   }
 

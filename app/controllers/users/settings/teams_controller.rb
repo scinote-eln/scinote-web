@@ -64,7 +64,7 @@ module Users
           )
 
           # Redirect to new team page
-          redirect_to action: :show, id: @new_team.id
+          redirect_to team_path(@new_team)
         else
           render :new
         end
