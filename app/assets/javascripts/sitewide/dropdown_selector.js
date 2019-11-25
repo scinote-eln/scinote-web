@@ -221,7 +221,9 @@ var dropdownSelector = (function() {
     var dropdownContainer;
 
     // Check if element exist or already initialized
-    if (selectElement.length === 0 || selectElement.next().hasClass('dropdown-selector-container')) return;
+    if (selectElement.length === 0 || selectElement.next().hasClass('dropdown-selector-container')) {
+      selectElement.next().remove();
+    }
 
     // Create initial container after select block
     dropdownContainer = selectElement.after('<div class="dropdown-selector-container"></div>').next();
