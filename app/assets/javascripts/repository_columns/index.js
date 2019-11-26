@@ -1,17 +1,21 @@
-/* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType*/
+/* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType
+RepositoryDateTimeColumnType*/
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
   var manageModal = '#manage-repository-column';
   var columnTypeClassNames = {
     RepositoryListValue: 'RepositoryListColumnType',
-    RepositoryStatusValue: 'RepositoryStatusColumnType'
+    RepositoryStatusValue: 'RepositoryStatusColumnType',
+    RepositoryDateValue: 'RepositoryDateTimeColumnType',
+    RepositoryDateTimeValue: 'RepositoryDateTimeColumnType',
+    RepositoryTimeValue: 'RepositoryDateTimeColumnType'
   };
 
   function initColumnTypeSelector() {
     var $manageModal = $(manageModal);
     $manageModal.off('change', '#repository-column-data-type').on('change', '#repository-column-data-type', function() {
       $('.column-type').hide();
-      $('[data-column-type="' + $(this).val() + '"]').show();
+      $('.' + $(this).val()).show();
     });
   }
 
@@ -175,15 +179,16 @@ var RepositoryColumns = (function() {
           .focus();
         $manageModal
           .trigger('columnModal::partialLoadedForStatuses')
-          .trigger('columnModal::partialLoadedForLists');
+          .trigger('columnModal::partialLoadedForLists')
+          .trigger('columnModal::partialLoadedForDateTime');
 
         if (button.data('action') === 'new') {
-          $('[data-column-type="RepositoryTextValue"]').show();
+          $('.RepositoryTextValue').show();
           $('#new-repo-column-submit').show();
         } else {
           columnType = $('#repository-column-data-type').val();
           $('#update-repo-column-submit').show();
-          $('[data-column-type=' + columnType + ']').show();
+          $('.' + columnType).show();
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
@@ -201,6 +206,7 @@ var RepositoryColumns = (function() {
         initManageColumnModal();
         RepositoryListColumnType.init();
         RepositoryStatusColumnType.init();
+        RepositoryDateTimeColumnType.init();
       }
     }
   };

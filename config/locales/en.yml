@@ -1126,6 +1126,8 @@ en:
       select:
         repository_text_value: "Text"
         repository_date_value: "Date"
+        repository_time_value: "Time"
+        repository_date_time_value: "Date & Time"
         repository_status_value: "Status"
         repository_list_value: "Dropdown"
         repository_asset_value: "File"
