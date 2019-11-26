@@ -1,0 +1,10 @@
+<div class="form-group">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-9">
+    <div class="permission-selector">
+      <%= check_box_tag 'range', '', column&.range?, { id: 'datetime-range', class: column.new_record? ? 'simple-checkbox' : 'simple-checkbox disabled' } %>
+      <span class="checkbox-label"></span>
+      <span class="range-label">Range</span>
+    </div>
+  </div>
+</div>

@@ -18,6 +18,7 @@ RSpec.describe RepositoryColumns::DateTimeColumnsController, type: :controller d
         repository_id: repository.id,
         repository_column: {
           name: 'name',
+          column_type: 'RepositoryDateTimeValue',
           range: true
         }
       }
