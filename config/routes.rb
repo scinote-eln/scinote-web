@@ -620,7 +620,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Api.configuration.core_api_v1_enabled || Rails.env.development?
+      if Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
