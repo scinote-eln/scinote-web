@@ -18,6 +18,7 @@ class ReportsController < ApplicationController
     step_contents_modal
     result_contents_modal
     project_contents
+    experiment_contents
     module_contents
     step_contents
     result_contents
@@ -343,7 +344,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       if experiment.blank?
         format.json { render json: {}, status: :not_found }
-      elsif modules.blank?
+      elsif selected_modules.blank?
         format.json { render json: {}, status: :no_content }
       else
         elements = generate_experiment_contents_json(selected_modules)
