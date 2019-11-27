@@ -7,7 +7,8 @@ module RepositoryDatatableHelper
                           repository,
                           columns_mappings,
                           _team,
-                          assigned_rows)
+                          assigned_rows,
+                          current_user)
     parsed_records = []
     includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
 
@@ -36,7 +37,7 @@ module RepositoryDatatableHelper
       # Add custom columns
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell)
+          display_cell_value(cell, current_user)
       end
       parsed_records << row
     end
@@ -66,7 +67,8 @@ module RepositoryDatatableHelper
     Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
   end
 
-  def display_cell_value(cell)
-    "RepositoryDatatable::#{cell.value_type}Serializer".constantize.new(cell).serializable_hash
+  def display_cell_value(cell, user)
+    "RepositoryDatatable::#{cell.repository_column.data_type}Serializer"
+      .constantize.new(cell, user: user).serializable_hash
   end
 end

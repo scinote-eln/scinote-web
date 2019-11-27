@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositoryCell < ActiveRecord::Base
+class RepositoryCell < ApplicationRecord
   attr_accessor :importing
 
   belongs_to :repository_row
@@ -54,10 +54,10 @@ class RepositoryCell < ActiveRecord::Base
              end),
              optional: true, foreign_key: :value_id, inverse_of: :repository_cell
 
-  validates_inclusion_of :repository_column,
-                         in: (lambda do |cell|
-                           cell.repository_row&.repository&.repository_columns || []
-                         end)
+  validates :repository_column,
+            inclusion: { in: (lambda do |cell|
+              cell.repository_row&.repository&.repository_columns || []
+            end) }
   validates :repository_column, presence: true
   validate :repository_column_data_type
   validates :repository_row,
@@ -80,8 +80,20 @@ class RepositoryCell < ActiveRecord::Base
   private
 
   def repository_column_data_type
-    if !repository_column || value_type != repository_column.data_type
+    if !repository_column || value_type != repository_column.data_type && !date_time_compatibility_checks
       errors.add(:value_type, 'must match column data type')
+    end
+  end
+
+  def date_time_compatibility_checks
+    case value_type
+    when 'RepositoryDateTimeValue'
+      %w(RepositoryTimeValue RepositoryDateTimeValue RepositoryDateValue).include?(repository_column.data_type)
+    when 'RepositoryDateTimeRangeValue'
+      %w(RepositoryTimeRangeValue RepositoryDateTimeRangeValue RepositoryDateRangeValue)
+        .include?(repository_column.data_type)
+    else
+      false
     end
   end
 end

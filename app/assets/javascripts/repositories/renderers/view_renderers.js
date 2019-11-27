@@ -44,3 +44,51 @@ $.fn.dataTable.render.RepositoryStatusValue = function(data) {
 $.fn.dataTable.render.defaultRepositoryStatusValue = function() {
   return '';
 };
+
+$.fn.dataTable.render.defaultRepositoryDateValue = function() {
+  return '';
+};
+
+$.fn.dataTable.render.RepositoryDateValue = function(data) {
+  return data.value;
+};
+
+$.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
+  return '';
+};
+
+$.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
+  return data.value;
+};
+
+$.fn.dataTable.render.defaultRepositoryTimeValue = function() {
+  return '';
+};
+
+$.fn.dataTable.render.RepositoryTimeValue = function(data) {
+  return data.value;
+};
+
+$.fn.dataTable.render.defaultRepositoryTimeRangeValue = function() {
+  return '';
+};
+
+$.fn.dataTable.render.RepositoryTimeRangeValue = function(data) {
+  return data.value;
+};
+
+$.fn.dataTable.render.defaultRepositoryDateTimeRangeValue = function() {
+  return '';
+};
+
+$.fn.dataTable.render.RepositoryDateTimeRangeValue = function(data) {
+  return data.value;
+};
+
+$.fn.dataTable.render.defaultRepositoryDateRangeValue = function() {
+  return '';
+};
+
+$.fn.dataTable.render.RepositoryDateRangeValue = function(data) {
+  return data.value;
+};
