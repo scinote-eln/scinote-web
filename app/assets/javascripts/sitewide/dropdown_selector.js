@@ -39,6 +39,7 @@
     noEmptyOption: boolean, // use defaut select (only for single option select). default 'false'
     singleSelect: boolean, // disable multiple select. default 'false'
     selectAppearance: string, // 'tag' or 'simple'. Default 'tag'
+    closeOnSelect: boolean, // Close dropdown after select
   }
 
 
@@ -660,6 +661,11 @@ var dropdownSelector = (function() {
     // Trigger onUnSelect event
     if (selector.data('config').onUnSelect && !config.skipChange && config.unselect && !config.skipUnselect) {
       selector.data('config').onUnSelect(config.tagId);
+    }
+
+    // Close dropdown after select
+    if (selector.data('config').closeOnSelect && container.hasClass('open')) {
+      container.find('.input-field').click();
     }
   }
 

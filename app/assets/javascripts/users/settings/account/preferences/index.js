@@ -102,6 +102,7 @@
     dropdownSelector.init('#time-zone-input-field', {
       noEmptyOption: true,
       singleSelect: true,
+      closeOnSelect: true,
       selectAppearance: 'simple',
       onClose: function() {
         $.ajax({
@@ -124,6 +125,7 @@
     dropdownSelector.init('#date-format-input-field', {
       noEmptyOption: true,
       singleSelect: true,
+      closeOnSelect: true,
       selectAppearance: 'simple',
       onClose: function() {
         $.ajax({
