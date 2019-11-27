@@ -238,6 +238,7 @@ class MyModulesController < ApplicationController
     respond_to do |format|
       format.json do
         if @my_module.update(description: params.require(:my_module)[:description])
+          log_activity(:change_module_description)
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
           render json: {
             html: custom_auto_link(
@@ -260,6 +261,7 @@ class MyModulesController < ApplicationController
     respond_to do |format|
       format.json do
         if protocol.update(description: params.require(:protocol)[:description])
+          log_activity(:protocol_description_in_task_edited)
           TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
           render json: {
             html: custom_auto_link(
