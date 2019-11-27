@@ -1,0 +1,31 @@
+<% provide(:head_title, t("users.settings.account.connected_accounts.head_title")) %>
+
+<%= render partial: "users/settings/sidebar.html.erb" %>
+<div class="tab-content">
+  <div class="tab-pane tab-pane-settings active" role="tabpanel">
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12">
+        <h4><%= t('users.settings.account.connected_accounts.title') %></h4>
+
+        <% if @linked_accounts.any? %>
+          <% @linked_accounts.each do |provider| %>
+            <% if Rails.configuration.x.azure_ad_apps.find { |_,value| value[:provider] == provider } %>
+              <% if lookup_context.exists?(provider, 'users/settings/account/connected_accounts', true) %>
+                <%= render partial: provider %>
+              <% else %>
+                <%= render partial: 'azure_ad', locals: { provider: provider } %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <h5>
+            <i><%= t('users.settings.account.connected_accounts.not_connected') %></i>
+          </h5>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
+</div>
