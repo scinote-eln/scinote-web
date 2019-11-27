@@ -575,13 +575,14 @@ var dropdownSelector = (function() {
 
       // Select element appearance
       var tagAppearance = selector.data('config').selectAppearance === 'simple' ? 'ds-simple' : 'ds-tags';
-
+      var label = customLabel ? customLabel(data) : data.label;
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label"
+                    title="${label}"
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
-                    ${customLabel ? customLabel(data) : data.label}
+                    ${label}
                   </div>
                   <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
@@ -730,6 +731,8 @@ var dropdownSelector = (function() {
     // Update dropdown position
     updateDropdownDirection: function(selector) {
       if ($(selector).length === 0) return false;
+
+      if (!$(selector).next().hasClass('open')) return false;
 
       updateDropdownDirection($(selector), $(selector).next());
 

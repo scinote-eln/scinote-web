@@ -301,6 +301,12 @@ var globalActivities = (function() {
       });
     }
 
+    $('.filters-container').off('scroll').on('scroll', function() {
+      $.each(filterSelectors, function(i, selector) {
+        dropdownSelector.updateDropdownDirection(`select[name=${selector}]`);
+      });
+    });
+
     $('#calendar-to-date').on('dp.change', function(e) {
       var dateContainer = $('.ga-side .date-selector.filter-block');
       if (!updateRunning) {
