@@ -98,6 +98,10 @@
         #calendar-due-date {
           opacity: 0;
         }
+
+        .fa-calendar-alt {
+          display: none;
+        }
       }
 
       &:hover {
@@ -179,7 +183,7 @@
         }
       }
 
-      &:hover {
+      &:not(.view-mode):hover {
         .input-field {
           border: 1px solid $color-gainsboro;
         }
