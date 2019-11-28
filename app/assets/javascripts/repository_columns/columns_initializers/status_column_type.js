@@ -62,7 +62,7 @@ var RepositoryStatusColumnType = (function() {
     var statusInput = 'input.status-item-field';
     var buttonWrapper = '.button-wrapper';
 
-    $manageModal.off('click', addStatusOptionBtn).on('click', addStatusOptionBtn, function() {
+    $manageModal.on('click', addStatusOptionBtn, function() {
       var newStatusRow = $(statusTemplate()).insertBefore($(this));
       validateForm();
       setTimeout(function() {
@@ -74,7 +74,7 @@ var RepositoryStatusColumnType = (function() {
       }, 300);
     });
 
-    $manageModal.off('click', deleteStatusOptionBtn).on('click', deleteStatusOptionBtn, function() {
+    $manageModal.on('click', deleteStatusOptionBtn, function() {
       // if existing item is deleted, flag it as deleted
       // if new item is deleted, remove it from HTML
 
@@ -100,12 +100,12 @@ var RepositoryStatusColumnType = (function() {
       }, 300);
     });
 
-    $manageModal.off('click', icon).on('click', icon, function() {
+    $manageModal.on('click', icon, function() {
       var $emojiPicker = $(this).parent().next('.emojis-picker');
       $emojiPicker.show();
     });
 
-    $manageModal.off('click', emojis).on('click', emojis, function() {
+    $manageModal.on('click', emojis, function() {
       var $clickedEmoji = $(this);
       var $iconField = $clickedEmoji.parent().prev().find('.status-item-icon');
       $clickedEmoji.parent().hide();
@@ -115,13 +115,10 @@ var RepositoryStatusColumnType = (function() {
     });
 
     $manageModal
-      .off('keyup change', statusInput)
-      .off('data-attribute-changed columnModal::partialLoadedForRepositoryStatusValue')
-      .off('click', buttonWrapper)
       .on('keyup change', statusInput, function() {
         validateForm();
       })
-      .on('data-attribute-changed columnModal::partialLoadedForRepositoryStatusValue', function(e) {
+      .on('data-attribute-changed columnModal::partialLoadedForRepositoryStatusValue', function() {
         validateForm();
       })
       .on('click', buttonWrapper, function() {
