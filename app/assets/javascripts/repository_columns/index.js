@@ -177,16 +177,14 @@ var RepositoryColumns = (function() {
         $manageModal.modal('show').find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
+        columnType = $('#repository-column-data-type').val();
         $manageModal
-          .trigger('columnModal::partialLoadedForStatuses')
-          .trigger('columnModal::partialLoadedForLists')
-          .trigger('columnModal::partialLoadedForDateTime');
+          .trigger('columnModal::partialLoadedFor' + columnType);
 
         if (button.data('action') === 'new') {
           $('.RepositoryTextValue').show();
           $('#new-repo-column-submit').show();
         } else {
-          columnType = $('#repository-column-data-type').val();
           $('#update-repo-column-submit').show();
           $('.' + columnType).show();
         }
