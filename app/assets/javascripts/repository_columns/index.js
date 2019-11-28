@@ -13,7 +13,7 @@ var RepositoryColumns = (function() {
 
   function initColumnTypeSelector() {
     var $manageModal = $(manageModal);
-    $manageModal.off('change', '#repository-column-data-type').on('change', '#repository-column-data-type', function() {
+    $manageModal.on('change', '#repository-column-data-type', function() {
       $('.column-type').hide();
       $('[data-column-type="' + $(this).val() + '"]').show();
     });
@@ -28,7 +28,7 @@ var RepositoryColumns = (function() {
 
   function initDeleteSubmitAction() {
     var $manageModal = $(manageModal);
-    $manageModal.off('click', '#delete-repo-column-submit').on('click', '#delete-repo-column-submit', function() {
+    $manageModal.on('click', '#delete-repo-column-submit', function() {
       animateSpinner();
       $manageModal.modal('hide');
       $.ajax({
@@ -114,7 +114,7 @@ var RepositoryColumns = (function() {
 
   function initCreateSubmitAction() {
     var $manageModal = $(manageModal);
-    $manageModal.off('click', '#new-repo-column-submit').on('click', '#new-repo-column-submit', function() {
+    $manageModal.on('click', '#new-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('create-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').val();
@@ -141,7 +141,7 @@ var RepositoryColumns = (function() {
 
   function initEditSubmitAction() {
     var $manageModal = $(manageModal);
-    $manageModal.off('click', '#update-repo-column-submit').on('click', '#update-repo-column-submit', function() {
+    $manageModal.on('click', '#update-repo-column-submit', function() {
       var url = $('#repository-column-data-type').find(':selected').data('edit-url');
       var params = { repository_column: { name: $('#repository-column-name').val() } };
       var selectedType = $('#repository-column-data-type').val();
@@ -169,7 +169,7 @@ var RepositoryColumns = (function() {
 
   function initManageColumnModal() {
     var $manageModal = $(manageModal);
-    $('.repository-column-edtior').off('click', '.manage-repo-column').on('click', '.manage-repo-column', function() {
+    $('.repository-column-edtior').on('click', '.manage-repo-column', function() {
       var button = $(this);
       var modalUrl = button.data('modal-url');
       var columnType;

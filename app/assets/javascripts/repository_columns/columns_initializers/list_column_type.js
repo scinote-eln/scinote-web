@@ -110,10 +110,6 @@ var RepositoryListColumnType = (function() {
     var columnNameInput = '#repository-column-name';
 
     $manageModal
-      .off('change keyup paste', listItemsTextarea)
-      .off('change', dropdownDelimiter)
-      .off('columnModal::partialLoadedForRepositoryListValue')
-      .off('keyup change', columnNameInput)
       .on('change keyup paste', listItemsTextarea, function() {
         refreshPreviewDropdownList();
       })
