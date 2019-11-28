@@ -20,7 +20,7 @@
     'data-placeholder': t("my_modules.module_header.no_tags"),
     'data-tags-create-url': project_tags_path(project_id: my_module.experiment.project_id),
     'data-ajax-url': search_tags_my_module_my_module_tags_path(@my_module),
-    'data-update-module-tags-url': my_module_my_module_tags_path(@my_module)
-
+    'data-update-module-tags-url': my_module_my_module_tags_path(@my_module),
+    'data-view-mode': !editable
   } %>
 </div>
