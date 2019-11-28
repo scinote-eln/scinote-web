@@ -164,6 +164,7 @@ en:
       delete_chemical_structure_on_task_protocol_html: "%{user} deleted chemical structure %{asset_name} on task's protocol %{my_module}."
       delete_chemical_structure_on_protocol_html: "%{user} deleted chemical structure %{asset_name} on protocol %{protocol}."
       delete_chemical_structure_on_task_html: "%{user} deleted chemical structure %{asset_name} on task %{my_module}."
+      protocol_description_in_task_edited_html: "%{user} edited protocol description on task %{my_module}."
 
     activity_name:
       create_project: "Project created"
@@ -293,6 +294,7 @@ en:
       delete_chemical_structure_on_task_protocol: "Chemical structure on task protocol deleted"
       delete_chemical_structure_on_protocol: "Chemical structure on protocol deleted"
       delete_chemical_structure_on_task: "Chemical structure on task deleted"
+      protocol_description_in_task_edited: "Protocol description in task edited"
 
     activity_group:
       projects: "Projects"
