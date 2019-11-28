@@ -58,7 +58,7 @@
 
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_asset_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
-                  value=<%= %>"RepositoryDateValue"
+                  value="RepositoryDateValue"
                   <%= 'selected' if @repository_column.repository_date_value? || @repository_column.repository_date_range_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_date_value') %>
 
