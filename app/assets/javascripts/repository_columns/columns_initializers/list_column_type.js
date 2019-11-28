@@ -112,7 +112,7 @@ var RepositoryListColumnType = (function() {
     $manageModal
       .off('change keyup paste', listItemsTextarea)
       .off('change', dropdownDelimiter)
-      .off('columnModal::partialLoadedForLists')
+      .off('columnModal::partialLoadedForRepositoryListValue')
       .off('keyup change', columnNameInput)
       .on('change keyup paste', listItemsTextarea, function() {
         refreshPreviewDropdownList();
@@ -120,7 +120,7 @@ var RepositoryListColumnType = (function() {
       .on('change', dropdownDelimiter, function() {
         refreshPreviewDropdownList();
       })
-      .on('columnModal::partialLoadedForLists', function() {
+      .on('columnModal::partialLoadedForRepositoryListValue', function() {
         refreshPreviewDropdownList();
       })
       .on('keyup change', columnNameInput, function() {

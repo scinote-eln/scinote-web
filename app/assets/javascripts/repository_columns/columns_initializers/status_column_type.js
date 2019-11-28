@@ -116,12 +116,12 @@ var RepositoryStatusColumnType = (function() {
 
     $manageModal
       .off('keyup change', statusInput)
-      .off('data-attribute-changed columnModal::partialLoadedForStatuses')
+      .off('data-attribute-changed columnModal::partialLoadedForRepositoryStatusValue')
       .off('click', buttonWrapper)
       .on('keyup change', statusInput, function() {
         validateForm();
       })
-      .on('data-attribute-changed columnModal::partialLoadedForStatuses', function(e) {
+      .on('data-attribute-changed columnModal::partialLoadedForRepositoryStatusValue', function(e) {
         validateForm();
       })
       .on('click', buttonWrapper, function() {
