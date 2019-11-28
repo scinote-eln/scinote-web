@@ -1,12 +1,11 @@
-/* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType
-RepositoryDateTimeColumnType*/
+/* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType */
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
   var manageModal = '#manage-repository-column';
   var columnTypeClassNames = {
     RepositoryListValue: 'RepositoryListColumnType',
     RepositoryStatusValue: 'RepositoryStatusColumnType',
-    RepositoryDateValue: 'RepositoryDateTimeColumnType',
+    RepositoryDateValue: 'RepositoryDateColumnType',
     RepositoryDateTimeValue: 'RepositoryDateTimeColumnType',
     RepositoryTimeValue: 'RepositoryDateTimeColumnType'
   };
@@ -204,7 +203,6 @@ var RepositoryColumns = (function() {
         initManageColumnModal();
         RepositoryListColumnType.init();
         RepositoryStatusColumnType.init();
-        RepositoryDateTimeColumnType.init();
       }
     }
   };

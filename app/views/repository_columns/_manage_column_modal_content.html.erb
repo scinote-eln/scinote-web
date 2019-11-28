@@ -91,13 +91,13 @@
     <span style="display: none" class="column-type status-column-type" data-column-type="RepositoryStatusValue">
       <%= render partial: "repository_columns/manage_column_partials/status.html.erb", locals: { column: @repository_column } %>
     </span>
-    <span style="display: none" class="column-type status-column-type" data-column-type="RepositoryDateValue">
-      <%= render partial: "repository_columns/manage_column_partials/datetime.html.erb", locals: { column: @repository_column } %>
+    <span style="display: none" class="column-type date-column-type" data-column-type="RepositoryDateValue">
+      <%= render partial: "repository_columns/manage_column_partials/date.html.erb", locals: { column: @repository_column } %>
     </span>
-    <span style="display: none" class="column-type status-column-type" data-column-type="RepositoryTimeValue">
-      <%= render partial: "repository_columns/manage_column_partials/datetime.html.erb", locals: { column: @repository_column } %>
+    <span style="display: none" class="column-type time-column-type" data-column-type="RepositoryTimeValue">
+      <%= render partial: "repository_columns/manage_column_partials/time.html.erb", locals: { column: @repository_column } %>
     </span>
-    <span style="display: none" class="column-type status-column-type" data-column-type="RepositoryDateTimeValue">
+    <span style="display: none" class="column-type datetime-column-type" data-column-type="RepositoryDateTimeValue">
       <%= render partial: "repository_columns/manage_column_partials/datetime.html.erb", locals: { column: @repository_column } %>
     </span>
   </div>
