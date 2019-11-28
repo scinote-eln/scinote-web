@@ -15,7 +15,7 @@ var RepositoryColumns = (function() {
     var $manageModal = $(manageModal);
     $manageModal.off('change', '#repository-column-data-type').on('change', '#repository-column-data-type', function() {
       $('.column-type').hide();
-      $('.' + $(this).val()).show();
+      $('[data-column-type="' + $(this).val() + '"]').show();
     });
   }
 
@@ -182,11 +182,11 @@ var RepositoryColumns = (function() {
           .trigger('columnModal::partialLoadedFor' + columnType);
 
         if (button.data('action') === 'new') {
-          $('.RepositoryTextValue').show();
+          $('[data-column-type="RepositoryTextValue"]').show();
           $('#new-repo-column-submit').show();
         } else {
           $('#update-repo-column-submit').show();
-          $('.' + columnType).show();
+          $('[data-column-type=' + columnType + ']').show();
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
