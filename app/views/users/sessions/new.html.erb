@@ -18,17 +18,19 @@
       <%= f.password_field :password, autocomplete: "off", class: "form-control", placeholder: t("devise.sessions.new.password_placeholder") %>
     </div>
 
-    <% if devise_mapping.rememberable? -%>
+    <% if devise_mapping.rememberable? && !@simple_sign_in %>
       <div class="field" style="margin-top: 10px;">
         <%= f.check_box :remember_me %>
         <%= f.label :remember_me %>
       </div>
-    <% end -%>
+    <% end %>
+
+    <%= hidden_field_tag(:simple_sign_in, @simple_sign_in) %>
 
     <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
       <%= f.submit t("devise.sessions.new.submit"), class: "btn btn-primary" %>
     </div>
   <% end %>
 
-  <%= render "users/shared/links" %>
+  <%= render "users/shared/links" unless @simple_sign_in %>
 </div>
