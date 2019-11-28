@@ -1150,6 +1150,8 @@ en:
       status_type:
         status_options_label: "Status options"
         add_status_label: "Add status option"
+      datetime_type:
+        range_label: 'Range'
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
