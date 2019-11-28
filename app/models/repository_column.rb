@@ -67,7 +67,4 @@ class RepositoryColumn < ApplicationRecord
     Extends::REPOSITORY_IMPORTABLE_TYPES.include?(data_type.to_sym)
   end
 
-  def range?
-    repository_date_time_range_value? || repository_date_range_value? || repository_time_range_value?
-  end
 end
