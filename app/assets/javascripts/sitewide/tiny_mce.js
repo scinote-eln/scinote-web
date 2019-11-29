@@ -111,7 +111,7 @@ var TinyMCE = (function() {
           selector: selector,
           convert_urls: false,
           menubar: 'file edit view insert format',
-          toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
