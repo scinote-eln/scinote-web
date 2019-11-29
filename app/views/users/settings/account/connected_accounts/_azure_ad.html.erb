@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+      <strong><%= t('users.settings.account.connected_accounts.azure_ad.title') %></strong> <br>
+        <p><%= t('users.settings.account.connected_accounts.azure_ad.connect_hint') %></p>
+    </div>
+    <div class="pull-right">
+      <div>
+        <strong>
+          <%= t('users.settings.account.connected_accounts.azure_ad.connected') %>
+          <span class="fas fa-check" aria-hidden="true"></span>
+        </strong>
+      </div>
+      <div>
+        <%= link_to t('users.settings.account.connected_accounts.azure_ad.unlink_button'),
+                    '#unlinkAzureADModal',
+                    class: 'btn btn-danger',
+                    data: { toggle: 'modal'} %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'users/settings/account/connected_accounts/unlink_modals/azure_ad_modal', locals: { provider: provider } %>

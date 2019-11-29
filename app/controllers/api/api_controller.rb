@@ -80,7 +80,7 @@ module Api
       end
 
       # Default token implementation
-      unless iss == Api.configuration.core_api_token_iss
+      unless iss == Rails.configuration.x.core_api_token_iss
         raise JWT::InvalidPayload, I18n.t('api.core.wrong_iss')
       end
       payload = CoreJwt.decode(token)

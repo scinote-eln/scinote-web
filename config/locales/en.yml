@@ -1463,6 +1463,7 @@ en:
           profile: "Profile"
           preferences: "Preferences"
           addons: "Add-ons"
+          connected_accounts: "Connected Accounts"
       account:
         preferences:
           head_title: "Settings | My preferences"
@@ -1483,6 +1484,19 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
+        connected_accounts:
+          head_title: "Settings | Connected Accounts"
+          title: "Connected Accounts"
+          not_connected: "You have no Connected accounts"
+          azure_ad:
+            title: "Your Azure AD Account"
+            connect_hint: "Allows you to sign in with your Azure AD account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink Azure AD account?"
+              description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
+              submit_button: "Submit"
       teams:
         head_title: "Settings | Teams"
         breadcrumbs:

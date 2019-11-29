@@ -486,7 +486,7 @@ class User < ApplicationRecord
     includes(:user_identities)
       .where(
         'user_identities.provider=? AND user_identities.uid=?',
-        Api.configuration.azure_ad_apps[token_payload[:aud]][:provider],
+        Rails.configuration.x.azure_ad_apps[token_payload[:aud]][:provider],
         token_payload[:sub]
       )
       .references(:user_identities)
