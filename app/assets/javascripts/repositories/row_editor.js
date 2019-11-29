@@ -106,6 +106,7 @@ var RepositoryDatatableRowEditor = (function() {
     let $row = $(row.node());
     let itemId = row.id();
     let formId = `repositoryRowForm${itemId}`;
+    let requestUrl = $(TABLE.table().node()).data('current-uri');
     let rowForm = $(`
       <form id="${formId}"
             class="repository-row-edit-form"
@@ -114,20 +115,22 @@ var RepositoryDatatableRowEditor = (function() {
             data-remote="true"
             data-row-id="${itemId}">
         <input name="id" type="hidden" value="${itemId}" />
+        <input name="request_url" type="hidden" value="${requestUrl}" />
       </form>
     `);
 
     $row.find('td').first().append(rowForm);
 
     TABLE.cells(row.index(), row.columns().eq(0)).every(function() {
-      let columnId = $(TABLE.columns(this.index().column).header()).attr('id');
+      let $header = $(TABLE.columns(this.index().column).header());
+      let columnId = $header.attr('id');
+      let dataType = $header.data('type');
       let cell = this;
 
       if (columnId === NAME_COLUMN_ID) {
         $.fn.dataTable.render.editRowName(formId, cell);
-      } else {
-        let dataType = $(this.column().header()).data('type');
-        if (dataType) $.fn.dataTable.render['edit' + dataType](formId, columnId, cell);
+      } else if (dataType) {
+        $.fn.dataTable.render['edit' + dataType](formId, columnId, cell);
       }
 
       return true;
