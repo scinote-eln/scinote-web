@@ -1,0 +1,87 @@
+.sci-btn {
+  @include font-button;
+  animation-timing-function: $timing-function-sharp;
+  background: $brand-primary;
+  border: 1px solid $brand-primary;
+  border-radius: $border-radius-default;
+  color: $color-white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  line-height: 20px;
+  outline: 0;
+  padding: 7px 16px;
+  transition: .3s;
+  user-select: none;
+
+  .fas {
+    color: inherit;
+    margin-right: 5px
+  }
+
+  &:hover {
+    background: $brand-primary-hover;
+  }
+
+  &:active {
+    background: $brand-primary-press;
+  }
+
+  &.secondary {
+    background: $color-white;
+    border: $border-default;
+    color: $color-black;
+
+    &:hover {
+      background: $color-concrete;
+      border: $border-secondary;
+    }
+
+    &:active {
+      background: $color-alto;
+      border: $border-secondary;
+    }
+  }
+
+  &.tertiary {
+    background: transparent;
+    border: $border-transparent;
+    color: $color-black;
+
+    &:hover {
+      background: $color-concrete;
+      border: $border-transparent;
+    }
+
+    &:active {
+      background: $color-alto;
+      border: $border-transparent;
+    }
+  }
+
+  &.sensitive {
+    background: $brand-danger;
+    border: $border-danger;
+
+    &:hover {
+      background: $brand-danger-hover;
+    }
+
+    &:active {
+      background: $brand-danger-press;
+    }
+  }
+
+  &.icon-btn {
+    padding: 7px;
+    width: 36px;
+
+    .fas {
+      margin: 0;
+    }
+  }
+
+  &:focus {
+    border: $border-focus;
+  }
+}

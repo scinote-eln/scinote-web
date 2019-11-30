@@ -1,13 +1,13 @@
 /*
  *= require highlightjs-github-theme
  *= require_self
- *= require_tree .
  *= require jquery-ui/draggable
  *= require rails_bootstrap_forms
  *= require bootstrap-select
- *= require constants
  *= stub reports_pdf
  */
+
+@import "shared_styles/global_elements";
 
 @import "constants";
 @import "bootstrap-sprockets";
@@ -19,9 +19,14 @@
 @import "handsontable.full.min";
 @import "ajax-bootstrap-select.min";
 @import "extend/bootstrap";
-@import "themes/scinote";
-@import "extend/perfect-scrollbar";
+@import "themes/*";
+@import "extend/*";
 @import "my_modules/protocols/*";
 @import "my_modules/results/*";
 @import "protocols/*";
 @import "hooks/*";
+@import "partials/*";
+@import "settings/*";
+@import "shared/*";
+
+@import "*"
