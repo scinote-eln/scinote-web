@@ -11,6 +11,7 @@
   line-height: 20px;
   outline: 0;
   padding: 7px 16px;
+  position: relative;
   transition: .3s;
   user-select: none;
 
@@ -83,5 +84,42 @@
 
   &:focus {
     border: $border-focus;
+  }
+
+  &:disabled {
+    background: $color-alto;
+    border: $border-tertiary;
+    color: $color-silver-chalice;
+    opacity: .25;
+
+    &.secondary,
+    &.tertiary {
+      background: $color-white;
+
+      &:hover {
+        background: $color-white;
+        border: $border-tertiary;
+      }
+    }
+
+    &.sensitive {
+      &:hover {
+        background: $color-alto;
+      }
+    }
+  }
+}
+
+.sci-btn-group {
+  display: inline-block;
+  position: relative;
+
+  .sci-btn {
+    float: left;
+    margin: 0 4px 4px 0;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 }
