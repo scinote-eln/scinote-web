@@ -1,5 +1,6 @@
-<% provide(:head_title, t("projects.index.head_title")) %>
 
+<% provide(:head_title, t("projects.index.head_title")) %>
+ 
 <% if current_team %>
   <%= render partial: "shared/sidebar", locals: { page: 'project' } %>
   <%= render partial: "shared/secondary_navigation" %>
@@ -168,3 +169,37 @@
 <% end %>
 
 <%= javascript_include_tag "projects/index" %>
+
+<!-- remove next part before merge -->
+
+<div class="demo-container" style="background: white; padding: 20px;">
+  <div>
+    <button class="sci-btn">Button</button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn secondary">Button</button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn tertiary">Button</button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn sensitive">Button</button>
+  </div>
+  <hr>
+  <div>
+    <button class="sci-btn"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn secondary"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn tertiary"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn sensitive"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
+  </div>
+  <hr>
+  <div>
+    <button class="sci-btn icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn secondary icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn tertiary icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
+    <span style="display: inline-block; width: 30px"></span>
+    <button class="sci-btn sensitive icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
+  </div>
+</div>
