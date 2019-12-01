@@ -1,0 +1,134 @@
+.sci-input-container {
+  display: inline-block;
+  position: relative;
+
+  label {
+    @include font-small;
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .sci-input-field {
+    @include font-button;
+    animation-timing-function: $timing-function-sharp;
+    border: $border-default;
+    border-radius: $border-radius-default;
+    height: 36px;
+    outline: 0;
+    padding: 0 0 0 10px;
+    transition: .3s;
+    width: 100%;
+
+    &:focus {
+      border: $border-focus;
+    }
+
+    &:disabled {
+      background: transparent;
+    }
+  }
+
+  .fas {
+    line-height: 36px;
+    position: absolute;
+    text-align: center;
+    bottom: 0;
+    width: 25px; 
+  }
+
+  &.left-icon {
+
+    .sci-input-field {
+      padding: 0 0 0 30px;
+    }
+
+    .fas {
+      left: 5px;
+    }
+  }
+
+  &.right-icon {
+
+    .sci-input-field {
+      padding: 0 30px 0 10px;
+    }
+
+    .fas {
+      right: 5px;
+    }
+  }
+
+  &.success,
+  &.error {
+
+    .sci-input-field {
+      padding: 0 30px 0 10px;
+    }
+
+    &::after {
+      font-family: "Font Awesome 5 Free";
+      font-weight: 501;
+      line-height: 36px;
+      position: absolute;
+      right: 5px;
+      text-align: center;
+      bottom: 0;
+      width: 25px;
+    }
+
+    &.right-icon {
+      .sci-input-field {
+        padding: 0 60px 0 10px;
+      }
+
+      &::after {
+        right: 35px;
+      }
+    }
+  }
+
+  &.success {
+    &::after {
+      color: $brand-success;
+      content: "\f00c";
+    }
+  }
+
+  &.error {
+    .sci-input-field {
+      border: $border-danger;
+    }
+
+    &::after {
+      color: $brand-danger;
+      content: "\f071";
+    }
+
+    &::before {
+      @include font-small;
+      color: $brand-danger;
+      content: attr(data-error-text);
+      left: 0;
+      line-height: 15px;
+      position: absolute;
+      bottom: -15px;
+      width: 100%;
+    }
+  }
+
+  &.disabled {
+    label {
+      color: $color-alto;
+    }
+
+    .sci-input-field {
+      border: $border-tertiary;
+      color: $color-alto;
+
+      &::placeholder {
+        color: inherit;
+      }
+    }
+  }
+}
