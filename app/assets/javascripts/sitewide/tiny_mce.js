@@ -315,6 +315,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('blur', function(e) {
+              if ($('.atwho-view:visible').length) return false;
               setTimeout(() => {
                 if (editor.isNotDirty === false) {
                   $(editor.container).find('.tinymce-save-button').click();
