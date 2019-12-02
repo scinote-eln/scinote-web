@@ -127,6 +127,8 @@ var RepositoryDatatableRowEditor = (function() {
       let dataType = $header.data('type');
       let cell = this;
 
+      if (!cell.column(cell.index().column).visible()) return true; // return if cell is not visible
+
       if (columnId === NAME_COLUMN_ID) {
         $.fn.dataTable.render.editRowName(formId, cell);
       } else if (dataType) {
