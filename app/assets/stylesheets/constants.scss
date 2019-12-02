@@ -54,18 +54,18 @@ $infinity: 9999999;
 //==============================================================================
 
 // Grayscale Colors in bootstrap
-$gray-darker: $color-black;
-$gray-dark: $color-emperor;
-$gray: $color-emperor;
-$gray-light: $color-dove-gray;
-$gray-lighter: $color-concrete;
+ $gray-darker: $color-black;
+ $gray-dark: $color-emperor;
+ $gray: $color-emperor;
+ $gray-light: $color-dove-gray;
+ $gray-lighter: $color-concrete;
 
 // Scaffolding
-$body-bg: $color-concrete;
-$text-color: $color-emperor;
-$link-color: $brand-primary;
-$link-hover-color: darken($link-color, 15%);
-$link-hover-decoration: underline;
+// $body-bg: $color-concrete;
+// $text-color: $color-emperor;
+// $link-color: $brand-primary;
+// $link-hover-color: darken($link-color, 15%);
+// $link-hover-decoration: underline;
 
 // Typography
 /*$font-family-lato: Lato, "Open Sans", Arial, Helvetica, sans-serif;
@@ -124,10 +124,10 @@ $btn-default-color: $gray-dark;
 $btn-default-bg: $brand-default;
 $btn-default-border: $color-silver;
 $btn-primary-color: $color-white;
-$btn-primary-bg: $brand-success;
+$btn-primary-bg: $brand-primary;
 $btn-primary-border: darken($btn-primary-bg, 5%);
 $btn-success-color: $color-white;
-$btn-success-bg: $brand-success;
+$btn-success-bg: $brand-primary;
 $btn-success-border: darken($btn-success-bg, 5%);
 $btn-info-color: $color-white;
 $btn-info-bg: $brand-info;
