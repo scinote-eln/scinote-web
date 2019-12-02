@@ -30,7 +30,7 @@ $.fn.dataTable.render.defaultRepositoryTextValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryListValue = function(data) {
-  return data.value;
+  return `<span data-value-id="${data.value.id}" class="list-label">${data.value.text}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryListValue = function() {
@@ -38,7 +38,10 @@ $.fn.dataTable.render.defaultRepositoryListValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryStatusValue = function(data) {
-  return '<i class="repository-status-value-icon">' + data.value.icon + '</i>' + data.value.status;
+  return `
+    <span class="repository-status-value-icon">${data.value.icon}</span>
+    <span data-value-id="${data.value.id}" class="status-label">${data.value.status}</span>
+  `;
 };
 
 $.fn.dataTable.render.defaultRepositoryStatusValue = function() {

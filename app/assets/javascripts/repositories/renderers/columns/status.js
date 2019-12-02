@@ -1,39 +1,39 @@
 /* global dropdownSelector */
 /* eslint-disable no-unused-vars */
 
-var List = (function() {
-  function listItemDropdown(options, currentValueId, columnId, formId) {
+var Status = (function() {
+  function statusItemDropdown(options, currentValueId, columnId, formId) {
     var html = `<select class="form-control selectpicker repository-dropdown"
                 data-abs-min-length="2" data-live-search="true" from="${formId}"
                 data-container="body" column_id="${columnId}">
                 <option value="-1"></option>`;
     $.each(options, function(index, value) {
       var selected = (parseInt(currentValueId, 10) === value[0]) ? 'selected' : '';
-      html += `<option value="${value[0]}" ${selected}>${value[1]}</option>`;
+      html += `<option value="${value[0]}" ${selected}>${value[2]} ${value[1]}</option>`;
     });
     html += '</select>';
     return html;
   }
 
-  function initialListItemsRequest(columnId, currentValueId, formId, url) {
+  function initialStatusItemsRequest(columnId, currentValue, formId, url) {
     var massageResponse = [];
     $.ajax({
       url: url,
-      type: 'POST',
+      type: 'GET',
       dataType: 'json',
       async: false,
       data: {
         column_id: columnId
       }
     }).done(function(data) {
-      $.each(data.list_items, function(index, el) {
-        massageResponse.push([el.id, el.data]);
+      $.each(data.status_items, function(index, el) {
+        massageResponse.push([el.id, el.status, el.icon]);
       });
     });
-    return listItemDropdown(massageResponse, currentValueId, columnId, formId);
+    return statusItemDropdown(massageResponse, currentValue, columnId, formId);
   }
 
-  function initSelectPicker($select, $hiddenField) {
+  function initStatusSelectPicker($select, $hiddenField) {
     dropdownSelector.init($select, {
       noEmptyOption: true,
       singleSelect: true,
@@ -46,7 +46,7 @@ var List = (function() {
   }
 
   return {
-    initialListItemsRequest: initialListItemsRequest,
-    initSelectPicker: initSelectPicker
+    initialStatusItemsRequest: initialStatusItemsRequest,
+    initStatusSelectPicker: initStatusSelectPicker
   };
 }());

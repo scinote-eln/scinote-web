@@ -1,4 +1,4 @@
-/* global List SmartAnnotation*/
+/* global List Status SmartAnnotation*/
 
 $.fn.dataTable.render.editRowName = function(formId, cell) {
   let $cell = $(cell.node());
@@ -39,7 +39,7 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
 
 $.fn.dataTable.render.editRepositoryListValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
-  let currentValue = $cell.text();
+  let currentValueId = $cell.find('.list-label').attr('data-value-id');
   let url = $cell.closest('table').data('list-items-path');
   let hiddenField = `
     <input form="${formId}"
@@ -48,13 +48,26 @@ $.fn.dataTable.render.editRepositoryListValue = function(formId, columnId, cell)
            value=""
            data-type="RepositoryListValue">`;
 
-  $cell.html(hiddenField + List.initialListItemsRequest(columnId, currentValue, formId, url));
+  $cell.html(hiddenField + List.initialListItemsRequest(columnId, currentValueId, formId, url));
 
   List.initSelectPicker($cell.find('select'), $cell.find(`[name='repository_cells[${columnId}]']`));
 };
 
 $.fn.dataTable.render.editRepositoryStatusValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+  let currentValueId = $cell.find('.status-label').attr('data-value-id');
+
+  let url = $cell.closest('table').data('status-items-path');
+  let hiddenField = `
+    <input form="${formId}"
+           type="hidden"
+           name="repository_cells[${columnId}]"
+           value=""
+           data-type="RepositoryStatusValue">`;
+
+  $cell.html(hiddenField + Status.initialStatusItemsRequest(columnId, currentValueId, formId, url));
+
+  Status.initStatusSelectPicker($cell.find('select'), $cell.find(`[name='repository_cells[${columnId}]']`));
 };
 
 $.fn.dataTable.render.editRepositoryDateTimeValue = function(formId, columnId, cell) {

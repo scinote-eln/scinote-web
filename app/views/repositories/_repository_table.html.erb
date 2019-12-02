@@ -20,6 +20,7 @@
     data-default-order="<%= default_table_order_as_js_array %>"
     data-default-table-columns="<%= default_table_columns %>"
     data-list-items-path="<%= Rails.application.routes.url_helpers.repository_list_items_path %>"
+    data-status-items-path="<%= Rails.application.routes.url_helpers.repository_status_items_path %>"
     data-editable="<%= can_manage_repository_rows?(repository) %>">
     <thead>
       <tr>
