@@ -251,7 +251,12 @@ class Asset < ApplicationRecord
       text_data = mjs_doc.search("//Field[@name='text']").collect(&:text).join(' ')
     else
       # Start Tika as a server
-      Yomu.server(:text) if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
+      begin
+        yomu_server_pid = Yomu.class_variable_get(:@@server_pid)
+      rescue StandardError
+        yomu_server_pid = nil
+      end
+      Yomu.server(:text) if !ENV['NO_TIKA_SERVER'] && yomu_server_pid
       blob.open do |tmp_file|
         text_data = Yomu.new(tmp_file.path).text
       end
