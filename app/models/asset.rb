@@ -225,8 +225,8 @@ class Asset < ApplicationRecord
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
-           .extract_asset_text_delayed(id, in_template)
+      #Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
+      Asset.extract_asset_text_delayed(id, in_template)
     elsif marvinjs?
       extract_asset_text
     else
@@ -250,13 +250,6 @@ class Asset < ApplicationRecord
       mjs_doc.remove_namespaces!
       text_data = mjs_doc.search("//Field[@name='text']").collect(&:text).join(' ')
     else
-      # Start Tika as a server
-      begin
-        yomu_server_pid = Yomu.class_variable_get(:@@server_pid)
-      rescue StandardError
-        yomu_server_pid = nil
-      end
-      Yomu.server(:text) if !ENV['NO_TIKA_SERVER'] && yomu_server_pid
       blob.open do |tmp_file|
         text_data = Yomu.new(tmp_file.path).text
       end
