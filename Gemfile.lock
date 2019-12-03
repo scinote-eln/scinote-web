@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/aignatov-bio/yomu
+  revision: 5075b7a72d26526dbc8e22baaf8c1d2144874783
+  branch: ai-sci-update-json-gem-dependency
+  specs:
+    yomu (0.2.4)
+      json (>= 1.8)
+      mime-types (>= 1.23)
+
+GIT
   remote: https://github.com/biosistemika/canaid
   revision: 2ac3004d728adbf1be7f4271689b83464f612b23
   branch: rails_6
@@ -581,7 +590,6 @@ GEM
     wkhtmltopdf-heroku (2.12.5.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yomu (0.1.5)
     zeitwerk (2.1.10)
 
 PLATFORMS
@@ -695,7 +703,7 @@ DEPENDENCIES
   whacamole
   wicked_pdf (~> 1.4.0)
   wkhtmltopdf-heroku (= 2.12.5)
-  yomu
+  yomu!
 
 RUBY VERSION
    ruby 2.6.4p104
