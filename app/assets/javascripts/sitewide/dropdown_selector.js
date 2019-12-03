@@ -244,10 +244,10 @@ var dropdownSelector = (function() {
     var perfectScroll;
     var dropdownContainer;
 
+    if (selectElement.length === 0) return;
+
     // Check if element exist or already initialized
-    if (selectElement.length === 0 || selectElement.next().hasClass('dropdown-selector-container')) {
-      selectElement.next().remove();
-    }
+    if (selectElement.next().hasClass('dropdown-selector-container')) selectElement.next().remove();
 
     // Create initial container after select block
     dropdownContainer = selectElement.after('<div class="dropdown-selector-container"></div>').next();
