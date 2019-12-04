@@ -519,6 +519,9 @@
         refreshCurrentView();
       }
       projectsChanged = false;
+    })
+    .on('click', function() {
+      $(this).next().click();
     });
   }
 

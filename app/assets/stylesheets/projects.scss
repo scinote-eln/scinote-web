@@ -40,7 +40,7 @@ $color-module-hover: $brand-primary;
   }
 
   .projects-view-mode-switch {
-    margin: 10px;
+    margin: 8px 10px 12px ;
   }
 
 }
@@ -564,9 +564,9 @@ li.module-hover {
   }
 
   .experiment-no-description {
+    @include font-h3;
     color: $color-alto;
     display: block;
-    font-size: $font-size-large;
     font-weight: bold;
     margin-top: 10px;
     text-align: center;
