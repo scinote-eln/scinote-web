@@ -1,3 +1,5 @@
+// scss-lint:disable SelectorDepth QualifyingElement
+
 :root {
   --sci-checkbox-size: 16px;
 }
@@ -28,7 +30,7 @@ input[type="checkbox"].sci-checkbox {
       color: $color-white;
       content: "";
       font-family: "Font Awesome 5 Free";
-      font-size: calc(var(--sci-checkbox-size) - var(--sci-checkbox-size) * 0.375);
+      font-size: calc(var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375);
       font-weight: 501;
       height: var(--sci-checkbox-size);
       left: 0;

@@ -1,3 +1,5 @@
+// scss-lint:disable NestingDepth
+
 .sci-input-container {
   display: inline-block;
   position: relative;
@@ -30,11 +32,11 @@
   }
 
   .fas {
+    bottom: 0;
     line-height: 36px;
     position: absolute;
     text-align: center;
-    bottom: 0;
-    width: 25px; 
+    width: 25px;
   }
 
   &.left-icon {
@@ -67,13 +69,13 @@
     }
 
     &::after {
+      bottom: 0;
       font-family: "Font Awesome 5 Free";
       font-weight: 501;
       line-height: 36px;
       position: absolute;
       right: 5px;
       text-align: center;
-      bottom: 0;
       width: 25px;
     }
 
@@ -107,12 +109,12 @@
 
     &::before {
       @include font-small;
+      bottom: -15px;
       color: $brand-danger;
       content: attr(data-error-text);
       left: 0;
       line-height: 15px;
       position: absolute;
-      bottom: -15px;
       width: 100%;
     }
   }
