@@ -22,9 +22,9 @@
 
     & > a,
     & > span {
+      @include font-small;
       color: $color-silver-chalice;
       display: grid;
-      font-size: $font-size-h6;
       margin-left: auto;
       margin-right: auto;
       padding: 10px 0;
