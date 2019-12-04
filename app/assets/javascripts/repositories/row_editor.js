@@ -1,6 +1,7 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation
+  globals HelperModule animateSpinner SmartAnnotation Asset
 */
+/* eslint-disable no-unused-vars */
 
 var RepositoryDatatableRowEditor = (function() {
   const NAME_COLUMN_ID = 'row-name';
@@ -18,26 +19,79 @@ var RepositoryDatatableRowEditor = (function() {
     });
   }
 
+  function validateAndSubmit($table) {
+    let $form = $table.find('.repository-row-edit-form');
+    let $row = $form.closest('tr');
+    let valid = true;
+    let directUrl = $table.data('direct-upload-url');
+    let $files = $row.find('input[type=file]');
+    $row.find('.has-error').removeClass('has-error').find('span').remove();
+
+    // Validations here
+    $row.find('input').each(function() {
+      let dataType = $(this).data('type');
+      if (!dataType) return;
+
+      valid = $.fn.dataTable.render[dataType + 'Validator']($(this));
+      if (!valid) return false;
+    });
+
+    if (!valid) return false;
+
+    // DirectUpload here
+    let uploadPromise = Asset.uploadFiles($files, directUrl);
+
+    // Submission here
+    uploadPromise
+      .then(function() {
+        animateSpinner(null, true);
+        $form.submit();
+        return false;
+      }).catch((reason) => {
+        alert(reason);
+        return false;
+      });
+
+    return null;
+  }
+
+  function initAssetCellActions($row) {
+    let fileInputs = $row.find('input[type=file]');
+    let deleteButtons = $row.find('.file-upload-button>span.delete-action');
+
+    fileInputs.on('change', function() {
+      let $input = $(this);
+      let $fileBtn = $input.next('.file-upload-button');
+      let $label = $fileBtn.find('.label-asset');
+
+      $label.text($input[0].files[0].name);
+      $fileBtn.removeClass('new-file');
+    });
+
+
+    deleteButtons.on('click', function() {
+      let $fileBtn = $(this).parent();
+      let $input = $fileBtn.prev('input[type=file]');
+      let $label = $fileBtn.find('.label-asset');
+
+      $fileBtn.addClass('new-file');
+      $label.text('');
+      $input.val('');
+
+      if (!$input.data('is-empty')) { // set hidden field for deletion only if original value has been set on rendering
+        $input
+          .prev('.file-hidden-field-container')
+          .html(`<input type="hidden" 
+                     form="${$input.attr('form')}" 
+                     name="repository_cells[${$input.data('col-id')}]" 
+                     value="-1"/>`);
+      }
+    });
+  }
+
   function initFormSubmitAction(table) {
     TABLE = table;
     let $table = $(TABLE.table().node());
-
-    $table.on('ajax:beforeSend', '.repository-row-edit-form', function() {
-      let $row = $(this).closest('tr');
-      let valid = true;
-
-      $row.find('.has-error').removeClass('has-error').find('span').remove();
-
-      $row.find('input').each(function() {
-        let dataType = $(this).data('type');
-        if (!dataType) return;
-
-        valid = $.fn.dataTable.render[dataType + 'Validator']($(this));
-      });
-      if (!valid) return false;
-
-      animateSpinner(null, true);
-    });
 
     $table.on('ajax:success', '.repository-row-edit-form', function(ev, data) {
       TABLE.ajax.reload();
@@ -139,13 +193,16 @@ var RepositoryDatatableRowEditor = (function() {
     });
 
     initSmartAnnotation($row);
+    initAssetCellActions($row);
 
     TABLE.columns.adjust();
   }
 
   return Object.freeze({
     initFormSubmitAction: initFormSubmitAction,
+    validateAndSubmit: validateAndSubmit,
     switchRowToEditMode: switchRowToEditMode,
     addNewRow: addNewRow
   });
 }());
+

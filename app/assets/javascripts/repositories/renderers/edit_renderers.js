@@ -17,7 +17,27 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
 };
 
 $.fn.dataTable.render.editRepositoryAssetValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+  let empty = $cell.is(':empty');
+  let fileName = $cell.find('a.file-preview-link').text();
+
+  $cell.html(`
+    <div class="file-editing">
+      <div class="file-hidden-field-container hidden"></div>
+      <input class=""
+             id="repository_file_${columnId}"
+             form="${formId}"
+             type="file"
+             data-col-id="${columnId}"
+             data-is-empty="${empty}"
+             value=""
+             data-type="RepositoryAssetValue">
+      <div class="file-upload-button ${empty ? 'new-file' : ''}">
+        <label for="repository_file_${columnId}">Select File (Max 300 MB)...</label>
+        <span class="icon"><i class="fas fa-paperclip"></i></span><span class="label-asset">${fileName}</span>
+        <span class="delete-action fas fa-trash"> </span>
+      </div>
+    </div>`);
 };
 
 $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell) {

@@ -250,7 +250,8 @@ var RepositoryDatatable = (function(global) {
 
   function initSaveButton() {
     TABLE_WRAPPER.on('click', '#saveRecord', function() {
-      $(TABLE_ID).find('.repository-row-edit-form').submit();
+      var $table = $(TABLE_ID);
+      RepositoryDatatableRowEditor.validateAndSubmit($table);
     });
   }
 
