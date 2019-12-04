@@ -286,8 +286,8 @@ a[data-toggle="tooltip"] {
 .navbar-secondary {
   background: $color-concrete !important;
   margin-left: -280px;
-  padding-left: 294px;
-  padding-right: 97px;
+  padding-left: 280px;
+  padding-right: 82px;
   margin-bottom: 0;
   border-color: transparent;
   border-bottom: 0;
@@ -310,7 +310,7 @@ a[data-toggle="tooltip"] {
   #secondary-menu {
     background: $color-white;
     border-bottom: 1px solid $color-gainsboro;
-    margin-top: 15px;
+    padding-top: 15px;
 
     .open > a,
     .open > a:hover,
@@ -398,7 +398,7 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-without-sidebar{
-  padding-left: 15px;
+  padding-left: 0;
   margin-left: 0px;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
@@ -498,7 +498,7 @@ a[data-toggle="tooltip"] {
     margin-bottom: 15px;
   }
 
-  & > .btn-group {
+  & > .sci-btn-group {
     margin-right: 30px;
   }
 }
@@ -918,13 +918,15 @@ ul.content-activities {
   margin-bottom: 5px;
 
   .protocol-button {
-    margin-bottom: 5px;
+
+    .sci-btn-group {
+      float: left
+    }
   }
 
   .protocol-status-bar {
     display: flex;
-    height: 33px;
-    margin-bottom: 5px;
+    height: 40px;
     margin-right: 15px;
   }
 
@@ -932,7 +934,8 @@ ul.content-activities {
     border-color: $color-silver;
     box-shadow: none;
     display: inline-block;
-    height: 33px;
+    height: 36px;
+    margin-bottom: 5px;
 
     & > .panel-body {
       padding: 0 0 0 15px;
@@ -944,7 +947,7 @@ ul.content-activities {
 
     .link-button,
     .link-toggle {
-      height: 33px;
+      height: 36px;
       position: relative;
       right: -1px;
       top: -1px;

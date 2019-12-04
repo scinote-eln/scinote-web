@@ -42,28 +42,17 @@
 
   .complete-step-btn {
     display: inline-block;
-    line-height: 39px;
-
-    button {
-      display: block;
-      font-size: 12px;
-      margin: auto 0;
-      padding: 3px 10px;
-
-      span {
-        font-size: 15px;
-      }
-    }
   }
 
   .panel-heading {
-    height: 39px;
+    border: 0;
+    height: 46px;
     padding-bottom: 0;
     padding-top: 0;
 
     .panel-options {
       bottom: 0;
-      line-height: 39px;
+      line-height: 46px;
     }
 
     span.step-number {
@@ -76,19 +65,19 @@
     .left-floats {
       align-items: center;
       display: flex;
-      height: 39px;
+      height: 100%;
       padding-right: 15px;
 
       .step-name-link {
         display: flex;
         flex-shrink: 1;
-        line-height: 39px;
+        line-height: 100%;
         overflow: hidden;
 
         .name-block {
           display: flex;
           flex-shrink: 1;
-          height: 39px;
+          height: 100%;
           overflow: hidden;
 
           @media (max-width: 1188px) {

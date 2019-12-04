@@ -19,8 +19,8 @@
               <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success help_tooltips",
+              <button type="button" class="sci-btn secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+              <%= f.submit t("projects.index.modal_new_project.create"), class: "sci-btn help_tooltips",
                            data: {
                              tooltiplink: I18n.t('tooltips.link.new_project'),
                              tooltipcontent: I18n.t('tooltips.text.new_project')
@@ -43,8 +43,8 @@
         <div class="modal-body">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-          <button type="button" class="btn btn-success" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
+          <button type="button" class="sci-btn secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <button type="button" class="sci-btn" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
         </div>
       </div>
     </div>
@@ -75,11 +75,11 @@
         <div class="modal-body">
         </div>
         <div class="modal-footer">
-          <button id="export-projects-modal-close" type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
-          <button id="export-projects-modal-cancel" type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <button id="export-projects-modal-close" type="button" class="sci-btn secondary" data-dismiss="modal"><%=t "general.close" %></button>
+          <button id="export-projects-modal-cancel" type="button" class="sci-btn secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
           <button id="export-projects-modal-submit"
                   type="button"
-                  class="btn btn-success"
+                  class="sci-btn"
                   data-export-projects-submit-url="<%= export_projects_team_path(current_team) %>">
             <%=t "projects.export_projects.modal_submit" %>
           </button>
@@ -96,7 +96,7 @@
         <% if @teams.exists? && can_create_projects?(current_team) %>
           <h2><strong><%=t 'projects.index.no_projects.title' %></strong></h2>
           <br />
-          <a class="btn btn-primary btn-lg new-project-btn">
+          <a class="sci-btn new-project-btn">
             <span class="fas fa-plus"></span>
             <span class="hidden-xs"><%= t('projects.index.no_projects.create_new_button') %></span>
           </a>
@@ -114,7 +114,7 @@
 
             <% if @teams.exists? && can_create_projects?(current_team) %>
             <!-- new project button -->
-              <a class="btn btn-primary new-project-btn">
+              <a class="sci-btn new-project-btn">
                 <span class="fas fa-plus" aria-hidden="true"></span>
                 <span class="hidden-xs"><%=t "projects.index.new" %></span>
               </a>
@@ -122,7 +122,7 @@
 
             <!-- project sort -->
             <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button class="sci-btn tertiary dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span><%= t("general.sort.#{@current_sort}_html") %></span>
                 <span class="caret"></span>
               </button>
@@ -140,7 +140,7 @@
             </div>
 
             <!-- export projects button -->
-            <button type="button" class="btn btn-default pull-right"
+            <button type="button" class="sci-btn secondary pull-right"
                                   id="export-projects-button"
                                   data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>"
                                   disabled>
@@ -169,105 +169,3 @@
 <% end %>
 
 <%= javascript_include_tag "projects/index" %>
-
-<!-- remove next part before merge -->
-
-<div class="demo-container" style="background: white; padding: 20px;">
-  <div class="sci-btn-group">
-    <button class="sci-btn">Button</button>
-    <button class="sci-btn secondary">Button</button>
-    <button class="sci-btn tertiary">Button</button>
-    <button class="sci-btn sensitive">Button</button>
-  </div>
-  <hr>
-  <div class="sci-btn-group">
-    <button class="sci-btn"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn secondary"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn tertiary"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn sensitive"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-  </div>
-  <hr>
-  <div class="sci-btn-group">
-    <button class="sci-btn icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-    <button class="sci-btn secondary icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-    <button class="sci-btn tertiary icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-    <button class="sci-btn sensitive icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-  </div>
-  <hr>
-  <div class="sci-btn-group">
-    <button class="sci-btn" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn secondary" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn tertiary" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn sensitive" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-  </div>
-  <hr>
-  <div>
-    <input type="checkbox" class="sci-checkbox">
-    <span class="sci-checkbox-label"></span>
-    <span style="display: inline-block; width: 20px"></span>
-    <input type="checkbox" class="sci-checkbox" disabled>
-    <span class="sci-checkbox-label"></span>
-    <span style="display: inline-block; width: 20px"></span>
-    <input type="checkbox" class="sci-checkbox" disabled checked>
-    <span class="sci-checkbox-label"></span>
-  </div>
-  <hr>
-  <div>
-    <input type="radio" name="test" class="sci-radio">
-    <span class="sci-radio-label"></span>
-    <span style="display: inline-block; width: 20px"></span>
-    <input type="radio" name="test" class="sci-radio">
-    <span class="sci-radio-label"></span>
-    <span style="display: inline-block; width: 20px"></span>
-    <input type="radio" name="test" class="sci-radio" disabled>
-    <span class="sci-radio-label"></span>
-  </div>
-  <hr>
-  <div>
-    <input type="checkbox" class="sci-toggle-checkbox">
-    <span class="sci-toggle-checkbox-label"></span>
-    <span style="display: inline-block; width: 20px"></span>
-    <input type="checkbox" class="sci-toggle-checkbox" disabled>
-    <span class="sci-toggle-checkbox-label"></span>
-  </div>
-  <hr>
-  <div class="sci-toggles-group">
-    <input type="radio" name="test1" class="sci-toggle-item">
-    <span class="sci-toggle-item-label"><i class="fas fa-th-large"></i></span>
-    <input type="radio" name="test1" class="sci-toggle-item">
-    <span class="sci-toggle-item-label"><i class="fas fa-th-list"></i></span>
-    <input type="radio" name="test1" class="sci-toggle-item">
-    <span class="sci-toggle-item-label"><i class="fas fa-th"></i></span>
-  </div>
-  <hr>
-  <div class="sci-input-container" style="width: 300px">
-    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-  </div>
-  <hr>
-  <div class="sci-input-container left-icon" style="width: 300px">
-    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-    <i class="fas fa-search"></i>
-  </div>
-  <hr>
-  <div class="sci-input-container right-icon"  style="width: 300px">
-    <label>Right icon</label>
-    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-    <i class="fas fa-search"></i>
-  </div>
-  <hr>
-  <div class="sci-input-container right-icon success"  style="width: 300px">
-    <label>Success and icon</label>
-    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-    <i class="fas fa-search"></i>
-  </div>
-  <hr>
-  <div class="sci-input-container error" data-error-text="Error text"  style="width: 300px">
-    <label>Error</label>
-    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-  </div>
-  <hr>
-  <div class="sci-input-container disabled" style="width: 300px">
-    <label>Disabled</label>
-    <input type="text" class="sci-input-field" placeholder="Placeholder" disabled></input>
-  </div>
-</div>

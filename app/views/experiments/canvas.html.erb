@@ -12,13 +12,13 @@
                 type: 'button',
                 id: 'edit-canvas-button',
                 data: { action: 'edit' },
-                class: 'ajax btn btn-primary' do %>
+                class: 'ajax sci-btn' do %>
                   <span class="fas fa-pencil-alt"></span>
                   <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
                 <% end %>
           <!-- experiment actions -->
-          <span class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="dropdown actions-button">
+            <button class="sci-btn secondary dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
               <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
               <span class="caret"></span>
@@ -28,15 +28,18 @@
           </span>
         <% end %>
         <div class="toolbarButtons">
-          <span class="hidden-xs"><%=t 'experiments.canvas.zoom' %></span>
-          <div id="zoom-level-buttons" class="btn-group" data-toggle="buttons">
-            <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
+          <span class="hidden-xs zoom-text"><%=t 'experiments.canvas.zoom' %></span>
+          <div id="zoom-level-buttons" class="sci-toggles-group change-canvas-view" data-toggle="buttons">
+            <input type="radio" name="canvas-format" class="sci-toggle-item" checked>
+            <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
               <span class="fas fa-th-large" aria-hidden="true" ></span>
             <% end %>
-            <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "medium_zoom" do %>
+            <input type="radio" name="canvas-format" class="sci-toggle-item" >
+            <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "medium_zoom" do %>
               <span class="fas fa-th-list" aria-hidden="true"></span>
             <% end %>
-            <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "small_zoom" do %>
+            <input type="radio" name="canvas-format" class="sci-toggle-item" >
+            <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "small_zoom" do %>
               <span class="fas fa-th" aria-hidden="true"></span>
             <% end %>
           </div>
