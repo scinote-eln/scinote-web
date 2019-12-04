@@ -11,7 +11,7 @@
   padding-left: 15px;
 
   .fa-bell {
-    font-size: $font-size-large;
+    font-size: 16px;
   }
 
   #count-notifications {
@@ -40,11 +40,9 @@
 }
 
 .navbar-default .navbar-brand {
-  & > img {
-    margin-top: -7px;
-    max-width: 55px;
-    max-height: 38px;
-  }
+  align-items: center;
+  display: flex;
+  padding: 0 15px;
 }
 
 .dropdown-notifications {
@@ -419,7 +417,7 @@
 #system-notifications-dropdown {
 
   .fa-gift {
-    font-size: $font-size-large;
+    font-size: 16px;
   }
 
   #count-system-notifications {
