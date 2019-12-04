@@ -14,10 +14,10 @@
  */
 .ps__rail-x {
   display: none;
-  opacity: 0;
   transition: background-color .2s linear, opacity .2s linear;
   -webkit-transition: background-color .2s linear, opacity .2s linear;
   height: 16px;
+  opacity: 0.6;
   /* there must be 'bottom' or 'top' for ps__rail-x */
   bottom: 0px;
   /* please don't change 'position' */
@@ -26,10 +26,10 @@
 
 .ps__rail-y {
   display: none;
-  opacity: 0;
   transition: background-color .2s linear, opacity .2s linear;
   -webkit-transition: background-color .2s linear, opacity .2s linear;
   width: 16px;
+  opacity: 0.6;
   /* there must be 'right' or 'left' for ps__rail-y */
   right: 0;
   /* please don't change 'position' */
@@ -80,10 +80,10 @@
 
 .ps__thumb-y {
   background-color: $color-silver-chalice;
-  border-radius: 4px;
+  border-radius: 3px;
   transition: background-color .2s linear, width .2s ease-in-out;
   -webkit-transition: background-color .2s linear, width .2s ease-in-out;
-  width: 4px;
+  width: 6px;
   /* there must be 'right' for ps__thumb-y */
   right: 2px;
   /* please don't change 'position' */
@@ -93,15 +93,13 @@
 .ps__rail-x:hover > .ps__thumb-x,
 .ps__rail-x:focus > .ps__thumb-x,
 .ps__rail-x.ps--clicking .ps__thumb-x {
-  background-color: $brand-primary;
-  height: 12px;
+  height: 10px;
 }
 
 .ps__rail-y:hover > .ps__thumb-y,
 .ps__rail-y:focus > .ps__thumb-y,
 .ps__rail-y.ps--clicking .ps__thumb-y {
-  background-color: $brand-primary;
-  width: 12px;
+  width: 10px;
 }
 
 /* MS supports */

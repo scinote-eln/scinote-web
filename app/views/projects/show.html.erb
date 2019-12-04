@@ -11,7 +11,7 @@
         <div class="col-sm-12">
           <!-- experiment sort -->
           <div class="dropdown pull-left">
-            <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button class="sci-btn secondary dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span><%= t("general.sort.#{@current_sort}_html") %></span>
               <span class="caret"></span>
             </button>
@@ -32,7 +32,7 @@
                         remote: true,
                         type: "button",
                         id: 'new-experiment',
-                        class: 'btn btn-primary pull-right' do %>
+                        class: 'sci-btn pull-right' do %>
               <span class="fas fa-plus"></span>
               <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
             <% end %>
