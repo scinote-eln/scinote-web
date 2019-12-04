@@ -115,12 +115,12 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
 
       <div class="modal-footer">
         <div data-role="step-form">
-          <button type="button" class="btn btn-default" data-dismiss="modal">
+          <button type="button" class="sci-btn secondary" data-dismiss="modal">
             <%= t('general.cancel') %>
           </button>
 
           <!-- Invite buttons -->
-          <button type="button" class="btn btn-success help_tooltips"
+          <button type="button" class="sci-btn help_tooltips"
                   data-tooltiplink="<%= I18n.t('tooltips.link.invite_to_sci') %>"
                   data-tooltipcontent="<%= I18n.t('tooltips.text.invite_to_sci') %>"
                   data-role="invite-btn" data-action="invite"
@@ -129,7 +129,7 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
           </button>
 
           <div class="btn-group" data-role="invite-with-role-div">
-            <button type="button" class="btn btn-success dropdown-toggle help_tooltips"
+            <button type="button" class="sci-btn dropdown-toggle help_tooltips"
                     data-tooltiplink="<%= I18n.t('tooltips.link.invite_to_sci') %>"
                     data-tooltipcontent="<%= I18n.t('tooltips.text.invite_to_sci') %>"
                     data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true"

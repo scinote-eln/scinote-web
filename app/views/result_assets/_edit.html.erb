@@ -11,11 +11,11 @@
     <% end %>
     <hr>
     <div class="align-right">
-      <button type="button" class="btn btn-default cancel-edit">
+      <button type="button" class="sci-btn secondary cancel-edit">
         <%= t("general.cancel")%>
       </button>
       <%= f.submit t("general.save"),
-                   class: 'btn btn-success save-result',
+                   class: 'sci-btn save-result',
                    onclick: "Results.processResult(event, Results.ResultTypeEnum.FILE);" %>
     </div>
   <% end %>

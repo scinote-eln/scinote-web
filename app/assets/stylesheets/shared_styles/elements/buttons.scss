@@ -13,6 +13,7 @@
   padding: 7px 16px;
   position: relative;
   transition: .3s;
+  text-decoration: none;
   user-select: none;
 
   .fas {
@@ -22,10 +23,21 @@
 
   &:hover {
     background: $brand-primary-hover;
+    color: $color-white;
+    text-decoration: none;
   }
 
   &:active {
     background: $brand-primary-press;
+    color: $color-white;
+    text-decoration: none;
+  }
+
+  &:focus {
+    border: $border-focus;
+    color: $color-white;
+    outline: 0;
+    text-decoration: none;
   }
 
   &.secondary {
@@ -36,11 +48,18 @@
     &:hover {
       background: $color-concrete;
       border: $border-secondary;
+      color: $color-black;
     }
 
     &:active {
       background: $color-alto;
       border: $border-secondary;
+      color: $color-black;
+    }
+
+    &:focus {
+      border: $border-focus;
+      color: $color-black;
     }
   }
 
@@ -52,11 +71,18 @@
     &:hover {
       background: $color-concrete;
       border: $border-transparent;
+      color: $color-black;
     }
 
     &:active {
       background: $color-alto;
       border: $border-transparent;
+      color: $color-black;
+    }
+
+    &:focus {
+      border: $border-focus;
+      color: $color-black;
     }
   }
 
@@ -71,6 +97,11 @@
     &:active {
       background: $brand-danger-press;
     }
+
+    &:focus {
+      border: $border-focus;
+      color: $color-white;
+    }
   }
 
   &.icon-btn {
@@ -82,15 +113,11 @@
     }
   }
 
-  &:focus {
-    border: $border-focus;
-  }
-
   &:disabled {
     background: $color-alto;
     border: $border-tertiary;
     color: $color-silver-chalice;
-    opacity: .25;
+    opacity: .5;
 
     &.secondary,
     &.tertiary {
@@ -99,6 +126,7 @@
       &:hover {
         background: $color-white;
         border: $border-tertiary;
+        color: $color-silver-chalice;
       }
     }
 
@@ -118,7 +146,7 @@
     float: left;
     margin: 0 4px 4px 0;
 
-    &:last-of-type {
+    &:nth-last-child(1) {
       margin-right: 0;
     }
   }

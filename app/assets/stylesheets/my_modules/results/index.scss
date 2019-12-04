@@ -8,10 +8,14 @@
 
 #results-toolbar {
   .help_tooltips {
-    .btn-default {
-      border: 0;
-      color: inherit;
-      margin-left: 10px;
+    align-items: center;
+    display: flex;
+
+    .add-result-text {
+      display: inline-block;
+      line-height: 36px;
+      margin-bottom: 5px;
+      margin-right: 5px;
     }
   }
 }

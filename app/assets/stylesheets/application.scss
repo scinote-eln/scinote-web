@@ -19,14 +19,14 @@
 @import "handsontable.full.min";
 @import "ajax-bootstrap-select.min";
 @import "extend/bootstrap";
-@import "themes/*";
 @import "extend/*";
+@import "hooks/*";
+@import "partials/*";
 @import "my_modules/protocols/*";
 @import "my_modules/results/*";
 @import "protocols/*";
-@import "hooks/*";
-@import "partials/*";
 @import "settings/*";
 @import "shared/*";
+@import "themes/*";
 
 @import "*"
