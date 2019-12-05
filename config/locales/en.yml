@@ -1047,6 +1047,8 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
+      assets:
+        select_file_btn: "Select File (Max %{max_size} MB)..."
     add_new_record: "New item"
     import_records:
       import: 'Import'

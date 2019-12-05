@@ -128,6 +128,8 @@ var RepositoryDatatableRowEditor = (function() {
     $row.append(rowForm);
     $row.append($(TABLE_CELL));
 
+    $(TABLE.table().node()).find('tbody').prepend($row);
+
     table.columns().every(function() {
       let column = this;
       let $header = $(column.header());
@@ -137,19 +139,17 @@ var RepositoryDatatableRowEditor = (function() {
 
       let columnId = $header.attr('id');
 
+      let $cell = $(TABLE_CELL).appendTo($row);
+
       if (columnId === NAME_COLUMN_ID) {
-        $row.append($(TABLE_CELL).html($.fn.dataTable.render.newRowName(formId)));
+        $.fn.dataTable.render.newRowName(formId, $cell);
       } else {
         let dataType = $header.data('type');
         if (dataType) {
-          $row.append($(TABLE_CELL).html($.fn.dataTable.render['new' + dataType](formId, columnId)));
-        } else {
-          $row.append($(TABLE_CELL));
+          $.fn.dataTable.render['new' + dataType](formId, columnId, $cell);
         }
       }
     });
-
-    $(TABLE.table().node()).find('tbody').prepend($row);
 
     initSmartAnnotation($row);
 

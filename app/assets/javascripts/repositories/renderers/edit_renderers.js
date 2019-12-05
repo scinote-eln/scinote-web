@@ -1,4 +1,4 @@
-/* global List Status SmartAnnotation*/
+/* global List Status SmartAnnotation I18n GLOBAL_CONSTANTS */
 
 $.fn.dataTable.render.editRowName = function(formId, cell) {
   let $cell = $(cell.node());
@@ -33,7 +33,7 @@ $.fn.dataTable.render.editRepositoryAssetValue = function(formId, columnId, cell
              value=""
              data-type="RepositoryAssetValue">
       <div class="file-upload-button ${empty ? 'new-file' : ''}">
-        <label for="repository_file_${columnId}">Select File (Max 300 MB)...</label>
+        <label for="repository_file_${columnId}">${I18n.t('repositories.table.assets.select_file_btn', { max_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB })}</label>
         <span class="icon"><i class="fas fa-paperclip"></i></span><span class="label-asset">${fileName}</span>
         <span class="delete-action fas fa-trash"> </span>
       </div>
