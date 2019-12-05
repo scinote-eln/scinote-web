@@ -1,0 +1,16 @@
+// scss-lint:disable SelectorDepth SelectorFormat
+// scss-lint:disable NestingDepth ImportantRule
+
+@import "constants";
+@import "mixins";
+
+.user-account-preferences {
+  .time-zone-container {
+    margin-bottom: 10px;
+    max-width: 450px;
+  }
+
+  .date-format-container {
+    max-width: 450px;
+  }
+}

@@ -33,26 +33,22 @@ var TinyMCE = (function() {
     var prefix = getAutoSavePrefix(editor);
     var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
     var lastUpdated = $(selector).data('last-updated');
-
-    var restoreBtn = $('<button class="btn restore-draft-btn pull-right">Restore Draft</button>');
-    var cancelBtn = $(`<div class="tinymce-cancel-notification-button pull-right">
-                        <button type="button">
-                          <span class="fas fa-times"></span>
-                        </button>
-                       </div>`);
+    var notificationBar;
+    var restoreBtn = $('<button class="btn restore-draft-btn">Restore Draft</button>');
+    var cancelBtn = $('<span class="fas fa-times"></span>');
 
     // Check whether we have draft stored
     if (editor.plugins.autosave.hasDraft()) {
-      var notificationBar = $('<div class="restore-draft-notification"></div>');
+      notificationBar = $('<div class="restore-draft-notification"></div>');
 
       if (lastDraftTime < lastUpdated) {
-        notificationBar.text(I18n.t('tiny_mce.older_version_available'));
+        notificationBar.html(`<span class="notification-text">${I18n.t('tiny_mce.older_version_available')}</span>`);
       } else {
-        notificationBar.text(I18n.t('tiny_mce.newer_version_available'));
+        notificationBar.html(`<span class="notification-text">${I18n.t('tiny_mce.newer_version_available')}</span>`);
       }
 
       // Add notification bar
-      $(notificationBar).append(cancelBtn).append(restoreBtn);
+      $(notificationBar).append(restoreBtn).append(cancelBtn);
       $(editor.contentAreaContainer).before(notificationBar);
 
       $(restoreBtn).click(function() {
@@ -136,7 +132,8 @@ var TinyMCE = (function() {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
-          autosave_interval: '15s',
+          autosave_restore_when_empty: false,
+          autosave_interval: '1s',
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
           object_resizing: true,
@@ -254,6 +251,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+                editor.plugins.autosave.removeDraft();
                 if (onSaveCallback) { onSaveCallback(); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
@@ -317,6 +315,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('blur', function(e) {
+              if ($('.atwho-view:visible').length) return false;
               setTimeout(() => {
                 if (editor.isNotDirty === false) {
                   $(editor.container).find('.tinymce-save-button').click();
@@ -326,9 +325,9 @@ var TinyMCE = (function() {
               }, 0);
             });
 
-            /* editor.on('init', function(e) {
+            editor.on('init', function(e) {
               restoreDraftNotification(selector, editor);
-            });*/
+            });
           },
           codesample_content_css: $(selector).data('highlightjs-path')
         });

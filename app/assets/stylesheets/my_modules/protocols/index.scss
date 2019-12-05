@@ -14,29 +14,6 @@
   }
 }
 
-.protocol-info,
-.module-header {
-    .well {
-    border: 0;
-    box-shadow: none;
-    font-size: 14px;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .badge-icon {
-    background: transparent;
-    color: $color-silver;
-    padding-left: 0;
-    padding-right: 5px;
-
-    + .well-sm {
-      margin-bottom: 5px;
-      margin-left: 0;
-    }
-  }
-}
-
 .module-header {
   display: inline-block;
   position: relative;
@@ -48,18 +25,94 @@
     margin: 10px 0 15px;
   }
 
+  .fas.block-icon {
+    color: $color-silver;
+    font-size: 18px;
+    margin-right: 5px;
+  }
+
   .header-container {
     display: flex;
     flex-wrap: wrap;
     float: left;
+    margin-bottom: 10px;
     width: calc(100% - 280px);
 
     .flex-block {
+      align-items: center;
       display: flex;
       flex-grow: 1;
+      margin-right: 10px;
 
-      .well-sm {
-        display: inline-block;
+      .flex-block-label {
+        align-items: center;
+        display: flex;
+        margin-right: 3px;
+      }
+    }
+
+    .due-date-container {
+      align-items: center;
+      display: inline-flex;
+
+      .date-text {
+        border: 1px solid transparent;
+        font-weight: bold;
+        line-height: 34px;
+        margin-right: 25px;
+        padding: 0 3px;
+        position: relative;
+
+        &.alert-green {
+          color: $brand-success;
+        }
+
+        &.alert-yellow {
+          color: $brand-warning;
+        }
+
+        &.alert-red {
+          color: $brand-danger;
+        }
+
+        .clear-date {
+          color: $color-silver;
+          cursor: pointer;
+          display: none;
+          font-size: 20px;
+          left: 100%;
+          line-height: 34px;
+          margin-left: 5px;
+          position: absolute;
+          top: 0;
+        }
+      }
+
+      .datetime-picker-container {
+        color: $color-emperor;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        #calendar-due-date {
+          opacity: 0;
+        }
+
+        .fa-calendar-alt {
+          display: none;
+        }
+      }
+
+      &:hover {
+        .date-text[data-editable=true] {
+          border-color: $color-silver;
+          border-radius: 3px;
+
+          .clear-date {
+            display: inline;
+          }
+        }
       }
     }
   }
@@ -97,6 +150,7 @@
     width: 100%;
 
     #module-tags {
+      align-items: center;
       display: flex;
       width: 100%;
     }
@@ -129,7 +183,7 @@
         }
       }
 
-      &:hover {
+      &:not(.view-mode):hover {
         .input-field {
           border: 1px solid $color-gainsboro;
         }
@@ -147,7 +201,6 @@
       display: inline-block;
       font-size: 14px;
       line-height: 32px;
-      padding-right: 3px;
       width: 37px;
     }
 

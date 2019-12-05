@@ -2,6 +2,7 @@
 
 class MarvinJsAssetsController < ApplicationController
   include MarvinJsActions
+  include ActiveStorage::SetCurrent
 
   before_action :load_vars, except: :create
   before_action :load_create_vars, only: :create
