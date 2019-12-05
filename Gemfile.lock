@@ -16,6 +16,15 @@ GIT
       railties (> 3.1, < 7.0)
 
 GIT
+  remote: https://github.com/biosistemika/yomu
+  revision: 8845246f3e6a6cbc49b902cd4b908ba70553cbdd
+  branch: master
+  specs:
+    yomu (0.2.4)
+      json (>= 1.8)
+      mime-types (>= 1.23)
+
+GIT
   remote: https://github.com/einzige/sneaky-save
   revision: ee71d0a00cd4ecdd575bd2a9aa8b8693915f4871
   specs:
@@ -581,7 +590,6 @@ GEM
     wkhtmltopdf-heroku (2.12.5.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yomu (0.1.5)
     zeitwerk (2.1.10)
 
 PLATFORMS
@@ -695,7 +703,7 @@ DEPENDENCIES
   whacamole
   wicked_pdf (~> 1.4.0)
   wkhtmltopdf-heroku (= 2.12.5)
-  yomu
+  yomu!
 
 RUBY VERSION
    ruby 2.6.4p104
