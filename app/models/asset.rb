@@ -250,7 +250,7 @@ class Asset < ApplicationRecord
       mjs_doc.remove_namespaces!
       text_data = mjs_doc.search("//Field[@name='text']").collect(&:text).join(' ')
     else
-      # Start Tika as a server  
+      # Start Tika as a server
       Yomu.server(:text) if !ENV['NO_TIKA_SERVER'] && Yomu.class_variable_get(:@@server_pid).nil?
       blob.open do |tmp_file|
         text_data = Yomu.new(tmp_file.path).text
