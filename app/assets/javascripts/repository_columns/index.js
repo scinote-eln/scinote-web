@@ -1,4 +1,5 @@
-/* global I18n HelperModule animateSpinner RepositoryListColumnType RepositoryStatusColumnType */
+/* global I18n HelperModule animateSpinner RepositoryListColumnType */
+/* global RepositoryStatusColumnType dropdownSelector */
 /* eslint-disable no-restricted-globals */
 var RepositoryColumns = (function() {
   var manageModal = '#manage-repository-column';
@@ -177,6 +178,13 @@ var RepositoryColumns = (function() {
           .find('#repository-column-name')
           .focus();
         columnType = $('#repository-column-data-type').val();
+        dropdownSelector.init('#repository-column-data-type', {
+          noEmptyOption: true,
+          singleSelect: true,
+          closeOnSelect: true,
+          optionClass: 'custom-option',
+          selectAppearance: 'simple'
+        });
         $manageModal
           .trigger('columnModal::partialLoadedFor' + columnType);
 

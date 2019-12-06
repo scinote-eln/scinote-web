@@ -16,5 +16,11 @@
     position: relative;
     top: -2px;
   }
+
+  #repository-column-data-type + .dropdown-selector-container {
+    .custom-option {
+      padding: 0 25px;
+    }
+  }
 }
 
