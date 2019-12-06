@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe RepositoryDateTimeValue, type: :model do
-  let(:repository_date_time_value) { create :repository_date_time_value }
+  let(:repository_date_time_value) { build :repository_date_time_value }
 
   it 'is valid' do
     expect(repository_date_time_value).to be_valid

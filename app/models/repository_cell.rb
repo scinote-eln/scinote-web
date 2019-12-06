@@ -80,7 +80,7 @@ class RepositoryCell < ApplicationRecord
   private
 
   def repository_column_data_type
-    if !repository_column || value_type != repository_column.data_type
+    if !repository_column || value.class.name != repository_column.data_type
       errors.add(:value_type, 'must match column data type')
     end
   end
