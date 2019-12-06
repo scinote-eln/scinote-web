@@ -5,9 +5,8 @@ module RepositoryDatatable
     attributes :value, :value_type
 
     def value
-      date_time_format = @instance_options[:user].settings[:date_format]
       cell = object.repository_date_time_value
-      cell.data.strftime(date_time_format)
+      I18n.l(cell.data, format: :full_date)
     end
   end
 end

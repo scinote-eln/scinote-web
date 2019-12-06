@@ -5,9 +5,8 @@ module RepositoryDatatable
     attributes :value, :value_type
 
     def value
-      date_time_format = @instance_options[:user].settings[:date_format] + ', %H:%M'
       cell = object.repository_date_time_range_value
-      cell.start_time.strftime(date_time_format) + ' - ' + cell.end_time.strftime(date_time_format)
+      I18n.l(cell.start_time, format: :full_with_comma) + ' - ' + I18n.l(cell.end_time, format: :full_with_comma)
     end
   end
 end
