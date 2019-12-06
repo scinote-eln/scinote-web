@@ -1,13 +1,18 @@
-/* global GLOBAL_CONSTANTS  I18n */
+/* global GLOBAL_CONSTANTS */
 /* eslint-disable no-unused-vars */
 var RepositoryListColumnType = (function() {
   var manageModal = '#manage-repository-column';
+  var delimiterDropdown = '.list-column-type #delimiter';
+  var itemsTextarea = '.list-column-type #items-textarea';
+  var previewContainer = '.list-column-type  .dropdown-preview';
+  var dropdownOptions = '.list-column-type #dropdown-options';
 
   function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
   }
 
-  function textToItems(text, delimiter) {
+  function textToItems(text, delimiterContainer) {
+    var delimiter = $(delimiterContainer).val();
     var res = [];
     var usedDelimiter = '';
     var definedDelimiters = {
@@ -42,7 +47,7 @@ var RepositoryListColumnType = (function() {
       res[index] = option.slice(0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
     });
 
-    $('select#delimiter').attr('data-used-delimiter', usedDelimiter);
+    $(delimiterContainer).attr('data-used-delimiter', usedDelimiter);
     return res;
   }
 
@@ -51,9 +56,9 @@ var RepositoryListColumnType = (function() {
   }
 
 
-  function drawDropdownPreview(items) {
+  function drawDropdownPreview(items, container) {
     var $manageModal = $(manageModal);
-    var $dropdownPreview = $manageModal.find('.dropdown-preview select');
+    var $dropdownPreview = $manageModal.find(container).find('.preview-select');
     $('option', $dropdownPreview).remove();
     $.each(items, function(i, item) {
       $dropdownPreview.append($('<option>', {
@@ -61,21 +66,14 @@ var RepositoryListColumnType = (function() {
         text: item
       }));
     });
-
-    if (items.length === 0) {
-      $dropdownPreview.append($('<option>', {
-        value: '',
-        text: I18n.t('libraries.manange_modal_column.list_type.dropdown_item_select_option')
-      }));
-    }
   }
 
-  function refreshCounter(number) {
+  function refreshCounter(number, container) {
     var $manageModal = $(manageModal);
-    var $counterContainer = $manageModal.find('.limit-counter-container');
+    var $counterContainer = $manageModal.find(container).find('.limit-counter-container');
     var $btn = $manageModal.find('.column-save-btn');
 
-    $manageModal.find('.list-items-count').html(number).attr('data-count', number);
+    $counterContainer.find('.items-count').html(number).attr('data-count', number);
 
     if (number >= GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
       $counterContainer.addClass('error-to-many-items');
@@ -86,41 +84,51 @@ var RepositoryListColumnType = (function() {
     }
   }
 
-  function refreshPreviewDropdownList() {
-    var listItemsTextarea = '.list-column-type #list-items-textarea';
-    var dropdownDelimiter = '#delimiter';
-
-    var items = textToItems($(listItemsTextarea).val(), $(dropdownDelimiter).val());
+  function refreshPreviewDropdownList(preview, textarea, delimiterContainer, dropdown) {
+    var items = textToItems($(textarea).val(), delimiterContainer);
     var hashItems = [];
-    drawDropdownPreview(items);
-    refreshCounter(items.length);
+    drawDropdownPreview(items, preview);
+    refreshCounter(items.length, preview);
 
     $.each(items, (index, option) => {
       hashItems.push({ data: option });
     });
 
-    $('#dropdown_options').val(JSON.stringify(hashItems));
-    $('.limit-counter-container .items-label').html(pluralizeWord(items.length, 'item'));
+    $(dropdown).val(JSON.stringify(hashItems));
+    $(preview).find('.items-label').html(pluralizeWord(items.length, 'item'));
   }
 
   function initDropdownItemsTextArea() {
     var $manageModal = $(manageModal);
-    var listItemsTextarea = '.list-column-type #list-items-textarea';
-    var dropdownDelimiter = '#delimiter';
     var columnNameInput = '#repository-column-name';
 
     $manageModal
-      .on('change keyup paste', listItemsTextarea, function() {
-        refreshPreviewDropdownList();
+      .on('change keyup paste', itemsTextarea, function() {
+        refreshPreviewDropdownList(
+          previewContainer,
+          itemsTextarea,
+          delimiterDropdown,
+          dropdownOptions
+        );
       })
-      .on('change', dropdownDelimiter, function() {
-        refreshPreviewDropdownList();
+      .on('change', delimiterDropdown, function() {
+        refreshPreviewDropdownList(
+          previewContainer,
+          itemsTextarea,
+          delimiterDropdown,
+          dropdownOptions
+        );
       })
       .on('columnModal::partialLoadedForRepositoryListValue', function() {
-        refreshPreviewDropdownList();
+        refreshPreviewDropdownList(
+          previewContainer,
+          itemsTextarea,
+          delimiterDropdown,
+          dropdownOptions
+        );
       })
       .on('keyup change', columnNameInput, function() {
-        $manageModal.find('.preview-label').html($manageModal.find(columnNameInput).val());
+        $manageModal.find(previewContainer).find('.preview-label').html($manageModal.find(columnNameInput).val());
       });
   }
 
@@ -130,14 +138,19 @@ var RepositoryListColumnType = (function() {
     },
     checkValidation: () => {
       var $manageModal = $(manageModal);
-      var count = $manageModal.find('.list-items-count').attr('data-count');
+      var count = $manageModal.find(previewContainer).find('.items-count').attr('data-count');
       return count < GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN;
     },
     loadParams: () => {
       var repositoryColumnParams = {};
-      repositoryColumnParams.repository_list_items_attributes = JSON.parse($('#dropdown_options').val());
-      repositoryColumnParams.delimiter = $('#delimiter').data('used-delimiter');
+      var options = JSON.parse($(dropdownOptions).val());
+      repositoryColumnParams.repository_list_items_attributes = options;
+      repositoryColumnParams.delimiter = $(delimiterDropdown).data('used-delimiter');
       return repositoryColumnParams;
+    },
+
+    refreshPreviewDropdownList: (preview, textarea, delimiter, dropdown) => {
+      refreshPreviewDropdownList(preview, textarea, delimiter, dropdown);
     }
   };
 }());

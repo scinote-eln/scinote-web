@@ -7,9 +7,11 @@ class RepositoryColumn < ApplicationRecord
   has_many :repository_rows, through: :repository_cells
   has_many :repository_list_items, dependent: :destroy, index_errors: true
   has_many :repository_status_items, dependent: :destroy, index_errors: true
+  has_many :repository_checkbox_items, dependent: :destroy, index_errors: true
 
   accepts_nested_attributes_for :repository_status_items, allow_destroy: true
   accepts_nested_attributes_for :repository_list_items, allow_destroy: true
+  accepts_nested_attributes_for :repository_checkbox_items, allow_destroy: true
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
@@ -25,6 +27,7 @@ class RepositoryColumn < ApplicationRecord
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
   scope :asset_type, -> { where(data_type: 'RepositoryAssetValue') }
   scope :status_type, -> { where(data_type: 'RepositoryStatusValue') }
+  scope :checkbox_type, -> { where(data_type: 'RepositoryCheckboxValue') }
 
   def self.name_like(query)
     where('repository_columns.name ILIKE ?', "%#{query}%")

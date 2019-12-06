@@ -113,3 +113,7 @@ $.fn.dataTable.render.editRepositoryDateRangeValue = function(formId, columnId, 
 $.fn.dataTable.render.editRepositoryTimeRangeValue = function(formId, columnId, cell) {
   return '';
 };
+
+$.fn.dataTable.render.editRepositoryCheckboxValue = function(formId, columnId, cell) {
+  return '';
+};
