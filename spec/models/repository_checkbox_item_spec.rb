@@ -31,7 +31,7 @@ RSpec.describe RepositoryCheckboxItem, type: :model do
   describe 'Validations' do
     describe '#data' do
       it { is_expected.to validate_presence_of(:data) }
-      it { is_expected.to validate_length_of(:data).is_at_most(Constants::TEXT_MAX_LENGTH) }
+      it { is_expected.to validate_length_of(:data).is_at_most(Constants::NAME_MAX_LENGTH) }
       it {
         expect(repository_checkbox_item).to validate_uniqueness_of(:data)
           .scoped_to(:repository_column_id).case_insensitive

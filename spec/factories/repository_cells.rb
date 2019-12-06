@@ -45,5 +45,12 @@ FactoryBot.define do
         repository_cell.value ||= build(:repository_date_time_range_value, repository_cell: repository_cell)
       end
     end
+
+    trait :checkbox_value do
+      repository_column { create :repository_column, :date_time_range_type, repository: repository_row.repository }
+      after(:build) do |repository_cell|
+        repository_cell.value ||= build(:repository_checkbox_value, repository_cell: repository_cell)
+      end
+    end
   end
 end
