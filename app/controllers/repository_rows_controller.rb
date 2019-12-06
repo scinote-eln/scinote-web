@@ -33,7 +33,6 @@ class RepositoryRowsController < ApplicationController
                                 :created_by,
                                 repository_cells: :value
                               )
-    @current_user = current_user
   end
 
   def create

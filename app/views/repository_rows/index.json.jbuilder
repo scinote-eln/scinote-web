@@ -6,6 +6,5 @@ json.data do
                                   @repository,
                                   @columns_mappings,
                                   @repository.team,
-                                  @assigned_rows,
-                                  @current_user)
+                                  @assigned_rows)
 end
