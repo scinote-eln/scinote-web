@@ -2,7 +2,7 @@
 <% readonly = false unless defined?(readonly) %>
 <% edit_mode = (comment.user == current_user && !readonly) %>
   <div 
-    class="comment-container inline-init-handler <%= edit_mode ? 'comment-editable-field' : '' %> <%= report ? 'report' : '' %>" 
+    class="comment-container <%= edit_mode ? 'inline-init-handler' : '' %> <%= report ? 'report' : '' %>" 
     data-field-to-update="message"
     data-params-group="comment"
     data-path-to-update="<%= comment_action_url(comment) %>"
