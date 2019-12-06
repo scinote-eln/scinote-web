@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryStatusItemsController < ApplicationController
-  before_action :load_vars, only: :search
+  before_action :load_vars
 
   def search
     status_items = @repository_column.repository_status_items
