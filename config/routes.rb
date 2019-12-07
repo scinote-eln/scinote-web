@@ -596,6 +596,8 @@ Rails.application.routes.draw do
     post 'repository_list_items', to: 'repository_list_items#search',
                                   defaults: { format: 'json' }
 
+    get 'repository_status_items', to: 'repository_status_items#search'
+
     get 'repository_rows/:id', to: 'repository_rows#show',
                                as: :repository_row,
                                defaults: { format: 'json' }

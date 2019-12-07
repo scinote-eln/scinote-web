@@ -1047,6 +1047,8 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
+      assets:
+        select_file_btn: "Select File (Max %{max_size} MB)..."
     add_new_record: "New item"
     import_records:
       import: 'Import'
@@ -1920,6 +1922,7 @@ en:
       full_js: "D.M.YYYY HH:mm"
       full: "%{date_format} %H:%M"
       full_with_tz: "%{date_format} %H:%M %z"
+      full_with_comma: "%{date_format}, %H:%M"
       full_date: "%{date_format}"
       time: "%H:%M"
       short: "%H"

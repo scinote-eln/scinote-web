@@ -52,9 +52,12 @@
     .ds-simple {
       font-size: 14px;
       line-height: 28px;
+      overflow: hidden;
       padding-left: 5px;
       position: relative;
+      text-overflow: ellipsis;
       transition: .3s;
+      white-space: nowrap;
       z-index: 2;
     }
 

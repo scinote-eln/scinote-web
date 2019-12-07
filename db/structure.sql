@@ -1236,7 +1236,8 @@ CREATE TABLE public.repository_date_time_range_values (
     last_modified_by_id bigint,
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    type character varying
 );
 
 
@@ -1269,7 +1270,8 @@ CREATE TABLE public.repository_date_time_values (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     created_by_id bigint NOT NULL,
-    last_modified_by_id bigint NOT NULL
+    last_modified_by_id bigint NOT NULL,
+    type character varying
 );
 
 
@@ -6845,6 +6847,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191007144622'),
 ('20191009146101'),
 ('20191105143702'),
-('20191115143747');
+('20191115143747'),
+('20191206105058');
 
 

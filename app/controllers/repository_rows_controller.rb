@@ -142,8 +142,22 @@ class RepositoryRowsController < ApplicationController
               else
                 existing.delete
               end
+            # ############################################ #
+            # Temporary, will be refactored in next ticket #
+            # ############################################ #
+            elsif existing.value_type == 'RepositoryStatusValue'
+              item = RepositoryStatusItem.where(
+                repository_column: existing.repository_column
+              ).find(value) unless value == '-1'
+              if item
+                existing.value.update_attribute(
+                  :repository_status_item_id, item.id
+                )
+              else
+                existing.delete
+              end
             elsif existing.value_type == 'RepositoryAssetValue'
-              existing.value.destroy && next if remove_file_columns_params.include?(key)
+              existing.value.destroy && next if value == '-1'
               if existing.value.asset.update(file: value)
                 existing.value.asset.created_by = current_user
                 existing.value.asset.last_modified_by = current_user
@@ -223,6 +237,23 @@ class RepositoryRowsController < ApplicationController
         }
       )
       save_successful = list_item && cell_value.save
+    # ############################################ #
+    # Temporary, will be refactored in next ticket #
+    # ############################################ #
+    elsif column.data_type == 'RepositoryStatusValue'
+      return if value == '-1'
+
+      status_item = RepositoryStatusItem.where(repository_column: column).find(value)
+      cell_value = RepositoryStatusValue.new(
+        repository_status_item_id: status_item.id,
+        created_by: current_user,
+        last_modified_by: current_user,
+        repository_cell_attributes: {
+          repository_row: record,
+          repository_column: column
+        }
+      )
+      save_successful = status_item && cell_value.save
     elsif column.data_type == 'RepositoryAssetValue'
       return if value.blank?
       asset = Asset.new(file: value,

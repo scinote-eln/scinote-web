@@ -145,19 +145,19 @@ var RepositoryDatatable = (function(global) {
   }
 
   // Helper functions
-  function listItemDropdown(options, currentValue, columnId) {
-    var html = `<select class="form-control selectpicker repository-dropdown"
-                data-abs-min-length="2" data-live-search="true"
-                data-container="body" column_id="${columnId}">
-                <option value="-1"></option>`;
-    $.each(options, function(index, value) {
-      var selected = (currentValue === value[1]) ? 'selected' : '';
-      html += '<option value="' + value[0] + '" ' + selected + '>';
-      html += value[1] + '</option>';
-    });
-    html += '</select>';
-    return html;
-  }
+  // function listItemDropdown(options, currentValue, columnId) {
+  //   var html = `<select class="form-control selectpicker repository-dropdown"
+  //               data-abs-min-length="2" data-live-search="true"
+  //               data-container="body" column_id="${columnId}">
+  //               <option value="-1"></option>`;
+  //   $.each(options, function(index, value) {
+  //     var selected = (currentValue === value[1]) ? 'selected' : '';
+  //     html += '<option value="' + value[0] + '" ' + selected + '>';
+  //     html += value[1] + '</option>';
+  //   });
+  //   html += '</select>';
+  //   return html;
+  // }
 
   function initRowSelection() {
     // Handle clicks on checkbox
@@ -250,7 +250,8 @@ var RepositoryDatatable = (function(global) {
 
   function initSaveButton() {
     TABLE_WRAPPER.on('click', '#saveRecord', function() {
-      $(TABLE_ID).find('.repository-row-edit-form').submit();
+      var $table = $(TABLE_ID);
+      RepositoryDatatableRowEditor.validateAndSubmit($table);
     });
   }
 
@@ -401,24 +402,24 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function initialListItemsRequest(columnId) {
-    var massageResponse = [];
-    $.ajax({
-      url: $(TABLE_ID).data('list-items-path'),
-      type: 'POST',
-      dataType: 'json',
-      async: false,
-      data: {
-        q: '',
-        column_id: columnId
-      }
-    }).done(function(data) {
-      $.each(data.list_items, function(index, el) {
-        massageResponse.push([el.id, el.data]);
-      });
-    });
-    return listItemDropdown(massageResponse, '-1', columnId);
-  }
+  // function initialListItemsRequest(columnId) {
+  //   var massageResponse = [];
+  //   $.ajax({
+  //     url: $(TABLE_ID).data('list-items-path'),
+  //     type: 'POST',
+  //     dataType: 'json',
+  //     async: false,
+  //     data: {
+  //       q: '',
+  //       column_id: columnId
+  //     }
+  //   }).done(function(data) {
+  //     $.each(data.list_items, function(index, el) {
+  //       massageResponse.push([el.id, el.data]);
+  //     });
+  //   });
+  //   return listItemDropdown(massageResponse, '-1', columnId);
+  // }
 
   function initSelectPicker() {
     $('.selectpicker')

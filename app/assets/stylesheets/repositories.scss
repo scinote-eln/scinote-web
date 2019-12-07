@@ -65,6 +65,10 @@
   .repository-status-value-icon {
     margin-right: 5px;
   }
+
+  .dropdown-selector-container {
+    width: 150px;
+  }
 }
 
 .repository-cog {
@@ -158,7 +162,111 @@
   }
 
   .file-preview-link {
+    min-width: 140px;
     padding-left: 5px;
+  }
+}
+
+.file-editing {
+  width: 200px;
+
+  .file-upload-button {
+    background-color: $color-white;
+    border: solid 1px;
+    border-radius: 3px;
+    height: 34px;
+    line-height: 32px;
+    position: relative;
+
+    &.new-file {
+      .icon {
+        display: none;
+      }
+
+      label {
+        display: inline-block;
+      }
+
+      &:hover {
+        .fa-trash {
+          display: none;
+        }
+      }
+    }
+
+    .icon {
+      display: inline-block;
+      text-align: center;
+      width: 34px;
+    }
+
+    .label-asset {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: calc(100% - 44px);
+    }
+
+    .fa-trash {
+      background-color: $color-white;
+      cursor: pointer;
+      display: none;
+      line-height: 32px;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      top: 0;
+      width: 34px;
+      z-index: 3;
+    }
+
+    &:hover {
+      .fa-trash {
+        display: inline-block;
+      }
+    }
+
+    &.error {
+      border-color: $brand-danger;
+      margin-bottom: 10px;
+
+      &::after {
+        background-color: $color-white;
+        bottom: 0;
+        color: $brand-danger;
+        content: "\f071";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 501;
+        line-height: 32px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        width: 34px;
+      }
+
+      &::before {
+        bottom: -15px;
+        color: $brand-danger;
+        content: attr(data-error-text);
+        left: 0;
+        line-height: 15px;
+        position: absolute;
+        width: 100%;
+      }
+    }
+  }
+
+
+
+  input[type=file] {
+    display: none;
+  }
+
+  label {
+    display: none;
+    font-weight: normal;
+    margin-left: 10px;
   }
 }
 

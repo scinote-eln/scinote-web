@@ -67,6 +67,7 @@ module RepositoryDatatableHelper
   end
 
   def display_cell_value(cell)
-    "RepositoryDatatable::#{cell.value_type}Serializer".constantize.new(cell).serializable_hash
+    "RepositoryDatatable::#{cell.repository_column.data_type}Serializer"
+      .constantize.new(cell).serializable_hash
   end
 end
