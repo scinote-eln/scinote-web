@@ -3,29 +3,42 @@
 require 'rails_helper'
 
 describe RepositoryDateTimeRangeValue, type: :model do
-  let(:repository_date_time_range_value) { create :repository_date_time_range_value }
-
-  it 'is valid' do
-    expect(repository_date_time_range_value).to be_valid
+  let(:date_time_range_value) do
+    create :repository_date_time_range_value, start_time: Time.utc(2000, 10, 10), end_time: Time.utc(2000, 10, 11)
   end
 
-  describe 'Validations' do
-    describe '#repository_cell' do
-      it { is_expected.to validate_presence_of(:repository_cell) }
-    end
-
-    describe '#start_time' do
-      it { is_expected.to validate_presence_of(:start_time) }
-    end
-
-    describe '#end_time' do
-      it { is_expected.to validate_presence_of(:end_time) }
+  describe '.formatted' do
+    it 'prints date format with time' do
+      str = '10/10/2000, 00:00 - 10/11/2000, 00:00'
+      expect(date_time_range_value.formatted).to eq(str)
     end
   end
 
-  describe 'Associations' do
-    it { is_expected.to belong_to(:created_by).optional }
-    it { is_expected.to belong_to(:last_modified_by).optional }
-    it { is_expected.to have_one(:repository_cell) }
+  describe '.data_changed?' do
+    context 'when has different datetime value' do
+      let(:new_values) do
+        {
+          start_time: Time.utc(2000, 10, 10).to_s,
+          end_time: Time.utc(2000, 10, 12).to_s
+        }
+      end
+
+      it do
+        expect(date_time_range_value.data_changed?(new_values)).to be_truthy
+      end
+    end
+
+    context 'when has same datetime value' do
+      let(:new_values) do
+        {
+          start_time: Time.utc(2000, 10, 10).to_s,
+          end_time: Time.utc(2000, 10, 11).to_s
+        }
+      end
+
+      it do
+        expect(date_time_range_value.data_changed?(new_values)).to be_falsey
+      end
+    end
   end
 end

@@ -42,4 +42,46 @@ describe RepositoryAssetValue, type: :model do
       expect(repository_asset_value.reload.formatted).to eq 'test.jpg'
     end
   end
+
+  describe 'data_changed?' do
+    it do
+      expect(repository_asset_value.data_changed?(anything)).to be_truthy
+    end
+  end
+
+  describe 'update_data!' do
+    let(:user) { create :user }
+    let(:new_file_base64) do
+      {
+        file_data: 'data:image/png;base64, someImageDataHere',
+        filename: 'newFile.png'
+      }
+    end
+
+    let(:new_file_with_signed_url) do
+      {
+        signed_url: 'someUrl'
+      }
+    end
+
+    context 'when has signed_url' do
+      it 'should change last_modified_by and data' do
+        repository_asset_value.save
+
+        expect { repository_asset_value.update_data!(new_file_with_signed_url, user) }
+          .to(change { repository_asset_value.reload.last_modified_by.id }
+                .and(change { repository_asset_value.reload.data }))
+      end
+    end
+
+    context 'when has base464 file' do
+      it 'should change last_modified_by and data' do
+        repository_asset_value.save
+
+        expect { repository_asset_value.update_data!(new_file_base64, user) }
+          .to(change { repository_asset_value.reload.last_modified_by.id }
+                .and(change { repository_asset_value.reload.data }))
+      end
+    end
+  end
 end

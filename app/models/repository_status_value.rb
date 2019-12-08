@@ -18,6 +18,16 @@ class RepositoryStatusValue < ApplicationRecord
     data
   end
 
+  def data_changed?(new_data)
+    new_data.to_i != repository_status_item_id
+  end
+
+  def update_data!(new_data, user)
+    self.repository_status_item_id = new_data.to_i
+    self.last_modified_by = user
+    save!
+  end
+
   def data
     return nil unless repository_status_item
 

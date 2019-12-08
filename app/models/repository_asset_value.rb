@@ -33,8 +33,13 @@ class RepositoryAssetValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data].split(',')[1])),
-                      filename: new_data[:file_name])
+    if new_data[:signed_url]
+      asset.update(file: new_data[:sigend_url])
+    else
+      asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data].split(',')[1])),
+                        filename: new_data[:filename])
+    end
+
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!

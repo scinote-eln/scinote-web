@@ -52,4 +52,36 @@ RSpec.describe RepositoryListValue, type: :model do
       expect(repository_list_value.reload.data).to be_nil
     end
   end
+
+  describe 'data_changed?' do
+    context 'when has new data' do
+      it do
+        expect(repository_list_value.data_changed?('-1')).to be_truthy
+      end
+    end
+
+    context 'when has same data' do
+      it do
+        repository_list_value.save
+        id = repository_list_value.repository_list_item.id
+
+        expect(repository_list_value.data_changed?(id)).to be_falsey
+      end
+    end
+  end
+
+  describe 'update_data!' do
+    let(:user) { create :user }
+    let(:new_list_item) do
+      create :repository_list_item, repository_column: repository_list_value.repository_list_item.repository_column
+    end
+
+    it 'should change last_modified_by and data' do
+      repository_list_value.save
+
+      expect { repository_list_value.update_data!(new_list_item.id, user) }
+        .to(change { repository_list_value.reload.last_modified_by.id }
+              .and(change { repository_list_value.reload.data }))
+    end
+  end
 end
