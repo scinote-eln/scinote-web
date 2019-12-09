@@ -1136,6 +1136,7 @@ en:
       dropdown_item_descirption: "Dropdown items should be separated by comma."
       select:
         repository_text_value: "Text"
+        repository_number_value: "Number"
         repository_date_value: "Date"
         repository_time_value: "Time"
         repository_date_time_value: "Date & Time"
@@ -1149,6 +1150,8 @@ en:
       edit:
         title: "Edit %{name} Column"
         button: "Update column"
+      number_type:
+        decimals_label: "Decimal digits"
       list_type:
         delimiter_label: "Delimiter"
         dropdown_items_label: "Dropdown items"

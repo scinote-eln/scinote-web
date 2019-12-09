@@ -1257,7 +1257,8 @@ CREATE TABLE public.repository_columns (
     data_type integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    delimiter character varying
+    delimiter character varying,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -1415,6 +1416,39 @@ CREATE SEQUENCE public.repository_list_values_id_seq
 --
 
 ALTER SEQUENCE public.repository_list_values_id_seq OWNED BY public.repository_list_values.id;
+
+
+--
+-- Name: repository_number_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_number_values (
+    id bigint NOT NULL,
+    data numeric,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_number_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_number_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_number_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_number_values_id_seq OWNED BY public.repository_number_values.id;
 
 
 --
@@ -2989,6 +3023,13 @@ ALTER TABLE ONLY public.repository_list_values ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: repository_number_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values ALTER COLUMN id SET DEFAULT nextval('public.repository_number_values_id_seq'::regclass);
+
+
+--
 -- Name: repository_rows id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3555,6 +3596,14 @@ ALTER TABLE ONLY public.repository_list_items
 
 ALTER TABLE ONLY public.repository_list_values
     ADD CONSTRAINT repository_list_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_number_values repository_number_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT repository_number_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4823,6 +4872,27 @@ CREATE INDEX index_repository_list_values_on_repository_list_item_id ON public.r
 
 
 --
+-- Name: index_repository_number_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_created_by_id ON public.repository_number_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_number_values_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_data ON public.repository_number_values USING btree (data);
+
+
+--
+-- Name: index_repository_number_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.repository_number_values USING btree (last_modified_by_id);
+
+
+--
 -- Name: index_repository_rows_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5880,6 +5950,14 @@ ALTER TABLE ONLY public.step_assets
 
 
 --
+-- Name: repository_number_values fk_rails_3df53c9b27; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT fk_rails_3df53c9b27 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: projects fk_rails_47aee20018; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6221,6 +6299,14 @@ ALTER TABLE ONLY public.wopi_apps
 
 ALTER TABLE ONLY public.reports
     ADD CONSTRAINT fk_rails_8e98747719 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_number_values fk_rails_8f8a2f87f1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT fk_rails_8f8a2f87f1 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7033,3 +7119,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191205133447'),
 ('20191205133522');
 ('20191206105058');
+('20191204112549');

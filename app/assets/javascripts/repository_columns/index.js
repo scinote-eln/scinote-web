@@ -9,7 +9,8 @@ var RepositoryColumns = (function() {
     RepositoryDateValue: 'RepositoryDateColumnType',
     RepositoryDateTimeValue: 'RepositoryDateTimeColumnType',
     RepositoryTimeValue: 'RepositoryDateTimeColumnType',
-    RepositoryChecklistValue: 'RepositoryChecklistColumnType'
+    RepositoryChecklistValue: 'RepositoryChecklistColumnType',
+    RepositoryNumberValue: 'RepositoryNumberColumnType'
   };
 
   function initColumnTypeSelector() {

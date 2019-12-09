@@ -14,6 +14,12 @@ class RepositoryCell < ApplicationRecord
                .where(repository_cells: { value_type: 'RepositoryTextValue' })
              end),
              optional: true, foreign_key: :value_id
+  belongs_to :repository_number_value,
+             (lambda do
+               includes(:repository_cell)
+               .where(repository_cells: { value_type: 'RepositoryNumberValue' })
+             end),
+             optional: true, foreign_key: :value_id
   belongs_to :repository_date_time_value,
              (lambda do
                includes(:repository_cell)
