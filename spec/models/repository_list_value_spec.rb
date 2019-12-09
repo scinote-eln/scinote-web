@@ -75,13 +75,22 @@ RSpec.describe RepositoryListValue, type: :model do
     let(:new_list_item) do
       create :repository_list_item, repository_column: repository_list_value.repository_list_item.repository_column
     end
+    context 'when update data' do
+      it 'should change last_modified_by and data' do
+        repository_list_value.save
 
-    it 'should change last_modified_by and data' do
-      repository_list_value.save
+        expect { repository_list_value.update_data!(new_list_item.id, user) }
+          .to(change { repository_list_value.reload.last_modified_by.id }
+                .and(change { repository_list_value.reload.data }))
+      end
+    end
 
-      expect { repository_list_value.update_data!(new_list_item.id, user) }
-        .to(change { repository_list_value.reload.last_modified_by.id }
-              .and(change { repository_list_value.reload.data }))
+    context 'when delete cell value' do
+      it do
+        repository_list_value.save
+
+        expect { repository_list_value.update_data!('-1', user) }.to change(RepositoryListValue, :count).by(-1)
+      end
     end
   end
 end

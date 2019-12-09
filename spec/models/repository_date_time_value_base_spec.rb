@@ -29,12 +29,22 @@ describe RepositoryDateTimeValueBase, type: :model do
     let(:user) { create :user }
     let(:new_data) { Time.now.utc.to_s }
 
-    it 'should change last_modified_by and dates' do
-      repository_date_time_value.save
+    context 'when update data' do
+      it 'should change last_modified_by and dates' do
+        repository_date_time_value.save
 
-      expect { repository_date_time_value.update_data!(new_data, user) }
-        .to(change { repository_date_time_value.reload.last_modified_by.id }
-              .and(change { repository_date_time_value.reload.data }))
+        expect { repository_date_time_value.update_data!(new_data, user) }
+          .to(change { repository_date_time_value.reload.last_modified_by.id }
+                .and(change { repository_date_time_value.reload.data }))
+      end
+    end
+
+    context 'when delete cell value' do
+      it do
+        repository_date_time_value.save
+
+        expect { repository_date_time_value.update_data!('', user) }.to change(RepositoryDateTimeValue, :count).by(-1)
+      end
     end
   end
 end

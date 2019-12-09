@@ -23,6 +23,8 @@ class RepositoryStatusValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
+    destroy! && return if new_data == '-1'
+
     self.repository_status_item_id = new_data.to_i
     self.last_modified_by = user
     save!

@@ -64,23 +64,33 @@ describe RepositoryAssetValue, type: :model do
       }
     end
 
-    context 'when has signed_url' do
-      it 'should change last_modified_by and data' do
-        repository_asset_value.save
+    context 'when update data' do
+      context 'when has signed_url' do
+        it 'should change last_modified_by and data' do
+          repository_asset_value.save
 
-        expect { repository_asset_value.update_data!(new_file_with_signed_url, user) }
-          .to(change { repository_asset_value.reload.last_modified_by.id }
-                .and(change { repository_asset_value.reload.data }))
+          expect { repository_asset_value.update_data!(new_file_with_signed_url, user) }
+            .to(change { repository_asset_value.reload.last_modified_by.id }
+                  .and(change { repository_asset_value.reload.data }))
+        end
+      end
+
+      context 'when has base464 file' do
+        it 'should change last_modified_by and data' do
+          repository_asset_value.save
+
+          expect { repository_asset_value.update_data!(new_file_base64, user) }
+            .to(change { repository_asset_value.reload.last_modified_by.id }
+                  .and(change { repository_asset_value.reload.data }))
+        end
       end
     end
 
-    context 'when has base464 file' do
-      it 'should change last_modified_by and data' do
+    context 'when delete cell value' do
+      it do
         repository_asset_value.save
 
-        expect { repository_asset_value.update_data!(new_file_base64, user) }
-          .to(change { repository_asset_value.reload.last_modified_by.id }
-                .and(change { repository_asset_value.reload.data }))
+        expect { repository_asset_value.update_data!('-1', user) }.to change(RepositoryAssetValue, :count).by(-1)
       end
     end
   end

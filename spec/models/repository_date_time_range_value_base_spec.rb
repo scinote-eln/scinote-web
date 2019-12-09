@@ -37,12 +37,24 @@ describe RepositoryDateTimeRangeValueBase, type: :model do
         end_time: (Time.zone.now + 2.days).utc.to_s
       }
     end
-    it 'should change last_modified_by and dates' do
-      repository_date_time_range_value.save
 
-      expect { repository_date_time_range_value.update_data!(new_times, user) }
-        .to(change { repository_date_time_range_value.reload.last_modified_by.id }
-              .and(change { repository_date_time_range_value.reload.data }))
+    context 'when update data' do
+      it 'should change last_modified_by and dates' do
+        repository_date_time_range_value.save
+
+        expect { repository_date_time_range_value.update_data!(new_times, user) }
+          .to(change { repository_date_time_range_value.reload.last_modified_by.id }
+                .and(change { repository_date_time_range_value.reload.data }))
+      end
+    end
+
+    context 'when delete cell value' do
+      it do
+        repository_date_time_range_value.save
+
+        expect { repository_date_time_range_value.update_data!('', user) }
+          .to(change(RepositoryDateTimeRangeValue, :count).by(-1))
+      end
     end
   end
 

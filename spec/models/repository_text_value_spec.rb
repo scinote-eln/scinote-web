@@ -53,12 +53,22 @@ describe RepositoryTextValue, type: :model do
   describe 'update_data!' do
     let(:user) { create :user }
 
-    it 'should change last_modified_by and data' do
-      repository_text_value.save
+    context 'when update data' do
+      it 'should change last_modified_by and data' do
+        repository_text_value.save
 
-      expect { repository_text_value.update_data!('newData', user) }
-        .to(change { repository_text_value.reload.last_modified_by.id }
-              .and(change { repository_text_value.reload.data }))
+        expect { repository_text_value.update_data!('newData', user) }
+          .to(change { repository_text_value.reload.last_modified_by.id }
+                .and(change { repository_text_value.reload.data }))
+      end
+    end
+
+    context 'when delete cell value' do
+      it do
+        repository_text_value.save
+
+        expect { repository_text_value.update_data!('', user) }.to change(RepositoryTextValue, :count).by(-1)
+      end
     end
   end
 end

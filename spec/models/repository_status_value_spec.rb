@@ -45,12 +45,22 @@ describe RepositoryStatusValue do
              repository_column: repository_status_value.repository_status_item.repository_column
     end
 
-    it 'should change last_modified_by and data' do
-      repository_status_value.save
+    context 'when update data' do
+      it 'should change last_modified_by and data' do
+        repository_status_value.save
 
-      expect { repository_status_value.update_data!(new_status_item.id, user) }
-        .to(change { repository_status_value.reload.last_modified_by.id }
-              .and(change { repository_status_value.reload.data }))
+        expect { repository_status_value.update_data!(new_status_item.id, user) }
+          .to(change { repository_status_value.reload.last_modified_by.id }
+                .and(change { repository_status_value.reload.data }))
+      end
+    end
+
+    context 'when delete cell value' do
+      it do
+        repository_status_value.save
+
+        expect { repository_status_value.update_data!('-1', user) }.to change(RepositoryStatusValue, :count).by(-1)
+      end
     end
   end
 end

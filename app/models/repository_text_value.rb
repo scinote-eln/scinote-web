@@ -23,6 +23,8 @@ class RepositoryTextValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
+    destroy! && return if new_data == ''
+
     self.data = new_data
     self.last_modified_by = user
     save!

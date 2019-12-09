@@ -33,6 +33,8 @@ class RepositoryAssetValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
+    destroy! && return if new_data == '-1'
+
     if new_data[:signed_url]
       asset.update(file: new_data[:sigend_url])
     else
