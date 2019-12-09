@@ -33,7 +33,7 @@ module RepositoryColumns
         m.merge!(repository_id: @repository.id, created_by_id: @user.id, last_modified_by_id: @user.id)
       end
 
-      @params[:repository_checkbox_items_attributes]&.map do |m|
+      @params[:repository_checklist_items_attributes]&.map do |m|
         m.merge!(repository_id: @repository.id, created_by_id: @user.id, last_modified_by_id: @user.id)
       end
 

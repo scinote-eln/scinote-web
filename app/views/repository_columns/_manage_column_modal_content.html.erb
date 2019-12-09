@@ -75,17 +75,17 @@
             <%= t('libraries.manange_modal_column.select.repository_date_time_value') %>
           </option>
 
-          <option data-create-url="<%= repository_repository_columns_checkbox_columns_path(@repository) %>"
-                  data-edit-url="<%= repository_repository_columns_checkbox_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
-                  value="RepositoryCheckboxValue"
-                  <%= 'selected' if @repository_column.repository_checkbox_value? %> >
+          <option data-create-url="<%= repository_repository_columns_checklist_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_checklist_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryChecklistValue"
+                  <%= 'selected' if @repository_column.repository_checklist_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_checklist_value') %>
           </option>
         </select>
       </div>
     </div>
     <hr/>
-    <% columns = ['text', 'asset', 'list', 'status', 'date', 'time', 'datetime', 'checkbox'] %>
+    <% columns = ['text', 'asset', 'list', 'status', 'date', 'time', 'datetime', 'checklist'] %>
     <% columns.each do |column| %>
       <span style="display: none" class="column-type <%= column %>-column-type" data-column-type="Repository<%= column.capitalize %>Value">
         <%= render partial: "repository_columns/manage_column_partials/#{column}.html.erb", locals: {column: @repository_column}  %>

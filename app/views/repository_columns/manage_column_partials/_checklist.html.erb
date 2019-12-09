@@ -18,7 +18,7 @@
     <%= t('libraries.manange_modal_column.checklist_type.checklist_items') %>
   </label>
   <div class="col-sm-9">
-    <%= text_area_tag 'items-textarea', column.repository_checkbox_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea' %>
+    <%= text_area_tag 'items-textarea', column.repository_checklist_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea' %>
   </div>
 </div>
 <div class="dropdown-preview">

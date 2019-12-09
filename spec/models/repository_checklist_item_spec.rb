@@ -2,15 +2,15 @@
 
 require 'rails_helper'
 
-RSpec.describe RepositoryCheckboxItem, type: :model do
-  let(:repository_checkbox_item) { build :repository_checkbox_item }
+RSpec.describe RepositoryChecklistItem, type: :model do
+  let(:repository_checklist_item) { build :repository_checklist_item }
 
   it 'is valid' do
-    expect(repository_checkbox_item).to be_valid
+    expect(repository_checklist_item).to be_valid
   end
 
-  it 'should be of class RepositoryListItem' do
-    expect(subject.class).to eq RepositoryCheckboxItem
+  it 'should be of class RepositoryChecklistItem' do
+    expect(subject.class).to eq RepositoryChecklistItem
   end
 
   describe 'Database table' do
@@ -33,7 +33,7 @@ RSpec.describe RepositoryCheckboxItem, type: :model do
       it { is_expected.to validate_presence_of(:data) }
       it { is_expected.to validate_length_of(:data).is_at_most(Constants::NAME_MAX_LENGTH) }
       it {
-        expect(repository_checkbox_item).to validate_uniqueness_of(:data)
+        expect(repository_checklist_item).to validate_uniqueness_of(:data)
           .scoped_to(:repository_column_id).case_insensitive
       }
     end

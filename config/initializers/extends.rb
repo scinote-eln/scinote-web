@@ -52,8 +52,7 @@ class Extends
                             RepositoryDateTimeRangeValue: 7,
                             RepositoryTimeRangeValue: 8,
                             RepositoryDateRangeValue: 9,
-                            RepositoryCheckboxValue: 10,
-                          }
+                            RepositoryChecklistValue: 10 }
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES

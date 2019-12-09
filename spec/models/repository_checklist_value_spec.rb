@@ -2,21 +2,21 @@
 
 require 'rails_helper'
 
-RSpec.describe RepositoryCheckboxValue, type: :model do
-  let(:repository_checkbox_value) { build :repository_checkbox_value }
+RSpec.describe RepositoryChecklistValue, type: :model do
+  let(:repository_checklist_value) { build :repository_checklist_value }
 
   it 'is valid' do
-    expect(repository_checkbox_value).to be_valid
+    expect(repository_checklist_value).to be_valid
   end
 
-  it 'should be of class RepositoryCheckboxValue' do
-    expect(subject.class).to eq RepositoryCheckboxValue
+  it 'should be of class RepositoryChecklistValue' do
+    expect(subject.class).to eq RepositoryChecklistValue
   end
 
   describe 'Database table' do
     it { should have_db_column :created_by_id }
     it { should have_db_column :last_modified_by_id }
-    it { should have_db_column :repository_checkboxes_items }
+    it { should have_db_column :repository_checklist_items }
   end
 
   describe 'Relations' do

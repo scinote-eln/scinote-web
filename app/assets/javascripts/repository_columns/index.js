@@ -8,7 +8,7 @@ var RepositoryColumns = (function() {
     RepositoryDateValue: 'RepositoryDateColumnType',
     RepositoryDateTimeValue: 'RepositoryDateTimeColumnType',
     RepositoryTimeValue: 'RepositoryDateTimeColumnType',
-    RepositoryCheckboxValue: 'RepositoryCheckboxColumnType'
+    RepositoryChecklistValue: 'RepositoryChecklistColumnType'
   };
 
   function initColumnTypeSelector() {
@@ -204,7 +204,7 @@ var RepositoryColumns = (function() {
         initManageColumnModal();
         RepositoryListColumnType.init();
         RepositoryStatusColumnType.init();
-        RepositoryCheckboxColumnType.init();
+        RepositoryChecklistColumnType.init();
       }
     }
   };

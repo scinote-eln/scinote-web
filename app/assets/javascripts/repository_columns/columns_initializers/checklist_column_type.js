@@ -1,13 +1,13 @@
 /* global GLOBAL_CONSTANTS dropdownSelector RepositoryListColumnType */
  
-var RepositoryCheckboxColumnType = (function() {
+var RepositoryChecklistColumnType = (function() {
   var manageModal = '#manage-repository-column';
-  var delimiterDropdown = '.checkbox-column-type .delimiter';
-  var itemsTextarea = '.checkbox-column-type .items-textarea';
-  var previewContainer = '.checkbox-column-type .dropdown-preview';
-  var dropdownOptions = '.checkbox-column-type .dropdown-options';
+  var delimiterDropdown = '.checklist-column-type .delimiter';
+  var itemsTextarea = '.checklist-column-type .items-textarea';
+  var previewContainer = '.checklist-column-type .dropdown-preview';
+  var dropdownOptions = '.checklist-column-type .dropdown-options';
 
-  function initCheckboxDropdown() {
+  function initChecklistDropdown() {
     dropdownSelector.init(previewContainer + ' .preview-select', {
       noEmptyOption: true,
       optionClass: 'checkbox-icon',
@@ -22,7 +22,7 @@ var RepositoryCheckboxColumnType = (function() {
 
     $manageModal
       .on('show.bs.modal', function() {
-        setTimeout(() => { initCheckboxDropdown(); }, 200);
+        setTimeout(() => { initChecklistDropdown(); }, 200);
       })
       .on('change keyup paste', itemsTextarea, function() {
         RepositoryListColumnType.refreshPreviewDropdownList(
@@ -31,7 +31,7 @@ var RepositoryCheckboxColumnType = (function() {
           delimiterDropdown,
           dropdownOptions
         );
-        initCheckboxDropdown();
+        initChecklistDropdown();
       })
       .on('change', delimiterDropdown, function() {
         RepositoryListColumnType.refreshPreviewDropdownList(
@@ -40,16 +40,16 @@ var RepositoryCheckboxColumnType = (function() {
           delimiterDropdown,
           dropdownOptions
         );
-        initCheckboxDropdown();
+        initChecklistDropdown();
       })
-      .on('columnModal::partialLoadedForRepositoryCheckboxValue', function() {
+      .on('columnModal::partialLoadedForRepositoryChecklistValue', function() {
         RepositoryListColumnType.refreshPreviewDropdownList(
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
           dropdownOptions
         );
-        initCheckboxDropdown();
+        initChecklistDropdown();
       })
       .on('keyup change', columnNameInput, function() {
         $manageModal.find(previewContainer).find('.preview-label').html($manageModal.find(columnNameInput).val());
@@ -68,7 +68,7 @@ var RepositoryCheckboxColumnType = (function() {
     loadParams: () => {
       var repositoryColumnParams = {};
       var options = JSON.parse($(dropdownOptions).val());
-      repositoryColumnParams.repository_checkbox_items_attributes = options;
+      repositoryColumnParams.repository_checklist_items_attributes = options;
       repositoryColumnParams.delimiter = $(delimiterDropdown).data('used-delimiter');
       return repositoryColumnParams;
     }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class CheckboxColumnsController < BaseColumnsController
+  class ChecklistColumnsController < BaseColumnsController
     before_action :load_column, only: %i(update destroy)
     before_action :check_create_permissions, only: :create
     before_action :check_manage_permissions, only: %i(update destroy)
@@ -10,7 +10,7 @@ module RepositoryColumns
     def create
       service = RepositoryColumns::CreateColumnService
                 .call(user: current_user, repository: @repository, team: current_team,
-                      column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryCheckboxValue],
+                      column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryChecklistValue],
                       params: repository_column_params)
 
       if service.succeed?
@@ -21,7 +21,7 @@ module RepositoryColumns
     end
 
     def update
-      service = RepositoryColumns::UpdateCheckboxColumnService
+      service = RepositoryColumns::UpdateChecklistColumnService
                 .call(user: current_user,
                       team: current_team,
                       column: @repository_column,
@@ -48,7 +48,7 @@ module RepositoryColumns
     private
 
     def repository_column_params
-      params.require(:repository_column).permit(:name, :delimiter, repository_checkbox_items_attributes: %i(data))
+      params.require(:repository_column).permit(:name, :delimiter, repository_checklist_items_attributes: %i(data))
     end
 
     def delimiters

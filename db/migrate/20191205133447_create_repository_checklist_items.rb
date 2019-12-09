@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class CreateRepositoryCheckboxItems < ActiveRecord::Migration[6.0]
+class CreateRepositoryChecklistItems < ActiveRecord::Migration[6.0]
   def change
-    create_table :repository_checkbox_items do |t|
+    create_table :repository_checklist_items do |t|
       t.string :data, null: false, index: true
       t.references :repository, null: false, foreign_key: true
       t.references :repository_column, null: false, foreign_key: true

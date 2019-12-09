@@ -244,23 +244,23 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify
-  has_many :created_repository_checkbox_values,
-           class_name: 'RepositoryCheckboxValue',
+  has_many :created_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
            foreign_key: 'created_by_id',
            inverse_of: :created_by,
            dependent: :nullify
-  has_many :modified_repository_checkbox_values,
-           class_name: 'RepositoryCheckboxValue',
+  has_many :modified_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify
-  has_many :created_repository_checkbox_types,
-           class_name: 'RepositoryCheckboxItem',
+  has_many :created_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
            foreign_key: 'created_by_id',
            inverse_of: :created_by,
            dependent: :nullify
-  has_many :modified_repository_checkbox_types,
-           class_name: 'RepositoryCheckboxItem',
+  has_many :modified_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe RepositoryColumns::CheckboxColumnsController, type: :controller do
+RSpec.describe RepositoryColumns::ChecklistColumnsController, type: :controller do
   login_user
 
   let(:user) { subject.current_user }
@@ -11,7 +11,7 @@ RSpec.describe RepositoryColumns::CheckboxColumnsController, type: :controller d
   let(:repository) { create :repository, created_by: user, team: team }
   let(:repository_column) { create(:repository_column, :status_type, repository: repository) }
 
-  describe 'POST repository_checkbox_columns, #create' do
+  describe 'POST repository_checklist_columns, #create' do
     let(:action) { post :create, params: params }
     let(:params) do
       {
@@ -103,7 +103,7 @@ RSpec.describe RepositoryColumns::CheckboxColumnsController, type: :controller d
       allow(service).to(receive(:succeed?)).and_return(true)
       allow(service).to(receive(:column)).and_return(repository_column)
 
-      allow_any_instance_of(RepositoryColumns::UpdateListColumnService).to(receive(:call)).and_return(service)
+      allow_any_instance_of(RepositoryColumns::UpdateChecklistColumnService).to(receive(:call)).and_return(service)
     end
 
     context 'when columnd is updated' do
@@ -151,7 +151,7 @@ RSpec.describe RepositoryColumns::CheckboxColumnsController, type: :controller d
         allow(service).to(receive(:succeed?)).and_return(false)
         allow(service).to(receive(:errors)).and_return({})
 
-        allow_any_instance_of(RepositoryColumns::UpdateCheckboxColumnService).to(receive(:call)).and_return(service)
+        allow_any_instance_of(RepositoryColumns::UpdateChecklistColumnService).to(receive(:call)).and_return(service)
       end
 
       it 'respons with status 422' do
