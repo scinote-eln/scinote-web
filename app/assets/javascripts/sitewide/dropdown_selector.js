@@ -223,11 +223,17 @@ var dropdownSelector = (function() {
 
       if (pressedKey === 38) {
         if (selectedOption.prev('.dropdown-option').length) {
-          selectedOption.removeClass('highlight').prev('.dropdown-option').addClass('highlight');
+          selectedOption.removeClass('highlight').prev().addClass('highlight');
+        }
+        if (selectedOption.prev('.delimiter').length) {
+          selectedOption.removeClass('highlight').prev().prev().addClass('highlight');
         }
       } else if (pressedKey === 40) {
         if (selectedOption.next('.dropdown-option').length) {
-          selectedOption.removeClass('highlight').next('.dropdown-option').addClass('highlight');
+          selectedOption.removeClass('highlight').next().addClass('highlight');
+        }
+        if (selectedOption.next('.delimiter').length) {
+          selectedOption.removeClass('highlight').next().next().addClass('highlight');
         }
       }
     });
@@ -436,6 +442,11 @@ var dropdownSelector = (function() {
       `);
     }
 
+    // Draw delimiter object
+    function drawDelimiter() {
+      return $('<div class="delimiter"></div>');
+    }
+
     // Draw group object
     function drawGroup(group) {
       return $(`
@@ -452,13 +463,14 @@ var dropdownSelector = (function() {
       if (selector.data('config').singleSelect) {
         $container.find('.dropdown-option').removeClass('select');
         updateCurrentData($container, []);
+        selector.val($(this).data('value')).change();
       }
       $(this).toggleClass('select');
       saveData(selector, $container);
     }
 
     // Remove placeholder from option container
-    container.find('.dropdown-group, .dropdown-option, .empty-dropdown').remove();
+    container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .delimiter').remove();
     if (!data) return;
 
     if (data.length > 0) {
@@ -495,7 +507,12 @@ var dropdownSelector = (function() {
       } else {
         // For simple options we only draw them
         $.each(data, function(oi, option) {
-          var optionElement = drawOption(selector, option);
+          var optionElement;
+          if (option.delimiter) {
+            drawDelimiter().appendTo(container.find('.dropdown-container'));
+            return;
+          }
+          optionElement = drawOption(selector, option);
           optionElement.click(clickOption);
           optionElement.appendTo(container.find('.dropdown-container'));
         });
@@ -701,7 +718,11 @@ var dropdownSelector = (function() {
     } else {
       options = filterOptions(selector, container, selector.find('option'));
       $.each(options, function(oi, option) {
-        result.push({ label: option.innerHTML, value: option.value });
+        result.push({
+          label: option.innerHTML,
+          value: option.value,
+          delimiter: option.dataset.delimiter
+        });
       });
     }
     return result;

@@ -122,6 +122,12 @@
       text-align: center;
     }
 
+    .delimiter {
+      background: $color-alto;
+      height: 1px;
+      margin: 5px 16px;
+    }
+
     .dropdown-select-all {
       background: $color-white;
       border: 0;
