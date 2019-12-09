@@ -315,7 +315,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('blur', function(e) {
-              if ($('.atwho-view:visible').length) return false;
+              if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
               setTimeout(() => {
                 if (editor.isNotDirty === false) {
                   $(editor.container).find('.tinymce-save-button').click();
@@ -323,6 +323,7 @@ var TinyMCE = (function() {
                   $(editor.container).find('.tinymce-cancel-button').click();
                 }
               }, 0);
+              return true;
             });
 
             editor.on('init', function(e) {
