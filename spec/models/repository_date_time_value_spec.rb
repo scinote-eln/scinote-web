@@ -31,4 +31,22 @@ describe RepositoryDateTimeValue, type: :model do
       end
     end
   end
+
+  describe 'self.new_with_payload' do
+    let(:user) { create :user }
+    let(:column) { create :repository_column }
+    let(:cell) { build :repository_cell, repository_column: column }
+    let(:attributes) do
+      {
+        repository_cell: cell,
+        created_by: user,
+        last_modified_by: user
+      }
+    end
+
+    it do
+      expect(RepositoryDateTimeValue.new_with_payload(Time.now.utc.to_s, attributes))
+        .to be_an_instance_of RepositoryDateTimeValue
+    end
+  end
 end

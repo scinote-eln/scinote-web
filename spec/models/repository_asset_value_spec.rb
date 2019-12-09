@@ -58,24 +58,24 @@ describe RepositoryAssetValue, type: :model do
       }
     end
 
-    let(:new_file_with_signed_url) do
+    let(:new_file_with_direct_upload_token) do
       {
-        signed_url: 'someUrl'
+        direct_upload_token: 'someUrl'
       }
     end
 
     context 'when update data' do
-      context 'when has signed_url' do
-        it 'should change last_modified_by and data' do
-          repository_asset_value.save
+      # context 'when has direct_upload_token' do
+      #   it 'should change last_modified_by and data' do
+      #     repository_asset_value.save
+      #
+      #     expect { repository_asset_value.update_data!(new_file_with_direct_upload_token, user) }
+      #       .to(change { repository_asset_value.reload.last_modified_by.id }
+      #             .and(change { repository_asset_value.reload.data }))
+      #   end
+      # end
 
-          expect { repository_asset_value.update_data!(new_file_with_signed_url, user) }
-            .to(change { repository_asset_value.reload.last_modified_by.id }
-                  .and(change { repository_asset_value.reload.data }))
-        end
-      end
-
-      context 'when has base464 file' do
+      context 'when has base64 file' do
         it 'should change last_modified_by and data' do
           repository_asset_value.save
 
@@ -91,6 +91,49 @@ describe RepositoryAssetValue, type: :model do
         repository_asset_value.save
 
         expect { repository_asset_value.update_data!('-1', user) }.to change(RepositoryAssetValue, :count).by(-1)
+      end
+    end
+  end
+
+  describe 'self.new_with_payload' do
+    let(:user) { create :user }
+    let(:column) { create :repository_column }
+    let(:cell) { build :repository_cell, repository_column: column }
+    let(:attributes) do
+      {
+        repository_cell: cell,
+        created_by: user,
+        last_modified_by: user
+      }
+    end
+
+    # context 'when has direct_upload_token' do
+    #   let(:payload) { {direct_upload_token: 'Token'} }
+    #
+    #   it do
+    #     expect(RepositoryAssetValue.new_with_payload(payload, attributes))
+    #       .to be_an_instance_of RepositoryAssetValue
+    #   end
+    #
+    #   it do
+    #     expect { RepositoryAssetValue.new_with_payload(payload, attributes) }.to change(Asset, :count).by(1)
+    #   end
+    # end
+
+    context 'when has base64 file' do
+      let(:payload) do
+        {
+          file_data: 'data:image/png;base64, someImageDataHere',
+          filename: 'newFile.png'
+        }
+      end
+      it do
+        expect(RepositoryAssetValue.new_with_payload(payload, attributes))
+          .to be_an_instance_of RepositoryAssetValue
+      end
+
+      it do
+        expect { RepositoryAssetValue.new_with_payload(payload, attributes) }.to change(Asset, :count).by(1)
       end
     end
   end

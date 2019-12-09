@@ -41,4 +41,28 @@ describe RepositoryDateRangeValue, type: :model do
       end
     end
   end
+
+  describe 'self.new_with_payload' do
+    let(:user) { create :user }
+    let(:column) { create :repository_column }
+    let(:cell) { build :repository_cell, repository_column: column }
+    let(:attributes) do
+      {
+        repository_cell: cell,
+        created_by: user,
+        last_modified_by: user
+      }
+    end
+    let(:payload) do
+      {
+        start_time: Time.now.utc.to_s,
+        end_time: (Time.now.utc + 1.day).to_s
+      }
+    end
+
+    it do
+      expect(RepositoryDateRangeValue.new_with_payload(payload, attributes))
+        .to be_an_instance_of RepositoryDateRangeValue
+    end
+  end
 end

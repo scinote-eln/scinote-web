@@ -288,8 +288,8 @@ class RepositoryRowsController < ApplicationController
         }
       )
       if (save_successful = cell_value.save)
-        record_annotation_notification(record,
-                                       cell_value.repository_cell)
+        # record_annotation_notification(record,
+        #                                cell_value.repository_cell)
       end
     end
 

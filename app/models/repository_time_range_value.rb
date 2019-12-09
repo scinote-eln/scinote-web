@@ -10,4 +10,11 @@ class RepositoryTimeRangeValue < RepositoryDateTimeRangeValueBase
   def formatted(new_dates: nil)
     super(:time, new_dates: new_dates)
   end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.start_time = Time.zone.parse(payload[:start_time])
+    value.end_time = Time.zone.parse(payload[:end_time])
+    value
+  end
 end

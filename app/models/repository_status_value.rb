@@ -35,4 +35,13 @@ class RepositoryStatusValue < ApplicationRecord
 
     "#{repository_status_item.icon} #{repository_status_item.status}"
   end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.repository_status_item = value.repository_cell
+                                        .repository_column
+                                        .repository_status_items
+                                        .find(payload)
+    value
+  end
 end
