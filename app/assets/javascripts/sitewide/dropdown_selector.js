@@ -10,7 +10,7 @@
     data-placeholder // Search placeholder
     data-disable-on-load // Disable input after initialization
     data-select-all-button // Text for select all button
-    data-combine-tags // Combine multiple tags to one  (only for tags)
+    data-combine-tags // Combine multiple tags to one (in simple mode gives you multiple select)
     data-select-multiple-all-selected // Text for combine tags, when all selected
     data-select-multiple-name // Text for combine tags, when select more than one tag
     data-view-mode // Run in view mode
@@ -123,7 +123,7 @@ var dropdownSelector = (function() {
     if (mode) {
       updateCurrentData(container, []);
       updateTags(selector, container, { skipChange: true });
-      searchFieldValue.attr('placeholder', selector.data('disable-placeholder'));
+      searchFieldValue.attr('placeholder', selector.data('disable-placeholder') || '');
       container.addClass('disabled').removeClass('open')
         .find('.search-field').val('')
         .prop('disabled', true);
@@ -259,7 +259,7 @@ var dropdownSelector = (function() {
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input type="text" class="search-field" placeholder="${selectElement.data('placeholder')}"></input>
+        <input type="text" class="search-field" placeholder="${selectElement.data('placeholder') || ''}"></input>
         ${prepareCustomDropdownIcon(config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
@@ -632,7 +632,7 @@ var dropdownSelector = (function() {
 
     // If we have alteast one tag, we need to remove placeholder from search field
     searchFieldValue.attr('placeholder',
-      selectedOptions.length > 0 ? '' : selector.data('placeholder'));
+      selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
 
     // Add stretch class for visual improvments
     if (!selector.data('combine-tags')) {

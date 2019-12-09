@@ -40,6 +40,13 @@ class RepositoryCell < ApplicationRecord
              end),
              optional: true, foreign_key: :value_id, inverse_of: :repository_cell
 
+  belongs_to :repository_checklist_value,
+             (lambda do
+               includes(:repository_cell)
+                 .where(repository_cells: { value_type: 'RepositoryChecklistValue' })
+             end),
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+
   belongs_to :repository_date_time_value,
              (lambda do
                includes(:repository_cell)

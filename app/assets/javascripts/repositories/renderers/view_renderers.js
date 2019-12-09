@@ -95,3 +95,11 @@ $.fn.dataTable.render.defaultRepositoryDateRangeValue = function() {
 $.fn.dataTable.render.RepositoryDateRangeValue = function(data) {
   return data.value;
 };
+
+$.fn.dataTable.render.RepositoryCheckboxValue = function(data) {
+  return '';
+};
+
+$.fn.dataTable.render.defaultRepositoryCheckboxValue = function() {
+  return '';
+};

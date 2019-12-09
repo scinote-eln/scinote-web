@@ -74,33 +74,23 @@
                   <%= 'selected' if @repository_column.repository_date_time_value? || @repository_column.repository_date_time_range_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_date_time_value') %>
           </option>
+
+          <option data-create-url="<%= repository_repository_columns_checklist_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_checklist_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryChecklistValue"
+                  <%= 'selected' if @repository_column.repository_checklist_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_checklist_value') %>
+          </option>
         </select>
       </div>
     </div>
-
     <hr/>
-    <span style="display: none" class="column-type text-column-type" data-column-type="RepositoryTextValue">
-      <%= render partial: "repository_columns/manage_column_partials/text.html.erb" %>
-    </span>
-    <span style="display: none" class="column-type asset-column-type" data-column-type="RepositoryAssetValue">
-      <%= render partial: "repository_columns/manage_column_partials/asset.html.erb" %>
-    </span>
-    <span style="display: none" class="column-type list-column-type" data-column-type="RepositoryListValue">
-      <%= render partial: "repository_columns/manage_column_partials/list.html.erb", locals: { column: @repository_column } %>
-    </span>
-    <span style="display: none" class="column-type status-column-type" data-column-type="RepositoryStatusValue">
-      <%= render partial: "repository_columns/manage_column_partials/status.html.erb", locals: { column: @repository_column } %>
-    </span>
-    <span style="display: none" class="column-type date-column-type" data-column-type="RepositoryDateValue">
-      <%= render partial: "repository_columns/manage_column_partials/date.html.erb", locals: { column: @repository_column } %>
-    </span>
-    <span style="display: none" class="column-type time-column-type" data-column-type="RepositoryTimeValue">
-      <%= render partial: "repository_columns/manage_column_partials/time.html.erb", locals: { column: @repository_column } %>
-    </span>
-    <span style="display: none" class="column-type datetime-column-type" data-column-type="RepositoryDateTimeValue">
-      <%= render partial: "repository_columns/manage_column_partials/datetime.html.erb", locals: { column: @repository_column } %>
-    </span>
-  </div>
+    <% columns = ['text', 'asset', 'list', 'status', 'date', 'time', 'datetime', 'checklist'] %>
+    <% columns.each do |column| %>
+      <span style="display: none" class="column-type <%= column %>-column-type" data-column-type="Repository<%= column.capitalize %>Value">
+        <%= render partial: "repository_columns/manage_column_partials/#{column}.html.erb", locals: {column: @repository_column}  %>
+      </span>
+    <% end %>
   </div>
 </div>
 <div class="modal-footer">

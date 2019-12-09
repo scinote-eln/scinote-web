@@ -587,6 +587,7 @@ Rails.application.routes.draw do
         resources :list_columns, only: %i(create update destroy)
         resources :asset_columns, only: %i(create update destroy)
         resources :date_time_columns, only: %i(create update destroy)
+        resources :checklist_columns, only: %i(create update destroy)
       end
     end
 

@@ -74,3 +74,7 @@ $.fn.dataTable.render.newRepositoryStatusValue = function(formId, columnId, $cel
 
   Status.initStatusSelectPicker($cell.find('select'), $cell.find(`[name='repository_cells[${columnId}]']`));
 };
+
+$.fn.dataTable.render.newRepositoryCheckboxValue = function(formId, columnId) {
+  return '';
+};

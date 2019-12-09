@@ -231,6 +231,12 @@
         display: none;
         position: absolute;
       }
+
+      .ds-simple {
+        .fa-times {
+          display: none;
+        }
+      }
     }
   }
 
