@@ -7,8 +7,8 @@ class RepositoryStatusItem < ApplicationRecord
   belongs_to :repository
   belongs_to :repository_column
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User', optional: true,
-             inverse_of: :created_repositroy_status_types
+             inverse_of: :created_repository_status_types
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true,
-             inverse_of: :modified_repositroy_status_types
+             inverse_of: :modified_repository_status_types
   has_many :repository_status_values, inverse_of: :repository_status_item, dependent: :delete_all
 end
