@@ -47,15 +47,6 @@ describe RepositoryDateTimeRangeValueBase, type: :model do
                 .and(change { repository_date_time_range_value.reload.data }))
       end
     end
-
-    context 'when delete cell value' do
-      it do
-        repository_date_time_range_value.save
-
-        expect { repository_date_time_range_value.update_data!('', user) }
-          .to(change(RepositoryDateTimeRangeValue, :count).by(-1))
-      end
-    end
   end
 
   describe '.data' do

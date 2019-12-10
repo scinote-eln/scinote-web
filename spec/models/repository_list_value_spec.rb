@@ -84,14 +84,6 @@ RSpec.describe RepositoryListValue, type: :model do
                 .and(change { repository_list_value.reload.data }))
       end
     end
-
-    context 'when delete cell value' do
-      it do
-        repository_list_value.save
-
-        expect { repository_list_value.update_data!('-1', user) }.to change(RepositoryListValue, :count).by(-1)
-      end
-    end
   end
 
   describe 'self.new_with_payload' do

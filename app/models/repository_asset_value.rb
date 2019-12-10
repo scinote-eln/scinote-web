@@ -33,8 +33,6 @@ class RepositoryAssetValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    destroy! && return if new_data == '-1'
-
     if new_data.is_a?(String) # assume it's a signed_id_token
       asset.file.attach(new_data)
     elsif new_data[:file_data]

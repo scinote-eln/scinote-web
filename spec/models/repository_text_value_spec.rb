@@ -62,14 +62,6 @@ describe RepositoryTextValue, type: :model do
                 .and(change { repository_text_value.reload.data }))
       end
     end
-
-    context 'when delete cell value' do
-      it do
-        repository_text_value.save
-
-        expect { repository_text_value.update_data!('', user) }.to change(RepositoryTextValue, :count).by(-1)
-      end
-    end
   end
 
   describe 'self.new_with_payload' do

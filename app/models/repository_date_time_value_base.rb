@@ -16,8 +16,6 @@ class RepositoryDateTimeValueBase < ApplicationRecord
   SORTABLE_VALUE_INCLUDE = :repository_date_time_value
 
   def update_data!(new_data, user)
-    destroy! && return if new_data == ''
-
     self.data = Time.zone.parse(new_data)
     self.last_modified_by = user
     save!
@@ -26,6 +24,6 @@ class RepositoryDateTimeValueBase < ApplicationRecord
   private
 
   def formatted(format)
-    I18n.l(d, format: format)
+    I18n.l(data, format: format)
   end
 end

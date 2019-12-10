@@ -18,8 +18,7 @@ module RepositoryRows
       return self unless valid?
 
       ActiveRecord::Base.transaction do
-        @repository_row = RepositoryRow.new(params[:repository_row])
-        @repository_row.repository = @repository
+        @repository_row = @repository.repository_rows.new(params[:repository_row])
         @repository_row.last_modified_by = @user
         @repository_row.created_by = @user
         @repository_row.save!

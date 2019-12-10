@@ -24,6 +24,13 @@ module RepositoryRows
           next unless column
 
           cell = @repository_row.repository_cells.find_by(repository_column_id: column.id)
+
+          if cell && value.empty?
+            cell.destroy!
+            @record_updated = true
+            next
+          end
+
           unless cell
             RepositoryCell.create_with_value!(@repository_row, column, value, @user)
             @record_updated = true

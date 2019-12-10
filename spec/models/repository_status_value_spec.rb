@@ -54,14 +54,6 @@ describe RepositoryStatusValue do
                 .and(change { repository_status_value.reload.data }))
       end
     end
-
-    context 'when delete cell value' do
-      it do
-        repository_status_value.save
-
-        expect { repository_status_value.update_data!('-1', user) }.to change(RepositoryStatusValue, :count).by(-1)
-      end
-    end
   end
 
   describe 'self.new_with_payload' do

@@ -81,14 +81,6 @@ describe RepositoryAssetValue, type: :model do
         end
       end
     end
-
-    context 'when delete cell value' do
-      it do
-        repository_asset_value.save
-
-        expect { repository_asset_value.update_data!('-1', user) }.to change(RepositoryAssetValue, :count).by(-1)
-      end
-    end
   end
 
   describe 'self.new_with_payload' do

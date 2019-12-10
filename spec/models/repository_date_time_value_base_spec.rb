@@ -38,13 +38,5 @@ describe RepositoryDateTimeValueBase, type: :model do
                 .and(change { repository_date_time_value.reload.data }))
       end
     end
-
-    context 'when delete cell value' do
-      it do
-        repository_date_time_value.save
-
-        expect { repository_date_time_value.update_data!('', user) }.to change(RepositoryDateTimeValue, :count).by(-1)
-      end
-    end
   end
 end
