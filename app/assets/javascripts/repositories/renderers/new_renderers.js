@@ -48,17 +48,7 @@ $.fn.dataTable.render.newRepositoryTextValue = function(formId, columnId, $cell)
 };
 
 $.fn.dataTable.render.newRepositoryListValue = function(formId, columnId, $cell) {
-  let url = $cell.closest('table').data('list-items-path');
-  let hiddenField = `
-    <input form="${formId}"
-           type="hidden"
-           name="repository_cells[${columnId}]"
-           value=""
-           data-type="RepositoryListValue">`;
-
-  $cell.html(hiddenField + List.initialListItemsRequest(columnId, '', formId, url));
-
-  List.initSelectPicker($cell.find('select'), $cell.find(`[name='repository_cells[${columnId}]']`));
+  ListColumnHelper.initialListEditMode(formId, columnId, $cell)
 };
 
 $.fn.dataTable.render.newRepositoryStatusValue = function(formId, columnId, $cell) {
@@ -75,6 +65,6 @@ $.fn.dataTable.render.newRepositoryStatusValue = function(formId, columnId, $cel
   Status.initStatusSelectPicker($cell.find('select'), $cell.find(`[name='repository_cells[${columnId}]']`));
 };
 
-$.fn.dataTable.render.newRepositoryCheckboxValue = function(formId, columnId) {
-  return '';
+$.fn.dataTable.render.newRepositoryChecklistValue = function(formId, columnId, $cell) {
+  ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell)
 };

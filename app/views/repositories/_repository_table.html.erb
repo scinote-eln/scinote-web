@@ -19,7 +19,7 @@
     data-columns-changed="<%= I18n.t('repositories.columns_changed') %>"
     data-default-order="<%= default_table_order_as_js_array %>"
     data-default-table-columns="<%= default_table_columns %>"
-    data-list-items-path="<%= Rails.application.routes.url_helpers.repository_list_items_path %>"
+    data-checklist-items-path="<%= Rails.application.routes.url_helpers.repository_list_items_path %>"
     data-status-items-path="<%= Rails.application.routes.url_helpers.repository_status_items_path %>"
     data-editable="<%= can_manage_repository_rows?(repository) %>">
     <thead>
@@ -31,7 +31,13 @@
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
-          <th class="repository-column" id="<%= column.id %>" data-type="<%= column.data_type %>">
+          <th 
+            class="repository-column" 
+            id="<%= column.id %>" 
+            data-type="<%= column.data_type %>"
+            <%= "data-items-url=#{items_repository_repository_columns_checklist_column_path(repository, column)}" if column.data_type == 'RepositoryChecklistValue' %>
+            <%= "data-items-url=#{items_repository_repository_columns_list_column_path(repository, column)}" if column.data_type == 'RepositoryListValue' %>
+          >
             <%= display_tooltip(column.name) %>
           </th>
         <% end %>

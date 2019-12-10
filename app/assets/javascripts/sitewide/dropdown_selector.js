@@ -55,16 +55,29 @@ var dropdownSelector = (function() {
     var containerPosition = container[0].getBoundingClientRect().top;
     var containerHeight = container[0].getBoundingClientRect().height;
     var containerWidth = container[0].getBoundingClientRect().width;
-    var bottomSpace = windowHeight - containerPosition - containerHeight;
-    if (bottomSpace < 280) {
+    var bottomSpace;
+    var modalContainer = container.closest('.modal-dialog');
+    var modalContainerBottom = 0;
+    var maxHeight = 0;
+
+    if (modalContainer.length) {
+      windowHeight = modalContainer.height() + modalContainer[0].getBoundingClientRect().top;
+      modalContainerBottom = modalContainer[0].getBoundingClientRect().bottom;
+      maxHeight += modalContainerBottom
+    }
+
+    bottomSpace = windowHeight - containerPosition - containerHeight;
+    
+    if ((modalContainerBottom + bottomSpace) < 280) {
       container.addClass('inverse');
-      container.find('.dropdown-container').css('max-height', `${(containerPosition - 122)}px`)
+      container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
         .css('margin-bottom', `${(containerPosition * -1)}px`)
         .css('width', `${containerWidth}px`);
     } else {
       container.removeClass('inverse');
-      container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32)}px`)
-        .css('width', '');
+      container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32 + maxHeight)}px`)
+        .css('width', `${containerWidth}px`)
+        .css('margin-top', `${(bottomSpace * -1)}px`)
     }
   }
 
@@ -265,7 +278,7 @@ var dropdownSelector = (function() {
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input type="text" class="search-field" placeholder="${selectElement.data('placeholder') || ''}"></input>
+        <input type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
         ${prepareCustomDropdownIcon(config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
@@ -372,8 +385,10 @@ var dropdownSelector = (function() {
 
     // When user will click away, we must close dropdown
     $(window).click(() => {
-      if (dropdownContainer.hasClass('open') && config.onClose) {
+      if (dropdownContainer.hasClass('open')) {
         dropdownContainer.find('.search-field').val('');
+      }
+      if (dropdownContainer.hasClass('open') && config.onClose) {
         config.onClose();
       }
       dropdownContainer.removeClass('open active');
@@ -544,7 +559,7 @@ var dropdownSelector = (function() {
     }
 
     // First we clear search field
-    container.find('.search-field').val('');
+    if (selector.data('config').singleSelect) container.find('.search-field').val('');
 
     // Now we check all options in dropdown for selection and add them to array
     $.each(container.find('.dropdown-container .dropdown-option'), function(oi, option) {
@@ -575,8 +590,6 @@ var dropdownSelector = (function() {
     updateCurrentData(container, selectArray);
     // Redraw tags
     updateTags(selector, container, { select: true });
-    // Reload options in option container
-    loadData(selector, container);
   }
 
   // Refresh tags in input field
@@ -650,6 +663,7 @@ var dropdownSelector = (function() {
     // If we have alteast one tag, we need to remove placeholder from search field
     searchFieldValue.attr('placeholder',
       selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
+    searchFieldValue.attr('data-options-selected', selectedOptions.length)
 
     // Add stretch class for visual improvments
     if (!selector.data('combine-tags')) {
@@ -772,7 +786,6 @@ var dropdownSelector = (function() {
       values = $.map(getCurrentData($(selector).next()), (v) => {
         return v.value;
       });
-
       if ($(selector).data('config').singleSelect) return values[0];
 
       return values;

@@ -96,10 +96,11 @@ $.fn.dataTable.render.RepositoryDateRangeValue = function(data) {
   return data.value;
 };
 
-$.fn.dataTable.render.RepositoryCheckboxValue = function(data) {
+$.fn.dataTable.render.RepositoryChecklistValue = function(data) {
+  console.log(data)
   return '';
 };
 
-$.fn.dataTable.render.defaultRepositoryCheckboxValue = function() {
-  return '';
+$.fn.dataTable.render.defaultRepositoryChecklistValue = function() {
+  return '&#8212;';
 };

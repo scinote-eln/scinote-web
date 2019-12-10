@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module RepositoryDatatable
-  class RepositoryCheckboxValueSerializer < ActiveModel::Serializer
+  class RepositoryChecklistValueSerializer < ActiveModel::Serializer
     attributes :value, :value_type
 
     def value
-      object.repository_checkbox_value.data
+      object.repository_checklist_value.data
     end
   end
 end

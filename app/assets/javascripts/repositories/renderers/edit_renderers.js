@@ -58,19 +58,14 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
 };
 
 $.fn.dataTable.render.editRepositoryListValue = function(formId, columnId, cell) {
-  let $cell = $(cell.node());
-  let currentValueId = $cell.find('.list-label').attr('data-value-id');
-  let url = $cell.closest('table').data('list-items-path');
-  let hiddenField = `
-    <input form="${formId}"
-           type="hidden"
-           name="repository_cells[${columnId}]"
-           value=""
-           data-type="RepositoryListValue">`;
+  var $cell = $(cell.node());
+  var currentElement = $cell.find('.list-label')
+  var currentValue = {
+    value: currentElement.attr('data-value-id'),
+    label: currentElement.text()
+  }
 
-  $cell.html(hiddenField + List.initialListItemsRequest(columnId, currentValueId, formId, url));
-
-  List.initSelectPicker($cell.find('select'), $cell.find(`[name='repository_cells[${columnId}]']`));
+  ListColumnHelper.initialListEditMode(formId, columnId, $cell, currentValue)
 };
 
 $.fn.dataTable.render.editRepositoryStatusValue = function(formId, columnId, cell) {
@@ -114,6 +109,6 @@ $.fn.dataTable.render.editRepositoryTimeRangeValue = function(formId, columnId, 
   return '';
 };
 
-$.fn.dataTable.render.editRepositoryCheckboxValue = function(formId, columnId, cell) {
+$.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, cell) {
   return '';
 };

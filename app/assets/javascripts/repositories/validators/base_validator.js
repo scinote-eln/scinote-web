@@ -29,3 +29,7 @@ $.fn.dataTable.render.RepositoryAssetValueValidator = function($input) {
   $btn.attr('data-error-text', errorMessage);
   return false;
 };
+
+$.fn.dataTable.render.RepositoryChecklistValueValidator = function() {
+  return true;
+};
