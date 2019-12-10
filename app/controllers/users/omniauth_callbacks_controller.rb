@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     include UsersGenerator
@@ -12,6 +14,53 @@ module Users
     # You should also create an action method in this controller like this:
     # def twitter
     # end
+
+    def customazureactivedirectory
+      auth = request.env['omniauth.auth']
+      provider_id = auth.dig(:extra, :raw_info, :id_token_claims, :aud)
+      provider_conf = Rails.configuration.x.azure_ad_apps[provider_id]
+      raise StandardError, 'No matching Azure AD provider config found' if provider_conf.empty?
+
+      auth.provider = provider_conf[:provider]
+
+      return redirect_to connected_accounts_path if current_user
+
+      email = auth.info.email
+      email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
+      user = User.from_omniauth(auth)
+      if user
+        # User found in database so just sign in him
+        sign_in_and_redirect(user)
+      elsif email.present?
+        user = User.find_by(email: email)
+
+        if user.blank?
+          # Create new user and identity
+          User.create_from_omniauth!(auth)
+          sign_in_and_redirect(user)
+        elsif provider_conf[:auto_link_on_sign_in]
+          # Link to existing local account
+          user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+          sign_in_and_redirect(user)
+        else
+          # Cannot do anything with it, so just return an error
+          error_message = I18n.t('devise.azure.errors.no_local_user_map')
+          redirect_to after_omniauth_failure_path_for(resource_name)
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace.join("\n")
+      error_message = I18n.t('devise.azure.errors.failed_to_save') if e.is_a?(ActiveRecord::RecordInvalid)
+      error_message ||= I18n.t('devise.azure.errors.generic')
+      redirect_to after_omniauth_failure_path_for(resource_name)
+    ensure
+      if error_message
+        set_flash_message(:alert, :failure, kind: I18n.t('devise.azure.provider_name'), reason: error_message)
+      else
+        set_flash_message(:notice, :success, kind: I18n.t('devise.azure.provider_name'))
+      end
+    end
 
     def linkedin
       auth_hash = request.env['omniauth.auth']

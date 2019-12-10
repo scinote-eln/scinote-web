@@ -73,7 +73,7 @@ class Extends
                                         'RepositoryListValue' => 'list',
                                         'RepositoryAssetValue' => 'file' }
 
-  OMNIAUTH_PROVIDERS = [:linkedin]
+  OMNIAUTH_PROVIDERS = [:linkedin, :customazureactivedirectory]
 
   INITIAL_USER_OPTIONS = {}
 

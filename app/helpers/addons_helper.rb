@@ -3,6 +3,6 @@ module AddonsHelper
     Rails::Engine
       .subclasses
       .select { |c| c.name.start_with?('Scinote') }
-      .map(&:parent)
+      .map(&:module_parent)
   end
 end

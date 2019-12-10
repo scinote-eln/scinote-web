@@ -297,6 +297,20 @@ class User < ApplicationRecord
       .take
   end
 
+  def self.create_from_omniauth!(auth)
+    full_name = "#{auth.info.first_name} #{auth.info.last_name}"
+    user = User.new(full_name: full_name,
+                    initials: generate_initials(full_name),
+                    email: email,
+                    password: generate_user_password)
+    User.transaction do
+      user.save!
+      user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+      user.update!(confirmed_at: user.created_at)
+    end
+    user
+  end
+
   # Search all active users for username & email. Can
   # also specify which team to ignore.
   def self.search(

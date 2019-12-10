@@ -364,6 +364,9 @@ GEM
     omniauth (1.9.0)
       hashie (>= 3.4.6, < 3.7.0)
       rack (>= 1.6.2, < 3)
+    omniauth-azure-activedirectory (1.0.0)
+      jwt (~> 1.5)
+      omniauth (~> 1.1)
     omniauth-linkedin-oauth2 (1.0.0)
       omniauth-oauth2
     omniauth-oauth2 (1.6.0)
@@ -648,6 +651,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri (~> 1.10.3)
   omniauth
+  omniauth-azure-activedirectory
   omniauth-linkedin-oauth2
   omniauth-rails_csrf_protection (~> 0.1)
   overcommit

@@ -37,4 +37,8 @@
       <% end -%>
     <% end -%>
   <% end -%>
+
+  <div class="azure-sign-in-actions">
+    <%= render partial: "users/shared/azure_sign_in_links", locals: { resource_name: resource_name } %>
+  </div>
 </div>
