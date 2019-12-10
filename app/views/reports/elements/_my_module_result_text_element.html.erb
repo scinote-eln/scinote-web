@@ -3,7 +3,7 @@
 <% comments = result.result_comments %>
 <% timestamp = result.created_at %>
 <% name = result.name %>
-<% pdf_export_ready = defined?(export_all) && export_all %>
+<% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-result-element report-result-text-element" data-ts="<%= timestamp.to_i %>" data-type="result_text" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="fas fa-asterisk">
   <div class="report-element-header">
     <div class="row">
@@ -27,10 +27,11 @@
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12 text-container ql-editor">
-        <%= custom_auto_link(result_text.prepare_for_report(:text),
+        <%= custom_auto_link(result_text.prepare_for_report(:text, for_export_all),
                              team: current_team,
                              simple_format: false,
-                             tags: %w(img)) %>
+                             tags: %w(img),
+                             base64_encoded_imgs: for_export_all) %>
       </div>
     </div>
   </div>

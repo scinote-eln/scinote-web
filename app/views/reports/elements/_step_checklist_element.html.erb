@@ -1,6 +1,7 @@
 <% if checklist.blank? and @checklist.present? then checklist = @checklist end %>
 <% items = checklist.checklist_items %>
 <% timestamp = checklist.created_at %>
+<% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-step-attachment-element report-step-checklist-element" data-ts="<%= timestamp.to_i %>" data-type="step_checklist" data-id='{ "checklist_id": <%= checklist.id %> }' data-scroll-id="<%= checklist.id %>" data-name="<%= checklist.name %>" data-icon-class="fas fa-tasks">
   <div class="report-element-header">
     <div class="row">
@@ -8,7 +9,10 @@
           <span class="fas fa-tasks"></span>
       </div>
       <div class="pull-left checklist-name">
-        <%= custom_auto_link(t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name), team: current_team) %>
+        <%= custom_auto_link(t('projects.reports.elements.step_checklist.checklist_name',
+                             name: checklist.name),
+                             team: current_team,
+                             base64_encoded_imgs: for_export_all) %>
       </div>
       <div class="pull-left user-time">
         <%=t 'projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full) %>
@@ -27,7 +31,8 @@
             <%= custom_auto_link(item.text,
                                  team: current_team,
                                  simple_format: true,
-                                 wrapper_tag: { wrapper_tag: 'span'}) %>
+                                 wrapper_tag: { wrapper_tag: 'span'},
+                                 base64_encoded_imgs: for_export_all) %>
           </span>
         </li>
       <% end %>
