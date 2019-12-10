@@ -58,23 +58,23 @@
                   <%= 'selected' if @repository_column.repository_status_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_status_value') %>
           </option>
-          
+
           <option data-delimiter=true></option>
 
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
-                  data-edit-url="<%= repository_repository_columns_asset_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryDateValue"
                   <%= 'selected' if @repository_column.repository_date_value? || @repository_column.repository_date_range_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_date_value') %>
 
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
-                  data-edit-url="<%= repository_repository_columns_asset_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryTimeValue"
                   <%= 'selected' if @repository_column.repository_time_value? || @repository_column.repository_time_range_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_time_value') %>
 
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
-                  data-edit-url="<%= repository_repository_columns_asset_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryDateTimeValue"
                   <%= 'selected' if @repository_column.repository_date_time_value? || @repository_column.repository_date_time_range_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_date_time_value') %>
