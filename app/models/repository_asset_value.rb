@@ -35,12 +35,10 @@ class RepositoryAssetValue < ApplicationRecord
   def update_data!(new_data, user)
     destroy! && return if new_data == '-1'
 
-    if new_data.is_a?(Hash) && new_data[:file_data]
-      asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data].split(',')[1])),
-                        filename: new_data[:file_name])
-    else
-      # new_data is direct_upload_token
+    if new_data.is_a?(String) # assume it's a signed_id_token
       asset.file.attach(new_data)
+    elsif new_data[:file_data]
+      asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data])), filename: new_data[:file_name])
     end
 
     asset.last_modified_by = user
@@ -53,14 +51,10 @@ class RepositoryAssetValue < ApplicationRecord
     team = value.repository_cell.repository_column.repository.team
     value.asset = Asset.create!(created_by: value.created_by, last_modified_by: value.created_by, team: team)
 
-    if payload.is_a?(Hash) && payload[:file_data]
-      value.asset.file.attach(
-        io: StringIO.new(Base64.decode64(payload[:file_data].split(',')[1])),
-        filename: payload[:file_name]
-      )
-    else
-      # payload is direct_upload_token
+    if payload.is_a?(String) # assume it's a signed_id_token
       value.asset.file.attach(payload)
+    elsif payload[:file_data]
+      value.asset.file.attach(io: StringIO.new(Base64.decode64(payload[:file_data])), filename: payload[:file_name])
     end
 
     value.asset.post_process_file(team)
