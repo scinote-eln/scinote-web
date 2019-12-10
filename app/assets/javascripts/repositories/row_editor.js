@@ -84,7 +84,7 @@ var RepositoryDatatableRowEditor = (function() {
           .html(`<input type="hidden" 
                      form="${$input.attr('form')}" 
                      name="repository_cells[${$input.data('col-id')}]" 
-                     value="-1"/>`);
+                     value=""/>`);
       }
     });
   }
