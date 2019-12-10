@@ -37,7 +37,7 @@ class RepositoryAssetValue < ApplicationRecord
 
     if new_data.is_a?(Hash) && new_data[:file_data]
       asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data].split(',')[1])),
-                        filename: new_data[:filename])
+                        filename: new_data[:file_name])
     else
       # new_data is direct_upload_token
       asset.file.attach(new_data)
@@ -56,7 +56,7 @@ class RepositoryAssetValue < ApplicationRecord
     if payload.is_a?(Hash) && payload[:file_data]
       value.asset.file.attach(
         io: StringIO.new(Base64.decode64(payload[:file_data].split(',')[1])),
-        filename: payload[:filename]
+        filename: payload[:file_name]
       )
     else
       # payload is direct_upload_token

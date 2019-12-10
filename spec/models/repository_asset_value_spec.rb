@@ -54,7 +54,7 @@ describe RepositoryAssetValue, type: :model do
     let(:new_file_base64) do
       {
         file_data: 'data:image/png;base64, someImageDataHere',
-        filename: 'newFile.png'
+        file_name: 'newFile.png'
       }
     end
 
@@ -120,7 +120,7 @@ describe RepositoryAssetValue, type: :model do
       let(:payload) do
         {
           file_data: 'data:image/png;base64, someImageDataHere',
-          filename: 'newFile.png'
+          file_name: 'newFile.png'
         }
       end
       it do

@@ -69,7 +69,7 @@ module Api
         end
         params.require(:data).require(:attributes).require(:column_id)
         params.require(:data).require(:attributes).require(:value)
-        params[:data][:attributes]
+        params[:data][:attributes].permit!.to_h
       end
 
       def update_inventory_cell_params
