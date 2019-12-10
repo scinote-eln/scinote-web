@@ -129,7 +129,7 @@ describe RepositoryRowsController, type: :controller do
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
-      { repository_id: repository.id, repository_row_name: 'row_name' }
+      { repository_id: repository.id, repository_row: { name: 'row_name' } }
     end
 
     it 'calls create activity for creating inventory item' do
@@ -152,7 +152,7 @@ describe RepositoryRowsController, type: :controller do
       {
         repository_id: repository.id,
         id: repository_row.id,
-        repository_row_name: 'row_name'
+        repository_row: { name: 'row_name' }
       }
     end
 
