@@ -2,42 +2,42 @@
 
 require 'rails_helper'
 
-describe RepositoryDateTimeRangeValue, type: :model do
-  let(:date_time_range_value) do
-    create :repository_date_time_range_value, start_time: Time.utc(2000, 10, 10), end_time: Time.utc(2000, 10, 11)
+describe RepositoryTimeRangeValue, type: :model do
+  let(:time_range_value) do
+    create :repository_time_range_value, start_time: Time.utc(2000, 10, 10), end_time: Time.utc(2000, 10, 11, 4, 11)
   end
 
   describe '.formatted' do
     it 'prints date format with time' do
-      str = '10/10/2000, 00:00 - 10/11/2000, 00:00'
-      expect(date_time_range_value.formatted).to eq(str)
+      str = '00:00 - 04:11'
+      expect(time_range_value.formatted).to eq(str)
     end
   end
 
   describe '.data_changed?' do
-    context 'when has different datetime value' do
+    context 'when has different time value' do
       let(:new_values) do
         {
-          start_time: Time.utc(2000, 10, 10).to_s,
-          end_time: Time.utc(2000, 10, 12).to_s
+          start_time: Time.utc(2000, 10, 10, 12, 13).to_s,
+          end_time: Time.utc(2000, 10, 12, 4, 11).to_s
         }
       end
 
       it do
-        expect(date_time_range_value.data_changed?(new_values)).to be_truthy
+        expect(time_range_value.data_changed?(new_values)).to be_truthy
       end
     end
 
-    context 'when has same datetime value' do
+    context 'when has same time value (but different date)' do
       let(:new_values) do
         {
           start_time: Time.utc(2000, 10, 10).to_s,
-          end_time: Time.utc(2000, 10, 11).to_s
+          end_time: Time.utc(2012, 10, 14, 4, 11).to_s
         }
       end
 
       it do
-        expect(date_time_range_value.data_changed?(new_values)).to be_falsey
+        expect(time_range_value.data_changed?(new_values)).to be_falsey
       end
     end
   end
@@ -61,8 +61,8 @@ describe RepositoryDateTimeRangeValue, type: :model do
     end
 
     it do
-      expect(RepositoryDateTimeRangeValue.new_with_payload(payload, attributes))
-        .to be_an_instance_of RepositoryDateTimeRangeValue
+      expect(RepositoryTimeRangeValue.new_with_payload(payload, attributes))
+        .to be_an_instance_of RepositoryTimeRangeValue
     end
   end
 end

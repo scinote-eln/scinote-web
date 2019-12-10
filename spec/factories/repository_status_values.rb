@@ -2,6 +2,9 @@
 
 FactoryBot.define do
   factory :repository_status_value do
+    created_by { create :user }
+    last_modified_by { created_by }
+
     repository_status_item
   end
 end

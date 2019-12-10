@@ -3,25 +3,50 @@
 require 'rails_helper'
 
 describe RepositoryDateTimeValue, type: :model do
-  let(:repository_date_time_value) { build :repository_date_time_value }
-
-  it 'is valid' do
-    expect(repository_date_time_value).to be_valid
+  let(:date_time_value) do
+    create :repository_date_time_value, data: Time.utc(2000, 10, 11, 1, 4)
   end
 
-  describe 'Validations' do
-    describe '#repository_cell' do
-      it { is_expected.to validate_presence_of(:repository_cell) }
-    end
-
-    describe '#data' do
-      it { is_expected.to validate_presence_of(:data) }
+  describe '.formatted' do
+    it 'prints date format with date' do
+      str = '10/11/2000, 01:04'
+      expect(date_time_value.formatted).to eq(str)
     end
   end
 
-  describe 'Associations' do
-    it { is_expected.to belong_to(:created_by).optional }
-    it { is_expected.to belong_to(:last_modified_by).optional }
-    it { is_expected.to have_one(:repository_cell) }
+  describe '.data_changed?' do
+    context 'when has different datetime value' do
+      let(:new_values) { Time.utc(2000, 12, 11, 4, 14).to_s }
+
+      it do
+        expect(date_time_value.data_changed?(new_values)).to be_truthy
+      end
+    end
+
+    context 'when has same datetime value' do
+      let(:new_values) { Time.utc(2000, 10, 11, 1, 4).to_s }
+
+      it do
+        expect(date_time_value.data_changed?(new_values)).to be_falsey
+      end
+    end
+  end
+
+  describe 'self.new_with_payload' do
+    let(:user) { create :user }
+    let(:column) { create :repository_column }
+    let(:cell) { build :repository_cell, repository_column: column }
+    let(:attributes) do
+      {
+        repository_cell: cell,
+        created_by: user,
+        last_modified_by: user
+      }
+    end
+
+    it do
+      expect(RepositoryDateTimeValue.new_with_payload(Time.now.utc.to_s, attributes))
+        .to be_an_instance_of RepositoryDateTimeValue
+    end
   end
 end

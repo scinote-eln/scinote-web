@@ -18,9 +18,28 @@ class RepositoryStatusValue < ApplicationRecord
     data
   end
 
+  def data_changed?(new_data)
+    new_data.to_i != repository_status_item_id
+  end
+
+  def update_data!(new_data, user)
+    self.repository_status_item_id = new_data.to_i
+    self.last_modified_by = user
+    save!
+  end
+
   def data
     return nil unless repository_status_item
 
     "#{repository_status_item.icon} #{repository_status_item.status}"
+  end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.repository_status_item = value.repository_cell
+                                        .repository_column
+                                        .repository_status_items
+                                        .find(payload)
+    value
   end
 end

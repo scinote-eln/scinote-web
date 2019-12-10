@@ -20,7 +20,7 @@ class RepositoryCell < ApplicationRecord
                .where(repository_cells: { value_type: 'RepositoryNumberValue' })
              end),
              optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-  belongs_to :repository_date_time_value,
+  belongs_to :repository_date_value,
              (lambda do
                includes(:repository_cell)
                .where(repository_cells: { value_type: 'RepositoryDateValue' })
@@ -60,10 +60,31 @@ class RepositoryCell < ApplicationRecord
              end),
              optional: true, foreign_key: :value_id, inverse_of: :repository_cell
 
+  belongs_to :repository_time_value,
+             (lambda do
+               includes(:repository_cell)
+                 .where(repository_cells: { value_type: 'RepositoryTimeValue' })
+             end),
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+
   belongs_to :repository_date_time_range_value,
              (lambda do
                includes(:repository_cell)
                  .where(repository_cells: { value_type: 'RepositoryDateTimeRangeValue' })
+             end),
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+
+  belongs_to :repository_date_range_value,
+             (lambda do
+               includes(:repository_cell)
+                 .where(repository_cells: { value_type: 'RepositoryDateRangeValue' })
+             end),
+             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+
+  belongs_to :repository_time_range_value,
+             (lambda do
+               includes(:repository_cell)
+                 .where(repository_cells: { value_type: 'RepositoryTimeRangeValue' })
              end),
              optional: true, foreign_key: :value_id, inverse_of: :repository_cell
 
