@@ -5,6 +5,7 @@
     <%= t('libraries.manange_modal_column.number_type.decimals_label') %>
   </label>
   <div class="col-sm-3">
-    <%= number_field_tag('decimals', selected_decimals, in: 0...101, class: 'form-control') %>
+    <%= number_field_tag('decimals', selected_decimals, in: 0...Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS,
+                         class: 'form-control') %>
   </div>
 </div>

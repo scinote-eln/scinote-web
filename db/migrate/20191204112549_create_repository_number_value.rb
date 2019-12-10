@@ -9,8 +9,5 @@ class CreateRepositoryNumberValue < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-
-    # add jsonb column for repository columns metadata
-    add_column :repository_columns, :metadata, :jsonb, default: {}, null: false
   end
 end
