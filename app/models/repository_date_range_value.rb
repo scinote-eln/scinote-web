@@ -4,11 +4,11 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
   def data_changed?(new_data)
     st = Time.zone.parse(new_data[:start_time])
     et = Time.zone.parse(new_data[:end_time])
-    formatted != formatted(new_dates: [st, et])
+    st.to_date != start_time.to_date || et.to_date != end_time.to_date
   end
 
-  def formatted(new_dates: nil)
-    super(:full_date, new_dates: new_dates)
+  def formatted
+    super(:full_date)
   end
 
   def self.new_with_payload(payload, attributes)

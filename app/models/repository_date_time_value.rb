@@ -2,11 +2,12 @@
 
 class RepositoryDateTimeValue < RepositoryDateTimeValueBase
   def data_changed?(new_data)
-    formatted != formatted(new_date: new_data)
+    new_time = Time.zone.parse(new_data)
+    new_time.to_i != data.to_i
   end
 
-  def formatted(new_date: nil)
-    super(:full_with_comma, new_date: new_date)
+  def formatted
+    super(:full_with_comma)
   end
 
   def self.new_with_payload(payload, attributes)

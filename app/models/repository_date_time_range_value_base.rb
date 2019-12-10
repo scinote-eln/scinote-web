@@ -30,18 +30,10 @@ class RepositoryDateTimeRangeValueBase < ApplicationRecord
 
   private
 
-  def formatted(format, new_dates: nil)
-    if new_dates&.any?
-      st = new_dates[0]
-      et = new_dates[1]
-    else
-      st = start_time
-      et = end_time
-    end
-
+  def formatted(format)
     [
-      I18n.l(st, format: format),
-      I18n.l(et, format: format)
+      I18n.l(start_time, format: format),
+      I18n.l(end_time, format: format)
     ].compact.join(' - ')
   end
 end

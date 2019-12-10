@@ -25,8 +25,7 @@ class RepositoryDateTimeValueBase < ApplicationRecord
 
   private
 
-  def formatted(format, new_date: nil)
-    d = new_date ? Time.zone.parse(new_date) : data
+  def formatted(format)
     I18n.l(d, format: format)
   end
 end
