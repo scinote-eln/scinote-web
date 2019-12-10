@@ -572,15 +572,6 @@ class User < ApplicationRecord
     avatar.blob&.filename&.sanitized
   end
 
-  def avatar_base64(style)
-    unless avatar.attached?
-      missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
-      return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
-    end
-
-    convert_variant_to_base64(avatar_variant(style))
-  end
-
   protected
 
   def confirmation_required?

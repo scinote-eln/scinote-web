@@ -6,7 +6,7 @@
 <% assets = step.assets %>
 <% checklists = step.checklists %>
 <% comments = step.step_comments %>
-<% pdf_export_ready = defined?(export_all) && export_all %>
+<% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-step-element"
      data-ts="<%= timestamp.to_i %>"
      data-type="step"
@@ -38,10 +38,11 @@
     <div class="row">
       <div class="col-xs-12 ql-editor">
         <% if step.description.present? %>
-          <%= custom_auto_link(step.prepare_for_report(:description),
+          <%= custom_auto_link(step.prepare_for_report(:description, for_export_all),
                                team: current_team,
                                simple_format: false,
-                               tags: %w(img)) %>
+                               tags: %w(img),
+                               base64_encoded_imgs: for_export_all) %>
         <% else %>
           <em><%=t "projects.reports.elements.step.no_description" %></em>
         <% end %>
