@@ -35,11 +35,12 @@ class RepositoryAssetValue < ApplicationRecord
   def update_data!(new_data, user)
     destroy! && return if new_data == '-1'
 
-    if new_data[:direct_upload_token]
-      asset.file.attach(new_data[:direct_upload_token])
-    else
+    if new_data.is_a?(Hash) && new_data[:file_data]
       asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data].split(',')[1])),
                         filename: new_data[:filename])
+    else
+      # new_data is direct_upload_token
+      asset.file.attach(new_data)
     end
 
     asset.last_modified_by = user
@@ -48,19 +49,18 @@ class RepositoryAssetValue < ApplicationRecord
   end
 
   def self.new_with_payload(payload, attributes)
-    raise ArgumentError, 'Payload needs to be a hash' unless payload.is_a?(Hash)
-
     value = new(attributes)
     team = value.repository_cell.repository_column.repository.team
     value.asset = Asset.create!(created_by: value.created_by, last_modified_by: value.created_by, team: team)
 
-    if payload[:direct_upload_token]
-      value.asset.file.attach(payload[:direct_upload_token])
-    elsif payload[:file_data]
+    if payload.is_a?(Hash) && payload[:file_data]
       value.asset.file.attach(
         io: StringIO.new(Base64.decode64(payload[:file_data].split(',')[1])),
         filename: payload[:filename]
       )
+    else
+      # payload is direct_upload_token
+      value.asset.file.attach(payload)
     end
 
     value.asset.post_process_file(team)

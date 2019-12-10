@@ -9,7 +9,7 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
       <input class="form-control editing"
              form="${formId}"
              type="text"
-             name="repository_row_name"
+             name="repository_row[name]"
              value="${text}"
              data-type="RowName">
     </div>

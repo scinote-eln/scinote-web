@@ -58,11 +58,7 @@ describe RepositoryAssetValue, type: :model do
       }
     end
 
-    let(:new_file_with_direct_upload_token) do
-      {
-        direct_upload_token: 'someUrl'
-      }
-    end
+    let(:new_file_with_direct_upload_token) { 'Token' }
 
     context 'when update data' do
       # context 'when has direct_upload_token' do

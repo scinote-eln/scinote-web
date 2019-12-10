@@ -119,9 +119,6 @@ describe RepositoryRows::UpdateRepositoryRowService do
   end
 
   context 'when service does not succeed' do
-    context 'when cell value update fails' do
-    end
-
     context 'when updates repository_row and cell, but fails' do
       let(:params) do
         {
