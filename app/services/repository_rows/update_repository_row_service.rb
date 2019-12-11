@@ -31,14 +31,11 @@ module RepositoryRows
             next
           end
 
-          unless cell
-            RepositoryCell.create_with_value!(@repository_row, column, value, @user)
-            @record_updated = true
-            next
-          end
-
-          if cell.value.data_changed?(value)
+          if cell&.value&.data_changed?(value)
             cell.value.update_data!(value, @user)
+            @record_updated = true
+          elsif !value.empty?
+            RepositoryCell.create_with_value!(@repository_row, column, value, @user)
             @record_updated = true
           end
         end

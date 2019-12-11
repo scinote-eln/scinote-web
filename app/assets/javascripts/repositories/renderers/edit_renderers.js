@@ -1,4 +1,4 @@
-/* global List Status SmartAnnotation I18n GLOBAL_CONSTANTS */
+/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS */
 
 $.fn.dataTable.render.editRowName = function(formId, cell) {
   let $cell = $(cell.node());
@@ -59,13 +59,16 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
 
 $.fn.dataTable.render.editRepositoryListValue = function(formId, columnId, cell) {
   var $cell = $(cell.node());
-  var currentElement = $cell.find('.list-label')
-  var currentValue = {
-    value: currentElement.attr('data-value-id'),
-    label: currentElement.text()
+  var currentElement = $cell.find('.list-label');
+  var currentValue = null;
+  if (currentElement.length) {
+    currentValue = {
+      value: currentElement.attr('data-value-id'),
+      label: currentElement.text()
+    };
   }
 
-  ListColumnHelper.initialListEditMode(formId, columnId, $cell, currentValue)
+  ListColumnHelper.initialListEditMode(formId, columnId, $cell, currentValue);
 };
 
 $.fn.dataTable.render.editRepositoryStatusValue = function(formId, columnId, cell) {
@@ -110,5 +113,7 @@ $.fn.dataTable.render.editRepositoryTimeRangeValue = function(formId, columnId, 
 };
 
 $.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, cell) {
-  return '';
+  var $cell = $(cell.node());
+  var currentValue = $cell.find('.checklist-options').data('checklist-items');
+  ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell, currentValue);
 };

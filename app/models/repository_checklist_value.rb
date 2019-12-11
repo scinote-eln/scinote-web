@@ -18,5 +18,22 @@ class RepositoryChecklistValue < ApplicationRecord
   def data
     repository_cell.repository_column.repository_checklist_items
                    .where(id: repository_checklist_items).select(:id, :data)
+                   .map { |i| { value: i.id, label: i.data } }
+  end
+
+  def data_changed?(new_data)
+    JSON.parse(new_data) != repository_checklist_items
+  end
+
+  def update_data!(new_data, user)
+    self.repository_checklist_items = JSON.parse(new_data)
+    self.last_modified_by = user
+    save!
+  end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.repository_checklist_items = JSON.parse(payload)
+    value
   end
 end

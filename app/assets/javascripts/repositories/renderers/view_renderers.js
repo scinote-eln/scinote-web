@@ -97,8 +97,27 @@ $.fn.dataTable.render.RepositoryDateRangeValue = function(data) {
 };
 
 $.fn.dataTable.render.RepositoryChecklistValue = function(data) {
-  console.log(data)
-  return '';
+  var render = '&#8212;';
+  var options = data.value;
+  if (options.length == 1) {
+    render = `<span class="checklist-options" data-checklist-items='${JSON.stringify(options)}'>
+      ${options[0].label}
+    </span>`
+  } else if (options.length > 1) {
+    var optionsList = $(' <ul class="dropdown-menu checklist-dropdown-menu" role="menu"></ul');
+    $.each(options, function(i, option) {
+      $(`<li class="checklist-item">${option.label}</li>`).appendTo(optionsList)
+    })
+
+    render = `
+      <span class="dropdown checklist-dropdown"> 
+        <span data-toggle="dropdown" class="checklist-options" aria-haspopup="true" data-checklist-items='${JSON.stringify(options)}'>
+          ${options.length} ${I18n.t('libraries.manange_modal_column.checklist_type.multiple_options')}
+        </span>
+        ${optionsList[0].outerHTML}
+      </span>`
+  }
+  return render;
 };
 
 $.fn.dataTable.render.defaultRepositoryChecklistValue = function() {

@@ -1,4 +1,4 @@
-/* global List Status SmartAnnotation I18n GLOBAL_CONSTANTS */
+/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS */
 
 $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
@@ -48,7 +48,7 @@ $.fn.dataTable.render.newRepositoryTextValue = function(formId, columnId, $cell)
 };
 
 $.fn.dataTable.render.newRepositoryListValue = function(formId, columnId, $cell) {
-  ListColumnHelper.initialListEditMode(formId, columnId, $cell)
+  ListColumnHelper.initialListEditMode(formId, columnId, $cell);
 };
 
 $.fn.dataTable.render.newRepositoryStatusValue = function(formId, columnId, $cell) {
@@ -66,5 +66,5 @@ $.fn.dataTable.render.newRepositoryStatusValue = function(formId, columnId, $cel
 };
 
 $.fn.dataTable.render.newRepositoryChecklistValue = function(formId, columnId, $cell) {
-  ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell)
+  ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell);
 };

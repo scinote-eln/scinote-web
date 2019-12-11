@@ -63,11 +63,11 @@ var dropdownSelector = (function() {
     if (modalContainer.length) {
       windowHeight = modalContainer.height() + modalContainer[0].getBoundingClientRect().top;
       modalContainerBottom = modalContainer[0].getBoundingClientRect().bottom;
-      maxHeight += modalContainerBottom
+      maxHeight += modalContainerBottom;
     }
 
     bottomSpace = windowHeight - containerPosition - containerHeight;
-    
+
     if ((modalContainerBottom + bottomSpace) < 280) {
       container.addClass('inverse');
       container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
@@ -77,7 +77,7 @@ var dropdownSelector = (function() {
       container.removeClass('inverse');
       container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32 + maxHeight)}px`)
         .css('width', `${containerWidth}px`)
-        .css('margin-top', `${(bottomSpace * -1)}px`)
+        .css('margin-top', `${(bottomSpace * -1)}px`);
     }
   }
 
@@ -381,7 +381,8 @@ var dropdownSelector = (function() {
     });
 
     // When user will resize browser we must check dropdown position
-    $(window).resize(function() { updateDropdownDirection(selectElement, dropdownContainer); });
+    $(window).resize(() => { updateDropdownDirection(selectElement, dropdownContainer); });
+    $(window).scroll(() => { updateDropdownDirection(selectElement, dropdownContainer); });
 
     // When user will click away, we must close dropdown
     $(window).click(() => {
@@ -663,7 +664,7 @@ var dropdownSelector = (function() {
     // If we have alteast one tag, we need to remove placeholder from search field
     searchFieldValue.attr('placeholder',
       selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
-    searchFieldValue.attr('data-options-selected', selectedOptions.length)
+    searchFieldValue.attr('data-options-selected', selectedOptions.length);
 
     // Add stretch class for visual improvments
     if (!selector.data('combine-tags')) {

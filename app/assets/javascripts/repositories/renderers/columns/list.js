@@ -4,7 +4,7 @@
 var ListColumnHelper = (function() {
   function listSelect(select, url, value) {
     var selectedOption = '';
-    if (value) {
+    if (value && value.value) {
       selectedOption = `<option value="${value.value}">${value.label}</option>`;
     }
     return $(`<select 
@@ -33,7 +33,7 @@ var ListColumnHelper = (function() {
       singleSelect: true,
       selectAppearance: 'simple',
       onChange: function() {
-        var values = JSON.stringify(dropdownSelector.getValues('#' + select));
+        var values = dropdownSelector.getValues('#' + select);
         $hiddenField.val(values);
       }
     });

@@ -47,10 +47,9 @@ module RepositoryColumns
 
     def items
       column_checklist_items = @repository_column.repository_checklist_items
-                                          .where('data ILIKE ?',
-                                                 "%#{search_params[:query]}%")
-                                          .limit(Constants::SEARCH_LIMIT)
-                                          .select(:id, :data)
+                                                 .where('data ILIKE ?',
+                                                        "%#{search_params[:query]}%")
+                                                 .select(:id, :data)
 
       render json: column_checklist_items.map { |i| { value: i.id, label: escape_input(i.data) } }, status: :ok
     end
