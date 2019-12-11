@@ -47,10 +47,10 @@ module RepositoryColumns
 
     def items
       column_list_items = @repository_column.repository_list_items
-                                          .where('data ILIKE ?',
-                                                 "%#{search_params[:query]}%")
-                                          .limit(Constants::SEARCH_LIMIT)
-                                          .select(:id, :data)
+                                            .where('data ILIKE ?',
+                                                   "%#{search_params[:query]}%")
+                                            .limit(Constants::SEARCH_LIMIT)
+                                            .select(:id, :data)
 
       render json: column_list_items.map { |i| { value: i.id, label: escape_input(i.data) } }, status: :ok
     end

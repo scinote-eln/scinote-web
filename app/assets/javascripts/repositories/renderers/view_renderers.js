@@ -1,3 +1,5 @@
+/* global I18n */
+
 $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   var asset = data.value;
   return `
@@ -99,15 +101,16 @@ $.fn.dataTable.render.RepositoryDateRangeValue = function(data) {
 $.fn.dataTable.render.RepositoryChecklistValue = function(data) {
   var render = '&#8212;';
   var options = data.value;
-  if (options.length == 1) {
+  var optionsList;
+  if (options.length === 1) {
     render = `<span class="checklist-options" data-checklist-items='${JSON.stringify(options)}'>
       ${options[0].label}
-    </span>`
+    </span>`;
   } else if (options.length > 1) {
-    var optionsList = $(' <ul class="dropdown-menu checklist-dropdown-menu" role="menu"></ul');
+    optionsList = $(' <ul class="dropdown-menu checklist-dropdown-menu" role="menu"></ul');
     $.each(options, function(i, option) {
-      $(`<li class="checklist-item">${option.label}</li>`).appendTo(optionsList)
-    })
+      $(`<li class="checklist-item">${option.label}</li>`).appendTo(optionsList);
+    });
 
     render = `
       <span class="dropdown checklist-dropdown"> 
@@ -115,7 +118,7 @@ $.fn.dataTable.render.RepositoryChecklistValue = function(data) {
           ${options.length} ${I18n.t('libraries.manange_modal_column.checklist_type.multiple_options')}
         </span>
         ${optionsList[0].outerHTML}
-      </span>`
+      </span>`;
   }
   return render;
 };
