@@ -20,10 +20,18 @@ var ChecklistColumnHelper = (function() {
   }
 
   function checklistHiddenField(formId, columnId, values) {
+    var idList = [];
+    if (values) {
+      $.each(values, function(i, option) {
+        idList.push(option.value);
+      });
+    } else {
+      idList = '';
+    }
     return $(`<input form="${formId}"
              type="hidden"
              name="repository_cells[${columnId}]"
-             value=""
+             value="${JSON.stringify(idList)}"
              data-type="RepositoryChecklistValue">`);
   }
 
