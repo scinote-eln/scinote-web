@@ -2,6 +2,7 @@
 <% if order.blank? and @order.present? then order = @order end %>
 <% comments = step.step_comments.order(created_at: order) %>
 <% timestamp = Time.current + 1.year %>
+<% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-comments-element report-step-comments-element" data-ts="<%= timestamp.to_i %>" data-order="asc" data-type="step_comments" data-id='{ "step_id": <%= step.id %> }' data-scroll-id="<%= step.id %>" data-name="<%=t "projects.reports.elements.step_comments.sidebar_name" %>" data-icon-class="fas fa-comment">
   <div class="report-element-header">
     <div class="row">
@@ -22,7 +23,8 @@
         <% if comments.any? %>
           <ul class="no-style content-comments">
             <% comments.each do |comment| %>
-              <%= render partial: 'shared/comments/item.html.erb', locals: { comment: comment, readonly: true, report: true } %>
+              <%= render partial: 'shared/comments/item.html.erb',
+                         locals: { comment: comment, readonly: true, report: true, export_all: for_export_all } %>
             <% end %>
           </ul>
         <% else %>
