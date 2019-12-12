@@ -15,7 +15,7 @@ SETUP_PROC = lambda do |env|
 
       provider_id = unverified_jwt_payload['aud']
     else # Authorization phase
-      raise ActionController::ParameterMissing, 'Provider name is missing' if req.params['provider'].empty?
+      raise ActionController::ParameterMissing, 'Provider name is missing' if req.params['provider'].blank?
 
       provider_id = providers.select { |_, v| v[:provider] == req.params['provider'] }.keys.first
       raise StandardError, 'No Azure AD config available for sign in' if provider_id.blank?

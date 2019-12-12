@@ -1494,6 +1494,7 @@ en:
           head_title: "Settings | Connected Accounts"
           title: "Connected Accounts"
           not_connected: "You have no Connected accounts"
+          unlink_success: "Sucessfully unlinked"
           azure_ad:
             title: "Your Azure AD Account"
             connect_hint: "Allows you to sign in with your Azure AD account."
@@ -1503,6 +1504,9 @@ en:
               title: "Unlink Azure AD account?"
               description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
               submit_button: "Submit"
+          errors:
+            not_found: "You have no Connected accounts for this provider"
+            generic: "Unable to unlink linked account"
       teams:
         head_title: "Settings | Teams"
         breadcrumbs:
