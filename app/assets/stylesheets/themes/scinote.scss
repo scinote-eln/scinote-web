@@ -399,11 +399,11 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-without-sidebar{
-  padding-left: 0;
   margin-left: 0px;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
+  padding-left: 0;
   -o-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
 
@@ -499,7 +499,7 @@ a[data-toggle="tooltip"] {
     margin-bottom: 15px;
   }
 
-  & > .sci-btn-group {
+  > .sci-btn-group {
     margin-right: 30px;
   }
 }
@@ -921,7 +921,7 @@ ul.content-activities {
   .protocol-button {
 
     .sci-btn-group {
-      float: left
+      float: left;
     }
   }
 

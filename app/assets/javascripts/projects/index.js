@@ -510,19 +510,20 @@
   }
 
   function initProjectsViewModeSwitch() {
-    $('input[name=projects-view-mode-selector]').off().on('change', function() {
-      if ($(this).val() === projectsViewMode) {
-        return;
-      }
-      projectsViewMode = $(this).val();
-      if (projectsChanged) {
-        refreshCurrentView();
-      }
-      projectsChanged = false;
-    })
-    .on('click', function() {
-      $(this).next().click();
-    });
+    $('input[name=projects-view-mode-selector]').off()
+      .on('change', function() {
+        if ($(this).val() === projectsViewMode) {
+          return;
+        }
+        projectsViewMode = $(this).val();
+        if (projectsChanged) {
+          refreshCurrentView();
+        }
+        projectsChanged = false;
+      })
+      .on('click', function() {
+        $(this).next().click();
+      });
   }
 
   function initSorting() {
