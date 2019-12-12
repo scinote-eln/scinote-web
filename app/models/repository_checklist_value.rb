@@ -15,7 +15,8 @@ class RepositoryChecklistValue < ApplicationRecord
   SORTABLE_VALUE_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
 
   def formatted
-    data
+    repository_cell.repository_column.repository_checklist_items
+                   .where(id: repository_checklist_items).select(:data).join('\n')
   end
 
   def data
