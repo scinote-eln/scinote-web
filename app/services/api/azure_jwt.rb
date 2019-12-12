@@ -42,7 +42,7 @@ module Api
       end
 
       # Decode token payload and verify it's signature.
-      payload, = JWT.decode(
+      payload, header = JWT.decode(
         token,
         OpenSSL::PKey::RSA.new(fetch_rsa_key(k_id, app_id)),
         true,
@@ -54,7 +54,7 @@ module Api
         iss: app_config[:iss],
         nbf_leeway: LEEWAY
       )
-      HashWithIndifferentAccess.new(payload)
+      [HashWithIndifferentAccess.new(payload), HashWithIndifferentAccess.new(header)]
     end
   end
 end

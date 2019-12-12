@@ -1,0 +1,7 @@
+<% Rails.configuration.x.azure_ad_apps.select { |uid, config| config[:enable_sign_in] }.each do |uid, config| %>
+  <div class="form-group">
+    <%= form_tag user_customazureactivedirectory_omniauth_authorize_path(provider: config[:provider]), method: :post do %>
+      <%= submit_tag config[:sign_in_label], class: 'btn btn-azure-ad' %>
+    <% end %>
+  </div>
+<% end %>

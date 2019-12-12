@@ -23,6 +23,7 @@ gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
+gem 'omniauth-azure-activedirectory'
 gem 'omniauth-linkedin-oauth2'
 
 # TODO: remove this when omniauth gem resolves CVE issues
