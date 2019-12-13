@@ -2,9 +2,9 @@
 
 module RepositoryColumns
   class ListColumnsController < BaseColumnsController
-    before_action :load_column, only: %i(update destroy)
+    before_action :load_column, only: %i(update destroy items)
     before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: %i(update destroy)
+    before_action :check_manage_permissions, only: %i(update destroy items)
     helper_method :delimiters
 
     def create
@@ -45,7 +45,21 @@ module RepositoryColumns
       end
     end
 
+    def items
+      column_list_items = @repository_column.repository_list_items
+                                            .where('data ILIKE ?',
+                                                   "%#{search_params[:query]}%")
+                                            .limit(Constants::SEARCH_LIMIT)
+                                            .select(:id, :data)
+
+      render json: column_list_items.map { |i| { value: i.id, label: escape_input(i.data) } }, status: :ok
+    end
+
     private
+
+    def search_params
+      params.permit(:query, :column_id)
+    end
 
     def repository_column_params
       params.require(:repository_column).permit(:name, :delimiter, repository_list_items_attributes: %i(data))

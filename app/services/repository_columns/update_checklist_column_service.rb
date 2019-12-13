@@ -14,12 +14,12 @@ module RepositoryColumns
       @column.lock!
 
       updating_items_names = @params[:repository_checklist_items_attributes].to_a.map { |e| e[:data] }
-      existing_items_names = @column.repository_checkbox_items.pluck(:data)
+      existing_items_names = @column.repository_checklist_items.pluck(:data)
       to_be_deleted = existing_items_names - updating_items_names
       to_be_created = updating_items_names - existing_items_names
 
       if @column.repository_list_items.size - to_be_deleted.size + to_be_created.size >=
-         Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
+         Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
 
         @errors[:repository_column] = { repository_checklist_items: 'too many items' }
       end
@@ -30,7 +30,7 @@ module RepositoryColumns
 
       ActiveRecord::Base.transaction do
         to_be_deleted.each do |item|
-          @column.repository_checkbox_items.find_by(data: item).destroy!.id
+          @column.repository_checklist_items.find_by(data: item).destroy!.id
         end
 
         to_be_created.each do |item|

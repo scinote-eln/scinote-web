@@ -581,12 +581,20 @@ Rails.application.routes.draw do
       namespace :repository_columns do
         resources :text_columns, only: %i(create update destroy)
         resources :number_columns, only: %i(create update destroy)
-        resources :list_columns, only: %i(create update destroy)
+        resources :list_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
         resources :asset_columns, only: %i(create update destroy)
         resources :date_columns, only: %i(create update destroy)
         resources :status_columns, only: %i(create update destroy)
         resources :date_time_columns, only: %i(create update destroy)
-        resources :checklist_columns, only: %i(create update destroy)
+        resources :checklist_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
       end
     end
 

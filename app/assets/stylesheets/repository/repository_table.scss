@@ -1,0 +1,17 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
+@import "constants";
+
+.repository-table {
+  // Cells
+
+  // Checklists
+  .checklist-dropdown {
+    .dropdown-menu {
+      .checklist-item {
+        padding: 5px;
+      }
+    }
+  }
+}

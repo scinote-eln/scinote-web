@@ -109,8 +109,8 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
     display: none;
     overflow: hidden;
-    position: absolute;
-    top: calc(100% - 30px);
+    position: fixed;
+    bottom: calc(100% - 30px);
     transition: .2s;
     transition-property: top, bottom, box-shadow;
     width: 100%;
@@ -167,7 +167,7 @@
       cursor: pointer;
       display: flex;
       min-height: 32px;
-      padding: 0 10px;
+      padding: 3px 10px;
       position: relative;
       user-select: none;
 
@@ -236,9 +236,19 @@
         bottom: 3px;
         display: none;
         position: absolute;
+
+        &[data-options-selected="0"] {
+          display: block;
+        }
       }
 
       .ds-simple {
+        .tag-label {
+          overflow: hiddens;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         .fa-times {
           display: none;
         }
@@ -263,6 +273,7 @@
 
     .dropdown-container {
       border-top: 0;
+      bottom: auto;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
       display: block;
       top: 100%;
@@ -289,6 +300,10 @@
       .search-field {
         display: block;
         line-height: 14px;
+
+        &[data-options-selected="0"] {
+          line-height: 24px;
+        }
       }
 
       .ds-simple {

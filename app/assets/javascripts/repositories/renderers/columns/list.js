@@ -1,52 +1,45 @@
 /* global dropdownSelector */
 /* eslint-disable no-unused-vars */
 
-var List = (function() {
-  function listItemDropdown(options, currentValueId, columnId, formId) {
-    var html = `<select class="form-control selectpicker repository-dropdown"
-                data-abs-min-length="2" data-live-search="true" from="${formId}"
-                data-container="body" column_id="${columnId}">
-                <option value="-1"></option>`;
-    $.each(options, function(index, value) {
-      var selected = (parseInt(currentValueId, 10) === value[0]) ? 'selected' : '';
-      html += `<option value="${value[0]}" ${selected}>${value[1]}</option>`;
-    });
-    html += '</select>';
-    return html;
+var ListColumnHelper = (function() {
+  function listSelect(select, url, value) {
+    var selectedOption = '';
+    if (value && value.value) {
+      selectedOption = `<option value="${value.value}">${value.label}</option>`;
+    }
+    return $(`<select 
+              id="${select}"
+              data-placeholder = "Select option..."
+              data-ajax-url = "${url}"
+            >${selectedOption}</select>`);
   }
 
-  function initialListItemsRequest(columnId, currentValueId, formId, url) {
-    var massageResponse = [];
-    $.ajax({
-      url: url,
-      type: 'POST',
-      dataType: 'json',
-      async: false,
-      data: {
-        column_id: columnId
-      }
-    }).done(function(data) {
-      $.each(data.list_items, function(index, el) {
-        massageResponse.push([el.id, el.data]);
-      });
-    });
-    return listItemDropdown(massageResponse, currentValueId, columnId, formId);
+  function listHiddenField(formId, columnId, value) {
+    var originalValue = value ? value.value : '';
+    return $(`<input form="${formId}"
+             type="hidden"
+             name="repository_cells[${columnId}]"
+             value="${originalValue}"
+             data-type="RepositoryListValue">`);
   }
 
-  function initSelectPicker($select, $hiddenField) {
-    dropdownSelector.init($select, {
-      noEmptyOption: true,
+  function initialListEditMode(formId, columnId, cell, value = null) {
+    var select = 'list-' + columnId;
+    var listUrl = $('.repository-column#' + columnId).data('items-url');
+    var $select = listSelect(select, listUrl, value);
+    var $hiddenField = listHiddenField(formId, columnId, value);
+    cell.html($select).append($hiddenField);
+    dropdownSelector.init('#' + select, {
       singleSelect: true,
-      closeOnSelect: true,
       selectAppearance: 'simple',
       onChange: function() {
-        $hiddenField.val(dropdownSelector.getValues($select));
+        var values = dropdownSelector.getValues('#' + select);
+        $hiddenField.val(values);
       }
     });
   }
 
   return {
-    initialListItemsRequest: initialListItemsRequest,
-    initSelectPicker: initSelectPicker
+    initialListEditMode: initialListEditMode
   };
 }());
