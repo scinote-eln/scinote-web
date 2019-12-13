@@ -16,7 +16,7 @@ class RepositoryChecklistValue < ApplicationRecord
 
   def formatted
     repository_cell.repository_column.repository_checklist_items
-                   .where(id: repository_checklist_items).select(:data).join('\n')
+                   .where(id: repository_checklist_items).pluck(:data).join(' | ')
   end
 
   def data
