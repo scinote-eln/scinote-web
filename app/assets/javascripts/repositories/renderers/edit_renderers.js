@@ -1,4 +1,4 @@
-/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS */
+/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS DateTimeHelper*/
 
 $.fn.dataTable.render.editRowName = function(formId, cell) {
   let $cell = $(cell.node());
@@ -89,15 +89,31 @@ $.fn.dataTable.render.editRepositoryStatusValue = function(formId, columnId, cel
 };
 
 $.fn.dataTable.render.editRepositoryDateTimeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+  let $span = $cell.find('span').first();
+  let date = $span.data('date');
+  let time = $span.data('time');
+  let datetime = $span.data('datetime');
+
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, date, time, datetime);
 };
 
 $.fn.dataTable.render.editRepositoryDateValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+  let $span = $cell.find('span').first();
+  let date = $span.data('date');
+  let datetime = $span.data('datetime');
+
+  DateTimeHelper.initDateEditMode(formId, columnId, $cell, date, datetime);
 };
 
 $.fn.dataTable.render.editRepositoryTimeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+  let $span = $cell.find('span').first();
+  let time = $span.data('time');
+  let datetime = $span.data('datetime');
+
+  DateTimeHelper.initTimeEditMode(formId, columnId, $cell, time, datetime);
 };
 
 $.fn.dataTable.render.editRepositoryDateTimeRangeValue = function(formId, columnId, cell) {

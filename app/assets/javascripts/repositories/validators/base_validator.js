@@ -37,3 +37,7 @@ $.fn.dataTable.render.RepositoryChecklistValueValidator = function() {
 $.fn.dataTable.render.RepositoryNumberValueValidator = function() {
   return true;
 };
+
+$.fn.dataTable.render.RepositoryDateTimeValueValidator = function() {
+  return true;
+}

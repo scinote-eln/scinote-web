@@ -1,4 +1,4 @@
-/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS */
+/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS DateTimeHelper formatJS */
 
 $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
@@ -84,4 +84,20 @@ $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cel
     </div>`);
 
   SmartAnnotation.init($cell.find('input'));
+};
+
+$.fn.dataTable.render.newRepositoryDateTimeValue = function(formId, columnId, $cell) {
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, '', '', '');
+};
+
+$.fn.dataTable.render.newRepositoryTimeValue = function(formId, columnId, $cell) {
+  DateTimeHelper.initTimeEditMode(formId, columnId, $cell, '', '');
+};
+
+$.fn.dataTable.render.newRepositoryDateValue = function(formId, columnId, $cell) {
+  DateTimeHelper.initDateEditMode(formId, columnId, $cell, '', '');
+};
+
+$.fn.dataTable.render.newRepositoryCheckboxValue = function(formId, columnId) {
+  return '';
 };

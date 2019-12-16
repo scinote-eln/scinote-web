@@ -3,7 +3,10 @@
 module RepositoryDatatable
   class RepositoryTimeValueSerializer < RepositoryBaseValueSerializer
     def value
-      I18n.l(object.data, format: :time)
+      {
+        formatted: I18n.l(object.data, format: :time),
+        datetime: object.data.strftime('%Y/%m/%d %H:%M')
+      }
     end
   end
 end

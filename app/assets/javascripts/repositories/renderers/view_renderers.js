@@ -55,7 +55,7 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
-  return data.value;
+  return `<span data-datetime="${data.value.datetime}" data-date="${data.value.formatted}">${data.value.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
@@ -63,7 +63,9 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
-  return data.value;
+  return `<span data-time="${data.value.time_formatted}" 
+                data-datetime="${data.value.datetime}" 
+                data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryTimeValue = function() {
@@ -71,7 +73,8 @@ $.fn.dataTable.render.defaultRepositoryTimeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTimeValue = function(data) {
-  return data.value;
+  return `<span data-time="${data.value.formatted}" 
+                data-datetime="${data.value.datetime}">${data.value.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryTimeRangeValue = function() {
@@ -79,7 +82,7 @@ $.fn.dataTable.render.defaultRepositoryTimeRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTimeRangeValue = function(data) {
-  return data.value;
+  return `<span data-datetime="${data.value.datetime}">${data.value.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryDateTimeRangeValue = function() {
