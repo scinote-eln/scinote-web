@@ -11,6 +11,12 @@ class TinyMceAssetsController < ApplicationController
 
   def create
     image = params.fetch(:file) { render_404 }
+    unless image.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
+      return render json: {
+        errors: [I18n.t('tiny_mce.unsupported_image_format')]
+      }, status: :unprocessable_entity
+    end
+
     tiny_img = TinyMceAsset.new(team_id: current_team.id, saved: false)
 
     tiny_img.transaction do
@@ -27,7 +33,7 @@ class TinyMceAssetsController < ApplicationController
       }, content_type: 'text/html'
     else
       render json: {
-        error: tiny_img.errors.full_messages
+        errors: tiny_img.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
