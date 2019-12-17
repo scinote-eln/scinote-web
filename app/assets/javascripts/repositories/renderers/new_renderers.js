@@ -98,6 +98,20 @@ $.fn.dataTable.render.newRepositoryDateValue = function(formId, columnId, $cell)
   DateTimeHelper.initDateEditMode(formId, columnId, $cell, '', '');
 };
 
+$.fn.dataTable.render.newRepositoryDateTimeRangeValue = function(formId, columnId, $cell) {
+  // let $cell = $(cell.node());
+  // let $startSpan = $cell.find('span').first();
+  // let startDate = $startSpan.data('date');
+  // let startTime = $startSpan.data('time');
+  // let startDatetime = $startSpan.data('datetime');
+  // let $endSpan = $cell.find('span').last();
+  // let endDate = $endSpan.data('date');
+  // let endTime = $endSpan.data('time');
+  // let endDatetime = $endSpan.data('datetime');
+
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, '', '', '', '', '', '');
+};
+
 $.fn.dataTable.render.newRepositoryCheckboxValue = function(formId, columnId) {
   return '';
 };

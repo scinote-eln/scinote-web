@@ -90,7 +90,12 @@ $.fn.dataTable.render.defaultRepositoryDateTimeRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeRangeValue = function(data) {
-  return data.value;
+  return `<span data-time="${data.value.start_time.time_formatted}"
+                data-datetime="${data.value.start_time.datetime}"
+                data-date="${data.value.start_time.date_formatted}">${data.value.start_time.formatted}</span> -
+          <span data-time="${data.value.end_time.time_formatted}"
+                data-datetime="${data.value.end_time.datetime}"
+                data-date="${data.value.end_time.date_formatted}">${data.value.end_time.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryDateRangeValue = function() {
