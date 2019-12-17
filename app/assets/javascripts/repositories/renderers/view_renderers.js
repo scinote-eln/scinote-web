@@ -82,7 +82,10 @@ $.fn.dataTable.render.defaultRepositoryTimeRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTimeRangeValue = function(data) {
-  return `<span data-datetime="${data.value.datetime}">${data.value.formatted}</span>`;
+  return `<span data-time="${data.value.start_time.formatted}"
+                data-datetime="${data.value.start_time.datetime}">${data.value.start_time.formatted}</span> -
+          <span data-time="${data.value.end_time.formatted}"
+                data-datetime="${data.value.end_time.datetime}">${data.value.end_time.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryDateTimeRangeValue = function() {
@@ -103,7 +106,10 @@ $.fn.dataTable.render.defaultRepositoryDateRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateRangeValue = function(data) {
-  return data.value;
+  return `<span data-datetime="${data.value.start_time.datetime}"
+                data-date="${data.value.start_time.formatted}">${data.value.start_time.formatted}</span> -
+          <span data-datetime="${data.value.end_time.datetime}"
+                data-date="${data.value.end_time.formatted}">${data.value.end_time.formatted}</span>`;
 };
 
 $.fn.dataTable.render.RepositoryChecklistValue = function(data) {

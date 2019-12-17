@@ -131,11 +131,27 @@ $.fn.dataTable.render.editRepositoryDateTimeRangeValue = function(formId, column
 };
 
 $.fn.dataTable.render.editRepositoryDateRangeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+  let $startSpan = $cell.find('span').first();
+  let startDate = $startSpan.data('date');
+  let startDatetime = $startSpan.data('datetime');
+  let $endSpan = $cell.find('span').last();
+  let endDate = $endSpan.data('date');
+  let endDatetime = $endSpan.data('datetime');
+
+  DateTimeHelper.initDateRangeEditMode(formId, columnId, $cell, startDate, startDatetime, endDate, endDatetime);
 };
 
 $.fn.dataTable.render.editRepositoryTimeRangeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+  let $startSpan = $cell.find('span').first();
+  let startTime = $startSpan.data('time');
+  let startDatetime = $startSpan.data('datetime');
+  let $endSpan = $cell.find('span').last();
+  let endTime = $endSpan.data('time');
+  let endDatetime = $endSpan.data('datetime');
+
+  DateTimeHelper.initTimeRangeEditMode(formId, columnId, $cell, startTime, startDatetime, endTime, endDatetime);
 };
 
 $.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, cell) {
