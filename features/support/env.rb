@@ -13,6 +13,8 @@ require 'cucumber/rails'
 require 'capybara'
 require 'capybara/cucumber'
 require 'capybara/email'
+# require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
 
 include FirstTimeDataGenerator
 

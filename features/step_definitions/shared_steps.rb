@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+Given(/^the following users are registered:$/) do |table|
+  table.hashes.each do |hash|
+    team_name = hash.delete "team"
+    team_role = hash.delete "role"
+    user = FactoryBot.create(:user, hash)
+    team = FactoryBot.create(:team, {name: team_name, users: [user]})
+    UserTeam.where(user: user, team: team).first.update role: team_role
+    User.find_by_email(hash.fetch('email')).confirm
+  end
+end
+
 When(/^I click "(.+)" button$/) do |button|
   click_button(button)
 end
@@ -7,6 +18,18 @@ end
 Then('I click {string} Scinote button') do |button|
   find('.btn', text: button).click
 end
+
+Then('I click on {string} button') do |button|
+  find('.btn', text: button).click
+end
+
+Given("I click on {string} class button") do |button6|
+  find('.btn',class: button6, match: :first).click
+end
+
+Given("I click on {string} id button") do |button1|
+  find('.btn', id: button1).click
+end 
 
 Then('I trigger click {string}') do |string|
   page.execute_script("$('#{string}').trigger('click')")
@@ -36,9 +59,20 @@ Then(/^I click "(.+)" link within dropdown menu$/) do |link|
   end
 end
 
+Then(/^I click on "(.+)" within dropdown menu$/) do |link1|
+  within('.inner') do
+    find('.text', text: link1).click
+  end
+end
+
 Then(/^I should see "(.+)"$/) do |text|
   wait_for_ajax
   expect(page).to have_content(text)
+end
+
+Then("I should not see {string}") do |text6|
+  wait_for_ajax
+  expect(page).not_to have_content(text6)
 end
 
 Then(/^I should be on homepage$/) do
@@ -105,7 +139,7 @@ Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
   end
 end
 
-Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, input_id|
+Then(/^I fill in "([^"]*)" in "([^"]*)" input fields$/) do |text, input_id|
   page.find("#{input_id} input[type=\"text\"]").set(text)
 end
 
@@ -124,7 +158,7 @@ Then('I change {string} with {string} of field {string} of {string} modal window
 end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" field$/) do |text, input_id|
-  page.find(input_id).set(text)
+ page.find(input_id).set(text)
 end
 
 Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
@@ -176,12 +210,21 @@ Then('I wait for {int} sec') do |sec|
   sleep sec
 end
 
+Then('I click button with icon and label {string}') do |label|
+  find('.btn', text: label).click
+end
+
 Given('default screen size') do
   page.driver.browser.manage.window.resize_to(1920, 1080) if defined?(page.driver.browser.manage)
 end
 
+Given('default screen size2') do
+  page.driver.browser.manage.window.resize_to(1600, 900) if defined?(page.driver.browser.manage)
+end
+
 Then('I make screenshot') do
-  page.save_screenshot(full: true)
+  page.execute_script "window.scrollTo(0,0)"
+  page.driver.save_screenshot 'screenshot.png'
 end
 
 Given('I click to Cancel on confirm dialog') do
@@ -190,4 +233,20 @@ end
 
 Given('I click to OK on confirm dialog') do
   page.driver.browser.switch_to.alert.accept
+end
+
+Then("confirm with ENTER key to {string}") do |element|
+  page.find("#{element}").native.send_keys(:enter)
+end
+
+Then("I hover over comment") do 
+  find('.content-placeholder').hover
+end
+
+Then("I click on {string} sign") do |string1|
+  find("#{string1}").click
+end  
+
+Then("WAIT") do
+  wait_for_ajax
 end
