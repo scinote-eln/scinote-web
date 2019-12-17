@@ -1,4 +1,4 @@
-/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS DateTimeHelper formatJS */
+/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS DateTimeHelper */
 
 $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
