@@ -58,6 +58,7 @@ var DateTimeHelper = (function() {
     let endTime = endTimeContainer.find('input[type=hidden]').val();
     let formId = startTimeContainer.find('input[type!=hidden]').data('form-id');
     let columnId = startTimeContainer.find('input[type!=hidden]').data('column-id');
+    let dataType = $container.find('.cell-range-container').data('type');
     let json = {};
     let hiddenField;
     let value;
@@ -75,7 +76,8 @@ var DateTimeHelper = (function() {
       <input type="hidden"
              form="${formId}"
              name="repository_cells[${columnId}]"
-             value='${value}' />`;
+             value='${value}'
+             data-type="${dataType}"/>`;
 
     $container.find('.cell-range-container').html(hiddenField);
     startTimeContainer.find('.cell-timestamp-container').html('');
@@ -106,6 +108,7 @@ var DateTimeHelper = (function() {
     let hiddenFieldContainer = $input.parent().find('.cell-timestamp-container');
     let hasTime = isValidTimeStr(timeStr);
     let hasDate = isValidDate(date);
+    let dataType = $container.data('type');
     let value;
     let hiddenField;
 
@@ -124,7 +127,8 @@ var DateTimeHelper = (function() {
       <input type="hidden" 
              form="${formId}" 
              name="repository_cells[${columnId}]" 
-             value="${value}" />`;
+             value="${value}" 
+             data-type="${dataType}"/>`;
 
     hiddenFieldContainer.html(hiddenField);
   }
@@ -191,7 +195,7 @@ var DateTimeHelper = (function() {
   function initDateEditMode(formId, columnId, $cell, date, datetime) {
     let inputFields = `
     <div class="form-group">
-      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="date"></div>
+      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="date"  data-type="RepositoryDateValue"></div>
       ${dateInputField(formId, columnId, date)}
     </div>
   `;
@@ -205,7 +209,7 @@ var DateTimeHelper = (function() {
   function initTimeEditMode(formId, columnId, $cell, time, datetime) {
     let inputFields = `
     <div class="form-group">
-      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="time"></div>
+      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="time"  data-type="RepositoryTimeValue"></div>
       ${timeInputField(formId, columnId, time)}
     </div>
   `;
@@ -226,7 +230,7 @@ var DateTimeHelper = (function() {
   function initDateTimeEditMode(formId, columnId, $cell, date, time, datetime) {
     let inputFields = `
     <div class="form-group">
-      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="datetime"></div>
+      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="datetime" data-type="RepositoryDateTimeValue"></div>
       ${dateInputField(formId, columnId, date)}
       ${timeInputField(formId, columnId, time)}
     </div>
@@ -249,7 +253,7 @@ var DateTimeHelper = (function() {
   function initDateTimeRangeEditMode(formId, columnId, $cell, startDate, startTime, startDatetime, endDate, endTime, endDatetime) {
     let inputFields = `
     <div class="form-group">
-      <div class="cell-range-container"></div>
+      <div class="cell-range-container"  data-type="RepositoryDateTimeRangeValue"></div>
       <div class="start-time range-type">
         <div class="cell-timestamp-container" data-current-date="${startDatetime}" data-datetime-type="datetime"></div>
         ${dateInputField(formId, columnId, startDate)}
@@ -289,7 +293,7 @@ var DateTimeHelper = (function() {
   function initDateRangeEditMode(formId, columnId, $cell, startDate, startDatetime, endDate, endDatetime) {
     let inputFields = `
     <div class="form-group">
-      <div class="cell-range-container"></div>
+      <div class="cell-range-container" data-type="RepositoryDateRangeValue"></div>
       <div class="start-time range-type">
         <div class="cell-timestamp-container" data-current-date="${startDatetime}" data-datetime-type="date"></div>
         ${dateInputField(formId, columnId, startDate)}
@@ -319,7 +323,7 @@ var DateTimeHelper = (function() {
   function initTimeRangeEditMode(formId, columnId, $cell, startTime, startDatetime, endTime, endDatetime) {
     let inputFields = `
     <div class="form-group">
-      <div class="cell-range-container"></div>
+      <div class="cell-range-container" data-type="RepositoryTimeRangeValue"></div>
       <div class="start-time range-type">
         <div class="cell-timestamp-container" data-current-date="${startDatetime}" data-datetime-type="time"></div>
         ${timeInputField(formId, columnId, startTime)}   
