@@ -12,8 +12,9 @@ class RepositoryRowsController < ApplicationController
                          copy_records
                          available_rows)
   before_action :check_create_permissions, only: :create
+  before_action :check_delete_permissions, only: :delete_records
   before_action :check_manage_permissions,
-                only: %i(edit update delete_records copy_records)
+                only: %i(edit update copy_records)
 
   def index
     @draw = params[:draw].to_i
@@ -370,6 +371,10 @@ class RepositoryRowsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_repository_rows?(@repository)
+  end
+
+  def check_delete_permissions
+    render_403 unless can_delete_repository_rows?(@repository)
   end
 
   def record_params
