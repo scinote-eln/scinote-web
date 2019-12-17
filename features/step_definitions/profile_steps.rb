@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Then(/^I click on Avatar$/) do
   find('img.avatar').click
 end

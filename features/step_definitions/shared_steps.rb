@@ -2,12 +2,12 @@
 
 Given(/^the following users are registered:$/) do |table|
   table.hashes.each do |hash|
-    team_name = hash.delete "team"
-    team_role = hash.delete "role"
+    team_name = hash.delete 'team'
+    team_role = hash.delete 'role'
     user = FactoryBot.create(:user, hash)
-    team = FactoryBot.create(:team, {name: team_name, users: [user]})
+    team = FactoryBot.create(:team, name: team_name, users: [user])
     UserTeam.where(user: user, team: team).first.update role: team_role
-    User.find_by_email(hash.fetch('email')).confirm
+    User.find_by(email: hash.fetch('email')).confirm
   end
 end
 
@@ -23,13 +23,13 @@ Then('I click on {string} button') do |button|
   find('.btn', text: button).click
 end
 
-Given("I click on {string} class button") do |button6|
-  find('.btn',class: button6, match: :first).click
+Given('I click on {string} class button') do |button6|
+  find('.btn', class: button6, match: :first).click
 end
 
-Given("I click on {string} id button") do |button1|
+Given('I click on {string} id button') do |button1|
   find('.btn', id: button1).click
-end 
+end
 
 Then('I trigger click {string}') do |string|
   page.execute_script("$('#{string}').trigger('click')")
@@ -70,7 +70,7 @@ Then(/^I should see "(.+)"$/) do |text|
   expect(page).to have_content(text)
 end
 
-Then("I should not see {string}") do |text6|
+Then('I should not see {string}') do |text6|
   wait_for_ajax
   expect(page).not_to have_content(text6)
 end
@@ -153,12 +153,12 @@ Then('I fill in {string} to {string} field of {string} modal window') do |value,
   page.find('.modal-content', text: modal).find_field(field, with: '').set(value)
 end
 
-Then('I change {string} with {string} of field {string} of {string} modal window') do |old_value, new_value, field, modal|
+Then('I change {string} with {string} of field {string} of {string} window') do |old_value, new_value, field, modal|
   page.find('.modal-content', text: modal).find_field(field, with: old_value).set(new_value)
 end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" field$/) do |text, input_id|
- page.find(input_id).set(text)
+  page.find(input_id).set(text)
 end
 
 Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
@@ -180,18 +180,18 @@ end
 
 Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" input field$/) do |old_text, new_text, container_id|
   wait_for_ajax
-  container = page.find_by_id(container_id)
+  container = page.find_by(id: container_id)
   expect(container).to have_xpath("//input[@value='#{old_text}']")
   container.find('input').set(new_text)
 end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" textarea field$/) do |text, textarea_id|
-  textarea = page.find_by_id(textarea_id)
+  textarea = page.find_by(id: textarea_id)
   textarea.set(text)
 end
 
 Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" textarea field$/) do |old_text, new_text, textarea_id|
-  textarea = page.find_by_id(textarea_id)
+  textarea = page.find_by(id: textarea_id)
   expect(textarea).to have_content(old_text)
   textarea.set(new_text)
 end
@@ -223,7 +223,7 @@ Given('default screen size2') do
 end
 
 Then('I make screenshot') do
-  page.execute_script "window.scrollTo(0,0)"
+  page.execute_script 'window.scrollTo(0,0)'
   page.driver.save_screenshot 'screenshot.png'
 end
 
@@ -235,18 +235,18 @@ Given('I click to OK on confirm dialog') do
   page.driver.browser.switch_to.alert.accept
 end
 
-Then("confirm with ENTER key to {string}") do |element|
-  page.find("#{element}").native.send_keys(:enter)
+Then('confirm with ENTER key to {string}') do |element|
+  page.find(element.to_s).native.send_keys(:enter)
 end
 
-Then("I hover over comment") do 
+Then('I hover over comment') do
   find('.content-placeholder').hover
 end
 
-Then("I click on {string} sign") do |string1|
-  find("#{string1}").click
-end  
+Then('I click on {string} sign') do |string1|
+  find(string1.to_s).click
+end
 
-Then("WAIT") do
+Then('WAIT') do
   wait_for_ajax
 end
