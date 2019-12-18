@@ -16,7 +16,6 @@ RSpec.describe RepositoryChecklistValue, type: :model do
   describe 'Database table' do
     it { should have_db_column :created_by_id }
     it { should have_db_column :last_modified_by_id }
-    it { should have_db_column :repository_checklist_items }
   end
 
   describe 'Relations' do

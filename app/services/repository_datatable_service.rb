@@ -1,5 +1,6 @@
-class RepositoryDatatableService
+# frozen_string_literal: true
 
+class RepositoryDatatableService
   attr_reader :repository_rows, :assigned_rows, :mappings
 
   def initialize(repository, params, user, my_module = nil)
@@ -100,6 +101,7 @@ class RepositoryDatatableService
 
     if sortable_columns[column_id - 1] == 'assigned'
       return records if @my_module && @params[:assigned] == 'assigned'
+
       if @my_module
         # Depending on the sort, order nulls first or
         # nulls last on repository_cells association
@@ -119,14 +121,14 @@ class RepositoryDatatableService
       end
     elsif sortable_columns[column_id - 1] == 'repository_cell.value'
       id = @mappings.key(column_id.to_s)
-      sorting_column = RepositoryColumn.find_by_id(id)
+      sorting_column = RepositoryColumn.find_by(id: id)
       return records unless sorting_column
 
       sorting_data_type = sorting_column.data_type.constantize
 
       cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
                             .where('repository_cells.repository_column_id': sorting_column.id)
-                            .select("repository_cells.repository_row_id,
+                            .select("DISTINCT ON (repository_cells.repository_row_id) repository_row_id,
                                     #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
 
       records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")

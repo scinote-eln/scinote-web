@@ -39,7 +39,7 @@ describe RepositoryRows::CreateRepositoryRowService do
       let(:params) do
         {
           repository_cells: Hash[column.id, ''],
-          repository_row: { name: 'name' }
+          repository_row: { name: '' }
         }
       end
 
