@@ -25,17 +25,18 @@ module RepositoryRows
 
           cell = @repository_row.repository_cells.find_by(repository_column_id: column.id)
 
-          if cell && value.empty?
+          if cell.present? && value.blank?
             cell.destroy!
+            @record_updated = true
+            next
+          elsif cell.blank?
+            RepositoryCell.create_with_value!(@repository_row, column, value, @user)
             @record_updated = true
             next
           end
 
-          if cell&.value&.data_changed?(value)
+          if cell.value.data_changed?(value)
             cell.value.update_data!(value, @user)
-            @record_updated = true
-          elsif !value.empty?
-            RepositoryCell.create_with_value!(@repository_row, column, value, @user)
             @record_updated = true
           end
         end

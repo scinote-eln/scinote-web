@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 module RepositoryDatatable
-  class RepositoryAssetValueSerializer < ActiveModel::Serializer
+  class RepositoryAssetValueSerializer < RepositoryBaseValueSerializer
     include Rails.application.routes.url_helpers
 
-    attributes :value, :value_type
-
     def value
-      asset = object.repository_asset_value.asset
+      asset = object.asset
       {
         id: asset.id,
         url: rails_blob_path(asset.file, disposition: 'attachment'),

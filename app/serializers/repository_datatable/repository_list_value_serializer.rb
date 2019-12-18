@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 module RepositoryDatatable
-  class RepositoryListValueSerializer < ActiveModel::Serializer
-    attributes :value, :value_type
-
+  class RepositoryListValueSerializer < RepositoryBaseValueSerializer
     def value
       {
-        id: object.repository_list_value.repository_list_item.id,
-        text: object.repository_list_value.data
+        id: object.repository_list_item.id,
+        text: object.data
       }
     end
   end

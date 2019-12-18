@@ -81,9 +81,9 @@ var RepositoryDatatableRowEditor = (function() {
       if (!$input.data('is-empty')) { // set hidden field for deletion only if original value has been set on rendering
         $input
           .prev('.file-hidden-field-container')
-          .html(`<input type="hidden" 
-                     form="${$input.attr('form')}" 
-                     name="repository_cells[${$input.data('col-id')}]" 
+          .html(`<input type="hidden"
+                     form="${$input.attr('form')}"
+                     name="repository_cells[${$input.data('col-id')}]"
                      value=""/>`);
       }
     });
@@ -146,7 +146,7 @@ var RepositoryDatatableRowEditor = (function() {
       } else {
         let dataType = $header.data('type');
         if (dataType) {
-          $.fn.dataTable.render['new' + dataType](formId, columnId, $cell);
+          $.fn.dataTable.render['new' + dataType](formId, columnId, $cell, $header);
         }
       }
     });
@@ -186,7 +186,7 @@ var RepositoryDatatableRowEditor = (function() {
       if (columnId === NAME_COLUMN_ID) {
         $.fn.dataTable.render.editRowName(formId, cell);
       } else if (dataType) {
-        $.fn.dataTable.render['edit' + dataType](formId, columnId, cell);
+        $.fn.dataTable.render['edit' + dataType](formId, columnId, cell, $header);
       }
 
       return true;
@@ -205,4 +205,3 @@ var RepositoryDatatableRowEditor = (function() {
     addNewRow: addNewRow
   });
 }());
-
