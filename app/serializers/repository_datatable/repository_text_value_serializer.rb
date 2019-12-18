@@ -3,7 +3,7 @@
 module RepositoryDatatable
   class RepositoryTextValueSerializer < RepositoryBaseValueSerializer
     def value
-      object.repository_text_value.data
+      object.data
     end
   end
 end
