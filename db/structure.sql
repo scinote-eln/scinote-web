@@ -1257,7 +1257,6 @@ CREATE TABLE public.repository_columns (
     data_type integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    delimiter character varying,
     metadata jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
@@ -7120,7 +7119,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191205133447'),
 ('20191205133522'),
 ('20191206105058'),
-('20191210103004');
-
+('20191210103004'),
+('20191218072619');
 
 

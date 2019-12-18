@@ -25,7 +25,7 @@ module RepositoryColumns
       end
       return self unless valid?
 
-      @errors[:repository_column] = @column.errors.messages unless @column.update(@params.slice(:name, :delimiter))
+      @errors[:repository_column] = @column.errors.messages unless @column.update(@params.slice(:name, :metadata))
       return self unless valid?
 
       ActiveRecord::Base.transaction do
