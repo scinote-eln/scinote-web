@@ -1,5 +1,5 @@
 /* global GLOBAL_CONSTANTS dropdownSelector RepositoryListColumnType */
- 
+
 var RepositoryChecklistColumnType = (function() {
   var manageModal = '#manage-repository-column';
   var delimiterDropdown = '.checklist-column-type .delimiter';
@@ -69,7 +69,7 @@ var RepositoryChecklistColumnType = (function() {
       var repositoryColumnParams = {};
       var options = JSON.parse($(dropdownOptions).val());
       repositoryColumnParams.repository_checklist_items_attributes = options;
-      repositoryColumnParams.delimiter = $(delimiterDropdown).data('used-delimiter');
+      repositoryColumnParams.metadata = { delimiter: $(delimiterDropdown).data('used-delimiter') };
       return repositoryColumnParams;
     }
   };
