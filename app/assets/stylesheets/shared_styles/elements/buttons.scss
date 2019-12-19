@@ -9,11 +9,11 @@
   color: $color-white;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
   line-height: 20px;
   outline: 0;
   padding: 7px 16px;
   position: relative;
+  text-align: center;
   text-decoration: none;
   transition: .3s;
   user-select: none;
@@ -36,7 +36,7 @@
   }
 
   &:focus {
-    border: $border-focus;
+    box-shadow: 0 0 0 1px $brand-focus;
     color: $color-white;
     outline: 0;
     text-decoration: none;
@@ -60,7 +60,7 @@
     }
 
     &:focus {
-      border: $border-focus;
+      box-shadow: 0 0 0 1px $brand-focus;
       color: $color-black;
     }
   }
@@ -83,7 +83,7 @@
     }
 
     &:focus {
-      border: $border-focus;
+      box-shadow: 0 0 0 1px $brand-focus;
       color: $color-black;
     }
   }
@@ -101,7 +101,7 @@
     }
 
     &:focus {
-      border: $border-focus;
+      box-shadow: 0 0 0 1px $brand-focus;
       color: $color-white;
     }
   }
@@ -146,7 +146,7 @@
 
   .sci-btn {
     float: left;
-    margin: 0 4px 4px 0;
+    margin: 2px 4px 2px 0;
 
     &:nth-last-child(1) {
       margin-right: 0;

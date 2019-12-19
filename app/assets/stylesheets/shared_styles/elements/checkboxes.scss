@@ -23,15 +23,14 @@ input[type="checkbox"].sci-checkbox {
     width: var(--sci-checkbox-size);
 
     &::before {
+      @include font-awesome;
       animation-timing-function: $timing-function-sharp;
       background: $color-white;
       border: $border-default;
       border-radius: 1px;
       color: $color-white;
       content: "";
-      font-family: "Font Awesome 5 Free";
       font-size: calc(var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375);
-      font-weight: 501;
       height: var(--sci-checkbox-size);
       left: 0;
       line-height: calc(var(--sci-checkbox-size) - 2px);
@@ -51,7 +50,7 @@ input[type="checkbox"].sci-checkbox {
     &::before {
       background: $brand-primary;
       border: 1px solid $brand-primary;
-      content: "\f00c";
+      content: $font-fas-check;
     }
   }
 

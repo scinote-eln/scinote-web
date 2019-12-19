@@ -40,7 +40,6 @@
   }
 
   &.left-icon {
-
     .sci-input-field {
       padding: 0 0 0 30px;
     }
@@ -51,7 +50,6 @@
   }
 
   &.right-icon {
-
     .sci-input-field {
       padding: 0 30px 0 10px;
     }
@@ -63,15 +61,13 @@
 
   &.success,
   &.error {
-
     .sci-input-field {
       padding: 0 30px 0 10px;
     }
 
     &::after {
+      @include font-awesome;
       bottom: 0;
-      font-family: "Font Awesome 5 Free";
-      font-weight: 501;
       line-height: 36px;
       position: absolute;
       right: 5px;
@@ -93,7 +89,7 @@
   &.success {
     &::after {
       color: $brand-success;
-      content: "\f00c";
+      content: $font-fas-check;
     }
   }
 
@@ -104,7 +100,7 @@
 
     &::after {
       color: $brand-danger;
-      content: "\f071";
+      content: $font-fas-exclamation-triangle;
     }
 
     &::before {

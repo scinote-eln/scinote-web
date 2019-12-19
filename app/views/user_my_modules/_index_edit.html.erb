@@ -43,7 +43,7 @@
       <%= collection_select(:user_my_module, :user_id, @unassigned_users, :id, :full_name, {}, { class: 'selectpicker' }) %>
       </div>
       <div class="col-xs-2">
-        <%= f.button class: 'btn btn-primary' do %>
+        <%= f.button class: 'btn sci-btn' do %>
           <span class="fas fa-plus"></span>
           <span class="hidden-xs"><%= t("experiments.canvas.full_zoom.modal_manage_users.create") %></span>
         <% end %>

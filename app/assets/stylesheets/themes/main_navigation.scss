@@ -43,6 +43,10 @@
   align-items: center;
   display: flex;
   padding: 0 15px;
+
+  #logo {
+    max-height: 22px;
+  }
 }
 
 .dropdown-notifications {
@@ -392,10 +396,6 @@
 
 #search-bar {
   padding-right: 0;
-
-  .btn-default[type="submit"] {
-    height: 34px;
-  }
 }
 
 @media (max-width: 768px) {

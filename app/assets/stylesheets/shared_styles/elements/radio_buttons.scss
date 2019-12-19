@@ -28,9 +28,7 @@ input[type="radio"].sci-radio {
       border-radius: 50%;
       color: $color-white;
       content: "";
-      font-family: "Font Awesome 5 Free";
       font-size: calc(var(--sci-radio-size) - var(--sci-radio-size) * .375);
-      font-weight: 501;
       height: var(--sci-radio-size);
       left: 0;
       line-height: calc(var(--sci-radio-size) - 2px);
