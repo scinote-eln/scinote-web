@@ -95,10 +95,10 @@
       </div>
     </div>
     <hr/>
-    <% columns = ['text', 'number', 'asset', 'list', 'status', 'date', 'time', 'datetime', 'checklist'] %>
+    <% columns = %w(Text Number Asset List Status Date Time DateTime Checklist) %>
     <% columns.each do |column| %>
-      <span style="display: none" class="column-type <%= column %>-column-type" data-column-type="Repository<%= column.capitalize %>Value">
-        <%= render partial: "repository_columns/manage_column_partials/#{column}.html.erb", locals: {column: @repository_column}  %>
+      <span style="display: none" class="column-type <%= column.downcase %>-column-type" data-column-type="Repository<%= column %>Value">
+        <%= render partial: "repository_columns/manage_column_partials/#{column.downcase}.html.erb", locals: {column: @repository_column}  %>
       </span>
     <% end %>
   </div>
