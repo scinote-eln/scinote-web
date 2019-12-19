@@ -6,6 +6,7 @@ describe RepositoryRows::CreateRepositoryRowService do
   let(:user) { create :user }
   let(:repository) { create :repository }
   let!(:column) { create :repository_column, :text_type, repository: repository }
+  let!(:date_column) { create :repository_column, :date_type, repository: repository }
   let(:service_call) do
     RepositoryRows::CreateRepositoryRowService
       .call(repository: repository, user: user, params: params)
@@ -38,7 +39,7 @@ describe RepositoryRows::CreateRepositoryRowService do
     context 'when repository_row is valid but cell is not' do
       let(:params) do
         {
-          repository_cells: Hash[column.id, ''],
+          repository_cells: Hash[date_column.id, 'text'],
           repository_row: { name: 'name' }
         }
       end

@@ -5,12 +5,12 @@ $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   return `
     <div class="asset-value-cell">
       ${asset.icon_html}
-      <a  class="file-preview-link" 
-        id="modal_link${asset.id}" 
-        data-no-turbolink="true" 
-        data-id="true" 
-        data-status="asset-present" 
-        data-preview-url="${asset.preview_url}" 
+      <a  class="file-preview-link"
+        id="modal_link${asset.id}"
+        data-no-turbolink="true"
+        data-id="true"
+        data-status="asset-present"
+        data-preview-url="${asset.preview_url}"
         href="${asset.url}"
         >
       ${asset.file_name}
@@ -113,7 +113,7 @@ $.fn.dataTable.render.RepositoryChecklistValue = function(data) {
     });
 
     render = `
-      <span class="dropdown checklist-dropdown"> 
+      <span class="dropdown checklist-dropdown">
         <span data-toggle="dropdown" class="checklist-options" aria-haspopup="true" data-checklist-items='${JSON.stringify(options)}'>
           ${options.length} ${I18n.t('libraries.manange_modal_column.checklist_type.multiple_options')}
         </span>
@@ -125,4 +125,12 @@ $.fn.dataTable.render.RepositoryChecklistValue = function(data) {
 
 $.fn.dataTable.render.defaultRepositoryChecklistValue = function() {
   return '&#8212;';
+};
+
+$.fn.dataTable.render.defaultRepositoryNumberValue = function() {
+  return '';
+};
+
+$.fn.dataTable.render.RepositoryNumberValue = function(data) {
+  return parseFloat(Number(data.value).toFixed(data.value_decimals));
 };

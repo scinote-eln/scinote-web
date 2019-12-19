@@ -31,10 +31,13 @@
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
-          <th 
-            class="repository-column" 
-            id="<%= column.id %>" 
+          <th
+            class="repository-column"
+            id="<%= column.id %>"
             data-type="<%= column.data_type %>"
+            <% column.metadata.each do |k, v| %>
+              <%= "data-metadata-#{k}=#{v}" %>
+            <% end %>
             <%= "data-items-url=#{items_repository_repository_columns_checklist_column_path(repository, column)}" if column.data_type == 'RepositoryChecklistValue' %>
             <%= "data-items-url=#{items_repository_repository_columns_list_column_path(repository, column)}" if column.data_type == 'RepositoryListValue' %>
           >

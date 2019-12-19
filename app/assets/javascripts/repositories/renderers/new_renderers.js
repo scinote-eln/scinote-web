@@ -68,3 +68,20 @@ $.fn.dataTable.render.newRepositoryStatusValue = function(formId, columnId, $cel
 $.fn.dataTable.render.newRepositoryChecklistValue = function(formId, columnId, $cell) {
   ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell);
 };
+
+$.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cell, $header) {
+  let decimals = Number($header.data('metadata-decimals'));
+
+  $cell.html(`
+    <div class="form-group">
+      <input class="form-control editing"
+             form="${formId}"
+             type="number"
+             name="repository_cells[${columnId}]"
+             value=""
+             onchange="if (this.value !== '') { this.value = parseFloat(Number(this.value).toFixed(${decimals})); }"
+             data-type="RepositoryNumberValue">
+    </div>`);
+
+  SmartAnnotation.init($cell.find('input'));
+};

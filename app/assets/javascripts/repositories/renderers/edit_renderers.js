@@ -117,3 +117,20 @@ $.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, 
   var currentValue = $cell.find('.checklist-options').data('checklist-items');
   ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell, currentValue);
 };
+
+$.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cell, $header) {
+  let $cell = $(cell.node());
+  let decimals = Number($header.data('metadata-decimals'));
+  let number = parseFloat(Number($cell.text()).toFixed(decimals));
+
+  $cell.html(`
+    <div class="form-group">
+      <input class="form-control editing"
+             form="${formId}"
+             type="number"
+             name="repository_cells[${columnId}]"
+             value="${number}"
+             onchange="if (this.value !== '') { this.value = parseFloat(Number(this.value).toFixed(${decimals})); }"
+             data-type="RepositoryNumberValue">
+    </div>`);
+};

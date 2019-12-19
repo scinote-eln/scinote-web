@@ -33,3 +33,7 @@ $.fn.dataTable.render.RepositoryAssetValueValidator = function($input) {
 $.fn.dataTable.render.RepositoryChecklistValueValidator = function() {
   return true;
 };
+
+$.fn.dataTable.render.RepositoryNumberValueValidator = function() {
+  return true;
+};
