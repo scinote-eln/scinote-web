@@ -83,7 +83,7 @@ Naming/FileName:
   Enabled: false
   Exclude: []
 
-Layout/FirstParameterIndentation:
+Layout/IndentFirstArgument:
   EnforcedStyle: consistent
 
 Style/For:
