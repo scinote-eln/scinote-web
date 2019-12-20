@@ -112,7 +112,7 @@ $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
     endTime = new Date(JSON.parse($input.val()).end_time);
   }
 
-  if (!($dateS.val() === '') === ($dateE.val() === '')) {
+  if (($dateS.val() === '') !== ($dateE.val() === '')) {
     isValid = false;
     errorMessage = I18n.t('repositories.table.date_time.errors.set_all_or_none');
   } else if (($input.val()) && (startTime > endTime)) {
@@ -136,7 +136,7 @@ $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
   let isValid = true;
   let errorMessage;
 
-  if (!($timeS.val() === '') === ($timeE.val() === '')) {
+  if (($timeS.val() === '') !== ($timeE.val() === '')) {
     isValid = false;
     errorMessage = I18n.t('repositories.table.date_time.errors.set_all_or_none');
   } else if ($timeS.val() > $timeE.val()) {
