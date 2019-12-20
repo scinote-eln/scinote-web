@@ -15,7 +15,7 @@
       <span class="name-container">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
-                     locals: { 
+                     locals: {
                         initial_value: @repository.name,
                         config: @inline_editable_title_config
                      } %>
@@ -169,3 +169,18 @@
 <%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag "repositories/show" %>
 <%= javascript_include_tag "repositories/index" %>
+<%= javascript_pack_tag 'custom/inputmask' %>
+
+<script type="text/javascript" charset="utf-8">
+  <%
+    js_format = I18n.backend.date_format.dup
+    js_format.gsub!(/%-d/, 'D')
+    js_format.gsub!(/%d/, 'DD')
+    js_format.gsub!(/%-m/, 'M')
+    js_format.gsub!(/%m/, 'MM')
+    js_format.gsub!(/%b/, 'MMM')
+    js_format.gsub!(/%B/, 'MMMM')
+    js_format.gsub!('%Y', 'YYYY')
+  %>
+  const formatJS = "<%= js_format %>"
+</script>

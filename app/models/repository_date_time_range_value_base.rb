@@ -16,8 +16,9 @@ class RepositoryDateTimeRangeValueBase < ApplicationRecord
   SORTABLE_VALUE_INCLUDE = :repository_date_time_range_value
 
   def update_data!(new_data, user)
-    self.start_time = Time.zone.parse(new_data[:start_time])
-    self.end_time = Time.zone.parse(new_data[:end_time])
+    data = JSON.parse(new_data).symbolize_keys
+    self.start_time = Time.zone.parse(data[:start_time])
+    self.end_time = Time.zone.parse(data[:end_time])
     self.last_modified_by = user
     save!
   end

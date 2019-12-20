@@ -1,4 +1,7 @@
-/* global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n GLOBAL_CONSTANTS */
+/*
+global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n
+GLOBAL_CONSTANTS DateTimeHelper
+*/
 
 $.fn.dataTable.render.editRowName = function(formId, cell) {
   let $cell = $(cell.node());
@@ -89,27 +92,39 @@ $.fn.dataTable.render.editRepositoryStatusValue = function(formId, columnId, cel
 };
 
 $.fn.dataTable.render.editRepositoryDateTimeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, '', 'RepositoryDateTimeValue');
 };
 
 $.fn.dataTable.render.editRepositoryDateValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'dateonly', 'RepositoryDateValue');
 };
 
 $.fn.dataTable.render.editRepositoryTimeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeValue');
 };
 
 $.fn.dataTable.render.editRepositoryDateTimeRangeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, '', 'RepositoryDateTimeRangeValue');
 };
 
 $.fn.dataTable.render.editRepositoryDateRangeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'dateonly', 'RepositoryDateRangeValue');
 };
 
 $.fn.dataTable.render.editRepositoryTimeRangeValue = function(formId, columnId, cell) {
-  return '';
+  let $cell = $(cell.node());
+
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeRangeValue');
 };
 
 $.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, cell) {

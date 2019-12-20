@@ -35,7 +35,7 @@ describe RepositoryDateTimeRangeValueBase, type: :model do
       {
         start_time: Time.now.utc.to_s,
         end_time: (Time.zone.now + 2.days).utc.to_s
-      }
+      }.to_json
     end
 
     context 'when update data' do

@@ -20,7 +20,7 @@ describe RepositoryTimeRangeValue, type: :model do
         {
           start_time: Time.utc(2000, 10, 10, 12, 13).to_s,
           end_time: Time.utc(2000, 10, 12, 4, 11).to_s
-        }
+        }.to_json
       end
 
       it do
@@ -33,7 +33,7 @@ describe RepositoryTimeRangeValue, type: :model do
         {
           start_time: Time.utc(2000, 10, 10).to_s,
           end_time: Time.utc(2012, 10, 14, 4, 11).to_s
-        }
+        }.to_json
       end
 
       it do
@@ -57,7 +57,7 @@ describe RepositoryTimeRangeValue, type: :model do
       {
         start_time: Time.now.utc.to_s,
         end_time: (Time.now.utc + 1.day).to_s
-      }
+      }.to_json
     end
 
     it do
