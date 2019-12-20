@@ -145,7 +145,7 @@ var RepositoryListColumnType = (function() {
       var repositoryColumnParams = {};
       var options = JSON.parse($(dropdownOptions).val());
       repositoryColumnParams.repository_list_items_attributes = options;
-      repositoryColumnParams.delimiter = $(delimiterDropdown).data('used-delimiter');
+      repositoryColumnParams.metadata = { delimiter: $(delimiterDropdown).data('used-delimiter') };
       return repositoryColumnParams;
     },
 

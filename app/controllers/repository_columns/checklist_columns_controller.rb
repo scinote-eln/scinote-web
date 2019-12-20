@@ -62,7 +62,9 @@ module RepositoryColumns
     end
 
     def repository_column_params
-      params.require(:repository_column).permit(:name, :delimiter, repository_checklist_items_attributes: %i(data))
+      params
+        .require(:repository_column)
+        .permit(:name, metadata: [:delimiter], repository_checklist_items_attributes: %i(data))
     end
 
     def delimiters

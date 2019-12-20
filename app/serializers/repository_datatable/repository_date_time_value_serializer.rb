@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 module RepositoryDatatable
-  class RepositoryDateTimeValueSerializer < ActiveModel::Serializer
-    attributes :value, :value_type
-
+  class RepositoryDateTimeValueSerializer < RepositoryBaseValueSerializer
     def value
-      cell = object.repository_date_time_value
-      I18n.l(cell.data, format: :full_with_comma)
+      I18n.l(object.data, format: :full_with_comma)
     end
   end
 end

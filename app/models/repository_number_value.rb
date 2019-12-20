@@ -16,4 +16,20 @@ class RepositoryNumberValue < ApplicationRecord
   def formatted
     data
   end
+
+  def data_changed?(new_data)
+    new_data.to_f != data
+  end
+
+  def update_data!(new_data, user)
+    self.data = new_data.to_f
+    self.last_modified_by = user
+    save!
+  end
+
+  def self.new_with_payload(payload, attributes)
+    value = new(attributes)
+    value.data = payload.to_f
+    value
+  end
 end

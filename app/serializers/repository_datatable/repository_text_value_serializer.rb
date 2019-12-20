@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 module RepositoryDatatable
-  class RepositoryTextValueSerializer < ActiveModel::Serializer
-    attributes :value, :value_type
-
+  class RepositoryTextValueSerializer < RepositoryBaseValueSerializer
     def value
-      object.repository_text_value.data
+      object.data
     end
   end
 end
