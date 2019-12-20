@@ -39,15 +39,14 @@ $.fn.dataTable.render.RepositoryNumberValueValidator = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeValueValidator = function($input) {
-  let $container = $input.parents().eq(1);
-  let $date = $container.find('input[data-datetime-part=date]');
-  let $time = $container.find('input[data-datetime-part=time]');
+  let $container = $input.parents('.datetime-container');
+  let $date = $container.find('input.date-part');
+  let $time = $container.find('input.time-part');
 
   if (($date.val() === '') === ($time.val() === '')) {
     return true;
   }
 
-  // will be refactored
   $container.addClass('has-error');
   $container.append('<span class="help-block">Set both or none</span>');
   return false;
@@ -62,12 +61,11 @@ $.fn.dataTable.render.RepositoryTimeValueValidator = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
-  // will be refactored
-  let $container = $input.parents().eq(1);
-  let $dateS = $container.find('.start-time input[data-datetime-part=date]');
-  let $timeS = $container.find('.start-time input[data-datetime-part=time]');
-  let $dateE = $container.find('.end-time input[data-datetime-part=date]');
-  let $timeE = $container.find('.end-time input[data-datetime-part=time]');
+  let $container = $input.parents('.datetime-container');
+  let $dateS = $container.find('.start-time input.date-part');
+  let $timeS = $container.find('.start-time input.time-part');
+  let $dateE = $container.find('.end-time input.date-part');
+  let $timeE = $container.find('.end-time input.time-part');
   let isValid = true;
   let errorMessage;
   let startTime;
@@ -86,10 +84,10 @@ $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
 
   if (a.filter((v, i, arr) => arr.indexOf(v) === i).length > 1) {
     isValid = false;
-    errorMessage = 'Needs to set all or none';
+    errorMessage = I18n.t('repositories.table.date_time.errors.set_all_or_none');
   } else if (($input.val()) && (startTime > endTime)) {
     isValid = false;
-    errorMessage = 'End time is before start time';
+    errorMessage = I18n.t('repositories.table.date_time.errors.not_valid_range');
   }
 
   if (isValid) {
@@ -102,11 +100,9 @@ $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
 };
 
 $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
-  // will be refactored
-
-  let $container = $input.parents().eq(1);
-  let $dateS = $container.find('.start-time input[data-datetime-part=date]');
-  let $dateE = $container.find('.end-time input[data-datetime-part=date]');
+  let $container = $input.parents('.datetime-container');
+  let $dateS = $container.find('.start-time input.date-part');
+  let $dateE = $container.find('.end-time input.date-part');
   let isValid = true;
   let errorMessage;
   let endTime;
@@ -118,10 +114,10 @@ $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
 
   if (!($dateS.val() === '') === ($dateE.val() === '')) {
     isValid = false;
-    errorMessage = 'Needs to set all or none';
+    errorMessage = I18n.t('repositories.table.date_time.errors.set_all_or_none');
   } else if (($input.val()) && (startTime > endTime)) {
     isValid = false;
-    errorMessage = 'End date is before start date';
+    errorMessage = I18n.t('repositories.table.date_time.errors.not_valid_range');
   }
 
   if (isValid) {
@@ -134,26 +130,22 @@ $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
 };
 
 $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
-  // will be refactored
-
-  let $container = $input.parents().eq(1);
-  let $timeS = $container.find('.start-time input[data-datetime-part=time]');
-  let $timeE = $container.find('.end-time input[data-datetime-part=time]');
+  let $container = $input.parents('.datetime-container');
+  let $timeS = $container.find('.start-time input.time-part');
+  let $timeE = $container.find('.end-time input.time-part');
   let isValid = true;
   let errorMessage;
 
   if (!($timeS.val() === '') === ($timeE.val() === '')) {
     isValid = false;
-    errorMessage = 'Needs to set both or none';
+    errorMessage = I18n.t('repositories.table.date_time.errors.set_all_or_none');
   } else if ($timeS.val() > $timeE.val()) {
     isValid = false;
-    errorMessage = 'Needs to set both or none';
-    errorMessage = 'End time is before start time';
+    errorMessage = I18n.t('repositories.table.date_time.errors.not_valid_range');
   }
   if (isValid) {
     return true;
   }
-  // will be refactored
   $container.addClass('has-error');
   $container.append(`<span class="help-block">${errorMessage}</span>`);
   return false;

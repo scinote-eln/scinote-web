@@ -14,4 +14,17 @@
       }
     }
   }
+
+  // DateTime
+  .dateonly {
+    input.time-part {
+      display: none;
+    }
+  }
+
+  .timeonly {
+    input.date-part {
+      display: none;
+    }
+  }
 }

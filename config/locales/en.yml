@@ -1049,6 +1049,10 @@ en:
       added_by: "Added by"
       assets:
         select_file_btn: "Select File (Max %{max_size} MB)..."
+      date_time:
+        errors:
+          set_all_or_none: 'Needs to set both or none'
+          not_valid_range: 'Range is not valid.'
     add_new_record: "New item"
     import_records:
       import: 'Import'

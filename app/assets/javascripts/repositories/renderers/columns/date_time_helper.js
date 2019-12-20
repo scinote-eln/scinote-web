@@ -7,7 +7,7 @@ var DateTimeHelper = (function() {
   }
 
   function isValidDate(date) {
-    return (Object.prototype.toString.call(date) === '[object Date]') && !isNaN(date.getTime());
+    return (date instanceof Date) && !isNaN(date.getTime());
   }
 
   function addLeadingZero(value) {
@@ -20,10 +20,9 @@ var DateTimeHelper = (function() {
       date.setMinutes(0);
       return date;
     }
-    let hours = timeStr.split(':')[0];
-    let mins = timeStr.split(':')[1];
-    date.setHours(hours);
-    date.setMinutes(mins);
+
+    date.setHours(timeStr.split(':')[0]);
+    date.setMinutes(timeStr.split(':')[1]);
     return date;
   }
 
@@ -40,177 +39,159 @@ var DateTimeHelper = (function() {
     return `${y}/${m}/${d} ${hours}:${mins}`;
   }
 
-  function findSecondRangeInput($input) {
-    let $container = $input.parent().parent();
-    let $secondInput;
-    if ($input.parent().hasClass('start-time')) {
-      $secondInput = $container.find('.end-time input').first();
-    } else {
-      $secondInput = $container.find('.start-time input').first();
-    }
-    return $secondInput;
-  }
-
-  function replaceForRangeHiddenField($container) {
-    let startTimeContainer = $container.find('.start-time');
-    let endTimeContainer = $container.find('.end-time');
-    let startTime = startTimeContainer.find('input[type=hidden]').val();
-    let endTime = endTimeContainer.find('input[type=hidden]').val();
-    let formId = startTimeContainer.find('input[type!=hidden]').data('form-id');
-    let columnId = startTimeContainer.find('input[type!=hidden]').data('column-id');
-    let dataType = $container.find('.cell-range-container').data('type');
-    let json = {};
-    let hiddenField;
-    let value;
-
-    json.start_time = startTime;
-    json.end_time = endTime;
-
-    if (startTime && endTime) {
-      value = JSON.stringify(json);
-    } else {
-      value = '';
-    }
-
-    hiddenField = `
-      <input type="hidden"
-             form="${formId}"
-             name="repository_cells[${columnId}]"
-             value='${value}'
-             data-type="${dataType}"/>`;
-
-    $container.find('.cell-range-container').html(hiddenField);
-    startTimeContainer.find('.cell-timestamp-container').html('');
-    endTimeContainer.find('.cell-timestamp-container').html('');
-  }
-
-  function insertHiddenField($input) {
-    let fieldType = $input.data('datetime-part');
-    let $container = $input.parent().find('.cell-timestamp-container');
-    let dateStr = $container.data('current-date');
-    let columnType = $container.data('datetime-type');
-    let timeStr;
-
-    if (fieldType === 'time') {
-      timeStr = $input.val();
-    } else if (fieldType === 'date') {
-      timeStr = $input.parent().find('input[data-mask-type=time]').val();
-    }
-
-    if (columnType === 'time' && !isValidDate(dateStr)) {
-      // new time without value for date
-      dateStr = stringDateTimeFormat(new Date(), 'dateonly');
-    }
+  function insertHiddenField($container) {
+    let formId = $container.data('form-id');
+    let columnId = $container.data('column-id');
+    let dateStr = $container.find('input.date-part').data('selected-date');
+    let timeStr = $container.find('input.time-part').val();
+    let columnType = $container.data('type');
     let date = new Date(dateStr);
-
-    let formId = $input.data('form-id');
-    let columnId = $input.data('column-id');
-    let hiddenFieldContainer = $input.parent().find('.cell-timestamp-container');
-    let hasTime = isValidTimeStr(timeStr);
-    let hasDate = isValidDate(date);
-    let dataType = $container.data('type');
     let value;
     let hiddenField;
 
-    if (!hasDate) { // Date needs to be presence
-      value = '';
-    } else if (columnType === 'time' && !hasTime) { // Delete time value
-      value = '';
-    } else if (columnType === 'datetime' && !hasTime) { // Delete date time value
-      value = '';
-    } else {
-      // create date time format
+    if (isValidDate(date) && isValidTimeStr(timeStr)) {
       value = stringDateTimeFormat(recalcTimestamp(date, timeStr), 'full');
+    } else {
+      value = '';
     }
 
     hiddenField = `
-      <input type="hidden" 
+      <input class="repository-cell-value" 
+             type="hidden" 
              form="${formId}" 
              name="repository_cells[${columnId}]" 
              value="${value}" 
-             data-type="${dataType}"/>`;
+             data-type="${columnType}"/>`;
 
-    hiddenFieldContainer.html(hiddenField);
+    $container.find('input.repository-cell-value').remove('input.repository-cell-value');
+    $container.prepend(hiddenField);
+  }
+
+
+  function insertRangeHiddenField($container) {
+    let formId = $container.data('form-id');
+    let columnId = $container.data('column-id');
+    let columnType = $container.data('type');
+    let $startContainer = $container.find('.start-time');
+    let $endContainer = $container.find('.end-time');
+    let startDate = new Date($startContainer.find('input.date-part').data('selected-date'));
+    let startTimeStr = $startContainer.find('input.time-part').val();
+    let endDate = new Date($endContainer.find('input.date-part').data('selected-date'));
+    let endTimeStr = $endContainer.find('input.time-part').val();
+    let hiddenField;
+    let value = '';
+
+    if (isValidDate(startDate)
+      && isValidTimeStr(startTimeStr)
+      && isValidDate(endDate)
+      && isValidTimeStr(endTimeStr)) {
+      let start = stringDateTimeFormat(recalcTimestamp(startDate, startTimeStr), 'full');
+      let end = stringDateTimeFormat(recalcTimestamp(endDate, endTimeStr), 'full');
+      value = JSON.stringify({ start_time: start, end_time: end });
+    }
+
+    hiddenField = `
+      <input class="repository-cell-value" 
+             type="hidden" 
+             form="${formId}" 
+             name="repository_cells[${columnId}]" 
+             value='${value}' 
+             data-type="${columnType}"/>`;
+
+    $container.find('input.repository-cell-value').remove('input.repository-cell-value');
+    $container.prepend(hiddenField);
   }
 
   function initChangeEvents($cell) {
-    $cell.find('input[data-mask-type=time]').on('change', function() {
+    $cell.find('input.time-part').on('change', function() {
       let $input = $(this);
-      insertHiddenField($input);
+      let $container = $input.closest('.datetime-container');
 
-      if ($input.parent('.range-type').length) {
-        let $secondInput = findSecondRangeInput($input);
-
-        insertHiddenField($secondInput);
-        replaceForRangeHiddenField($input.parent().parent());
+      if ($container.hasClass('range-type')) {
+        insertRangeHiddenField($container);
+      } else {
+        insertHiddenField($container);
       }
     });
 
-    $cell.find('.calendar-input').on('dp.change', function(e) {
+    $cell.find('input.date-part').on('dp.change', function(e) {
       let $input = $(this);
       let date = e.date._d;
-      let $container = $input.parent().find('.cell-timestamp-container');
+      let $container = $input.closest('.datetime-container');
 
       if (date !== undefined) {
-        $container.data('current-date', stringDateTimeFormat(date, 'dateonly'));
+        $input.data('selected-date', stringDateTimeFormat(date, 'dateonly'));
       } else {
-        $container.data('current-date', '');
+        $input.data('selected-date', '');
       }
 
-      insertHiddenField($input);
-
-      if ($input.parent('.range-type').length) {
-        let $secondInput = findSecondRangeInput($input);
-
-        insertHiddenField($secondInput);
-        replaceForRangeHiddenField($input.parent().parent());
+      if ($container.hasClass('range-type')) {
+        insertRangeHiddenField($container);
+      } else {
+        insertHiddenField($container);
       }
     });
   }
 
-  function dateInputField(formId, columnId, value) {
+
+  function dateInputField(value, dateDataValue) {
     return `
-       <input class="form-control editing calendar-input" 
-             type="datetime"
-             data-datetime-part="date"
-             data-form-id="${formId}" 
-             data-column-id="${columnId}"
-             value='${value}'/>     
+       <input class="form-control editing calendar-input date-part" 
+              type="datetime"
+              data-datetime-part="date"
+              data-selected-date="${dateDataValue}"
+              value='${value}'/>     
     `;
   }
 
-  function timeInputField(formId, columnId, value) {
+  function timeInputField(value) {
     return `
-      <input class="form-control editing" 
+      <input class="form-control editing time-part" 
              type="text"
-             data-datetime-part="time"
              data-mask-type="time" 
-             data-form-id="${formId}" 
-             data-column-id="${columnId}" 
              value='${value}'
              placeholder="HH:mm"/>
     `;
   }
 
-  function initDateEditMode(formId, columnId, $cell, date, datetime) {
-    let inputFields = `
-    <div class="form-group">
-      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="date"  data-type="RepositoryDateValue"></div>
-      ${dateInputField(formId, columnId, date)}
-    </div>
-  `;
-
-    $cell.html(inputFields);
-
-    $cell.find('.calendar-input').datetimepicker({ ignoreReadonly: true, locale: 'en', format: formatJS });
-    initChangeEvents($cell);
+  function getDateOrDefault($span, mode) {
+    let dateStr = $span.data('date');
+    let date;
+    if (mode === 'timeonly') {
+      // Set default date if no data in span
+      date = new Date(dateStr);
+      if (isValidDate(date)) {
+        dateStr = stringDateTimeFormat(new Date(date), 'dateonly');
+      } else {
+        dateStr = stringDateTimeFormat(new Date(), 'dateonly');
+      }
+    }
+    return dateStr;
   }
 
-  function initTimeEditMode(formId, columnId, $cell, time, datetime) {
+  function getTimeOrDefault($span, mode) {
+    let timeStr = $span.data('time');
+
+    if ((mode === 'dateonly') && (!isValidTimeStr(timeStr))) {
+      timeStr = '00:00';
+    }
+    return timeStr;
+  }
+
+  function initDateTimeEditMode(formId, columnId, $cell, mode, columnType) {
+    let $span = $cell.find('span').first();
+    let date = $span.data('date');
+    let dateDataValue = getDateOrDefault($span, mode);
+    let time = getTimeOrDefault($span, mode);
+    let datetime = $span.data('datetime');
     let inputFields = `
-    <div class="form-group">
-      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="time"  data-type="RepositoryTimeValue"></div>
-      ${timeInputField(formId, columnId, time)}
+    <div class="form-group datetime-container ${mode}" 
+                data-form-id="${formId}"
+                data-column-id="${columnId}"
+                data-type="${columnType}"
+                data-current-datetime="${datetime}">
+      ${dateInputField(date, dateDataValue)}
+      ${timeInputField(time)}
     </div>
   `;
 
@@ -224,45 +205,37 @@ var DateTimeHelper = (function() {
       hourFormat: 24
     }).mask($cell.find('input[data-mask-type="time"]'));
 
-    initChangeEvents($cell);
-  }
-
-  function initDateTimeEditMode(formId, columnId, $cell, date, time, datetime) {
-    let inputFields = `
-    <div class="form-group">
-      <div class="cell-timestamp-container" data-current-date="${datetime}" data-datetime-type="datetime" data-type="RepositoryDateTimeValue"></div>
-      ${dateInputField(formId, columnId, date)}
-      ${timeInputField(formId, columnId, time)}
-    </div>
-  `;
-
-    $cell.html(inputFields);
-
-    Inputmask('datetime', {
-      inputFormat: 'HH:MM',
-      placeholder: 'HH:mm',
-      clearIncomplete: true,
-      showMaskOnHover: true,
-      hourFormat: 24
-    }).mask($cell.find('input[data-mask-type="time"]'));
-
     $cell.find('.calendar-input').datetimepicker({ ignoreReadonly: true, locale: 'en', format: formatJS });
     initChangeEvents($cell);
   }
 
-  function initDateTimeRangeEditMode(formId, columnId, $cell, startDate, startTime, startDatetime, endDate, endTime, endDatetime) {
+  function initDateTimeRangeEditMode(formId, columnId, $cell, mode, columnType) {
+    let $startSpan = $cell.find('span').first();
+    let startDate = $startSpan.data('date');
+    let startTime = getTimeOrDefault($startSpan, mode);
+    let startDatetime = $startSpan.data('datetime');
+    let startDateDataValue = getDateOrDefault($startSpan, mode);
+    let $endSpan = $cell.find('span').last();
+    let endDate = $endSpan.data('date');
+    let endTime = getTimeOrDefault($endSpan, mode);
+    let endDatetime = $endSpan.data('datetime');
+    let endDateDataValue = getDateOrDefault($endSpan, mode);
+
     let inputFields = `
-    <div class="form-group">
-      <div class="cell-range-container"  data-type="RepositoryDateTimeRangeValue"></div>
-      <div class="start-time range-type">
-        <div class="cell-timestamp-container" data-current-date="${startDatetime}" data-datetime-type="datetime"></div>
-        ${dateInputField(formId, columnId, startDate)}
-        ${timeInputField(formId, columnId, startTime)}   
+    <div class="form-group datetime-container range-type"
+         data-form-id="${formId}"
+         data-column-id="${columnId}"
+         data-type="${columnType}"
+         >
+      <div class="start-time ${mode}" 
+           data-current-datetime="${startDatetime}"> 
+        ${dateInputField(startDate, startDateDataValue)}
+        ${timeInputField(startTime)}   
       </div>
-      <div class="end-time range-type">
-        <div class="cell-timestamp-container" data-current-date="${endDatetime}" data-datetime-type="datetime"></div>
-        ${dateInputField(formId, columnId, endDate)}
-        ${timeInputField(formId, columnId, endTime)}
+      <div class="end-time ${mode}"
+           data-current-datetime="${endDatetime}">
+        ${dateInputField(endDate, endDateDataValue)}
+        ${timeInputField(endTime)}
       </div>      
     </div>
   `;
@@ -286,74 +259,12 @@ var DateTimeHelper = (function() {
     $cal2.on('dp.change', function(e) {
       $cal1.data('DateTimePicker').maxDate(e.date);
     });
-
-    initChangeEvents($cell);
-  }
-
-  function initDateRangeEditMode(formId, columnId, $cell, startDate, startDatetime, endDate, endDatetime) {
-    let inputFields = `
-    <div class="form-group">
-      <div class="cell-range-container" data-type="RepositoryDateRangeValue"></div>
-      <div class="start-time range-type">
-        <div class="cell-timestamp-container" data-current-date="${startDatetime}" data-datetime-type="date"></div>
-        ${dateInputField(formId, columnId, startDate)}
-      </div>
-      <div class="end-time range-type">
-        <div class="cell-timestamp-container" data-current-date="${endDatetime}" data-datetime-type="date"></div>
-        ${dateInputField(formId, columnId, endDate)}
-      </div>      
-    </div>
-  `;
-
-    $cell.html(inputFields);
-
-    let $cal1 = $cell.find('.calendar-input').first().datetimepicker({ ignoreReadonly: true, locale: 'en', format: formatJS });
-    let $cal2 = $cell.find('.calendar-input').last().datetimepicker({ ignoreReadonly: true, locale: 'en', format: formatJS });
-
-    $cal1.on('dp.change', function(e) {
-      $cal2.data('DateTimePicker').minDate(e.date);
-    });
-    $cal2.on('dp.change', function(e) {
-      $cal1.data('DateTimePicker').maxDate(e.date);
-    });
-
-    initChangeEvents($cell);
-  }
-
-  function initTimeRangeEditMode(formId, columnId, $cell, startTime, startDatetime, endTime, endDatetime) {
-    let inputFields = `
-    <div class="form-group">
-      <div class="cell-range-container" data-type="RepositoryTimeRangeValue"></div>
-      <div class="start-time range-type">
-        <div class="cell-timestamp-container" data-current-date="${startDatetime}" data-datetime-type="time"></div>
-        ${timeInputField(formId, columnId, startTime)}   
-      </div>
-      <div class="end-time range-type">
-        <div class="cell-timestamp-container" data-current-date="${endDatetime}" data-datetime-type="time"></div>
-        ${timeInputField(formId, columnId, endTime)}
-      </div>      
-    </div>
-  `;
-
-    $cell.html(inputFields);
-
-    Inputmask('datetime', {
-      inputFormat: 'HH:MM',
-      placeholder: 'HH:mm',
-      clearIncomplete: true,
-      showMaskOnHover: true,
-      hourFormat: 24
-    }).mask($cell.find('input[data-mask-type="time"]'));
 
     initChangeEvents($cell);
   }
 
   return {
-    initDateEditMode: initDateEditMode,
-    initTimeEditMode: initTimeEditMode,
     initDateTimeEditMode: initDateTimeEditMode,
-    initDateTimeRangeEditMode: initDateTimeRangeEditMode,
-    initDateRangeEditMode: initDateRangeEditMode,
-    initTimeRangeEditMode: initTimeRangeEditMode
+    initDateTimeRangeEditMode: initDateTimeRangeEditMode
   };
 }());
