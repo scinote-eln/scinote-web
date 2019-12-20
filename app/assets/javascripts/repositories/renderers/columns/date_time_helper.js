@@ -46,13 +46,11 @@ var DateTimeHelper = (function() {
     let timeStr = $container.find('input.time-part').val();
     let columnType = $container.data('type');
     let date = new Date(dateStr);
-    let value;
+    let value = '';
     let hiddenField;
 
     if (isValidDate(date) && isValidTimeStr(timeStr)) {
       value = stringDateTimeFormat(recalcTimestamp(date, timeStr), 'full');
-    } else {
-      value = '';
     }
 
     hiddenField = `
@@ -63,7 +61,7 @@ var DateTimeHelper = (function() {
              value="${value}" 
              data-type="${columnType}"/>`;
 
-    $container.find('input.repository-cell-value').remove('input.repository-cell-value');
+    $container.find('input.repository-cell-value').remove();
     $container.prepend(hiddenField);
   }
 
@@ -98,7 +96,7 @@ var DateTimeHelper = (function() {
              value='${value}' 
              data-type="${columnType}"/>`;
 
-    $container.find('input.repository-cell-value').remove('input.repository-cell-value');
+    $container.find('input.repository-cell-value').remove();
     $container.prepend(hiddenField);
   }
 
