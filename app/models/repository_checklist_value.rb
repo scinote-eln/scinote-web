@@ -19,7 +19,7 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def data
-    repository_checklist_items.order(created_at: :asc).map { |i| { value: i.id, label: i.data } }
+    repository_checklist_items.order(data: :asc).map { |i| { value: i.id, label: i.data } }
   end
 
   def data_changed?(new_data)
@@ -30,18 +30,18 @@ class RepositoryChecklistValue < ApplicationRecord
     repository_cell_values_checklist_items.destroy_all
     repository_cell.repository_column
                    .repository_checklist_items.where(id: JSON.parse(new_data)).find_each do |item|
-      repository_cell_values_checklist_items.create(repository_checklist_item: item)
+      repository_cell_values_checklist_items.create!(repository_checklist_item: item)
     end
     self.last_modified_by = user
     save!
   end
 
   def self.new_with_payload(payload, attributes)
-    value = create(attributes)
+    value = new(attributes)
     value.repository_cell
          .repository_column
          .repository_checklist_items.where(id: JSON.parse(payload)).find_each do |item|
-      value.repository_cell_values_checklist_items.create(repository_checklist_item: item)
+      value.repository_cell_values_checklist_items.new(repository_checklist_item: item)
     end
     value
   end

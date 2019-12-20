@@ -128,8 +128,11 @@ class RepositoryDatatableService
 
       cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
                             .where('repository_cells.repository_column_id': sorting_column.id)
-                            .select("DISTINCT ON (repository_cells.repository_row_id) repository_row_id,
-                                    #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
+                            .select("repository_cells.repository_row_id,
+                                              string_agg(
+                                                #{sorting_data_type::SORTABLE_COLUMN_NAME}, ' '
+                                                ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
+                            .group('repository_cells.repository_row_id')
 
       records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
              .order("values.value #{dir}")

@@ -50,6 +50,7 @@ module RepositoryColumns
                                                  .where('data ILIKE ?',
                                                         "%#{search_params[:query]}%")
                                                  .select(:id, :data)
+                                                 .order(data: :asc)
 
       render json: column_checklist_items.map { |i| { value: i.id, label: escape_input(i.data) } }, status: :ok
     end
