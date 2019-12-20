@@ -66,14 +66,8 @@ class CanvasController < ApplicationController
                float?(pos[1]) && float?(pos[2])
           return render_403
         end
-        if index.zero?
-          center = pos
-          x = 0
-          y = 0
-        else
-          x = pos[1].to_i - center[1].to_i
-          y = pos[2].to_i - center[2].to_i
-        end
+        x = pos[1].to_i
+        y = pos[2].to_i
         # Multiple modules cannot have same position
         return render_403 if positions.any? { |_, v| v[:x] == x && v[:y] == y }
         positions[pos[0]] = { x: x, y: y }
