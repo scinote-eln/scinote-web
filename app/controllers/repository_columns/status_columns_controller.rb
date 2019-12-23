@@ -3,9 +3,9 @@
 module RepositoryColumns
   class StatusColumnsController < BaseColumnsController
     include InputSanitizeHelper
-    before_action :load_column, only: %i(update destroy)
+    before_action :load_column, only: %i(update destroy items)
     before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: %i(update destroy)
+    before_action :check_manage_permissions, only: %i(update destroy items)
 
     def create
       service = RepositoryColumns::CreateColumnService
@@ -45,7 +45,21 @@ module RepositoryColumns
       end
     end
 
+    def items
+      column_status_items = @repository_column.repository_status_items
+                                              .where('status ILIKE ?',
+                                                     "%#{search_params[:query]}%")
+                                              .select(:id, :icon, :status)
+
+      render json: column_status_items
+        .map { |i| { value: i.id, label: "#{i.icon} #{escape_input(i.status)}" } }, status: :ok
+    end
+
     private
+
+    def search_params
+      params.permit(:query, :column_id)
+    end
 
     def repository_column_params
       params.require(:repository_column).permit(:name, repository_status_items_attributes: %i(status icon))
