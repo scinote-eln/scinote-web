@@ -126,13 +126,22 @@ class RepositoryDatatableService
 
       sorting_data_type = sorting_column.data_type.constantize
 
-      cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
-                            .where('repository_cells.repository_column_id': sorting_column.id)
-                            .select("repository_cells.repository_row_id,
+      if sorting_column.repository_checklist_value?
+        cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
+                              .where('repository_cells.repository_column_id': sorting_column.id)
+                              .select("repository_cells.repository_row_id,
                                               STRING_AGG(
                                                 #{sorting_data_type::SORTABLE_COLUMN_NAME}, ' '
                                                 ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
-                            .group('repository_cells.repository_row_id')
+                              .group('repository_cells.repository_row_id')
+
+
+      else
+        cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
+                              .where('repository_cells.repository_column_id': sorting_column.id)
+                              .select("repository_cells.repository_row_id,
+                                      #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
+      end
 
       records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
              .order("values.value #{dir}")
