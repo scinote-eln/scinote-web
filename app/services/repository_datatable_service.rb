@@ -129,7 +129,7 @@ class RepositoryDatatableService
       cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
                             .where('repository_cells.repository_column_id': sorting_column.id)
                             .select("repository_cells.repository_row_id,
-                                              string_agg(
+                                              STRING_AGG(
                                                 #{sorting_data_type::SORTABLE_COLUMN_NAME}, ' '
                                                 ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
                             .group('repository_cells.repository_row_id')
