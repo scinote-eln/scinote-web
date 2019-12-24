@@ -25,7 +25,7 @@ var StatusColumnHelper = (function() {
   }
 
   function initialStatusEditMode(formId, columnId, cell, value = null) {
-    var select = 'list-' + columnId;
+    var select = 'status-list-' + columnId;
     var listUrl = $('.repository-column#' + columnId).data('items-url');
     var $select = statusSelect(select, listUrl, value);
     var $hiddenField = statusHiddenField(formId, columnId, value);
