@@ -39,8 +39,8 @@ describe RepositoryRows::CreateRepositoryRowService do
     context 'when repository_row is valid but cell is not' do
       let(:params) do
         {
-          repository_cells: Hash[date_column.id, 'text'],
-          repository_row: { name: 'name' }
+          repository_cells: Hash[column.id, ''],
+          repository_row: { name: '' }
         }
       end
 

@@ -1143,6 +1143,38 @@ ALTER SEQUENCE public.repository_asset_values_id_seq OWNED BY public.repository_
 
 
 --
+-- Name: repository_cell_values_checklist_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_cell_values_checklist_items (
+    id bigint NOT NULL,
+    repository_checklist_item_id bigint NOT NULL,
+    repository_checklist_value_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_cell_values_checklist_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_cell_values_checklist_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_cell_values_checklist_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_cell_values_checklist_items_id_seq OWNED BY public.repository_cell_values_checklist_items.id;
+
+
+--
 -- Name: repository_cells; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1220,9 +1252,7 @@ CREATE TABLE public.repository_checklist_values (
     created_by_id bigint,
     last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    repository_checklist_items jsonb,
-    "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition" jsonb
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -2966,6 +2996,13 @@ ALTER TABLE ONLY public.repository_asset_values ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: repository_cell_values_checklist_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items ALTER COLUMN id SET DEFAULT nextval('public.repository_cell_values_checklist_items_id_seq'::regclass);
+
+
+--
 -- Name: repository_cells id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3531,6 +3568,14 @@ ALTER TABLE ONLY public.repositories
 
 ALTER TABLE ONLY public.repository_asset_values
     ADD CONSTRAINT repository_asset_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_cell_values_checklist_items repository_cell_values_checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items
+    ADD CONSTRAINT repository_cell_values_checklist_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -5669,6 +5714,20 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
+-- Name: repository_cell_values_checklist_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX repository_cell_values_checklist_item_id ON public.repository_cell_values_checklist_items USING btree (repository_checklist_item_id);
+
+
+--
+-- Name: repository_cell_values_checklist_value_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX repository_cell_values_checklist_value_id ON public.repository_cell_values_checklist_items USING btree (repository_checklist_value_id);
+
+
+--
 -- Name: repository_status_items fk_rails_00642f1707; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6861,6 +6920,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 
 --
+-- Name: repository_cell_values_checklist_items fk_rails_efd3251ebf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items
+    ADD CONSTRAINT fk_rails_efd3251ebf FOREIGN KEY (repository_checklist_value_id) REFERENCES public.repository_checklist_values(id);
+
+
+--
 -- Name: repository_date_time_range_values fk_rails_efe428fafe; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6882,6 +6949,14 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_f36eac136b FOREIGN KEY (experiment_id) REFERENCES public.experiments(id);
+
+
+--
+-- Name: repository_cell_values_checklist_items fk_rails_f5260bda13; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items
+    ADD CONSTRAINT fk_rails_f5260bda13 FOREIGN KEY (repository_checklist_item_id) REFERENCES public.repository_checklist_items(id);
 
 
 --
@@ -7116,7 +7191,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191105143702'),
 ('20191115143747'),
 ('20191204112549'),
-('20191205133447'),
 ('20191205133522'),
 ('20191206105058'),
 ('20191210103004'),
