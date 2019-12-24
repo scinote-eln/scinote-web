@@ -1,5 +1,5 @@
 /*
-global ListColumnHelper ChecklistColumnHelper Status SmartAnnotation I18n
+global ListColumnHelper ChecklistColumnHelper StatusColumnHelper SmartAnnotation I18n
 GLOBAL_CONSTANTS DateTimeHelper
 */
 
@@ -55,17 +55,7 @@ $.fn.dataTable.render.newRepositoryListValue = function(formId, columnId, $cell)
 };
 
 $.fn.dataTable.render.newRepositoryStatusValue = function(formId, columnId, $cell) {
-  let url = $cell.closest('table').data('status-items-path');
-  let hiddenField = `
-    <input form="${formId}"
-           type="hidden"
-           name="repository_cells[${columnId}]"
-           value=""
-           data-type="RepositoryStatusValue">`;
-
-  $cell.html(hiddenField + Status.initialStatusItemsRequest(columnId, '', formId, url));
-
-  Status.initStatusSelectPicker($cell.find('select'), $cell.find(`[name='repository_cells[${columnId}]']`));
+  StatusColumnHelper.initialStatusEditMode(formId, columnId, $cell);
 };
 
 $.fn.dataTable.render.newRepositoryChecklistValue = function(formId, columnId, $cell) {

@@ -1,52 +1,46 @@
 /* global dropdownSelector */
 /* eslint-disable no-unused-vars */
 
-var Status = (function() {
-  function statusItemDropdown(options, currentValueId, columnId, formId) {
-    var html = `<select class="form-control selectpicker repository-dropdown"
-                data-abs-min-length="2" data-live-search="true" from="${formId}"
-                data-container="body" column_id="${columnId}">
-                <option value="-1"></option>`;
-    $.each(options, function(index, value) {
-      var selected = (parseInt(currentValueId, 10) === value[0]) ? 'selected' : '';
-      html += `<option value="${value[0]}" ${selected}>${value[2]} ${value[1]}</option>`;
-    });
-    html += '</select>';
-    return html;
+var StatusColumnHelper = (function() {
+  function statusSelect(select, url, value) {
+    var selectedOption = '';
+    if (value && value.value) {
+      selectedOption = `<option value="${value.value}">${value.label}</option>`;
+    }
+
+    return $(`<select 
+              id="${select}"
+              data-placeholder = "Select option..."
+              data-ajax-url = "${url}"
+            >${selectedOption}</select>`);
   }
 
-  function initialStatusItemsRequest(columnId, currentValue, formId, url) {
-    var massageResponse = [];
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      async: false,
-      data: {
-        column_id: columnId
-      }
-    }).done(function(data) {
-      $.each(data.status_items, function(index, el) {
-        massageResponse.push([el.id, el.status, el.icon]);
-      });
-    });
-    return statusItemDropdown(massageResponse, currentValue, columnId, formId);
+  function statusHiddenField(formId, columnId, value) {
+    var originalValue = value ? value.value : '';
+    return $(`<input form="${formId}"
+             type="hidden"
+             name="repository_cells[${columnId}]"
+             value="${originalValue}"
+             data-type="RepositoryStatusValue">`);
   }
 
-  function initStatusSelectPicker($select, $hiddenField) {
-    dropdownSelector.init($select, {
-      noEmptyOption: true,
+  function initialStatusEditMode(formId, columnId, cell, value = null) {
+    var select = 'status-list-' + columnId;
+    var listUrl = $('.repository-column#' + columnId).data('items-url');
+    var $select = statusSelect(select, listUrl, value);
+    var $hiddenField = statusHiddenField(formId, columnId, value);
+    cell.html($select).append($hiddenField);
+    dropdownSelector.init('#' + select, {
       singleSelect: true,
-      closeOnSelect: true,
       selectAppearance: 'simple',
       onChange: function() {
-        $hiddenField.val(dropdownSelector.getValues($select));
+        var values = dropdownSelector.getValues('#' + select);
+        $hiddenField.val(values);
       }
     });
   }
 
   return {
-    initialStatusItemsRequest: initialStatusItemsRequest,
-    initStatusSelectPicker: initStatusSelectPicker
+    initialStatusEditMode: initialStatusEditMode
   };
 }());

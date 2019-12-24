@@ -581,16 +581,20 @@ Rails.application.routes.draw do
       namespace :repository_columns do
         resources :text_columns, only: %i(create update destroy)
         resources :number_columns, only: %i(create update destroy)
+        resources :asset_columns, only: %i(create update destroy)
+        resources :date_columns, only: %i(create update destroy)
+        resources :date_time_columns, only: %i(create update destroy)
         resources :list_columns, only: %i(create update destroy) do
           member do
             get 'items'
           end
         end
-        resources :asset_columns, only: %i(create update destroy)
-        resources :date_columns, only: %i(create update destroy)
-        resources :status_columns, only: %i(create update destroy)
-        resources :date_time_columns, only: %i(create update destroy)
         resources :checklist_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
+        resources :status_columns, only: %i(create update destroy) do
           member do
             get 'items'
           end
@@ -600,11 +604,6 @@ Rails.application.routes.draw do
 
     post 'available_rows', to: 'repository_rows#available_rows',
                            defaults: { format: 'json' }
-
-    post 'repository_list_items', to: 'repository_list_items#search',
-                                  defaults: { format: 'json' }
-
-    get 'repository_status_items', to: 'repository_status_items#search'
 
     get 'repository_rows/:id', to: 'repository_rows#show',
                                as: :repository_row,
