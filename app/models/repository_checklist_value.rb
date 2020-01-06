@@ -2,9 +2,9 @@
 
 class RepositoryChecklistValue < ApplicationRecord
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User',
-             inverse_of: :created_repository_checklist_values
+                          inverse_of: :created_repository_checklist_values
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
-             inverse_of: :modified_repository_checklist_values
+                                inverse_of: :modified_repository_checklist_values
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
   has_many :repository_cell_values_checklist_items, dependent: :destroy
   has_many :repository_checklist_items, through: :repository_cell_values_checklist_items
@@ -15,8 +15,7 @@ class RepositoryChecklistValue < ApplicationRecord
   SORTABLE_VALUE_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
 
   def formatted
-    repository_cell.repository_column.repository_checklist_items
-                   .where(id: repository_checklist_items).pluck(:data).join(' | ')
+    repository_checklist_items.pluck(:data).join(' | ')
   end
 
   def data
