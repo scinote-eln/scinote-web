@@ -31,7 +31,7 @@ var avatarsModal = (function() {
       reader.readAsDataURL(inputField.files[0]);
       reader.onload = function() {
         var avatarContainer = $(modal).find('.avatar-preview-container');
-        $(modal).find('.save-button').removeClass('disabled').attr('disabled', false);
+        $(modal).find('.save-button').attr('disabled', false);
         $(modal).find('#new_avatar').val(reader.result);
 
         avatarContainer.show().children().remove();
@@ -50,7 +50,7 @@ var avatarsModal = (function() {
 
   function initPredefinedAvatars() {
     $(modal).find('.avatar-collection .avatar').click(function() {
-      $(modal).find('.save-button').removeClass('disabled').attr('disabled', false);
+      $(modal).find('.save-button').attr('disabled', false);
       $(modal).find('#raw_avatar')[0].value = null;
       $(modal).find('.avatar-preview-container').hide();
       $(modal).find('.current-avatar').show().find('img')
@@ -61,9 +61,9 @@ var avatarsModal = (function() {
 
   function initUpdateButton() {
     $(modal).find('.save-button').click(function() {
-      if ($(this).hasClass('disabled')) return;
+      if ($(this).is('[disabled=disabled]')) return;
 
-      $(this).addClass('disabled').attr('disabled', true);
+      $(this).attr('disabled', true);
       $.ajax({
         url: $(modal).data('update-url'),
         type: 'PUT',
@@ -76,7 +76,7 @@ var avatarsModal = (function() {
           location.reload();
         },
         error: () => {
-          $(this).removeClass('disabled').attr('disabled', false);
+          $(this).attr('disabled', false);
         }
       });
     });
