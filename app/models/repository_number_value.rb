@@ -14,7 +14,7 @@ class RepositoryNumberValue < ApplicationRecord
   SORTABLE_VALUE_INCLUDE = :repository_number_value
 
   def formatted
-    data
+    data.to_s
   end
 
   def data_changed?(new_data)
