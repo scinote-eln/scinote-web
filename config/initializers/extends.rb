@@ -62,6 +62,7 @@ class Extends
   # Extra attributes used for search in repositories, text columns
   # are only supported
   REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
+                                  'repository_number_values.data',
                                   'repository_list_items.data',
                                   'repository_checklist_items.data',
                                   'repository_status_items.status',
@@ -69,6 +70,7 @@ class Extends
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
+                                :repository_number_value,
                                 repository_list_value: :repository_list_item,
                                 repository_checklist_value: :repository_checklist_items,
                                 repository_status_value: :repository_status_item,
