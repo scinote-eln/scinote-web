@@ -331,6 +331,7 @@ class ProjectsController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'project',
+      item_id: @project.id,
       field_to_udpate: 'name',
       path_to_update: project_path(@project)
     }
