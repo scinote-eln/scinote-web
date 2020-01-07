@@ -12,9 +12,14 @@ module Reports::Docx::RepositoryHelper
       row.push(I18n.l(record.created_at, format: :full))
       row.push(escape_input(record.created_by.full_name))
 
+      cell_values = {}
       custom_cells = record.repository_cells
+      custom_cells.each do |cell|
+        cell_values[cell.repository_column_id] = cell.value.formatted
+      end
+
       repository_data[:data].mappings.each do |column_id, _position|
-        value = custom_cells.find_by(repository_column_id: column_id)&.value&.formatted
+        value = cell_values[column_id]
         row.push(value)
       end
 
