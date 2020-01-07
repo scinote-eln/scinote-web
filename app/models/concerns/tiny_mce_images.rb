@@ -11,7 +11,7 @@ module TinyMceImages
 
     before_save :clean_tiny_mce_image_urls
 
-    def prepare_for_report(field)
+    def prepare_for_report(field, base64_encoded_imgs = false)
       description = self[field]
 
       # Check tinymce for old format
@@ -20,7 +20,12 @@ module TinyMceImages
       tiny_mce_assets.each do |tm_asset|
         next unless tm_asset&.image&.attached?
 
-        new_tm_asset_src = tm_asset.preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+        new_tm_asset_src =
+          if base64_encoded_imgs
+            tm_asset.convert_variant_to_base64(tm_asset.preview)
+          else
+            tm_asset.preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+          end
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
           "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"

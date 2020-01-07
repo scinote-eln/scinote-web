@@ -18,11 +18,12 @@ gem 'sanitize', '~> 5.0'
 gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.16.0' # Token authentication for Devise
 gem 'webpacker', '~> 4.0.0'
-gem 'yomu'
+gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
+gem 'omniauth-azure-activedirectory'
 gem 'omniauth-linkedin-oauth2'
 
 # TODO: remove this when omniauth gem resolves CVE issues

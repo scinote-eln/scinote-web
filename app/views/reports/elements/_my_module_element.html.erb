@@ -1,6 +1,7 @@
 <% if my_module.blank? and @my_module.present? then my_module = @my_module end %>
 <% timestamp = my_module.created_at %>
 <% name = my_module.name %>
+<% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-module-element" data-ts="<%= timestamp.to_i %>" data-type="my_module" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= my_module.id %>" data-modal-title="<%=t "projects.reports.elements.modals.module_contents.head_title", module: my_module.name %>" data-name="<%= name %>" data-icon-class="fas fa-credit-card">
   <div class="report-element-header">
     <div class="row">
@@ -38,7 +39,9 @@
     <div class="row">
       <div class="col-xs-12">
         <% if my_module.description.present? %>
-          <%= custom_auto_link(my_module.prepare_for_report(:description), team: current_team) %>
+          <%= custom_auto_link(my_module.prepare_for_report(:description, for_export_all),
+                               team: current_team,
+                               base64_encoded_imgs: for_export_all) %>
         <% else %>
            <em><%=t "projects.reports.elements.module.no_description" %></em>
         <% end %>

@@ -111,7 +111,7 @@ var TinyMCE = (function() {
           selector: selector,
           convert_urls: false,
           menubar: 'file edit view insert format',
-          toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
@@ -315,6 +315,7 @@ var TinyMCE = (function() {
             });
 
             editor.on('blur', function(e) {
+              if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
               setTimeout(() => {
                 if (editor.isNotDirty === false) {
                   $(editor.container).find('.tinymce-save-button').click();
@@ -322,6 +323,7 @@ var TinyMCE = (function() {
                   $(editor.container).find('.tinymce-cancel-button').click();
                 }
               }, 0);
+              return true;
             });
 
             editor.on('init', function(e) {

@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class Users::SessionsController < Devise::SessionsController
+  layout :session_layout
+
   # before_filter :configure_sign_in_params, only: [:create]
   after_action :after_sign_in, only: :create
 
@@ -8,6 +12,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # GET /resource/sign_in
   def new
+    @simple_sign_in = params[:simple_sign_in] == 'true'
     # If user was redirected here from OAuth's authorize/new page (Doorkeeper
     # endpoint for authorizing an OAuth client), 3rd party sign-in buttons
     # (e.g. LinkedIn) should be hidden. See config/initializers/devise.rb.
@@ -75,5 +80,15 @@ class Users::SessionsController < Devise::SessionsController
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_in_params
     devise_parameter_sanitizer.for(:sign_in) << :attribute
+  end
+
+  private
+
+  def session_layout
+    if @simple_sign_in
+      'sign_in_halt'
+    else
+      'layouts/main'
+    end
   end
 end

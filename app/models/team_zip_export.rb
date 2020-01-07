@@ -269,7 +269,9 @@ class TeamZipExport < ZipExport
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
-      asset.file.copy_to_local_file(:original, asset_path)
+      asset.file.open do |file|
+        FileUtils.cp(file.path, asset_path)  
+      end
     end
 
     csv_file_path
