@@ -140,14 +140,17 @@ module ModelExporters
       {
         repository_cell: cell,
         repository_value: cell.value,
-        repository_value_asset: get_cell_value_asset(cell)
+        repository_value_asset: get_cell_value_asset(cell),
+        repository_value_checklist: get_cell_value_checklist(cell)
       }
     end
 
     def repository_column(column)
       {
         repository_column: column,
-        repository_list_items: column.repository_list_items
+        repository_list_items: column.repository_list_items,
+        repository_checklist_items: column.repository_checklist_items,
+        repository_status_items: column.repository_status_items
       }
     end
 
@@ -166,6 +169,12 @@ module ModelExporters
         asset: cell.value.asset,
         asset_blob: cell.value.asset.blob
       }
+    end
+
+    def get_cell_value_checklist(cell)
+      return unless cell.value_type == 'RepositoryChecklistValue'
+
+      cell.value.repository_cell_values_checklist_items
     end
   end
 end
