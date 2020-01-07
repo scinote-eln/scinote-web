@@ -13,7 +13,7 @@
 
   function AddUserButtonTemplate() {
     return `
-      <a href="#" class="sci-btn" data-trigger="invite-users"
+      <a href="#" class="btn btn-primary" data-trigger="invite-users"
          data-turbolinks="false" data-modal-id="team-invite-users-modal"
       >
         <span class="fas fa-plus"></span>

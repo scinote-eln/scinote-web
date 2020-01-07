@@ -7,10 +7,10 @@
 <div class="content-pane">
   <div id="results-toolbar">
     <div class="pull-right sci-btn-group">
-      <button class="sci-btn secondary" id="results-collapse-btn">
+      <button class="btn btn-secondary" id="results-collapse-btn">
         <span class="fas fa-caret-square-up"></span>
         <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></button></span>
-      <button class="sci-btn secondary" id="results-expand-btn">
+      <button class="btn btn-secondary" id="results-expand-btn">
         <span class="fas fa-caret-square-down"></span>
         <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></button></span>
     </div>
@@ -21,21 +21,21 @@
            data-tooltipcontent="<%= I18n.t('tooltips.text.task.results') %>">
       <span class="hidden-xs add-result-text"><%= t'my_modules.results.add_label' %></span>
       <div class="sci-btn-group">
-        <a class="sci-btn"
+        <a class="btn btn-primary"
            id="new-result-text"
            data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
            href="#">
           <span class="fas fa-font"></span>
           <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
         </a>
-        <a class="sci-btn"
+        <a class="btn btn-primary"
            id="new-result-table"
            data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>"
            href="#">
           <span class="fas fa-table"></span>
           <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
         </a>
-        <a class="sci-btn"
+        <a class="btn btn-primary"
            id="new-result-asset"
            data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
            href="#">

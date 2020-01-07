@@ -29,32 +29,32 @@
             <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
           </div>
           <div class="sci-btn-group" role="group">
-            <button class="sci-btn" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
+            <button class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
               <span class="fas fa-plus"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
             </button>
-            <button class="sci-btn secondary" data-action="edit" disabled>
+            <button class="btn btn-secondary" data-action="edit" disabled>
               <span class="fas fa-pencil-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
             </button>
-            <button class="sci-btn secondary" data-action="clone" disabled>
+            <button class="btn btn-secondary" data-action="clone" disabled>
               <span class="fas fa-copy"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
             </button>
             <% if @type == :public %>
-              <button class="sci-btn secondary" data-action="make-private" data-url="<%= make_private_protocols_path %>" disabled>
+              <button class="btn btn-secondary" data-action="make-private" data-url="<%= make_private_protocols_path %>" disabled>
                 <span class="fas fa-eye-slash"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
               </button>
             <% elsif @type == :private %>
-              <button class="sci-btn secondary" data-action="publish" data-url="<%= publish_protocols_path %>" disabled>
+              <button class="btn btn-secondary" data-action="publish" data-url="<%= publish_protocols_path %>" disabled>
                 <span class="fas fa-eye"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
               </button>
             <% end %>
           </div>
           <div id="import-export-protocols" class="sci-btn-group" role="group">
-          <button class="sci-btn secondary btn-open-file"
+          <button class="btn btn-secondary btn-open-file"
              data-toggle="dropdown"
              aria-haspopup="true"
              aria-expanded="false"
@@ -80,14 +80,14 @@
                 </li>
               </ul>
             <% end %>
-            <button class="sci-btn secondary" data-action="export" data-export-url="<%= export_protocols_path() %>" disabled>
+            <button class="btn btn-secondary" data-action="export" data-export-url="<%= export_protocols_path() %>" disabled>
               <span class="fas fa-upload"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
             </button>
           </div>
 
           <div class="sci-btn-group" role="group">
-            <button class="sci-btn secondary" data-action="archive" data-url="<%= archive_protocols_path %>" disabled>
+            <button class="btn btn-secondary" data-action="archive" data-url="<%= archive_protocols_path %>" disabled>
               <span class="fas fa-archive"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
             </button>
@@ -97,7 +97,7 @@
             <%= t("protocols.index.archive.description") %>
           </div>
           <div class="sci-btn-group" role="group">
-            <button class="sci-btn secondary" data-action="restore" data-url="<%= restore_protocols_path %>" disabled>
+            <button class="btn btn-secondary" data-action="restore" data-url="<%= restore_protocols_path %>" disabled>
               <span class="fas fa-sync-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
             </button>

@@ -1,12 +1,9 @@
 // scss-lint:disable NestingDepth
 
-.sci-btn {
+.btn{
   @include font-button;
   animation-timing-function: $timing-function-sharp;
-  background: $brand-primary;
-  border: 1px solid $brand-primary;
   border-radius: $border-radius-default;
-  color: $color-white;
   cursor: pointer;
   display: inline-block;
   line-height: 20px;
@@ -24,25 +21,40 @@
   }
 
   &:hover {
-    background: $brand-primary-hover;
-    color: $color-white;
     text-decoration: none;
   }
 
   &:active {
-    background: $brand-primary-press;
-    color: $color-white;
     text-decoration: none;
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px $brand-focus;
-    color: $color-white;
     outline: 0;
     text-decoration: none;
   }
 
-  &.secondary {
+  &.btn-primary {
+    background: $brand-primary;
+    border: 1px solid $brand-primary;
+    color: $color-white;
+
+    &:hover {
+      background: $brand-primary-hover;
+      color: $color-white;
+    }
+
+    &:active {
+      background: $brand-primary-press;
+      color: $color-white;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $color-white;
+    }
+  }
+
+  &.btn-secondary {
     background: $color-white;
     border: $border-default;
     color: $color-black;
@@ -65,7 +77,7 @@
     }
   }
 
-  &.tertiary {
+  &.btn-light {
     background: transparent;
     border: $border-transparent;
     color: $color-black;
@@ -88,16 +100,19 @@
     }
   }
 
-  &.sensitive {
+  &.btn-danger {
     background: $brand-danger;
     border: $border-danger;
+    color: $color-white;
 
     &:hover {
       background: $brand-danger-hover;
+      color: $color-white;
     }
 
     &:active {
       background: $brand-danger-press;
+      color: $color-white;
     }
 
     &:focus {
@@ -121,8 +136,8 @@
     color: $color-silver-chalice;
     opacity: .5;
 
-    &.secondary,
-    &.tertiary {
+    &.btn-secondary,
+    &.btn-light {
       background: $color-white;
 
       &:hover {
@@ -132,7 +147,7 @@
       }
     }
 
-    &.sensitive {
+    &.btn-danger {
       &:hover {
         background: $color-alto;
       }
@@ -144,7 +159,7 @@
   display: inline-block;
   position: relative;
 
-  .sci-btn {
+  .btn {
     float: left;
     margin: 2px 4px 2px 0;
 

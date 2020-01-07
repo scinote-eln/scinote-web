@@ -3,7 +3,7 @@
 
 .menu-bar {
   background-color: $color-white;
-  box-shadow: 1px 3px 6px 0 $color-alto;
+  box-shadow: $flyout-shadow;
   height: 100%;
   left: 0;
   padding-bottom: 50px;

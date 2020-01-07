@@ -423,9 +423,6 @@ a[data-toggle="tooltip"] {
 .tab-pane-settings {
   background-color: $color-white;
   padding: 15px;
-  border-left: 1px solid $color-alto;
-  border-right: 1px solid $color-alto;
-  border-bottom: 1px solid $color-alto;
 }
 
 .breadcrumb-teams {
@@ -936,7 +933,7 @@ ul.content-activities {
     box-shadow: none;
     display: inline-block;
     height: 36px;
-    margin-bottom: 5px;
+    margin: 2px 0;
 
     & > .panel-body {
       padding: 0 0 0 15px;

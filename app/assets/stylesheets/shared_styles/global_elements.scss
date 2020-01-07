@@ -1,6 +1,16 @@
 // scss-lint:disable Comment
 
 @import "constants/*";
+
+@import "../constants";
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "bootstrap-datetimepicker";
+@import "bootstrap-colorselector";
+@import "bootstrap-tagsinput";
+@import "bootstrap-tagsinput-typeahead";
+
 @import "elements/*";
 
 // Examples
@@ -8,34 +18,6 @@
 /*
 
 <div class="demo-container" style="background: white; padding: 20px;">
-  <div class="sci-btn-group">
-    <button class="sci-btn">Button</button>
-    <button class="sci-btn secondary">Button</button>
-    <button class="sci-btn tertiary">Button</button>
-    <button class="sci-btn sensitive">Button</button>
-  </div>
-  <hr>
-  <div class="sci-btn-group">
-    <button class="sci-btn"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn secondary"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn tertiary"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn sensitive"><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-  </div>
-  <hr>
-  <div class="sci-btn-group">
-    <button class="sci-btn icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-    <button class="sci-btn secondary icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-    <button class="sci-btn tertiary icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-    <button class="sci-btn sensitive icon-btn"><i class="fas fa-arrow-alt-circle-right"></i></button>
-  </div>
-  <hr>
-  <div class="sci-btn-group">
-    <button class="sci-btn" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn secondary" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn tertiary" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-    <button class="sci-btn sensitive" disabled><i class="fas fa-arrow-alt-circle-right"></i>Button</button>
-  </div>
-  <hr>
   <div>
     <input type="checkbox" class="sci-checkbox">
     <span class="sci-checkbox-label"></span>

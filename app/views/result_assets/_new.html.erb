@@ -22,10 +22,10 @@
     <br />
     <div class="align-right">
       <%= f.submit t('general.cancel'),
-                   class: 'sci-btn secondary cancel-new',
+                   class: 'btn btn-secondary cancel-new',
                    onclick: 'DragNDropResults.destroyAll();' %>
       <%= f.submit t('result_assets.new.create'),
-                   class: 'sci-btn save-result',
+                   class: 'btn btn-primary save-result',
                    onclick: 'DragNDropResults.processResult(event);',
                    disabled: true,
                    data: { href: my_module_result_assets_path(format: :json) } %>

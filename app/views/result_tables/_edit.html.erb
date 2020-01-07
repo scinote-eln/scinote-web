@@ -12,11 +12,11 @@
 		</div>
     <hr>
 		<div class="align-right">
-			<button type="button" class="sci-btn secondary cancel-edit">
+			<button type="button" class="btn btn-secondary cancel-edit">
 				<%= t("general.cancel")%>
 			</button>
 			<%= f.submit t("general.save"),
-									 class: 'sci-btn save-result',
+									 class: 'btn btn-primary save-result',
 									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE);" %>
 		</div>
 	<% end %>

@@ -12,13 +12,13 @@
                 type: 'button',
                 id: 'edit-canvas-button',
                 data: { action: 'edit' },
-                class: 'ajax sci-btn' do %>
+                class: 'ajax btn btn-primary' do %>
                   <span class="fas fa-pencil-alt"></span>
                   <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
                 <% end %>
           <!-- experiment actions -->
           <span class="dropdown actions-button">
-            <button class="sci-btn secondary dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
               <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
               <span class="caret"></span>
