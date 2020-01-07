@@ -147,24 +147,19 @@ class StepsController < ApplicationController
       destroy_attributes(step_params_all)
 
       # Attach newly uploaded files, and than remove their blob ids from the parameters
+      new_assets = []
       step_params_all[:assets_attributes]&.each do |key, value|
         next unless value[:signed_blob_id]
 
-        @step.assets
-             .create!(created_by: current_user, last_modified_by: current_user, team: current_team)
-             .file
-             .attach(value[:signed_blob_id])
+        new_asset = @step.assets.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+        new_asset.file
+                 .attach(value[:signed_blob_id])
+        new_assets.push(new_asset.id)
         step_params_all[:assets_attributes].delete(key)
       end
 
       @step.assign_attributes(step_params_all)
       @step.last_modified_by = current_user
-
-      @step.assets.each do |asset|
-        asset.created_by = current_user if asset.new_record?
-        asset.last_modified_by = current_user unless asset.new_record?
-        asset.team = current_team
-      end
 
       @step.tables.each do |table|
         table.created_by = current_user if table.new_record?
@@ -189,7 +184,7 @@ class StepsController < ApplicationController
 
         # Post process step assets
         @step.assets.each do |asset|
-          asset.post_process_file(team) if asset.changed?
+          asset.post_process_file(team) if new_assets.include? asset.id
         end
 
         # Generate activity

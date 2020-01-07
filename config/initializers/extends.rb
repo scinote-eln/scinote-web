@@ -73,7 +73,7 @@ class Extends
                                         'RepositoryListValue' => 'list',
                                         'RepositoryAssetValue' => 'file' }
 
-  OMNIAUTH_PROVIDERS = [:linkedin]
+  OMNIAUTH_PROVIDERS = [:linkedin, :customazureactivedirectory]
 
   INITIAL_USER_OPTIONS = {}
 
@@ -92,15 +92,16 @@ class Extends
                                'MyModule' => :description }
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team Repository Project Experiment MyModule Result Protocol Report
-  )
+    Team Repository Project Experiment MyModule Result Protocol Report RepositoryRow
+  ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
-    Repository Project Experiment MyModule Result Protocol Step Report
-  )
+    Repository RepositoryRow Project Experiment MyModule Result Protocol Step Report
+  ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {
-    Repository: nil,
+    Repository: [:repository_rows],
+    RepositoryRow: nil,
     Report: nil,
     Project: nil,
     Experiment: [:my_modules],
@@ -245,14 +246,15 @@ class Extends
     update_share_inventory: 133,
     share_inventory_with_all: 134,
     unshare_inventory_with_all: 135,
-    update_share_with_all_permission_level: 136
+    update_share_with_all_permission_level: 136,
+    protocol_description_in_task_edited: 137
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128],
     task: [8, 58, 9, 59, 10, 11, 12, 13, 14, 35, 36, 37, 53, 54, *60..64, *66..69, 106, 126, 120, 132],
-    task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130],
+    task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137],
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
     reports: [48, 50, 49],

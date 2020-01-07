@@ -173,15 +173,7 @@ class ProtocolsController < ApplicationController
       if @protocol.update_keywords(params[:keywords])
         format.json do
           log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
-
-          render json: {
-            updated_at_label: render_to_string(
-              partial: 'protocols/header/updated_at_label.html.erb'
-            ),
-            keywords_label: render_to_string(
-              partial: 'protocols/header/keywords_label.html.erb'
-            )
-          }
+          render json: { status: :ok }
         end
       else
         format.json { render json: {}, status: :unprocessable_entity }

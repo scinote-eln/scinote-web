@@ -138,7 +138,7 @@ CREATE TABLE public.activities (
     subject_id bigint,
     team_id bigint,
     group_type integer,
-    "values" json
+    "values" jsonb
 );
 
 
@@ -6485,6 +6485,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190812065432'),
 ('20190812072649'),
 ('20190830141257'),
+('20190903145834'),
 ('20190910125740'),
 ('20191001133557'),
 ('20191023162335');

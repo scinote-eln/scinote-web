@@ -4,9 +4,5 @@
 module ActiveStorage
   class CustomBaseController < ApplicationController
     include ActiveStorage::SetCurrent
-
-    before_action do
-      ActiveStorage::Current.host = request.base_url
-    end
   end
 end

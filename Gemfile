@@ -18,11 +18,12 @@ gem 'sanitize', '~> 5.0'
 gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.16.0' # Token authentication for Devise
 gem 'webpacker', '~> 4.0.0'
-gem 'yomu'
+gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
+gem 'omniauth-azure-activedirectory'
 gem 'omniauth-linkedin-oauth2'
 
 # TODO: remove this when omniauth gem resolves CVE issues
@@ -62,6 +63,7 @@ gem 'bcrypt', '~> 3.1.10'
 gem 'caracal-rails' # Build docx report
 gem 'commit_param_routing' # Enables different submit actions in the same form
 gem 'deface', '~> 1.0'
+gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'httparty', '~> 0.13.1'

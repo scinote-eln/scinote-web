@@ -7,12 +7,12 @@ module GlobalActivitiesHelper
 
   def generate_activity_content(activity, no_links = false)
     parameters = {}
-    activity.values[:message_items].each do |key, value|
+    activity.message_items.each do |key, value|
       parameters[key] =
         if value.is_a? String
           value
-        elsif value[:type] == 'Time' # use saved date for printing
-          l(Time.at(value[:value]), format: :full_date)
+        elsif value['type'] == 'Time' # use saved date for printing
+          l(Time.at(value['value']), format: :full_date)
         else
           no_links ? generate_name(value) : generate_link(value, activity)
         end
@@ -21,15 +21,15 @@ module GlobalActivitiesHelper
       I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys),
       team: activity.team
     )
-  rescue StandardError => ex
-    Rails.logger.error(ex.message)
-    Rails.logger.error(ex.backtrace.join("\n"))
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
     I18n.t('global_activities.index.content_generation_error', activity_id: activity.id)
   end
 
   def generate_link(message_item, activity)
-    obj = message_item[:type].constantize.find_by_id(message_item[:id])
-    return message_item[:value] unless obj
+    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    return message_item['value'] unless obj
 
     current_value = generate_name(message_item)
     team = activity.team
@@ -98,10 +98,10 @@ module GlobalActivitiesHelper
   end
 
   def generate_name(message_item)
-    obj = message_item[:type].constantize.find_by_id(message_item[:id])
-    return message_item[:value] unless obj
+    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    return message_item['value'] unless obj
 
-    value = obj.public_send(message_item[:value_for] || 'name')
+    value = obj.public_send(message_item['value_for'] || 'name')
     value = I18n.t('global_activities.index.no_name') if value.blank?
 
     value

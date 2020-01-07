@@ -29,8 +29,8 @@ Feature: Team settings
     Given I'm on "BioSistemika Process" team settings page
     Then I click on ".team-description" element
     Then I should not see "I was on Triglav one summer." on ".team-description" element
-    Then I fill in "I was on Triglav one summer." in "#team_1_textarea" rich text editor field
-    Then I click "Save" button
+    Then I fill in "I was on Triglav one summer." in ".team-description textarea" field
+    Then I click on ".save-button" element
     And I should see "I was on Triglav one summer." on ".team-description" element
 
   @javascript

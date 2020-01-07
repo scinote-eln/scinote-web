@@ -30,6 +30,7 @@ RUN apt-get update -qq && \
   rm -rf /var/lib/apt/lists/*
 
 ENV RAILS_ENV production
+ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
 
 # install gems
 COPY Gemfile* /usr/src/bundle/

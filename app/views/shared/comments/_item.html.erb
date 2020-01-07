@@ -2,7 +2,7 @@
 <% readonly = false unless defined?(readonly) %>
 <% edit_mode = (comment.user == current_user && !readonly) %>
   <div 
-    class="comment-container inline-init-handler <%= edit_mode ? 'comment-editable-field' : '' %> <%= report ? 'report' : '' %>" 
+    class="comment-container <%= edit_mode ? 'inline-init-handler' : '' %> <%= report ? 'report' : '' %>" 
     data-field-to-update="message"
     data-params-group="comment"
     data-path-to-update="<%= comment_action_url(comment) %>"
@@ -14,7 +14,8 @@
     <div class="avatar-placehodler">
       <span class='global-avatar-container'>
         <% if report %>
-          <%= image_tag user_avatar_absolute_url(comment.user, :icon_small), class: 'avatar' %>
+          <% base64_encoded = defined?(export_all) && export_all %>
+          <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, base64_encoded), class: 'avatar' %>
         <% else %>
           <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
         <% end %>
@@ -52,4 +53,3 @@
       <div class="error-block"></div>
     </div>
   </div>
-

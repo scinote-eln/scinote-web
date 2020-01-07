@@ -62,6 +62,12 @@ Rails.application.routes.draw do
     get 'users/settings/account/addons',
         to: 'users/settings/account/addons#index',
         as: 'addons'
+    get 'users/settings/account/connected_accounts',
+        to: 'users/settings/account/connected_accounts#index',
+        as: 'connected_accounts'
+    delete 'users/settings/account/connected_accounts',
+           to: 'users/settings/account/connected_accounts#destroy',
+           as: 'unlink_connected_account'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
@@ -620,7 +626,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Api.configuration.core_api_v1_enabled || Rails.env.development?
+      if Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
@@ -689,7 +695,13 @@ Rails.application.routes.draw do
 
   resources :global_activities, only: [:index] do
     collection do
-      get :search_subjects
+      get :project_filter
+      get :experiment_filter
+      get :my_module_filter
+      get :inventory_filter
+      get :inventory_item_filter
+      get :report_filter
+      get :protocol_filter
       get :team_filter
       get :user_filter
     end

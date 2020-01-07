@@ -60,10 +60,10 @@ var inlineEditing = (function() {
       data: params,
       success: function(result) {
         var viewData;
-        if (container.data('respons-field')) {
+        if (container.data('response-field')) {
           // If we want to modify preview element on backend
           // we can use this data field and we will take string from response
-          viewData = result[container.data('respons-field')];
+          viewData = result[container.data('response-field')];
         } else {
           // By default we just copy value from input string
           viewData = inputField(container).val();
@@ -109,6 +109,7 @@ var inlineEditing = (function() {
     .off('click', editBlocks)
     .off('click', `${editBlocks} .save-button`)
     .off('click', `${editBlocks} .cancel-button`)
+    .off('blur', `${editBlocks} textarea, ${editBlocks} input`)
     .on('click', editBlocks, function(e) {
     // 'A' mean that, if we click on <a></a> element we will not go in edit mode
       var container = $(this);

@@ -4,7 +4,7 @@ class MyModuleTagsController < ApplicationController
   before_action :check_manage_permissions, only: %i(create index_edit destroy)
 
   def index_edit
-    @my_module_tags = @my_module.my_module_tags
+    @my_module_tags = @my_module.my_module_tags.order(:id)
     @unassigned_tags = @my_module.unassigned_tags
     @new_mmt = MyModuleTag.new(my_module: @my_module)
     @new_tag = Tag.new(project: @my_module.experiment.project)
@@ -119,7 +119,11 @@ class MyModuleTagsController < ApplicationController
                        false,
                        params[:query]
                      ).select(:id, :name, :color).limit(6)
-    tags = [{ id: 0, name: params[:query], color: nil }] if tags.count.zero?
+    tags = tags.map { |i| { value: i.id, label: i.name, params: { color: i.color } } }
+
+    if !(tags.map { |i| i[:label] }.include? params[:query]) && !params[:query].empty?
+      tags = [{ value: 0, label: params[:query], params: { color: nil } }] + tags
+    end
     render json: tags
   end
 

@@ -1,0 +1,320 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+@import "constants";
+
+.dropdown-selector-container {
+  display: inline-block;
+  float: left;
+  position: relative;
+  width: 100%;
+
+  .input-field {
+    align-items: center;
+    background: $color-white;
+    border: 1px solid $color-alto;
+    border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 36px;
+    overflow: hidden;
+    padding: 3px 36px 3px 3px;
+    position: relative;
+    transition: .2s;
+    width: 100%;
+
+    .fa-caret-down {
+      color: $color-silver-chalice;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 18px;
+      position: absolute;
+      right: 8px;
+      text-align: center;
+      top: 8px;
+      width: 18px;
+    }
+
+    .search-field {
+      border: 0;
+      flex-basis: 0;
+      flex-grow: 2000;
+      line-height: 24px;
+      min-width: 0;
+      outline: 0;
+      padding-left: 5px;
+
+      &::placeholder {
+        opacity: .7;
+      }
+    }
+
+    .ds-simple {
+      font-size: 14px;
+      line-height: 28px;
+      padding-left: 5px;
+      position: relative;
+      transition: .3s;
+      z-index: 2;
+    }
+
+    .ds-tags {
+      align-items: center;
+      background: $color-concrete;
+      border-radius: 5px;
+      display: flex;
+      flex-shrink: 0;
+      line-height: 13px;
+      margin: 2px 3px;
+      max-width: calc(100% - 11px);
+      overflow: hidden;
+      padding: 5px 7px;
+      transition: .3s;
+      user-select: none;
+
+      &.closing {
+        margin: 2px 0;
+        max-width: 0;
+        padding: 5px 0;
+      }
+
+      .tag-label {
+        display: inline-block;
+        margin-bottom: 1px;
+        margin-right: 5px;
+        max-width: 240px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: auto;
+      }
+
+      .fas {
+        cursor: pointer;
+        flex-grow: 1;
+        font-size: 13px;
+        opacity: .7;
+        text-align: right;
+      }
+    }
+  }
+
+  .dropdown-container {
+    background: $color-white;
+    border: 1px solid $color-alto;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
+    display: none;
+    overflow: hidden;
+    position: absolute;
+    top: calc(100% - 30px);
+    transition: .2s;
+    transition-property: top, bottom, box-shadow;
+    width: 100%;
+    z-index: 10;
+
+    .empty-dropdown {
+      opacity: .6;
+      padding: 7px;
+      text-align: center;
+    }
+
+    .dropdown-select-all {
+      background: $color-white;
+      border: 0;
+      border-bottom: 1px solid $color-alto;
+      border-radius: 0;
+      cursor: pointer;
+      font-weight: bold;
+      line-height: 20px;
+      padding: 5px;
+      position: sticky;
+      text-align: center;
+      top: 0;
+      width: 100%;
+      z-index: 5;
+    }
+
+    .checkbox-icon {
+      &::before {
+        content: "\f0c8";
+        font-family: $font-family-icons;
+        font-size: 16px;
+        font-weight: 400;
+        margin: 0 8px 0 0;
+        position: relative;
+      }
+
+      &.select {
+
+        &::before {
+          content: "\f14a";
+        }
+      }
+    }
+
+    .dropdown-option {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      min-height: 32px;
+      padding: 0 10px;
+      position: relative;
+      user-select: none;
+
+      &.select {
+        background: $color-concrete;
+      }
+
+      &.highlight,
+      &:hover {
+        background: $brand-primary-light;
+      }
+
+
+    }
+
+    .dropdown-group {
+      .group-name {
+        align-items: center;
+        cursor: pointer;
+        display: flex;
+        font-size: 14px;
+        font-weight: bold;
+        min-height: 32px;
+        padding: 0 10px;
+        user-select: none;
+
+        &:hover {
+          background: $brand-primary-light;
+        }
+      }
+
+      .dropdown-option {
+        padding-left: 20px;
+      }
+
+      &.select {
+
+        .group-name.checkbox-icon {
+          background: $color-concrete;
+
+          &:hover {
+            background: $brand-primary-light;
+          }
+
+          &::before {
+            content: "\f14a";
+          }
+        }
+      }
+    }
+  }
+
+  &.inverse {
+    .dropdown-container {
+      bottom: calc(100% - 30px);
+      margin-bottom: 0;
+      top: auto;
+    }
+  }
+
+  &.simple-mode {
+    .input-field {
+      display: block;
+
+      .search-field {
+        bottom: 3px;
+        display: none;
+        position: absolute;
+      }
+    }
+  }
+
+  &.open {
+
+    .input-field {
+      border-radius: 4px 4px 0 0;
+      z-index: 12;
+
+      .search-field {
+        min-width: 50px;
+      }
+
+      .fa-caret-down {
+        transform: rotate(180deg);
+      }
+    }
+
+    .dropdown-container {
+      border-top: 0;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
+      display: block;
+      top: 100%;
+    }
+
+    &.inverse {
+
+      .input-field {
+        border-bottom: 1px solid $color-alto;
+        border-radius: 0 0 4px 4px;
+      }
+
+      .dropdown-container {
+        border-bottom: 0;
+        border-radius: 4px 4px 0 0;
+        bottom: 100%;
+        box-shadow: 0 -1px 2px 0 $md-color-shadow-dark;
+        position: fixed;
+        top: auto;
+      }
+    }
+
+    &.simple-mode {
+      .search-field {
+        display: block;
+        line-height: 14px;
+      }
+
+      .ds-simple {
+        color: $color-silver-chalice;
+        font-size: 12px;
+        line-height: 14px;
+      }
+    }
+  }
+
+  &.disabled {
+
+    .input-field {
+      background: $color-concrete;
+
+      .search-field:disabled {
+        background: inherit;
+        user-select: none;
+      }
+    }
+  }
+
+  &.view-mode {
+    .input-field {
+      background: $color-white;
+
+      .ds-tags .fa-times {
+        display: none;
+      }
+    }
+  }
+
+  &.success {
+    .input-field {
+      border-color: $brand-success !important;
+    }
+  }
+
+  &.error {
+    .input-field {
+      border-color: $brand-danger !important;
+    }
+  }
+}

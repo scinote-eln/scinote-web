@@ -19,6 +19,7 @@ $color-black: #000;
 // Theme colors
 $brand-default: $color-white;
 $brand-primary: #37a0d9;
+$brand-primary-new: #104da9;
 $brand-success: #2dbe61;
 $brand-info: #5bc0de;
 $brand-warning: #f0ad4e;
@@ -73,6 +74,7 @@ $font-family-sans-serif: "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
 $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 $font-family-base: $font-family-lato;
+$font-family-icons: "Font Awesome 5 Free";
 $font-size-base: 14px;
 $font-size-large: ceil(($font-size-base * 1.1)); //16px
 $font-size-small: ceil(($font-size-base * .9)); //13px
@@ -125,6 +127,9 @@ $btn-default-border: $color-silver;
 $btn-primary-color: $color-white;
 $btn-primary-bg: $brand-success;
 $btn-primary-border: darken($btn-primary-bg, 5%);
+$btn-primary-new-color: $color-white;
+$btn-primary-new-bg: $brand-primary-new;
+$btn-primary-new-border: darken($brand-primary-new, 5%);
 $btn-success-color: $color-white;
 $btn-success-bg: $brand-success;
 $btn-success-border: darken($btn-success-bg, 5%);

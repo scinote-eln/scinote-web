@@ -297,6 +297,20 @@ class User < ApplicationRecord
       .take
   end
 
+  def self.create_from_omniauth!(auth)
+    full_name = "#{auth.info.first_name} #{auth.info.last_name}"
+    user = User.new(full_name: full_name,
+                    initials: generate_initials(full_name),
+                    email: email,
+                    password: generate_user_password)
+    User.transaction do
+      user.save!
+      user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+      user.update!(confirmed_at: user.created_at)
+    end
+    user
+  end
+
   # Search all active users for username & email. Can
   # also specify which team to ignore.
   def self.search(
@@ -479,7 +493,7 @@ class User < ApplicationRecord
     includes(:user_identities)
       .where(
         'user_identities.provider=? AND user_identities.uid=?',
-        Api.configuration.azure_ad_apps[token_payload[:aud]][:provider],
+        Rails.configuration.x.azure_ad_apps[token_payload[:aud]][:provider],
         token_payload[:sub]
       )
       .references(:user_identities)
@@ -556,22 +570,13 @@ class User < ApplicationRecord
     User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
-        .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
+        .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
   end
 
   def file_name
     return '' unless avatar.attached?
 
     avatar.blob&.filename&.sanitized
-  end
-
-  def avatar_base64(style)
-    unless avatar.attached?
-      missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
-      return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
-    end
-
-    convert_variant_to_base64(avatar_variant(style))
   end
 
   protected

@@ -2,95 +2,46 @@
 <% provide(:container_class, "no-second-nav-container") %>
 
 <%= render partial: "users/settings/sidebar.html.erb" %>
-<div class="tab-content">
+<div class="tab-content user-account-preferences">
   <div class="tab-pane content-pane active" role="tabpanel">
 
     <div class="row">
       <div class="col-xs-12 col-sm-12">
-        <%= form_for(@user,
-                     url: update_preferences_path(format: :json),
-                     remote: true,
-                     html: {
-                      method: :put,
-                      'data-for' => 'settings[time_zone]',
-                      'data-turbolinks' => false
-                    }) do |f| %>
-          <div data-part="view">
-            <div class="form-group">
-              <%= f.label t("users.settings.account.preferences.edit.time_zone_label") %>
-              <div class="input-group" style="max-width: 500px;">
-                <input class="form-control"
-                       disabled="disabled"
-                       autocomplete="off"
-                       type="text"
-                       value="<%= @user.settings[:time_zone] %>"
-                       name="fake_user[settings][time_zone]"
-                       id="fake_user_settings_time_zone">
-                <span class="input-group-btn">
-                  <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
-                </span>
-              </div>
-              <small><%= t("users.settings.account.preferences.edit.time_zone_sublabel") %></small>
-            </div>
+        <div class="time-zone-container">
+          <%= label_tag t("users.settings.account.preferences.edit.time_zone_label") %>
+          <div class="time-zone-selector-container">
+            <%= select_tag "time-zone-input-field",  
+                            options_for_select(
+                              ActiveSupport::TimeZone.all.map{ |tz|
+                                [tz.formatted_offset + " " + tz.name, tz.name]
+                              },
+                              @user.settings[:time_zone]
+                            ),{
+                              'data-path-to-update': update_preferences_path(format: :json),
+                              class: 'hidden'
+                            } 
+            %>
           </div>
-          <div data-part="edit" style="display: none;">
-            <div class="well">
-              <h4><%=t "users.settings.account.preferences.edit.time_zone_title" %></h4>
-              <div class="form-group" style="max-width: 500px;">
-                <%= f.select :time_zone, ActiveSupport::TimeZone.all.collect { |tz|
-                      [tz.formatted_offset + " " + tz.name, tz.name]
-                    }, {}, {class: 'form-control selectpicker', 'data-role': 'clear'} %>
-                <small><%= t("users.settings.account.preferences.edit.time_zone_sublabel") %></small>
-              </div>
-              <div>
-                <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                <%= f.submit t("general.save"), class: "btn btn-success" %>
-              </div>
-            </div>
+          <small><%= t("users.settings.account.preferences.edit.time_zone_sublabel") %></small>
+        </div>
+
+        <div class="date-format-container">
+          <%= label_tag t("users.settings.account.preferences.edit.date_format_label") %>
+          <div class="date-format-selector-container">
+            <%= select_tag "date-format-input-field",  
+                            options_for_select(
+                              Constants::SUPPORTED_DATE_FORMATS.uniq.map{ |df|
+                                ["#{l(Time.new(2014, 11, 6), format: :full_date, date_format: df)}", df]
+                              },
+                              @user.settings[:date_format]
+                            ),{
+                              'data-path-to-update': update_preferences_path(format: :json),
+                              class: 'hidden'
+                            } 
+            %>
           </div>
-        <% end %>
-        <%= form_for(@user,
-                     url: update_preferences_path(format: :json),
-                     remote: true,
-                     html: {
-                      method: :put,
-                      'data-for' => 'date_format',
-                      'data-turbolinks' => false
-                    }) do |f| %>
-          <div data-part="view">
-            <div class="form-group">
-              <%= f.label t("users.settings.account.preferences.edit.date_format_label") %>
-              <div class="input-group" style="max-width: 500px;">
-                <input class="form-control"
-                       disabled="disabled"
-                       autocomplete="off"
-                       type="text"
-                       value="<%= l(Time.new(2014, 11, 6), format: :full_date) %>"
-                       name="fake_user[settings][time_zone]"
-                       id="fake_user_settings_date_format">
-                <span class="input-group-btn">
-                  <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
-                </span>
-              </div>
-              <small><%= t("users.settings.account.preferences.edit.date_format_sublabel") %></small>
-            </div>
-          </div>
-          <div data-part="edit" style="display: none;">
-            <div class="well">
-              <h4><%=t "users.settings.account.preferences.edit.date_format_title" %></h4>
-              <div class="form-group" style="max-width: 500px;">
-                <%= f.select :date_format, Constants::SUPPORTED_DATE_FORMATS.collect { |df|
-                      ["#{l(Time.new(2014, 11, 6), format: :full_date, date_format: df)}", df]
-                    }, {}, { class: 'form-control selectpicker', 'data-role': 'clear' } %>
-                <small><%= t("users.settings.account.preferences.edit.date_format_sublabel") %></small>
-              </div>
-              <div>
-                <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                <%= f.submit t("general.save"), class: "btn btn-success" %>
-              </div>
-            </div>
-          </div>
-        <% end %>
+          <small><%= t("users.settings.account.preferences.edit.date_format_sublabel") %></small>
+        </div>
         <hr>
         <%= form_for(@user,
                      url: update_togglable_settings_path(format: :json),

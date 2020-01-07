@@ -52,10 +52,11 @@ class ActivitiesService
       children.each do |child|
         parent_model = subject_name.to_s.constantize
         child_model = parent_model.reflect_on_association(child).class_name.to_sym
-        child_id = parent_model.where(id: subjects[subject_name])
-                               .joins(child)
-                               .pluck("#{child}.id")
-        subjects[child_model] = (subjects[child_model] ||= []) + child_id
+        next if subjects[child_model]
+
+        subjects[child_model] = parent_model.where(id: subjects[subject_name])
+                                            .joins(child)
+                                            .pluck("#{child}.id")
       end
     end
 

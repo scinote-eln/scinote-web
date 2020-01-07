@@ -26,27 +26,18 @@
   }
 
   .team-metadata {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+    grid-gap: 20px;
     font-size: 14px;
-    min-height: 40px;
+    margin-bottom: 20px;
 
-    .created-at,
-    .created-by,
-    .space-usage {
-      flex-grow: 1;
-      line-height: 40px;
+    .grid-block {
 
       .fas {
         color: $color-silver;
-        margin-right: 10px;
+        margin-right: 5px;
       }
-    }
-
-    .created-at,
-    .created-by {
-      margin-right: 20px
     }
 
     .created-by {
@@ -58,11 +49,85 @@
 
   .team-description {
     display: inline-block;
+    margin-top: 20px;
     position: relative;
     width: 100%;
 
-    .form-group {
-      margin-bottom: 0;
+    .view-mode {
+      border: 1px solid transparent;
+      border-radius: 3px;
+      cursor: pointer;
+      float: left;
+      min-height: 100px;
+      padding: 2px 4px;
+      white-space: pre;
+      width: 100%;
+
+      &.disable-select {
+        cursor: default;
+        margin-bottom: 20px;
+        min-height: auto;
+      }
+
+      &:empty:not(:focus)::before {
+        color: $color-silver-chalice;
+        content: attr(data-placeholder);
+        font-weight: normal;
+      }
+    }
+
+    .input-field {
+      border: 1px solid $color-silver;
+      border-radius: $border-radius-small;
+      cursor: pointer;
+      display: block;
+      float: left;
+      min-height: 100px;
+      padding: 2px 4px;
+      width: 100%;
+
+      &::placeholder {
+        color: $color-silver-chalice;
+        font-weight: normal;
+      }
+
+      &:focus {
+        outline: 0;
+      }
+
+      &:disabled {
+        background: transparent;
+        border: 1px solid transparent;
+        cursor: pointer;
+        pointer-events: none;
+        user-select: none;
+
+        + .button-container {
+          display: none;
+        }
+      }
+    }
+
+    .button-container {
+      position: absolute;
+      right: 0;
+      top: -20px;
+
+      .inline-field-button {
+        color: $color-silver-chalice;
+        cursor: pointer;
+        line-height: 20px;
+        padding-left: 20px;
+      }
+    }
+
+    &:hover .input-field,
+    &:hover .view-mode:not(.disable-select) {
+      border: 1px solid $color-silver;
+
+      &:disabled {
+        border: 1px solid $color-gainsboro;
+      }
     }
   }
 
@@ -105,7 +170,7 @@
 
     .dropdown-teams-user {
       .dropdown-menu li.user-team-role {
-        & > :first-child {
+        > :first-child {
           padding-left: 10px;
         }
 

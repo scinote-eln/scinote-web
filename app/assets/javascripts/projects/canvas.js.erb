@@ -700,7 +700,7 @@ function bindFullZoomAjaxTabs() {
     } else if (targetContents === "users") {
       initUsersEditLink(parentNode);
     } else if (targetContents === "comments") {
-      
+
     }
 
     $this.parents("ul").parent().find(".active").removeClass("active");
@@ -2286,7 +2286,7 @@ function updateFormWithModulesData(modules, connections, gridDistX, gridDistY) {
     positionsVal += id + "," + x + "," + y + ";";
     moduleGroupNames[id] = module.attr("data-module-group-name");
   });
-  positionsDiv.attr("value", positionsDiv.val() + positionsVal);
+  positionsDiv.attr("value", positionsVal + positionsDiv.val());
 
   if (moduleNamesDiv.val())
     moduleNamesDiv.attr("value", JSON.stringify($.extend(JSON.parse(moduleNamesDiv.val()),
