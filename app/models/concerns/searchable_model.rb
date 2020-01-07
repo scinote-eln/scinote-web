@@ -44,7 +44,7 @@ module SearchableModel
                 "CAST(#{a} AS TEXT) #{like} :t#{i} OR "
               else
                 col = options[:at_search].to_s == 'true' ? "lower(#{a})": a
-                "(trim_html_tags(#{col})) #{like} :t#{i} OR "
+                "(trim_html_tags((#{col})::text)) #{like} :t#{i} OR "
               end
             end
             ).join[0..-5]
@@ -86,7 +86,7 @@ module SearchableModel
               if a == 'repository_rows.id'
                 "CAST(#{a} AS TEXT) #{like} :t#{i} OR "
               else
-                "(trim_html_tags(#{a})) #{like} :t#{i} OR "
+                "(trim_html_tags((#{a})::text)) #{like} :t#{i} OR "
               end
             end
             ).join[0..-5]

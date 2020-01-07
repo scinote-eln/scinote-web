@@ -1,6 +1,6 @@
 <% provide(:head_title, t('libraries.repository_columns.head_title', repository: @repository.name)) %>
 
-<div class="content-pane">
+<div class="content-pane repository-column-edtior">
   <div class="repository-columns-header container">
     <div class="row">
       <%= link_to t('libraries.repository_columns.index.back_to_repository_html', repository: @repository.name),
@@ -12,9 +12,10 @@
         <h2><strong><%=t 'libraries.repository_columns.index.manage_column' %></strong></h2>
       </div>
       <div class="col-md-6 text-right">
-        <button class="btn btn-primary help_tooltips"
+        <button id="new-repo-column-modal"
+                class="btn btn-primary help_tooltips manage-repo-column"
                 data-modal-url="<%= repository_columns_create_html_path(@repository) %>"
-                data-action="new-column-modal"
+                data-action="new"
                 data-tooltiplink="<%= I18n.t('tooltips.link.inventory.manage_columns') %>"
                 data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.manage_columns') %>">
           <span class="fas fa-plus"></span>&nbsp;<%=t 'libraries.repository_columns.index.new_column' %>
@@ -32,20 +33,23 @@
       <% else %>
         <% @repository_columns.each do |column| %>
           <% cache column do %>
-            <li class="list-group-item row"
-                data-id="<%= column.id %>"
-                data-destroy-url="<%= repository_columns_destroy_html_path(@repository, column) %>"
-                data-edit-url="<%= edit_repository_repository_column_path(@repository, column) %>">
+            <li class="list-group-item row" data-id="<%= column.id %>">
               <div class="col-xs-8">
                 <span class="pull-left column-name"><%= column.name %></span>
               </div>
               <div class="col-xs-4">
                 <span class="controlls pull-right">
-                  <button class="btn btn-default" data-action="edit">
+                  <button class="btn btn-default edit-repo-column manage-repo-column" 
+                          data-action="edit"
+                          data-modal-url="<%= edit_repository_repository_column_path(@repository, column) %>"
+                  >
                     <span class="fas fa-pencil-alt"></span>
                     <%=t 'libraries.repository_columns.index.edit_column'%>
                   </button>&nbsp;
-                  <button class="btn btn-default delete-column" data-action="destroy">
+                  <button class="btn btn-default delete-repo-column manage-repo-column" 
+                          data-action="destroy"
+                          data-modal-url="<%= repository_columns_destroy_html_path(@repository, column) %>"
+                  >
                     <span class="fas fa-trash-alt"></span>
                     <%=t 'libraries.repository_columns.index.delete_column'%>
                   </button>
@@ -59,5 +63,4 @@
   </div>
 </div>
 
-<%= render partial: 'delete_column_modal' %>
-<%= javascript_include_tag "repository_columns/index" %>
+<%= render partial: 'manage_column_modal' %>

@@ -1,18 +1,27 @@
-<%= bootstrap_form_for @repository_column,
-                       url: repository_repository_column_path(@repository,
-                                                              @repository_column),
-                       remote: true,
-                       method: :delete,
-                       data: { role: "destroy-repository-column-form",
-                               id: @repository_column.id} do |f| %>
-  <p><%= t("repositories.modal_delete_column.message", column: @repository_column.name) %></p>
-  <div class="alert alert-danger" role="alert">
-    <span class="fas fa-exclamation-circle"></span>
-    &nbsp;
-    <%= t("repositories.modal_delete_column.alert_heading") %>
-    <ul>
-      <li><%= t("repositories.modal_delete_column.alert_line_1", nr: @repository_column.repository_cells.count) %></li>
-      <li><%= t("repositories.modal_delete_column.alert_line_2") %></li>
-    </ul>
-  </div>
-<% end %>
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title"><%= t("repositories.modal_delete_column.title") %></h4>
+</div>
+<div class="modal-body">
+    <p><%= t("repositories.modal_delete_column.message", column: @repository_column.name) %></p>
+    <div class="alert alert-danger" role="alert">
+      <span class="fas fa-exclamation-circle"></span>
+      <%= t("repositories.modal_delete_column.alert_heading") %>
+      <ul>
+        <li><%= t("repositories.modal_delete_column.alert_line_1", nr: @repository_column.repository_cells.count) %></li>
+        <li><%= t("repositories.modal_delete_column.alert_line_2") %></li>
+      </ul>
+    </div>
+</div>
+<div class="modal-footer delete-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
+  <button id="delete-repo-column-submit" 
+          type="button" 
+          class="btn btn-danger" 
+          data-action="delete"
+          data-delete-url="<%= repository_repository_column_path(@repository, @repository_column) %>"
+  >
+    <%= t("repositories.modal_delete_column.delete") %>
+  </button>
+</div>
+

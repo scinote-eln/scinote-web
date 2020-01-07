@@ -584,13 +584,32 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
+      namespace :repository_columns do
+        resources :text_columns, only: %i(create update destroy)
+        resources :number_columns, only: %i(create update destroy)
+        resources :asset_columns, only: %i(create update destroy)
+        resources :date_columns, only: %i(create update destroy)
+        resources :date_time_columns, only: %i(create update destroy)
+        resources :list_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
+        resources :checklist_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
+        resources :status_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
+      end
     end
 
     post 'available_rows', to: 'repository_rows#available_rows',
                            defaults: { format: 'json' }
-
-    post 'repository_list_items', to: 'repository_list_items#search',
-                                  defaults: { format: 'json' }
 
     get 'repository_rows/:id', to: 'repository_rows#show',
                                as: :repository_row,
@@ -639,6 +658,10 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
+                resources :inventory_status_items,
+                          only: %i(index create show update destroy),
+                          path: 'status_items',
+                          as: :status_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),

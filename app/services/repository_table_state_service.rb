@@ -18,14 +18,17 @@ class RepositoryTableStateService
                                          loaded.state['order'] &&
                                          loaded.state['columns'] &&
                                          loaded.state['ColReorder'] &&
-                                         loaded.state.dig('columns', '1', 'visible') == 'true' &&
-                                         loaded.state.dig('columns', '3', 'visible') == 'true'
+                                         loaded.state.dig('columns', 1, 'visible') == true &&
+                                         loaded.state.dig('columns', 3, 'visible') == true
     loaded
   end
 
   def update_state(state)
     saved_state = load_state
+    state['order'] = Constants::REPOSITORY_TABLE_DEFAULT_STATE['order'] if state.dig('order', 0, 0).to_i < 1
+
     return if saved_state.state.except('time') == state.except('time')
+
     saved_state.update(state: state)
   end
 
@@ -33,7 +36,7 @@ class RepositoryTableStateService
     # Destroy any state object before recreating a new one
     RepositoryTableState.where(user: @user, repository: @repository).destroy_all
 
-    return RepositoryTableState.create(
+    RepositoryTableState.create(
       user: @user,
       repository: @repository,
       state: generate_default_state
@@ -43,23 +46,17 @@ class RepositoryTableStateService
   private
 
   def generate_default_state
-    default_columns_num =
-      Constants::REPOSITORY_TABLE_DEFAULT_STATE[:length]
+    default_columns_num = Constants::REPOSITORY_TABLE_DEFAULT_STATE['length']
 
     # This state should be strings-only
-    state = HashUtil.deep_stringify_keys_and_values(
-      Constants::REPOSITORY_TABLE_DEFAULT_STATE
-    )
+    state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
     repository.repository_columns.each_with_index do |_, index|
       real_index = default_columns_num + index
-      state['columns'][real_index.to_s] =
-        HashUtil.deep_stringify_keys_and_values(
-          Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
-        )
-      state['ColReorder'] << real_index.to_s
+      state['columns'][real_index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
+      state['ColReorder'] << real_index
     end
-    state['length'] = state['columns'].length.to_s
-    state['time'] = Time.new.to_i.to_s
+    state['length'] = state['columns'].length
+    state['time'] = Time.new.to_i
     state
   end
 end

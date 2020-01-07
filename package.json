@@ -67,6 +67,7 @@
     "file-loader": "^4.0.0",
     "glob": "^7.1.2",
     "immutability-helper": "^2.7.1",
+    "inputmask": "^5.0.0",
     "intl": "^1.2.5",
     "js-yaml": "^3.12.0",
     "lodash": "^4.17.13",

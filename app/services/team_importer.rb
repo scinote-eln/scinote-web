@@ -21,6 +21,8 @@ class TeamImporter
     @result_text_mappings = {}
     @repository_row_mappings = {}
     @repository_list_item_mappings = {}
+    @repository_checklist_item_mappings = {}
+    @repository_status_item_mappings = {}
     @result_mappings = {}
     @checklist_mappings = {}
     @table_mappings = {}
@@ -161,7 +163,7 @@ class TeamImporter
     @is_template = true
 
     # Parse the experiment file and save it to DB
-    project = Project.find_by_id(project_id)
+    project = Project.find_by(id: project_id)
     experiment_json = JSON.parse(File.read("#{@import_dir}/experiment.json"))
 
     # Handle situation when experiment with same name already exists
@@ -215,7 +217,7 @@ class TeamImporter
     team.repositories.each do |rep|
       rep.repository_rows.find_each do |row|
         row.repository_cells.each do |cell|
-          cell.value.save! if update_annotation(cell.value.data)
+          cell.value.save! if update_annotation(cell.value.formatted)
         end
       end
     end
@@ -316,7 +318,7 @@ class TeamImporter
           activity.subject_id = mappings[activity.subject_id]
         end
       end
-      unless activity.values['message_items'].blank?
+      if activity.values['message_items'].present?
         activity.values['message_items'].each_value do |item|
           next unless item['type']
 
@@ -350,7 +352,7 @@ class TeamImporter
       tiny_mce_asset.save!
       tiny_mce_asset.image.attach(io: tiny_mce_file, filename: File.basename(tiny_mce_file))
       @mce_asset_counter += 1
-      next unless tiny_mce_asset.object_id.present?
+      next if tiny_mce_asset.object_id.blank?
 
       object = tiny_mce_asset.object
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
@@ -433,18 +435,46 @@ class TeamImporter
           find_user(repository_column.created_by_id)
         repository_column.save!
         @repository_column_mappings[orig_rep_col_id] = repository_column.id
-        next unless repository_column.data_type == 'RepositoryListValue'
-
-        repository_column_json['repository_list_items'].each do |list_item|
-          created_by_id = find_user(repository_column.created_by_id)
-          repository_list_item = RepositoryListItem.new(data: list_item['data'])
-          repository_list_item.repository_column = repository_column
-          repository_list_item.repository = repository
-          repository_list_item.created_by_id = created_by_id
-          repository_list_item.last_modified_by_id = created_by_id
-          repository_list_item.save!
-          @repository_list_item_mappings[list_item['id']] =
-            repository_list_item.id
+        case repository_column.data_type
+        when 'RepositoryListValue'
+          repository_column_json['repository_list_items'].each do |list_item|
+            created_by_id = find_user(repository_column.created_by_id)
+            repository_list_item = RepositoryListItem.new(data: list_item['data'])
+            repository_list_item.repository_column = repository_column
+            repository_list_item.repository = repository
+            repository_list_item.created_by_id = created_by_id
+            repository_list_item.last_modified_by_id = created_by_id
+            repository_list_item.save!
+            @repository_list_item_mappings[list_item['id']] =
+              repository_list_item.id
+          end
+        when 'RepositoryChecklistValue'
+          repository_column_json['repository_checklist_items'].each do |checklist_item|
+            created_by_id = find_user(repository_column.created_by_id)
+            repository_checklist_item = RepositoryChecklistItem.new(data: checklist_item['data'])
+            repository_checklist_item.repository_column = repository_column
+            repository_checklist_item.repository = repository
+            repository_checklist_item.created_by_id = created_by_id
+            repository_checklist_item.last_modified_by_id = created_by_id
+            repository_checklist_item.save!
+            @repository_checklist_item_mappings[checklist_item['id']] =
+              repository_checklist_item.id
+          end
+        when 'RepositoryStatusValue'
+          repository_column_json['repository_status_items'].each do |status_item|
+            created_by_id = find_user(repository_column.created_by_id)
+            repository_status_item = RepositoryStatusItem.new(
+              status: status_item['status'],
+              icon: status_item['icon']
+            )
+            repository_status_item.repository_column = repository_column
+            repository_status_item.repository = repository
+            repository_status_item.created_by_id = created_by_id
+            repository_status_item.last_modified_by_id = created_by_id
+            repository_status_item.save!
+            @repository_status_item_mappings[status_item['id']] =
+              repository_status_item.id
+          end
         end
       end
       create_repository_rows(repository_json['repository_rows'], repository)
@@ -893,7 +923,7 @@ class TeamImporter
         report_el_parent_mappings[report_element.id] = orig_parent_id
       end
       report_el_parent_mappings.each do |k, v|
-        re = ReportElement.find_by_id(k)
+        re = ReportElement.find_by(id: k)
         re.parent_id = report_element_mappings[v]
         re.save!
       end
@@ -910,6 +940,14 @@ class TeamImporter
     @repository_list_item_mappings[list_item_id]
   end
 
+  def find_checklist_item_id(checklist_item_id)
+    @repository_checklist_item_mappings[checklist_item_id]
+  end
+
+  def find_status_item_id(status_item_id)
+    @repository_status_item_mappings[status_item_id]
+  end
+
   def create_cell_value(repository_cell, value_json, team)
     cell_json = value_json['repository_value']
     case repository_cell.value_type
@@ -918,17 +956,34 @@ class TeamImporter
       repository_value = RepositoryListValue.new(
         repository_list_item_id: list_item_id.to_i
       )
-    when 'RepositoryTextValue'
-      repository_value = RepositoryTextValue.new(cell_json)
     when 'RepositoryAssetValue'
       asset = create_asset(value_json['repository_value_asset'], team)
       repository_value = RepositoryAssetValue.new(asset: asset)
+    when 'RepositoryChecklistValue'
+      repository_value = RepositoryChecklistValue.new(cell_json)
+    when 'RepositoryStatusValue'
+      list_item_id = find_status_item_id(cell_json['repository_status_item_id'])
+      repository_value = RepositoryStatusValue.new(
+        repository_status_item_id: list_item_id.to_i
+      )
+    else
+      value_type = repository_cell.repository_column.data_type
+      repository_value = value_type.constantize.new(cell_json)
     end
     repository_value.id = nil
     repository_value.created_by_id = find_user(cell_json['created_by_id'])
     repository_value.last_modified_by_id =
       find_user(cell_json['last_modified_by_id'])
     repository_value.repository_cell = repository_cell
+    repository_cell.value = repository_value
     repository_value.save!
+
+    if repository_cell.value_type == 'RepositoryChecklistValue'
+      value_json['repository_value_checklist'].each do |item|
+        item_id = find_checklist_item_id(item['repository_checklist_item_id']).to_i
+        RepositoryCellValuesChecklistItem.create!(repository_checklist_value: repository_value,
+                                                  repository_checklist_item_id: item_id)
+      end
+    end
   end
 end

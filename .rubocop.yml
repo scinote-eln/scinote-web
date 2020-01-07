@@ -83,7 +83,7 @@ Naming/FileName:
   Enabled: false
   Exclude: []
 
-Layout/FirstParameterIndentation:
+Layout/FirstArgumentIndentation:
   EnforcedStyle: consistent
 
 Style/For:
@@ -364,14 +364,6 @@ Metrics/ModuleLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Metrics/LineLength:
-  Max: 120
-  AllowHeredoc: true
-  AllowURI: true
-  URISchemes:
-    - http
-    - https
-
 Metrics/MethodLength:
   Enabled: false
 
@@ -391,6 +383,14 @@ Layout/EndAlignment:
 
 Layout/DefEndAlignment:
   EnforcedStyleAlignWith: start_of_line
+
+Layout/LineLength:
+  Max: 120
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
 
 ##################### Lint #####################################
 

@@ -40,6 +40,15 @@ input[type="checkbox"].simple-checkbox {
     }
   }
 
+  &.disabled {
+    pointer-events: none;
+
+    + .checkbox-label {
+      color: $color-silver-chalice;
+      cursor: not-allowed;
+    }
+  }
+
   &.hidden + .checkbox-label {
     display: none;
   }

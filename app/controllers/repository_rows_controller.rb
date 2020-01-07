@@ -37,38 +37,18 @@ class RepositoryRowsController < ApplicationController
   end
 
   def create
-    record = RepositoryRow.new(repository: @repository,
-                               created_by: current_user,
-                               last_modified_by: current_user)
-    errors = { default_fields: [],
-               repository_cells: [] }
+    service = RepositoryRows::CreateRepositoryRowService
+              .call(repository: @repository, user: current_user, params: update_params)
 
-    record.transaction do
-      record.name = record_params[:repository_row_name] unless record_params[:repository_row_name].blank?
-      errors[:default_fields] = record.errors.messages unless record.save
-      if cell_params
-        cell_params.each do |key, value|
-          next if create_cell_value(record, key, value, errors).nil?
-        end
-      end
-      raise ActiveRecord::Rollback if errors[:repository_cells].any?
-    end
+    if service.succeed?
+      log_activity(:create_item_inventory, service.repository_row) if service.succeed?
 
-    respond_to do |format|
-      format.json do
-        if errors[:default_fields].empty? && errors[:repository_cells].empty?
-          log_activity(:create_item_inventory, record)
-
-          render json: { id: record.id,
-                         flash: t('repositories.create.success_flash',
-                                  record: escape_input(record.name),
-                         repository: escape_input(@repository.name)) },
-                 status: :ok
-        else
-          render json: errors,
-          status: :bad_request
-        end
-      end
+      render json: { id: service.repository_row.id, flash: t('repositories.create.success_flash',
+                                                             record: escape_input(service.repository_row.name),
+                                                             repository: escape_input(@repository.name)) },
+             status: :ok
+    else
+      render json: service.errors, status: :bad_request
     end
   end
 
@@ -117,156 +97,18 @@ class RepositoryRowsController < ApplicationController
   end
 
   def update
-    errors = {
-      default_fields: [],
-      repository_cells: []
-    }
+    row_update = RepositoryRows::UpdateRepositoryRowService
+                 .call(repository_row: @record, user: current_user, params: update_params)
 
-    @record.transaction do
-      @record.name = record_params[:repository_row_name].blank? ? nil : record_params[:repository_row_name]
-      errors[:default_fields] = @record.errors.messages unless @record.save
-      if cell_params
-        cell_params.each do |key, value|
-          existing = @record.repository_cells.detect do |c|
-            c.repository_column_id == key.to_i
-          end
-          if existing
-            # Cell exists and new value present, so update value
-            if existing.value_type == 'RepositoryListValue'
-              item = RepositoryListItem.where(
-                repository_column: existing.repository_column
-              ).find(value) unless value == '-1'
-              if item
-                existing.value.update_attribute(
-                  :repository_list_item_id, item.id
-                )
-              else
-                existing.delete
-              end
-            elsif existing.value_type == 'RepositoryAssetValue'
-              existing.value.destroy && next if remove_file_columns_params.include?(key)
-              if existing.value.asset.update(file: value)
-                existing.value.asset.created_by = current_user
-                existing.value.asset.last_modified_by = current_user
-                existing.value.asset.post_process_file(current_team)
-              else
-                errors[:repository_cells] << {
-                  "#{existing.repository_column_id}": { data: existing.value.asset.errors.messages[:file].first }
-                }
-              end
-            else
-              existing.value.destroy && next if value == ''
-              existing.value.data = value
-              if existing.value.save
-                record_annotation_notification(@record, existing)
-              else
-                errors[:repository_cells] << {
-                  "#{existing.repository_column_id}":
-                  existing.value.errors.messages
-                }
-              end
-            end
-          else
-            next if value == ''
-            # Looks like it is a new cell, so we need to create new value, cell
-            # will be created automatically
-            next if create_cell_value(@record, key, value, errors).nil?
-          end
-        end
-      else
-        @record.repository_cells.each { |c| c.value.destroy }
-      end
-      raise ActiveRecord::Rollback if errors[:repository_cells].any?
-    end
+    if row_update.succeed?
+      log_activity(:edit_item_inventory, @record) if row_update.record_updated
 
-    respond_to do |format|
-      format.json do
-        if errors[:default_fields].empty? && errors[:repository_cells].empty?
-          # Row sucessfully updated, so sending response to client
-          log_activity(:edit_item_inventory, @record)
-
-          render json: {
-            id: @record.id,
-            flash: t(
-              'repositories.update.success_flash',
-              record: escape_input(@record.name),
-              repository: escape_input(@repository.name)
-            )
-          },
-          status: :ok
-        else
-          # Errors
-          render json: errors,
-          status: :bad_request
-        end
-      end
-    end
-  end
-
-  def create_cell_value(record, key, value, errors)
-    column = @repository.repository_columns.detect do |c|
-      c.id == key.to_i
-    end
-
-    save_successful = false
-    if column.data_type == 'RepositoryListValue'
-      return if value == '-1'
-      # check if item exists else revert the transaction
-      list_item = RepositoryListItem.where(repository_column: column)
-                                    .find(value)
-      cell_value = RepositoryListValue.new(
-        repository_list_item_id: list_item.id,
-        created_by: current_user,
-        last_modified_by: current_user,
-        repository_cell_attributes: {
-          repository_row: record,
-          repository_column: column
-        }
-      )
-      save_successful = list_item && cell_value.save
-    elsif column.data_type == 'RepositoryAssetValue'
-      return if value.blank?
-      asset = Asset.new(file: value,
-                        created_by: current_user,
-                        last_modified_by: current_user,
-                        team: current_team)
-      if asset.save
-        asset.post_process_file(current_team)
-      else
-        errors[:repository_cells] << {
-          "#{column.id}": { data: asset.errors.messages[:file].first }
-        }
-      end
-      cell_value = RepositoryAssetValue.new(
-        asset: asset,
-        created_by: current_user,
-        last_modified_by: current_user,
-        repository_cell_attributes: {
-          repository_row: record,
-          repository_column: column
-        }
-      )
-      save_successful = cell_value.save
+      render json: { id: @record.id, flash: t('repositories.update.success_flash',
+                                              record: escape_input(@record.name),
+                                              repository: escape_input(@repository.name)) },
+             status: :ok
     else
-      cell_value = RepositoryTextValue.new(
-        data: value,
-        created_by: current_user,
-        last_modified_by: current_user,
-        repository_cell_attributes: {
-          repository_row: record,
-          repository_column: column
-        }
-      )
-      if (save_successful = cell_value.save)
-        record_annotation_notification(record,
-                                       cell_value.repository_cell)
-      end
-    end
-
-    unless save_successful
-      errors[:repository_cells] << {
-        "#{column.id}": cell_value.errors.messages
-      }
+      render json: row_update.errors, status: :bad_request
     end
   end
 
@@ -377,14 +219,6 @@ class RepositoryRowsController < ApplicationController
     render_403 unless can_delete_repository_rows?(@repository)
   end
 
-  def record_params
-    params.permit(:repository_row_name).to_h
-  end
-
-  def cell_params
-    params.permit(repository_cells: {}).to_h[:repository_cells]
-  end
-
   def remove_file_columns_params
     JSON.parse(params.fetch(:remove_file_columns) { '[]' })
   end
@@ -454,6 +288,10 @@ class RepositoryRowsController < ApplicationController
       }
     end
     collection
+  end
+
+  def update_params
+    params.permit(repository_row: {}, repository_cells: {}).to_h
   end
 
   def log_activity(type_of, repository_row)

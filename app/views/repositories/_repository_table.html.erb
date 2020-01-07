@@ -19,7 +19,7 @@
     data-columns-changed="<%= I18n.t('repositories.columns_changed') %>"
     data-default-order="<%= default_table_order_as_js_array %>"
     data-default-table-columns="<%= default_table_columns %>"
-    data-list-items-path="<%= Rails.application.routes.url_helpers.repository_list_items_path %>">
+    data-editable="<%= can_manage_repository_rows?(repository) %>">
     <thead>
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
@@ -29,7 +29,17 @@
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
-          <th class="repository-column" id="<%= column.id %>" data-type="<%= column.data_type %>">
+          <th
+            class="repository-column"
+            id="<%= column.id %>"
+            data-type="<%= column.data_type %>"
+            <% column.metadata.each do |k, v| %>
+              <%= "data-metadata-#{k}=#{v}" %>
+            <% end %>
+            <%= "data-items-url=#{items_repository_repository_columns_checklist_column_path(repository, column)}" if column.repository_checklist_value? %>
+            <%= "data-items-url=#{items_repository_repository_columns_list_column_path(repository, column)}" if column.repository_list_value? %>
+            <%= "data-items-url=#{items_repository_repository_columns_status_column_path(repository, column)}" if column.repository_status_value? %>
+          >
             <%= display_tooltip(column.name) %>
           </th>
         <% end %>

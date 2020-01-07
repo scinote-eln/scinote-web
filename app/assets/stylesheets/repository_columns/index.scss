@@ -1,0 +1,26 @@
+// scss-lint:disable IdSelector
+
+@import "constants";
+
+#manage-repository-column {
+  .modal-footer {
+    text-align: center;
+  }
+
+  .delete-footer {
+    text-align: right;
+  }
+
+  .range-label {
+    left: 3px;
+    position: relative;
+    top: -2px;
+  }
+
+  #repository-column-data-type + .dropdown-selector-container {
+    .custom-option {
+      padding: 0 25px;
+    }
+  }
+}
+
