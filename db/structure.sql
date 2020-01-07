@@ -168,8 +168,8 @@ ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -6336,7 +6336,6 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20150713060702'),
-('20150713061603'),
 ('20150713063224'),
 ('20150713070738'),
 ('20150713071921'),
@@ -6420,7 +6419,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160704110900'),
 ('20160722082700'),
 ('20160803082801'),
-('20160808083040'),
 ('20160809074757'),
 ('20160928114119'),
 ('20160928114915'),
@@ -6489,7 +6487,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190830141257'),
 ('20190910125740'),
 ('20191001133557'),
-('20191009146101'),
 ('20191023162335');
 
 
