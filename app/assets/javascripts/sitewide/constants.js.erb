@@ -1,7 +1,10 @@
 const GLOBAL_CONSTANTS = {
   NAME_TRUNCATION_LENGTH: <%= Constants::NAME_TRUNCATION_LENGTH %>,
   NAME_MAX_LENGTH: <%= Constants::NAME_MAX_LENGTH %>,
+  NAME_MIN_LENGTH: <%= Constants::NAME_MIN_LENGTH %>,
   FILENAME_TRUNCATION_LENGTH: <%= Constants::FILENAME_TRUNCATION_LENGTH %>,
   FILE_MAX_SIZE_MB: <%= Rails.configuration.x.file_max_size_mb %>,
-  IS_SAFARI: /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+  IS_SAFARI: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
+  REPOSITORY_LIST_ITEMS_PER_COLUMN: <%= Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN %>,
+  REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN: <%= Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN %>
 };

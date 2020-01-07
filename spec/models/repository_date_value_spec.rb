@@ -3,32 +3,50 @@
 require 'rails_helper'
 
 describe RepositoryDateValue, type: :model do
-  let(:repository_date_value) { build :repository_date_value }
-
-  it 'is valid' do
-    expect(repository_date_value).to be_valid
+  let(:date_value) do
+    create :repository_date_value, data: Time.utc(2000, 10, 11)
   end
 
-  it 'should be of class RepositoryDateValue' do
-    expect(subject.class).to eq RepositoryDateValue
+  describe '.formatted' do
+    it 'prints date format with date' do
+      str = '10/11/2000'
+      expect(date_value.formatted).to eq(str)
+    end
   end
 
-  describe 'Database table' do
-    it { should have_db_column :data }
-    it { should have_db_column :created_at }
-    it { should have_db_column :updated_at }
-    it { should have_db_column :created_by_id }
-    it { should have_db_column :last_modified_by_id }
+  describe '.data_changed?' do
+    context 'when has different date value' do
+      let(:new_values) { Time.utc(2000, 12, 11, 4, 14).to_s }
+
+      it do
+        expect(date_value.data_changed?(new_values)).to be_truthy
+      end
+    end
+
+    context 'when has same date value (but different time)' do
+      let(:new_values) { Time.utc(2000, 10, 11, 4, 11).to_s }
+
+      it do
+        expect(date_value.data_changed?(new_values)).to be_falsey
+      end
+    end
   end
 
-  describe 'Relations' do
-    it { should belong_to(:created_by).class_name('User') }
-    it { should belong_to(:last_modified_by).class_name('User') }
-    it { should have_one :repository_cell }
-  end
+  describe 'self.new_with_payload' do
+    let(:user) { create :user }
+    let(:column) { create :repository_column }
+    let(:cell) { build :repository_cell, repository_column: column }
+    let(:attributes) do
+      {
+        repository_cell: cell,
+        created_by: user,
+        last_modified_by: user
+      }
+    end
 
-  describe 'Validations' do
-    it { should validate_presence_of :repository_cell }
-    it { should validate_presence_of :data }
+    it do
+      expect(RepositoryDateValue.new_with_payload(Time.now.utc.to_s, attributes))
+        .to be_an_instance_of RepositoryDateValue
+    end
   end
 end

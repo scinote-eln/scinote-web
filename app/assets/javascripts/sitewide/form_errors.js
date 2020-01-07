@@ -42,7 +42,7 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
     })).join('<br />');
     var $errSpan = "<span class='help-block'" +
       errAttributes + '>' + errorText + '</span>';
-    $formGroup.append($errSpan);
+    $(input).after($errSpan);
   }
 
   var $parent;

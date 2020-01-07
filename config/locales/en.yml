@@ -1053,6 +1053,12 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
+      assets:
+        select_file_btn: "Select File (Max %{max_size} MB)..."
+      date_time:
+        errors:
+          set_all_or_none: 'Needs to set both or none'
+          not_valid_range: 'Range is not valid.'
     add_new_record: "New item"
     import_records:
       import: 'Import'
@@ -1134,16 +1140,47 @@ en:
       nothing_to_delete: "Can't find sharing relation for destroy"
   libraries:
     manange_modal_column:
+      name_placeholder: "Enter column name..."
+      name: "Name"
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
-      labels:
-        text: "Text"
-        file: "File"
-        dropdown: "Dropdown"
+      select:
+        repository_text_value: "Text"
+        repository_number_value: "Number"
+        repository_date_value: "Date"
+        repository_time_value: "Time"
+        repository_date_time_value: "Date & Time"
+        repository_checklist_value: "Checklist"
+        repository_status_value: "Status"
+        repository_list_value: "Dropdown"
+        repository_asset_value: "File"
       new:
         title: "Add New Column"
+        button: "Save column"
       edit:
         title: "Edit %{name} Column"
+        button: "Update column"
+      number_type:
+        decimals_label: "Decimal digits"
+      list_type:
+        delimiter_label: "Delimiter"
+        dropdown_items_label: "Dropdown items"
+        dropdown_item_select_option: "Select option..."
+        delimiters:
+          auto: "Auto"
+          return: "Return"
+          space: "Space"
+          semicolon: "Semicolon"
+          comma: "Comma"
+      status_type:
+        status_options_label: "Status options"
+        add_status_label: "Add status option"
+      datetime_type:
+        range_label: 'Range'
+      checklist_type:
+        multiple_options: 'options'
+        all_options: 'All options'
+        checklist_items: 'Checklist items'
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
@@ -1921,6 +1958,7 @@ en:
       full_js: "D.M.YYYY HH:mm"
       full: "%{date_format} %H:%M"
       full_with_tz: "%{date_format} %H:%M %z"
+      full_with_comma: "%{date_format}, %H:%M"
       full_date: "%{date_format}"
       time: "%H:%M"
       short: "%H"

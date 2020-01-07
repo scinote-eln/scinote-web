@@ -45,7 +45,15 @@ class Extends
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
                             RepositoryDateValue: 1,
                             RepositoryListValue: 2,
-                            RepositoryAssetValue: 3 }
+                            RepositoryAssetValue: 3,
+                            RepositoryStatusValue: 4,
+                            RepositoryDateTimeValue: 5,
+                            RepositoryTimeValue: 6,
+                            RepositoryDateTimeRangeValue: 7,
+                            RepositoryTimeRangeValue: 8,
+                            RepositoryDateRangeValue: 9,
+                            RepositoryChecklistValue: 10,
+                            RepositoryNumberValue: 11 }
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES
@@ -54,12 +62,18 @@ class Extends
   # Extra attributes used for search in repositories, text columns
   # are only supported
   REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
+                                  'repository_number_values.data',
                                   'repository_list_items.data',
+                                  'repository_checklist_items.data',
+                                  'repository_status_items.status',
                                   'active_storage_blobs.filename']
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
+                                :repository_number_value,
                                 repository_list_value: :repository_list_item,
+                                repository_checklist_value: :repository_checklist_items,
+                                repository_status_value: :repository_status_item,
                                 repository_asset_value: { asset: { file_attachment: :blob } }]
 
   # List of implemented core API versions
@@ -71,7 +85,8 @@ class Extends
   API_REPOSITORY_DATA_TYPE_MAPPINGS = { 'RepositoryTextValue' => 'text',
                                         'RepositoryDateValue' => 'date',
                                         'RepositoryListValue' => 'list',
-                                        'RepositoryAssetValue' => 'file' }
+                                        'RepositoryAssetValue' => 'file',
+                                        'RepositoryStatusValue' => 'status' }
 
   OMNIAUTH_PROVIDERS = [:linkedin, :customazureactivedirectory]
 

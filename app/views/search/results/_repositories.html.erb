@@ -24,7 +24,7 @@
     <% repository_row.repository_cells.each do |cell| %>
       <span>
         <%=t "search.index.repositories.custom_column", column: cell.repository_column.name %>
-        <%= highlight cell.value.data, search_query.strip.split(/\s+/) %>
+        <%= highlight cell.value.formatted, search_query.strip.split(/\s+/) %>
       </span>
       <br>
     <% end %>

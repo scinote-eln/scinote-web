@@ -1143,6 +1143,38 @@ ALTER SEQUENCE public.repository_asset_values_id_seq OWNED BY public.repository_
 
 
 --
+-- Name: repository_cell_values_checklist_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_cell_values_checklist_items (
+    id bigint NOT NULL,
+    repository_checklist_item_id bigint NOT NULL,
+    repository_checklist_value_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_cell_values_checklist_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_cell_values_checklist_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_cell_values_checklist_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_cell_values_checklist_items_id_seq OWNED BY public.repository_cell_values_checklist_items.id;
+
+
+--
 -- Name: repository_cells; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1177,6 +1209,73 @@ ALTER SEQUENCE public.repository_cells_id_seq OWNED BY public.repository_cells.i
 
 
 --
+-- Name: repository_checklist_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_checklist_items (
+    id bigint NOT NULL,
+    data character varying NOT NULL,
+    repository_id bigint NOT NULL,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_checklist_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_checklist_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_checklist_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_checklist_items_id_seq OWNED BY public.repository_checklist_items.id;
+
+
+--
+-- Name: repository_checklist_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_checklist_values (
+    id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_checklist_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_checklist_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_checklist_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_checklist_values_id_seq OWNED BY public.repository_checklist_values.id;
+
+
+--
 -- Name: repository_columns; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1187,7 +1286,8 @@ CREATE TABLE public.repository_columns (
     name character varying,
     data_type integer NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -1211,24 +1311,26 @@ ALTER SEQUENCE public.repository_columns_id_seq OWNED BY public.repository_colum
 
 
 --
--- Name: repository_date_values; Type: TABLE; Schema: public; Owner: -
+-- Name: repository_date_time_range_values; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.repository_date_values (
+CREATE TABLE public.repository_date_time_range_values (
     id bigint NOT NULL,
-    data timestamp without time zone,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    created_by_id bigint NOT NULL,
-    last_modified_by_id bigint NOT NULL
+    start_time timestamp without time zone,
+    end_time timestamp without time zone,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    type character varying
 );
 
 
 --
--- Name: repository_date_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: repository_date_time_range_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.repository_date_values_id_seq
+CREATE SEQUENCE public.repository_date_time_range_values_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1237,10 +1339,44 @@ CREATE SEQUENCE public.repository_date_values_id_seq
 
 
 --
--- Name: repository_date_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: repository_date_time_range_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.repository_date_values_id_seq OWNED BY public.repository_date_values.id;
+ALTER SEQUENCE public.repository_date_time_range_values_id_seq OWNED BY public.repository_date_time_range_values.id;
+
+
+--
+-- Name: repository_date_time_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_date_time_values (
+    id bigint NOT NULL,
+    data timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    created_by_id bigint NOT NULL,
+    last_modified_by_id bigint NOT NULL,
+    type character varying
+);
+
+
+--
+-- Name: repository_date_time_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_date_time_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_date_time_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.repository_date_time_values.id;
 
 
 --
@@ -1312,6 +1448,39 @@ ALTER SEQUENCE public.repository_list_values_id_seq OWNED BY public.repository_l
 
 
 --
+-- Name: repository_number_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_number_values (
+    id bigint NOT NULL,
+    data numeric,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_number_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_number_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_number_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_number_values_id_seq OWNED BY public.repository_number_values.id;
+
+
+--
 -- Name: repository_rows; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1343,6 +1512,75 @@ CREATE SEQUENCE public.repository_rows_id_seq
 --
 
 ALTER SEQUENCE public.repository_rows_id_seq OWNED BY public.repository_rows.id;
+
+
+--
+-- Name: repository_status_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_status_items (
+    id bigint NOT NULL,
+    status character varying NOT NULL,
+    icon character varying NOT NULL,
+    repository_id bigint NOT NULL,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_status_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_status_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_status_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_status_items_id_seq OWNED BY public.repository_status_items.id;
+
+
+--
+-- Name: repository_status_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_status_values (
+    id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    repository_status_item_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_status_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_status_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_status_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository_status_values.id;
 
 
 --
@@ -2758,10 +2996,31 @@ ALTER TABLE ONLY public.repository_asset_values ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: repository_cell_values_checklist_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items ALTER COLUMN id SET DEFAULT nextval('public.repository_cell_values_checklist_items_id_seq'::regclass);
+
+
+--
 -- Name: repository_cells id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_cells ALTER COLUMN id SET DEFAULT nextval('public.repository_cells_id_seq'::regclass);
+
+
+--
+-- Name: repository_checklist_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_items_id_seq'::regclass);
+
+
+--
+-- Name: repository_checklist_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_values_id_seq'::regclass);
 
 
 --
@@ -2772,10 +3031,17 @@ ALTER TABLE ONLY public.repository_columns ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- Name: repository_date_values id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: repository_date_time_range_values id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_values_id_seq'::regclass);
+ALTER TABLE ONLY public.repository_date_time_range_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_time_range_values_id_seq'::regclass);
+
+
+--
+-- Name: repository_date_time_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_time_values_id_seq'::regclass);
 
 
 --
@@ -2793,10 +3059,31 @@ ALTER TABLE ONLY public.repository_list_values ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: repository_number_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values ALTER COLUMN id SET DEFAULT nextval('public.repository_number_values_id_seq'::regclass);
+
+
+--
 -- Name: repository_rows id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_rows ALTER COLUMN id SET DEFAULT nextval('public.repository_rows_id_seq'::regclass);
+
+
+--
+-- Name: repository_status_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items ALTER COLUMN id SET DEFAULT nextval('public.repository_status_items_id_seq'::regclass);
+
+
+--
+-- Name: repository_status_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nextval('public.repository_status_values_id_seq'::regclass);
 
 
 --
@@ -3284,11 +3571,35 @@ ALTER TABLE ONLY public.repository_asset_values
 
 
 --
+-- Name: repository_cell_values_checklist_items repository_cell_values_checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items
+    ADD CONSTRAINT repository_cell_values_checklist_items_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: repository_cells repository_cells_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_cells
     ADD CONSTRAINT repository_cells_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_checklist_items repository_checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT repository_checklist_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_checklist_values repository_checklist_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values
+    ADD CONSTRAINT repository_checklist_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -3300,11 +3611,19 @@ ALTER TABLE ONLY public.repository_columns
 
 
 --
--- Name: repository_date_values repository_date_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_date_time_range_values repository_date_time_range_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values
-    ADD CONSTRAINT repository_date_values_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.repository_date_time_range_values
+    ADD CONSTRAINT repository_date_time_range_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_date_time_values repository_date_time_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values
+    ADD CONSTRAINT repository_date_time_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -3324,11 +3643,35 @@ ALTER TABLE ONLY public.repository_list_values
 
 
 --
+-- Name: repository_number_values repository_number_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT repository_number_values_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: repository_rows repository_rows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_rows
     ADD CONSTRAINT repository_rows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_status_items repository_status_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT repository_status_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_status_values repository_status_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4104,6 +4447,13 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 
 
 --
+-- Name: index_on_rep_status_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_rep_status_type_id ON public.repository_status_values USING btree (repository_status_item_id);
+
+
+--
 -- Name: index_projects_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4426,10 +4776,87 @@ CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.reposit
 
 
 --
+-- Name: index_repository_checklist_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_created_by_id ON public.repository_checklist_items USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_checklist_items_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_data ON public.repository_checklist_items USING btree (data);
+
+
+--
+-- Name: index_repository_checklist_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_last_modified_by_id ON public.repository_checklist_items USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_checklist_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_repository_column_id ON public.repository_checklist_items USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_checklist_items_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_repository_id ON public.repository_checklist_items USING btree (repository_id);
+
+
+--
+-- Name: index_repository_checklist_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_values_on_created_by_id ON public.repository_checklist_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_checklist_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_values_on_last_modified_by_id ON public.repository_checklist_values USING btree (last_modified_by_id);
+
+
+--
 -- Name: index_repository_columns_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_repository_columns_on_repository_id ON public.repository_columns USING btree (repository_id);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_created_by_id ON public.repository_date_time_range_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time ON public.repository_date_time_range_values USING btree (end_time);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_last_modified_by_id ON public.repository_date_time_range_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time ON public.repository_date_time_range_values USING btree (start_time);
 
 
 --
@@ -4489,6 +4916,27 @@ CREATE INDEX index_repository_list_values_on_repository_list_item_id ON public.r
 
 
 --
+-- Name: index_repository_number_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_created_by_id ON public.repository_number_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_number_values_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_data ON public.repository_number_values USING btree (data);
+
+
+--
+-- Name: index_repository_number_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.repository_number_values USING btree (last_modified_by_id);
+
+
+--
 -- Name: index_repository_rows_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4500,6 +4948,55 @@ CREATE INDEX index_repository_rows_on_name ON public.repository_rows USING gin (
 --
 
 CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows USING btree (repository_id);
+
+
+--
+-- Name: index_repository_status_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_created_by_id ON public.repository_status_items USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_status_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_last_modified_by_id ON public.repository_status_items USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_status_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_repository_column_id ON public.repository_status_items USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_status_items_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_repository_id ON public.repository_status_items USING btree (repository_id);
+
+
+--
+-- Name: index_repository_status_items_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_status ON public.repository_status_items USING btree (status);
+
+
+--
+-- Name: index_repository_status_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_values_on_created_by_id ON public.repository_status_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_status_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.repository_status_values USING btree (last_modified_by_id);
 
 
 --
@@ -5217,6 +5714,28 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
+-- Name: repository_cell_values_checklist_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX repository_cell_values_checklist_item_id ON public.repository_cell_values_checklist_items USING btree (repository_checklist_item_id);
+
+
+--
+-- Name: repository_cell_values_checklist_value_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX repository_cell_values_checklist_value_id ON public.repository_cell_values_checklist_items USING btree (repository_checklist_value_id);
+
+
+--
+-- Name: repository_status_items fk_rails_00642f1707; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT fk_rails_00642f1707 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
 -- Name: sample_custom_fields fk_rails_01916e6992; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5246,6 +5765,14 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_0510000a52 FOREIGN KEY (table_id) REFERENCES public.tables(id);
+
+
+--
+-- Name: repository_checklist_items fk_rails_07ea1cc259; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT fk_rails_07ea1cc259 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -5481,6 +6008,14 @@ ALTER TABLE ONLY public.step_assets
 
 
 --
+-- Name: repository_number_values fk_rails_3df53c9b27; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT fk_rails_3df53c9b27 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: projects fk_rails_47aee20018; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5505,6 +6040,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT fk_rails_4cf67f9f1e FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: experiments fk_rails_4d671c16af; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5521,10 +6064,10 @@ ALTER TABLE ONLY public.repository_list_items
 
 
 --
--- Name: repository_date_values fk_rails_5d809fca2c; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_date_time_values fk_rails_5d809fca2c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values
+ALTER TABLE ONLY public.repository_date_time_values
     ADD CONSTRAINT fk_rails_5d809fca2c FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
@@ -5550,6 +6093,14 @@ ALTER TABLE ONLY public.user_my_modules
 
 ALTER TABLE ONLY public.user_teams
     ADD CONSTRAINT fk_rails_64c25f3fe6 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: repository_checklist_items fk_rails_664f0498be; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT fk_rails_664f0498be FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5649,6 +6200,14 @@ ALTER TABLE ONLY public.wopi_actions
 
 
 --
+-- Name: repository_status_items fk_rails_74e5e4cacc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT fk_rails_74e5e4cacc FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
 -- Name: results fk_rails_79fcaa8e37; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5670,6 +6229,14 @@ ALTER TABLE ONLY public.repositories
 
 ALTER TABLE ONLY public.checklist_items
     ADD CONSTRAINT fk_rails_7b68a8f1d8 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_status_items fk_rails_7bc42f7363; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT fk_rails_7bc42f7363 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5718,6 +6285,22 @@ ALTER TABLE ONLY public.checklists
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_831f89b951 FOREIGN KEY (checklist_id) REFERENCES public.checklists(id);
+
+
+--
+-- Name: repository_date_time_range_values fk_rails_87cdb60fa9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_range_values
+    ADD CONSTRAINT fk_rails_87cdb60fa9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_checklist_items fk_rails_885781d47e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT fk_rails_885781d47e FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5777,6 +6360,14 @@ ALTER TABLE ONLY public.reports
 
 
 --
+-- Name: repository_number_values fk_rails_8f8a2f87f1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT fk_rails_8f8a2f87f1 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: repository_list_values fk_rails_903285a9b0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5833,6 +6424,14 @@ ALTER TABLE ONLY public.user_teams
 
 
 --
+-- Name: repository_checklist_values fk_rails_98a7704432; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values
+    ADD CONSTRAINT fk_rails_98a7704432 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: activities fk_rails_992865be13; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5849,11 +6448,27 @@ ALTER TABLE ONLY public.reports
 
 
 --
+-- Name: repository_status_items fk_rails_9acc03f846; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT fk_rails_9acc03f846 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: results fk_rails_9be849c454; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT fk_rails_9be849c454 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_status_values fk_rails_9d357798c5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT fk_rails_9d357798c5 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5878,6 +6493,14 @@ ALTER TABLE ONLY public.my_module_repository_rows
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT fk_rails_a068b3a692 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_checklist_items fk_rails_a08ff8e2ba; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT fk_rails_a08ff8e2ba FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
 
 
 --
@@ -5910,6 +6533,14 @@ ALTER TABLE ONLY public.teams
 
 ALTER TABLE ONLY public.custom_fields
     ADD CONSTRAINT fk_rails_a25c0b1d1a FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_status_values fk_rails_a3a2aede5b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT fk_rails_a3a2aede5b FOREIGN KEY (repository_status_item_id) REFERENCES public.repository_status_items(id);
 
 
 --
@@ -6097,10 +6728,10 @@ ALTER TABLE ONLY public.result_texts
 
 
 --
--- Name: repository_date_values fk_rails_cfb9b16b76; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_date_time_values fk_rails_cfb9b16b76; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values
+ALTER TABLE ONLY public.repository_date_time_values
     ADD CONSTRAINT fk_rails_cfb9b16b76 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
@@ -6126,6 +6757,14 @@ ALTER TABLE ONLY public.user_projects
 
 ALTER TABLE ONLY public.user_notifications
     ADD CONSTRAINT fk_rails_d238d8ef07 FOREIGN KEY (notification_id) REFERENCES public.notifications(id);
+
+
+--
+-- Name: repository_checklist_values fk_rails_d2f015ade2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values
+    ADD CONSTRAINT fk_rails_d2f015ade2 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6281,6 +6920,22 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 
 --
+-- Name: repository_cell_values_checklist_items fk_rails_efd3251ebf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items
+    ADD CONSTRAINT fk_rails_efd3251ebf FOREIGN KEY (repository_checklist_value_id) REFERENCES public.repository_checklist_values(id);
+
+
+--
+-- Name: repository_date_time_range_values fk_rails_efe428fafe; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_range_values
+    ADD CONSTRAINT fk_rails_efe428fafe FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: protocol_protocol_keywords fk_rails_f04cc911dd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6294,6 +6949,14 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_f36eac136b FOREIGN KEY (experiment_id) REFERENCES public.experiments(id);
+
+
+--
+-- Name: repository_cell_values_checklist_items fk_rails_f5260bda13; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_cell_values_checklist_items
+    ADD CONSTRAINT fk_rails_f5260bda13 FOREIGN KEY (repository_checklist_item_id) REFERENCES public.repository_checklist_items(id);
 
 
 --
@@ -6522,6 +7185,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190903145834'),
 ('20190910125740'),
 ('20191001133557'),
-('20191009146101');
+('20191003091614'),
+('20191007144622'),
+('20191009146101'),
+('20191105143702'),
+('20191115143747'),
+('20191204112549'),
+('20191205133522'),
+('20191206105058'),
+('20191210103004'),
+('20191218072619');
 
 
