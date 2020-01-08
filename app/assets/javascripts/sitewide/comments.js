@@ -65,6 +65,7 @@ var Comments = (function() {
         $el.find('textarea'),
         $el.find('.new-comment-button')
       );
+      $el.find('textarea').focus().blur();
       $el.find('.new-comment-button').off('click').click(() => {
         var errorField = $el.find('.new-message-error');
         var newButton = this;

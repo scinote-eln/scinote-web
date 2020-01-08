@@ -1,0 +1,82 @@
+// scss-lint:disable Comment
+
+@import "constants/*";
+@import "elements/*";
+
+// Examples
+
+/*
+
+<div class="demo-container" style="background: white; padding: 20px;">
+  <div>
+    <input type="checkbox" class="sci-checkbox">
+    <span class="sci-checkbox-label"></span>
+    <span style="display: inline-block; width: 20px"></span>
+    <input type="checkbox" class="sci-checkbox" disabled>
+    <span class="sci-checkbox-label"></span>
+    <span style="display: inline-block; width: 20px"></span>
+    <input type="checkbox" class="sci-checkbox" disabled checked>
+    <span class="sci-checkbox-label"></span>
+  </div>
+  <hr>
+  <div>
+    <input type="radio" name="test" class="sci-radio">
+    <span class="sci-radio-label"></span>
+    <span style="display: inline-block; width: 20px"></span>
+    <input type="radio" name="test" class="sci-radio">
+    <span class="sci-radio-label"></span>
+    <span style="display: inline-block; width: 20px"></span>
+    <input type="radio" name="test" class="sci-radio" disabled>
+    <span class="sci-radio-label"></span>
+  </div>
+  <hr>
+  <div>
+    <input type="checkbox" class="sci-toggle-checkbox">
+    <span class="sci-toggle-checkbox-label"></span>
+    <span style="display: inline-block; width: 20px"></span>
+    <input type="checkbox" class="sci-toggle-checkbox" disabled>
+    <span class="sci-toggle-checkbox-label"></span>
+  </div>
+  <hr>
+  <div class="sci-toggles-group">
+    <input type="radio" name="test1" class="sci-toggle-item">
+    <span class="sci-toggle-item-label"><i class="fas fa-th-large"></i></span>
+    <input type="radio" name="test1" class="sci-toggle-item">
+    <span class="sci-toggle-item-label"><i class="fas fa-th-list"></i></span>
+    <input type="radio" name="test1" class="sci-toggle-item">
+    <span class="sci-toggle-item-label"><i class="fas fa-th"></i></span>
+  </div>
+  <hr>
+  <div class="sci-input-container" style="width: 300px">
+    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
+  </div>
+  <hr>
+  <div class="sci-input-container left-icon" style="width: 300px">
+    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
+    <i class="fas fa-search"></i>
+  </div>
+  <hr>
+  <div class="sci-input-container right-icon"  style="width: 300px">
+    <label>Right icon</label>
+    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
+    <i class="fas fa-search"></i>
+  </div>
+  <hr>
+  <div class="sci-input-container right-icon success"  style="width: 300px">
+    <label>Success and icon</label>
+    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
+    <i class="fas fa-search"></i>
+  </div>
+  <hr>
+  <div class="sci-input-container error" data-error-text="Error text"  style="width: 300px">
+    <label>Error</label>
+    <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
+  </div>
+  <hr>
+  <div class="sci-input-container disabled" style="width: 300px">
+    <label>Disabled</label>
+    <input type="text" class="sci-input-field" placeholder="Placeholder" disabled></input>
+  </div>
+</div>
+
+*/

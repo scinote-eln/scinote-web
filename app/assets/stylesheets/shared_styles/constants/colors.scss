@@ -1,0 +1,55 @@
+// Grayscale colors
+$color-white: #fff;
+$color-concrete: #f0f0f6;
+$color-alto: #d0d0d8;
+$color-silver-chalice: #a0a0a8;
+$color-volcano: #404048;
+$color-black: #231f20;
+
+
+
+// Theme colors
+$brand-primary: #104da9;
+$brand-primary-hover: #0c3a80;
+$brand-primary-press: #07244f;
+
+$brand-academy: #a52068;
+$brand-academy-dark: #8c1b58;
+
+$brand-focus: #609fff;
+$brand-focus-light: #dfecff;
+
+$brand-success: #2dbe61;
+$brand-success-light: #cbefd7;
+
+$brand-danger: #e72525;
+$brand-danger-hover: #b21d1d;
+$brand-danger-press: #801515;
+$brand-danger-light: #f9c9c9;
+
+$brand-warning: #f0ad4e;
+$brand-warning-light: #fbebd3;
+
+// MS Office colors:
+$office-ms-word: #2b579a;
+$office-ms-excel: #217346;
+$office-ms-powerpoint: #d24726;
+
+// MarvinJS color:
+$marvinjs-color: #29999c;
+
+
+
+// Don't use them
+$color-alabaster: $color-concrete;
+$color-gainsboro: $color-concrete;
+$color-silver: $color-alto;
+$color-dove-gray: $color-volcano;
+$color-emperor: $color-volcano;
+$brand-default: $color-white;
+$brand-info: $brand-focus;
+$brand-other: $brand-success;
+$brand-extra: $brand-focus;
+$brand-primary-light: $brand-focus-light;
+$brand-light-blue: $brand-focus-light;
+

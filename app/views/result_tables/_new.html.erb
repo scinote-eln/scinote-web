@@ -11,11 +11,11 @@
 			<% end %>
 		</div>
 		<div class="align-right">
-			<button type="button" class="btn btn-default cancel-new">
+			<button type="button" class="btn btn-secondary cancel-new">
 				<%= t("general.cancel")%>
 			</button>
 			<%= f.submit t("result_tables.new.create"),
-									 class: 'btn btn-success save-result',
+									 class: 'btn btn-primary save-result',
 									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE);" %>
     </div>
 	<% end %>

@@ -1,0 +1,170 @@
+// scss-lint:disable NestingDepth
+
+.btn{
+  @include font-button;
+  animation-timing-function: $timing-function-sharp;
+  border-radius: $border-radius-default;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 20px;
+  outline: 0;
+  padding: 7px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: .3s;
+  user-select: none;
+
+  .fas {
+    color: inherit;
+    margin-right: 5px;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:active {
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: 0;
+    text-decoration: none;
+  }
+
+  &.btn-primary {
+    background: $brand-primary;
+    border: 1px solid $brand-primary;
+    color: $color-white;
+
+    &:hover {
+      background: $brand-primary-hover;
+      color: $color-white;
+    }
+
+    &:active {
+      background: $brand-primary-press;
+      color: $color-white;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $color-white;
+    }
+  }
+
+  &.btn-secondary {
+    background: $color-white;
+    border: $border-default;
+    color: $color-black;
+
+    &:hover {
+      background: $color-concrete;
+      border: $border-secondary;
+      color: $color-black;
+    }
+
+    &:active {
+      background: $color-alto;
+      border: $border-secondary;
+      color: $color-black;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $color-black;
+    }
+  }
+
+  &.btn-light {
+    background: transparent;
+    border: $border-transparent;
+    color: $color-black;
+
+    &:hover {
+      background: $color-concrete;
+      border: $border-transparent;
+      color: $color-black;
+    }
+
+    &:active {
+      background: $color-alto;
+      border: $border-transparent;
+      color: $color-black;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $color-black;
+    }
+  }
+
+  &.btn-danger {
+    background: $brand-danger;
+    border: $border-danger;
+    color: $color-white;
+
+    &:hover {
+      background: $brand-danger-hover;
+      color: $color-white;
+    }
+
+    &:active {
+      background: $brand-danger-press;
+      color: $color-white;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $color-white;
+    }
+  }
+
+  &.icon-btn {
+    padding: 7px;
+    width: 36px;
+
+    .fas {
+      margin: 0;
+    }
+  }
+
+  &:disabled {
+    background: $color-alto;
+    border: $border-tertiary;
+    color: $color-silver-chalice;
+    opacity: .5;
+
+    &.btn-secondary,
+    &.btn-light {
+      background: $color-white;
+
+      &:hover {
+        background: $color-white;
+        border: $border-tertiary;
+        color: $color-silver-chalice;
+      }
+    }
+
+    &.btn-danger {
+      &:hover {
+        background: $color-alto;
+      }
+    }
+  }
+}
+
+.sci-btn-group {
+  display: inline-block;
+  position: relative;
+
+  .btn {
+    float: left;
+    margin: 2px 4px 2px 0;
+
+    &:nth-last-child(1) {
+      margin-right: 0;
+    }
+  }
+}

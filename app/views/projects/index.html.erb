@@ -1,5 +1,6 @@
-<% provide(:head_title, t("projects.index.head_title")) %>
 
+<% provide(:head_title, t("projects.index.head_title")) %>
+ 
 <% if current_team %>
   <%= render partial: "shared/sidebar", locals: { page: 'project' } %>
   <%= render partial: "shared/secondary_navigation" %>
@@ -18,8 +19,8 @@
               <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success help_tooltips",
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary help_tooltips",
                            data: {
                              tooltiplink: I18n.t('tooltips.link.new_project'),
                              tooltipcontent: I18n.t('tooltips.text.new_project')
@@ -42,8 +43,8 @@
         <div class="modal-body">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-          <button type="button" class="btn btn-success" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <button type="button" class="btn btn-primary" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
         </div>
       </div>
     </div>
@@ -74,11 +75,11 @@
         <div class="modal-body">
         </div>
         <div class="modal-footer">
-          <button id="export-projects-modal-close" type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
-          <button id="export-projects-modal-cancel" type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <button id="export-projects-modal-close" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.close" %></button>
+          <button id="export-projects-modal-cancel" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
           <button id="export-projects-modal-submit"
                   type="button"
-                  class="btn btn-success"
+                  class="btn btn-primary"
                   data-export-projects-submit-url="<%= export_projects_team_path(current_team) %>">
             <%=t "projects.export_projects.modal_submit" %>
           </button>
@@ -95,7 +96,7 @@
         <% if @teams.exists? && can_create_projects?(current_team) %>
           <h2><strong><%=t 'projects.index.no_projects.title' %></strong></h2>
           <br />
-          <a class="btn btn-primary btn-lg new-project-btn">
+          <a class="btn btn-primary new-project-btn">
             <span class="fas fa-plus"></span>
             <span class="hidden-xs"><%= t('projects.index.no_projects.create_new_button') %></span>
           </a>
@@ -121,7 +122,7 @@
 
             <!-- project sort -->
             <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span><%= t("general.sort.#{@current_sort}_html") %></span>
                 <span class="caret"></span>
               </button>
@@ -139,7 +140,7 @@
             </div>
 
             <!-- export projects button -->
-            <button type="button" class="btn btn-default pull-right"
+            <button type="button" class="btn btn-secondary pull-right"
                                   id="export-projects-button"
                                   data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>"
                                   disabled>

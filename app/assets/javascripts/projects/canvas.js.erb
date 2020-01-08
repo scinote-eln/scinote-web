@@ -496,6 +496,10 @@ function animateReposition(el, left, top) {
 function bindModeChange() {
   var buttons = $('#diagram-buttons').find("a[type='button']");
 
+  $('.change-canvas-view').off().on('click', '.sci-toggle-item', function() {
+    $(this).next().click();
+  })
+
   buttons.on('click', function() {
     var action = $(this).data("action");
 

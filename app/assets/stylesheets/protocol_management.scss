@@ -226,6 +226,7 @@
         align-items: center;
         display: flex;
         height: 30px;
+        margin-top: 5px;
 
         .info-line.button {
           flex-grow: 1;
@@ -353,15 +354,6 @@
         width: 100%;
       }
     }
-  }
-
-  .external-import-btn {
-    background-color: $brand-primary;
-    border: 0;
-    color: $color-white;
-    font-size: 12px;
-    padding-bottom: 3px;
-    padding-top: 3px;
   }
 
   .footer {
