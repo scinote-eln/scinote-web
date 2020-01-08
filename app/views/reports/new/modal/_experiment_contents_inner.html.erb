@@ -8,7 +8,7 @@
   <div class="checkbox-tree">
     <ul>
       <li>
-        <%= form.custom_check_box :experiment_all, label: experiment.name %>
+        <%= form.check_box :experiment_all, label: experiment.name %>
         <ul>
 
           <% experiment.my_module_groups.each do |my_module_group| %>
@@ -24,7 +24,7 @@
           <!-- Tasks without groups -->
           <% experiment.my_modules.without_group.each do |my_module| %>
             <li>
-              <%= form.custom_check_box "modules[#{my_module.id}]", label: my_module.name %>
+              <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
             </li>
           <% end %>
 
