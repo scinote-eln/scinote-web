@@ -5,7 +5,7 @@ $.fn.dataTable.render.RowNameValidator = function($input) {
 };
 
 $.fn.dataTable.render.RepositoryTextValueValidator = function($input) {
-  return textValidator(undefined, $input, 1, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
+  return textValidator(undefined, $input, 0, GLOBAL_CONSTANTS.TEXT_MAX_LENGTH);
 };
 
 $.fn.dataTable.render.RepositoryListValueValidator = function() {
