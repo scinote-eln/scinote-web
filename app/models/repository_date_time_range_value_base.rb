@@ -12,8 +12,8 @@ class RepositoryDateTimeRangeValueBase < ApplicationRecord
 
   validates :repository_cell, :start_time, :end_time, presence: true
 
-  SORTABLE_COLUMN_NAME = 'repository_date_time_values.start_time'
-  SORTABLE_VALUE_INCLUDE = :repository_date_time_range_value
+  SORTABLE_COLUMN_NAME = 'repository_date_time_range_values.start_time'
+  SORTABLE_VALUE_INCLUDE = :repository_date_time_range_value_base
 
   def update_data!(new_data, user)
     data = JSON.parse(new_data).symbolize_keys
