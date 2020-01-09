@@ -64,7 +64,7 @@ module SearchableModel
           a_query = query.split.map { |a| "%#{sanitize_sql_like(a)}%" }
           where_str =
             (attrs.map.with_index do |a, i|
-              if a == 'repository_rows.id'
+              if %w(repository_rows.id repository_number_values.data).include?(a)
                 "CAST(#{a} AS TEXT) #{like} ANY (array[:t#{i}]) OR "
               else
                 "(trim_html_tags(#{a})) #{like} ANY (array[:t#{i}]) OR "
