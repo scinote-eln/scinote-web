@@ -4,7 +4,53 @@
 @import "constants";
 
 .repository-table {
+  margin-top: 20px;
+
+  // Datatables generated name
+  .dataTables_length {
+    display: inline-block;
+    float: right;
+    margin-left: 10px;
+  }
+
+  .dataTables_filter {
+    float: right;
+  }
+
+  // hack only for firefox
+  @-moz-document url-prefix() {
+    input.form-control[type="file"] {
+      font-size: 13px;
+      height: auto;
+      padding: 3px 12px;
+    }
+  }
+
+  .repository-status-value-icon {
+    margin-right: 5px;
+  }
+
+  .dropdown-selector-container {
+    width: 150px;
+  }
+
+
   // Cells
+
+
+  // Assigned
+
+  .assigned-column {
+    .repository-row-edit-icon {
+      cursor: pointer;
+      display: none;
+      width: 30px;
+    }
+
+    .circle-icon {
+      margin-left: 30px;
+    }
+  }
 
   // Checklists
   .checklist-dropdown {
@@ -25,6 +71,44 @@
   .timeonly {
     input.date-part {
       display: none;
+    }
+  }
+
+  // Actions
+
+  tbody {
+    tr:hover {
+      background-color: $color-concrete;
+
+      .assigned-column {
+        .repository-row-edit-icon {
+          display: inline-block;
+        }
+
+        .circle-icon {
+          margin-left: 0;
+        }
+      }
+    }
+
+    .editing {
+      border: 1px solid;
+    }
+  }
+
+  &.editing {
+    tbody {
+      tr:hover {
+        .assigned-column {
+          .repository-row-edit-icon {
+            display: none;
+          }
+
+          .circle-icon {
+            margin-left: 30px;
+          }
+        }
+      }
     }
   }
 }

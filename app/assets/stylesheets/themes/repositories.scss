@@ -83,28 +83,6 @@
   }
 }
 
-.repository-table {
-  tbody {
-    tr:hover {
-      background-color: $color-concrete;
-    }
-
-    .editing {
-      border: 1px solid;
-    }
-
-    .repository-row-edit-icon {
-      opacity: 0;
-      padding-right: 10px;
-    }
-
-    tr:hover .repository-row-edit-icon {
-      cursor: pointer;
-      opacity: 1;
-    }
-  }
-}
-
 .new-input-file-field-div {
   display: flex;
   flex-direction: row;
