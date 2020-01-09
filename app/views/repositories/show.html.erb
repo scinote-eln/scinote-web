@@ -189,5 +189,8 @@
     js_format.gsub!(/%B/, 'MMMM')
     js_format.gsub!('%Y', 'YYYY')
   %>
-  const formatJS = "<%= js_format %>"
+
+  if (typeof(formatJS) == undefined) { // Turbolinks fix
+    const formatJS = "<%= js_format %>" 
+  }
 </script>
