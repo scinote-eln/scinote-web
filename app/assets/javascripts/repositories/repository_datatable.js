@@ -144,21 +144,6 @@ var RepositoryDatatable = (function(global) {
     }
   }
 
-  // Helper functions
-  // function listItemDropdown(options, currentValue, columnId) {
-  //   var html = `<select class="form-control selectpicker repository-dropdown"
-  //               data-abs-min-length="2" data-live-search="true"
-  //               data-container="body" column_id="${columnId}">
-  //               <option value="-1"></option>`;
-  //   $.each(options, function(index, value) {
-  //     var selected = (currentValue === value[1]) ? 'selected' : '';
-  //     html += '<option value="' + value[0] + '" ' + selected + '>';
-  //     html += value[1] + '</option>';
-  //   });
-  //   html += '</select>';
-  //   return html;
-  // }
-
   function initRowSelection() {
     // Handle clicks on checkbox
     $('.dt-body-center .repository-row-selector').change(function(ev) {
@@ -279,23 +264,6 @@ var RepositoryDatatable = (function(global) {
     );
   }
 
-  // Takes object and surrounds it with input
-  // function changeToInputField(object, name, value) {
-  //   return "<div class='form-group'><input class='form-control' data-object='"
-  //       + object + "' name='" + name + "' value='" + value + "'></input></div>";
-  // }
-
-  // Takes object and surrounds it with input
-  function changeToInputFileField(object, name, value) {
-    return "<div class='repository-input-file-field'>"
-        + "<div class='new-input-file-field-div'><div class='form-group'>"
-        + "<input type='file' class='form-control' data-object='"
-        + object + "' name='" + name + "' value='" + value + "'></div>"
-        + "<a onClick='clearFileInput(this)'>"
-        + "<i class='fas fa-times'></i>"
-        + '</a></div></div>';
-  }
-
   function initHeaderTooltip() {
     // Fix compatibility of fixed table header and column names modal-tooltip
     $('.modal-tooltip').off();
@@ -402,75 +370,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  // function initialListItemsRequest(columnId) {
-  //   var massageResponse = [];
-  //   $.ajax({
-  //     url: $(TABLE_ID).data('list-items-path'),
-  //     type: 'POST',
-  //     dataType: 'json',
-  //     async: false,
-  //     data: {
-  //       q: '',
-  //       column_id: columnId
-  //     }
-  //   }).done(function(data) {
-  //     $.each(data.list_items, function(index, el) {
-  //       massageResponse.push([el.id, el.data]);
-  //     });
-  //   });
-  //   return listItemDropdown(massageResponse, '-1', columnId);
-  // }
-
-  function initSelectPicker() {
-    $('.selectpicker')
-      .selectpicker({ liveSearch: true })
-      .ajaxSelectPicker({
-        ajax: {
-          url: $(TABLE_ID).data('list-items-path'),
-          type: 'POST',
-          dataType: 'json',
-          data: function() {
-            var params = {
-              q: '{{{q}}}',
-              column_id: $(this.valueOf().plugin.$element).attr('column_id')
-            };
-
-            return params;
-          }
-        },
-        locale: {
-          emptyTitle: 'Nothing selected'
-        },
-        preprocessData: function(data) {
-          var items = [];
-          if (Object.prototype.hasOwnProperty.call(data, 'list_items')) {
-            items.push({
-              value: '-1',
-              text: '',
-              disabled: false
-            });
-            $.each(data.list_items, function(index, el) {
-              items.push(
-                {
-                  value: el.id,
-                  text: el.data,
-                  disabled: false
-                }
-              );
-            });
-          }
-          return items;
-        },
-        emptyRequest: true,
-        clearOnEmpty: false,
-        preserveSelected: false
-      }).on('change.bs.select', function(el) {
-        $(this).closest('td').attr('list_item_id', el.target.value);
-        $(this).closest('td').attr('column_id', $(this).attr('column_id'));
-      })
-      .trigger('change.bs.select');
-  }
-
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
@@ -479,18 +378,6 @@ var RepositoryDatatable = (function(global) {
         TABLE.columns.adjust();
       });
   }
-
-  // Clear all has-error tags
-  // function clearAllErrors() {
-  //   // Remove any validation errors
-  //   $(selectedRecord)
-  //     .find('.has-error')
-  //     .removeClass('has-error')
-  //     .find('span')
-  //     .remove();
-  //   // Remove any alerts
-  //   $('#alert-container').find('div').remove();
-  // }
 
   function dataTableInit() {
     viewAssigned = 'assigned';
@@ -851,82 +738,6 @@ var RepositoryDatatable = (function(global) {
     RepositoryDatatableRowEditor.switchRowToEditMode(row);
     adjustTableHeader();
   };
-
-  // function submitForm(url, formData) {
-  //   var type;
-  //   if (saveAction === 'update') {
-  //     type = 'PUT';
-  //   } else {
-  //     type = 'POST';
-  //   }
-  //   $.ajax({
-  //     url: url,
-  //     type: type,
-  //     dataType: 'json',
-  //     data: formData,
-  //     processData: false,
-  //     contentType: false,
-  //     success: function(data) {
-  //       HelperModule.flashAlertMsg(data.flash, 'success');
-  //       SmartAnnotation.closePopup();
-  //       SCINOTE_REPOSITORY_EDITED_ROWS = [];
-  //       onClickCancel();
-  //       animateSpinner(null, false);
-  //     },
-  //     error: function(ev) {
-  //       var data = ev.responseJSON;
-  //       animateSpinner(null, false);
-  //       SmartAnnotation.closePopup();
-  //       clearAllErrors();
-  //
-  //       if (ev.status === 404) {
-  //         HelperModule.flashAlertMsg(
-  //           I18n.t('repositories.js.not_found_error'), 'danger'
-  //         );
-  //         changeToViewMode();
-  //       } else if (ev.status === 403) {
-  //         HelperModule.flashAlertMsg(
-  //           I18n.t('repositories.js.permission_error'), 'danger'
-  //         );
-  //         changeToViewMode();
-  //       } else if (ev.status === 400) {
-  //         if (data.default_fields) {
-  //           let defaultFields = data.default_fields;
-  //
-  //           // Validate record name
-  //           if (defaultFields.name) {
-  //             let input = $(selectedRecord).find('input[name = name]');
-  //
-  //             if (input) {
-  //               input.closest('.form-group').addClass('has-error');
-  //               input.parent().append("<span class='help-block'>" + defaultFields.name + '<br /></span>');
-  //             }
-  //           }
-  //         }
-  //
-  //         // Validate custom cells
-  //         $.each(data.repository_cells || [], function(_, val) {
-  //           $.each(val, function(key, val2) {
-  //             let input = $(selectedRecord).find('input[name=' + key + ']');
-  //             if (input) {
-  //               let message = Array.isArray(val2.data) ? val2.data[0] : val2.data;
-  //               // handle custom input field
-  //               if (input.attr('type') === 'file') {
-  //                 let container = input.closest('.repository-input-file-field');
-  //                 $(container.find('.form-group')[0]).addClass('has-error');
-  //                 container.addClass('has-error');
-  //                 container.append("<span class='help-block'>" + message + '<br /></span>');
-  //               } else {
-  //                 input.closest('.form-group').addClass('has-error');
-  //                 input.parent().append("<span class='help-block'>" + message + '<br /></span>');
-  //               }
-  //             }
-  //           });
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
 
   // Delete record
   global.onClickDelete = function() {

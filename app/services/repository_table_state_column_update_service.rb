@@ -19,7 +19,7 @@ class RepositoryTableStateColumnUpdateService
       state['columns'][index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
       state['ColReorder'] << index
       state['length'] = (index + 1)
-      state['time'] = Time.new.to_i
+      state['time'] = (Time.now.to_f * 1_000).to_i
       table_state.save
     end
   end
@@ -53,7 +53,7 @@ class RepositoryTableStateColumnUpdateService
       end
 
       state['length'] = (state['length'] - 1)
-      state['time'] = Time.new.to_i
+      state['time'] = (Time.now.to_f * 1_000).to_i
       table_state.save
     end
   end
