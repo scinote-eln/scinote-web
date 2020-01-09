@@ -1053,8 +1053,19 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
+      enter_row_name: "Enter name"
       assets:
         select_file_btn: "Select File (Max %{max_size} MB)..."
+      text:
+        enter_text: "Enter text"
+      number:
+        enter_number: "Enter number"
+      list:
+        select_item: "Select..."
+      status:
+        set_status: "Set Status..."
+      checklist:
+        set_checklist: "Set Checklist..."
       date_time:
         errors:
           set_all_or_none: 'Needs to set both or none'

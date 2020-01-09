@@ -11,7 +11,7 @@ var ChecklistColumnHelper = (function() {
     }
     return $(`<select 
               id="${select}"
-              data-placeholder = "Select options..."
+              data-placeholder = "${I18n.t('repositories.table.checklist.set_checklist')}"
               data-ajax-url = "${url}"
               data-combine-tags="true"
               data-select-multiple-all-selected="${I18n.t('libraries.manange_modal_column.checklist_type.all_options')}"
