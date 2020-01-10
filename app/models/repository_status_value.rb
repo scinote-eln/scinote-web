@@ -9,7 +9,7 @@ class RepositoryStatusValue < ApplicationRecord
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
   accepts_nested_attributes_for :repository_cell
 
-  validates :repository_status_item, presence: true
+  validates :repository_cell, :repository_status_item, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_status_items.status'
   SORTABLE_VALUE_INCLUDE = { repository_status_value: :repository_status_item }.freeze

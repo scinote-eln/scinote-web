@@ -72,7 +72,8 @@ class Extends
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
                                 :repository_number_value,
                                 repository_list_value: :repository_list_item,
-                                repository_checklist_value: :repository_checklist_items,
+                                repository_checklist_value:
+                                  { repository_cell_values_checklist_items: :repository_checklist_item },
                                 repository_status_value: :repository_status_item,
                                 repository_asset_value: { asset: { file_attachment: :blob } }]
 

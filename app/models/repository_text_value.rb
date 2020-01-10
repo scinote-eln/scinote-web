@@ -7,9 +7,7 @@ class RepositoryTextValue < ApplicationRecord
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
-  validates :data,
-            presence: true,
-            length: { maximum: Constants::TEXT_MAX_LENGTH }
+  validates :data, presence: true, length: { maximum: Constants::TEXT_MAX_LENGTH }
 
   SORTABLE_COLUMN_NAME = 'repository_text_values.data'
   SORTABLE_VALUE_INCLUDE = :repository_text_value
