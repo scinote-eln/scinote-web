@@ -158,6 +158,7 @@
           if (ctrl.tagName.toLowerCase() === 'input' && ctrl.type !== 'hidden') {
             if (ctrl.type === 'file') {
               ctrl.name = 'file';
+              ctrl.accept = 'image/*';
 
               tinymce.DOM.setStyles(ctrl, {
                 border: 0,
@@ -207,7 +208,7 @@
         }
         if (target.document || target.contentDocument) {
           doc = target.contentDocument || target.contentWindow.document;
-          handleResponse(doc.getElementsByTagName('body')[0].innerHTML);
+          handleResponse((doc.getElementsByTagName('pre')[0] || doc.getElementsByTagName('body')[0]).innerHTML);
         } else {
           handleError(I18n.t('tiny_mce.server_not_respond'));
         }
@@ -215,12 +216,12 @@
 
       function handleResponse(ret) {
         var json;
-        var errorJson;
+        var errorsJson;
         try {
           json = tinymce.util.JSON.parse(ret);
 
-          if (json.error) {
-            handleError(json.error.message);
+          if (json.errors) {
+            handleError(json.errors.join('<br>'));
           } else {
             editor.execCommand('mceInsertContent', false, buildHTML(json));
             editor.windowManager.close();
@@ -228,8 +229,8 @@
           }
         } catch (e) {
           // hack that gets the server error message
-          errorJson = JSON.parse($(ret).text());
-          handleError(errorJson.error[0]);
+          errorsJson = JSON.parse($(ret).text());
+          handleError(errorsJson.join('<br>'));
         }
       }
 

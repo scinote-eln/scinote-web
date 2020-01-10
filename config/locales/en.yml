@@ -2085,6 +2085,7 @@ en:
     upload_window_label: 'Choose an image'
     choose_file: 'Choose file'
     no_image_chosen: 'No image chosen'
+    unsupported_image_format: 'Unsupported image format'
     insert_btn: 'Insert'
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
