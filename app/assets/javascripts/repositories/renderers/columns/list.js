@@ -1,4 +1,4 @@
-/* global dropdownSelector */
+/* global dropdownSelector I18n */
 /* eslint-disable no-unused-vars */
 
 var ListColumnHelper = (function() {
@@ -9,7 +9,7 @@ var ListColumnHelper = (function() {
     }
     return $(`<select 
               id="${select}"
-              data-placeholder = "Select option..."
+              data-placeholder = "${I18n.t('repositories.table.list.select_item')}"
               data-ajax-url = "${url}"
             >${selectedOption}</select>`);
   }

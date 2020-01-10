@@ -14,6 +14,7 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
              type="text"
              name="repository_row[name]"
              value="${text}"
+             placeholder="${I18n.t('repositories.table.enter_row_name')}"
              data-type="RowName">
     </div>
   `);
@@ -54,6 +55,7 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
              type="text"
              name="repository_cells[${columnId}]"
              value="${text}"
+             placeholder="${I18n.t('repositories.table.text.enter_text')}"
              data-type="RepositoryTextValue">
     </div>`);
 
@@ -143,6 +145,7 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
              type="number"
              name="repository_cells[${columnId}]"
              value="${number}"
+             placeholder="${I18n.t('repositories.table.number.enter_number')}"
              onchange="if (this.value !== '') { this.value = parseFloat(Number(this.value).toFixed(${decimals})); }"
              data-type="RepositoryNumberValue">
     </div>`);
