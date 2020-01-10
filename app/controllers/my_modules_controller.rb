@@ -720,6 +720,7 @@ class MyModulesController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'my_module',
+      item_id: @my_module.id,
       field_to_udpate: 'name',
       path_to_update: my_module_path(@my_module)
     }
