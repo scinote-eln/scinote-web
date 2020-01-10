@@ -39,38 +39,6 @@
   }
 }
 
-.repository-table {
-  margin-top: 20px;
-
-  // Datatables generated name
-  .dataTables_length {
-    display: inline-block;
-    float: right;
-    margin-left: 10px;
-  }
-
-  .dataTables_filter {
-    float: right;
-  }
-
-  // hack only for firefox
-  @-moz-document url-prefix() {
-    input.form-control[type="file"] {
-      font-size: 13px;
-      height: auto;
-      padding: 3px 12px;
-    }
-  }
-
-  .repository-status-value-icon {
-    margin-right: 5px;
-  }
-
-  .dropdown-selector-container {
-    width: 150px;
-  }
-}
-
 .repository-cog {
   display: inline-block;
   float: right;

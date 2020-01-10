@@ -48,6 +48,7 @@ var RepositoryDatatable = (function(global) {
   // Enable/disable edit button
   function updateButtons() {
     if (currentMode === 'viewMode') {
+      $(TABLE_WRAPPER).removeClass('editing')
       $('#saveCancel').hide();
       $('#editDeleteCopy').show();
       $('#addRepositoryRecord').prop('disabled', false);
@@ -76,6 +77,7 @@ var RepositoryDatatable = (function(global) {
         $('#unassignRepositoryRecords').prop('disabled', false);
       }
     } else if (currentMode === 'editMode') {
+      $(TABLE_WRAPPER).addClass('editing')
       $('#editDeleteCopy').hide();
       $('#saveCancel').show();
       $('#repository-acitons-dropdown').prop('disabled', true);
@@ -421,6 +423,7 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         searchable: false,
         orderable: true,
+        className: 'assigned-column',
         sWidth: '1%',
         render: function(data) {
           let content = data;
