@@ -40,11 +40,11 @@ module SearchableModel
 
           where_str =
             (attrs.map.with_index do |a, i|
-              if a == 'repository_rows.id'
+              if %w(repository_rows.id repository_number_values.data).include?(a)
                 "CAST(#{a} AS TEXT) #{like} :t#{i} OR "
               else
                 col = options[:at_search].to_s == 'true' ? "lower(#{a})": a
-                "(trim_html_tags((#{col})::text)) #{like} :t#{i} OR "
+                "(trim_html_tags((#{col}))) #{like} :t#{i} OR "
               end
             end
             ).join[0..-5]
@@ -83,10 +83,10 @@ module SearchableModel
         unless attrs.empty?
           where_str =
             (attrs.map.with_index do |a, i|
-              if a == 'repository_rows.id'
+              if %w(repository_rows.id repository_number_values.data).include?(a)
                 "CAST(#{a} AS TEXT) #{like} :t#{i} OR "
               else
-                "(trim_html_tags((#{a})::text)) #{like} :t#{i} OR "
+                "(trim_html_tags(#{a})) #{like} :t#{i} OR "
               end
             end
             ).join[0..-5]
