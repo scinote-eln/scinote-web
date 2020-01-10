@@ -32,4 +32,6 @@ class RepositoryNumberValue < ApplicationRecord
     value.data = payload.to_f
     value
   end
+
+  alias export_formatted formatted
 end

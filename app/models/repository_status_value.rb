@@ -42,4 +42,6 @@ class RepositoryStatusValue < ApplicationRecord
                                         .find(payload)
     value
   end
+
+  alias export_formatted formatted
 end

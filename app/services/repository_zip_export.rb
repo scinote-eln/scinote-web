@@ -66,7 +66,7 @@ module RepositoryZipExport
                            handle_file_name_func.call(cell.value.asset)
                          else
                            SmartAnnotations::TagToText.new(
-                             user, team, cell.value.formatted
+                             user, team, cell.value.export_formatted
                            ).text
                          end
                        end
