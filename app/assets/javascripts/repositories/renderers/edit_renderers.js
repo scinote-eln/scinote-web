@@ -133,10 +133,8 @@ $.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, 
   ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell, currentValue);
 };
 
-$.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cell, $header) {
+$.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
-  let decimals = Number($header.data('metadata-decimals'));
-  let number = parseFloat(Number($cell.text()).toFixed(decimals));
 
   $cell.html(`
     <div class="form-group">
@@ -144,9 +142,8 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
              form="${formId}"
              type="number"
              name="repository_cells[${columnId}]"
-             value="${number}"
              placeholder="${I18n.t('repositories.table.number.enter_number')}"
-             onchange="if (this.value !== '') { this.value = parseFloat(Number(this.value).toFixed(${decimals})); }"
+             value="${$cell.find('.number-value').data('full-value')}"
              data-type="RepositoryNumberValue">
     </div>`);
 };
