@@ -15,4 +15,6 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
     value.data = Time.zone.parse(payload)
     value
   end
+
+  alias export_formatted formatted
 end

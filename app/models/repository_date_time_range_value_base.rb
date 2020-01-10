@@ -10,7 +10,7 @@ class RepositoryDateTimeRangeValueBase < ApplicationRecord
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :repository_date_time_value
   accepts_nested_attributes_for :repository_cell
 
-  validates :repository_cell, :start_time, :end_time, presence: true
+  validates :repository_cell, :start_time, :end_time, :type, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_date_time_values.start_time'
   SORTABLE_VALUE_INCLUDE = :repository_date_time_range_value

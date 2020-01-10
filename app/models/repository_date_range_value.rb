@@ -20,4 +20,6 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
     value.end_time = Time.zone.parse(data[:end_time])
     value
   end
+
+  alias export_formatted formatted
 end

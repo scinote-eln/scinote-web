@@ -58,4 +58,6 @@ class RepositoryAssetValue < ApplicationRecord
     value.asset.post_process_file(team)
     value
   end
+
+  alias export_formatted formatted
 end

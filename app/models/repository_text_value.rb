@@ -33,4 +33,6 @@ class RepositoryTextValue < ApplicationRecord
     value.data = payload
     value
   end
+
+  alias export_formatted formatted
 end

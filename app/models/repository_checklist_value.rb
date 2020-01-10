@@ -14,8 +14,12 @@ class RepositoryChecklistValue < ApplicationRecord
   SORTABLE_COLUMN_NAME = 'repository_checklist_items.data'
   SORTABLE_VALUE_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
 
-  def formatted
-    repository_checklist_items.pluck(:data).join(' | ')
+  def formatted(separator: ' | ')
+    repository_checklist_items.pluck(:data).join(separator)
+  end
+
+  def export_formatted
+    formatted(separator: "\n")
   end
 
   def data
