@@ -48,7 +48,7 @@ var RepositoryDatatable = (function(global) {
   // Enable/disable edit button
   function updateButtons() {
     if (currentMode === 'viewMode') {
-      $(TABLE_WRAPPER).removeClass('editing')
+      $(TABLE_WRAPPER).removeClass('editing');
       $('#saveCancel').hide();
       $('#editDeleteCopy').show();
       $('#addRepositoryRecord').prop('disabled', false);
@@ -77,7 +77,7 @@ var RepositoryDatatable = (function(global) {
         $('#unassignRepositoryRecords').prop('disabled', false);
       }
     } else if (currentMode === 'editMode') {
-      $(TABLE_WRAPPER).addClass('editing')
+      $(TABLE_WRAPPER).addClass('editing');
       $('#editDeleteCopy').hide();
       $('#saveCancel').show();
       $('#repository-acitons-dropdown').prop('disabled', true);
@@ -384,14 +384,12 @@ var RepositoryDatatable = (function(global) {
   function dataTableInit() {
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-6 toolbar'><'col-sm-6'lf>><'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
+      dom: "R<'main-actions'<'toolbar'><'filter-container'f>>t<'pagination-row'<'pagination-info'li><'pagination-actions'p>>",
       stateSave: true,
       processing: true,
       serverSide: true,
       sScrollX: '100%',
       sScrollXInner: '100%',
-      scrollY: '64vh',
-      scrollCollapse: true,
       order: $(TABLE_ID).data('default-order'),
       colReorder: {
         fixedColumnsLeft: 2,
@@ -540,6 +538,8 @@ var RepositoryDatatable = (function(global) {
           initSaveButton();
           initCancelButton();
         }
+
+        $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
       }
     });
 
@@ -936,9 +936,24 @@ var RepositoryDatatable = (function(global) {
 
   function redrawTableOnSidebarToggle() {
     $('#sidebar-arrow').on('click', function() {
+      var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
+      var windowWidth = $(window).width();
+      if (!$(this).is('[data-shown]')) {
+        if (windowWidth > orgignalWidth + 363) {
+          $('.repository-show .dataTables_scrollHead')
+            .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
+        }
+        document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
+      } else {
+        if (windowWidth > orgignalWidth + 83) {
+          $('.repository-show .dataTables_scrollHead')
+            .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
+        }
+        document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+      }
       setTimeout(function() {
         adjustTableHeader();
-      }, 400);
+      }, 500);
     });
   }
 

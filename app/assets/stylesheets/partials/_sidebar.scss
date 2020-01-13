@@ -58,10 +58,10 @@ $toggle-btn-size: 50px;
     height: 100%;
     margin-left: -$wrapper-width;
     position: fixed;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    -webkit-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    -moz-transition: 0.4s $timing-function-sharp;
+    -o-transition: 0.4s $timing-function-sharp;
+    -webkit-transition: 0.4s $timing-function-sharp;
+    transition: 0.4s $timing-function-sharp;
     width: $wrapper-width;
     z-index: 999;
 

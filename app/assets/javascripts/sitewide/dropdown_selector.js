@@ -53,6 +53,7 @@ var dropdownSelector = (function() {
   function updateDropdownDirection(selector, container) {
     var windowHeight = $(window).height();
     var containerPosition = container[0].getBoundingClientRect().top;
+    var containerPositionLeft = container[0].getBoundingClientRect().left;
     var containerHeight = container[0].getBoundingClientRect().height;
     var containerWidth = container[0].getBoundingClientRect().width;
     var bottomSpace;
@@ -62,6 +63,7 @@ var dropdownSelector = (function() {
 
     if (modalContainer.length) {
       windowHeight = modalContainer.height() + modalContainer[0].getBoundingClientRect().top;
+      containerPositionLeft -= modalContainer[0].getBoundingClientRect().left;
       modalContainerBottom = modalContainer[0].getBoundingClientRect().bottom;
       maxHeight += modalContainerBottom;
     }
@@ -72,11 +74,13 @@ var dropdownSelector = (function() {
       container.addClass('inverse');
       container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
         .css('margin-bottom', `${(containerPosition * -1)}px`)
+        .css('left', `${containerPositionLeft}px`)
         .css('width', `${containerWidth}px`);
     } else {
       container.removeClass('inverse');
       container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32 + maxHeight)}px`)
         .css('width', `${containerWidth}px`)
+        .css('left', `${containerPositionLeft}px`)
         .css('margin-top', `${(bottomSpace * -1)}px`);
     }
   }
