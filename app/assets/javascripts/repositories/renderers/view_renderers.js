@@ -146,5 +146,7 @@ $.fn.dataTable.render.defaultRepositoryNumberValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryNumberValue = function(data) {
-  return parseFloat(Number(data.value).toFixed(data.value_decimals));
+  return `<span class="number-value" data-full-value="${data.full_value}">
+            ${data.value}
+          </span>`;
 };
