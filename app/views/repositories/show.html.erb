@@ -9,7 +9,7 @@
 <%= render partial: "sidebar", locals: { repositories: @repositories } %>
 <div id="alert-container"></div>
 
-<div class="content-pane repository-show">
+<div class="repository-show">
   <div id="repository-toolbar">
     <div class="repository-title-name">
       <span class="name-container">
@@ -101,6 +101,7 @@
           </ul>
         <% end %>
     </div>
+    <div class="toolbar-delimiter"></div>
   </div>
 
   <!-- These buttons are appended to table in javascript, after table initialization -->
@@ -190,7 +191,5 @@
     js_format.gsub!('%Y', 'YYYY')
   %>
 
-  if (typeof(formatJS) == undefined) { // Turbolinks fix
-    const formatJS = "<%= js_format %>" 
-  }
+  var formatJS = "<%= js_format %>"
 </script>

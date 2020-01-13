@@ -6,13 +6,6 @@
 .repository-table {
   margin-top: 20px;
 
-  // Datatables generated name
-  .dataTables_length {
-    display: inline-block;
-    float: right;
-    margin-left: 10px;
-  }
-
   .dataTables_filter {
     float: right;
   }
@@ -62,15 +55,19 @@
   }
 
   // DateTime
-  .dateonly {
-    input.time-part {
-      display: none;
-    }
-  }
+  .datetime-container {
+    position: relative;
 
-  .timeonly {
-    input.date-part {
-      display: none;
+    &.dateonly {
+      input.time-part {
+        display: none;
+      }
+    }
+
+    &.timeonly {
+      input.date-part {
+        display: none;
+      }
     }
   }
 
