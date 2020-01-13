@@ -34,14 +34,36 @@
   // Assigned
 
   .assigned-column {
+    position: relative;
+
     .repository-row-edit-icon {
       cursor: pointer;
       display: none;
       width: 30px;
     }
 
-    .circle-icon {
+    .assign-counter-container {
+      border-radius: 2px;
+      cursor: pointer;
+      display: inline-block;
+      height: calc(100% - 2px);
       margin-left: 30px;
+      padding-top: 7px;
+      position: absolute;
+      top: 1px;
+      width: calc(100% - 38px);
+
+      .assign-counter {
+        margin-left: 5px;
+
+        &.has-assigned {
+          color: $brand-primary;
+        }
+      }
+
+      &:hover {
+        background-color: $color-silver-chalice;
+      }
     }
   }
 
@@ -81,8 +103,7 @@
         .repository-row-edit-icon {
           display: inline-block;
         }
-
-        .circle-icon {
+        .assign-counter-container {
           margin-left: 0;
         }
       }
@@ -100,8 +121,7 @@
           .repository-row-edit-icon {
             display: none;
           }
-
-          .circle-icon {
+          .assign-counter-container {
             margin-left: 30px;
           }
         }

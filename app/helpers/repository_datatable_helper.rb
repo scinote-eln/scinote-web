@@ -43,9 +43,12 @@ module RepositoryDatatableHelper
 
   def assigned_row(record)
     if record.assigned_my_modules_count.positive?
-      "<span class='circle-icon'>&nbsp;</span>"
+      tooltip = "#{record.assigned_my_modules_count} tasks,&#10;#{record.assigned_experiments_count} " \
+      "experiments,&#10;#{record.assigned_projects_count} projects"
+      "<div class='assign-counter-container' title='#{tooltip}'>"\
+      "<span class='assign-counter has-assigned'>#{record.assigned_my_modules_count}</span></div>"
     else
-      "<span class='circle-icon disabled'>&nbsp;</span>"
+      "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>"
     end
   end
 
