@@ -8,9 +8,8 @@ module RepositoryDatatableHelper
                           columns_mappings,
                           team)
     parsed_records = []
-    includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
 
-    repository_rows.includes(:repository_columns, :created_by, includes_json).each do |record|
+    repository_rows.each do |record|
       row = {
         'DT_RowId': record.id,
         '1': assigned_row(record),

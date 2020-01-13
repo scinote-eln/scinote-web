@@ -23,9 +23,11 @@ class RepositoryRowsController < ApplicationController
     datatable_service = RepositoryDatatableService.new(@repository, params, current_user)
 
     @all_rows_count = datatable_service.all_count
-    @filtered_rows_count = datatable_service.filtered_count
     @columns_mappings = datatable_service.mappings
     @repository_rows = datatable_service.repository_rows
+                                        .preload(:repository_columns,
+                                                 :created_by,
+                                                 repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES)
                                         .page(page)
                                         .per(per_page)
   end

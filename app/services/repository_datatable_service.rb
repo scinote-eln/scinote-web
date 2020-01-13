@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryDatatableService
-  attr_reader :repository_rows, :all_count, :filtered_count, :mappings
+  attr_reader :repository_rows, :all_count, :mappings
 
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
@@ -44,13 +44,11 @@ class RepositoryDatatableService
           'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s
         )
       end
-      @filtered_count = repository_rows.count
       repository_rows = repository_rows
                         .select('repository_rows.*')
                         .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
                         .group('repository_rows.id')
     else
-      @filtered_count = repository_rows.count
       repository_rows = repository_rows
                         .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
                         .select('repository_rows.*')

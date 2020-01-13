@@ -388,10 +388,12 @@ class MyModulesController < ApplicationController
                                                        params,
                                                        current_user,
                                                        @my_module)
-    @all_rows_count = datatable_service.all_count                                                 
-    @filtered_rows_count = datatable_service.filtered_count
+    @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
     @repository_rows = datatable_service.repository_rows
+                                        .preload(:repository_columns,
+                                                 :created_by,
+                                                 repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES)
                                         .page(page)
                                         .per(per_page)
 
