@@ -384,21 +384,17 @@ class MyModulesController < ApplicationController
     @draw = params[:draw].to_i
     per_page = params[:length] == '-1' ? 100 : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
-    records = RepositoryDatatableService.new(@repository,
-                                             params,
-                                             current_user,
-                                             @my_module)
-    @assigned_rows = records.assigned_rows
-    @repository_row_count = records.repository_rows.length
-    @columns_mappings = records.mappings
-    @repository_rows = records.repository_rows
-                              .page(page)
-                              .per(per_page)
-                              .preload(
-                                :repository_columns,
-                                :created_by,
-                                repository_cells: :value
-                              )
+    datatable_service = RepositoryDatatableService.new(@repository,
+                                                       params,
+                                                       current_user,
+                                                       @my_module)
+    @all_rows_count = datatable_service.all_count                                                 
+    @filtered_rows_count = datatable_service.filtered_count
+    @columns_mappings = datatable_service.mappings
+    @repository_rows = datatable_service.repository_rows
+                                        .page(page)
+                                        .per(per_page)
+
     render 'repository_rows/index.json'
   end
 

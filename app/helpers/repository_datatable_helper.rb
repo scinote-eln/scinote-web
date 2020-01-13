@@ -6,15 +6,14 @@ module RepositoryDatatableHelper
   def prepare_row_columns(repository_rows,
                           repository,
                           columns_mappings,
-                          team,
-                          assigned_rows)
+                          team)
     parsed_records = []
     includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
 
-    repository_rows.includes(includes_json).each do |record|
+    repository_rows.includes(:repository_columns, :created_by, includes_json).each do |record|
       row = {
         'DT_RowId': record.id,
-        '1': assigned_row(record, assigned_rows),
+        '1': assigned_row(record),
         '2': record.id,
         '3': escape_input(record.name),
         '4': I18n.l(record.created_at, format: :full),
@@ -43,8 +42,8 @@ module RepositoryDatatableHelper
     parsed_records
   end
 
-  def assigned_row(record, assigned_rows)
-    if assigned_rows&.include?(record)
+  def assigned_row(record)
+    if record.assigned_my_modules_count.positive?
       "<span class='circle-icon'>&nbsp;</span>"
     else
       "<span class='circle-icon disabled'>&nbsp;</span>"
@@ -67,7 +66,11 @@ module RepositoryDatatableHelper
   end
 
   def display_cell_value(cell, team)
-    "RepositoryDatatable::#{cell.repository_column.data_type}Serializer"
-      .constantize.new(cell.value, scope: { team: team, user: current_user }).serializable_hash
+    value_name = cell.repository_column.data_type.underscore
+    serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
+    serializer_class.new(
+      cell.__send__(value_name),
+      scope: { team: team, user: current_user, column: cell.repository_column }
+    ).serializable_hash
   end
 end

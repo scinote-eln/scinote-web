@@ -24,7 +24,7 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def data
-    repository_checklist_items.order(data: :asc).map { |i| { value: i.id, label: i.data } }
+    repository_checklist_items.map { |i| { value: i.id, label: i.data } }.sort_by { |item| item[:label] }
   end
 
   def data_changed?(new_data)

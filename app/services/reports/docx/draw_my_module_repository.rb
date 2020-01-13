@@ -7,7 +7,7 @@ module Reports::Docx::DrawMyModuleRepository
 
     repository_id = subject['id']['repository_id']
     repository_data = my_module.repository_json(repository_id, subject['sort_order'], @user)
-    return false unless repository_data[:data].assigned_rows.count.positive?
+    return false unless repository_data[:data].any?
 
     repository = ::Repository.find(repository_id)
     table = prepare_row_columns(repository_data)

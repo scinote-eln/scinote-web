@@ -20,6 +20,20 @@ module DatabaseHelper
     )
   end
 
+  # Create gin trigram index with filtered out html tags. PostgreSQL only!
+  def add_gin_index_for_numbers(table, column)
+    ActiveRecord::Base.connection.execute(
+      "CREATE INDEX index_#{table}_on_#{column}_text ON " \
+      "#{table} USING gin (((#{column})::text) gin_trgm_ops);"
+    )
+  end
+
+  def remove_gin_index_for_numbers(table, column)
+    ActiveRecord::Base.connection.execute(
+      "DROP INDEX IF EXISTS index_#{table}_on_#{column}_text;"
+    )
+  end
+
   # Get size of whole table & its indexes
   # (in bytes). PostgreSQL only!
   def get_table_size(table)

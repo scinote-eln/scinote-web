@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class RepositoryDatatableService
-  attr_reader :repository_rows, :assigned_rows, :mappings
+  attr_reader :repository_rows, :all_count, :filtered_count, :mappings
 
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
     @user = user
     @my_module = my_module
     @params = params
+    @sortable_columns = build_sortable_columns
     create_columns_mappings
     process_query
   end
@@ -30,42 +31,68 @@ class RepositoryDatatableService
     order_obj = build_conditions(@params)[:order_by_column]
 
     repository_rows = fetch_rows(search_value)
-    assigned_rows = repository_rows.joins(:my_module_repository_rows)
+
+    # Adding assigned counters
     if @my_module
-      assigned_rows = assigned_rows
-                      .where(my_module_repository_rows: {
-                               my_module_id: @my_module
-                             })
-      repository_rows = assigned_rows if @params[:assigned] == 'assigned'
+      if @params[:assigned] == 'assigned'
+        repository_rows = repository_rows.joins(:my_module_repository_rows)
+                                         .where(my_module_repository_rows: { my_module_id: @my_module })
+      else
+        repository_rows = repository_rows.joins(
+          'LEFT OUTER JOIN "my_module_repository_rows" '\
+          'ON "my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
+          'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s
+        )
+      end
+      @filtered_count = repository_rows.count
+      repository_rows = repository_rows
+                        .select('repository_rows.*')
+                        .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
+                        .group('repository_rows.id')
+    else
+      @filtered_count = repository_rows.count
+      repository_rows = repository_rows
+                        .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
+                        .select('repository_rows.*')
+                        .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
+                        .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
+                        .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
+                        .group('repository_rows.id')
     end
 
-    @assigned_rows = assigned_rows
     @repository_rows = sort_rows(order_obj, repository_rows)
   end
 
   def fetch_rows(search_value)
     repository_rows = @repository.repository_rows
-                                 .left_outer_joins(:created_by)
+
+    @all_count =
+      if @my_module && @params[:assigned] == 'assigned'
+        repository_rows.joins(:my_module_repository_rows)
+                       .where(my_module_repository_rows: { my_module_id: @my_module })
+                       .count
+      else
+        repository_rows.count
+      end
 
     if search_value.present?
-      includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
-      searchable_attributes = ['repository_rows.name',
-                               'users.full_name',
-                               'repository_rows.id'] +
-                              Extends::REPOSITORY_EXTRA_SEARCH_ATTR
+      matched_by_user = repository_rows.joins(:created_by).where_attributes_like('users.full_name', search_value)
 
-      # Using distinct raises error when combined with sort on a custom column
-      repository_row_ids = repository_rows
-                           .left_outer_joins(includes_json)
-                           .where_attributes_like(searchable_attributes,
-                                                  search_value)
-                           .pluck(:id)
-                           .uniq
-      repository_rows = RepositoryRow.left_outer_joins(:created_by)
-                                     .where(id: repository_row_ids)
+      repository_row_matches = repository_rows
+                               .where_attributes_like(['repository_rows.name', 'repository_rows.id'], search_value)
+      results = repository_rows.where(id: repository_row_matches)
+      results = results.or(repository_rows.where(id: matched_by_user))
+
+      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
+        custom_cell_matches = repository_rows.joins(repository_cells: include_hash)
+                                             .where_attributes_like(field, search_value)
+        results = results.or(repository_rows.where(id: custom_cell_matches))
+      end
+
+      repository_rows = results
     end
 
-    repository_rows
+    repository_rows.left_outer_joins(:created_by)
   end
 
   def build_conditions(params)
@@ -76,7 +103,7 @@ class RepositoryDatatableService
     { search_value: search_value, order_by_column: order_by_column }
   end
 
-  def sortable_columns
+  def build_sortable_columns
     array = [
       'assigned',
       'repository_rows.id',
@@ -94,32 +121,17 @@ class RepositoryDatatableService
     dir = %w(DESC ASC).find do |direction|
       direction == column_obj[:dir].upcase
     end || 'ASC'
+
     column_index = column_obj[:column]
     service = RepositoryTableStateService.new(@user, @repository)
     col_order = service.load_state.state['ColReorder']
     column_id = col_order[column_index].to_i
 
-    if sortable_columns[column_id - 1] == 'assigned'
+    if @sortable_columns[column_id - 1] == 'assigned'
       return records if @my_module && @params[:assigned] == 'assigned'
 
-      if @my_module
-        # Depending on the sort, order nulls first or
-        # nulls last on repository_cells association
-        return records.joins(
-          "LEFT OUTER JOIN my_module_repository_rows ON
-          (repository_rows.id =
-            my_module_repository_rows.repository_row_id
-          AND (my_module_repository_rows.my_module_id =
-            #{@my_module.id}
-          OR my_module_repository_rows.id IS NULL))"
-        ).order(
-          "my_module_repository_rows.id NULLS
-           #{sort_null_direction(dir)}"
-        )
-      else
-        return sort_assigned_records(records, dir)
-      end
-    elsif sortable_columns[column_id - 1] == 'repository_cell.value'
+      records.order("assigned_my_modules_count #{dir}")
+    elsif @sortable_columns[column_id - 1] == 'repository_cell.value'
       id = @mappings.key(column_id.to_s)
       sorting_column = RepositoryColumn.find_by(id: id)
       return records unless sorting_column
@@ -135,7 +147,6 @@ class RepositoryDatatableService
                                                 ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
                               .group('repository_cells.repository_row_id')
 
-
       else
         cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
                               .where('repository_cells.repository_column_id': sorting_column.id)
@@ -144,84 +155,12 @@ class RepositoryDatatableService
       end
 
       records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
+             .group('values.value')
              .order("values.value #{dir}")
-    elsif sortable_columns[column_id - 1] == 'users.full_name'
-      # We don't need join user table, because it already joined in fetch_row method
-      return records.order("users.full_name #{dir}")
+    elsif @sortable_columns[column_id - 1] == 'users.full_name'
+      records.group('users.full_name').order("users.full_name #{dir}")
     else
-      return records.order(
-        "#{sortable_columns[column_id - 1]} #{dir}"
-      )
+      records.group(@sortable_columns[column_id - 1]).order("#{@sortable_columns[column_id - 1]} #{dir}")
     end
-  end
-
-  def sort_assigned_records(records, direction)
-    assigned = records.joins(:my_module_repository_rows)
-                      .distinct
-                      .pluck(:id)
-    unassigned = records.where.not(id: assigned).pluck(:id)
-    if direction == 'ASC'
-      ids = assigned + unassigned
-    elsif direction == 'DESC'
-      ids = unassigned + assigned
-    end
-
-    order_by_index = ActiveRecord::Base.send(
-      :sanitize_sql_array,
-      ["position((',' || repository_rows.id || ',') in ?)",
-       ids.join(',') + ',']
-    )
-    records.order(order_by_index)
-  end
-
-  def sort_null_direction(val)
-    val == 'ASC' ? 'LAST' : 'FIRST'
-  end
-
-  def filter_by_asset_value(records, id, dir)
-    records.joins(
-      "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
-        active_storage_blobs.filename AS value
-      FROM repository_cells
-      INNER JOIN repository_asset_values
-      ON repository_asset_values.id = repository_cells.value_id
-      INNER JOIN assets
-      ON repository_asset_values.asset_id = assets.id
-      INNER JOIN active_storage_attachments
-      ON active_storage_attachments.record_id = assets.id
-         AND active_storage_attachments.record_type = 'Asset'
-         AND active_storage_attachments.name = 'file'
-      INNER JOIN active_storage_blobs
-      ON active_storage_blobs.id = active_storage_attachments.blob_id
-      WHERE repository_cells.repository_column_id = #{id}) AS values
-      ON values.repository_row_id = repository_rows.id"
-    ).order("values.value #{dir}")
-  end
-
-  def filter_by_text_value(records, id, dir)
-    records.joins(
-      "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
-        repository_text_values.data AS value
-      FROM repository_cells
-      INNER JOIN repository_text_values
-      ON repository_text_values.id = repository_cells.value_id
-      WHERE repository_cells.repository_column_id = #{id}) AS values
-      ON values.repository_row_id = repository_rows.id"
-    ).order("values.value #{dir}")
-  end
-
-  def filter_by_list_value(records, id, dir)
-    records.joins(
-      "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
-        repository_list_items.data AS value
-      FROM repository_cells
-      INNER JOIN repository_list_values
-      ON repository_list_values.id = repository_cells.value_id
-      INNER JOIN repository_list_items
-      ON repository_list_values.repository_list_item_id =
-      repository_list_items.id
-      WHERE repository_cells.repository_column_id = #{id}) AS values
-      ON values.repository_row_id = repository_rows.id"
-    ).order("values.value #{dir}")
   end
 end
