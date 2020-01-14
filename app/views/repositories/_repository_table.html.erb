@@ -33,6 +33,8 @@
             class="repository-column"
             id="<%= column.id %>"
             data-type="<%= column.data_type %>"
+            data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
+            data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>
             <% end %>

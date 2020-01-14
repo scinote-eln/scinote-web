@@ -1,4 +1,6 @@
 // scss-lint:disable IdSelector
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
 
 @import "constants";
 
@@ -80,20 +82,49 @@
       z-index: 99999999;
     }
 
-    li {
+    .col-list-el {
       background: $color-white;
       border-bottom: 1px solid $color-alto;
       padding: 10px 10px 10px 0;
       vertical-align: middle;
+
+      .manage-controls {
+        display: none;
+        margin-top: -10px;
+      }
+
+      &:hover {
+        .editable {
+          display: inline-block;
+        }
+
+        .column-type.editable {
+          display: none;
+        }
+
+        .grippy {
+          background: url(asset-path("custom/grippy.png"));
+        }
+      }
+
+      &:last-of-type {
+        border-bottom: 0;
+      }
+
+      &:not(.editable) {
+        .column-type::before {
+          @include font-awesome;
+          content: $font-fas-lock;
+          padding-right: 4px;
+        }
+      }
     }
 
     [data-position] {
-      cursor: -webkit-grab;
       cursor: grab;
     }
 
     .ui-sortable-helper {
-      cursor: -webkit-grabbing;
       cursor: grabbing;
     }
 
@@ -104,33 +135,8 @@
       width: 8px;
     }
 
-    li .grippy-img {
-      background: url(asset-path('custom/grippy.png'));
-    }
-
-    li:hover span.editable {
-      display: inline-block !important;
-    }
-
     .column-type {
-        color: $color-silver-chalice;
-    }
-
-    li.editable:hover span.column-type {
-      display: none;
-    }
-
-    li:not(.editable) {
-      .column-type:before {
-        content: "\f023";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 501;
-        padding-right: 4px;
-      }
-    }
-
-    li:last-of-type {
-      border-bottom: 0;
+      color: $color-silver-chalice;
     }
 
     .col-invisible {
@@ -148,7 +154,7 @@
         }
 
         &:hover {
-          color: $color-emperor;
+          color: $color-volcano;
         }
       }
 
@@ -161,14 +167,15 @@
         }
       }
     }
-
-    .manage-controls {
-      margin-top: -10px;
-    }
   }
 
   .delete-content {
     height: 390px;
     padding: 15px 0;
+  }
+
+  #new-repo-column-modal {
+    float: left;
+    margin-left: 5px;
   }
 }
