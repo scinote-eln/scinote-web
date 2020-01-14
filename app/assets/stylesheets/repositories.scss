@@ -130,6 +130,12 @@
         }
       }
     }
+
+    .dataTables_scrollBody {
+      thead {
+        opacity: 0;
+      }
+    }
   }
 
   .pagination-row {
@@ -140,7 +146,7 @@
     display: flex;
     height: 68px;
     left: var(--repository-sidebar-margin);
-    padding: 0 32px;
+    padding: 0 142px 0 32px;
     position: fixed;
     transition: .4s;
     width: calc(100% - var(--repository-sidebar-margin));

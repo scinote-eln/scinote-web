@@ -43,7 +43,7 @@
     }
 
     .assign-counter-container {
-      border-radius: 2px;
+      border-radius: $border-radius-tag;
       cursor: pointer;
       display: inline-block;
       height: calc(100% - 2px);
@@ -103,6 +103,7 @@
         .repository-row-edit-icon {
           display: inline-block;
         }
+
         .assign-counter-container {
           margin-left: 0;
         }
@@ -121,6 +122,7 @@
           .repository-row-edit-icon {
             display: none;
           }
+
           .assign-counter-container {
             margin-left: 30px;
           }

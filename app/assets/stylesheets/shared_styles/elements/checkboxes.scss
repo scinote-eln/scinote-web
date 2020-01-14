@@ -18,8 +18,8 @@ input[type="checkbox"].sci-checkbox {
     display: inline-block;
     flex-shrink: 0;
     height: var(--sci-checkbox-size);
-    margin-left: calc((var(--sci-checkbox-size) * -1) - 3px);
-    position: relative;
+    margin-left: calc(var(--sci-checkbox-size) * -1);
+    position: absolute;
     width: var(--sci-checkbox-size);
 
     &::before {
