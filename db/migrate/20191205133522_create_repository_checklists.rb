@@ -19,11 +19,9 @@ class CreateRepositoryChecklists < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    create_table :repository_cell_values_checklist_items do |t|
-      t.references :repository_checklist_item, null: false, foreign_key: true,
-                   index: { name: :repository_cell_values_checklist_item_id }
-      t.references :repository_checklist_value, null: false, foreign_key: true,
-                   index: { name: :repository_cell_values_checklist_value_id }
+    create_table :repository_checklist_items_values do |t|
+      t.belongs_to :repository_checklist_value, index: { name: 'index_on_repository_checklist_value_id' }
+      t.belongs_to :repository_checklist_item, index: { name: 'index_on_repository_checklist_item_id' }
       t.timestamps
     end
   end

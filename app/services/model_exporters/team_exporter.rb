@@ -174,7 +174,7 @@ module ModelExporters
     def get_cell_value_checklist(cell)
       return unless cell.value_type == 'RepositoryChecklistValue'
 
-      cell.value.repository_cell_values_checklist_items
+      cell.value.repository_checklist_items_values
     end
   end
 end

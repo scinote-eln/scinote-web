@@ -11,6 +11,6 @@ class RepositoryChecklistItem < ApplicationRecord
              inverse_of: :created_repository_checklist_types
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
              inverse_of: :modified_repository_checklist_types
-  has_many :repository_cell_values_checklist_items, dependent: :destroy
-  has_many :repository_checklist_values, through: :repository_cell_values_checklist_items
+  has_many :repository_checklist_items_values, dependent: :destroy
+  has_many :repository_checklist_values, through: :repository_checklist_items_values
 end

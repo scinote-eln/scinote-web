@@ -6,7 +6,7 @@ module RepositoryActions
     def initialize(user, repository, rows_ids = [])
       @user                       = user
       @repository                 = repository
-      @rows_to_duplicate          = sanitize_rows_to_duplicate(rows_ids)
+      @rows_to_duplicate          = rows_ids
       @number_of_duplicated_items = 0
     end
 
@@ -18,22 +18,20 @@ module RepositoryActions
 
     private
 
-    def sanitize_rows_to_duplicate(rows_ids)
-      process_ids = rows_ids.map(&:to_i).uniq
-      @repository.repository_rows.where(id: process_ids).pluck(:id)
-    end
-
     def duplicate_row(id)
-      row = RepositoryRow.find_by_id(id)
-      new_row = RepositoryRow.new(
-        row.attributes.merge(new_row_attributes(row.name, @user.id))
-      )
+      RepositoryRow.transaction do
+        row = @repository.repository_rows.find_by(id: id)
+        return unless row
 
-      if new_row.save
-        @number_of_duplicated_items += 1
+        new_row = RepositoryRow.create!(
+          row.attributes.merge(new_row_attributes(row.name, @user.id))
+        )
+
         row.repository_cells.each do |cell|
-          duplicate_repository_cell(cell, new_row)
+          RepositoryActions::DuplicateCell.new(cell, new_row, @user).call
         end
+
+        @number_of_duplicated_items += 1
 
         Activities::CreateActivityService
           .call(activity_type: :copy_inventory_item,
@@ -51,12 +49,6 @@ module RepositoryActions
         created_by_id: user_id,
         created_at: timestamp,
         updated_at: timestamp }
-    end
-
-    def duplicate_repository_cell(cell, new_row)
-      RepositoryActions::DuplicateCell.new(
-        cell, new_row, @user, @repository.team
-      ).call
     end
   end
 end

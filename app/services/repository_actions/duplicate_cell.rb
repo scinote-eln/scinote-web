@@ -2,70 +2,34 @@
 
 module RepositoryActions
   class DuplicateCell
-    def initialize(cell, new_row, user, team)
+    def initialize(cell, new_row, user)
       @cell    = cell
       @new_row = new_row
       @user    = user
-      @team    = team
     end
 
     def call
-      __send__("duplicate_#{@cell.value_type.split('::').last.underscore}")
+      new_value = @cell.value.dup
+      new_value.repository_cell = RepositoryCell.new(repository_row: @new_row,
+                                                     repository_column: @cell.repository_column)
+      new_value.created_by = @user
+      new_value.last_modified_by = @user
+
+      if respond_to?("#{@cell.value_type.split('::').last.underscore}_extra_attributes", true)
+        __send__("#{@cell.value_type.split('::').last.underscore}_extra_attributes", new_value)
+      end
+      new_value.save!
     end
 
     private
 
-    def duplicate_repository_list_value
-      old_value = @cell.value
-      RepositoryListValue.create(
-        old_value.attributes.merge(
-          id: nil, created_by: @user, last_modified_by: @user,
-          repository_cell_attributes: {
-            repository_row: @new_row,
-            repository_column: @cell.repository_column
-          }
-        )
-      )
+    def repository_asset_value_extra_attributes(value)
+      new_asset = @cell.value.asset.duplicate
+      value.asset = new_asset
     end
 
-    def duplicate_repository_text_value
-      old_value = @cell.value
-      RepositoryTextValue.create(
-        old_value.attributes.merge(
-          id: nil, created_by: @user, last_modified_by: @user,
-          repository_cell_attributes: {
-            repository_row: @new_row,
-            repository_column: @cell.repository_column
-          }
-        )
-      )
-    end
-
-    def duplicate_repository_asset_value
-      old_value = @cell.value
-      new_asset = old_value.asset.duplicate
-      RepositoryAssetValue.create(
-        old_value.attributes.merge(
-          id: nil, asset: new_asset, created_by: @user, last_modified_by: @user,
-          repository_cell_attributes: {
-            repository_row: @new_row,
-            repository_column: @cell.repository_column
-          }
-        )
-      )
-    end
-
-    def duplicate_repository_date_value
-      old_value = @cell.value
-      RepositoryDateTimeValue.create(
-        old_value.attributes.merge(
-          id: nil, created_by: @user, last_modified_by: @user,
-          repository_cell_attributes: {
-            repository_row: @new_row,
-            repository_column: @cell.repository_column
-          }
-        )
-      )
+    def repository_checklist_value_extra_attributes(value)
+      value.repository_checklist_items = @cell.value.repository_checklist_items
     end
   end
 end
