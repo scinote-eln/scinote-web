@@ -1009,7 +1009,6 @@ en:
       view_only_permission_label: "You have veiw-only permission"
 
       options_dropdown:
-        manage_columns: 'Manage columns'
         import_items: 'Import items'
         export_items: 'Export items'
         rename: "Rename inventory"
@@ -1097,7 +1096,6 @@ en:
     column_create: "Create"
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
-    columns_reorder: "Re-Order Columns"
     columns_visibility: "Visible columns"
     view_all_records: "View All Items"
     view_assigned_records: "View Assigned Items"
@@ -1150,6 +1148,9 @@ en:
       invalid_arguments: "Can't find %{key}"
       nothing_to_delete: "Can't find sharing relation for destroy"
   libraries:
+    manange_modal_column_index:
+      title: "Manage columns"
+      add_column: "Add column"
     manange_modal_column:
       name_placeholder: "Enter column name..."
       name: "Name"
@@ -1204,13 +1205,6 @@ en:
       destroy:
         success_flash: "Column %{name} was successfully deleted."
         error_flash: "Something went wrong! Please try again later."
-      index:
-        manage_column: "Manage Columns"
-        new_column: "New Column"
-        no_column: "No columns"
-        delete_column: "Delete"
-        edit_column: "Edit"
-        back_to_repository_html: "<span class='fas fa-arrow-left'></span> Back to %{repository}"
     index:
       head_title: "Inventories"
       no_libraries:

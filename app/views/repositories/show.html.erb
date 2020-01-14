@@ -9,7 +9,7 @@
 <%= render partial: "sidebar", locals: { repositories: @repositories } %>
 <div id="alert-container"></div>
 
-<div class="repository-show">
+<div class="content-pane repository-show" data-table-url="<%= load_table_repository_path(@repository) %> ">
   <div id="repository-toolbar">
     <div class="repository-title-name">
       <span class="name-container">
@@ -33,7 +33,7 @@
         <div class="repository-subtitle"><%= t('repositories.subtitle', team_name: team_name) %></div>
       <% end %>
     </div>
-    <div id="datatables-buttons" class="datatables-buttons">
+    <div class="repo-datatables-buttons">
       <div class="new-repository-button">
         <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
           <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
@@ -43,7 +43,14 @@
           <% end %>
         <% end %>
       </div>
-      <%= render partial: "columns_reorder_dropdown", formats: :html %>
+
+      <button class="btn btn-primary help_tooltips manage-repo-column-index"
+              data-modal-url="<%= repository_columns_index_html_path(@repository) %>"
+              data-action="new"
+              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.manage_columns') %>"
+              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.manage_columns') %>">
+        <span class="fas fa-wrench"></span>&nbsp;<%= t('repositories.index.columns') %>
+      </button>
     </div>
 
     <div class="repository-cog dropdown">
@@ -61,12 +68,6 @@
 
         <% if can_perform_repository_actions(@repository) %>
           <ul class="dropdown-menu pull-right">
-            <% if can_create_repository_columns?(@repository) %>
-              <li>
-                <%= link_to t('repositories.index.options_dropdown.manage_columns'),
-                            repository_repository_columns_path(@repository) %>
-              </li>
-            <% end %>
             <% if can_create_repository_rows?(@repository) %>
             <li>
               <a href="#" id="importRecordsButton" data-turbolinks="false">
@@ -172,6 +173,8 @@
 <%= render partial: "repositories/delete_record_modal.html.erb" %>
 <%= render partial: 'repositories/export_repository_modal.html.erb',
            locals: { repository: @repository } %>
+
+<%= render partial: 'repository_columns/manage_column_modal.html.erb' %>
 
 <%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>

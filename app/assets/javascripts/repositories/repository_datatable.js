@@ -1,5 +1,5 @@
 /*
-  globals I18n _ SmartAnnotation FilePreviewModal truncateLongString animateSpinner Promise
+  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise
   HelperModule animateLoading hideAssignUnasignModal RepositoryDatatableRowEditor
 */
 
@@ -11,7 +11,7 @@ var RepositoryDatatable = (function(global) {
   'use strict';
 
   var TABLE_ID = '';
-  var TABLE_WRAPPER = $('.repository-table');
+  var TABLE_WRAPPER = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
 
@@ -24,8 +24,6 @@ var RepositoryDatatable = (function(global) {
 
   // Tells whether to filter only assigned repository records
   var viewAssigned;
-
-  var dropdownList;
 
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
@@ -236,7 +234,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initSaveButton() {
-    TABLE_WRAPPER.on('click', '#saveRecord', function() {
+    $(TABLE_WRAPPER).on('click', '#saveRecord', function() {
       var $table = $(TABLE_ID);
       RepositoryDatatableRowEditor.validateAndSubmit($table);
     });
@@ -255,7 +253,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initCancelButton() {
-    TABLE_WRAPPER.on('click', '#cancelSave', function() {
+    $(TABLE_WRAPPER).on('click', '#cancelSave', function() {
       resetTableView();
     });
   }
@@ -771,159 +769,10 @@ var RepositoryDatatable = (function(global) {
     $(parent.find('.help-block')[0]).remove();
   };
 
-  function generateColumnNameTooltip(name) {
-    var maxLength = $(TABLE_ID).data('max-dropdown-length');
-    if ($.trim(name).length > maxLength) {
-      return '<div class="modal-tooltip">'
-             + truncateLongString(name, maxLength)
-             + '<span class="modal-tooltiptext">' + name + '</span></div>';
-    }
-    return name;
-  }
-
-  /*
-   * Repository columns dropdown
-   */
-
-  function customLiHoverEffect() {
-    var liEl = dropdownList.find('li');
-    liEl.mouseover(function() {
-      $(this).find('.grippy').addClass('grippy-img');
-    }).mouseout(function() {
-      $(this).find('.grippy').removeClass('grippy-img');
-    });
-  }
-
-  function toggleColumnVisibility() {
-    var lis = dropdownList.find('.vis');
-    lis.on('click', function(event) {
-      var self = $(this);
-      var li = self.closest('li');
-      var column = TABLE.column(li.attr('data-position'));
-
-      event.stopPropagation();
-
-      if (column.header.id !== 'row-name') {
-        if (column.visible()) {
-          self.addClass('fa-eye-slash');
-          self.removeClass('fa-eye');
-          li.addClass('col-invisible');
-          column.visible(false);
-          TABLE.setColumnSearchable(column.index(), false);
-        } else {
-          self.addClass('fa-eye');
-          self.removeClass('fa-eye-slash');
-          li.removeClass('col-invisible');
-          column.visible(true);
-          TABLE.setColumnSearchable(column.index(), true);
-        }
-      }
-      // Re-filter/search if neccesary
-      let searchText = $('div.dataTables_filter input').val();
-      if (!_.isEmpty(searchText)) {
-        TABLE.search(searchText).draw();
-      }
-      initRowSelection();
-      FilePreviewModal.init();
-    });
-  }
-
-  // loads the columns names in the dropdown list
-  function loadColumnsNames() {
-    // Save scroll position
-    var scrollPosition = dropdownList.scrollTop();
-    // Clear the list
-    dropdownList.find('li[data-position]').remove();
-    _.each(TABLE.columns().header(), function(el, index) {
-      if (index > 1) {
-        let colIndex = $(el).attr('data-column-index');
-        let visible = TABLE.column(colIndex).visible();
-
-        let visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
-        let visLi = (visible) ? '' : 'col-invisible';
-
-        let thederName;
-        if ($(el).find('.modal-tooltiptext').length > 0) {
-          thederName = $(el).find('.modal-tooltiptext').text();
-        } else {
-          thederName = el.innerText;
-        }
-
-        let listItem = dropdownList.find('.repository-columns-list-template').clone();
-
-        listItem.attr('data-position', colIndex);
-        listItem.attr('data-id', $(el).attr('id'));
-        listItem.addClass(visLi);
-        listItem.removeClass('repository-columns-list-template hide');
-        listItem.find('.text').html(generateColumnNameTooltip(thederName));
-        if (thederName !== 'Name') {
-          listItem.find('.vis').addClass(visClass);
-          listItem.find('.vis').attr('title', $(TABLE_ID).data('columns-visibility-text'));
-        }
-        dropdownList.append(listItem);
-      }
-    });
-    // Restore scroll position
-    dropdownList.scrollTop(scrollPosition);
-    toggleColumnVisibility();
-    // toggles grip img
-    customLiHoverEffect();
-  }
-
-  function initSorting() {
-    dropdownList.sortable({
-      items: 'li:not(.repository-columns-list-template)',
-      cancel: '.new-repository-column',
-      axis: 'y',
-      update: function() {
-        var reorderer = TABLE.colReorder;
-        var listIds = [];
-        // We skip first two columns
-        listIds.push(0, 1);
-        dropdownList.find('li[data-position]').each(function() {
-          listIds.push($(this).first().data('position'));
-        });
-        reorderer.order(listIds, false);
-        loadColumnsNames();
-        initRowSelection();
-      }
-    });
-    $('.sorting').on('click', checkAvailableColumns);
-  }
-
-  // calculate the max height of window and adjust dropdown max-height
-  function dropdownOverflow() {
-    var windowHeight = $(window).height();
-    var offset = windowHeight - dropdownList.offset().top;
-
-    if (dropdownList.height() >= offset) {
-      dropdownList.css('maxHeight', offset);
-    }
-  }
-
-  // initialze dropdown after the table is loaded
-  function initDropdown() {
-    TABLE.on('init.dt', function() {
-      dropdownList = $('#repository-columns-list');
-      initSorting();
-      toggleColumnVisibility();
-    });
-    $('#repository-columns-dropdown').on('show.bs.dropdown', function() {
-      loadColumnsNames();
-      dropdownList.sortable('enable');
-      checkAvailableColumns();
-    });
-
-    $('#repository-columns-dropdown').on('shown.bs.dropdown', function() {
-      dropdownOverflow();
-    });
-  }
-
   function init(id) {
     TABLE_ID = id;
     EDITABLE = $(TABLE_ID).data('editable');
     TABLE = dataTableInit();
-    initDropdown();
   }
 
   function destroy() {
@@ -960,6 +809,7 @@ var RepositoryDatatable = (function(global) {
   return Object.freeze({
     init: init,
     destroy: destroy,
-    redrawTableOnSidebarToggle: redrawTableOnSidebarToggle
+    redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
+    checkAvailableColumns: checkAvailableColumns
   });
 }(window));
