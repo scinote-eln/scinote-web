@@ -43,7 +43,7 @@
     }
 
     .assign-counter-container {
-      border-radius: 2px;
+      border-radius: $border-radius-tag;
       cursor: pointer;
       display: inline-block;
       height: calc(100% - 2px);

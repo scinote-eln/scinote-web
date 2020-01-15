@@ -1172,51 +1172,6 @@ ul.content-activities {
   width: 100%;
 }
 
-/* Data table */
-
-table.dataTable {
-  background-color: $color-alabaster;
-  table-layout: initial;
-  text-overflow: initial;
-  width: 100%;
-  word-break: initial;
-
-  thead {
-    background-color: $color-silver-chalice;
-  }
-
-  thead > tr > th {
-    border-bottom-width: 0;
-    border-left: 2px solid $color-alabaster;
-    color: $color-white;
-    font-weight: normal;
-  }
-
-  thead > tr > th:first-child {
-    border-left: none;
-  }
-
-  thead > tr > th,
-  thead > tr > td {
-    padding: 8px;
-  }
-
-  tbody > tr.selected,
-  tbody > tr > .selected {
-    background-color: $color-alto !important;
-    color: $color-emperor !important;
-
-    a {
-      color: $brand-primary !important;
-    }
-  }
-
-  .sorting_desc,
-  .sorting_asc {
-    background-color: $brand-primary;
-  }
-}
-
 /* Helpers */
 .line-wrap {
   overflow: hidden;
