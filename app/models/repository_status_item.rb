@@ -10,5 +10,5 @@ class RepositoryStatusItem < ApplicationRecord
              inverse_of: :created_repository_status_types
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true,
              inverse_of: :modified_repository_status_types
-  has_many :repository_status_values, inverse_of: :repository_status_item, dependent: :delete_all
+  has_many :repository_status_values, inverse_of: :repository_status_item, dependent: :destroy
 end

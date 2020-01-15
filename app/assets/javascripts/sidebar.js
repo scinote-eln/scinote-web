@@ -121,22 +121,22 @@
       var experimentId = sidebar.data('current-experiment');
       var taskId = sidebar.data('current-task');
       var currentPage = sidebar.data('page');
-      var li;
+      var link;
 
       if (currentPage === 'project') {
-        li = sidebar.find('li[data-project-id="' + projectId + '"]');
+        link = sidebar.find(`a[data-type="project"][data-id="${projectId}"]`);
       } else if (currentPage === 'experiment') {
-        li = sidebar.find('[data-experiment-id="' + experimentId + '"]');
+        link = sidebar.find(`a[data-type="experiment"][data-id="${experimentId}"]`);
       } else if (currentPage === 'canvas') {
-        li = sidebar.find('[data-experiment-id="' + experimentId + '"]');
-        li.find('.task-tree-link')
-          .append('<a href="" class="canvas-center-on">'
-                  + '<span class="fas fa-map-marker-alt"></span></a>');
+        link = sidebar.find(`a[data-type="experiment"][data-id="${experimentId}"]`);
+        let treeLink = link.closest('li').find('.task-tree-link');
+        treeLink.find('.canvas-center-on').remove();
+        treeLink.append('<a href="" class="canvas-center-on"><span class="fas fa-map-marker-alt"></span></a>');
       } else if (currentPage === 'task') {
-        li = sidebar.find('[data-module-id="' + taskId + '"]');
+        link = sidebar.find(`a[data-type="my_module"][data-id="${taskId}"]`);
       }
-      li.find('a:first').addClass('disabled');
-      li.addClass('active');
+      link.addClass('disabled');
+      link.closest('li').addClass('active');
     }
 
     activateCurrent();

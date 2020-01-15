@@ -314,6 +314,7 @@ class ExperimentsController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'experiment',
+      item_id: @experiment.id,
       field_to_udpate: 'name',
       path_to_update: experiment_path(@experiment)
     }

@@ -1,4 +1,4 @@
-/* global dropdownSelector */
+/* global dropdownSelector I18n */
 /* eslint-disable no-unused-vars */
 
 var StatusColumnHelper = (function() {
@@ -10,7 +10,7 @@ var StatusColumnHelper = (function() {
 
     return $(`<select 
               id="${select}"
-              data-placeholder = "Select option..."
+              data-placeholder = "${I18n.t('repositories.table.status.set_status')}"
               data-ajax-url = "${url}"
             >${selectedOption}</select>`);
   }

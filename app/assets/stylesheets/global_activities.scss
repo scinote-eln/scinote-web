@@ -34,22 +34,6 @@
       display: flex;
       height: 42px;
 
-      .hide-actions {
-        align-items: center;
-        color: $color-silver-chalice;
-        display: flex;
-        margin-right: 20px;
-
-        &:hover {
-          text-decoration: none;
-        }
-
-        .fas {
-          font-size: 18px;
-          margin-right: 5px;
-        }
-      }
-
       .ga-search-container {
         display: none;
         flex-grow: 1;

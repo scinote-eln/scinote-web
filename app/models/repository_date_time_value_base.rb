@@ -10,10 +10,10 @@ class RepositoryDateTimeValueBase < ApplicationRecord
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :repository_date_time_value
   accepts_nested_attributes_for :repository_cell
 
-  validates :repository_cell, :data, presence: true
+  validates :repository_cell, :data, :type, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_date_time_values.data'
-  SORTABLE_VALUE_INCLUDE = :repository_date_time_value
+  SORTABLE_VALUE_INCLUDE = :repository_date_time_value_base
 
   def update_data!(new_data, user)
     self.data = Time.zone.parse(new_data)

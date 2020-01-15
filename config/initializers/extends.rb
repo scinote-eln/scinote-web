@@ -59,14 +59,17 @@ class Extends
   # name should match record in REPOSITORY_DATA_TYPES
   REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue)
 
-  # Extra attributes used for search in repositories, text columns
-  # are only supported
-  REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
-                                  'repository_number_values.data',
-                                  'repository_list_items.data',
-                                  'repository_checklist_items.data',
-                                  'repository_status_items.status',
-                                  'active_storage_blobs.filename']
+  # Extra attributes used for search in repositories, 'filed_name' => include_hash
+  REPOSITORY_EXTRA_SEARCH_ATTR = {'repository_text_values.data' => :repository_text_value,
+                                  'repository_number_values.data' => :repository_number_value,
+                                  'repository_list_items.data' => { repository_list_value: :repository_list_item },
+                                  'repository_checklist_items.data' =>
+                                    { repository_checklist_value:
+                                      { repository_cell_values_checklist_items: :repository_checklist_item } },
+                                  'repository_status_items.status' =>
+                                    { repository_status_value: :repository_status_item },
+                                  'active_storage_blobs.filename' =>
+                                    { repository_asset_value: { asset: { file_attachment: :blob } } } }
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,

@@ -40,7 +40,7 @@ $color-module-hover: $brand-primary;
   }
 
   .projects-view-mode-switch {
-    margin: 10px;
+    margin: 8px 10px 12px;
   }
 
 }
@@ -48,26 +48,38 @@ $color-module-hover: $brand-primary;
 /* Canvas index page */
 
 #canvas-container:not(.canvas-container-edit-mode) {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 /**********************************
  * jsPlumb CANVAS RELATED STYLING *
  *********************************/
 #diagram-buttons {
-  margin-bottom: 10px;
+  align-items: center;
+  display: flex;
+
+  #edit-canvas-button {
+    margin-right: 5px;
+  }
+
+  .actions-button {
+    margin-right: 15px;
+  }
+
+  .toolbarButtons {
+    align-items: center;
+    display: flex;
+
+    .zoom-text {
+      margin-right: 5px;
+    }
+  }
 }
 
 #update-canvas {
-  #canvas-new-module {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btn-group > .btn:first-child {
-    border-bottom-left-radius: 0;
-  }
-  .btn-group > .btn:last-child {
-    border-bottom-right-radius: 0;
+
+  .canvas-header {
+    margin-bottom: 5px;
   }
 }
 
@@ -552,9 +564,9 @@ li.module-hover {
   }
 
   .experiment-no-description {
+    @include font-h3;
     color: $color-alto;
     display: block;
-    font-size: $font-size-large;
     font-weight: bold;
     margin-top: 10px;
     text-align: center;

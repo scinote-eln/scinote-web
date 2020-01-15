@@ -47,4 +47,6 @@ class RepositoryListValue < ApplicationRecord
                                       .find(payload)
     value
   end
+
+  alias export_formatted formatted
 end

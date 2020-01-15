@@ -5,7 +5,7 @@
 //==============================================================================
 
 // Grayscale colors
-$color-white: #fff;
+/*$color-white: #fff;
 $color-alabaster: #fcfcfc;
 $color-concrete: #f2f2f2;
 $color-gainsboro: #e3e3e3;
@@ -41,7 +41,7 @@ $office-ms-powerpoint: #d24726;
 
 // MarvinJS color:
 $marvinjs-color: #29999c;
-
+*/
 //==============================================================================
 // Other
 //==============================================================================
@@ -62,14 +62,14 @@ $gray-light: $color-dove-gray;
 $gray-lighter: $color-concrete;
 
 // Scaffolding
-$body-bg: $color-concrete;
-$text-color: $color-emperor;
-$link-color: $brand-primary;
-$link-hover-color: darken($link-color, 15%);
-$link-hover-decoration: underline;
+// $body-bg: $color-concrete;
+// $text-color: $color-emperor;
+// $link-color: $brand-primary;
+// $link-hover-color: darken($link-color, 15%);
+// $link-hover-decoration: underline;
 
 // Typography
-$font-family-lato: Lato, "Open Sans", Arial, Helvetica, sans-serif;
+/*$font-family-lato: Lato, "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-sans-serif: "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
 $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -89,7 +89,7 @@ $line-height-computed: floor(($font-size-base * $line-height-base));
 $headings-font-family: inherit;
 $headings-font-weight: 500;
 $headings-line-height: 1.1;
-$headings-color: inherit;
+$headings-color: inherit;*/
 
 // Components
 $padding-base-vertical: 6px;
@@ -125,17 +125,17 @@ $btn-default-color: $gray-dark;
 $btn-default-bg: $brand-default;
 $btn-default-border: $color-silver;
 $btn-primary-color: $color-white;
-$btn-primary-bg: $brand-success;
+$btn-primary-bg: $brand-primary;
 $btn-primary-border: darken($btn-primary-bg, 5%);
 $btn-primary-new-color: $color-white;
-$btn-primary-new-bg: $brand-primary-new;
-$btn-primary-new-border: darken($brand-primary-new, 5%);
+$btn-primary-new-bg: $brand-primary;
+$btn-primary-new-border: darken($brand-primary , 5%);
 $btn-success-color: $color-white;
-$btn-success-bg: $brand-success;
+$btn-success-bg: $brand-primary;
 $btn-success-border: darken($btn-success-bg, 5%);
 $btn-info-color: $color-white;
-$btn-info-bg: $brand-info;
-$btn-info-border: darken($btn-info-bg, 5%);
+$btn-info-bg: $brand-primary;
+$btn-info-border: $brand-primary;
 $btn-warning-color: $color-white;
 $btn-warning-bg: $brand-warning;
 $btn-warning-border: darken($btn-warning-bg, 5%);

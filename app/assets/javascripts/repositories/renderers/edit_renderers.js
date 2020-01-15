@@ -14,6 +14,7 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
              type="text"
              name="repository_row[name]"
              value="${text}"
+             placeholder="${I18n.t('repositories.table.enter_row_name')}"
              data-type="RowName">
     </div>
   `);
@@ -54,6 +55,7 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
              type="text"
              name="repository_cells[${columnId}]"
              value="${text}"
+             placeholder="${I18n.t('repositories.table.text.enter_text')}"
              data-type="RepositoryTextValue">
     </div>`);
 
@@ -131,10 +133,8 @@ $.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, 
   ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell, currentValue);
 };
 
-$.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cell, $header) {
+$.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
-  let decimals = Number($header.data('metadata-decimals'));
-  let number = parseFloat(Number($cell.text()).toFixed(decimals));
 
   $cell.html(`
     <div class="form-group">
@@ -142,8 +142,8 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
              form="${formId}"
              type="number"
              name="repository_cells[${columnId}]"
-             value="${number}"
-             onchange="if (this.value !== '') { this.value = parseFloat(Number(this.value).toFixed(${decimals})); }"
+             placeholder="${I18n.t('repositories.table.number.enter_number')}"
+             value="${$cell.find('.number-value').data('full-value')}"
              data-type="RepositoryNumberValue">
     </div>`);
 };

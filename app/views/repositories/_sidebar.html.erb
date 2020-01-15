@@ -16,13 +16,11 @@
         <% repositories.each do |repository| %>
           <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
             <span class="tree-link line-wrap no-indent">
-              <% if current_page?(repository_path(repository)) %>
-                <span title="<%= repository.name %>"><%= repository.name %></span>
-              <% else %>
-                <%= link_to repository.name,
-                            repository_path(repository),
-                            data: { 'no-turbolink' => 'true' } %>
-              <% end %>
+              <%= link_to repository.name,
+                          repository_path(repository),
+                          class: current_page?(repository_path(repository)) ? 'disabled' : '',
+                          title: repository.name,
+                          data: { 'no-turbolink' => 'true', type: 'repository', id: repository.id } %>
               <%= inventory_shared_status_icon(repository, current_team) %>
             </span>
           </li>

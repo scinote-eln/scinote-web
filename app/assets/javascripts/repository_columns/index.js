@@ -8,7 +8,7 @@ var RepositoryColumns = (function() {
     RepositoryStatusValue: 'RepositoryStatusColumnType',
     RepositoryDateValue: 'RepositoryDateColumnType',
     RepositoryDateTimeValue: 'RepositoryDateTimeColumnType',
-    RepositoryTimeValue: 'RepositoryDateTimeColumnType',
+    RepositoryTimeValue: 'RepositoryTimeColumnType',
     RepositoryChecklistValue: 'RepositoryChecklistColumnType',
     RepositoryNumberValue: 'RepositoryNumberColumnType'
   };
@@ -84,14 +84,14 @@ var RepositoryColumns = (function() {
                   </div>
                   <div class="col-xs-4">
                     <span class="controlls pull-right">
-                      <button class="btn btn-default edit-repo-column manage-repo-column" 
+                      <button class="btn btn-default edit-repo-column manage-repo-column"
                               data-action="edit"
                               data-modal-url="${attributes.edit_html_url}"
                       >
                       <span class="fas fa-pencil-alt"></span>
                         ${ I18n.t('libraries.repository_columns.index.edit_column')}
                       </button>
-                      <button class="btn btn-default delete-repo-column manage-repo-column" 
+                      <button class="btn btn-default delete-repo-column manage-repo-column"
                               data-action="destroy"
                               data-modal-url="${attributes.destroy_html_url}"
                       >

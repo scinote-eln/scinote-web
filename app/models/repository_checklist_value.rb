@@ -8,18 +8,23 @@ class RepositoryChecklistValue < ApplicationRecord
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
   has_many :repository_cell_values_checklist_items, dependent: :destroy
   has_many :repository_checklist_items, through: :repository_cell_values_checklist_items
-
   accepts_nested_attributes_for :repository_cell
+
+  validates :repository_cell, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_checklist_items.data'
   SORTABLE_VALUE_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
 
-  def formatted
-    repository_checklist_items.pluck(:data).join(' | ')
+  def formatted(separator: ' | ')
+    repository_checklist_items.pluck(:data).join(separator)
+  end
+
+  def export_formatted
+    formatted(separator: "\n")
   end
 
   def data
-    repository_checklist_items.order(data: :asc).map { |i| { value: i.id, label: i.data } }
+    repository_checklist_items.map { |i| { value: i.id, label: i.data } }.sort_by { |item| item[:label] }
   end
 
   def data_changed?(new_data)

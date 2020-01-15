@@ -2,17 +2,15 @@
 
 module RepositoryDatatable
   class RepositoryNumberValueSerializer < RepositoryBaseValueSerializer
-    attributes :value_decimals
+    attributes :full_value
 
     def value
-      object.data
+      decimal_number = scope[:column].metadata.fetch('decimals') { Constants::REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS }
+      BigDecimal(object.data).round(decimal_number.to_i)
     end
 
-    def value_decimals
-      object.repository_cell
-            .repository_column
-            .metadata
-            .fetch('decimals') { Constants::REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS }
+    def full_value
+      object.data
     end
   end
 end

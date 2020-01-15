@@ -336,6 +336,7 @@ class RepositoriesController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'repository',
+      item_id: @repository.id,
       field_to_udpate: 'name',
       path_to_update: team_repository_path(@repository),
       label_after: "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"

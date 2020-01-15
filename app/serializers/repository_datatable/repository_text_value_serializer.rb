@@ -2,8 +2,15 @@
 
 module RepositoryDatatable
   class RepositoryTextValueSerializer < RepositoryBaseValueSerializer
+    include InputSanitizeHelper
+    include ActionView::Helpers::TextHelper
+    include ApplicationHelper
+
     def value
-      object.data
+      @user = scope[:user]
+      custom_auto_link(object.data,
+                       simple_format: true,
+                       team: scope[:team])
     end
   end
 end

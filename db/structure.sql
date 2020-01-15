@@ -4898,10 +4898,24 @@ CREATE INDEX index_repository_number_values_on_data ON public.repository_number_
 
 
 --
+-- Name: index_repository_number_values_on_data_text; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_data_text ON public.repository_number_values USING gin (((data)::text) public.gin_trgm_ops);
+
+
+--
 -- Name: index_repository_number_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.repository_number_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_rows_on_id_text; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_id_text ON public.repository_rows USING gin (((id)::text) public.gin_trgm_ops);
 
 
 --
@@ -7161,4 +7175,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191205133522'),
 ('20191206105058'),
 ('20191210103004'),
-('20191218072619');
+('20191218072619'),
+('20200113143828');

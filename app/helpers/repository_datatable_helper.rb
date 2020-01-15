@@ -6,15 +6,13 @@ module RepositoryDatatableHelper
   def prepare_row_columns(repository_rows,
                           repository,
                           columns_mappings,
-                          _team,
-                          assigned_rows)
+                          team)
     parsed_records = []
-    includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
 
-    repository_rows.includes(includes_json).each do |record|
+    repository_rows.each do |record|
       row = {
         'DT_RowId': record.id,
-        '1': assigned_row(record, assigned_rows),
+        '1': assigned_row(record),
         '2': record.id,
         '3': escape_input(record.name),
         '4': I18n.l(record.created_at, format: :full),
@@ -36,18 +34,28 @@ module RepositoryDatatableHelper
       # Add custom columns
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell)
+          display_cell_value(cell, team)
       end
       parsed_records << row
     end
     parsed_records
   end
 
-  def assigned_row(record, assigned_rows)
-    if assigned_rows&.include?(record)
-      "<span class='circle-icon'>&nbsp;</span>"
+  def assigned_row(record)
+    if @my_module
+      if record.assigned_my_modules_count.positive?
+        "<span class='circle-icon'>&nbsp;</span>"
+      else
+        "<span class='circle-icon disabled'>&nbsp;</span>"
+      end
+    elsif record.assigned_my_modules_count.positive?
+      tooltip = "#{record.assigned_my_modules_count} tasks,&#10;#{record.assigned_experiments_count} " \
+      "experiments,&#10;#{record.assigned_projects_count} projects"
+
+      "<div class='assign-counter-container' title='#{tooltip}'>"\
+      "<span class='assign-counter has-assigned'>#{record.assigned_my_modules_count}</span></div>"
     else
-      "<span class='circle-icon disabled'>&nbsp;</span>"
+      "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>"
     end
   end
 
@@ -66,8 +74,12 @@ module RepositoryDatatableHelper
     Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
   end
 
-  def display_cell_value(cell)
-    "RepositoryDatatable::#{cell.repository_column.data_type}Serializer"
-      .constantize.new(cell.value).serializable_hash
+  def display_cell_value(cell, team)
+    value_name = cell.repository_column.data_type.underscore
+    serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
+    serializer_class.new(
+      cell.__send__(value_name),
+      scope: { team: team, user: current_user, column: cell.repository_column }
+    ).serializable_hash
   end
 end
