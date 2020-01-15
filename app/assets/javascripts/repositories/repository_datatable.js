@@ -382,7 +382,7 @@ var RepositoryDatatable = (function(global) {
   function dataTableInit() {
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'main-actions'<'toolbar'><'filter-container'f>>t<'pagination-row'<'pagination-info'li><'pagination-actions'p>>",
+      dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       stateSave: true,
       processing: true,
       serverSide: true,
@@ -516,6 +516,8 @@ var RepositoryDatatable = (function(global) {
         });
       },
       fnInitComplete: function() {
+        var tableLengthSelect = $('.dataTables_length select')
+        var tableFilterInput = $('.dataTables_filter input')
         initRowSelection();
         bindExportActions();
         disableCheckboxToggleOnAssetDownload();
@@ -537,7 +539,34 @@ var RepositoryDatatable = (function(global) {
           initCancelButton();
         }
 
-        $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
+        if ($('.repository-show').length) {
+          $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
+        }
+
+        if (tableLengthSelect.val() == null) {
+          tableLengthSelect.val(10).change();
+        }
+        $.each(tableLengthSelect.find('option'), (i, option) => {
+          option.innerHTML = I18n.t('repositories.index.show_per_page', { number: option.value });
+        })
+        $('.dataTables_length').append(tableLengthSelect).find('label').remove();
+        dropdownSelector.init(tableLengthSelect, {
+          noEmptyOption: true,
+          singleSelect: true,
+          closeOnSelect: true,
+          selectAppearance: 'simple'
+        })
+
+        tableFilterInput.attr('placeholder', I18n.t('repositories.index.filter_inventory'))
+          .addClass('sci-input-field')
+          .css('margin', 0);
+        $('.dataTables_filter').append(`
+            <div class="sci-input-container left-icon">
+              <i class="fas fa-search"></i>
+            </div>`).find('.sci-input-container').prepend(tableFilterInput)
+        $('.dataTables_filter').find('label').remove();
+
+        $('.main-actions, .pagination-row').removeClass('hidden');
       }
     });
 

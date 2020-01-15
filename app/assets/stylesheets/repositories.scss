@@ -166,7 +166,12 @@
       }
 
       .dataTables_length {
-        margin-right: 10px;
+        margin-right: 24px;
+        width: 170px;
+
+        .dropdown-selector-container {
+          width: inherit;
+        }
 
         label {
           margin-bottom: 0;
