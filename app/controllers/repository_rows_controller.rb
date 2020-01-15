@@ -147,7 +147,7 @@ class RepositoryRowsController < ApplicationController
 
   def copy_records
     duplicate_service = RepositoryActions::DuplicateRows.new(
-      current_user, @repository, params[:selected_rows]
+      current_user, @repository, copy_records_params
     )
     duplicate_service.call
     render json: {
@@ -221,6 +221,11 @@ class RepositoryRowsController < ApplicationController
 
   def selected_params
     params.permit(selected_rows: []).to_h[:selected_rows]
+  end
+
+  def copy_records_params
+    process_ids = params[:selected_rows].map(&:to_i).uniq
+    @repository.repository_rows.where(id: process_ids).pluck(:id)
   end
 
   def load_available_rows(query)

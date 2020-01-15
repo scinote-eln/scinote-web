@@ -981,7 +981,7 @@ class TeamImporter
     if repository_cell.value_type == 'RepositoryChecklistValue'
       value_json['repository_value_checklist'].each do |item|
         item_id = find_checklist_item_id(item['repository_checklist_item_id']).to_i
-        RepositoryCellValuesChecklistItem.create!(repository_checklist_value: repository_value,
+        RepositoryChecklistItemsValue.create!(repository_checklist_value: repository_value,
                                                   repository_checklist_item_id: item_id)
       end
     end

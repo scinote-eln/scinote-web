@@ -3,9 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe RepositoryChecklistValue, type: :model do
+  let(:repository_checklist_item) { build :repository_checklist_item }
   let(:repository_checklist_value) { build :repository_checklist_value }
 
   it 'is valid' do
+    repository_checklist_value.repository_checklist_items << repository_checklist_item
     expect(repository_checklist_value).to be_valid
   end
 
