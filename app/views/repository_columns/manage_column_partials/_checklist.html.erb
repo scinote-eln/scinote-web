@@ -10,7 +10,7 @@
     <%= t('libraries.manange_modal_column.list_type.delimiter_label') %>
   </label>
   <div class="col-sm-9">
-    <%= select_tag('delimiter', options_for_select(delimiters, selected_delimiter), class: 'form-control delimiter',disabled: !column.new_record?) %>
+    <%= select_tag('delimiter', options_for_select(delimiters, selected_delimiter), class: 'form-control delimiter', disabled: !column.new_record?) %>
   </div>
 </div>
 <div class="form-group">
