@@ -75,8 +75,6 @@ $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cel
              placeholder="${I18n.t('repositories.table.number.enter_number')}"
              data-type="RepositoryNumberValue">
     </div>`);
-
-  SmartAnnotation.init($cell.find('input'));
 };
 
 $.fn.dataTable.render.newRepositoryDateTimeValue = function(formId, columnId, $cell) {

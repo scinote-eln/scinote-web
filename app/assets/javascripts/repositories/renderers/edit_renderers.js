@@ -143,7 +143,7 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
              type="number"
              name="repository_cells[${columnId}]"
              placeholder="${I18n.t('repositories.table.number.enter_number')}"
-             value="${$cell.find('.number-value').data('full-value')}"
+             value="${$cell.find('.number-value').data('value')}"
              data-type="RepositoryNumberValue">
     </div>`);
 };
