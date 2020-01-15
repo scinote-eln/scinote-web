@@ -30,8 +30,6 @@ module RepositoryColumns
 
       ActiveRecord::Base.transaction do
         to_be_deleted.each do |item|
-          value_ids = @column.repository_list_items.find_by(data: item).repository_list_values.pluck(:id)
-          RepositoryCell.where('value_type = ? AND value_id IN (?)', 'RepositoryListValue', value_ids).destroy_all
           @column.repository_list_items.find_by(data: item).destroy!
         end
 
