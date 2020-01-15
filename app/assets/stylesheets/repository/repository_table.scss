@@ -65,6 +65,10 @@
         background-color: $color-alto;
       }
     }
+
+    .circle-icon {
+      margin-left: 30px;
+    }
   }
 
   // Checklists
@@ -104,7 +108,8 @@
           display: inline-block;
         }
 
-        .assign-counter-container {
+        .assign-counter-container,
+        .circle-icon {
           margin-left: 0;
         }
       }
@@ -123,7 +128,8 @@
             display: none;
           }
 
-          .assign-counter-container {
+          .assign-counter-container,
+          .circle-icon {
             margin-left: 30px;
           }
         }
