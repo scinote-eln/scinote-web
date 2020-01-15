@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryListItem < ApplicationRecord
-  has_many :repository_list_values, inverse_of: :repository_list_item
+  has_many :repository_list_values, inverse_of: :repository_list_item, dependent: :destroy
   belongs_to :repository, inverse_of: :repository_list_items
   belongs_to :repository_column, inverse_of: :repository_list_items
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
