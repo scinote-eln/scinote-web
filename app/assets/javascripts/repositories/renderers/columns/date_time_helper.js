@@ -134,21 +134,28 @@ var DateTimeHelper = (function() {
 
   function dateInputField(value, dateDataValue) {
     return `
-       <input class="form-control editing calendar-input date-part" 
-              type="datetime"
-              data-datetime-part="date"
-              data-selected-date="${dateDataValue}"
-              value='${value}'/>     
+      <div class="sci-input-container date-container right-icon">
+        <input class="calendar-input date-part sci-input-field" 
+                type="datetime"
+                placeholder="${formatJS}"
+                data-datetime-part="date"
+                data-selected-date="${dateDataValue}"
+                value='${value}'/>
+        <i class="fas fa-calendar-alt"></i>
+      </div>
     `;
   }
 
   function timeInputField(value) {
     return `
-      <input class="form-control editing time-part" 
-             type="text"
-             data-mask-type="time" 
-             value='${value}'
-             placeholder="HH:mm"/>
+      <div class="sci-input-container time-container right-icon">
+        <input class="time-part sci-input-field" 
+               type="text"
+               data-mask-type="time" 
+               value='${value}'
+               placeholder="HH:mm"/>
+        <i class="fas fa-clock"></i>
+      </div>
     `;
   }
 
@@ -176,6 +183,16 @@ var DateTimeHelper = (function() {
     return timeStr;
   }
 
+  function initCurrentTimeSelector($cell) {
+    $cell.find('.time-container .fa-clock').click(function() {
+      var inputField = $(this).prev();
+      var d = new Date();
+      var h = addLeadingZero(d.getHours());
+      var m = addLeadingZero(d.getMinutes());
+      inputField.val(h + ':' + m).change();
+    });
+  }
+
   function initDateTimeEditMode(formId, columnId, $cell, mode, columnType) {
     let $span = $cell.find('span').first();
     let date = $span.data('date');
@@ -194,6 +211,7 @@ var DateTimeHelper = (function() {
   `;
 
     $cell.html(inputFields);
+    initCurrentTimeSelector($cell);
 
     Inputmask('datetime', {
       inputFormat: 'HH:MM',
@@ -230,6 +248,7 @@ var DateTimeHelper = (function() {
         ${dateInputField(startDate, startDateDataValue)}
         ${timeInputField(startTime)}   
       </div>
+      <div class="separator">—</div>
       <div class="end-time ${mode}"
            data-current-datetime="${endDatetime}">
         ${dateInputField(endDate, endDateDataValue)}
@@ -239,6 +258,7 @@ var DateTimeHelper = (function() {
   `;
 
     $cell.html(inputFields);
+    initCurrentTimeSelector($cell);
 
     Inputmask('datetime', {
       inputFormat: 'HH:MM',

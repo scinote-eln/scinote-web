@@ -46,9 +46,10 @@ $.fn.dataTable.render.RepositoryDateTimeValueValidator = function($input) {
   if (($date.val() === '') === ($time.val() === '')) {
     return true;
   }
-
-  $container.addClass('has-error');
-  $container.append('<span class="help-block">Set both or none</span>');
+  $container.find('.date-container')
+    .addClass('error')
+    .attr('data-error-text', I18n.t('repositories.table.date_time.errors.set_all_or_none'));
+  $container.find('.time-container').addClass('error');
   return false;
 };
 
@@ -94,8 +95,9 @@ $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
     return true;
   }
 
-  $container.addClass('has-error');
-  $container.append(`<span class="help-block">${errorMessage}</span>`);
+  $container.find('.date-container').addClass('error');
+  $container.find('.time-container').addClass('error');
+  $container.find('.date-container').first().attr('data-error-text', errorMessage);
   return false;
 };
 
@@ -124,8 +126,8 @@ $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
     return true;
   }
 
-  $container.addClass('has-error');
-  $container.append(`<span class="help-block">${errorMessage}</span>`);
+  $container.find('.date-container').addClass('error');
+  $container.find('.date-container').first().attr('data-error-text', errorMessage);
   return false;
 };
 
@@ -146,7 +148,8 @@ $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
   if (isValid) {
     return true;
   }
-  $container.addClass('has-error');
-  $container.append(`<span class="help-block">${errorMessage}</span>`);
+
+  $container.find('.time-container').addClass('error');
+  $container.find('.time-container').first().attr('data-error-text', errorMessage);
   return false;
 };
