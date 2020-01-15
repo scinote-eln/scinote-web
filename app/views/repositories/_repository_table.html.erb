@@ -8,7 +8,7 @@
     data-delete-record="<%= repository_delete_records_path(repository) %>"
     data-copy-records="<%= repository_copy_records_path(repository) %>"
     data-direct-upload-url="<%= rails_direct_uploads_url %>"
-    data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
+    data-max-dropdown-length="<%= Constants::MODAL_TEXT_MAX_LENGTH %>"
     data-repository-columns-ids="<%= repository.available_columns_ids %>"
     data-save-text="<%= I18n.t('general.save') %>"
     data-edit-text="<%= I18n.t('general.edit') %>"
@@ -36,6 +36,8 @@
             class="repository-column"
             id="<%= column.id %>"
             data-type="<%= column.data_type %>"
+            data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
+            data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>
             <% end %>

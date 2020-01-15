@@ -1,7 +1,13 @@
-/* global I18n HelperModule animateSpinner RepositoryListColumnType */
-/* global RepositoryStatusColumnType dropdownSelector */
+/* global I18n HelperModule truncateLongString animateSpinner RepositoryListColumnType */
+/* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector */
 /* eslint-disable no-restricted-globals */
+
+//= require jquery-ui/widgets/sortable
+
 var RepositoryColumns = (function() {
+  var TABLE_ID = '';
+  var TABLE = null;
+  var columnsList = '#repository-columns-list';
   var manageModal = '#manage-repository-column';
   var columnTypeClassNames = {
     RepositoryListValue: 'RepositoryListColumnType',
@@ -13,6 +19,25 @@ var RepositoryColumns = (function() {
     RepositoryNumberValue: 'RepositoryNumberColumnType'
   };
 
+  function reloadDataTablePartial() {
+    // Append buttons for inventory datatable
+    $('div.toolbarButtonsDatatable').appendTo('.repository-show');
+    $('div.toolbarButtonsDatatable').hide();
+
+    // destroy datatable and remove partial
+    TABLE.destroy();
+    $('.repository-table').remove();
+
+    // reload datatable partial and intialize DataTable
+    $.get($('.repository-show').data('table-url'), (response) => {
+      $(response.html).appendTo($('.repository-show'));
+      RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
+      RepositoryDatatable.redrawTableOnSidebarToggle();
+      // show manage columns index modal
+      $(manageModal).find('.back-to-column-modal').trigger('click');
+    });
+  }
+
   function initColumnTypeSelector() {
     var $manageModal = $(manageModal);
     $manageModal.on('change', '#repository-column-data-type', function() {
@@ -21,26 +46,18 @@ var RepositoryColumns = (function() {
     });
   }
 
-  function removeElementFromDom(column) {
-    $('.repository-column-edtior .list-group-item[data-id="' + column.id + '"]').remove();
-    if ($('.list-group-item').length === 0) {
-      location.reload();
-    }
-  }
-
   function initDeleteSubmitAction() {
     var $manageModal = $(manageModal);
     $manageModal.on('click', '#delete-repo-column-submit', function() {
       animateSpinner();
-      $manageModal.modal('hide');
       $.ajax({
         url: $(this).data('delete-url'),
         type: 'DELETE',
         dataType: 'json',
         success: (result) => {
-          removeElementFromDom(result);
-          HelperModule.flashAlertMsg(result.message, 'success');
+          reloadDataTablePartial();
           animateSpinner(null, false);
+          HelperModule.flashAlertMsg(result.message, 'success');
         },
         error: (result) => {
           animateSpinner(null, false);
@@ -75,45 +92,6 @@ var RepositoryColumns = (function() {
     return allParams;
   }
 
-  function insertNewListItem(column) {
-    var attributes = column.attributes;
-    var html = `<li class="list-group-item row" data-id="${column.id}">
-
-                  <div class="col-xs-8">
-                    <span class="pull-left column-name">${attributes.name}</span>
-                  </div>
-                  <div class="col-xs-4">
-                    <span class="controlls pull-right">
-                      <button class="btn btn-default edit-repo-column manage-repo-column"
-                              data-action="edit"
-                              data-modal-url="${attributes.edit_html_url}"
-                      >
-                      <span class="fas fa-pencil-alt"></span>
-                        ${ I18n.t('libraries.repository_columns.index.edit_column')}
-                      </button>
-                      <button class="btn btn-default delete-repo-column manage-repo-column"
-                              data-action="destroy"
-                              data-modal-url="${attributes.destroy_html_url}"
-                      >
-                        <span class="fas fa-trash-alt"></span>
-                        ${ I18n.t('libraries.repository_columns.index.delete_column')}
-                      </button>
-                    </span>
-                  </div>
-                </li>`;
-
-    // remove element if already persent
-    $('[data-id="' + column.id + '"]').remove();
-    $(html).insertBefore('.repository-columns-body ul li:first');
-    // remove 'no column' list item
-    $('[data-attr="no-columns"]').remove();
-  }
-
-  function updateListItem(column) {
-    var name = column.attributes.name;
-    $('li[data-id=' + column.id + ']').find('span').first().html(name);
-  }
-
   function initCreateSubmitAction() {
     var $manageModal = $(manageModal);
     $manageModal.on('click', '#new-repo-column-submit', function() {
@@ -129,10 +107,8 @@ var RepositoryColumns = (function() {
         data: JSON.stringify(params),
         contentType: 'application/json',
         success: function(result) {
-          var data = result.data;
-          insertNewListItem(data);
-          HelperModule.flashAlertMsg(data.attributes.message, 'success');
-          $manageModal.modal('hide');
+          reloadDataTablePartial();
+          HelperModule.flashAlertMsg(result.data.attributes.message, 'success');
         },
         error: function(error) {
           $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
@@ -157,10 +133,8 @@ var RepositoryColumns = (function() {
         dataType: 'json',
         contentType: 'application/json',
         success: function(result) {
-          var data = result.data;
-          updateListItem(data);
-          HelperModule.flashAlertMsg(data.attributes.message, 'success');
-          $manageModal.modal('hide');
+          reloadDataTablePartial();
+          HelperModule.flashAlertMsg(result.data.attributes.message, 'success');
         },
         error: function(error) {
           $('#new-repository-column').renderFormErrors('repository_column', error.responseJSON.repository_column, true);
@@ -169,14 +143,14 @@ var RepositoryColumns = (function() {
     });
   }
 
-  function initManageColumnModal() {
+  function initManageColumnAction() {
     var $manageModal = $(manageModal);
-    $('.repository-column-edtior').on('click', '.manage-repo-column', function() {
+    $manageModal.on('click', '.manage-repo-column', function() {
       var button = $(this);
       var modalUrl = button.data('modal-url');
       var columnType;
       $.get(modalUrl, (data) => {
-        $manageModal.modal('show').find('.modal-content').html(data.html)
+        $manageModal.find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
         columnType = $('#repository-column-data-type').val();
@@ -203,14 +177,189 @@ var RepositoryColumns = (function() {
     });
   }
 
+  function generateColumnNameTooltip(name) {
+    var maxLength = $(TABLE_ID).data('max-dropdown-length');
+    if ($.trim(name).length > maxLength) {
+      return `<div class="modal-tooltip">
+                ${truncateLongString(name, maxLength)}
+                <span class="modal-tooltiptext">${name}</span>
+              </div>`;
+    }
+    return name;
+  }
+
+  function toggleColumnVisibility() {
+    var lis = $(columnsList).find('.vis');
+    lis.on('click', function(event) {
+      var self = $(this);
+      var li = self.closest('li');
+      var column = TABLE.column(li.attr('data-position'));
+
+      event.stopPropagation();
+
+      if (column.header.id !== 'row-name') {
+        if (column.visible()) {
+          self.addClass('fa-eye-slash');
+          self.removeClass('fa-eye');
+          li.addClass('col-invisible');
+          column.visible(false);
+          TABLE.setColumnSearchable(column.index(), false);
+        } else {
+          self.addClass('fa-eye');
+          self.removeClass('fa-eye-slash');
+          li.removeClass('col-invisible');
+          column.visible(true);
+          TABLE.setColumnSearchable(column.index(), true);
+        }
+      }
+      // Re-filter/search if neccesary
+      let searchText = $('div.dataTables_filter input').val();
+      if (!_.isEmpty(searchText)) {
+        TABLE.search(searchText).draw();
+      }
+    });
+  }
+
+  function getColumnTypeText(el, colId) {
+    var colType = '';
+    switch (colId) {
+      case 'row-id':
+        colType = 'RepositoryNumberValue';
+        break;
+      case 'row-name':
+        colType = 'RepositoryTextValue';
+        break;
+      case 'added-on':
+        colType = 'RepositoryDateTimeValue';
+        break;
+      case 'added-by':
+        colType = 'RepositoryListValue';
+        break;
+      default:
+        colType = $(el).attr('data-type');
+    }
+    return I18n.t('libraries.manange_modal_column.select.' + colType.split(/(?=[A-Z])/).join('_').toLowerCase());
+  }
+
+  // loads the columns names in the manage columns modal index
+  function loadColumnsNames() {
+    var $columnsList = $(columnsList);
+    var scrollPosition = $columnsList.scrollTop();
+    // Clear the list
+    $columnsList.find('li[data-position]').remove();
+    _.each(TABLE.columns().header(), function(el, index) {
+      if (index > 1) {
+        let colId = $(el).attr('id');
+        let colIndex = $(el).attr('data-column-index');
+        let visible = TABLE.column(colIndex).visible();
+        let visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
+        let visLi = (visible) ? '' : 'col-invisible';
+        let visText = $(TABLE_ID).data('columns-visibility-text');
+        let editLi = ($(el).attr('data-type')) ? 'editable' : '';
+        let editUrl = $(el).attr('data-edit-column-url');
+        let destroyUrl = $(el).attr('data-destroy-column-url');
+        let thederName;
+        if ($(el).find('.modal-tooltiptext').length > 0) {
+          thederName = $(el).find('.modal-tooltiptext').text();
+        } else {
+          thederName = el.innerText;
+        }
+        if (thederName === 'Name') {
+          visClass = '';
+          visText = '';
+        }
+        let listItem = `<li class="col-list-el ${visLi} ${editLi}" data-position="${colIndex}" data-id="${colId}">
+          <i class="grippy"></i>
+          <span class="vis-controls">
+            <span class="vis fas ${visClass}" title="${visText}"></span>
+          </span>
+          <span class="text">${generateColumnNameTooltip(thederName)}</span>
+          <span class="column-type pull-right ${editLi}">${getColumnTypeText(el, colId)}</span>
+          <span class="sci-btn-group manage-controls pull-right ${editLi}">
+            <button class="btn icon-btn btn-light edit-repo-column manage-repo-column"
+                    data-action="edit"
+                    data-modal-url="${editUrl}">
+              <span class="fas fa-pencil-alt" title="Edit"></span>
+            </button>
+            <button class="btn icon-btn btn-light delete-repo-column manage-repo-column"
+                    data-action="destroy"
+                    data-modal-url="${destroyUrl}">
+              <span class="fas fa-trash" title="Delete"></span>
+            </button>
+          </span>
+          <br>
+        </li>`;
+
+        $columnsList.append(listItem);
+      }
+    });
+    $columnsList.scrollTop(scrollPosition);
+    toggleColumnVisibility();
+  }
+
+  function initSorting() {
+    var $columnsList = $(columnsList);
+    $columnsList.sortable({
+      items: 'li',
+      scrollSpeed: 10,
+      axis: 'y',
+      update: function() {
+        var reorderer = TABLE.colReorder;
+        var listIds = [];
+        // We skip first two columns
+        listIds.push(0, 1);
+        $columnsList.find('li[data-position]').each(function() {
+          listIds.push($(this).first().data('position'));
+        });
+        reorderer.order(listIds, false);
+        loadColumnsNames();
+      }
+    });
+  }
+
+  function initManageColumnModal(button) {
+    var modalUrl = button.data('modal-url');
+    $.get(modalUrl, (data) => {
+      // show modal
+      $(manageModal).modal('show').find('.modal-content').html(data.html);
+
+      TABLE_ID = '#repository-table-' + data.id;
+      TABLE = $(TABLE_ID).DataTable();
+
+      initSorting();
+      toggleColumnVisibility();
+      loadColumnsNames();
+      RepositoryDatatable.checkAvailableColumns();
+    }).fail(function() {
+      HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
+    });
+  }
+
+  function initBackToManageColumns() {
+    var $manageModal = $(manageModal);
+    $manageModal.on('click', '.back-to-column-modal', function() {
+      var button = $(this);
+      initManageColumnModal(button);
+    });
+  }
+
+  function initColumnsButton() {
+    $('.repo-datatables-buttons').on('click', '.manage-repo-column-index', function() {
+      var button = $(this);
+      initManageColumnModal(button);
+    });
+  }
+
   return {
     init: () => {
-      if ($('.repository-columns-header').length > 0) {
+      if ($('.repo-datatables-buttons').length > 0) {
         initColumnTypeSelector();
-        initEditSubmitAction();
         initCreateSubmitAction();
+        initEditSubmitAction();
         initDeleteSubmitAction();
-        initManageColumnModal();
+        initBackToManageColumns();
+        initColumnsButton();
+        initManageColumnAction();
         RepositoryListColumnType.init();
         RepositoryStatusColumnType.init();
         RepositoryChecklistColumnType.init();

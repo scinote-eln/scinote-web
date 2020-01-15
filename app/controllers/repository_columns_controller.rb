@@ -3,7 +3,7 @@ class RepositoryColumnsController < ApplicationController
   include RepositoryColumnsHelper
 
   ACTIONS = %i(
-    create index create_html available_asset_type_columns available_columns
+    create index_html create_html available_asset_type_columns available_columns
   ).freeze
   before_action :load_vars,
                 except: ACTIONS
@@ -12,10 +12,16 @@ class RepositoryColumnsController < ApplicationController
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions,
                 except: ACTIONS
-  before_action :load_repository_columns, only: :index
   before_action :load_asset_type_columns, only: :available_asset_type_columns
 
-  def index; end
+  def index_html
+    render json: {
+      id: @repository.id,
+      html: render_to_string(
+        partial: 'repository_columns/manage_column_modal_index.html.erb'
+      )
+    }
+  end
 
   def create_html
     @repository_column = RepositoryColumn.new
@@ -176,11 +182,6 @@ class RepositoryColumnsController < ApplicationController
   def load_vars_nested
     @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
     render_404 unless @repository
-  end
-
-  def load_repository_columns
-    @repository_columns = @repository.repository_columns
-                                     .order(created_at: :desc)
   end
 
   def load_asset_type_columns
