@@ -217,9 +217,6 @@ class Asset < ApplicationRecord
   end
 
   def post_process_file(team = nil)
-    # Update self.empty
-    update(file_present: true)
-
     # Extract asset text if it's of correct type
     if text?
       Rails.logger.info "Asset #{id}: Creating extract text job"
