@@ -80,6 +80,14 @@
     }
   }
 
+  .checklist-dropdown span  {
+    color: $brand-primary;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   // DateTime
   .datetime-container {
     display: flex;

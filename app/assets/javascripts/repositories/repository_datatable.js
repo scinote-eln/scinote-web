@@ -48,7 +48,6 @@ var RepositoryDatatable = (function(global) {
     if (currentMode === 'viewMode') {
       $(TABLE_WRAPPER_ID).removeClass('editing');
       $('#saveCancel').hide();
-      $('#editDeleteCopy').show();
       $('#addRepositoryRecord').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
       $('#repository-acitons-dropdown').prop('disabled', false);
@@ -63,6 +62,7 @@ var RepositoryDatatable = (function(global) {
         $('#deleteRepositoryRecordsButton').prop('disabled', true);
         $('#assignRepositoryRecords').prop('disabled', true);
         $('#unassignRepositoryRecords').prop('disabled', true);
+        $('#editDeleteCopy').hide();
       } else {
         if (rowsSelected.length === 1) {
           $('#editRepositoryRecord').prop('disabled', false);
@@ -74,6 +74,7 @@ var RepositoryDatatable = (function(global) {
         $('#copyRepositoryRecords').prop('disabled', false);
         $('#assignRepositoryRecords').prop('disabled', false);
         $('#unassignRepositoryRecords').prop('disabled', false);
+        $('#editDeleteCopy').show();
       }
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
