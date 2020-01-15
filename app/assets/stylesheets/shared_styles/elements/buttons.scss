@@ -131,10 +131,13 @@
   }
 
   &:disabled {
-    background: $color-alto;
     border: $border-tertiary;
     color: $color-silver-chalice;
     opacity: .5;
+
+    &.btn-primary {
+      background: $color-alto;
+    }
 
     &.btn-secondary,
     &.btn-light {

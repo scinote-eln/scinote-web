@@ -52,3 +52,79 @@
     }
   }
 }
+
+
+.dataTables_paginate {
+  .paginate_button {
+    background-color: transparent;
+    display: inline-block;
+    line-height: 36px;
+    margin-left: 4px;
+    min-width: 36px;
+    position: relative;
+    text-align: center;
+
+    a {
+      background-color: inherit;
+      border: 1px solid transparent;
+      border-radius: $border-radius-default;
+      color: inherit;
+      outline: 0;
+
+      &:hover,
+      &:focus {
+        background-color: inherit;
+        border: 1px solid transparent;
+        outline: 0;
+      }
+    }
+
+    &:focus {
+      outline: 0;
+    }
+
+    &.active {
+      a {
+        background-color: inherit;
+        border: 1px solid $brand-primary;
+        color: inherit;
+
+        &:hover,
+        &:focus {
+          background-color: inherit;
+          color: inherit;
+        }
+      }
+    }
+
+    &.previous {
+      &::before {
+        @include font-awesome;
+        content: $font-fas-angle-left;
+        left: 0;
+        line-height: 36px;
+        padding: 0 8px;
+        position: absolute;
+      }
+
+      a {
+        padding-left: 23px;
+      }
+    }
+
+    &.next {
+      &::before {
+        @include font-awesome;
+        content: $font-fas-angle-right;
+        line-height: 36px;
+        padding: 0 8px;
+        position: absolute;
+        right: 0;
+      }
+
+      a {
+        padding-right: 23px;
+      }
+    }
+  }
+}
