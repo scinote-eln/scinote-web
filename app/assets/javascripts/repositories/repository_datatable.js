@@ -55,6 +55,7 @@ var RepositoryDatatable = (function(global) {
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', false);
       $('th').removeClass('disable-click');
       $('.repository-row-selector').prop('disabled', false);
+      $('.dataTables_filter input').prop('disabled', false);
       if (rowsSelected.length === 0) {
         $('#exportRepositoriesButton').addClass('disabled');
         $('#copyRepositoryRecords').prop('disabled', true);
@@ -88,6 +89,7 @@ var RepositoryDatatable = (function(global) {
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
       $('th').addClass('disable-click');
       $('.repository-row-selector').prop('disabled', true);
+      $('.dataTables_filter input').prop('disabled', true);
     }
   }
 
