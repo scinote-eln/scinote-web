@@ -25,7 +25,7 @@ module RepositoryColumns
                 .call(user: current_user,
                       team: current_team,
                       column: @repository_column,
-                      params: repository_column_params)
+                      params: repository_column_update_params)
 
       if service.succeed?
         render json: service.column, status: :ok, editing: true
@@ -65,6 +65,12 @@ module RepositoryColumns
       params
         .require(:repository_column)
         .permit(:name, metadata: [:delimiter], repository_checklist_items_attributes: %i(data))
+    end
+
+    def repository_column_update_params
+      params
+        .require(:repository_column)
+        .permit(:name, repository_checklist_items_attributes: %i(data))
     end
 
     def delimiters

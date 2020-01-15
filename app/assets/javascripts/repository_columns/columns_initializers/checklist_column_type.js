@@ -31,6 +31,7 @@ var RepositoryChecklistColumnType = (function() {
           delimiterDropdown,
           dropdownOptions
         );
+        $('.changing-existing-list-items-warning').removeClass('hidden');
         initChecklistDropdown();
       })
       .on('change', delimiterDropdown, function() {
