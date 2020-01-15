@@ -189,7 +189,7 @@ var DateTimeHelper = (function() {
       var d = new Date();
       var h = addLeadingZero(d.getHours());
       var m = addLeadingZero(d.getMinutes());
-      inputField.val(h + ':' + m);
+      inputField.val(h + ':' + m).change();
     });
   }
 
