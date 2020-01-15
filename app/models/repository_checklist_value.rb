@@ -44,11 +44,9 @@ class RepositoryChecklistValue < ApplicationRecord
 
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
-    value.repository_cell
-         .repository_column
-         .repository_checklist_items.where(id: JSON.parse(payload)).find_each do |item|
-      value.repository_checklist_items_values.new(repository_checklist_item: item)
-    end
+    value.repository_checklist_items = value.repository_cell
+                                            .repository_column
+                                            .repository_checklist_items.where(id: JSON.parse(payload))
     value
   end
 end
