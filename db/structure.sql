@@ -214,14 +214,9 @@ CREATE TABLE public.assets (
     id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    file_file_name character varying,
-    file_content_type character varying,
-    file_file_size bigint,
-    file_updated_at timestamp without time zone,
     created_by_id bigint,
     last_modified_by_id bigint,
     estimated_size integer DEFAULT 0 NOT NULL,
-    file_present boolean DEFAULT false NOT NULL,
     lock character varying(1024),
     lock_ttl integer,
     version integer DEFAULT 1,
@@ -528,10 +523,6 @@ CREATE TABLE public.experiments (
     restored_on timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    workflowimg_file_name character varying,
-    workflowimg_content_type character varying,
-    workflowimg_file_size bigint,
-    workflowimg_updated_at timestamp without time zone,
     uuid uuid
 );
 
@@ -1143,38 +1134,6 @@ ALTER SEQUENCE public.repository_asset_values_id_seq OWNED BY public.repository_
 
 
 --
--- Name: repository_cell_values_checklist_items; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repository_cell_values_checklist_items (
-    id bigint NOT NULL,
-    repository_checklist_item_id bigint NOT NULL,
-    repository_checklist_value_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: repository_cell_values_checklist_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repository_cell_values_checklist_items_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: repository_cell_values_checklist_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repository_cell_values_checklist_items_id_seq OWNED BY public.repository_cell_values_checklist_items.id;
-
-
---
 -- Name: repository_cells; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1241,6 +1200,38 @@ CREATE SEQUENCE public.repository_checklist_items_id_seq
 --
 
 ALTER SEQUENCE public.repository_checklist_items_id_seq OWNED BY public.repository_checklist_items.id;
+
+
+--
+-- Name: repository_checklist_items_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_checklist_items_values (
+    id bigint NOT NULL,
+    repository_checklist_value_id bigint,
+    repository_checklist_item_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_checklist_items_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_checklist_items_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_checklist_items_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_checklist_items_values_id_seq OWNED BY public.repository_checklist_items_values.id;
 
 
 --
@@ -2288,11 +2279,7 @@ CREATE TABLE public.temp_files (
     id bigint NOT NULL,
     session_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    file_file_name character varying,
-    file_content_type character varying,
-    file_file_size bigint,
-    file_updated_at timestamp without time zone
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2321,10 +2308,6 @@ ALTER SEQUENCE public.temp_files_id_seq OWNED BY public.temp_files.id;
 
 CREATE TABLE public.tiny_mce_assets (
     id bigint NOT NULL,
-    image_file_name character varying,
-    image_content_type character varying,
-    image_file_size bigint,
-    image_updated_at timestamp without time zone,
     estimated_size integer DEFAULT 0 NOT NULL,
     team_id integer,
     created_at timestamp without time zone NOT NULL,
@@ -2591,10 +2574,6 @@ CREATE TABLE public.users (
     last_sign_in_ip character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    avatar_file_name character varying,
-    avatar_content_type character varying,
-    avatar_file_size bigint,
-    avatar_updated_at timestamp without time zone,
     confirmation_token character varying,
     confirmed_at timestamp without time zone,
     confirmation_sent_at timestamp without time zone,
@@ -2772,10 +2751,6 @@ CREATE TABLE public.zip_exports (
     user_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    zip_file_file_name character varying,
-    zip_file_content_type character varying,
-    zip_file_file_size bigint,
-    zip_file_updated_at timestamp without time zone,
     type character varying
 );
 
@@ -2996,13 +2971,6 @@ ALTER TABLE ONLY public.repository_asset_values ALTER COLUMN id SET DEFAULT next
 
 
 --
--- Name: repository_cell_values_checklist_items id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_cell_values_checklist_items ALTER COLUMN id SET DEFAULT nextval('public.repository_cell_values_checklist_items_id_seq'::regclass);
-
-
---
 -- Name: repository_cells id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3014,6 +2982,13 @@ ALTER TABLE ONLY public.repository_cells ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.repository_checklist_items ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_items_id_seq'::regclass);
+
+
+--
+-- Name: repository_checklist_items_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items_values ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_items_values_id_seq'::regclass);
 
 
 --
@@ -3571,14 +3546,6 @@ ALTER TABLE ONLY public.repository_asset_values
 
 
 --
--- Name: repository_cell_values_checklist_items repository_cell_values_checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_cell_values_checklist_items
-    ADD CONSTRAINT repository_cell_values_checklist_items_pkey PRIMARY KEY (id);
-
-
---
 -- Name: repository_cells repository_cells_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3592,6 +3559,14 @@ ALTER TABLE ONLY public.repository_cells
 
 ALTER TABLE ONLY public.repository_checklist_items
     ADD CONSTRAINT repository_checklist_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_checklist_items_values repository_checklist_items_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items_values
+    ADD CONSTRAINT repository_checklist_items_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4090,13 +4065,6 @@ CREATE INDEX index_assets_on_created_by_id ON public.assets USING btree (created
 
 
 --
--- Name: index_assets_on_file_file_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_assets_on_file_file_name ON public.assets USING gin (public.trim_html_tags((file_file_name)::text) public.gin_trgm_ops);
-
-
---
 -- Name: index_assets_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4451,6 +4419,20 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 --
 
 CREATE INDEX index_on_rep_status_type_id ON public.repository_status_values USING btree (repository_status_item_id);
+
+
+--
+-- Name: index_on_repository_checklist_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_checklist_item_id ON public.repository_checklist_items_values USING btree (repository_checklist_item_id);
+
+
+--
+-- Name: index_on_repository_checklist_value_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checklist_items_values USING btree (repository_checklist_value_id);
 
 
 --
@@ -5728,20 +5710,6 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
--- Name: repository_cell_values_checklist_item_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX repository_cell_values_checklist_item_id ON public.repository_cell_values_checklist_items USING btree (repository_checklist_item_id);
-
-
---
--- Name: repository_cell_values_checklist_value_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX repository_cell_values_checklist_value_id ON public.repository_cell_values_checklist_items USING btree (repository_checklist_value_id);
-
-
---
 -- Name: repository_status_items fk_rails_00642f1707; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6934,14 +6902,6 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 
 --
--- Name: repository_cell_values_checklist_items fk_rails_efd3251ebf; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_cell_values_checklist_items
-    ADD CONSTRAINT fk_rails_efd3251ebf FOREIGN KEY (repository_checklist_value_id) REFERENCES public.repository_checklist_values(id);
-
-
---
 -- Name: repository_date_time_range_values fk_rails_efe428fafe; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6963,14 +6923,6 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_f36eac136b FOREIGN KEY (experiment_id) REFERENCES public.experiments(id);
-
-
---
--- Name: repository_cell_values_checklist_items fk_rails_f5260bda13; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_cell_values_checklist_items
-    ADD CONSTRAINT fk_rails_f5260bda13 FOREIGN KEY (repository_checklist_item_id) REFERENCES public.repository_checklist_items(id);
 
 
 --
@@ -7045,7 +6997,6 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20150713060702'),
-('20150713061603'),
 ('20150713063224'),
 ('20150713070738'),
 ('20150713071921'),
@@ -7129,7 +7080,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160704110900'),
 ('20160722082700'),
 ('20160803082801'),
-('20160808083040'),
 ('20160809074757'),
 ('20160928114119'),
 ('20160928114915'),
@@ -7202,6 +7152,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191003091614'),
 ('20191007144622'),
 ('20191009146101'),
+('20191023162335'),
 ('20191105143702'),
 ('20191115143747'),
 ('20191204112549'),
@@ -7210,5 +7161,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191210103004'),
 ('20191218072619'),
 ('20200113143828');
-
-

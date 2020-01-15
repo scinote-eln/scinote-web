@@ -22,7 +22,10 @@
     data-editable="<%= can_manage_repository_rows?(repository) %>">
     <thead>
       <tr>
-        <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
+        <th id="checkbox">
+            <input name="select_all" value="1" type="checkbox" class="sci-checkbox">
+            <span class="sci-checkbox-label"></span>
+        </th>
         <th id="assigned"><%= t("repositories.table.assigned") %></th>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>

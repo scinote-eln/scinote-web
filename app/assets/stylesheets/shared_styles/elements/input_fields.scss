@@ -32,10 +32,10 @@
   }
 
   .fas {
-    bottom: 0;
     line-height: 36px;
     position: absolute;
     text-align: center;
+    top: 0;
     width: 25px;
   }
 
@@ -61,10 +61,6 @@
 
   &.success,
   &.error {
-    .sci-input-field {
-      padding: 0 30px 0 10px;
-    }
-
     &::after {
       @include font-awesome;
       bottom: 0;
@@ -74,44 +70,56 @@
       text-align: center;
       width: 25px;
     }
-
-    &.right-icon {
-      .sci-input-field {
-        padding: 0 60px 0 10px;
-      }
-
-      &::after {
-        right: 35px;
-      }
-    }
-  }
-
-  &.success {
-    &::after {
-      color: $brand-success;
-      content: $font-fas-check;
-    }
   }
 
   &.error {
+    padding-bottom: 6px;
+
     .sci-input-field {
       border: $border-danger;
     }
 
-    &::after {
-      color: $brand-danger;
-      content: $font-fas-exclamation-triangle;
-    }
-
     &::before {
       @include font-small;
-      bottom: -15px;
+      bottom: -9px;
       color: $brand-danger;
       content: attr(data-error-text);
       left: 0;
       line-height: 15px;
       position: absolute;
+      white-space: nowrap;
       width: 100%;
+    }
+
+    &.success-icon {
+      &::after {
+        color: $brand-success;
+        content: $font-fas-check;
+      }
+    }
+
+    &.error-icon {
+      &::after {
+        color: $brand-danger;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+
+    .success-icon,
+    .error-icon {
+      .sci-input-field {
+        padding: 0 30px 0 10px;
+      }
+
+      &.right-icon {
+        .sci-input-field {
+          padding: 0 60px 0 10px;
+        }
+
+        &::after {
+          right: 35px;
+        }
+      }
     }
   }
 

@@ -44,18 +44,13 @@ class RepositoryDatatableService
           'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s
         )
       end
-      repository_rows = repository_rows
-                        .select('repository_rows.*')
-                        .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
-                        .group('repository_rows.id')
+      repository_rows = repository_rows.select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
     else
       repository_rows = repository_rows
                         .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
-                        .select('repository_rows.*')
                         .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
                         .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
                         .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
-                        .group('repository_rows.id')
     end
 
     @repository_rows = sort_rows(order_obj, repository_rows)
@@ -91,6 +86,9 @@ class RepositoryDatatableService
     end
 
     repository_rows.left_outer_joins(:created_by)
+                   .select('repository_rows.*')
+                   .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
+                   .group('repository_rows.id')
   end
 
   def build_conditions(params)

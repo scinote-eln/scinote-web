@@ -828,17 +828,10 @@ class TeamImporter
 
   # returns asset object
   def create_asset(asset_json, team, user_id = nil)
-    ### Fix for support templates
-    asset_info = asset_json['asset'] || asset_json
-
-    asset = Asset.new(asset_info)
+    asset = Asset.new(asset_json['asset'])
     asset_blob = asset_json['asset_blob']
     ### Fix for support templates
-    asset_file_name = if asset_blob
-                        asset_blob['filename']
-                      else
-                        asset_json['file_file_name']
-                      end
+    asset_file_name = asset_blob['filename']
     file = File.open("#{@import_dir}/assets/#{asset.id}/#{asset_file_name}")
     orig_asset_id = asset.id
     asset.id = nil
@@ -988,7 +981,7 @@ class TeamImporter
     if repository_cell.value_type == 'RepositoryChecklistValue'
       value_json['repository_value_checklist'].each do |item|
         item_id = find_checklist_item_id(item['repository_checklist_item_id']).to_i
-        RepositoryCellValuesChecklistItem.create!(repository_checklist_value: repository_value,
+        RepositoryChecklistItemsValue.create!(repository_checklist_value: repository_value,
                                                   repository_checklist_item_id: item_id)
       end
     end

@@ -65,7 +65,7 @@ class Extends
                                   'repository_list_items.data' => { repository_list_value: :repository_list_item },
                                   'repository_checklist_items.data' =>
                                     { repository_checklist_value:
-                                      { repository_cell_values_checklist_items: :repository_checklist_item } },
+                                      { repository_checklist_items_values: :repository_checklist_item } },
                                   'repository_status_items.status' =>
                                     { repository_status_value: :repository_status_item },
                                   'active_storage_blobs.filename' =>

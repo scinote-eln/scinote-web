@@ -43,7 +43,7 @@
     }
 
     .assign-counter-container {
-      border-radius: 2px;
+      border-radius: $border-radius-tag;
       cursor: pointer;
       display: inline-block;
       height: calc(100% - 2px);
@@ -65,6 +65,10 @@
         background-color: $color-alto;
       }
     }
+
+    .circle-icon {
+      margin-left: 30px;
+    }
   }
 
   // Checklists
@@ -78,16 +82,48 @@
 
   // DateTime
   .datetime-container {
+    display: flex;
     position: relative;
 
-    &.dateonly {
-      input.time-part {
+    .sci-input-container {
+      margin: 0 2px;
+    }
+
+    .separator {
+      line-height: 36px;
+      text-align: center;
+      width: 20px;
+    }
+
+    .start-time,
+    .end-time {
+      display: flex;
+      position: relative;
+    }
+
+    .date-container {
+      width: 160px;
+    }
+
+    .time-container {
+      width: 90px;
+
+      .fa-clock {
+        cursor: pointer;
+      }
+    }
+
+
+    &.dateonly,
+    &.range-type .dateonly {
+      .time-container {
         display: none;
       }
     }
 
-    &.timeonly {
-      input.date-part {
+    &.timeonly,
+    &.range-type .timeonly {
+      .date-container {
         display: none;
       }
     }
@@ -103,7 +139,9 @@
         .repository-row-edit-icon {
           display: inline-block;
         }
-        .assign-counter-container {
+
+        .assign-counter-container,
+        .circle-icon {
           margin-left: 0;
         }
       }
@@ -121,7 +159,9 @@
           .repository-row-edit-icon {
             display: none;
           }
-          .assign-counter-container {
+
+          .assign-counter-container,
+          .circle-icon {
             margin-left: 30px;
           }
         }

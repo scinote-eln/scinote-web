@@ -411,7 +411,7 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function() {
-          return "<input class='repository-row-selector' type='checkbox'>";
+          return "<input class='repository-row-selector sci-checkbox' type='checkbox'><span class='sci-checkbox-label'></span>";
         }
       }, {
         // Assigned column is not searchable

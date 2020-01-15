@@ -107,5 +107,25 @@ describe RepositoryColumns::UpdateListColumnService do
         expect { service_call }.not_to(change { Activity.count })
       end
     end
+
+    context 'when has some cells' do
+      let(:params) do
+        {
+          repository_list_items_attributes: [
+            { data: 'new added list item' }
+          ]
+        }
+      end
+
+      it 'cells should be deleted' do
+        row = create :repository_row, repository: column.repository
+        second_row = create :repository_row, repository: column.repository
+        data = list_item.id
+        RepositoryCell.create_with_value!(row, column, data, user)
+        RepositoryCell.create_with_value!(second_row, column, data, user)
+
+        expect { service_call }.to(change { RepositoryCell.count }.by(-2))
+      end
+    end
   end
 end

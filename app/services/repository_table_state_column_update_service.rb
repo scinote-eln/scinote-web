@@ -28,33 +28,37 @@ class RepositoryTableStateColumnUpdateService
     raise ArgumentError, 'repository is empty' if repository.blank?
     raise ArgumentError, 'old_column_index is empty' if old_column_index.blank?
 
-    RepositoryTableState.where(
-      repository: repository
-    ).find_each do |table_state|
+    RepositoryTableState.where(repository: repository).find_each do |table_state|
       state = table_state.state
+      user = table_state.user
 
-      # Remove column from ColReorder, columns, length entries
-      state['columns'].delete_at(old_column_index)
-      state['ColReorder'].delete(old_column_index)
-      state['ColReorder'].map! do |index|
-        if index > old_column_index
-          index - 1
-        else
-          index
+      begin
+        # Remove column from ColReorder, columns, length entries
+        state['columns'].delete_at(old_column_index)
+        state['ColReorder'].delete(old_column_index)
+        state['ColReorder'].map! do |index|
+          if index > old_column_index
+            index - 1
+          else
+            index
+          end
         end
-      end
 
-      if state.dig('order', 0, 0) == old_column_index
-        # Fallback to default order if user had table ordered by
-        # the deleted column
-        state['order'] = Constants::REPOSITORY_TABLE_DEFAULT_STATE['order']
-      elsif state.dig('order', 0, 0) > old_column_index
-        state['order'][0][0] -= 1
-      end
+        if state.dig('order', 0, 0) == old_column_index
+          # Fallback to default order if user had table ordered by
+          # the deleted column
+          state['order'] = Constants::REPOSITORY_TABLE_DEFAULT_STATE['order']
+        elsif state.dig('order', 0, 0) > old_column_index
+          state['order'][0][0] -= 1
+        end
 
-      state['length'] = (state['length'] - 1)
-      state['time'] = (Time.now.to_f * 1_000).to_i
-      table_state.save
+        state['length'] = (state['length'] - 1)
+        state['time'] = (Time.now.to_f * 1_000).to_i
+        table_state.save
+      rescue NoMethodError => e
+        Rails.logger.error e.message
+        RepositoryTableStateService.new(user, repository).create_default_state
+      end
     end
   end
 end
