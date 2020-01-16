@@ -143,3 +143,10 @@
     }
   }
 }
+
+
+.bootstrap-datetimepicker-widget {
+  .dow {
+    @include font-button;
+  }
+}

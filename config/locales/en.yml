@@ -1007,6 +1007,8 @@ en:
       edit_inventory: "Edit Inventory"
       share_inventory: "Share"
       view_only_permission_label: "You have veiw-only permission"
+      show_per_page: "Show %{number} per page"
+      filter_inventory: "Filter inventory"
 
       options_dropdown:
         import_items: 'Import items'

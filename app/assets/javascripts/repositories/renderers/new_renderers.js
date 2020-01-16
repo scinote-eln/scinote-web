@@ -5,8 +5,8 @@ GLOBAL_CONSTANTS DateTimeHelper
 
 $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
-    <div class="form-group">
-      <input class="form-control editing"
+    <div class="sci-input-container text-field">
+      <input class="sci-input-field"
              form="${formId}"
              type="text"
              name="repository_row[name]"
@@ -39,8 +39,8 @@ $.fn.dataTable.render.newRepositoryAssetValue = function(formId, columnId, $cell
 
 $.fn.dataTable.render.newRepositoryTextValue = function(formId, columnId, $cell) {
   $cell.html(`
-    <div class="form-group">
-      <input class="form-control editing"
+    <div class="sci-input-container text-field">
+      <input class="sci-input-field"
              form="${formId}"
              type="text"
              name="repository_cells[${columnId}]"
@@ -66,8 +66,8 @@ $.fn.dataTable.render.newRepositoryChecklistValue = function(formId, columnId, $
 
 $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cell) {
   $cell.html(`
-    <div class="form-group">
-      <input class="form-control editing"
+    <div class="sci-input-container text-field">
+      <input class="sci-input-field"
              form="${formId}"
              type="number"
              name="repository_cells[${columnId}]"
