@@ -48,13 +48,13 @@ var RepositoryDatatable = (function(global) {
     if (currentMode === 'viewMode') {
       $(TABLE_WRAPPER_ID).removeClass('editing');
       $('#saveCancel').hide();
-      $('#editDeleteCopy').show();
       $('#addRepositoryRecord').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
       $('#repository-acitons-dropdown').prop('disabled', false);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', false);
       $('th').removeClass('disable-click');
       $('.repository-row-selector').prop('disabled', false);
+      $('.dataTables_filter input').prop('disabled', false);
       if (rowsSelected.length === 0) {
         $('#exportRepositoriesButton').addClass('disabled');
         $('#copyRepositoryRecords').prop('disabled', true);
@@ -62,6 +62,7 @@ var RepositoryDatatable = (function(global) {
         $('#deleteRepositoryRecordsButton').prop('disabled', true);
         $('#assignRepositoryRecords').prop('disabled', true);
         $('#unassignRepositoryRecords').prop('disabled', true);
+        $('#editDeleteCopy').hide();
       } else {
         if (rowsSelected.length === 1) {
           $('#editRepositoryRecord').prop('disabled', false);
@@ -73,6 +74,7 @@ var RepositoryDatatable = (function(global) {
         $('#copyRepositoryRecords').prop('disabled', false);
         $('#assignRepositoryRecords').prop('disabled', false);
         $('#unassignRepositoryRecords').prop('disabled', false);
+        $('#editDeleteCopy').show();
       }
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
@@ -88,6 +90,7 @@ var RepositoryDatatable = (function(global) {
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
       $('th').addClass('disable-click');
       $('.repository-row-selector').prop('disabled', true);
+      $('.dataTables_filter input').prop('disabled', true);
     }
   }
 

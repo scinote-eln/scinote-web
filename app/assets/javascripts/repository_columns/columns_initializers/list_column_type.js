@@ -110,6 +110,7 @@ var RepositoryListColumnType = (function() {
           delimiterDropdown,
           dropdownOptions
         );
+        $('.changing-existing-list-items-warning').removeClass('hidden');
       })
       .on('change', delimiterDropdown, function() {
         refreshPreviewDropdownList(

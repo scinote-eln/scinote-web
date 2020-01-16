@@ -94,16 +94,15 @@ var RepositoryDatatableRowEditor = (function() {
     let $table = $(TABLE.table().node());
 
     $table.on('ajax:success', '.repository-row-edit-form', function(ev, data) {
-      TABLE.ajax.reload();
-      HelperModule.flashAlertMsg(data.flash, 'success');
+      TABLE.ajax.reload(() => {
+        animateSpinner(null, false);
+        HelperModule.flashAlertMsg(data.flash, 'success');
+      });
     });
 
     $table.on('ajax:error', '.repository-row-edit-form', function(ev, data) {
-      HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
-    });
-
-    $table.on('ajax:complete', '.repository-row-edit-form', function() {
       animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });
   }
 

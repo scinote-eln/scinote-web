@@ -78,8 +78,16 @@
         padding: 5px;
       }
     }
-  }
 
+    span  {
+      color: $brand-primary;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
   // Text and Number field
 
   .text-field.sci-input-container {

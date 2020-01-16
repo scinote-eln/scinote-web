@@ -8,7 +8,7 @@ var StatusColumnHelper = (function() {
       selectedOption = `<option value="${value.value}">${value.label}</option>`;
     }
 
-    return $(`<select 
+    return $(`<select
               id="${select}"
               data-placeholder = "${I18n.t('repositories.table.status.set_status')}"
               data-ajax-url = "${url}"
@@ -33,6 +33,7 @@ var StatusColumnHelper = (function() {
     dropdownSelector.init('#' + select, {
       singleSelect: true,
       selectAppearance: 'simple',
+      closeOnSelect: true,
       onChange: function() {
         var values = dropdownSelector.getValues('#' + select);
         $hiddenField.val(values);

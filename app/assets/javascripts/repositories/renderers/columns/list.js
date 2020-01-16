@@ -7,7 +7,7 @@ var ListColumnHelper = (function() {
     if (value && value.value) {
       selectedOption = `<option value="${value.value}">${value.label}</option>`;
     }
-    return $(`<select 
+    return $(`<select
               id="${select}"
               data-placeholder = "${I18n.t('repositories.table.list.select_item')}"
               data-ajax-url = "${url}"
@@ -32,6 +32,7 @@ var ListColumnHelper = (function() {
     dropdownSelector.init('#' + select, {
       singleSelect: true,
       selectAppearance: 'simple',
+      closeOnSelect: true,
       onChange: function() {
         var values = dropdownSelector.getValues('#' + select);
         $hiddenField.val(values);

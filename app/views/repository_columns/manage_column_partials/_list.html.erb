@@ -10,7 +10,7 @@
     <%= t('libraries.manange_modal_column.list_type.delimiter_label') %>
   </label>
   <div class="col-sm-9">
-    <%= select_tag('delimiter', options_for_select(delimiters, selected_delimiter), class: 'form-control delimiter') %>
+    <%= select_tag('delimiter', options_for_select(delimiters, selected_delimiter), class: 'form-control delimiter', disabled: !column.new_record?) %>
   </div>
 </div>
 <div class="form-group">
@@ -19,6 +19,11 @@
   </label>
   <div class="col-sm-9">
     <%= text_area_tag 'items-textarea', column.repository_list_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea' %>
+    <% unless column.new_record? %>
+      <div class="bg-danger hidden changing-existing-list-items-warning">
+        <%= t('libraries.manange_modal_column.change_multi_select_items_warning') %>
+      </div>
+    <% end %>
   </div>
 </div>
 <div class="dropdown-preview">

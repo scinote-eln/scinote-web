@@ -63,8 +63,8 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
-  return `<span data-time="${data.value.time_formatted}" 
-                data-datetime="${data.value.datetime}" 
+  return `<span data-time="${data.value.time_formatted}"
+                data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
 };
 
@@ -73,7 +73,7 @@ $.fn.dataTable.render.defaultRepositoryTimeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTimeValue = function(data) {
-  return `<span data-time="${data.value.formatted}" 
+  return `<span data-time="${data.value.formatted}"
                 data-datetime="${data.value.datetime}">${data.value.formatted}</span>`;
 };
 
@@ -146,7 +146,7 @@ $.fn.dataTable.render.defaultRepositoryNumberValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryNumberValue = function(data) {
-  return `<span class="number-value" data-full-value="${data.full_value}">
+  return `<span class="number-value" data-value="${data.value}">
             ${data.value}
           </span>`;
 };

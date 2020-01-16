@@ -24,7 +24,7 @@
       <div class="container-fluid">
         <div class="navbar-header">
           <span class="navbar-brand" title="<% t('nav.label.scinote') %>">
-            <%= image_tag('/images/scinote_icon.jpg', id: 'logo') %>
+            <%= image_tag('/images/scinote_icon.svg', id: 'logo') %>
           </span>
         </div>
         <% if user_signed_in? %>
@@ -36,15 +36,9 @@
         <% end %>
       </div>
     </nav>
-    <% if flash[:error]%>
-      <div class="alert alert-danger alert-dismissable alert-floating">
-        <div class="container">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <span class="fas fa-exclamation-circle"></span>
-          <span><%= sanitize_input(flash[:error]) %></span>
-        </div>
-      </div>
-    <% end %>
+
+    <%= render partial: 'shared/flash_alerts', locals: { flash: flash, notice: notice, alert: alert } %>
+
     <div class="container sign-in-halt-container">
       <%= yield %>
     </div>
