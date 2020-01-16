@@ -48,6 +48,7 @@ var RepositoryDatatable = (function(global) {
     if (currentMode === 'viewMode') {
       $(TABLE_WRAPPER_ID).removeClass('editing');
       $('#saveCancel').hide();
+      $('.manage-repo-column-index').prop('disabled', false);
       $('#addRepositoryRecord').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
       $('#repository-acitons-dropdown').prop('disabled', false);
@@ -80,6 +81,7 @@ var RepositoryDatatable = (function(global) {
       $(TABLE_WRAPPER_ID).addClass('editing');
       $('#editDeleteCopy').hide();
       $('#saveCancel').show();
+      $('.manage-repo-column-index').prop('disabled', true);
       $('#repository-acitons-dropdown').prop('disabled', true);
       $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').prop('disabled', true);

@@ -9,7 +9,7 @@
 
 .repository-show {
   animation-timing-function: $timing-function-sharp;
-  height: calc(100vh - 51px);
+  height: calc(100vh - 66px);
   left: var(--repository-sidebar-margin);
   margin: 0;
   padding: 0 32px;
@@ -362,10 +362,6 @@
 .toolbarButtonsDatatable {
   .view-only-label {
     opacity: .6;
-  }
-
-  .btn {
-    border: 0;
   }
 }
 
