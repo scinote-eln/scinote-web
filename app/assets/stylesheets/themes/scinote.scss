@@ -1904,23 +1904,13 @@ a.disabled-with-click-events {
 }
 
 #alert-flash {
-
   button {
     margin-right: 400px;
   }
 
-  .fas {
-    margin-left: 100px;
-  }
-
   @media(max-width:768px) {
-
     button {
       display: none;
-    }
-
-    .fas {
-      margin-left: 10px;
     }
   }
 }

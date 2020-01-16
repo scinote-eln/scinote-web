@@ -309,17 +309,17 @@ $container-lg: auto;
 // $jumbotron-heading-font-size: ceil(($font-size-base * 4.5));
 
 // Form states and alerts
-$state-success-text: #3c763d;
-$state-success-bg: #d5f2df;
+$state-success-text: $brand-success;
+$state-success-bg: $brand-success-light;
 $state-success-border: adjust-hue(darken($state-success-bg, 5%), -10);
-$state-info-text: #31708f;
-$state-info-bg: #d7ecf7;
+$state-info-text: $brand-focus;
+$state-info-bg: $brand-focus-light;
 $state-info-border: adjust-hue(darken($state-info-bg, 7%), -10);
-$state-warning-text: #8a6d3b;
-$state-warning-bg: #fcf8e3;
+$state-warning-text: $brand-warning;
+$state-warning-bg: $brand-warning-light;
 $state-warning-border: adjust-hue(darken($state-warning-bg, 5%), -10);
-$state-danger-text: #a94442;
-$state-danger-bg: #fadcd9;
+$state-danger-text: $brand-danger;
+$state-danger-bg: $brand-danger-light;
 $state-danger-border: adjust-hue(darken($state-danger-bg, 5%), -10);
 
 // // Tooltips
@@ -367,22 +367,22 @@ $state-danger-border: adjust-hue(darken($state-danger-bg, 5%), -10);
 // $modal-md: 600px;
 // $modal-sm: 300px;
 //
-// // Alerts
-// $alert-padding: 15px;
-// $alert-border-radius: $border-radius-base;
-// $alert-link-font-weight: bold;
-// $alert-success-bg: $state-success-bg;
-// $alert-success-text: $state-success-text;
-// $alert-success-border: $state-success-border;
-// $alert-info-bg: $state-info-bg;
-// $alert-info-text: $state-info-text;
-// $alert-info-border: $state-info-border;
-// $alert-warning-bg: $state-warning-bg;
-// $alert-warning-text: $state-warning-text;
-// $alert-warning-border: $state-warning-border;
-// $alert-danger-bg: $state-danger-bg;
-// $alert-danger-text: $state-danger-text;
-// $alert-danger-border: $state-danger-border;
+// Alerts
+$alert-padding: 15px;
+$alert-border-radius: $border-radius-base;
+$alert-link-font-weight: bold;
+$alert-success-bg: $state-success-bg;
+$alert-success-text: $state-success-text;
+$alert-success-border: $state-success-border;
+$alert-info-bg: $state-info-bg;
+$alert-info-text: $state-info-text;
+$alert-info-border: $state-info-border;
+$alert-warning-bg: $state-warning-bg;
+$alert-warning-text: $state-warning-text;
+$alert-warning-border: $state-warning-border;
+$alert-danger-bg: $state-danger-bg;
+$alert-danger-text: $state-danger-text;
+$alert-danger-border: $state-danger-border;
 //
 // // Progress bars
 // $progress-bg: #f5f5f5;

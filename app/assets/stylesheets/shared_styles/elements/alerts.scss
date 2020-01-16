@@ -1,0 +1,30 @@
+.alert {
+  border-radius: 0;
+  margin-bottom: 0;
+  opacity: .86;
+  padding: 9px;
+  width: 100%;
+
+  > div {
+    height: 34px;
+    position: relative;
+
+    > * {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+
+    .fas {
+      font-size: $font-size-h2;
+      margin-left: 12px;
+    }
+
+    span:last-child {
+      color: $color-volcano;
+      line-height: 17px;
+      margin-left: 36px;
+      width: 60%;
+    }
+  }
+}
