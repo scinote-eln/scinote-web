@@ -13,7 +13,7 @@ class CreateRepositoryStatusItems < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_gin_index_without_tags :repository_status_items, :data
+    add_gin_index_without_tags :repository_status_items, :status
   end
 
   def down
