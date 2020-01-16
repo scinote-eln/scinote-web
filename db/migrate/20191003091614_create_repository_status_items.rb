@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class CreateRepositoryStatusItems < ActiveRecord::Migration[6.0]
-  def change
+  def up
     create_table :repository_status_items do |t|
-      t.string :status, null: false, index: true
+      t.string :status, null: false
       t.string :icon, null: false
       t.references :repository, null: false, foreign_key: true
       t.references :repository_column, null: false, foreign_key: true
@@ -12,5 +12,11 @@ class CreateRepositoryStatusItems < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
+
+    add_gin_index_without_tags :repository_status_items, :data
+  end
+
+  def down
+    drop_table :repository_status_items
   end
 end

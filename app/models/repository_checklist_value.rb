@@ -33,11 +33,12 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    repository_checklist_items_values.destroy_all
-    repository_cell.repository_column
-                   .repository_checklist_items.where(id: JSON.parse(new_data)).find_each do |item|
-      repository_checklist_items_values.create!(repository_checklist_item: item)
-    end
+    item_ids = JSON.parse(new_data)
+    return destroy! if item_ids.blank?
+
+    self.repository_checklist_items = repository_cell.repository_column
+                                                     .repository_checklist_items
+                                                     .where(id: item_ids)
     self.last_modified_by = user
     save!
   end
@@ -46,7 +47,8 @@ class RepositoryChecklistValue < ApplicationRecord
     value = new(attributes)
     value.repository_checklist_items = value.repository_cell
                                             .repository_column
-                                            .repository_checklist_items.where(id: JSON.parse(payload))
+                                            .repository_checklist_items
+                                            .where(id: JSON.parse(payload))
     value
   end
 end
