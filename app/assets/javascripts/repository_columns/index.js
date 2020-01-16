@@ -217,6 +217,7 @@ var RepositoryColumns = (function() {
       if (!_.isEmpty(searchText)) {
         TABLE.search(searchText).draw();
       }
+      RepositoryDatatable.initRowSelection();
     });
   }
 
@@ -312,6 +313,7 @@ var RepositoryColumns = (function() {
           listIds.push($(this).first().data('position'));
         });
         reorderer.order(listIds, false);
+        RepositoryDatatable.initRowSelection();
         loadColumnsNames();
       }
     });

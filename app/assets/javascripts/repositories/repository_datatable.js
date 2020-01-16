@@ -842,6 +842,7 @@ var RepositoryDatatable = (function(global) {
     init: init,
     destroy: destroy,
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
-    checkAvailableColumns: checkAvailableColumns
+    checkAvailableColumns: checkAvailableColumns,
+    initRowSelection: initRowSelection
   });
 }(window));
