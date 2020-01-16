@@ -1,11 +1,40 @@
-/* global GLOBAL_CONSTANTS textValidator I18n */
+/* global GLOBAL_CONSTANTS I18n */
 
 $.fn.dataTable.render.RowNameValidator = function($input) {
-  return textValidator(undefined, $input, 1, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
+  var $inputContainer = $input.closest('.sci-input-container');
+  var value = $input.val();
+  var errorText;
+
+  if (value === '') {
+    errorText = I18n.t('repositories.table.name.errors.is_empty');
+  } else if (value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+    errorText = I18n.t('repositories.table.name.errors.too_long', { max_length: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB });
+  }
+
+  if (errorText) {
+    $inputContainer.addClass('error');
+    $inputContainer.attr('data-error-text', errorText);
+    return false;
+  }
+
+  $inputContainer.removeClass('error');
+  return true;
 };
 
 $.fn.dataTable.render.RepositoryTextValueValidator = function($input) {
-  return textValidator(undefined, $input, 0, GLOBAL_CONSTANTS.TEXT_MAX_LENGTH);
+  var $inputContainer = $input.closest('.sci-input-container');
+  var value = $input.val();
+  var errorText;
+
+  if (value.length > GLOBAL_CONSTANTS.TEXT_MAX_LENGTH) {
+    errorText = I18n.t('repositories.table.text.errors.too_long', { max_length: GLOBAL_CONSTANTS.TEXT_MAX_LENGTH });
+    $inputContainer.addClass('error');
+    $inputContainer.attr('data-error-text', errorText);
+    return false;
+  }
+
+  $inputContainer.removeClass('error');
+  return true;
 };
 
 $.fn.dataTable.render.RepositoryListValueValidator = function() {
