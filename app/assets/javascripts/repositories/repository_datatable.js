@@ -106,6 +106,7 @@ var RepositoryDatatable = (function(global) {
     TABLE.button(0).enable(true);
     FilePreviewModal.init();
     updateButtons();
+    disableCheckboxToggleOnCheckboxPreview();
   }
 
   function changeToEditMode() {
@@ -373,6 +374,13 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function disableCheckboxToggleOnCheckboxPreview(){
+      $(".checklist-dropdown").click(function(e) {
+        e.stopPropagation();
+        $(e.currentTarget).find("ul").toggle()
+      });
+  }
+
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
@@ -484,7 +492,6 @@ var RepositoryDatatable = (function(global) {
         FilePreviewModal.init();
         // Prevent row toggling when selecting user smart annotation link
         SmartAnnotation.preventPropagation('.atwho-user-popover');
-
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
@@ -588,7 +595,7 @@ var RepositoryDatatable = (function(global) {
     });
 
     TABLE.on('column-reorder', function() {
-      initRowSelection();
+      FdSelection();
     });
 
     $('#assignRepositories, #unassignRepositories').click(function() {
