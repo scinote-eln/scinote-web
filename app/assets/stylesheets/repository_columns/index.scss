@@ -7,7 +7,7 @@
 #manage-repository-column {
   .modal-content {
     font-size: 14px;
-    height: 500px;
+    min-height: 500px;
     width: 540px;
   }
 
@@ -32,10 +32,9 @@
   }
 
   .modal-body {
-    padding: 0 15px;
+    padding: 0 15px 61px;
 
     .form-horizontal {
-      height: 390px;
       padding: 15px 0;
     }
 
@@ -54,8 +53,11 @@
   }
 
   .modal-footer {
+    bottom: 0;
     padding: 12px 15px;
+    position: absolute;
     text-align: center;
+    width: 100%;
   }
 
   .range-label {
