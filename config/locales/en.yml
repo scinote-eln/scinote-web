@@ -1159,6 +1159,7 @@ en:
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
       change_multi_select_items_warning: "Be careful: changing existing list items will result in deselecting previously selected items."
+      too_many_items_label: " of %{limit} items"
       select:
         repository_text_value: "Text"
         repository_number_value: "Number"
