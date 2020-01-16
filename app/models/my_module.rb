@@ -413,6 +413,26 @@ class MyModule < ApplicationRecord
     { headers: headers, data: records }
   end
 
+  def repository_docx_json(repository_id)
+    headers = [
+      I18n.t('repositories.table.id'),
+      I18n.t('repositories.table.row_name'),
+      I18n.t('repositories.table.added_on'),
+      I18n.t('repositories.table.added_by')
+    ]
+    custom_columns = []
+    repository = Repository.find_by(id: repository_id)
+    return false unless repository
+
+    repository.repository_columns.order(:id).each do |column|
+      headers.push(column.name)
+      custom_columns.push(column.id)
+    end
+
+    records = repository_rows.where(repository_id: repository_id).select(:id, :name, :created_at, :created_by_id)
+    { headers: headers, rows: records, custom_columns: custom_columns }
+  end
+
   def deep_clone(current_user)
     deep_clone_to_experiment(current_user, experiment)
   end

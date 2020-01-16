@@ -5,7 +5,7 @@ module Reports::Docx::RepositoryHelper
 
   def prepare_row_columns(repository_data)
     result = [repository_data[:headers]]
-    repository_data[:data].repository_rows.each do |record|
+    repository_data[:rows].each do |record|
       row = []
       row.push(record.id)
       row.push(escape_input(record.name))
@@ -18,7 +18,7 @@ module Reports::Docx::RepositoryHelper
         cell_values[cell.repository_column_id] = cell.value.formatted
       end
 
-      repository_data[:data].mappings.each do |column_id, _position|
+      repository_data[:custom_columns].each do |column_id|
         value = cell_values[column_id]
         row.push(value)
       end
