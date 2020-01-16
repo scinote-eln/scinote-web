@@ -10,8 +10,9 @@ module RepositoryActions
 
     def call
       new_value = @cell.value.dup
-      new_value.repository_cell = RepositoryCell.new(repository_row: @new_row,
-                                                     repository_column: @cell.repository_column)
+      new_cell = RepositoryCell.new(repository_row: @new_row, repository_column: @cell.repository_column)
+
+      new_cell.value = new_value
       new_value.created_by = @user
       new_value.last_modified_by = @user
 
