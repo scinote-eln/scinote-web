@@ -1,5 +1,5 @@
 /*
-  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise
+  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise dropdownSelector
   HelperModule animateLoading hideAssignUnasignModal RepositoryDatatableRowEditor
 */
 
@@ -516,8 +516,8 @@ var RepositoryDatatable = (function(global) {
         });
       },
       fnInitComplete: function() {
-        var tableLengthSelect = $('.dataTables_length select')
-        var tableFilterInput = $('.dataTables_filter input')
+        var tableLengthSelect = $('.dataTables_length select');
+        var tableFilterInput = $('.dataTables_filter input');
         initRowSelection();
         bindExportActions();
         disableCheckboxToggleOnAssetDownload();
@@ -548,14 +548,14 @@ var RepositoryDatatable = (function(global) {
         }
         $.each(tableLengthSelect.find('option'), (i, option) => {
           option.innerHTML = I18n.t('repositories.index.show_per_page', { number: option.value });
-        })
+        });
         $('.dataTables_length').append(tableLengthSelect).find('label').remove();
         dropdownSelector.init(tableLengthSelect, {
           noEmptyOption: true,
           singleSelect: true,
           closeOnSelect: true,
           selectAppearance: 'simple'
-        })
+        });
 
         tableFilterInput.attr('placeholder', I18n.t('repositories.index.filter_inventory'))
           .addClass('sci-input-field')
@@ -563,7 +563,7 @@ var RepositoryDatatable = (function(global) {
         $('.dataTables_filter').append(`
             <div class="sci-input-container left-icon">
               <i class="fas fa-search"></i>
-            </div>`).find('.sci-input-container').prepend(tableFilterInput)
+            </div>`).find('.sci-input-container').prepend(tableFilterInput);
         $('.dataTables_filter').find('label').remove();
 
         $('.main-actions, .pagination-row').removeClass('hidden');
