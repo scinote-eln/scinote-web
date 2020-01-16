@@ -15,6 +15,12 @@
         border-bottom: 2px solid $color-white;
         border-left: 2px solid $color-white;
         font-weight: bold;
+        white-space: nowrap;
+
+        .modal-tooltiptext {
+          margin-left: -10px;
+          margin-top: 10px;
+        }
 
         &::after {
           color: $color-silver-chalice;
