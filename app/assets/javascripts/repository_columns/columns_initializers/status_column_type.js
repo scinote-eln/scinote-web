@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 var RepositoryStatusColumnType = (function() {
   var manageModal = '#manage-repository-column';
+  var iconId = '.status-item-icon';
 
   function statusTemplate() {
     return `
@@ -11,14 +12,6 @@ var RepositoryStatusColumnType = (function() {
              class="status-item-field"
              type="text"/>
       <span class="status-item-icon-trash fas fa-trash"></span>
-    </div>
-    <div class="emojis-picker">
-      <span data-emoji-code="&#128540;">&#128540;</span>
-      <span data-emoji-code="&#128520;">&#128520;</span>
-      <span data-emoji-code="&#128526;">&#128526;</span>
-      <span data-emoji-code="&#128531;">&#128531;</span>
-      <span data-emoji-code="&#128535;">&#128535;</span>
-      <span data-emoji-code="&#128536;">&#128536;</span>
     </div>`;
   }
 
@@ -30,12 +23,12 @@ var RepositoryStatusColumnType = (function() {
     $.each($statusRows, (index, statusRow) => {
       var $row = $(statusRow);
       var $statusField = $row.find('.status-item-field');
-      var $icon = $row.find('.status-item-icon');
+      var iconPlaceholder = $row.find(iconId)[0].emojioneArea.editor.hasClass('has-placeholder');
       var stringLength = $statusField.val().length;
 
       if (stringLength < GLOBAL_CONSTANTS.NAME_MIN_LENGTH
           || stringLength > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
-          || !$icon.attr('data-icon')) {
+          || iconPlaceholder) {
         $row.addClass('error');
       } else {
         $row.removeClass('error');
@@ -53,18 +46,32 @@ var RepositoryStatusColumnType = (function() {
     $(manageModal).find('.error').addClass('error-highlight');
   }
 
+  function initEmojiPicker(iconElem) {
+    iconElem.emojioneArea({
+      standalone: true,
+      autocomplete: false,
+      pickerPosition: 'bottom',
+      events: {
+        emojibtn_click: function(button, event) {
+          validateForm();
+        }
+      }
+    });
+  }
+
   function initActions() {
     var $manageModal = $(manageModal);
     var addStatusOptionBtn = '.add-status';
     var deleteStatusOptionBtn = '.status-item-icon-trash';
-    var icon = '.status-item-icon';
-    var emojis = '.emojis-picker>span';
     var statusInput = 'input.status-item-field';
     var buttonWrapper = '.button-wrapper';
 
     $manageModal.on('click', addStatusOptionBtn, function() {
       var newStatusRow = $(statusTemplate()).insertBefore($(this));
+      var newIcon = newStatusRow.find(iconId);
+      initEmojiPicker(newIcon);
       validateForm();
+
       setTimeout(function() {
         newStatusRow.css('height', '34px');
       }, 0);
@@ -79,7 +86,6 @@ var RepositoryStatusColumnType = (function() {
       // if new item is deleted, remove it from HTML
 
       var $statusRow = $(this).parent();
-      var $emojis = $statusRow.next('.emojis-picker');
       var isNewRow = $statusRow.data('id') == null;
 
       setTimeout(function() {
@@ -96,22 +102,11 @@ var RepositoryStatusColumnType = (function() {
           $statusRow.removeClass('error');
           validateForm();
         }
-        $emojis.remove();
       }, 300);
     });
 
-    $manageModal.on('click', icon, function() {
-      var $emojiPicker = $(this).parent().next('.emojis-picker');
-      $emojiPicker.show();
-    });
-
-    $manageModal.on('click', emojis, function() {
-      var $clickedEmoji = $(this);
-      var $iconField = $clickedEmoji.parent().prev().find('.status-item-icon');
-      $clickedEmoji.parent().hide();
-      $iconField.html($clickedEmoji.data('emoji-code'));
-      $iconField.attr('data-icon', $clickedEmoji.data('emoji-code'));
-      $iconField.trigger('data-attribute-changed', $iconField);
+    $manageModal.on('columnModal::partialLoadedForRepositoryStatusValue', function() {
+      initEmojiPicker($(iconId));
     });
 
     $manageModal
@@ -148,7 +143,7 @@ var RepositoryStatusColumnType = (function() {
         var $item = $(value);
         var id = $item.data('id');
         var removed = $item.data('removed');
-        var icon = $item.find('.status-item-icon').data('icon');
+        var icon = $item.find(iconId)[0].emojioneArea.getText();
         var status = $item.find('input.status-item-field').val();
 
         if (removed && id) { // flag as item for removing
