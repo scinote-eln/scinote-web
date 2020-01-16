@@ -68,18 +68,21 @@ var RepositoryListColumnType = (function() {
     });
   }
 
-  function refreshCounter(number, container) {
+  function refreshCounter(number) {
     var $manageModal = $(manageModal);
-    var $counterContainer = $manageModal.find(container).find('.limit-counter-container');
+    var $counterContainer = $manageModal.find('.limit-counter-container');
     var $btn = $manageModal.find('.column-save-btn');
+    var $textarea = $counterContainer.parents('.form-group').find('textarea');
 
     $counterContainer.find('.items-count').html(number).attr('data-count', number);
 
     if (number >= GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
       $counterContainer.addClass('error-to-many-items');
+      $textarea.addClass('too-many-items');
       $btn.addClass('disabled');
     } else {
       $counterContainer.removeClass('error-to-many-items');
+      $textarea.removeClass('too-many-items');
       $btn.removeClass('disabled');
     }
   }
@@ -88,7 +91,7 @@ var RepositoryListColumnType = (function() {
     var items = textToItems($(textarea).val(), delimiterContainer);
     var hashItems = [];
     drawDropdownPreview(items, preview);
-    refreshCounter(items.length, preview);
+    refreshCounter(items.length);
 
     $.each(items, (index, option) => {
       hashItems.push({ data: option });
@@ -139,7 +142,7 @@ var RepositoryListColumnType = (function() {
     },
     checkValidation: () => {
       var $manageModal = $(manageModal);
-      var count = $manageModal.find(previewContainer).find('.items-count').attr('data-count');
+      var count = $manageModal.find('.items-count').attr('data-count');
       return count < GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN;
     },
     loadParams: () => {

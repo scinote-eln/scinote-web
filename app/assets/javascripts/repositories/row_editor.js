@@ -66,6 +66,7 @@ var RepositoryDatatableRowEditor = (function() {
 
       $label.text($input[0].files[0].name);
       $fileBtn.removeClass('new-file');
+      $fileBtn.removeClass('error');
     });
 
 
@@ -77,6 +78,7 @@ var RepositoryDatatableRowEditor = (function() {
       $fileBtn.addClass('new-file');
       $label.text('');
       $input.val('');
+      $fileBtn.removeClass('error');
 
       if (!$input.data('is-empty')) { // set hidden field for deletion only if original value has been set on rendering
         $input
@@ -151,6 +153,7 @@ var RepositoryDatatableRowEditor = (function() {
     });
 
     initSmartAnnotation($row);
+    initAssetCellActions($row);
 
     TABLE.columns.adjust();
   }

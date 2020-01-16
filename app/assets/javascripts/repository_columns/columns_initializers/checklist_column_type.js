@@ -63,7 +63,7 @@ var RepositoryChecklistColumnType = (function() {
     },
     checkValidation: () => {
       var $manageModal = $(manageModal);
-      var count = $manageModal.find(previewContainer).find('.items-count').attr('data-count');
+      var count = $manageModal.find('.items-count').attr('data-count');
       return count < GLOBAL_CONSTANTS.REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN;
     },
     loadParams: () => {

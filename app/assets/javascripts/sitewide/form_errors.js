@@ -35,12 +35,6 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
 
     })).join('<br />');
 
-    if ($(input).hasClass('sci-input-field')) {
-      $(input).closest('.sci-input-container').addClass('error');
-      $(input).closest('.sci-input-container').attr('data-error-text', errorText);
-      return;
-    }
-
     // Mark error form group
     var $formGroup = $(input).closest('.form-group');
     if (!$formGroup.hasClass('has-error')) {

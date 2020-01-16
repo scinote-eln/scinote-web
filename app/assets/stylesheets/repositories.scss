@@ -334,6 +334,7 @@
       }
 
       &::before {
+        @include font-small;
         bottom: -15px;
         color: $brand-danger;
         content: attr(data-error-text);
