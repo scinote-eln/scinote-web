@@ -99,6 +99,10 @@ var RepositoryDatatableRowEditor = (function() {
       TABLE.ajax.reload(() => {
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(data.flash, 'success');
+        window.scrollTo({
+          left: 0,
+          behavior: 'smooth'
+        });
       });
     });
 
