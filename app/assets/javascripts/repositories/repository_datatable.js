@@ -375,10 +375,10 @@ var RepositoryDatatable = (function(global) {
   }
 
   function disableCheckboxToggleOnCheckboxPreview(){
-      $(".checklist-dropdown").click(function(e) {
-        e.stopPropagation();
-        $(e.currentTarget).find("ul").toggle()
-      });
+    $('.checklist-dropdown').click(function(e) {
+      e.stopPropagation();
+      $(e.currentTarget).find('ul').toggle()
+    });
   }
 
   // Adjust columns width in table header
@@ -595,7 +595,7 @@ var RepositoryDatatable = (function(global) {
     });
 
     TABLE.on('column-reorder', function() {
-      FdSelection();
+      initRowSelection();
     });
 
     $('#assignRepositories, #unassignRepositories').click(function() {
