@@ -137,6 +137,11 @@
 
     &.btn-primary {
       background: $color-alto;
+
+      &:hover {
+        border: $border-tertiary;
+        color: $color-silver-chalice;
+      }
     }
 
     &.btn-secondary,

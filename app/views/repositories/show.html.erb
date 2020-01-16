@@ -55,7 +55,7 @@
 
     <div class="repository-cog dropdown">
         <button id="repository-acitons-dropdown"
-                class="btn btn-default"
+                class="btn btn-secondary"
                 type="button"
                 data-toggle="dropdown"
                 aria-haspopup="true"
@@ -121,14 +121,14 @@
     <% if can_manage_repository_rows?(@repository) %>
       <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
         <%if @display_edit_button %>
-          <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
+          <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
             <span class="fas fa-pencil-alt"></span>
             <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
           </button>
         <% end %>
 
         <%if @display_delete_button %>
-          <button type="button" class="btn btn-default"
+          <button type="button" class="btn btn-light"
             id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
             <span class="fas fa-trash"></span>
             <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
@@ -137,7 +137,7 @@
         <% end %>
 
         <%if @display_duplicate_button %>
-          <button type="button" class="btn btn-default copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
+          <button type="button" class="btn btn-light copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
             <span class="fas fa-copy"></span>
             <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
           </button>
@@ -149,7 +149,7 @@
           <span class="fas fa-save"></span>
           <%= t("repositories.save_record") %>
         </button>
-        <button type="button" class="btn btn-default" id="cancelSave">
+        <button type="button" class="btn btn-light" id="cancelSave">
           <span class="fas fa-times-circle"></span>
           <%= t("repositories.cancel_save") %>
         </button>
