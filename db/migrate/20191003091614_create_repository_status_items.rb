@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require File.expand_path('app/helpers/database_helper')
+
 class CreateRepositoryStatusItems < ActiveRecord::Migration[6.0]
+  include DatabaseHelper
+
   def up
     create_table :repository_status_items do |t|
       t.string :status, null: false

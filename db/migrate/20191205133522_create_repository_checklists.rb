@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require File.expand_path('app/helpers/database_helper')
+
 class CreateRepositoryChecklists < ActiveRecord::Migration[6.0]
+  include DatabaseHelper
+
   def up
     create_table :repository_checklist_values do |t|
       t.references :created_by, index: true, foreign_key: { to_table: :users }, null: true
