@@ -29,7 +29,7 @@ var RepositoryStatusColumnType = (function() {
       if (stringLength < GLOBAL_CONSTANTS.NAME_MIN_LENGTH
           || stringLength > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
           || iconPlaceholder) {
-        $row.addClass('error');
+        $row.addClass('error').attr('data-error-text', I18n.t('libraries.manange_modal_column.status_type.errors.icon_and_name_error'));
       } else {
         $row.removeClass('error');
       }

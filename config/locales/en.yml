@@ -1201,6 +1201,8 @@ en:
       status_type:
         status_options_label: "Status options"
         add_status_label: "Add status option"
+        errors:
+          icon_and_name_error: "Status icon and status name should be filled"
       datetime_type:
         range_label: 'Range'
       checklist_type:
