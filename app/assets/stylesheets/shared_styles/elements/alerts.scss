@@ -1,0 +1,25 @@
+.alert {
+  align-items: center;
+  border-radius: 0;
+  display: flex;
+  height: 52px;
+  margin-bottom: 0;
+  opacity: .86;
+  padding: 9px;
+  width: 100%;
+
+  .fas {
+    font-size: $font-size-h2;
+    margin-left: 12px;
+  }
+
+  .message {
+    color: $color-volcano;
+    flex-grow: 1;
+    margin-left: 14px;
+  }
+
+  .close {
+    top: 0;
+  }
+}
