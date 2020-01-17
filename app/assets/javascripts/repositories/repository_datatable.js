@@ -152,7 +152,7 @@ var RepositoryDatatable = (function(global) {
 
   function initRowSelection() {
     // Handle clicks on checkbox
-    $('.dt-body-center .repository-row-selector').change(function(ev) {
+    $(TABLE_ID).on('change', '.repository-row-selector', function(ev) {
       var $row;
       var data;
       var rowId;
@@ -250,9 +250,7 @@ var RepositoryDatatable = (function(global) {
     if ($('#assigned').text().length === 0) {
       TABLE.column(1).visible(false);
     }
-    TABLE.ajax.reload(function() {
-      initRowSelection();
-    }, false);
+    TABLE.ajax.reload(null, false);
     changeToViewMode();
     SmartAnnotation.closePopup();
     animateSpinner(null, false);
@@ -497,7 +495,6 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
-        initRowSelection();
       },
       preDrawCallback: function() {
         animateSpinner(this);
@@ -530,8 +527,7 @@ var RepositoryDatatable = (function(global) {
       fnInitComplete: function() {
         var tableLengthSelect = $('.dataTables_length select');
         var tableFilterInput = $('.dataTables_filter input');
-        initRowSelection();
-        bindExportActions();
+
         disableCheckboxToggleOnAssetDownload();
         FilePreviewModal.init();
         initHeaderTooltip();
@@ -596,13 +592,12 @@ var RepositoryDatatable = (function(global) {
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
 
-    TABLE.on('column-reorder', function() {
-      initRowSelection();
-    });
-
     $('#assignRepositories, #unassignRepositories').click(function() {
       animateLoading();
     });
+
+    initRowSelection();
+    bindExportActions();
 
     return TABLE;
   }
@@ -621,23 +616,15 @@ var RepositoryDatatable = (function(global) {
     });
 
     $('#assigned-repo-records').on('click', function() {
-      var promiseReload;
       viewAssigned = 'assigned';
-      promiseReload = new Promise(function(resolve) {
+      return new Promise(function(resolve) {
         resolve(TABLE.ajax.reload());
-      });
-      promiseReload.then(function() {
-        initRowSelection();
       });
     });
     $('#all-repo-records').on('click', function() {
-      var promiseReload;
       viewAssigned = 'all';
-      promiseReload = new Promise(function(resolve) {
+      return new Promise(function(resolve) {
         resolve(TABLE.ajax.reload());
-      });
-      promiseReload.then(function() {
-        initRowSelection();
       });
     });
   };
