@@ -6,6 +6,7 @@
   height: 34px;
   margin-bottom: 5px;
   transition: .3s;
+  position: relative;
 
   .status-item-field {
     border: 1px solid $input-border;
@@ -62,6 +63,8 @@
   }
 
   &.error.error-highlight {
+    margin-bottom: 15px;
+
     .status-item-icon,
     .status-item-field {
       border-color: $brand-danger;
@@ -69,6 +72,18 @@
 
     .status-item-icon {
       border-right-color: $input-border;
+    }
+
+    &::before {
+      @include font-small;
+      bottom: -14px;
+      color: $brand-danger;
+      content: attr(data-error-text);
+      left: 0;
+      line-height: 15px;
+      position: absolute;
+      white-space: nowrap;
+      width: 100%;
     }
   }
 }
