@@ -1,6 +1,6 @@
 <%
   delimiters = defined_delimiters_options
-  selected_delimiter = column.metadata['delimiter'] || 'return'
+  selected_delimiter = column.new_record? ? 'auto' : column.metadata['delimiter'] || 'return'
   selected_delimiter_char = Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[selected_delimiter.to_sym]
 %>
 
