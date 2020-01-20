@@ -94,6 +94,12 @@
     }
   }
 
+  #new-repository-column {
+    .tag-label{
+      pointer-events: none;
+    }
+  }
+
   .repo-columns-list {
     height: 390px;
     margin-bottom: 0;
@@ -207,7 +213,7 @@
     .repo-columns-list>.editable:hover>.manage-controls {
       display: none;
     }
-    
+
     .repo-columns-list>.editable:hover>.column-type {
       display: inline-block;
     }
