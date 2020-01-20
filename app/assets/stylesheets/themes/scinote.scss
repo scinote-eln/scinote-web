@@ -347,6 +347,7 @@ a[data-toggle="tooltip"] {
 
       &.active {
         @include box-shadow(0 4px 0 $brand-primary);
+        line-height: 24px;
         margin-bottom: 4px;
 
         & > a,
