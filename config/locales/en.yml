@@ -1198,6 +1198,12 @@ en:
           space: "Space"
           semicolon: "Semicolon"
           comma: "Comma"
+        items_placeholders:
+          auto: "Enter dropdown list options..."
+          return: "Enter dropdown list options one per line:\nDropdown list option 1\nDropdown list option 2\n..."
+          comma: "Enter dropdown list options, separated by commas..."
+          semicolon: "Enter dropdown list options, separated by semicolons..."
+          space: "Enter dropdown list options, separated by space..."
       status_type:
         status_options_label: "Status options"
         add_status_label: "Add status option"
@@ -1209,6 +1215,12 @@ en:
         multiple_options: 'options'
         all_options: 'All options'
         checklist_items: 'Checklist items'
+        items_placeholders:
+          auto: "Enter checklist items..."
+          return: "Enter checklist items one per line:\nChecklist item 1\nChecklist item  2\n..."
+          comma: "Enter checklist items, separated by commas..."
+          semicolon: "Enter checklist items, separated by semicolons..."
+          space: "Enter checklist items, separated by space..."
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'

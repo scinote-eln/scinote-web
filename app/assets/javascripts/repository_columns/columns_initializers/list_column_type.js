@@ -1,4 +1,4 @@
-/* global GLOBAL_CONSTANTS */
+/* global GLOBAL_CONSTANTS dropdownSelector I18n */
 /* eslint-disable no-unused-vars */
 var RepositoryListColumnType = (function() {
   var manageModal = '#manage-repository-column';
@@ -6,6 +6,21 @@ var RepositoryListColumnType = (function() {
   var itemsTextarea = '.list-column-type #items-textarea';
   var previewContainer = '.list-column-type  .dropdown-preview';
   var dropdownOptions = '.list-column-type #dropdown-options';
+
+  function initListDropdown() {
+    dropdownSelector.init(previewContainer + ' .preview-select', {
+      noEmptyOption: true,
+      singleSelect: true,
+      selectAppearance: 'simple',
+      closeOnSelect: true
+    });
+  }
+
+  function initUpdatePlaceholder(delimiter) {
+    var value = delimiter.value;
+    var placeholder = I18n.t('libraries.manange_modal_column.list_type.items_placeholders.' + value);
+    $(itemsTextarea).attr('placeholder', placeholder);
+  }
 
   function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
@@ -113,15 +128,18 @@ var RepositoryListColumnType = (function() {
           delimiterDropdown,
           dropdownOptions
         );
+        initListDropdown();
         $('.changing-existing-list-items-warning').removeClass('hidden');
       })
       .on('change', delimiterDropdown, function() {
+        initUpdatePlaceholder(this);
         refreshPreviewDropdownList(
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
           dropdownOptions
         );
+        initListDropdown();
       })
       .on('columnModal::partialLoadedForRepositoryListValue', function() {
         refreshPreviewDropdownList(
@@ -130,6 +148,7 @@ var RepositoryListColumnType = (function() {
           delimiterDropdown,
           dropdownOptions
         );
+        initListDropdown();
       })
       .on('keyup change', columnNameInput, function() {
         $manageModal.find(previewContainer).find('.preview-label').html($manageModal.find(columnNameInput).val());
@@ -155,6 +174,14 @@ var RepositoryListColumnType = (function() {
 
     refreshPreviewDropdownList: (preview, textarea, delimiter, dropdown) => {
       refreshPreviewDropdownList(preview, textarea, delimiter, dropdown);
+    },
+
+    initListDropdown: () => {
+      initListDropdown();
+    },
+
+    initListPlaceholder: () => {
+      initUpdatePlaceholder($(delimiterDropdown)[0]);
     }
   };
 }());

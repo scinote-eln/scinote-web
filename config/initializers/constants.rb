@@ -989,6 +989,14 @@ class Constants
     space: ' '
   }.freeze
 
+  REPOSITORY_LIST_ITEMS_DELIMITERS_ICON_MAP = {
+    auto: "＊",
+    return: "↵",
+    comma: ',',
+    semicolon: ';',
+    space: '⎵'
+  }.freeze
+
   IMPORT_REPOSITORY_ITEMS_LIMIT = 2000
 
   # Very basic regex to check for validity of emails

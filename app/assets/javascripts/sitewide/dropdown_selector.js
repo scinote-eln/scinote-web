@@ -40,6 +40,7 @@
     singleSelect: boolean, // disable multiple select. default 'false'
     selectAppearance: string, // 'tag' or 'simple'. Default 'tag'
     closeOnSelect: boolean, // Close dropdown after select
+    disableSearch: boolean, // Disable search
   }
 
 
@@ -153,6 +154,9 @@ var dropdownSelector = (function() {
 
   // Read option to JSON
   function convertOptionToJson(option) {
+    if (option === undefined) {
+      return { label: '', value: '', params: {} };
+    }
     return {
       label: option.innerHTML,
       value: option.value,
@@ -424,6 +428,11 @@ var dropdownSelector = (function() {
       dropdownContainer.addClass('simple-mode');
     }
 
+    // Disable search
+    if (config.disableSearch) {
+      dropdownContainer.addClass('disable-search');
+    }
+
     // initialization keyboard controll
     initKeyboardControl(dropdownContainer);
 
@@ -615,7 +624,7 @@ var dropdownSelector = (function() {
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label"
-                    title="${label}"
+                    title="${$('<span>' + label + '</span>').text()}"
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
                     ${label}
@@ -740,7 +749,8 @@ var dropdownSelector = (function() {
         result.push({
           label: option.innerHTML,
           value: option.value,
-          delimiter: option.dataset.delimiter
+          delimiter: option.dataset.delimiter,
+          params: JSON.parse(option.dataset.params || '{}')
         });
       });
     }

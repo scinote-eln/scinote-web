@@ -149,6 +149,20 @@ var RepositoryColumns = (function() {
       var button = $(this);
       var modalUrl = button.data('modal-url');
       var columnType;
+      var delimiterOptionsRender = function(data) {
+        return `<span class='icon'>${data.params.icon}</span>${data.label}`;
+      };
+      var delimiterDropdownConfig = {
+        singleSelect: true,
+        noEmptyOption: true,
+        selectAppearance: 'simple',
+        closeOnSelect: true,
+        optionClass: 'delimiter-icon-dropdown',
+        optionLabel: delimiterOptionsRender,
+        tagClass: 'delimiter-icon-dropdown',
+        tagLabel: delimiterOptionsRender,
+        disableSearch: true
+      };
       $.get(modalUrl, (data) => {
         $manageModal.find('.modal-content').html(data.html)
           .find('#repository-column-name')
@@ -159,8 +173,18 @@ var RepositoryColumns = (function() {
           singleSelect: true,
           closeOnSelect: true,
           optionClass: 'custom-option',
-          selectAppearance: 'simple'
+          selectAppearance: 'simple',
+          disableSearch: true
         });
+
+        dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
+        RepositoryListColumnType.initListDropdown();
+        RepositoryListColumnType.initListPlaceholder();
+
+        dropdownSelector.init('.checklist-column-type .delimiter', delimiterDropdownConfig);
+        RepositoryChecklistColumnType.initChecklistDropdown();
+        RepositoryChecklistColumnType.initChecklistPlaceholder();
+
         $manageModal
           .trigger('columnModal::partialLoadedFor' + columnType);
 
