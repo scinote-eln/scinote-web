@@ -2286,7 +2286,7 @@ en:
       inventory:
         new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
         visibility: "You can make inventory columns visible or hidden."
-        manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, files or be defined as a dropdown list."
+        manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, number, file, date, time or be defined as a checklist, dropdown or status list."
 
     link:
       invite_to_sci: "https://support.scinote.net/hc/en-us/articles/115003902929"
