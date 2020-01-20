@@ -99,13 +99,7 @@ var RepositoryDatatableRowEditor = (function() {
       TABLE.ajax.reload(() => {
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(data.flash, 'success');
-
-        setTimeout(() => {
-          window.scrollTo({
-            left: 0,
-            behavior: 'smooth'
-          });
-        }, 400);
+        $('html, body').animate({scrollLeft: 0}, 300);
       });
     });
 
