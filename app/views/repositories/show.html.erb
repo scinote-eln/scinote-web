@@ -174,7 +174,7 @@
 <%= render partial: 'repositories/export_repository_modal.html.erb',
            locals: { repository: @repository } %>
 
-<%= render partial: 'repository_columns/manage_column_modal.html.erb' %>
+<%= render partial: 'repository_columns/manage_column_modal.html.erb', locals: { my_module_page: false } %>
 
 <%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>

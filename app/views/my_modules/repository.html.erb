@@ -56,7 +56,7 @@
   </div>
 </div>
 
-<%= render partial: 'repository_columns/manage_column_modal.html.erb' %>
+<%= render partial: 'repository_columns/manage_column_modal.html.erb', locals: { my_module_page: true } %>
 
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
