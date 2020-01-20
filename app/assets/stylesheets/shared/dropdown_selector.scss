@@ -244,7 +244,7 @@
 
       .ds-simple {
         .tag-label {
-          overflow: hiddens;
+          overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
@@ -296,7 +296,7 @@
       }
     }
 
-    &.simple-mode {
+    &.simple-mode:not(.disable-search) {
       .search-field {
         display: block;
         line-height: 14px;
@@ -307,10 +307,16 @@
       }
 
       .ds-simple {
-        color: $color-silver-chalice;
         font-size: 12px;
         line-height: 14px;
+        opacity: .6;
       }
+    }
+  }
+
+  &.disable-search {
+    .search-field {
+      display: none;
     }
   }
 

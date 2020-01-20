@@ -1,4 +1,4 @@
-/* global GLOBAL_CONSTANTS dropdownSelector RepositoryListColumnType */
+/* global GLOBAL_CONSTANTS dropdownSelector RepositoryListColumnType I18n */
 
 var RepositoryChecklistColumnType = (function() {
   var manageModal = '#manage-repository-column';
@@ -13,6 +13,12 @@ var RepositoryChecklistColumnType = (function() {
       optionClass: 'checkbox-icon',
       selectAppearance: 'simple'
     });
+  }
+
+  function initUpdatePlaceholder(delimiter) {
+    var value = delimiter.value;
+    var placeholder = I18n.t('libraries.manange_modal_column.checklist_type.items_placeholders.' + value);
+    $(itemsTextarea).attr('placeholder', placeholder);
   }
 
   function initDropdownItemsTextArea() {
@@ -42,6 +48,7 @@ var RepositoryChecklistColumnType = (function() {
           dropdownOptions
         );
         initChecklistDropdown();
+        initUpdatePlaceholder(this);
       })
       .on('columnModal::partialLoadedForRepositoryChecklistValue', function() {
         RepositoryListColumnType.refreshPreviewDropdownList(
@@ -72,6 +79,12 @@ var RepositoryChecklistColumnType = (function() {
       repositoryColumnParams.repository_checklist_items_attributes = options;
       repositoryColumnParams.metadata = { delimiter: $(delimiterDropdown).data('used-delimiter') };
       return repositoryColumnParams;
+    },
+    initChecklistDropdown: () => {
+      initChecklistDropdown();
+    },
+    initChecklistPlaceholder: () => {
+      initUpdatePlaceholder($(delimiterDropdown)[0]);
     }
   };
 }());
