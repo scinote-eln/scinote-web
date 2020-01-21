@@ -217,5 +217,13 @@
     .repo-columns-list>.editable:hover>.column-type {
       display: inline-block;
     }
+
+    .modal-footer {
+      min-height: 61px;
+
+      #new-repo-column-modal {
+        display: none;
+      }
+    }
   }
 }
