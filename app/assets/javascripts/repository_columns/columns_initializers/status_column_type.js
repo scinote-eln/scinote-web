@@ -1,5 +1,6 @@
-/* global GLOBAL_CONSTANTS I18n */
-/* eslint-disable no-unused-vars */
+/* global GLOBAL_CONSTANTS I18n EmojiButton twemoji */
+/* eslint-disable no-unused-vars, no-use-before-define, consistent-return, no-param-reassign */
+
 var RepositoryStatusColumnType = (function() {
   var manageModal = '#manage-repository-column';
   var iconId = '.status-item-icon';
@@ -23,12 +24,12 @@ var RepositoryStatusColumnType = (function() {
     $.each($statusRows, (index, statusRow) => {
       var $row = $(statusRow);
       var $statusField = $row.find('.status-item-field');
-      var iconPlaceholder = $row.find(iconId)[0].emojioneArea.editor.hasClass('has-placeholder');
+      var iconPlaceholder = $row.find(iconId).attr('emoji');
       var stringLength = $statusField.val().length;
 
       if (stringLength < GLOBAL_CONSTANTS.NAME_MIN_LENGTH
           || stringLength > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
-          || iconPlaceholder) {
+          || !iconPlaceholder) {
         $row.addClass('error').attr('data-error-text', I18n.t('libraries.manange_modal_column.status_type.errors.icon_and_name_error'));
       } else {
         $row.removeClass('error');
@@ -46,17 +47,35 @@ var RepositoryStatusColumnType = (function() {
     $(manageModal).find('.error').addClass('error-highlight');
   }
 
-  function initEmojiPicker(iconElem) {
-    iconElem.emojioneArea({
-      standalone: true,
-      autocomplete: false,
-      pickerPosition: 'bottom',
-      events: {
-        emojibtn_click: function(button, event) {
-          validateForm();
+  function initEmojiPicker() {
+    // init Emoji picker modal
+    $(manageModal)
+      .on('click', iconId, function() {
+        var picker = new EmojiButton({ rootElement: document.getElementById('manage-repository-column') });
+        var iconElement = this;
+        picker.on('emoji', emoji => {
+          $(iconElement).attr('emoji', emoji).html(twemoji.parse(emoji));
+        });
+
+        if (picker.pickerVisible) {
+          picker.hidePicker();
+        } else {
+          picker.showPicker(iconElement);
         }
-      }
-    });
+        twemoji.parse($('.emoji-picker').last().find('.emoji-picker__tab-body')[1]);
+      })
+      .on('click', '.emoji-picker__tab-body.active .emoji-picker__emoji', function() {
+        if ($('.emoji-picker__variant-popup').length) {
+          twemoji.parse($('.emoji-picker__variant-popup')[0]);
+        }
+      })
+      .on('click', '.emoji-picker__tab', function() {
+        $.each($('.emoji-picker__tab'), (i, tab) => {
+          if ($(tab).hasClass('active')) {
+            twemoji.parse($('.emoji-picker__tab-body')[i]);
+          }
+        });
+      });
   }
 
   function initActions() {
@@ -66,10 +85,10 @@ var RepositoryStatusColumnType = (function() {
     var statusInput = 'input.status-item-field';
     var buttonWrapper = '.button-wrapper';
 
+    initEmojiPicker();
     $manageModal.on('click', addStatusOptionBtn, function() {
       var newStatusRow = $(statusTemplate()).insertBefore($(this));
       var newIcon = newStatusRow.find(iconId);
-      initEmojiPicker(newIcon);
       validateForm();
 
       setTimeout(function() {
@@ -103,10 +122,6 @@ var RepositoryStatusColumnType = (function() {
           validateForm();
         }
       }, 300);
-    });
-
-    $manageModal.on('columnModal::partialLoadedForRepositoryStatusValue', function() {
-      initEmojiPicker($(iconId));
     });
 
     $manageModal
@@ -143,7 +158,7 @@ var RepositoryStatusColumnType = (function() {
         var $item = $(value);
         var id = $item.data('id');
         var removed = $item.data('removed');
-        var icon = $item.find(iconId)[0].emojioneArea.getText();
+        var icon = $item.find(iconId).attr('emoji');
         var status = $item.find('input.status-item-field').val();
 
         if (removed && id) { // flag as item for removing
@@ -159,6 +174,12 @@ var RepositoryStatusColumnType = (function() {
       });
 
       return repositoryColumnParams;
+    },
+
+    updateLoadedEmojies: () => {
+      $.each($('.status-column-type .status-item-icon'), (i, icon) => {
+        $(icon).html(twemoji.parse(icon.innerHTML));
+      });
     }
   };
 }());

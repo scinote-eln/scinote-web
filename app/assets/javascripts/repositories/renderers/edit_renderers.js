@@ -84,7 +84,7 @@ $.fn.dataTable.render.editRepositoryStatusValue = function(formId, columnId, cel
   if (currentElement.length) {
     currentValue = {
       value: currentElement.attr('data-value-id'),
-      label: iconElement.text() + ' ' + currentElement.text()
+      label: iconElement.find('img').attr('alt') + ' ' + currentElement.text()
     };
   }
 

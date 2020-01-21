@@ -19,15 +19,6 @@
     }
   }
 
-  .repository-status-value-icon {
-    margin-right: 5px;
-  }
-
-  .dropdown-selector-container {
-    width: 150px;
-  }
-
-
   // Cells
 
 
@@ -79,7 +70,7 @@
       }
     }
 
-    span  {
+    span {
       color: $brand-primary;
       cursor: pointer;
 
@@ -92,6 +83,49 @@
 
   .text-field.sci-input-container {
     min-width: 150px;
+  }
+
+  // Status
+  .repository-status-value-container {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .repository-status-value-icon {
+    .emoji {
+      height: 24px;
+      margin-right: 5px;
+      min-width: 24px;
+      width: 24px;
+    }
+  }
+
+  .dropdown-selector-container {
+    width: 150px;
+
+    .emoji-status {
+      .emoji {
+        height: 24px;
+        margin-right: 5px;
+        min-width: 24px;
+        transition: .3s;
+        width: 24px;
+      }
+    }
+
+    &.open {
+      .ds-simple.emoji-status {
+        .emoji {
+          height: 12px;
+          margin-right: 2px;
+          min-width: 12px;
+          width: 12px;
+        }
+      }
+    }
   }
 
   // DateTime

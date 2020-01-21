@@ -1,4 +1,4 @@
-/* global I18n */
+/* global I18n twemoji */
 
 $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   var asset = data.value;
@@ -41,8 +41,10 @@ $.fn.dataTable.render.defaultRepositoryListValue = function() {
 
 $.fn.dataTable.render.RepositoryStatusValue = function(data) {
   return `
-    <span class="repository-status-value-icon">${data.value.icon}</span>
+  <div class="repository-status-value-container" title="${data.value.icon} ${data.value.status}">
+    <span class="repository-status-value-icon">${twemoji.parse(data.value.icon)}</span>
     <span data-value-id="${data.value.id}" class="status-label">${data.value.status}</span>
+  </div>
   `;
 };
 

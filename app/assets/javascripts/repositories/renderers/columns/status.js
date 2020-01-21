@@ -1,4 +1,4 @@
-/* global dropdownSelector I18n */
+/* global dropdownSelector I18n twemoji */
 /* eslint-disable no-unused-vars */
 
 var StatusColumnHelper = (function() {
@@ -34,9 +34,17 @@ var StatusColumnHelper = (function() {
       singleSelect: true,
       selectAppearance: 'simple',
       closeOnSelect: true,
-      onChange: function() {
+      onChange: () => {
         var values = dropdownSelector.getValues('#' + select);
         $hiddenField.val(values);
+      },
+      optionClass: 'emoji-status',
+      optionLabel: (data) => {
+        return twemoji.parse(data.label);
+      },
+      tagClass: 'emoji-status',
+      tagLabel: (data) => {
+        return twemoji.parse(data.label);
       }
     });
   }

@@ -5,7 +5,7 @@
   <div class="col-sm-9 status-item-list">
     <% column.repository_status_items.each do |item| %>
       <div class="status-item-container" data-id="<%= item.id %>">
-        <div class="status-item-icon"><span><%= item.icon %></span></div>
+        <div class="status-item-icon" emoji="<%= item.icon %>"><%= item.icon %></div>
         <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
                class="status-item-field"
                type="text"
