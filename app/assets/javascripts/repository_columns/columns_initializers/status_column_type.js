@@ -47,43 +47,56 @@ var RepositoryStatusColumnType = (function() {
     $(manageModal).find('.error').addClass('error-highlight');
   }
 
-  function initEmojiPicker(iconElem) {
-    var picker = new EmojiButton();
-    var icon = $(iconElem)[0];
-    picker.on('emoji', emoji => {
-      $(iconElem).attr('emoji', emoji).html(twemoji.parse(emoji));
-    });
-    $(icon).off().click(() => {
+  function onEmojiPickerOpen(attempt = 1) {
+    var emojiPicker = $('.emoji-picker.visible .emoji-picker__tab-body.active');
+    if (emojiPicker.length) {
+      replaceEmojies(emojiPicker);
+      $.each(emojiPicker.find('.emoji-picker__emojis'), (i, scrollContainer) => {
+        $(scrollContainer).off('scroll').on('scroll', function() {
+          replaceEmojies($(this).closest('.emoji-picker__tab-body'));
+        });
+      });
+    } else if (attempt < 50) {
+      setTimeout(() => {
+        onEmojiPickerOpen(attempt + 1);
+      }, 100);
+    }
+  }
+
+  function initEmojiPicker() {
+    // init Emoji picker modal
+    $(manageModal).on('click', iconId, function() {
+      var picker = new EmojiButton();
+      var iconElement = this;
+      picker.on('emoji', emoji => {
+        $(iconElement).attr('emoji', emoji).html(twemoji.parse(emoji));
+      });
+
       if (picker.pickerVisible) {
         picker.hidePicker();
       } else {
-        picker.showPicker(icon);
+        picker.showPicker(iconElement);
       }
-      setTimeout(() => {
-        replaceEmojies($('.emoji-picker.visible .emoji-picker__tab-body.active'));
-        $.each($('.emoji-picker__tab-body .emoji-picker__emojis'), (i, scrollContainer) => {
-          $(scrollContainer).off('scroll').on('scroll', function() {
-            replaceEmojies($(this).closest('.emoji-picker__tab-body'));
-          });
-        });
-      }, 100);
-      $('.emoji-picker__tabs').off('click', '.emoji-picker__tab')
-        .on('click', '.emoji-picker__tab', function() {
-          $.each($('.emoji-picker__tab'), (i, tab) => {
-            if ($(tab).hasClass('active')) {
-              replaceEmojies($($('.emoji-picker__tab-body')[i]));
-            }
-          });
-        });
-
-      $('.emoji-picker__tab-body.active').off('click', '.emoji-picker__emoji')
-        .on('click', '.emoji-picker__emoji', function() {
-          $.each($('.emoji-picker__variant-popup .emoji-picker__emoji'), (i, button) => {
-            $(button).addClass('updated');
-            button.innerHTML = twemoji.parse(button.innerHTML);
-          });
-        });
+      onEmojiPickerOpen();
     });
+
+
+    $(document).off('click', '.emoji-picker__tab-body.active .emoji-picker__emoji')
+      .on('click', '.emoji-picker__tab-body.active .emoji-picker__emoji', function() {
+        $.each($('.emoji-picker__variant-popup .emoji-picker__emoji'), (i, button) => {
+          $(button).addClass('updated');
+          button.innerHTML = twemoji.parse(button.innerHTML);
+        });
+      });
+
+    $(document).off('click', '.emoji-picker__tab')
+      .on('click', '.emoji-picker__tab', function() {
+        $.each($('.emoji-picker__tab'), (i, tab) => {
+          if ($(tab).hasClass('active')) {
+            replaceEmojies($($('.emoji-picker__tab-body')[i]));
+          }
+        });
+      });
   }
 
   function replaceEmojies(tabBody) {
@@ -109,10 +122,10 @@ var RepositoryStatusColumnType = (function() {
     var statusInput = 'input.status-item-field';
     var buttonWrapper = '.button-wrapper';
 
+    initEmojiPicker();
     $manageModal.on('click', addStatusOptionBtn, function() {
       var newStatusRow = $(statusTemplate()).insertBefore($(this));
       var newIcon = newStatusRow.find(iconId);
-      initEmojiPicker(newIcon);
       validateForm();
 
       setTimeout(function() {
@@ -146,10 +159,6 @@ var RepositoryStatusColumnType = (function() {
           validateForm();
         }
       }, 300);
-    });
-
-    $manageModal.on('columnModal::partialLoadedForRepositoryStatusValue', function() {
-      initEmojiPicker($(iconId));
     });
 
     $manageModal
@@ -206,7 +215,6 @@ var RepositoryStatusColumnType = (function() {
 
     updateLoadedEmojies: () => {
       $.each($('.status-column-type .status-item-icon'), (i, icon) => {
-        initEmojiPicker(icon);
         $(icon).html(twemoji.parse(icon.innerHTML));
       });
     }
