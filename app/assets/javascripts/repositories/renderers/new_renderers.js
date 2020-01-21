@@ -64,12 +64,16 @@ $.fn.dataTable.render.newRepositoryChecklistValue = function(formId, columnId, $
   ChecklistColumnHelper.initialChecklistEditMode(formId, columnId, $cell);
 };
 
-$.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cell) {
+$.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cell, $header) {
+  let decimals = $header.data('metadata-decimals');
+
   $cell.html(`
     <div class="sci-input-container text-field">
       <input class="sci-input-field"
              form="${formId}"
-             type="number"
+             type="text"
+             oninput="this.value = this.value.replace(/[^0-9.]/g, '');
+                      this.value = this.value.match(/^\\d*(\\.\\d{0,${decimals}})?/)[0];"
              name="repository_cells[${columnId}]"
              value=""
              placeholder="${I18n.t('repositories.table.number.enter_number')}"
