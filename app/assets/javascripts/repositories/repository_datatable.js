@@ -14,6 +14,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
+  var SELECT_ALL_SELECTOR = "#checkbox > input[name=select_all]"
 
   var rowsSelected = [];
 
@@ -125,7 +126,7 @@ var RepositoryDatatable = (function(global) {
     var $header = TABLE.table().header();
     var $chkboxAll = $('.repository-row-selector', $table);
     var $chkboxChecked = $('.repository-row-selector:checked', $table);
-    var chkboxSelectAll = $('input[name="select_all"]', $header).get(0);
+    var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
 
     // If none of the checkboxes are checked
     if ($chkboxChecked.length === 0) {
@@ -192,7 +193,7 @@ var RepositoryDatatable = (function(global) {
     });
 
     // Handle click on "Select all" control
-    $('.dataTables_scrollHead input[name="select_all"]').change(function(ev) {
+    $(SELECT_ALL_SELECTOR).change(function(ev) {
       if (this.checked) {
         $('.repository-row-selector:not(:checked)').trigger('click');
       } else {
