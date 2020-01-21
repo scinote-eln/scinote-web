@@ -184,21 +184,18 @@ class Constants
   ].freeze
 
   # Theme colors
-  BRAND_PRIMARY = '#37a0d9'.freeze # $brand-primary
-  BRAND_DEFAULT = '#8fd13f'.freeze # $brand-default
+  BRAND_PRIMARY = '#104da9'.freeze # $brand-primary
 
   # Grayscale colors
   COLOR_WHITE = '#ffffff'.freeze # $color-white
-  COLOR_ALABASTER = '#fcfcfc'.freeze # $color-alabaster
-  COLOR_CONCRETE = '#f2f2f2'.freeze # $color-concrete
-  COLOR_GAINSBORO = '#e3e3e3'.freeze # $color-gainsboro
-  COLOR_ALTO = '#d2d2d2'.freeze # $color-alto
-  COLOR_SILVER = '#c5c5c5'.freeze # $color-silver
-  COLOR_SILVER_CHALICE = '#a0a0a0'.freeze # $color-silver-chalice
-  COLOR_DOVE_GRAY = '#666666'.freeze # $color-dove-gray
-  COLOR_EMPEROR = '#555555'.freeze # $color-emperor
-  COLOR_BLACK = '#000000'.freeze # $color-black
+  COLOR_CONCRETE = '#f0f0f6'.freeze # $color-concrete
+  COLOR_ALTO = '#d0d0d8'.freeze # $color-alto
+  COLOR_SILVER_CHALICE = '#a0a0a8'.freeze # $color-silver-chalice
+  COLOR_VOLCANO = '#404048'.freeze # $color-volcano
+  COLOR_BLACK = '#231f20'.freeze # $color-black
 
+  # Fonts
+  FONT_FAMILY_BASE = 'Lato,"Open Sans",Arial,Helvetica,sans-serif;'.freeze # $font-family-base
 
   #=============================================================================
   # External URLs
