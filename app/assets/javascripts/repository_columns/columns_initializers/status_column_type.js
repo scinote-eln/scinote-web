@@ -47,72 +47,35 @@ var RepositoryStatusColumnType = (function() {
     $(manageModal).find('.error').addClass('error-highlight');
   }
 
-  function onEmojiPickerOpen(attempt = 1) {
-    var emojiPicker = $('.emoji-picker.visible .emoji-picker__tab-body.active');
-    if (emojiPicker.length) {
-      replaceEmojies(emojiPicker);
-      $.each(emojiPicker.find('.emoji-picker__emojis'), (i, scrollContainer) => {
-        $(scrollContainer).off('scroll').on('scroll', function() {
-          replaceEmojies($(this).closest('.emoji-picker__tab-body'));
-        });
-      });
-    } else if (attempt < 50) {
-      setTimeout(() => {
-        onEmojiPickerOpen(attempt + 1);
-      }, 100);
-    }
-  }
-
   function initEmojiPicker() {
     // init Emoji picker modal
-    $(manageModal).on('click', iconId, function() {
-      var picker = new EmojiButton();
-      var iconElement = this;
-      picker.on('emoji', emoji => {
-        $(iconElement).attr('emoji', emoji).html(twemoji.parse(emoji));
-      });
-
-      if (picker.pickerVisible) {
-        picker.hidePicker();
-      } else {
-        picker.showPicker(iconElement);
-      }
-      onEmojiPickerOpen();
-    });
-
-
-    $(document).off('click', '.emoji-picker__tab-body.active .emoji-picker__emoji')
-      .on('click', '.emoji-picker__tab-body.active .emoji-picker__emoji', function() {
-        $.each($('.emoji-picker__variant-popup .emoji-picker__emoji'), (i, button) => {
-          $(button).addClass('updated');
-          button.innerHTML = twemoji.parse(button.innerHTML);
+    $(manageModal)
+      .on('click', iconId, function() {
+        var picker = new EmojiButton({ rootElement: document.getElementById('manage-repository-column') });
+        var iconElement = this;
+        picker.on('emoji', emoji => {
+          $(iconElement).attr('emoji', emoji).html(twemoji.parse(emoji));
         });
-      });
 
-    $(document).off('click', '.emoji-picker__tab')
+        if (picker.pickerVisible) {
+          picker.hidePicker();
+        } else {
+          picker.showPicker(iconElement);
+        }
+        twemoji.parse($('.emoji-picker').last().find('.emoji-picker__tab-body')[1]);
+      })
+      .on('click', '.emoji-picker__tab-body.active .emoji-picker__emoji', function() {
+        if ($('.emoji-picker__variant-popup').length) {
+          twemoji.parse($('.emoji-picker__variant-popup')[0]);
+        }
+      })
       .on('click', '.emoji-picker__tab', function() {
         $.each($('.emoji-picker__tab'), (i, tab) => {
           if ($(tab).hasClass('active')) {
-            replaceEmojies($($('.emoji-picker__tab-body')[i]));
+            twemoji.parse($('.emoji-picker__tab-body')[i]);
           }
         });
       });
-  }
-
-  function replaceEmojies(tabBody) {
-    var container = tabBody.find('.emoji-picker__emojis');
-    var containerHeight = container.height();
-    $.each(tabBody.find('.emoji-picker__emoji:not(.updated)'), (i, button) => {
-      var buttonPosition = $(button).offset().top - container.offset().top;
-      var buttonVisible = containerHeight > buttonPosition - 100;
-      if (buttonVisible && !$(button).hasClass('updated')) {
-        $(button).addClass('updated');
-        button.innerHTML = twemoji.parse(button.innerHTML);
-      }
-      if (!buttonVisible) {
-        return false;
-      }
-    });
   }
 
   function initActions() {

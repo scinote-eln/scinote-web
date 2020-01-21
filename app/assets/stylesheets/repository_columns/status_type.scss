@@ -161,15 +161,9 @@
   }
 
   .emoji-picker__emoji {
-    opacity: 0;
-
     .emoji {
       height: 22px;
       width: 22px;
-    }
-
-    &.updated {
-      opacity: 1;
     }
   }
 
