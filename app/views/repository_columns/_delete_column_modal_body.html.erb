@@ -11,7 +11,8 @@
   <div class="delete-content"
     <p><%= t("repositories.modal_delete_column.message", column: @repository_column.name) %></p>
     <div class="alert alert-danger" role="alert">
-      <span class="fas fa-exclamation-circle"></span>
+      <span class="fas fa-exclamation-triangle"></span>
+      &nbsp;
       <%= t("repositories.modal_delete_column.alert_heading") %>
       <ul>
         <li><%= t("repositories.modal_delete_column.alert_line_1", nr: @repository_column.repository_cells.count) %></li>
