@@ -14,7 +14,7 @@ module Experiments
       @graph[:size] = '4,4'
       @graph.node[color: Constants::COLOR_ALTO,
                   style: :filled,
-                  fontcolor: Constants::COLOR_EMPEROR,
+                  fontcolor: Constants::COLOR_VOLCANO,
                   shape: 'circle',
                   fontname: 'Arial',
                   fontsize: '16.0']
