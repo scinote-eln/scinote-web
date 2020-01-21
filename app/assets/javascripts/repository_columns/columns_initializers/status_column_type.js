@@ -1,5 +1,6 @@
-/* global GLOBAL_CONSTANTS I18n */
-/* eslint-disable no-unused-vars */
+/* global GLOBAL_CONSTANTS I18n EmojiButton twemoji */
+/* eslint-disable no-unused-vars, no-use-before-define, consistent-return, no-param-reassign */
+
 var RepositoryStatusColumnType = (function() {
   var manageModal = '#manage-repository-column';
   var iconId = '.status-item-icon';
@@ -23,12 +24,12 @@ var RepositoryStatusColumnType = (function() {
     $.each($statusRows, (index, statusRow) => {
       var $row = $(statusRow);
       var $statusField = $row.find('.status-item-field');
-      var iconPlaceholder = $row.find(iconId)[0].emojioneArea.editor.hasClass('has-placeholder');
+      var iconPlaceholder = $row.find(iconId).attr('emoji');
       var stringLength = $statusField.val().length;
 
       if (stringLength < GLOBAL_CONSTANTS.NAME_MIN_LENGTH
           || stringLength > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
-          || iconPlaceholder) {
+          || !iconPlaceholder) {
         $row.addClass('error').attr('data-error-text', I18n.t('libraries.manange_modal_column.status_type.errors.icon_and_name_error'));
       } else {
         $row.removeClass('error');
@@ -47,14 +48,56 @@ var RepositoryStatusColumnType = (function() {
   }
 
   function initEmojiPicker(iconElem) {
-    iconElem.emojioneArea({
-      standalone: true,
-      autocomplete: false,
-      pickerPosition: 'bottom',
-      events: {
-        emojibtn_click: function(button, event) {
-          validateForm();
-        }
+    var picker = new EmojiButton();
+    var icon = $(iconElem)[0];
+    picker.on('emoji', emoji => {
+      $(iconElem).attr('emoji', emoji).html(twemoji.parse(emoji));
+    });
+    $(icon).click(() => {
+      if (picker.pickerVisible) {
+        picker.hidePicker();
+      } else {
+        picker.showPicker(icon);
+      }
+      setTimeout(() => {
+        replaceEmojies($('.emoji-picker.visible .emoji-picker__tab-body.active'));
+        $.each($('.emoji-picker__tab-body .emoji-picker__emojis'), (i, scrollContainer) => {
+          $(scrollContainer).off('scroll').on('scroll', function() {
+            replaceEmojies($(this).closest('.emoji-picker__tab-body'));
+          });
+        });
+      }, 0);
+      $('.emoji-picker__tabs').off('click', '.emoji-picker__tab')
+        .on('click', '.emoji-picker__tab', function() {
+          $.each($('.emoji-picker__tab'), (i, tab) => {
+            if ($(tab).hasClass('active')) {
+              replaceEmojies($($('.emoji-picker__tab-body')[i]));
+            }
+          });
+        });
+
+      $('.emoji-picker__tab-body.active').off('click', '.emoji-picker__emoji')
+        .on('click', '.emoji-picker__emoji', function() {
+          $.each($('.emoji-picker__variant-popup .emoji-picker__emoji'), (i, button) => {
+            $(button).addClass('updated');
+            button.innerHTML = twemoji.parse(button.innerHTML);
+          });
+        });
+    });
+  }
+
+  function replaceEmojies(tabBody) {
+    var container = tabBody.find('.emoji-picker__emojis');
+    var containerHeight = container.height();
+    $.each(tabBody.find('.emoji-picker__emoji:not(.updated)'), (i, button) => {
+      var buttonPosition = $(button).offset().top - container.offset().top;
+      var buttonVisible = containerHeight > buttonPosition - 100;
+      if (buttonVisible && !$(button).hasClass('updated')) {
+        $(button).addClass('updated');
+        button.innerHTML = twemoji.parse(button.innerHTML);
+      }
+      if (!buttonVisible) {
+        return false;
       }
     });
   }
@@ -143,7 +186,7 @@ var RepositoryStatusColumnType = (function() {
         var $item = $(value);
         var id = $item.data('id');
         var removed = $item.data('removed');
-        var icon = $item.find(iconId)[0].emojioneArea.getText();
+        var icon = $item.find(iconId).attr('emoji');
         var status = $item.find('input.status-item-field').val();
 
         if (removed && id) { // flag as item for removing
@@ -159,6 +202,13 @@ var RepositoryStatusColumnType = (function() {
       });
 
       return repositoryColumnParams;
+    },
+
+    updateLoadedEmojies: () => {
+      $.each($('.status-column-type .status-item-icon'), (i, icon) => {
+        initEmojiPicker(icon);
+        $(icon).html(twemoji.parse(icon.innerHTML));
+      });
     }
   };
 }());

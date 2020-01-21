@@ -188,6 +188,8 @@ var RepositoryColumns = (function() {
         $manageModal
           .trigger('columnModal::partialLoadedFor' + columnType);
 
+        RepositoryStatusColumnType.updateLoadedEmojies();
+
         if (button.data('action') === 'new') {
           $('[data-column-type="RepositoryTextValue"]').show();
           $('#new-repo-column-submit').show();
