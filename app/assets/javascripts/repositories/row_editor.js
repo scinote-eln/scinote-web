@@ -38,13 +38,13 @@ var RepositoryDatatableRowEditor = (function() {
 
     if (!valid) return false;
 
+    animateSpinner($table, true);
     // DirectUpload here
     let uploadPromise = Asset.uploadFiles($files, directUrl);
 
     // Submission here
     uploadPromise
       .then(function() {
-        animateSpinner(null, true);
         $form.submit();
         return false;
       }).catch((reason) => {
