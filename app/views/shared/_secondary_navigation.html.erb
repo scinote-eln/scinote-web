@@ -145,7 +145,7 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <h4 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
+      <h2 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
                      locals: { 
@@ -155,7 +155,7 @@
         <% else %>
           <%= title_element.name %>
         <% end %>
-      </h4>
+      </h2>
 
     </div>
   </div>
