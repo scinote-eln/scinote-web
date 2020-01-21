@@ -14,7 +14,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
-  var SELECT_ALL_SELECTOR = "#checkbox > input"
+  var SELECT_ALL_SELECTOR = "#checkbox > input[name=select_all]"
 
   var rowsSelected = [];
 
