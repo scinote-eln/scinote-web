@@ -53,7 +53,7 @@ var RepositoryStatusColumnType = (function() {
     picker.on('emoji', emoji => {
       $(iconElem).attr('emoji', emoji).html(twemoji.parse(emoji));
     });
-    $(icon).click(() => {
+    $(icon).off().click(() => {
       if (picker.pickerVisible) {
         picker.hidePicker();
       } else {
@@ -66,7 +66,7 @@ var RepositoryStatusColumnType = (function() {
             replaceEmojies($(this).closest('.emoji-picker__tab-body'));
           });
         });
-      }, 0);
+      }, 100);
       $('.emoji-picker__tabs').off('click', '.emoji-picker__tab')
         .on('click', '.emoji-picker__tab', function() {
           $.each($('.emoji-picker__tab'), (i, tab) => {
