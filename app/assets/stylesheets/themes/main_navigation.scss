@@ -2,7 +2,7 @@
 @import "mixins";
 
 #main-nav {
-  box-shadow: 0 3px 6px $color-alto;
+  box-shadow: $flyout-shadow;
   margin-bottom: 0;
 }
 
@@ -11,7 +11,7 @@
   padding-left: 15px;
 
   .fa-bell {
-    font-size: $font-size-large;
+    font-size: 16px;
   }
 
   #count-notifications {
@@ -40,10 +40,12 @@
 }
 
 .navbar-default .navbar-brand {
-  & > img {
-    margin-top: -7px;
-    max-width: 55px;
-    max-height: 38px;
+  align-items: center;
+  display: flex;
+  padding: 0 15px;
+
+  #logo {
+    max-height: 22px;
   }
 }
 
@@ -367,11 +369,6 @@
 
 // Alert
 .alert {
-  border-radius: 0;
-  margin-bottom: 0;
-  opacity: .86;
-  width: 100%;
-
   &.alert-hidden {
     display: none;
   }
@@ -394,10 +391,6 @@
 
 #search-bar {
   padding-right: 0;
-
-  .btn-default[type="submit"] {
-    height: 34px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -419,7 +412,7 @@
 #system-notifications-dropdown {
 
   .fa-gift {
-    font-size: $font-size-large;
+    font-size: 16px;
   }
 
   #count-system-notifications {

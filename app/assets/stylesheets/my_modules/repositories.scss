@@ -1,0 +1,69 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
+.my-module-inventories {
+
+  .main-actions {
+    align-items: center;
+    display: flex;
+
+    .filter-container {
+      flex-grow: 1;
+    }
+  }
+
+  .dataTables_scroll {
+    .dataTables_scrollBody {
+      thead {
+        opacity: 0;
+      }
+    }
+  }
+
+  tbody {
+    tr:hover {
+
+      .assigned-column {
+        .repository-row-edit-icon {
+          display: none !important;
+        }
+
+        .circle-icon {
+          margin-left: 30px !important;
+        }
+      }
+    }
+  }
+
+  .pagination-row {
+    align-items: center;
+    display: flex;
+
+    .pagination-info,
+    .pagination-actions {
+      flex-grow: 1;
+    }
+
+    .pagination-info {
+      align-items: center;
+      display: flex;
+
+      .dataTables_info {
+        padding-top: 0;
+      }
+
+      .dataTables_length {
+        margin-right: 24px;
+        width: 170px;
+
+        .dropdown-selector-container {
+          width: inherit;
+        }
+
+        label {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

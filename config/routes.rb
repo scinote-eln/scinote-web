@@ -62,6 +62,12 @@ Rails.application.routes.draw do
     get 'users/settings/account/addons',
         to: 'users/settings/account/addons#index',
         as: 'addons'
+    get 'users/settings/account/connected_accounts',
+        to: 'users/settings/account/connected_accounts#index',
+        as: 'connected_accounts'
+    delete 'users/settings/account/connected_accounts',
+           to: 'users/settings/account/connected_accounts#destroy',
+           as: 'unlink_connected_account'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
@@ -542,6 +548,9 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
+      member do
+        get :load_table
+      end
       # Save repository table state
       post 'state_save',
            to: 'user_repositories#save_table_state',
@@ -563,6 +572,10 @@ Rails.application.routes.draw do
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
+      get 'index_html',
+          to: 'repository_columns#index_html',
+          as: 'columns_index_html',
+          defaults: { format: 'json' }
       get 'create_html',
           to: 'repository_columns#create_html',
           as: 'columns_create_html',
@@ -572,19 +585,38 @@ Rails.application.routes.draw do
           as: 'available_columns',
           defaults: { format: 'json' }
 
-      resources :repository_columns, only: %i(index create edit update destroy)
+      resources :repository_columns, only: %i(create edit update destroy)
       resources :repository_rows, only: %i(create edit update)
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
+      namespace :repository_columns do
+        resources :text_columns, only: %i(create update destroy)
+        resources :number_columns, only: %i(create update destroy)
+        resources :asset_columns, only: %i(create update destroy)
+        resources :date_columns, only: %i(create update destroy)
+        resources :date_time_columns, only: %i(create update destroy)
+        resources :list_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
+        resources :checklist_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
+        resources :status_columns, only: %i(create update destroy) do
+          member do
+            get 'items'
+          end
+        end
+      end
     end
 
     post 'available_rows', to: 'repository_rows#available_rows',
                            defaults: { format: 'json' }
-
-    post 'repository_list_items', to: 'repository_list_items#search',
-                                  defaults: { format: 'json' }
 
     get 'repository_rows/:id', to: 'repository_rows#show',
                                as: :repository_row,
@@ -620,7 +652,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Api.configuration.core_api_v1_enabled || Rails.env.development?
+      if Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
@@ -633,6 +665,10 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
+                resources :inventory_status_items,
+                          only: %i(index create show update destroy),
+                          path: 'status_items',
+                          as: :status_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),

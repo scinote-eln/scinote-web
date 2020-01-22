@@ -9,7 +9,7 @@
             <div data-action="uncomplete-step"
                  class="complete-step-btn"
                  data-link-url="<%= toggle_step_state_step_path(step)%>">
-              <button class="btn btn-default">
+              <button class="btn btn-secondary">
                 <span class="fas fa-times"></span>
                 <%= t("protocols.steps.options.uncomplete_title") %>
               </button>
@@ -18,7 +18,7 @@
             <div data-action="complete-step"
                  class="complete-step-btn"
                  data-link-url="<%= toggle_step_state_step_path(step)%>">
-              <button class="btn btn-toggle">
+              <button class="btn btn-secondary">
                 <span class="fas fa-check"></span>
                 <%= t("protocols.steps.options.complete_title") %>
               </button>
@@ -29,25 +29,25 @@
         <% if (can_manage_protocol_in_module?(@protocol) ||
                       can_manage_protocol_in_repository?(@protocol)) && !(preview) %>
           <a data-action="move-step"
-             class="btn btn-link"
+             class="btn btn-light icon-btn"
              href="<%= move_up_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.up_arrow_title") %>"
              data-remote="true">
               <span class="fas fa-arrow-up"></span></a>
           <a data-action="move-step"
-             class="btn btn-link"
+             class="btn btn-light icon-btn"
              href="<%= move_down_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.down_arrow_title") %>"
              data-remote="true">
             <span class="fas fa-arrow-down"></span></a>
           <a data-action="edit-step"
-             class="btn btn-link"
+             class="btn btn-light icon-btn"
              title="<%= t("protocols.steps.options.edit_title") %>"
              href="<%= edit_step_path(step, format: :json) %>"
              data-remote="true" >
             <span class="fas fa-pencil-alt"></span>
           </a>
-          <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
+          <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-light icon-btn",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
             <span class="fas fa-trash-alt"></span>
           <% end %>

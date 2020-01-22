@@ -11,7 +11,7 @@ class RepositoriesController < ApplicationController
   before_action :load_parent_vars, except:
     %i(repository_table_index parse_sheet)
   before_action :check_view_all_permissions, only: :index
-  before_action :check_view_permissions, only: %i(export_repository show)
+  before_action :check_view_permissions, only: %i(load_table export_repository show)
   before_action :check_manage_permissions, only:
     %i(destroy destroy_modal rename_modal update)
   before_action :check_share_permissions, only: :share_modal
@@ -32,6 +32,16 @@ class RepositoriesController < ApplicationController
     @display_edit_button = can_create_repository_rows?(@repository)
     @display_delete_button = can_delete_repository_rows?(@repository)
     @display_duplicate_button = can_create_repository_rows?(@repository)
+  end
+
+  def load_table
+    render json: {
+      html: render_to_string(partial: 'repositories/repository_table.html.erb',
+                             locals: {
+                               repository: @repository,
+                               repository_index_link: repository_table_index_path(@repository)
+                             })
+    }
   end
 
   def create_modal
@@ -336,6 +346,7 @@ class RepositoriesController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'repository',
+      item_id: @repository.id,
       field_to_udpate: 'name',
       path_to_update: team_repository_path(@repository),
       label_after: "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"

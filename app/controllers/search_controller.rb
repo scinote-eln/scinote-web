@@ -138,9 +138,7 @@ class SearchController < ApplicationController
             repository_results[:repository] = repository
             repository_results[:count] = 0
             search_results.each do |result|
-              if repository.id == result.id
-                repository_results[:count] += result.counter
-              end
+              repository_results[:count] += result.counter if repository.id == result.id
             end
             team_results[:repositories][repository.name] = repository_results
             team_results[:count] += repository_results[:count]

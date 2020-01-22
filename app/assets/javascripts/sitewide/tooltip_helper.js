@@ -94,11 +94,17 @@
       var mouse = { x: e.clientX, y: e.clientY };
       $('.popover.tooltip-open').each(function(i, obj) {
         var tooltipObj = '*[data-tooltip-id="' + obj.dataset.popoverId + '"]';
-        var objHeight = $(tooltipObj)[0].clientHeight;
-        var objWidth = $(tooltipObj)[0].clientWidth;
-        var objLeft = $(tooltipObj)[0].offsetLeft;
-        var objTop = $(tooltipObj)[0].offsetTop;
-        var objCorners = {
+        var objHeight;
+        var objWidth;
+        var objLeft;
+        var objTop;
+        var objCorners;
+        if ($(tooltipObj).length === 0) return;
+        objHeight = $(tooltipObj)[0].clientHeight;
+        objWidth = $(tooltipObj)[0].clientWidth;
+        objLeft = $(tooltipObj)[0].offsetLeft;
+        objTop = $(tooltipObj)[0].offsetTop;
+        objCorners = {
           tl: { x: objLeft, y: objTop },
           tr: { x: (objLeft + objWidth), y: objTop },
           bl: { x: objLeft, y: (objTop + objHeight) },

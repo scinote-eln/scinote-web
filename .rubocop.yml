@@ -14,12 +14,12 @@ AllCops:
 Layout/AccessModifierIndentation:
   EnforcedStyle: indent
 
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedHashRocketStyle: key
   EnforcedColonStyle: key
   EnforcedLastArgumentHashStyle: ignore_implicit
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_first_parameter
 
 Style/AndOr:
@@ -83,7 +83,7 @@ Naming/FileName:
   Enabled: false
   Exclude: []
 
-Layout/IndentFirstParameter:
+Layout/FirstArgumentIndentation:
   EnforcedStyle: consistent
 
 Style/For:
@@ -111,10 +111,10 @@ Layout/IndentationConsistency:
 Layout/IndentationWidth:
   Width: 2
 
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: special_inside_parentheses
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: special_inside_parentheses
 
 Style/Next:
@@ -197,9 +197,9 @@ Naming/PredicateName:
   - is_
   - has_
   - have_
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
   - is_
-  NameWhitelist:
+  AllowedMethods:
     - is_a?
   Exclude:
   - spec/**/*
@@ -282,7 +282,7 @@ Style/TernaryParentheses:
   EnforcedStyle: require_no_parentheses
   AllowSafeAssignment: true
 
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   EnforcedStyle: final_newline
 
 Style/TrailingCommaInArguments:
@@ -364,14 +364,6 @@ Metrics/ModuleLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Metrics/LineLength:
-  Max: 120
-  AllowHeredoc: true
-  AllowURI: true
-  URISchemes:
-    - http
-    - https
-
 Metrics/MethodLength:
   Enabled: false
 
@@ -392,6 +384,14 @@ Layout/EndAlignment:
 Layout/DefEndAlignment:
   EnforcedStyleAlignWith: start_of_line
 
+Layout/LineLength:
+  Max: 120
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+
 ##################### Lint #####################################
 
 Lint/AssignmentInCondition:
@@ -411,7 +411,7 @@ Lint/UnusedMethodArgument:
 Lint/EachWithObjectArgument:
   Enabled: true
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 
 Lint/LiteralAsCondition:

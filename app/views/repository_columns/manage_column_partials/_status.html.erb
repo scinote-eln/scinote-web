@@ -1,0 +1,21 @@
+<div class="form-group">
+  <label class="control-label col-sm-3" for="repository-column-data-type">
+    <%= t('libraries.manange_modal_column.status_type.status_options_label') %>
+  </label>
+  <div class="col-sm-9 status-item-list">
+    <% column.repository_status_items.each do |item| %>
+      <div class="status-item-container" data-id="<%= item.id %>">
+        <div class="status-item-icon" emoji="<%= item.icon %>"><%= item.icon %></div>
+        <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
+               class="status-item-field"
+               type="text"
+               value="<%= item.status %>"/>
+        <span class="status-item-icon-trash fas fa-trash"></span>
+      </div>
+    <% end %>
+    <div class="add-status">
+      <span class="fas fa-plus"></span>
+      <span class="add-status-label"><%= t('libraries.manange_modal_column.status_type.add_status_label') %></span>
+    </div>
+  </div>
+</div>

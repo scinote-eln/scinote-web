@@ -186,7 +186,6 @@ GEM
       activesupport
     childprocess (1.0.1)
       rake (< 13.0)
-    climate_control (0.2.0)
     coderay (1.1.2)
     coffee-rails (5.0.0)
       coffee-script (>= 2.2.0)
@@ -288,7 +287,7 @@ GEM
       mini_magick (>= 4.9.5, < 5)
       ruby-vips (>= 2.0.13, < 3)
     iniparse (1.4.4)
-    jaro_winkler (1.5.3)
+    jaro_winkler (1.5.4)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
     jmespath (1.4.0)
@@ -301,7 +300,7 @@ GEM
     js_cookie_rails (2.2.0)
       railties (>= 3.1)
     json (1.8.6)
-    json-jwt (1.10.2)
+    json-jwt (1.11.0)
       activesupport (>= 4.2)
       aes_key_wrap
       bindata
@@ -346,7 +345,7 @@ GEM
     mini_magick (4.9.5)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
+    minitest (5.13.0)
     momentjs-rails (2.17.1)
       railties (>= 3.1)
     msgpack (1.3.1)
@@ -359,7 +358,7 @@ GEM
       jquery-rails
       rails (>= 3.2.0)
     newrelic_rpm (6.6.0.358)
-    nio4r (2.5.1)
+    nio4r (2.5.2)
     nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.1)
@@ -373,6 +372,9 @@ GEM
     omniauth (1.9.0)
       hashie (>= 3.4.6, < 3.7.0)
       rack (>= 1.6.2, < 3)
+    omniauth-azure-activedirectory (1.0.0)
+      jwt (~> 1.5)
+      omniauth (~> 1.1)
     omniauth-linkedin-oauth2 (1.0.0)
       omniauth-oauth2
     omniauth-oauth2 (1.6.0)
@@ -385,14 +387,8 @@ GEM
     overcommit (0.49.1)
       childprocess (>= 0.6.3, < 2.0)
       iniparse (~> 1.4)
-    paperclip (6.1.0)
-      activemodel (>= 4.2.0)
-      activesupport (>= 4.2.0)
-      mime-types
-      mimemagic (~> 0.3.0)
-      terrapin (~> 0.6.0)
-    parallel (1.17.0)
-    parser (2.6.4.0)
+    parallel (1.19.1)
+    parser (2.6.5.0)
       ast (~> 2.4.0)
     pg (1.1.4)
     pg_search (2.3.0)
@@ -408,10 +404,10 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.1)
-    puma (4.1.1)
+    puma (4.3.1)
       nio4r (~> 2.0)
     raabro (1.1.6)
-    rack (2.0.7)
+    rack (2.0.8)
     rack-attack (6.1.0)
       rack (>= 1.0, < 3)
     rack-proxy (0.6.5)
@@ -490,16 +486,16 @@ GEM
       rspec-mocks (~> 3.8)
       rspec-support (~> 3.8)
     rspec-support (3.8.2)
-    rubocop (0.74.0)
+    rubocop (0.78.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-performance (1.4.1)
+    rubocop-performance (1.5.1)
       rubocop (>= 0.71.0)
-    rubocop-rails (2.3.2)
+    rubocop-rails (2.4.0)
       rack (>= 1.1)
       rubocop (>= 0.72.0)
     ruby-graphviz (1.2.4)
@@ -553,8 +549,6 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     stream (0.5.2)
-    terrapin (0.6.0)
-      climate_control (>= 0.0.3, < 1.0)
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.9)
@@ -590,7 +584,7 @@ GEM
     wkhtmltopdf-heroku (2.12.5.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.1.10)
+    zeitwerk (2.2.1)
 
 PLATFORMS
   ruby
@@ -656,10 +650,10 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri (~> 1.10.3)
   omniauth
+  omniauth-azure-activedirectory
   omniauth-linkedin-oauth2
   omniauth-rails_csrf_protection (~> 0.1)
   overcommit
-  paperclip (~> 6.1)
   pg (~> 1.1)
   pg_search
   pry
@@ -675,7 +669,7 @@ DEPENDENCIES
   rgl
   roo (~> 2.8.2)
   rspec-rails (>= 4.0.0.beta2)
-  rubocop (>= 0.59.0)
+  rubocop (>= 0.75.0)
   rubocop-performance
   rubocop-rails
   ruby-graphviz (~> 1.2)

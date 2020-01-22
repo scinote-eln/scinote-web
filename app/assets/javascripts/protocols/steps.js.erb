@@ -198,8 +198,8 @@
         var collapseIcon = $(this).find(".collapse-step-icon");
         var collapsed = $(this).hasClass("collapsed");
         // Toggle collapse button
-        collapseIcon.toggleClass("fa-caret-square-up", !collapsed);
-        collapseIcon.toggleClass("fa-caret-square-down", collapsed);
+        collapseIcon.toggleClass("fa-chevron-up", !collapsed);
+        collapseIcon.toggleClass("fa-chevron-down", collapsed);
 
       });
   }
@@ -645,16 +645,16 @@
       renderTable($(this));
     });
     $(document).find("span.collapse-step-icon").each(function()  {
-      $(this).addClass("fa-caret-square-up");
-      $(this).removeClass("fa-caret-square-down");
+      $(this).addClass("fa-chevron-up");
+      $(this).removeClass("fa-chevron-down");
     });
   }
 
   function expandStep(step) {
     $('.panel-collapse', step).collapse('show');
     $(step).find("span.collapse-step-icon")
-      .addClass("fa-caret-square-up")
-      .removeClass("fa-caret-square-down");
+      .addClass("fa-chevron-up")
+      .removeClass("fa-chevron-down");
     $(step).find("div.step-result-hot-table").each(function()  {
       renderTable($(this));
     });
@@ -703,8 +703,8 @@
     $("[data-action='collapse-steps']").click(function () {
       $('.step .panel-collapse').collapse('hide');
       $(document).find("span.collapse-step-icon").each(function()  {
-        $(this).addClass("fa-caret-square-down");
-        $(this).removeClass("fa-caret-square-up");
+        $(this).addClass("fa-chevron-down");
+        $(this).removeClass("fa-chevron-up");
       });
     });
     $("[data-action='expand-steps']").click(expandAllSteps);

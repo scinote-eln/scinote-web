@@ -1,13 +1,15 @@
-<h3 class="ga-title">
+<h2 class="ga-title">
   <%= t('activities.index.global_activities_title') %>
-</h3>
+</h2>
 <div class="ga-actions">
-  <a id="global-activities-expand-all" class="hide-actions" href="#" data-turbolinks="false">
-    <i class="fas fa-chevron-down"></i><%= t('activities.index.expand_all') %>
-  </a>
-  <a id="global-activities-colapse-all" class="hide-actions" href="#" data-turbolinks="false">
-    <i class="fas fa-chevron-up"></i><%= t('activities.index.collapse_all') %>
-  </a>
+  <div class="sci-btn-group">
+    <a id="global-activities-expand-all" class="hide-actions btn btn-light" href="#" data-turbolinks="false">
+      <i class="fas fa-chevron-down"></i><%= t('activities.index.expand_all') %>
+    </a>
+    <a id="global-activities-colapse-all" class="hide-actions btn btn-light" href="#" data-turbolinks="false">
+      <i class="fas fa-chevron-up"></i><%= t('activities.index.collapse_all') %>
+    </a>
+  </div>
   <div class="ga-search-container">
     <input type="text" class="search-field" placeholder="Search..." aria-describedby="basic-addon1">
     <i class="fas fa-search"></i>

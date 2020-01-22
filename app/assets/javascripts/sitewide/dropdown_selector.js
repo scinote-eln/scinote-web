@@ -10,7 +10,7 @@
     data-placeholder // Search placeholder
     data-disable-on-load // Disable input after initialization
     data-select-all-button // Text for select all button
-    data-combine-tags // Combine multiple tags to one  (only for tags)
+    data-combine-tags // Combine multiple tags to one (in simple mode gives you multiple select)
     data-select-multiple-all-selected // Text for combine tags, when all selected
     data-select-multiple-name // Text for combine tags, when select more than one tag
     data-view-mode // Run in view mode
@@ -40,6 +40,7 @@
     singleSelect: boolean, // disable multiple select. default 'false'
     selectAppearance: string, // 'tag' or 'simple'. Default 'tag'
     closeOnSelect: boolean, // Close dropdown after select
+    disableSearch: boolean, // Disable search
   }
 
 
@@ -53,18 +54,35 @@ var dropdownSelector = (function() {
   function updateDropdownDirection(selector, container) {
     var windowHeight = $(window).height();
     var containerPosition = container[0].getBoundingClientRect().top;
+    var containerPositionLeft = container[0].getBoundingClientRect().left;
     var containerHeight = container[0].getBoundingClientRect().height;
     var containerWidth = container[0].getBoundingClientRect().width;
-    var bottomSpace = windowHeight - containerPosition - containerHeight;
-    if (bottomSpace < 280) {
+    var bottomSpace;
+    var modalContainer = container.closest('.modal-dialog');
+    var modalContainerBottom = 0;
+    var maxHeight = 0;
+
+    if (modalContainer.length) {
+      windowHeight = modalContainer.height() + modalContainer[0].getBoundingClientRect().top;
+      containerPositionLeft -= modalContainer[0].getBoundingClientRect().left;
+      modalContainerBottom = modalContainer[0].getBoundingClientRect().bottom;
+      maxHeight += modalContainerBottom;
+    }
+
+    bottomSpace = windowHeight - containerPosition - containerHeight;
+
+    if ((modalContainerBottom + bottomSpace) < 280) {
       container.addClass('inverse');
-      container.find('.dropdown-container').css('max-height', `${(containerPosition - 122)}px`)
+      container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
         .css('margin-bottom', `${(containerPosition * -1)}px`)
+        .css('left', `${containerPositionLeft}px`)
         .css('width', `${containerWidth}px`);
     } else {
       container.removeClass('inverse');
-      container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32)}px`)
-        .css('width', '');
+      container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32 + maxHeight)}px`)
+        .css('width', `${containerWidth}px`)
+        .css('left', `${containerPositionLeft}px`)
+        .css('margin-top', `${(bottomSpace * -1)}px`);
     }
   }
 
@@ -123,7 +141,7 @@ var dropdownSelector = (function() {
     if (mode) {
       updateCurrentData(container, []);
       updateTags(selector, container, { skipChange: true });
-      searchFieldValue.attr('placeholder', selector.data('disable-placeholder'));
+      searchFieldValue.attr('placeholder', selector.data('disable-placeholder') || '');
       container.addClass('disabled').removeClass('open')
         .find('.search-field').val('')
         .prop('disabled', true);
@@ -136,6 +154,9 @@ var dropdownSelector = (function() {
 
   // Read option to JSON
   function convertOptionToJson(option) {
+    if (option === undefined) {
+      return { label: '', value: '', params: {} };
+    }
     return {
       label: option.innerHTML,
       value: option.value,
@@ -223,11 +244,17 @@ var dropdownSelector = (function() {
 
       if (pressedKey === 38) {
         if (selectedOption.prev('.dropdown-option').length) {
-          selectedOption.removeClass('highlight').prev('.dropdown-option').addClass('highlight');
+          selectedOption.removeClass('highlight').prev().addClass('highlight');
+        }
+        if (selectedOption.prev('.delimiter').length) {
+          selectedOption.removeClass('highlight').prev().prev().addClass('highlight');
         }
       } else if (pressedKey === 40) {
         if (selectedOption.next('.dropdown-option').length) {
-          selectedOption.removeClass('highlight').next('.dropdown-option').addClass('highlight');
+          selectedOption.removeClass('highlight').next().addClass('highlight');
+        }
+        if (selectedOption.next('.delimiter').length) {
+          selectedOption.removeClass('highlight').next().next().addClass('highlight');
         }
       }
     });
@@ -259,7 +286,7 @@ var dropdownSelector = (function() {
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input type="text" class="search-field" placeholder="${selectElement.data('placeholder')}"></input>
+        <input type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
         ${prepareCustomDropdownIcon(config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
@@ -362,12 +389,15 @@ var dropdownSelector = (function() {
     });
 
     // When user will resize browser we must check dropdown position
-    $(window).resize(function() { updateDropdownDirection(selectElement, dropdownContainer); });
+    $(window).resize(() => { updateDropdownDirection(selectElement, dropdownContainer); });
+    $(window).scroll(() => { updateDropdownDirection(selectElement, dropdownContainer); });
 
     // When user will click away, we must close dropdown
     $(window).click(() => {
-      if (dropdownContainer.hasClass('open') && config.onClose) {
+      if (dropdownContainer.hasClass('open')) {
         dropdownContainer.find('.search-field').val('');
+      }
+      if (dropdownContainer.hasClass('open') && config.onClose) {
         config.onClose();
       }
       dropdownContainer.removeClass('open active');
@@ -396,6 +426,11 @@ var dropdownSelector = (function() {
     // Enable simple mode for dropdown selector
     if (config.selectAppearance === 'simple') {
       dropdownContainer.addClass('simple-mode');
+    }
+
+    // Disable search
+    if (config.disableSearch) {
+      dropdownContainer.addClass('disable-search');
     }
 
     // initialization keyboard controll
@@ -436,6 +471,11 @@ var dropdownSelector = (function() {
       `);
     }
 
+    // Draw delimiter object
+    function drawDelimiter() {
+      return $('<div class="delimiter"></div>');
+    }
+
     // Draw group object
     function drawGroup(group) {
       return $(`
@@ -452,13 +492,14 @@ var dropdownSelector = (function() {
       if (selector.data('config').singleSelect) {
         $container.find('.dropdown-option').removeClass('select');
         updateCurrentData($container, []);
+        selector.val($(this).data('value')).change();
       }
       $(this).toggleClass('select');
       saveData(selector, $container);
     }
 
     // Remove placeholder from option container
-    container.find('.dropdown-group, .dropdown-option, .empty-dropdown').remove();
+    container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .delimiter').remove();
     if (!data) return;
 
     if (data.length > 0) {
@@ -495,7 +536,12 @@ var dropdownSelector = (function() {
       } else {
         // For simple options we only draw them
         $.each(data, function(oi, option) {
-          var optionElement = drawOption(selector, option);
+          var optionElement;
+          if (option.delimiter) {
+            drawDelimiter().appendTo(container.find('.dropdown-container'));
+            return;
+          }
+          optionElement = drawOption(selector, option);
           optionElement.click(clickOption);
           optionElement.appendTo(container.find('.dropdown-container'));
         });
@@ -527,7 +573,7 @@ var dropdownSelector = (function() {
     }
 
     // First we clear search field
-    container.find('.search-field').val('');
+    if (selector.data('config').singleSelect) container.find('.search-field').val('');
 
     // Now we check all options in dropdown for selection and add them to array
     $.each(container.find('.dropdown-container .dropdown-option'), function(oi, option) {
@@ -558,8 +604,6 @@ var dropdownSelector = (function() {
     updateCurrentData(container, selectArray);
     // Redraw tags
     updateTags(selector, container, { select: true });
-    // Reload options in option container
-    loadData(selector, container);
   }
 
   // Refresh tags in input field
@@ -580,7 +624,7 @@ var dropdownSelector = (function() {
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label"
-                    title="${label}"
+                    title="${$('<span>' + label + '</span>').text()}"
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
                     ${label}
@@ -632,7 +676,8 @@ var dropdownSelector = (function() {
 
     // If we have alteast one tag, we need to remove placeholder from search field
     searchFieldValue.attr('placeholder',
-      selectedOptions.length > 0 ? '' : selector.data('placeholder'));
+      selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
+    searchFieldValue.attr('data-options-selected', selectedOptions.length);
 
     // Add stretch class for visual improvments
     if (!selector.data('combine-tags')) {
@@ -701,7 +746,12 @@ var dropdownSelector = (function() {
     } else {
       options = filterOptions(selector, container, selector.find('option'));
       $.each(options, function(oi, option) {
-        result.push({ label: option.innerHTML, value: option.value });
+        result.push({
+          label: option.innerHTML,
+          value: option.value,
+          delimiter: option.dataset.delimiter,
+          params: JSON.parse(option.dataset.params || '{}')
+        });
       });
     }
     return result;
@@ -751,7 +801,6 @@ var dropdownSelector = (function() {
       values = $.map(getCurrentData($(selector).next()), (v) => {
         return v.value;
       });
-
       if ($(selector).data('config').singleSelect) return values[0];
 
       return values;

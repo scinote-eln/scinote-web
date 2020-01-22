@@ -21,7 +21,7 @@ module ModelExporters
         # Writing JSON file with experiment structure
         File.write(
           File.join(@dir_to_export, 'experiment.json'),
-          experiment[0].to_json
+          JSON.pretty_generate(experiment[0].as_json)
         )
         # Copying assets
         assets_dir = File.join(@dir_to_export, 'assets')

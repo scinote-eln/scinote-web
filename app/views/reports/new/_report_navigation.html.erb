@@ -2,7 +2,7 @@
   <div class="center-block" id="report-menu">
 
     <div class="dropdown" id="sort-report">
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span class="fas fa-sort visible-xs-inline"></span>
         <span class="hidden-xs"><%= t'projects.reports.new.nav_sort_by' %></span>
         <span class="caret"></span>
@@ -13,14 +13,14 @@
       </ul>
     </div>
 
-    <%= link_to "", class: "btn btn-default", remote: true, id: "print-report" do %>
+    <%= link_to "", class: "btn btn-secondary", remote: true, id: "print-report" do %>
       <span class="fas fa-print"></span>
       <span class="hidden-xs"><%=t "projects.reports.new.nav_print" %></span>
     <% end %>
 
 
     <div class="dropdown" id="download-report">
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span class="fas fa-download"></span>
         <span class="hidden-xs"><%= t("projects.reports.new.nav_download") %><span>
         <span class="caret"></span>
@@ -33,17 +33,17 @@
 
     <button
       onclick="$('#savePDFtoInventory').modal('show')"
-      class="btn btn-default">
+      class="btn btn-secondary">
       <span class="fas fa-save">
       </span>
       <%=t 'projects.reports.new.save_PDF_to_inventory'%>
     </button>
 
     <div class="pull-right">
-      <%= link_to reports_path, data: { no_turbolink: false }, id: "cancel-report-link", class: "btn btn-default" do %>
+      <%= link_to reports_path, data: { no_turbolink: false }, id: "cancel-report-link", class: "btn btn-secondary" do %>
         <span class="hidden-xs"><%=t "projects.reports.new.nav_close" %></span>
       <% end %>
-      <%= link_to "", class: "btn btn-success", remote: true, id: "save-report-link" do %>
+      <%= link_to "", class: "btn btn-primary", remote: true, id: "save-report-link" do %>
         <span class="hidden-xs"><%=t "projects.reports.new.nav_save" %></span>
       <% end %>
     </div>

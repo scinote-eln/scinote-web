@@ -3,10 +3,191 @@
 
 @import "constants";
 
-.content-pane.repository-show {
-  margin-top: 15px;
-  padding-top: 0;
+:root {
+  --repository-sidebar-margin: 363px;
 }
+
+.repository-show {
+  animation-timing-function: $timing-function-sharp;
+  height: calc(100vh - 66px);
+  left: var(--repository-sidebar-margin);
+  margin: 0;
+  padding: 0 32px;
+  position: absolute;
+  top: 51px;
+  transition: .4s;
+  width: calc(100vw - var(--repository-sidebar-margin));
+
+
+  #repository-toolbar {
+    align-items: center;
+    animation-timing-function: $timing-function-sharp;
+    background-color: $color-white;
+    display: flex;
+    height: 75px;
+    left: var(--repository-sidebar-margin);
+    padding: 35px 32px 20px;
+    position: fixed;
+    transition: .4s;
+    width: calc(100% - var(--repository-sidebar-margin));
+    z-index: 100;
+
+    .toolbar-delimiter {
+      border-bottom: $border-tertiary;
+      bottom: 0;
+      position: absolute;
+      width: calc(100% - 64px);
+    }
+
+    .repository-share-icon {
+      flex-shrink: 0;
+      margin-top: -2px;
+
+      .fas-custom {
+        margin-left: 5px;
+      }
+    }
+
+    .repository-title-name {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      font-size: 18px;
+      line-height: 32px;
+      margin-right: 20px;
+      overflow: hidden;
+      padding-left: 5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .name-container {
+        align-items: center;
+        display: inline-flex;
+        height: 32px;
+
+        .read-only-name {
+          display: inline-block;
+          line-height: 32px;
+          max-width: calc(100% - 30px);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .inline-editing-container {
+          width: 100%;
+        }
+      }
+    }
+
+    .repository-subtitle {
+      color: $color-silver-chalice;
+      font-size: 12px;
+      line-height: 12px;
+    }
+
+    .datatables-buttons {
+      flex-shrink: 0;
+    }
+  }
+
+  .main-actions {
+    align-items: center;
+    animation-timing-function: $timing-function-sharp;
+    background-color: $color-white;
+    display: flex;
+    flex-grow: 1;
+    height: 68px;
+    left: var(--repository-sidebar-margin);
+    padding: 0 32px;
+    position: fixed;
+    top: 126px;
+    transition: .4s;
+    width: calc(100% - var(--repository-sidebar-margin));
+    z-index: 90;
+
+    .filter-container {
+      flex-grow: 1;
+    }
+  }
+
+  .dataTables_scroll {
+    padding-bottom: 68px;
+    padding-top: 123px;
+
+    .dataTables_scrollHead {
+      position: sticky !important;
+      top: 194px;
+      z-index: 90;
+
+      .table.dataTable {
+        animation-timing-function: $timing-function-sharp;
+        margin-top: 0 !important;
+        transition: .4s;
+
+        th {
+          transition: width .2s;
+        }
+      }
+    }
+
+    .dataTables_scrollBody {
+      thead th#checkbox {
+        opacity: 0;
+      }
+    }
+  }
+
+  .pagination-row {
+    align-items: center;
+    animation-timing-function: $timing-function-sharp;
+    background-color: $color-white;
+    bottom: 0;
+    display: flex;
+    height: 68px;
+    left: var(--repository-sidebar-margin);
+    padding: 0 142px 0 32px;
+    position: fixed;
+    transition: .4s;
+    width: calc(100% - var(--repository-sidebar-margin));
+    z-index: 90;
+
+    .pagination-info,
+    .pagination-actions {
+      flex-grow: 1;
+    }
+
+    .pagination-info {
+      align-items: center;
+      display: flex;
+
+      .dataTables_info {
+        padding-top: 0;
+      }
+
+      .dataTables_length {
+        margin-right: 24px;
+        width: 170px;
+
+        .dropdown-selector-container {
+          width: inherit;
+        }
+
+        label {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
 
 .repositories-dropdown-menu {
   border: 1px solid $color-gainsboro;
@@ -22,7 +203,7 @@
     border-top: 1px solid $color-gainsboro;
   }
 
-  .fas-custom{
+  .fas-custom {
     float: right;
   }
 
@@ -36,30 +217,6 @@
 
   &.hidden {
     display: none !important;
-  }
-}
-
-.repository-table {
-  margin-top: 20px;
-
-  // Datatables generated name
-  .dataTables_length {
-    display: inline-block;
-    float: right;
-    margin-left: 10px;
-  }
-
-  .dataTables_filter {
-    float: right;
-  }
-
-  // hack only for firefox
-  @-moz-document url-prefix() {
-    input.form-control[type="file"] {
-      font-size: 13px;
-      height: auto;
-      padding: 3px 12px;
-    }
   }
 }
 
@@ -79,74 +236,132 @@
   margin-bottom: 15px;
 }
 
-#repository-toolbar {
+.asset-value-cell {
   align-items: center;
-  border-bottom: 1px solid $color-gainsboro;
   display: flex;
-  height: 55px;
-  margin-left: -20px;
-  padding: 5px 15px;
-  width: calc(100% + 40px);
 
-  .repository-share-icon {
-    flex-shrink: 0;
-    margin-top: -2px;
-
-    .fas-custom {
-      margin-left: 5px;
-    }
+  .fas {
+    font-size: 18px;
+    min-width: 18px;
   }
 
-  .repository-title-name {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    font-size: 18px;
-    line-height: 32px;
-    margin-right: 20px;
-    overflow: hidden;
+  .image-icon {
+    width: 18px;
+  }
+
+  .file-preview-link {
+    min-width: 140px;
     padding-left: 5px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  }
+}
 
-    .name-container {
-      align-items: center;
-      display: inline-flex;
-      height: 32px;
+.file-editing {
+  width: 200px;
 
-      .read-only-name {
-        display: inline-block;
-        line-height: 32px;
-        max-width: calc(100% - 30px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+  .file-upload-button {
+    background-color: $color-white;
+    border: solid 1px;
+    border-radius: 3px;
+    height: 34px;
+    line-height: 32px;
+    position: relative;
+
+    &.new-file {
+      .icon {
+        display: none;
       }
 
-      .inline-editing-container {
+      label {
+        display: inline-block;
+      }
+
+      &:hover {
+        .fa-trash {
+          display: none;
+        }
+      }
+    }
+
+    .icon {
+      display: inline-block;
+      text-align: center;
+      width: 34px;
+    }
+
+    .label-asset {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: calc(100% - 44px);
+    }
+
+    .fa-trash {
+      background-color: $color-white;
+      cursor: pointer;
+      display: none;
+      line-height: 32px;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      top: 0;
+      width: 34px;
+      z-index: 3;
+    }
+
+    &:hover {
+      .fa-trash {
+        display: inline-block;
+      }
+    }
+
+    &.error {
+      border-color: $brand-danger;
+      margin-bottom: 10px;
+
+      &::after {
+        background-color: $color-white;
+        bottom: 0;
+        color: $brand-danger;
+        content: "\f071";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 501;
+        line-height: 32px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        width: 34px;
+      }
+
+      &::before {
+        @include font-small;
+        bottom: -15px;
+        color: $brand-danger;
+        content: attr(data-error-text);
+        left: 0;
+        line-height: 15px;
+        position: absolute;
         width: 100%;
       }
     }
   }
 
-  .repository-subtitle {
-    color: $color-silver-chalice;
-    font-size: 12px;
-    line-height: 12px;
+
+
+  input[type=file] {
+    display: none;
   }
 
-  .datatables-buttons {
-    flex-shrink: 0;
+  label {
+    display: none;
+    font-weight: normal;
+    margin-left: 10px;
   }
 }
 
 .toolbarButtonsDatatable {
   .view-only-label {
     opacity: .6;
-  }
-
-  .btn {
-    border: 0;
   }
 }
 
@@ -255,3 +470,4 @@
     color: $color-silver-chalice;
   }
 }
+

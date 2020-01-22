@@ -106,7 +106,7 @@
       <a type="button" class="btn btn-warning link-button" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_and_self_newer.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_and_self_newer.text", self_ts: l(@protocol.updated_at, format: :full), parent_ts: l(@protocol.parent.updated_at, format: :full)).html_safe %>">
         <span class="fas fa-book"></span>
         &nbsp;
-        <span class="fas fa-exclamation-circle"></span>
+        <span class="fas fa-exclamation-triangle"></span>
       </a>
       <a type="button" class="btn btn-warning dropdown-toggle link-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>

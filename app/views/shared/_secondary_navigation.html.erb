@@ -43,15 +43,11 @@
             <li>
               <ul class="list-unstyled">
                 <li>
-                  <div class="btn-group projects-view-mode-switch" data-toggle="buttons">
-                    <a class="btn btn-toggle active" href="#projects-cards-view" data-toggle="tab" data-mode="cards">
-                      <input type="radio" name="projects-view-mode-selector" value="cards">
-                      <i class="fas fa-th-large"></i>
-                    </a>
-                    <a class="btn btn-toggle" href="#projects-table-view" data-toggle="tab" data-mode="table">
-                      <input type="radio" name="projects-view-mode-selector" value="table">
-                      <i class="fas fa-th-list"></i>
-                    </a>
+                  <div class="projects-view-mode-switch sci-toggles-group" data-toggle="buttons">
+                    <input type="radio" name="projects-view-mode-selector" value="cards" class="sci-toggle-item" checked>
+                    <a href="#projects-cards-view" data-toggle="tab" data-mode="cards" class="sci-toggle-item-label"><i class="fas fa-th-large"></i></a>
+                    <input type="radio" name="projects-view-mode-selector" class="sci-toggle-item">
+                    <a class="sci-toggle-item-label" href="#projects-table-view" data-toggle="tab" data-mode="table"><i class="fas fa-th-list"></i></a>
                   </div>
                 </li>
               </ul>
@@ -149,7 +145,7 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <h4 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
+      <h2 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
                      locals: { 
@@ -159,7 +155,7 @@
         <% else %>
           <%= title_element.name %>
         <% end %>
-      </h4>
+      </h2>
 
     </div>
   </div>

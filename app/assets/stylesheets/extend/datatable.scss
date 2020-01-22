@@ -1,0 +1,137 @@
+// scss-lint:disable SelectorDepth QualifyingElement NestingDepth
+// Data table
+
+.table.dataTable {
+  table-layout: initial;
+  text-overflow: initial;
+  width: 100%;
+  word-break: initial;
+
+  thead {
+    background-color: $color-concrete;
+
+    tr {
+      th {
+        border-bottom: 2px solid $color-white;
+        border-left: 2px solid $color-white;
+        font-weight: bold;
+        overflow: hidden;
+        white-space: nowrap;
+
+        .modal-tooltiptext {
+          margin-left: -10px;
+          margin-top: 10px;
+        }
+
+        &::after {
+          color: $color-silver-chalice;
+          font-weight: normal;
+          opacity: 1;
+        }
+
+        &:first-child {
+          border-left: 0;
+        }
+      }
+
+      th,
+      td {
+        padding: 8px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      &.selected,
+      .selected {
+        background-color: $color-alto;
+      }
+    }
+  }
+
+  .sorting_desc,
+  .sorting_asc {
+    background-color: $color-alto;
+
+    &::after {
+      color: $color-volcano;
+    }
+  }
+}
+
+
+.dataTables_paginate {
+  .paginate_button {
+    background-color: transparent;
+    display: inline-block;
+    line-height: 36px;
+    margin-left: 4px;
+    min-width: 36px;
+    position: relative;
+    text-align: center;
+
+    a {
+      background-color: inherit;
+      border: 1px solid transparent;
+      border-radius: $border-radius-default;
+      color: inherit;
+      outline: 0;
+
+      &:hover,
+      &:focus {
+        background-color: inherit;
+        border: 1px solid transparent;
+        outline: 0;
+      }
+    }
+
+    &:focus {
+      outline: 0;
+    }
+
+    &.active {
+      a {
+        background-color: inherit;
+        border: 1px solid $brand-primary;
+        color: inherit;
+
+        &:hover,
+        &:focus {
+          background-color: inherit;
+          color: inherit;
+        }
+      }
+    }
+
+    &.previous {
+      &::before {
+        @include font-awesome;
+        content: $font-fas-angle-left;
+        left: 0;
+        line-height: 36px;
+        padding: 0 8px;
+        position: absolute;
+      }
+
+      a {
+        padding-left: 23px;
+      }
+    }
+
+    &.next {
+      &::before {
+        @include font-awesome;
+        content: $font-fas-angle-right;
+        line-height: 36px;
+        padding: 0 8px;
+        position: absolute;
+        right: 0;
+      }
+
+      a {
+        padding-right: 23px;
+      }
+    }
+  }
+}

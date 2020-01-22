@@ -69,25 +69,6 @@ describe RepositoryDatatableService do
         )
       end
     end
-
-    describe '#sortable_columns' do
-      it 'returns an array of all columns that are sortable' do
-        columns = subject.send(:sortable_columns)
-        expect(columns.length).to eq 6
-      end
-    end
-
-    describe '#sort_null_direction' do
-      it 'returns LAST if value is ascending' do
-        result = subject.send(:sort_null_direction, 'ASC')
-        expect(result).to eq 'LAST'
-      end
-
-      it 'returns FIRST if value is not ascending' do
-        result = subject.send(:sort_null_direction, 'DESC')
-        expect(result).to eq 'FIRST'
-      end
-    end
   end
 
   describe 'ordering' do
@@ -127,7 +108,7 @@ describe RepositoryDatatableService do
                                                params,
                                                user)
       expect(subject.repository_rows.first.name).to eq 'test'
-      expect(subject.repository_rows.count).to eq 1
+      expect(subject.repository_rows.length).to eq 1
     end
   end
 end

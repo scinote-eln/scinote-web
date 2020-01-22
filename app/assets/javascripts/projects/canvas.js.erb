@@ -496,6 +496,10 @@ function animateReposition(el, left, top) {
 function bindModeChange() {
   var buttons = $('#diagram-buttons').find("a[type='button']");
 
+  $('.change-canvas-view').off().on('click', '.sci-toggle-item', function() {
+    $(this).next().click();
+  })
+
   buttons.on('click', function() {
     var action = $(this).data("action");
 
@@ -700,7 +704,7 @@ function bindFullZoomAjaxTabs() {
     } else if (targetContents === "users") {
       initUsersEditLink(parentNode);
     } else if (targetContents === "comments") {
-      
+
     }
 
     $this.parents("ul").parent().find(".active").removeClass("active");
@@ -2286,7 +2290,7 @@ function updateFormWithModulesData(modules, connections, gridDistX, gridDistY) {
     positionsVal += id + "," + x + "," + y + ";";
     moduleGroupNames[id] = module.attr("data-module-group-name");
   });
-  positionsDiv.attr("value", positionsDiv.val() + positionsVal);
+  positionsDiv.attr("value", positionsVal + positionsDiv.val());
 
   if (moduleNamesDiv.val())
     moduleNamesDiv.attr("value", JSON.stringify($.extend(JSON.parse(moduleNamesDiv.val()),

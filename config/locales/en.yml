@@ -51,6 +51,12 @@ en:
       complete_sign_up: "You have to complete the sign up process"
       email_already_taken: "SciNote account with email %{email} alreday exists"
       failed_to_save: "Failed to create new user"
+    azure:
+      provider_name: "Azure Active Directory"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        failed_to_save: "Failed to create new user"
 
   doorkeeper:
     authorizations:
@@ -1001,9 +1007,10 @@ en:
       edit_inventory: "Edit Inventory"
       share_inventory: "Share"
       view_only_permission_label: "You have veiw-only permission"
+      show_per_page: "Show %{number} per page"
+      filter_inventory: "Filter inventory"
 
       options_dropdown:
-        manage_columns: 'Manage columns'
         import_items: 'Import items'
         export_items: 'Export items'
         rename: "Rename inventory"
@@ -1047,6 +1054,30 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
+      enter_row_name: "Enter name"
+      assets:
+        select_file_btn: "Select File (Max %{max_size} MB)..."
+      text:
+        errors:
+          :too_long: "Text is too long (maximum is %{max_length} characters)"
+        enter_text: "Enter text"
+      number:
+        enter_number: "Enter number"
+      list:
+        select_item: "Select..."
+      status:
+        set_status: "Set Status..."
+      checklist:
+        set_checklist: "Set Checklist..."
+      date_time:
+        errors:
+          set_all_or_none: 'Needs to set both or none'
+          not_valid_range: 'Range is not valid.'
+      name:
+        errors:
+          too_long: "Item name is too long (maximum is %{max_length} characters)"
+          is_empty: "Item name should be filled"
+
     add_new_record: "New item"
     import_records:
       import: 'Import'
@@ -1074,7 +1105,6 @@ en:
     column_create: "Create"
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
-    columns_reorder: "Re-Order Columns"
     columns_visibility: "Visible columns"
     view_all_records: "View All Items"
     view_assigned_records: "View Assigned Items"
@@ -1127,17 +1157,70 @@ en:
       invalid_arguments: "Can't find %{key}"
       nothing_to_delete: "Can't find sharing relation for destroy"
   libraries:
+    manange_modal_column_index:
+      title: "Manage columns"
+      add_column: "Add column"
     manange_modal_column:
+      name_placeholder: "Enter column name..."
+      name: "Name"
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
-      labels:
-        text: "Text"
-        file: "File"
-        dropdown: "Dropdown"
+      change_multi_select_items_warning: "Be careful: changing existing list items will result in deselecting previously selected items."
+      too_many_items_label: " of %{limit} items"
+      select:
+        repository_text_value: "Text"
+        repository_number_value: "Number"
+        repository_date_value: "Date"
+        repository_date_range_value: "Date"
+        repository_time_value: "Time"
+        repository_time_range_value: "Time"
+        repository_date_time_value: "Date & Time"
+        repository_date_time_range_value: "Date & Time"
+        repository_checklist_value: "Checklist"
+        repository_status_value: "Status"
+        repository_list_value: "Dropdown"
+        repository_asset_value: "File"
       new:
         title: "Add New Column"
+        button: "Save column"
       edit:
         title: "Edit %{name} Column"
+        button: "Update column"
+      number_type:
+        decimals_label: "Decimal digits"
+      list_type:
+        delimiter_label: "Delimiter"
+        dropdown_items_label: "Dropdown items"
+        dropdown_item_select_option: "Select option..."
+        delimiters:
+          auto: "Auto"
+          return: "Return"
+          space: "Space"
+          semicolon: "Semicolon"
+          comma: "Comma"
+        items_placeholders:
+          auto: "Enter dropdown list options..."
+          return: "Enter dropdown list options one per line:\nDropdown list option 1\nDropdown list option 2\n..."
+          comma: "Enter dropdown list options, separated by commas..."
+          semicolon: "Enter dropdown list options, separated by semicolons..."
+          space: "Enter dropdown list options, separated by space..."
+      status_type:
+        status_options_label: "Status options"
+        add_status_label: "Add status option"
+        errors:
+          icon_and_name_error: "Status icon and status name should be filled"
+      datetime_type:
+        range_label: 'Range'
+      checklist_type:
+        multiple_options: 'options'
+        all_options: 'All options'
+        checklist_items: 'Checklist items'
+        items_placeholders:
+          auto: "Enter checklist items..."
+          return: "Enter checklist items one per line:\nChecklist item 1\nChecklist item  2\n..."
+          comma: "Enter checklist items, separated by commas..."
+          semicolon: "Enter checklist items, separated by semicolons..."
+          space: "Enter checklist items, separated by space..."
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
@@ -1150,13 +1233,6 @@ en:
       destroy:
         success_flash: "Column %{name} was successfully deleted."
         error_flash: "Something went wrong! Please try again later."
-      index:
-        manage_column: "Manage Columns"
-        new_column: "New Column"
-        no_column: "No columns"
-        delete_column: "Delete"
-        edit_column: "Edit"
-        back_to_repository_html: "<span class='fas fa-arrow-left'></span> Back to %{repository}"
     index:
       head_title: "Inventories"
       no_libraries:
@@ -1463,6 +1539,7 @@ en:
           profile: "Profile"
           preferences: "Preferences"
           addons: "Add-ons"
+          connected_accounts: "Connected Accounts"
       account:
         preferences:
           head_title: "Settings | My preferences"
@@ -1483,6 +1560,23 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
+        connected_accounts:
+          head_title: "Settings | Connected Accounts"
+          title: "Connected Accounts"
+          not_connected: "You have no Connected accounts"
+          unlink_success: "Sucessfully unlinked"
+          azure_ad:
+            title: "Your Azure AD Account"
+            connect_hint: "Allows you to sign in with your Azure AD account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink Azure AD account?"
+              description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
+              submit_button: "Submit"
+          errors:
+            not_found: "You have no Connected accounts for this provider"
+            generic: "Unable to unlink linked account"
       teams:
         head_title: "Settings | Teams"
         breadcrumbs:
@@ -1897,6 +1991,7 @@ en:
       full_js: "D.M.YYYY HH:mm"
       full: "%{date_format} %H:%M"
       full_with_tz: "%{date_format} %H:%M %z"
+      full_with_comma: "%{date_format}, %H:%M"
       full_date: "%{date_format}"
       time: "%H:%M"
       short: "%H"
@@ -2023,6 +2118,7 @@ en:
     upload_window_label: 'Choose an image'
     choose_file: 'Choose file'
     no_image_chosen: 'No image chosen'
+    unsupported_image_format: 'Unsupported image format'
     insert_btn: 'Insert'
     error_message: 'You must choose a file'
     server_not_respond: "Didn't get a response from the server"
@@ -2202,7 +2298,7 @@ en:
       inventory:
         new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
         visibility: "You can make inventory columns visible or hidden."
-        manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, files or be defined as a dropdown list."
+        manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, number, file, date, time or be defined as a checklist, dropdown or status list."
 
     link:
       invite_to_sci: "https://support.scinote.net/hc/en-us/articles/115003902929"

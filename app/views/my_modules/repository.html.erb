@@ -17,8 +17,14 @@
     <button type="button" class="btn btn-default" id="all-repo-records"><%= t("repositories.view_all_records") %></button>
   </div>
 
-  <div id="datatables-buttons" class="pull-right" style="display: inline;">
-    <%= render partial: "repositories/columns_reorder_dropdown" %>
+  <div class="repo-datatables-buttons pull-right" style="display: inline;">
+    <button class="btn btn-secondary help_tooltips manage-repo-column-index"
+            data-modal-url="<%= repository_columns_index_html_path(@repository) %>"
+            data-action="new"
+            data-tooltiplink="<%= I18n.t('tooltips.link.inventory.manage_columns') %>"
+            data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.manage_columns') %>">
+      <span class="fas fa-wrench"></span>&nbsp;<%= t('repositories.index.columns') %>
+    </button>
   </div>
 
   <div class="toolbarButtons" style="display:none">
@@ -38,7 +44,7 @@
     <% end %>
   </div>
 
-  <div id="content"
+  <div id="content" class="my-module-inventories"
        data-repo-id="#repository-table-<%= @repository.id %>">
   	<%= render partial: "repositories/repository_table",
                locals: {
@@ -50,6 +56,9 @@
   </div>
 </div>
 
+<%= render partial: 'repository_columns/manage_column_modal.html.erb', locals: { my_module_page: true } %>
+
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag 'repositories/my_module_repository' %>
+<%= javascript_pack_tag 'emoji_button' %>

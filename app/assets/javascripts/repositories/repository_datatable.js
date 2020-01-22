@@ -1,36 +1,30 @@
 /*
-  globals I18n _ SmartAnnotation FilePreviewModal truncateLongString animateSpinner Promise
-  ActiveStorage HelperModule animateLoading RepositoryItemEditForm onClickCancel
-  hideAssignUnasignModal
+  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise dropdownSelector
+  HelperModule animateLoading hideAssignUnasignModal RepositoryDatatableRowEditor
 */
 
 //= require jquery-ui/widgets/sortable
-//= require repositories/forms/repository_item_edit.js
+//= require repositories/row_editor.js
+
 
 var RepositoryDatatable = (function(global) {
   'use strict';
 
   var TABLE_ID = '';
+  var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
-  var SCINOTE_REPOSITORY_EDITED_ROWS = []; // an array of edited rows
+  var EDITABLE = false;
+  var SELECT_ALL_SELECTOR = "#checkbox > input[name=select_all]"
 
   var rowsSelected = [];
 
   // Tells whether we're currently viewing or editing table
   var currentMode = 'viewMode';
 
-  // Tells what action will execute by pressing on save button (update/create)
-  var saveAction = 'update';
-  var selectedRecord;
-
-  // Helps saving correct table state
-  var myData;
-  var loadFirstTime = true;
+  // var selectedRecord;
 
   // Tells whether to filter only assigned repository records
   var viewAssigned;
-
-  var dropdownList;
 
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
@@ -50,78 +44,80 @@ var RepositoryDatatable = (function(global) {
       return value;
     });
 
+  // Enable/disable edit button
+  function updateButtons() {
+    if (currentMode === 'viewMode') {
+      $(TABLE_WRAPPER_ID).removeClass('editing');
+      $('#saveCancel').hide();
+      $('.manage-repo-column-index').prop('disabled', false);
+      $('#addRepositoryRecord').prop('disabled', false);
+      $('.dataTables_length select').prop('disabled', false);
+      $('#repository-acitons-dropdown').prop('disabled', false);
+      $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', false);
+      $('th').removeClass('disable-click');
+      $('.repository-row-selector').prop('disabled', false);
+      $('.dataTables_filter input').prop('disabled', false);
+      if (rowsSelected.length === 0) {
+        $('#exportRepositoriesButton').addClass('disabled');
+        $('#copyRepositoryRecords').prop('disabled', true);
+        $('#editRepositoryRecord').prop('disabled', true);
+        $('#deleteRepositoryRecordsButton').prop('disabled', true);
+        $('#assignRepositoryRecords').prop('disabled', true);
+        $('#unassignRepositoryRecords').prop('disabled', true);
+        $('#editDeleteCopy').hide();
+      } else {
+        if (rowsSelected.length === 1) {
+          $('#editRepositoryRecord').prop('disabled', false);
+        } else {
+          $('#editRepositoryRecord').prop('disabled', true);
+        }
+        $('#exportRepositoriesButton').removeClass('disabled');
+        $('#deleteRepositoryRecordsButton').prop('disabled', false);
+        $('#copyRepositoryRecords').prop('disabled', false);
+        $('#assignRepositoryRecords').prop('disabled', false);
+        $('#unassignRepositoryRecords').prop('disabled', false);
+        $('#editDeleteCopy').show();
+      }
+    } else if (currentMode === 'editMode') {
+      $(TABLE_WRAPPER_ID).addClass('editing');
+      $('#editDeleteCopy').hide();
+      $('#saveCancel').show();
+      $('.manage-repo-column-index').prop('disabled', true);
+      $('#repository-acitons-dropdown').prop('disabled', true);
+      $('.dataTables_length select').prop('disabled', true);
+      $('#addRepositoryRecord').prop('disabled', true);
+      $('#editRepositoryRecord').prop('disabled', true);
+      $('#deleteRepositoryRecordsButton').prop('disabled', true);
+      $('#assignRepositoryRecords').prop('disabled', true);
+      $('#unassignRepositoryRecords').prop('disabled', true);
+      $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
+      $('th').addClass('disable-click');
+      $('.repository-row-selector').prop('disabled', true);
+      $('.dataTables_filter input').prop('disabled', true);
+    }
+  }
+
+  function clearRowSelection() {
+    $('.dt-body-center .repository-row-selector').prop('checked', false);
+    $('.dt-body-center .repository-row-selector').closest('tr').removeClass('selected');
+    rowsSelected = [];
+  }
+
   function changeToViewMode() {
     currentMode = 'viewMode';
     // Table specific stuff
     TABLE.button(0).enable(true);
     FilePreviewModal.init();
+    updateButtons();
+    disableCheckboxToggleOnCheckboxPreview();
   }
 
   function changeToEditMode() {
     currentMode = 'editMode';
     // Table specific stuff
     TABLE.button(0).enable(false);
-  }
-
-  // Enable/disable edit button
-  function updateButtons() {
-    if (currentMode === 'viewMode') {
-      $('#addRepositoryRecord').removeClass('disabled').prop('disabled', false);
-      $('.dataTables_length select').prop('disabled', false);
-      $('#repository-acitons-dropdown').removeClass('disabled').prop('disabled', false);
-      $('#addNewColumn').removeClass('disabled').prop('disabled', false);
-      $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', false);
-      $('th').removeClass('disable-click');
-      $('.repository-row-selector').removeClass('disabled').prop('disabled', false);
-      if (rowsSelected.length === 0) {
-        $('#copyRepositoryRecords').prop('disabled', true).addClass('disabled');
-        $('#editRepositoryRecord').prop('disabled', true).addClass('disabled');
-        $('#deleteRepositoryRecordsButton').prop('disabled', true).addClass('disabled');
-        $('#exportRepositoriesButton').parent('li').addClass('disabled');
-        $('#exportRepositoriesButton').prop('disabled', true).off('click');
-        $('#export-repositories').off('click');
-        $('#assignRepositoryRecords').addClass('disabled').prop('disabled', true);
-        $('#unassignRepositoryRecords').addClass('disabled').prop('disabled', true);
-      } else {
-        if (rowsSelected.length === 1 && $('#exportRepositoriesButton').get(0)) {
-          $('#editRepositoryRecord').prop('disabled', false).removeClass('disabled');
-
-          // If we switched from 2 selections to 1, then this is not needed
-          let events = $.data($('#exportRepositoriesButton').get(0), 'events');
-          if (!events || !events.click) {
-            $('#exportRepositoriesButton').parent('li').removeClass('disabled');
-            $('#exportRepositoriesButton').prop('disabled', false);
-            $('#exportRepositoriesButton').off('click').on('click', function() {
-              $('#exportRepositoryModal').modal('show');
-            });
-            $('#export-repositories').off('click').on('click', function() {
-              animateSpinner(null, true);
-              $('#form-export').submit();
-            });
-          }
-        } else {
-          $('#editRepositoryRecord').prop('disabled', true).addClass('disabled');
-        }
-        $('#deleteRepositoryRecordsButton').prop('disabled', false).removeClass('disabled');
-        $('#copyRepositoryRecords').prop('disabled', false).removeClass('disabled');
-        $('#assignRepositoryRecords').removeClass('disabled').prop('disabled', false);
-        $('#unassignRepositoryRecords').removeClass('disabled').prop('disabled', false);
-      }
-    } else if (currentMode === 'editMode') {
-      $('#repository-acitons-dropdown').addClass('disabled').prop('disabled', true);
-      $('.dataTables_length select').prop('disabled', true);
-      $('#addRepositoryRecord').addClass('disabled').prop('disabled', true);
-      $('#editRepositoryRecord').addClass('disabled').prop('disabled', true);
-      $('#addNewColumn').addClass('disabled').prop('disabled', true);
-      $('#deleteRepositoryRecordsButton').addClass('disabled').prop('disabled', true);
-      $('#exportRepositoriesButton').off('click');
-      $('#export-repositories').off('click');
-      $('#assignRepositoryRecords').addClass('disabled').prop('disabled', true);
-      $('#unassignRepositoryRecords').addClass('disabled').prop('disabled', true);
-      $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
-      $('th').addClass('disable-click');
-      $('.repository-row-selector').addClass('disabled').prop('disabled', true);
-    }
+    clearRowSelection();
+    updateButtons();
   }
 
   // Updates "Select all" control in a data table
@@ -130,7 +126,7 @@ var RepositoryDatatable = (function(global) {
     var $header = TABLE.table().header();
     var $chkboxAll = $('.repository-row-selector', $table);
     var $chkboxChecked = $('.repository-row-selector:checked', $table);
-    var chkboxSelectAll = $('input[name="select_all"]', $header).get(0);
+    var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
 
     // If none of the checkboxes are checked
     if ($chkboxChecked.length === 0) {
@@ -155,38 +151,9 @@ var RepositoryDatatable = (function(global) {
     }
   }
 
-  // Helper functions
-  function listItemDropdown(options, currentValue, columnId) {
-    var html = `<select class="form-control selectpicker repository-dropdown"
-                data-abs-min-length="2" data-live-search="true"
-                data-container="body" column_id="${columnId}">
-                <option value="-1"></option>`;
-    $.each(options, function(index, value) {
-      var selected = (currentValue === value[1]) ? 'selected' : '';
-      html += '<option value="' + value[0] + '" ' + selected + '>';
-      html += value[1] + '</option>';
-    });
-    html += '</select>';
-    return html;
-  }
-
-  function addSelectedFile(type, cell, input) {
-    if (type === 'RepositoryAssetValue') {
-      if (cell.value != null) {
-        const dT = new ClipboardEvent('').clipboardData // Firefox workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
-          || new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
-        dT.items.add(new File([_], cell.value.file_name));
-        input.files = dT.files;
-      }
-      $(input).on('change', function() {
-        this.dataset.changed = 'true';
-      });
-    }
-  }
-
   function initRowSelection() {
     // Handle clicks on checkbox
-    $('.dt-body-center .repository-row-selector').change(function(e) {
+    $(TABLE_ID).on('change', '.repository-row-selector', function(ev) {
       var $row;
       var data;
       var rowId;
@@ -219,21 +186,80 @@ var RepositoryDatatable = (function(global) {
 
       updateDataTableSelectAllCtrl();
 
-      e.stopPropagation();
+      ev.stopPropagation();
       updateButtons();
       // Update number of selected records info
       $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
     });
 
     // Handle click on "Select all" control
-    $('.dataTables_scrollHead input[name="select_all"]').change(function(e) {
+    $(SELECT_ALL_SELECTOR).change(function(ev) {
       if (this.checked) {
         $('.repository-row-selector:not(:checked)').trigger('click');
       } else {
         $('.repository-row-selector:checked').trigger('click');
       }
       // Prevent click event from propagating to parent
-      e.stopPropagation();
+      ev.stopPropagation();
+    });
+  }
+
+  function checkAvailableColumns() {
+    $.ajax({
+      url: $(TABLE_ID).data('available-columns'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        var columnsIds = data.columns;
+        var presentColumns = $(TABLE_ID).data('repository-columns-ids');
+        if (!_.isEqual(columnsIds.sort(), presentColumns.sort())) {
+          alert($(TABLE_ID).data('columns-changed'));
+          animateSpinner();
+          location.reload();
+        }
+      },
+      error: function() {
+        location.reload();
+      }
+    });
+  }
+
+  function initItemEditIcon() {
+    $(TABLE_ID).on('click', '.repository-row-edit-icon', function(ev) {
+      let rowId = $(ev.target).closest('tr').attr('id');
+      let row = TABLE.row(`#${rowId}`);
+
+      $(row.node()).find('.repository-row-selector').trigger('click');
+
+      checkAvailableColumns();
+
+      $(TABLE_ID).find('.repository-row-edit-icon').remove();
+
+      RepositoryDatatableRowEditor.switchRowToEditMode(row);
+      changeToEditMode();
+    });
+  }
+
+  function initSaveButton() {
+    $(TABLE_WRAPPER_ID).on('click', '#saveRecord', function() {
+      var $table = $(TABLE_ID);
+      RepositoryDatatableRowEditor.validateAndSubmit($table);
+    });
+  }
+
+  function resetTableView() {
+    if ($('#assigned').text().length === 0) {
+      TABLE.column(1).visible(false);
+    }
+    TABLE.ajax.reload(null, false);
+    changeToViewMode();
+    SmartAnnotation.closePopup();
+    animateSpinner(null, false);
+  }
+
+  function initCancelButton() {
+    $(TABLE_WRAPPER_ID).on('click', '#cancelSave', function() {
+      resetTableView();
     });
   }
 
@@ -241,23 +267,6 @@ var RepositoryDatatable = (function(global) {
     $(form).append(
       $('<input>').attr('type', 'hidden').attr('name', name).val(val)
     );
-  }
-
-  // Takes object and surrounds it with input
-  function changeToInputField(object, name, value) {
-    return "<div class='form-group'><input class='form-control' data-object='"
-        + object + "' name='" + name + "' value='" + value + "'></input></div>";
-  }
-
-  // Takes object and surrounds it with input
-  function changeToInputFileField(object, name, value) {
-    return "<div class='repository-input-file-field'>"
-        + "<div class='new-input-file-field-div'><div class='form-group'>"
-        + "<input type='file' class='form-control' data-object='"
-        + object + "' name='" + name + "' value='" + value + "'></div>"
-        + "<a onClick='clearFileInput(this)'>"
-        + "<i class='fas fa-times'></i>"
-        + '</a></div></div>';
   }
 
   function initHeaderTooltip() {
@@ -291,6 +300,15 @@ var RepositoryDatatable = (function(global) {
   }
 
   function bindExportActions() {
+    $('#export-repositories').on('click', function() {
+      animateSpinner(null, true);
+    });
+
+    $('#exportRepositoriesButton').on('click', function() {
+      $('#exportRepositoryModal').modal('show');
+    });
+
+
     $('form#form-export').submit(function() {
       var form = this;
       if (currentMode === 'viewMode') {
@@ -357,80 +375,11 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  // Return td element with content
-  function createTdElement(content) {
-    var td = document.createElement('td');
-    td.innerHTML = content;
-    return td;
-  }
-
-  function initialListItemsRequest(columnId) {
-    var massageResponse = [];
-    $.ajax({
-      url: $(TABLE_ID).data('list-items-path'),
-      type: 'POST',
-      dataType: 'json',
-      async: false,
-      data: {
-        q: '',
-        column_id: columnId
-      }
-    }).done(function(data) {
-      $.each(data.list_items, function(index, el) {
-        massageResponse.push([el.id, el.data]);
-      });
+  function disableCheckboxToggleOnCheckboxPreview(){
+    $('.checklist-dropdown').click(function(e) {
+      e.stopPropagation();
+      $(e.currentTarget).find('ul').toggle()
     });
-    return listItemDropdown(massageResponse, '-1', columnId);
-  }
-
-  function initSelectPicker() {
-    $('.selectpicker')
-      .selectpicker({ liveSearch: true })
-      .ajaxSelectPicker({
-        ajax: {
-          url: $(TABLE_ID).data('list-items-path'),
-          type: 'POST',
-          dataType: 'json',
-          data: function() {
-            var params = {
-              q: '{{{q}}}',
-              column_id: $(this.valueOf().plugin.$element).attr('column_id')
-            };
-
-            return params;
-          }
-        },
-        locale: {
-          emptyTitle: 'Nothing selected'
-        },
-        preprocessData: function(data) {
-          var items = [];
-          if (Object.prototype.hasOwnProperty.call(data, 'list_items')) {
-            items.push({
-              value: '-1',
-              text: '',
-              disabled: false
-            });
-            $.each(data.list_items, function(index, el) {
-              items.push(
-                {
-                  value: el.id,
-                  text: el.data,
-                  disabled: false
-                }
-              );
-            });
-          }
-          return items;
-        },
-        emptyRequest: true,
-        clearOnEmpty: false,
-        preserveSelected: false
-      }).on('change.bs.select', function(el) {
-        $(this).closest('td').attr('list_item_id', el.target.value);
-        $(this).closest('td').attr('column_id', $(this).attr('column_id'));
-      })
-      .trigger('change.bs.select');
   }
 
   // Adjust columns width in table header
@@ -442,35 +391,16 @@ var RepositoryDatatable = (function(global) {
       });
   }
 
-  // Clear all has-error tags
-  function clearAllErrors() {
-    // Remove any validation errors
-    $(selectedRecord)
-      .find('.has-error')
-      .removeClass('has-error')
-      .find('span')
-      .remove();
-    // Remove any alerts
-    $('#alert-container').find('div').remove();
-  }
-
-  function clearRowSelection() {
-    $('.dt-body-center .repository-row-selector').prop('checked', false);
-    $('.dt-body-center .repository-row-selector').closest('tr').removeClass('selected');
-    rowsSelected = [];
-  }
-
   function dataTableInit() {
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-6 toolbar'><'col-sm-6'lf>><'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
+      dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       stateSave: true,
       processing: true,
       serverSide: true,
       sScrollX: '100%',
       sScrollXInner: '100%',
-      scrollY: '64vh',
-      scrollCollapse: true,
+      order: $(TABLE_ID).data('default-order'),
       colReorder: {
         fixedColumnsLeft: 2,
         realtime: false
@@ -487,19 +417,29 @@ var RepositoryDatatable = (function(global) {
       columnDefs: [{
         // Checkbox column needs special handling
         targets: 0,
+        visible: true,
         searchable: false,
         orderable: false,
         className: 'dt-body-center',
         sWidth: '1%',
         render: function() {
-          return "<input class='repository-row-selector' type='checkbox'>";
+          return "<input class='repository-row-selector sci-checkbox' type='checkbox'><span class='sci-checkbox-label'></span>";
         }
       }, {
         // Assigned column is not searchable
         targets: 1,
+        visible: true,
         searchable: false,
         orderable: true,
-        sWidth: '1%'
+        className: 'assigned-column',
+        sWidth: '1%',
+        render: function(data) {
+          let content = data;
+          if (EDITABLE) {
+            content = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>' + content;
+          }
+          return content;
+        }
       }, {
         // Name column is clickable
         targets: 3,
@@ -508,268 +448,165 @@ var RepositoryDatatable = (function(global) {
           return "<a href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
         }
+      }, {
+        targets: '_all',
+        render: function(data) {
+          if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
+            return $.fn.dataTable.render[data.value_type](data);
+          }
+          return data;
+        }
       }],
       oLanguage: {
         sSearch: I18n.t('general.filter_dots')
       },
       rowCallback: function(row, data) {
         // Get row ID
-        var rowId = data.DT_RowId;
+        let rowId = data.DT_RowId;
         // If row ID is in the list of selected row IDs
         if ($.inArray(rowId, rowsSelected) !== -1) {
           $(row).find('input[type="checkbox"]').prop('checked', true);
           $(row).addClass('selected');
         }
       },
-      order: $(TABLE_ID).data('default-order'),
       columns: (function() {
-        var numOfColumns = $(TABLE_ID).data('num-columns');
         var columns = $(TABLE_ID).data('default-table-columns');
-        for (let i = 0; i < numOfColumns; i += 1) {
-          if (columns[i] === undefined) {
-            // This should only occur for custom columns
-            columns[i] = { visible: true, searchable: true };
-          }
+        var customColumns = $(TABLE_ID).find('thead th[data-type]');
+        for (let i = 0; i < columns.length; i += 1) {
           columns[i].data = String(i);
           columns[i].defaultContent = '';
         }
+        customColumns.each((i, column) => {
+          columns.push({
+            visible: true,
+            searchable: true,
+            data: String(columns.length),
+            defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
+          });
+        });
         return columns;
       }()),
-      fnDrawCallback: function() {
+      drawCallback: function() {
         animateSpinner(this, false);
         changeToViewMode();
-        updateButtons();
         updateDataTableSelectAllCtrl();
         FilePreviewModal.init();
         // Prevent row toggling when selecting user smart annotation link
         SmartAnnotation.preventPropagation('.atwho-user-popover');
-
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
-        initRowSelection();
       },
       preDrawCallback: function() {
         animateSpinner(this);
         $('.record-info-link').off('click');
       },
-      stateLoadCallback: function() {
-        // Send an Ajax request to the server to get the data. Note that
-        // this is a synchronous request since the data is expected back from the
-        // function
+      stateLoadCallback: function(settings, callback) {
         var repositoryId = $(TABLE_ID).data('repository-id');
         $.ajax({
           url: '/repositories/' + repositoryId + '/state_load',
           data: {},
-          async: false,
           dataType: 'json',
           type: 'POST',
           success: function(json) {
-            myData = json.state;
-
-            // Fix the order - convert it from index-keyed JS object that
-            // is returned from the server state into true JS array;
-            // e.g. {0: [2, 'asc'], 1: [3, 'desc']}
-            // is converted into [[2, 'asc'], [3, 'desc']]
-            myData.order = _.toArray(myData.order);
+            callback(json.state);
           }
         });
-        return myData;
       },
       stateSaveCallback: function(settings, data) {
-        var stateData = data;
         // Send an Ajax request to the server with the state object
-        var repositoryId = $(TABLE_ID).data('repository-id');
-        // Save correct data
-        if (loadFirstTime === true) {
-          stateData = myData;
-        }
+        let repositoryId = $(TABLE_ID).data('repository-id');
+
         $.ajax({
           url: '/repositories/' + repositoryId + '/state_save',
-          data: { state: stateData },
+          contentType: 'application/json',
+          data: JSON.stringify({ state: data }),
           dataType: 'json',
           type: 'POST'
         });
-        loadFirstTime = false;
       },
-      fnInitComplete: function(oSettings) {
-        // First two columns are fixed
-        TABLE.column(0).visible(true);
-        TABLE.column(1).visible(true);
+      fnInitComplete: function() {
+        var tableLengthSelect = $('.dataTables_length select');
+        var tableFilterInput = $('.dataTables_filter input');
 
-        // Reload correct column order and visibility (if you refresh page)
-        for (let i = 2; i < TABLE.columns()[0].length; i += 1) {
-          let visibility = false;
-          if (myData.columns && myData.columns[i]) {
-            visibility = myData.columns[i].visible;
-          }
-          if (typeof (visibility) === 'string') {
-            visibility = (visibility === 'true');
-          }
-          TABLE.column(i).visible(visibility);
-          TABLE.setColumnSearchable(i, visibility);
-        }
-
-        // Re-order table as per loaded state
-        if (myData.order) {
-          TABLE.order(myData.order);
-          TABLE.draw();
-        }
-
-        // Datatables triggers this action about 3 times
-        // sometimes on the first iteration the oSettings._colReorder is null
-        // and the fnOrder rises an error that breaks the table
-        // here I added a null guard for that case.
-        // @todo we need to find out why the tables are loaded multiple times
-        if (oSettings._colReorder) {
-          oSettings._colReorder.fnOrder(myData.ColReorder);
-        }
-        initRowSelection();
-        bindExportActions();
         disableCheckboxToggleOnAssetDownload();
         FilePreviewModal.init();
         initHeaderTooltip();
+
+        // Append button to inner toolbar in table
+        $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
+        $('div.toolbarButtonsDatatable').show();
+
+        // Append buttons for task inventory
+        $('div.toolbarButtons').appendTo('div.toolbar');
+        $('div.toolbarButtons').show();
+
+        if (EDITABLE) {
+          RepositoryDatatableRowEditor.initFormSubmitAction(TABLE);
+          initItemEditIcon();
+          initSaveButton();
+          initCancelButton();
+        }
+
+        if ($('.repository-show').length) {
+          $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
+        }
+
+        if (tableLengthSelect.val() == null) {
+          tableLengthSelect.val(10).change();
+        }
+        $.each(tableLengthSelect.find('option'), (i, option) => {
+          option.innerHTML = I18n.t('repositories.index.show_per_page', { number: option.value });
+        });
+        $('.dataTables_length').append(tableLengthSelect).find('label').remove();
+        dropdownSelector.init(tableLengthSelect, {
+          noEmptyOption: true,
+          singleSelect: true,
+          closeOnSelect: true,
+          selectAppearance: 'simple'
+        });
+
+        tableFilterInput.attr('placeholder', I18n.t('repositories.index.filter_inventory'))
+          .addClass('sci-input-field')
+          .css('margin', 0);
+        $('.dataTables_filter').append(`
+            <div class="sci-input-container left-icon">
+              <i class="fas fa-search"></i>
+            </div>`).find('.sci-input-container').prepend(tableFilterInput);
+        $('.dataTables_filter').find('label').remove();
+
+        $('.main-actions, .pagination-row').removeClass('hidden');
       }
     });
 
     // hack to replace filter placeholder
-    $('.dataTables_filter .form-control').attr('placeholder', $('.dataTables_filter label').text())
-    $('.dataTables_filter label').contents().filter(function(){
+    $('.dataTables_filter .form-control').attr('placeholder', $('.dataTables_filter label').text());
+    $('.dataTables_filter label').contents().filter(function() {
       return this.nodeType === 3;
     }).remove();
 
     // Handle click on table cells with checkboxes
-    $(TABLE_ID).on('click', 'tbody td', function(e) {
-      if ($(e.target).is('.repository-row-selector')) {
-        // Skip if clicking on selector checkbox
-        return;
-      }
-      if (!$(e.target).is('.record-info-link')) {
-        // Skip if clicking on samples info link
-        $(this).parent().find('.repository-row-selector').trigger('click');
-      }
-    });
+    $(TABLE_ID).on('click', 'tbody td', function(ev) {
+      // Skip if clicking on selector checkbox, edit icon or link
+      if ($(ev.target).is('.repository-row-selector, .repository-row-edit-icon, a')) return;
 
-    TABLE.on('column-reorder', function() {
-      initRowSelection();
+      $(this).parent().find('.repository-row-selector').trigger('click');
     });
 
     $('#assignRepositories, #unassignRepositories').click(function() {
       animateLoading();
     });
 
-    // Timeout for table header scrolling
-    setTimeout(function() {
-      TABLE.columns.adjust();
-
-      // Append button to inner toolbar in table
-      $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
-      $('div.toolbarButtonsDatatable').show();
-
-      // Append buttons for task inventory
-      $('div.toolbarButtons').appendTo('div.toolbar');
-      $('div.toolbarButtons').show();
-    }, 10);
+    initRowSelection();
+    bindExportActions();
 
     return TABLE;
   }
 
-  function checkAvailableColumns() {
-    $.ajax({
-      url: $(TABLE_ID).data('available-columns'),
-      type: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        var columnsIds = data.columns;
-        var presentColumns = $(TABLE_ID).data('repository-columns-ids');
-        if (!_.isEqual(columnsIds.sort(), presentColumns.sort())) {
-          alert($(TABLE_ID).data('columns-changed'));
-          animateSpinner();
-          location.reload();
-        }
-      },
-      error: function() {
-        location.reload();
-      }
-    });
-  }
-
-  // Restore previous table
-  global.onClickCancel = function() {
-    if ($('#assigned').text().length === 0) {
-      TABLE.column(1).visible(false);
-    }
-    TABLE.ajax.reload(function() {
-      initRowSelection();
-    }, false);
-    changeToViewMode();
-    updateButtons();
-    SmartAnnotation.closePopup();
-    SCINOTE_REPOSITORY_EDITED_ROWS = [];
-    animateSpinner(null, false);
-  };
-
   global.onClickAddRecord = function() {
-    var tr = document.createElement('tr');
-
     checkAvailableColumns();
+    RepositoryDatatableRowEditor.addNewRow(TABLE);
     changeToEditMode();
-    updateButtons();
-
-    saveAction = 'create';
-
-    if (TABLE.column(1).visible() === false) {
-      TABLE.column(1).visible(true);
-    }
-    $('table' + TABLE_ID + ' thead tr').children('th').each(function() {
-      var th = $(this);
-      var td;
-      var input;
-      if ($(th).attr('id') === 'checkbox') {
-        td = createTdElement('');
-        $(td).html($('#saveRecord').clone());
-        tr.appendChild(td);
-      } else if ($(th).attr('id') === 'assigned') {
-        td = createTdElement('');
-        $(td).html($('#cancelSave').clone());
-        tr.appendChild(td);
-      } else if ($(th).attr('id') === 'row-name') {
-        input = changeToInputField('repository_row', 'name', '');
-        tr.appendChild(createTdElement(input));
-      } else if ($(th).hasClass('repository-column')
-                 && $(th).attr('data-type') === 'RepositoryTextValue') {
-        input = changeToInputField('repository_cell', th.attr('id'), '');
-        tr.appendChild(createTdElement(input));
-      } else if ($(th).hasClass('repository-column')
-                 && $(th).attr('data-type') === 'RepositoryListValue') {
-        input = initialListItemsRequest($(th).attr('id'));
-        tr.appendChild(createTdElement(input));
-      } else if ($(th).hasClass('repository-column')
-                 && $(th).attr('data-type') === 'RepositoryAssetValue') {
-        input = changeToInputFileField('repository_cell_file', th.attr('id'), '');
-        td = createTdElement(input);
-        tr.appendChild(td);
-        addSelectedFile($(th).attr('data-type'), '', $(td).find('input')[0]);
-      } else {
-        // Column we don't care for, just add empty td
-        tr.appendChild(createTdElement(''));
-      }
-    });
-
-    $('table' + TABLE_ID).prepend(tr);
-    selectedRecord = tr;
-
-    // initialize smart annotation
-    _.each($('[data-object="repository_cell"]'), function(el) {
-      if (_.isUndefined($(el).data('atwho'))) {
-        SmartAnnotation.init(el);
-      }
-    });
-
-    // Init selectpicker
-    initSelectPicker();
-    // Adjust columns width in table header
-    adjustTableHeader();
   };
 
   global.onClickToggleAssignedRecords = function() {
@@ -780,23 +617,15 @@ var RepositoryDatatable = (function(global) {
     });
 
     $('#assigned-repo-records').on('click', function() {
-      var promiseReload;
       viewAssigned = 'assigned';
-      promiseReload = new Promise(function(resolve) {
+      return new Promise(function(resolve) {
         resolve(TABLE.ajax.reload());
-      });
-      promiseReload.then(function() {
-        initRowSelection();
       });
     });
     $('#all-repo-records').on('click', function() {
-      var promiseReload;
       viewAssigned = 'all';
-      promiseReload = new Promise(function(resolve) {
+      return new Promise(function(resolve) {
         resolve(TABLE.ajax.reload());
-      });
-      promiseReload.then(function() {
-        initRowSelection();
       });
     });
   };
@@ -832,13 +661,13 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       },
       error: function(data) {
         hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       }
     });
@@ -867,13 +696,13 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       },
       error: function(data) {
         hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
-        onClickCancel();
+        resetTableView();
         clearRowSelection();
       }
     });
@@ -889,12 +718,12 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         HelperModule.flashAlertMsg(data.flash, data.color);
         rowsSelected = [];
-        onClickCancel();
+        resetTableView();
       },
-      error: function(e) {
-        if (e.status === 403) {
+      error: function(ev) {
+        if (ev.status === 403) {
           HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), e.responseJSON.style
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
           );
         }
       }
@@ -911,12 +740,12 @@ var RepositoryDatatable = (function(global) {
       success: function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         rowsSelected = [];
-        onClickCancel();
+        resetTableView();
       },
-      error: function(e) {
-        if (e.status === 403) {
+      error: function(ev) {
+        if (ev.status === 403) {
           HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), e.responseJSON.style
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
           );
         }
       }
@@ -925,231 +754,19 @@ var RepositoryDatatable = (function(global) {
 
   // Edit record
   global.onClickEdit = function() {
-    var row;
-    var node;
-    var rowData;
-
     checkAvailableColumns();
+
     if (rowsSelected.length !== 1) {
       return;
     }
 
-    row = TABLE.row('#' + rowsSelected[0]);
-    node = row.node();
-    rowData = row.data();
+    let row = TABLE.row('#' + rowsSelected[0]);
 
-    $(node).find('td input').trigger('click');
-    selectedRecord = node;
+    $(TABLE_ID).find('.repository-row-edit-icon').remove();
 
-    clearAllErrors();
     changeToEditMode();
-    updateButtons();
-    saveAction = 'update';
-
-    $.ajax({
-      url: rowData.recordEditUrl,
-      type: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        var editForm = new RepositoryItemEditForm(data, node);
-
-        if (TABLE.column(1).visible() === false) {
-          TABLE.column(1).visible(true);
-        }
-        // Show save and cancel buttons in first two columns
-        $(node).children('td').eq(0).html($('#saveRecord').clone());
-        $(node).children('td').eq(1).html($('#cancelSave').clone());
-
-        editForm.renderForm(TABLE);
-        initSelectPicker();
-        editForm.initializeSelectpickerValues(node);
-
-        // initialize smart annotation
-        _.each($('[data-object="repository_cell"]'), function(el) {
-          if (_.isUndefined($(el).data('atwho'))) {
-            SmartAnnotation.init(el);
-          }
-        });
-        // Adjust columns width in table header
-        adjustTableHeader();
-        updateButtons();
-
-        SCINOTE_REPOSITORY_EDITED_ROWS.push(editForm);
-      },
-      error: function(e) {
-        if (e.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), e.responseJSON.style
-          );
-          changeToViewMode();
-          updateButtons();
-        }
-      }
-    });
-  };
-
-  function submitForm(url, formData) {
-    var type;
-    if (saveAction === 'update') {
-      type = 'PUT';
-    } else {
-      type = 'POST';
-    }
-    $.ajax({
-      url: url,
-      type: type,
-      dataType: 'json',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        SmartAnnotation.closePopup();
-        SCINOTE_REPOSITORY_EDITED_ROWS = [];
-        onClickCancel();
-        animateSpinner(null, false);
-      },
-      error: function(e) {
-        var data = e.responseJSON;
-        animateSpinner(null, false);
-        SmartAnnotation.closePopup();
-        clearAllErrors();
-
-        if (e.status === 404) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.not_found_error'), 'danger'
-          );
-          changeToViewMode();
-          updateButtons();
-        } else if (e.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), 'danger'
-          );
-          changeToViewMode();
-          updateButtons();
-        } else if (e.status === 400) {
-          if (data.default_fields) {
-            let defaultFields = data.default_fields;
-
-            // Validate record name
-            if (defaultFields.name) {
-              let input = $(selectedRecord).find('input[name = name]');
-
-              if (input) {
-                input.closest('.form-group').addClass('has-error');
-                input.parent().append("<span class='help-block'>" + defaultFields.name + '<br /></span>');
-              }
-            }
-          }
-
-          // Validate custom cells
-          $.each(data.repository_cells || [], function(_, val) {
-            $.each(val, function(key, val2) {
-              let input = $(selectedRecord).find('input[name=' + key + ']');
-              if (input) {
-                let message = Array.isArray(val2.data) ? val2.data[0] : val2.data;
-                // handle custom input field
-                if (input.attr('type') === 'file') {
-                  let container = input.closest('.repository-input-file-field');
-                  $(container.find('.form-group')[0]).addClass('has-error');
-                  container.addClass('has-error');
-                  container.append("<span class='help-block'>" + message + '<br /></span>');
-                } else {
-                  input.closest('.form-group').addClass('has-error');
-                  input.parent().append("<span class='help-block'>" + message + '<br /></span>');
-                }
-              }
-            });
-          });
-        }
-      }
-    });
-  }
-
-  function buildNewFormData() {
-    return new Promise((resolve, reject) => {
-      var node = selectedRecord;
-      var formData = new FormData();
-      var filesToUploadCntr = 0;
-      var filesUploadedCntr = 0;
-      const directUploadUrl = $(TABLE_ID).data('directUploadUrl');
-
-      // First fetch all the data in input fields
-      formData.append('request_url', $(TABLE_ID).data('current-uri'));
-      formData.append('repository_row_id', $(selectedRecord).attr('id'));
-
-      // Direct record attributes
-      // Record name
-      formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
-
-      // Custom cells text type
-      $(node).find('td input[data-object = repository_cell]').each(function() {
-        // Send data only and only if cell is not empty
-        if ($(this).val().trim()) {
-          formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
-        }
-      });
-
-      // Custom cells list type
-      $(node).find('td[column_id]').each(function(index, el) {
-        var value = $(el).attr('list_item_id');
-        formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
-      });
-
-      // Custom cells file type, first run, count files ready for upload
-      $(node).find('td input[data-object = repository_cell_file]').each(function() {
-        // Send data only and only if cell is not empty
-        if ($(this)[0].files.length === 1) {
-          filesToUploadCntr += 1;
-        }
-      });
-
-      // No files for upload, so return earlier
-      if (filesToUploadCntr === 0) {
-        resolve(formData);
-        return;
-      }
-
-      // Custom cells file type, second run, upload files
-      $(node).find('td input[data-object = repository_cell_file]').each(function() {
-        // Send data only and only if cell is not empty
-        if ($(this)[0].files.length === 1) {
-          let upload = new ActiveStorage.DirectUpload($(this)[0].files[0], directUploadUrl);
-          let colId = $(this).attr('name');
-
-          upload.create(function(error, blob) {
-            if (error) {
-              reject(error);
-            } else {
-              formData.append('repository_cells[' + colId + ']', blob.signed_id);
-              filesUploadedCntr += 1;
-
-              if (filesUploadedCntr === filesToUploadCntr) {
-                resolve(formData);
-              }
-            }
-          });
-        }
-      });
-    });
-  }
-
-  // Save record
-  global.onClickSave = function() {
-    animateSpinner(null, true);
-    if (saveAction === 'update') {
-      let row = TABLE.row(selectedRecord);
-      let rowData = row.data();
-      SCINOTE_REPOSITORY_EDITED_ROWS[0].parseToFormObject(
-        TABLE_ID, selectedRecord
-      ).then(formData => {
-        submitForm(rowData.recordUpdateUrl, formData);
-      });
-    } else if (saveAction === 'create') {
-      buildNewFormData().then(formData => {
-        submitForm($('table' + TABLE_ID).data('create-record'), formData);
-      });
-    }
+    RepositoryDatatableRowEditor.switchRowToEditMode(row);
+    adjustTableHeader();
   };
 
   // Delete record
@@ -1181,158 +798,10 @@ var RepositoryDatatable = (function(global) {
     $(parent.find('.help-block')[0]).remove();
   };
 
-  function generateColumnNameTooltip(name) {
-    var maxLength = $(TABLE_ID).data('max-dropdown-length');
-    if ($.trim(name).length > maxLength) {
-      return '<div class="modal-tooltip">'
-             + truncateLongString(name, maxLength)
-             + '<span class="modal-tooltiptext">' + name + '</span></div>';
-    }
-    return name;
-  }
-
-  /*
-   * Repository columns dropdown
-   */
-
-  function customLiHoverEffect() {
-    var liEl = dropdownList.find('li');
-    liEl.mouseover(function() {
-      $(this).find('.grippy').addClass('grippy-img');
-    }).mouseout(function() {
-      $(this).find('.grippy').removeClass('grippy-img');
-    });
-  }
-
-  function toggleColumnVisibility() {
-    var lis = dropdownList.find('.vis');
-    lis.on('click', function(event) {
-      var self = $(this);
-      var li = self.closest('li');
-      var column = TABLE.column(li.attr('data-position'));
-
-      event.stopPropagation();
-
-      if (column.header.id !== 'row-name') {
-        if (column.visible()) {
-          self.addClass('fa-eye-slash');
-          self.removeClass('fa-eye');
-          li.addClass('col-invisible');
-          column.visible(false);
-          TABLE.setColumnSearchable(column.index(), false);
-        } else {
-          self.addClass('fa-eye');
-          self.removeClass('fa-eye-slash');
-          li.removeClass('col-invisible');
-          column.visible(true);
-          TABLE.setColumnSearchable(column.index(), true);
-        }
-      }
-      // Re-filter/search if neccesary
-      let searchText = $('div.dataTables_filter input').val();
-      if (!_.isEmpty(searchText)) {
-        TABLE.search(searchText).draw();
-      }
-      initRowSelection();
-      FilePreviewModal.init();
-    });
-  }
-
-  // loads the columns names in the dropdown list
-  function loadColumnsNames() {
-    // Save scroll position
-    var scrollPosition = dropdownList.scrollTop();
-    // Clear the list
-    dropdownList.find('li[data-position]').remove();
-    _.each(TABLE.columns().header(), function(el, index) {
-      if (index > 1) {
-        let colIndex = $(el).attr('data-column-index');
-        let visible = TABLE.column(colIndex).visible();
-
-        let visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
-        let visLi = (visible) ? '' : 'col-invisible';
-
-        let thederName;
-        if ($(el).find('.modal-tooltiptext').length > 0) {
-          thederName = $(el).find('.modal-tooltiptext').text();
-        } else {
-          thederName = el.innerText;
-        }
-
-        let listItem = dropdownList.find('.repository-columns-list-template').clone();
-
-        listItem.attr('data-position', colIndex);
-        listItem.attr('data-id', $(el).attr('id'));
-        listItem.addClass(visLi);
-        listItem.removeClass('repository-columns-list-template hide');
-        listItem.find('.text').html(generateColumnNameTooltip(thederName));
-        if (thederName !== 'Name') {
-          listItem.find('.vis').addClass(visClass);
-          listItem.find('.vis').attr('title', $(TABLE_ID).data('columns-visibility-text'));
-        }
-        dropdownList.append(listItem);
-      }
-    });
-    // Restore scroll position
-    dropdownList.scrollTop(scrollPosition);
-    toggleColumnVisibility();
-    // toggles grip img
-    customLiHoverEffect();
-  }
-
-  function initSorting() {
-    dropdownList.sortable({
-      items: 'li:not(.repository-columns-list-template)',
-      cancel: '.new-repository-column',
-      axis: 'y',
-      update: function() {
-        var reorderer = TABLE.colReorder;
-        var listIds = [];
-        // We skip first two columns
-        listIds.push(0, 1);
-        dropdownList.find('li[data-position]').each(function() {
-          listIds.push($(this).first().data('position'));
-        });
-        reorderer.order(listIds, false);
-        loadColumnsNames();
-        initRowSelection();
-      }
-    });
-    $('.sorting').on('click', checkAvailableColumns);
-  }
-
-  // calculate the max height of window and adjust dropdown max-height
-  function dropdownOverflow() {
-    var windowHeight = $(window).height();
-    var offset = windowHeight - dropdownList.offset().top;
-
-    if (dropdownList.height() >= offset) {
-      dropdownList.css('maxHeight', offset);
-    }
-  }
-
-  // initialze dropdown after the table is loaded
-  function initDropdown() {
-    TABLE.on('init.dt', function() {
-      dropdownList = $('#repository-columns-list');
-      initSorting();
-      toggleColumnVisibility();
-    });
-    $('#repository-columns-dropdown').on('show.bs.dropdown', function() {
-      loadColumnsNames();
-      dropdownList.sortable('enable');
-      checkAvailableColumns();
-    });
-
-    $('#repository-columns-dropdown').on('shown.bs.dropdown', function() {
-      dropdownOverflow();
-    });
-  }
-
   function init(id) {
     TABLE_ID = id;
+    EDITABLE = $(TABLE_ID).data('editable');
     TABLE = dataTableInit();
-    initDropdown();
   }
 
   function destroy() {
@@ -1345,15 +814,31 @@ var RepositoryDatatable = (function(global) {
 
   function redrawTableOnSidebarToggle() {
     $('#sidebar-arrow').on('click', function() {
+      var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
+      var windowWidth = $(window).width();
+      if (!$(this).is('[data-shown]')) {
+        if (windowWidth > orgignalWidth + 363) {
+          $('.repository-show .dataTables_scrollHead')
+            .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
+        }
+        document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
+      } else {
+        if (windowWidth > orgignalWidth + 83) {
+          $('.repository-show .dataTables_scrollHead')
+            .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
+        }
+        document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+      }
       setTimeout(function() {
         adjustTableHeader();
-      }, 400);
+      }, 500);
     });
   }
 
   return Object.freeze({
     init: init,
     destroy: destroy,
-    redrawTableOnSidebarToggle: redrawTableOnSidebarToggle
+    redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
+    checkAvailableColumns: checkAvailableColumns
   });
 }(window));

@@ -1,0 +1,48 @@
+.alert {
+  border-radius: 0;
+  margin-bottom: 0;
+  opacity: .86;
+  width: 100%;
+}
+
+.alert-floating {
+  align-items: center;
+  display: flex;
+  height: 52px;
+  padding: 9px;
+
+  .fas {
+    font-size: $font-size-h2;
+    margin-left: 12px;
+  }
+
+  .message {
+    color: $color-volcano;
+    flex-grow: 1;
+    margin-left: 14px;
+  }
+
+  .close {
+    top: 0;
+  }
+}
+
+.alert:not(.alert-floating) {
+  color: $color-volcano;
+
+  &.alert-danger .fas {
+    color: $brand-danger;
+  }
+
+  &.alert-warning .fas {
+    color: $brand-warning;
+  }
+
+  &.alert-info .fas {
+    color: $brand-info;
+  }
+
+  &.alert-success .fas {
+    color: $brand-success;
+  }
+}

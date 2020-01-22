@@ -9,7 +9,6 @@ class Reports::Docx
   include InputSanitizeHelper
   include TeamsHelper
   include GlobalActivitiesHelper
-  include RepositoryDatatableHelper
 
   Dir[File.join(File.dirname(__FILE__), 'docx') + '**/*.rb'].each do |file|
     include_module = File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join
@@ -34,7 +33,6 @@ class Reports::Docx
     end
     @docx
   end
-
 
   def self.link_prepare(scinote_url, link)
     link[0] == '/' ? scinote_url + link : link

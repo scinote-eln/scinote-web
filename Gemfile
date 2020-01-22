@@ -23,6 +23,7 @@ gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
+gem 'omniauth-azure-activedirectory'
 gem 'omniauth-linkedin-oauth2'
 
 # TODO: remove this when omniauth gem resolves CVE issues
@@ -91,7 +92,6 @@ gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
 gem 'image_processing', '~> 1.2'
-gem 'paperclip', '~> 6.1'
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
@@ -122,7 +122,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rails-controller-testing'
   gem 'rspec-rails', '>= 4.0.0.beta2'
-  gem 'rubocop', '>= 0.59.0', require: false
+  gem 'rubocop', '>= 0.75.0', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'timecop'

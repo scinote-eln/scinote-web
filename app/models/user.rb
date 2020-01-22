@@ -214,6 +214,66 @@ class User < ApplicationRecord
   has_many :assigned_my_module_repository_rows,
            class_name: 'MyModuleRepositoryRow',
            foreign_key: 'assigned_by_id'
+  has_many :created_repository_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_number_values,
+           class_name: 'RepositoryNumberValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_number_values,
+           class_name: 'RepositoryNumberValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
@@ -243,8 +303,8 @@ class User < ApplicationRecord
   def avatar_remote_url=(url_value)
     self.avatar = URI.parse(url_value)
     # Assuming url_value is http://example.com/photos/face.png
-    # avatar_file_name == "face.png"
-    # avatar_content_type == "image/png"
+    # avatar.filename == "face.png"
+    # avatar.content_type == "image/png"
     @avatar_remote_url = url_value
   end
 
@@ -297,6 +357,20 @@ class User < ApplicationRecord
       .take
   end
 
+  def self.create_from_omniauth!(auth)
+    full_name = "#{auth.info.first_name} #{auth.info.last_name}"
+    user = User.new(full_name: full_name,
+                    initials: generate_initials(full_name),
+                    email: email,
+                    password: generate_user_password)
+    User.transaction do
+      user.save!
+      user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+      user.update!(confirmed_at: user.created_at)
+    end
+    user
+  end
+
   # Search all active users for username & email. Can
   # also specify which team to ignore.
   def self.search(
@@ -323,13 +397,6 @@ class User < ApplicationRecord
     result
       .where_attributes_like([:full_name, :email], query)
       .distinct
-  end
-
-  def empty_avatar(name, size)
-    file_ext = name.split(".").last
-    self.avatar_file_name = name
-    self.avatar_content_type = Rack::Mime.mime_type(".#{file_ext}")
-    self.avatar_file_size = size.to_i
   end
 
   # Whether user is active (= confirmed) or not
@@ -486,7 +553,7 @@ class User < ApplicationRecord
     includes(:user_identities)
       .where(
         'user_identities.provider=? AND user_identities.uid=?',
-        Api.configuration.azure_ad_apps[token_payload[:aud]][:provider],
+        Rails.configuration.x.azure_ad_apps[token_payload[:aud]][:provider],
         token_payload[:sub]
       )
       .references(:user_identities)

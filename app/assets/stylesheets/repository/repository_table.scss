@@ -1,0 +1,219 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
+@import "constants";
+
+.repository-table {
+  margin-top: 20px;
+
+  .dataTables_filter {
+    float: right;
+  }
+
+  // hack only for firefox
+  @-moz-document url-prefix() {
+    input.form-control[type="file"] {
+      font-size: 13px;
+      height: auto;
+      padding: 3px 12px;
+    }
+  }
+
+  // Cells
+
+
+  // Assigned
+
+  .assigned-column {
+    position: relative;
+
+    .repository-row-edit-icon {
+      cursor: pointer;
+      display: none;
+      width: 30px;
+    }
+
+    .assign-counter-container {
+      border-radius: $border-radius-tag;
+      cursor: pointer;
+      display: inline-block;
+      height: calc(100% - 2px);
+      margin-left: 30px;
+      padding-top: 7px;
+      position: absolute;
+      top: 1px;
+      width: calc(100% - 38px);
+
+      .assign-counter {
+        margin-left: 5px;
+
+        &.has-assigned {
+          color: $brand-primary;
+        }
+      }
+
+      &:hover {
+        background-color: $color-alto;
+      }
+    }
+
+    .circle-icon {
+      margin-left: 30px;
+    }
+  }
+
+  // Checklists
+  .checklist-dropdown {
+    .dropdown-menu {
+      .checklist-item {
+        padding: 5px;
+      }
+    }
+
+    span {
+      color: $brand-primary;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  // Text and Number field
+
+  .text-field.sci-input-container {
+    min-width: 150px;
+  }
+
+  // Status
+  .repository-status-value-container {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .repository-status-value-icon {
+    .emoji {
+      height: 24px;
+      margin-right: 5px;
+      min-width: 24px;
+      width: 24px;
+    }
+  }
+
+  .dropdown-selector-container {
+    width: 150px;
+
+    .emoji-status {
+      .emoji {
+        height: 24px;
+        margin-right: 5px;
+        min-width: 24px;
+        transition: .3s;
+        width: 24px;
+      }
+    }
+
+    &.open {
+      .ds-simple.emoji-status {
+        .emoji {
+          height: 12px;
+          margin-right: 2px;
+          min-width: 12px;
+          width: 12px;
+        }
+      }
+    }
+  }
+
+  // DateTime
+  .datetime-container {
+    display: flex;
+    position: relative;
+
+    .sci-input-container {
+      margin: 0 2px;
+    }
+
+    .separator {
+      line-height: 36px;
+      text-align: center;
+      width: 20px;
+    }
+
+    .start-time,
+    .end-time {
+      display: flex;
+      position: relative;
+    }
+
+    .date-container {
+      width: 160px;
+    }
+
+    .time-container {
+      width: 90px;
+
+      .fa-clock {
+        cursor: pointer;
+      }
+    }
+
+
+    &.dateonly,
+    &.range-type .dateonly {
+      .time-container {
+        display: none;
+      }
+    }
+
+    &.timeonly,
+    &.range-type .timeonly {
+      .date-container {
+        display: none;
+      }
+    }
+  }
+
+  // Actions
+
+  tbody {
+    tr:hover {
+      background-color: $color-concrete;
+
+      .assigned-column {
+        .repository-row-edit-icon {
+          display: inline-block;
+        }
+
+        .assign-counter-container,
+        .circle-icon {
+          margin-left: 0;
+        }
+      }
+    }
+
+    .editing {
+      border: 1px solid;
+    }
+  }
+
+  &.editing {
+    tbody {
+      tr:hover {
+        .assigned-column {
+          .repository-row-edit-icon {
+            display: none;
+          }
+
+          .assign-counter-container,
+          .circle-icon {
+            margin-left: 30px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@
     data-delete-record="<%= repository_delete_records_path(repository) %>"
     data-copy-records="<%= repository_copy_records_path(repository) %>"
     data-direct-upload-url="<%= rails_direct_uploads_url %>"
-    data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
+    data-max-dropdown-length="<%= Constants::MODAL_TEXT_MAX_LENGTH %>"
     data-repository-columns-ids="<%= repository.available_columns_ids %>"
     data-save-text="<%= I18n.t('general.save') %>"
     data-edit-text="<%= I18n.t('general.edit') %>"
@@ -19,17 +19,32 @@
     data-columns-changed="<%= I18n.t('repositories.columns_changed') %>"
     data-default-order="<%= default_table_order_as_js_array %>"
     data-default-table-columns="<%= default_table_columns %>"
-    data-list-items-path="<%= Rails.application.routes.url_helpers.repository_list_items_path %>">
+    data-editable="<%= can_manage_repository_rows?(repository) %>">
     <thead>
       <tr>
-        <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
+        <th id="checkbox">
+            <input name="select_all" value="1" type="checkbox" class="sci-checkbox">
+            <span class="sci-checkbox-label"></span>
+        </th>
         <th id="assigned"><%= t("repositories.table.assigned") %></th>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
-          <th class="repository-column" id="<%= column.id %>" data-type="<%= column.data_type %>">
+          <th
+            class="repository-column"
+            id="<%= column.id %>"
+            data-type="<%= column.data_type %>"
+            data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
+            data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
+            <% column.metadata.each do |k, v| %>
+              <%= "data-metadata-#{k}=#{v}" %>
+            <% end %>
+            <%= "data-items-url=#{items_repository_repository_columns_checklist_column_path(repository, column)}" if column.repository_checklist_value? %>
+            <%= "data-items-url=#{items_repository_repository_columns_list_column_path(repository, column)}" if column.repository_list_value? %>
+            <%= "data-items-url=#{items_repository_repository_columns_status_column_path(repository, column)}" if column.repository_status_value? %>
+          >
             <%= display_tooltip(column.name) %>
           </th>
         <% end %>

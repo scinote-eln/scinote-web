@@ -56,6 +56,20 @@
                <% end %>
              </span>
            </li>
+           <!-- Connected accounts -->
+           <li class="<%= 'active' if on_settings_account_connected_accounts_page? %>" >
+             <span class="tree-link line-wrap first-indent">
+               <% if on_settings_account_connected_accounts_page? %>
+                 <span title="<%= t("users.settings.sidebar.account_nav.connected_accounts") %>">
+                   <%= t("users.settings.sidebar.account_nav.connected_accounts") %>
+                 </span>
+               <% else %>
+                 <%= link_to t("users.settings.sidebar.account_nav.connected_accounts"),
+                             connected_accounts_path,
+                             data: { 'no-turbolink' => 'true' } %>
+               <% end %>
+             </span>
+           </li>
          </ul>
        </li>
 

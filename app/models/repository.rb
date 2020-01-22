@@ -18,6 +18,7 @@ class Repository < ApplicationRecord
            inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
   has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
+  has_many :repository_checklist_items, inverse_of: :repository, dependent: :destroy
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
   has_many :teams_shared_with, through: :team_repositories, source: :team
 
@@ -56,34 +57,31 @@ class Repository < ApplicationRecord
     repository = nil,
     options = {}
   )
-    repositories = repository ||
-                   Repository.accessible_by_teams(user.teams.pluck(:id))
+    repositories = repository&.id || Repository.accessible_by_teams(user.teams.pluck(:id)).pluck(:id)
 
-    includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
-    searchable_attributes = ['repository_rows.name', 'users.full_name'] +
-                            Extends::REPOSITORY_EXTRA_SEARCH_ATTR
+    readable_rows = RepositoryRow.joins(:repository).where(repository_id: repositories)
 
-    all_rows = RepositoryRow.where(repository: repositories)
+    matched_by_user = readable_rows.joins(:created_by).where_attributes_like('users.full_name', query, options)
 
-    new_query = RepositoryRow
-                .distinct
-                .from(all_rows, 'repository_rows')
-                .left_outer_joins(:created_by)
-                .left_outer_joins(includes_json)
-                .where_attributes_like(searchable_attributes, query, options)
+    repository_row_matches =
+      readable_rows.where_attributes_like(['repository_rows.name', 'repository_rows.id'], query, options)
+
+    repository_rows = readable_rows.where(id: repository_row_matches)
+    repository_rows = repository_rows.or(readable_rows.where(id: matched_by_user))
+
+    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
+      custom_cell_matches = readable_rows.joins(repository_cells: include_hash)
+                                         .where_attributes_like(field, query, options)
+      repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
+    end
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
-      new_query
-        .joins(:repository)
-        .select(
-          'repositories.id AS id, COUNT(DISTINCT repository_rows.id) AS counter'
-        )
-        .group('repositories.id')
+      repository_rows.select('repositories.id AS id, COUNT(DISTINCT repository_rows.id) AS counter')
+                     .group('repositories.id')
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      repository_rows.limit(Constants::SEARCH_LIMIT)
+                     .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

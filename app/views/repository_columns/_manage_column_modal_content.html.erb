@@ -1,0 +1,118 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <button class="btn icon-btn btn-light manage-repo-column-index back-to-column-modal"
+          data-modal-url="<%= repository_columns_index_html_path(@repository) %>"
+          data-action="new">
+    <span class="fas fa-arrow-left"></span>
+  </button>
+  <h4 class="modal-title">
+    <% if @repository_column.new_record? %>
+      <%= t("libraries.manange_modal_column.new.title") %>
+    <% else %>
+      <%= t("libraries.manange_modal_column.edit.title", name:  @repository_column.name) %>
+    <% end %>
+  </h4>
+</div>
+<div class="modal-body">
+  <div class="form-horizontal"
+       id="new-repository-column"
+       data-edit-type="<%= @repository_column.data_type unless @repository_column.new_record? %>">
+    <div class="form-group">
+      <label class="control-label col-sm-3" for="repository-column-name">
+        <%= t('libraries.manange_modal_column.name') %>
+      </label>
+      <div class="col-sm-9">
+        <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
+               class="form-control"
+               type="text"
+               name="repository_column[name]"
+               id="repository-column-name" value="<%= @repository_column.name unless @repository_column.new_record? %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-3" for="repository-column-data-type">
+        <%= t('libraries.manange_modal_column.colum_type') %>
+      </label>
+      <div class="col-sm-9">
+        <select class="form-control" name="repository_column[data_type]" id="repository-column-data-type"
+                <%= 'data-disable-on-load="true" disable' unless @repository_column.new_record? %>>
+          <option data-create-url="<%= repository_repository_columns_text_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_text_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryTextValue"
+                  <%= 'selected' if @repository_column.repository_text_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_text_value') %>
+          </option>
+          <option data-create-url="<%= repository_repository_columns_number_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_number_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryNumberValue"
+                  <%= 'selected' if @repository_column.repository_number_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_number_value') %>
+          </option>
+          <option data-create-url="<%= repository_repository_columns_asset_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_asset_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryAssetValue"
+                  <%= 'selected' if @repository_column.repository_asset_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_asset_value') %>
+          </option>
+
+          <option data-delimiter=true></option>
+
+          <option data-create-url="<%= repository_repository_columns_list_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_list_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryListValue"
+                  <%= 'selected' if @repository_column.repository_list_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_list_value') %>
+          </option>
+          <option data-create-url="<%= repository_repository_columns_checklist_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_checklist_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryChecklistValue"
+                  <%= 'selected' if @repository_column.repository_checklist_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_checklist_value') %>
+          </option>
+          <option data-create-url="<%= repository_repository_columns_status_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_status_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryStatusValue"
+                  <%= 'selected' if @repository_column.repository_status_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_status_value') %>
+          </option>
+
+          <option data-delimiter=true></option>
+
+          <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryDateTimeValue"
+                  <%= 'selected' if @repository_column.repository_date_time_value? || @repository_column.repository_date_time_range_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_date_time_value') %>
+          </option>
+          <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryDateValue"
+                  <%= 'selected' if @repository_column.repository_date_value? || @repository_column.repository_date_range_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_date_value') %>
+          </option>
+          <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryTimeValue"
+                  <%= 'selected' if @repository_column.repository_time_value? || @repository_column.repository_time_range_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_time_value') %>
+          </option>
+        </select>
+      </div>
+    </div>
+    <hr/>
+    <% columns = %w(Text Number Asset List Status Date Time DateTime Checklist) %>
+    <% columns.each do |column| %>
+      <span style="display: none" class="column-type <%= column.downcase %>-column-type" data-column-type="Repository<%= column %>Value">
+        <%= render partial: "repository_columns/manage_column_partials/#{column.downcase}.html.erb", locals: {column: @repository_column}  %>
+      </span>
+    <% end %>
+  </div>
+</div>
+<div class="modal-footer">
+  <button id="new-repo-column-submit" class="btn btn-success column-save-btn" data-action="save" style="display: none;">
+    <%= t("libraries.manange_modal_column.new.button") %>
+  </button>
+  <button id="update-repo-column-submit" class="btn btn-success column-save-btn" data-action="save"  style="display: none;">
+    <%= t("libraries.manange_modal_column.edit.button") %>
+  </button>
+</div>

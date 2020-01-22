@@ -2,6 +2,8 @@
 /* global SmartAnnotation */
 
 var inlineEditing = (function() {
+  const SIDEBAR_ITEM_TYPES = ['project', 'experiment', 'my_module', 'repository'];
+
   var editBlocks = '.inline-init-handler';
 
   function appendAfterLabel(container) {
@@ -29,9 +31,17 @@ var inlineEditing = (function() {
     });
   }
 
+  function updateSideBarNav(itemType, itemId, newData) {
+    let sidebar = $('#slide-panel');
+    let link = sidebar.find(`a[data-type="${itemType}"][data-id="${itemId}"]`);
+    link.prop('title', newData);
+    link.text(newData);
+  }
+
   function updateField(container) {
     var params;
     var paramsGroup = container.data('params-group');
+    var itemId = container.data('item-id');
     var fieldToUpdate = container.data('field-to-update');
 
     if (inputField(container).val() === container.attr('data-original-name')) {
@@ -83,6 +93,10 @@ var inlineEditing = (function() {
           .addClass('hidden')
           .attr('value', inputField(container).val());
         appendAfterLabel(container);
+
+        if (SIDEBAR_ITEM_TYPES.includes(paramsGroup)) {
+          updateSideBarNav(paramsGroup, itemId, viewData);
+        }
       },
       error: function(response) {
         var error = response.responseJSON[fieldToUpdate];

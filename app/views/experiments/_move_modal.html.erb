@@ -27,9 +27,9 @@
           <%= t("experiments.move.notice") %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
           <% if !@projects.blank? %>
-            <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-success" %>
+            <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary" %>
           <% end %>
         </div>
       </div>

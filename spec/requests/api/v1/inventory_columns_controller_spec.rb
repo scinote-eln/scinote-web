@@ -22,6 +22,10 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       repository: @valid_inventory, data_type: :RepositoryListValue)
     create(:repository_list_item, repository: @valid_inventory,
              repository_column: list_column, data: Faker::Name.unique.name)
+    status_column = create(:repository_column, name: Faker::Name.unique.name,
+                         repository: @valid_inventory, data_type: :RepositoryStatusValue)
+    create(:repository_status_item, repository: @valid_inventory,
+           repository_column: status_column, status: Faker::Name.unique.name, icon: 'icon')
     create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryAssetValue)
 
@@ -124,8 +128,33 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       )
     end
 
+    it 'Valid status column response' do
+      status_column = @valid_inventory.repository_columns.status_type.first
+      hash_body = nil
+      get api_v1_team_inventory_column_path(
+        id: status_column.id,
+        team_id: @teams.first.id,
+        inventory_id: @valid_inventory.id
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(status_column,
+               serializer: Api::V1::InventoryColumnSerializer)
+          .as_json[:data]
+      )
+      expect(hash_body[:data]).to include('relationships')
+      expect(hash_body[:included]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_inventory.repository_columns.limit(10),
+               each_serializer: Api::V1::InventoryColumnSerializer,
+               include: :inventory_status_items)
+          .as_json[:included]
+      )
+    end
+
     it 'Valid file column response' do
-      file_column = @valid_inventory.repository_columns.third
+      file_column = @valid_inventory.repository_columns.asset_type.first
       hash_body = nil
       get api_v1_team_inventory_column_path(
         id: file_column.id,

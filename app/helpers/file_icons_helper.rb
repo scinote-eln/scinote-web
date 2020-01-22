@@ -42,7 +42,7 @@ module FileIconsHelper
     image_link = Extends::FILE_ICON_MAPPINGS[file_ext] if Extends::FILE_ICON_MAPPINGS[file_ext]
 
     if image_link
-      image_tag image_link
+      ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
     else
       ''
     end
@@ -95,4 +95,12 @@ module FileIconsHelper
       'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     end
   end
+
+  def file_extension_icon_html(asset)
+    html = file_extension_icon(asset)
+    html = "<i class='fas #{file_fa_icon_class(asset)}'></i>" if html.blank?
+    html
+  end
+
+  module_function :file_extension_icon_html, :file_extension_icon, :file_fa_icon_class
 end
