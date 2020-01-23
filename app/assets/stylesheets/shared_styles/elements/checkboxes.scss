@@ -36,7 +36,6 @@ input[type="checkbox"].sci-checkbox {
       line-height: calc(var(--sci-checkbox-size) - 2px);
       position: absolute;
       text-align: center;
-      top: 1px;
       transition: .2s;
       width: var(--sci-checkbox-size);
     }
@@ -51,6 +50,18 @@ input[type="checkbox"].sci-checkbox {
       background: $brand-primary;
       border: 1px solid $brand-primary;
       content: $font-fas-check;
+    }
+  }
+
+  &:indeterminate + .sci-checkbox-label {
+    &::after {
+      content: '';
+      background: $color-volcano;
+      height: calc(var(--sci-checkbox-size) - 6px);
+      left: 3px;
+      position: absolute;
+      top: 3px;
+      width: calc(var(--sci-checkbox-size) - 6px);
     }
   }
 

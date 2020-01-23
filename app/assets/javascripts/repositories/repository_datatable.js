@@ -449,6 +449,11 @@ var RepositoryDatatable = (function(global) {
                  + "class='record-info-link'>" + data + '</a>';
         }
       }, {
+        // Added on column
+        targets: 4,
+        class: 'added-on',
+        visible: true
+      }, {
         targets: '_all',
         render: function(data) {
           if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
