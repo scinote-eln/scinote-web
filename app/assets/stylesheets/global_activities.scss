@@ -352,6 +352,10 @@
         text-align: left;
         width: calc(50% - 25px);
 
+        &:hover {
+          background: $color-concrete;
+        }
+
         &.selected {
           background: $brand-light-blue;
           opacity: 1;
