@@ -418,13 +418,8 @@
         display: flex;
         padding: 5px 0;
 
-        .simple-checkbox.hidden {
+        .sci-checkbox.hidden {
           display: inline-block !important;
-
-          + .checkbox-label {
-            display: inline-block;
-            opacity: 0;
-          }
         }
       }
     }
@@ -441,7 +436,7 @@
       display: flex;
       flex-grow: 1;
 
-      .checkbox-label {
+      .sci-checkbox-container {
         margin-right: 5px;
       }
     }
@@ -470,4 +465,3 @@
     color: $color-silver-chalice;
   }
 }
-
