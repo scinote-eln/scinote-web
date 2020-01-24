@@ -1,6 +1,8 @@
 <div class="team-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.teams') %></h4>
-  <h6 class="team clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light team clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="select-container">
     <select name="team"
       data-placeholder = "<%= t('global_activities.index.select_teams') %>"
@@ -15,7 +17,9 @@
      data-period-label="<%= t('global_activities.index.period_label') %>"
      data-period-select="">
   <h4 class="title"><%= t('global_activities.index.activity') %></h4>
-  <h6 class="date clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light date clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="date-selector">
     <div class="hot-buttons">
       <div class="hot-button btn btn-default" data-period="today"><%= t('global_activities.index.today') %></div>
@@ -37,7 +41,9 @@
 
 <div class="activity-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.activity_type') %></h4>
-  <h6 class="activity clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light activity clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="select-container group-activity">
     <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
       'data-placeholder': t('global_activities.index.select_activity_groups')
@@ -53,7 +59,9 @@
 
 <div class="user-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
-  <h6 class="user clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light user clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="select-container">
     <select name="user"
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
@@ -64,7 +72,9 @@
 
 <div class="filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.projects_experiments_tasks') %></h4>
-  <h6 class="project clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light project clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="select-container project">
     <select name="project"
       data-placeholder = "<%= t('global_activities.index.select_projects') %>"
@@ -91,7 +101,9 @@
 
 <div class="filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.inventories') %></h4>
-  <h6 class="inventory clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light inventory clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="select-container inventory">
     <select name="inventory"
       data-placeholder = "<%= t('global_activities.index.select_inventories') %>"
@@ -110,7 +122,9 @@
 
 <div class="filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.protocols') %></h4>
-  <h6 class="protocol clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light protocol clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="select-container">
     <select name="protocol"
       data-placeholder = "<%= t('global_activities.index.select_protocols') %>"
@@ -123,7 +137,9 @@
 
 <div class="filter-block small-left report-block">
   <h4 class="title"><%= t('global_activities.index.reports') %></h4>
-  <h6 class="report clear"><%= t('global_activities.index.clear') %></h6>
+  <div class="btn btn-light report clear">
+    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+  </div>
   <div class="select-container">
     <select name="report"
       data-placeholder = "<%= t('global_activities.index.select_reports') %>"

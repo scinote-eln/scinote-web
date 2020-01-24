@@ -57,46 +57,46 @@
   &.btn-secondary {
     background: $color-white;
     border: $border-default;
-    color: $color-black;
+    color: $color-volcano;
 
     &:hover {
       background: $color-concrete;
       border: $border-secondary;
-      color: $color-black;
+      color: $color-volcano;
     }
 
     &:active {
       background: $color-alto;
       border: $border-secondary;
-      color: $color-black;
+      color: $color-volcano;
     }
 
     &:focus {
       box-shadow: 0 0 0 1px $brand-focus;
-      color: $color-black;
+      color: $color-volcano;
     }
   }
 
   &.btn-light {
     background: transparent;
     border: $border-transparent;
-    color: $color-black;
+    color: $color-volcano;
 
     &:hover {
       background: $color-concrete;
       border: $border-transparent;
-      color: $color-black;
+      color: $color-volcano;
     }
 
     &:active {
       background: $color-alto;
       border: $border-transparent;
-      color: $color-black;
+      color: $color-volcano;
     }
 
     &:focus {
       box-shadow: 0 0 0 1px $brand-focus;
-      color: $color-black;
+      color: $color-volcano;
     }
   }
 
