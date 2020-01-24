@@ -75,7 +75,7 @@ module RepositoryDatatableHelper
   end
 
   def display_cell_value(cell, team)
-    value_name = cell.repository_column.data_type.underscore
+    value_name = cell.repository_column.data_type.demodulize.underscore
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
     serializer_class.new(
       cell.__send__(value_name),
