@@ -94,7 +94,7 @@
       var url = new URL($(this).attr('href'));
       url.searchParams.set('scroll', $('.tree').scrollTop());
       $(this).attr('href', url.toString());
-    })
+    });
 
     function toggleLi(el, collapse, animate) {
       var children = el.find(' > ul > li');
