@@ -444,7 +444,7 @@ var RepositoryDatatable = (function(global) {
           let content = data;
           let icon = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>';
           if (!row.recordEditable) {
-            icon = '<i class="repository-row-lock-icon fas fa-lock"></i>';
+            icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           }
           content = icon + content;
           return content;
