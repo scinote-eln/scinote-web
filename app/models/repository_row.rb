@@ -37,4 +37,8 @@ class RepositoryRow < ApplicationRecord
       .where('repositories.team_id = ? and repository_rows.created_by_id = ?', team, user)
       .update_all(created_by_id: new_owner.id)
   end
+
+  def editable?
+    true
+  end
 end

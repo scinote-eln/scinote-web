@@ -52,7 +52,7 @@ class RepositoryDatatableService
                         .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
                         .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     end
-    repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
+    repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
 
     @repository_rows = sort_rows(order_obj, repository_rows)
   end

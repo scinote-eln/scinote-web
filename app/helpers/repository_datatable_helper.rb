@@ -29,7 +29,7 @@ module RepositoryDatatableHelper
                                 ),
         'recordInfoUrl': Rails.application.routes.url_helpers
                               .repository_row_path(record.id),
-        'recordEditable': record_editable
+        'recordEditable': record.editable?
       }
 
       # Add custom columns
@@ -73,10 +73,6 @@ module RepositoryDatatableHelper
 
   def default_table_columns
     Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
-  end
-
-  def record_editable
-    true
   end
 
   def display_cell_value(cell, team)
