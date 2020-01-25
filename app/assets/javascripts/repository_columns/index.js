@@ -281,7 +281,8 @@ var RepositoryColumns = (function() {
         let visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
         let visLi = (visible) ? '' : 'col-invisible';
         let visText = $(TABLE_ID).data('columns-visibility-text');
-        let editLi = ($(el).attr('data-type')) ? 'editable' : '';
+        let customColumn = ($(el).attr('data-type')) ? 'editable' : '';
+        let editableRow = ($(el).attr('data-editable-row') === 'true') ? 'has-permissions' : '';
         let editUrl = $(el).attr('data-edit-column-url');
         let destroyUrl = $(el).attr('data-destroy-column-url');
         let thederName;
@@ -294,14 +295,14 @@ var RepositoryColumns = (function() {
           visClass = '';
           visText = '';
         }
-        let listItem = `<li class="col-list-el ${visLi} ${editLi}" data-position="${colIndex}" data-id="${colId}">
+        let listItem = `<li class="col-list-el ${visLi} ${customColumn} ${editableRow}" data-position="${colIndex}" data-id="${colId}">
           <i class="grippy"></i>
           <span class="vis-controls">
             <span class="vis fas ${visClass}" title="${visText}"></span>
           </span>
           <span class="text">${generateColumnNameTooltip(thederName)}</span>
-          <span class="column-type pull-right ${editLi}">${getColumnTypeText(el, colId)}</span>
-          <span class="sci-btn-group manage-controls pull-right ${editLi}">
+          <span class="column-type pull-right">${getColumnTypeText(el, colId)}</span>
+          <span class="sci-btn-group manage-controls pull-right">
             <button class="btn icon-btn btn-light edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
