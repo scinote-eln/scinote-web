@@ -116,6 +116,7 @@
     padding-top: 123px;
 
     .dataTables_scrollHead {
+      position: -webkit-sticky !important;
       position: sticky !important;
       top: 194px;
       z-index: 90;
