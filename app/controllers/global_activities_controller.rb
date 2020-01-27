@@ -69,7 +69,7 @@ class GlobalActivitiesController < ApplicationController
   end
 
   def team_filter
-    render json: current_user.teams.global_activity_filter(activity_filters, params[:query])
+    render json: current_user.teams.order('LOWER(name)').global_activity_filter(activity_filters, params[:query])
   end
 
   def user_filter
