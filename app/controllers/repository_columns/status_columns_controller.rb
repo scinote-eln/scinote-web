@@ -5,7 +5,7 @@ module RepositoryColumns
     include InputSanitizeHelper
     before_action :load_column, only: %i(update destroy items)
     before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: %i(update destroy items)
+    before_action :check_manage_permissions, only: %i(update destroy)
 
     def create
       service = RepositoryColumns::CreateColumnService
