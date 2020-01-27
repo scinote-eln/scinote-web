@@ -33,6 +33,10 @@
       width: 30px;
     }
 
+    .repository-row-lock-icon {
+      width: 30px;
+    }
+
     .assign-counter-container {
       border-radius: $border-radius-tag;
       cursor: pointer;
@@ -197,6 +201,12 @@
 
     .editing {
       border: 1px solid;
+    }
+
+    tr[data-editable=false] {
+      .assign-counter-container {
+        margin-left: 0;
+      }
     }
   }
 
