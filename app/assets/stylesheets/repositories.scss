@@ -246,6 +246,7 @@
   }
 
   .image-icon {
+    height: 18px;
     width: 18px;
   }
 
@@ -284,7 +285,9 @@
 
     .icon {
       display: inline-block;
+      position: relative;
       text-align: center;
+      top: -12px;
       width: 34px;
     }
 
@@ -470,4 +473,3 @@
     color: $color-silver-chalice;
   }
 }
-
