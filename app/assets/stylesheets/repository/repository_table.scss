@@ -6,14 +6,6 @@
 .repository-table {
   margin-top: 20px;
 
-  &.editing {
-    .dataTables_scrollHead {
-      .repository-column[data-type="RepositoryDateTimeRangeValue"] {
-        min-width: 520px;
-      }
-    }
-  }
-
   .dataTables_filter {
     float: right;
   }
