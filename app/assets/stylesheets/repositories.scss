@@ -108,6 +108,10 @@
 
     .filter-container {
       flex-grow: 1;
+
+      .toolbar-filter-buttons {
+        float: right;
+      }
     }
   }
 
