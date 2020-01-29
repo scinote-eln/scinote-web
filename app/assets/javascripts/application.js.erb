@@ -191,15 +191,6 @@ var HelperModule = (function(){
 
   var helpers = {};
 
-  helpers.treeLinkTruncation = function() {
-    $('.tree-link a').each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
-    $(".tree-link span").each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
-  }
-
   helpers.hideFlashMsg =  function() {
     var flash = $('.alert');
     if (flash.length > 0) {

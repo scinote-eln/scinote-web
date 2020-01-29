@@ -4,7 +4,7 @@
       <ul>
         <% if can_create_repositories?(current_team) %>
           <li>
-            <span class="tree-link link-wrap no-indent">
+            <span class="tree-link no-indent">
               <a class="sidebar-button create-new-repository" data-remote="true"
                  href="<%= create_modal_team_repositories_path(current_team) %>">
                 <span class="fas fa-plus"></span>
@@ -15,11 +15,10 @@
         <% end %>
         <% repositories.each do |repository| %>
           <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
-            <span class="tree-link line-wrap no-indent">
+            <span class="tree-link no-indent" title="<%= repository.name %>">
               <%= link_to repository.name,
                           repository_path(repository),
-                          class: current_page?(repository_path(repository)) ? 'disabled' : '',
-                          title: repository.name,
+                          class: current_page?(repository_path(repository)) ? 'disabled line-wrap' : 'line-wrap',
                           data: { 'no-turbolink' => 'true', type: 'repository', id: repository.id } %>
               <%= inventory_shared_status_icon(repository, current_team) %>
             </span>
