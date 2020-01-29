@@ -547,6 +547,9 @@ var RepositoryDatatable = (function(global) {
         $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
         $('div.toolbarButtonsDatatable').show();
 
+        $('div.toolbar-filter-buttons').prependTo('div.filter-container');
+        $('div.toolbar-filter-buttons').show();
+
         // Append buttons for task inventory
         $('div.toolbarButtons').appendTo('div.toolbar');
         $('div.toolbarButtons').show();
@@ -613,6 +616,11 @@ var RepositoryDatatable = (function(global) {
 
     initRowSelection();
     bindExportActions();
+    $(window).resize(() => {
+      setTimeout(() => {
+        adjustTableHeader();
+      }, 500);
+    });
 
     return TABLE;
   }

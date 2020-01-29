@@ -24,6 +24,9 @@ var RepositoryColumns = (function() {
     $('div.toolbarButtonsDatatable').appendTo('.repository-show');
     $('div.toolbarButtonsDatatable').hide();
 
+    $('div.toolbar-filter-buttons').appendTo('.repository-show');
+    $('div.toolbar-filter-buttons').hide();
+
     // destroy datatable and remove partial
     TABLE.destroy();
     $('.repository-table').remove();
