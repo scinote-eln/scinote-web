@@ -24,12 +24,12 @@ var RepositoryStatusColumnType = (function() {
     $.each($statusRows, (index, statusRow) => {
       var $row = $(statusRow);
       var $statusField = $row.find('.status-item-field');
-      var iconPlaceholder = $row.find(iconId).attr('emoji');
+      var icon = $row.find(iconId).attr('emoji');
       var stringLength = $statusField.val().length;
 
       if (stringLength < GLOBAL_CONSTANTS.NAME_MIN_LENGTH
           || stringLength > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
-          || !iconPlaceholder) {
+          || !icon) {
         $row.addClass('error').attr('data-error-text', I18n.t('libraries.manange_modal_column.status_type.errors.icon_and_name_error'));
       } else {
         $row.removeClass('error');
@@ -55,6 +55,7 @@ var RepositoryStatusColumnType = (function() {
         var iconElement = this;
         picker.on('emoji', emoji => {
           $(iconElement).attr('emoji', emoji).html(twemoji.parse(emoji));
+          validateForm();
         });
 
         if (picker.pickerVisible) {
