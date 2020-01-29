@@ -602,6 +602,11 @@ var RepositoryDatatable = (function(global) {
 
     initRowSelection();
     bindExportActions();
+    $(window).resize(() => {
+      setTimeout(() => {
+        adjustTableHeader()
+      }, 500)
+    })
 
     return TABLE;
   }
