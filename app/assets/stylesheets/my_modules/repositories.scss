@@ -21,8 +21,15 @@
   }
 
   tbody {
-    tr:hover {
+    tr {
+      .assigned-column {
+        .repository-row-lock-icon {
+          display: none !important;
+        }
+      }
+    }
 
+    tr:hover {
       .assigned-column {
         .repository-row-edit-icon {
           display: none !important;

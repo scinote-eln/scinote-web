@@ -4,6 +4,13 @@
   --sci-checkbox-size: 16px;
 }
 
+.sci-checkbox-container {
+  display: inline-block;
+  height: var(--sci-checkbox-size);
+  position: relative;
+  width: var(--sci-checkbox-size);
+}
+
 input[type="checkbox"].sci-checkbox {
   cursor: pointer;
   flex-shrink: 0;
@@ -36,7 +43,6 @@ input[type="checkbox"].sci-checkbox {
       line-height: calc(var(--sci-checkbox-size) - 2px);
       position: absolute;
       text-align: center;
-      top: 1px;
       transition: .2s;
       width: var(--sci-checkbox-size);
     }
