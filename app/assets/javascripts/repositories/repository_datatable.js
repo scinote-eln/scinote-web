@@ -604,9 +604,9 @@ var RepositoryDatatable = (function(global) {
     bindExportActions();
     $(window).resize(() => {
       setTimeout(() => {
-        adjustTableHeader()
-      }, 500)
-    })
+        adjustTableHeader();
+      }, 500);
+    });
 
     return TABLE;
   }
