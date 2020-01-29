@@ -28,7 +28,8 @@ module RepositoryDatatableHelper
                                   record.id
                                 ),
         'recordInfoUrl': Rails.application.routes.url_helpers
-                              .repository_row_path(record.id)
+                              .repository_row_path(record.id),
+        'recordEditable': record.editable?
       }
 
       # Add custom columns

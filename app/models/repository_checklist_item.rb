@@ -11,5 +11,5 @@ class RepositoryChecklistItem < ApplicationRecord
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
              inverse_of: :modified_repository_checklist_types
   has_many :repository_checklist_items_values, dependent: :destroy
-  has_many :repository_checklist_values, through: :repository_checklist_items_values
+  has_many :repository_checklist_values, through: :repository_checklist_items_values, dependent: :destroy
 end

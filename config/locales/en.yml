@@ -1055,6 +1055,7 @@ en:
       added_on: "Added on"
       added_by: "Added by"
       enter_row_name: "Enter name"
+      locked_item: "This is read-only item."
       assets:
         select_file_btn: "Select File (Max %{max_size} MB)..."
       text:
