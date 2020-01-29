@@ -36,7 +36,7 @@
     line-height: 36px;
     position: absolute;
     text-align: center;
-    top: 0;
+    bottom: 0;
     width: 25px;
   }
 
@@ -78,6 +78,10 @@
 
     .sci-input-field {
       border: $border-danger;
+    }
+
+    .fas {
+      bottom: 6px;
     }
 
     &::before {
