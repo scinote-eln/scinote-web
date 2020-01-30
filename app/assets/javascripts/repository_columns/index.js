@@ -198,7 +198,7 @@ var RepositoryColumns = (function() {
           $('#new-repo-column-submit').show();
         } else {
           $('#update-repo-column-submit').show();
-          $('[data-column-type=' + columnType + ']').show();
+          $('[data-column-type="' + columnType + '"]').show();
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
