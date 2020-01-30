@@ -73,7 +73,7 @@
                   <%= hidden_field(:user, :current_team_id) %>
                   <div class="dropdown-header"><%= t('nav.team_switch_title') %></div>
                   <div class="team-container">
-                    <% current_user.teams.each do |team| %>
+                    <% current_user.teams.ordered.each do |team| %>
                       <li class="team-name-item">
                         <a href="#"
                           data-id="<%= team.id %>"
