@@ -6,6 +6,15 @@
 .repository-table {
   margin-top: 20px;
 
+  &.editing {
+    tbody>tr {
+      &:not(.editing) {
+        opacity: .4;
+        pointer-events: none;
+      }
+    }
+  }
+
   .dataTables_filter {
     float: right;
   }
