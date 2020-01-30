@@ -318,7 +318,7 @@ class TeamImporter
           activity.subject_id = mappings[activity.subject_id]
         end
       end
-      if activity.values['message_items'].present?
+      if activity.values&.dig(:message_items).present?
         activity.values['message_items'].each_value do |item|
           next unless item['type']
 
