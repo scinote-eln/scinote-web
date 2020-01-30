@@ -109,6 +109,12 @@ var RepositoryDatatable = (function(global) {
     rowsSelected = [];
   }
 
+  function disableCheckboxToggleOnCheckboxPreview() {
+    $('.checklist-dropdown').click(function(e) {
+      $(e.currentTarget).closest('tr').find('.repository-row-selector').trigger('click');
+    });
+  }
+
   function changeToViewMode() {
     currentMode = 'viewMode';
     // Table specific stuff
@@ -381,13 +387,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function disableCheckboxToggleOnCheckboxPreview(){
-    $('.checklist-dropdown').click(function(e) {
-      e.stopPropagation();
-      $(e.currentTarget).find('ul').toggle()
-    });
-  }
-
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
@@ -547,6 +546,7 @@ var RepositoryDatatable = (function(global) {
         disableCheckboxToggleOnAssetDownload();
         FilePreviewModal.init();
         initHeaderTooltip();
+        disableCheckboxToggleOnCheckboxPreview();
 
         // Append button to inner toolbar in table
         $('div.toolbarButtonsDatatable').appendTo('div.toolbar');

@@ -83,8 +83,11 @@
   // Checklists
   .checklist-dropdown {
     .dropdown-menu {
+      min-width: 220px;
+
       .checklist-item {
-        padding: 5px;
+        line-height: 18px;
+        padding: 5px 15px;
       }
     }
 
