@@ -7,16 +7,6 @@
 $color-group-hover: $color-alabaster;
 $color-module-hover: $brand-primary;
 
-#new-project-modal,
-#edit-project-modal,
-#copy-to-repository-modal {
-  .btn-group label.btn-toggle:not(.active) {
-    background-color: $color-white;
-    border-color: $color-silver;
-    color: $color-emperor;
-  }
-}
-
 #sortMenu {
   border-color: $color-white;
 
@@ -32,13 +22,6 @@ $color-module-hover: $brand-primary;
 /* Secondary navigation */
 
 .navbar-nav {
-
-  .btn-group .btn-toggle:not(.active) {
-    background-color: $color-white;
-    border-color: $color-silver;
-    color: $color-emperor;
-  }
-
   .projects-view-mode-switch {
     margin: 8px 10px 12px;
   }

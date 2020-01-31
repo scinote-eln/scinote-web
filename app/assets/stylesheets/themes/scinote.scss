@@ -30,7 +30,20 @@ table {
 }
 
 .btn-toggle {
-  @include button-variant($btn-toggle-color, $btn-toggle-bg, $btn-toggle-border);
+  background: $color-white;
+  border: $border-default;
+  color: $color-volcano;
+
+  &.active {
+    background: $brand-primary;
+    border: 1px solid $brand-primary;
+    box-shadow: none;
+    color: $color-white;
+
+    &.focus {
+      outline: 0;
+    }
+  }
 }
 
 #no-teams-jumbotron {

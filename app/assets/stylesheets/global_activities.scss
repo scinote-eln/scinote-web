@@ -309,8 +309,8 @@
     width: 100%;
 
     .title {
+      @include font-small;
       float: left;
-      font-size: 16px;
       line-height: 20px;
       margin-bottom: 5px;
       width: calc(100% - 50px);

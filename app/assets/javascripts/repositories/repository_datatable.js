@@ -638,9 +638,8 @@ var RepositoryDatatable = (function(global) {
 
   global.onClickToggleAssignedRecords = function() {
     $('.repository-assign-group > .btn').click(function() {
-      $('.btn-group > .btn').removeClass('active btn-toggle');
-      $('.btn-group > .btn').addClass('btn-default');
-      $(this).addClass('active btn-toggle');
+      $('.btn-group > .btn').removeClass('active');
+      $(this).addClass('active');
     });
 
     $('#assigned-repo-records').on('click', function() {
