@@ -34,13 +34,15 @@
       <% end %>
     </div>
     <div class="repo-datatables-buttons">
-      <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
-        <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
-                    class: 'btn btn-secondary share-repo-option', remote: true, id: 'shareRepoBtn' do %>
-          <span class="fas fa-user-plus"></span>
-          <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
+      <div class="share-repository-button">
+        <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
+          <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
+                      class: 'btn btn-secondary share-repo-option', remote: true, id: 'shareRepoBtn' do %>
+            <span class="fas fa-user-plus"></span>
+            <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
 
       <button class="btn btn-secondary help_tooltips manage-repo-column-index"
               data-modal-url="<%= repository_columns_index_html_path(@repository) %>"
