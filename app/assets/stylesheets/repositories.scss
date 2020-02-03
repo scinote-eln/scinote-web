@@ -86,7 +86,7 @@
       line-height: 12px;
     }
 
-    .datatables-buttons {
+    .repo-datatables-buttons {
       flex-shrink: 0;
     }
   }
@@ -108,6 +108,10 @@
 
     .filter-container {
       flex-grow: 1;
+
+      .toolbar-filter-buttons {
+        float: right;
+      }
     }
   }
 
@@ -116,6 +120,7 @@
     padding-top: 123px;
 
     .dataTables_scrollHead {
+      position: -webkit-sticky !important;
       position: sticky !important;
       top: 194px;
       z-index: 90;
@@ -259,9 +264,12 @@
   width: 200px;
 
   .file-upload-button {
+    align-items: center;
     background-color: $color-white;
-    border: solid 1px;
-    border-radius: 3px;
+    border: $border-default;
+    border-radius: $border-radius-default;
+    cursor: pointer;
+    display: flex;
     height: 34px;
     line-height: 32px;
     position: relative;
@@ -272,7 +280,11 @@
       }
 
       label {
+        color: $color-silver-chalice;
+        cursor: pointer;
         display: inline-block;
+        margin-bottom: 0;
+        white-space: nowrap;
       }
 
       &:hover {
@@ -418,13 +430,8 @@
         display: flex;
         padding: 5px 0;
 
-        .simple-checkbox.hidden {
+        .sci-checkbox.hidden {
           display: inline-block !important;
-
-          + .checkbox-label {
-            display: inline-block;
-            opacity: 0;
-          }
         }
       }
     }
@@ -441,7 +448,7 @@
       display: flex;
       flex-grow: 1;
 
-      .checkbox-label {
+      .sci-checkbox-container {
         margin-right: 5px;
       }
     }
@@ -470,4 +477,3 @@
     color: $color-silver-chalice;
   }
 }
-

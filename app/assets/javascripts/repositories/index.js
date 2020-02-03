@@ -108,18 +108,18 @@
     var permissionCBs = form.find("input[name='write_permissions[]']");
     var permissionChanges = form.find("input[name='permission_changes']");
     var submitBtn = form.find('input[type="submit"]');
-    var selectAllCheckbox = form.find('.all-teams .simple-checkbox');
+    var selectAllCheckbox = form.find('.all-teams .sci-checkbox');
 
-    form.find('.teams-list').find('input.simple-checkbox, .permission-selector')
+    form.find('.teams-list').find('input.sci-checkbox, .permission-selector')
       .toggleClass('hidden', selectAllCheckbox.is(':checked'));
-    form.find('.all-teams .trigger-checkbox')
+    form.find('.all-teams .sci-toggle-checkbox')
       .toggleClass('hidden', !selectAllCheckbox.is(':checked'))
       .attr('disabled', !selectAllCheckbox.is(':checked'));
 
     selectAllCheckbox.change(function() {
-      form.find('.teams-list').find('input.simple-checkbox, .permission-selector')
+      form.find('.teams-list').find('input.sci-checkbox, .permission-selector')
         .toggleClass('hidden', this.checked);
-      form.find('.all-teams .trigger-checkbox').toggleClass('hidden', !this.checked)
+      form.find('.all-teams .sci-toggle-checkbox').toggleClass('hidden', !this.checked)
         .attr('disabled', !this.checked);
     });
 

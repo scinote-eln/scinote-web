@@ -128,6 +128,7 @@ var RepositoryDatatableRowEditor = (function() {
 
     // First two columns are always present and visible
     $row.append(rowForm);
+    $row.addClass('editing');
     $row.append($(TABLE_CELL));
 
     $(TABLE.table().node()).find('tbody').prepend($row);
@@ -177,6 +178,7 @@ var RepositoryDatatableRowEditor = (function() {
     `);
 
     $row.find('td').first().append(rowForm);
+    $row.addClass('editing');
 
     TABLE.cells(row.index(), row.columns().eq(0)).every(function() {
       let $header = $(TABLE.columns(this.index().column).header());

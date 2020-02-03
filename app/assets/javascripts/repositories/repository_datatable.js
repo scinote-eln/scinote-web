@@ -17,6 +17,7 @@ var RepositoryDatatable = (function(global) {
   var SELECT_ALL_SELECTOR = "#checkbox > input[name=select_all]"
 
   var rowsSelected = [];
+  var rowsLocked = [];
 
   // Tells whether we're currently viewing or editing table
   var currentMode = 'viewMode';
@@ -76,6 +77,11 @@ var RepositoryDatatable = (function(global) {
         $('#copyRepositoryRecords').prop('disabled', false);
         $('#assignRepositoryRecords').prop('disabled', false);
         $('#unassignRepositoryRecords').prop('disabled', false);
+
+        if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
+          $('#editRepositoryRecord').prop('disabled', true);
+          $('#deleteRepositoryRecordsButton').prop('disabled', true);
+        }
         $('#editDeleteCopy').show();
       }
     } else if (currentMode === 'editMode') {
@@ -101,6 +107,12 @@ var RepositoryDatatable = (function(global) {
     $('.dt-body-center .repository-row-selector').prop('checked', false);
     $('.dt-body-center .repository-row-selector').closest('tr').removeClass('selected');
     rowsSelected = [];
+  }
+
+  function disableCheckboxToggleOnCheckboxPreview() {
+    $('.checklist-dropdown').click(function(e) {
+      $(e.currentTarget).closest('tr').find('.repository-row-selector').trigger('click');
+    });
   }
 
   function changeToViewMode() {
@@ -375,13 +387,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function disableCheckboxToggleOnCheckboxPreview(){
-    $('.checklist-dropdown').click(function(e) {
-      e.stopPropagation();
-      $(e.currentTarget).find('ul').toggle()
-    });
-  }
-
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
@@ -422,8 +427,9 @@ var RepositoryDatatable = (function(global) {
         orderable: false,
         className: 'dt-body-center',
         sWidth: '1%',
-        render: function() {
-          return "<input class='repository-row-selector sci-checkbox' type='checkbox'><span class='sci-checkbox-label'></span>";
+        render: function(data, type, row) {
+          return `<input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                  <span class='sci-checkbox-label'></span>`;
         }
       }, {
         // Assigned column is not searchable
@@ -433,11 +439,13 @@ var RepositoryDatatable = (function(global) {
         orderable: true,
         className: 'assigned-column',
         sWidth: '1%',
-        render: function(data) {
+        render: function(data, type, row) {
           let content = data;
-          if (EDITABLE) {
-            content = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>' + content;
+          let icon = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>';
+          if (!row.recordEditable) {
+            icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           }
+          content = icon + content;
           return content;
         }
       }, {
@@ -448,6 +456,11 @@ var RepositoryDatatable = (function(global) {
           return "<a href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
         }
+      }, {
+        // Added on column
+        targets: 4,
+        class: 'added-on',
+        visible: true
       }, {
         targets: '_all',
         render: function(data) {
@@ -461,6 +474,7 @@ var RepositoryDatatable = (function(global) {
         sSearch: I18n.t('general.filter_dots')
       },
       rowCallback: function(row, data) {
+        $(row).attr('data-editable', data.recordEditable);
         // Get row ID
         let rowId = data.DT_RowId;
         // If row ID is in the list of selected row IDs
@@ -532,10 +546,14 @@ var RepositoryDatatable = (function(global) {
         disableCheckboxToggleOnAssetDownload();
         FilePreviewModal.init();
         initHeaderTooltip();
+        disableCheckboxToggleOnCheckboxPreview();
 
         // Append button to inner toolbar in table
         $('div.toolbarButtonsDatatable').appendTo('div.toolbar');
         $('div.toolbarButtonsDatatable').show();
+
+        $('div.toolbar-filter-buttons').prependTo('div.filter-container');
+        $('div.toolbar-filter-buttons').show();
 
         // Append buttons for task inventory
         $('div.toolbarButtons').appendTo('div.toolbar');
@@ -576,6 +594,10 @@ var RepositoryDatatable = (function(global) {
         $('.dataTables_filter').find('label').remove();
 
         $('.main-actions, .pagination-row').removeClass('hidden');
+
+        $(TABLE_ID).find('tr[data-editable=false]').each(function(_, e) {
+          rowsLocked.push(parseInt($(e).attr('id'), 10));
+        });
       }
     });
 
@@ -599,6 +621,11 @@ var RepositoryDatatable = (function(global) {
 
     initRowSelection();
     bindExportActions();
+    $(window).resize(() => {
+      setTimeout(() => {
+        adjustTableHeader();
+      }, 500);
+    });
 
     return TABLE;
   }

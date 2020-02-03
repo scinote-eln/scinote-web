@@ -28,7 +28,8 @@ module RepositoryDatatableHelper
                                   record.id
                                 ),
         'recordInfoUrl': Rails.application.routes.url_helpers
-                              .repository_row_path(record.id)
+                              .repository_row_path(record.id),
+        'recordEditable': record.editable?
       }
 
       # Add custom columns
@@ -49,8 +50,10 @@ module RepositoryDatatableHelper
         "<span class='circle-icon disabled'>&nbsp;</span>"
       end
     elsif record.assigned_my_modules_count.positive?
-      tooltip = "#{record.assigned_my_modules_count} tasks,&#10;#{record.assigned_experiments_count} " \
-      "experiments,&#10;#{record.assigned_projects_count} projects"
+      tooltip = t('repositories.table.assigned_tooltip',
+                  tasks: record.assigned_my_modules_count,
+      experiments: record.assigned_experiments_count,
+      projects: record.assigned_projects_count)
 
       "<div class='assign-counter-container' title='#{tooltip}'>"\
       "<span class='assign-counter has-assigned'>#{record.assigned_my_modules_count}</span></div>"
@@ -75,7 +78,7 @@ module RepositoryDatatableHelper
   end
 
   def display_cell_value(cell, team)
-    value_name = cell.repository_column.data_type.underscore
+    value_name = cell.repository_column.data_type.demodulize.underscore
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
     serializer_class.new(
       cell.__send__(value_name),

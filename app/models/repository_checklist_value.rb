@@ -22,7 +22,7 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def export_formatted
-    formatted(separator: "\n")
+    repository_checklist_items.pluck(:data).map { |d| d.tr("\n", ' ') }.join("\n")
   end
 
   def data

@@ -262,18 +262,5 @@ RSpec.describe RepositoryColumns::StatusColumnsController, type: :controller do
         expect(response).to(have_http_status(404))
       end
     end
-
-    context 'when user does not have permissions' do
-      before do
-        user_team.role = :guest
-        user_team.save
-      end
-
-      it 'respons with status 403' do
-        action
-
-        expect(response).to(have_http_status(403))
-      end
-    end
   end
 end

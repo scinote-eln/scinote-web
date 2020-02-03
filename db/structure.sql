@@ -4768,7 +4768,7 @@ CREATE INDEX index_repository_checklist_items_on_created_by_id ON public.reposit
 -- Name: index_repository_checklist_items_on_data; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_checklist_items_on_data ON public.repository_checklist_items USING btree (data);
+CREATE INDEX index_repository_checklist_items_on_data ON public.repository_checklist_items USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
 
 
 --
@@ -4978,7 +4978,7 @@ CREATE INDEX index_repository_status_items_on_repository_id ON public.repository
 -- Name: index_repository_status_items_on_status; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_status_items_on_status ON public.repository_status_items USING btree (status);
+CREATE INDEX index_repository_status_items_on_status ON public.repository_status_items USING gin (public.trim_html_tags((status)::text) public.gin_trgm_ops);
 
 
 --
@@ -7151,7 +7151,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191001133557'),
 ('20191003091614'),
 ('20191007144622'),
-('20191009146101'),
 ('20191023162335'),
 ('20191105143702'),
 ('20191115143747'),
@@ -7161,3 +7160,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191210103004'),
 ('20191218072619'),
 ('20200113143828');
+
+

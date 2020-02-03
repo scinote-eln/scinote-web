@@ -124,12 +124,14 @@
       }
 
       &:hover {
-        .editable {
-          display: inline-block;
-        }
+        &.editable.has-permissions {
+          .manage-controls {
+            display: inline-block;
+          }
 
-        .column-type.editable {
-          display: none;
+          .column-type {
+            display: none;
+          }
         }
 
         .grippy {
@@ -210,11 +212,11 @@
   }
 
   &[data-task-page=true] {
-    .repo-columns-list>.editable:hover>.manage-controls {
+    .repo-columns-list>.col-list-el:hover.editable.has-permissions>.manage-controls {
       display: none;
     }
 
-    .repo-columns-list>.editable:hover>.column-type {
+    .repo-columns-list>.col-list-el:hover.editable.has-permissions>.column-type {
       display: inline-block;
     }
 

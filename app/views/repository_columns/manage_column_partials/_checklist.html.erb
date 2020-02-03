@@ -12,8 +12,8 @@
   <div class="col-sm-9">
     <select name="delimiter" id="delimiter" class="form-control delimiter" <%= "data-disable-on-load=true" if !column.new_record? %>>
       <% delimiters.each do |delimiter| %>
-        <option value="<%= delimiter[1] %>" 
-          <%= "selected" if delimiter[1] == selected_delimiter  %>
+        <option value="<%= delimiter[1] %>"
+          <%= "selected" if delimiter[1].to_s == selected_delimiter  %>
           data-params='{"icon": "<%= Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_ICON_MAP[delimiter[1].to_sym] %>"}'
         ><%= delimiter[0] %></option>
       <% end %>

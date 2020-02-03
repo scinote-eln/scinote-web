@@ -73,7 +73,7 @@
                   <%= hidden_field(:user, :current_team_id) %>
                   <div class="dropdown-header"><%= t('nav.team_switch_title') %></div>
                   <div class="team-container">
-                    <% current_user.teams.each do |team| %>
+                    <% current_user.teams.ordered.each do |team| %>
                       <li class="team-name-item">
                         <a href="#"
                           data-id="<%= team.id %>"
@@ -189,19 +189,17 @@
             </li>
           </ul>
         </li>
-
         <li>
-          <%= link_to Constants::ACADEMY_TR_LINK,  
-            class: "academy-link flag", 
-            title: I18n.t('nav.academy_tooltip'),
-            target: :_blank do 
+          <%= link_to Constants::ACADEMY_TR_LINK,
+                      class: "academy-link flag",
+                      title: I18n.t('nav.academy_tooltip'),
+                      target: :_blank do
           %>
             <div class="icon-container">
               <span class="fas fa-graduation-cap"></span>
             </div>
           <% end %>
         </li>
-
       </ul>
     </div>
     <% end %>
