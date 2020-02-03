@@ -12,6 +12,8 @@ class RepositoryListValue < ApplicationRecord
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
+  validates :repository_list_item, presence: true
+
   validates_inclusion_of :repository_list_item,
                          in: (lambda do |list_value|
                            list_value.repository_cell&.repository_column&.repository_list_items || []
@@ -19,6 +21,7 @@ class RepositoryListValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'repository_list_items.data'
   SORTABLE_VALUE_INCLUDE = { repository_list_value: :repository_list_item }.freeze
+  PRELOAD_INCLUDE = { repository_list_value: :repository_list_item }.freeze
 
   def formatted
     data.to_s
@@ -45,6 +48,24 @@ class RepositoryListValue < ApplicationRecord
                                       .repository_column
                                       .repository_list_items
                                       .find(payload)
+    value
+  end
+
+  def self.import_from_text(text, attributes)
+    value = new(attributes)
+    column = value.repository_cell.repository_column
+    list_item = column.repository_list_items.find_by(data: text)
+
+    if list_item.blank?
+      list_item = column.repository_list_items.new(data: text,
+                                                   created_by: value.created_by,
+                                                   last_modified_by: value.last_modified_by,
+                                                   repository: column.repository)
+
+      return nil unless list_item.save
+    end
+
+    value.repository_list_item = list_item
     value
   end
 

@@ -15,6 +15,7 @@ class RepositoryChecklistValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'repository_checklist_items.data'
   SORTABLE_VALUE_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
+  PRELOAD_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
 
   def formatted(separator: ' | ')
     repository_checklist_items.pluck(:data).join(separator)
@@ -49,6 +50,28 @@ class RepositoryChecklistValue < ApplicationRecord
                                             .repository_column
                                             .repository_checklist_items
                                             .where(id: JSON.parse(payload))
+    value
+  end
+
+  def self.import_from_text(text, attributes)
+    value = new(attributes)
+    column = value.repository_cell.repository_column
+    byebug
+    text.split("\n").each do |item_text|
+      checklist_item = column.repository_checklist_items.find_by(data: item_text)
+
+      if checklist_item.blank?
+        checklist_item = column.repository_checklist_items.new(data: text,
+                                                               created_by: value.created_by,
+                                                               last_modified_by: value.last_modified_by,
+                                                               repository: column.repository)
+
+        return nil unless checklist_item.save
+      end
+
+      value.repository_checklist_items << checklist_item
+    end
+
     value
   end
 end

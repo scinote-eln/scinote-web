@@ -3,13 +3,12 @@
 class SpreadsheetParser
   # Based on file's extension opens file (used for importing)
   def self.open_spreadsheet(file)
-    if file.class.name.split('::')[-1] == 'UploadedFile'
-      filename = file.original_filename
-      file_path = file.path
-    else
-      filename = File.basename(file.path)
-      file_path = file.path
-    end
+    file_path = file.path
+    filename = if file.class.name.split('::')[-1] == 'UploadedFile'
+                 file.original_filename
+               else
+                 File.basename(file.path)
+               end
 
     case File.extname(filename)
     when '.csv'
@@ -20,10 +19,7 @@ class SpreadsheetParser
       # This assumption is based purely on biologist's habits
       Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
     when '.xlsx'
-      # Roo Excel parcel was replaced with Creek, but it can be enabled back,
-      # just swap lines below. But only one can be enabled at the same time.
       Roo::Excelx.new(file_path)
-      # Creek::Book.new(file_path).sheets[0]
     else
       raise TypeError
     end
@@ -56,11 +52,8 @@ class SpreadsheetParser
   end
 
   def self.parse_row(row, sheet)
-    # Creek XLSX parser returns Hash of the row, Roo - Array
-    if row.is_a?(Hash)
-      row.values.map(&:to_s)
-    elsif sheet.is_a?(Roo::Excelx)
-      row.map { |cell| cell&.value&.to_s }
+    if sheet.is_a?(Roo::Excelx)
+      row.map { |cell| cell&.formatted_value }
     else
       row.map(&:to_s)
     end

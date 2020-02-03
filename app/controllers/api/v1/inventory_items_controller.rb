@@ -13,10 +13,9 @@ module Api
       def index
         items =
           @inventory.repository_rows
-                    .includes(repository_cells: :repository_column)
-                    .includes(
-                      repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES
-                    ).page(params.dig(:page, :number))
+                    .preload(repository_cells: :repository_column)
+                    .preload(repository_cells: @inventory.cell_preload_includes)
+                    .page(params.dig(:page, :number))
                     .per(params.dig(:page, :size))
         incl = params[:include] == 'inventory_cells' ? :inventory_cells : nil
         render jsonapi: items,

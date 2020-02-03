@@ -391,7 +391,7 @@ class MyModulesController < ApplicationController
     @repository_rows = datatable_service.repository_rows
                                         .preload(:repository_columns,
                                                  :created_by,
-                                                 repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES)
+                                                 repository_cells: @repository.cell_preload_includes)
                                         .page(page)
                                         .per(per_page)
 
