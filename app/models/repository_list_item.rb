@@ -15,7 +15,8 @@ class RepositoryListItem < ApplicationRecord
   private
 
   def validate_per_column_limit
-    if repository_column.repository_list_items.count > Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
+    if repository_column &&
+       repository_column.repository_list_items.count > Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
       errors.add(:base, :per_column_limit)
     end
   end
