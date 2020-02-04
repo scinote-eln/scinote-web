@@ -569,6 +569,9 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
+      get 'repository_columns/:id/edit_html',
+          to: 'repository_columns#edit_html',
+          as: 'columns_edit_html'
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
@@ -585,29 +588,29 @@ Rails.application.routes.draw do
           as: 'available_columns',
           defaults: { format: 'json' }
 
-      resources :repository_columns, only: %i(create edit update destroy)
+      resources :repository_columns, only: :destroy
       resources :repository_rows, only: %i(create edit update)
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
       namespace :repository_columns do
-        resources :text_columns, only: %i(create update destroy)
-        resources :number_columns, only: %i(create update destroy)
-        resources :asset_columns, only: %i(create update destroy)
-        resources :date_columns, only: %i(create update destroy)
-        resources :date_time_columns, only: %i(create update destroy)
-        resources :list_columns, only: %i(create update destroy) do
+        resources :text_columns, only: %i(create update)
+        resources :number_columns, only: %i(create update)
+        resources :asset_columns, only: %i(create update)
+        resources :date_columns, only: %i(create update)
+        resources :date_time_columns, only: %i(create update)
+        resources :list_columns, only: %i(create update) do
           member do
             get 'items'
           end
         end
-        resources :checklist_columns, only: %i(create update destroy) do
+        resources :checklist_columns, only: %i(create update) do
           member do
             get 'items'
           end
         end
-        resources :status_columns, only: %i(create update destroy) do
+        resources :status_columns, only: %i(create update) do
           member do
             get 'items'
           end

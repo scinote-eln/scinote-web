@@ -3,9 +3,9 @@
 module RepositoryColumns
   class DateTimeColumnsController < BaseColumnsController
     include InputSanitizeHelper
-    before_action :load_column, only: %i(update destroy)
+    before_action :load_column, only: :update
     before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: %i(update destroy)
+    before_action :check_manage_permissions, only: :update
 
     def create
       service = RepositoryColumns::CreateColumnService
@@ -29,17 +29,6 @@ module RepositoryColumns
 
       if service.succeed?
         render json: service.column, status: :ok, editing: true
-      else
-        render json: service.errors, status: :unprocessable_entity
-      end
-    end
-
-    def destroy
-      service = RepositoryColumns::DeleteColumnService
-                .call(user: current_user, team: current_team, column: @repository_column)
-
-      if service.succeed?
-        render json: {}, status: :ok
       else
         render json: service.errors, status: :unprocessable_entity
       end
