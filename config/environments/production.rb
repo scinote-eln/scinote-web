@@ -40,7 +40,8 @@ Rails.application.configure do
     authentication: Rails.application.secrets.mailer_authentication,
     enable_starttls_auto: true,
     user_name: Rails.application.secrets.mailer_user_name,
-    password: Rails.application.secrets.mailer_password
+    password: Rails.application.secrets.mailer_password,
+    openssl_verify_mode: Rails.application.secrets.mailer_openssl_verify_mode
   }
 
   #config.action_mailer.perform_deliveries = false
