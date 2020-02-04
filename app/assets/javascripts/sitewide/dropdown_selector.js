@@ -731,6 +731,7 @@ var dropdownSelector = (function() {
 
       $.get(selector.data('ajax-url'), ajaxParams, (data) => {
         loadData(selector, container, data);
+        PerfectSb().update_all();
       });
     // For local options we convert options element from select to correct array
     } else if (selector.data('select-by-group')) {
