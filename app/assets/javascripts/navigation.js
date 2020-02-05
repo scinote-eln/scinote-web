@@ -164,4 +164,4 @@
   // init
   loadDropdownSystemNotifications();
   loadUnseenNotificationsNumber('system-notifications', '.fa-gift');
-})();
+}());

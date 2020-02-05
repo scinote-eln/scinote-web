@@ -158,13 +158,13 @@
       .addClass('fas fa-caret-right expanded');
 
     // Add IDs to all parent <lis>
-    var i = 0;
+    let i = 0;
     _.each($('[data-parent="candidate"]'), function(el) {
       $(el).attr('data-toggle-id', i += 1);
     });
 
     // Get the current project
-    var project = $('[data-project-id]').data('projectId');
+    let project = $('[data-current-project]').data('currentProject');
 
     // Set number of elements
     sessionExpandSidebarElement(
