@@ -7,7 +7,7 @@ describe RepositoryColumns::CreateColumnService do
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:team) { create :team }
   let(:repository) { create :repository, team: team }
-  let(:column_type) { :RepositoryListValue }
+  let(:column_type) { :RepositoryStatusValue }
   let(:params) do
     {
       name: 'myrepo',
