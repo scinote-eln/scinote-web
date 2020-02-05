@@ -1,0 +1,36 @@
+.connected-account {
+  border: $border-default;
+  border-radius: $border-radius-default;
+  display: flex;
+  padding: 16px;
+
+  .left-block {
+    align-items: center;
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+
+    .title {
+      @include font-h3;
+    }
+
+    .description {
+      flex-basis: 100%;
+      margin-top: 7px;
+    }
+
+    .status {
+      color: $brand-success;
+      margin-left: 8px;
+    }
+  }
+
+  .right-block {
+    align-items: flex-end;
+    display: flex;
+    flex-basis: 150px;
+    flex-direction: column;
+    flex-shrink: 0;
+    justify-content: flex-end;
+  }
+}
