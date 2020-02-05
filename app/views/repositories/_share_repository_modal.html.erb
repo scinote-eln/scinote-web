@@ -17,29 +17,37 @@
           <div class="data-list">
             <div class="all-teams">
               <span class="team-selector" title="<%= t("repositories.index.modal_share.all_teams_tooltip") %>">
-                <%= check_box_tag 'select_all_teams', 0, @repository.shared_read? || @repository.shared_write?, { class: 'simple-checkbox' } %>
-                <span class="checkbox-label"></span>
+                <span class="sci-checkbox-container">
+                  <%= check_box_tag 'select_all_teams', 0, @repository.shared_read? || @repository.shared_write?, { class: 'sci-checkbox' } %>
+                  <span class="sci-checkbox-label"></span>
+                </span>
                 <%= t("repositories.index.modal_share.all_teams") %>
               </span>
               <span class="permission-selector">
-                <%= check_box_tag 'select_all_write_permission', 0, @repository.shared_write?, { class: 'hidden trigger-checkbox' }%>
-                <span class="checkbox-label"></span>
+                <span class="sci-toggle-checkbox-container">
+                  <%= check_box_tag 'select_all_write_permission', 0, @repository.shared_write?, { class: 'hidden sci-toggle-checkbox' }%>
+                  <span class="sci-toggle-checkbox-label"></span>
+                </span>
               </span>
             </div>
             <div class="teams-list">
               <% (current_user.teams - [@repository.team]).each do |t| %>
               <div class="team-container">
                 <div class="team-selector">
-                  <%= check_box_tag 'share_team_ids[]', t.id, @repository.private_shared_with?(t), {id: "shared_#{t.id}", class: "simple-checkbox"} %>
-                  <span class="checkbox-label"></span>
+                  <span class="sci-checkbox-container">
+                    <%= check_box_tag 'share_team_ids[]', t.id, @repository.private_shared_with?(t), {id: "shared_#{t.id}", class: "sci-checkbox"} %>
+                    <span class="sci-checkbox-label"></span>
+                  </span>
                   <%= t.name %>
                 </div>
                 <div class="permission-selector">
-                  <%= check_box_tag 'write_permissions[]', t.id, @repository.private_shared_with_write?(t), {
-                    id: "editable_#{t.id}",
-                    class: (@repository.private_shared_with?(t) ? 'trigger-checkbox' : 'trigger-checkbox hidden')
-                  }.compact %>
-                  <span class="checkbox-label"></span>
+                  <span class="sci-toggle-checkbox-container">
+                    <%= check_box_tag 'write_permissions[]', t.id, @repository.private_shared_with_write?(t), {
+                      id: "editable_#{t.id}",
+                      class: (@repository.private_shared_with?(t) ? 'sci-toggle-checkbox' : 'sci-toggle-checkbox hidden')
+                    }.compact %>
+                    <span class="sci-toggle-checkbox-label"></span>
+                  </span>
                 </div>
               </div>
               <% end %>

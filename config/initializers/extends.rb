@@ -79,6 +79,9 @@ class Extends
                                 repository_status_value: :repository_status_item,
                                 repository_asset_value: { asset: { file_attachment: :blob } }]
 
+  # Array of preload relations used in search query for repository rows
+  REPOSITORY_ROWS_PRELOAD_RELATIONS = []
+
   # List of implemented core API versions
   API_VERSIONS = ['v1']
 

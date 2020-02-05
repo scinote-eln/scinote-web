@@ -13,18 +13,12 @@
     margin-bottom: 0;
   }
 
-  .no-indent {
-    background-color: $color-white;
-  }
-
   .first-indent {
-    background-color: $color-concrete;
-    padding-left: 30px;
+    margin-left: 30px;
   }
 
   .second-indent {
-    background-color: $color-concrete;
-    padding-left: 60px;
+    margin-left: 60px;
   }
 
   li {
@@ -49,8 +43,8 @@
     }
 
     &.active > span {
-      background-color: $brand-primary;
-      color: $color-white;
+      background-color: $color-white;
+      color: $brand-primary;
       font-weight: bold;
 
       &.first-indent > span,
@@ -77,21 +71,16 @@
 
     // Links are recolored
     a {
-      color: $color-emperor;
+      color: $color-volcano;
       position: relative;
 
       &.disabled {
-        color: $color-white;
+        color: $brand-primary;
       }
 
       &:hover {
-        color: $brand-primary;
+        color: $color-volcano;
       }
-    }
-
-    .border-custom {
-      box-shadow: 0 -.25px 0 .25px $color-alto;
-      margin: 0 15px;
     }
   }
 
@@ -121,7 +110,7 @@
     }
 
     .first-indent {
-      padding-left: 45px;
+      padding-left: 15px;
     }
   }
 }
@@ -136,7 +125,7 @@
 
   .active {
     .fas-custom {
-      fill: $color-white;
+      fill: $brand-primary;
     }
   }
 }

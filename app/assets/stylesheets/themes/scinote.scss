@@ -30,7 +30,20 @@ table {
 }
 
 .btn-toggle {
-  @include button-variant($btn-toggle-color, $btn-toggle-bg, $btn-toggle-border);
+  background: $color-white;
+  border: $border-default;
+  color: $color-volcano;
+
+  &.active {
+    background: $brand-primary;
+    border: 1px solid $brand-primary;
+    box-shadow: none;
+    color: $color-white;
+
+    &.focus {
+      outline: 0;
+    }
+  }
 }
 
 #no-teams-jumbotron {
@@ -284,7 +297,6 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-secondary {
-  background: $color-concrete !important;
   margin-left: -280px;
   padding-left: 280px;
   padding-right: 82px;
@@ -393,19 +405,13 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-secondary {
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  transition: .4s $timing-function-sharp;
 }
 
 .navbar-without-sidebar{
   margin-left: 0px;
   padding-left: 0;
-  -o-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  transition: .4s $timing-function-sharp;
 }
 
 /** Chat bubble */
@@ -1608,7 +1614,7 @@ textarea.textarea-sm {
   min-height: 34px;
 
   &.form-control {
-    height: 34px;
+    height: 36px;
   }
 }
 

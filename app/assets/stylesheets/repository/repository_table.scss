@@ -6,6 +6,15 @@
 .repository-table {
   margin-top: 20px;
 
+  &.editing {
+    tbody>tr {
+      &:not(.editing) {
+        opacity: .4;
+        pointer-events: none;
+      }
+    }
+  }
+
   .dataTables_filter {
     float: right;
   }
@@ -30,6 +39,10 @@
     .repository-row-edit-icon {
       cursor: pointer;
       display: none;
+      width: 30px;
+    }
+
+    .repository-row-lock-icon {
       width: 30px;
     }
 
@@ -62,11 +75,19 @@
     }
   }
 
+  // Added on
+  .added-on {
+    white-space: nowrap;
+  }
+
   // Checklists
   .checklist-dropdown {
     .dropdown-menu {
+      min-width: 220px;
+
       .checklist-item {
-        padding: 5px;
+        line-height: 18px;
+        padding: 5px 15px;
       }
     }
 
@@ -197,6 +218,12 @@
 
     .editing {
       border: 1px solid;
+    }
+
+    tr[data-editable=false] {
+      .assign-counter-container {
+        margin-left: 0;
+      }
     }
   }
 

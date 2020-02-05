@@ -1,5 +1,12 @@
 // scss-lint:disable SelectorDepth QualifyingElement NestingDepth
 
+.sci-toggle-checkbox-container {
+  display: inline-block;
+  height: 16px;
+  position: relative;
+  width: 24px;
+}
+
 input[type="checkbox"].sci-toggle-checkbox {
   cursor: pointer;
   flex-shrink: 0;
@@ -17,8 +24,9 @@ input[type="checkbox"].sci-toggle-checkbox {
     display: inline-block;
     flex-shrink: 0;
     height: 16px;
-    margin-left: -27px;
-    position: relative;
+    left: 0;
+    position: absolute;
+    top: 0;
     transition: .2s;
     width: 24px;
 

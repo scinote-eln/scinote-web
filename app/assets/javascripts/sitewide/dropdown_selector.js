@@ -218,7 +218,6 @@ var dropdownSelector = (function() {
       label: searchField.val(),
       value: searchField.val()
     };
-
     $.each(selectArray, function() {
       if (this.value === newTag.value) searchField.val('');
     });
@@ -335,6 +334,7 @@ var dropdownSelector = (function() {
           } else {
             dropdownContainer.find('.dropdown-option').first().click();
           }
+          dropdownContainer.find('.search-field').val('');
         }
       }).click((e) =>{
         e.stopPropagation();
@@ -731,6 +731,7 @@ var dropdownSelector = (function() {
 
       $.get(selector.data('ajax-url'), ajaxParams, (data) => {
         loadData(selector, container, data);
+        PerfectSb().update_all();
       });
     // For local options we convert options element from select to correct array
     } else if (selector.data('select-by-group')) {

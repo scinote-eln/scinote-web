@@ -36,6 +36,17 @@
   }
 }
 
+.mce-primary {
+  background-color: $brand-primary !important;
+  border-color: $brand-primary !important;
+  border-radius: $border-radius-default !important;
+  color: $color-white !important;
+}
+
+.mce-primary .mce-txt:hover {
+  color: $color-white !important;
+}
+
 .ql-editor {
   font-size: 16px;
 }
