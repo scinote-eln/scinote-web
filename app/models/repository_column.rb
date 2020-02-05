@@ -5,9 +5,9 @@ class RepositoryColumn < ApplicationRecord
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_cells, dependent: :destroy
   has_many :repository_rows, through: :repository_cells
-  has_many :repository_list_items, dependent: :destroy, index_errors: true
-  has_many :repository_status_items, dependent: :destroy, index_errors: true
-  has_many :repository_checklist_items, dependent: :destroy, index_errors: true
+  has_many :repository_list_items, -> { order('data ASC') }, dependent: :destroy, index_errors: true
+  has_many :repository_status_items, -> { order('status ASC') }, dependent: :destroy, index_errors: true
+  has_many :repository_checklist_items, -> { order('data ASC') }, dependent: :destroy, index_errors: true
 
   accepts_nested_attributes_for :repository_status_items, allow_destroy: true
   accepts_nested_attributes_for :repository_list_items, allow_destroy: true
