@@ -1,7 +1,7 @@
 <div class="team-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.teams') %></h4>
   <div class="btn btn-light team clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container">
     <select name="team"
@@ -18,7 +18,7 @@
      data-period-select="">
   <h4 class="title"><%= t('global_activities.index.activity') %></h4>
   <div class="btn btn-light date clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="date-selector">
     <div class="hot-buttons">
@@ -42,7 +42,7 @@
 <div class="activity-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.activity_type') %></h4>
   <div class="btn btn-light activity clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container group-activity">
     <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
@@ -60,7 +60,7 @@
 <div class="user-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
   <div class="btn btn-light user clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container">
     <select name="user"
@@ -73,7 +73,7 @@
 <div class="filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.projects_experiments_tasks') %></h4>
   <div class="btn btn-light project clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container project">
     <select name="project"
@@ -102,7 +102,7 @@
 <div class="filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.inventories') %></h4>
   <div class="btn btn-light inventory clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container inventory">
     <select name="inventory"
@@ -123,7 +123,7 @@
 <div class="filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.protocols') %></h4>
   <div class="btn btn-light protocol clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container">
     <select name="protocol"
@@ -138,7 +138,7 @@
 <div class="filter-block small-left report-block">
   <h4 class="title"><%= t('global_activities.index.reports') %></h4>
   <div class="btn btn-light report clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container">
     <select name="report"

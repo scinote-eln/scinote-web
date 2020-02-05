@@ -5,7 +5,7 @@
      data-period-select="">
   <h4 class="title"><%= t('global_activities.index.activity') %></h4>
   <div class="btn btn-light date clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="date-selector">
     <div class="hot-buttons">
@@ -29,7 +29,7 @@
 <div class="activity-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.activity_type') %></h4>
   <div class="btn btn-light activity clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container group-activity">
     <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
@@ -47,7 +47,7 @@
 <div class="user-selector filter-block small-left">
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
   <div class="btn btn-light user clear">
-    <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear') %>
+    <%= t('global_activities.index.clear') %>
   </div>
   <div class="select-container">
     <select name="user"
