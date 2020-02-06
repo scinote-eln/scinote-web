@@ -1,6 +1,6 @@
 /*
 global ListColumnHelper ChecklistColumnHelper StatusColumnHelper SmartAnnotation I18n
-GLOBAL_CONSTANTS DateTimeHelper
+AssetColumnHelper DateTimeHelper
 */
 
 $.fn.dataTable.render.newRowName = function(formId, $cell) {
@@ -18,23 +18,7 @@ $.fn.dataTable.render.newRowName = function(formId, $cell) {
 };
 
 $.fn.dataTable.render.newRepositoryAssetValue = function(formId, columnId, $cell) {
-  $cell.html(`
-    <div class="file-editing">
-      <div class="file-hidden-field-container hidden"></div>
-      <input class=""
-             id="repository_file_${columnId}"
-             form="${formId}"
-             type="file"
-             data-col-id="${columnId}"
-             data-is-empty="true"
-             value=""
-             data-type="RepositoryAssetValue">
-      <div class="file-upload-button new-file">
-        <label for="repository_file_${columnId}">${I18n.t('repositories.table.assets.select_file_btn', { max_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB })}</label>
-        <span class="icon"><i class="fas fa-paperclip"></i></span><span class="label-asset"></span>
-        <span class="delete-action fas fa-trash"> </span>
-      </div>
-    </div>`);
+  AssetColumnHelper.renderCell($cell, formId, columnId);
 };
 
 $.fn.dataTable.render.newRepositoryTextValue = function(formId, columnId, $cell) {

@@ -259,10 +259,38 @@
 .file-editing {
   width: 200px;
 
+  input[type=file] {
+    display: none;
+  }
+
+  label {
+    cursor: pointer;
+    flex-grow: 1;
+    font-weight: normal;
+    height: 100%;
+    margin-bottom: 0;
+    margin-right: 5px;
+    overflow: hidden;
+    padding-left: 34px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 2;
+
+    &:empty::before {
+      content: attr(data-placeholder);
+      margin-left: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
   .file-upload-button {
+    align-items: center;
     background-color: $color-white;
     border: solid 1px;
     border-radius: 3px;
+    display: flex;
     height: 34px;
     line-height: 32px;
     position: relative;
@@ -272,31 +300,25 @@
         display: none;
       }
 
-      label {
-        display: inline-block;
-      }
-
       &:hover {
         .fa-trash {
           display: none;
         }
       }
+
+      label {
+        padding-left: 0;
+      }
     }
 
     .icon {
       display: inline-block;
-      position: relative;
+      left: 0;
+      line-height: 32px;
+      position: absolute;
       text-align: center;
-      top: -12px;
+      top: 0;
       width: 34px;
-    }
-
-    .label-asset {
-      display: inline-block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: calc(100% - 44px);
     }
 
     .fa-trash {
@@ -347,18 +369,6 @@
         width: 100%;
       }
     }
-  }
-
-
-
-  input[type=file] {
-    display: none;
-  }
-
-  label {
-    display: none;
-    font-weight: normal;
-    margin-left: 10px;
   }
 }
 

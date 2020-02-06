@@ -1,9 +1,9 @@
 /*
- global ActiveStorage Promise
+ global ActiveStorage Promise I18n GLOBAL_CONSTANTS
 */
 /* eslint-disable no-unused-vars */
 
-var Asset = (function() {
+var AssetColumnHelper = (function() {
   function uploadFiles($fileInputs, directUploadUrl) {
     let filesToUploadCntr = 0;
     let filesUploadedCntr = 0;
@@ -48,7 +48,32 @@ var Asset = (function() {
     });
   }
 
+  function renderCell($cell, formId, columnId) {
+    let empty = $cell.is(':empty');
+    let fileName = $cell.find('a.file-preview-link').text();
+    let placeholder = I18n.t('repositories.table.assets.select_file_btn', { max_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB });
+
+    $cell.html(`
+      <div class="file-editing">
+        <div class="file-hidden-field-container hidden"></div>
+        <input class=""
+               id="repository_file_${columnId}"
+               form="${formId}"
+               type="file"
+               data-col-id="${columnId}"
+               data-is-empty="${empty}"
+               value=""
+               data-type="RepositoryAssetValue">
+        <div class="file-upload-button ${empty ? 'new-file' : ''}">
+          <i class="fas fa-paperclip icon"></i>
+          <label data-placeholder="${placeholder}" for="repository_file_${columnId}">${fileName}</label>
+          <span class="delete-action fas fa-trash"> </span>
+        </div>
+      </div>`);
+  }
+
   return {
-    uploadFiles: uploadFiles
+    uploadFiles: uploadFiles,
+    renderCell: renderCell
   };
 }());
