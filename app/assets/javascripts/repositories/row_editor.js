@@ -1,5 +1,5 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation Asset
+  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper
 */
 /* eslint-disable no-unused-vars */
 
