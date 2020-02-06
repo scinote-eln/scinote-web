@@ -7,6 +7,7 @@ var RepositoryDatatableRowEditor = (function() {
   const NAME_COLUMN_ID = 'row-name';
   const TABLE_ROW = '<tr></tr>';
   const TABLE_CELL = '<td></td>';
+  const EDIT_FORM_CLASS_NAME = 'repository-row-edit-form';
 
   var TABLE;
 
@@ -20,7 +21,7 @@ var RepositoryDatatableRowEditor = (function() {
   }
 
   function validateAndSubmit($table) {
-    let $form = $table.find('.repository-row-edit-form');
+    let $form = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
     let $row = $form.closest('tr');
     let valid = true;
     let directUrl = $table.data('direct-upload-url');
@@ -95,7 +96,7 @@ var RepositoryDatatableRowEditor = (function() {
     TABLE = table;
     let $table = $(TABLE.table().node());
 
-    $table.on('ajax:success', '.repository-row-edit-form', function(ev, data) {
+    $table.on('ajax:success', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
       TABLE.ajax.reload(() => {
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(data.flash, 'success');
@@ -103,7 +104,7 @@ var RepositoryDatatableRowEditor = (function() {
       });
     });
 
-    $table.on('ajax:error', '.repository-row-edit-form', function(ev, data) {
+    $table.on('ajax:error', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });
@@ -118,7 +119,7 @@ var RepositoryDatatableRowEditor = (function() {
     let rowForm = $(`
       <td>
         <form id="${formId}"
-              class="repository-row-edit-form"
+              class="${EDIT_FORM_CLASS_NAME}"
               action="${actionUrl}"
               method="post"
               data-remote="true">
@@ -167,7 +168,7 @@ var RepositoryDatatableRowEditor = (function() {
     let requestUrl = $(TABLE.table().node()).data('current-uri');
     let rowForm = $(`
       <form id="${formId}"
-            class="repository-row-edit-form"
+            class="${EDIT_FORM_CLASS_NAME}"
             action="${row.data().recordUpdateUrl}"
             method="patch"
             data-remote="true"
@@ -204,6 +205,7 @@ var RepositoryDatatableRowEditor = (function() {
   }
 
   return Object.freeze({
+    EDIT_FORM_CLASS_NAME: EDIT_FORM_CLASS_NAME,
     initFormSubmitAction: initFormSubmitAction,
     validateAndSubmit: validateAndSubmit,
     switchRowToEditMode: switchRowToEditMode,
