@@ -27,7 +27,7 @@
         </div>
 
         <div class="row tag-edit" style="display: none;">
-          <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :put, html: { class: "edit-tag-form" } do |f| %>
+          <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :put, html: { class: "edit-tag-form" }, data: {tag_id: tag.id} do |f| %>
             <%= hidden_field_tag :my_module_id, @my_module.id %>
             <div class="col-xs-7">
               <%= f.text_field :name, hide_label: true %>

@@ -100,7 +100,17 @@ function bindEditTagsAjax() {
       });
     manageTagsModalBody.find('.edit-tag-form')
       .on('ajax:success', function(e, data) {
+        var newTag;
         initTagsModalBody(data);
+        dropdownSelector.removeValue('#module-tags-selector', this.dataset.tagId, '', true);
+        newTag = $('#manage-module-tags-modal .list-group-item[data-tag-id=' + this.dataset.tagId + ']');
+        dropdownSelector.addValue('#module-tags-selector', {
+          value: newTag.data('tag-id'),
+          label: newTag.data('name'),
+          params: {
+            color: newTag.data('color')
+          }
+        }, true);
       })
       .on('ajax:error', function(e, data) {
         $(this).renderFormErrors('tag', data.responseJSON);
