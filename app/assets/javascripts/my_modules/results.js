@@ -101,6 +101,11 @@
 
     // create custom ajax request in order to fix issuses with remote: true from
     function handleResultFileSubmit(form, ev) {
+      if (!form.find('#result_asset_attributes_file')[0].files.length > 0) {
+        // Assuming that only result name is getting updated
+        return;
+      }
+
       ev.preventDefault();
       ev.stopPropagation();
 
@@ -157,15 +162,15 @@
       var $form = $(ev.target.form);
       $form.clearFormErrors();
 
+      textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
+
       switch (resultTypeEnum) {
         case ResultTypeEnum.FILE:
           handleResultFileSubmit($form, ev);
           break;
         case ResultTypeEnum.TABLE:
-          textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
           break;
         case ResultTypeEnum.TEXT:
-          textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
           textValidator(
             ev, $form.find('#result_text_attributes_textarea'), 1,
             $form.data('rich-text-max-length'), false, TinyMCE.getContent()
