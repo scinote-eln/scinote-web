@@ -1,5 +1,5 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation Asset
+  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper
 */
 /* eslint-disable no-unused-vars */
 
@@ -40,7 +40,7 @@ var RepositoryDatatableRowEditor = (function() {
 
     animateSpinner($table, true);
     // DirectUpload here
-    let uploadPromise = Asset.uploadFiles($files, directUrl);
+    let uploadPromise = AssetColumnHelper.uploadFiles($files, directUrl);
 
     // Submission here
     uploadPromise
@@ -62,10 +62,15 @@ var RepositoryDatatableRowEditor = (function() {
     fileInputs.on('change', function() {
       let $input = $(this);
       let $fileBtn = $input.next('.file-upload-button');
-      let $label = $fileBtn.find('.label-asset');
+      let $label = $fileBtn.find('label');
 
-      $label.text($input[0].files[0].name);
-      $fileBtn.removeClass('new-file');
+      if ($input[0].files[0]) {
+        $label.text($input[0].files[0].name);
+        $fileBtn.removeClass('new-file');
+      } else {
+        $label.text('');
+        $fileBtn.addClass('new-file');
+      }
       $fileBtn.removeClass('error');
     });
 
@@ -73,7 +78,7 @@ var RepositoryDatatableRowEditor = (function() {
     deleteButtons.on('click', function() {
       let $fileBtn = $(this).parent();
       let $input = $fileBtn.prev('input[type=file]');
-      let $label = $fileBtn.find('.label-asset');
+      let $label = $fileBtn.find('label');
 
       $fileBtn.addClass('new-file');
       $label.text('');
