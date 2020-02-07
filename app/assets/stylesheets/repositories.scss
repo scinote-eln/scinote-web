@@ -243,6 +243,7 @@
   }
 
   .file-preview-link {
+    display: inline-block;
     min-width: 140px;
     padding-left: 5px;
   }
@@ -300,6 +301,7 @@
       }
 
       label {
+        color: $color-silver-chalice;
         padding-left: 0;
       }
     }
