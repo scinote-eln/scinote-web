@@ -101,7 +101,7 @@
 
     // create custom ajax request in order to fix issuses with remote: true from
     function handleResultFileSubmit(form, ev) {
-      if (!form.find('#result_asset_attributes_file')[0].files.length > 0) {
+      if (!(form.find('#result_asset_attributes_file')[0].files.length > 0)) {
         // Assuming that only result name is getting updated
         return;
       }
