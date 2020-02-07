@@ -3988,6 +3988,13 @@ CREATE INDEX index_activities_on_created_at ON public.activities USING btree (cr
 
 
 --
+-- Name: index_activities_on_created_at_and_team_id_and_no_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_activities_on_created_at_and_team_id_and_no_project_id ON public.activities USING btree (created_at DESC, team_id) WHERE (project_id IS NULL);
+
+
+--
 -- Name: index_activities_on_experiment_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7159,6 +7166,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191206105058'),
 ('20191210103004'),
 ('20191218072619'),
-('20200113143828');
+('20200113143828'),
+('20200204100934');
 
 
