@@ -33,6 +33,7 @@ var ListColumnHelper = (function() {
       singleSelect: true,
       selectAppearance: 'simple',
       closeOnSelect: true,
+      emptyOptionAjax: true,
       onChange: function() {
         var values = dropdownSelector.getValues('#' + select);
         $hiddenField.val(values);
