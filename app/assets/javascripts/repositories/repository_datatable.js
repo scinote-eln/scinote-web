@@ -120,6 +120,7 @@ var RepositoryDatatable = (function(global) {
     // Table specific stuff
     TABLE.button(0).enable(true);
     FilePreviewModal.init();
+    $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
     updateButtons();
     disableCheckboxToggleOnCheckboxPreview();
   }
@@ -129,6 +130,7 @@ var RepositoryDatatable = (function(global) {
     // Table specific stuff
     TABLE.button(0).enable(false);
     clearRowSelection();
+    $(TABLE_WRAPPER_ID).find('tr:not(.editing)').addClass('blocked');
     updateButtons();
   }
 

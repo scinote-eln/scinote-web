@@ -7,11 +7,9 @@
   margin-top: 20px;
 
   &.editing {
-    tbody>tr {
-      &:not(.editing) {
-        opacity: .4;
-        pointer-events: none;
-      }
+    tbody>tr.blocked {
+      opacity: .4;
+      pointer-events: none;
     }
   }
 
