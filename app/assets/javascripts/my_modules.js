@@ -199,6 +199,7 @@ function initTagsSelector() {
   var myModuleTagsSelector = '#module-tags-selector';
 
   dropdownSelector.init(myModuleTagsSelector, {
+    closeOnSelect: true,
     tagClass: 'my-module-white-tags',
     tagStyle: (data) => {
       return `background: ${data.params.color}`;
@@ -254,7 +255,6 @@ function initTagsSelector() {
           }, true);
         });
       }
-      dropdownSelector.closeDropdown(myModuleTagsSelector);
     },
     onUnSelect: (id) => {
       $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`);

@@ -1051,10 +1051,12 @@ en:
     table:
       id: 'ID'
       assigned: "Assigned"
+      assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
       enter_row_name: "Enter name"
+      locked_item: "This is read-only item."
       assets:
         select_file_btn: "Select File (Max %{max_size} MB)..."
       text:

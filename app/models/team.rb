@@ -12,6 +12,7 @@ class Team < ApplicationRecord
 
   after_create :generate_template_project
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
+  scope :ordered, -> { order('LOWER(name)') }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,

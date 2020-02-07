@@ -4,6 +4,13 @@
   --sci-radio-size: 16px;
 }
 
+.sci-radio-container {
+  display: inline-block;
+  height: var(--sci-radio-size);
+  position: relative;
+  width: var(--sci-radio-size);
+}
+
 input[type="radio"].sci-radio {
   cursor: pointer;
   flex-shrink: 0;
@@ -18,8 +25,8 @@ input[type="radio"].sci-radio {
     display: inline-block;
     flex-shrink: 0;
     height: var(--sci-radio-size);
-    margin-left: calc((var(--sci-radio-size) * -1) - 3px);
-    position: relative;
+    left: 0;
+    position: absolute;
     width: var(--sci-radio-size);
 
     &::before {
@@ -34,7 +41,6 @@ input[type="radio"].sci-radio {
       line-height: calc(var(--sci-radio-size) - 2px);
       position: absolute;
       text-align: center;
-      top: 1px;
       transition: .2s;
       width: var(--sci-radio-size);
     }
@@ -48,7 +54,7 @@ input[type="radio"].sci-radio {
       height: calc(var(--sci-radio-size) - 6px);
       left: 3px;
       position: absolute;
-      top: 4px;
+      top: 3px;
       transition: .2s;
       width: calc(var(--sci-radio-size) - 6px);
     }

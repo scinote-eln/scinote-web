@@ -8,7 +8,7 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
   let text = $cell.find('a').first().text();
 
   $cell.html(`
-    <div class="sci-input-container text-field">
+    <div class="sci-input-container text-field error-icon">
       <input class="sci-input-field"
              form="${formId}"
              type="text"
@@ -30,7 +30,7 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
   let text = $cell.text();
 
   $cell.html(`
-    <div class="sci-input-container text-field">
+    <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
              form="${formId}"
              type="text"
@@ -122,7 +122,7 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
   if (!number) number = '';
 
   $cell.html(`
-    <div class="sci-input-container text-field">
+    <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
              form="${formId}"
              type="text"

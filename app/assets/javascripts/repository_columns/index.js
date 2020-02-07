@@ -24,6 +24,9 @@ var RepositoryColumns = (function() {
     $('div.toolbarButtonsDatatable').appendTo('.repository-show');
     $('div.toolbarButtonsDatatable').hide();
 
+    $('div.toolbar-filter-buttons').appendTo('.repository-show');
+    $('div.toolbar-filter-buttons').hide();
+
     // destroy datatable and remove partial
     TABLE.destroy();
     $('.repository-table').remove();
@@ -195,7 +198,7 @@ var RepositoryColumns = (function() {
           $('#new-repo-column-submit').show();
         } else {
           $('#update-repo-column-submit').show();
-          $('[data-column-type=' + columnType + ']').show();
+          $('[data-column-type="' + columnType + '"]').show();
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');

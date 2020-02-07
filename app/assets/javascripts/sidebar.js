@@ -90,6 +90,12 @@
    * Setup the sidebar collapsing & expanding functionality.
    */
   global.setupSidebarTree = function() {
+    $('.tree a').click(function() {
+      var url = new URL($(this).attr('href'));
+      url.searchParams.set('scroll', $('.tree').scrollTop());
+      $(this).attr('href', url.toString());
+    });
+
     function toggleLi(el, collapse, animate) {
       var children = el.find(' > ul > li');
 
@@ -265,12 +271,7 @@
   }
 
   function scrollToSelectedItem() {
-    var offset;
-    if ($('#slide-panel .active').length) {
-      offset = $('#slide-panel .active').offset().top - 50;
-      if (offset < 0) offset = 0;
-      $('#slide-panel .tree').scrollTo(offset, 10);
-    }
+    $('#slide-panel .tree').scrollTo($('.tree').data('scroll'));
   }
 
   // Initialize click listeners

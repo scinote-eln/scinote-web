@@ -62,16 +62,17 @@
     }
 
     .ds-tags {
+      @include font-small;
       align-items: center;
       background: $color-concrete;
-      border-radius: 5px;
+      border-radius: $border-radius-tag;
       display: flex;
       flex-shrink: 0;
       line-height: 13px;
       margin: 2px 3px;
       max-width: calc(100% - 11px);
       overflow: hidden;
-      padding: 5px 7px;
+      padding: 5px 8px;
       transition: .3s;
       user-select: none;
 

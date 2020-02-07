@@ -5,7 +5,7 @@ AssetColumnHelper DateTimeHelper
 
 $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
-    <div class="sci-input-container text-field">
+    <div class="sci-input-container text-field error-icon">
       <input class="sci-input-field"
              form="${formId}"
              type="text"
@@ -23,7 +23,7 @@ $.fn.dataTable.render.newRepositoryAssetValue = function(formId, columnId, $cell
 
 $.fn.dataTable.render.newRepositoryTextValue = function(formId, columnId, $cell) {
   $cell.html(`
-    <div class="sci-input-container text-field">
+    <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
              form="${formId}"
              type="text"
@@ -52,7 +52,7 @@ $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cel
   let decimals = $header.data('metadata-decimals');
 
   $cell.html(`
-    <div class="sci-input-container text-field">
+    <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
              form="${formId}"
              type="text"
@@ -87,8 +87,4 @@ $.fn.dataTable.render.newRepositoryDateRangeValue = function(formId, columnId, $
 
 $.fn.dataTable.render.newRepositoryTimeRangeValue = function(formId, columnId, $cell) {
   DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeRangeValue');
-};
-
-$.fn.dataTable.render.newRepositoryCheckboxValue = function(formId, columnId) {
-  return '';
 };
