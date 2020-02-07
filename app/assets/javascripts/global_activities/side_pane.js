@@ -77,7 +77,9 @@ var globalActivities = (function() {
     var defaultOnChangeActions = function() {
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
+      toggleClearButtons();
     };
+    $('.ga-tags-container').hide();
 
     dropdownSelector.init(groupActivityFilter, {
       optionClass: 'checkbox-icon',
@@ -113,6 +115,7 @@ var globalActivities = (function() {
       updateRunning = false;
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
+      toggleClearButtons();
     });
 
     dropdownSelector.init(userFilter, {
@@ -295,6 +298,24 @@ var globalActivities = (function() {
       return true;
     }
 
+    function toggleClearButtons() {
+      var topFilters = $('.ga-tags-container');
+      if (topFilters.find('.ds-tags').length) {
+        topFilters.show();
+      } else {
+        topFilters.hide();
+      }
+
+      $.each($('.filter-block'), (i, block) => {
+        if ($(block).find('.ds-tags').length
+        || ($(block).hasClass('date-selector') && $(block)[0].dataset.periodSelect.length)) {
+          $(block).find('.clear').show();
+        } else {
+          $(block).find('.clear').hide();
+        }
+      });
+    }
+
     function resetHotButtonsBackgroundColor() {
       $('.date-selector .hot-button').each(function() {
         $(this).removeClass('selected');
@@ -314,6 +335,7 @@ var globalActivities = (function() {
         dateContainer[0].dataset.periodSelect = $('#calendar-to-date').val() + ' - ' + $('#calendar-from-date').val();
         GlobalActivitiesUpdateTopPaneTags();
         reloadActivities();
+        toggleClearButtons();
         resetHotButtonsBackgroundColor();
       }
     });
@@ -325,6 +347,7 @@ var globalActivities = (function() {
         dateContainer[0].dataset.periodSelect = $('#calendar-to-date').val() + ' - ' + $('#calendar-from-date').val();
         GlobalActivitiesUpdateTopPaneTags();
         reloadActivities();
+        toggleClearButtons();
         resetHotButtonsBackgroundColor();
       }
     });
@@ -376,6 +399,7 @@ var globalActivities = (function() {
       dateContainer[0].dataset.periodSelect = this.innerHTML;
       GlobalActivitiesUpdateTopPaneTags();
       reloadActivities();
+      toggleClearButtons();
 
       resetHotButtonsBackgroundColor();
       $(this).addClass('selected');

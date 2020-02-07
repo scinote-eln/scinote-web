@@ -17,8 +17,6 @@
   }
 
   .ga-top {
-    border-bottom: 1px solid $color-gainsboro;
-
     .ga-title {
       border-bottom: 1px solid $color-gainsboro;
       height: 35px;
@@ -71,11 +69,18 @@
     }
 
     .ga-tags-container {
+      border-bottom: 1px solid $color-gainsboro;
       display: flex;
       min-height: 38px;
-      padding: 5px 0;
+      padding: 2px 0;
+
+      .clear-container {
+        flex-shrink: 0;
+        margin-left: 4px;
+      }
 
       .ga-tags {
+        align-items: center;
         display: flex;
         flex-grow: 1;
         flex-wrap: wrap;
@@ -95,6 +100,7 @@
           flex-shrink: 0;
           line-height: 13px;
           margin: 2px 3px;
+          max-height: 24px;
           max-width: 250px;
           overflow: hidden;
           padding: 5px 8px;
@@ -126,26 +132,12 @@
           .fas {
             cursor: pointer;
             flex-grow: 1;
-            font-size: 13px;
+            font-size: 12px;
             opacity: .7;
             text-align: right;
           }
         }
       }
-
-      .clear-container {
-        color: $color-silver-chalice;
-        cursor: pointer;
-        flex-shrink: 0;
-        line-height: 28px;
-        padding-left: 15px;
-        user-select: none;
-
-        .fas {
-          margin-right: 5px;
-        }
-      }
-
     }
   }
 
@@ -322,10 +314,18 @@
 
     .clear {
       cursor: pointer;
+      display: none;
       float: right;
+      font-weight: normal;
       line-height: 12px;
-      margin-bottom: 5px;
+      margin-bottom: 0;
+      margin-top: 8px;
+      padding-bottom: 8px;
       padding-top: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .select-container {
