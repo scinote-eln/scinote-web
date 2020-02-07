@@ -1135,6 +1135,7 @@ en:
       not_found_error: "This inventory item does not exist."
       column_added: "New column was sucessfully created."
       empty_column_name: "Please enter column name."
+      leaving_warning: "You have made some changes, are you sure you want to leave this page?"
     create:
       success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
     update:
