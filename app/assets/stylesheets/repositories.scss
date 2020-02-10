@@ -85,7 +85,12 @@
     }
 
     .repo-datatables-buttons {
+      display: flex;
       flex-shrink: 0;
+
+      .manage-repo-column-index {
+        margin-left: 4px;
+      }
     }
   }
 
