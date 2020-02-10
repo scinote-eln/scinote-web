@@ -41,6 +41,7 @@
     selectAppearance: string, // 'tag' or 'simple'. Default 'tag'
     closeOnSelect: boolean, // Close dropdown after select
     disableSearch: boolean, // Disable search
+    emptyOptionAjax: boolean, // Add empty option for ajax request
   }
 
 
@@ -730,7 +731,16 @@ var dropdownSelector = (function() {
       ajaxParams = customParams ? customParams(defaultParams) : defaultParams;
 
       $.get(selector.data('ajax-url'), ajaxParams, (data) => {
-        loadData(selector, container, data);
+        var optionsAjax = data;
+        if (selector.data('config').emptyOptionAjax) {
+          optionsAjax = [{
+            label: '',
+            value: '',
+            group: null,
+            params: {}
+          }].concat(data);
+        }
+        loadData(selector, container, optionsAjax);
         PerfectSb().update_all();
       });
     // For local options we convert options element from select to correct array

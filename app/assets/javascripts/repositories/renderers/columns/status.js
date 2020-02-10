@@ -34,6 +34,7 @@ var StatusColumnHelper = (function() {
       singleSelect: true,
       selectAppearance: 'simple',
       closeOnSelect: true,
+      emptyOptionAjax: true,
       onChange: () => {
         var values = dropdownSelector.getValues('#' + select);
         $hiddenField.val(values);
