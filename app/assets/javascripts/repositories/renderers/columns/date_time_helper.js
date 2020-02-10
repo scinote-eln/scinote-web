@@ -54,11 +54,11 @@ var DateTimeHelper = (function() {
     }
 
     hiddenField = `
-      <input class="repository-cell-value" 
-             type="hidden" 
-             form="${formId}" 
-             name="repository_cells[${columnId}]" 
-             value="${value}" 
+      <input class="repository-cell-value"
+             type="hidden"
+             form="${formId}"
+             name="repository_cells[${columnId}]"
+             value="${value}"
              data-type="${columnType}"/>`;
 
     $container.find('input.repository-cell-value').remove();
@@ -89,11 +89,11 @@ var DateTimeHelper = (function() {
     }
 
     hiddenField = `
-      <input class="repository-cell-value" 
-             type="hidden" 
-             form="${formId}" 
-             name="repository_cells[${columnId}]" 
-             value='${value}' 
+      <input class="repository-cell-value"
+             type="hidden"
+             form="${formId}"
+             name="repository_cells[${columnId}]"
+             value='${value}'
              data-type="${columnType}"/>`;
 
     $container.find('input.repository-cell-value').remove();
@@ -135,7 +135,7 @@ var DateTimeHelper = (function() {
   function dateInputField(value, dateDataValue) {
     return `
       <div class="sci-input-container date-container right-icon">
-        <input class="calendar-input date-part sci-input-field" 
+        <input class="calendar-input date-part sci-input-field"
                 type="datetime"
                 placeholder="${formatJS}"
                 data-datetime-part="date"
@@ -149,9 +149,9 @@ var DateTimeHelper = (function() {
   function timeInputField(value) {
     return `
       <div class="sci-input-container time-container right-icon">
-        <input class="time-part sci-input-field" 
+        <input class="time-part sci-input-field"
                type="text"
-               data-mask-type="time" 
+               data-mask-type="time"
                value='${value}'
                placeholder="HH:mm"/>
         <i class="fas fa-clock"></i>
@@ -200,7 +200,7 @@ var DateTimeHelper = (function() {
     let time = getTimeOrDefault($span, mode);
     let datetime = $span.data('datetime');
     let inputFields = `
-    <div class="form-group datetime-container ${mode}" 
+    <div class="form-group datetime-container ${mode}"
                 data-form-id="${formId}"
                 data-column-id="${columnId}"
                 data-type="${columnType}"
@@ -243,17 +243,17 @@ var DateTimeHelper = (function() {
          data-column-id="${columnId}"
          data-type="${columnType}"
          >
-      <div class="start-time ${mode}" 
-           data-current-datetime="${startDatetime}"> 
+      <div class="start-time ${mode}"
+           data-current-datetime="${startDatetime}">
         ${dateInputField(startDate, startDateDataValue)}
-        ${timeInputField(startTime)}   
+        ${timeInputField(startTime)}
       </div>
       <div class="separator">—</div>
       <div class="end-time ${mode}"
            data-current-datetime="${endDatetime}">
         ${dateInputField(endDate, endDateDataValue)}
         ${timeInputField(endTime)}
-      </div>      
+      </div>
     </div>
   `;
 
