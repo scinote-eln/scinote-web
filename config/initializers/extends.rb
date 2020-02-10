@@ -121,15 +121,15 @@ class Extends
   ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {
-    Repository: [:repository_rows],
-    RepositoryRow: nil,
-    Report: nil,
-    Project: nil,
-    Experiment: [:my_modules],
-    MyModule: [:results,:protocols],
-    Result: nil,
-    Protocol: [:steps],
-    Step: nil
+    repository: [:repository_rows],
+    repository_row: nil,
+    report: nil,
+    project: nil,
+    experiment: [:my_modules],
+    my_module: [:results, :protocols],
+    result: nil,
+    protocol: [:steps],
+    step: nil
   }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
