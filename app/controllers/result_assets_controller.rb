@@ -65,7 +65,7 @@ class ResultAssetsController < ApplicationController
     saved = false
 
     @result.transaction do
-      update_params = result_params
+      update_params = result_params.reject { |_, v| v.blank? }
       previous_size = @result.space_taken
 
       if update_params.dig(:asset_attributes, :signed_blob_id)
@@ -96,17 +96,18 @@ class ResultAssetsController < ApplicationController
           raise ActiveRecord:: Rollback
         end
         # Asset (file) and/or name has been changed
+        asset_changed = @result.asset.changed?
         saved = @result.save
 
         if saved
           # Release team's space taken due to
           # previous asset being removed
           team = @result.my_module.experiment.project.team
-          team.release_space(previous_size)
+          team.release_space(previous_size) if asset_changed
           team.save
 
           # Post process new file if neccesary
-          @result.asset.post_process_file(team) if @result.asset.present?
+          @result.asset.post_process_file(team) if asset_changed && @result.asset.present?
 
           log_activity(:edit_result)
         end

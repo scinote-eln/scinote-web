@@ -1,5 +1,5 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper
+  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS
 */
 /* eslint-disable no-unused-vars */
 
@@ -7,7 +7,7 @@ var RepositoryDatatableRowEditor = (function() {
   const NAME_COLUMN_ID = 'row-name';
   const TABLE_ROW = '<tr></tr>';
   const TABLE_CELL = '<td></td>';
-  const EDIT_FORM_CLASS_NAME = 'repository-row-edit-form';
+  const EDIT_FORM_CLASS_NAME = GLOBAL_CONSTANTS.REPOSITORY_ROW_EDITOR_FORM_CLASS_NAME;
 
   var TABLE;
 
