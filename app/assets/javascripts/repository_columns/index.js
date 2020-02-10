@@ -37,7 +37,9 @@ var RepositoryColumns = (function() {
       RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
       RepositoryDatatable.redrawTableOnSidebarToggle();
       // show manage columns index modal
-      $(manageModal).find('.back-to-column-modal').trigger('click');
+      setTimeout(function() {
+        $(manageModal).find('.back-to-column-modal').trigger('click');
+      }, 500);
     });
   }
 
