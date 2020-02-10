@@ -56,7 +56,6 @@ class RepositoryChecklistValue < ApplicationRecord
   def self.import_from_text(text, attributes)
     value = new(attributes)
     column = value.repository_cell.repository_column
-    byebug
     text.split("\n").each do |item_text|
       checklist_item = column.repository_checklist_items.find_by(data: item_text)
 
