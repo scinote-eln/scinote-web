@@ -15,24 +15,22 @@ class RepositoryDateTimeRangeValueBase < ApplicationRecord
   SORTABLE_COLUMN_NAME = 'repository_date_time_range_values.start_time'
   SORTABLE_VALUE_INCLUDE = :repository_date_time_range_value_base
 
-  def update_data!(new_data, user)
-    data = JSON.parse(new_data).symbolize_keys
-    self.start_time = Time.zone.parse(data[:start_time])
-    self.end_time = Time.zone.parse(data[:end_time])
-    self.last_modified_by = user
-    save!
-  end
-
   def data
     [start_time, end_time].compact.join(' - ')
   end
-
-  private
 
   def formatted(format)
     [
       I18n.l(start_time, format: format),
       I18n.l(end_time, format: format)
     ].compact.join(' - ')
+  end
+
+  def update_data!(new_data, user)
+    data = JSON.parse(new_data).symbolize_keys
+    self.start_time = Time.zone.parse(data[:start_time])
+    self.end_time = Time.zone.parse(data[:end_time])
+    self.last_modified_by = user
+    save!
   end
 end

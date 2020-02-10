@@ -12,6 +12,7 @@ class RepositoryNumberValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'repository_number_values.data'
   SORTABLE_VALUE_INCLUDE = :repository_number_value
+  PRELOAD_INCLUDE = :repository_number_value
 
   def formatted
     data.to_s
@@ -31,6 +32,12 @@ class RepositoryNumberValue < ApplicationRecord
     value = new(attributes)
     value.data = BigDecimal(payload)
     value
+  end
+
+  def self.import_from_text(text, attributes)
+    new(attributes.merge(data: BigDecimal(text)))
+  rescue ArgumentError
+    nil
   end
 
   alias export_formatted formatted

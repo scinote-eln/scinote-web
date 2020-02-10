@@ -95,7 +95,14 @@ en:
           attributes:
             file:
               too_big: "is too big"
-
+        repository_list_item:
+          attributes:
+            base:
+              per_column_limit: "Too many items in the column"
+        repository_checklist_item:
+          attributes:
+            base:
+              per_column_limit: "Too many items in the column"
 
   helpers:
     label:

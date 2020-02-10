@@ -25,6 +25,7 @@ module RepositoryImportParser
     def run
       fetch_columns
       return check_for_duplicate_columns if check_for_duplicate_columns
+
       import_rows!
     end
 
@@ -53,10 +54,10 @@ module RepositoryImportParser
 
     def import_rows!
       errors = false
-      column_items = []
       @rows.each do |row|
         # Skip empty rows
         next if row.empty?
+
         unless @header_skipped
           @header_skipped = true
           next
@@ -64,39 +65,32 @@ module RepositoryImportParser
         @total_new_rows += 1
 
         row = SpreadsheetParser.parse_row(row, @sheet)
-        record_row = new_repository_row(row)
-        record_row.transaction do
-          unless record_row.save
+        repository_row = new_repository_row(row)
+        repository_row.transaction do
+          unless repository_row.save
             errors = true
+            Rails.logger.error cell_value.errors.full_messages
             raise ActiveRecord::Rollback
           end
 
           row_cell_values = []
           row.each.with_index do |value, index|
             column = @columns[index]
-            size = 0
             if column && value.present?
-              if column.data_type == 'RepositoryListValue'
-                current_items_column = get_items_column(column_items, column)
-                size = current_items_column.list_items_number
-              end
-              # uses RepositoryCellValueResolver to retrieve the correct value
-              cell_value_resolver =
-                RepositoryImportParser::RepositoryCellValueResolver.new(
-                  column,
-                  @user,
-                  @repository,
-                  size
-                )
-              cell_value = cell_value_resolver.get_value(value, record_row)
-              if column.data_type == 'RepositoryListValue'
-                current_items_column.list_items_number =
-                  cell_value_resolver.column_list_items_size
-              end
-              next if cell_value.nil? # checks the case if we reach items limit
-              cell_value.repository_cell.importing = true
+              attributes = { created_by: @user,
+                             last_modified_by: @user,
+                             repository_cell_attributes: { repository_row: repository_row,
+                                                           repository_column: column,
+                                                           importing: true } }
+
+              cell_value = column.data_type.constantize.import_from_text(value, attributes)
+              next if cell_value.nil?
+
+              cell_value.repository_cell.value = cell_value
+
               unless cell_value.valid?
                 errors = true
+                Rails.logger.error cell_value.errors.full_messages
                 raise ActiveRecord::Rollback
               end
               row_cell_values << cell_value
@@ -128,33 +122,15 @@ module RepositoryImportParser
     end
 
     def import_to_database(row_cell_values)
-      return false if RepositoryTextValue.import(
-        row_cell_values.select { |element| element.is_a? RepositoryTextValue },
-        recursive: true,
-        validate: false
-      ).failed_instances.any?
-      return false if RepositoryListValue.import(
-        row_cell_values.select { |element| element.is_a? RepositoryListValue },
-        recursive: true,
-        validate: false
-      ).failed_instances.any?
-      true
-    end
+      Extends::REPOSITORY_IMPORTABLE_TYPES.each do |data_type|
+        value_class = data_type.to_s.constantize
+        values = row_cell_values.select { |v| v.is_a? value_class }
+        next if values.blank?
 
-    def get_items_column(list, column)
-      current_column = nil
-      list.each do |element|
-        current_column = element if element.has_column? column
+        return false if value_class.import(values, recursive: true, validate: false).failed_instances.any?
       end
-      unless current_column
-        new_column = RepositoryImportParser::ListItemsColumn.new(
-          column,
-          column.repository_list_items.size
-        )
-        list << new_column
-        return new_column
-      end
-      current_column
+
+      true
     end
   end
 end

@@ -178,6 +178,14 @@ class Repository < ApplicationRecord
     new_repo
   end
 
+  def cell_preload_includes
+    cell_includes = []
+    repository_columns.pluck(:data_type).each do |data_type|
+      cell_includes << data_type.constantize::PRELOAD_INCLUDE
+    end
+    cell_includes
+  end
+
   def import_records(sheet, mappings, user)
     importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
     importer.run

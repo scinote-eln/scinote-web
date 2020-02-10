@@ -57,7 +57,9 @@ class Extends
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES
-  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue)
+  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue RepositoryNumberValue
+                                   RepositoryDateValue RepositoryDateTimeValue RepositoryTimeValue
+                                   RepositoryStatusValue RepositoryChecklistValue)
 
   # Extra attributes used for search in repositories, 'filed_name' => include_hash
   REPOSITORY_EXTRA_SEARCH_ATTR = {'repository_text_values.data' => :repository_text_value,

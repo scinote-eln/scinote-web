@@ -15,15 +15,19 @@ class RepositoryDateTimeValueBase < ApplicationRecord
   SORTABLE_COLUMN_NAME = 'repository_date_time_values.data'
   SORTABLE_VALUE_INCLUDE = :repository_date_time_value_base
 
+  def formatted(format)
+    I18n.l(data, format: format)
+  end
+
   def update_data!(new_data, user)
     self.data = Time.zone.parse(new_data)
     self.last_modified_by = user
     save!
   end
 
-  private
-
-  def formatted(format)
-    I18n.l(data, format: format)
+  def self.import_from_text(text, attributes)
+    new(attributes.merge(data: DateTime.parse(text)))
+  rescue ArgumentError
+    nil
   end
 end

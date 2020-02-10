@@ -11,6 +11,7 @@ class RepositoryTextValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'repository_text_values.data'
   SORTABLE_VALUE_INCLUDE = :repository_text_value
+  PRELOAD_INCLUDE = :repository_text_value
 
   def formatted
     data
@@ -30,6 +31,10 @@ class RepositoryTextValue < ApplicationRecord
     value = new(attributes)
     value.data = payload
     value
+  end
+
+  def self.import_from_text(text, attributes)
+    new(attributes.merge(data: text))
   end
 
   alias export_formatted formatted
