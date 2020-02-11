@@ -792,8 +792,8 @@ var RepositoryDatatable = (function(global) {
 
     $(TABLE_ID).find('.repository-row-edit-icon').remove();
 
-    changeToEditMode();
     RepositoryDatatableRowEditor.switchRowToEditMode(row);
+    changeToEditMode();
     adjustTableHeader();
   };
 
