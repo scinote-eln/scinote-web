@@ -48,8 +48,8 @@ class RepositoryStatusValue < ApplicationRecord
     icon = text[0]
     status = text[1..-1].strip
     value = new(attributes)
-    column = value.repository_cell.repository_column
-    status_item = column.repository_status_items.find_by(status: status)
+    column = attributes.dig(:repository_cell_attributes, :repository_column)
+    status_item = column.repository_status_items.find { |item| item.status == status }
 
     if status_item.blank?
       status_item = column.repository_status_items.new(icon: icon,

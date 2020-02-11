@@ -55,9 +55,9 @@ class RepositoryChecklistValue < ApplicationRecord
 
   def self.import_from_text(text, attributes)
     value = new(attributes)
-    column = value.repository_cell.repository_column
+    column = attributes.dig(:repository_cell_attributes, :repository_column)
     text.split("\n").each do |item_text|
-      checklist_item = column.repository_checklist_items.find_by(data: item_text)
+      checklist_item = column.repository_checklist_items.find { |item| item.data == item_text }
 
       if checklist_item.blank?
         checklist_item = column.repository_checklist_items.new(data: text,

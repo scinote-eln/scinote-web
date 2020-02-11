@@ -8,6 +8,8 @@
 # @repository: the repository in which we import the items
 module RepositoryImportParser
   class Importer
+    IMPORT_BATCH_SIZE = 500
+
     def initialize(sheet, mappings, user, repository)
       @columns = []
       @name_index = -1
@@ -38,7 +40,10 @@ module RepositoryImportParser
           @columns << nil
           @name_index = index
         else
-          @columns << @repository_columns.find_by_id(value)
+          column = @repository_columns.preload(Extends::REPOSITORY_IMPORT_COLUMN_PRELOADS).find_by(id: value)
+          next unless column && Extends::REPOSITORY_IMPORTABLE_TYPES.include?(column.data_type.to_sym)
+
+          @columns << column
         end
       end
     end
@@ -46,64 +51,59 @@ module RepositoryImportParser
     def check_for_duplicate_columns
       col_compact = @columns.compact
       if col_compact.map(&:id).uniq.length != col_compact.length
-        return { status: :error,
-                 nr_of_added: @new_rows_added,
-                 total_nr: @total_new_rows }
+        { status: :error, nr_of_added: @new_rows_added, total_nr: @total_new_rows }
       end
     end
 
     def import_rows!
       errors = false
-      @rows.each do |row|
-        # Skip empty rows
-        next if row.empty?
 
-        unless @header_skipped
-          @header_skipped = true
-          next
-        end
-        @total_new_rows += 1
+      @repository.transaction do
+        batch_counter = 0
+        full_row_import_batch = []
 
-        row = SpreadsheetParser.parse_row(row, @sheet)
-        repository_row = new_repository_row(row)
-        repository_row.transaction do
-          unless repository_row.save
-            errors = true
-            Rails.logger.error cell_value.errors.full_messages
-            raise ActiveRecord::Rollback
+        @rows.each do |row|
+          # Skip empty rows
+          next if row.empty?
+
+          unless @header_skipped
+            @header_skipped = true
+            next
           end
+          @total_new_rows += 1
 
-          row_cell_values = []
-          row.each.with_index do |value, index|
-            column = @columns[index]
-            if column && value.present?
-              attributes = { created_by: @user,
-                             last_modified_by: @user,
-                             repository_cell_attributes: { repository_row: repository_row,
-                                                           repository_column: column,
-                                                           importing: true } }
-
-              cell_value = column.data_type.constantize.import_from_text(value, attributes)
-              next if cell_value.nil?
-
-              cell_value.repository_cell.value = cell_value
-
-              unless cell_value.valid?
+          new_full_row = {}
+          SpreadsheetParser.parse_row(row, @sheet).each.with_index do |value, index|
+            if index == @name_index
+              new_row =
+                RepositoryRow.new(name: value, repository: @repository, created_by: @user, last_modified_by: @user)
+              unless new_row.valid?
                 errors = true
-                Rails.logger.error cell_value.errors.full_messages
-                raise ActiveRecord::Rollback
+                break
               end
-              row_cell_values << cell_value
+
+              new_full_row[:repository_row] = new_row
+              next
             end
+            next unless @columns[index]
+
+            new_full_row[index] = value
           end
 
-          unless import_to_database(row_cell_values)
-            errors = true
-            raise ActiveRecord::Rollback
+          if new_full_row[:repository_row].present?
+            full_row_import_batch << new_full_row
+            batch_counter += 1
           end
 
-          @new_rows_added += 1
+          next if batch_counter < IMPORT_BATCH_SIZE
+
+          import_batch_to_database(full_row_import_batch)
+          full_row_import_batch = []
+          batch_counter = 0
         end
+
+        # Import of the remaining rows
+        import_batch_to_database(full_row_import_batch) if full_row_import_batch.any?
       end
 
       if errors
@@ -114,23 +114,39 @@ module RepositoryImportParser
       { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows }
     end
 
-    def new_repository_row(row)
-      RepositoryRow.new(name: row[@name_index],
-                        repository: @repository,
-                        created_by: @user,
-                        last_modified_by: @user)
-    end
+    def import_batch_to_database(full_row_import_batch)
+      repository_rows = full_row_import_batch.collect { |row| row[:repository_row] }
+      @new_rows_added += RepositoryRow.import(repository_rows, recursive: false, validate: false).ids.length
+      repository_rows.each { |row| row.run_callbacks(:create) }
 
-    def import_to_database(row_cell_values)
-      Extends::REPOSITORY_IMPORTABLE_TYPES.each do |data_type|
-        value_class = data_type.to_s.constantize
-        values = row_cell_values.select { |v| v.is_a? value_class }
-        next if values.blank?
+      import_mappings = Hash[@columns.map { |column| column&.data_type&.to_sym }
+                                     .compact
+                                     .uniq
+                                     .map { |data_type| [data_type, []] }]
 
-        return false if value_class.import(values, recursive: true, validate: false).failed_instances.any?
+      full_row_import_batch.each do |row|
+        next unless row[:repository_row].id
+
+        row.reject { |k| k == :repository_row }.each do |index, value|
+          column = @columns[index]
+          cell_value_attributes = { created_by: @user,
+                                    last_modified_by: @user,
+                                    repository_cell_attributes: { repository_row: row[:repository_row],
+                                                                  repository_column: column,
+                                                                  importing: true } }
+
+          cell_value = column.data_type.constantize.import_from_text(value, cell_value_attributes)
+          next if cell_value.nil?
+
+          cell_value.repository_cell.value = cell_value
+
+          import_mappings[column.data_type.to_sym] << cell_value
+        end
       end
 
-      true
+      import_mappings.each do |data_type, cell_values|
+        data_type.to_s.constantize.import(cell_values, recursive: true, validate: false)
+      end
     end
   end
 end

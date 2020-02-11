@@ -105,7 +105,8 @@ class RepositoryCell < ApplicationRecord
   validates :repository_column,
             inclusion: { in: (lambda do |cell|
               cell.repository_row&.repository&.repository_columns || []
-            end) }
+            end) },
+            unless: :importing
   validates :repository_column, presence: true
   validate :repository_column_data_type
   validates :repository_row,

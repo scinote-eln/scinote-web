@@ -34,7 +34,9 @@ class RepositoryTextValue < ApplicationRecord
   end
 
   def self.import_from_text(text, attributes)
-    new(attributes.merge(data: text))
+    return nil if text.blank?
+
+    new(attributes.merge(data: text.truncate(Constants::TEXT_MAX_LENGTH)))
   end
 
   alias export_formatted formatted
