@@ -12,7 +12,7 @@
 <div class="content-pane repository-show" data-table-url="<%= load_table_repository_path(@repository) %> ">
   <div id="repository-toolbar">
     <div class="repository-title-name">
-      <span class="name-container">
+      <h2 class="name-container">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
                      locals: {
@@ -27,7 +27,7 @@
             <%= inventory_shared_status_icon(@repository, current_team) %>
           </span>
         <% end %>
-      </span>
+      </h2>
       <% if @repository.shared_with_anybody? %>
         <% team_name = @repository.team == current_team ? 'your Team' : @repository.team.name %>
         <div class="repository-subtitle"><%= t('repositories.subtitle', team_name: team_name) %></div>
