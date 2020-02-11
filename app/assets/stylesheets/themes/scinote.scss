@@ -521,8 +521,19 @@ a[data-toggle="tooltip"] {
 
 .protocols-datatable {
   .dataTables_wrapper {
-    margin-top: 15px;
     clear: both;
+
+    .main-actions,
+    .pagination-row {
+      display: flex;
+    }
+
+    .dataTables_filter,
+    .dataTables_info,
+    .dataTables_paginate,
+    .dataTables_length {
+      flex-grow: 1;
+    }
   }
 
   table {

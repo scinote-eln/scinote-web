@@ -4,6 +4,7 @@
     <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="max-file-size" content="<%= Rails.configuration.x.file_max_size_mb %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
 
