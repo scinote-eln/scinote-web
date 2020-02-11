@@ -28,7 +28,7 @@ function initProtocolsTable() {
 
   protocolsDatatable = protocolsTableEl.DataTable({
     order: [[1, "asc"]],
-    dom: "RBfl<'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
+    dom: "RB<'main-actions'lf>t<'pagination-row'ip>",
     stateSave: true,
     sScrollX: '100%',
     sScrollXInner: '100%',
