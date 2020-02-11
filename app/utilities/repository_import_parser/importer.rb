@@ -34,16 +34,15 @@ module RepositoryImportParser
     private
 
     def fetch_columns
-      @mappings.each.with_index do |(_, value), index|
+      @mappings.each_with_index do |(_, value), index|
         if value == '-1'
           # Fill blank space, so our indices stay the same
           @columns << nil
           @name_index = index
         else
-          column = @repository_columns.preload(Extends::REPOSITORY_IMPORT_COLUMN_PRELOADS).find_by(id: value)
-          next unless column && Extends::REPOSITORY_IMPORTABLE_TYPES.include?(column.data_type.to_sym)
-
-          @columns << column
+          @columns << @repository_columns.where(data_type: Extends::REPOSITORY_IMPORTABLE_TYPES)
+                                         .preload(Extends::REPOSITORY_IMPORT_COLUMN_PRELOADS)
+                                         .find_by(id: value)
         end
       end
     end
@@ -73,7 +72,7 @@ module RepositoryImportParser
           @total_new_rows += 1
 
           new_full_row = {}
-          SpreadsheetParser.parse_row(row, @sheet).each.with_index do |value, index|
+          SpreadsheetParser.parse_row(row, @sheet).each_with_index do |value, index|
             if index == @name_index
               new_row =
                 RepositoryRow.new(name: value, repository: @repository, created_by: @user, last_modified_by: @user)
