@@ -189,7 +189,7 @@ var dropdownSelector = (function() {
     if (config.inputTagMode) {
       return '';
     }
-    return '<i class="fas fa-caret-down"></i>';
+    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon"></i>';
   }
 
   // Set new data
@@ -290,7 +290,7 @@ var dropdownSelector = (function() {
         ${prepareCustomDropdownIcon(config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
-      
+
     `).appendTo(dropdownContainer);
 
     // If we setup Select All we draw it and add correspond logic
@@ -427,6 +427,9 @@ var dropdownSelector = (function() {
     // Enable simple mode for dropdown selector
     if (config.selectAppearance === 'simple') {
       dropdownContainer.addClass('simple-mode');
+      if (dropdownContainer.find('.tag-label').length) {
+        dropdownContainer.find('.search-field').attr('placeholder', dropdownContainer.find('.tag-label').text().trim());
+      }
     }
 
     // Disable search
@@ -676,8 +679,15 @@ var dropdownSelector = (function() {
     }
 
     // If we have alteast one tag, we need to remove placeholder from search field
-    searchFieldValue.attr('placeholder',
-      selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
+    if (selector.data('config').selectAppearance === 'simple') {
+      let selectedLabel = container.find('.tag-label');
+      container.find('.search-field').attr('placeholder',
+        selectedLabel.length && selectedLabel.text().trim() !== '' ? selectedLabel.text().trim() : selector.data('placeholder'));
+    } else {
+      searchFieldValue.attr('placeholder',
+        selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
+    }
+
     searchFieldValue.attr('data-options-selected', selectedOptions.length);
 
     // Add stretch class for visual improvments
