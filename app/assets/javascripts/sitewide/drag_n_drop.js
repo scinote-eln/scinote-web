@@ -464,15 +464,8 @@
       const form = $(ev.target.form);
       const url = form.find('#drag-n-drop-assets').data('directUploadUrl');
       const numberOfFiles = droppedFiles.length;
-
-      let resultNames = [];
-
-      $.each($('input[rel="results[name]"]'), function() {
-        resultNames.push($(this).val());
-      });
-
-      resultNames.reverse();
       var counter = 0;
+
       for (let i = 0; i < numberOfFiles; i += 1) {
         let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
 
@@ -480,7 +473,7 @@
           if (error) {
             // Handle the error
           } else {
-            fd.append('results_names[' + i + ']', resultNames[i]);
+            fd.append('results_names[' + i + ']', $('input[name="results[name][' + i + ']"]').val());
             fd.append('results_files[' + i + '][signed_blob_id]', blob.signed_id);
             counter += 1;
             if (counter === numberOfFiles) {
@@ -521,7 +514,7 @@
                       <span class="fas fa-paperclip"></span>
                       ${I18n.t('assets.drag_n_drop.file_label')}
                       <div class="pull-right">
-                        <a data-item-id="' + ${i} + '" href="#">
+                        <a data-item-id="${i}" href="#">
                           <span class="fas fa-times"></span>
                         </a>
                       </div>
@@ -530,7 +523,7 @@
                       <div class="form-group">
                         <label class="control-label">Name</label>
                         <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
-                               rel="results[name]" name="results[name][' + ${i} + ']">
+                               rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">
                         <label class="control-label">${I18n.t('assets.drag_n_drop.file_label')}:</label>
@@ -555,7 +548,7 @@
       }
     }
 
-    function removeItemHandler(id, callback) {
+    function removeItemHandler(id) {
       $('[data-item-id="' + id + '"]').off('click').on('click', function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -564,7 +557,7 @@
         let index = $el.data('item-id');
         totalSize -= parseInt(droppedFiles[index].size, 10);
         droppedFiles.splice(index, 1);
-        callback();
+        $el.closest('.panel-result-attachment-new').remove();
       });
     }
 
@@ -582,7 +575,7 @@
             .after(uploadedAssetPreview(droppedFiles[i], i))
             .promise()
             .done(function() {
-              removeItemHandler(i, listItems);
+              removeItemHandler(i);
             });
         }
         validateTotalSize();
@@ -594,7 +587,7 @@
       fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for (let i = 0; i < files.length; i += 1) {
-        droppedFiles.push(files[i]);
+        droppedFiles.unshift(files[i]);
       }
       listItems();
     }
