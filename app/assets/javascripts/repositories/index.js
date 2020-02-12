@@ -124,6 +124,8 @@
     });
 
     sharedCBs.change(function() {
+      var selectedTeams = form.find('.teams-list .sci-checkbox:checked').length;
+      form.find('#select_all_teams').prop('indeterminate', selectedTeams > 0);
       $('#editable_' + this.value).toggleClass('hidden', !this.checked)
         .attr('disabled', !this.checked);
     });
