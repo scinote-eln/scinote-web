@@ -126,7 +126,8 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
       <input class="sci-input-field"
              form="${formId}"
              type="text"
-             oninput="this.value = this.value.replace(/[^0-9.]/g, '');
+             oninput="regexp = ${decimals} === 0 ? /[^0-9]/g : /[^0-9.]/g
+                      this.value = this.value.replace(regexp, '');
                       this.value = this.value.match(/^\\d*(\\.\\d{0,${decimals}})?/)[0];"
              name="repository_cells[${columnId}]"
              placeholder="${I18n.t('repositories.table.number.enter_number')}"

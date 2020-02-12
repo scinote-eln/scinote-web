@@ -1068,10 +1068,12 @@ en:
         select_file_btn: "Select File (Max %{max_size} MB)..."
       text:
         errors:
-          :too_long: "Text is too long (maximum is %{max_length} characters)"
+          too_long: "Text is too long (maximum is %{max_length} characters)"
         enter_text: "Enter text"
       number:
         enter_number: "Enter number"
+        errors:
+          wrong_format: "Not correct number format"
       list:
         select_item: "Select..."
       status:
