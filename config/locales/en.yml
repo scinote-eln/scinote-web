@@ -1222,7 +1222,7 @@ en:
       datetime_type:
         range_label: 'Range'
       checklist_type:
-        multiple_options: 'options'
+        multiple_options: 'selected'
         all_options: 'All options'
         checklist_items: 'Checklist items'
         items_placeholders:
