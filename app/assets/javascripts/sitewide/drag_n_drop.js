@@ -352,6 +352,7 @@
       fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for (let i = 0; i < files.length; i += 1) {
+        files[i].uuid = Math.random().toString(36);
         droppedFiles.push(files[i]);
       }
       listItems();
@@ -514,7 +515,7 @@
                       <span class="fas fa-paperclip"></span>
                       ${I18n.t('assets.drag_n_drop.file_label')}
                       <div class="pull-right">
-                        <a data-item-id="${i}" href="#">
+                        <a data-item-id="${asset.uuid}" href="#">
                           <span class="fas fa-times"></span>
                         </a>
                       </div>
@@ -548,13 +549,15 @@
       }
     }
 
-    function removeItemHandler(id) {
-      $('[data-item-id="' + id + '"]').off('click').on('click', function(e) {
+    function removeItemHandler(uuid) {
+      $('[data-item-id="' + uuid + '"]').off('click').on('click', function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         e.stopPropagation();
         let $el = $(this);
-        let index = $el.data('item-id');
+        let index = droppedFiles.findIndex((file) => {
+          return file.uuid === $el.data('item-id');
+        });
         totalSize -= parseInt(droppedFiles[index].size, 10);
         droppedFiles.splice(index, 1);
         $el.closest('.panel-result-attachment-new').remove();
@@ -575,7 +578,7 @@
             .after(uploadedAssetPreview(droppedFiles[i], i))
             .promise()
             .done(function() {
-              removeItemHandler(i);
+              removeItemHandler(droppedFiles[i].uuid);
             });
         }
         validateTotalSize();
@@ -586,7 +589,9 @@
     function init(files) {
       fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
+
       for (let i = 0; i < files.length; i += 1) {
+        files[i].uuid = Math.random().toString(36);
         droppedFiles.unshift(files[i]);
       }
       listItems();
