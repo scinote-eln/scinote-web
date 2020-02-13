@@ -135,7 +135,8 @@ en:
       none: "No activities!"
     label:
       scinote: "SciNote"
-      projects: "Home"
+      dashboard: "Overview"
+      projects: "Projects"
       protocols: "Protocols"
       calendar: "Calendar"
       activities: "Activities"
@@ -258,7 +259,7 @@ en:
 
   projects:
     index:
-      head_title: "Home"
+      head_title: "Projects"
       archive: "Archive"
       archived: "Archived"
       active: "Active"
