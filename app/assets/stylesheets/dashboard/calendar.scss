@@ -1,0 +1,11 @@
+.dashboard-container .calendar-widget {
+  grid-column: 10 / span 3;
+  grid-row: 1 / span 6;
+}
+
+@media (max-width: 1000px) {
+  .dashboard-container .calendar-widget {
+    grid-column: 1 / span 6;
+    grid-row: 5 / span 4;
+  }
+}

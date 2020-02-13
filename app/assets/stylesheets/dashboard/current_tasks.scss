@@ -1,0 +1,11 @@
+.dashboard-container .current-tasks-widget {
+  grid-column: 1 / span 9;
+  grid-row: 1 / span 6;
+}
+
+@media (max-width: 1000px) {
+  .dashboard-container .current-tasks-widget {
+    grid-column: 1 / span 12;
+    grid-row: 1 / span 4;
+  }
+}

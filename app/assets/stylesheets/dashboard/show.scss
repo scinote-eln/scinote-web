@@ -1,0 +1,24 @@
+
+.dashboard-container {
+  --dashboard-widgets-gap: 30px;
+  display: grid;
+  grid-column-gap: var(--dashboard-widgets-gap);
+  grid-row-gap: var(--dashboard-widgets-gap);
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  min-height: calc(100vh - 51px);
+  padding: var(--dashboard-widgets-gap) calc(var(--dashboard-widgets-gap) - 15px);
+  width: 100%;
+
+  .basic-widget {
+    border-radius: $border-radius-modal;
+    box-shadow: $flyout-shadow;
+    position: relative;
+  }
+}
+
+@media (max-width: 1300px) {
+  .dashboard-container {
+    --dashboard-widgets-gap: 16px;
+  }
+}

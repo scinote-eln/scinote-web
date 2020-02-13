@@ -16,7 +16,7 @@ Rails.application.routes.draw do
                                       confirmations: 'users/confirmations',
                                       omniauth_callbacks: 'users/omniauth_callbacks' }
 
-    root 'projects#index'
+    root 'dashboards#show'
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
@@ -239,6 +239,9 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
+
+    resource :dashboard, only: :show do
+    end
 
     resources :projects, except: [:new, :destroy] do
       resources :user_projects, path: '/users',
