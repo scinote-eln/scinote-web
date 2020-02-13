@@ -16,7 +16,7 @@ Rails.application.routes.draw do
                                       confirmations: 'users/confirmations',
                                       omniauth_callbacks: 'users/omniauth_callbacks' }
 
-    root 'projects#index'
+    root 'dashboards#show'
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
