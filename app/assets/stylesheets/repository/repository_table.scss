@@ -225,6 +225,12 @@
     }
   }
 
+  table[data-editable=false] {
+    .assign-counter-container {
+      margin-left: 30px !important;
+    }
+  }
+
   &.editing {
     tbody {
       tr:hover {
