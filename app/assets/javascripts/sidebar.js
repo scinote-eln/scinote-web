@@ -4,28 +4,29 @@
  */
 
 /* global I18n _ */
-(function(global) {
-  var STORAGE_TREE_KEY = 'scinote-sidebar-tree-collapsed-ids';
+(function() {
+  const SIDEBAR_ID = '#slide-panel';
+  const STORAGE_TREE_KEY = 'scinote-sidebar-tree-collapsed-ids';
 
   /**
    * Get all collapsed sidebar elements.
    * @return An array of sidebar element IDs.
    */
-  global.sessionGetCollapsedSidebarElements = function() {
+  function sessionGetCollapsedSidebarElements() {
     var val = sessionStorage.getItem(STORAGE_TREE_KEY);
     if (val === null) {
       val = '[]';
       sessionStorage.setItem(STORAGE_TREE_KEY, val);
     }
     return JSON.parse(val);
-  };
+  }
 
   /**
    * Collapse a specified element in the sidebar.
    * @param id - The collapsed element's ID.
    */
-  global.sessionCollapseSidebarElement = function(project, id) {
-    var ids = global.sessionGetCollapsedSidebarElements();
+  function sessionCollapseSidebarElement(project, id) {
+    var ids = sessionGetCollapsedSidebarElements();
     var item = _.findWhere(ids, { prid: project });
     var collapsed = { prid: project, ids: [] };
     var storedProjects = _.pluck(ids, 'prid');
@@ -39,34 +40,14 @@
       ids.push(collapsed);
     }
     sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
-  };
-
-  /**
-   * Expand a specified element in the sidebar.
-   * @param id - The expanded element's ID.
-   */
-  global.sessionExpandSidebarElement = function(project, id, elements) {
-    var ids = global.sessionGetCollapsedSidebarElements();
-    var item = _.findWhere(ids, { prid: project});
-    var index = -1;
-
-    if (item) {
-      index = _.indexOf(item.ids, id);
-      global.recalculateElementsPositions(ids, item, elements);
-    }
-
-    if (index !== -1) {
-      item.ids.splice(index, 1);
-      sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
-    }
-  };
+  }
 
   /**
    * Recalculate the position of the elements after an experiment
    * is added or archived.
    */
-  global.recalculateElementsPositions = function(ids, item, elements) {
-    var diff;
+  function recalculateElementsPositions(ids, item, elements) {
+    let diff;
 
     if (item.eleNum > elements) {
       diff = item.eleNum - elements;
@@ -87,9 +68,29 @@
   }
 
   /**
+   * Expand a specified element in the sidebar.
+   * @param id - The expanded element's ID.
+   */
+  function sessionExpandSidebarElement(project, id, elements) {
+    var ids = sessionGetCollapsedSidebarElements();
+    var item = _.findWhere(ids, { prid: project });
+    var index = -1;
+
+    if (item) {
+      index = _.indexOf(item.ids, id);
+      recalculateElementsPositions(ids, item, elements);
+    }
+
+    if (index !== -1) {
+      item.ids.splice(index, 1);
+      sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
+    }
+  }
+
+  /**
    * Setup the sidebar collapsing & expanding functionality.
    */
-  global.setupSidebarTree = function() {
+  function setupSidebarTree() {
     $('.tree a').click(function() {
       var url = new URL($(this).attr('href'));
       url.searchParams.set('scroll', $('.tree').scrollTop());
@@ -122,7 +123,7 @@
 
     // Make active current project/experiment/task
     function activateCurrent() {
-      var sidebar = $('#slide-panel');
+      var sidebar = $(SIDEBAR_ID);
       var projectId = sidebar.data('current-project');
       var experimentId = sidebar.data('current-experiment');
       var taskId = sidebar.data('current-task');
@@ -172,28 +173,24 @@
     );
 
     // Get the session-stored elements
-    var collapsedIds = global.sessionGetCollapsedSidebarElements();
+    let collapsedIds = sessionGetCollapsedSidebarElements();
 
     // Get the current project stored elements
-    var currentProjectIds = _.findWhere(collapsedIds, { prid: project });
-    if ( currentProjectIds ){
-      currentProjectIds.ids = _.filter(currentProjectIds.ids,
-                                  function(val) {
-                                    return val !== null;
-                                  }).join(", ");
+    let currentProjectIds = _.findWhere(collapsedIds, { prid: project });
+    if (currentProjectIds) {
+      currentProjectIds.ids = _.filter(currentProjectIds.ids, function(val) { return val !== null; }).join(', ');
 
       // Collapse session-stored elements
       _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
-        var id = $(el).data("toggle-id");
+        var id = $(el).data('toggle-id');
         var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
 
-        if( li.hasClass("active") ||  li.find(".active").length > 0){
+        if (li.hasClass('active') || li.find('.active').length > 0) {
           // Always expand the active element
           toggleLi(li,
             false,
             false);
-        } else if ( $.inArray( id.toString(),
-                               currentProjectIds.ids.split(", ")) !== -1 ) {
+        } else if ($.inArray(id.toString(), currentProjectIds.ids.split(', ')) !== -1) {
           // Expande element
           toggleLi(li,
             false,
@@ -208,70 +205,54 @@
     } else {
       // Collapse all
       _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
-        var id = $(el).data("toggle-id");
+        var id = $(el).data('toggle-id');
         var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
 
-        if( li.hasClass("active") ){
+        if (li.hasClass('active') || li.find('.active').length > 0) {
           // Always expand the active element
-          toggleLi(li,
-            false,
-            false);
+          toggleLi(li, false, false);
           sessionCollapseSidebarElement(project, id);
         } else {
           // Element collapsed by default
-          toggleLi(li,
-            true,
-            false);
+          toggleLi(li, true, false);
         }
       });
     }
 
     // Add onclick callback to every triangle icon
-    $(".tree li.parent_li ")
-    .find("> span i")
-    .on("click", function (e) {
-      var el = $(this)
-      .parent("span")
-      .parent("li.parent_li");
+    $('.tree li.parent_li ').find('> span i').on('click', function(e) {
+      let el = $(this).parent('span').parent('li.parent_li');
 
-      if (el.find(" > ul > li").is(":visible")) {
+      if (el.find(' > ul > li').is(':visible')) {
         toggleLi(el, true, true);
-        sessionExpandSidebarElement(project,
-                                    el.data("toggle-id"),
-                                    $('[data-parent="candidate"]').length );
+        sessionExpandSidebarElement(project, el.data('toggle-id'), $('[data-parent="candidate"]').length);
       } else {
         toggleLi(el, false, true);
-        sessionCollapseSidebarElement(project, el.data("toggle-id"));
+        sessionCollapseSidebarElement(project, el.data('toggle-id'));
       }
       e.stopPropagation();
       return false;
     });
 
     // Add bold style to all levels of selected element
-    $(".tree li.active ")
-    .parents('.parent_li[data-parent="candidate"]')
-    .find("> span a")
-    .css("font-weight", "bold");
+    $('.tree li.active ').parents('.parent_li[data-parent="candidate"]').find('> span a').css('font-weight', 'bold');
 
     // Add custom borders to tree links
-    $(".tree li span.tree-link ").after("<div class='border-custom'></div>");
+    $('.tree li span.tree-link ').after("<div class='border-custom'></div>");
   }
 
   // Resize the sidebar to accomodate to the page size
-  global.resizeSidebarContents = function() {
-    var tree = $("#sidebar-wrapper .tree");
+  function resizeSidebarContents() {
+    var tree = $('#sidebar-wrapper .tree');
 
     // Set vertical scrollbar on navigation tree
-    if (tree.length && tree.length == 1) {
-      tree.css(
-        "height",
-        ($(window).height() - tree.position().top - 50) + "px"
-      );
+    if (tree.length && tree.length === 1) {
+      tree.css('height', ($(window).height() - tree.position().top - 50) + 'px');
     }
   }
 
   function scrollToSelectedItem() {
-    $('#slide-panel .tree').scrollTo($('.tree').data('scroll'));
+    $(`${SIDEBAR_ID} .tree`).scrollTo($('.tree').data('scroll'));
   }
 
   // Initialize click listeners
