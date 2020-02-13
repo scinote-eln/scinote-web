@@ -240,6 +240,9 @@ Rails.application.routes.draw do
           defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
 
+    resource :dashboard, only: :show do
+    end
+
     resources :projects, except: [:new, :destroy] do
       resources :user_projects, path: '/users',
                 only: [:create, :index, :update, :destroy]
