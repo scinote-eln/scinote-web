@@ -1,6 +1,65 @@
 .dashboard-container .current-tasks-widget {
   grid-column: 1 / span 9;
   grid-row: 1 / span 6;
+
+  .filter-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 30px;
+    width: 30px;
+
+    .fa-filter {
+      cursor: pointer;
+      font-size: $font-size-h2;
+    }
+
+    .curent-tasks-filters {
+      padding: 0;
+      width: 230px;
+
+      .header {
+        align-items: center;
+        border-bottom: $border-default;
+        display: flex;
+        height: 44px;
+        margin-bottom: 16px;
+        padding: 0  5px 0 16px;
+
+        .title {
+          @include font-h2;
+          flex-grow: 1;
+          user-select: none;
+
+        }
+      }
+
+      .select-block {
+        display: inline-block;
+        padding: 0 16px 16px;
+        position: relative;
+        width: 100%;
+
+        label {
+          @include font-small;
+          display: inline-block;
+          font-weight: bold;
+          margin-bottom: 5px;
+          user-select: none;
+        }
+      }
+
+      .footer {
+        align-items: center;
+        border-top: $border-default;
+        display: flex;
+        justify-content: center;
+        height: 68px;
+        position: relative;
+        width: 100%;
+      }
+    }
+  }
 }
 
 @media (max-width: 1000px) {

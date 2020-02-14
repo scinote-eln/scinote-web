@@ -1,2 +1,38 @@
 <div class="current-tasks-widget basic-widget">
+  <div class="filter-container dropdown">
+    <span data-toggle="dropdown" class="fas fa-filter"></span>
+    <div class="dropdown-menu curent-tasks-filters" role="menu">
+      <div class="header">
+        <div class="title">Filters</div>
+        <div class="btn btn-light"><i class="fas fa-times-circle"></i>Clear</div>
+      </div>
+      <div class="select-block">
+        <label>Sort by</label>
+        <select class="sort-filter">
+          <option value="date_asc" >Due Date Ascending</option>
+          <option value="date_desc" >Due Date Descending</option>
+          <option value="atoz" >From A to Z</option>
+          <option value="ztoa" >From Z to A</option>
+        </select>
+      </div>
+      <div class="select-block">
+        <label>Display</label>
+        <select class="view-filter">
+          <option value="active" >Only active tasks</option>
+          <option value="completed" >Only completed and locked tasks</option>
+        </select>
+      </div>
+      <div class="select-block">
+        <label>Project</label>
+        <select class="project-filter"></select>
+      </div>
+      <div class="select-block">
+        <label>Experiment</label>
+        <select class="experiment-filter"></select>
+      </div>
+      <div class="footer">
+        <div class="btn btn-primary">Apply</div>
+      </div>
+    </div>
+  </div>
 </div>

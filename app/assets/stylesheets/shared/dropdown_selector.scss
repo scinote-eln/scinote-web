@@ -40,6 +40,7 @@
     }
 
     .search-field {
+      @include font-button;
       border: 0;
       flex-basis: 0;
       flex-grow: 2000;
@@ -108,6 +109,7 @@
   }
 
   .dropdown-container {
+    @include font-button;
     background: $color-white;
     border: 1px solid $color-alto;
     border-radius: 0 0 4px 4px;
