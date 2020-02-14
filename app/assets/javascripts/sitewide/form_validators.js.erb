@@ -196,6 +196,14 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
   return filesSizeValid;
 }
 
+function numberMinMaxValidator(value, min, max) {
+  if(parseInt(value) < min || isNaN(value))
+    return min;
+  else if(parseInt(value) > max)
+    return max;
+  else return value;
+}
+
 /*
  * Overriden in billing module for checking whether enough
  * team space is free.
