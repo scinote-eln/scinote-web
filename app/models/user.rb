@@ -19,15 +19,6 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
-  # has_attached_file :avatar,
-  #                   styles: {
-  #                     medium: Constants::MEDIUM_PIC_FORMAT,
-  #                     thumb: Constants::THUMB_PIC_FORMAT,
-  #                     icon: Constants::ICON_PIC_FORMAT,
-  #                     icon_small: Constants::ICON_SMALL_PIC_FORMAT
-  #                   },
-  #                   default_url: Constants::DEFAULT_AVATAR_URL
-
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
             presence: true,
@@ -39,10 +30,6 @@ class User < ApplicationRecord
             presence: true,
             length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  # validates_attachment :avatar,
-  #   :content_type => { :content_type => ["image/jpeg", "image/png"] },
-  #   size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
-  #           message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications_settings
@@ -271,6 +258,16 @@ class User < ApplicationRecord
            dependent: :nullify
   has_many :modified_repository_number_values,
            class_name: 'RepositoryNumberValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_text_values,
+           class_name: 'RepositoryTextValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_text_values,
+           class_name: 'RepositoryTextValue',
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify

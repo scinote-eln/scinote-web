@@ -13,6 +13,14 @@ module Api
                  object.data_type == 'RepositoryListValue' &&
                    !instance_options[:hide_list_items]
                end)
+      has_many :repository_checklist_items,
+               key: :inventory_checklist_items,
+               serializer: InventoryChecklistItemSerializer,
+               class_name: 'RepositoryChecklistItem',
+               if: (lambda do
+                 object.data_type == 'RepositoryChecklistValue' &&
+                  !instance_options[:hide_list_items]
+               end)
       has_many :repository_status_items,
                key: :repository_status_items,
                serializer: InventoryStatusItemSerializer,

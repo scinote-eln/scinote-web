@@ -4,7 +4,7 @@ class RepositoryDateTimeRangeValue < RepositoryDateTimeRangeValueBase
   PRELOAD_INCLUDE = :repository_date_time_range_value
 
   def data_changed?(new_data)
-    data = JSON.parse(new_data).symbolize_keys
+    data = new_data.is_a?(String) ? JSON.parse(new_data).symbolize_keys : new_data
     st = Time.zone.parse(data[:start_time])
     et = Time.zone.parse(data[:end_time])
     st.to_i != start_time.to_i || et.to_i != end_time.to_i
@@ -15,7 +15,7 @@ class RepositoryDateTimeRangeValue < RepositoryDateTimeRangeValueBase
   end
 
   def self.new_with_payload(payload, attributes)
-    data = JSON.parse(payload).symbolize_keys
+    data = payload.is_a?(String) ? JSON.parse(payload).symbolize_keys : payload
 
     value = new(attributes)
     value.start_time = Time.zone.parse(data[:start_time])

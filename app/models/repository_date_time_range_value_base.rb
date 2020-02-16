@@ -27,7 +27,7 @@ class RepositoryDateTimeRangeValueBase < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    data = JSON.parse(new_data).symbolize_keys
+    data = new_data.is_a?(String) ? JSON.parse(new_data).symbolize_keys : new_data
     self.start_time = Time.zone.parse(data[:start_time])
     self.end_time = Time.zone.parse(data[:end_time])
     self.last_modified_by = user

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe RepositoryTextValue, type: :model do
-  let(:repository_text_value) { build :repository_text_value }
+  let(:repository_text_value) { create :repository_text_value }
 
   it 'is valid' do
     expect(repository_text_value).to be_valid

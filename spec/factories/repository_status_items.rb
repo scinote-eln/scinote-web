@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :repository_status_item do
-    sequence(:icon) { |n| "icon-#{n}" }
+    sequence(:icon) { '😀' }
     sequence(:status) { |n| "status-#{n}" }
     repository
     repository_column

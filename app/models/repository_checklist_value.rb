@@ -30,11 +30,15 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def data_changed?(new_data)
-    JSON.parse(new_data) != repository_checklist_items.pluck(:id)
+    if new_data.is_a?(String)
+      JSON.parse(new_data) != repository_checklist_items.pluck(:id)
+    else
+      new_data != repository_checklist_items.pluck(:id)
+    end
   end
 
   def update_data!(new_data, user)
-    item_ids = JSON.parse(new_data)
+    item_ids = new_data.is_a?(String) ? JSON.parse(new_data) : new_data
     return destroy! if item_ids.blank?
 
     self.repository_checklist_items = repository_cell.repository_column
@@ -45,11 +49,12 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def self.new_with_payload(payload, attributes)
+    item_ids = payload.is_a?(String) ? JSON.parse(payload) : payload
     value = new(attributes)
     value.repository_checklist_items = value.repository_cell
                                             .repository_column
                                             .repository_checklist_items
-                                            .where(id: JSON.parse(payload))
+                                            .where(id: item_ids)
     value
   end
 
