@@ -4,7 +4,7 @@
     <div class="dropdown-menu curent-tasks-filters" role="menu">
       <div class="header">
         <div class="title">Filters</div>
-        <div class="btn btn-light"><i class="fas fa-times-circle"></i>Clear</div>
+        <div class="btn btn-light clear-button"><i class="fas fa-times-circle"></i>Clear</div>
       </div>
       <div class="select-block">
         <label>Sort by</label>
@@ -24,11 +24,16 @@
       </div>
       <div class="select-block">
         <label>Project</label>
-        <select class="project-filter"></select>
+        <select class="project-filter"
+                data-ajax-url="<%= project_filter_dashboard_current_tasks_path %>"
+                data-placeholder="Select Project"></select>
       </div>
       <div class="select-block">
         <label>Experiment</label>
-        <select class="experiment-filter"></select>
+        <select class="experiment-filter"
+                data-ajax-url="<%= experiment_filter_dashboard_current_tasks_path %>"
+                data-disable-on-load="true"
+                data-placeholder="Select Experiment"></select>
       </div>
       <div class="footer">
         <div class="btn btn-primary">Apply</div>

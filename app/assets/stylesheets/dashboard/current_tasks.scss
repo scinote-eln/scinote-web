@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 .dashboard-container .current-tasks-widget {
   grid-column: 1 / span 9;
   grid-row: 1 / span 6;
@@ -5,8 +8,8 @@
   .filter-container {
     align-items: center;
     display: flex;
-    justify-content: center;
     height: 30px;
+    justify-content: center;
     width: 30px;
 
     .fa-filter {
@@ -53,8 +56,8 @@
         align-items: center;
         border-top: $border-default;
         display: flex;
-        justify-content: center;
         height: 68px;
+        justify-content: center;
         position: relative;
         width: 100%;
       }

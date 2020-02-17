@@ -242,6 +242,8 @@ Rails.application.routes.draw do
 
     resource :dashboard, only: :show do
       resource :current_tasks, module: 'dashboard', only: :show do
+        get :project_filter
+        get :experiment_filter
       end
     end
 

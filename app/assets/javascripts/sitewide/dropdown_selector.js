@@ -506,7 +506,7 @@ var dropdownSelector = (function() {
     container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .delimiter').remove();
     if (!data) return;
 
-    if (data.length > 0) {
+    if (data.length > 0 && !(data.length === 1 && data[0].value === '')) {
       // If we use select-by-group option we need first draw groups
       if (selector.data('select-by-group')) {
         $.each(data, function(gi, group) {
@@ -681,7 +681,7 @@ var dropdownSelector = (function() {
     // If we have alteast one tag, we need to remove placeholder from search field
     if (selector.data('config').selectAppearance === 'simple') {
       let selectedLabel = container.find('.tag-label');
-      container.find('.search-field').attr('placeholder',
+      container.find('.search-field').prop('placeholder',
         selectedLabel.length && selectedLabel.text().trim() !== '' ? selectedLabel.text().trim() : selector.data('placeholder'));
     } else {
       searchFieldValue.attr('placeholder',
@@ -741,14 +741,14 @@ var dropdownSelector = (function() {
       ajaxParams = customParams ? customParams(defaultParams) : defaultParams;
 
       $.get(selector.data('ajax-url'), ajaxParams, (data) => {
-        var optionsAjax = data;
+        var optionsAjax = data.constructor === Array ? data : [];
         if (selector.data('config').emptyOptionAjax) {
           optionsAjax = [{
-            label: '',
+            label: selector.data('placeholder') || '',
             value: '',
             group: null,
             params: {}
-          }].concat(data);
+          }].concat(optionsAjax);
         }
         loadData(selector, container, optionsAjax);
         PerfectSb().update_all();
