@@ -1,42 +1,43 @@
 <div class="current-tasks-widget basic-widget">
   <div class="filter-container dropdown">
-    <span data-toggle="dropdown" class="fas fa-filter"></span>
+    <div class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></div>
     <div class="dropdown-menu curent-tasks-filters" role="menu">
       <div class="header">
-        <div class="title">Filters</div>
-        <div class="btn btn-light clear-button"><i class="fas fa-times-circle"></i>Clear</div>
+        <div class="title"><%= t("dashboard.current_tasks.filter.title") %></div>
+        <div class="btn btn-light clear-button"><i class="fas fa-times-circle"></i><%= t("dashboard.current_tasks.filter.clear") %></div>
       </div>
       <div class="select-block">
-        <label>Sort by</label>
+        <label><%= t("dashboard.current_tasks.filter.sort") %></label>
         <select class="sort-filter">
-          <option value="date_asc" >Due Date Ascending</option>
-          <option value="date_desc" >Due Date Descending</option>
-          <option value="atoz" >From A to Z</option>
-          <option value="ztoa" >From Z to A</option>
+          <option value="date_asc" ><%= t("dashboard.current_tasks.filter.date_asc") %></option>
+          <option value="date_desc" ><%= t("dashboard.current_tasks.filter.date_desc") %></option>
+          <option value="aotz" ><%= t("dashboard.current_tasks.filter.atoz") %></option>
+          <option value="ztoa" ><%= t("dashboard.current_tasks.filter.ztoa") %></option>
         </select>
       </div>
       <div class="select-block">
-        <label>Display</label>
+        <label><%= t("dashboard.current_tasks.filter.display") %></label>
         <select class="view-filter">
-          <option value="active" >Only active tasks</option>
-          <option value="completed" >Only completed and locked tasks</option>
+          <option value="active" ><%= t("dashboard.current_tasks.filter.active_tasks") %></option>
+          <option value="completed" ><%= t("dashboard.current_tasks.filter.locked_tasks") %></option>
         </select>
       </div>
       <div class="select-block">
-        <label>Project</label>
+        <label><%= t("dashboard.current_tasks.filter.project") %></label>
         <select class="project-filter"
                 data-ajax-url="<%= project_filter_dashboard_current_tasks_path %>"
-                data-placeholder="Select Project"></select>
+                data-placeholder="<%= t("dashboard.current_tasks.filter.select_project") %>"></select>
       </div>
       <div class="select-block">
-        <label>Experiment</label>
+        <label><%= t("dashboard.current_tasks.filter.experiment") %></label>
         <select class="experiment-filter"
                 data-ajax-url="<%= experiment_filter_dashboard_current_tasks_path %>"
                 data-disable-on-load="true"
-                data-placeholder="Select Experiment"></select>
+                data-disable-placeholder="<%= t("dashboard.current_tasks.filter.select_experiment") %>"
+                data-placeholder="<%= t("dashboard.current_tasks.filter.select_experiment") %>"></select>
       </div>
       <div class="footer">
-        <div class="btn btn-primary">Apply</div>
+        <div class="btn btn-primary"><%= t("dashboard.current_tasks.filter.apply") %></div>
       </div>
     </div>
   </div>

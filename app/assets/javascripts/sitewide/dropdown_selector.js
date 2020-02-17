@@ -380,7 +380,7 @@ var dropdownSelector = (function() {
         }
       } else {
         // on Close we blur search field
-        dropdownContainer.find('.search-field').blur();
+        dropdownContainer.find('.search-field').blur().val('');
 
         // onClose event
         if (config.onClose) {
@@ -837,7 +837,21 @@ var dropdownSelector = (function() {
     setData: function(selector, data) {
       if ($(selector).length === 0) return false;
 
-      setData($(selector), []);
+      setData($(selector), data);
+
+      return this;
+    },
+
+    // Select value
+    selectValue: function(selector, value) {
+      var $selector;
+      var option;
+
+      if ($(selector).length === 0) return false;
+
+      $selector = $(selector);
+      option = $selector.find(`option[value="${value}"]`)[0];
+      setData($selector, [convertOptionToJson(option)]);
 
       return this;
     },

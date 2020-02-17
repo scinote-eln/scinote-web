@@ -7,12 +7,12 @@ module Dashboard
     def show; end
 
     def project_filter
-      result = current_team.projects.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
+      projects = current_team.projects.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
       unless params[:mode] == 'team'
-        result = result.where(id: current_user.my_modules.joins(:experiment)
+        projects = projects.where(id: current_user.my_modules.joins(:experiment)
           .group(:project_id).select(:project_id).pluck(:project_id))
       end
-      render json: result.map { |i| { value: i.id, label: escape_input(i.name) } }, status: :ok
+      render json: projects.map { |i| { value: i.id, label: escape_input(i.name) } }, status: :ok
     end
 
     def experiment_filter
@@ -21,12 +21,12 @@ module Dashboard
         render json: []
         return false
       end
-      result = project.experiments.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
+      experiments = project.experiments.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
       unless params[:mode] == 'team'
-        result = result.where(id: current_user.my_modules
+        experiments = experiments.where(id: current_user.my_modules
           .group(:experiment_id).select(:experiment_id).pluck(:experiment_id))
       end
-      render json: result.map { |i| { value: i.id, label: escape_input(i.name) } }, status: :ok
+      render json: experiments.map { |i| { value: i.id, label: escape_input(i.name) } }, status: :ok
     end
   end
 end

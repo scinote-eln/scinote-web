@@ -9,6 +9,8 @@ var DasboardCurrentTasksWidget = (function() {
     var experimentFilter = '.curent-tasks-filters .experiment-filter';
 
     $('.curent-tasks-filters .clear-button').click(() => {
+      dropdownSelector.selectValue(sortFilter, 'date_asc');
+      dropdownSelector.selectValue(viewFilter, 'active');
       dropdownSelector.clearData(projectFilter);
       dropdownSelector.clearData(experimentFilter);
     });
@@ -17,14 +19,16 @@ var DasboardCurrentTasksWidget = (function() {
       noEmptyOption: true,
       singleSelect: true,
       closeOnSelect: true,
-      selectAppearance: 'simple'
+      selectAppearance: 'simple',
+      disableSearch: true
     });
 
     dropdownSelector.init(viewFilter, {
       noEmptyOption: true,
       singleSelect: true,
       closeOnSelect: true,
-      selectAppearance: 'simple'
+      selectAppearance: 'simple',
+      disableSearch: true
     });
 
     dropdownSelector.init(projectFilter, {
@@ -46,6 +50,7 @@ var DasboardCurrentTasksWidget = (function() {
         dropdownSelector.clearData(experimentFilter);
       }
     });
+
     dropdownSelector.init(experimentFilter, {
       singleSelect: true,
       closeOnSelect: true,

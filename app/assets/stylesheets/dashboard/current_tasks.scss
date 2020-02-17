@@ -6,16 +6,8 @@
   grid-row: 1 / span 6;
 
   .filter-container {
-    align-items: center;
-    display: flex;
-    height: 30px;
-    justify-content: center;
-    width: 30px;
-
-    .fa-filter {
-      cursor: pointer;
-      font-size: $font-size-h2;
-    }
+    height: 36px;
+    width: 36px;
 
     .curent-tasks-filters {
       padding: 0;
