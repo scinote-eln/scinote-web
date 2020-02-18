@@ -377,3 +377,24 @@ $(document).on('turbolinks:before-visit', function(e) {
     return false;
   });
 });
+
+$(document).on('turbolinks:load', function(e) {
+  var records = Object.entries(localStorage).filter(record => { return record[0].includes('tinymce-autosave'); });
+  var dLocation = document.location;
+  var prefix = `tinymce-autosave-${dLocation.pathname}${dLocation.search}${dLocation.hash}-`;
+  for (let i = 0; i < records.length; i += 1) {
+    if (records[i][0].includes(prefix + 'my_module_description_textarea-draft')) {
+      setTimeout(() => {
+        window.scrollTo(0, $('#my_module_description_view').offset().top);
+        $('#my_module_description_view').click();
+      }, 500);
+      break;
+    } else if (records[i][0].includes(prefix + 'protocol_description_textarea-draft')) {
+      setTimeout(() => {
+        window.scrollTo(0, $('#protocol_description_view').offset().top);
+        $('#protocol_description_view').click();
+      }, 500);
+      break;
+    }
+  }
+});
