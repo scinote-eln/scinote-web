@@ -17,3 +17,8 @@ en:
         experiment: "Experiment"
         select_experiment: "Select Experiment"
         apply: "Apply"
+      progress_bar:
+        in_progress: "In progress: %{steps} / %{total_steps}"
+        overdue: "Overdue: %{steps} / %{total_steps}"
+        completed: "Completed"
+        locked: "Locked"
