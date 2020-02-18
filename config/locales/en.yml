@@ -1139,6 +1139,7 @@ en:
       title: 'Import items'
       notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data.'
       upload: 'Upload'
+      limit_description_html: 'When importing items, try to limit the amount to <b>500</b>.<br>Otherwise it may impede to process.'
     js:
       permission_error: "You don't have permission to edit this item."
       not_found_error: "This inventory item does not exist."
