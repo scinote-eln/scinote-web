@@ -39,6 +39,10 @@
           })
           .off('shown.bs.popover')
           .on('shown.bs.popover', function() {
+            // hide popup if object element hidden
+            if (!$(obj).is(':visible') || $(obj).is(':disabled')) {
+              $(obj).popover('hide');
+            }
             // hide all other popovers
             popoversArray.forEach(function(arrayItem) {
               if (obj !== arrayItem) {
