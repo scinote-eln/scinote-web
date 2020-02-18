@@ -1,0 +1,19 @@
+en:
+  dashboard:
+    current_tasks:
+      filter:
+        title: "Filters"
+        clear: "Clear"
+        sort: "Sort by"
+        date_asc: "Due Date Ascending"
+        date_desc: "Due Date Descending"
+        atoz: "From A to Z"
+        ztoa: "From Z to A"
+        display: "Display"
+        active_tasks: "Only active tasks"
+        locked_tasks: "Only completed and locked tasks"
+        project: "Project"
+        select_project: "Select Project"
+        experiment: "Experiment"
+        select_experiment: "Select Experiment"
+        apply: "Apply"

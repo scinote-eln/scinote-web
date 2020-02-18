@@ -40,6 +40,7 @@
     }
 
     .search-field {
+      @include font-button;
       border: 0;
       flex-basis: 0;
       flex-grow: 2000;
@@ -95,6 +96,10 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         width: auto;
+
+        &[data-ds-tag-id=""] {
+          opacity: .7;
+        }
       }
 
       .fas {
@@ -108,6 +113,7 @@
   }
 
   .dropdown-container {
+    @include font-button;
     background: $color-white;
     border: 1px solid $color-alto;
     border-radius: 0 0 4px 4px;
@@ -163,11 +169,15 @@
         background: $color-concrete;
       }
 
+      &[data-value=""] {
+        opacity: .7;
+      }
+
       &.select {
         background: $brand-primary;
         color: $color-white;
+        opacity: 1;
       }
-
     }
 
     .checkbox-icon {
@@ -267,6 +277,10 @@
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+
+          &[data-ds-tag-id=""] {
+            opacity: .7;
+          }
         }
 
         .fa-times {

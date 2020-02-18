@@ -241,6 +241,10 @@ Rails.application.routes.draw do
     post 'reports/destroy', to: 'reports#destroy'
 
     resource :dashboard, only: :show do
+      resource :current_tasks, module: 'dashboard', only: :show do
+        get :project_filter
+        get :experiment_filter
+      end
     end
 
     resources :projects, except: [:new, :destroy] do
