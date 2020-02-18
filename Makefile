@@ -85,6 +85,7 @@ tests-ci:
 	@docker-compose run --rm web bash -c "bundle install && yarn install"
 	@docker-compose up -d webpack
 	@docker-compose ps
+	@docker logs scinote_db_development
 	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAIL_FROM=MAIL_FROM -e MAIL_REPLYTO=MAIL_REPLYTO -e RAILS_ENV=test -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost:3000 -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true -e CORE_API_RATE_LIMIT=1000000 --rm web bash -c "rake db:create && rake db:migrate && yarn install && bundle exec rspec && bundle exec cucumber"
 
 console:
