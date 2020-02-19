@@ -367,23 +367,6 @@
   padding: 10px 0 10px 30px;
 }
 
-// Alert
-.alert {
-  &.alert-hidden {
-    display: none;
-  }
-
-  a#hide-alert {
-    margin-left: 15px;
-  }
-
-  &.alert-floating {
-    position: fixed;
-    top: 50px;
-    z-index: 1000;
-  }
-}
-
 #content-wrapper {
   margin-top: 50px;
   margin-left: 83px;

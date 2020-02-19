@@ -18,31 +18,35 @@
     flex-wrap: wrap;
     min-height: 36px;
     overflow: hidden;
-    padding: 3px 36px 3px 3px;
+    padding: 3px 42px 3px 3px;
     position: relative;
     transition: .2s;
     width: 100%;
 
-    .fa-caret-down {
+    .right-icon {
       color: $color-silver-chalice;
       cursor: pointer;
-      font-size: 20px;
       line-height: 18px;
       position: absolute;
-      right: 8px;
+      right: 12px;
       text-align: center;
       top: 8px;
       width: 18px;
+
+      &.fa-search {
+        color: $brand-focus;
+        display: none;
+      }
     }
 
     .search-field {
       border: 0;
       flex-basis: 0;
       flex-grow: 2000;
-      line-height: 24px;
+      line-height: 28px;
       min-width: 0;
       outline: 0;
-      padding-left: 5px;
+      padding: 0 0 0 5px;
 
       &::placeholder {
         opacity: .7;
@@ -107,11 +111,11 @@
     background: $color-white;
     border: 1px solid $color-alto;
     border-radius: 0 0 4px 4px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
+    bottom: calc(100% - 30px);
+    box-shadow: $flyout-shadow;
     display: none;
     overflow: hidden;
     position: fixed;
-    bottom: calc(100% - 30px);
     transition: .2s;
     transition-property: top, bottom, box-shadow;
     width: 100%;
@@ -145,24 +149,6 @@
       z-index: 5;
     }
 
-    .checkbox-icon {
-      &::before {
-        content: "\f0c8";
-        font-family: $font-family-icons;
-        font-size: 16px;
-        font-weight: 400;
-        margin: 0 8px 0 0;
-        position: relative;
-      }
-
-      &.select {
-
-        &::before {
-          content: "\f14a";
-        }
-      }
-    }
-
     .dropdown-option {
       align-items: center;
       cursor: pointer;
@@ -172,16 +158,50 @@
       position: relative;
       user-select: none;
 
-      &.select {
+      &.highlight,
+      &:hover {
         background: $color-concrete;
       }
 
-      &.highlight,
-      &:hover {
-        background: $brand-primary-light;
+      &.select {
+        background: $brand-primary;
+        color: $color-white;
       }
 
+    }
 
+    .checkbox-icon {
+      &::before {
+        @include font-awesome;
+        animation-timing-function: $timing-function-sharp;
+        background: $color-white;
+        border: $border-default;
+        border-radius: 1px;
+        color: $color-white;
+        content: "";
+        font-size: calc(var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375);
+        height: var(--sci-checkbox-size);
+        line-height: calc(var(--sci-checkbox-size) - 2px);
+        margin-right: 8px;
+        text-align: center;
+        transition: .2s;
+        width: var(--sci-checkbox-size);
+      }
+
+      &.select {
+        background: $color-white;
+        color: inherit;
+
+        &:hover {
+          background: $color-concrete;
+        }
+
+        &::before {
+          background: $brand-primary;
+          border: 1px solid $brand-primary;
+          content: $font-fas-check;
+        }
+      }
     }
 
     .dropdown-group {
@@ -234,9 +254,8 @@
       display: block;
 
       .search-field {
-        bottom: 3px;
+        background: transparent;
         display: none;
-        position: absolute;
 
         &[data-options-selected="0"] {
           display: block;
@@ -275,7 +294,7 @@
     .dropdown-container {
       border-top: 0;
       bottom: auto;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 0 4px 0 rgba(0, 0, 0, 0.08);
+      box-shadow: $flyout-shadow;
       display: block;
       top: 100%;
     }
@@ -298,19 +317,28 @@
     }
 
     &.simple-mode:not(.disable-search) {
+      .input-field {
+        background: $color-concrete;
+        border-color: $brand-focus;
+      }
+
       .search-field {
         display: block;
-        line-height: 14px;
-
-        &[data-options-selected="0"] {
-          line-height: 24px;
-        }
+        width: 100%;
       }
 
       .ds-simple {
-        font-size: 12px;
-        line-height: 14px;
-        opacity: .6;
+        display: none;
+      }
+
+      .right-icon {
+        &.fa-search {
+          display: inline;
+        }
+
+        &.fa-caret-down {
+          display: none;
+        }
       }
     }
   }

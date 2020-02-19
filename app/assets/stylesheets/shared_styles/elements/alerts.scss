@@ -5,25 +5,36 @@
   width: 100%;
 }
 
-.alert-floating {
-  align-items: center;
-  display: flex;
-  height: 52px;
-  padding: 9px;
+#notifications {
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1100;
 
-  .fas {
-    font-size: $font-size-h2;
-    margin-left: 12px;
-  }
+  .alert-floating {
+    align-items: center;
+    display: flex;
+    height: 52px;
+    opacity: 1;
+    padding: 9px;
 
-  .message {
-    color: $color-volcano;
-    flex-grow: 1;
-    margin-left: 14px;
-  }
+    .fas {
+      font-size: $font-size-h2;
+      margin-left: 12px;
+    }
 
-  .close {
-    top: 0;
+    .message {
+      color: $color-volcano;
+      flex-grow: 1;
+      margin-left: 14px;
+    }
+
+    .close {
+      opacity: .3;
+      right: 10px;
+      top: 0;
+    }
   }
 }
 

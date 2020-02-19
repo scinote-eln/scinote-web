@@ -63,7 +63,15 @@ $.fn.dataTable.render.RepositoryChecklistValueValidator = function() {
   return true;
 };
 
-$.fn.dataTable.render.RepositoryNumberValueValidator = function() {
+$.fn.dataTable.render.RepositoryNumberValueValidator = function($input) {
+  if ($input.val().slice(-1) === '.') {
+    $input.closest('.text-field').addClass('error').attr(
+      'data-error-text',
+      I18n.t('repositories.table.number.errors.wrong_format')
+    );
+    return false;
+  }
+  $input.removeClass('error');
   return true;
 };
 

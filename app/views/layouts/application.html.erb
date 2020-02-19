@@ -57,10 +57,8 @@
       <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: nil} %>
     <% end %>
 
-    <% unless user_signed_in? %>
-      <%= render partial: 'shared/flash_alerts',
+    <%= render partial: 'shared/flash_alerts',
                  locals: { flash: flash, notice: notice, alert: alert } %>
-    <% end %>
 
     <%= render "shared/left_menu_bar" if user_signed_in? %>
 
