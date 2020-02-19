@@ -17,3 +17,12 @@ en:
         experiment: "Experiment"
         select_experiment: "Select Experiment"
         apply: "Apply"
+    calendar:
+      dow:
+        su: 'Su'
+        mo: 'Mo'
+        tu: 'Tu'
+        we: 'We'
+        th: 'Th'
+        fr: 'Fr'
+        sa: 'Sa'

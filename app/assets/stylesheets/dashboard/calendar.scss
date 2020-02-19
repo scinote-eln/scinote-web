@@ -1,6 +1,78 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 .dashboard-container .calendar-widget {
   grid-column: 10 / span 3;
   grid-row: 1 / span 6;
+
+  .dashboard-calendar {
+    height: 100%;
+    width: 100%;
+  }
+
+  .clndr {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .controls {
+      border-bottom: $border-default;
+      display: flex;
+      flex-basis: 42px;
+      padding: 3px;
+
+      .clndr-title {
+        @include font-h3;
+        align-items: center;
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+      }
+    }
+
+    .days-container {
+      align-items: center;
+      display: grid;
+      flex-grow: 1;
+      grid-column-gap: 6px;
+      grid-row-gap: 6px;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      justify-items: center;
+      padding: 6px;
+
+      .day-header {
+        @include font-button;
+        color: $color-silver-chalice;
+        font-weight: bold;
+      }
+
+      .day {
+        @include font-button;
+        align-items: center;
+        display: flex;
+        height: 32px;
+        justify-content: center;
+        user-select: none;
+        width: 32px;
+
+        &.adjacent-month {
+          color: $color-alto;
+        }
+
+        &.today {
+          border: $border-primary;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1250px) {
+  .dashboard-container .calendar-widget {
+    grid-column: 9 / span 4;
+  }
 }
 
 @media (max-width: 1000px) {
