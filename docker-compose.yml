@@ -7,6 +7,8 @@ services:
       - scinote_development_postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    environment:
+      - "POSTGRES_PASSWORD=mysecretpassword"
 
   web:
     build:
