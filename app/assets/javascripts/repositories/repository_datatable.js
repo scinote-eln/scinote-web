@@ -443,9 +443,13 @@ var RepositoryDatatable = (function(global) {
         sWidth: '1%',
         render: function(data, type, row) {
           let content = data;
-          let icon = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>';
+          let icon;
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
+          } else if (EDITABLE) {
+            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>';
+          } else {
+            icon = '';
           }
           content = icon + content;
           return content;
