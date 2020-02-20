@@ -1,4 +1,5 @@
 /* global I18n */
+/* eslint-disable no-underscore-dangle */
 
 var DasboardCalendarWidget = (function() {
   function calendarTemplate() {
@@ -17,10 +18,27 @@ var DasboardCalendarWidget = (function() {
                     <div class="day-header"><%= day %></div>
                 <% }); %>
                 <% _.each(days, function(day) { %>
-                  <div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %></div>
+                  <% if (day.classes.includes('event')){ %>
+                    <div class="<%= day.classes %>" id="<%= day.id %>">
+                      <div class="event-day" data-toggle="dropdown"><%= day.day %></div>
+                      <div class="dropdown-menu events-container dropdown-menu-right" role="menu">
+                        <div class="title">Due on <%= day.date.format(formatJS) %></div>
+                        <div class="tasks"></div>
+                      </div>
+                    </div>
+                  <% } else { %>
+                    <div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %></div>
+                  <% } %>
                 <% }); %>
               </div>
             </script>`;
+  }
+
+  function getMonthEventsList(date, clndrInstance) {
+    var getUrl = $('.dashboard-calendar').data('month-events-url');
+    $.get(getUrl, { date: date }, function(result) {
+      clndrInstance.setEvents(result.events);
+    });
   }
 
   function initCalendar() {
@@ -33,12 +51,26 @@ var DasboardCalendarWidget = (function() {
       I18n.t('dashboard.calendar.dow.fr'),
       I18n.t('dashboard.calendar.dow.sa')
     ];
-    $('.dashboard-calendar').clndr({
+    var clndrInstance = $('.dashboard-calendar').clndr({
       template: $(calendarTemplate()).html(),
-      adjacentDaysChangeMonth: true,
       daysOfTheWeek: dayOfWeek,
-      forceSixRows: true
+      forceSixRows: true,
+      clickEvents: {
+        click: function(target) {
+          var getDayUrl = $('.dashboard-calendar').data('day-events-url');
+          if ($(target.element).hasClass('event')) {
+            $.get(getDayUrl, { date: target.date._i }, function(result) {
+              $(target.element).find('.tasks').html(result.html);
+            });
+          }
+        },
+        onMonthChange: function(month) {
+          getMonthEventsList(month._d, clndrInstance);
+        }
+      }
     });
+
+    getMonthEventsList((new Date()), clndrInstance);
   }
 
 

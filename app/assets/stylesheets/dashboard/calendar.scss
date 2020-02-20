@@ -50,9 +50,13 @@
       .day {
         @include font-button;
         align-items: center;
+        animation-timing-function: $timing-function-sharp;
+        border-radius: 50%;
         display: flex;
         height: 32px;
         justify-content: center;
+        position: relative;
+        transition: .3s;
         user-select: none;
         width: 32px;
 
@@ -62,7 +66,47 @@
 
         &.today {
           border: $border-primary;
-          border-radius: 50%;
+        }
+
+        &.event {
+
+          .event-day {
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            height: 32px;
+            justify-content: center;
+            width: 32px;
+
+            &:hover {
+              background: $color-alto;
+              color: inherit;
+            }
+          }
+
+
+          &::after {
+            background: $brand-danger;
+            border-radius: 50%;
+            content: "";
+            height: 4px;
+            left: 14px;
+            position: absolute;
+            top: 24px;
+            width: 4px;
+          }
+        }
+
+        .events-container {
+          color: $color-black;
+          padding: 8px;
+          width: 280px;
+
+          .title {
+            @include font-h3;
+            margin-bottom: 8px;
+          }
         }
       }
     }
@@ -79,5 +123,12 @@
   .dashboard-container .calendar-widget {
     grid-column: 1 / span 6;
     grid-row: 5 / span 4;
+
+    .clndr {
+      .events-container {
+        left: 0;
+        right: auto;
+      }
+    }
   }
 }
