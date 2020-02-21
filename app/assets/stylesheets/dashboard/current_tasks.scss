@@ -5,18 +5,116 @@
   grid-column: 1 / span 9;
   grid-row: 1 / span 6;
 
+  .title {
+    flex-shrink: 0;
+  }
+
+  .actions-container {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  .filter-container {
+    height: 36px;
+    margin-right: 4px;
+    width: 36px;
+
+    .curent-tasks-filters {
+      padding: 0;
+      width: 230px;
+
+      .header {
+        align-items: center;
+        border-bottom: $border-default;
+        display: flex;
+        height: 44px;
+        margin-bottom: 16px;
+        padding: 0  5px 0 16px;
+
+        .title {
+          @include font-h2;
+          flex-grow: 1;
+          user-select: none;
+
+        }
+      }
+
+      .select-block {
+        display: inline-block;
+        padding: 0 16px 16px;
+        position: relative;
+        width: 100%;
+
+        label {
+          @include font-small;
+          display: inline-block;
+          font-weight: bold;
+          margin-bottom: 5px;
+          user-select: none;
+        }
+      }
+
+      .footer {
+        align-items: center;
+        border-top: $border-default;
+        display: flex;
+        height: 68px;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+      }
+    }
+  }
+
+  .current-tasks-list {
+    display: flex;
+    flex-direction: column;
+    height: 293px;
+    overflow-y: auto;
+    padding: 0 16px;
+
+    .current-task-item {
+      border-bottom: $border-tertiary;
+      color: $color-volcano;
+      padding: 6px 0;
+      text-decoration: none;
+
+      .current-task-breadcrumbs {
+        @include font-small;
+        color: $color-silver-chalice;
+        line-height: 14px;
+      }
+
+      .item-row{
+        display: flex;
+
+        .task-name {
+          flex-grow: 1;
+          font-size: $font-size-base;  //not in styleguide
+          font-weight: bold;
+        }
+
+        .task-due-date {
+          flex-basis: 260px;
+          font-size: 14px;
+
+          .fas {
+            padding: 4px;
+          }
+
+          &.overdue {
+            color: $brand-danger;
+          }
+        }
+      }
+    }
+  }
+
   .task-progress-container {
-    max-width: 300px;
+    max-width: 250px;
     min-width: 150px;
     position: relative;
     width: 100%;
-
-    // Example
-    //
-    //<div class="task-progress-container">
-    //  <div class="task-progress" style="padding-left: 45%"></div>
-    //  <div class="task-progress-label">t('...')</div>
-    //</div>
 
     &::after {
       @include font-small;
@@ -103,57 +201,6 @@
       &::after {
         color: $color-silver-chalice;
         content: $font-fas-lock;
-      }
-    }
-  }
-
-  .filter-container {
-    height: 36px;
-    width: 36px;
-
-    .curent-tasks-filters {
-      padding: 0;
-      width: 230px;
-
-      .header {
-        align-items: center;
-        border-bottom: $border-default;
-        display: flex;
-        height: 44px;
-        margin-bottom: 16px;
-        padding: 0  5px 0 16px;
-
-        .title {
-          @include font-h2;
-          flex-grow: 1;
-          user-select: none;
-
-        }
-      }
-
-      .select-block {
-        display: inline-block;
-        padding: 0 16px 16px;
-        position: relative;
-        width: 100%;
-
-        label {
-          @include font-small;
-          display: inline-block;
-          font-weight: bold;
-          margin-bottom: 5px;
-          user-select: none;
-        }
-      }
-
-      .footer {
-        align-items: center;
-        border-top: $border-default;
-        display: flex;
-        height: 68px;
-        justify-content: center;
-        position: relative;
-        width: 100%;
       }
     }
   }

@@ -4,7 +4,54 @@ module Dashboard
   class CurrentTasksController < ApplicationController
     include InputSanitizeHelper
 
-    def show; end
+    def show
+      if params[:project_id]
+        if params[:experiment_id]
+          tasks = MyModule.active.joins(:experiment).where('experiments.id': params[:experiment_id])
+        else
+          tasks = MyModule.active.joins(:experiment).where('experiments.project_id': params[:project_id])
+        end
+      else
+        tasks = MyModule.active.joins(experiment: :project).where('projects.team_id': current_team)
+      end
+      if params[:mode] == 'assigned'
+        tasks = tasks.left_outer_joins(:user_my_modules).where('user_my_modules.user_id': current_user.id)
+      end
+      tasks = tasks.where('my_modules.state': params[:view])
+
+      case params[:sort]
+      when 'date_desc'
+        tasks = tasks.order('my_modules.due_date': :desc)
+      when 'date_asc'
+        tasks = tasks.order('my_modules.due_date': :asc)
+      when 'atoz'
+        tasks = tasks.order('my_modules.name': :asc)
+      when 'ztoa'
+        tasks = tasks.order('my_modules.name': :desc)
+      else
+        tasks
+      end
+
+      respond_to do |format|
+        format.json do
+          render json: {
+            tasks_list: tasks.map do |task|
+              due_date = I18n.l(task.due_date, format: :full_with_comma) if task.due_date.present?
+              { id: task.id,
+                link: protocols_my_module_path(task.id),
+                experiment: task.experiment.name,
+                project: task.experiment.project.name,
+                name: escape_input(task.name),
+                due_date: due_date,
+                overdue: task.is_overdue?,
+                state: task.state,
+                steps_state: task.completed_steps_percentage }
+            end,
+            status: :ok
+          }
+        end
+      end
+    end
 
     def project_filter
       projects = current_team.projects.search(current_user, false, params[:query], 1, current_team).select(:id, :name)

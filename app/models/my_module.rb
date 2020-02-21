@@ -492,6 +492,18 @@ class MyModule < ApplicationRecord
     state == 'completed'
   end
 
+  def completed_steps_percentage
+    if protocol && protocol.steps.count.positive?
+      {
+        completed_steps: protocol.steps.count(&:completed),
+        all_steps: protocol.steps.count,
+        percentage: (protocol.steps.count(&:completed).fdiv(protocol.steps.count) * 100).round
+      }
+    else
+      0
+    end
+  end
+
   # Check if my_module is ready to become completed
   def check_completness_status
     if protocol && protocol.steps.count > 0
