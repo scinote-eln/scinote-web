@@ -996,6 +996,8 @@ class Constants
 
   IMPORT_REPOSITORY_ITEMS_LIMIT = 2000
 
+  DEFAULT_TEAM_REPOSITORIES_LIMIT = 6
+
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
