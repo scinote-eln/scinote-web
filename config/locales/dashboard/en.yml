@@ -18,6 +18,7 @@ en:
         select_experiment: "Select Experiment"
         apply: "Apply"
     calendar:
+      due_on: Due on
       dow:
         su: 'Su'
         mo: 'Mo'

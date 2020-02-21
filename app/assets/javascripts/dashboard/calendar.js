@@ -22,7 +22,7 @@ var DasboardCalendarWidget = (function() {
                     <div class="<%= day.classes %>" id="<%= day.id %>">
                       <div class="event-day" data-toggle="dropdown"><%= day.day %></div>
                       <div class="dropdown-menu events-container dropdown-menu-right" role="menu">
-                        <div class="title">Due on <%= day.date.format(formatJS) %></div>
+                        <div class="title">${I18n.t('dashboard.calendar.due_on')} <%= day.date.format(formatJS) %></div>
                         <div class="tasks"></div>
                       </div>
                     </div>
