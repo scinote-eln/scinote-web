@@ -57,7 +57,6 @@
     "babel-loader": "^8.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap-sass": "^3.3.7",
-    "clndr": "^1.5.1",
     "coffee-loader": "^0.8.0",
     "coffeescript": "^1.12.6",
     "compression-webpack-plugin": "^1.1.11",
