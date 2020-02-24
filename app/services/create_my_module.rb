@@ -20,7 +20,7 @@ class CreateMyModule
       my_module_params = {
         x: 0,
         y: 0,
-        name: @config[:my_module_name] || 'New Task'
+        name: @config[:my_module_name] || I18n.t('create_task_service.default_task_name')
       }
 
       my_module = @experiment.my_modules.new(my_module_params)
