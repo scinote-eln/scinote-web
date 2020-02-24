@@ -5,6 +5,108 @@
   grid-column: 1 / span 9;
   grid-row: 1 / span 6;
 
+  .task-progress-container {
+    max-width: 300px;
+    min-width: 150px;
+    position: relative;
+    width: 100%;
+
+    // Example
+    //
+    //<div class="task-progress-container">
+    //  <div class="task-progress" style="padding-left: 45%"></div>
+    //  <div class="task-progress-label">t('...')</div>
+    //</div>
+
+    &::after {
+      @include font-small;
+      @include font-awesome;
+      content: "";
+      line-height: 18px;
+      position: absolute;
+      right: 8px;
+      top: 0;
+    }
+
+    .task-progress {
+      background: $brand-focus-light;
+      border-radius: $border-radius-tag;
+      display: flex;
+      height: 18px;
+      outline: $border-tertiary;
+      position: relative;
+
+      &::after {
+        background: $color-white;
+        content: "";
+        height: 18px;
+        width: 100%;
+      }
+    }
+
+    .task-progress-label {
+      @include font-small;
+      font-weight: bold;
+      height: 18px;
+      left: 0;
+      line-height: 18px;
+      padding-left: 8px;
+      position: absolute;
+      top: 0;
+      width: calc(100% - 30px);
+    }
+
+    &.overdue {
+      .task-progress {
+        background: $brand-danger-light;
+      }
+
+      .task-progress-label {
+        color: $brand-danger;
+      }
+
+      &::after {
+        color: $brand-danger;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+
+    &.completed {
+      .task-progress {
+        outline: $border-success;
+      }
+
+      .task-progress,
+      .task-progress::after {
+        background: $brand-success-light;
+      }
+
+      .task-progress-label {
+        color: $brand-success;
+      }
+
+      &::after {
+        color: $brand-success;
+        content: $font-fas-check;
+      }
+    }
+
+    &.locked {
+      .task-progress {
+        background: $color-white;
+      }
+
+      .task-progress-label {
+        color: $color-silver-chalice;
+      }
+
+      &::after {
+        color: $color-silver-chalice;
+        content: $font-fas-lock;
+      }
+    }
+  }
+
   .filter-container {
     height: 36px;
     width: 36px;
