@@ -2,6 +2,8 @@
 
 module Dashboard
   class CalendarsController < ApplicationController
+    include IconsHelper
+
     def show
       date = DateTime.parse(params[:date])
       start_date = date.at_beginning_of_month.utc - 7.days

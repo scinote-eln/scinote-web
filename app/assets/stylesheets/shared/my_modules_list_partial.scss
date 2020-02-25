@@ -14,7 +14,7 @@
     color: $color-silver-chalice;
     display: flex;
     height: 20px;
-    margin: 5px 0;
+    margin-top: 5px;
     width: 100%;
 
     .project,
@@ -38,13 +38,17 @@
       align-items: center;
       display: flex;
       line-height: 25px;
-    }
 
-    .task-icon {
-      margin-right: 9px;
+      .task-icon {
+        margin-right: 9px;
 
-      path {
-        fill: $brand-primary;
+        path {
+          fill: $brand-primary;
+        }
+      }
+
+      .task-link {
+        line-height: 24px;
       }
     }
   }
