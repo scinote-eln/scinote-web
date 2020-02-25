@@ -28,7 +28,7 @@ class CreateMyModuleService
 
       @my_module.save!
       create_my_module_activity
-      @experiment.generate_workflow_img
+      @params[:experiment].generate_workflow_img
       @my_module
     end
   end
