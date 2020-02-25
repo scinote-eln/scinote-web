@@ -10,19 +10,17 @@ class CreateMyModuleService
 
   def call
     ActiveRecord::Base.transaction do
-      @experiment = if @params[:experiment].class == Experiment
-                      @params[:experiment]
-                    else
-                      @params[:experiment][:project] = @params[:project]
-                      CreateExperimentService.new(@user, @team, @params[:experiment]).call
-                    end
-      raise ActiveRecord::Rollback unless @experiment
+      unless @params[:experiment].class == Experiment
+        @params[:experiment][:project] = @params[:project]
+        @params[:experiment] = CreateExperimentService.new(@user, @team, @params[:experiment]).call
+      end
+      raise ActiveRecord::Rollback unless @params[:experiment]
 
       @my_module_params[:x] ||= 0
       @my_module_params[:y] ||= 0
       @my_module_params[:name] ||= I18n.t('create_task_service.default_task_name')
 
-      @my_module = @experiment.my_modules.new(@my_module_params)
+      @my_module = @params[:experiment].my_modules.new(@my_module_params)
 
       new_pos = @my_module.get_new_position
       @my_module.x = new_pos[:x]
@@ -42,7 +40,7 @@ class CreateMyModuleService
       .call(activity_type: :create_module,
             owner: @user,
             team: @team,
-            project: @experiment.project,
+            project: @params[:experiment].project,
             subject: @my_module,
             message_items: { my_module: @my_module.id })
   end
