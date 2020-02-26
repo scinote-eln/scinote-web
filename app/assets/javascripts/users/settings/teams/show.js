@@ -11,17 +11,6 @@
     });
   }
 
-  function AddUserButtonTemplate() {
-    return `
-      <a href="#" class="btn btn-primary" data-trigger="invite-users"
-         data-turbolinks="false" data-modal-id="team-invite-users-modal"
-      >
-        <span class="fas fa-plus"></span>
-        ${I18n.t('users.settings.teams.edit.add_user')}
-      </a>
-    `;
-  }
-
   // Initialize users DataTable
   function initUsersTable() {
     usersDatatable = $('#users-table').DataTable({
@@ -70,7 +59,7 @@
         sSearch: I18n.t('general.filter')
       }
     });
-    $('.users-datatable .add-new-team-members').html(AddUserButtonTemplate());
+    $('#add-new-team-members-button').detach().appendTo('.users-datatable .add-new-team-members').removeClass('hidden');
     setTimeout(() => { $('#users-table').css('width', '100%'); }, 300);
   }
 

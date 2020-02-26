@@ -16,6 +16,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_admin_of_team?(team)
   end
 
+  # team: invite new users to the team
+  can :invite_team_users do
+    true
+  end
+
   # project: create
   can :create_projects do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
