@@ -1,4 +1,4 @@
-/* global dropdownSelector I18n animateSpinner */
+/* global dropdownSelector I18n animateSpinner PerfectSb */
 /* eslint-disable no-param-reassign */
 
 var DasboardCurrentTasksWidget = (function() {
@@ -6,6 +6,11 @@ var DasboardCurrentTasksWidget = (function() {
   var viewFilter = '.curent-tasks-filters .view-filter';
   var projectFilter = '.curent-tasks-filters .project-filter';
   var experimentFilter = '.curent-tasks-filters .experiment-filter';
+  var emptyState = `<div class="no-tasks">
+                      <p class="text-1">${ I18n.t('dashboard.current_tasks.no_tasks.text_1') }</p>
+                      <p class="text-2">${ I18n.t('dashboard.current_tasks.no_tasks.text_2') }</p>
+                      <i class="fas fa-angle-double-down"></i>
+                    </div>`;
 
   function loadCurrentTasksList() {
     var $currentTasksList = $('.current-tasks-list');
@@ -18,6 +23,12 @@ var DasboardCurrentTasksWidget = (function() {
     };
     animateSpinner($currentTasksList, true);
     $.get($currentTasksList.attr('data-tasks-list-url'), params, function(data) {
+      // Toggle empty state
+      if (data.tasks_list.length === 0) {
+        $currentTasksList.append(emptyState);
+      } else {
+        $currentTasksList.find('.no-tasks').remove();
+      }
       // Clear the list
       $currentTasksList.find('.current-task-item').remove();
       $.each(data.tasks_list, (i, task) => {
@@ -50,6 +61,7 @@ var DasboardCurrentTasksWidget = (function() {
                            </a>`;
         $currentTasksList.append(currentTaskItem);
       });
+      PerfectSb().update_all();
       animateSpinner($currentTasksList, false);
     });
   }

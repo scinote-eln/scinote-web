@@ -21,6 +21,9 @@ en:
         experiment: "Experiment"
         select_experiment: "Select Experiment"
         apply: "Apply"
+      no_tasks:
+        text_1: "Looks like you completed all of your tasks. Good job!"
+        text_2: "Why not use use the Quick start section to create your next task"
       due_date: "Due date: %{date}"
       progress_bar:
         in_progress: "In progress"

@@ -27,6 +27,12 @@
         padding: 4px 0;
       }
     }
+
+    .widget-body {
+      height: calc(100% - 44px);
+      position: absolute;
+      width: 100%;
+    }
   }
 }
 

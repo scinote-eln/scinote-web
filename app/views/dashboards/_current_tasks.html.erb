@@ -50,13 +50,13 @@
     </div>
 
     <div class="sci-secondary-navbar current-tasks-navbar">
-      <a class="navbar-assigned active" href="" data-remote="true" data-mode="assigned"><%= t("dashboard.current_tasks.navbar.assigned") %></a>
-      <a class="navbar-all" href="" data-remote="true" data-mode="team"><%= t("dashboard.current_tasks.navbar.all") %></a>
+      <a class="navbar-link navbar-assigned active" href="" data-remote="true" data-mode="assigned"><%= t("dashboard.current_tasks.navbar.assigned") %></a>
+      <a class="navbar-link navbar-all" href="" data-remote="true" data-mode="team"><%= t("dashboard.current_tasks.navbar.all") %></a>
     </div>
   </div>
 
-  <div class="widger-body">
-    <div class="current-tasks-list"
+  <div class="widget-body">
+    <div class="current-tasks-list perfect-scrollbar"
          data-tasks-list-url="<%= dashboard_current_tasks_path %>">
     </div>
   </div>
