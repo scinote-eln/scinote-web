@@ -245,6 +245,10 @@ Rails.application.routes.draw do
         get :project_filter
         get :experiment_filter
       end
+
+      resource :calendar, module: 'dashboard', only: [:show] do
+        get :day
+      end
     end
 
     resources :projects, except: [:new, :destroy] do

@@ -22,3 +22,13 @@ en:
         overdue: "Overdue: %{steps} / %{total_steps}"
         completed: "Completed"
         locked: "Locked"
+    calendar:
+      due_on: Due on
+      dow:
+        su: 'Su'
+        mo: 'Mo'
+        tu: 'Tu'
+        we: 'We'
+        th: 'Th'
+        fr: 'Fr'
+        sa: 'Sa'

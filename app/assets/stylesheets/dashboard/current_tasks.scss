@@ -159,6 +159,12 @@
   }
 }
 
+@media (max-width: 1250px) {
+  .dashboard-container .current-tasks-widget {
+    grid-column: 1 / span 8;
+  }
+}
+
 @media (max-width: 1000px) {
   .dashboard-container .current-tasks-widget {
     grid-column: 1 / span 12;

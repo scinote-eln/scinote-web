@@ -1,0 +1,19 @@
+<div class="my-modules-list-partial">
+  <% task_groups.each do |task_group| %>
+  <div class="task-group">
+    <div class="header">
+      <span class="project" title="<%= task_group[:project_name] %>"><%= task_group[:project_name] %></span>
+      <span class="slash">/</span>
+      <span class="experiment" title="<%= task_group[:experiment_name] %>"><%= task_group[:experiment_name] %></span>
+    </div>
+    <div class="tasks">
+      <% task_group[:tasks].each do |task| %>
+      <div class="task">
+        <%= draw_custom_icon('task-icon') %>
+        <%= link_to(task[:task_name], protocols_my_module_path(task[:id]), {class: "task-link", title: task[:task_name]}) %>
+      </div>
+      <% end %>
+    </div>
+  <% end %>
+  </div>
+</div>
