@@ -41,3 +41,18 @@ en:
         th: 'Th'
         fr: 'Fr'
         sa: 'Sa'
+    quick_start:
+      title: "Quick start"
+      description: "Quickly start a new task, create a new project or a new report."
+      new_task: "New task"
+      new_protocol: "New protocol"
+      new_report: "New report"
+    create_task_modal:
+      title: "Create a new Task"
+      description: "Simply type in the fields bellow to find or create space for your new task to live in"
+      project: "Project"
+      experiment: "Experiment"
+      project_placeholder: "Enter project name (New or Existing)"
+      experiment_placeholder: "Enter experiment name (New or Existing)"
+      experiment_disabled_placeholder: "Select Project to enable Experiments"
+      create_task: "Create Task"

@@ -1,2 +1,20 @@
 <div class="quick-start-widget basic-widget">
+  <div class="widget-header">
+    <div class="widget-title">
+      <%= t("dashboard.quick_start.title") %>
+    </div>
+  </div>
+  <div class="widget-body">
+    <div class="quick-start-description">
+      <%= t("dashboard.quick_start.description") %>
+    </div>
+    <div class="new-task btn btn-secondary btn-block"><i class="fas fa-plus"></i><%= t("dashboard.quick_start.new_task") %></div>
+    <%= link_to protocols_path(new_protocol: true), {class: "new-protocol btn btn-secondary btn-block"} do %>
+      <i class="fas fa-edit"></i><%= t("dashboard.quick_start.new_protocol") %>
+    <% end %>
+    <%= link_to reports_path(new_report: true), {class: "new-report btn btn-secondary btn-block"} do %>
+      <i class="fas fa-clipboard-check"></i><%= t("dashboard.quick_start.new_report") %>
+    <% end %>
+  </div>
 </div>
+<%= render "create_task_modal" %>

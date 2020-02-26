@@ -1,5 +1,5 @@
-
 .dashboard-container {
+  --widget-header-size: 44px;
   --dashboard-widgets-gap: 30px;
   display: grid;
   grid-column-gap: var(--dashboard-widgets-gap);
@@ -19,17 +19,17 @@
       align-items: center;
       border-bottom: $border-tertiary;
       display: flex;
-      height: 44px;
 
-      h2 {
-        line-height: 18px;
-        margin: 10px 16px;
-        padding: 4px 0;
+      height: var(--widget-header-size);
+      padding-left: 16px;
+
+      .widget-title {
+        @include font-h2;
       }
     }
 
     .widget-body {
-      height: calc(100% - 44px);
+      height: calc(100% - var(--widget-header-size));
       position: absolute;
       width: 100%;
     }
