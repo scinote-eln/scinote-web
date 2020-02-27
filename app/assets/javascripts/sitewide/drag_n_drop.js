@@ -178,7 +178,6 @@
     var totalSize = 0;
     var fileMaxSizeMb;
     var fileMaxSize;
-    var uploadedFilesCounter = 0;
 
     // return the status of files if they are ready to submit
     function filesStatus() {
@@ -187,14 +186,6 @@
 
     function clearFiles() {
       droppedFiles = [];
-    }
-
-    function incrementUploadedFilesCounter() {
-      uploadedFilesCounter += 1;
-    }
-
-    function getUploadedFilesCounter() {
-      return uploadedFilesCounter;
     }
 
     function dragNdropAssetsOff() {
@@ -210,14 +201,14 @@
         const form = $(ev.target).closest('form').get(0);
         const url = $(form).find('#drag-n-drop-assets').data('directUploadUrl');
         const regex = /step\[assets_attributes\]\[[0-9]*\]\[id\]/;
-        const numberOfFiles = droppedFiles.length;
+        const lastIndex = droppedFiles.length - 1;
         let prevEls = $('input').filter(function() {
           return this.name.match(regex);
         });
 
         let fd = new FormData(form);
+        let index = 0;
 
-        uploadedFilesCounter = 0;
         fd.delete('step[file][]');
 
         if (droppedFiles.length === 0) {
@@ -225,22 +216,25 @@
           return;
         }
 
-        for (let i = 0; i < droppedFiles.length; i += 1) {
-          let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
-          let index = i + prevEls.length;
+        const uploadFile = (file) => {
+          let upload = new ActiveStorage.DirectUpload(file, url);
 
           upload.create(function(error, blob) {
             if (error) {
               reject(error);
             } else {
-              fd.append('step[assets_attributes][' + index + '][signed_blob_id]', blob.signed_id);
-              incrementUploadedFilesCounter();
-              if (getUploadedFilesCounter() === numberOfFiles) {
+              fd.append('step[assets_attributes][' + (index + prevEls.length) + '][signed_blob_id]', blob.signed_id);
+              if (index === lastIndex) {
                 resolve(fd);
+                return;
               }
+              index += 1;
+              uploadFile(droppedFiles[index]);
             }
           });
-        }
+        };
+
+        uploadFile(droppedFiles[index]);
 
         filesValid = true;
         totalSize = 0;
@@ -463,26 +457,31 @@
     function appendFilesToForm(ev, fd) {
       const form = $(ev.target.form);
       const url = form.find('#drag-n-drop-assets').data('directUploadUrl');
-      const numberOfFiles = droppedFiles.length;
-      var counter = 0;
+      const lastIndex = droppedFiles.length - 1;
 
-      for (let i = 0; i < numberOfFiles; i += 1) {
-        let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
+      let index = 0;
 
-        upload.create(function(error, blob) {
+      const uploadFile = (file) => {
+        const upload = new ActiveStorage.DirectUpload(file, url);
+
+        upload.create((error, blob) => {
           if (error) {
             // Handle the error
           } else {
-            fd.append('results_names[' + i + ']', $('input[name="results[name][' + i + ']"]').val());
-            fd.append('results_files[' + i + '][signed_blob_id]', blob.signed_id);
-            counter += 1;
-            if (counter === numberOfFiles) {
+            fd.append('results_names[' + index + ']', $('input[name="results[name][' + index + ']"]').val());
+            fd.append('results_files[' + index + '][signed_blob_id]', blob.signed_id);
+            if (index === lastIndex) {
               submitResultForm($(ev.target).attr('data-href'), fd);
               destroyAll();
+              return;
             }
+            index += 1;
+            uploadFile(droppedFiles[index]);
           }
         });
-      }
+      };
+
+      uploadFile(droppedFiles[index]);
     }
 
     /* eslint no-param-reassign: ["error", { "props": false }] */
