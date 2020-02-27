@@ -87,7 +87,11 @@
   .tree-link {
     display: flex;
 
-    a:not(.canvas-center-on) {
+    .btn-secondary {
+      background: transparent;
+    }
+
+    a:not(.canvas-center-on, .btn) {
       width: 100%;
     }
 
