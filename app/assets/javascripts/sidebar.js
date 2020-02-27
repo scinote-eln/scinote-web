@@ -272,4 +272,60 @@
   });
 
   scrollToSelectedItem();
-}(window));
+});
+
+
+
+var Sidebar = (function() {
+
+  const SIDEBAR_ID = '#slide-panel';
+  const STORAGE_TREE_KEY = 'scinote-sidebar-tree-state';
+  const STORAGE_SCROLL_TREE_KEY = 'scinote-sidebar-tree-scroll-state';
+
+  function toggleTree($tree_childs) {
+    $tree_childs.toggleClass('hidden')
+    $.each($tree_childs, (i, tree_child) => {
+      $(tree_child).closest('.branch').find('.tree-toggle').first().toggleClass('fa-caret-down').toggleClass('fa-caret-right')
+    })
+  }
+
+  function saveCurrentState() {
+    var config = []
+    $.each($(SIDEBAR_ID).find('.tree-child:not(:hidden)'), (i, branch) => {
+      config.push(`[data-branch-id=${branch.dataset.branchId}]`)
+    })
+    sessionStorage.setItem(STORAGE_TREE_KEY, config.join(','));
+  }
+
+  function initSideBar() {
+    $(SIDEBAR_ID).on('click', '.tree-toggle', function() {
+      var $tree_child = $(this).closest('.branch').find('.tree-child').first()
+      toggleTree($tree_child)
+      saveCurrentState();
+      PerfectSb().update_all();
+    })
+
+    $(SIDEBAR_ID).find('.tree').scroll(function() {
+      sessionStorage.setItem(STORAGE_SCROLL_TREE_KEY, $(this).scrollTop());
+    })
+
+    toggleTree($(SIDEBAR_ID).find('.tree-child[data-active="true"]'))
+    toggleTree($(SIDEBAR_ID).find('.tree-child.hidden').filter(sessionStorage.getItem(STORAGE_TREE_KEY)))
+    $('#wrapper').show();
+
+    PerfectSb().update_all();
+    $(SIDEBAR_ID).find('.tree').scrollTo(sessionStorage.getItem(STORAGE_SCROLL_TREE_KEY));
+  }
+
+  return {
+    init: (mode) => {
+      if ($(SIDEBAR_ID).length) {
+        initSideBar()
+      }
+    }
+  };
+}());
+
+$(document).on('turbolinks:load', function() {
+  Sidebar.init();
+});

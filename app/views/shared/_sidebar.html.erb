@@ -12,7 +12,11 @@
     <div class="tree perfect-scrollbar" data-scroll="<%= params[:scroll] %>">
       <ul>
         <% cache [action_name, current_user, current_team] do %>
-          <%= render partial: 'shared/sidebar/projects' %>
+          <%= render partial: 'shared/sidebar/projects', locals: {
+            current_project: current_project,
+            current_experiment: current_experiment,
+            current_task: current_task
+          }  %>
         <% end %>
       </ul>
     </div>

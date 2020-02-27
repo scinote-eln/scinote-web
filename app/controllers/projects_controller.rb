@@ -69,11 +69,20 @@ class ProjectsController < ApplicationController
   end
 
   def sidebar
+    current_task ||= current_task || nil
+    current_experiment ||= current_experiment || current_task&.experiment || nil
+    current_project ||= current_experiment&.project || current_task&.experiment&.project || nil
+
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
             partial: 'shared/sidebar/projects.html.erb',
+            locals: {
+              current_project: current_project,
+              current_experiment: current_experiment,
+              current_task: current_task
+            },
             formats: :html
           )
         }
