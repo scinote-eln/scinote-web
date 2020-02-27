@@ -493,11 +493,24 @@ class MyModule < ApplicationRecord
   end
 
   def completed_steps_percentage
-    if protocol && protocol.steps.count.positive?
+    if protocol && protocol.steps.any?
+      steps_percentage_sql = <<-SQL
+        SELECT
+          COUNT(steps.id) AS all,
+          SUM (CASE WHEN steps.completed = TRUE THEN 1 ELSE 0 END) AS completed,
+          SUM (CASE WHEN steps.completed = TRUE THEN 1 ELSE 0 END)* 100 / (COUNT(steps.id)) AS percentage
+        FROM my_modules
+        INNER JOIN protocols ON protocols.my_module_id = my_modules.id
+        INNER JOIN steps ON steps.protocol_id = protocols.id
+        WHERE my_modules.id = #{id}
+        GROUP BY my_modules.id
+        ORDER BY my_modules.id
+      SQL
+      steps_percentage = ActiveRecord::Base.connection.execute(steps_percentage_sql)
       {
-        completed_steps: protocol.steps.count(&:completed),
-        all_steps: protocol.steps.count,
-        percentage: (protocol.steps.count(&:completed).fdiv(protocol.steps.count) * 100).round
+        completed_steps: steps_percentage[0]['completed'],
+        all_steps: steps_percentage[0]['all'],
+        percentage: steps_percentage[0]['percentage']
       }
     else
       0
