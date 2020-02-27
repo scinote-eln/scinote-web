@@ -506,7 +506,7 @@ var dropdownSelector = (function() {
     container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .delimiter').remove();
     if (!data) return;
 
-    if (data.length > 0) {
+    if (data.length > 0 && !(data.length === 1 && data[0].value === '')) {
       // If we use select-by-group option we need first draw groups
       if (selector.data('select-by-group')) {
         $.each(data, function(gi, group) {
@@ -741,14 +741,14 @@ var dropdownSelector = (function() {
       ajaxParams = customParams ? customParams(defaultParams) : defaultParams;
 
       $.get(selector.data('ajax-url'), ajaxParams, (data) => {
-        var optionsAjax = data;
+        var optionsAjax = data.constructor === Array ? data : [];
         if (selector.data('config').emptyOptionAjax) {
           optionsAjax = [{
-            label: '',
+            label: selector.data('placeholder') || '',
             value: '',
             group: null,
             params: {}
-          }].concat(data);
+          }].concat(optionsAjax);
         }
         loadData(selector, container, optionsAjax);
         PerfectSb().update_all();

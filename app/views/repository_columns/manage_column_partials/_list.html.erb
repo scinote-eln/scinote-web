@@ -31,7 +31,7 @@
   </div>
 </div>
   <div class="col-sm-9">
-    <%= text_area_tag 'items-textarea', column.repository_list_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea' %>
+    <%= text_area_tag 'items-textarea', column.repository_list_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea', name: "repository_column[repository_list_items]" %>
     <% unless column.new_record? %>
       <div class="bg-danger hidden changing-existing-list-items-warning">
         <%= t('libraries.manange_modal_column.change_multi_select_items_warning') %>

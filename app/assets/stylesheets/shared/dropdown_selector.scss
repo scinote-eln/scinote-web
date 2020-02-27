@@ -163,9 +163,14 @@
         background: $color-concrete;
       }
 
+      &[data-value=""] {
+        opacity: .7;
+      }
+
       &.select {
         background: $brand-primary;
         color: $color-white;
+        opacity: 1;
       }
 
     }
@@ -267,6 +272,10 @@
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+
+          &[data-ds-tag-id=""] {
+            opacity: .7;
+          }
         }
 
         .fa-times {

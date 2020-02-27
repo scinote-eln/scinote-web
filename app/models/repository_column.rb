@@ -27,6 +27,9 @@ class RepositoryColumn < ApplicationRecord
             uniqueness: { scope: :repository_id, case_sensitive: true }
   validates :name, :data_type, :repository, :created_by, presence: true
 
+  validates :repository_list_items, presence: { if: proc { |collumn| collumn.data_type == 'RepositoryListValue' } }
+  validates :repository_status_items, presence: { if: proc { |collumn| collumn.data_type == 'RepositoryStatusValue' } }
+
   after_create :update_repository_table_states_with_new_column
   around_destroy :update_repository_table_states_with_removed_column
 
