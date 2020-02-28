@@ -492,6 +492,31 @@ class MyModule < ApplicationRecord
     state == 'completed'
   end
 
+  def completed_steps_percentage
+    if protocol.steps.any?
+      steps_percentage =
+        MyModule.joins(protocols: :steps)
+                .where(id: id)
+                .group(:id)
+                .select('my_modules.*')
+                .select('COUNT(steps.id) AS all')
+                .select('COUNT(steps.id) FILTER (where steps.completed = true) AS completed')
+                .select('((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) AS percentage')
+                .take
+      {
+        completed_steps: steps_percentage.completed,
+        all_steps: steps_percentage.all,
+        percentage: steps_percentage.percentage
+      }
+    else
+      {
+        completed_steps: 0,
+        all_steps: 0,
+        percentage: 0
+      }
+    end
+  end
+
   # Check if my_module is ready to become completed
   def check_completness_status
     if protocol && protocol.steps.count > 0
@@ -512,6 +537,21 @@ class MyModule < ApplicationRecord
   def uncomplete
     self.state = 'uncompleted'
     self.completed_on = nil
+  end
+
+  def self.my_modules_list_partial
+    ungrouped_tasks = joins(experiment: :project)
+                      .select('experiments.name as experiment_name,
+                               projects.name as project_name,
+                               my_modules.name as task_name,
+                               my_modules.id')
+    ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
+      {
+        project_name: group[0],
+        experiment_name: group[1],
+        tasks: tasks.map { |task| { id: task.id, task_name: task.task_name } }
+      }
+    end
   end
 
   private

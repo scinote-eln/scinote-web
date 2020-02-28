@@ -1,6 +1,10 @@
 en:
   dashboard:
     current_tasks:
+      title: "Current tasks"
+      navbar:
+        assigned: "Assigned to me"
+        all: "All"
       filter:
         title: "Filters"
         clear: "Clear"
@@ -10,15 +14,30 @@ en:
         atoz: "From A to Z"
         ztoa: "From Z to A"
         display: "Display"
-        active_tasks: "Only active tasks"
-        locked_tasks: "Only completed and locked tasks"
+        uncompleted_tasks: "Only in progress tasks"
+        completed_tasks: "Only completed tasks"
         project: "Project"
         select_project: "Select Project"
         experiment: "Experiment"
         select_experiment: "Select Experiment"
         apply: "Apply"
+      no_tasks:
+        text_1: "Looks like you completed all of your tasks. Good job!"
+        text_2: "Why not use use the Quick start section to create your next task"
+      due_date: "Due date: %{date}"
       progress_bar:
-        in_progress: "In progress: %{steps} / %{total_steps}"
-        overdue: "Overdue: %{steps} / %{total_steps}"
+        in_progress: "In progress"
+        overdue: "Overdue"
+        completed_steps: ": %{steps} / %{total_steps}"
         completed: "Completed"
         locked: "Locked"
+    calendar:
+      due_on: Due on
+      dow:
+        su: 'Su'
+        mo: 'Mo'
+        tu: 'Tu'
+        we: 'We'
+        th: 'Th'
+        fr: 'Fr'
+        sa: 'Sa'

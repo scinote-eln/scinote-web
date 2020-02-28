@@ -249,6 +249,10 @@ Rails.application.routes.draw do
       namespace :quick_start, module: :dashboard, controller: :quick_start do
         post :create_task
       end
+
+      resource :calendar, module: 'dashboard', only: [:show] do
+        get :day
+      end
     end
 
     resources :projects, except: [:new, :destroy] do
