@@ -78,24 +78,21 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
 
           <% if type.in?(['invite_with_team_selector', 'invite_with_team_selector_and_role']) %>
             <% # Only allow inviting to teams where user is admin %>
-            <% uos = current_user ? current_user.user_teams.where(role: UserTeam.roles[:admin]).joins(:team) : [] %>
-            <% if uos.count > 0 %>
+            <% teams = current_user.teams
+                                   .joins(:user_teams)
+                                   .where('user_teams.role': UserTeam.roles[:admin])
+                                   .select { |team|  can_invite_team_users?(team) } %>
+            <% if teams.any? %>
               <div class="team-selector">
                 <div class="heading">
                   <input type="checkbox" data-role="team-selector-checkbox" />
                   <span><%= t('invite_users.invite_to_team_heading') %></span>
                 </div>
-                <%= select_tag(
-                  'team-select',
-                  options_for_select(
-                    uos.pluck('teams.name', 'teams.id')
-                  ),
-                  {
-                    class: 'form-control selectpicker',
-                    'data-role' => 'team-selector-dropdown',
-                    disabled: 'disabled'
-                  }
-                ) %>
+                <%= select_tag('team-select',
+                               options_for_select(teams.pluck(:name, :id)),
+                               { class: 'form-control selectpicker',
+                                 'data-role' => 'team-selector-dropdown',
+                                 disabled: 'disabled' }) %>
               </div>
             <% end %>
           <% end %>
