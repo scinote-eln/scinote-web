@@ -1,6 +1,32 @@
 .dashboard-container .quick-start-widget {
-  grid-column: 1 / span 3;
+  grid-column: 1 / span 2;
   grid-row: 7 / span 6;
+
+  .widget-body {
+    padding: 16px;
+
+    .quick-start-description {
+      margin-bottom: 24px;
+    }
+
+    .btn-secondary {
+      margin-bottom: 8px;
+      text-align: left;
+    }
+  }
+}
+
+@media (max-width: 1700px) {
+  .dashboard-container .quick-start-widget {
+    grid-column: 1 / span 3;
+  }
+}
+
+
+@media (max-width: 1250px) {
+  .dashboard-container .quick-start-widget {
+    grid-column: 1 / span 4;
+  }
 }
 
 @media (max-width: 1000px) {

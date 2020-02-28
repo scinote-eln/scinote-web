@@ -1,0 +1,28 @@
+#create-task-modal {
+  .modal-dialog {
+    width: 360px;
+
+    .description {
+      margin-bottom: 20px;
+    }
+
+    .select-block {
+      display: inline-block;
+      padding-bottom: 16px;
+      position: relative;
+      width: 100%;
+
+      label {
+        @include font-small;
+        display: inline-block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        user-select: none;
+      }
+    }
+
+    .modal-footer {
+      text-align: center;
+    }
+  }
+}
