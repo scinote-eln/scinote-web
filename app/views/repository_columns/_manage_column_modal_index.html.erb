@@ -14,7 +14,7 @@
 <div class="modal-footer">
   <% if can_create_repository_columns?(@repository)%>
     <button id="new-repo-column-modal"
-            class="btn btn-light help_tooltips manage-repo-column"
+            class="btn btn-secondary help_tooltips manage-repo-column"
             data-modal-url="<%= repository_columns_create_html_path(@repository) %>"
             data-action="new"
             data-tooltiplink="<%= I18n.t('tooltips.link.inventory.manage_columns') %>"
