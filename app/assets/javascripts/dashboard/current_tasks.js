@@ -22,7 +22,7 @@ var DasboardCurrentTasksWidget = (function() {
       mode: $('.current-tasks-navbar .active').data('mode')
     };
     animateSpinner($currentTasksList, true);
-    $.get($currentTasksList.attr('data-tasks-list-url'), params, function(data) {
+    $.get($currentTasksList.data('tasksListUrl'), params, function(data) {
       // Toggle empty state
       if (data.tasks_list.length === 0) {
         $currentTasksList.append(emptyState);
@@ -143,7 +143,9 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function initNavbar() {
-    $('.navbar-assigned, .navbar-all').on('click', function() {
+    $('.navbar-assigned, .navbar-all').on('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
       $('.current-tasks-navbar').find('a').removeClass('active');
       $(this).addClass('active');
       loadCurrentTasksList();

@@ -34,20 +34,23 @@ module Dashboard
         tasks
       end
 
+      tasks = tasks.with_step_statistics.preload(experiment: :project)
+
       respond_to do |format|
         format.json do
           render json: {
             tasks_list: tasks.map do |task|
-              due_date = I18n.l(task.due_date, format: :full_with_comma) if task.due_date.present?
               { id: task.id,
                 link: protocols_my_module_path(task.id),
-                experiment: task.experiment.name,
-                project: task.experiment.project.name,
+                experiment: escape_input(task.experiment.name),
+                project: escape_input(task.experiment.project.name),
                 name: escape_input(task.name),
-                due_date: due_date,
+                due_date: task.due_date.present? ? I18n.l(task.due_date, format: :full_with_comma) : nil,
                 overdue: task.is_overdue?,
                 state: task.state,
-                steps_state: task.completed_steps_percentage }
+                steps_state: { completed_steps: task.steps_completed,
+                               all_steps: task.steps_total,
+                               percentage: task.steps_completed_percentage } }
             end,
             status: :ok
           }
@@ -80,9 +83,7 @@ module Dashboard
     private
 
     def task_filters
-      params.permit(
-        :project_id, :experiment_id, :mode, :view, :sort
-      )
+      params.permit(:project_id, :experiment_id, :mode, :view, :sort)
     end
 
     def load_project
