@@ -492,6 +492,31 @@ class MyModule < ApplicationRecord
     state == 'completed'
   end
 
+  def completed_steps_percentage
+    if protocol.steps.any?
+      steps_percentage =
+        MyModule.joins(protocols: :steps)
+                .where(id: id)
+                .group(:id)
+                .select('my_modules.*')
+                .select('COUNT(steps.id) AS all')
+                .select('COUNT(steps.id) FILTER (where steps.completed = true) AS completed')
+                .select('((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) AS percentage')
+                .take
+      {
+        completed_steps: steps_percentage.completed,
+        all_steps: steps_percentage.all,
+        percentage: steps_percentage.percentage
+      }
+    else
+      {
+        completed_steps: 0,
+        all_steps: 0,
+        percentage: 0
+      }
+    end
+  end
+
   # Check if my_module is ready to become completed
   def check_completness_status
     if protocol && protocol.steps.count > 0
