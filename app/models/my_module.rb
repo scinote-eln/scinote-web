@@ -80,6 +80,15 @@ class MyModule < ApplicationRecord
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
+  scope :with_step_statistics, (lambda do
+    joins(protocols: :steps)
+    .group(:id)
+    .select('my_modules.*')
+    .select('COUNT(steps.id) AS steps_total')
+    .select('COUNT(steps.id) FILTER (where steps.completed = true) AS steps_completed')
+    .select('((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) '\
+            'AS steps_completed_percentage')
+  end)
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
@@ -490,31 +499,6 @@ class MyModule < ApplicationRecord
 
   def completed?
     state == 'completed'
-  end
-
-  def completed_steps_percentage
-    if protocol.steps.any?
-      steps_percentage =
-        MyModule.joins(protocols: :steps)
-                .where(id: id)
-                .group(:id)
-                .select('my_modules.*')
-                .select('COUNT(steps.id) AS all')
-                .select('COUNT(steps.id) FILTER (where steps.completed = true) AS completed')
-                .select('((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) AS percentage')
-                .take
-      {
-        completed_steps: steps_percentage.completed,
-        all_steps: steps_percentage.all,
-        percentage: steps_percentage.percentage
-      }
-    else
-      {
-        completed_steps: 0,
-        all_steps: 0,
-        percentage: 0
-      }
-    end
   end
 
   # Check if my_module is ready to become completed
