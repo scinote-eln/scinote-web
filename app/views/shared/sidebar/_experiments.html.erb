@@ -3,7 +3,7 @@
     <% project.active_experiments.each do |experiment| %>
       <% cache [action_name, current_user, experiment] do %>
         <li data-parent="candidate" class="branch <%= 'active' if experiment_page? && current_experiment == experiment %>">
-          <span class="tree-link line-wrap first-indent" title="<%= experiment.name %>">
+          <span class="tree-link first-indent" title="<%= experiment.name %>">
             <% if experiment.active_my_modules.any? %>
               <i class="fas fa-caret-right tree-toggle"></i>
             <% end %>
@@ -13,9 +13,6 @@
                         style: (current_experiment == experiment ? 'font-weight: bold' : ''),
                         data: { type: 'experiment', id: experiment.id }
                         %>
-            <% if experiment_page? && current_experiment == experiment && action_name =='canvas' %>
-              <a href="" class="canvas-center-on"><span class="fas fa-map-marker-alt"></span></a>
-            <% end %>
           </span>
           <%= render partial: 'shared/sidebar/my_modules', locals: {
             experiment: experiment,

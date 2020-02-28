@@ -1,9 +1,9 @@
  <%= content_for :sidebar do %>
   <div id="slide-panel" class="visible">
     <div id="repo-tree" class="tree">
-      <ul>
+      <ul class="sidebar-root">
         <% if can_create_repositories?(current_team) %>
-          <li>
+          <li class="branch">
             <span class="tree-link no-indent">
               <a class="sidebar-button create-new-repository" data-remote="true"
                  href="<%= create_modal_team_repositories_path(current_team) %>">
@@ -14,7 +14,7 @@
           </li>
         <% end %>
         <% repositories.each do |repository| %>
-          <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
+          <li class="branch <%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
             <span class="tree-link no-indent" title="<%= repository.name %>">
               <%= link_to repository.name,
                           repository_path(repository),

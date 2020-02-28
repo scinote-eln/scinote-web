@@ -7,6 +7,9 @@
                       module_action_to_link_to(my_module),
                       class: 'line-wrap',
                       data: { type: 'my_module', id: my_module.id } %>
+          <% if experiment_page? && current_experiment == experiment && action_name =='canvas' %>
+            <a href="" class="canvas-center-on"><i class="fas fa-map-marker-alt"></i></a>
+          <% end %>
         </span>
       </li>
     <% end %>

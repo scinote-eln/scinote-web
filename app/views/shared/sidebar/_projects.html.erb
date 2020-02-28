@@ -1,4 +1,4 @@
-<ul>
+<ul class="sidebar-root">
   <% @projects_tree.each do |project| %>
     <% cache [action_name, current_user, project] do %>
       <li data-parent="candidate"
