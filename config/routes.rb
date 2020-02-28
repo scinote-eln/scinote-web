@@ -246,6 +246,10 @@ Rails.application.routes.draw do
         get :experiment_filter
       end
 
+      namespace :quick_start, module: :dashboard, controller: :quick_start do
+        post :create_task
+      end
+
       resource :calendar, module: 'dashboard', only: [:show] do
         get :day
       end
