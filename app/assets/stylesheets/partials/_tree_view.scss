@@ -24,6 +24,11 @@
       height: 50px;
       position: relative;
 
+      .btn-secondary {
+        background: transparent;
+        margin-left: 20px;
+      }
+
       .tree-toggle {
         cursor: pointer;
         display: inline-block;
