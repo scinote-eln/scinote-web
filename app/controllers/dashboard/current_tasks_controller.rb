@@ -4,16 +4,15 @@ module Dashboard
   class CurrentTasksController < ApplicationController
     include InputSanitizeHelper
 
-    before_action :check_view_permissions, only: :show
+    before_action :load_project, only: %i(show experiment_filter)
+    before_action :load_experiment, only: :show
+    before_action :check_task_view_permissions, only: :show
 
     def show
-      project = current_team.projects.find_by(id: task_filters[:project_id]) if task_filters[:project_id]
-      experiment = project.experiments.find_by(id: task_filters[:experiment_id]) if task_filters[:experiment_id]
-
-      tasks = if experiment
-                experiment.my_modules.active
-              elsif project
-                MyModule.active.joins(:experiment).where('experiments.project_id': project.id)
+      tasks = if @experiment
+                @experiment.my_modules.active
+              elsif @project
+                MyModule.active.joins(:experiment).where('experiments.project_id': @project.id)
               else
                 MyModule.active.viewable_by_user(current_user, current_team)
               end
@@ -66,12 +65,11 @@ module Dashboard
     end
 
     def experiment_filter
-      project = current_team.projects.find_by(id: params[:project_id])
-      unless project
+      unless @project
         render json: []
         return false
       end
-      experiments = project.experiments.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
+      experiments = @project.experiments.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
       unless params[:mode] == 'team'
         experiments = experiments.where(id: current_user.my_modules
           .group(:experiment_id).select(:experiment_id).pluck(:experiment_id))
@@ -87,12 +85,17 @@ module Dashboard
       )
     end
 
-    def check_view_permissions
-      experiment = Experiment.find_by_id(params[:experiment_id])
-      project = Project.find_by_id(params[:project_id])
+    def load_project
+      @project = current_team.projects.find_by(id: params[:project_id])
+    end
 
-      render_403 if project && !can_read_project?(project)
-      render_403 if experiment && !can_read_experiment?(experiment)
+    def load_experiment
+      @experiment = @project.experiments.find_by(id: params[:experiment_id]) if @project
+    end
+
+    def check_task_view_permissions
+      render_403 if @project && !can_read_project?(@project)
+      render_403 if @experiment && !can_read_experiment?(@experiment)
     end
   end
 end

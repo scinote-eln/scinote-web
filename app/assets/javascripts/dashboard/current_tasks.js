@@ -33,7 +33,7 @@ var DasboardCurrentTasksWidget = (function() {
       $currentTasksList.find('.current-task-item').remove();
       $.each(data.tasks_list, (i, task) => {
         var currentTaskItem;
-        var stepsPercentage = (task.steps_state === 0) ? '' : task.steps_state.percentage + '%';
+        var stepsPercentage = task.steps_state.percentage + '%';
         var stateText;
         var dueDate = (task.due_date !== null) ? '<i class="fas fa-calendar-day"></i>'
           + I18n.t('dashboard.current_tasks.due_date', { date: task.due_date }) : '';
@@ -43,7 +43,7 @@ var DasboardCurrentTasksWidget = (function() {
         } else {
           stateText = I18n.t('dashboard.current_tasks.progress_bar.in_progress');
           if (task.overdue) { stateText = I18n.t('dashboard.current_tasks.progress_bar.overdue'); }
-          if (task.steps_state !== 0) {
+          if (task.steps_state.all_steps !== 0) {
             stateText += I18n.t('dashboard.current_tasks.progress_bar.completed_steps',
               { steps: task.steps_state.completed_steps, total_steps: task.steps_state.all_steps });
           }
