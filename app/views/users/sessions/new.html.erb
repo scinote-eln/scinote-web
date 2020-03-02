@@ -1,36 +1,26 @@
 <% provide(:head_title, t("devise.sessions.new.head_title")) %>
 
-<div class="center-block center-block-narrow">
-  <h1><%=t "devise.sessions.new.title" %></h1>
+<div class="center-block center-block-narrow" style="margin-top: 64px">
+  <h1 style="width: 250px"><%=t "devise.sessions.new.title" %></h1>
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="input-group">
-      <span class="input-group-addon" style="text-transform: capitalize;">
-        <%= :email %>
-      </span>
-      <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: t("devise.sessions.new.email_placeholder") %>
+    <div class="sci-input-container" style=" width: 315px">
+      <%= f.label :email %>
+      <%= f.email_field :email, autofocus: true, class: "sci-input-field", placeholder: t("devise.sessions.new.email_placeholder") %>
     </div>
 
-    <div class="input-group" style="margin-top: 10px;">
-      <span class="input-group-addon" style="text-transform: capitalize;">
-        <%= :password %>
-      </span>
-      <%= f.password_field :password, autocomplete: "off", class: "form-control", placeholder: t("devise.sessions.new.password_placeholder") %>
+    <div class="sci-input-container" style="margin-top: 20px; width: 315px">
+      <%= f.label :password %>
+      <%= f.password_field :password, autocomplete: "off", class: "sci-input-field", placeholder: t("devise.sessions.new.password_placeholder") %>
     </div>
 
-    <% if devise_mapping.rememberable? && !@simple_sign_in %>
-      <div class="field" style="margin-top: 10px;">
-        <%= f.check_box :remember_me %>
-        <%= f.label :remember_me %>
-      </div>
-    <% end %>
 
     <%= hidden_field_tag(:simple_sign_in, @simple_sign_in) %>
-
-    <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
-      <%= f.submit t("devise.sessions.new.submit"), class: "btn btn-primary" %>
+    <div style="display: flex; margin-top: 20px; margin-bottom: 10px;">
+      <div class="actions" style="margin-right: 16px">
+        <%= f.submit t("devise.sessions.new.submit"), class: "btn btn-primary" %>
+      </div>
+      <%= render "users/shared/links" unless @simple_sign_in %>
     </div>
   <% end %>
-
-  <%= render "users/shared/links" unless @simple_sign_in %>
 </div>
