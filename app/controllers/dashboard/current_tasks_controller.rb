@@ -34,28 +34,25 @@ module Dashboard
         tasks
       end
 
-      tasks = tasks.with_step_statistics.preload(experiment: :project)
+      page = (params[:page] || 1).to_i
+      tasks_per_page = tasks.page(page).per(Constants::INFINITE_SCROLL_LIMIT)
 
-      respond_to do |format|
-        format.json do
-          render json: {
-            tasks_list: tasks.map do |task|
-              { id: task.id,
-                link: protocols_my_module_path(task.id),
-                experiment: escape_input(task.experiment.name),
-                project: escape_input(task.experiment.project.name),
-                name: escape_input(task.name),
-                due_date: task.due_date.present? ? I18n.l(task.due_date, format: :full_with_comma) : nil,
-                overdue: task.is_overdue?,
-                state: task.state,
-                steps_state: { completed_steps: task.steps_completed,
-                               all_steps: task.steps_total,
-                               percentage: task.steps_completed_percentage } }
-            end,
-            status: :ok
-          }
-        end
+      tasks_per_page = tasks_per_page.with_step_statistics.preload(experiment: :project)
+      tasks_list = tasks_per_page.map do |task|
+        { id: task.id,
+          link: protocols_my_module_path(task.id),
+          experiment: escape_input(task.experiment.name),
+          project: escape_input(task.experiment.project.name),
+          name: escape_input(task.name),
+          due_date: task.due_date.present? ? I18n.l(task.due_date, format: :full_with_comma) : nil,
+          overdue: task.is_overdue?,
+          state: task.state,
+          steps_state: { completed_steps: task.steps_completed,
+                         all_steps: task.steps_total,
+                         percentage: task.steps_completed_percentage } }
       end
+
+      render json: { data: tasks_list, next_page: tasks_per_page.next_page }
     end
 
     def project_filter
@@ -83,7 +80,7 @@ module Dashboard
     private
 
     def task_filters
-      params.permit(:project_id, :experiment_id, :mode, :view, :sort)
+      params.permit(:project_id, :experiment_id, :mode, :view, :sort, :page)
     end
 
     def load_project
