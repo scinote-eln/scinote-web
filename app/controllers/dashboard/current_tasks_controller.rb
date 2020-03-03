@@ -18,8 +18,8 @@ module Dashboard
               end
 
       tasks = tasks.joins(experiment: :project)
-                   .where('experiments.archived': false)
-                   .where('projects.archived': false)
+                   .where(experiments: {archived: false})
+                   .where(projects: {archived: false})
 
       if task_filters[:mode] == 'assigned'
         tasks = tasks.left_outer_joins(:user_my_modules).where('user_my_modules.user_id': current_user.id)
