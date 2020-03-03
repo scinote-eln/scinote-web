@@ -30,6 +30,10 @@
     &:disabled {
       background: transparent;
     }
+
+    &::placeholder {
+      color: $color-alto;
+    }
   }
 
   .fas {

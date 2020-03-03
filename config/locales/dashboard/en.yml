@@ -2,6 +2,7 @@ en:
   dashboard:
     current_tasks:
       title: "Current tasks"
+      search: "Search tasks"
       navbar:
         assigned: "Assigned to me"
         all: "All"

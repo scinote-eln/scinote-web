@@ -6,7 +6,7 @@ var DasboardCurrentTasksWidget = (function() {
   var viewFilter = '.curent-tasks-filters .view-filter';
   var projectFilter = '.curent-tasks-filters .project-filter';
   var experimentFilter = '.curent-tasks-filters .experiment-filter';
-  var emptyState = `<div class="no-tasks">
+  var emptyState = `<div class="no-tasks ">
                       <p class="text-1">${ I18n.t('dashboard.current_tasks.no_tasks.text_1') }</p>
                       <p class="text-2">${ I18n.t('dashboard.current_tasks.no_tasks.text_2') }</p>
                       <i class="fas fa-angle-double-down"></i>
@@ -19,18 +19,16 @@ var DasboardCurrentTasksWidget = (function() {
       experiment_id: dropdownSelector.getValues(experimentFilter),
       sort: dropdownSelector.getValues(sortFilter),
       view: dropdownSelector.getValues(viewFilter),
+      query: $('.current-tasks-widget .task-search-field').val(),
       mode: $('.current-tasks-navbar .active').data('mode')
     };
     animateSpinner($currentTasksList, true);
     $.get($currentTasksList.data('tasksListUrl'), params, function(data) {
+      $currentTasksList.find('.current-task-item, .no-tasks').remove();
       // Toggle empty state
       if (data.tasks_list.length === 0) {
         $currentTasksList.append(emptyState);
-      } else {
-        $currentTasksList.find('.no-tasks').remove();
       }
-      // Clear the list
-      $currentTasksList.find('.current-task-item').remove();
       $.each(data.tasks_list, (i, task) => {
         var currentTaskItem;
         var stepsPercentage = task.steps_state.percentage + '%';
@@ -152,11 +150,24 @@ var DasboardCurrentTasksWidget = (function() {
     });
   }
 
+  function initSearch() {
+    $('.current-tasks-widget').on('change', '.task-search-field', () => {
+      loadCurrentTasksList();
+    }).on('keydown', '.task-search-field', function(e) {
+      if (e.keyCode === 13) {
+        loadCurrentTasksList();
+        $(this).blur();
+      }
+    });
+  }
+
+
   return {
     init: () => {
       if ($('.current-tasks-widget').length) {
         initNavbar();
         initFilters();
+        initSearch();
         loadCurrentTasksList();
       }
     }
