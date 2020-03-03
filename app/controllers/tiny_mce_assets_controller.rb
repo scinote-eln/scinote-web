@@ -17,6 +17,12 @@ class TinyMceAssetsController < ApplicationController
       }, status: :unprocessable_entity
     end
 
+    if image.size > Rails.configuration.x.file_max_size_mb.megabytes
+      return render json: {
+        errors: [t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb)]
+      }, status: :unprocessable_entity
+    end
+
     tiny_img = TinyMceAsset.new(team_id: current_team.id, saved: false)
 
     tiny_img.transaction do
