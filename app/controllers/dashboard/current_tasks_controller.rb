@@ -12,10 +12,15 @@ module Dashboard
       tasks = if @experiment
                 @experiment.my_modules.active
               elsif @project
-                MyModule.active.joins(:experiment).where('experiments.project_id': @project.id)
+                MyModule.active.where('projects.id': @project.id)
               else
                 MyModule.active.viewable_by_user(current_user, current_team)
               end
+
+      tasks = tasks.joins(experiment: :project)
+                   .where('experiments.archived': false)
+                   .where('projects.archived': false)
+
       if task_filters[:mode] == 'assigned'
         tasks = tasks.left_outer_joins(:user_my_modules).where('user_my_modules.user_id': current_user.id)
       end
@@ -60,7 +65,11 @@ module Dashboard
     end
 
     def project_filter
-      projects = current_team.projects.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
+      projects = current_team.projects
+                             .where(archived: false)
+                             .viewable_by_user(current_user, current_team)
+                             .search_by_name(current_user, current_team, params[:query]).select(:id, :name)
+
       unless params[:mode] == 'team'
         projects = projects.where(id: current_user.my_modules.joins(:experiment)
           .group(:project_id).select(:project_id).pluck(:project_id))
@@ -73,7 +82,11 @@ module Dashboard
         render json: []
         return false
       end
-      experiments = @project.experiments.search(current_user, false, params[:query], 1, current_team).select(:id, :name)
+      experiments = @project.experiments
+                            .where(archived: false)
+                            .viewable_by_user(current_user, current_team)
+                            .search_by_name(current_user, current_team, params[:query]).select(:id, :name)
+
       unless params[:mode] == 'team'
         experiments = experiments.where(id: current_user.my_modules
           .group(:experiment_id).select(:experiment_id).pluck(:experiment_id))
