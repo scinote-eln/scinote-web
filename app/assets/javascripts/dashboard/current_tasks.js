@@ -47,7 +47,7 @@ var DasboardCurrentTasksWidget = (function() {
           }
         }
         currentTaskItem = `<a class="current-task-item" href="${task.link}">
-                             <div class="current-task-breadcrumbs">${task.project}/${task.experiment}</div>
+                             <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
                              <div class="item-row">
                                <div class="task-name">${task.name}</div>
                                <div class="task-due-date ${overdue}">${dueDate}</div>
