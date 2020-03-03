@@ -5,7 +5,7 @@
   display: none !important;
 
   + .image-selection-container {
-    height: 28px;
+    height: 36px;
     left: 140px;
     position: absolute;
     top: 0;
@@ -32,6 +32,16 @@
       padding-left: 10px;
       position: relative;
       width: calc(100% - 100px);
+    }
+
+    &.error {
+      &::after {
+        color: $brand-danger;
+        content: attr(data-error);
+        left: 0;
+        position: absolute;
+        top: 40px;
+      }
     }
   }
 }

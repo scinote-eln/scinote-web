@@ -168,4 +168,24 @@
   }
 }
 
+.mce-window {
+
+  .mce-abs-layout {
+    overflow: visible !important;
+  }
+
+  .mce-error {
+    padding-top: 15px;
+  }
+
+  .mce-primary[disabled=disabled] {
+    pointer-events: none;
+
+    button {
+      background: $color-alto;
+      color: $color-volcano;
+    }
+  }
+}
+
 // scss-lint:enable ImportantRule
