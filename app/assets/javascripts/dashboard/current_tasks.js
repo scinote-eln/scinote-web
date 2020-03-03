@@ -6,7 +6,7 @@ var DasboardCurrentTasksWidget = (function() {
   var viewFilter = '.curent-tasks-filters .view-filter';
   var projectFilter = '.curent-tasks-filters .project-filter';
   var experimentFilter = '.curent-tasks-filters .experiment-filter';
-  var emptyState = `<div class="no-tasks ">
+  var emptyState = `<div class="no-tasks">
                       <p class="text-1">${ I18n.t('dashboard.current_tasks.no_tasks.text_1') }</p>
                       <p class="text-2">${ I18n.t('dashboard.current_tasks.no_tasks.text_2') }</p>
                       <i class="fas fa-angle-double-down"></i>
