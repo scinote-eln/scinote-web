@@ -26,8 +26,10 @@ var DasboardCurrentTasksWidget = (function() {
         stateText = I18n.t('dashboard.current_tasks.progress_bar.in_progress');
         if (task.overdue) { stateText = I18n.t('dashboard.current_tasks.progress_bar.overdue'); }
         if (task.steps_state.all_steps !== 0) {
-          stateText += I18n.t('dashboard.current_tasks.progress_bar.completed_steps',
-            { steps: task.steps_state.completed_steps, total_steps: task.steps_state.all_steps });
+          stateText += I18n.t(
+            'dashboard.current_tasks.progress_bar.completed_steps',
+            { steps: task.steps_state.completed_steps, total_steps: task.steps_state.all_steps }
+          );
         }
       }
       currentTaskItem = `<a class="current-task-item" href="${task.link}">
@@ -74,13 +76,13 @@ var DasboardCurrentTasksWidget = (function() {
       mode: $('.current-tasks-navbar .active').data('mode')
     };
     animateSpinner($currentTasksList, true);
-    $.get($currentTasksList.data('tasksListUrl'), params, function(data) {
+    $.get($currentTasksList.data('tasksListUrl'), params, function(result) {
       $currentTasksList.find('.current-task-item, .no-tasks').remove();
       // Toggle empty state
-      if (data.data.length === 0) {
+      if (result.data.length === 0) {
         $currentTasksList.append(emptyState);
       }
-      generateTasksListHtml(data, $currentTasksList);
+      generateTasksListHtml(result, $currentTasksList);
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
       animateSpinner($currentTasksList, false);

@@ -287,6 +287,10 @@
   .dashboard-container .current-tasks-widget {
     grid-column: 1 / span 12;
     grid-row: 1 / span 4;
+
+    .no-tasks .fas {
+      margin-left: 500px;
+    }
   }
 }
 
