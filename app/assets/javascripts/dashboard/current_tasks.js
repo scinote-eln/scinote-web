@@ -153,11 +153,6 @@ var DasboardCurrentTasksWidget = (function() {
   function initSearch() {
     $('.current-tasks-widget').on('change', '.task-search-field', () => {
       loadCurrentTasksList();
-    }).on('keydown', '.task-search-field', function(e) {
-      if (e.keyCode === 13) {
-        loadCurrentTasksList();
-        $(this).blur();
-      }
     });
   }
 
