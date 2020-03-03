@@ -36,10 +36,9 @@ module Dashboard
       end
 
       page = (params[:page] || 1).to_i
-      tasks_per_page = tasks.page(page).per(Constants::INFINITE_SCROLL_LIMIT)
+      tasks = tasks.with_step_statistics.preload(experiment: :project).page(page).per(Constants::INFINITE_SCROLL_LIMIT)
 
-      tasks_per_page = tasks_per_page.with_step_statistics.preload(experiment: :project)
-      tasks_list = tasks_per_page.map do |task|
+      tasks_list = tasks.map do |task|
         { id: task.id,
           link: protocols_my_module_path(task.id),
           experiment: escape_input(task.experiment.name),
@@ -53,7 +52,7 @@ module Dashboard
                          percentage: task.steps_completed_percentage } }
       end
 
-      render json: { data: tasks_list, next_page: tasks_per_page.next_page }
+      render json: { data: tasks_list, next_page: tasks.next_page }
     end
 
     def project_filter
