@@ -20,6 +20,7 @@ module Dashboard
         tasks = tasks.left_outer_joins(:user_my_modules).where('user_my_modules.user_id': current_user.id)
       end
       tasks = tasks.where('my_modules.state': task_filters[:view])
+                   .search_by_name(current_user, current_team, task_filters[:query])
 
       case task_filters[:sort]
       when 'date_desc'
@@ -83,7 +84,7 @@ module Dashboard
     private
 
     def task_filters
-      params.permit(:project_id, :experiment_id, :mode, :view, :sort)
+      params.permit(:project_id, :experiment_id, :mode, :view, :sort, :query)
     end
 
     def load_project

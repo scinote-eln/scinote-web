@@ -19,18 +19,16 @@ var DasboardCurrentTasksWidget = (function() {
       experiment_id: dropdownSelector.getValues(experimentFilter),
       sort: dropdownSelector.getValues(sortFilter),
       view: dropdownSelector.getValues(viewFilter),
+      query: $('.current-tasks-widget .task-search-field').val(),
       mode: $('.current-tasks-navbar .active').data('mode')
     };
     animateSpinner($currentTasksList, true);
     $.get($currentTasksList.data('tasksListUrl'), params, function(data) {
+      $currentTasksList.find('.current-task-item, .no-tasks').remove();
       // Toggle empty state
       if (data.tasks_list.length === 0) {
         $currentTasksList.append(emptyState);
-      } else {
-        $currentTasksList.find('.no-tasks').remove();
       }
-      // Clear the list
-      $currentTasksList.find('.current-task-item').remove();
       $.each(data.tasks_list, (i, task) => {
         var currentTaskItem;
         var stepsPercentage = task.steps_state.percentage + '%';
@@ -152,11 +150,19 @@ var DasboardCurrentTasksWidget = (function() {
     });
   }
 
+  function initSearch() {
+    $('.current-tasks-widget').on('change', '.task-search-field', () => {
+      loadCurrentTasksList();
+    });
+  }
+
+
   return {
     init: () => {
       if ($('.current-tasks-widget').length) {
         initNavbar();
         initFilters();
+        initSearch();
         loadCurrentTasksList();
       }
     }
