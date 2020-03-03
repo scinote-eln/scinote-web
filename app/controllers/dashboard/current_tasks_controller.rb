@@ -44,7 +44,7 @@ module Dashboard
           experiment: escape_input(task.experiment.name),
           project: escape_input(task.experiment.project.name),
           name: escape_input(task.name),
-          due_date: task.due_date.present? ? I18n.l(task.due_date, format: :full_with_comma) : nil,
+          due_date: task.due_date.present? ? I18n.l(task.due_date, format: :full_date) : nil,
           overdue: task.is_overdue?,
           state: task.state,
           steps_state: { completed_steps: task.steps_completed,
