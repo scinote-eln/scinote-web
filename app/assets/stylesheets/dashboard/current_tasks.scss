@@ -146,13 +146,22 @@
     .current-task-item {
       border-bottom: $border-tertiary;
       color: $color-volcano;
-      padding: 6px 0;
+      padding: 6px;
       text-decoration: none;
 
       .current-task-breadcrumbs {
         @include font-small;
         color: $color-silver-chalice;
         line-height: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .slash {
+          display: inline-block;
+          text-align: center;
+          width: 16px;
+        }
       }
 
       .item-row {
@@ -160,12 +169,16 @@
 
         .task-name {
           flex-grow: 1;
-          font-size: $font-size-base;  //not in styleguide
+          font-size: $font-size-base;
           font-weight: bold;
+          overflow: hidden;
+          padding-right: 10px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .task-due-date {
-          flex-basis: 260px;
+          flex-basis: 280px;
           flex-shrink: 0;
           font-size: 14px;
 
@@ -177,6 +190,10 @@
             color: $brand-danger;
           }
         }
+      }
+
+      &:hover {
+        background: $color-concrete;
       }
     }
   }
@@ -277,9 +294,32 @@
   }
 }
 
+@media (max-width: 1500px) {
+  .dashboard-container .current-tasks-widget {
+    .task-progress-container {
+      max-width: 200px;
+    }
+  }
+}
+
 @media (max-width: 1250px) {
   .dashboard-container .current-tasks-widget {
     grid-column: 1 / span 8;
+
+    .task-progress-container {
+      max-width: 150px;
+    }
+
+    .current-tasks-list {
+      .current-task-item {
+        .item-row {
+          .task-due-date {
+            flex-basis: 230px;
+          }
+        }
+      }
+    }
+
   }
 }
 
@@ -287,13 +327,5 @@
   .dashboard-container .current-tasks-widget {
     grid-column: 1 / span 12;
     grid-row: 1 / span 4;
-  }
-}
-
-@media (max-width: 1200px) {
-  .dashboard-container .current-tasks-widget {
-    .task-progress-container {
-      max-width: 180px;
-    }
   }
 }
