@@ -76,7 +76,7 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
           <br />
           <em><%= t('invite_users.input_subtitle') %></em>
 
-          <% if type.in?(['invite_with_team_selector', 'invite_with_team_selector_and_role']) %>
+          <% if current_user && type.in?(['invite_with_team_selector', 'invite_with_team_selector_and_role']) %>
             <% # Only allow inviting to teams where user is admin %>
             <% teams = current_user.teams
                                    .joins(:user_teams)
