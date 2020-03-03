@@ -1,4 +1,4 @@
-/* global dropdownSelector I18n animateSpinner PerfectSb */
+/* global dropdownSelector I18n animateSpinner PerfectSb InfiniteScroll */
 /* eslint-disable no-param-reassign */
 
 var DasboardCurrentTasksWidget = (function() {
@@ -12,7 +12,60 @@ var DasboardCurrentTasksWidget = (function() {
                       <i class="fas fa-angle-double-down"></i>
                     </div>`;
 
-  function loadCurrentTasksList() {
+  function generateTasksListHtml(json, container) {
+    $.each(json.data, (i, task) => {
+      var currentTaskItem;
+      var stepsPercentage = task.steps_state.percentage + '%';
+      var stateText;
+      var dueDate = (task.due_date !== null) ? '<i class="fas fa-calendar-day"></i>'
+        + I18n.t('dashboard.current_tasks.due_date', { date: task.due_date }) : '';
+      var overdue = (task.overdue) ? 'overdue' : '';
+      if (task.state === 'completed') {
+        stateText = I18n.t('dashboard.current_tasks.progress_bar.completed');
+      } else {
+        stateText = I18n.t('dashboard.current_tasks.progress_bar.in_progress');
+        if (task.overdue) { stateText = I18n.t('dashboard.current_tasks.progress_bar.overdue'); }
+        if (task.steps_state.all_steps !== 0) {
+          stateText += I18n.t(
+            'dashboard.current_tasks.progress_bar.completed_steps',
+            { steps: task.steps_state.completed_steps, total_steps: task.steps_state.all_steps }
+          );
+        }
+      }
+      currentTaskItem = `<a class="current-task-item" href="${task.link}">
+                           <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
+                           <div class="item-row">
+                             <div class="task-name">${task.name}</div>
+                             <div class="task-due-date ${overdue}">${dueDate}</div>
+                             <div class="task-progress-container ${task.state} ${overdue}">
+                               <div class="task-progress" style="padding-left: ${stepsPercentage}"></div>
+                               <div class="task-progress-label">${stateText}</div>
+                             </div>
+                           </div>
+                         </a>`;
+      $(container).append(currentTaskItem);
+    });
+  }
+
+  function initInfiniteScroll() {
+    InfiniteScroll.init('.current-tasks-list', {
+      url: $('.current-tasks-list').data('tasksListUrl'),
+      customResponse: (json, container) => {
+        generateTasksListHtml(json, container);
+      },
+      customParams: (params) => {
+        params.project_id = dropdownSelector.getValues(projectFilter);
+        params.experiment_id = dropdownSelector.getValues(experimentFilter);
+        params.sort = dropdownSelector.getValues(sortFilter);
+        params.view = dropdownSelector.getValues(viewFilter);
+        params.query = $('.current-tasks-widget .task-search-field').val();
+        params.mode = $('.current-tasks-navbar .active').data('mode');
+        return params;
+      }
+    });
+  }
+
+  function loadCurrentTasksList(newList) {
     var $currentTasksList = $('.current-tasks-list');
     var params = {
       project_id: dropdownSelector.getValues(projectFilter),
@@ -23,43 +76,15 @@ var DasboardCurrentTasksWidget = (function() {
       mode: $('.current-tasks-navbar .active').data('mode')
     };
     animateSpinner($currentTasksList, true);
-    $.get($currentTasksList.data('tasksListUrl'), params, function(data) {
+    $.get($currentTasksList.data('tasksListUrl'), params, function(result) {
       $currentTasksList.find('.current-task-item, .no-tasks').remove();
       // Toggle empty state
-      if (data.tasks_list.length === 0) {
+      if (result.data.length === 0) {
         $currentTasksList.append(emptyState);
       }
-      $.each(data.tasks_list, (i, task) => {
-        var currentTaskItem;
-        var stepsPercentage = task.steps_state.percentage + '%';
-        var stateText;
-        var dueDate = (task.due_date !== null) ? '<i class="fas fa-calendar-day"></i>'
-          + I18n.t('dashboard.current_tasks.due_date', { date: task.due_date }) : '';
-        var overdue = (task.overdue) ? 'overdue' : '';
-        if (task.state === 'completed') {
-          stateText = I18n.t('dashboard.current_tasks.progress_bar.completed');
-        } else {
-          stateText = I18n.t('dashboard.current_tasks.progress_bar.in_progress');
-          if (task.overdue) { stateText = I18n.t('dashboard.current_tasks.progress_bar.overdue'); }
-          if (task.steps_state.all_steps !== 0) {
-            stateText += I18n.t('dashboard.current_tasks.progress_bar.completed_steps',
-              { steps: task.steps_state.completed_steps, total_steps: task.steps_state.all_steps });
-          }
-        }
-        currentTaskItem = `<a class="current-task-item" href="${task.link}">
-                             <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
-                             <div class="item-row">
-                               <div class="task-name">${task.name}</div>
-                               <div class="task-due-date ${overdue}">${dueDate}</div>
-                               <div class="task-progress-container ${task.state} ${overdue}">
-                                 <div class="task-progress" style="padding-left: ${stepsPercentage}"></div>
-                                 <div class="task-progress-label">${stateText}</div>
-                               </div>
-                             </div>
-                           </a>`;
-        $currentTasksList.append(currentTaskItem);
-      });
+      generateTasksListHtml(result, $currentTasksList);
       PerfectSb().update_all();
+      if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
       animateSpinner($currentTasksList, false);
     });
   }
@@ -136,7 +161,7 @@ var DasboardCurrentTasksWidget = (function() {
       $('.curent-tasks-filters').dropdown('toggle');
       e.stopPropagation();
       e.preventDefault();
-      loadCurrentTasksList();
+      loadCurrentTasksList(true);
     });
   }
 
@@ -146,7 +171,7 @@ var DasboardCurrentTasksWidget = (function() {
       e.preventDefault();
       $('.current-tasks-navbar').find('a').removeClass('active');
       $(this).addClass('active');
-      loadCurrentTasksList();
+      loadCurrentTasksList(true);
     });
   }
 
@@ -164,6 +189,7 @@ var DasboardCurrentTasksWidget = (function() {
         initFilters();
         initSearch();
         loadCurrentTasksList();
+        initInfiniteScroll();
       }
     }
   };
