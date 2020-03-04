@@ -247,6 +247,8 @@ Rails.application.routes.draw do
       end
 
       namespace :quick_start, module: :dashboard, controller: :quick_start do
+        get :project_filter
+        get :experiment_filter
         post :create_task
       end
 

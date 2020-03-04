@@ -9,7 +9,6 @@ class CreateProjectService
 
   def call
     ActiveRecord::Base.transaction do
-      @params[:visibility] ||= 'hidden'
       @params[:created_by] = @user
       @params[:last_modified_by] = @user
 
