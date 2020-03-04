@@ -189,6 +189,14 @@
           &.overdue {
             color: $brand-danger;
           }
+
+          &.day-prior {
+            color: $brand-warning;
+          }
+
+          &.completed {
+            color: $brand-success;
+          }
         }
       }
 

@@ -40,6 +40,7 @@
       line-height: 25px;
 
       .task-icon {
+        flex-shrink: 0;
         margin-right: 9px;
 
         path {
@@ -49,6 +50,9 @@
 
       .task-link {
         line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }

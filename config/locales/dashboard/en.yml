@@ -18,9 +18,9 @@ en:
         uncompleted_tasks: "Only in progress tasks"
         completed_tasks: "Only completed tasks"
         project: "Project"
-        select_project: "Select Project"
+        select_project: "All Projects"
         experiment: "Experiment"
-        select_experiment: "Select Experiment"
+        select_experiment: "All Experiments"
         apply: "Apply"
       no_tasks:
         text_1: "Looks like you completed all of your tasks. Good job!"
