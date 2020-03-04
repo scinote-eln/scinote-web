@@ -31,7 +31,6 @@ en:
         overdue: "Overdue"
         completed_steps: ": %{steps} / %{total_steps}"
         completed: "Completed"
-        locked: "Locked"
     calendar:
       due_on: Due on
       dow:
