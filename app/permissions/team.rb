@@ -48,8 +48,16 @@ Canaid::Permissions.register_for(Team) do
 
   # repository: create, copy
   can :create_repositories do |user, team|
-    user.is_admin_of_team?(team) &&
-      team.repositories.count < Rails.configuration.x.repositories_limit
+    within_limits = true
+    if Rails.configuration.x.global_repositories_limit.positive?
+      within_limits = Repository.count < Rails.configuration.x.global_repositories_limit
+    end
+
+    if within_limits && Rails.configuration.x.team_repositories_limit.positive?
+      within_limits = team.repositories.count < Rails.configuration.x.team_repositories_limit
+    end
+
+    within_limits && user.is_admin_of_team?(team)
   end
 
   # this permission is scattered around the application
