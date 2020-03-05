@@ -64,10 +64,6 @@
           color: $color-alto;
         }
 
-        &.today {
-          border: $border-primary;
-        }
-
         &.event {
 
           .event-day {
@@ -75,9 +71,9 @@
             border-radius: 50%;
             cursor: pointer;
             display: flex;
-            height: 32px;
+            height: 30px;
             justify-content: center;
-            width: 32px;
+            width: 30px;
 
             &:hover {
               background: $color-concrete;
@@ -95,6 +91,17 @@
             position: absolute;
             top: 24px;
             width: 4px;
+          }
+        }
+
+        &.today {
+          border: $border-primary;
+
+          &.event {
+            &::after {
+              left: 13px;
+              top: 23px;
+            }
           }
         }
 

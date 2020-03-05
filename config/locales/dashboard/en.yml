@@ -15,12 +15,12 @@ en:
         atoz: "From A to Z"
         ztoa: "From Z to A"
         display: "Display"
-        uncompleted_tasks: "Only in progress tasks"
-        completed_tasks: "Only completed tasks"
+        uncompleted_tasks: "Tasks in progress"
+        completed_tasks: "Tasks completed"
         project: "Project"
-        select_project: "Select Project"
+        select_project: "All Projects"
         experiment: "Experiment"
-        select_experiment: "Select Experiment"
+        select_experiment: "All Experiments"
         apply: "Apply"
       no_tasks:
         text_1: "Looks like you completed all of your tasks. Good job!"
@@ -31,7 +31,6 @@ en:
         overdue: "Overdue"
         completed_steps: ": %{steps} / %{total_steps}"
         completed: "Completed"
-        locked: "Locked"
     calendar:
       due_on: Due on
       dow:

@@ -189,6 +189,14 @@
           &.overdue {
             color: $brand-danger;
           }
+
+          &.day-prior {
+            color: $brand-warning;
+          }
+
+          &.completed {
+            color: $brand-success;
+          }
         }
       }
 
@@ -257,6 +265,12 @@
       }
     }
 
+    &.day-prior {
+      .task-progress-label {
+        color: $brand-warning;
+      }
+    }
+
     &.completed {
       .task-progress {
         outline: $border-success;
@@ -274,21 +288,6 @@
       &::after {
         color: $brand-success;
         content: $font-fas-check;
-      }
-    }
-
-    &.locked {
-      .task-progress {
-        background: $color-white;
-      }
-
-      .task-progress-label {
-        color: $color-silver-chalice;
-      }
-
-      &::after {
-        color: $color-silver-chalice;
-        content: $font-fas-lock;
       }
     }
   }

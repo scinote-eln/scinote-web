@@ -14,35 +14,19 @@ var DasboardCurrentTasksWidget = (function() {
 
   function generateTasksListHtml(json, container) {
     $.each(json.data, (i, task) => {
-      var currentTaskItem;
-      var stepsPercentage = task.steps_state.percentage + '%';
-      var stateText;
-      var dueDate = (task.due_date !== null) ? '<i class="fas fa-calendar-day"></i>'
-        + I18n.t('dashboard.current_tasks.due_date', { date: task.due_date }) : '';
-      var overdue = (task.overdue) ? 'overdue' : '';
-      if (task.state === 'completed') {
-        stateText = I18n.t('dashboard.current_tasks.progress_bar.completed');
-      } else {
-        stateText = I18n.t('dashboard.current_tasks.progress_bar.in_progress');
-        if (task.overdue) { stateText = I18n.t('dashboard.current_tasks.progress_bar.overdue'); }
-        if (task.steps_state.all_steps !== 0) {
-          stateText += I18n.t(
-            'dashboard.current_tasks.progress_bar.completed_steps',
-            { steps: task.steps_state.completed_steps, total_steps: task.steps_state.all_steps }
-          );
-        }
-      }
-      currentTaskItem = `<a class="current-task-item" href="${task.link}">
-                           <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
-                           <div class="item-row">
-                             <div class="task-name">${task.name}</div>
-                             <div class="task-due-date ${overdue}">${dueDate}</div>
-                             <div class="task-progress-container ${task.state} ${overdue}">
-                               <div class="task-progress" style="padding-left: ${stepsPercentage}"></div>
-                               <div class="task-progress-label">${stateText}</div>
-                             </div>
-                           </div>
-                         </a>`;
+      var currentTaskItem = ` <a class="current-task-item" href="${task.link}">
+                                <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
+                                <div class="item-row">
+                                  <div class="task-name">${task.name}</div>
+                                  <div class="task-due-date ${task.state.class} ${task.due_date ? '' : 'hidden'}">
+                                    <i class="fas fa-calendar-day"></i> ${I18n.t('dashboard.current_tasks.due_date', { date: task.due_date })}
+                                  </div>
+                                  <div class="task-progress-container ${task.state.class}">
+                                    <div class="task-progress" style="padding-left: ${task.steps_precentage}'%'"></div>
+                                    <div class="task-progress-label">${task.state.text}</div>
+                                  </div>
+                                </div>
+                              </a>`;
       $(container).append(currentTaskItem);
     });
   }
@@ -161,6 +145,10 @@ var DasboardCurrentTasksWidget = (function() {
       $('.curent-tasks-filters').dropdown('toggle');
       e.stopPropagation();
       e.preventDefault();
+      loadCurrentTasksList(true);
+    });
+
+    $('.filter-container').on('hide.bs.dropdown', () => {
       loadCurrentTasksList(true);
     });
   }
