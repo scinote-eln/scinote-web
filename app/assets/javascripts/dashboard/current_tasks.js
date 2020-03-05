@@ -14,19 +14,19 @@ var DasboardCurrentTasksWidget = (function() {
 
   function generateTasksListHtml(json, container) {
     $.each(json.data, (i, task) => {
-      var currentTaskItem = `<a class="current-task-item" href="${task.link}">
-                               <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
-                               <div class="item-row">
-                                 <div class="task-name">${task.name}</div>
-                                 <div class="task-due-date ${task.state.class} ${task.due_date ? '' : 'hidden'}">
-                                  <i class="fas fa-calendar-day"></i> ${I18n.t('dashboard.current_tasks.due_date', { date: task.due_date })}
+      var currentTaskItem = ` <a class="current-task-item" href="${task.link}">
+                                <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
+                                <div class="item-row">
+                                  <div class="task-name">${task.name}</div>
+                                  <div class="task-due-date ${task.state.class} ${task.due_date ? '' : 'hidden'}">
+                                    <i class="fas fa-calendar-day"></i> ${I18n.t('dashboard.current_tasks.due_date', { date: task.due_date })}
+                                  </div>
+                                  <div class="task-progress-container ${task.state.class}">
+                                    <div class="task-progress" style="padding-left: ${task.steps_precentage}'%'"></div>
+                                    <div class="task-progress-label">${task.state.text}</div>
+                                  </div>
                                 </div>
-                                 <div class="task-progress-container ${task.state.class}">
-                                   <div class="task-progress" style="padding-left: ${task.steps_precentage}'%'"></div>
-                                   <div class="task-progress-label">${task.state.text}</div>
-                                 </div>
-                               </div>
-                             </a>`;
+                              </a>`;
       $(container).append(currentTaskItem);
     });
   }

@@ -265,6 +265,12 @@
       }
     }
 
+    &.day-prior {
+      .task-progress-label {
+        color: $brand-warning;
+      }
+    }
+
     &.completed {
       .task-progress {
         outline: $border-success;

@@ -27,7 +27,6 @@ module Dashboard
 
       tasks = filter_by_state(tasks)
 
-
       case task_filters[:sort]
       when 'date_desc'
         tasks = tasks.order('my_modules.due_date': :desc)
@@ -43,7 +42,7 @@ module Dashboard
 
       page = (params[:page] || 1).to_i
       tasks = tasks.with_step_statistics.search_by_name(current_user, current_team, task_filters[:query])
-                                        .preload(experiment: :project).page(page).per(Constants::INFINITE_SCROLL_LIMIT)
+                   .preload(experiment: :project).page(page).per(Constants::INFINITE_SCROLL_LIMIT)
 
       tasks_list = tasks.map do |task|
         { id: task.id,
@@ -97,9 +96,7 @@ module Dashboard
         task_state_text = t('dashboard.current_tasks.progress_bar.completed')
       else
         task_state_text = t('dashboard.current_tasks.progress_bar.in_progress')
-
         task_state_class = 'day-prior' if task.is_one_day_prior?
-
         if task.is_overdue?
           task_state_text = t('dashboard.current_tasks.progress_bar.overdue')
           task_state_class = 'overdue'
