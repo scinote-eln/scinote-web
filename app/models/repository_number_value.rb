@@ -34,7 +34,7 @@ class RepositoryNumberValue < ApplicationRecord
     value
   end
 
-  def self.import_from_text(text, attributes)
+  def self.import_from_text(text, attributes, _options = {})
     new(attributes.merge(data: BigDecimal(text)))
   rescue ArgumentError
     nil

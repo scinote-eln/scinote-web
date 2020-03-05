@@ -53,7 +53,7 @@ class RepositoryChecklistValue < ApplicationRecord
     value
   end
 
-  def self.import_from_text(text, attributes)
+  def self.import_from_text(text, attributes, _options = {})
     value = new(attributes)
     column = attributes.dig(:repository_cell_attributes, :repository_column)
     text.split("\n").each do |item_text|

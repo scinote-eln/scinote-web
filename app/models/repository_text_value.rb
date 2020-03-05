@@ -33,7 +33,7 @@ class RepositoryTextValue < ApplicationRecord
     value
   end
 
-  def self.import_from_text(text, attributes)
+  def self.import_from_text(text, attributes, _options = {})
     return nil if text.blank?
 
     new(attributes.merge(data: text.truncate(Constants::TEXT_MAX_LENGTH)))
