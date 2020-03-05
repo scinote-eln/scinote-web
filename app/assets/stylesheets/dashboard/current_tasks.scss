@@ -207,6 +207,7 @@
   }
 
   .task-progress-container {
+    height: 20px;
     max-width: 250px;
     min-width: 150px;
     position: relative;
@@ -219,15 +220,15 @@
       line-height: 18px;
       position: absolute;
       right: 8px;
-      top: 0;
+      top: 1px;
     }
 
     .task-progress {
       background: $brand-focus-light;
+      border: $border-tertiary;
       border-radius: $border-radius-tag;
       display: flex;
-      height: 18px;
-      outline: $border-tertiary;
+      height: 20px;
       position: relative;
 
       &::after {
@@ -241,9 +242,9 @@
     .task-progress-label {
       @include font-small;
       font-weight: bold;
-      height: 18px;
+      height: 20px;
       left: 0;
-      line-height: 18px;
+      line-height: 20px;
       padding-left: 8px;
       position: absolute;
       top: 0;
