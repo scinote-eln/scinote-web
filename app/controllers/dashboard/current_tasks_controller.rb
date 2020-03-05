@@ -29,9 +29,9 @@ module Dashboard
 
       case task_filters[:sort]
       when 'date_desc'
-        tasks = tasks.order('my_modules.due_date': :desc)
+        tasks = tasks.order('my_modules.due_date': :desc).order('my_modules.name': :asc)
       when 'date_asc'
-        tasks = tasks.order('my_modules.due_date': :asc)
+        tasks = tasks.order('my_modules.due_date': :asc).order('my_modules.name': :asc)
       when 'atoz'
         tasks = tasks.order('my_modules.name': :asc)
       when 'ztoa'
