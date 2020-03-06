@@ -13,23 +13,8 @@ module Dashboard
 
     def call
       visible_projects = Project.viewable_by_user(@user, @team)
-      visible_by_team = Activity.where(project: nil, team_id: @team.id)
-                                .where('created_at > ?', (DateTime.now - 1.month))
-                                .select('MAX(created_at) as last_change,
-                                         percentile_disc(0) WITHIN GROUP (ORDER BY values) as values,
-                                         subject_id,
-                                         subject_type')
-                                .group(:subject_id, :subject_type)
-                                .order(last_change: :desc)
-      visible_by_projects = Activity.where(project_id: visible_projects.pluck(:id))
-                                    .where('created_at > ?', (DateTime.now - 1.month))
-                                    .select('MAX(created_at) as last_change,
-                                             percentile_disc(0) WITHIN GROUP (ORDER BY values) as values,
-                                             subject_id,
-                                             subject_type')
-                                    .group(:subject_id, :subject_type)
-                                    .order(last_change: :desc)
-
+      visible_by_team = activities_with_filter.where(project: nil, team_id: @team.id)
+      visible_by_projects = activities_with_filter.where(project_id: visible_projects.pluck(:id))
       query = Activity.from("((#{visible_by_team.to_sql}) UNION ALL (#{visible_by_projects.to_sql})) AS activities")
 
       # Join subjects
@@ -130,6 +115,17 @@ module Dashboard
       when 'Report'
         edit_project_report_path(activity[:report_project_id], activity[:subject_id]) if activity[:report_project_id]
       end
+    end
+
+    def activities_with_filter
+      Activity.where('created_at > ?', (DateTime.now - 1.month))
+              .where("(values #>> '{message_items, user, id}') :: BIGINT = ?", @user.id)
+              .select('MAX(created_at) as last_change,
+                       percentile_disc(0) WITHIN GROUP (ORDER BY values) as values,
+                       subject_id,
+                       subject_type')
+              .group(:subject_id, :subject_type)
+              .order(last_change: :desc)
     end
   end
 end
