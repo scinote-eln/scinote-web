@@ -44,7 +44,7 @@ class RepositoryStatusValue < ApplicationRecord
     value
   end
 
-  def self.import_from_text(text, attributes)
+  def self.import_from_text(text, attributes, _options = {})
     icon = text[0]
     status = text[1..-1].strip
     value = new(attributes)

@@ -134,7 +134,11 @@ module RepositoryImportParser
                                                                   repository_column: column,
                                                                   importing: true } }
 
-          cell_value = column.data_type.constantize.import_from_text(value, cell_value_attributes)
+          cell_value = column.data_type.constantize.import_from_text(
+            value,
+            cell_value_attributes,
+            user: @user.as_json
+          )
           next if cell_value.nil?
 
           cell_value.repository_cell.value = cell_value
