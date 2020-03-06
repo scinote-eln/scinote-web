@@ -87,7 +87,10 @@ module Dashboard
         activity.each do |key, _value|
           object_name = activity.delete key if key.to_s.include? 'name'
         end
-        activity[:last_change] = I18n.l(DateTime.parse(activity[:last_change]), format: :full_with_comma)
+        activity[:last_change] = I18n.l(
+          DateTime.parse(activity[:last_change]).in_time_zone(@user.settings[:time_zone] || 'UTC'),
+          format: :full_with_comma
+        )
         activity[:name] = escape_input(object_name)
         activity[:url] = generate_url(activity)
         activity unless activity[:name].empty?
