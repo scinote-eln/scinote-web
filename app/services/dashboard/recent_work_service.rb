@@ -42,7 +42,17 @@ module Dashboard
                           subject_type = 'Protocol'
                           AND (values #>> '{message_items, my_module, id}') :: BIGINT = my_modules_protocol.id
                           AND my_modules_protocol.archived = 'false'
-                      ").select('
+                        LEFT JOIN experiments my_modules_experiment ON
+                          my_modules_experiment.id = my_modules.experiment_id
+                          OR my_modules_experiment.id = my_modules_result.experiment_id
+                          OR my_modules_experiment.id = my_modules_protocol.experiment_id
+                        LEFT JOIN projects experiments_project ON
+                          experiments_project.id = my_modules_experiment.project_id
+                          OR experiments_project.id = experiments.project_id
+                      ")
+                      .where("my_modules_experiment.archived != 'true' OR my_modules_experiment.archived IS NULL")
+                      .where("experiments_project.archived != 'true' OR experiments_project.archived IS NULL")
+                      .select('
                         projects.name as project_name,
                         experiments.name as experiment_name,
                         my_modules.name as my_module_name,
