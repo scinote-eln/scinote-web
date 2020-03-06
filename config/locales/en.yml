@@ -130,7 +130,6 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
-      about: "About SciNote"
     activities:
       none: "No activities!"
     label:
@@ -161,8 +160,10 @@ en:
     academy: "Academy"
     support: "Support"
     support_links:
-      support: "Support Center"
+      support: "Knowledge center"
       tutorials: "Video tutorials"
+      core_version: "SciNote Core ver. %{version} |"
+      about: "about"
 
   sidebar:
     title: "Navigation"
