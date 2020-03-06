@@ -1,2 +1,17 @@
 <div class="recent-work-widget basic-widget">
+  <div class="widget-header">
+    <div class="widget-title">
+      <%= t('dashboard.recent_work.title') %>
+    </div>
+    <div class="sci-secondary-navbar recent-work-navbar">
+      <span class="navbar-link active" data-mode="all"><%= t('dashboard.recent_work.modes.all') %></span>
+      <span class="navbar-link" data-mode="projects"><%= t('dashboard.recent_work.modes.projects') %></span>
+      <span class="navbar-link" data-mode="repositories"><%= t('dashboard.recent_work.modes.repositories') %></span>
+      <span class="navbar-link" data-mode="protocols"><%= t('dashboard.recent_work.modes.protocols') %></span>
+      <span class="navbar-link" data-mode="reports"><%= t('dashboard.recent_work.modes.reports') %></span>
+    </div>
+  </div>
+  <div class="widget-body">
+    <div class="recent-work-container perfect-scrollbar" data-url="<%= dashboard_recent_works_path %>"></div>
+  </div>
 </div>

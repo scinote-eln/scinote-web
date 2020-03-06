@@ -30,6 +30,10 @@ var InfiniteScroll = (function() {
       }
       $container.removeClass('loading');
 
+      if ($container.data('config').afterAction) {
+        $container.data('config').afterAction(result, $container);
+      }
+
       if (scrollNotVisible($container)) {
         loadData($container, $container.data('next-page'));
       }
@@ -59,7 +63,7 @@ var InfiniteScroll = (function() {
       initScroll(object, config);
     },
     resetScroll: (object) => {
-      $(object).data('next-page', 2).removeClass('last-page');
+      $(object).data('next-page', $(object).data('config').loadFirstPage ? 1 : 2).removeClass('last-page');
       if (scrollNotVisible($(object))) {
         loadData($(object), $(object).data('next-page'));
       }

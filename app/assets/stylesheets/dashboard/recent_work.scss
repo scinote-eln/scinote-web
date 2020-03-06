@@ -1,6 +1,72 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 .dashboard-container .recent-work-widget {
   grid-column: 3 / span 7;
   grid-row: 7 / span 6;
+
+  .widget-title {
+    flex-grow: 1;
+  }
+
+  .recent-work-container {
+    height: 100%;
+    padding: 0 8px;
+    position: relative;
+
+    .recent-work-item {
+      color: $color-volcano;
+      cursor: pointer;
+      display: flex;
+      line-height: 28px;
+      padding: 0 8px;
+      text-decoration: none;
+
+      .object-name {
+        flex-grow: 1;
+        font-weight: bold;
+        overflow: hidden;
+        padding-right: 15px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .object-type {
+        @include font-small;
+        color: $color-silver-chalice;
+        flex-basis: 120px;
+        flex-shrink: 0;
+      }
+
+      .object-changed {
+        @include font-small;
+        flex-basis: 160px;
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        background: $color-concrete;
+      }
+    }
+
+    .no-results {
+      color: $color-alto;
+      padding: 24px;
+
+      .no-results-title {
+        @include font-h1;
+      }
+
+      .no-results-description {
+        @include font-main;
+      }
+
+      .no-results-arrow {
+        font-size: 32px;
+        padding-top: 50px;
+      }
+    }
+  }
 }
 
 @media (max-width: 1700px) {
@@ -10,7 +76,7 @@
 }
 
 
-@media (max-width: 1250px) {
+@media (max-width: 1300px) {
   .dashboard-container .recent-work-widget {
     grid-column: 5 / span 8;
   }
@@ -20,5 +86,11 @@
   .dashboard-container .recent-work-widget {
     grid-column: 1 / span 12;
     grid-row: 9 / span 4;
+
+    .no-results {
+      .no-results-arrow {
+        display: none;
+      }
+    }
   }
 }

@@ -255,6 +255,8 @@ Rails.application.routes.draw do
       resource :calendar, module: 'dashboard', only: [:show] do
         get :day
       end
+
+      resource :recent_works, module: 'dashboard', only: [:show]
     end
 
     resources :projects, except: [:new, :destroy] do
