@@ -22,7 +22,7 @@ var DasboardCurrentTasksWidget = (function() {
                                     <i class="fas fa-calendar-day"></i> ${I18n.t('dashboard.current_tasks.due_date', { date: task.due_date })}
                                   </div>
                                   <div class="task-progress-container ${task.state.class}">
-                                    <div class="task-progress" style="padding-left: ${task.steps_precentage}'%'"></div>
+                                    <div class="task-progress" style="padding-left: ${task.steps_precentage}%"></div>
                                     <div class="task-progress-label">${task.state.text}</div>
                                   </div>
                                 </div>
