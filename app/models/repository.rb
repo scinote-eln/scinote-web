@@ -50,6 +50,18 @@ class Repository < ApplicationRecord
       .where.not(id: accessible_by_teams(team.id).select(:id)).distinct
   }
 
+  def self.within_global_limits?
+    return true unless Rails.configuration.x.global_repositories_limit.positive?
+
+    count < Rails.configuration.x.global_repositories_limit
+  end
+
+  def self.within_team_limits?(team)
+    return true unless Rails.configuration.x.team_repositories_limit.positive?
+
+    team.repositories.count < Rails.configuration.x.team_repositories_limit
+  end
+
   def self.search(
     user,
     query = nil,

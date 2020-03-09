@@ -362,16 +362,11 @@ class RepositoriesController < ApplicationController
   end
 
   def check_create_permissions
-    unless can_create_repositories?(@team) ||
-           @team.repositories.count < Rails.configuration.x.repositories_limit
-      render_403
-    end
+    render_403 unless can_create_repositories?(@team)
   end
 
   def check_copy_permissions
-    render_403 if !can_create_repositories?(@team) ||
-                  @team.repositories.count >= Rails.configuration.x.repositories_limit ||
-                  @repository.shared_with?(current_team)
+    render_403 if !can_create_repositories?(@team) || @repository.shared_with?(current_team)
   end
 
   def check_manage_permissions
