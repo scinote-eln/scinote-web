@@ -665,6 +665,10 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
+                resources :inventory_checklist_items,
+                          only: %i(index create show update destroy),
+                          path: 'checklist_items',
+                          as: :checklist_items
                 resources :inventory_status_items,
                           only: %i(index create show update destroy),
                           path: 'status_items',

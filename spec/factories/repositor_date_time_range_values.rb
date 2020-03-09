@@ -13,6 +13,7 @@ FactoryBot.define do
           class: 'RepositoryDateTimeRangeValue' do
     after(:build) do |value|
       value.repository_cell ||= build(:repository_cell, :date_time_range_value, repository_date_time_range_value: value)
+      value.repository_cell.value = value
     end
   end
 
@@ -21,6 +22,7 @@ FactoryBot.define do
           class: 'RepositoryTimeRangeValue' do
     after(:build) do |value|
       value.repository_cell ||= build(:repository_cell, :time_range_value, repository_time_range_value: value)
+      value.repository_cell.value = value
     end
   end
 
@@ -29,6 +31,7 @@ FactoryBot.define do
           class: 'RepositoryDateRangeValue' do
     after(:build) do |value|
       value.repository_cell ||= build(:repository_cell, :date_range_value, repository_date_range_value: value)
+      value.repository_cell.value = value
     end
   end
 end
