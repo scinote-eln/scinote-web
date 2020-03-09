@@ -18,95 +18,101 @@ module Dashboard
       query = Activity.from("((#{visible_by_team.to_sql}) UNION ALL (#{visible_by_projects.to_sql})) AS activities")
 
       # Join subjects
-      if %w(all projects).include? @mode
-        query = query.joins("
-                        LEFT JOIN projects ON
-                          subject_type = 'Project'
-                          AND subject_id = projects.id
-                          AND projects.archived = 'false'
-                        LEFT JOIN experiments ON
-                          subject_type = 'Experiment'
-                          AND subject_id = experiments.id
-                          AND experiments.archived = 'false'
-                        LEFT JOIN my_modules ON
-                          subject_type = 'MyModule'
-                          AND subject_id = my_modules.id
-                          AND my_modules.archived = 'false'
+      query = query.joins("
                         LEFT JOIN results ON
                           subject_type = 'Result'
                           AND subject_id = results.id
-                        LEFT JOIN my_modules my_modules_result ON
-                          my_modules_result.id = results.my_module_id
-                          AND my_modules_result.archived = 'false'
-                        LEFT JOIN my_modules my_modules_protocol ON
+                        LEFT JOIN protocols ON
                           subject_type = 'Protocol'
-                          AND (values #>> '{message_items, my_module, id}') :: BIGINT = my_modules_protocol.id
-                          AND my_modules_protocol.archived = 'false'
-                        LEFT JOIN experiments my_modules_experiment ON
-                          my_modules_experiment.id = my_modules.experiment_id
-                          OR my_modules_experiment.id = my_modules_result.experiment_id
-                          OR my_modules_experiment.id = my_modules_protocol.experiment_id
-                        LEFT JOIN projects experiments_project ON
-                          experiments_project.id = my_modules_experiment.project_id
-                          OR experiments_project.id = experiments.project_id
+                          AND subject_id = protocols.id
+                        LEFT JOIN my_modules ON
+                          (subject_type = 'MyModule' AND subject_id = my_modules.id)
+                          OR  protocols.my_module_id = my_modules.id
+                          OR  results.my_module_id = my_modules.id
+                        LEFT JOIN experiments ON
+                          (subject_type = 'Experiment' AND subject_id = experiments.id)
+                          OR experiments.id = my_modules.experiment_id
+                        LEFT JOIN projects ON
+                          (subject_type = 'Project' AND subject_id = projects.id)
+                          OR projects.id = experiments.project_id
+                        LEFT JOIN repositories ON
+                          subject_type = 'Repository'
+                          AND subject_id = repositories.id
+                        LEFT JOIN reports ON subject_type = 'Report'
+                          AND subject_id = reports.id
                       ")
-                      .where("my_modules_experiment.archived != 'true' OR my_modules_experiment.archived IS NULL")
-                      .where("experiments_project.archived != 'true' OR experiments_project.archived IS NULL")
-                      .select('
-                        projects.name as project_name,
-                        experiments.name as experiment_name,
-                        my_modules.name as my_module_name,
-                        my_modules_protocol.name as my_module_protocol_name,
-                        my_modules_protocol.id as my_module_protocol_id,
-                        my_modules_result.name as my_module_result_name,
-                        my_modules_result.id as my_module_result_id
+                   .where("
+                        (projects.archived != 'true' OR projects.archived IS NULL)
+                        AND (experiments.archived != 'true' OR experiments.archived IS NULL)
+                        AND (my_modules.archived != 'true' OR my_modules.archived IS NULL)
+                        AND (protocols.protocol_type != 4 OR protocols.protocol_type IS NULL)
+                      ")
+                   .select('
+                        DISTINCT ON (group_id)
+
+                        CASE
+                        WHEN my_modules.id IS NOT NULL THEN
+                          CONCAT(\'tsk\', my_modules.id)
+                        WHEN experiments.id IS NOT NULL THEN
+                          CONCAT(\'exp\', experiments.id)
+                        WHEN projects.id IS NOT NULL THEN
+                          CONCAT(\'pro\', projects.id)
+                        WHEN protocols.id IS NOT NULL THEN
+                          CONCAT(\'prt\', protocols.id)
+                        WHEN repositories.id IS NOT NULL THEN
+                          CONCAT(\'inv\', repositories.id)
+                        WHEN reports.id IS NOT NULL THEN
+                          CONCAT(\'rpt\', reports.id)
+                        END as group_id,
+
+                        CASE
+                        WHEN my_modules.name IS NOT NULL THEN
+                          my_modules.name
+                        WHEN experiments.name IS NOT NULL THEN
+                          experiments.name
+                        WHEN projects.name IS NOT NULL THEN
+                          projects.name
+                        WHEN protocols.name IS NOT NULL THEN
+                          protocols.name
+                        WHEN repositories.name IS NOT NULL THEN
+                          repositories.name
+                        WHEN reports.name IS NOT NULL THEN
+                          reports.name
+                        END as name,
+
+                        reports.project_id as report_project_id,
+                        subject_id,
+                        subject_type,
+                        last_change
                       ')
+
+      query_filter = []
+      if %w(all projects).include? @mode
+        query_filter.push("group_id LIKE '%tsk%' OR group_id LIKE '%exp%' OR group_id LIKE '%pro%'")
       end
 
-      if %w(all protocols).include? @mode
-        query = query.joins("LEFT JOIN protocols ON subject_type = 'Protocol'
-                                                    AND subject_id = protocols.id AND protocols.my_module_id IS NULL
-                                                    AND protocols.protocol_type != 4")
-                     .select('protocols.name as protocol_name')
-      end
+      query_filter.push("group_id LIKE '%prt%'") if %w(all protocols).include? @mode
 
-      if %w(all repositories).include? @mode
-        query = query.joins("LEFT JOIN repositories ON subject_type = 'Repository' AND subject_id = repositories.id")
-                     .select('repositories.name as repository_name')
-      end
+      query_filter.push("group_id LIKE '%inv%'") if %w(all repositories).include? @mode
 
-      if %w(all reports).include? @mode
-        query = query.joins("LEFT JOIN reports ON subject_type = 'Report' AND subject_id = reports.id")
-                     .select('reports.name as report_name, reports.project_id as report_project_id')
-      end
+      query_filter.push("group_id LIKE '%rpt%'") if %w(all reports).include? @mode
 
-      query = query.select(:subject_id, :subject_type, :last_change).order(last_change: :desc)
+      ordered_query = Activity.from("(#{query.to_sql}) AS activities").where(query_filter.join(' OR '))
+                              .order('last_change DESC').limit(Constants::SEARCH_LIMIT)
 
-      activities = query.as_json.map do |activity|
+      activities = ordered_query.as_json.map do |activity|
         activity.deep_symbolize_keys!
-        object_name = nil
         activity.delete_if { |_k, v| v.nil? }
-        if activity[:my_module_protocol_name]
-          activity[:subject_type] = 'MyModule'
-          activity[:subject_id] = activity.delete :my_module_protocol_id
-        end
-        if activity[:my_module_result_name]
-          activity[:subject_type] = 'MyModule'
-          activity[:subject_id] = activity.delete :my_module_result_id
-        end
-        activity.each do |key, _value|
-          object_name = activity.delete key if key.to_s.include? 'name'
-        end
+
         activity[:last_change] = I18n.l(
           DateTime.parse(activity[:last_change]).in_time_zone(@user.settings[:time_zone] || 'UTC'),
           format: :full_with_comma
         )
-        activity[:name] = escape_input(object_name)
+        activity[:subject_type] = override_subject_type(activity)
+        activity[:name] = escape_input(activity[:name])
         activity[:url] = generate_url(activity)
-        activity unless activity[:name].empty?
-      end.compact
-
-      activities.uniq! { |activity| [activity[:subject_type], activity[:subject_id]].join(':') }
+        activity
+      end
 
       activities
     end
@@ -131,14 +137,28 @@ module Dashboard
     end
 
     def activities_with_filter
-      Activity.where('created_at > ?', (DateTime.now - 1.month))
-              .where("(values #>> '{message_items, user, id}') :: BIGINT = ?", @user.id)
+      Activity.where("(values #>> '{message_items, user, id}') :: BIGINT = ?", @user.id)
               .select('MAX(created_at) as last_change,
-                       percentile_disc(0) WITHIN GROUP (ORDER BY values) as values,
                        subject_id,
                        subject_type')
               .group(:subject_id, :subject_type)
               .order(last_change: :desc)
+    end
+
+    def override_subject_type(activity)
+      if activity[:group_id].include?('pro')
+        'Project'
+      elsif activity[:group_id].include?('exp')
+        'Experiment'
+      elsif activity[:group_id].include?('tsk')
+        'MyModule'
+      elsif activity[:group_id].include?('prt')
+        'Protocol'
+      elsif activity[:group_id].include?('inv')
+        'Repository'
+      elsif activity[:group_id].include?('rpt')
+        'Report'
+      end
     end
   end
 end
