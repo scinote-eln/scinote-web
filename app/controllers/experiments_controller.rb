@@ -95,7 +95,7 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
 
     if @experiment.save
-      experiment_annotation_notification(old_text)
+      experiment_annotation_notification(old_text) if old_text
 
       activity_type = if experiment_params[:archived] == 'false'
                         :restore_experiment

@@ -1,0 +1,59 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.my-modules-list-partial {
+  width: 100%;
+
+  .task-group:not(:first-child) {
+    border-top: $border-tertiary;
+  }
+
+  .header {
+    @include font-small;
+    align-items: center;
+    color: $color-silver-chalice;
+    display: flex;
+    height: 20px;
+    margin-top: 5px;
+    width: 100%;
+
+    .project,
+    .experiment {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .slash {
+      flex-basis: 20px;
+      text-align: center;
+    }
+  }
+
+  .tasks {
+    @include font-button;
+    margin-bottom: 5px;
+
+    .task {
+      align-items: center;
+      display: flex;
+      line-height: 25px;
+
+      .task-icon {
+        flex-shrink: 0;
+        margin-right: 9px;
+
+        path {
+          fill: $brand-primary;
+        }
+      }
+
+      .task-link {
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}

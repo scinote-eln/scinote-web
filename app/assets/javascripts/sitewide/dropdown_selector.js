@@ -380,7 +380,7 @@ var dropdownSelector = (function() {
         }
       } else {
         // on Close we blur search field
-        dropdownContainer.find('.search-field').blur();
+        dropdownContainer.find('.search-field').blur().val('');
 
         // onClose event
         if (config.onClose) {
@@ -681,7 +681,7 @@ var dropdownSelector = (function() {
     // If we have alteast one tag, we need to remove placeholder from search field
     if (selector.data('config').selectAppearance === 'simple') {
       let selectedLabel = container.find('.tag-label');
-      container.find('.search-field').attr('placeholder',
+      container.find('.search-field').prop('placeholder',
         selectedLabel.length && selectedLabel.text().trim() !== '' ? selectedLabel.text().trim() : selector.data('placeholder'));
     } else {
       searchFieldValue.attr('placeholder',
@@ -837,7 +837,21 @@ var dropdownSelector = (function() {
     setData: function(selector, data) {
       if ($(selector).length === 0) return false;
 
-      setData($(selector), []);
+      setData($(selector), data);
+
+      return this;
+    },
+
+    // Select value
+    selectValue: function(selector, value) {
+      var $selector;
+      var option;
+
+      if ($(selector).length === 0) return false;
+
+      $selector = $(selector);
+      option = $selector.find(`option[value="${value}"]`)[0];
+      setData($selector, [convertOptionToJson(option)]);
 
       return this;
     },

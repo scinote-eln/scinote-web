@@ -329,6 +329,8 @@ function initCreateNewModal() {
     });
   });
 
+  if ($('#protocols-index').data('new-protocol')) link.click();
+
   submitBtn.on("click", function() {
     // Submit the form inside modal
     $(this).closest(".modal").find(".modal-body form").submit();

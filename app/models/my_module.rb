@@ -80,6 +80,16 @@ class MyModule < ApplicationRecord
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
+  scope :with_step_statistics, (lambda do
+    left_outer_joins(protocols: :steps)
+    .group(:id)
+    .select('my_modules.*')
+    .select('COUNT(steps.id) AS steps_total')
+    .select('COUNT(steps.id) FILTER (where steps.completed = true) AS steps_completed')
+    .select('CASE COUNT(steps.id) WHEN 0 THEN 0 ELSE'\
+            '((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) '\
+            'END AS steps_completed_percentage')
+  end)
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
@@ -512,6 +522,21 @@ class MyModule < ApplicationRecord
   def uncomplete
     self.state = 'uncompleted'
     self.completed_on = nil
+  end
+
+  def self.my_modules_list_partial
+    ungrouped_tasks = joins(experiment: :project)
+                      .select('experiments.name as experiment_name,
+                               projects.name as project_name,
+                               my_modules.name as task_name,
+                               my_modules.id')
+    ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
+      {
+        project_name: group[0],
+        experiment_name: group[1],
+        tasks: tasks.map { |task| { id: task.id, task_name: task.task_name } }
+      }
+    end
   end
 
   private

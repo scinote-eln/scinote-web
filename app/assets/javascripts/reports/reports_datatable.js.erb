@@ -186,6 +186,8 @@
       initSelectPicker();
       initRedirectToNewReportPage();
     });
+
+    if ($('#content-reports-index').data('new-report')) $('#new-report-btn').click();
   }
 
   initDatatable();

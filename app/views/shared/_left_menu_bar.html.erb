@@ -2,6 +2,12 @@
   <div class="scroll-wrapper">
     <ul class="nav">
       <% if current_user.teams.empty? %>
+      <li class="disabled">
+          <span>
+            <span class="fas fa-thumbtack"></span>
+            <span><%= t('left_menu_bar.dashboard') %></span>
+          </span>
+        </li>
         <li class="disabled">
           <span>
             <span class="fas fa-folder"></span>
@@ -27,6 +33,12 @@
           </span>
         </li>
       <% else %>
+        <li class="<%= "active" if dashboard_are_selected? %>">
+          <%= link_to dashboard_path, id: "dashboard-link", title: t('left_menu_bar.dashboard') do %>
+            <span class="fas fa-thumbtack"></span>
+            <span><%= t('left_menu_bar.dashboard') %></span>
+          <% end %>
+        </li>
         <li class="<%= "active" if projects_are_selected? %>">
           <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
             <span class="fas fa-folder"></span>

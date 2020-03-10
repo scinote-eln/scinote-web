@@ -1,0 +1,21 @@
+<div class="calendar-widget basic-widget">
+  <div class="dashboard-calendar"
+       data-month-events-url="<%= dashboard_calendar_path %>"
+       data-day-events-url="<%= day_dashboard_calendar_path %>"
+  ></div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+  <%
+    js_format = I18n.backend.date_format.dup
+    js_format.gsub!(/%-d/, 'D')
+    js_format.gsub!(/%d/, 'DD')
+    js_format.gsub!(/%-m/, 'M')
+    js_format.gsub!(/%m/, 'MM')
+    js_format.gsub!(/%b/, 'MMM')
+    js_format.gsub!(/%B/, 'MMMM')
+    js_format.gsub!('%Y', 'YYYY')
+  %>
+
+  var formatJS = "<%= js_format %>"
+</script>

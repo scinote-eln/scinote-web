@@ -56,16 +56,14 @@ class Constants
   COMMENTS_SEARCH_LIMIT = 10
   # Activity limited query/display elements for pages
   ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 20
-
+  # Infinite Scroll load limit (elements per page)
+  INFINITE_SCROLL_LIMIT = 20
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
-
   # Maximum nr. of search results for atwho (smart annotations)
   ATWHO_SEARCH_LIMIT = 5
-
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
-
   # Number of protocols in recent protocol dropdown
   RECENT_PROTOCOL_LIMIT = 14
 
