@@ -9,12 +9,16 @@ class CreateMyModuleService
   end
 
   def call
+    new_my_module = nil
     ActiveRecord::Base.transaction do
       unless @params[:experiment].class == Experiment
         @params[:experiment][:project] = @params[:project]
         @params[:experiment] = CreateExperimentService.new(@user, @team, @params[:experiment]).call
       end
-      raise ActiveRecord::Rollback unless @params[:experiment]
+      unless @params[:experiment]&.errors&.empty?
+        new_my_module = @params[:experiment]
+        raise ActiveRecord::Rollback
+      end
 
       @my_module_params[:x] ||= 0
       @my_module_params[:y] ||= 0
@@ -29,8 +33,9 @@ class CreateMyModuleService
       @my_module.save!
       create_my_module_activity
       @params[:experiment].generate_workflow_img
-      @my_module
+      new_my_module = @my_module
     end
+    new_my_module
   end
 
   private

@@ -11,7 +11,7 @@
           <div class="description">
             <%= t("dashboard.create_task_modal.description") %>
           </div>
-          <div class="select-block">
+          <div class="select-block" data-error-object="Project" data-error="">
             <label><%= t("dashboard.create_task_modal.project") %></label>
             <select class="project-filter"
                     data-ajax-url="<%= dashboard_quick_start_project_filter_path %>"
@@ -33,7 +33,7 @@
               </div>
             </div>
           </div>
-          <div class="select-block">
+          <div class="select-block" data-error-object="Experiment" data-error="">
             <label><%= t("dashboard.create_task_modal.experiment") %></label>
             <select class="experiment-filter"
                     data-ajax-url="<%= dashboard_quick_start_experiment_filter_path %>"

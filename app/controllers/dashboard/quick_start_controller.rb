@@ -12,10 +12,10 @@ module Dashboard
       my_module = CreateMyModuleService.new(current_user, current_team,
                                             project: @project || create_project_params,
                                             experiment: @experiment || create_experiment_params).call
-      if my_module
+      if my_module.errors.empty?
         render json: { my_module_path: protocols_my_module_path(my_module) }
       else
-        render json: {}, status: :unprocessable_entity
+        render json: { errors: my_module.errors, error_object: my_module.class.name }, status: :unprocessable_entity
       end
     end
 

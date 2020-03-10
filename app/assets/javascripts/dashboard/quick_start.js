@@ -10,6 +10,7 @@ var DasboardQuickStartWidget = (function() {
   function initNewTaskModal() {
     $('.quick-start-widget .new-task').click(() => {
       $('#create-task-modal').modal('show');
+      $('#create-task-modal .select-block').attr('data-error', '');
     });
 
     dropdownSelector.init(projectFilter, {
@@ -75,7 +76,7 @@ var DasboardQuickStartWidget = (function() {
       }
     });
 
-    $(createTaskButton).click(() => {
+    $(createTaskButton).click((e) => {
       var params = {};
       if (dropdownSelector.getValues(projectFilter) === '0') {
         params.project = {
@@ -90,8 +91,15 @@ var DasboardQuickStartWidget = (function() {
       } else {
         params.experiment = { id: dropdownSelector.getValues(experimentFilter) };
       }
+      e.stopPropagation();
+      e.preventDefault();
+      $('#create-task-modal .select-block').attr('data-error', '');
       $.post($(createTaskButton).data('ajaxUrl'), params, function(data) {
         window.location.href = data.my_module_path;
+      }).error((response) => {
+        var errorsObject = response.responseJSON.error_object;
+        var errorsText = response.responseJSON.errors.name.join(' ');
+        $(`#create-task-modal .select-block[data-error-object="${errorsObject}"]`).attr('data-error', errorsText);
       });
     });
   }

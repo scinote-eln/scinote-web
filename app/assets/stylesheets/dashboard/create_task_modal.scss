@@ -21,6 +21,12 @@
         margin-bottom: 5px;
         user-select: none;
       }
+
+      &::after {
+        display: block;
+        color: $brand-danger;
+        content: attr(data-error);
+      }
     }
 
     .dropdown-selector-container {
@@ -29,14 +35,18 @@
       }
     }
 
+    .new-projects-visibility {
+      position: relative;
+    }
+
     .down-arrow {
       background-color: $color-white;
       box-shadow: -4px 4px 0 $color-black;
       display: inline-block;
       height: 38px;
-      margin: 0 6px 24px 14px;
+      margin: 0 11px 20px 14px;
       opacity: .2;
-      width: 18px;
+      width: 40px;
     }
 
     .down-arrow::before {
@@ -45,14 +55,15 @@
       border-top: 6px solid transparent;
       content: "";
       height: 0;
-      left: 40px;
+      left: 46px;
       position: absolute;
-      top: 185px;
+      top: 36px;
       width: 0;
     }
 
     .project-visibility-container {
       display: inline-block;
+      width: 260px;
     }
 
     .project-visibility-title {
@@ -64,12 +75,13 @@
 
     .sci-toggles-group {
       .sci-toggle-item {
-        width: 143px;
+        width: 130px;
       }
 
       .sci-toggle-item-label {
-        margin-left: -143px;
-        width: 143px;
+        margin-left: -130px;
+        margin-bottom: 0;
+        width: 130px;
       }
     }
 

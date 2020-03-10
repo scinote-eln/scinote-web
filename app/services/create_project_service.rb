@@ -8,15 +8,24 @@ class CreateProjectService
   end
 
   def call
+    new_project = nil
     ActiveRecord::Base.transaction do
       @params[:created_by] = @user
       @params[:last_modified_by] = @user
 
-      @project = @team.projects.create!(@params)
-      @project.user_projects.create!(role: :owner, user: @user)
-      create_project_activity
-      @project
+      @project = @team.projects.new(@params)
+
+      if @project.save
+        @project.user_projects.create!(role: :owner, user: @user)
+        create_project_activity
+        new_project = @project
+      else
+        new_project = @project
+        raise ActiveRecord::Rollback
+
+      end
     end
+    new_project
   end
 
   private
