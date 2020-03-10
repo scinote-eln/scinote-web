@@ -634,6 +634,12 @@
           }
         });
         newStepHandler();
+      }).catch(() => {
+        $('#new-step-assets-tab').addClass('has-error');
+        $('#new-step-assets-group')
+          .addClass('has-error')
+          .prepend('<span class="help-block">' +  I18n.t('general.file.upload_failure') + '</span>');
+        animateSpinner(null, false);
       });
     }
   }

@@ -2,6 +2,8 @@
 
 module ActiveStorage
   class DirectUploadsController < CustomBaseController
+    before_action :check_file_size, only: :create
+
     def create
       blob = ActiveStorage::Blob.create_before_direct_upload!(blob_args)
       render json: direct_upload_json(blob)
@@ -22,6 +24,10 @@ module ActiveStorage
       blob.as_json(root: false, methods: :signed_id)
           .merge(direct_upload: { url: blob.service_url_for_direct_upload,
                                   headers: blob.service_headers_for_direct_upload })
+    end
+
+    def check_file_size
+      render_403 if blob_args[:byte_size] > Rails.configuration.x.file_max_size_mb.megabytes
     end
   end
 end

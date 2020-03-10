@@ -467,7 +467,14 @@
 
         upload.create((error, blob) => {
           if (error) {
-            // Handle the error
+            $.each($('.panel-result-attachment-new'), function() {
+              if (!$(this).find('p').hasClass('dnd-total-error')) {
+                $(this)
+                  .find('.panel-body')
+                  .append("<p class='dnd-total-error'>" + I18n.t('general.file.upload_failure') + '</p>');
+              }
+            });
+            animateSpinner(null, false);
           } else {
             fd.append('results_names[' + index + ']', $('input[name="results[name][' + index + ']"]').val());
             fd.append('results_files[' + index + '][signed_blob_id]', blob.signed_id);
