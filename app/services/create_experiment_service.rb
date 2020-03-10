@@ -8,19 +8,26 @@ class CreateExperimentService
   end
 
   def call
+    new_experiment = nil
     ActiveRecord::Base.transaction do
       unless @params[:project].class == Project
         @params[:project] = CreateProjectService.new(@user, @team, @params[:project]).call
       end
-      raise ActiveRecord::Rollback unless @params[:project]
+      unless @params[:project]&.errors&.empty?
+        new_experiment = @params[:project]
+        raise ActiveRecord::Rollback
+      end
 
       @params[:created_by] = @user
       @params[:last_modified_by] = @user
 
-      @experiment = @params[:project].experiments.create!(@params)
-      create_experiment_activity
-      @experiment
+      @experiment = @params[:project].experiments.new(@params)
+
+      create_experiment_activity if @experiment.save
+
+      new_experiment = @experiment
     end
+    new_experiment
   end
 
   private
