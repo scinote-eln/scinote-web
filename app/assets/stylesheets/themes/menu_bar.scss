@@ -75,6 +75,14 @@
     &.open > a {
       color: $color-emperor;
     }
+
+    .about-scinote {
+      font-size: 12px;
+
+      .core-version {
+        color: $color-silver-chalice;
+      }
+    }
   }
 }
 

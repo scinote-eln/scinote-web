@@ -181,24 +181,7 @@
                           destroy_user_session_path,
                           method: :delete %>
             </li>
-            <li role="separator" class="divider">
-            <li>
-              <%= link_to '#', data: { trigger: 'about-modal' } do %>
-                <%= t('nav.user.about') %>
-              <% end %>
-            </li>
           </ul>
-        </li>
-        <li>
-          <%= link_to Constants::ACADEMY_TR_LINK,
-                      class: "academy-link flag",
-                      title: I18n.t('nav.academy_tooltip'),
-                      target: :_blank do
-          %>
-            <div class="icon-container">
-              <span class="fas fa-graduation-cap"></span>
-            </div>
-          <% end %>
         </li>
       </ul>
     </div>

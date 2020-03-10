@@ -81,6 +81,13 @@
           <li><%= link_to t('left_menu_bar.support_links.tutorials'),
                             Constants::TUTORIALS_URL,
                             target: "_blank" %></li>
+          <li role="separator" class="divider" data-hook="support-dropdown-separator">
+          <li>
+            <%= link_to '#', class: "about-scinote", data: { toggle: 'modal', target: '#aboutModal' } do %>
+              <span class="core-version"><%= t('left_menu_bar.support_links.core_version', version: Scinote::Application::VERSION ) %></span>
+              <%= t('left_menu_bar.support_links.about') %>
+            <% end %>
+          </li>
         </ul>
       </li>
       <li class="<%= "active" if settings_are_selected? %>">

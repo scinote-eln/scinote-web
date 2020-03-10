@@ -3,12 +3,6 @@
 (function() {
   'use strict';
 
-  /* Init about modal */
-  $("[data-trigger='about-modal']").on('click', function(ev) {
-    ev.preventDefault();
-    $('[data-role=about-modal]').modal('show');
-  });
-
   /* Loading overlay for search */
   $('#search-bar').submit(function() {
     if ($('#update-canvas')) {
