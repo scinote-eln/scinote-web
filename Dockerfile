@@ -18,6 +18,10 @@ RUN apt-get update -qq && \
   libvips42 \
   sudo graphviz --no-install-recommends \
   libreoffice \
+  fonts-droid-fallback \
+  fonts-noto-mono \
+  fonts-wqy-microhei \
+  fonts-wqy-zenhei \
   libfile-mimeinfo-perl \
   chromium-driver && \
   wget -q -O /tmp/wkhtmltox_amd64.deb $WKHTMLTOPDF_PACKAGE_URL && \
