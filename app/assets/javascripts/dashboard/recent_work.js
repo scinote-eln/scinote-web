@@ -4,11 +4,11 @@
 var DasboardRecentWorkWidget = (function() {
   function renderRecentWorkItem(data, container) {
     $.each(data, (i, item) => {
-      var recentWorkItem = `<a href="${item.url}" class="recent-work-item">
-                              <div class="object-name">${item.name}</div>
-                              <div class="object-type">${I18n.t('dashboard.recent_work.subject_type.' + item.subject_type)}</div>
-                              <div class="object-changed">${item.last_change}</div>
-                            </a>`;
+      var recentWorkItem = $($('#recent-work-item-template').html());
+      recentWorkItem.attr('href', item.url);
+      recentWorkItem.find('.object-name').html(item.name);
+      recentWorkItem.find('.object-type').html(I18n.t('dashboard.recent_work.subject_type.' + item.subject_type));
+      recentWorkItem.find('.object-changed').html(item.last_change);
       container.append(recentWorkItem);
     });
   }
@@ -22,13 +22,7 @@ var DasboardRecentWorkWidget = (function() {
       if (result.length) {
         renderRecentWorkItem(result, container);
       } else {
-        container.append(`<div class="no-results">
-                            <div class="no-results-title">${I18n.t('dashboard.recent_work.no_results.title')}</div>
-                            <div class="no-results-description">${I18n.t('dashboard.recent_work.no_results.description')}</div>
-                            <div class="no-results-arrow">
-                              <i class="fas fa-angle-double-left"></i>
-                            </div>
-                          </div>`);
+        container.append($('#recent-work-no-results-template').html());
       }
 
       PerfectSb().update_all();

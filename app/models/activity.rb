@@ -21,6 +21,30 @@ class Activity < ApplicationRecord
   validates :subject_type, inclusion: { in: Extends::ACTIVITY_SUBJECT_TYPES,
                                         allow_blank: true }
 
+  scope :subjects_joins, -> { joins("
+                                LEFT JOIN results ON
+                                  subject_type = 'Result'
+                                  AND subject_id = results.id
+                                LEFT JOIN protocols ON
+                                  subject_type = 'Protocol'
+                                  AND subject_id = protocols.id
+                                LEFT JOIN my_modules ON
+                                  (subject_type = 'MyModule' AND subject_id = my_modules.id)
+                                  OR  protocols.my_module_id = my_modules.id
+                                  OR  results.my_module_id = my_modules.id
+                                LEFT JOIN experiments ON
+                                  (subject_type = 'Experiment' AND subject_id = experiments.id)
+                                  OR experiments.id = my_modules.experiment_id
+                                LEFT JOIN projects ON
+                                  (subject_type = 'Project' AND subject_id = projects.id)
+                                  OR projects.id = experiments.project_id
+                                LEFT JOIN repositories ON
+                                  subject_type = 'Repository'
+                                  AND subject_id = repositories.id
+                                LEFT JOIN reports ON subject_type = 'Report'
+                                  AND subject_id = reports.id
+                              ") }
+
   store_accessor :values, :message_items, :breadcrumbs
 
   default_values(

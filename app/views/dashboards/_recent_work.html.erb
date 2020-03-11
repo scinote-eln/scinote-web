@@ -15,3 +15,21 @@
     <div class="recent-work-container perfect-scrollbar" data-url="<%= dashboard_recent_works_path %>"></div>
   </div>
 </div>
+
+<template id="recent-work-item-template">
+  <a href="" class="recent-work-item">
+    <div class="object-name"></div>
+    <div class="object-type"></div>
+    <div class="object-changed"></div>
+  </a>
+</template>
+
+<template id="recent-work-no-results-template">
+  <div class="no-results">
+    <div class="no-results-title"><%= t('dashboard.recent_work.no_results.title') %></div>
+    <div class="no-results-description"><%= t('dashboard.recent_work.no_results.description') %></div>
+    <div class="no-results-arrow">
+      <i class="fas fa-angle-double-left"></i>
+    </div>
+   </div>
+</template>
