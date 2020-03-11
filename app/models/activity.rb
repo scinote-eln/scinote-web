@@ -21,7 +21,8 @@ class Activity < ApplicationRecord
   validates :subject_type, inclusion: { in: Extends::ACTIVITY_SUBJECT_TYPES,
                                         allow_blank: true }
 
-  scope :subjects_joins, -> { joins("
+  scope :subjects_joins, lambda {
+                           joins("
                                 LEFT JOIN results ON
                                   subject_type = 'Result'
                                   AND subject_id = results.id
@@ -43,7 +44,8 @@ class Activity < ApplicationRecord
                                   AND subject_id = repositories.id
                                 LEFT JOIN reports ON subject_type = 'Report'
                                   AND subject_id = reports.id
-                              ") }
+                              ")
+                         }
 
   store_accessor :values, :message_items, :breadcrumbs
 
