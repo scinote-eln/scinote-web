@@ -14,7 +14,7 @@ module Dashboard
     def call
       visible_projects = Project.viewable_by_user(@user, @team)
 
-      activities = Activity.where("(values #>> '{message_items, user, id}') :: BIGINT = ?", @user.id)
+      activities = Activity.where(owner_id: @user.id)
                            .where('((project_id IS NULL AND team_id = ?) OR project_id IN (?))',
                                   @team.id,
                                   visible_projects.pluck(:id))
@@ -25,7 +25,13 @@ module Dashboard
                            .order(last_change: :desc)
 
       query = Activity.from("(#{activities.to_sql}) AS activities")
-                      .subjects_joins
+                      .results_joins
+                      .protocols_joins
+                      .my_modules_joins(:from_results, :from_protocols)
+                      .experiments_joins(:from_my_modules)
+                      .projects_joins(:from_experiments)
+                      .repositories_joins
+                      .reports_joins
                       .where('projects.archived IS NOT TRUE')
                       .where('experiments.archived IS NOT TRUE')
                       .where('my_modules.archived IS NOT TRUE')
