@@ -45,9 +45,9 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function filtersEnabled() {
-    return dropdownSelector.getValues(experimentFilter) ||
-           dropdownSelector.getValues(projectFilter) ||
-           dropdownSelector.getValues(viewFilter) !== 'uncompleted'
+    return dropdownSelector.getValues(experimentFilter)
+           || dropdownSelector.getValues(projectFilter)
+           || dropdownSelector.getValues(viewFilter) !== 'uncompleted';
   }
 
   function loadCurrentTasksList(newList) {
@@ -64,7 +64,6 @@ var DasboardCurrentTasksWidget = (function() {
     $.get($currentTasksList.data('tasksListUrl'), params, function(result) {
       $currentTasksList.empty();
       // Toggle empty state
-      console.log(filtersEnabled())
       if (result.data.length === 0) {
         if (filtersEnabled()) {
           $currentTasksList.append($('#dashboard-current-task-no-search-results').html());
@@ -157,11 +156,11 @@ var DasboardCurrentTasksWidget = (function() {
 
     $('.filter-container').on('hide.bs.dropdown', () => {
       loadCurrentTasksList(true);
-      $('.current-tasks-list').removeClass('disabled')
+      $('.current-tasks-list').removeClass('disabled');
     });
 
     $('.filter-container').on('shown.bs.dropdown', () => {
-      $('.current-tasks-list').addClass('disabled')
+      $('.current-tasks-list').addClass('disabled');
     });
   }
 
