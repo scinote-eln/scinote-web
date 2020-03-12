@@ -6,11 +6,6 @@ var DasboardCurrentTasksWidget = (function() {
   var viewFilter = '.curent-tasks-filters .view-filter';
   var projectFilter = '.curent-tasks-filters .project-filter';
   var experimentFilter = '.curent-tasks-filters .experiment-filter';
-  var emptyState = `<div class="no-tasks">
-                      <p class="text-1">${ I18n.t('dashboard.current_tasks.no_tasks.text_1') }</p>
-                      <p class="text-2">${ I18n.t('dashboard.current_tasks.no_tasks.text_2') }</p>
-                      <i class="fas fa-angle-double-down"></i>
-                    </div>`;
 
   function generateTasksListHtml(json, container) {
     $.each(json.data, (i, task) => {
@@ -49,6 +44,12 @@ var DasboardCurrentTasksWidget = (function() {
     });
   }
 
+  function filtersEnabled() {
+    return dropdownSelector.getValues(experimentFilter) ||
+           dropdownSelector.getValues(projectFilter) ||
+           dropdownSelector.getValues(viewFilter) !== 'uncompleted'
+  }
+
   function loadCurrentTasksList(newList) {
     var $currentTasksList = $('.current-tasks-list');
     var params = {
@@ -61,10 +62,16 @@ var DasboardCurrentTasksWidget = (function() {
     };
     animateSpinner($currentTasksList, true);
     $.get($currentTasksList.data('tasksListUrl'), params, function(result) {
-      $currentTasksList.find('.current-task-item, .no-tasks').remove();
+      $currentTasksList.empty();
       // Toggle empty state
+      console.log(filtersEnabled())
       if (result.data.length === 0) {
-        $currentTasksList.append(emptyState);
+        if (filtersEnabled()) {
+          $currentTasksList.append($('#dashboard-current-task-no-search-results').html());
+        } else {
+          $currentTasksList.append($('#dashboard-current-task-no-tasks').html());
+          $currentTasksList.find('.widget-placeholder').addClass($('.current-tasks-navbar .active').data('mode'));
+        }
       }
       generateTasksListHtml(result, $currentTasksList);
       PerfectSb().update_all();
@@ -150,6 +157,11 @@ var DasboardCurrentTasksWidget = (function() {
 
     $('.filter-container').on('hide.bs.dropdown', () => {
       loadCurrentTasksList(true);
+      $('.current-tasks-list').removeClass('disabled')
+    });
+
+    $('.filter-container').on('shown.bs.dropdown', () => {
+      $('.current-tasks-list').addClass('disabled')
     });
   }
 

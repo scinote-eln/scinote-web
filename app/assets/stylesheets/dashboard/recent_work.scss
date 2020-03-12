@@ -49,18 +49,7 @@
       }
     }
 
-    .no-results {
-      color: $color-alto;
-      padding: 24px;
-
-      .no-results-title {
-        @include font-h1;
-      }
-
-      .no-results-description {
-        @include font-main;
-      }
-
+    .widget-placeholder {
       .no-results-arrow {
         font-size: 32px;
         padding-top: 50px;
