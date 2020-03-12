@@ -566,6 +566,7 @@
         });
         totalSize -= parseInt(droppedFiles[index].size, 10);
         droppedFiles.splice(index, 1);
+        validateTotalSize();
         $el.closest('.panel-result-attachment-new').remove();
       });
     }
