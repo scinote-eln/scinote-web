@@ -40,7 +40,7 @@ module ActiveStorage
         render_403 unless can_read_experiment?(experiment)
       elsif asset.repository_cell
         repository = asset.repository_cell.repository_column.repository
-        render_403 unless can_read_team?(repository.team)
+        render_403 unless can_read_repository?(repository)
       else
         render_403
       end
