@@ -26,7 +26,7 @@ class RepositoryDateTimeValueBase < ApplicationRecord
   end
 
   def self.import_from_text(text, attributes, options = {})
-    date_format = options.dig(:user, :settings, :date_format) || Constants::DEFAULT_DATE_FORMAT
+    date_format = options[:user].settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
     new(attributes.merge(data: DateTime.strptime(text, date_format)))
   rescue ArgumentError
     nil

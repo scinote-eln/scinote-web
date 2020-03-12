@@ -137,7 +137,7 @@ module RepositoryImportParser
           cell_value = column.data_type.constantize.import_from_text(
             value,
             cell_value_attributes,
-            user: @user.as_json
+            user: @user
           )
           next if cell_value.nil?
 

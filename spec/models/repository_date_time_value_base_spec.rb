@@ -39,4 +39,37 @@ describe RepositoryDateTimeValueBase, type: :model do
       end
     end
   end
+
+  describe 'self.import_from_text' do
+    let(:user) { create :user }
+    let(:date_string1) { '2020-01-22' }
+    let(:date_string2) { '01-22-2020' }
+    let(:date_string3) { '01/22/2020' }
+    let(:test_date) { Date.parse('2020-01-22') }
+    let(:attributes) { {} }
+
+    it 'takes date format from user settings 1' do
+      user.settings[:date_format] = '%Y-%m-%d'
+      user.save
+      result = RepositoryDateTimeValueBase.import_from_text(date_string1, attributes, user: user)
+      expect(result).to respond_to(:data)
+      expect(result.data).to eq(test_date)
+    end
+
+    it 'takes date format from user settings 2' do
+      user.settings[:date_format] = '%m-%d-%Y'
+      user.save
+      result = RepositoryDateTimeValueBase.import_from_text(date_string2, attributes, user: user)
+      expect(result).to respond_to(:data)
+      expect(result.data).to eq(test_date)
+    end
+
+    it 'takes default date format when there is no user settings' do
+      user.settings[:date_format] = nil
+      user.save
+      result = RepositoryDateTimeValueBase.import_from_text(date_string3, attributes, user: user)
+      expect(result).to respond_to(:data)
+      expect(result.data).to eq(test_date)
+    end
+  end
 end
