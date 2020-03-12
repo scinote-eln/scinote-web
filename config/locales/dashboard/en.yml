@@ -60,3 +60,21 @@ en:
       experiment_disabled_placeholder: "Select Project to enable Experiments"
       filter_create_new: "Create"
       create_task: "Create Task"
+    recent_work:
+      title: "Recent work"
+      no_results:
+        title: "You have not worked on anything recently."
+        description: "Use the Quick start section to begin creating."
+      modes:
+        all: "All"
+        projects: "PROJECTS"
+        repositories: "INVENTORIES"
+        protocols: "PROTOCOLS"
+        reports: "REPORTS"
+      subject_type:
+        Project: "Project"
+        Experiment: "Experiment"
+        MyModule: "Task"
+        Repository: "Inventory"
+        Protocol: "Protocol"
+        Report: "Report"

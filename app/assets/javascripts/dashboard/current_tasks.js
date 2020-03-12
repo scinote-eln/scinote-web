@@ -154,10 +154,8 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function initNavbar() {
-    $('.navbar-assigned, .navbar-all').on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      $('.current-tasks-navbar').find('a').removeClass('active');
+    $('.current-tasks-navbar .navbar-link').on('click', function() {
+      $(this).parent().find('.navbar-link').removeClass('active');
       $(this).addClass('active');
       loadCurrentTasksList(true);
     });
