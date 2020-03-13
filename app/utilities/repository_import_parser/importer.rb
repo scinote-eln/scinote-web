@@ -133,11 +133,10 @@ module RepositoryImportParser
                                     repository_cell_attributes: { repository_row: row[:repository_row],
                                                                   repository_column: column,
                                                                   importing: true } }
-
           cell_value = column.data_type.constantize.import_from_text(
             value,
             cell_value_attributes,
-            user: @user
+            @user.as_json(root: true, only: :settings).deep_symbolize_keys
           )
           next if cell_value.nil?
 

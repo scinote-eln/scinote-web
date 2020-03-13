@@ -51,7 +51,10 @@ describe RepositoryDateTimeValueBase, type: :model do
     it 'takes date format from user settings 1' do
       user.settings[:date_format] = '%Y-%m-%d'
       user.save
-      result = RepositoryDateTimeValueBase.import_from_text(date_string1, attributes, user: user)
+      result = RepositoryDateTimeValueBase
+               .import_from_text(date_string1,
+                                 attributes,
+                                 user.as_json(root: true, only: :settings).deep_symbolize_keys)
       expect(result).to respond_to(:data)
       expect(result.data).to eq(test_date)
     end
@@ -59,7 +62,10 @@ describe RepositoryDateTimeValueBase, type: :model do
     it 'takes date format from user settings 2' do
       user.settings[:date_format] = '%m-%d-%Y'
       user.save
-      result = RepositoryDateTimeValueBase.import_from_text(date_string2, attributes, user: user)
+      result = RepositoryDateTimeValueBase
+               .import_from_text(date_string2,
+                                 attributes,
+                                 user.as_json(root: true, only: :settings).deep_symbolize_keys)
       expect(result).to respond_to(:data)
       expect(result.data).to eq(test_date)
     end
@@ -67,7 +73,10 @@ describe RepositoryDateTimeValueBase, type: :model do
     it 'takes default date format when there is no user settings' do
       user.settings[:date_format] = nil
       user.save
-      result = RepositoryDateTimeValueBase.import_from_text(date_string3, attributes, user: user)
+      result = RepositoryDateTimeValueBase
+               .import_from_text(date_string3,
+                                 attributes,
+                                 user.as_json(root: true, only: :settings).deep_symbolize_keys)
       expect(result).to respond_to(:data)
       expect(result.data).to eq(test_date)
     end
