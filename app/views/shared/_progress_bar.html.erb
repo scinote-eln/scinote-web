@@ -1,0 +1,15 @@
+<%
+  options = {} unless options
+  text = options[:unlimited] ? '∞' : percentage.to_s + '%'
+  value = options[:unlimited] ? '100%' : percentage.to_s + '%'
+%>
+<div class="progress <%= 'small' if options[:small] %>" data-value="<%= text %>">
+  <div class="progress-bar"
+       role="progressbar"
+       aria-valuenow="<%= value %>"
+       aria-valuemin="0"
+       aria-valuemax="100"
+       style="width: <%= value %>">
+    <div class="progress-bar-text"><%= text %></div>
+  </div>
+</div>

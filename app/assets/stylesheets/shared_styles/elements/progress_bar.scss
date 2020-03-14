@@ -1,0 +1,30 @@
+.progress {
+  background: $color-white;
+  border: $border-tertiary;
+  border-radius: $border-radius-tag;
+  box-shadow: none;
+  height: 24px;
+  position: relative;
+
+  .progress-bar {
+    background: $brand-primary;
+    line-height: 22px;
+    overflow: hidden;
+    position: relative;
+
+    .progress-bar-text {
+      color: $color-white ;
+      line-height: 22px;
+      text-align: center;
+    }
+  }
+
+  &:before {
+    content: attr(data-value);
+    color: $color-volcano;
+    display: block;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+  }
+}
