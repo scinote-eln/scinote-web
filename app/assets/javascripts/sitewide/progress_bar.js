@@ -1,10 +1,9 @@
 
 var progressBar = (function() {
-
   function resizeProgressBars() {
-    $.each($('.progress'), (i, progress_bar) => {
-      $(progress_bar).find('.progress-bar-text').css('width', $(progress_bar).width() + 'px');
-    })
+    $.each($('.progress'), (i, progress) => {
+      $(progress).find('.progress-bar-text').css('width', $(progress).width() + 'px');
+    });
   }
 
 
@@ -13,7 +12,7 @@ var progressBar = (function() {
       resizeProgressBars();
       $(window).on('resize', () => {
         resizeProgressBars();
-      })
+      });
     }
   };
 }());
