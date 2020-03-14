@@ -27,4 +27,21 @@
     text-align: center;
     width: 100%;
   }
+
+  &.small {
+    border: none;
+    height: 4px;
+
+    .progress-bar {
+      line-height: 4px;
+
+      .progress-bar-text {
+        display: none;
+      }
+    }
+
+    &:before {
+      display: none;
+    }
+  }
 }
