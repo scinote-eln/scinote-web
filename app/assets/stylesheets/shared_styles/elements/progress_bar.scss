@@ -13,15 +13,15 @@
     position: relative;
 
     .progress-bar-text {
-      color: $color-white ;
+      color: $color-white;
       line-height: 22px;
       text-align: center;
     }
   }
 
-  &:before {
-    content: attr(data-value);
+  &::before {
     color: $color-volcano;
+    content: attr(data-value);
     display: block;
     position: absolute;
     text-align: center;
@@ -29,7 +29,7 @@
   }
 
   &.small {
-    border: none;
+    border: 0;
     height: 4px;
 
     .progress-bar {
@@ -40,7 +40,7 @@
       }
     }
 
-    &:before {
+    &::before {
       display: none;
     }
   }
