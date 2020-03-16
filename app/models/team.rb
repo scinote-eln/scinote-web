@@ -172,7 +172,7 @@ class Team < ApplicationRecord
         my_module.results.find_each do |result|
           st += result.asset.estimated_size if result.is_asset
           if result.is_text
-            tiny_assets = TinyMceAsset.where(result_text: result.result_text)
+            tiny_assets = TinyMceAsset.where(object_type: 'ResultText', object_id: result.result_text.id)
             tiny_assets.find_each { |tiny| st += tiny.estimated_size }
           end
         end

@@ -137,7 +137,6 @@ class StepsController < ApplicationController
       old_description = @step.description
       old_checklists = fetch_old_checklists_data(@step)
       new_checklists = fetch_new_checklists_data
-      previous_size = @step.space_taken
 
       step_params_all = step_params
 
@@ -176,10 +175,7 @@ class StepsController < ApplicationController
                                         old_description,
                                         new_checklists,
                                         old_checklists)
-
-        # Release team's space taken
         team = @protocol.team
-        team.release_space(previous_size)
         team.save
 
         # Post process step assets
