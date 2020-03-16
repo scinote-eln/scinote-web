@@ -145,10 +145,8 @@ class MyModulesController < ApplicationController
   def update
     update_params = my_module_params
     if update_params[:due_date].present?
-      update_params[:due_date] = Time.strptime(
-        update_params[:due_date].delete('-'),
-        I18n.backend.date_format.dup.delete('-')
-      )
+      update_params[:due_date] =
+        Time.zone.strptime(update_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
     end
     @my_module.assign_attributes(update_params)
     @my_module.last_modified_by = current_user
@@ -211,15 +209,19 @@ class MyModulesController < ApplicationController
           render json: {
             status: :ok,
             due_date_label: render_to_string(
-              partial: "my_modules/due_date_label.html.erb",
+              partial: 'my_modules/due_date_label.html.erb',
               locals: { my_module: @my_module }
             ),
-            module_header_due_date_label: render_to_string(
-              partial: "my_modules/module_header_due_date_label.html.erb",
+            card_due_date_label: render_to_string(
+              partial: 'my_modules/card_due_date_label.html.erb',
+              locals: { my_module: @my_module }
+            ),
+            module_header_due_date: render_to_string(
+              partial: 'my_modules/module_header_due_date.html.erb',
               locals: { my_module: @my_module }
             ),
             description_label: render_to_string(
-              partial: "my_modules/description_label.html.erb",
+              partial: 'my_modules/description_label.html.erb',
               locals: { my_module: @my_module }
             ),
             alerts: alerts
@@ -577,8 +579,8 @@ class MyModulesController < ApplicationController
             render json: {
               new_btn: render_to_string(partial: new_btn_partial),
               completed: completed,
-              module_header_due_date_label: render_to_string(
-                partial: 'my_modules/module_header_due_date_label.html.erb',
+              module_header_due_date: render_to_string(
+                partial: 'my_modules/module_header_due_date.html.erb',
                 locals: { my_module: @my_module }
               ),
               module_state_label: render_to_string(
@@ -605,8 +607,8 @@ class MyModulesController < ApplicationController
         format.json do
             render json: {
               task_button_title: t('my_modules.buttons.uncomplete'),
-              module_header_due_date_label: render_to_string(
-                partial: 'my_modules/module_header_due_date_label.html.erb',
+              module_header_due_date: render_to_string(
+                partial: 'my_modules/module_header_due_date.html.erb',
                 locals: { my_module: @my_module }
               ),
               module_state_label: render_to_string(

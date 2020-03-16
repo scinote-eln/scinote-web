@@ -6,12 +6,12 @@
     </div>
     <strong><%= l(@my_module.created_at, format: :full) %></strong>
   </div>
-  
+
   <div class="flex-block date-block" >
     <span class="fas block-icon fa-calendar-alt"></span>
     <span class="hidden-xs hidden-sm  hidden-md"><%=t "my_modules.module_header.due_date" %></span>
     <div class="due-date-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
-      <%= render partial: "module_header_due_date_label.html.erb",
+      <%= render partial: "module_header_due_date.html.erb",
         locals: { my_module: @my_module } %>
     </div>
   </div>

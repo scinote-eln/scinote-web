@@ -1,0 +1,29 @@
+<% if my_module.completed? %>
+  <%= t("my_modules.states.completed") %>
+  <span class="due-date-label">
+    <%= l(my_module.completed_on.utc, format: :full_date) %>
+    <span class="fas fa-check"></span>
+  </span>
+<% elsif my_module.is_one_day_prior? %>
+  <%= t("my_modules.states.due_soon") %>
+  <span class="due-date-label">
+    <%=l my_module.due_date.utc, format: :full_date %>
+    <span class="fas fa-exclamation-triangle"></span>
+  </span>
+<% elsif my_module.is_overdue? %>
+  <%= t("my_modules.states.overdue") %>
+  <span class="due-date-label">
+    <%=l my_module.due_date.utc, format: :full_date %>
+    <span class="fas fa-exclamation-triangle"></span>
+  </span>
+<% elsif my_module.due_date %>
+  <%= t("experiments.canvas.full_zoom.due_date") %>
+  <span class="due-date-label">
+      <%=l my_module.due_date.utc, format: :full_date %>
+  </span>
+<% else %>
+  <%= t("experiments.canvas.full_zoom.due_date") %>
+  <span class="due-date-label">
+    <em><%=t "experiments.canvas.full_zoom.no_due_date" %></em>
+  </span>
+<% end %>

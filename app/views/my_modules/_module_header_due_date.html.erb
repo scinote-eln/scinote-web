@@ -1,0 +1,33 @@
+<span class="date-text" data-editable="<%= can_manage_module?(my_module) %>">
+  <span id="due-date-label-container" class="view-block">
+    <%= render partial: "due_date_label.html.erb" , locals: { my_module: my_module } %>
+  </span>
+  <% if can_manage_module?(my_module) %>
+    <div class="datetime-picker-container" id="due-date">
+      <%
+        js_format = I18n.backend.date_format.dup
+          js_format.gsub!(/%-d/, 'D')
+          js_format.gsub!(/%d/, 'DD')
+          js_format.gsub!(/%-m/, 'M')
+          js_format.gsub!(/%m/, 'MM')
+          js_format.gsub!(/%b/, 'MMM')
+          js_format.gsub!(/%B/, 'MMMM')
+          js_format.gsub!('%Y', 'YYYY')
+          js_format << ' HH:mm'
+      %>
+
+      <span class="fas fa-calendar-alt"></span>
+      <input id="calendar-due-date"
+             type="datetime"
+             data-toggle='date-time-picker'
+             class="form-control calendar-input"
+             readonly
+             placeholder="<%= t('experiments.canvas.full_zoom.no_due_date') %>"
+             data-date-format="<%= js_format %>"
+             data-date-locale="<%= I18n.locale %>"
+             data-date-use-current="false"
+             value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
+    </div>
+    <span class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendar-due-date'></span>
+  <% end %>
+</span>
