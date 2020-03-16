@@ -32,6 +32,19 @@
       height: calc(100% - var(--widget-header-size));
       position: absolute;
       width: 100%;
+
+      .widget-placeholder {
+        color: $color-alto;
+        padding: 24px;
+
+        .widget-placeholder-title {
+          @include font-h1;
+        }
+
+        .widget-placeholder-description {
+          @include font-main;
+        }
+      }
     }
   }
 }

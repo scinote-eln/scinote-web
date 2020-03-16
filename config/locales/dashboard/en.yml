@@ -23,8 +23,13 @@ en:
         select_experiment: "All Experiments"
         apply: "Apply"
       no_tasks:
-        text_1: "Looks like you completed all of your tasks. Good job!"
-        text_2: "Why not use use the Quick start section to create your next task"
+        assigned_tasks:
+          title: "There are no tasks assigned to you at the moment."
+          description: "Why not use the Quick start section to create your next task."
+        team_tasks:
+          title: "Your Team has no tasks at the moment."
+        search_result:
+          title: "No results."
       due_date: "Due date: %{date}"
       progress_bar:
         in_progress: "In progress"
@@ -47,6 +52,9 @@ en:
       new_task: "New task"
       new_protocol: "New protocol"
       new_report: "New report"
+      placeholder:
+        title: "Cannot create."
+        description: "As a guest in this team you cannot create anything."
     create_task_modal:
       title: "Create a new Task"
       description: "Simply type in the fields bellow to find or create space for your new task to live in"
@@ -65,6 +73,9 @@ en:
       no_results:
         title: "You have not worked on anything recently."
         description: "Use the Quick start section to begin creating."
+      no_results_guest:
+        title: "No recent work."
+        description: "As a guest in this team you cannot make or change anything."
       modes:
         all: "All"
         projects: "PROJECTS"

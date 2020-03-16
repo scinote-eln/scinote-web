@@ -64,3 +64,20 @@
     </div>
   </div>
 </div>
+
+<template id="dashboard-current-task-no-tasks">
+  <div class="widget-placeholder">
+    <p class="widget-placeholder-title team"><%= I18n.t('dashboard.current_tasks.no_tasks.team_tasks.title') %></p>
+    <p class="widget-placeholder-title assigned"><%= I18n.t('dashboard.current_tasks.no_tasks.assigned_tasks.title') %></p>
+    <% unless current_user.is_guest_of_team?(current_team) %>
+      <p class="widget-placeholder-description"><%= I18n.t('dashboard.current_tasks.no_tasks.assigned_tasks.description') %></p>
+      <i class="fas fa-angle-double-down"></i>
+    <% end %>
+  </div>
+</template>
+
+<template id="dashboard-current-task-no-search-results">
+  <div class="widget-placeholder">
+    <p class="widget-placeholder-title"><%= I18n.t('dashboard.current_tasks.no_tasks.search_result.title') %></p>
+  </div>
+</template>
