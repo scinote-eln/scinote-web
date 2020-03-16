@@ -41,7 +41,7 @@ gem 'rack-attack'
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
-gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17'
 # Select elements for Bootstrap
 gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'

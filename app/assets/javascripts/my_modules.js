@@ -1,28 +1,24 @@
 /* global I18n dropdownSelector */
 /* eslint-disable no-use-before-define */
 
+function updateDueDate() {
+  let updateUrl = $('.due-date-container').data('update-url');
+  let val = $('#calendar-due-date').val();
+  $.ajax({
+    url: updateUrl,
+    type: 'PATCH',
+    dataType: 'json',
+    data: { my_module: { due_date: val } },
+    success: function(result) {
+      $('#due-date-label-container').html(result.due_date_label);
+    }
+  });
+}
+
 // Bind ajax for editing due dates
 function initDueDatePicker() {
-  function updateDueDate(val) {
-    var updateUrl = $('.due-date-container').data('update-url');
-    $.ajax({
-      url: updateUrl,
-      type: 'PATCH',
-      dataType: 'json',
-      data: { my_module: { due_date: val } },
-      success: function(result) {
-        $('.due-date-container').html($(result.module_header_due_date_label));
-        initDueDatePicker();
-      }
-    });
-  }
-
   $('#calendar-due-date').on('dp.change', function() {
-    updateDueDate($('#calendar-due-date').val());
-  });
-
-  $('.flex-block.date-block .clear-date').off('click').on('click', function() {
-    updateDueDate(null);
+    updateDueDate();
   });
 }
 
@@ -194,7 +190,7 @@ function applyTaskCompletedCallBack() {
             button.find('.btn')
               .removeClass('btn-default').addClass('btn-primary');
           }
-          $('.due-date-container').html(data.module_header_due_date_label);
+          $('.due-date-container').html(data.module_header_due_date);
           initDueDatePicker();
           $('.task-state-label').html(data.module_state_label);
           button.find('button').replaceWith(data.new_btn);

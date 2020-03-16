@@ -22,9 +22,10 @@ module BootstrapFormHelper
     def datetime_picker(name, options = {})
       id = "#{@object_name}_#{name.to_s}"
       input_name = "#{@object_name}[#{name.to_s}]"
-      timestamp = @object[name] ? "#{@object[name].to_i}000" : ""
+      date_format = I18n.backend.date_format.dup
+      value = options[:value] ? options[:value].strftime(date_format + ' %H:%M') : ''
       js_locale = I18n.locale.to_s
-      js_format = I18n.backend.date_format.dup
+      js_format = date_format
       js_format.gsub!(/%-d/, 'D')
       js_format.gsub!(/%d/, 'DD')
       js_format.gsub!(/%-m/, 'M')
@@ -32,36 +33,27 @@ module BootstrapFormHelper
       js_format.gsub!(/%b/, 'MMM')
       js_format.gsub!(/%B/, 'MMMM')
       js_format.gsub!('%Y', 'YYYY')
+      js_format << ' HH:mm' if options[:time] == true
 
-      label = name.to_s.humanize
-      if options[:label] then
-        label = options[:label]
+      label = options[:label] || name.to_s.humanize
+
+      style = options[:style] ? "style='#{options[:style]}'" : ''
+
+      res = "<div class='form-group' #{style}><label class='control-label required' for='#{id}'>#{label}</label>" \
+            "<div class='container' style='padding-left: 0; margin-left: 0;'><div class='row'><div class='col-sm-6'>"
+
+      res << "<div class='input-group date'>" if options[:clear]
+
+      res << "<input type='datetime' class='form-control' name='#{input_name}' id='#{id}' "\
+             "readonly value='#{value}' data-toggle='date-time-picker' data-date-format='#{js_format}' " \
+             "data-date-locale='#{js_locale}' data-date-show-today-button='#{options[:today].present?}'/>"
+
+      if options[:clear]
+        res << "<span class='input-group-addon' data-toggle='clear-date-time-picker' data-target='#{id}'>" \
+               "<i class='fas fa-times'></i></span></div>"
       end
 
-      styleStr = ""
-      if options[:style] then
-        styleStr = "style='#{options[:style]}'"
-      end
-
-      jsOpts = ""
-      if options[:today] then
-        jsOpts << "showTodayButton: true, "
-      end
-
-      res = ""
-      res << "<div class='form-group' #{styleStr}><label class='control-label required' for='#{id}'>#{label}</label><div class='container' style='padding-left: 0; margin-left: 0;'><div class='row'><div class='col-sm-6'><div class='form-group'>"
-      if options[:clear] then
-        res << "<div class='input-group date'>"
-      end
-      res << "<input type='datetime' class='form-control' name='#{input_name}' id='#{id}' readonly data-ts='#{timestamp}' />"
-      if options[:clear] then
-        res << "<span class='input-group-addon' id='#{id}_clear'><span class='fas fa-times'></span></span></div>"
-      end
-      res << "</div></div></div></div><script type='text/javascript'>$(function () { var dt = $('##{id}'); dt.datetimepicker({ #{jsOpts}ignoreReadonly: true, locale: '#{js_locale}', format: '#{js_format}' }); if (dt.length > 0 && dt.data['ts'] != '') { $('##{id}').data('DateTimePicker').date(moment($('##{id}').data('ts'))); }"
-      if options[:clear] then
-        res << "$('##{id}_clear').click(function() { $('##{id}').data('DateTimePicker').clear(); });"
-      end
-      res << "});</script></div>"
+      res << '</div></div></div></div>'
       res.html_safe
     end
 

@@ -156,7 +156,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
     bootstrap-select-rails (1.12.4)
-    bootstrap3-datetimepicker-rails (4.15.35)
+    bootstrap3-datetimepicker-rails (4.17.47)
       momentjs-rails (>= 2.8.1)
     bootstrap_form (2.7.0)
     builder (3.2.3)
@@ -606,7 +606,7 @@ DEPENDENCIES
   bootsnap
   bootstrap-sass (~> 3.4.1)
   bootstrap-select-rails (~> 1.12.4)
-  bootstrap3-datetimepicker-rails (~> 4.15.35)
+  bootstrap3-datetimepicker-rails (~> 4.17)
   bootstrap_form (~> 2.7.0)
   bullet
   byebug
