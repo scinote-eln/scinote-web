@@ -19,7 +19,6 @@ class Team < ApplicationRecord
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
-  validates :space_taken, presence: true
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -151,6 +150,20 @@ class Team < ApplicationRecord
     end
 
     fields
+  end
+
+  def storage_used
+    by_assets = Asset.joins(:file_blob)
+                     .where(assets: { team_id: id })
+                     .select('active_storage_blobs.byte_size')
+
+    by_tiny_mce_assets = TinyMceAsset.joins(:image_blob)
+                                     .where(tiny_mce_assets: { team_id: id })
+                                     .select('active_storage_blobs.byte_size')
+
+    ActiveStorage::Blob
+      .from("((#{by_assets.to_sql}) UNION ALL (#{by_tiny_mce_assets.to_sql})) AS active_storage_blobs")
+      .sum(:byte_size)
   end
 
   # (re)calculate the space taken by this team
