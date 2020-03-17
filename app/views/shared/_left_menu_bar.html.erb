@@ -73,6 +73,13 @@
           <span><%= t('left_menu_bar.activities') %></span>
         <% end %>
       </li>
+      <!-- settings -->
+      <li class="<%= "active" if settings_are_selected? %>">
+        <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
+          <span class="fas fa-cog"></span>
+          <span><%= t('left_menu_bar.settings') %></span>
+        <% end %>
+      </li>
       <!-- support -->
       <li class="dropup">
         <a href="#"
@@ -102,12 +109,7 @@
           </li>
         </ul>
       </li>
-      <li class="<%= "active" if settings_are_selected? %>">
-        <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
-          <span class="fas fa-cog"></span>
-          <span><%= t('left_menu_bar.settings') %></span>
-        <% end %>
-      </li>
+      <!-- academy -->
       <li>
         <%= link_to Constants::ACADEMY_BL_LINK,
           id: "academy-link",

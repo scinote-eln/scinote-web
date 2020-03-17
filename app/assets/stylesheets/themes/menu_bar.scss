@@ -70,6 +70,10 @@
       bottom: 0;
       left: 99%;
       margin-bottom: 0;
+
+      & > li > a {
+        padding: 8px 20px;
+      }
     }
 
     &.open > a {
@@ -83,6 +87,10 @@
         color: $color-silver-chalice;
       }
     }
+  }
+
+  #support-link {
+    color: $brand-primary;
   }
 }
 
