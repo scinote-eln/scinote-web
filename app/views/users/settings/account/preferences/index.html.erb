@@ -31,7 +31,7 @@
             <%= select_tag "date-format-input-field",
                             options_for_select(
                               Constants::SUPPORTED_DATE_FORMATS.uniq.map{ |df|
-                                ["#{l(Time.new(2014, 11, 6), format: :full_date, date_format: df)}", df]
+                                ["#{l(Time.new(2019, 11, 25), format: :full_date, date_format: df)}", df]
                               },
                               @user.settings[:date_format]
                             ),{
