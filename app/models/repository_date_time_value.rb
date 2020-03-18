@@ -13,7 +13,7 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
   end
 
   def export_formatted
-    I18n.l(data, format: :full )
+    I18n.l(data, format: :full)
   end
 
   def self.new_with_payload(payload, attributes)
@@ -28,5 +28,4 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
   rescue ArgumentError
     nil
   end
-
 end
