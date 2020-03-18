@@ -19,7 +19,7 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
   end
 
   def self.import_from_text(text, attributes, options = {})
-    date_format = (options.dig(:user, :settings, :date_format) || Constants::DEFAULT_DATE_FORMAT).gsub(/%-/, '%') 
+    date_format = (options.dig(:user, :settings, :date_format) || Constants::DEFAULT_DATE_FORMAT).gsub(/%-/, '%')
     new(attributes.merge(data: DateTime.strptime(text, date_format)))
   rescue ArgumentError
     nil

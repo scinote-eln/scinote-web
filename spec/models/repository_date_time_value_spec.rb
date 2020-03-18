@@ -9,7 +9,7 @@ describe RepositoryDateTimeValue, type: :model do
 
   describe '.formatted' do
     it 'prints date format with date' do
-      str = '10/11/2000, 01:04'
+      str = '10/11/2000 01:04'
       expect(date_time_value.formatted).to eq(str)
     end
   end
@@ -53,15 +53,14 @@ describe RepositoryDateTimeValue, type: :model do
   describe 'self.import_from_text' do
     let(:user) { create :user }
     let(:test_date) { DateTime.parse('2020-01-22 09:52') }
-    let(:date_string) { '01/22/2020, 09:52' }
+    let(:date_string) { '01/22/2020 09:52' }
     let(:attributes) { {} }
-
 
     it 'correctly handles all available date formats' do
       Constants::SUPPORTED_DATE_FORMATS.each do |date_format|
         user.settings[:date_format] = date_format.gsub(/%-/, '%')
         user.save
-        date_format += ", %H:%M"
+        date_format += ' %H:%M'
         test_string = test_date.strftime(date_format)
         result = RepositoryDateTimeValue
                  .import_from_text(test_string,

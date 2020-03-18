@@ -56,7 +56,6 @@ describe RepositoryDateValue, type: :model do
     let(:date_string) { '01/22/2020' }
     let(:attributes) { {} }
 
-
     it 'correctly handles all available date formats' do
       Constants::SUPPORTED_DATE_FORMATS.each do |date_format|
         user.settings[:date_format] = date_format.gsub(/%-/, '%')

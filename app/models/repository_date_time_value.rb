@@ -9,7 +9,7 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
   end
 
   def formatted
-    super(:full_with_comma)
+    I18n.l(data, format: :full )
   end
 
   def self.new_with_payload(payload, attributes)
@@ -19,11 +19,10 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
   end
 
   def self.import_from_text(text, attributes, options = {})
-    date_format = (options.dig(:user, :settings, :date_format) || Constants::DEFAULT_DATE_FORMAT).gsub(/%-/, '%') + ", %H:%M"
+    date_format = (options.dig(:user, :settings, :date_format) || Constants::DEFAULT_DATE_FORMAT).gsub(/%-/, '%') + ' %H:%M'
     new(attributes.merge(data: DateTime.strptime(text, date_format)))
   rescue ArgumentError
     nil
   end
 
-  alias export_formatted formatted
 end
