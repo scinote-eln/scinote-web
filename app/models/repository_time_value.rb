@@ -18,5 +18,12 @@ class RepositoryTimeValue < RepositoryDateTimeValueBase
     value
   end
 
+  def self.import_from_text(text, attributes, _options = {})
+    time_format = '%H:%M'
+    new(attributes.merge(data: DateTime.strptime(text, time_format).strftime(time_format)))
+  rescue ArgumentError
+    nil
+  end
+
   alias export_formatted formatted
 end
