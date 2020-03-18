@@ -9,6 +9,10 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
   end
 
   def formatted
+    super(:full_with_comma)
+  end
+
+  def export_formatted
     I18n.l(data, format: :full )
   end
 

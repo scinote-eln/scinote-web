@@ -9,7 +9,7 @@ describe RepositoryDateTimeValue, type: :model do
 
   describe '.formatted' do
     it 'prints date format with date' do
-      str = '10/11/2000 01:04'
+      str = '10/11/2000, 01:04'
       expect(date_time_value.formatted).to eq(str)
     end
   end
