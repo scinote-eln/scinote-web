@@ -176,7 +176,7 @@
             </span>
           </a>
           <ul class="dropdown-menu" data-hook="navigation-user-menu">
-            <li>
+            <li data-hook="navigation-user-menu-logout">
               <%= link_to t('nav.user.logout'),
                           destroy_user_session_path,
                           method: :delete %>
