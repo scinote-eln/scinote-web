@@ -300,6 +300,7 @@ function initCreateNewModal() {
   var link = $("[data-action='create-new']");
   var modal = $("#create-new-modal");
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
+  var newProtocol = parseInt(sessionStorage.getItem('scinote-dashboard-new-protocol'), 10);
 
   link.on("click", function() {
     $.ajax({
@@ -329,7 +330,10 @@ function initCreateNewModal() {
     });
   });
 
-  if ($('#protocols-index').data('new-protocol')) link.click();
+  if (Math.floor(Date.now() / 1000) - newProtocol < 15) {
+    link.click();
+    sessionStorage.removeItem('scinote-dashboard-new-protocol');
+  }
 
   submitBtn.on("click", function() {
     // Submit the form inside modal
