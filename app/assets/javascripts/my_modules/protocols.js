@@ -10,15 +10,19 @@ var selectedRow = null;
 
 
 function initEditMyModuleDescription() {
-  $('#my_module_description_view').on('click', function() {
+  var viewObject = $('#my_module_description_view');
+  viewObject.on('click', function() {
     TinyMCE.init('#my_module_description_textarea');
   });
+  TinyMCE.initIfHasDraft(viewObject);
 }
 
 function initEditProtocolDescription() {
-  $('#protocol_description_view').on('click', function() {
+  var viewObject = $('#protocol_description_view');
+  viewObject.on('click', function() {
     TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
   });
+  TinyMCE.initIfHasDraft(viewObject);
 }
 
 // Initialize edit description modal window
