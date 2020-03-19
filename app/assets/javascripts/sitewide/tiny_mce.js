@@ -85,14 +85,13 @@ var TinyMCE = (function() {
   }
 
   function draftLocation() {
-    return 'tinymce-drafts-' + document.location.pathname
+    return 'tinymce-drafts-' + document.location.pathname;
   }
 
   function removeDraft(editor, textAreaObject) {
-    console.log(1)
     var location = draftLocation();
     var storedDrafts = JSON.parse(sessionStorage.getItem(location) || '[]');
-    var draftId = storedDrafts.indexOf(textAreaObject.data('tinymce-object'))
+    var draftId = storedDrafts.indexOf(textAreaObject.data('tinymce-object'));
     if (draftId > -1) {
       storedDrafts.splice(draftId, 1);
     }
@@ -332,7 +331,7 @@ var TinyMCE = (function() {
             editor.on('StoreDraft', function() {
               var location = draftLocation();
               var storedDrafts = JSON.parse(sessionStorage.getItem(location) || '[]');
-              var draftName = textAreaObject.data('tinymce-object')
+              var draftName = textAreaObject.data('tinymce-object');
               if (storedDrafts.includes(draftName) || !draftName) return;
               storedDrafts.push(draftName);
               sessionStorage.setItem(location, JSON.stringify(storedDrafts));
@@ -399,10 +398,10 @@ var TinyMCE = (function() {
         let top = viewObject.offset().top;
         setTimeout(() => {
           viewObject.click();
-        }, 0)
+        }, 0);
         setTimeout(() => {
           window.scrollTo(0, top - 150);
-        }, 2000)
+        }, 2000);
       }
     }
   });
