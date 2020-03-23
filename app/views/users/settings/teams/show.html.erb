@@ -50,7 +50,7 @@
       <div class="space-usage grid-block">
         <span class="fas fa-hdd"></span>
         <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
-        <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.space_taken)}" %></b>
+        <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.storage_used)}" %></b>
       </div>
     </div>
 
