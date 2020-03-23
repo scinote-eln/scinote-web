@@ -37,10 +37,14 @@ class RepositoryRowsController < ApplicationController
               .call(repository: @repository, user: current_user, params: update_params)
 
     if service.succeed?
-      log_activity(:create_item_inventory, service.repository_row) if service.succeed?
+      repository_row = service.repository_row
+      log_activity(:create_item_inventory, repository_row)
+      repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
+        record_annotation_notification(repository_row, repository_cell)
+      end
 
       render json: { id: service.repository_row.id, flash: t('repositories.create.success_flash',
-                                                             record: escape_input(service.repository_row.name),
+                                                             record: escape_input(repository_row.name),
                                                              repository: escape_input(@repository.name)) },
              status: :ok
     else
@@ -97,7 +101,12 @@ class RepositoryRowsController < ApplicationController
                  .call(repository_row: @record, user: current_user, params: update_params)
 
     if row_update.succeed?
-      log_activity(:edit_item_inventory, @record) if row_update.record_updated
+      if row_update.record_updated
+        log_activity(:edit_item_inventory, @record)
+        @record.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
+          record_annotation_notification(@record, repository_cell)
+        end
+      end
 
       render json: { id: @record.id, flash: t('repositories.update.success_flash',
                                               record: escape_input(@record.name),
@@ -250,9 +259,8 @@ class RepositoryRowsController < ApplicationController
   end
 
   def record_annotation_notification(record, cell, old_text = nil)
-    table_url = params.fetch(:request_url) { :request_url_must_be_present }
     smart_annotation_notification(
-      old_text: (old_text if old_text),
+      old_text: old_text,
       new_text: cell.value.data,
       title: t('notifications.repository_annotation_title',
                user: current_user.full_name,
@@ -260,8 +268,8 @@ class RepositoryRowsController < ApplicationController
                record: record.name,
                repository: record.repository.name),
       message: t('notifications.repository_annotation_message_html',
-                 record: link_to(record.name, table_url),
-                 column: link_to(cell.repository_column.name, table_url))
+                 record: link_to(record.name, repository_url(@repository)),
+                 column: link_to(cell.repository_column.name, repository_url(@repository)))
     )
   end
 
