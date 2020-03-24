@@ -72,10 +72,14 @@ input[type="checkbox"].sci-checkbox {
     }
   }
 
-  &:disabled + .sci-checkbox-label {
-    &::before {
-      background: $color-alto;
-      border: $border-tertiary;
+  &:disabled {
+    cursor: default;
+
+    + .sci-checkbox-label {
+      &::before {
+        background: $color-alto;
+        border: $border-tertiary;
+      }
     }
   }
 }
