@@ -4,9 +4,11 @@
 .dashboard-container .calendar-widget {
   grid-column: 10 / span 3;
   grid-row: 1 / span 6;
+  min-height: 320px;
 
   .dashboard-calendar {
     height: 100%;
+    position: absolute;
     width: 100%;
   }
 
@@ -19,6 +21,7 @@
       border-bottom: $border-default;
       display: flex;
       flex-basis: 42px;
+      flex-shrink: 0;
       padding: 3px;
 
       .clndr-title {
@@ -33,6 +36,7 @@
     .days-container {
       align-items: center;
       display: grid;
+      flex-basis: calc(100% - 42px);
       flex-grow: 1;
       grid-column-gap: 6px;
       grid-row-gap: 6px;
