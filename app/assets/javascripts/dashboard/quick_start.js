@@ -7,6 +7,18 @@ var DasboardQuickStartWidget = (function() {
   var createTaskButton = '#create-task-modal .create-task-button';
   var newProjectsVisibility = '#create-task-modal .new-projects-visibility';
 
+  function initNewReportLink() {
+    $('.quick-start-widget .new-report').click(() => {
+      sessionStorage.setItem('scinote-dashboard-new-report', Math.floor(Date.now() / 1000));
+    });
+  }
+
+  function initNewProtocolLink() {
+    $('.quick-start-widget .new-protocol').click(() => {
+      sessionStorage.setItem('scinote-dashboard-new-protocol', Math.floor(Date.now() / 1000));
+    });
+  }
+
   function initNewTaskModal() {
     $('.quick-start-widget .new-task').click(() => {
       $('#create-task-modal').modal('show');
@@ -108,6 +120,8 @@ var DasboardQuickStartWidget = (function() {
     init: () => {
       if ($('.quick-start-widget').length) {
         initNewTaskModal();
+        initNewProtocolLink();
+        initNewReportLink();
       }
     }
   };
