@@ -24,7 +24,8 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
 
   def self.import_from_text(text, attributes, options = {})
     date_format = (options.dig(:user, :settings, :date_format) || Constants::DEFAULT_DATE_FORMAT).gsub(/%-/, '%') + ' %H:%M'
-    new(attributes.merge(data: DateTime.strptime(text, date_format)))
+    Time.zone = options.dig(:user, :settings, :time_zone) || 'UTC'
+    new(attributes.merge(data: Time.zone.strptime(text, date_format)))
   rescue ArgumentError
     nil
   end
