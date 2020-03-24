@@ -16,38 +16,38 @@
     </div>
 
     <% if can_manage_module?(@my_module) %>
-      <div class="help_tooltips"
-           data-tooltiplink="<%= I18n.t('tooltips.link.task.results') %>"
-           data-tooltipcontent="<%= I18n.t('tooltips.text.task.results') %>">
-      <span class="hidden-xs add-result-text"><%= t'my_modules.results.add_label' %></span>
-      <div class="sci-btn-group">
-        <a class="btn btn-primary"
-           id="new-result-text"
-           data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
-           href="#">
-          <span class="fas fa-font"></span>
-          <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
-        </a>
-        <a class="btn btn-primary"
-           id="new-result-table"
-           data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>"
-           href="#">
-          <span class="fas fa-table"></span>
-          <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
-        </a>
-        <a class="btn btn-primary"
-           id="new-result-asset"
-           data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
-           href="#">
-          <span class="fas fa-paperclip"></span>
-          <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
-        </a>
-        <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
-                     locals: {  element_id: @my_module.id, element_type: 'Result',  sketch_container: "#results[data-module-id=#{@my_module.id}]" } %>
-        <%= render partial: "assets/wopi/create_wopi_file_button",
-                   locals: {  element_id: @my_module.id, element_type: 'Result' } %>
+      <div class="add-result-toolbar">
+        <span class="hidden-xs add-result-text"><%= t'my_modules.results.add_label' %></span>
+        <div class="sci-btn-group help_tooltips"
+             data-tooltiplink="<%= I18n.t('tooltips.link.task.results') %>"
+             data-tooltipcontent="<%= I18n.t('tooltips.text.task.results') %>">
+          <a class="btn btn-primary"
+             id="new-result-text"
+             data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
+             href="#">
+            <span class="fas fa-font"></span>
+            <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
+          </a>
+          <a class="btn btn-primary"
+             id="new-result-table"
+             data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>"
+             href="#">
+            <span class="fas fa-table"></span>
+            <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
+          </a>
+          <a class="btn btn-primary"
+             id="new-result-asset"
+             data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
+             href="#">
+            <span class="fas fa-paperclip"></span>
+            <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
+          </a>
+          <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
+                       locals: {  element_id: @my_module.id, element_type: 'Result',  sketch_container: "#results[data-module-id=#{@my_module.id}]" } %>
+          <%= render partial: "assets/wopi/create_wopi_file_button",
+                     locals: {  element_id: @my_module.id, element_type: 'Result' } %>
+        </div>
       </div>
-    </div>
     <% end %>
   </div>
 
