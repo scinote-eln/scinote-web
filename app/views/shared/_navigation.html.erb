@@ -88,7 +88,7 @@
                     <% end %>
                   </div>
                 <% end %>
-                <% if current_user.teams.length > 1 && can_create_teams? %>
+                <% if can_create_teams? %>
                   <li class="new-team">
                     <%= link_to new_team_path do %>
                       <span class="fas fa-plus"></span>
