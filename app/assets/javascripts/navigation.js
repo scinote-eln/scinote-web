@@ -90,11 +90,9 @@
 
     ps = new PerfectScrollbar(teamContainter, { scrollYMarginOffset: 5 });
     teamSwitch.click(() => {
-      dropDownHeight = dropDownMenu.height();
       if (teamSwitch.find('.new-team').length === 0) {
         teamSwitch.find('.edit_user').css('height', '100%');
       }
-      dropDownMenu.css('height', (dropDownHeight + 'px'));
       setTimeout(() => {
         ps.update();
       }, 0);

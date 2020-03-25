@@ -65,7 +65,6 @@
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <% if current_user.teams.length > 1 || can_create_teams? %>
               <ul class="dropdown-menu">
                 <%= form_for(current_user,
                              url: user_current_team_path,
@@ -89,7 +88,7 @@
                     <% end %>
                   </div>
                 <% end %>
-                <% if current_user.teams.length > 1 && can_create_teams? %>
+                <% if can_create_teams? %>
                   <li class="new-team">
                     <%= link_to new_team_path do %>
                       <span class="fas fa-plus"></span>
@@ -98,7 +97,6 @@
                   </li>
                 <% end %>
               </ul>
-              <% end %>
             </div>
           </li>
         <% end %>
