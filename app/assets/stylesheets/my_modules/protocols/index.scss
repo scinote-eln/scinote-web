@@ -77,7 +77,7 @@
       }
     }
 
-    .due-date-container {
+    .datetime-container {
       align-items: center;
       display: inline-flex;
 
@@ -121,7 +121,11 @@
         top: 0;
         width: 100%;
 
-        #calendar-due-date {
+        #calendarDueDate {
+          opacity: 0;
+        }
+
+        #calendarStartDate {
           opacity: 0;
         }
 

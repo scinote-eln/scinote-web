@@ -143,21 +143,15 @@ class MyModulesController < ApplicationController
   end
 
   def update
-    update_params = my_module_params
-    if update_params[:due_date].present?
-      update_params[:due_date] =
-        Time.zone.strptime(update_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
-    end
-    @my_module.assign_attributes(update_params)
+    @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
     description_changed = @my_module.description_changed?
+    start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
 
     if @my_module.archived_changed?(from: false, to: true)
-
       saved = @my_module.archive(current_user)
     elsif @my_module.archived_changed?(from: true, to: false)
-
       saved = @my_module.restore(current_user)
       if saved
         restored = true
@@ -165,28 +159,14 @@ class MyModulesController < ApplicationController
       end
     else
       saved = @my_module.save
-
       if saved
         if description_changed
           log_activity(:change_module_description)
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
         end
 
-        if due_date_changes
-          # rubocop:disable Metrics/BlockNesting    # temporary solution
-          type_of = if due_date_changes[0].nil?     # set due_date
-                      message_items = { my_module_duedate: @my_module.due_date }
-                      :set_task_due_date
-                    elsif due_date_changes[1].nil?  # remove due_date
-                      message_items = { my_module_duedate: due_date_changes[0] }
-                      :remove_task_due_date
-                    else                            # change due_date
-                      message_items = { my_module_duedate: @my_module.due_date }
-                      :change_task_due_date
-                    end
-          # rubocop:enable Metrics/BlockNesting
-          log_activity(type_of, @my_module, message_items)
-        end
+        log_start_date_change_activity(start_date_changes) if start_date_changes.present?
+        log_due_date_change_activity(due_date_changes) if due_date_changes.present?
       end
     end
     respond_to do |format|
@@ -199,7 +179,7 @@ class MyModulesController < ApplicationController
           redirect_to module_archive_experiment_path(@my_module.experiment)
         end
       elsif saved
-        format.json {
+        format.json do
           alerts = []
           alerts << 'alert-green' if @my_module.completed?
           unless @my_module.completed?
@@ -208,6 +188,10 @@ class MyModulesController < ApplicationController
           end
           render json: {
             status: :ok,
+            start_date_label: render_to_string(
+              partial: 'my_modules/start_date_label.html.erb',
+              locals: { my_module: @my_module }
+            ),
             due_date_label: render_to_string(
               partial: 'my_modules/due_date_label.html.erb',
               locals: { my_module: @my_module }
@@ -226,12 +210,12 @@ class MyModulesController < ApplicationController
             ),
             alerts: alerts
           }
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: @my_module.errors,
             status: :unprocessable_entity
-        }
+        end
       end
     end
   end
@@ -725,8 +709,46 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_params
-    params.require(:my_module).permit(:name, :description, :due_date,
-                                      :archived)
+    update_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
+
+    if update_params[:started_on].present?
+      update_params[:started_on] =
+        Time.zone.strptime(update_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    end
+    if update_params[:due_date].present?
+      update_params[:due_date] =
+        Time.zone.strptime(update_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    end
+
+    update_params
+  end
+
+  def log_start_date_change_activity(start_date_changes)
+    type_of = if start_date_changes[0].nil?     # set started_on
+                message_items = { my_module_started_on: @my_module.due_date }
+                :set_task_start_date
+              elsif start_date_changes[1].nil?  # remove started_on
+                message_items = { my_module_started_on: start_date_changes[0] }
+                :remove_task_start_date
+              else                              # change started_on
+                message_items = { my_module_started_on: @my_module.due_date }
+                :change_task_start_date
+              end
+    log_activity(type_of, @my_module, message_items)
+  end
+
+  def log_due_date_change_activity(due_date_changes)
+    type_of = if due_date_changes[0].nil?     # set due_date
+                message_items = { my_module_duedate: @my_module.due_date }
+                :set_task_due_date
+              elsif due_date_changes[1].nil?  # remove due_date
+                message_items = { my_module_duedate: due_date_changes[0] }
+                :remove_task_due_date
+              else                            # change due_date
+                message_items = { my_module_duedate: @my_module.due_date }
+                :change_task_due_date
+              end
+    log_activity(type_of, @my_module, message_items)
   end
 
   def log_activity(type_of, my_module = nil, message_items = {})
@@ -747,5 +769,4 @@ class MyModulesController < ApplicationController
       :page, :starting_timestamp, :from_date, :to_date, types: [], users: [], subjects: {}
     )
   end
-
 end

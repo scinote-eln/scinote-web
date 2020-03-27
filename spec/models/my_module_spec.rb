@@ -35,6 +35,7 @@ describe MyModule, type: :model do
     it { should have_db_column :experiment_id }
     it { should have_db_column :state }
     it { should have_db_column :completed_on }
+    it { should have_db_column :started_on }
   end
 
   describe 'Relations' do

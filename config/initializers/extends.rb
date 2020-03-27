@@ -279,7 +279,10 @@ class Extends
     share_inventory_with_all: 134,
     unshare_inventory_with_all: 135,
     update_share_with_all_permission_level: 136,
-    protocol_description_in_task_edited: 137
+    protocol_description_in_task_edited: 137,
+    set_task_start_date: 138,
+    change_task_start_date: 139,
+    remove_task_start_date: 140
   }
 
   ACTIVITY_GROUPS = {
