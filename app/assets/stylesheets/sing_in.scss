@@ -43,6 +43,10 @@
 
         .linkedin-link {
           margin-right: 15px;
+
+          &:hover {
+            text-decoration: none;
+          }
         }
 
         .linkedin-signin-button {

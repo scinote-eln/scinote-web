@@ -16,25 +16,25 @@
       <%= form_for(:user, as: resource_name, url: registration_path(resource_name), html: { id: "sign-up-form" } ) do |f| %>
 
         <div class="form-group sci-input-container">
-          <%= f.label :full_name %>
+          <%= f.label :full_name, t('users.registrations.new.full_name_label') %>
           <%= f.text_field :full_name, autofocus: true, class: 'form-control sci-input-field' %>
         </div>
 
         <div class="form-group sci-input-container">
-          <%= f.label :email %>
+          <%= f.label :email, t('users.registrations.new.email_label') %>
           <%= f.email_field :email, class: 'form-control sci-input-field' %>
         </div>
 
         <div class="form-group sci-input-container">
-          <%= f.label :password %>
+          <%= f.label :password, t('users.registrations.new.password_label') %>
           <% if @minimum_password_length %>
-          <em>(<%= @minimum_password_length %> characters minimum)</em>
+          <em class="minimum-password-length"><%= t('users.registrations.new.minimum_password_length', password_length: @minimum_password_length) %></em>
           <% end %>
           <%= f.password_field :password, autocomplete: 'off', class: 'form-control sci-input-field' %>
         </div>
 
         <div class="form-group sci-input-container" id="password_confirmation_form">
-          <%= f.label :password_confirmation %>
+          <%= f.label :password_confirmation, t('users.registrations.new.password_confirmation_label') %>
           <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control sci-input-field' %>
         </div>
         <% if Rails.configuration.x.new_team_on_signup %>
