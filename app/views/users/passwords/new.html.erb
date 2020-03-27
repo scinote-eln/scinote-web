@@ -1,25 +1,29 @@
 <% provide(:head_title, t("devise.passwords.new.head_title")) %>
+<% content_for(:body_class, 'forgot-password-layout') %>
+<div class="forgot-password-container">
+  <div class="forgot-password-form-wrapper">
+    <div class="center-block center-block-narrow">
+      <h1 class="forgot-password-title"><%=t "devise.passwords.new.title" %></h1>
 
-<div class="center-block center-block-narrow">
-  <h2><%=t "devise.passwords.new.title" %></h2>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
 
-  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+        <% if not resource.errors.empty? %>
+        <div class="alert alert-danger" id="alert-flash">
+        <%= devise_error_messages! %>
+        </div>
+        <% end %>
 
-    <% if not resource.errors.empty? %>
-    <div class="alert alert-danger" id="alert-flash">
-    <%= devise_error_messages! %>
+        <div class="form-group sci-input-container">
+          <%= f.label :email %><br /actions>
+          <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.submit t("devise.passwords.new.submit"), class: "btn btn-primary" %>
+        </div>
+      <% end %>
+
+      <%= render partial: 'users/shared/links', locals: {linkedin_skip: true} %>
     </div>
-    <% end %>
-
-    <div class="form-group">
-      <%= f.label :email %><br /actions>
-      <%= f.email_field :email, autofocus: true, class: "form-control" %>
-    </div>
-
-    <div class="form-group">
-      <%= f.submit t("devise.passwords.new.submit"), class: "btn btn-primary" %>
-    </div>
-  <% end %>
-
-  <%= render "users/shared/links" %>
+  </div>
 </div>

@@ -1,53 +1,64 @@
 <% provide(:head_title, t('users.registrations.new.head_title')) %>
+<% content_for(:body_class, 'sign-up-layout') %>
+<div class="sign-up-container">
+  <div class="sign-up-form-wrapper">
+    <div class="center-block center-block-narrow">
+      <h1 class="sign-up-title"><%= t 'users.registrations.new.head_title' %></h1>
 
-<div class="center-block center-block-narrow">
-  <h1><%= t 'users.registrations.new.head_title' %></h1>
-  <div data-hook="sign-up-form-hook">
-  <%= form_for(:user, as: resource_name, url: registration_path(resource_name), html: { id: "sign-up-form" } ) do |f| %>
+      <%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled && @oauth_authorize != true %>
+        <div class="linkedin-container">
+          <%= render partial: "users/shared/linkedin_sign_in_links", locals: { resource_name: resource_name } %>
+          <span><%= t("devise.sessions.new.or") %></span>
+        </div>
+      <% end -%>
 
-    <div class="form-group">
-      <%= f.label :full_name %>
-      <%= f.text_field :full_name, autofocus: true, class: 'form-control' %>
-    </div>
+      <div data-hook="sign-up-form-hook">
+      <%= form_for(:user, as: resource_name, url: registration_path(resource_name), html: { id: "sign-up-form" } ) do |f| %>
 
-    <div class="form-group">
-      <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control' %>
-    </div>
+        <div class="form-group sci-input-container">
+          <%= f.label :full_name %>
+          <%= f.text_field :full_name, autofocus: true, class: 'form-control sci-input-field' %>
+        </div>
 
-    <div class="form-group">
-      <%= f.label :password %>
-      <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <div class="form-group sci-input-container">
+          <%= f.label :email %>
+          <%= f.email_field :email, class: 'form-control sci-input-field' %>
+        </div>
+
+        <div class="form-group sci-input-container">
+          <%= f.label :password %>
+          <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %> characters minimum)</em>
+          <% end %>
+          <%= f.password_field :password, autocomplete: 'off', class: 'form-control sci-input-field' %>
+        </div>
+
+        <div class="form-group sci-input-container" id="password_confirmation_form">
+          <%= f.label :password_confirmation %>
+          <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control sci-input-field' %>
+        </div>
+        <% if Rails.configuration.x.new_team_on_signup %>
+          <div class="form-group sci-input-container" id="team_name_form">
+            <%= label :team, :name, t('users.registrations.new.team_name_label') %>
+            <% if @team %>
+            <%= text_field :team, :name, class: 'form-control sci-input-field', value: @team.name,
+                placeholder: t('users.registrations.new.team_name_placeholder') %>
+            <% else %>
+            <%= text_field :team, :name, class: 'form-control sci-input-field',
+                placeholder: t('users.registrations.new.team_name_placeholder') %>
+            <% end %>
+          </div>
+        <% end %>
+        <%= recaptcha_input_tag %>
+
+        <div class="form-group" data-hook="sign-up-form-submit">
+          <%= f.submit 'Sign up', class: 'btn btn-primary sign-up-button' %>
+        </div>
       <% end %>
-      <%= f.password_field :password, autocomplete: 'off', class: 'form-control' %>
+      </div>
+      <%= render partial: 'users/shared/links', locals: {linkedin_skip: true} %>
     </div>
-
-    <div class="form-group" id="password_confirmation_form">
-      <%= f.label :password_confirmation %>
-      <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control' %>
-    </div>
-    <% if Rails.configuration.x.new_team_on_signup %>
-    <div class="form-group" id="team_name_form">
-      <%= label :team, :name, t('users.registrations.new.team_name_label') %>
-      <% if @team %>
-      <%= text_field :team, :name, class: 'form-control', value: @team.name,
-          placeholder: t('users.registrations.new.team_name_placeholder') %>
-      <% else %>
-      <%= text_field :team, :name, class: 'form-control',
-          placeholder: t('users.registrations.new.team_name_placeholder') %>
-      <% end %>
-      <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
-    </div>
-    <% end %>
-    <%= recaptcha_input_tag %>
-
-    <div class="form-group" data-hook="sign-up-form-submit">
-      <%= f.submit 'Sign up', class: 'btn btn-primary' %>
-    </div>
-  <% end %>
   </div>
-  <%= render 'users/shared/links' %>
 </div>
 
 <% if resource and not resource.errors.empty? %>
