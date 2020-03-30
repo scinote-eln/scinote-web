@@ -293,6 +293,8 @@ class Experiment < ApplicationRecord
       my_module.last_modified_by = current_user
       my_module.save!
 
+      my_module.assign_user(current_user)
+
       ids_map[m[:id]] = my_module.id.to_s
     end
     my_modules.reload
