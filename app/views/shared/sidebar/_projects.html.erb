@@ -1,16 +1,25 @@
-<ul>
+<ul class="sidebar-root">
   <% @projects_tree.each do |project| %>
     <% cache [action_name, current_user, project] do %>
-      <li data-parent="candidate">
+      <li data-parent="candidate"
+          class="branch <%= 'active' if project_page? && current_project == project %>" >
         <span class="tree-link no-indent" title="<%= project.name %>">
-          <i class="no-arrow"></i>
+          <% if project.active_experiments.any? %>
+            <i class="fas fa-caret-right tree-toggle"></i>
+          <% end %>
             <%= link_to project.name,
                         project_action_to_link_to(project),
                         title: project.name,
                         class: 'line-wrap',
+                        style: (current_project == project ? 'font-weight: bold' : ''),
                         data: { type: 'project', id: project.id } %>
         </span>
-        <%= render partial: 'shared/sidebar/experiments', locals: { project: project } %>
+        <%= render partial: 'shared/sidebar/experiments', locals: {
+            project: project,
+            current_project: current_project,
+            current_experiment: current_experiment,
+            current_task: current_task
+        } %>
       </li>
     <% end %>
   <% end %>
