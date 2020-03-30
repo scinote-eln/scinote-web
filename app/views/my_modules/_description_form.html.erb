@@ -3,14 +3,11 @@
   <div id="my_module_description_view"
        class="ql-editor tinymce-view"
        data-placeholder="<%= t('my_modules.module_header.empty_description_edit_label') %>"
-       data-tinymce-init="tinymce-my-module-description-<%= @my_module.id %>">
-    <% if @my_module.description.present? %>
-      <%= custom_auto_link(@my_module.tinymce_render(:description),
-                           simple_format: false,
-                           tags: %w(img),
-                           team: current_team) %>
-    <% end %>
-  </div>
+       data-tinymce-init="tinymce-my-module-description-<%= @my_module.id %>"
+  ><%= custom_auto_link(@my_module.tinymce_render(:description),
+                        simple_format: false,
+                        tags: %w(img),
+                        team: current_team) if @my_module.description.present? %></div>
   <%= f.tiny_mce_editor(:description,
                         id: :my_module_description_textarea,
                         class: 'hidden',

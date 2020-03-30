@@ -3,14 +3,11 @@
   <div id="protocol_description_view"
        class="ql-editor tinymce-view"
        data-placeholder="<%= t('my_modules.protocols.protocol_status_bar.empty_description_edit_label') %>"
-       data-tinymce-init="tinymce-protocol-description-<%= protocol.id %>" >
-    <% if protocol.description.present? %>
-      <%= custom_auto_link(protocol.tinymce_render(:description),
-                           simple_format: false,
-                           tags: %w(img),
-                           team: current_team) %>
-    <% end %>
-  </div>
+       data-tinymce-init="tinymce-protocol-description-<%= protocol.id %>"
+  ><%= custom_auto_link(protocol.tinymce_render(:description),
+                        simple_format: false,
+                        tags: %w(img),
+                        team: current_team) if protocol.description.present? %></div>
   <%= f.tiny_mce_editor(:description,
                         id: :protocol_description_textarea,
                         class: 'hidden',
