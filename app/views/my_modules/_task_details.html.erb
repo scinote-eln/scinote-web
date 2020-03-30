@@ -16,8 +16,6 @@
     </div>
   </div>
 
-
-
   <div class="flex-block">
     <div class="flex-block-label">
       <span class="fas block-icon fa-tachometer-alt"></span>
@@ -40,25 +38,6 @@
     <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span>
     <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: can_manage_module?(@my_module) } %>
   </div>
-</div>
-
-
-<div class="module-description">
-    <div class="title">
-      <%= t('my_modules.module_header.description_label') %>
-    </div>
-    <div class="my-module-description-content">
-      <% if can_manage_module?(@my_module) %>
-        <%= render partial: "description_form" %>
-      <% elsif @my_module.description.present? %>
-        <%= custom_auto_link(@my_module.tinymce_render(:description),
-                             simple_format: false,
-                             tags: %w(img),
-                             team: current_team) %>
-      <% else %>
-        <span class="no-description"><%= t('my_modules.module_header.no_description') %></span>
-      <% end %>
-    </div>
 </div>
 
 <!-- Manage tags modal -->
