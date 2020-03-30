@@ -1,3 +1,5 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector
+
 .sign-in-layout {
   #content-wrapper {
     margin-left: 0;
@@ -11,8 +13,8 @@
     display: flex;
 
     .sign-in-form-wrapper {
-      flex-grow: 1;
       flex-basis: 50%;
+      flex-grow: 1;
 
       .center-block-narrow {
         margin-top: 72px;
