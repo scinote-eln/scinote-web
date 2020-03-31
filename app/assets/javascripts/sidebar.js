@@ -28,6 +28,31 @@ var Sidebar = (function() {
   }
 
   function loadLastState() {
+    var currentProject = $(SIDEBAR_ID).attr('data-current-project');
+    var currentExperiment = $(SIDEBAR_ID).attr('data-current-experiment');
+    var currentTask = $(SIDEBAR_ID).attr('data-current-task');
+
+    if (currentProject) {
+      let projectBranch = $(`.tree-child[data-branch-id="pro${currentProject}"]`).attr('data-active', 'true');
+      projectBranch.prev().addClass('active');
+      if (!currentExperiment) projectBranch.closest('.branch').addClass('active');
+    }
+
+    if (currentExperiment) {
+      let experimentBranch = $(`.tree-child[data-branch-id="exp${currentExperiment}"]`).attr('data-active', 'true');
+      experimentBranch.prev().addClass('active');
+      if (!currentTask) {
+        experimentBranch.closest('.branch')
+          .addClass('show-canvas-handler')
+          .addClass('active');
+      }
+    }
+
+    if (currentTask) {
+      $(`.leaf[data-module-id="${currentTask}"]`).addClass('active');
+    }
+
+
     toggleTree($(SIDEBAR_ID).find('.tree-child[data-active="true"]'));
     toggleTree($(SIDEBAR_ID).find('.tree-child.hidden').filter(sessionStorage.getItem(STORAGE_TREE_KEY)));
     PerfectSb().update_all();
