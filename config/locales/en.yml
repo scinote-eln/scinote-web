@@ -599,7 +599,7 @@ en:
       title: "Notes"
       no_description: "No task description"
       empty_description_edit_label: "Click here to start writing notes"
-    assigned-items:
+    assigned_items:
       title: "Assigned items"
     protocol:
       title: "Protocol"

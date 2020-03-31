@@ -11,7 +11,7 @@
       <h2><%= t('my_modules.details.title') %></h2>
     </span>
     <div class="task-details">
-      <%= render partial: "task_details" %>
+      <%= render partial: "my_module_details" %>
     </div>
   </div>
   <!-- Notes -->
@@ -25,7 +25,7 @@
       </a>
     </div>
     <div class="collapse in" id="notes-container" aria-expanded="true">
-      <%= render partial: "task_notes" %>
+      <%= render partial: "my_module_notes" %>
     </div>
   </div>
   <!-- Assigned items -->
@@ -34,7 +34,7 @@
       <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="false" aria-controls="assigned-items-container">
         <i class="fas fa-caret-right"></i>
         <span class="task-section-title">
-          <h2><%= t('my_modules.assigned-items.title') %></h2>
+          <h2><%= t('my_modules.assigned_items.title') %></h2>
         </span>
     </a>
     </div>
@@ -53,7 +53,7 @@
       </a>
     </div>
     <div class="collapse" id="protocol-container">
-      <%= render partial: "task_protocol" %>
+      <%= render partial: "my_module_protocol" %>
     </div>
   </div>
 </div>
