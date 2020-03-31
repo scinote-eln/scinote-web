@@ -1,0 +1,35 @@
+<div class="protocol-status-container">
+  <div class="protocol-status-bar" data-role="protocol-status-bar">
+    <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
+  </div>
+  <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
+  <% if can_manage_protocol_in_module?(@protocol) %>
+    <%= render partial: "my_modules/recent_protocol_dropdown.html.erb", locals: {protocol: @my_module.protocol}%>
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="protocol-description-content">
+      <% if can_manage_module?(@my_module) %>
+        <%= render partial: "my_modules/protocols/protocol_description_form", locals:
+          {
+            protocol: @my_module.protocol,
+            update_url: update_protocol_description_my_module_path(@my_module, format: :json)
+          }
+        %>
+      <% elsif @my_module.protocol.description.present? %>
+        <%= custom_auto_link(@my_module.protocol.tinymce_render(:description),
+                             simple_format: false,
+                             tags: %w(img),
+                             team: current_team) %>
+      <% else %>
+        <span style="font-size: 16px"><%= t('my_modules.protocols.protocol_status_bar.no_description') %></span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div data-role="steps-container">
+  <%= render partial: "protocols/steps.html.erb" %>
+</div>

@@ -6,24 +6,50 @@
 @import "constants";
 @import "mixins";
 
-#manage-module-tags-modal {
+.content-pane.my-modules-protocols-index {
+  padding: 10px;
+}
 
+.task-section {
+  border-left: 3px solid $color-concrete;
+  margin: 16px 0;
+  padding-left: 16px;
+
+  .task-section-caret {
+    color: $color-volcano;
+    display: inline-block;
+    text-decoration: none;
+
+    .fas {
+      margin-right: 5px;
+    }
+
+    &:not(.collapsed) .fas {
+      @include rotate(90deg);
+    }
+  }
+
+  .task-section-title {
+    display: inline-block;
+
+    h2 {
+      margin-bottom: 8px;
+      margin-top: 11px;
+    }
+  }
+}
+
+#manage-module-tags-modal {
   .well {
     border: 0;
     box-shadow: none;
   }
 }
 
-.module-header {
+.task-details {
   display: inline-block;
   position: relative;
   width: 100%;
-
-  + .protocol-title {
-    font-size: 22px;
-    font-weight: bold;
-    margin: 10px 0 15px;
-  }
 
   .fas.block-icon {
     color: $color-silver;
@@ -123,25 +149,6 @@
 
     .my_module-state-buttons {
       padding-top: 0;
-    }
-  }
-
-  .module-description {
-    float: left;
-    width: 100%;
-
-    .no-description {
-      font-size: 16px;
-    }
-
-    .title {
-      font-size: 22px;
-      font-weight: bold;
-      padding: 20px 0 5px;
-    }
-
-    .my-module-description-content {
-      margin-left: 10px;
     }
   }
 
@@ -250,10 +257,23 @@
             float: left;
             line-height: 36px;
           }
-
         }
       }
     }
+  }
+}
+
+.task-notes {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+
+  .no-description {
+    font-size: 16px;
+  }
+
+  .task-notes-content {
+    margin-left: 10px;
   }
 }
 

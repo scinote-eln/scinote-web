@@ -593,6 +593,16 @@ en:
       can_add_user_to_project: "Can not add user to the project."
 
   my_modules:
+    details:
+      title: "Details"
+    notes:
+      title: "Notes"
+      no_description: "No task description"
+      empty_description_edit_label: "Click here to start writing notes"
+    assigned_items:
+      title: "Assigned items"
+    protocol:
+      title: "Protocol"
     buttons:
       complete: "Complete Task"
       uncomplete: "Uncomplete Task"
@@ -632,9 +642,6 @@ en:
       no_tags: "Add new Task Tags (optional)"
       manage_tags: "Manage tags"
       create_new_tag: "create new"
-      no_description: "No task description"
-      description_label: "Description"
-      empty_description_edit_label: "Click here to enter Task Description (optional)"
       recent_protocols_from_repository: "Recent protocols from the Repository"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
