@@ -26,7 +26,7 @@
       </div>
       <div class="pull-right module-start-date">
         <% if my_module.started_on.present? %>
-          <%= t('projects.reports.elements.module.started_on', start_date: l(my_module.started_on, format: :full)) %>
+          <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
         <% else %>
           <em><%=t "projects.reports.elements.module.no_start_date" %></em>
         <% end %>
