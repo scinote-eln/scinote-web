@@ -103,7 +103,9 @@ describe Experiment, type: :model do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type: :create_module)))
-
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :assign_user_to_module)))
         function_call
       end
 
@@ -137,12 +139,15 @@ describe Experiment, type: :model do
           .to(receive(:call)
                 .with(hash_including(activity_type:
                                        :clone_module))).exactly(3).times
-
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :assign_user_to_module))).exactly(3).times
         function_call
       end
 
       it 'creats 3 new activities in DB' do
-        expect { function_call }.to change { Activity.all.count }.by(3)
+        expect { function_call }.to change { Activity.all.count }.by(6)
       end
     end
 
