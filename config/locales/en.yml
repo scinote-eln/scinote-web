@@ -500,6 +500,8 @@ en:
           title: "Report for project %{project}"
         module:
           user_time: "Task created on %{timestamp}."
+          started_on: "Start date: %{started_on}"
+          no_start_date: "No start date"
           due_date: "Due date: %{due_date}"
           no_due_date: "No due date"
           no_description: "No description"
@@ -637,6 +639,8 @@ en:
       restored_flash: "Task %{module} restored successfully!"
     module_header:
       start_date: "Start date:"
+      no_start_date: "not set"
+      no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
       tags: "Tags:"
       no_tags: "Add new Task Tags (optional)"

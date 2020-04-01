@@ -667,7 +667,8 @@ CREATE TABLE public.my_modules (
     workflow_order integer DEFAULT '-1'::integer NOT NULL,
     experiment_id bigint DEFAULT 0 NOT NULL,
     state smallint DEFAULT 0,
-    completed_on timestamp without time zone
+    completed_on timestamp without time zone,
+    started_on timestamp without time zone
 );
 
 
@@ -7167,6 +7168,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191210103004'),
 ('20191218072619'),
 ('20200113143828'),
-('20200204100934');
+('20200204100934'),
+('20200326114643');
 
 
