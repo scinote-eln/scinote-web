@@ -19,15 +19,19 @@ en:
       new:
         head_title: "Forgot password"
         title: "Forgot your password?"
-        submit: "Send me reset password instructions"
+        submit: "Reset password"
     registrations:
       password_changed: "Password successfully updated."
     sessions:
       new:
         head_title: "Log in"
         title: "Log in"
-        email_placeholder: "username@email.com"
-        password_placeholder: "pass****"
+        or: "OR"
+        email_field: "E-mail"
+        email_placeholder: "john.doe@email.com"
+        password_field: "Password"
+        password_placeholder: "Enter password"
+        remember_me: "Remember me"
         submit: "Log in"
       create:
         team_name: "%{user}'s projects"
@@ -1535,7 +1539,12 @@ en:
         head_title: "Sign up"
         team_name_label: "Team name"
         team_name_placeholder: "e.g. John's lab"
-        team_name_help: "This is the name of your lab or your group. You can invite other members to your team if needed."
+        email_label: "E-mail"
+        full_name_label: "Full name"
+        password_label: "Password"
+        minimum_password_length: "(%{password_length} characters minimum)"
+        password_confirmation_label: "Password confirmation"
+        captcha_description: "Let us know you’re human. Enter the captcha below."
       new_with_provider:
         head_title: "Complete the Sign up"
     statistics:

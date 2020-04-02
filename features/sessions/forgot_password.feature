@@ -14,14 +14,14 @@ Background:
 Scenario: User forgot their password and requests for new password
   Given I am on reset password page
   Then I fill in "nonadmin@myorg.com" in "#user_email" field
-  And I click "Send me reset password instruction" button
+  And I click "Reset password" button
   Then I should see "You will receive an email with instructions on how to reset your password in a few minutes." flash message
 
 @javascript
 Scenario: User forgot their password and enters non valid email
   Given I am on reset password page
   Then I fill in "nonuser@myorg.com" in "#user_email" field
-  And I click "Send me reset password instruction" button
+  And I click "Reset password" button
   Then I should see "Email not found"
 
 @javascript
