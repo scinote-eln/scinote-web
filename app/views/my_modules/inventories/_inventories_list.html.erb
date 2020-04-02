@@ -1,0 +1,24 @@
+<div class="my-module-assigned-repositories">
+  <% @assigned_repositories.each do |repository| %>
+    <div class="assigned-repository">
+      <a class="assigned-repository-caret collapsed" role="button"
+         data-toggle="collapse"
+         href="#assigned-repository-items-container-<%= repository.id %>"
+         aria-expanded="false"
+         aria-controls="assigned-repository-items-container-<%= repository.id %>"
+      >
+        <i class="fas fa-caret-right"></i>
+        <span class="assigned-repository-title" data-rows-count="[<%= repository.rows_count %>]">
+          <%= repository.name %>
+        </span>
+        <div class="action-buttons">
+          <i class="fas fa-expand full-screen"></i>
+          <i class="fas fa-trash unassign-repository"></i>
+        </div>
+      </a>
+      <div class="collapse" id="assigned-repository-items-container-<%= repository.id %>">
+        Repository table
+      </div>
+    </div>
+  <% end %>
+</div>

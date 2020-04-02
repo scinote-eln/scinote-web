@@ -205,6 +205,15 @@ class MyModule < ApplicationRecord
                              .count
   end
 
+  def assigned_repositories_list
+    my_module_repository_rows.joins(repository_row: :repository)
+                             .select('
+                                repositories.name,
+                                repositories.id,
+                                COUNT(my_module_repository_rows.id) as rows_count
+                              ').group('repositories.name, repositories.id')
+  end
+
   def unassigned_users
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +
