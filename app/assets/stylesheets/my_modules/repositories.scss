@@ -75,7 +75,7 @@
   }
 }
 
-.my-module-assigned-repositories {
+#assigned-items-container {
   .assigned-repository {
     border: $border-default;
     border-radius: $border-radius-modal;
@@ -135,6 +135,10 @@
           width: 36px;
         }
       }
+    }
+
+    &:hover {
+      background: $color-concrete;
     }
   }
 }

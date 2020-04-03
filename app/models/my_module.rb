@@ -206,10 +206,7 @@ class MyModule < ApplicationRecord
   end
 
   def assigned_repositories
-    assigned_repositories_ids = repository_rows.group('repository_id')
-                                               .select('repository_id')
-                                               .pluck('repository_id')
-    Repository.where(id: assigned_repositories_ids)
+    Repository.where(id: repository_rows.select('DISTINCT(repository_id)'))
   end
 
   def unassigned_users
