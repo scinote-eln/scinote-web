@@ -8,7 +8,7 @@
          aria-controls="assigned-repository-items-container-<%= repository.id %>"
       >
         <i class="fas fa-caret-right"></i>
-        <span class="assigned-repository-title" data-rows-count="[<%= repository.rows_count %>]">
+        <span class="assigned-repository-title" data-rows-count="[<%= @my_module.repository_rows_count(repository) %>]">
           <%= repository.name %>
         </span>
         <div class="action-buttons">

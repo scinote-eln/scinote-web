@@ -205,13 +205,11 @@ class MyModule < ApplicationRecord
                              .count
   end
 
-  def assigned_repositories_list
-    my_module_repository_rows.joins(repository_row: :repository)
-                             .select('
-                                repositories.name,
-                                repositories.id,
-                                COUNT(my_module_repository_rows.id) as rows_count
-                              ').group('repositories.name, repositories.id')
+  def assigned_repositories
+    assigned_repositories_ids = repository_rows.group('repository_id')
+                                               .select('repository_id')
+                                               .pluck('repository_id')
+    Repository.where(id: assigned_repositories_ids)
   end
 
   def unassigned_users
