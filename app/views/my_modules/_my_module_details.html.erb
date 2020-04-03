@@ -1,37 +1,30 @@
 <% my_module_editable = can_manage_module?(@my_module) %>
 
-<div class="header-container">
-
-  <div class="flex-block date-block">
-    <span class="fas block-icon fa-calendar-alt"></span>
-    <span class="hidden-xs hidden-sm hidden-md"><%= t('my_modules.module_header.start_date') %></span>
-    <div id="startDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
-      <%= render partial: "module_header_start_date.html.erb", locals: { my_module: @my_module } %>
-    </div>
-  </div>
-
-  <div class="flex-block date-block" >
-    <span class="fas block-icon fa-calendar-alt"></span>
-    <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.module_header.due_date') %></span>
-    <div id="dueDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
-      <%= render partial: "module_header_due_date.html.erb", locals: { my_module: @my_module } %>
-    </div>
-  </div>
-
-  <div class="flex-block">
-    <div class="flex-block-label">
-      <span class="fas block-icon fa-tachometer-alt"></span>
-      <%= t('my_modules.states.state_label') %>
-    </div>
-    <span class="task-state-label">
-      <%= render partial: "module_state_label.html.erb",
-        locals: { my_module: @my_module } %>
-    </span>
+<div class="flex-block date-block">
+  <span class="fas block-icon fa-calendar-alt"></span>
+  <span class="hidden-xs hidden-sm hidden-md"><%= t('my_modules.module_header.start_date') %></span>
+  <div id="startDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
+    <%= render partial: "module_header_start_date.html.erb", locals: { my_module: @my_module } %>
   </div>
 </div>
 
-<div class="complete-button-container">
-  <%= render partial: "my_modules/state_buttons.html.erb" %>
+<div class="flex-block date-block" >
+  <span class="fas block-icon fa-calendar-alt"></span>
+  <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.module_header.due_date') %></span>
+  <div id="dueDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
+    <%= render partial: "module_header_due_date.html.erb", locals: { my_module: @my_module } %>
+  </div>
+</div>
+
+<div class="flex-block">
+  <div class="flex-block-label">
+    <span class="fas block-icon fa-tachometer-alt"></span>
+    <%= t('my_modules.states.state_label') %>
+  </div>
+  <span class="task-state-label">
+    <%= render partial: "module_state_label.html.erb",
+      locals: { my_module: @my_module } %>
+  </span>
 </div>
 
 <div class="module-tags">

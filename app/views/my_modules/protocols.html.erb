@@ -7,9 +7,14 @@
 <div class="content-pane my-modules-protocols-index">
   <!-- Details -->
   <div class="task-section">
-    <span class="task-section-title">
-      <h2><%= t('my_modules.details.title') %></h2>
-    </span>
+    <div class="task-section-header">
+      <span class="task-section-title">
+        <h2><%= t('my_modules.details.title') %></h2>
+      </span>
+      <div class="complete-button-container">
+        <%= render partial: "my_modules/state_buttons.html.erb" %>
+      </div>
+    </div>
     <div class="task-details">
       <%= render partial: "my_module_details" %>
     </div>

@@ -39,127 +39,103 @@
   }
 }
 
-#manage-module-tags-modal {
-  .well {
-    border: 0;
-    box-shadow: none;
+.complete-button-container {
+  display: inline;
+  float: right;
+  width: 260px;
+
+  .my_module-state-buttons {
+    padding-top: 0;
   }
 }
 
 .task-details {
-  display: inline-block;
-  position: relative;
-  width: 100%;
-
   .fas.block-icon {
-    color: $color-silver;
-    font-size: 18px;
-    margin-right: 5px;
+    margin-right: 8px;
   }
 
-  .header-container {
+  .flex-block {
+    align-items: center;
     display: flex;
-    flex-wrap: wrap;
-    float: left;
-    margin-bottom: 10px;
-    width: calc(100% - 280px);
+    line-height: 32px;
 
-    .flex-block {
+    .flex-block-label {
       align-items: center;
       display: flex;
-      flex-grow: 1;
-      margin-right: 10px;
-
-      .flex-block-label {
-        align-items: center;
-        display: flex;
-        margin-right: 3px;
-      }
-    }
-
-    .datetime-container {
-      align-items: center;
-      display: inline-flex;
-
-      .date-text {
-        border: 1px solid transparent;
-        font-weight: bold;
-        line-height: 34px;
-        margin-right: 25px;
-        padding: 0 3px;
-        position: relative;
-
-        .alert-green {
-          color: $brand-success;
-        }
-
-        .alert-yellow {
-          color: $brand-warning;
-        }
-
-        .alert-red {
-          color: $brand-danger;
-        }
-
-        .clear-date {
-          color: $color-silver;
-          cursor: pointer;
-          display: none;
-          font-size: 20px;
-          left: 100%;
-          line-height: 34px;
-          margin-left: 5px;
-          position: absolute;
-          top: 0;
-        }
-      }
-
-      .datetime-picker-container {
-        color: $color-emperor;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-
-        #calendarDueDate {
-          opacity: 0;
-        }
-
-        #calendarStartDate {
-          opacity: 0;
-        }
-
-        .fa-calendar-alt {
-          display: none;
-        }
-      }
-
-      &:hover {
-        .date-text[data-editable=true] {
-          border-color: $color-silver;
-          border-radius: 3px;
-
-          .clear-date {
-            display: inline;
-          }
-        }
-      }
+      margin-right: 4px;
     }
   }
 
-  .complete-button-container {
-    float: right;
-    width: 260px;
+  .datetime-container {
+    align-items: center;
+    display: inline-flex;
 
-    .my_module-state-buttons {
-      padding-top: 0;
+    .date-text {
+      border: 1px solid transparent;
+      font-weight: bold;
+      line-height: 32px;
+      margin-right: 25px;
+      padding: 0 4px;
+      position: relative;
+
+      .alert-green {
+        color: $brand-success;
+      }
+
+      .alert-yellow {
+        color: $brand-warning;
+      }
+
+      .alert-red {
+        color: $brand-danger;
+      }
+
+      .clear-date {
+        color: $color-silver;
+        cursor: pointer;
+        display: none;
+        font-size: 20px;
+        left: 100%;
+        line-height: 34px;
+        margin-left: 5px;
+        position: absolute;
+        top: 0;
+      }
+    }
+
+    .datetime-picker-container {
+      color: $color-emperor;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      #calendarDueDate {
+        opacity: 0;
+      }
+
+      #calendarStartDate {
+        opacity: 0;
+      }
+
+      .fa-calendar-alt {
+        display: none;
+      }
+    }
+
+    &:hover {
+      .date-text[data-editable=true] {
+        border-color: $color-silver;
+        border-radius: 3px;
+
+        .clear-date {
+          display: inline;
+        }
+      }
     }
   }
 
   .module-tags {
-    float: left;
-    width: 100%;
-
     #module-tags {
       align-items: center;
       display: flex;
@@ -263,6 +239,13 @@
           }
         }
       }
+    }
+  }
+
+  #manage-module-tags-modal {
+    .well {
+      border: 0;
+      box-shadow: none;
     }
   }
 }
