@@ -205,6 +205,10 @@ class MyModule < ApplicationRecord
                              .count
   end
 
+  def assigned_repositories
+    Repository.where(id: repository_rows.select('DISTINCT(repository_id)'))
+  end
+
   def unassigned_users
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +

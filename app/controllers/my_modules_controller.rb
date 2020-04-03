@@ -271,6 +271,7 @@ class MyModulesController < ApplicationController
       current_team,
       Constants::RECENT_PROTOCOL_LIMIT
     ).any?
+    @assigned_repositories = @my_module.assigned_repositories
     current_team_switch(@protocol.team)
   end
 
