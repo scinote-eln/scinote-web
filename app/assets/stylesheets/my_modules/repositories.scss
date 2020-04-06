@@ -92,6 +92,7 @@
       &:hover,
       &:active {
         text-decoration: none;
+        background: $color-concrete;
       }
 
       &:not(.collapsed) .fa-caret-right {
@@ -137,8 +138,27 @@
       }
     }
 
-    &:hover {
-      background: $color-concrete;
+    .assigned-repository-container {
+      .table.dataTable {
+        margin-top: 0 !important;
+
+        .row-name {
+          border-left: 0;
+        }
+      }
+
+      .pagination-row {
+        border-top: $border-default;
+        padding: 5px 10px;
+
+        .pagination {
+          display: inline-flex;
+        }
+
+        .dataTables_paginate {
+          height: 38px;
+        }
+      }
     }
   }
 }

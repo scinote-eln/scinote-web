@@ -42,6 +42,24 @@ module RepositoryDatatableHelper
     parsed_records
   end
 
+  def prepare_row_columns_simple(repository_rows)
+    parsed_records = []
+    repository_rows.each do |record|
+      row = {
+        'DT_RowId': record.id,
+        '1': assigned_row(record),
+        '2': record.id,
+        '3': escape_input(record.name),
+        '4': I18n.l(record.created_at, format: :full),
+        '5': escape_input(record.created_by.full_name),
+        'recordInfoUrl': Rails.application.routes.url_helpers
+                              .repository_row_path(record.id)
+      }
+      parsed_records << row
+    end
+    parsed_records
+  end
+
   def assigned_row(record)
     if @my_module
       if record.assigned_my_modules_count.positive?
