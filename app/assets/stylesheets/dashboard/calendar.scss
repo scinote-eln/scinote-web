@@ -1,7 +1,10 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
+
+
 .dashboard-container .calendar-widget {
+  --calendar-day-size: 32px;
   grid-column: 10 / span 3;
   grid-row: 1 / span 6;
   min-height: 320px;
@@ -57,12 +60,12 @@
         animation-timing-function: $timing-function-sharp;
         border-radius: 50%;
         display: flex;
-        height: 32px;
+        height: var(--calendar-day-size);
         justify-content: center;
         position: relative;
         transition: .3s;
         user-select: none;
-        width: 32px;
+        width: var(--calendar-day-size);
 
         &.adjacent-month {
           color: $color-alto;
@@ -75,9 +78,9 @@
             border-radius: 50%;
             cursor: pointer;
             display: flex;
-            height: 30px;
+            height: calc(var(--calendar-day-size) - 2px);
             justify-content: center;
-            width: 30px;
+            width: calc(var(--calendar-day-size) - 2px);
 
             &:hover {
               background: $color-concrete;
@@ -91,9 +94,9 @@
             border-radius: 50%;
             content: "";
             height: 4px;
-            left: 14px;
+            left: calc((var(--calendar-day-size) / 2) - 2px);
             position: absolute;
-            top: 24px;
+            top: calc((var(--calendar-day-size) / 2) + 8px);
             width: 4px;
           }
         }
@@ -141,5 +144,13 @@
         right: auto;
       }
     }
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-container .calendar-widget {
+    --calendar-day-size: 28px;
+    grid-column: 1 / span 12;
+    grid-row: 2;
   }
 }

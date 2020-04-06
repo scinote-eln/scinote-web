@@ -1,6 +1,7 @@
 .sci-secondary-navbar {
   display: flex;
   height: 100%;
+  overflow-x: auto;
 
   .navbar-link {
     @include font-small;
@@ -13,6 +14,7 @@
     position: relative;
     text-decoration: none;
     text-transform: uppercase;
+    white-space: nowrap;
 
     &:hover {
       color: $color-volcano;
