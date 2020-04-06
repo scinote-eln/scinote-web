@@ -32,6 +32,9 @@ class CreateMyModuleService
 
       @my_module.save!
       create_my_module_activity
+
+      @my_module.assign_user(@user)
+
       @params[:experiment].generate_workflow_img
       new_my_module = @my_module
     end
