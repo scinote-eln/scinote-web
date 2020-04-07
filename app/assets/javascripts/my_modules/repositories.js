@@ -16,7 +16,8 @@ var MyModuleRepositories = (function() {
         url: $(tableContainer).data('source'),
         data: function(d) {
           d.assigned = 'assigned';
-          d.simple_view = 'true';
+          d.view_mode = true;
+          d.skip_custom_columns = true;
         },
         global: false,
         type: 'GET'
@@ -28,7 +29,12 @@ var MyModuleRepositories = (function() {
           columns[i].defaultContent = '';
         }
         return columns;
-      }())
+      }()),
+      drawCallback: function() {
+        var repositoryContainer = $(this).closest('.assigned-repository-container');
+        repositoryContainer.find('.table.dataTable').removeClass('hidden');
+        SIMPLE_TABLE.columns.adjust();
+      }
     });
   }
 
@@ -37,7 +43,6 @@ var MyModuleRepositories = (function() {
       var repositoryContainer = $(this);
       var repositoryTemplate = $($('#my-module-repository-simple-template').html());
       repositoryTemplate.attr('data-source', $(this).data('repository-url'));
-
       repositoryContainer.html(repositoryTemplate);
       renderSimpleTable(repositoryTemplate);
     });

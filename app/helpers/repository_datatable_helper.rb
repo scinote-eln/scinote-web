@@ -6,44 +6,10 @@ module RepositoryDatatableHelper
   def prepare_row_columns(repository_rows,
                           repository,
                           columns_mappings,
-                          team)
+                          team,
+                          options = {})
     parsed_records = []
 
-    repository_rows.each do |record|
-      row = {
-        'DT_RowId': record.id,
-        '1': assigned_row(record),
-        '2': record.id,
-        '3': escape_input(record.name),
-        '4': I18n.l(record.created_at, format: :full),
-        '5': escape_input(record.created_by.full_name),
-        'recordEditUrl': Rails.application.routes.url_helpers
-                              .edit_repository_repository_row_path(
-                                repository,
-                                record.id
-                              ),
-        'recordUpdateUrl': Rails.application.routes.url_helpers
-                                .repository_repository_row_path(
-                                  repository,
-                                  record.id
-                                ),
-        'recordInfoUrl': Rails.application.routes.url_helpers
-                              .repository_row_path(record.id),
-        'recordEditable': record.editable?
-      }
-
-      # Add custom columns
-      record.repository_cells.each do |cell|
-        row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell, team)
-      end
-      parsed_records << row
-    end
-    parsed_records
-  end
-
-  def prepare_row_columns_simple(repository_rows)
-    parsed_records = []
     repository_rows.each do |record|
       row = {
         'DT_RowId': record.id,
@@ -55,6 +21,30 @@ module RepositoryDatatableHelper
         'recordInfoUrl': Rails.application.routes.url_helpers
                               .repository_row_path(record.id)
       }
+
+      unless options[:view_mode]
+        row.merge({
+          'recordEditUrl': Rails.application.routes.url_helpers
+                                .edit_repository_repository_row_path(
+                                  repository,
+                                  record.id
+                                ),
+          'recordUpdateUrl': Rails.application.routes.url_helpers
+                                  .repository_repository_row_path(
+                                    repository,
+                                    record.id
+                                  ),
+          'recordEditable': record.editable?
+        })
+      end
+
+      unless options[:skip_custom_columns]
+        # Add custom columns
+        record.repository_cells.each do |cell|
+          row[columns_mappings[cell.repository_column.id]] =
+            display_cell_value(cell, team)
+        end
+      end
       parsed_records << row
     end
     parsed_records

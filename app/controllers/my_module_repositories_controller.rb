@@ -10,6 +10,10 @@ class MyModuleRepositoriesController < ApplicationController
     page = (params[:start].to_i / per_page) + 1
     datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module)
 
+    @datatable_params = {
+      view_mode: params[:view_mode],
+      skip_custom_columns: params[:skip_custom_columns]
+    }
     @all_rows_count = datatable_service.all_count
     @repository_rows = datatable_service.repository_rows
                                         .preload(:repository_columns,
@@ -17,11 +21,8 @@ class MyModuleRepositoriesController < ApplicationController
                                                  repository_cells: @repository.cell_preload_includes)
                                         .page(page)
                                         .per(per_page)
-    if params[:simple_view]
-      render 'repository_rows/simple.json'
-    else
-      render 'repository_rows/index.json'
-    end
+
+    render 'repository_rows/index.json'
   end
 
   private
