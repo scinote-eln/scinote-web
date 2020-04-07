@@ -162,3 +162,64 @@
     }
   }
 }
+
+#my-module-repository-full-view-modal {
+  .modal-dialog {
+    height: 100vh;
+    margin: 0;
+    width: 100vw;
+
+    .modal-content {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      height: inherit;
+
+      .modal-body {
+        flex-grow: 1;
+      }
+
+      .dataTables_wrapper {
+        height: calc(100% - 30px);
+        position: absolute;
+        width: calc(100% - 30px);
+
+        .dataTables_scroll {
+          height: calc(100% - 104px);
+
+          .dataTables_scrollBody {
+            height: calc(100% - 44px);
+          }
+        }
+      }
+    }
+  }
+
+  .dataTables_scrollBody {
+    .assigned-column {
+      position: relative;
+
+      .assign-counter-container {
+        border-radius: $border-radius-tag;
+        cursor: pointer;
+        line-height: 35px;
+        position: absolute;
+        text-align: center;
+        top: 1px;
+        width: calc(100% - 16px);
+
+        .assign-counter {
+          &.has-assigned {
+            color: $brand-primary;
+          }
+        }
+
+        &:hover {
+          background-color: $color-alto;
+        }
+      }
+    }
+  }
+}

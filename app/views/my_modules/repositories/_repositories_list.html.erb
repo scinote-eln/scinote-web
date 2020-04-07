@@ -11,7 +11,8 @@
         <%= repository.name %>
       </span>
       <div class="action-buttons">
-        <i class="fas fa-expand full-screen"></i>
+        <i class="fas fa-expand full-screen"
+           data-table-url="<%= full_view_table_my_module_my_module_repository_path(@my_module, repository) %>"></i>
         <i class="fas fa-trash unassign-repository"></i>
       </div>
     </a>
@@ -40,5 +41,7 @@
     <tbody></tbody>
   </table>
 </template>
+
+<%= render partial: "my_modules/repositories/full_view_modal" %>
 
 <%= javascript_include_tag("my_modules/repositories") %>

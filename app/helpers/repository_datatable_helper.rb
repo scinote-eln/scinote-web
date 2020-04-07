@@ -23,18 +23,18 @@ module RepositoryDatatableHelper
       }
 
       unless options[:view_mode]
-        row.merge(
+        row.merge!(
           'recordEditUrl': Rails.application.routes.url_helpers
                                 .edit_repository_repository_row_path(
                                   repository,
                                   record.id
                                 ),
-'recordUpdateUrl': Rails.application.routes.url_helpers
-                        .repository_repository_row_path(
-                          repository,
-                          record.id
-                        ),
-'recordEditable': record.editable?
+          'recordUpdateUrl': Rails.application.routes.url_helpers
+                                  .repository_repository_row_path(
+                                    repository,
+                                    record.id
+                                  ),
+          'recordEditable': record.editable?
         )
       end
 
@@ -51,13 +51,7 @@ module RepositoryDatatableHelper
   end
 
   def assigned_row(record)
-    if @my_module
-      if record.assigned_my_modules_count.positive?
-        "<span class='circle-icon'>&nbsp;</span>"
-      else
-        "<span class='circle-icon disabled'>&nbsp;</span>"
-      end
-    elsif record.assigned_my_modules_count.positive?
+    if record.assigned_my_modules_count.positive?
       tooltip = t('repositories.table.assigned_tooltip',
                   tasks: record.assigned_my_modules_count,
       experiments: record.assigned_experiments_count,
