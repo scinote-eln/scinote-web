@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 var MyModuleRepositories = (function() {
   var SIMPLE_TABLE;
 
