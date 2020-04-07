@@ -401,123 +401,45 @@ class MyModulesController < ApplicationController
 
   # Submit actions
   def assign_repository_records
-    if params[:selected_rows].present? && params[:repository_id].present?
-      records_names = []
-      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
-      downstream_my_modules = []
-      dowmstream_records = {}
-      RepositoryRow
-        .where(id: params[:selected_rows],
-               repository_id: params[:repository_id])
-        .find_each do |record|
-        unless @my_module.repository_rows.include?(record)
-          record.last_modified_by = current_user
-          record.save
+    service = RepositoryRows::MyModuleAssigningService.call(my_module: @my_module,
+                                                            repository: @repository,
+                                                            user: current_user,
+                                                            params: params)
 
-          MyModuleRepositoryRow.create!(
-            my_module: @my_module,
-            repository_row: record,
-            assigned_by: current_user
-          )
-          records_names << record.name
-        end
+    if service.succeed? && service.assigned_rows_names.any?
+      names = service.assigned_rows_names.map { |name| escape_input(name) }
+      message = params[:downstream].blank? ? 'assigned_records_flash' : 'assigned_records_downstream_flash'
+      flash =   I18n.t("repositories.#{message}", records: names.join(', '))
+      status = :ok
+    else
+      flash = t('repositories.no_records_assigned_flash')
+      status = :bad_request
+    end
 
-        next unless downstream
-        @my_module.downstream_modules.each do |my_module|
-          next if my_module.repository_rows.include?(record)
-          dowmstream_records[my_module.id] = [] unless dowmstream_records[my_module.id]
-          MyModuleRepositoryRow.create!(
-            my_module: my_module,
-            repository_row: record,
-            assigned_by: current_user
-          )
-          dowmstream_records[my_module.id] << record.name
-          downstream_my_modules.push(my_module)
-        end
-      end
-
-      if records_names.any?
-        records_names.uniq!
-        log_activity(:assign_repository_record,
-                     @my_module,
-                     repository: @repository.id,
-                     record_names: records_names.join(', '))
-        downstream_my_modules.uniq.each do |my_module|
-          log_activity(:assign_repository_record,
-                       my_module,
-                       repository: @repository.id,
-                       record_names: dowmstream_records[my_module.id].join(', '))
-        end
-        records_names.map! { |n| escape_input(n) }
-        flash = I18n.t('repositories.assigned_records_flash',
-                       records: records_names.join(', '))
-        flash = I18n.t('repositories.assigned_records_downstream_flash',
-                       records: records_names.join(', ')) if downstream
-        respond_to do |format|
-          format.json { render json: { flash: flash }, status: :ok }
-        end
-      else
-        respond_to do |format|
-          format.json do
-            render json: {
-              flash: t('repositories.no_records_assigned_flash')
-            }, status: :bad_request
-          end
-        end
+    respond_to do |format|
+      format.json do
+        render json: { flash: flash }, status: status
       end
     end
   end
 
   def unassign_repository_records
-    if params[:selected_rows].present? && params[:repository_id].present?
-      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
+    service = RepositoryRows::MyModuleUnassigningService.call(my_module: @my_module,
+                                                              repository: @repository,
+                                                              user: current_user,
+                                                              params: params)
+    if service.succeed? && service.unassigned_rows_names.any?
+      flash = I18n.t('repositories.unassigned_records_flash',
+                     records: service.unassigned_rows_names.map { |name| escape_input(name) }.join(', '))
+      status = :ok
+    else
+      flash = t('repositories.no_records_unassigned_flash')
+      status = :bad_request
+    end
 
-      records = RepositoryRow.assigned_on_my_module(params[:selected_rows],
-                                                    @my_module)
-
-      @my_module.repository_rows.destroy(records & @my_module.repository_rows)
-
-      if downstream
-        @my_module.downstream_modules.each do |my_module|
-          assigned_records = RepositoryRow.assigned_on_my_module(
-            params[:selected_rows],
-            my_module
-          )
-          my_module.repository_rows.destroy(
-            assigned_records & my_module.repository_rows
-          )
-          assigned_records.update_all(last_modified_by_id: current_user.id)
-          next unless assigned_records.any?
-
-          log_activity(:unassign_repository_record,
-                       my_module,
-                       repository: @repository.id,
-                       record_names: assigned_records.map(&:name).join(', '))
-        end
-      end
-
-      # update last last_modified_by
-      records.update_all(last_modified_by_id: current_user.id)
-
-      if records.any?
-        log_activity(:unassign_repository_record,
-                     @my_module,
-                     repository: @repository.id,
-                     record_names: records.map(&:name).join(', '))
-
-        flash = I18n.t('repositories.unassigned_records_flash',
-                       records: records.map { |r| escape_input(r.name) }.join(', '))
-        respond_to do |format|
-          format.json { render json: { flash: flash }, status: :ok }
-        end
-      else
-        respond_to do |format|
-          format.json do
-            render json: {
-              flash: t('repositories.no_records_unassigned_flash')
-            }, status: :bad_request
-          end
-        end
+    respond_to do |format|
+      format.json do
+        render json: { flash: flash }, status: status
       end
     end
   end
@@ -657,7 +579,7 @@ class MyModulesController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.find_by_id(params[:repository_id])
+    @repository = Repository.find_by(id: params[:repository_id])
     render_404 unless @repository
     render_403 unless can_read_repository?(@repository)
   end

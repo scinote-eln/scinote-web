@@ -21,16 +21,27 @@ class Repository < ApplicationRecord
   has_many :repository_checklist_items, inverse_of: :repository, dependent: :destroy
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
   has_many :teams_shared_with, through: :team_repositories, source: :team
+  has_many :repository_snapshots,
+           -> { unscope(where: :snapshot) },
+           class_name: 'Repository',
+           foreign_key: :parent_id,
+           inverse_of: :original_repository,
+           dependent: :nullify
+  belongs_to :original_repository, foreign_key: :parent_id, class_name: 'Repository', inverse_of: :repository_snapshots
+  belongs_to :my_module, optional: true
 
   auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,
             uniqueness: { scope: :team_id, case_sensitive: false },
-            length: { maximum: Constants::NAME_MAX_LENGTH }
+            length: { maximum: Constants::NAME_MAX_LENGTH },
+            unless: :snapshot?
   validates :team, presence: true
   validates :created_by, presence: true
 
-  default_scope -> { kept }
+  # Not discarded and not snapshots
+  default_scope -> { kept.live }
+
   scope :accessible_by_teams, lambda { |teams|
     left_outer_joins(:team_repositories)
       .where('repositories.team_id IN (?) '\
@@ -43,6 +54,9 @@ class Repository < ApplicationRecord
              Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write])
       .distinct
   }
+
+  scope :live, -> { where(snapshot: false) }
+  scope :snapshots, -> { unscope(where: :snapshot).where(snapshot: true) }
 
   scope :used_on_task_but_unshared, lambda { |task, team|
     where(id: task.repository_rows

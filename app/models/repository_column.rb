@@ -75,4 +75,26 @@ class RepositoryColumn < ApplicationRecord
   def importable?
     Extends::REPOSITORY_IMPORTABLE_TYPES.include?(data_type.to_sym)
   end
+
+  def deep_dup
+    new_column = super
+
+    __send__("#{data_type.underscore}_deep_dup", new_column) if respond_to?("#{data_type.underscore}_deep_dup", true)
+
+    new_column
+  end
+
+  private
+
+  def repository_list_value_deep_dup(new_column)
+    repository_list_items.each { |item| new_column.repository_list_items << item.deep_dup }
+  end
+
+  def repository_checklist_value_deep_dup(new_column)
+    repository_checklist_items.each { |item| new_column.repository_checklist_items << item.deep_dup }
+  end
+
+  def repository_status_value_deep_dup(new_column)
+    repository_status_items.each { |item| new_column.repository_status_items << item.deep_dup }
+  end
 end
