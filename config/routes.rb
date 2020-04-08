@@ -375,8 +375,11 @@ Rails.application.routes.draw do
           post :destroy_by_tag_id
         end
       end
-      resources :user_my_modules, path: '/users',
-                only: [:index, :create, :destroy]
+      resources :user_my_modules, path: '/users', only: %i(index create destroy) do
+        collection do
+          get :index_compact
+        end
+      end
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]

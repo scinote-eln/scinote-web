@@ -19,6 +19,18 @@ class UserMyModulesController < ApplicationController
     end
   end
 
+  def index_compact
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'index_compact.html.erb'
+          )
+        }
+      end
+    end
+  end
+
   def index_edit
     @user_my_modules = @my_module.user_my_modules
     @unassigned_users = @my_module.unassigned_users

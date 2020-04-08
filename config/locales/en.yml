@@ -597,6 +597,7 @@ en:
   my_modules:
     details:
       title: "Details"
+      assigned_users: "Assigned users:"
     notes:
       title: "Notes"
       no_description: "No task description"
