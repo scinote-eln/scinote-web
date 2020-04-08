@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-/* global DataTableHelpers PerfectScrollbar */
+/* global DataTableHelpers PerfectScrollbar FilePreviewModal */
 
 var MyModuleRepositories = (function() {
   var SIMPLE_TABLE;
@@ -70,6 +70,7 @@ var MyModuleRepositories = (function() {
     FULL_VIEW_TABLE = $(tableContainer).DataTable({
       dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       processing: true,
+      stateSave: true,
       serverSide: true,
       order: $(tableContainer).data('default-order'),
       pageLength: 25,
@@ -119,6 +120,7 @@ var MyModuleRepositories = (function() {
 
       drawCallback: function() {
         FULL_VIEW_TABLE.columns.adjust();
+        FilePreviewModal.init();
         if (FULL_VIEW_TABLE_SCROLLBAR) {
           FULL_VIEW_TABLE_SCROLLBAR.update();
         } else {
@@ -130,6 +132,12 @@ var MyModuleRepositories = (function() {
             }
           );
         }
+      },
+      stateLoadCallback: function(settings, callback) {
+        var loadStateUrl = $(tableContainer).data('load-state-url');
+        $.post(loadStateUrl, function(json) {
+          callback(json.state);
+        });
       }
     });
   }
@@ -147,6 +155,11 @@ var MyModuleRepositories = (function() {
   function initRepositoryFullView() {
     $('#assigned-items-container').on('click', '.action-buttons .full-screen', function(e) {
       var fullViewModal = $('#my-module-repository-full-view-modal');
+      var repositoryNameObject = $(this).closest('.assigned-repository-caret')
+        .find('.assigned-repository-title')
+        .clone();
+
+      fullViewModal.find('.repository-name').html(repositoryNameObject);
       fullViewModal.modal('show');
       $.get($(this).data('table-url'), (data) => {
         fullViewModal.find('.modal-body').html(data.html);
