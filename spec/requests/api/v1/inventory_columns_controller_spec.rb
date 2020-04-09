@@ -20,12 +20,10 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       repository: @valid_inventory, data_type: :RepositoryTextValue)
     list_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryListValue)
-    create(:repository_list_item, repository: @valid_inventory,
-             repository_column: list_column, data: Faker::Name.unique.name)
+    create(:repository_list_item, repository_column: list_column, data: Faker::Name.unique.name)
     status_column = create(:repository_column, name: Faker::Name.unique.name,
                          repository: @valid_inventory, data_type: :RepositoryStatusValue)
-    create(:repository_status_item, repository: @valid_inventory,
-           repository_column: status_column, status: Faker::Name.unique.name, icon: 'icon')
+    create(:repository_status_item, repository_column: status_column, status: Faker::Name.unique.name, icon: 'icon')
     create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryAssetValue)
 

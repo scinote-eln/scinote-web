@@ -73,8 +73,7 @@ class RepositoryListValue < ApplicationRecord
     if list_item.blank?
       list_item = column.repository_list_items.new(data: text,
                                                    created_by: value.created_by,
-                                                   last_modified_by: value.last_modified_by,
-                                                   repository: column.repository)
+                                                   last_modified_by: value.last_modified_by)
 
       return nil unless list_item.save
     end

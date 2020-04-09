@@ -11,7 +11,7 @@ module RepositoryRows
       @repository = repository
       @user = user
       @params = params
-      @unassigned_rows_names = []
+      @unassigned_rows_names = Set[]
       @errors = {}
     end
 
@@ -19,14 +19,14 @@ module RepositoryRows
       return self unless valid?
 
       ActiveRecord::Base.transaction do
-        @unassigned_rows_names = unassign_repository_rows_from_my_module(@my_module)
-
         if params[:downstream] == 'true'
           @my_module.downstream_modules.each do |downstream_module|
             unassign_repository_rows_from_my_module(downstream_module)
           end
+        else
+          unassign_repository_rows_from_my_module(@my_module)
         end
-      rescue ActiveRecord::RecordInvalid => e
+      rescue StandardError => e
         @errors[e.record.class.name.underscore] = e.record.errors.full_messages
         raise ActiveRecord::Rollback
       end
@@ -65,7 +65,7 @@ module RepositoryRows
                                                               repository: @repository.id,
                                                               record_names: unassigned_names.join(', ') })
 
-      unassigned_names
+      @unassigned_rows_names.merge(unassigned_names)
     end
 
     def valid?

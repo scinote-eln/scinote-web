@@ -35,7 +35,6 @@ module RepositoryColumns
 
         to_be_created.each do |item|
           RepositoryChecklistItem.create!(
-            repository: @repository,
             repository_column: @column,
             data: item,
             created_by: @user,

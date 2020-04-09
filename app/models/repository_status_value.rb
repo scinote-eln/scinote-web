@@ -69,8 +69,7 @@ class RepositoryStatusValue < ApplicationRecord
       status_item = column.repository_status_items.new(icon: icon,
                                                        status: status,
                                                        created_by: value.created_by,
-                                                       last_modified_by: value.last_modified_by,
-                                                       repository: column.repository)
+                                                       last_modified_by: value.last_modified_by)
 
       return nil unless status_item.save
     end

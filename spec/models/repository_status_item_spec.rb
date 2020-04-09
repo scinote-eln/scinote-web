@@ -10,10 +10,6 @@ describe RepositoryStatusItem do
   end
 
   describe 'Validations' do
-    describe '#repository' do
-      it { is_expected.to validate_presence_of(:repository) }
-    end
-
     describe '#icon' do
       it { is_expected.to validate_presence_of(:icon) }
     end
@@ -25,7 +21,6 @@ describe RepositoryStatusItem do
   end
 
   describe 'Associations' do
-    it { is_expected.to belong_to(:repository) }
     it { is_expected.to belong_to(:repository_column) }
     it { is_expected.to belong_to(:created_by).optional }
     it { is_expected.to belong_to(:last_modified_by).optional }

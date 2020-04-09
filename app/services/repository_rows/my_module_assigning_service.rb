@@ -11,58 +11,20 @@ module RepositoryRows
       @repository = repository
       @user = user
       @params = params
-      @assigned_rows_names = []
+      @assigned_rows_names = Set[]
       @errors = {}
     end
 
     def call
       return self unless valid?
 
-      downstream_modules = []
-      downstream_records = {}
-
       ActiveRecord::Base.transaction do
-        unassigned_rows = @repository.repository_rows
-                                     .joins("LEFT OUTER JOIN my_module_repository_rows "\
-                                            "ON repository_rows.id = my_module_repository_rows.repository_row_id "\
-                                            "AND my_module_repository_rows.my_module_id = #{@my_module.id.to_i}")
-                                     .where(my_module_repository_rows: { id: nil })
-                                     .where(id: @params[:selected_rows])
-
-        unassigned_rows.find_each do |repository_row|
-          MyModuleRepositoryRow.create!(my_module: @my_module, repository_row: repository_row, assigned_by: @user)
-          @assigned_rows_names << repository_row.name
-
-          next unless @params[:downstream] == 'true'
-
-          unassigned_downstream_modules = @my_module.downstream_modules
-                                                    .left_outer_joins(:my_module_repository_rows)
-                                                    .where.not(my_module_repository_rows: { repository_row: record })
-
-          unassigned_downstream_modules.each do |downstream_module|
-            next if my_module.repository_rows.include?(repository_row)
-
-            downstream_records[my_module.id] = [] unless downstream_records[downstream_module.id]
-            MyModuleRepositoryRow.create!(
-              my_module: downstream_module,
-              repository_row: repository_row,
-              assigned_by: @user
-            )
-            downstream_records[downstream_module.id] << repository_row.name
-            downstream_modules.push(downstream_module)
+        if params[:downstream] == 'true'
+          @my_module.downstream_modules.each do |downstream_module|
+            assign_repository_rows_to_my_module(downstream_module)
           end
-
-          if @assigned_rows_names.present?
-            @assigned_rows_names.uniq!
-            log_activity(@my_module,
-                         repository: @repository.id,
-                         record_names: @assigned_rows_names.join(', '))
-            downstream_modules.uniq.each do |downstream_module|
-              log_activity(downstream_module,
-                           repository: @repository.id,
-                           record_names: downstream_records[my_module.id].join(', '))
-            end
-          end
+        else
+          assign_repository_rows_to_my_module(@my_module)
         end
       rescue ActiveRecord::RecordInvalid => e
         @errors[e.record.class.name.underscore] = e.record.errors.full_messages
@@ -78,16 +40,35 @@ module RepositoryRows
 
     private
 
-    def log_activity(my_module = nil, message_items = {})
-      message_items = { my_module: my_module.id }.merge(message_items)
+    def assign_repository_rows_to_my_module(my_module)
+      assigned_names = []
+      unassigned_rows = @repository.repository_rows
+                                   .joins("LEFT OUTER JOIN my_module_repository_rows "\
+                                          "ON repository_rows.id = my_module_repository_rows.repository_row_id "\
+                                          "AND my_module_repository_rows.my_module_id = #{my_module.id.to_i}")
+                                   .where(my_module_repository_rows: { id: nil })
+                                   .where(id: @params[:selected_rows])
 
-      Activities::CreateActivityService
-        .call(activity_type: :assign_repository_record,
-              owner: current_user,
-              team: my_module.experiment.project.team,
-              project: my_module.experiment.project,
-              subject: my_module,
-              message_items: message_items)
+      return [] unless unassigned_rows.any?
+
+      unassigned_rows.find_each do |repository_row|
+        MyModuleRepositoryRow.create!(my_module: my_module,
+                                      repository_row: repository_row,
+                                      assigned_by: @user)
+        assigned_names << repository_row.name
+      end
+
+      return [] if assigned_names.blank?
+
+      Activities::CreateActivityService.call(activity_type: :assign_repository_record,
+                                             owner: @user,
+                                             team: my_module.experiment.project.team,
+                                             project: my_module.experiment.project,
+                                             subject: my_module,
+                                             message_items: { my_module: my_module.id,
+                                                              repository: @repository.id,
+                                                              record_names: assigned_names.join(', ') })
+      @assigned_rows_names.merge(assigned_names)
     end
 
     def valid?

@@ -21,8 +21,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
     list_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryListValue)
     list_item =
-      create(:repository_list_item, repository: @valid_inventory,
-             repository_column: list_column, data: Faker::Name.unique.name)
+      create(:repository_list_item, repository_column: list_column, data: Faker::Name.unique.name)
     file_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryAssetValue)
     asset = create(:asset)

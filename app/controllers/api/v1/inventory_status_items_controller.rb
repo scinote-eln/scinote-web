@@ -61,8 +61,7 @@ module Api
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: %i(status icon) })[:data].merge(
           created_by: @current_user,
-          last_modified_by: @current_user,
-          repository: @inventory
+          last_modified_by: @current_user
         )
       end
 

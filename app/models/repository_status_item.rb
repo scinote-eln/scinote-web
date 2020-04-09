@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryStatusItem < ApplicationRecord
-  validates :repository, :repository_column, :icon, presence: true
+  validates :repository_column, :icon, presence: true
   validates :status, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
                                                maximum: Constants::NAME_MAX_LENGTH }
   belongs_to :repository_column

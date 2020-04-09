@@ -40,21 +40,12 @@ class MyModule < ApplicationRecord
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
-  has_many :inputs,
-           class_name: 'Connection',
-           foreign_key: 'input_id',
-           inverse_of: :to,
-           dependent: :destroy
-  has_many :outputs,
-           class_name: 'Connection',
-           foreign_key: 'output_id',
-           inverse_of: :from,
-           dependent: :destroy
-  has_many :my_modules, through: :outputs, source: :to
-  has_many :my_module_antecessors,
-           through: :inputs,
-           source: :from,
-           class_name: 'MyModule'
+
+  has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
+  has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy
+  has_many :my_modules, through: :outputs, source: :to, class_name: 'MyModule'
+  has_many :my_module_antecessors, through: :inputs, source: :from, class_name: 'MyModule'
+
   has_many :sample_my_modules,
            inverse_of: :my_module,
            dependent: :destroy

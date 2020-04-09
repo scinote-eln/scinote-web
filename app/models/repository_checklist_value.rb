@@ -83,8 +83,7 @@ class RepositoryChecklistValue < ApplicationRecord
       if checklist_item.blank?
         checklist_item = column.repository_checklist_items.new(data: text,
                                                                created_by: value.created_by,
-                                                               last_modified_by: value.last_modified_by,
-                                                               repository: column.repository)
+                                                               last_modified_by: value.last_modified_by)
 
         return nil unless checklist_item.save
       end
