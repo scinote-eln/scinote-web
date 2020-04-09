@@ -335,3 +335,59 @@
     }
   }
 }
+
+@media (max-width: 700px) {
+  .dashboard-container .current-tasks-widget {
+    --widget-header-size: 72px;
+    grid-row: 1;
+    min-height: 450px;
+
+    .widget-title {
+      flex-basis: 100%;
+      line-height: 36px;
+    }
+
+    .actions-container {
+      flex-grow: 0;
+      padding: 0;
+    }
+
+    .current-tasks-navbar {
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+
+    .search-container {
+      margin-right: 5px;
+
+      .task-search-field {
+        width: 150px;
+
+        &:focus {
+          width: 150px;
+        }
+      }
+    }
+
+    .current-tasks-list {
+      .current-task-item {
+        .item-row {
+          flex-wrap: wrap;
+
+          .task-due-date {
+            @include font-small;
+
+            .fas {
+              display: none;
+            }
+          }
+
+          .task-progress-container {
+            flex-basis: 100%;
+            max-width: none;
+          }
+        }
+      }
+    }
+  }
+}

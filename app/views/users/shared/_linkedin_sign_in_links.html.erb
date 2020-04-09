@@ -1,0 +1,10 @@
+<%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? %>
+  <%= link_to omniauth_authorize_path(resource_name, :linkedin), method: :post, title: "Sign in with LinkedIn", class: 'linkedin-link' do %>
+        <%= image_tag('linkedin/Sign-in-Large---Default.png',
+                      class: 'linkedin-signin-button',
+                      alt: "Sign in with LinkedIn",
+                      onmouseover: "src='#{image_path('linkedin/Sign-in-Large---Hover.png')}'",
+                      onmouseout: "src='#{image_path('linkedin/Sign-in-Large---Default.png')}'",
+                      onclick: "src='#{image_path('linkedin/Sign-in-Large---Active.png')}'") %>
+  <% end -%>
+<% end -%>

@@ -14,7 +14,7 @@ Feature: Sign up
   Scenario: Sign up for an existing user
     Given I visit the sign up page
     Then I fill the sign up form with
-    | Full name | Email          | Password | Password confirmation | Team name   |
+    | Full name | E-mail          | Password | Password confirmation | Team name   |
     | Magnus    | tusk@gmail.com | asdf1234 | asdf1234              | SpliceGirls |
     And I click on "Sign up"
     Then I should see "has already been taken"
@@ -23,7 +23,7 @@ Feature: Sign up
   Scenario: Sign up for an non-existent user
     Given I visit the sign up page
     Then I fill the sign up form with
-    | Full name | Email          | Password | Password confirmation | Team name   |
+    | Full name | E-mail          | Password | Password confirmation | Team name   |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            | SpliceGirls |
     And I click on "Sign up"
     Then I should be on homepage
@@ -32,7 +32,7 @@ Feature: Sign up
   Scenario: Unsuccessful sign up, password confirmation does not match
     Given I visit the sign up page
     Then I fill the sign up form with
-    | Full name | Email          | Password | Password confirmation | Team name   |
+    | Full name | E-mail          | Password | Password confirmation | Team name   |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234567         | SpliceGirls |
     And I click on "Sign up"
     Then I should see "doesn't match Password"
@@ -41,7 +41,7 @@ Feature: Sign up
   Scenario: Unsuccessful sign up, team name is missing
     Given I visit the sign up page
     Then I fill the sign up form with
-    | Full name | Email          | Password | Password confirmation |
+    | Full name | E-mail          | Password | Password confirmation |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            |
     And I click on "Sign up"
     Then I should see "is too short (minimum is 2 characters)"

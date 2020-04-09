@@ -21,9 +21,11 @@ var ProtocolRepositoryHeader = (function() {
   }
 
   function initEditDescription() {
-    $('#protocol_description_view').on('click', function() {
+    var viewObject = $('#protocol_description_view');
+    viewObject.on('click', function() {
       TinyMCE.init('#protocol_description_textarea');
     });
+    TinyMCE.initIfHasDraft(viewObject);
   }
 
   return {

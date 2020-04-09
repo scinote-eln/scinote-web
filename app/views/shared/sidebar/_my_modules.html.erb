@@ -1,5 +1,5 @@
 <% if experiment.active_my_modules.present? %>
-  <ul>
+  <ul class="tree-child hidden" data-branch-id="exp<%= experiment.id %>">
     <% experiment.active_my_modules.each do |my_module| %>
       <li class="leaf" data-module-id="<%= my_module.id %>">
         <span class="tree-link task-tree-link second-indent" title="<%= my_module.name %>">
@@ -7,6 +7,9 @@
                       module_action_to_link_to(my_module),
                       class: 'line-wrap',
                       data: { type: 'my_module', id: my_module.id } %>
+          <% if action_name =='canvas' %>
+            <a href="" class="canvas-center-on"><i class="fas fa-map-marker-alt"></i></a>
+          <% end %>
         </span>
       </li>
     <% end %>
