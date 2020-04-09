@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryColumn < ApplicationRecord
-  belongs_to :repository
+  belongs_to :repository, class_name: 'RepositoryBase'
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_cells, dependent: :destroy
   has_many :repository_rows, through: :repository_cells
@@ -79,22 +79,46 @@ class RepositoryColumn < ApplicationRecord
   def deep_dup
     new_column = super
 
-    __send__("#{data_type.underscore}_deep_dup", new_column) if respond_to?("#{data_type.underscore}_deep_dup", true)
+    extra_method_name = "#{data_type.underscore}_deep_dup"
+    __send__(extra_method_name, new_column) if respond_to?(extra_method_name, true)
 
     new_column
+  end
+
+  def snapshot!(repository_snapshot)
+    column_snapshot = deep_dup
+    column_snapshot.assign_attributes(
+      repository: repository_snapshot,
+      parent_id: id,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    column_snapshot.save!
   end
 
   private
 
   def repository_list_value_deep_dup(new_column)
-    repository_list_items.each { |item| new_column.repository_list_items << item.deep_dup }
+    repository_list_items.each do |item|
+      new_item = item.deep_dup
+      new_item.repository_id = nil
+      new_column.repository_list_items << new_item
+    end
   end
 
   def repository_checklist_value_deep_dup(new_column)
-    repository_checklist_items.each { |item| new_column.repository_checklist_items << item.deep_dup }
+    repository_checklist_items.each do |item|
+      new_item = item.deep_dup
+      new_item.repository_id = nil
+      new_column.repository_checklist_items << new_item
+    end
   end
 
   def repository_status_value_deep_dup(new_column)
-    repository_status_items.each { |item| new_column.repository_status_items << item.deep_dup }
+    repository_status_items.each do |item|
+      new_item = item.deep_dup
+      new_item.repository_id = nil
+      new_column.repository_status_items << new_item
+    end
   end
 end

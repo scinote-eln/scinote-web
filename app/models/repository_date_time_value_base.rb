@@ -24,4 +24,14 @@ class RepositoryDateTimeValueBase < ApplicationRecord
     self.last_modified_by = user
     save!
   end
+
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Repositories
-  class MyModuleAssignedSnapshotService
+  class MyModuleAssigningSnapshotService
     extend Service
 
     attr_reader :repository, :my_module, :user, :errors
@@ -17,18 +17,14 @@ module Repositories
       return self unless valid?
 
       ActiveRecord::Base.transaction do
-        repository_snapshot = @repository.dup
-        repository_snapshot.snapshot = true
+        repository_snapshot = @repository.dup.becomes(RepositorySnapshot)
+        repository_snapshot.type = RepositorySnapshot.name
         repository_snapshot.original_repository = @repository
         repository_snapshot.my_module = @my_module
         repository_snapshot.save!
 
-        @repository.repository_columns.find_each do |column|
-          column_snapshot = column.deep_dup
-          column_snapshot.created_at = column.created_at
-          column_snapshot.updated_at = DateTime.now
-          column_snapshot.repository = repository_snapshot
-          column_snapshot.save!
+        @repository.repository_columns.each do |column|
+          column.snapshot!(repository_snapshot)
         end
 
         repository_rows = @repository.repository_rows
@@ -36,15 +32,7 @@ module Repositories
                                      .where(my_module_repository_rows: { my_module: @my_module })
 
         repository_rows.find_each do |original_row|
-          row_snapshot = original_row.deep_dup
-          row_snapshot.parent_id = original_row.id
-          row_snapshot.created_at = original_row.created_at
-          row_snapshot.updated_at = DateTime.now
-          row_snapshot.save!
-
-          original_row.repository_cells.each do |cell|
-            RepositoryActions::DuplicateCell.new(cell, row_snapshot, @user).call
-          end
+          original_row.snapshot!(repository_snapshot)
         end
       rescue ActiveRecord::RecordInvalid => e
         @errors[e.record.class.name.underscore] = e.record.errors.full_messages

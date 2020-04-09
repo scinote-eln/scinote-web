@@ -4,7 +4,6 @@ class RepositoryStatusItem < ApplicationRecord
   validates :repository, :repository_column, :icon, presence: true
   validates :status, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
                                                maximum: Constants::NAME_MAX_LENGTH }
-  belongs_to :repository
   belongs_to :repository_column
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User', optional: true,
              inverse_of: :created_repository_status_types

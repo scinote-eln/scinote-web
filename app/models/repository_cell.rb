@@ -126,6 +126,20 @@ class RepositoryCell < ApplicationRecord
     cell
   end
 
+  def snapshot!(row_snapshot)
+    cell_snapshot = dup
+    column_snapshot = row_snapshot.repository
+                                  .repository_columns
+                                  .find { |c| c.parent_id == repository_column.id }
+    cell_snapshot.assign_attributes(
+      repository_row: row_snapshot,
+      repository_column: column_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value.snapshot!(cell_snapshot)
+  end
+
   private
 
   def repository_column_data_type

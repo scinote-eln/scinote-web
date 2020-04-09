@@ -1100,9 +1100,9 @@ CREATE TABLE public.repositories (
     updated_at timestamp without time zone,
     discarded_at timestamp without time zone,
     permission_level integer DEFAULT 0 NOT NULL,
-    snapshot boolean DEFAULT false,
     parent_id bigint,
-    my_module_id bigint
+    my_module_id bigint,
+    type character varying
 );
 
 
@@ -1201,7 +1201,6 @@ ALTER SEQUENCE public.repository_cells_id_seq OWNED BY public.repository_cells.i
 CREATE TABLE public.repository_checklist_items (
     id bigint NOT NULL,
     data character varying NOT NULL,
-    repository_id bigint NOT NULL,
     repository_column_id bigint NOT NULL,
     created_by_id bigint,
     last_modified_by_id bigint,
@@ -1305,7 +1304,8 @@ CREATE TABLE public.repository_columns (
     data_type integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    metadata jsonb DEFAULT '{}'::jsonb NOT NULL
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    parent_id bigint
 );
 
 
@@ -1405,7 +1405,6 @@ ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.reposit
 
 CREATE TABLE public.repository_list_items (
     id bigint NOT NULL,
-    repository_id bigint,
     repository_column_id bigint,
     data text NOT NULL,
     created_by_id bigint,
@@ -1544,7 +1543,6 @@ CREATE TABLE public.repository_status_items (
     id bigint NOT NULL,
     status character varying NOT NULL,
     icon character varying NOT NULL,
-    repository_id bigint NOT NULL,
     repository_column_id bigint NOT NULL,
     created_by_id bigint,
     last_modified_by_id bigint,
@@ -4863,13 +4861,6 @@ CREATE INDEX index_repository_checklist_items_on_repository_column_id ON public.
 
 
 --
--- Name: index_repository_checklist_items_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_checklist_items_on_repository_id ON public.repository_checklist_items USING btree (repository_id);
-
-
---
 -- Name: index_repository_checklist_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4944,13 +4935,6 @@ CREATE INDEX index_repository_list_items_on_last_modified_by_id ON public.reposi
 --
 
 CREATE INDEX index_repository_list_items_on_repository_column_id ON public.repository_list_items USING btree (repository_column_id);
-
-
---
--- Name: index_repository_list_items_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_items_on_repository_id ON public.repository_list_items USING btree (repository_id);
 
 
 --
@@ -5042,13 +5026,6 @@ CREATE INDEX index_repository_status_items_on_last_modified_by_id ON public.repo
 --
 
 CREATE INDEX index_repository_status_items_on_repository_column_id ON public.repository_status_items USING btree (repository_column_id);
-
-
---
--- Name: index_repository_status_items_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_status_items_on_repository_id ON public.repository_status_items USING btree (repository_id);
 
 
 --
@@ -5787,14 +5764,6 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
--- Name: repository_status_items fk_rails_00642f1707; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_status_items
-    ADD CONSTRAINT fk_rails_00642f1707 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
-
-
---
 -- Name: sample_custom_fields fk_rails_01916e6992; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5824,14 +5793,6 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_0510000a52 FOREIGN KEY (table_id) REFERENCES public.tables(id);
-
-
---
--- Name: repository_checklist_items fk_rails_07ea1cc259; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_checklist_items
-    ADD CONSTRAINT fk_rails_07ea1cc259 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -6016,14 +5977,6 @@ ALTER TABLE ONLY public.my_modules
 
 ALTER TABLE ONLY public.sample_types
     ADD CONSTRAINT fk_rails_316e1b5e2c FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: repository_list_items fk_rails_31e11a3b07; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_list_items
-    ADD CONSTRAINT fk_rails_31e11a3b07 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -7240,3 +7193,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200204100934'),
 ('20200326114643'),
 ('20200331183640');
+
+

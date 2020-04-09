@@ -10,7 +10,7 @@ Canaid::Permissions.register_for(Repository) do
      create_repository_columns)
     .each do |perm|
     can perm do |_, repository|
-      !repository.snapshot?
+      !repository.is_a? RepositorySnapshot
     end
   end
 

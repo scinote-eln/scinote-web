@@ -63,8 +63,7 @@ class MyModule < ApplicationRecord
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :repository_snapshots,
-           -> { where(snapshot: true) },
-           class_name: 'Repository',
+           class_name: 'RepositorySnapshot',
            dependent: :destroy,
            inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy

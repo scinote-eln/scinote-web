@@ -19,7 +19,7 @@ module RepositoryRows
       return self unless valid?
 
       downstream_modules = []
-      dowstream_records = {}
+      downstream_records = {}
 
       ActiveRecord::Base.transaction do
         unassigned_rows = @repository.repository_rows
@@ -42,13 +42,13 @@ module RepositoryRows
           unassigned_downstream_modules.each do |downstream_module|
             next if my_module.repository_rows.include?(repository_row)
 
-            dowstream_records[my_module.id] = [] unless dowstream_records[downstream_module.id]
+            downstream_records[my_module.id] = [] unless downstream_records[downstream_module.id]
             MyModuleRepositoryRow.create!(
               my_module: downstream_module,
               repository_row: repository_row,
               assigned_by: @user
             )
-            dowstream_records[downstream_module.id] << repository_row.name
+            downstream_records[downstream_module.id] << repository_row.name
             downstream_modules.push(downstream_module)
           end
 
@@ -60,7 +60,7 @@ module RepositoryRows
             downstream_modules.uniq.each do |downstream_module|
               log_activity(downstream_module,
                            repository: @repository.id,
-                           record_names: dowstream_records[my_module.id].join(', '))
+                           record_names: downstream_records[my_module.id].join(', '))
             end
           end
         end

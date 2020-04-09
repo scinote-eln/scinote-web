@@ -48,6 +48,22 @@ class RepositoryChecklistValue < ApplicationRecord
     save!
   end
 
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    item_values = repository_checklist_items.pluck(:data)
+    checklist_items_snapshot = cell_snapshot.repository_column
+                                            .repository_checklist_items
+                                            .select { |snapshot_item| item_values.include?(snapshot_item.data) }
+
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      repository_checklist_items: checklist_items_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
+
   def self.new_with_payload(payload, attributes)
     item_ids = payload.is_a?(String) ? JSON.parse(payload) : payload
     value = new(attributes)
