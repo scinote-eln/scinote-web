@@ -167,6 +167,13 @@ var MyModuleRepositories = (function() {
         renderFullViewTable(fullViewModal.find('.table'));
       });
       e.stopPropagation();
+
+  function initRepositoriesDropdown() {
+    $('.repositories-assign-container').on('show.bs.dropdown', function() {
+      var dropdownContainer = $(this);
+      $.get(dropdownContainer.data('repositories-url'), function(result) {
+        dropdownContainer.find('.repositories-dropdown-menu').html(result.html);
+      });
     });
   }
 
@@ -174,6 +181,7 @@ var MyModuleRepositories = (function() {
     init: () => {
       initSimpleTable();
       initRepositoryFullView();
+      initRepositoriesDropdown();
     }
   };
 }());

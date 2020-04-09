@@ -41,7 +41,20 @@
         <span class="task-section-title">
           <h2><%= t('my_modules.assigned_items.title') %></h2>
         </span>
-    </a>
+      </a>
+      <div class="actions-block">
+        <div class="dropdown repositories-assign-container"
+             data-repositories-url="<%= dropdown_list_my_module_my_module_repositories_path(@my_module) %>"
+        >
+          <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="fas fa-file-signature"></span>
+            <span>Assign from</span>
+            <span class="caret pull-right"></span>
+          </a>
+          <div class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+          </div>
+        </div>
+      </div>
     </div>
     <div class="collapse panel-group" id="assigned-items-container">
       <%= render partial: "my_modules/repositories/repositories_list" %>
