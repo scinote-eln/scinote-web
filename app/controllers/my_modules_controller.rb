@@ -266,11 +266,6 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
-    @recent_protcols_positive = Protocol.recent_protocols(
-      current_user,
-      current_team,
-      Constants::RECENT_PROTOCOL_LIMIT
-    ).any?
     @assigned_repositories = @my_module.assigned_repositories
     current_team_switch(@protocol.team)
   end
