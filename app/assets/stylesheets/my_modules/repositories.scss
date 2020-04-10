@@ -1,6 +1,27 @@
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
 
+@mixin my-module-repository-title {
+  @include font-h3;
+  line-height: 22px;
+  overflow: hidden;
+  padding-right: 55px;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &::after {
+    color: $color-alto;
+    content: attr(data-rows-count);
+    display: inline-block;
+    line-height: 22px;
+    padding-left: 5px;
+    position: absolute;
+    right: 0;
+    width: 55px;
+  }
+}
+
 .my-module-inventories {
 
   .main-actions {
@@ -89,8 +110,9 @@
       padding: 0 18px;
       text-decoration: none;
 
-      &:hover,
-      &:active {
+      &.collapsed:hover,
+      &.collapsed:active {
+        background: $color-concrete;
         text-decoration: none;
       }
 
@@ -104,23 +126,7 @@
       }
 
       .assigned-repository-title {
-        @include font-h3;
-        overflow: hidden;
-        padding-right: 55px;
-        position: relative;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        &::after {
-          color: $color-alto;
-          content: attr(data-rows-count);
-          display: inline-block;
-          line-height: 22px;
-          padding-left: 5px;
-          position: absolute;
-          right: 0;
-          width: 55px;
-        }
+        @include my-module-repository-title;
       }
 
       .action-buttons {
@@ -137,8 +143,142 @@
       }
     }
 
-    &:hover {
-      background: $color-concrete;
+    .assigned-repository-container {
+      .table.dataTable {
+        margin-top: 0 !important;
+
+        .row-name {
+          border-left: 0;
+        }
+      }
+
+      .pagination-row {
+        border-top: $border-default;
+        padding: 5px 10px;
+
+        .pagination {
+          display: inline-flex;
+        }
+
+        .dataTables_paginate {
+          height: 38px;
+        }
+      }
+    }
+  }
+}
+
+#my-module-repository-full-view-modal {
+  .modal-dialog {
+    height: 100vh;
+    margin: 0;
+    width: 100vw;
+
+    .modal-content {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      height: inherit;
+
+      .modal-header {
+        align-items: center;
+        display: flex;
+        height: 55px;
+        padding: 10px 24px;
+
+        .close {
+          flex-shrink: 0;
+        }
+
+        .header-container {
+          flex-grow: 1;
+
+          .assigned-repository-title {
+            @include my-module-repository-title;
+            @include font-h2;
+          }
+
+          .breadcrumbs {
+            @include font-small;
+            align-items: center;
+            color: $color-silver-chalice;
+            display: flex;
+            height: 20px;
+            width: 100%;
+
+            .my-module,
+            .project,
+            .experiment {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            .slash {
+              flex-basis: 20px;
+              text-align: center;
+            }
+          }
+        }
+      }
+
+      .modal-body {
+        flex-grow: 1;
+        padding: 0;
+      }
+
+      .dataTables_wrapper {
+        height: 100%;
+        position: absolute;
+        width: 100%;
+
+        .dataTables_scroll {
+          height: calc(100% - 146px);
+          padding: 0 24px;
+
+          .dataTables_scrollBody {
+            height: calc(100% - 44px);
+          }
+        }
+
+        .main-actions {
+          padding: 16px 24px 10px;
+        }
+
+        .pagination-row {
+          border-top: $border-default;
+          height: 84px;
+          padding: 0 24px;
+        }
+      }
+    }
+  }
+
+  .dataTables_scrollBody {
+    .assigned-column {
+      position: relative;
+
+      .assign-counter-container {
+        border-radius: $border-radius-tag;
+        cursor: pointer;
+        line-height: 35px;
+        position: absolute;
+        text-align: center;
+        top: 1px;
+        width: calc(100% - 16px);
+
+        .assign-counter {
+          &.has-assigned {
+            color: $brand-primary;
+          }
+        }
+
+        &:hover {
+          background-color: $color-alto;
+        }
+      }
     }
   }
 }

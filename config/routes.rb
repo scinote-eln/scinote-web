@@ -380,6 +380,13 @@ Rails.application.routes.draw do
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
+
+      resources :my_module_repositories, path: '/repositories', only: :show do
+        member do
+          get :full_view_table
+        end
+      end
+
       # resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]
       resources :result_assets, only: [:new, :create]

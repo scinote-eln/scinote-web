@@ -1,0 +1,39 @@
+// scss-lint:disable SelectorDepth SelectorFormat
+// scss-lint:disable NestingDepth QualifyingElement
+
+.dataTables_wrapper {
+  .pagination-row {
+    align-items: center;
+    background-color: $color-white;
+    display: flex;
+    height: 68px;
+    width: 100%;
+
+    .pagination-info,
+    .pagination-actions {
+      flex-grow: 1;
+    }
+
+    .pagination-info {
+      align-items: center;
+      display: flex;
+
+      .dataTables_info {
+        padding-top: 0;
+      }
+
+      .dataTables_length {
+        margin-right: 24px;
+        width: 170px;
+
+        .dropdown-selector-container {
+          width: inherit;
+        }
+
+        label {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

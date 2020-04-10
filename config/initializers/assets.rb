@@ -33,6 +33,7 @@ Rails.application.config.assets.precompile +=
   %w(users/settings/teams/invite_users_modal.js)
 Rails.application.config.assets.precompile += %w(my_modules/activities.js)
 Rails.application.config.assets.precompile += %w(my_modules/protocols.js)
+Rails.application.config.assets.precompile += %w(my_modules/repositories.js)
 Rails.application.config.assets.precompile +=
   %w(my_modules/protocols/protocol_status_bar.js)
 Rails.application.config.assets.precompile += %w(my_modules/results.js)
