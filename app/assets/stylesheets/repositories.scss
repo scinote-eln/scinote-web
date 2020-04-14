@@ -187,29 +187,6 @@
   }
 }
 
-.repositories-dropdown-menu {
-  border: 1px solid $color-gainsboro;
-  border-top: 0;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-  height: auto;
-  max-height: 400px;
-  overflow-x: hidden;
-  text-transform: initial;
-  width: 300px;
-
-  li:not(:first-child) {
-    border-top: 1px solid $color-gainsboro;
-  }
-
-  .fas-custom {
-    float: right;
-  }
-
-  a.muted {
-    opacity: .7;
-  }
-}
-
 .repository-share-status {
   display: contents !important;
 

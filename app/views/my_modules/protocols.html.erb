@@ -11,7 +11,7 @@
       <span class="task-section-title">
         <h2><%= t('my_modules.details.title') %></h2>
       </span>
-      <div class="complete-button-container">
+      <div class="actions-block">
         <%= render partial: "my_modules/state_buttons.html.erb" %>
       </div>
     </div>
@@ -51,8 +51,8 @@
             <span><%= t('my_modules.assigned_items.assign_from') %></span>
             <span class="caret pull-right"></span>
           </a>
-          <div class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
-          </div>
+          <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+          </ul>
         </div>
       </div>
     </div>

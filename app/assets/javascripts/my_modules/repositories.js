@@ -167,6 +167,8 @@ var MyModuleRepositories = (function() {
         renderFullViewTable(fullViewModal.find('.table'));
       });
       e.stopPropagation();
+    });
+  }
 
   function initRepositoriesDropdown() {
     $('.repositories-assign-container').on('show.bs.dropdown', function() {

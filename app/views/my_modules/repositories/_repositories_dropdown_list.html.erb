@@ -1,6 +1,6 @@
 <% @repositories.each do |repository| %>
   <% assigned_items_count = @my_module.repository_rows_count(repository) %>
-  <div class="repository">
+  <li class="repository">
     <% if repository.shared_with?(current_team) %>
       <span class="shared-icon">
         <i class="fas fa-users"></i>
@@ -13,5 +13,5 @@
         <%= assigned_items_count %>
       </span>
     <% end %>
-  </div>
+  </li>
 <% end %>
