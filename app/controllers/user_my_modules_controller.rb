@@ -1,16 +1,16 @@
 class UserMyModulesController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: :index
+  before_action :check_view_permissions, only: %i(index index_old)
   before_action :check_manage_permissions, only: %i(create index_edit destroy)
 
-  def index
+  def index_old
     @user_my_modules = @my_module.user_my_modules
 
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'index.html.erb'
+            partial: 'index_old.html.erb'
           ),
           my_module_id: @my_module.id,
           counter: @my_module.users.count # Used for counter badge
@@ -19,12 +19,12 @@ class UserMyModulesController < ApplicationController
     end
   end
 
-  def index_compact
+  def index
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'index_compact.html.erb'
+            partial: 'index.html.erb'
           )
         }
       end

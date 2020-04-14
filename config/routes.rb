@@ -377,7 +377,7 @@ Rails.application.routes.draw do
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
         collection do
-          get :index_compact
+          get :index_old
         end
       end
       resources :my_module_comments,

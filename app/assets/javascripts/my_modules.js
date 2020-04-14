@@ -291,32 +291,16 @@ function initTagsSelector() {
 }
 
 function initAssignedUsersSelector() {
-  var manageUsersModal = null;
-  var manageUsersModalBody = null;
+  var manageUsersModal = $('#manage-module-users-modal');
+  var manageUsersModalBody = manageUsersModal.find('.modal-body');
 
   // Initialize users editing modal remote loading
   function initUsersEditLink() {
-    $('.task-details .manage-users-link').on('ajax:success', function(e, data) {
+    $('.task-details').on('ajax:success', '.manage-users-link', function(e, data) {
       manageUsersModal.modal('show');
       manageUsersModal.find('#manage-module-users-modal-module').text(data.my_module.name);
       initUsersModalBody(data);
     });
-  }
-
-  // Initialize reloading manage user modal content after posting new user
-  function initAddUserForm() {
-    manageUsersModalBody.find('.add-user-form')
-      .on('ajax:success', function(e, data) {
-        initUsersModalBody(data);
-      });
-  }
-
-  // Initialize remove user from my_module links
-  function initRemoveUserLinks() {
-    manageUsersModalBody.find('.remove-user-link')
-      .on('ajax:success', function(e, data) {
-        initUsersModalBody(data);
-      });
   }
 
   // Initialize ajax listeners and elements style on modal body.
@@ -324,12 +308,17 @@ function initAssignedUsersSelector() {
   function initUsersModalBody(data) {
     manageUsersModalBody.html(data.html);
     manageUsersModalBody.find('.selectpicker').selectpicker();
-    initAddUserForm();
-    initRemoveUserLinks();
   }
 
-  manageUsersModal = $('#manage-module-users-modal');
-  manageUsersModalBody = manageUsersModal.find('.modal-body');
+  // Initialize reloading manage user modal content after posting new user
+  manageUsersModalBody.on('ajax:success', '.add-user-form', function(e, data) {
+    initUsersModalBody(data);
+  });
+
+  // Initialize remove user from my_module links
+  manageUsersModalBody.on('ajax:success', '.remove-user-link', function(e, data) {
+    initUsersModalBody(data);
+  });
 
   // Reload users HTML element when modal is closed
   manageUsersModal.on('hide.bs.modal', function() {
@@ -341,7 +330,6 @@ function initAssignedUsersSelector() {
       dataType: 'json',
       success: function(data) {
         $('.task-assigned-users').replaceWith(data.html);
-        initUsersEditLink();
       },
       error: function() {
         // TODO
