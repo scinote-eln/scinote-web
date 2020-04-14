@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class MyModuleRepositoriesController < ApplicationController
-
   before_action :load_my_module, only: %i(show full_view_table dropdown_list)
   before_action :load_repository, only: %i(show full_view_table)
   before_action :check_my_module_view_permissions, only: %i(show full_view_table dropdown_list)
@@ -32,7 +31,6 @@ class MyModuleRepositoriesController < ApplicationController
   def full_view_table
     render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_table') }
   end
-
 
   def dropdown_list
     @repositories = Repository.accessible_by_teams(current_team)
