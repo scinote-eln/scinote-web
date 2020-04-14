@@ -41,13 +41,13 @@ class MyModuleRepositoriesController < ApplicationController
   private
 
   def load_my_module
-    @my_module = MyModule.find(params[:my_module_id])
+    @my_module = MyModule.find_by(id: params[:my_module_id])
     render_404 unless @my_module
   end
 
   def load_repository
-    @repository = Repository.find(params[:id])
-    ender_404 unless @repository
+    @repository = Repository.find_by(id: params[:id])
+    render_404 unless @repository
   end
 
   def check_my_module_view_permissions
