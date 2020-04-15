@@ -188,12 +188,4 @@ class Repository < RepositoryBase
     importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
     importer.run
   end
-
-  def destroy_discarded(discarded_by_id = nil)
-    self.discarded_by_id = discarded_by_id
-    destroy
-  end
-  handle_asynchronously :destroy_discarded,
-                        queue: :clear_discarded_repository,
-                        priority: 20
 end
