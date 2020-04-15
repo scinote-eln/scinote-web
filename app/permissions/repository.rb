@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 Canaid::Permissions.register_for(Repository) do
+  %i(manage_repository
+     share_repository
+     create_repository_rows
+     manage_repository_rows
+     update_repository_rows
+     delete_repository_rows
+     create_repository_columns)
+    .each do |perm|
+    can perm do |_, repository|
+      !repository.is_a? RepositorySnapshot
+    end
+  end
+
   # repository: read/export
   can :read_repository do |user, repository|
     user.teams.include?(repository.team) || repository.shared_with?(user.current_team)

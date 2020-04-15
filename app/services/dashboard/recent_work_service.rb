@@ -113,7 +113,7 @@ module Dashboard
         project_path(object_id)
       when 'Protocol'
         edit_protocol_path(object_id)
-      when 'Repository'
+      when 'RepositoryBase'
         repository_path(object_id)
       when 'Report'
         edit_project_report_path(recent_object[:report_project_id], object_id) if recent_object[:report_project_id]
@@ -130,7 +130,7 @@ module Dashboard
       elsif recent_object[:group_id].include?('prt')
         'Protocol'
       elsif recent_object[:group_id].include?('inv')
-        'Repository'
+        'RepositoryBase'
       elsif recent_object[:group_id].include?('rpt')
         'Report'
       end

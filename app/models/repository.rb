@@ -1,36 +1,26 @@
 # frozen_string_literal: true
 
-class Repository < ApplicationRecord
+class Repository < RepositoryBase
   include SearchableModel
   include SearchableByNameModel
   include RepositoryImportParser
-  include Discard::Model
 
   enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 
-  attribute :discarded_by_id, :integer
-
-  belongs_to :team
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
-  has_many :repository_columns, dependent: :destroy
-  has_many :repository_rows, dependent: :destroy
-  has_many :repository_table_states,
-           inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
-  has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
-  has_many :repository_checklist_items, inverse_of: :repository, dependent: :destroy
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
   has_many :teams_shared_with, through: :team_repositories, source: :team
+  has_many :repository_snapshots,
+           class_name: 'RepositorySnapshot',
+           foreign_key: :parent_id,
+           inverse_of: :original_repository,
+           dependent: :nullify
 
-  auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,
             uniqueness: { scope: :team_id, case_sensitive: false },
             length: { maximum: Constants::NAME_MAX_LENGTH }
-  validates :team, presence: true
-  validates :created_by, presence: true
 
-  default_scope -> { kept }
   scope :accessible_by_teams, lambda { |teams|
     left_outer_joins(:team_repositories)
       .where('repositories.team_id IN (?) '\
@@ -139,10 +129,6 @@ class Repository < ApplicationRecord
     where('repositories.name ILIKE ?', "%#{query}%")
   end
 
-  def available_columns_ids
-    repository_columns.pluck(:id)
-  end
-
   def importable_repository_fields
     fields = {}
     # First and foremost add record name
@@ -202,12 +188,4 @@ class Repository < ApplicationRecord
     importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
     importer.run
   end
-
-  def destroy_discarded(discarded_by_id = nil)
-    self.discarded_by_id = discarded_by_id
-    destroy
-  end
-  handle_asynchronously :destroy_discarded,
-                        queue: :clear_discarded_repository,
-                        priority: 20
 end

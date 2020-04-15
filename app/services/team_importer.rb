@@ -313,6 +313,8 @@ class TeamImporter
       if activity.subject_id.present?
         if activity.subject_type == 'Team'
           activity.subject_id = team.id
+        elsif activity.subject_type == 'RepositoryBase'
+          activity.subject_id = @repository_mappings[activity.subject_id]
         else
           mappings = instance_variable_get("@#{activity.subject_type.underscore}_mappings")
           activity.subject_id = mappings[activity.subject_id]

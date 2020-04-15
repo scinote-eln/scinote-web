@@ -27,9 +27,4 @@ describe MyModuleRepositoryRow, type: :model do
     it { should belong_to(:assigned_by).class_name('User').optional }
     it { should belong_to(:repository_row) }
   end
-
-  describe 'Validations' do
-    it { should validate_presence_of :repository_row }
-    it { should validate_presence_of :my_module }
-  end
 end
