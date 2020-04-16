@@ -57,7 +57,7 @@
   .flex-block {
     align-items: center;
     display: flex;
-    line-height: 32px;
+    line-height: 34px;
 
     .flex-block-label {
       align-items: center;
@@ -247,6 +247,20 @@
       border: 0;
       box-shadow: none;
     }
+  }
+
+  .task-assigned-users {
+    height: 34px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .assign-new-user {
+    background-color: $color-concrete;
+    color: $color-silver-chalice;
+    text-align: center;
   }
 }
 

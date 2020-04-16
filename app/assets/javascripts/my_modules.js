@@ -290,8 +290,64 @@ function initTagsSelector() {
   }).getContainer(myModuleTagsSelector).addClass('my-module-tags-container');
 }
 
+function initAssignedUsersSelector() {
+  var manageUsersModal = $('#manage-module-users-modal');
+  var manageUsersModalBody = manageUsersModal.find('.modal-body');
+
+  // Initialize users editing modal remote loading
+  function initUsersEditLink() {
+    $('.task-details').on('ajax:success', '.manage-users-link', function(e, data) {
+      manageUsersModal.modal('show');
+      manageUsersModal.find('#manage-module-users-modal-module').text(data.my_module.name);
+      initUsersModalBody(data);
+    });
+  }
+
+  // Initialize ajax listeners and elements style on modal body.
+  // This function must be called when modal body is changed.
+  function initUsersModalBody(data) {
+    manageUsersModalBody.html(data.html);
+    manageUsersModalBody.find('.selectpicker').selectpicker();
+  }
+
+  // Initialize reloading manage user modal content after posting new user
+  manageUsersModalBody.on('ajax:success', '.add-user-form', function(e, data) {
+    initUsersModalBody(data);
+  });
+
+  // Initialize remove user from my_module links
+  manageUsersModalBody.on('ajax:success', '.remove-user-link', function(e, data) {
+    initUsersModalBody(data);
+  });
+
+  // Reload users HTML element when modal is closed
+  manageUsersModal.on('hide.bs.modal', function() {
+    var usersEl = $('.task-assigned-users');
+    // Load HTML to refresh users
+    $.ajax({
+      url: usersEl.attr('data-module-users-url'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        $('.task-assigned-users').replaceWith(data.html);
+      },
+      error: function() {
+        // TODO
+      }
+    });
+  });
+
+  // Remove users modal content when modal window is closed.
+  manageUsersModal.on('hidden.bs.modal', function() {
+    manageUsersModalBody.html('');
+  });
+
+  initUsersEditLink();
+}
+
 applyTaskCompletedCallBack();
 initTagsSelector();
 bindEditTagsAjax();
 initStartDatePicker();
 initDueDatePicker();
+initAssignedUsersSelector();
