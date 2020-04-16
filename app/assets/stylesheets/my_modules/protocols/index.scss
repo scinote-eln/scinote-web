@@ -33,12 +33,12 @@
     display: inline-block;
 
     h2 {
-      margin-bottom: 8px;
-      margin-top: 11px;
+      margin: 10px 0;
     }
   }
 
   .task-section-header {
+    align-items: center;
     display: flex;
     flex-wrap: wrap;
 
@@ -345,48 +345,119 @@
   }
 }
 
-.my-module-recent-protocols {
-  flex-grow: 1;
-  height: 36px;
-  margin-bottom: 5px;
+.my-module-protocol-status {
   position: relative;
 
-  .btn-group {
-    align-items: center;
-    display: flex;
-    float: right;
-    height: 33px;
+  .status-label {
+    @include font-h3;
+    color: $color-alto;
+    float: left;
+    margin: 0 3px;
+
+    &.linked {
+      color: $brand-primary;
+    }
   }
 
-  .title {
-    font-size: 14px;
+  .status-info {
+    @include font-h2;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:active {
+      color: inherit;
+      text-decoration: none;
+    }
   }
 
-  .dropdown-button {
-    cursor: pointer;
-    padding: 10px 5px;
-  }
+  .status-info-dropdown {
+    left: -125px;
+    max-width: 100vw;
+    width: 650px;
 
-  .dropdown-menu {
-    left: auto;
-    padding: 0;
-    right: 0;
-    width: 402px;
+    .dropdown-body {
+      border-bottom: $border-tertiary;
+      padding: 10px 32px;
 
-    .protocol {
-      cursor: pointer;
-      display: inline-block;
-      float: left;
-      padding: 5px 10px;
-      transition: $md-transaction;
-      width: 200px;
+      .info-line {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 9px 0;
 
-      &:hover {
-        background: $color-gainsboro;
+        .description {
+          @include font-button;
+          flex-grow: 1;
+          min-width: 120px;
+        }
+
+        .value {
+          @include font-h3;
+          flex-shrink: 0;
+        }
+
+        &.new-parent-version {
+          .value {
+            color: $brand-warning;
+
+            &::before {
+              @include font-awesome;
+              content: "\f2f1";
+              margin-right: 5px;
+            }
+          }
+        }
       }
 
-      .fas {
-        margin-right: 5px;
+      .notification-line {
+        @include font-button;
+        color: $color-silver-chalice;
+        display: flex;
+        margin: 8px 0;
+
+        .fas {
+          line-height: 21px;
+          margin-right: 3px;
+        }
+
+        &.new-parent-version {
+          color: $brand-warning;
+        }
+
+        &.new-protocol-version {
+          color: $brand-focus;
+        }
+      }
+    }
+
+    .dropdown-footer {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 16px;
+
+      .button-container {
+        flex-basis: calc(100% / 3);
+        flex-grow: 1;
+      }
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .my-module-protocol-status {
+    .status-info-dropdown {
+      left: -75px;
+      width: 300px;
+
+      .dropdown-footer {
+        flex-direction: column;
+
+        .btn {
+          float: left !important;
+          margin: 5px 0;
+          width: auto;
+        }
       }
     }
   }

@@ -385,7 +385,7 @@ function refreshProtocolStatusBar() {
     type: 'GET',
     dataType: 'json',
     success: function(data) {
-      $("[data-role='protocol-status-bar']").html(data.html);
+      $(".my-module-protocol-status").replaceWith(data.html);
       initLinkUpdate();
     }
   });

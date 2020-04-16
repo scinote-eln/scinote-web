@@ -1,14 +1,101 @@
-<div class="panel panel-default panel-protocol-status help_tooltips"
-     data-tooltiplink="<%= I18n.t('tooltips.link.protocol.linking') %>"
-     data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.linking') %>">
-  <div class="panel-body">
-    <% if @protocol.linked? %>
-      <%= protocol_status_href(@protocol) %>
-    <% else %>
-      <%= t("my_modules.protocols.protocol_status_bar.unlinked") %>
-    <% end %>
-    &nbsp;
-    <%= render partial: "my_modules/protocols/protocol_status_bar_buttons.html.erb" %>
+<div class="dropdown my-module-protocol-status">
+  <% if @protocol.linked? %>
+    <span class="status-label linked">
+      [<%= protocol_name(@protocol.parent) %>]
+    </span>
+  <% else %>
+    <span class="status-label">
+      [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
+    </span>
+  <% end %>
+  <a href="#" id="my-module-protocol-info-button" class="status-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fas fa-info-circle"></i>
+  </a>
+  <div class="dropdown-menu status-info-dropdown" aria-labelledby="my-module-protocol-info-button">
+    <div class="dropdown-body">
+      <div class="info-line">
+        <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_created") %></div>
+        <div class="value"><%= I18n.l(@protocol.created_at, format: :full) %></div>
+      </div>
+      <% if @protocol.linked? && can_read_protocol_in_repository?(@protocol.parent) %>
+        <div class="info-line <%= "new-parent-version" if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>">
+          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.template_updated") %></div>
+          <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
+          <% end %>
+          <div class="value"><%= I18n.l(@protocol.parent.updated_at, format: :full) %></div>
+        </div>
+      <% end %>
+      <div class="info-line">
+        <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_updated") %></div>
+        <div class="value"><%= I18n.l(@protocol.updated_at, format: :full) %></div>
+      </div>
+      <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
+        <div class="notification-line new-parent-version">
+          <i class="fas fa-sync-alt"></i>
+          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.template_updated_html") %></div>
+        </div>
+      <% end %>
+      <% if @protocol.newer_than_parent? || @protocol.parent_and_self_newer? %>
+        <div class="notification-line new-protocol-version">
+          <i class="fas fa-info-circle"></i>
+          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.protocol_updated") %></div>
+        </div>
+      <% end %>
+      <% if @protocol.unlinked? %>
+        <div class="notification-line">
+          <i class="fas fa-unlink"></i>
+          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.unlinked") %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="dropdown-footer">
+      <div class="button-container no-padding">
+        <% if @protocol.linked? && can_manage_protocol_in_module?(@protocol) %>
+          <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true,
+            title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"),
+            data: { action: "unlink" },
+            class: "btn btn-light" do %>
+              <i class="fas fa-unlink"></i>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="button-container no-padding">
+        <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) %>
+          <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), remote: true,
+            title: t("my_modules.protocols.protocol_status_bar.btns.save_to_repository_title"),
+            class: "btn btn-light btn-block",
+            data: {
+              action: "copy-to-repository",
+              hook: "protocol-copy-to-repository"
+            } do %>
+            <i class="fas fa-save"></i>
+            <%= t("my_modules.protocols.protocol_status_bar.btns.save_to_repository") %>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="button-container no-padding">
+        <% if @protocol.linked? && can_manage_protocol_in_module?(@protocol) %>
+          <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
+            <%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true,
+              title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"),
+              class: "btn btn-light pull-right",
+              data: { action: "update-self" } do %>
+              <i class="fas fa-sync-alt"></i>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>
+            <% end %>
+          <% elsif @protocol.newer_than_parent? %>
+            <%= link_to revert_modal_protocol_path(@protocol, format: :json), remote: true,
+              title: t("my_modules.protocols.protocol_status_bar.btns.revert_title"),
+              class: "btn btn-light pull-right",
+              data: { action: "revert" } do %>
+              <i class="fas fa-undo"></i>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.revert") %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 <%= javascript_include_tag("my_modules/protocols/protocol_status_bar") %>
