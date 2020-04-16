@@ -37,6 +37,57 @@
       margin-top: 11px;
     }
   }
+
+  .task-section-header {
+    display: flex;
+    flex-wrap: wrap;
+
+    .actions-block {
+      display: flex;
+      flex-grow: 1;
+      justify-content: flex-end;
+
+      .repositories-assign-container {
+        flex-grow: 1;
+        max-width: 200px;
+
+        .btn {
+          text-align: left;
+
+          .caret {
+            margin: 8px 0;
+          }
+        }
+
+        .repositories-dropdown-menu {
+          width: 100%;
+
+          .repository {
+            @include font-button;
+            display: flex;
+            padding: 8px 16px;
+
+            .assigned-items,
+            .shared-icon {
+              flex-shrink: 0;
+
+              .fas {
+                padding-right: 5px;
+              }
+            }
+
+            .assigned-items {
+              color: $color-alto;
+            }
+
+            .name {
+              flex-grow: 1;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .complete-button-container {

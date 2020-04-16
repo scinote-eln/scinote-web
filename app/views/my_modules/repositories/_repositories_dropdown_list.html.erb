@@ -1,0 +1,17 @@
+<% @repositories.each do |repository| %>
+  <% assigned_items_count = @my_module.repository_rows_count(repository) %>
+  <li class="repository">
+    <% if repository.shared_with?(current_team) %>
+      <span class="shared-icon">
+        <i class="fas fa-users"></i>
+      </span>
+    <% end %>
+    <span class="name"><%= escape_input(repository.name) %></span>
+    <% if assigned_items_count.positive? %>
+      <span class="assigned-items">
+        <i class="fas fa-file-signature"></i>
+        <%= assigned_items_count %>
+      </span>
+    <% end %>
+  </li>
+<% end %>

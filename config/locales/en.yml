@@ -604,6 +604,7 @@ en:
       empty_description_edit_label: "Click here to start writing notes"
     assigned_items:
       title: "Assigned items"
+      assign_from: "Assign from"
     protocol:
       title: "Protocol"
     buttons:

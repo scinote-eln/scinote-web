@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class MyModuleRepositoriesController < ApplicationController
-  before_action :load_vars, only: %i(show full_view_table)
-  before_action :check_view_permissions, only: %i(show full_view_table)
+  before_action :load_my_module, only: %i(show full_view_table dropdown_list)
+  before_action :load_repository, only: %i(show full_view_table)
+  before_action :check_my_module_view_permissions, only: %i(show full_view_table dropdown_list)
+  before_action :check_repository_view_permissions, only: %i(show full_view_table)
 
   def show
     @draw = params[:draw].to_i
@@ -30,17 +32,29 @@ class MyModuleRepositoriesController < ApplicationController
     render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_table') }
   end
 
-  private
+  def dropdown_list
+    @repositories = Repository.accessible_by_teams(current_team)
 
-  def load_vars
-    @my_module = MyModule.find(params[:my_module_id])
-    @repository = Repository.find(params[:id])
-
-    render_404 unless @my_module && @repository
+    render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_dropdown_list') }
   end
 
-  def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment) &&
-                      can_read_repository?(@repository)
+  private
+
+  def load_my_module
+    @my_module = MyModule.find_by(id: params[:my_module_id])
+    render_404 unless @my_module
+  end
+
+  def load_repository
+    @repository = Repository.find_by(id: params[:id])
+    render_404 unless @repository
+  end
+
+  def check_my_module_view_permissions
+    render_403 unless can_read_experiment?(@my_module.experiment)
+  end
+
+  def check_repository_view_permissions
+    render_403 unless can_read_repository?(@repository)
   end
 end

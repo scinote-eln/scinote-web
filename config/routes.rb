@@ -388,6 +388,9 @@ Rails.application.routes.draw do
         member do
           get :full_view_table
         end
+        collection do
+          get :dropdown_list
+        end
       end
 
       # resources :sample_my_modules, path: '/samples_index', only: [:index]

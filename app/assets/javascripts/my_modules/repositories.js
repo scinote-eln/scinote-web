@@ -170,10 +170,20 @@ var MyModuleRepositories = (function() {
     });
   }
 
+  function initRepositoriesDropdown() {
+    $('.repositories-assign-container').on('show.bs.dropdown', function() {
+      var dropdownContainer = $(this);
+      $.get(dropdownContainer.data('repositories-url'), function(result) {
+        dropdownContainer.find('.repositories-dropdown-menu').html(result.html);
+      });
+    });
+  }
+
   return {
     init: () => {
       initSimpleTable();
       initRepositoryFullView();
+      initRepositoriesDropdown();
     }
   };
 }());

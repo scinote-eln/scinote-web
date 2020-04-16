@@ -11,7 +11,7 @@
       <span class="task-section-title">
         <h2><%= t('my_modules.details.title') %></h2>
       </span>
-      <div class="complete-button-container">
+      <div class="actions-block">
         <%= render partial: "my_modules/state_buttons.html.erb" %>
       </div>
     </div>
@@ -41,7 +41,20 @@
         <span class="task-section-title">
           <h2><%= t('my_modules.assigned_items.title') %></h2>
         </span>
-    </a>
+      </a>
+      <div class="actions-block">
+        <div class="dropdown repositories-assign-container"
+             data-repositories-url="<%= dropdown_list_my_module_my_module_repositories_path(@my_module) %>"
+        >
+          <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="fas fa-file-signature"></span>
+            <span><%= t('my_modules.assigned_items.assign_from') %></span>
+            <span class="caret pull-right"></span>
+          </a>
+          <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="collapse panel-group" id="assigned-items-container">
       <%= render partial: "my_modules/repositories/repositories_list" %>
