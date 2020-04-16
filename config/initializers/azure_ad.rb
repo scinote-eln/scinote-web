@@ -66,7 +66,7 @@ Rails.application.configure do
         config.x.azure_ad_apps[app_id] = app_config
       end
     end
-  rescue ActiveRecord::ActiveRecordError
+  rescue ActiveRecord::ActiveRecordError, PG::ConnectionBad
     Rails.logger.info('Not connected to database, skipping additional Azure AD configuration')
   end
 end
