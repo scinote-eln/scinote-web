@@ -86,6 +86,16 @@
           }
         }
       }
+
+      .dropdown-menu {
+        a {
+          padding: 8px 20px;
+        }
+
+        .fas {
+          padding-right: 5px;
+        }
+      }
     }
   }
 }
