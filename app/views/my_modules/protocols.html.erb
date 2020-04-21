@@ -8,9 +8,15 @@
   <!-- Details -->
   <div class="task-section">
     <div class="task-section-header">
-      <span class="task-section-title">
-        <h2><%= t('my_modules.details.title') %></h2>
+      <span id="taskDetailsLabel" class="task-section-title">
+        <h2>
+          <%= t('my_modules.details.title') %>
+          <span class="fas block-icon fa-info-circle"></span>
+        </h2>
       </span>
+      <div id="taskDetailsContent" class="hidden">
+        <%= render partial: "module_header_details_popover.html.erb" %>
+      </div>
       <div class="actions-block">
         <%= render partial: "my_modules/state_buttons.html.erb" %>
       </div>
