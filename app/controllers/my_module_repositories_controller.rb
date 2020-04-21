@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class MyModuleRepositoriesController < ApplicationController
-  before_action :load_my_module, only: %i(show full_view_table dropdown_list)
-  before_action :load_repository, only: %i(show full_view_table)
-  before_action :check_my_module_view_permissions, only: %i(show full_view_table dropdown_list)
-  before_action :check_repository_view_permissions, only: %i(show full_view_table)
+  before_action :load_my_module
+  before_action :load_repository, except: %i(repositories_dropdown_list)
+  before_action :check_my_module_view_permissions
+  before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list)
 
-  def show
+  def index_dt
     @draw = params[:draw].to_i
-    per_page = params[:length] == '-1' ? 10 : params[:length].to_i
+    per_page = params[:length] == '-1' ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
     datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module)
 
@@ -29,10 +29,12 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def full_view_table
-    render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_table') }
+    render json: {
+      html: render_to_string(partial: 'my_modules/repositories/full_view_table')
+    }
   end
 
-  def dropdown_list
+  def repositories_dropdown_list
     @repositories = Repository.accessible_by_teams(current_team)
 
     render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_dropdown_list') }

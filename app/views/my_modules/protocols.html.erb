@@ -43,10 +43,8 @@
         </span>
       </a>
       <div class="actions-block">
-        <div class="dropdown repositories-assign-container"
-             data-repositories-url="<%= dropdown_list_my_module_my_module_repositories_path(@my_module) %>"
-        >
-          <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown repositories-assign-container" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
+          <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span class="fas fa-file-signature"></span>
             <span><%= t('my_modules.assigned_items.assign_from') %></span>
             <span class="caret pull-right"></span>

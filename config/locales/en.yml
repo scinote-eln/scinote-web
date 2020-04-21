@@ -784,6 +784,15 @@ en:
     repository:
       head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
+      snapshots:
+        full_view:
+          header: 'Versions'
+          live: 'Live version'
+          live_description: 'Regularly updated from the inventory'
+          no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
+          versions_sidebar_button: 'View versions'
+          create_button: 'Create snapshot'
+          created_by: 'by %{full_name}'
     modals:
       assign_repository_record:
         title: 'Assign %{repository_name} items to task %{my_module_name}'

@@ -18,7 +18,7 @@ class RepositoryDatatableService
   def create_columns_mappings
     # Make mappings of custom columns, so we have same id for every
     # column
-    index = 6
+    index = @repository.default_columns_count
     @mappings = {}
     @repository.repository_columns.order(:id).each do |column|
       @mappings[column.id] = index.to_s

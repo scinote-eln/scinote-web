@@ -50,6 +50,30 @@ module RepositoryDatatableHelper
     parsed_records
   end
 
+  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, options = {})
+    parsed_records = []
+
+    repository_rows.each do |record|
+      row = {
+        'DT_RowId': record.id,
+        '1': record.parent_id,
+        '2': escape_input(record.name),
+        '3': I18n.l(record.created_at, format: :full),
+        '4': escape_input(record.created_by.full_name),
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_row_path(record.id)
+      }
+
+      unless options[:skip_custom_columns]
+        # Add custom columns
+        record.repository_cells.each do |cell|
+          row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
+        end
+      end
+      parsed_records << row
+    end
+    parsed_records
+  end
+
   def assigned_row(record)
     if record.assigned_my_modules_count.positive?
       tooltip = t('repositories.table.assigned_tooltip',
@@ -77,6 +101,14 @@ module RepositoryDatatableHelper
 
   def default_table_columns
     Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
+  end
+
+  def default_snapshot_table_order_as_js_array
+    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['order'].to_json
+  end
+
+  def default_snapshot_table_columns
+    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'].to_json
   end
 
   def display_cell_value(cell, team)
