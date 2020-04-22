@@ -19,7 +19,7 @@
       <div class="rows-to-assign">
         <p class="header">
           <i class="fas fa-plus"></i>
-          Items newly assigned
+          <%=t 'my_modules.modals.update_repository_record.newly_assigned_items' %>
         </p>
         <ul class="rows-list">
           <% rows_to_assign.each do |row_id, row| %>
@@ -32,7 +32,7 @@
       <div class="rows-to-unassign">
         <p class="header">
           <i class="fas fa-minus"></i>
-          Items that will be removed
+          <%=t 'my_modules.modals.update_repository_record.items_will_be_removed' %>
         </p>
         <ul class="rows-list">
           <% rows_to_unassign.each do |row_id, row| %>

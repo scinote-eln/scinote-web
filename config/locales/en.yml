@@ -823,6 +823,8 @@ en:
         message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"
         task: 'Update task'
         task_and_downstream: 'Update task & downstream'
+        newly_assigned_items: "Items newly assigned"
+        items_will_be_removed: "Items that will be removed"
       assign_repository_record:
         title: 'Assign %{repository_name} items to task %{my_module_name}'
         message: Do you want to assign %{size} items only to this task, or assign them to this task & downstream tasks in the workflow as well?
