@@ -25,7 +25,7 @@ module OmniAuth
           response_mode: response_mode,
           response_type: response_type,
           nonce: new_nonce,
-          scope: 'openid'
+          scope: 'openid profile email'
         }
         params[:p] = options[:sign_in_policy] if options[:sign_in_policy].present?
 
