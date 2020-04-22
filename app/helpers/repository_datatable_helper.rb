@@ -3,14 +3,8 @@
 module RepositoryDatatableHelper
   include InputSanitizeHelper
 
-  def prepare_row_columns(repository_rows,
-                          repository,
-                          columns_mappings,
-                          team,
-                          options = {})
-    parsed_records = []
-
-    repository_rows.each do |record|
+  def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
+    repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
         '1': assigned_row(record),
@@ -45,15 +39,12 @@ module RepositoryDatatableHelper
             display_cell_value(cell, team)
         end
       end
-      parsed_records << row
+      row
     end
-    parsed_records
   end
 
   def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, options = {})
-    parsed_records = []
-
-    repository_rows.each do |record|
+    repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
         '1': record.parent_id,
@@ -69,9 +60,8 @@ module RepositoryDatatableHelper
           row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
         end
       end
-      parsed_records << row
+      row
     end
-    parsed_records
   end
 
   def assigned_row(record)
