@@ -53,7 +53,13 @@ class SpreadsheetParser
 
   def self.parse_row(row, sheet)
     if sheet.is_a?(Roo::Excelx)
-      row.map { |cell| cell&.formatted_value }
+      row.map do |cell|
+        if cell.is_a?(Roo::Excelx::Cell::Number) && cell.format == 'General'
+          cell&.value&.to_d
+        else
+          cell&.formatted_value
+        end
+      end
     else
       row.map(&:to_s)
     end
