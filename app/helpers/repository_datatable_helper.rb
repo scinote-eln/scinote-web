@@ -3,7 +3,13 @@
 module RepositoryDatatableHelper
   include InputSanitizeHelper
 
+
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
+
+    if options[:my_module]
+      assigned_rows = options[:my_module].repository_rows.where(repository: repository).pluck(:id)
+    end
+
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
@@ -31,6 +37,8 @@ module RepositoryDatatableHelper
           'recordEditable': record.editable?
         )
       end
+
+      row['0'] = assigned_rows.include? record.id if options[:my_module]
 
       unless options[:skip_custom_columns]
         # Add custom columns

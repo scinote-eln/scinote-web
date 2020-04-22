@@ -640,19 +640,6 @@ var RepositoryDatatable = (function(global) {
     });
   };
 
-  global.openAssignRecordsModal = function() {
-    $.post(
-      $('#assignRepositoryRecords').data('assign-url-modal'),
-      { selected_rows: rowsSelected }
-    ).done(
-      function(data) {
-        $(data.html).appendTo('body').promise().done(function() {
-          $('#assignRepositoryRecordModal').modal('show');
-        });
-      }
-    );
-  };
-
   global.hideAssignUnasignModal = function(id) {
     $(id).modal('hide').promise().done(
       function() {
@@ -660,28 +647,6 @@ var RepositoryDatatable = (function(global) {
       }
     );
   };
-
-  global.submitAssignRepositoryRecord = function(option) {
-    animateSpinner();
-    $.ajax({
-      url: $('#assignRepositoryRecordModal').data('assign-url'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_rows: rowsSelected, downstream: (option === 'downstream') },
-      success: function(data) {
-        hideAssignUnasignModal('#assignRepositoryRecordModal');
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        resetTableView();
-        clearRowSelection();
-      },
-      error: function(data) {
-        hideAssignUnasignModal('#assignRepositoryRecordModal');
-        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
-        resetTableView();
-        clearRowSelection();
-      }
-    });
-  }
 
   global.openUnassignRecordsModal = function() {
     $.post(

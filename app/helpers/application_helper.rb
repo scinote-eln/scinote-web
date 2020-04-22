@@ -6,7 +6,8 @@ module ApplicationHelper
   include InputSanitizeHelper
 
   def module_page?
-    controller_name == 'my_modules'
+    controller_name == 'my_modules' ||
+      controller_name == 'my_module_repositories'
   end
 
   def experiment_page?

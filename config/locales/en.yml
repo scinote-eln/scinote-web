@@ -808,13 +808,26 @@ en:
           versions_sidebar_button: 'View versions'
           create_button: 'Create snapshot'
           created_by: 'by %{full_name}'
+      flash:
+        assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
+        assign_to_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task and downstream tasks."
+        unassign_from_task_html: "Successfully unassigned <strong>%{unassigned_items}</strong> item(s) from the task."
+        unassign_from_task_and_downstream_html: "Successfully unassigned <strong>%{unassigned_items}</strong> item(s) from the task and downstream tasks."
+        assign_and_unassign_from_task_html: "Successfully assigned <strong>%{assigned_items}</strong> and unassigned <strong>%{unassigned_items}</strong> item(s) from the task."
+        assign_and_unassign_from_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> and unassigned <strong>%{unassigned_items}</strong> item(s) from the task and downstream tasks."
+        update_error: "There was an error in updating your item(s)."
+
     modals:
+      update_repository_record:
+        title: "Update %{repository_name} items to %{my_module_name} task"
+        message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"
+        task: 'Update task'
+        task_and_downstream: 'Update task & downstream'
       assign_repository_record:
         title: 'Assign %{repository_name} items to task %{my_module_name}'
         message: Do you want to assign %{size} items only to this task, or assign them to this task & downstream tasks in the workflow as well?
-        task_and_downstream: 'Task & Downstream'
-        unassign_title: "Unassign %{repository_name} items from task %{my_module_name}"
-        unassign_message: "Do you want to unassign %{size} items only from this task, or unassign them from this task & downstream tasks in the workflow as well?"
+        task: 'Assign to task'
+        task_and_downstream: 'Assign to task & downstream'
     unshared_inventory:
       title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
       body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
@@ -1195,11 +1208,6 @@ en:
       contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."
       no_records_selected_flash: "There were no selected items."
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
-    assigned_records_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task"
-    assigned_records_downstream_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task and downstream tasks"
-    unassigned_records_flash: "Successfully unassigned item(s) <strong>%{records}</strong> from task"
-    no_records_assigned_flash: "No items were assigned to task"
-    no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
     multiple_share_service:
