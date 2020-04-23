@@ -3,12 +3,8 @@
 module RepositoryDatatableHelper
   include InputSanitizeHelper
 
-
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
-
-    if options[:my_module]
-      assigned_rows = options[:my_module].repository_rows.where(repository: repository).pluck(:id)
-    end
+    assigned_rows = options[:my_module].repository_rows.where(repository: repository).pluck(:id) if options[:my_module]
 
     repository_rows.map do |record|
       row = {
