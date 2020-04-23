@@ -1,0 +1,73 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector
+
+.sign-in-layout {
+  #content-wrapper {
+    margin-left: 0;
+
+    .container:first-child {
+      padding: 0;
+    }
+  }
+
+  .sign-in-container {
+    display: flex;
+
+    .sign-in-form-wrapper {
+      flex-basis: 50%;
+      flex-grow: 1;
+
+      .center-block-narrow {
+        margin-top: 72px;
+        padding: 0 50px;
+      }
+
+      .log-in-title {
+        margin-bottom: 24px;
+      }
+
+      .remember-me {
+        align-items: center;
+        display: flex;
+        margin-bottom: 24px;
+
+        label {
+          margin-left: 8px;
+          margin-bottom: 0;
+        }
+      }
+
+      .sci-input-container {
+        margin-bottom: 24px;
+      }
+
+      .linkedin-container {
+        margin-bottom: 24px;
+
+        .linkedin-link {
+          margin-right: 15px;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        .linkedin-signin-button {
+          margin: 0;
+        }
+
+        span {
+          font-weight: bold;
+        }
+      }
+
+      .log-in-button {
+        padding: 7px 32px;
+      }
+
+      .forgot-password-link {
+        display: inline-block;
+        margin-bottom: 16px;
+      }
+    }
+  }
+}

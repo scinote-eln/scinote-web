@@ -83,3 +83,41 @@
     }
   }
 }
+
+@media (max-width: 700px) {
+  .dashboard-container .recent-work-widget {
+    --widget-header-size: 72px;
+    grid-row: 3;
+    min-height: 450px;
+
+    .widget-title {
+      flex-basis: 100%;
+      line-height: 36px;
+    }
+
+    .recent-work-container {
+      .recent-work-item {
+        flex-wrap: wrap;
+        margin: 5px 0;
+
+        .object-name {
+          flex-basis: 100%;
+          line-height: 18px;
+        }
+
+        .object-type {
+          flex-basis: 0;
+          flex-grow: 1;
+          line-height: 18px;
+        }
+
+        .object-changed {
+          flex-basis: 0;
+          flex-grow: 1;
+          line-height: 18px;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

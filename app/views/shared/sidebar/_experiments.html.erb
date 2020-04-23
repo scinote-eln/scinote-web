@@ -1,8 +1,8 @@
 <% if project.active_experiments.present? %>
-  <ul class="tree-child hidden" data-active="<%= project.id == current_project&.id %>" data-branch-id="pro<%= project.id %>">
+  <ul class="tree-child hidden" data-branch-id="pro<%= project.id %>">
     <% project.active_experiments.each do |experiment| %>
       <% cache [action_name, current_user, experiment] do %>
-        <li data-parent="candidate" class="branch <%= 'active' if experiment_page? && current_experiment == experiment %>">
+        <li data-parent="candidate" class="branch">
           <span class="tree-link first-indent" title="<%= experiment.name %>">
             <% if experiment.active_my_modules.any? %>
               <i class="fas fa-caret-right tree-toggle"></i>
@@ -10,15 +10,10 @@
             <%= link_to experiment.name,
                         experiment_action_to_link_to(experiment),
                         class: 'overview_exp_label line-wrap',
-                        style: (current_experiment == experiment ? 'font-weight: bold' : ''),
                         data: { type: 'experiment', id: experiment.id }
-                        %>
+            %>
           </span>
-          <%= render partial: 'shared/sidebar/my_modules', locals: {
-            experiment: experiment,
-            current_experiment: current_experiment,
-            current_task: current_task
-          } %>
+          <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
         </li>
       <% end %>
     <% end %>

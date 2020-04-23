@@ -36,7 +36,7 @@ end
 Given("I click on Reset Password link in the reset password email for user {string}") do |email|
   visit new_user_password_path
   fill_in 'user_email', with: email
-  click_button 'Send me reset password instruction'
+  click_button 'Reset password'
 
   Delayed::Worker.new.work_off
   sleep 1

@@ -538,6 +538,21 @@ class MyModule < ApplicationRecord
     end
   end
 
+  def assign_user(user, assigned_by = nil)
+    user_my_modules.create(
+      assigned_by: assigned_by || user,
+      user: user
+    )
+    Activities::CreateActivityService
+      .call(activity_type: :assign_user_to_module,
+            owner: assigned_by || user,
+            team: experiment.project.team,
+            project: experiment.project,
+            subject: self,
+            message_items: { my_module: id,
+                             user_target: user.id })
+  end
+
   private
 
   def create_blank_protocol

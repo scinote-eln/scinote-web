@@ -58,12 +58,19 @@
       .canvas-center-on {
         animation-timing-function: $timing-function-sharp;
         color: $color-volcano;
+        display: none;
         flex-basis: 36px;
         flex-shrink: 0;
         line-height: 50px;
         padding-right: 16px;
         text-align: center;
         transition: .2s;
+      }
+
+      &.active {
+        .line-wrap {
+          font-weight: bold;
+        }
       }
 
       &:hover {
@@ -92,6 +99,12 @@
       .canvas-center-on {
         background-color: $color-white;
         color: $brand-primary;
+      }
+    }
+
+    &.show-canvas-handler {
+      .canvas-center-on {
+        display: inline-block;
       }
     }
   }
