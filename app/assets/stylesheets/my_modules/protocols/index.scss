@@ -92,7 +92,7 @@
       }
 
       .dropdown-menu {
-        font-size: 14px;
+        @include font-button;
 
         a {
           padding: 8px 20px;
