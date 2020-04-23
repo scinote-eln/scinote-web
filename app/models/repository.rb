@@ -87,6 +87,10 @@ class Repository < RepositoryBase
     end
   end
 
+  def default_columns_count
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE['length']
+  end
+
   def i_shared?(team)
     shared_with_anybody? && self.team == team
   end

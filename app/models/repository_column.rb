@@ -100,25 +100,19 @@ class RepositoryColumn < ApplicationRecord
 
   def repository_list_value_deep_dup(new_column)
     repository_list_items.each do |item|
-      new_item = item.deep_dup
-      new_item.repository_id = nil
-      new_column.repository_list_items << new_item
+      new_column.repository_list_items << item.deep_dup
     end
   end
 
   def repository_checklist_value_deep_dup(new_column)
     repository_checklist_items.each do |item|
-      new_item = item.deep_dup
-      new_item.repository_id = nil
-      new_column.repository_checklist_items << new_item
+      new_column.repository_checklist_items << item.deep_dup
     end
   end
 
   def repository_status_value_deep_dup(new_column)
     repository_status_items.each do |item|
-      new_item = item.deep_dup
-      new_item.repository_id = nil
-      new_column.repository_status_items << new_item
+      new_column.repository_status_items << item.deep_dup
     end
   end
 end

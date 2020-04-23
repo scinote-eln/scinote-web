@@ -11,23 +11,21 @@
         <%= repository.name %>
       </span>
       <div class="action-buttons">
-        <i class="fas fa-expand full-screen"
-           data-table-url="<%= full_view_table_my_module_my_module_repository_path(@my_module, repository) %>"></i>
+        <i class="fas fa-expand full-screen" data-table-url="<%= full_view_table_my_module_repository_path(@my_module, repository) %>">
+        </i>
         <i class="fas fa-trash unassign-repository"></i>
       </div>
     </a>
     <div class="collapse assigned-repository-container"
          id="assigned-repository-items-container-<%= repository.id %>"
-         data-repository-url="<%= my_module_my_module_repository_path(@my_module, repository) %>"
+         data-repository-url="<%= index_dt_my_module_repository_path(@my_module, repository) %>"
     >
     </div>
   </div>
 <% end %>
 
 <template id="my-module-repository-simple-template">
-  <table class="table hidden"
-         data-default-table-columns="<%= default_table_columns %>"
-  >
+  <table class="table hidden" data-default-table-columns="<%= default_table_columns %>">
     <thead>
       <tr>
         <th class="never"></th>

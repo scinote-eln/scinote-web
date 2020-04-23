@@ -384,13 +384,25 @@ Rails.application.routes.draw do
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
 
-      resources :my_module_repositories, path: '/repositories', only: :show do
+      get :repositories_dropdown_list, to: 'my_module_repositories#repositories_dropdown_list'
+
+      resources :repositories, only: [] do
         member do
-          get :full_view_table
+          get :full_view_table, to: 'my_module_repositories#full_view_table', as: :full_view_table
+          post :index_dt, to: 'my_module_repositories#index_dt', as: :index_dt
         end
-        collection do
-          get :dropdown_list
+
+        resources :repository_snapshots, controller: 'my_module_repository_snapshots',
+                                         as: :snapshots,
+                                         only: %i(create destroy) do
+          member do
+            get :full_view_table, to: 'my_module_repository_snapshots#full_view_table'
+            post :index_dt, to: 'my_module_repository_snapshots#index_dt'
+          end
         end
+
+        get :full_view_versions_sidebar, to: 'my_module_repository_snapshots#full_view_versions_sidebar',
+                                         as: :full_view_versions_sidebar
       end
 
       # resources :sample_my_modules, path: '/samples_index', only: [:index]

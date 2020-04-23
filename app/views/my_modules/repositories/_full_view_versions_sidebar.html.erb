@@ -1,0 +1,54 @@
+<div class="repository-versions-header">
+  <h4><%= t('my_modules.repository.snapshots.full_view.header') %>
+    <a id="collapseVersionsSidebar" class="pull-right sidebar-collapse-button" href="#">
+      <i class="fas fa-angle-double-right"></i>
+    </a>
+  </h4>
+</div>
+<div class="list-group">
+  <div class="list-group-item live-version-item" data-id="<%= @repository.id %>">
+    <a id="selectLiveVersionButton" class="version-button" href="#" data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository) %>">
+      <h2 class="list-group-item-heading">
+        <%= t('my_modules.repository.snapshots.full_view.live') %>
+      </h2>
+    </a>
+    <p class="list-group-item-text">
+      <%= t('my_modules.repository.snapshots.full_view.live_description') %>
+    </p>
+  </div>
+
+  <div class="create-snapshot-item">
+    <% if @repository_snapshots.blank? %>
+      <p class="list-group-item-text">
+        <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
+      </p>
+    <% end %>
+
+    <button id="createRepositorySnapshotButton" class="btn btn-default" data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>">
+      <i class="fas fa-camera"></i>
+      <%= t('my_modules.repository.snapshots.full_view.create_button') %>
+    </button>
+  </div>
+
+  <% @repository_snapshots.each do |repository_snapshot| %>
+    <div class="list-group-item repository-snapshot-item" data-id="<%= repository_snapshot.id %>">
+      <div class="row">
+        <div class="col-sm-10">
+          <a class="version-button select-snapshot-button" href="#" data-table-url="<%= full_view_table_my_module_repository_snapshot_path(@my_module, @repository, repository_snapshot) %>">
+            <h4 class="list-group-item-heading">
+              <%= l(repository_snapshot.created_at, format: :full) %>
+            </h4>
+            <p class="list-group-item-text">
+              <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>
+            </p>
+          </a>
+        </div>
+        <div class="col-sm-2">
+          <a class="pull-right btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, @repository, repository_snapshot) %>">
+            <i class="fas fa-trash"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  <% end  %>
+</div>

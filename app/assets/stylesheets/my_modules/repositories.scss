@@ -170,7 +170,7 @@
   }
 }
 
-#my-module-repository-full-view-modal {
+#myModuleRepositoryFullViewModal {
   .modal-dialog {
     height: 100vh;
     margin: 0;
@@ -231,30 +231,30 @@
         padding: 0;
       }
 
-      .dataTables_wrapper {
-        height: 100%;
-        position: absolute;
-        width: 100%;
-
-        .dataTables_scroll {
-          height: calc(100% - 146px);
-          padding: 0 24px;
-
-          .dataTables_scrollBody {
-            height: calc(100% - 44px);
-          }
-        }
-
-        .main-actions {
-          padding: 16px 24px 10px;
-        }
-
-        .pagination-row {
-          border-top: $border-default;
-          height: 84px;
-          padding: 0 24px;
-        }
-      }
+      // .dataTables_wrapper {
+      //   height: 100%;
+      //   position: absolute;
+      //   width: 100%;
+      //
+      //   .dataTables_scroll {
+      //     height: calc(100% - 146px);
+      //     padding: 0 24px;
+      //
+      //     .dataTables_scrollBody {
+      //       height: calc(100% - 44px);
+      //     }
+      //   }
+      //
+      //   .main-actions {
+      //     padding: 16px 24px 10px;
+      //   }
+      //
+      //   .pagination-row {
+      //     border-top: $border-default;
+      //     height: 84px;
+      //     padding: 0 24px;
+      //   }
+      // }
     }
   }
 
@@ -281,6 +281,84 @@
           background-color: $color-alto;
         }
       }
+    }
+  }
+
+  .table-container {
+    padding: 2em;
+    width: 100%;
+
+    &.collapsed {
+      margin-right: 20%;
+      width: 80%;
+    }
+
+  }
+
+  .repository-versions-sidebar {
+    background-color: $color-concrete;
+    bottom: 0;
+    height: 100%;
+    overflow-x: hidden;
+    padding: 0;
+    position: fixed;
+    right: 0;
+    transition: .5s;
+    width: 20%;
+
+    &.collapsed {
+		  margin-right: -20%;
+		}
+
+    .sidebar-collapse-button {
+      color: $color-volcano;
+      text-decoration: none;
+    }
+
+    .repository-versions-header {
+      border-bottom: 1px solid $color-alto;
+      padding: 0 1em;
+    }
+
+    .list-group-item {
+      background-color: $color-concrete;
+      border: 0;
+
+      .list-group-item-text {
+        color: $color-silver-chalice;
+      }
+
+      .version-button {
+        color: $color-volcano;
+        text-decoration: none;
+      }
+
+      .delete-snapshot-button {
+        display: none;
+      }
+
+      &:hover {
+        background-color: $color-alto;
+
+        .delete-snapshot-button {
+          display: block;
+        }
+      }
+
+      &.active {
+        background-color: $brand-primary;
+
+        .list-group-item-heading,
+        .list-group-item-text,
+        .delete-snapshot-button {
+          color: $color-white;
+        }
+      }
+    }
+
+    .create-snapshot-item {
+      border-bottom: 1px solid $color-alto;
+      padding: 15px 10px;
     }
   }
 }

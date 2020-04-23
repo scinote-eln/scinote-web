@@ -963,6 +963,26 @@ class Constants
     }
   end
   REPOSITORY_TABLE_DEFAULT_STATE.freeze
+
+  # Repository default table state
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE = {
+    'time' => 0,
+    'start' => 0,
+    'length' => 5,
+    'order' => [[1, 'asc']], # Default sorting by 'ID' column
+    'search' => { 'search' => '',
+                  'smart' => true,
+                  'regex' => false,
+                  'caseInsensitive' => true },
+    'columns' => [],
+    'assigned' => 'assigned',
+    'ColReorder' => [*0..4]
+  }
+
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'] = REPOSITORY_TABLE_DEFAULT_STATE['columns'][0..4]
+
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE.freeze
+
   # For default custom column template, any searchable default
   # column can be reused
   REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
@@ -971,6 +991,7 @@ class Constants
 
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
 
+  REPOSITORY_DEFAULT_PAGE_SIZE = 10
   REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
   REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN = 50
   REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS = 2

@@ -5,4 +5,8 @@ class RepositorySnapshot < RepositoryBase
   belongs_to :my_module, optional: true
 
   validates :name, presence: true, length: { maximum: Constants::NAME_MAX_LENGTH }
+
+  def default_columns_count
+    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
+  end
 end

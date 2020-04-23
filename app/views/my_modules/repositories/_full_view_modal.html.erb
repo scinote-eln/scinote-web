@@ -1,4 +1,4 @@
-<div class="modal" id="my-module-repository-full-view-modal" tabindex="-1" role="dialog">
+<div class="modal" id="myModuleRepositoryFullViewModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -16,6 +16,20 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
+        <template id="repositoryToolbarButtonsTemplate">
+          <div class="">
+            <div class="form-group pull-left">
+              <button id="showVersionsSidebar" type="button" class="btn btn-default">
+                <span class="fas fa-eye"></span>
+                <%= t('my_modules.repository.snapshots.full_view.versions_sidebar_button') %>
+              </button>
+            </div>
+          </div>
+        </template>
+        <div class="row">
+          <div class="table-container"></div>
+          <div class="repository-versions-sidebar collapsed"></div>
+        </div>
       </div>
     </div>
   </div>

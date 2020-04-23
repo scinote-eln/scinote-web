@@ -29,6 +29,16 @@ Canaid::Permissions.register_for(Repository) do
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)
   end
 
+  # repository: make a snapshot with assigned rows
+  can :create_repository_snapshot do |user, repository|
+    user.is_normal_user_or_admin_of_team?(repository.team)
+  end
+
+  # repository: delete a snapshot with assigned rows
+  can :delete_repository_snapshot do |user, repository|
+    user.is_normal_user_or_admin_of_team?(repository.team)
+  end
+
   # repository: create/import record
   can :create_repository_rows do |user, repository|
     if repository.shared_with?(user.current_team)
