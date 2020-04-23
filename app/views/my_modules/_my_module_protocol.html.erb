@@ -2,7 +2,6 @@
   <div class="protocol-status-bar" data-role="protocol-status-bar">
     <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
   </div>
-  <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
   <% if can_manage_protocol_in_module?(@protocol) %>
     <%= render partial: "my_modules/recent_protocol_dropdown.html.erb", locals: {protocol: @my_module.protocol}%>
   <% end %>
