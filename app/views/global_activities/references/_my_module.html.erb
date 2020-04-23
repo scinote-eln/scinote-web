@@ -6,11 +6,7 @@
     <% if subject.archived?
         path = module_archive_experiment_path(subject.experiment)
       else
-        if (['assign_repository_record','unassign_repository_record'].include? type_of)
-          path = repository_my_module_path(subject,values["message_items"]["repository"]["id"])
-        else 
-          path = protocols_my_module_path(subject)
-        end
+        path = protocols_my_module_path(subject)
       end %>
     <%= route_to_other_team(path,
                             team,
