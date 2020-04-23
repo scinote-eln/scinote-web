@@ -42,7 +42,7 @@ module GlobalActivitiesHelper
       # Not link for now
       return current_value
     when Team
-      path = projects_path
+      path = projects_path(team: obj.id)
     when Repository
       path = repository_path(obj)
     when RepositoryRow
