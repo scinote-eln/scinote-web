@@ -5,7 +5,7 @@
        data-default-order="<%= default_snapshot_table_order_as_js_array %>"
        data-default-table-columns="<%= default_snapshot_table_columns %>"
        data-load-state-url="<%= repository_load_table_state_path(@repository_snapshot) %>"
-       data-versions-sidebar-url="<%= my_module_repository_full_view_versions_sidebar_path(@my_module, @repository) %>"
+       data-versions-sidebar-url="<%= full_view_versions_sidebar_my_module_repository_snapshots_path(@my_module, @repository) %>"
 >
   <thead>
     <tr>

@@ -38,20 +38,20 @@ var MyModuleRepositories = (function() {
 
   function fullViewColumnDefs() {
     let columnDefs = [{
-        targets: 0,
-        visible: true,
-        searchable: false,
-        orderable: false,
-        className: 'dt-body-center',
-        sWidth: '1%',
-        render: function(data) {
-          var checked = data ? 'checked' : '';
-          return `<div class="sci-checkbox-container">
-                    <input class='repository-row-selector sci-checkbox' type='checkbox' ${checked}>
-                    <span class='sci-checkbox-label'></span>
-                  </div>`;
-        }
-      }];
+      targets: 0,
+      visible: true,
+      searchable: false,
+      orderable: false,
+      className: 'dt-body-center',
+      sWidth: '1%',
+      render: function(data) {
+        var checked = data ? 'checked' : '';
+        return `<div class="sci-checkbox-container">
+                  <input class='repository-row-selector sci-checkbox' type='checkbox' ${checked}>
+                  <span class='sci-checkbox-label'></span>
+                </div>`;
+      }
+    }];
 
     if (FULL_VIEW_MODAL.find('.table').data('type') === 'live') {
       columnDefs.push({
@@ -153,7 +153,7 @@ var MyModuleRepositories = (function() {
         DataTableHelpers.initSearchField(dataTableWrapper);
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
         if (options.assign_mode) {
-          renderFullViewActionButtons();
+          renderFullViewAssignButtons();
         } else {
           $('.table-container .toolbar').html($('#repositoryToolbarButtonsTemplate').html());
         }
@@ -221,7 +221,7 @@ var MyModuleRepositories = (function() {
     animateSpinner(null, true);
     $.get(tableUrl, (data) => {
       FULL_VIEW_MODAL.find('.table-container').html(data.html);
-      renderFullViewTable(FULL_VIEW_MODAL.find('.table'));
+      renderFullViewTable(FULL_VIEW_MODAL.find('.table'), { assigned: true, skipCheckbox: true });
       setSelectedItem();
       animateSpinner(null, false);
     });
@@ -355,7 +355,7 @@ var MyModuleRepositories = (function() {
     refreshSelectAllCheckbox();
   }
 
-  function renderFullViewActionButtons() {
+  function renderFullViewAssignButtons() {
     var toolbar = FULL_VIEW_MODAL.find('.dataTables_wrapper .toolbar');
     toolbar.empty();
     if (FULL_VIEW_MODAL.data('rows-count') === 0) {
@@ -380,7 +380,7 @@ var MyModuleRepositories = (function() {
       FULL_VIEW_MODAL.data('rows-count', $(this).data('rows-count'));
       FULL_VIEW_MODAL.modal('show');
       $.get($(this).data('table-url'), (data) => {
-        FULL_VIEW_MODAL.find('.modal-body').html(data.html);
+        FULL_VIEW_MODAL.find('.table-container').html(data.html);
         FULL_VIEW_MODAL.data('assign-url-modal', assignUrlModal);
         FULL_VIEW_MODAL.data('update-url-modal', updateUrlModal);
         renderFullViewTable(FULL_VIEW_MODAL.find('.table'), { assign_mode: true });
@@ -460,7 +460,7 @@ var MyModuleRepositories = (function() {
         FULL_VIEW_TABLE.ajax.reload(null, false);
         reloadRepositoriesList();
         updateFullViewRowsCount(data.rows_count);
-        renderFullViewActionButtons();
+        renderFullViewAssignButtons();
       },
       error: function(data) {
         UPDATE_REPOSITORY_MODAL.modal('hide');

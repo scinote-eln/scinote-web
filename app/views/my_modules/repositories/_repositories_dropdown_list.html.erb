@@ -1,9 +1,9 @@
 <% @repositories.each do |repository| %>
   <% assigned_items_count = @my_module.repository_rows_count(repository) %>
   <li class="repository"
-      data-table-url="<%= full_view_table_my_module_my_module_repository_path(@my_module, repository) %>"
-      data-assign-url-modal="<%= assign_repository_records_modal_my_module_my_module_repository_path(@my_module, repository) %>"
-      data-update-url-modal="<%= update_repository_records_modal_my_module_my_module_repository_path(@my_module, repository)%>" data-repository-id="<%= repository.id %>"
+      data-table-url="<%= full_view_table_my_module_repository_path(@my_module, repository) %>"
+      data-assign-url-modal="<%= assign_repository_records_modal_my_module_repository_path(@my_module, repository) %>"
+      data-update-url-modal="<%= update_repository_records_modal_my_module_repository_path(@my_module, repository)%>" data-repository-id="<%= repository.id %>"
       data-rows-count="<%= assigned_items_count %>" >
     <% if repository.shared_with?(current_team) %>
       <span class="shared-icon">

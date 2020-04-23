@@ -406,6 +406,7 @@ Rails.application.routes.draw do
           collection do
             get :full_view_versions_sidebar
           end
+        end
       end
 
       # resources :sample_my_modules, path: '/samples_index', only: [:index]

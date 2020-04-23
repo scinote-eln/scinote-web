@@ -73,7 +73,7 @@ class MyModuleRepositoriesController < ApplicationController
     )
     render json: {
       html: modal,
-      update_url: my_module_my_module_repository_path(@my_module, @repository)
+      update_url: my_module_repository_path(@my_module, @repository)
     }, status: :ok
   end
 
@@ -87,7 +87,7 @@ class MyModuleRepositoriesController < ApplicationController
     )
     render json: {
       html: modal,
-      update_url: my_module_my_module_repository_path(@my_module, @repository)
+      update_url: my_module_repository_path(@my_module, @repository)
     }, status: :ok
   end
 
