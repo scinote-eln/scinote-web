@@ -18,7 +18,7 @@ module RepositoryRows
     def call
       return self unless valid?
 
-      #ActiveRecord::Base.transaction do
+      ActiveRecord::Base.transaction do
         if params[:downstream] == 'true'
           @my_module.downstream_modules.each do |downstream_module|
             unassign_repository_rows_from_my_module(downstream_module)
@@ -26,10 +26,10 @@ module RepositoryRows
         else
           unassign_repository_rows_from_my_module(@my_module)
         end
-      #rescue StandardError => e
-      #  @errors[e.record.class.name.underscore] = e.record.errors.full_messages
-      #  raise ActiveRecord::Rollback
-      #end
+      rescue StandardError => e
+        @errors[e.record.class.name.underscore] = e.record.errors.full_messages
+        raise ActiveRecord::Rollback
+      end
 
       self
     end

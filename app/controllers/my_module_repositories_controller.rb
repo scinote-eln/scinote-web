@@ -49,7 +49,7 @@ class MyModuleRepositoriesController < ApplicationController
 
     if (params[:rows_to_assign].nil? || assign_service.succeed?) &&
        (params[:rows_to_unassign].nil? || unassign_service.succeed?)
-      flash = update_flash_message(assign_service, unassign_service)
+      flash = update_flash_message
       status = :ok
     else
       flash = t('my_modules.repository.flash.update_error')
@@ -133,7 +133,7 @@ class MyModuleRepositoriesController < ApplicationController
                       can_assign_repository_rows_to_module?(@my_module)
   end
 
-  def update_flash_message(assign_service, unassign_service)
+  def update_flash_message
     assigned_count = params[:rows_to_assign]&.count
     unassigned_count = params[:rows_to_unassign]&.count
 

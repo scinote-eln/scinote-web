@@ -1,6 +1,5 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign, no-use-before-define */
 /* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule */
-
 
 
 var MyModuleRepositories = (function() {
