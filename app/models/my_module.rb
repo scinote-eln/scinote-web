@@ -526,14 +526,17 @@ class MyModule < ApplicationRecord
   def self.my_modules_list_partial
     ungrouped_tasks = joins(experiment: :project)
                       .select('experiments.name as experiment_name,
+                               experiments.archived as experiment_archived,
                                projects.name as project_name,
-                               my_modules.name as task_name,
-                               my_modules.id')
+                               projects.archived as projects_archived,
+                               my_modules.*')
     ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
       {
         project_name: group[0],
+        projects_archived: tasks[0]&.projects_archived,
         experiment_name: group[1],
-        tasks: tasks.map { |task| { id: task.id, task_name: task.task_name } }
+        experiment_archived: tasks[0]&.experiment_archived,
+        tasks: tasks
       }
     end
   end

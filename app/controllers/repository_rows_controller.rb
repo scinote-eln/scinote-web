@@ -3,7 +3,7 @@ class RepositoryRowsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
 
-  before_action :load_info_modal_vars, only: :show
+  before_action :load_info_modal_vars, only: %i(show assigned_task_list)
   before_action :load_vars, only: %i(edit update)
   before_action :load_repository,
                 only: %i(create
@@ -178,6 +178,14 @@ class RepositoryRowsController < ApplicationController
       render json: { results: load_available_rows(search_params[:q]) },
                    status: :ok
     end
+  end
+
+  def assigned_task_list
+      my_modules = @repository_row.my_modules.joins(experiment: :project)
+                                             .my_modules_list_partial
+      render json: {
+        html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: { task_groups: my_modules })
+      }
   end
 
   private

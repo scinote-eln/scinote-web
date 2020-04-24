@@ -442,7 +442,7 @@ var RepositoryDatatable = (function(global) {
         className: 'assigned-column',
         sWidth: '1%',
         render: function(data, type, row) {
-          let content = data;
+          let content = $.fn.dataTable.render.AssignedTasksValue(data);
           let icon;
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
@@ -582,6 +582,14 @@ var RepositoryDatatable = (function(global) {
         $(TABLE_ID).find('tr[data-editable=false]').each(function(_, e) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
         });
+
+         $(TABLE_ID).on('show.bs.dropdown', '.assign-counter-container', function() {
+          var tasksContainer = $(this).find('.tasks');
+           var tasksUrl = $(this).data('task-list-url');
+           $.get(tasksUrl, function(result) {
+            tasksContainer.html(result.html);
+           })
+         })
       }
     });
 

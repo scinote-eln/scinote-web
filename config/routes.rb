@@ -630,7 +630,11 @@ Rails.application.routes.draw do
           defaults: { format: 'json' }
 
       resources :repository_columns, only: %i(create edit update destroy)
-      resources :repository_rows, only: %i(create edit update)
+      resources :repository_rows, only: %i(create edit update) do
+        member do
+          get :assigned_task_list
+        end
+      end
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
