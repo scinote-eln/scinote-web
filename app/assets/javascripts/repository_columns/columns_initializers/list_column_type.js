@@ -91,7 +91,7 @@ var RepositoryListColumnType = (function() {
 
     $counterContainer.find('.items-count').html(number).attr('data-count', number);
 
-    if (number >= GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
+    if (number > GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
       $counterContainer.addClass('error-to-many-items');
       $textarea.addClass('too-many-items');
       $btn.addClass('disabled');
@@ -162,7 +162,7 @@ var RepositoryListColumnType = (function() {
     checkValidation: () => {
       var $manageModal = $(manageModal);
       var count = $manageModal.find('.items-count').attr('data-count');
-      return count < GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN;
+      return count <= GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN;
     },
     loadParams: () => {
       var repositoryColumnParams = {};
