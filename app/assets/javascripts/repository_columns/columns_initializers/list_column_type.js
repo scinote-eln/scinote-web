@@ -83,7 +83,7 @@ var RepositoryListColumnType = (function() {
     });
   }
 
-  function refreshCounter(number) {
+  function refreshCounter(number, limit) {
     var $manageModal = $(manageModal);
     var $counterContainer = $manageModal.find('.limit-counter-container');
     var $btn = $manageModal.find('.column-save-btn');
@@ -91,7 +91,7 @@ var RepositoryListColumnType = (function() {
 
     $counterContainer.find('.items-count').html(number).attr('data-count', number);
 
-    if (number > GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN) {
+    if (number > limit) {
       $counterContainer.addClass('error-to-many-items');
       $textarea.addClass('too-many-items');
       $btn.addClass('disabled');
@@ -102,11 +102,11 @@ var RepositoryListColumnType = (function() {
     }
   }
 
-  function refreshPreviewDropdownList(preview, textarea, delimiterContainer, dropdown) {
+  function refreshPreviewDropdownList(preview, textarea, delimiterContainer, dropdown, limit) {
     var items = textToItems($(textarea).val(), delimiterContainer);
     var hashItems = [];
     drawDropdownPreview(items, preview);
-    refreshCounter(items.length);
+    refreshCounter(items.length, limit);
 
     $.each(items, (index, option) => {
       hashItems.push({ data: option });
@@ -126,7 +126,8 @@ var RepositoryListColumnType = (function() {
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
-          dropdownOptions
+          dropdownOptions,
+          GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN
         );
         initListDropdown();
         $('.changing-existing-list-items-warning').removeClass('hidden');
@@ -137,7 +138,8 @@ var RepositoryListColumnType = (function() {
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
-          dropdownOptions
+          dropdownOptions,
+          GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN
         );
         initListDropdown();
       })
@@ -146,7 +148,8 @@ var RepositoryListColumnType = (function() {
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
-          dropdownOptions
+          dropdownOptions,
+          GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN
         );
         initListDropdown();
       })
@@ -172,8 +175,8 @@ var RepositoryListColumnType = (function() {
       return repositoryColumnParams;
     },
 
-    refreshPreviewDropdownList: (preview, textarea, delimiter, dropdown) => {
-      refreshPreviewDropdownList(preview, textarea, delimiter, dropdown);
+    refreshPreviewDropdownList: (preview, textarea, delimiter, dropdown, limit) => {
+      refreshPreviewDropdownList(preview, textarea, delimiter, dropdown, limit);
     },
 
     initListDropdown: () => {
