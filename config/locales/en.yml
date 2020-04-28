@@ -1098,6 +1098,7 @@ en:
     table:
       id: 'ID'
       assigned: "Assigned"
+      assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
       row_name: "Name"
       added_on: "Added on"
