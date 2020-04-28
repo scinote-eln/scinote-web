@@ -100,7 +100,6 @@ function initProtocolsTable() {
     fnDrawCallback: function(settings, json) {
       animateSpinner(this, false);
       initRowSelection();
-      $.initTooltips();
     },
     preDrawCallback: function(settings) {
       animateSpinner(this);
