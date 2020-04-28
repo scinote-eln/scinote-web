@@ -1576,11 +1576,6 @@ en:
             date_format_label: "Date format"
             date_format_sublabel: "Date format setting affects all date display throughout application."
             date_format_title: "Date format"
-            tips:
-              title: "Help Tips"
-              text1: "When you place your mouse cursor on a certain element in SciNote and hold it for a bit, a short and helpful description will appear."
-              text2: "If you feel confident in SciNote already, you can turn off these Help Tips."
-              toggle: "Show Help Tips"
           update_flash: "Preferences successfully updated."
         addons:
           head_title: "Settings | Add-ons"

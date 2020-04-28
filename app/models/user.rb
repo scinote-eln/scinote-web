@@ -43,8 +43,7 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
-    },
-    tooltips_enabled: true
+    }
   )
 
   store_accessor :variables, :export_vars
