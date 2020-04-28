@@ -394,10 +394,11 @@ Rails.application.routes.draw do
 
         resources :repository_snapshots, controller: 'my_module_repository_snapshots',
                                          as: :snapshots,
-                                         only: %i(create destroy) do
+                                         only: %i(create show destroy) do
           member do
             get :full_view_table, to: 'my_module_repository_snapshots#full_view_table'
             post :index_dt, to: 'my_module_repository_snapshots#index_dt'
+            get :status, to: 'my_module_repository_snapshots#status'
           end
         end
 

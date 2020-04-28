@@ -5,7 +5,7 @@
     </a>
   </h4>
 </div>
-<div class="list-group">
+<div class="list-group repository-versions-list">
   <div class="list-group-item live-version-item" data-id="<%= @repository.id %>">
     <a id="selectLiveVersionButton" class="version-button" href="#" data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository) %>">
       <h2 class="list-group-item-heading">
@@ -30,25 +30,5 @@
     </button>
   </div>
 
-  <% @repository_snapshots.each do |repository_snapshot| %>
-    <div class="list-group-item repository-snapshot-item" data-id="<%= repository_snapshot.id %>">
-      <div class="row">
-        <div class="col-sm-10">
-          <a class="version-button select-snapshot-button" href="#" data-table-url="<%= full_view_table_my_module_repository_snapshot_path(@my_module, @repository, repository_snapshot) %>">
-            <h4 class="list-group-item-heading">
-              <%= l(repository_snapshot.created_at, format: :full) %>
-            </h4>
-            <p class="list-group-item-text">
-              <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>
-            </p>
-          </a>
-        </div>
-        <div class="col-sm-2">
-          <a class="pull-right btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, @repository, repository_snapshot) %>">
-            <i class="fas fa-trash"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  <% end  %>
+  <%= render partial: 'my_modules/repositories/full_view_version', collection: @repository_snapshots, as: :repository_snapshot %>
 </div>

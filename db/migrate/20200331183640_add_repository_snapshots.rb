@@ -3,6 +3,7 @@
 class AddRepositorySnapshots < ActiveRecord::Migration[6.0]
   def up
     add_column :repositories, :parent_id, :bigint, null: true
+    add_column :repositories, :status, :integer, null: true
     add_reference :repositories, :my_module
     add_column :repositories, :type, :string
 
