@@ -272,6 +272,10 @@
         width: calc(100% - 16px);
 
         .assign-counter {
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+
           &.has-assigned {
             color: $brand-primary;
           }
@@ -279,6 +283,11 @@
 
         &:hover {
           background-color: $color-alto;
+        }
+
+        .dropdown-menu {
+          min-width: 320px;
+          padding: 8px;
         }
       }
     }

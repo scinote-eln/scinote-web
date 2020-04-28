@@ -2,16 +2,25 @@
   <% task_groups.each do |task_group| %>
   <div class="task-group">
     <div class="header">
+      <% if task_group[:project_archived]%>
+        <span class="archived"><%= t('general.archived') %></span>
+      <% end %>
       <span class="project" title="<%= task_group[:project_name] %>"><%= escape_input(task_group[:project_name]) %></span>
       <span class="slash">/</span>
+      <% if task_group[:experiment_archived] %>
+        <span class="archived"><%= t('general.archived') %></span>
+      <% end %>
       <span class="experiment" title="<%= task_group[:experiment_name] %>"><%= escape_input(task_group[:experiment_name]) %></span>
     </div>
     <div class="tasks">
       <% task_group[:tasks].each do |task| %>
       <div class="task">
         <%= draw_custom_icon('task-icon') %>
+        <% if task.archived %>
+          <span class="archived"><%= t('general.archived') %></span>
+        <% end %>
         <% if can_read_experiment?(current_user, task.experiment) %>
-          <%= link_to(escape_input(task.name), protocols_my_module_path(task.id), {class: "task-link", title: task.name}) %>
+          <%= link_to(escape_input(task.name), protocols_my_module_path(task.id), {class: "task-link", title: escape_input(task.name), target: "_blank"}) %>
         <% else %>
           <%= escape_input(task.name) %>
         <% end %>

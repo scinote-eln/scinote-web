@@ -528,12 +528,12 @@ class MyModule < ApplicationRecord
                       .select('experiments.name as experiment_name,
                                experiments.archived as experiment_archived,
                                projects.name as project_name,
-                               projects.archived as projects_archived,
+                               projects.archived as project_archived,
                                my_modules.*')
     ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
       {
         project_name: group[0],
-        projects_archived: tasks[0]&.projects_archived,
+        project_archived: tasks[0]&.project_archived,
         experiment_name: group[1],
         experiment_archived: tasks[0]&.experiment_archived,
         tasks: tasks

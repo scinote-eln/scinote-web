@@ -181,11 +181,13 @@ class RepositoryRowsController < ApplicationController
   end
 
   def assigned_task_list
-      my_modules = @repository_row.my_modules.joins(experiment: :project)
-                                             .my_modules_list_partial
-      render json: {
-        html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: { task_groups: my_modules })
-      }
+    my_modules = @repository_row.my_modules.joins(experiment: :project)
+                                .search_by_name(current_user, current_team, params[:query])
+                                .my_modules_list_partial
+
+    render json: {
+      html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: { task_groups: my_modules })
+    }
   end
 
   private

@@ -1,6 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise DataTableHelpers
   HelperModule animateLoading hideAssignUnasignModal RepositoryDatatableRowEditor
+  initAssignedTasksDropdown
 */
 
 //= require jquery-ui/widgets/sortable
@@ -583,13 +584,7 @@ var RepositoryDatatable = (function(global) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
         });
 
-         $(TABLE_ID).on('show.bs.dropdown', '.assign-counter-container', function() {
-          var tasksContainer = $(this).find('.tasks');
-           var tasksUrl = $(this).data('task-list-url');
-           $.get(tasksUrl, function(result) {
-            tasksContainer.html(result.html);
-           })
-         })
+        initAssignedTasksDropdown(TABLE_ID);
       }
     });
 

@@ -41,7 +41,6 @@
 
     .assign-counter-container {
       border-radius: $border-radius-tag;
-      cursor: pointer;
       display: inline-block;
       line-height: 35px;
       position: absolute;
@@ -70,6 +69,7 @@
       }
 
       .dropdown-menu {
+        min-width: 320px;
         padding: 8px;
       }
     }

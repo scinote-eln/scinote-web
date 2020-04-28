@@ -161,18 +161,18 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
       tasks: data.tasks,
       experiments: data.experiments,
       projects: data.projects
-    })
+    });
     return `<div class="assign-counter-container dropdown" title="${tooltip}"
             data-task-list-url="${data.task_list_url}">
               <a href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
               <div class="dropdown-menu" role="menu">
+                <div class="sci-input-container">
+                  <input type="text" class="sci-input-field search-tasks" placeholder="Search..."></input>
+                </div>
                 <div class="tasks"></div>
               </div>
-            </div>`
-
-  } else {
-    return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>"
+            </div>`;
   }
-
+  return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
 };

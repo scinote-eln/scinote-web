@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-/* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner */
+/* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner initAssignedTasksDropdown */
 
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
@@ -37,7 +37,10 @@ var MyModuleRepositories = (function() {
         targets: 1,
         searchable: false,
         className: 'assigned-column',
-        sWidth: '1%'
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.AssignedTasksValue(data);
+        }
       }, {
         targets: 3,
         render: function(data, type, row) {
@@ -131,6 +134,7 @@ var MyModuleRepositories = (function() {
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
 
         $('.table-container .toolbar').html($('#repositoryToolbarButtonsTemplate').html());
+        initAssignedTasksDropdown(tableContainer);
       },
 
       drawCallback: function() {

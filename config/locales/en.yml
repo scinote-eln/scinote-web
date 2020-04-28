@@ -2205,6 +2205,7 @@ en:
     more_comments: "More comments"
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
+    archived: "Archived"
     sort:
       new_html: "Newest first &#8595;"
       old_html: "Oldest first &#8593;"
