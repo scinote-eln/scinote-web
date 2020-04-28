@@ -1576,11 +1576,6 @@ en:
             date_format_label: "Date format"
             date_format_sublabel: "Date format setting affects all date display throughout application."
             date_format_title: "Date format"
-            tips:
-              title: "Help Tips"
-              text1: "When you place your mouse cursor on a certain element in SciNote and hold it for a bit, a short and helpful description will appear."
-              text2: "If you feel confident in SciNote already, you can turn off these Help Tips."
-              toggle: "Show Help Tips"
           update_flash: "Preferences successfully updated."
         addons:
           head_title: "Settings | Add-ons"
@@ -2302,57 +2297,6 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
-  tooltips:
-    text:
-      invite_to_sci: "Invite other scientists to SciNote and gain additional free storage space for your team. How?"
-      new_project: "Project is the topmost layer when you are organizing your data in SciNote. It allows you to assign members and keep all project-related data within one project card."
-      experiment:
-        copy: "Copy this experiment as a template to another project. Only tasks and protocol steps will be copied!"
-        dates: "You can see the date when this experiment was created and when it was last modified."
-        move: "Move your experiment with all its tasks to another project. Make sure that members of both projects are the same even if a few other members were added."
-      task:
-        due_date: "Set due dates to your tasks and stay organized."
-        new: "Your experiment can be defined by a series of tasks. Start by adding the tasks and, if needed, connect them into a workflow."
-        color_tag: "Create personalised colorful tags to mark your tasks."
-        due_date_specific: "Set a due date to a specific task."
-        results: "You have three options to save your lab results: as classic text, created table or uploaded file from computer."
-      protocol:
-        step_edit: "You can edit the name and description of a protocol step, add checklists, tables or files."
-        step_add_files: "Drag and drop your files here. SciNote supports all types of files and images."
-        linking: "By linking the protocol in your task and the protocol in a repository you can see if any of the versions has been modified and decide to update either of them at any point."
-        complete: "You can complete the task if you are done working on it."
-        inventories: "You can assign inventory items to your task."
-        num_linked: "This number represents how many tasks are linked to the selected protocol."
-        unshared_inventory: "This Inventory has been unshared with your Team by "
-      inventory:
-        new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
-        visibility: "You can make inventory columns visible or hidden."
-        manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, number, file, date, time or be defined as a checklist, dropdown or status list."
-
-    link:
-      invite_to_sci: "https://support.scinote.net/hc/en-us/articles/115003902929"
-      new_project: "https://support.scinote.net/hc/en-us/articles/115003373852"
-      experiment:
-        copy: "https://support.scinote.net/hc/en-us/articles/115001434365"
-        dates: "https://support.scinote.net/hc/en-us/articles/115001799832"
-        move: "https://support.scinote.net/hc/en-us/articles/115001434385"
-      task:
-        due_date: "https://support.scinote.net/hc/en-us/articles/360000527572"
-        new: "https://support.scinote.net/hc/en-us/articles/360000537411"
-        color_tag: "https://support.scinote.net/hc/en-us/articles/360007237912"
-        due_date_specific: "https://support.scinote.net/hc/en-us/articles/360000527572"
-        results: "https://support.scinote.net/hc/en-us/articles/360007238592"
-      protocol:
-        step_edit: "https://support.scinote.net/hc/en-us/articles/115001788051"
-        step_add_files: "https://support.scinote.net/hc/en-us/articles/360007237252"
-        linking: "https://support.scinote.net/hc/en-us/articles/115003680385"
-        complete: "https://support.scinote.net/hc/en-us/articles/115001799812"
-        inventories: "https://support.scinote.net/hc/en-us/articles/360004694971"
-        num_linked: "https://support.scinote.net/hc/en-us/articles/115001788711"
-      inventory:
-        new: "https://support.scinote.net/hc/en-us/articles/360004627792"
-        visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
-        manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
   marvinjs:
     new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"
