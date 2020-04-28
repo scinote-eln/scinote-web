@@ -13,9 +13,9 @@
   </h4>
 </div>
 <div class="modal-body">
-  <p><%= t('my_modules.modals.update_repository_record.message', size: selected_rows.keys.count) %></p>
+  <p><%= t('my_modules.modals.update_repository_record.message', size: selected_rows.values.count) %></p>
   <div class="rows-list-container">
-    <% if rows_to_assign.keys.any? %>
+    <% if rows_to_assign.values.any? %>
       <div class="rows-to-assign">
         <p class="header">
           <i class="fas fa-plus"></i>
@@ -28,7 +28,7 @@
         </ul>
       </div>
     <% end %>
-    <% if rows_to_unassign.keys.any? %>
+    <% if rows_to_unassign.values.any? %>
       <div class="rows-to-unassign">
         <p class="header">
           <i class="fas fa-minus"></i>
