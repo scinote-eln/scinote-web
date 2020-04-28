@@ -49,7 +49,7 @@
         </span>
       </a>
       <div class="actions-block">
-        <div class="dropdown repositories-assign-container" data-repositories-url="<%= repositories_dropdown_list_my_module_repositories_path(@my_module) %>">
+        <div class="dropdown repositories-assign-container" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
           <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span class="fas fa-file-signature"></span>
             <span><%= t('my_modules.assigned_items.assign_from') %></span>
@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="collapse panel-group" id="assigned-items-container"
-         data-repositories-list-url="<%= repositories_list_html_my_module_repositories_path(@my_module) %>">
+         data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
       <%= render partial: "my_modules/repositories/repositories_list" %>
     </div>
     <%= render partial: "my_modules/repositories/full_view_modal" %>

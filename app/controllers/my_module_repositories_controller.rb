@@ -7,7 +7,6 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html)
   before_action :check_my_module_view_permissions
   before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html)
-
   before_action :check_assign_repository_records_permissions, only: :update
 
   def index_dt
@@ -64,12 +63,11 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def update_repository_records_modal
-    selected_rows = params[:selected_rows]
     modal = render_to_string(
       partial: 'my_modules/modals/update_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-                selected_rows: selected_rows }
+                selected_rows: params[:selected_rows] }
     )
     render json: {
       html: modal,
@@ -78,12 +76,11 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def assign_repository_records_modal
-    selected_rows = params[:selected_rows]
     modal = render_to_string(
       partial: 'my_modules/modals/assign_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-                selected_rows: selected_rows }
+                selected_rows: params[:selected_rows] }
     )
     render json: {
       html: modal,
@@ -116,7 +113,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.find_by(id: params[:id])
+    @repository = Repository.find_by(id: params[:id] || params[:repository_id])
     render_404 unless @repository
   end
 
@@ -129,8 +126,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def check_assign_repository_records_permissions
-    render_403 unless module_page? &&
-                      can_assign_repository_rows_to_module?(@my_module)
+    render_403 unless can_assign_repository_rows_to_module?(@my_module)
   end
 
   def update_flash_message

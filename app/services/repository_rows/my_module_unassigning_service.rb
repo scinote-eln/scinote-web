@@ -44,11 +44,8 @@ module RepositoryRows
     def unassign_repository_rows_from_my_module(my_module)
       unassigned_names = my_module.my_module_repository_rows
                                   .joins(:repository_row)
-                                  .where(repository_row_id: params[:rows_to_unassign])
-                                  .where(repository_rows: { repository: @repository })
-                                  .select('my_module_id,
-                                           my_module_repository_rows.id,
-                                           repository_rows.name AS name')
+                                  .where(repository_rows: { repository: @repository, id: params[:rows_to_unassign] })
+                                  .select('my_module_repository_rows.*, repository_rows.name AS name')
                                   .destroy_all
                                   .pluck(:name)
 

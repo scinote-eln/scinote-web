@@ -3,23 +3,23 @@
     <span aria-hidden="true">×</span>
   </button>
   <h4 class="modal-title">
-    <%=t 'my_modules.modals.assign_repository_record.title',
+    <%= t('my_modules.modals.assign_repository_record.title',
          repository_name: repository.name,
-         my_module_name: my_module.name %>
+         my_module_name: my_module.name) %>
   </h4>
 </div>
 <div class="modal-body">
-  <p><%=t 'my_modules.modals.assign_repository_record.message', size: selected_rows.keys.count %></p>
+  <p><%= t('my_modules.modals.assign_repository_record.message', size: selected_rows.keys.count) %></p>
 </div>
 <div class="modal-footer">
   <a class="btn btn-light" data-dismiss="modal">
     <i class="fas fa-times"></i>
-    <%= t 'general.cancel' %>
+    <%= t('general.cancel') %>
   </a>
   <a class="btn btn-secondary downstream-action">
-    <%= t 'my_modules.modals.assign_repository_record.task_and_downstream' %>
+    <%= t('my_modules.modals.assign_repository_record.task_and_downstream') %>
   </a>
   <a class="btn btn-primary task-action">
-    <%= t 'my_modules.modals.assign_repository_record.task' %>
+    <%= t('my_modules.modals.assign_repository_record.task') %>
   </a>
 </div>
