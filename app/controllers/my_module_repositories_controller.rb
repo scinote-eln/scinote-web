@@ -113,7 +113,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.find_by(id: params[:id] || params[:repository_id])
+    @repository = Repository.find_by(id: params[:id])
     render_404 unless @repository
   end
 

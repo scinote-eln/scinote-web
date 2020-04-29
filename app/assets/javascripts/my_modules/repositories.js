@@ -5,6 +5,7 @@
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
   const UPDATE_REPOSITORY_MODAL = $('#updateRepositoryRecordModal');
+  const STATUS_POLLING_INTERVAL = 30000;
   var SIMPLE_TABLE;
   var FULL_VIEW_TABLE;
   var FULL_VIEW_TABLE_SCROLLBAR;
@@ -200,26 +201,9 @@ var MyModuleRepositories = (function() {
     versionsSidebar.find(`[data-id="${currentId}"]`).addClass('active');
   }
 
-  function createDestroySnapshot(actionPath, requestType) {
-    animateSpinner(null, true);
-    $.ajax({
-      url: actionPath,
-      type: requestType,
-      dataType: 'json',
-      success: function(data) {
-        FULL_VIEW_MODAL.find('.repository-versions-sidebar').html(data.html);
-        setSelectedItem();
-        animateSpinner(null, false);
-      },
-      error: function() {
-        // TODO
-      }
-    });
-  }
-
   function reloadTable(tableUrl) {
     animateSpinner(null, true);
-    $.get(tableUrl, (data) => {
+    $.getJSON(tableUrl, (data) => {
       FULL_VIEW_MODAL.find('.table-container').html(data.html);
       renderFullViewTable(FULL_VIEW_MODAL.find('.table'), { assigned: true, skipCheckbox: true });
       setSelectedItem();
@@ -255,6 +239,20 @@ var MyModuleRepositories = (function() {
     }
   }
 
+  function checkSnapshotStatus(snapshotItem) {
+    $.getJSON(snapshotItem.data('status-url'), (statusData) => {
+      if (statusData.status === 'ready') {
+        $.getJSON(snapshotItem.data('item-url'), (itemData) => {
+          snapshotItem.replaceWith(itemData.html);
+        });
+      } else {
+        setTimeout(function() {
+          checkSnapshotStatus(snapshotItem);
+        }, STATUS_POLLING_INTERVAL);
+      }
+    });
+  }
+
   function initSimpleTable() {
     $('#assigned-items-container').on('show.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
@@ -265,28 +263,61 @@ var MyModuleRepositories = (function() {
     });
   }
 
+  function initVersionsStatusCheck() {
+    let sidebar = FULL_VIEW_MODAL.find('.repository-versions-sidebar');
+    sidebar.find('.repository-snapshot-item.provisioning').each(function() {
+      var snapshotItem = $(this);
+      setTimeout(function() {
+        checkSnapshotStatus(snapshotItem);
+      }, STATUS_POLLING_INTERVAL);
+    });
+  }
+
   function initVersionsSidebarActions() {
     FULL_VIEW_MODAL.on('click', '#showVersionsSidebar', function(e) {
-      $.get(FULL_VIEW_MODAL.find('.table').data('versions-sidebar-url'), (data) => {
+      $.getJSON(FULL_VIEW_MODAL.find('.table').data('versions-sidebar-url'), (data) => {
         FULL_VIEW_MODAL.find('.repository-versions-sidebar').html(data.html);
         setSelectedItem();
         FULL_VIEW_MODAL.find('.table-container').addClass('collapsed');
         FULL_VIEW_MODAL.find('.repository-versions-sidebar').removeClass('collapsed');
+        initVersionsStatusCheck();
       });
       e.stopPropagation();
     });
 
     FULL_VIEW_MODAL.on('click', '#createRepositorySnapshotButton', function(e) {
-      createDestroySnapshot($(this).data('action-path'), 'POST');
+      animateSpinner(null, true);
+      $.ajax({
+        url: $(this).data('action-path'),
+        type: 'POST',
+        dataType: 'json',
+        success: function(data) {
+          let snapshotItem = $(data.html);
+          FULL_VIEW_MODAL.find('.repository-versions-list').append(snapshotItem);
+          setTimeout(function() {
+            checkSnapshotStatus(snapshotItem);
+          }, STATUS_POLLING_INTERVAL);
+          animateSpinner(null, false);
+        }
+      });
       e.stopPropagation();
     });
 
     FULL_VIEW_MODAL.on('click', '.delete-snapshot-button', function(e) {
-      let snapshotId = $(this).closest('.repository-snapshot-item').data('id');
-      createDestroySnapshot($(this).data('action-path'), 'DELETE');
-      if (snapshotId === FULL_VIEW_MODAL.find('.table').data('id')) {
-        reloadTable(FULL_VIEW_MODAL.find('#selectLiveVersionButton').data('table-url'));
-      }
+      let snapshotItem = $(this).closest('.repository-snapshot-item');
+      animateSpinner(null, true);
+      $.ajax({
+        url: $(this).data('action-path'),
+        type: 'DELETE',
+        dataType: 'json',
+        success: function() {
+          if (snapshotItem.data('id') === FULL_VIEW_MODAL.find('.table').data('id')) {
+            reloadTable(FULL_VIEW_MODAL.find('#selectLiveVersionButton').data('table-url'));
+          }
+          snapshotItem.remove();
+          animateSpinner(null, false);
+        }
+      });
       e.stopPropagation();
     });
 
@@ -315,7 +346,7 @@ var MyModuleRepositories = (function() {
 
       FULL_VIEW_MODAL.find('.repository-name').html(repositoryNameObject);
       FULL_VIEW_MODAL.modal('show');
-      $.get($(this).data('table-url'), (data) => {
+      $.getJSON($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
         renderFullViewTable(FULL_VIEW_MODAL.find('.table'), { assigned: true, skipCheckbox: true });
       });
@@ -326,7 +357,7 @@ var MyModuleRepositories = (function() {
   function initRepositoriesDropdown() {
     $('.repositories-assign-container').on('show.bs.dropdown', function() {
       var dropdownContainer = $(this);
-      $.get(dropdownContainer.data('repositories-url'), function(result) {
+      $.getJSON(dropdownContainer.data('repositories-url'), function(result) {
         dropdownContainer.find('.repositories-dropdown-menu').html(result.html);
       });
     });

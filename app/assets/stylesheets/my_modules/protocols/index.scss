@@ -47,6 +47,10 @@
       flex-grow: 1;
       justify-content: flex-end;
 
+      .caret {
+        margin-left: 25px;
+      }
+
       .repositories-assign-container {
         flex-grow: 1;
         max-width: 200px;
@@ -85,6 +89,18 @@
               flex-grow: 1;
             }
           }
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+
+        a {
+          padding: 8px 20px;
+        }
+
+        .fas {
+          padding-right: 5px;
         }
       }
     }

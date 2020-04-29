@@ -76,6 +76,9 @@
           <h2><%= t('my_modules.protocol.title') %></h2>
         </div>
       </a>
+      <div class="actions-block">
+        <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
+      </div>
     </div>
     <div class="collapse" id="protocol-container">
       <%= render partial: "my_module_protocol" %>

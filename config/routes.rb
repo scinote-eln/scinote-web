@@ -391,15 +391,17 @@ Rails.application.routes.draw do
         member do
           get :full_view_table
           post :index_dt
+          get :assign_repository_records_modal, as: :assign_modal
+          get :update_repository_records_modal, as: :update_modal
         end
 
-        get :assign_repository_records_modal, as: :assign_modal
-        get :update_repository_records_modal, as: :update_modal
+        resources :snapshots, controller: :my_module_repository_snapshots,
+          only: %i(create destroy show) do
 
-        resources :snapshots, controller: :my_module_repository_snapshots, only: %i(create destroy) do
           member do
             get :full_view_table
             post :index_dt
+            get :status
           end
         end
 
