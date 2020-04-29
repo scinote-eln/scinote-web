@@ -137,7 +137,7 @@ class MyModuleRepositoriesController < ApplicationController
       if assigned_count && unassigned_count
         t('my_modules.repository.flash.assign_and_unassign_from_task_and_downstream_html',
           assigned_items: assigned_count,
-        unassigned_items: unassigned_count)
+          unassigned_items: unassigned_count)
       elsif assigned_count
         t('my_modules.repository.flash.assign_to_task_and_downstream_html',
           assigned_items: assigned_count)
