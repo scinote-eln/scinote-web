@@ -30,22 +30,38 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def create
-    service = Repositories::MyModuleAssigningSnapshotService.call(repository: @repository,
-                                                                  my_module: @my_module,
-                                                                  user: current_user)
+    repository_snapshot = @repository.dup.becomes(RepositorySnapshot)
+    repository_snapshot.assign_attributes(type: RepositorySnapshot.name,
+                                          original_repository: @repository,
+                                          my_module: @my_module,
+                                          created_by: current_user)
+    repository_snapshot.provisioning!
+    repository_snapshot.reload
 
-    if service.succeed?
-      @repository_snapshots = @my_module.repository_snapshots.where(original_repository: @repository)
-      render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_versions_sidebar') }
-    else
-      render json: service.errors, status: :unprocessable_entity
-    end
+    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
+
+    render json: {
+      html: render_to_string(partial: 'my_modules/repositories/full_view_version',
+                             locals: { repository_snapshot: repository_snapshot })
+    }
+  end
+
+  def status
+    render json: {
+      status: @repository_snapshot.status
+    }
+  end
+
+  def show
+    render json: {
+      html: render_to_string(partial: 'my_modules/repositories/full_view_version',
+                             locals: { repository_snapshot: @repository_snapshot })
+    }
   end
 
   def destroy
     @repository_snapshot.destroy!
-    @repository_snapshots = @my_module.repository_snapshots.where(original_repository: @repository)
-    render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_versions_sidebar') }
+    render json: {}
   end
 
   def full_view_table

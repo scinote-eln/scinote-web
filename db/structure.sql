@@ -1100,9 +1100,10 @@ CREATE TABLE public.repositories (
     updated_at timestamp without time zone,
     discarded_at timestamp without time zone,
     permission_level integer DEFAULT 0 NOT NULL,
+    type character varying,
     parent_id bigint,
-    my_module_id bigint,
-    type character varying
+    status integer,
+    my_module_id bigint
 );
 
 
