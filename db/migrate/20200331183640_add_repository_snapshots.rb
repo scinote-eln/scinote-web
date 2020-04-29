@@ -2,10 +2,13 @@
 
 class AddRepositorySnapshots < ActiveRecord::Migration[6.0]
   def up
-    add_column :repositories, :parent_id, :bigint, null: true
-    add_column :repositories, :status, :integer, null: true
+    change_table :repositories, bulk: true do |t|
+      t.string :type
+      t.bigint :parent_id, null: true
+      t.integer :status, null: true
+    end
+
     add_reference :repositories, :my_module
-    add_column :repositories, :type, :string
 
     execute "UPDATE \"repositories\" SET \"type\" = 'Repository'"
     execute "UPDATE \"activities\" SET \"subject_type\" = 'RepositoryBase' WHERE \"subject_type\" = 'Repository'"
