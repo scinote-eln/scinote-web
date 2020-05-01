@@ -68,11 +68,9 @@ function initCopyToRepository() {
   var modal = $('#copy-to-repository-modal');
   var modalBody = modal.find('.modal-body');
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
-
   link
     .on('ajax:success', function(e, data) {
       modalBody.html(data.html);
-
       modalBody.find("[data-role='copy-to-repository']")
         .on('ajax:success', function(e2, data2) {
           if (data2.refresh !== null) {
@@ -385,8 +383,9 @@ function refreshProtocolStatusBar() {
     type: 'GET',
     dataType: 'json',
     success: function(data) {
-      $(".my-module-protocol-status").replaceWith(data.html);
+      $('.my-module-protocol-status').replaceWith(data.html);
       initLinkUpdate();
+      initCopyToRepository();
     }
   });
 }

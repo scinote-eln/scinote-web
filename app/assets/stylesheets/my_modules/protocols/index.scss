@@ -369,6 +369,14 @@
       color: inherit;
       text-decoration: none;
     }
+
+    &.protocol-newer {
+      color: $brand-primary;
+    }
+
+    &.parent-newer {
+      color: $brand-warning;
+    }
   }
 
   .status-info-dropdown {
