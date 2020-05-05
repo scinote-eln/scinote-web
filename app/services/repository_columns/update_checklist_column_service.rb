@@ -18,7 +18,7 @@ module RepositoryColumns
       to_be_deleted = existing_items_names - updating_items_names
       to_be_created = updating_items_names - existing_items_names
 
-      if @column.repository_list_items.size - to_be_deleted.size + to_be_created.size >=
+      if @column.repository_list_items.size - to_be_deleted.size + to_be_created.size >
          Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
 
         @errors[:repository_column] = { repository_checklist_items: 'too many items' }
