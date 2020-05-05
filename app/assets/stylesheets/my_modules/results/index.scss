@@ -10,12 +10,11 @@
   .add-result-toolbar {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
   }
 
   .add-result-text {
     display: inline-block;
-    line-height: 36px;
-    margin-bottom: 5px;
     margin-right: 5px;
   }
 }
