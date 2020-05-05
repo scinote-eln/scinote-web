@@ -107,8 +107,8 @@ describe MyModuleRepositoriesController, type: :controller do
         child_module = create :my_module, experiment: experiment
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row,
-                                 my_module: child_module,
-                                 assigned_by: user
+                                   my_module: child_module,
+                                   assigned_by: user
       end
       put :update, params: params_downstream, format: :json
       expect(Activity.count).to eq 4
@@ -165,8 +165,8 @@ describe MyModuleRepositoriesController, type: :controller do
         child_module = create :my_module, experiment: experiment
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row_2,
-                                 my_module: child_module,
-                                 assigned_by: user
+                                   my_module: child_module,
+                                   assigned_by: user
       end
       put :update, params: params_downstream, format: :json
       expect(Activity.count).to eq 8
