@@ -450,9 +450,11 @@ var MyModuleRepositories = (function() {
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       assignList = UPDATE_REPOSITORY_MODAL.find('.rows-to-assign .rows-list')[0];
       unassignList = UPDATE_REPOSITORY_MODAL.find('.rows-to-unassign .rows-list')[0];
-      UPDATE_REPOSITORY_MODAL.modal('show');
       if (assignList) assignListScrollbar = new PerfectScrollbar(assignList);
       if (unassignList) unassignListScrollbar = new PerfectScrollbar(unassignList);
+      UPDATE_REPOSITORY_MODAL.modal('show');
+      assignListScrollbar.update();
+      unassignListScrollbar.update();
     });
   }
 
