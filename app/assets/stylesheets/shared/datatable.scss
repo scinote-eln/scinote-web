@@ -17,7 +17,7 @@
     background-color: $color-white;
     display: flex;
     flex-wrap: wrap;
-    height: 68px;
+    min-height: 68px;
     width: 100%;
 
     .pagination-info,
@@ -28,9 +28,16 @@
     .pagination-info {
       align-items: center;
       display: flex;
+      flex-wrap: wrap;
 
       .dataTables_info {
         padding-top: 0;
+      }
+
+      @media (max-width: 1000px) {
+        .dataTables_info {
+          display: none;
+        }
       }
 
       .dataTables_length {
@@ -44,6 +51,12 @@
         label {
           margin-bottom: 0;
         }
+      }
+    }
+
+    @media (max-width: 767px) {
+      .pagination-info {
+        display: none;
       }
     }
   }
