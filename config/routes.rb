@@ -384,26 +384,28 @@ Rails.application.routes.draw do
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
 
-      get :repositories_dropdown_list, to: 'my_module_repositories#repositories_dropdown_list'
+      get :repositories_dropdown_list, controller: :my_module_repositories
+      get :repositories_list_html, controller: :my_module_repositories
 
-      resources :repositories, only: [] do
+      resources :repositories, controller: :my_module_repositories, only: :update do
         member do
-          get :full_view_table, to: 'my_module_repositories#full_view_table', as: :full_view_table
-          post :index_dt, to: 'my_module_repositories#index_dt', as: :index_dt
+          get :full_view_table
+          post :index_dt
+          get :assign_repository_records_modal, as: :assign_modal
+          get :update_repository_records_modal, as: :update_modal
         end
 
-        resources :repository_snapshots, controller: 'my_module_repository_snapshots',
-                                         as: :snapshots,
-                                         only: %i(create show destroy) do
+        resources :snapshots, controller: :my_module_repository_snapshots,
+          only: %i(create destroy show) do
+
           member do
-            get :full_view_table, to: 'my_module_repository_snapshots#full_view_table'
-            post :index_dt, to: 'my_module_repository_snapshots#index_dt'
-            get :status, to: 'my_module_repository_snapshots#status'
+            get :full_view_table
+            post :index_dt
+            get :status
           end
         end
 
-        get :full_view_versions_sidebar, to: 'my_module_repository_snapshots#full_view_versions_sidebar',
-                                         as: :full_view_versions_sidebar
+        get :full_view_versions_sidebar, controller: :my_module_repository_snapshots
       end
 
       # resources :sample_my_modules, path: '/samples_index', only: [:index]

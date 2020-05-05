@@ -44,8 +44,8 @@ module RepositoryRows
     def unassign_repository_rows_from_my_module(my_module)
       unassigned_names = my_module.my_module_repository_rows
                                   .joins(:repository_row)
-                                  .where(repository_rows: { repository: @repository, id: params[:selected_rows] })
-                                  .select('*, repository_rows.name AS name')
+                                  .where(repository_rows: { repository: @repository, id: params[:rows_to_unassign] })
+                                  .select('my_module_repository_rows.*, repository_rows.name AS name')
                                   .destroy_all
                                   .pluck(:name)
 
@@ -53,7 +53,7 @@ module RepositoryRows
 
       # update row last_modified_by
       my_module.repository_rows
-               .where(repository: @repository, id: params[:selected_rows])
+               .where(repository: @repository, id: params[:rows_to_unassign])
                .update_all(last_modified_by_id: @user.id)
 
       Activities::CreateActivityService.call(activity_type: :unassign_repository_record,

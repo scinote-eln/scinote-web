@@ -42,7 +42,8 @@ class RepositoryDatatableService
           'LEFT OUTER JOIN "my_module_repository_rows" '\
           'ON "my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
           'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s
-        )
+        ).select('CASE WHEN my_module_repository_rows.id IS NOT NULL '\
+                 'THEN true ELSE false END as row_assigned').group('my_module_repository_rows.id')
       end
     end
     repository_rows = repository_rows

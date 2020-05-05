@@ -32,6 +32,8 @@ module RepositoryDatatableHelper
         )
       end
 
+      row['0'] = record[:row_assigned] if options[:my_module]
+
       unless options[:skip_custom_columns]
         # Add custom columns
         record.repository_cells.each do |cell|

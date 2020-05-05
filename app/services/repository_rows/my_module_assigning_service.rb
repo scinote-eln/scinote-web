@@ -47,7 +47,7 @@ module RepositoryRows
                                           "ON repository_rows.id = my_module_repository_rows.repository_row_id "\
                                           "AND my_module_repository_rows.my_module_id = #{my_module.id.to_i}")
                                    .where(my_module_repository_rows: { id: nil })
-                                   .where(id: @params[:selected_rows])
+                                   .where(id: @params[:rows_to_assign])
 
       return [] unless unassigned_rows.any?
 

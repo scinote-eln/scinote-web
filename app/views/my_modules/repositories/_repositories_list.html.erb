@@ -1,5 +1,5 @@
 <% @assigned_repositories.each do |repository| %>
-  <div class="assigned-repository panel">
+  <div class="assigned-repository panel" data-repository-id="<%= repository.id %>">
     <a class="assigned-repository-caret collapsed"
        role="button"
        data-toggle="collapse"
@@ -39,7 +39,3 @@
     <tbody></tbody>
   </table>
 </template>
-
-<%= render partial: "my_modules/repositories/full_view_modal" %>
-
-<%= javascript_include_tag("my_modules/repositories") %>
