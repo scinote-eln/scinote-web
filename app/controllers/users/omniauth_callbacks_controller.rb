@@ -28,25 +28,40 @@ module Users
       email = auth.info.email
       email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
       user = User.from_omniauth(auth)
-      if user
-        # User found in database so just sign in him
-        sign_in_and_redirect(user)
-      elsif email.present?
-        user = User.find_by(email: email)
 
-        if user.blank?
-          # Create new user and identity
-          User.create_from_omniauth!(auth)
-          sign_in_and_redirect(user)
-        elsif provider_conf[:auto_link_on_sign_in]
-          # Link to existing local account
+      # User found in database so just signing in
+      return sign_in_and_redirect(user) if user.present?
+
+      if email.blank?
+        # No email in the token so can not link or create user
+        error_message = I18n.t('devise.azure.errors.no_email')
+        return redirect_to after_omniauth_failure_path_for(resource_name)
+      end
+
+      user = User.find_by(email: email)
+
+      if user.blank?
+        # Create new user and identity
+        full_name = "#{auth.info.first_name} #{auth.info.last_name}"
+        user = User.new(full_name: full_name,
+                        initials: generate_initials(full_name),
+                        email: email,
+                        password: generate_user_password)
+        User.transaction do
+          user.save!
           user.user_identities.create!(provider: auth.provider, uid: auth.uid)
-          sign_in_and_redirect(user)
-        else
-          # Cannot do anything with it, so just return an error
-          error_message = I18n.t('devise.azure.errors.no_local_user_map')
-          redirect_to after_omniauth_failure_path_for(resource_name)
+          user.update!(confirmed_at: user.created_at)
         end
+
+        sign_in_and_redirect(user)
+      elsif provider_conf[:auto_link_on_sign_in]
+        # Link to existing local account
+        user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+        sign_in_and_redirect(user)
+      else
+        # Cannot do anything with it, so just return an error
+        error_message = I18n.t('devise.azure.errors.no_local_user_map')
+        redirect_to after_omniauth_failure_path_for(resource_name)
       end
     rescue StandardError => e
       Rails.logger.error e.message
