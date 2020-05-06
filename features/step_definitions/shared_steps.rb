@@ -22,6 +22,15 @@ end
 Then('I click {string} icon') do |icon_class|
   sci_click_on_icon(icon_class: icon_class)
 end
+
+Then('I click {string} button at position {int}') do |button, position|
+  sci_click_on_button(text: button, position: position)
+end
+
+Then('I click {string} icon at position {int}') do |icon_class, position|
+  sci_click_on_icon(icon_class: icon_class, position: position)
+end
+
 #
 # Then('I click {string} icon with delay') do |icon_class|
 #   sci_click_on_icon(icon_class: icon_class, wait: 1)

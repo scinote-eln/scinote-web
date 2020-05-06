@@ -473,18 +473,21 @@ Scenario: Delete archived File result
  # We need to optimize some tests... When you deleting archived result, we always adding result. This should be initial
  # state there, already
 
- @javascript
- Scenario: Delete archived File result
-  Given I am on Task results page
-  And I click "File" button
-  And I attach file "Moon.png" to the drag-n-drop field
-  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
-  And I click "Add" button
-  And I click "fa-briefcase" icon
-  And I click to OK on confirm dialog
-  And I am on Task archive page
-  And I click button with id "dropdownMenu1"
-  And I click "Delete" link within dropdown menu
-  And I click to OK on confirm dialog
-  Then I should see "Sucessfully removed result MED from task Experiment design." flash message
 
+ #### JUST TESTING, will be removed
+
+ @javascript
+ Scenario: Successful add text result with Text name
+  Given I am on Task results page
+  And I click "Text" button
+  And I fill in "LJ ZOO" in "#result_name" field
+  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
+  And I click "Add" button
+  And I click "Text" button
+  And I fill in "Kuga???" in "#result_name" field
+  And I fill in "Test2." in "#result_text_attributes_textarea" rich text editor field
+  And I click "Add" button
+  And I click "fa-pencil-alt" icon at position 2
+  And I fill in "No more zoo Updated" in "#result_name" field
+  And I click "Save" button
+  Then I should see "No more zoo"
