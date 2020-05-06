@@ -64,7 +64,7 @@
         <% end %>
       </div>
       <div class="col-sm-4 button-container no-padding">
-        <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) && (@protocol.newer_than_parent? || @protocol.parent_and_self_newer?) %>
+        <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) && (@protocol.newer_than_parent? || @protocol.parent_and_self_newer? || @protocol.unlinked?) %>
           <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), remote: true,
             title: t("my_modules.protocols.protocol_status_bar.btns.save_to_repository_title"),
             class: "btn btn-light btn-block",

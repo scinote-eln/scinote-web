@@ -687,13 +687,13 @@ en:
           protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
           unlinked: "This protocol is not linked to the repository."
         btns:
-          unlink: "Unlink Template"
+          unlink: "Unlink template"
           unlink_title: "Unlink this protocol from the parent in the repository"
-          revert: "Revert Protocol"
+          revert: "Revert protocol"
           revert_title: "Revert the protocol to the repository version. This will discard any local changes."
-          save_to_repository: "Save to Repository"
+          save_to_repository: "Save to repository"
           save_to_repository_title: "Copy this protocol to repository"
-          update_self: "Update from Repository"
+          update_self: "Update from repository"
           update_self_title: "Update this protocol with the version stored in the repository"
       confirm_link_update_modal:
         unlink_title: "Unlink template"
