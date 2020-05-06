@@ -31,6 +31,7 @@ class ReportsController < ApplicationController
                 only: %i(new edit available_repositories)
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
+  before_action :switch_team_with_param, only: :index
 
   # Index showing all reports of a single project
   def index; end
