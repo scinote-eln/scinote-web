@@ -11,9 +11,11 @@
         <%= image_tag avatar_path(user, :icon_small) %>
       </span>
     <% end %>
-    <span class='global-avatar-container assign-new-user'>
-      <i class="fas fa-plus"></i>
-    </span>
+    <% if @my_module.unassigned_users.any? %>
+      <span class='global-avatar-container assign-new-user'>
+        <i class="fas fa-plus"></i>
+      </span>
+    <% end %>
   </a>
 <% else %>
   <div class="task-assigned-users">
