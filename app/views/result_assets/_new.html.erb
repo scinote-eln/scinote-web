@@ -19,10 +19,10 @@
     </div>
     <br />
     <div class="align-right">
-      <%= f.submit t('general.cancel'),
+      <%= f.button t('general.cancel'),
                    class: 'btn btn-secondary cancel-new',
                    onclick: 'DragNDropResults.destroyAll();' %>
-      <%= f.submit t('result_assets.new.create'),
+      <%= f.button t('result_assets.new.create'),
                    class: 'btn btn-primary save-result',
                    onclick: 'DragNDropResults.processResult(event);',
                    disabled: true,
