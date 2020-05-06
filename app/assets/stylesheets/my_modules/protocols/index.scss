@@ -322,7 +322,7 @@
   }
 
   .task-assigned-users {
-    height: 34px;
+    height: 33px;
 
     &:hover {
       text-decoration: none;
@@ -333,6 +333,10 @@
     background-color: $color-concrete;
     color: $color-silver-chalice;
     text-align: center;
+
+    .fa-plus {
+      font-size: 16px;
+    }
   }
 }
 
