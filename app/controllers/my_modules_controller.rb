@@ -648,13 +648,13 @@ class MyModulesController < ApplicationController
 
   def log_start_date_change_activity(start_date_changes)
     type_of = if start_date_changes[0].nil?     # set started_on
-                message_items = { my_module_started_on: @my_module.due_date }
+                message_items = { my_module_started_on: @my_module.started_on }
                 :set_task_start_date
               elsif start_date_changes[1].nil?  # remove started_on
                 message_items = { my_module_started_on: start_date_changes[0] }
                 :remove_task_start_date
               else                              # change started_on
-                message_items = { my_module_started_on: @my_module.due_date }
+                message_items = { my_module_started_on: @my_module.started_on }
                 :change_task_start_date
               end
     log_activity(type_of, @my_module, message_items)
