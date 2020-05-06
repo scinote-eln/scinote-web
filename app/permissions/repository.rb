@@ -1,24 +1,17 @@
 # frozen_string_literal: true
 
-Canaid::Permissions.register_for(Repository) do
-  %i(manage_repository
-     share_repository
-     create_repository_rows
-     manage_repository_rows
-     update_repository_rows
-     delete_repository_rows
-     create_repository_columns)
-    .each do |perm|
-    can perm do |_, repository|
-      !repository.is_a? RepositorySnapshot
-    end
-  end
-
+Canaid::Permissions.register_for(RepositoryBase) do
   # repository: read/export
   can :read_repository do |user, repository|
-    user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
+    if repository.is_a?(RepositorySnapshot)
+      user.teams.include?(repository.team)
+    else
+      user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
+    end
   end
+end
 
+Canaid::Permissions.register_for(Repository) do
   # repository: update, delete
   can :manage_repository do |user, repository|
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)
