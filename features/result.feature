@@ -14,53 +14,53 @@ Background:
   And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
   Given Demo project exists for the "BioSistemika Process" team
   And "nonadmin@myorg.com" is signed in with "mypassword1234"
-  
+
 @javascript
 Scenario: Unsuccessful add Text result
  Given I am on Task results page
- And I click on "Text" button
- And I click on "save-result" class button
+ And I click "Text" button
+ And I click "Add" button
  Then I should see "can't be blank"
- And I click on "Cancel" button
+ And I click "Cancel" button
 
 @javascript
 Scenario: Successful add text result with Text name
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Add" button
  Then I should see "LJ ZOO"
 
 @javascript
 Scenario: Successful add Text result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Add" button
  Then I should see "Vse to pa zaradi botra petelina, bog mu daj zdravje!"
 
 @javascript
 Scenario: Successful edit Text task result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
- And I click on ".fa-pencil-alt" sign
+ And I click "Add" button
+ And I click "fa-pencil-alt" SCIicon
  And I fill in "ZOO" in "#result_name" field
  And I fill in "Vse to pa zaradi botra petelina!" in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Save" button
  Then I should see "Vse to pa zaradi botra petelina!"
 
 @javascript
 Scenario: Successful add comment to a Text task result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
- And I click on ".result-panel-collapse-link" sign
+ And I click "Add" button
+ And I click ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
  And WAIT
@@ -69,10 +69,10 @@ Scenario: Successful add comment to a Text task result
 @javascript
 Scenario: Unsuccessful add comment to a Text task result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "" in "message" textarea field
  And confirm with ENTER key to "#message"
@@ -83,42 +83,42 @@ Scenario: Unsuccessful add comment to a Text task result
 @javascript
 Scenario: Successful edit comment to a Text task result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
  And WAIT
  And I click on ".comment-container" sign
- And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message" 
+ And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message"
  And I click on ".save-button" sign
  Then I should see "I was on Triglav one summer and I do not have plans to go once more."
 
 @javascript
 Scenario: Unsuccessful edit comment to a Text task result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
  And WAIT
  And I click on ".comment-container" sign
- And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message" 
+ And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message"
  And I click on ".cancel-button" sign
  Then I should see "I was on Triglav one summer."
 
 @javascript
 Scenario: Unsuccessful delete comment to a Text task resultGiven I am on Task results page
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -131,10 +131,10 @@ Scenario: Unsuccessful delete comment to a Text task resultGiven I am on Task re
 @javascript
 Scenario: Successful delete comment to a Text task result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -148,61 +148,61 @@ Scenario: Successful delete comment to a Text task result
 @javascript
 Scenario: Successful archive text result with Text name
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  Then I should see "Successfully archived text result in task Experiment design" flash message
 
 @wip
 Scenario: Unsuccessful add Table result ##########this one doesnt work
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
+ And I click "Table" button
+ And I click "Add" button
  Then I should see "can't be blank"
- And I click on "Cancel" button
+ And I click "Cancel" button
 
 @javascript
 Scenario: Successful add table result with Table name
  Given I am on Task results page
- And I click on "Table" button
+ And I click "Table" button
  And I fill in "ZOO" in "#result_name" field
  And I click on table cell one
- And I input "Živali pa so se odpravile dalje po svetu." in cell 
- And I click on "save-result" class button
+ And I input "Živali pa so se odpravile dalje po svetu." in cell
+ And I click "Add" button
  Then I should see "Živali pa so se odpravile dalje po svetu."
 
 @javascript
 Scenario: Successful add Table result
  Given I am on Task results page
- And I click on "Table" button
+ And I click "Table" button
  And I click on table cell one
  And I input "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in cell
- And I click on "save-result" class button
+ And I click "Add" button
  Then I should see "Vse to pa zaradi botra petelina, bog mu daj zdravje!"
 
-@javascript 
+@javascript
 Scenario: Successful edit Table task result
  Given I am on Task results page
- And I click on "Table" button
+ And I click "Table" button
  And I fill in "ZOO" in "#result_name" field
  And I click on table cell one
- And I input "Živali pa so se odpravile dalje po svetu." in cell 
- And I click on "save-result" class button
+ And I input "Živali pa so se odpravile dalje po svetu." in cell
+ And I click "Add" button
  And I click on ".fa-pencil-alt" sign
  And I fill in "LJ ZOO" in "#result_name" field
  And I click on table cell one
- And I input "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in cell 
- And I click on "save-result" class button
+ And I input "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in cell
+ And I click "Save" button
  Then I should see "Vse to pa zaradi botra petelina, bog mu daj zdravje!"
 
 @javascript
 Scenario: Successful add comment to a Table task result
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
+ And I click "Table" button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -212,36 +212,37 @@ Scenario: Successful add comment to a Table task result
 @javascript
 Scenario: Successful edit comment to a Table task result
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
+ And I click "Table" button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
  And WAIT
  And I click on ".comment-container" sign
- And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message" 
+ And I click on ".comment-container" sign
+ And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message"
  And I click on ".save-button" sign
  Then I should see "I was on Triglav one summer and I do not have plans to go once more."
 
 @javascript
 Scenario: Unsuccessful edit comment to a Table task result
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
+ And I click "Table" button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
  And WAIT
  And I click on ".comment-container" sign
- And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message" 
+ And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message"
  And I click on ".cancel-button" sign
  Then I should see "I was on Triglav one summer."
 
 @javascript
 Scenario: Unsuccessful delete comment to a Table task result
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
+ And I click "Table" button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -254,8 +255,8 @@ Scenario: Unsuccessful delete comment to a Table task result
 @javascript
 Scenario: Successful delete comment to a Table task result
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
+ And I click "Table" button
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -268,59 +269,59 @@ Scenario: Successful delete comment to a Table task result
 @javascript
 Scenario: Successful archive Table result with Table name
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I click "Table" button
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  Then I should see "Successfully archived table result in task Experiment design" flash message
 
 @wip
 Scenario: Unsuccessful add File result #doesnt work
  Given I am on Task results page
- And I click on "File" button
- And I click on "save-result" button
+ And I click "File" button
+ And I click "Add" button
  Then I should see File "can't be blank"
- And I click to "Cancel" button
+ And I click "Cancel" button
 
-@javascript             
+@javascript
 Scenario: Successful add File result with File name
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
- And WAIT 
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
+ And WAIT
  Then I should see "MED"
 
 @javascript
 Scenario: Successful add File result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I click on "save-result" class button
+ And I click "Add" button
  And WAIT
  Then I should see "Moon"
 
 @wip
 Scenario: Successful edit File result with File name (((#gets error - is a bug)))
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
  And I click on ".fa-pencil-alt" sign
  And I fill in "STAR ZOO" in "#result_name" field
- And I click on "save-result" class button
+ And I click "Add" button
  And WAIT
  Then I should see "STAR ZOO"
 
 @javascript
 Scenario: Successful add comment to a File task result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -330,42 +331,42 @@ Scenario: Successful add comment to a File task result
 @javascript
 Scenario: Successful edit comment to a File task result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
  And WAIT
  And I click on ".comment-container" sign
- And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message" 
+ And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message"
  And I click on ".save-button" sign
  Then I should see "I was on Triglav one summer and I do not have plans to go once more."
 
 @javascript
 Scenario: Unsuccessful edit comment to a File task result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
  And WAIT
  And I click on ".comment-container" sign
- And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message" 
+ And I change comment "I was on Triglav one summer." with "I was on Triglav one summer and I do not have plans to go once more." of "#message"
  And I click on ".cancel-button" sign
  Then I should see "I was on Triglav one summer."
 
 @javascript
 Scenario: Unsuccessful delete comment to a File task result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -378,10 +379,10 @@ Scenario: Unsuccessful delete comment to a File task result
 @javascript
 Scenario: Successful delete comment to a File task result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
  And I click on ".result-panel-collapse-link" sign
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click on "i.fas:nth-child(2)" sign
@@ -393,22 +394,22 @@ Scenario: Successful delete comment to a File task result
 @javascript
 Scenario: Successful archive File result with File name
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  Then I should see "Successfully archived file result in task Experiment design" flash message
 
 @javascript
 Scenario: Download archived Text result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  And I am on Task archive page
  And I click on "dropdownMenu1" id button
@@ -418,9 +419,9 @@ Scenario: Download archived Text result
 @javascript
 Scenario: Download archived Table result
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I click "Table" button
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  And I am on Task archive page
  And I click on "dropdownMenu1" id button
@@ -430,11 +431,11 @@ Scenario: Download archived Table result
 @javascript
 Scenario: Download archived File result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  And I am on Task archive page
  And I click on "dropdownMenu1" id button
@@ -445,11 +446,11 @@ Scenario: Download archived File result
 @javascript
 Scenario: Delete archived Text result
  Given I am on Task results page
- And I click on "Text" button
+ And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  And I am on Task archive page
  And I click on "dropdownMenu1" id button
@@ -460,9 +461,9 @@ Scenario: Delete archived Text result
 @javascript
 Scenario: Delete archived Table result
  Given I am on Task results page
- And I click on "Table" button
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I click "Table" button
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  And I am on Task archive page
  And I click on "dropdownMenu1" id button
@@ -473,14 +474,18 @@ Scenario: Delete archived Table result
 @javascript
 Scenario: Delete archived File result
  Given I am on Task results page
- And I click on "File" button
+ And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field  
- And I click on "save-result" class button
- And I click on "form-submit-link" class button
+ And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
+ And I click "Add" button
+ And I click "fa-briefcase" SCIicon
  And I click to OK on confirm dialog
  And I am on Task archive page
  And I click on "dropdownMenu1" id button
  And I click "Delete" link within dropdown menu
  And I click to OK on confirm dialog
  Then I should see "Sucessfully removed result MED from task Experiment design." flash message
+
+
+ # We need to optimize some tests... When you deleting archived result, we always adding result. This should be initial
+ # state there, already
