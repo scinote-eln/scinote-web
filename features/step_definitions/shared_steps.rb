@@ -11,23 +11,44 @@ Given(/^the following users are registered:$/) do |table|
   end
 end
 
-When(/^I click "(.+)" button$/) do |button|
-  click_button(button)
+# When(/^I click "(.+)" button$/) do |button|
+#   click_button(button)
+# end
+
+Then('I click {string} button') do |button|
+  sci_click_on_button(text: button)
 end
 
-Then('I click {string} Scinote button') do |button|
-  find('.btn', text: button).click
+Then('I click {string} icon') do |icon_class|
+  sci_click_on_icon(icon_class: icon_class)
 end
 
-Then('I click on {string} button') do |button|
-  find('.btn', text: button).click
+Then('I click {string} button at position {int}') do |button, position|
+  sci_click_on_button(text: button, position: position)
 end
 
-Given('I click on {string} class button') do |button6|
-  find('.btn', class: button6, match: :first).click
+Then('I click {string} icon at position {int}') do |icon_class, position|
+  sci_click_on_icon(icon_class: icon_class, position: position)
 end
 
-Given('I click on {string} id button') do |button1|
+#
+# Then('I click {string} icon with delay') do |icon_class|
+#   sci_click_on_icon(icon_class: icon_class, wait: 1)
+# end
+
+# Then('I click on {string} button') do |button|
+#   find('.btn', text: button).click
+# end
+
+# Given('I click on {string} class button') do |button6|
+#   find('.btn', class: button6, match: :first).click
+# end
+
+Then('I click element with css {string}') do |selector|
+  find(selector).click
+end
+
+Given('I click button with id {string}') do |button1|
   find('.btn', id: button1).click
 end
 
@@ -59,11 +80,11 @@ Then(/^I click "(.+)" link within dropdown menu$/) do |link|
   end
 end
 
-Then(/^I click on "(.+)" within dropdown menu$/) do |link1|
-  within('.inner') do
-    find('.text', text: link1).click
-  end
-end
+# Then(/^I click on "(.+)" within dropdown menu$/) do |link1|
+#   within('.inner') do
+#     find('.text', text: link1).click
+#   end
+# end
 
 Then(/^I should see "(.+)"$/) do |text|
   wait_for_ajax
@@ -115,9 +136,9 @@ Then(/^I should see "([^"]*)" error message$/) do |message|
   expect(page).to have_content(message)
 end
 
-Then(/^I click on "([^"]*)"$/) do |button|
-  click_on button
-end
+# Then(/^I click on "([^"]*)"$/) do |button|
+#   click_on button
+# end
 
 Then(/^I click on image within "([^"]*)" element$/) do |container|
   sleep 0.5
@@ -132,12 +153,12 @@ Then(/^I should see "([^"]*)" flash message$/) do |message|
   expect(find('.alert')).to have_content(message)
 end
 
-Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
-  wait_for_ajax
-  within(container_id) do
-    find('[data-action="edit"]').click
-  end
-end
+# Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
+#   wait_for_ajax
+#   within(container_id) do
+#     find('[data-action="edit"]').click
+#   end
+# end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" input fields$/) do |text, input_id|
   page.find("#{input_id} input[type=\"text\"]").set(text)
@@ -166,13 +187,13 @@ Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id
   expect(container).to have_xpath("//input[@value='#{text}']")
 end
 
-Given('I click {string} icon') do |id|
-  find(:css, id).click
-end
+# Given('I click {string} icon') do |id|
+#   find(:css, id).click
+# end
 
-Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
-  find(selector).click
-end
+# Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
+#   find(selector).click
+# end
 
 Then(/^I attach file "([^"]*)" to the drag-n-drop field$/) do |file_name|
   find('#drag-n-drop-assets', visible: false).send_keys(Rails.root.join('features', 'assets', file_name))
@@ -180,18 +201,18 @@ end
 
 Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" input field$/) do |old_text, new_text, container_id|
   wait_for_ajax
-  container = page.find_by(id: container_id)
+  container = page.find_by_id(container_id)
   expect(container).to have_xpath("//input[@value='#{old_text}']")
   container.find('input').set(new_text)
 end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" textarea field$/) do |text, textarea_id|
-  textarea = page.find_by(id: textarea_id)
+  textarea = page.find_by_id(textarea_id)
   textarea.set(text)
 end
 
 Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" textarea field$/) do |old_text, new_text, textarea_id|
-  textarea = page.find_by(id: textarea_id)
+  textarea = page.find_by_id(textarea_id)
   expect(textarea).to have_content(old_text)
   textarea.set(new_text)
 end
@@ -210,9 +231,9 @@ Then('I wait for {int} sec') do |sec|
   sleep sec
 end
 
-Then('I click button with icon and label {string}') do |label|
-  find('.btn', text: label).click
-end
+# Then('I click button with icon and label {string}') do |label|
+#   find('.btn', text: label).click
+# end
 
 Given('default screen size') do
   page.driver.browser.manage.window.resize_to(1920, 1080) if defined?(page.driver.browser.manage)
@@ -235,18 +256,20 @@ Given('I click to OK on confirm dialog') do
   page.driver.browser.switch_to.alert.accept
 end
 
-Then('confirm with ENTER key to {string}') do |element|
+Then('confirm with ENTER key to {string}') do |element| # More clear name of action?
   page.find(element.to_s).native.send_keys(:enter)
 end
 
-Then('I hover over comment') do
+Then('I hover over comment') do # Maybe "I hover css element {".content-placholder"}" So its reusable?
   find('.content-placeholder').hover
 end
 
-Then('I click on {string} sign') do |string1|
-  find(string1.to_s).click
-end
+# Then('I click on {string} sign') do |string1|
+#   find(string1.to_s).click
+# end
 
 Then('WAIT') do
   wait_for_ajax
 end
+
+
