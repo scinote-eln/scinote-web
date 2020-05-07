@@ -18,19 +18,17 @@
       <div class="modal-body">
         <template id="repositoryToolbarButtonsTemplate">
           <div class="">
-            <div class="form-group pull-left">
-              <button id="showVersionsSidebar" type="button" class="btn btn-default">
+            <div class="pull-left">
+              <button id="showVersionsSidebar" type="button" class="btn btn-secondary">
                 <span class="fas fa-eye"></span>
                 <%= t('my_modules.repository.snapshots.full_view.versions_sidebar_button') %>
               </button>
             </div>
           </div>
         </template>
-        <div class="row">
-          <div class="table-container"></div>
-          <div class="repository-versions-sidebar collapsed"></div>
-        </div>
+        <div class="table-container"></div>
       </div>
+      <div class="repository-versions-sidebar"></div>
     </div>
   </div>
 </div>

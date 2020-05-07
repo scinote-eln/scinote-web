@@ -276,11 +276,16 @@ var MyModuleRepositories = (function() {
   function initVersionsSidebarActions() {
     FULL_VIEW_MODAL.on('click', '#showVersionsSidebar', function(e) {
       $.getJSON(FULL_VIEW_MODAL.find('.table').data('versions-sidebar-url'), (data) => {
+        var snapshotsItemsScrollBar;
         FULL_VIEW_MODAL.find('.repository-versions-sidebar').html(data.html);
+        snapshotsItemsScrollBar = new PerfectScrollbar(
+          FULL_VIEW_MODAL.find('.repository-snapshots-container')[0]
+        );
         setSelectedItem();
-        FULL_VIEW_MODAL.find('.table-container').addClass('collapsed');
-        FULL_VIEW_MODAL.find('.repository-versions-sidebar').removeClass('collapsed');
+        FULL_VIEW_MODAL.find('.modal-content').addClass('show-sidebar');
         initVersionsStatusCheck();
+        snapshotsItemsScrollBar.update();
+        FULL_VIEW_TABLE.columns.adjust();
       });
       e.stopPropagation();
     });
@@ -332,8 +337,8 @@ var MyModuleRepositories = (function() {
     });
 
     FULL_VIEW_MODAL.on('click', '#collapseVersionsSidebar', function(e) {
-      FULL_VIEW_MODAL.find('.repository-versions-sidebar').addClass('collapsed');
-      FULL_VIEW_MODAL.find('.table-container').removeClass('collapsed');
+      FULL_VIEW_MODAL.find('.modal-content').removeClass('show-sidebar');
+      FULL_VIEW_TABLE.columns.adjust();
       e.stopPropagation();
     });
   }
@@ -453,8 +458,8 @@ var MyModuleRepositories = (function() {
       if (assignList) assignListScrollbar = new PerfectScrollbar(assignList);
       if (unassignList) unassignListScrollbar = new PerfectScrollbar(unassignList);
       UPDATE_REPOSITORY_MODAL.modal('show');
-      assignListScrollbar.update();
-      unassignListScrollbar.update();
+      if (assignList) assignListScrollbar.update();
+      if (unassignList) unassignListScrollbar.update();
     });
   }
 
