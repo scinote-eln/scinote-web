@@ -85,7 +85,7 @@ Scenario: Successful add new step to a task4
   And I fill in "Dalmatinec" to "B2" Table field
   And I click on "Add" button
   Then I should see "BOS" on "#steps" element
-    
+
 @wip
 Scenario: Successful reorder Steps
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
@@ -99,7 +99,7 @@ Scenario: Successful reorder Steps
 Scenario: Successful edit Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
   And I click on "Edit step" icon of "PES"
-  And I change "zivali pa so se odpravile dalje po svetu." with "Vse to pa zaradi botra petelina!" 
+  And I change "zivali pa so se odpravile dalje po svetu." with "Vse to pa zaradi botra petelina!"
   And I click on "Files" button
   And I click on "Browse to add" button
   And "Open" window is opened
@@ -141,7 +141,7 @@ Scenario: Successful check checklist item
 @wip
 Scenario: Successful add comment to a Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on Comments of "ZOO" 
+  And I click on Comments of "ZOO"
   And I add "I was on Triglav one summer." in comment field
   And And I click on "paper plane" sign
   Then I should see "I was on Triglav one summer." in Comments list of "ZOO" Step
@@ -149,7 +149,7 @@ Scenario: Successful add comment to a Step
 @wip
 Scenario: Unsuccessful add comment to a Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on Comments of "ZOO" 
+  And I click on Comments of "ZOO"
   And confirm with ENTER key
   And And I click on "paper plane" sign
   Then I should see "Massage can't be blank" error message under "Comments list" field
@@ -183,14 +183,14 @@ Scenario: Successful delete comment to a Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
   And place mouse on "I was on Triglav one summer and I do not have plans to go once more."
   And I click on "trashcan" button
-  And I click on "OK" button 
-  Then "I was on Triglav one summer and I do not have plans to go once more." comment is removed from Comments list of "ZOO" 
+  And I click on "OK" button
+  Then "I was on Triglav one summer and I do not have plans to go once more." comment is removed from Comments list of "ZOO"
 
 @wip
 Scenario: Successful delete Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
   And I click on "trashcan" icon of "ZOO"
-  And I click on "OK" button
+  And I click "OK" button
   Then I should see " Step 3 successfully deleted." flash message
 
 @wip

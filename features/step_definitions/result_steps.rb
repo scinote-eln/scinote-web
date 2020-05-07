@@ -17,14 +17,16 @@ Then('I click on table cell one') do
   find('.htCore tbody td', match: :first).double_click
 end
 
-Given('I am on Task archive page') do
-  visit '/modules/1/archive'
+Given('I am on task {string} archive page') do |task_name|
+  # visit '/modules/1/archive'
+  visit_task_archived_results_page(task_name)
 end
 
 Then('I change comment {string} with {string} of {string}') do |text1, text2, message_id|
   find(message_id.to_s, text: text1).set(text2)
 end
 
-Given('I am on Task results page') do
-  visit '/modules/1/results'
+Given('I am on task {string} results page') do |task_name|
+  # visit '/modules/1/results'
+  visit_task_results_page(task_name)
 end

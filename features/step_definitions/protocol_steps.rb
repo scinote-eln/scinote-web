@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 Given(/^I'm on the Protocols page of a "([^"]*)" task$/) do |task_name|
-  task = MyModule.find_by(name: task_name)
-  visit protocols_my_module_path(task)
+  visit_task_page(task_name)
 end
 
 Then(/^I should see "([^"]*)" attachment on "([^"]*)" step$/) do |file, step_name|
@@ -22,6 +21,6 @@ Given('I click on {string} tag button') do |button2|
   find('.btn', text: button2, match: :first).click
 end
 
-Given('task page of Experiment design') do
-  visit '/modules/1/protocols'
+Given('task page of {string}') do |task_name|
+  visit_task_page(task_name)
 end

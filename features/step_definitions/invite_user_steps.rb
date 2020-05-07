@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-Given('Settings page of BioSistemika Process team of a Karli Novak user') do
-  visit '/users/settings/teams/1'
+# Given('Settings page of BioSistemika Process team of a Karli Novak user') do
+#   visit '/users/settings/teams/1'
+# end
+
+Given('Settings page for {string} team') do |team_name|
+  visit_team_settings_page(team_name)
 end
 
 Then('I fill in {string} to Invite users to team BioSistemika Process input field') do |email|

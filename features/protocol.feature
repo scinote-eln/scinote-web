@@ -18,7 +18,7 @@ Given default screen size2
 
  @javascript
  Scenario: Successful add new tag to a task
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on ".search-field" sign
    And I click on ".edit-tags-link" sign
    And I click on "New" tag button
@@ -33,7 +33,7 @@ Given default screen size2
 
 @javascript
  Scenario: Successful change a tag to a task
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on ".search-field" sign
    And I click on ".edit-tags-link" sign
    And I click on "New" tag button
@@ -51,13 +51,13 @@ Given default screen size2
    And I click on "remove-tag-link" class button
    And WAIT
    And I click on "Close" button
-   And task page of Experiment design
+   And task page of "Experiment design"
    Then I should see "Sky"
    Then I should not see "Sun"
 
 @javascript
  Scenario: Successful add a tag to a task
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on ".search-field" sign
    And I click on ".edit-tags-link" sign
    And I click on ".bootstrap-select" sign
@@ -70,24 +70,24 @@ Given default screen size2
    And I click on "Bacteria" within dropdown menu
    And I click on "Add" button
    And I click on "Close" button
-   And task page of Experiment design
+   And task page of "Experiment design"
    Then I should see "Plant"
    Then I should see "Bacteria"
 
 @javascript
  Scenario: Successful delete a tag
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on ".search-field" sign
    And I click on ".edit-tags-link" sign
    And I click on "delete-tag-link" class button
    And I click on "Close" button
-   And task page of Experiment design
+   And task page of "Experiment design"
    Then I should not see "Dry lab"
 
 @javascript
  Scenario: Successful add a due date
-   Given task page of Experiment design
-   And I click on "a.due-date-link:nth-child(2)" sign 
+   Given task page of "Experiment design"
+   And I click on "a.due-date-link:nth-child(2)" sign
    And I click on "#my_module_due_date" sign
    And I click on "Save" button
    And WAIT
@@ -95,7 +95,7 @@ Given default screen size2
 
 @javascript
  Scenario: Successful remove a due date
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on "a.due-date-link:nth-child(2)" sign
    And I click on "#my_module_due_date_clear" sign
    And I click on "Save" button
@@ -105,7 +105,7 @@ Given default screen size2
 
 @javascript
  Scenario: Successful add description
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on "#my_module_description_view" sign
    And confirm with ENTER key to "#my_module_description_textarea_ifr"
    And I fill in "I was on Triglav one summer" in "#my_module_description_textarea" rich text editor field
@@ -114,7 +114,7 @@ Given default screen size2
 
 @javascript
  Scenario: Successful change description
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on "#my_module_description_view" sign
    And confirm with ENTER key to "#my_module_description_textarea_ifr"
    And I fill in "I was on Triglav one summer" in "#my_module_description_textarea" rich text editor field
@@ -125,16 +125,16 @@ Given default screen size2
    And I make screenshot
    And I click on ".tinymce-save-button" sign
    Then I should see "I will go to Krn one day."
-  
+
 @javascript
  Scenario: Successful Complete task
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on "Complete Task" button
    Then I should see "Uncomplete Task"
 
 @javascript
  Scenario: Successful Uncomplete task
-   Given task page of Experiment design
+   Given task page of "Experiment design"
    And I click on "Complete Task" button
    And I click on "Uncomplete Task" button
    Then I should see "Complete Task"
