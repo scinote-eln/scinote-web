@@ -35,7 +35,7 @@ module RepositoryRows
           unassign_repository_rows_from_my_module(@my_module)
           assign_repository_rows_to_my_module(@my_module)
         end
-      rescue StandardError => e
+      rescue ActiveRecord::RecordInvalid => e
         @errors[e.record.class.name.underscore] = e.record.errors.full_messages
         raise ActiveRecord::Rollback
       end
