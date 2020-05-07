@@ -7,7 +7,7 @@ module RepositoryDatatableHelper
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
-        '1': assigned_row(record, repository),
+        '1': assigned_row(record),
         '2': record.id,
         '3': escape_input(record.name),
         '4': I18n.l(record.created_at, format: :full),
@@ -64,12 +64,12 @@ module RepositoryDatatableHelper
     end
   end
 
-  def assigned_row(record, repository)
+  def assigned_row(record)
     {
       tasks: record.assigned_my_modules_count,
       experiments: record.assigned_experiments_count,
       projects: record.assigned_projects_count,
-      task_list_url: assigned_task_list_repository_repository_row_path(repository, record)
+      task_list_url: assigned_task_list_repository_repository_row_path(record.repository, record)
     }
   end
 
