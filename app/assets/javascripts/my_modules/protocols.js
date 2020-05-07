@@ -472,6 +472,16 @@ function updateRecentProtocolsStatus() {
   }
 }
 
+function initProtocolSectionOpenEvent() {
+  $('#protocol-container').on('shown.bs.collapse', function() {
+    $(this).find("[data-role='hot-table']").each(function() {
+      var $container = $(this).find("[data-role='step-hot-table']");
+      var hot = $container.handsontable('getInstance');
+      hot.render();
+    });
+  });
+}
+
 /**
  * Initializes page
  */
@@ -485,6 +495,7 @@ function init() {
   refreshProtocolStatusBar();
   initImport();
   initRecentProtocols();
+  initProtocolSectionOpenEvent();
 }
 
 init();

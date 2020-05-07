@@ -39,7 +39,6 @@
     <li>
       <a id="protocol-copy-to-repository"
          data-action="copy-to-repository"
-         data-hook="protocol-copy-to-repository"
          class="<%= 'disabled' unless protocol_savable_to_repo %>"
          data-remote="true"
          href="<%= protocol_savable_to_repo ? copy_to_repository_modal_protocol_path(@protocol, format: :json) : '#' %>">

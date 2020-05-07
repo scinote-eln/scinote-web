@@ -9,7 +9,12 @@
 >
   <thead>
     <tr>
-      <th class="never"></th>
+      <th id="checkbox">
+        <div class="sci-checkbox-container">
+          <input value="1" type="checkbox" class="sci-checkbox select-all">
+          <span class="sci-checkbox-label"></span>
+        </div>
+      </th>
       <th id="assigned"><%= t("repositories.table.assigned") %></th>
       <th id="row-id"><%= t("repositories.table.id") %></th>
       <th id="row-name"><%= t("repositories.table.row_name") %></th>

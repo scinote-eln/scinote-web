@@ -60,9 +60,12 @@
         </div>
       </div>
     </div>
-    <div class="collapse panel-group" id="assigned-items-container">
+    <div class="collapse panel-group" id="assigned-items-container"
+         data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
       <%= render partial: "my_modules/repositories/repositories_list" %>
     </div>
+    <%= render partial: "my_modules/repositories/full_view_modal" %>
+    <%= render partial: "my_modules/modals/update_repository_records_modal" %>
   </div>
   <!-- Protocol -->
   <div class="task-section">
@@ -75,6 +78,13 @@
       </a>
       <div class="actions-block">
         <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
+        <a href="#"
+           class="btn btn-primary"
+           data-action="new-step"
+           data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
+            <span class="fas fa-plus" aria-hidden="true"></span>
+            <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
+        </a>
       </div>
     </div>
     <div class="collapse" id="protocol-container">
@@ -107,3 +117,4 @@
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_pack_tag 'emoji_button' %>
+<%= javascript_include_tag("my_modules/repositories") %>

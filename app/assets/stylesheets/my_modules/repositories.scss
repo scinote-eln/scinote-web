@@ -259,6 +259,11 @@
   }
 
   .dataTables_scrollBody {
+
+    tbody tr.selected {
+      background: $brand-warning-light;
+    }
+
     .assigned-column {
       position: relative;
 
@@ -369,5 +374,48 @@
       border-bottom: 1px solid $color-alto;
       padding: 15px 10px;
     }
+  }
+}
+
+.update-repository-record-modal {
+  .rows-list-container {
+    display: flex;
+    margin: 0 -10px;
+
+    .header {
+      font-weight: bold;
+
+      .fas {
+        margin-right: 3px;
+      }
+    }
+
+    .rows-list {
+      background: $color-concrete;
+      height: 170px;
+      list-style: none;
+      overflow: hidden;
+      padding-left: 16px;
+      position: relative;
+
+      li {
+        margin: 6px 0;
+      }
+    }
+
+    .rows-to-assign,
+    .rows-to-unassign {
+      flex-grow: 1;
+      margin: 0 10px;
+    }
+
+    .rows-to-assign .header .fas {
+      color: $brand-success;
+    }
+
+    .rows-to-unassign .header .fas {
+      color: $brand-danger;
+    }
+
   }
 }
