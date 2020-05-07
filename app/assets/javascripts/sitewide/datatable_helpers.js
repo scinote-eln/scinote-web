@@ -17,6 +17,7 @@ var DataTableHelpers = (function() {
         noEmptyOption: true,
         singleSelect: true,
         closeOnSelect: true,
+        disableSearch: true,
         selectAppearance: 'simple'
       });
     },

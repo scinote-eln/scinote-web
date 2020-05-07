@@ -298,7 +298,7 @@ var MyModuleRepositories = (function() {
         dataType: 'json',
         success: function(data) {
           let snapshotItem = $(data.html);
-          FULL_VIEW_MODAL.find('.repository-versions-list').append(snapshotItem);
+          FULL_VIEW_MODAL.find('.snapshots-container-scrollbody').append(snapshotItem);
           setTimeout(function() {
             checkSnapshotStatus(snapshotItem);
           }, STATUS_POLLING_INTERVAL);

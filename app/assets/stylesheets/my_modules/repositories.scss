@@ -340,7 +340,7 @@
 
     .repository-versions-list {
       display: grid;
-      grid-template-rows: 60px 60px calc(100% - 120px);
+      grid-template-rows: 60px calc(100% - 60px);
       height: calc(100% - 55px);
       margin-bottom: 0;
 
