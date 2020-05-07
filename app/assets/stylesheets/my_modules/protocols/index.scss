@@ -138,6 +138,11 @@
     }
   }
 
+  .empty-label {
+    color: $color-silver-chalice;
+    font-weight: normal;
+  }
+
   .datetime-container {
     align-items: center;
     display: inline-flex;
@@ -244,7 +249,7 @@
 
       &:not(.view-mode):hover {
         .input-field {
-          border: 1px solid $color-gainsboro;
+          border: 1px solid $color-alto;
         }
       }
     }
@@ -260,7 +265,7 @@
       display: inline-block;
       font-size: 14px;
       line-height: 32px;
-      width: 37px;
+      margin-right: 4px;
     }
 
     .select-container {
@@ -322,9 +327,16 @@
   }
 
   .task-assigned-users {
-    height: 33px;
+    align-items: center;
+    border: 1px solid transparent;
+    display: flex;
+    height: 36px;
+    line-height: 34px;
+    padding: 2px;
 
     &:hover {
+      border-color: $color-alto;
+      border-radius: 3px;
       text-decoration: none;
     }
   }

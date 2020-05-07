@@ -249,7 +249,7 @@ function initTagsSelector() {
       }
       return `<span class="my-module-tags-color"></span>
               ${data.label + ' '}
-              <span class="my-module-tags-create-new"> (${I18n.t('my_modules.module_header.create_new_tag')})</span>`;
+              <span class="my-module-tags-create-new"> (${I18n.t('my_modules.details.create_new_tag')})</span>`;
     },
     onOpen: function() {
       $('.select-container .edit-button-container').removeClass('hidden');

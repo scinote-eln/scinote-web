@@ -2,6 +2,8 @@
   <% if my_module.started_on.present? %>
     <strong><%= l(my_module.started_on, format: :full) %></strong>
   <% else %>
-    <%= t('my_modules.module_header.no_start_date') %>
+    <span class="empty-label">
+      <%= t('my_modules.details.no_start_date_placeholder') %>
+    </span>
   <% end %>
 </span>
