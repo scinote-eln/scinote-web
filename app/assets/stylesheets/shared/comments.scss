@@ -39,6 +39,7 @@
       }
 
       .comment-message {
+        @include font-main;
         float: left;
         width: 100%;
 
@@ -218,6 +219,7 @@
 
     textarea {
       border: 1px solid transparent;
+      border-radius: $border-radius-default;
       box-shadow: none;
       outline: none;
       overflow: hidden;
@@ -246,7 +248,7 @@
       padding: 4px;
       position: absolute;
       right: -36px;
-      text-align: center; 
+      text-align: center;
       top: 0;
       transition: $md-transaction;
       width: 26px;
