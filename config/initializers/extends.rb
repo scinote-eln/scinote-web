@@ -124,11 +124,11 @@ class Extends
                                'MyModule' => :description }
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team Repository Project Experiment MyModule Result Protocol Report RepositoryRow
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
-    Repository RepositoryRow Project Experiment MyModule Result Protocol Step Report
+    RepositoryBase RepositoryRow Project Experiment MyModule Result Protocol Step Report
   ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {

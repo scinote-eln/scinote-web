@@ -1,0 +1,60 @@
+<div class="task-details-popover">
+  <div class="row">
+    <div class="col-xs-3">
+      <%= t('my_modules.module_header.details_popover.project_label') %>
+    </div>
+    <div class="col-xs-9">
+      <strong>
+        <%= @my_module.experiment.project.name.truncate(Constants::MAX_NAME_TRUNCATION) %>
+      </strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <%= t('my_modules.module_header.details_popover.experiment_label') %>
+    </div>
+    <div class="col-xs-9">
+      <strong>
+        <%= @my_module.experiment.name.truncate(Constants::MAX_NAME_TRUNCATION) %>
+      </strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <%= t('my_modules.module_header.details_popover.creator_label') %>
+    </div>
+    <div class="col-xs-9">
+      <strong>
+        <%= @my_module.created_by&.full_name&.truncate(Constants::MAX_NAME_TRUNCATION) %>
+      </strong>
+      <%= t('my_modules.module_header.details_popover.creator_same_user_label') if current_user == @my_module.created_by %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <%= t('my_modules.module_header.details_popover.created_label') %>
+    </div>
+    <div class="col-xs-9">
+      <strong>
+        <%= l(@my_module.created_at, format: :full_date) %>
+      </strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <%= t('my_modules.module_header.details_popover.modified_label') %>
+    </div>
+    <div class="col-xs-9">
+      <strong>
+        <% if @my_module.last_modified_by.present? %>
+          <%= t('my_modules.module_header.details_popover.modified_value',
+                date: l(@my_module.updated_at, format: :full_date),
+                full_name: @my_module.last_modified_by.full_name.truncate(Constants::MAX_NAME_TRUNCATION)) %>
+        <% else %>
+          <%= t('my_modules.module_header.details_popover.modified_value_without_user',
+                date: l(@my_module.updated_at, format: :full_date)) %>
+        <% end %>
+      </strong>
+    </div>
+  </div>
+</div>

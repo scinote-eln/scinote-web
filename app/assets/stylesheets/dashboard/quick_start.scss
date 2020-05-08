@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 .dashboard-container .quick-start-widget {
   grid-column: 1 / span 2;
   grid-row: 7 / span 6;
@@ -32,5 +35,14 @@
   .dashboard-container .quick-start-widget {
     grid-column: 7 / span 6;
     grid-row: 5 / span 4;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-container .quick-start-widget {
+    --widget-header-size: 36px;
+    grid-column: 1 / span 12;
+    grid-row: 4;
+    min-height: 300px;
   }
 }

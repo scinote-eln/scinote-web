@@ -8,10 +8,16 @@
   <!-- Details -->
   <div class="task-section">
     <div class="task-section-header">
-      <span class="task-section-title">
-        <h2><%= t('my_modules.details.title') %></h2>
+      <span id="taskDetailsLabel" class="task-section-title">
+        <h2>
+          <%= t('my_modules.details.title') %>
+          <span class="fas block-icon fa-info-circle"></span>
+        </h2>
       </span>
-      <div class="complete-button-container">
+      <div id="taskDetailsContent" class="hidden">
+        <%= render partial: "module_header_details_popover.html.erb" %>
+      </div>
+      <div class="actions-block">
         <%= render partial: "my_modules/state_buttons.html.erb" %>
       </div>
     </div>
@@ -41,11 +47,25 @@
         <span class="task-section-title">
           <h2><%= t('my_modules.assigned_items.title') %></h2>
         </span>
-    </a>
+      </a>
+      <div class="actions-block">
+        <div class="dropdown repositories-assign-container" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
+          <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="fas fa-file-signature"></span>
+            <span><%= t('my_modules.assigned_items.assign_from') %></span>
+            <span class="caret pull-right"></span>
+          </a>
+          <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="collapse panel-group" id="assigned-items-container">
+    <div class="collapse panel-group" id="assigned-items-container"
+         data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
       <%= render partial: "my_modules/repositories/repositories_list" %>
     </div>
+    <%= render partial: "my_modules/repositories/full_view_modal" %>
+    <%= render partial: "my_modules/modals/update_repository_records_modal" %>
   </div>
   <!-- Protocol -->
   <div class="task-section">
@@ -56,6 +76,17 @@
           <h2><%= t('my_modules.protocol.title') %></h2>
         </div>
       </a>
+      <%= render partial: "my_modules/protocols/protocol_status_bar" %>
+      <div class="actions-block">
+        <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
+        <a href="#"
+           class="btn btn-primary"
+           data-action="new-step"
+           data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
+            <span class="fas fa-plus" aria-hidden="true"></span>
+            <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
+        </a>
+      </div>
     </div>
     <div class="collapse" id="protocol-container">
       <%= render partial: "my_module_protocol" %>
@@ -86,3 +117,5 @@
 
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag("my_modules/protocols") %>
+<%= javascript_pack_tag 'emoji_button' %>
+<%= javascript_include_tag("my_modules/repositories") %>

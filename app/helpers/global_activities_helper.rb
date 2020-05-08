@@ -65,11 +65,7 @@ module GlobalActivitiesHelper
       path = if obj.archived?
                module_archive_experiment_path(obj.experiment)
              else
-               path = if %w(assign_repository_record unassign_repository_record).include? activity.type_of
-                        repository_my_module_path(obj, activity.values['message_items']['repository']['id'])
-                      else
-                        protocols_my_module_path(obj)
-                      end
+               protocols_my_module_path(obj)
              end
     when Protocol
       if obj.in_repository_public?

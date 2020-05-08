@@ -27,6 +27,14 @@
   </span>
 </div>
 
+<div class="flex-block">
+  <div class="flex-block-label">
+    <span class="fas block-icon fa-users"></span>
+    <%= t('my_modules.details.assigned_users') %>
+  </div>
+  <%= render partial: "user_my_modules/index" %>
+</div>
+
 <div class="module-tags">
   <div id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
     <span class="fas block-icon fa-tags"></span>
@@ -34,6 +42,9 @@
     <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: my_module_editable } %>
   </div>
 </div>
+
+<!-- Manage users modal -->
+<%= render partial: "my_modules/modals/manage_users_modal" %>
 
 <!-- Manage tags modal -->
 <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: @my_module } %>

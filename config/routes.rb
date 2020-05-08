@@ -375,11 +375,39 @@ Rails.application.routes.draw do
           post :destroy_by_tag_id
         end
       end
-      resources :user_my_modules, path: '/users',
-                only: [:index, :create, :destroy]
+      resources :user_my_modules, path: '/users', only: %i(index create destroy) do
+        collection do
+          get :index_old
+        end
+      end
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
+
+      get :repositories_dropdown_list, controller: :my_module_repositories
+      get :repositories_list_html, controller: :my_module_repositories
+
+      resources :repositories, controller: :my_module_repositories, only: :update do
+        member do
+          get :full_view_table
+          post :index_dt
+          get :assign_repository_records_modal, as: :assign_modal
+          get :update_repository_records_modal, as: :update_modal
+        end
+
+        resources :snapshots, controller: :my_module_repository_snapshots,
+          only: %i(create destroy show) do
+
+          member do
+            get :full_view_table
+            post :index_dt
+            get :status
+          end
+        end
+
+        get :full_view_versions_sidebar, controller: :my_module_repository_snapshots
+      end
+
       # resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]
       resources :result_assets, only: [:new, :create]

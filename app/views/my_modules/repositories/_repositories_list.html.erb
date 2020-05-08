@@ -1,5 +1,5 @@
 <% @assigned_repositories.each do |repository| %>
-  <div class="assigned-repository panel">
+  <div class="assigned-repository panel" data-repository-id="<%= repository.id %>">
     <a class="assigned-repository-caret collapsed"
        role="button"
        data-toggle="collapse"
@@ -11,14 +11,31 @@
         <%= repository.name %>
       </span>
       <div class="action-buttons">
-        <i class="fas fa-expand full-screen"></i>
+        <i class="fas fa-expand full-screen" data-table-url="<%= full_view_table_my_module_repository_path(@my_module, repository) %>">
+        </i>
         <i class="fas fa-trash unassign-repository"></i>
       </div>
     </a>
-    <div class="collapse"
+    <div class="collapse assigned-repository-container"
          id="assigned-repository-items-container-<%= repository.id %>"
+         data-repository-url="<%= index_dt_my_module_repository_path(@my_module, repository) %>"
     >
-      Repository table
     </div>
   </div>
 <% end %>
+
+<template id="my-module-repository-simple-template">
+  <table class="table hidden" data-default-table-columns="<%= default_table_columns %>">
+    <thead>
+      <tr>
+        <th class="never"></th>
+        <th class="never"></th>
+        <th class="never"></th>
+        <th class="row-name"><%= t("repositories.table.row_name") %></th>
+        <th class="never"></th>
+        <th class="never"></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</template>

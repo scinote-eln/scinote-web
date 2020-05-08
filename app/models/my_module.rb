@@ -40,21 +40,12 @@ class MyModule < ApplicationRecord
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
-  has_many :inputs,
-           class_name: 'Connection',
-           foreign_key: 'input_id',
-           inverse_of: :to,
-           dependent: :destroy
-  has_many :outputs,
-           class_name: 'Connection',
-           foreign_key: 'output_id',
-           inverse_of: :from,
-           dependent: :destroy
-  has_many :my_modules, through: :outputs, source: :to
-  has_many :my_module_antecessors,
-           through: :inputs,
-           source: :from,
-           class_name: 'MyModule'
+
+  has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
+  has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy
+  has_many :my_modules, through: :outputs, source: :to, class_name: 'MyModule'
+  has_many :my_module_antecessors, through: :inputs, source: :from, class_name: 'MyModule'
+
   has_many :sample_my_modules,
            inverse_of: :my_module,
            dependent: :destroy
@@ -62,6 +53,10 @@ class MyModule < ApplicationRecord
   has_many :my_module_repository_rows,
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
+  has_many :repository_snapshots,
+           class_name: 'RepositorySnapshot',
+           dependent: :destroy,
+           inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
@@ -541,6 +536,21 @@ class MyModule < ApplicationRecord
         tasks: tasks.map { |task| { id: task.id, task_name: task.task_name } }
       }
     end
+  end
+
+  def assign_user(user, assigned_by = nil)
+    user_my_modules.create(
+      assigned_by: assigned_by || user,
+      user: user
+    )
+    Activities::CreateActivityService
+      .call(activity_type: :assign_user_to_module,
+            owner: assigned_by || user,
+            team: experiment.project.team,
+            project: experiment.project,
+            subject: self,
+            message_items: { my_module: id,
+                             user_target: user.id })
   end
 
   private

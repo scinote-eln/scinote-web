@@ -68,11 +68,9 @@ function initCopyToRepository() {
   var modal = $('#copy-to-repository-modal');
   var modalBody = modal.find('.modal-body');
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
-
   link
     .on('ajax:success', function(e, data) {
       modalBody.html(data.html);
-
       modalBody.find("[data-role='copy-to-repository']")
         .on('ajax:success', function(e2, data2) {
           if (data2.refresh !== null) {
@@ -180,7 +178,7 @@ function initLoadFromRepository() {
 
       modal.modal('show');
 
-      // Init Datatable on public tab
+      // Init Datatable on recent tab
       initLoadFromRepositoryTable(modalBody.find('#recent-tab'));
 
       modalBody.find("a[data-toggle='tab']")
@@ -384,8 +382,9 @@ function refreshProtocolStatusBar() {
     type: 'GET',
     dataType: 'json',
     success: function(data) {
-      $("[data-role='protocol-status-bar']").html(data.html);
+      $('.my-module-protocol-status').replaceWith(data.html);
       initLinkUpdate();
+      initCopyToRepository();
     }
   });
 }
@@ -432,6 +431,18 @@ function initImport() {
   });
 }
 
+
+
+function initProtocolSectionOpenEvent() {
+  $('#protocol-container').on('shown.bs.collapse', function() {
+    $(this).find("[data-role='hot-table']").each(function() {
+      var $container = $(this).find("[data-role='step-hot-table']");
+      var hot = $container.handsontable('getInstance');
+      hot.render();
+    });
+  });
+}
+
 /**
  * Initializes page
  */
@@ -444,6 +455,7 @@ function init() {
   initLoadFromRepository();
   refreshProtocolStatusBar();
   initImport();
+  initProtocolSectionOpenEvent();
 }
 
 init();

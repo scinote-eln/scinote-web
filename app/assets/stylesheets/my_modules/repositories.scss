@@ -1,6 +1,27 @@
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
 
+@mixin my-module-repository-title {
+  @include font-h3;
+  line-height: 22px;
+  overflow: hidden;
+  padding-right: 55px;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &::after {
+    color: $color-alto;
+    content: attr(data-rows-count);
+    display: inline-block;
+    line-height: 22px;
+    padding-left: 5px;
+    position: absolute;
+    right: 0;
+    width: 55px;
+  }
+}
+
 .my-module-inventories {
 
   .main-actions {
@@ -76,6 +97,8 @@
 }
 
 #assigned-items-container {
+  padding-top: 10px;
+
   .assigned-repository {
     border: $border-default;
     border-radius: $border-radius-modal;
@@ -89,8 +112,9 @@
       padding: 0 18px;
       text-decoration: none;
 
-      &:hover,
-      &:active {
+      &.collapsed:hover,
+      &.collapsed:active {
+        background: $color-concrete;
         text-decoration: none;
       }
 
@@ -104,23 +128,7 @@
       }
 
       .assigned-repository-title {
-        @include font-h3;
-        overflow: hidden;
-        padding-right: 55px;
-        position: relative;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        &::after {
-          color: $color-alto;
-          content: attr(data-rows-count);
-          display: inline-block;
-          line-height: 22px;
-          padding-left: 5px;
-          position: absolute;
-          right: 0;
-          width: 55px;
-        }
+        @include my-module-repository-title;
       }
 
       .action-buttons {
@@ -137,8 +145,324 @@
       }
     }
 
-    &:hover {
+    .assigned-repository-container {
+      .table.dataTable {
+        margin-top: 0 !important;
+
+        .row-name {
+          border-left: 0;
+        }
+      }
+
+      .pagination-row {
+        border-top: $border-default;
+        padding: 5px 10px;
+
+        .pagination {
+          display: inline-flex;
+        }
+
+        .dataTables_paginate {
+          height: 38px;
+        }
+      }
+    }
+  }
+}
+
+#myModuleRepositoryFullViewModal {
+  padding-left: 0 !important;
+
+  .modal-dialog {
+    height: 100vh;
+    margin: 0;
+    width: 100vw;
+
+    .modal-content {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      display: grid;
+      grid-template-areas: 'header sidebar'
+                           'table sidebar';
+      grid-template-columns: minmax(50%, 100%) 0;
+      grid-template-rows: 55px calc(100% - 55px);
+      height: inherit;
+      transition: all $timing-function-sharp;
+
+      &.show-sidebar {
+        grid-template-columns: minmax(50%, 100%) minmax(250px, 400px);
+      }
+
+      .modal-header {
+        align-items: center;
+        display: flex;
+        grid-area: header;
+        height: 55px;
+        padding: 10px 24px;
+
+        .close {
+          flex-shrink: 0;
+          text-align: center;
+          width: 20px;
+        }
+
+        .header-container {
+          flex-grow: 1;
+          max-width: calc(100% - 20px);
+
+          .assigned-repository-title {
+            @include my-module-repository-title;
+            @include font-h2;
+          }
+
+          .breadcrumbs {
+            @include font-small;
+            align-items: center;
+            color: $color-silver-chalice;
+            display: flex;
+            height: 20px;
+            width: 90%;
+
+            .my-module,
+            .project,
+            .experiment {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            .slash {
+              flex-basis: 20px;
+              text-align: center;
+            }
+          }
+        }
+      }
+
+      .modal-body {
+        grid-area: table;
+        padding: 0;
+      }
+    }
+  }
+
+  .dataTables_scrollBody {
+    flex-grow: 1;
+
+    tbody tr.selected {
+      background: $brand-warning-light;
+    }
+
+    .assigned-column {
+      position: relative;
+
+      .assign-counter-container {
+        border-radius: $border-radius-tag;
+        cursor: pointer;
+        line-height: 35px;
+        position: absolute;
+        text-align: center;
+        top: 1px;
+        width: calc(100% - 16px);
+
+        .assign-counter {
+          &.has-assigned {
+            color: $brand-primary;
+          }
+        }
+
+        &:hover {
+          background-color: $color-alto;
+        }
+      }
+    }
+  }
+
+  .dataTables_scrollHead {
+    flex-shrink: 0;
+  }
+
+  .table-container {
+    height: 100%;
+    padding: 1em 1.5em 0;
+    width: 100%;
+
+    .dataTables_wrapper {
+      display: flex;
+      flex-direction: column;
+      height: inherit;
+
+      .dataTables_scroll {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        max-height: 100%;
+        overflow: auto;
+      }
+    }
+
+    .main-actions {
+      flex-shrink: 0;
+      margin-bottom: 10px;
+    }
+
+    .pagination-row {
+      border-top: $border-default;
+      flex-shrink: 0;
+      margin-left: -1.5em;
+      padding: 1em 1.5em;
+      width: calc(100% + 3em);
+    }
+
+  }
+
+  .repository-versions-sidebar {
+    background-color: $color-concrete;
+    grid-area: sidebar;
+    overflow: hidden;
+
+    .sidebar-collapse-button {
+      color: $color-volcano;
+      text-decoration: none;
+    }
+
+    .repository-versions-header {
+      border-bottom: 1px solid $color-alto;
+      height: 55px;
+      padding: 0 1em;
+
+      h4 {
+        line-height: 55px;
+        margin: 0;
+      }
+    }
+
+    .repository-versions-list {
+      display: grid;
+      grid-template-rows: 60px 60px calc(100% - 120px);
+      height: calc(100% - 55px);
+      margin-bottom: 0;
+
+      .repository-snapshots-container {
+        overflow: auto;
+        position: relative;
+      }
+    }
+
+    .list-group-item {
+      align-items: center;
+      background-color: $color-concrete;
+      border: 0;
+      border-radius: 0;
+
+
+      .list-group-item-text {
+        color: $color-silver-chalice;
+      }
+
+      .version-button {
+        color: $color-volcano;
+        text-decoration: none;
+      }
+
+      .delete-snapshot-button {
+        display: none;
+      }
+
+      &:hover {
+        background-color: $color-alto;
+
+        .delete-snapshot-button {
+          display: block;
+        }
+      }
+
+      &.active {
+        background-color: $brand-primary;
+
+        .list-group-item-heading,
+        .list-group-item-text,
+        .delete-snapshot-button {
+          color: $color-white;
+        }
+      }
+    }
+
+    .create-snapshot-item {
+      border-bottom: 1px solid $color-alto;
+      padding: 12px 10px;
+    }
+  }
+}
+
+.update-repository-record-modal {
+  .rows-list-container {
+    display: flex;
+    margin: 0 -10px;
+
+    .header {
+      font-weight: bold;
+
+      .fas {
+        margin-right: 3px;
+      }
+    }
+
+    .rows-list {
       background: $color-concrete;
+      height: 170px;
+      list-style: none;
+      overflow: hidden;
+      padding-left: 16px;
+      position: relative;
+
+      li {
+        margin: 6px 0;
+      }
+    }
+
+    .rows-to-assign,
+    .rows-to-unassign {
+      flex-grow: 1;
+      margin: 0 10px;
+    }
+
+    .rows-to-assign .header .fas {
+      color: $brand-success;
+    }
+
+    .rows-to-unassign .header .fas {
+      color: $brand-danger;
+    }
+
+  }
+}
+
+
+@media (max-width: 700px) {
+  #myModuleRepositoryFullViewModal {
+    .modal-dialog {
+      .modal-content {
+        grid-template-areas: 'header'
+                             'table'
+                             'sidebar';
+        grid-template-columns: 100%;
+        grid-template-rows: 55px calc(100% - 55px) 0;
+
+        &.show-sidebar {
+          grid-template-columns: 100%;
+          grid-template-rows: 55px 0 calc(100% - 55px);
+
+          .modal-body {
+            overflow: hidden;
+          }
+        }
+      }
+    }
+
+    .sidebar-collapse-button {
+      transform: rotateZ(90deg);
     }
   }
 }

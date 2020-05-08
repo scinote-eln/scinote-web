@@ -1,5 +1,5 @@
 /*
-  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise dropdownSelector
+  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise DataTableHelpers
   HelperModule animateLoading hideAssignUnasignModal RepositoryDatatableRowEditor
 */
 
@@ -546,8 +546,6 @@ var RepositoryDatatable = (function(global) {
         });
       },
       fnInitComplete: function() {
-        var tableLengthSelect = $('.dataTables_length select');
-        var tableFilterInput = $('.dataTables_filter input');
 
         disableCheckboxToggleOnAssetDownload();
         FilePreviewModal.init();
@@ -572,32 +570,12 @@ var RepositoryDatatable = (function(global) {
           initCancelButton();
         }
 
+        DataTableHelpers.initLengthApearance($(TABLE_ID).closest('.dataTables_wrapper'));
+        DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'));
+
         if ($('.repository-show').length) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
         }
-
-        if (tableLengthSelect.val() == null) {
-          tableLengthSelect.val(10).change();
-        }
-        $.each(tableLengthSelect.find('option'), (i, option) => {
-          option.innerHTML = I18n.t('repositories.index.show_per_page', { number: option.value });
-        });
-        $('.dataTables_length').append(tableLengthSelect).find('label').remove();
-        dropdownSelector.init(tableLengthSelect, {
-          noEmptyOption: true,
-          singleSelect: true,
-          closeOnSelect: true,
-          selectAppearance: 'simple'
-        });
-
-        tableFilterInput.attr('placeholder', I18n.t('repositories.index.filter_inventory'))
-          .addClass('sci-input-field')
-          .css('margin', 0);
-        $('.dataTables_filter').append(`
-            <div class="sci-input-container left-icon">
-              <i class="fas fa-search"></i>
-            </div>`).find('.sci-input-container').prepend(tableFilterInput);
-        $('.dataTables_filter').find('label').remove();
 
         $('.main-actions, .pagination-row').removeClass('hidden');
 
@@ -662,19 +640,6 @@ var RepositoryDatatable = (function(global) {
     });
   };
 
-  global.openAssignRecordsModal = function() {
-    $.post(
-      $('#assignRepositoryRecords').data('assign-url-modal'),
-      { selected_rows: rowsSelected }
-    ).done(
-      function(data) {
-        $(data.html).appendTo('body').promise().done(function() {
-          $('#assignRepositoryRecordModal').modal('show');
-        });
-      }
-    );
-  };
-
   global.hideAssignUnasignModal = function(id) {
     $(id).modal('hide').promise().done(
       function() {
@@ -682,28 +647,6 @@ var RepositoryDatatable = (function(global) {
       }
     );
   };
-
-  global.submitAssignRepositoryRecord = function(option) {
-    animateSpinner();
-    $.ajax({
-      url: $('#assignRepositoryRecordModal').data('assign-url'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_rows: rowsSelected, downstream: (option === 'downstream') },
-      success: function(data) {
-        hideAssignUnasignModal('#assignRepositoryRecordModal');
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        resetTableView();
-        clearRowSelection();
-      },
-      error: function(data) {
-        hideAssignUnasignModal('#assignRepositoryRecordModal');
-        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
-        resetTableView();
-        clearRowSelection();
-      }
-    });
-  }
 
   global.openUnassignRecordsModal = function() {
     $.post(

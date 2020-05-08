@@ -489,6 +489,7 @@
       var $btn = $(this);
       $btn.off();
       animateSpinner(null, true);
+      $('#protocol-container').collapse('show');
 
       $.ajax({
         url: $btn.data('href'),

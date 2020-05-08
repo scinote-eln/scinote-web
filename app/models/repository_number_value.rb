@@ -28,6 +28,16 @@ class RepositoryNumberValue < ApplicationRecord
     save!
   end
 
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     value.data = BigDecimal(payload)

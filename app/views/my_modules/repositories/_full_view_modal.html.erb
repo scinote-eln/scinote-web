@@ -1,0 +1,46 @@
+<div class="modal" id="myModuleRepositoryFullViewModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="header-container">
+          <div class="breadcrumbs">
+            <span class="project" title="<%= @project.name %>"><%= @project.name %></span>
+            <span class="slash">/</span>
+            <span class="experiment" title="<%= @experiment.name %>"><%= @experiment.name %></span>
+            <span class="slash">/</span>
+            <span class="my-module" title="<%= @my_module.name %>"><%= @my_module.name %></span>
+          </div>
+          <div class="repository-name">
+          </div>
+        </div>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <template id="repositoryToolbarButtonsTemplate">
+          <div class="">
+            <div class="pull-left">
+              <button id="showVersionsSidebar" type="button" class="btn btn-secondary">
+                <span class="fas fa-eye"></span>
+                <%= t('my_modules.repository.snapshots.full_view.versions_sidebar_button') %>
+              </button>
+            </div>
+          </div>
+        </template>
+        <div class="table-container"></div>
+      </div>
+      <div class="repository-versions-sidebar"></div>
+    </div>
+  </div>
+</div>
+
+<template id="my-module-repository-full-view-assign-button">
+  <button type="button" class="btn btn-primary" id="assignRepositoryRecords" disabled>
+      <%= t('repositories.assign_records_to_module') %>
+  </button>
+</template>
+
+<template id="my-module-repository-full-view-update-button">
+   <button type="button" class="btn btn-primary" id="updateRepositoryRecords" disabled>
+      <%= t('general.update') %>
+   </button>
+</template>

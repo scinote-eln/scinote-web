@@ -60,7 +60,7 @@ describe RepositoryStatusValue do
     let(:user) { create :user }
     let(:column) { create :repository_column }
     let(:cell) { build :repository_cell, repository_column: column }
-    let(:list_item) { create :repository_status_item, repository: column.repository, repository_column: column }
+    let(:list_item) { create :repository_status_item, repository_column: column }
     let(:attributes) do
       {
         repository_cell: cell,

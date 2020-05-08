@@ -29,6 +29,20 @@ class RepositoryStatusValue < ApplicationRecord
     save!
   end
 
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    list_item = cell_snapshot.repository_column
+                             .repository_status_items
+                             .find { |item| item.data == repository_status_item.data }
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      repository_status_item: list_item,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
+
   def data
     return nil unless repository_status_item
 
@@ -55,8 +69,7 @@ class RepositoryStatusValue < ApplicationRecord
       status_item = column.repository_status_items.new(icon: icon,
                                                        status: status,
                                                        created_by: value.created_by,
-                                                       last_modified_by: value.last_modified_by,
-                                                       repository: column.repository)
+                                                       last_modified_by: value.last_modified_by)
 
       return nil unless status_item.save
     end

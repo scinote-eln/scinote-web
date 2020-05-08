@@ -45,6 +45,30 @@ class RepositoryAssetValue < ApplicationRecord
     asset.save! && save!
   end
 
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    asset_snapshot = asset.dup
+
+    asset_snapshot.save!
+
+    asset.blob.open do |tmp_file|
+      blob_snapshot = ActiveStorage::Blob.create_after_upload!(
+        io: tmp_file,
+        filename: asset.blob.filename,
+        metadata: asset.blob.metadata
+      )
+      asset_snapshot.file.attach(blob_snapshot)
+    end
+
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      asset: asset_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     team = value.repository_cell.repository_column.repository.team
