@@ -1,9 +1,3 @@
-<div class="protocol-status-container">
-  <% if can_manage_protocol_in_module?(@protocol) %>
-    <%= render partial: "my_modules/recent_protocol_dropdown.html.erb", locals: {protocol: @my_module.protocol}%>
-  <% end %>
-</div>
-
 <div class="row">
   <div class="col-xs-12">
     <div class="protocol-description-content">

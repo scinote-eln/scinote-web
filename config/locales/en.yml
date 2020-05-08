@@ -726,6 +726,7 @@ en:
         text2: "This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         tab_public: "Team protocols"
         tab_private: "My protocols"
+        tab_recent: "Recent protocols"
         tab_archive: "Archived protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"

@@ -93,13 +93,21 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
         .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
         .where('protocols.protocol_type = ?',
                Protocol.protocol_types[:in_repository_public])
-    else
+    elsif @type == :private
       records =
         records
         .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
         .where('protocols.protocol_type = ?',
                Protocol.protocol_types[:in_repository_private])
         .where(added_by: @user)
+    else
+      records =
+        records
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+        .where('(protocols.protocol_type = ? OR (protocols.protocol_type = ? AND added_by_id = ?))',
+               Protocol.protocol_types[:in_repository_public],
+               Protocol.protocol_types[:in_repository_private],
+               @user.id)
     end
 
     records.group('"protocols"."id"')
