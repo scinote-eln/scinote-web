@@ -1,16 +1,29 @@
 <div class="my-modules-list-partial">
-  <% task_groups.each do |task_group| %>
+  <% grouped_by_prj_exp(my_modules).each do |task_group| %>
   <div class="task-group">
     <div class="header">
+      <% if task_group[:project_archived]%>
+        <span class="archived"><%= t('general.archived') %></span>
+      <% end %>
       <span class="project" title="<%= task_group[:project_name] %>"><%= task_group[:project_name] %></span>
       <span class="slash">/</span>
+      <% if task_group[:experiment_archived] %>
+        <span class="archived"><%= t('general.archived') %></span>
+      <% end %>
       <span class="experiment" title="<%= task_group[:experiment_name] %>"><%= task_group[:experiment_name] %></span>
     </div>
     <div class="tasks">
       <% task_group[:tasks].each do |task| %>
       <div class="task">
         <%= draw_custom_icon('task-icon') %>
-        <%= link_to(task[:task_name], protocols_my_module_path(task[:id]), {class: "task-link", title: task[:task_name]}) %>
+        <% if task.archived %>
+          <span class="archived"><%= t('general.archived') %></span>
+        <% end %>
+        <% if can_read_experiment?(current_user, task.experiment) %>
+          <%= link_to(task.name, protocols_my_module_path(task.id), {class: "task-link", title: task.name, target: "_blank"}) %>
+        <% else %>
+          <%= task.name %>
+        <% end %>
       </div>
       <% end %>
     </div>

@@ -523,21 +523,6 @@ class MyModule < ApplicationRecord
     self.completed_on = nil
   end
 
-  def self.my_modules_list_partial
-    ungrouped_tasks = joins(experiment: :project)
-                      .select('experiments.name as experiment_name,
-                               projects.name as project_name,
-                               my_modules.name as task_name,
-                               my_modules.id')
-    ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
-      {
-        project_name: group[0],
-        experiment_name: group[1],
-        tasks: tasks.map { |task| { id: task.id, task_name: task.task_name } }
-      }
-    end
-  end
-
   def assign_user(user, assigned_by = nil)
     user_my_modules.create(
       assigned_by: assigned_by || user,

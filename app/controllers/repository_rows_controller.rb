@@ -2,8 +2,9 @@ class RepositoryRowsController < ApplicationController
   include InputSanitizeHelper
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
+  include MyModulesHelper
 
-  before_action :load_info_modal_vars, only: :show
+  before_action :load_info_modal_vars, only: %i(show assigned_task_list)
   before_action :load_vars, only: %i(edit update)
   before_action :load_repository,
                 only: %i(create
@@ -178,6 +179,16 @@ class RepositoryRowsController < ApplicationController
       render json: { results: load_available_rows(search_params[:q]) },
                    status: :ok
     end
+  end
+
+  def assigned_task_list
+    my_modules = @repository_row.my_modules.joins(experiment: :project)
+                                .search_by_name(current_user, current_team, params[:query])
+    render json: {
+      html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
+                               my_modules: my_modules
+                             })
+    }
   end
 
   private

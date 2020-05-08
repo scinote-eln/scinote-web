@@ -67,17 +67,12 @@ module RepositoryDatatableHelper
   end
 
   def assigned_row(record)
-    if record.assigned_my_modules_count.positive?
-      tooltip = t('repositories.table.assigned_tooltip',
-                  tasks: record.assigned_my_modules_count,
+    {
+      tasks: record.assigned_my_modules_count,
       experiments: record.assigned_experiments_count,
-      projects: record.assigned_projects_count)
-
-      "<div class='assign-counter-container' title='#{tooltip}'>"\
-      "<span class='assign-counter has-assigned'>#{record.assigned_my_modules_count}</span></div>"
-    else
-      "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>"
-    end
+      projects: record.assigned_projects_count,
+      task_list_url: assigned_task_list_repository_repository_row_path(record.repository, record)
+    }
   end
 
   def can_perform_repository_actions(repository)

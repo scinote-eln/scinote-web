@@ -1,6 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise DataTableHelpers
   HelperModule animateLoading hideAssignUnasignModal RepositoryDatatableRowEditor
+  initAssignedTasksDropdown
 */
 
 //= require jquery-ui/widgets/sortable
@@ -442,7 +443,7 @@ var RepositoryDatatable = (function(global) {
         className: 'assigned-column',
         sWidth: '1%',
         render: function(data, type, row) {
-          let content = data;
+          let content = $.fn.dataTable.render.AssignedTasksValue(data);
           let icon;
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
@@ -582,6 +583,8 @@ var RepositoryDatatable = (function(global) {
         $(TABLE_ID).find('tr[data-editable=false]').each(function(_, e) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
         });
+
+        initAssignedTasksDropdown(TABLE_ID);
       }
     });
 

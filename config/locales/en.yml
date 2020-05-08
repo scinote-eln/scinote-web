@@ -1100,6 +1100,7 @@ en:
     table:
       id: 'ID'
       assigned: "Assigned"
+      assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
       row_name: "Name"
       added_on: "Added on"
@@ -2202,6 +2203,7 @@ en:
     more_comments: "More comments"
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
+    archived: "Archived"
     sort:
       new_html: "Newest first &#8595;"
       old_html: "Oldest first &#8593;"

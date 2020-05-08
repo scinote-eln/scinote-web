@@ -11,7 +11,7 @@
         "required": ["DT_RowId", "1", "2", "3", "4", "5", "recordEditUrl", "recordUpdateUrl", "recordInfoUrl"],
         "properties": {
           "DT_RowId": { "type": "integer" },
-          "1": { "type": "string" },
+          "1": { "type": "object" },
           "2": { "type": "integer" },
           "3": { "type": "string" },
           "4": { "type": "string" },
