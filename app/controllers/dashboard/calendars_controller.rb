@@ -3,7 +3,7 @@
 module Dashboard
   class CalendarsController < ApplicationController
     include IconsHelper
-    include MyModulesListPartialHelper
+    include MyModulesHelper
 
     def show
       date = DateTime.parse(params[:date])
@@ -27,10 +27,9 @@ module Dashboard
                                .where(projects: { archived: false })
                                .where('DATE(my_modules.due_date) = DATE(?)', date)
                                .where(projects: { team_id: current_team.id })
-      my_modules_grouped = my_modules_list_partial(my_modules)
       render json: {
         html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
-                                 task_groups: my_modules_grouped
+                                 my_modules: my_modules
                                })
       }
     end

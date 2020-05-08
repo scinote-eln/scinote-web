@@ -1,5 +1,5 @@
 <div class="my-modules-list-partial">
-  <% task_groups.each do |task_group| %>
+  <% grouped_by_prj_exp(my_modules).each do |task_group| %>
   <div class="task-group">
     <div class="header">
       <% if task_group[:project_archived]%>

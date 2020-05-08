@@ -2,7 +2,7 @@ class RepositoryRowsController < ApplicationController
   include InputSanitizeHelper
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
-  include MyModulesListPartialHelper
+  include MyModulesHelper
 
   before_action :load_info_modal_vars, only: %i(show assigned_task_list)
   before_action :load_vars, only: %i(edit update)
@@ -184,10 +184,9 @@ class RepositoryRowsController < ApplicationController
   def assigned_task_list
     my_modules = @repository_row.my_modules.joins(experiment: :project)
                                 .search_by_name(current_user, current_team, params[:query])
-    my_modules_grouped = my_modules_list_partial(my_modules)
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
-                               task_groups: my_modules_grouped
+                               my_modules: my_modules
                              })
     }
   end
