@@ -33,14 +33,14 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def update
-    update_row_service = RepositoryRows::MyModuleUpdateRowsService.call(my_module: @my_module,
-                                                                        repository: @repository,
-                                                                        user: current_user,
-                                                                        params: params)
-    if update_row_service.succeed? &&
-       (update_row_service.assigned_rows_count.positive? ||
-         update_row_service.unassigned_rows_count.positive?)
-      flash = update_flash_message(update_row_service)
+    service = RepositoryRows::MyModuleAssignUnassignService.call(my_module: @my_module,
+                                                                 repository: @repository,
+                                                                 user: current_user,
+                                                                 params: params)
+    if service.succeed? &&
+       (service.assigned_rows_count.positive? ||
+         service.unassigned_rows_count.positive?)
+      flash = update_flash_message(service)
       status = :ok
     else
       flash = t('my_modules.repository.flash.update_error')
@@ -121,9 +121,9 @@ class MyModuleRepositoriesController < ApplicationController
     render_403 unless can_assign_repository_rows_to_module?(@my_module)
   end
 
-  def update_flash_message(update_row_service)
-    assigned_count = update_row_service.assigned_rows_count
-    unassigned_count = update_row_service.unassigned_rows_count
+  def update_flash_message(service)
+    assigned_count = service.assigned_rows_count
+    unassigned_count = service.unassigned_rows_count
 
     if params[:downstream] == 'true'
       if assigned_count && unassigned_count

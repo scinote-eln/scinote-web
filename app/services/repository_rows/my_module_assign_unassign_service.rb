@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryRows
-  class MyModuleUpdateRowsService
+  class MyModuleAssignUnassignService
     extend Service
 
     attr_reader :repository,
