@@ -33,22 +33,14 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def update
-    if params[:rows_to_assign]
-      assign_service = RepositoryRows::MyModuleAssigningService.call(my_module: @my_module,
-                                                                     repository: @repository,
-                                                                     user: current_user,
-                                                                     params: params)
-    end
-    if params[:rows_to_unassign]
-      unassign_service = RepositoryRows::MyModuleUnassigningService.call(my_module: @my_module,
-                                                                         repository: @repository,
-                                                                         user: current_user,
-                                                                         params: params)
-    end
-
-    if (params[:rows_to_assign].nil? || assign_service.succeed?) &&
-       (params[:rows_to_unassign].nil? || unassign_service.succeed?)
-      flash = update_flash_message
+    service = RepositoryRows::MyModuleAssignUnassignService.call(my_module: @my_module,
+                                                                 repository: @repository,
+                                                                 user: current_user,
+                                                                 params: params)
+    if service.succeed? &&
+       (service.assigned_rows_count.positive? ||
+         service.unassigned_rows_count.positive?)
+      flash = update_flash_message(service)
       status = :ok
     else
       flash = t('my_modules.repository.flash.update_error')
@@ -129,9 +121,9 @@ class MyModuleRepositoriesController < ApplicationController
     render_403 unless can_assign_repository_rows_to_module?(@my_module)
   end
 
-  def update_flash_message
-    assigned_count = params[:rows_to_assign]&.count
-    unassigned_count = params[:rows_to_unassign]&.count
+  def update_flash_message(service)
+    assigned_count = service.assigned_rows_count
+    unassigned_count = service.unassigned_rows_count
 
     if params[:downstream] == 'true'
       if assigned_count && unassigned_count
