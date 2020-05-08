@@ -47,12 +47,12 @@
     <div class="task-section-header">
       <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="false" aria-controls="assigned-items-container">
         <i class="fas fa-caret-right"></i>
-        <span class="task-section-title">
-          <h2><%= t('my_modules.assigned_items.title') %></h2>
+        <span class="task-section-title ">
+          <h2 class="assigned-items-title" data-assigned-items-count="<%= @assigned_repositories.map{|i| i.assigned_rows_count}.sum %>"><%= t('my_modules.assigned_items.title') %></h2>
         </span>
       </a>
       <div class="actions-block">
-        <div class="dropdown repositories-assign-container" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
+        <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
           <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span class="fas fa-file-signature"></span>
             <span><%= t('my_modules.assigned_items.assign_from') %></span>

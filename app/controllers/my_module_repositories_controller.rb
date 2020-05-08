@@ -85,7 +85,10 @@ class MyModuleRepositoriesController < ApplicationController
 
   def repositories_list_html
     @assigned_repositories = @my_module.live_and_snapshot_repositories_list
-    render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_list') }
+    render json: {
+      html: render_to_string(partial: 'my_modules/repositories/repositories_list'),
+      assigned_rows_count: @assigned_repositories.map{|i| i.assigned_rows_count}.sum
+    }
   end
 
   def full_view_table

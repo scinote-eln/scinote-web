@@ -136,11 +136,8 @@
         flex-shrink: 0;
         text-align: right;
 
-        .fas {
-          cursor: pointer;
-          line-height: 36px;
-          text-align: center;
-          width: 36px;
+        .full-screen:hover {
+          background: $color-alto;
         }
       }
     }

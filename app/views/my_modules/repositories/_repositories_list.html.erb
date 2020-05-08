@@ -11,9 +11,9 @@
         <%= repository.name %>
       </span>
       <div class="action-buttons">
-        <i class="fas fa-expand full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>">
-        </i>
-        <i class="fas fa-trash unassign-repository"></i>
+        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>">
+          <i class="fas fa-expand"></i>
+        </button>
       </div>
     </a>
     <div class="collapse assigned-repository-container"
