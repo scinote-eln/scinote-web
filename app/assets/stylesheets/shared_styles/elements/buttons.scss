@@ -25,7 +25,9 @@
     text-decoration: none;
   }
 
-  &:active {
+  &:active,
+  &.active {
+    box-shadow: none;
     text-decoration: none;
   }
 
@@ -44,7 +46,8 @@
       color: $color-white;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $brand-primary-press;
       color: $color-white;
     }
@@ -66,7 +69,8 @@
       color: $color-volcano;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $color-alto;
       border: $border-secondary;
       color: $color-volcano;
@@ -89,7 +93,8 @@
       color: $color-volcano;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $color-alto;
       border: $border-transparent;
       color: $color-volcano;
@@ -111,7 +116,8 @@
       color: $color-white;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $brand-danger-press;
       color: $color-white;
     }
