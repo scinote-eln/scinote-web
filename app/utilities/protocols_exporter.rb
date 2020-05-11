@@ -116,10 +116,9 @@ module ProtocolsExporter
         if step.tables.count > 0
           step_xml << "<elnTables>\n"
           step.tables.order(:id).each do |table|
-            table_xml = "<elnTable id=\"#{table.id}\" " \
-                        "guid=\"#{get_guid(table.id)}\">\n"
-            table_xml << "<contents>#{table.contents.unpack1('H*')}" \
-                         "</contents>\n"
+            table_xml = "<elnTable id=\"#{table.id}\" guid=\"#{get_guid(table.id)}\">\n"
+            table_xml << "<name>#{table.name}</name>\n"
+            table_xml << "<contents>#{table.contents.unpack1('H*')}</contents>\n"
             table_xml << "</elnTable>\n"
             step_xml << table_xml
           end
