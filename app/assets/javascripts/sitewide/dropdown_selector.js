@@ -62,8 +62,9 @@ var dropdownSelector = (function() {
     var modalContainer = container.closest('.modal-dialog');
     var modalContainerBottom = 0;
     var maxHeight = 0;
+    const bottomTreshold = 280;
 
-    if (modalContainer.length && windowHeight - modalContainer.height() > 100) {
+    if (modalContainer.length && windowHeight - modalContainer.height() > bottomTreshold) {
       let modalClientRect = modalContainer[0].getBoundingClientRect();
       windowHeight = modalContainer.height() + modalClientRect.top;
       containerPositionLeft -= modalClientRect.left;
@@ -72,7 +73,7 @@ var dropdownSelector = (function() {
     }
     bottomSpace = windowHeight - containerPosition - containerHeight;
 
-    if ((modalContainerBottom + bottomSpace) < 280) {
+    if ((modalContainerBottom + bottomSpace) < bottomTreshold) {
       container.addClass('inverse');
       container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
         .css('margin-bottom', `${(containerPosition * -1)}px`)
