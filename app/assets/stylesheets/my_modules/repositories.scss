@@ -115,6 +115,7 @@
       &.collapsed:hover,
       &.collapsed:active {
         background: $color-concrete;
+        border-radius: 6px;
         text-decoration: none;
       }
 
