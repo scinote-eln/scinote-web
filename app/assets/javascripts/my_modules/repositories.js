@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign, no-use-before-define */
 /* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
-initAssignedTasksDropdown */
+initAssignedTasksDropdown I18n */
 
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
@@ -173,6 +173,11 @@ var MyModuleRepositories = (function() {
       drawCallback: function() {
         FULL_VIEW_TABLE.columns.adjust();
         FilePreviewModal.init();
+        renderFullViewRepositoryName(
+          tableContainer.attr('data-repository-name'),
+          tableContainer.attr('data-repository-snapshot-created')
+        );
+        updateFullViewRowsCount(tableContainer.attr('data-assigned-items-count'));
         if (FULL_VIEW_TABLE_SCROLLBAR) {
           FULL_VIEW_TABLE_SCROLLBAR.update();
         } else {
@@ -397,10 +402,10 @@ var MyModuleRepositories = (function() {
   function initRepositoryFullView() {
     $('#assigned-items-container').on('click', '.action-buttons .full-screen', function(e) {
       var repositoryNameObject = $(this).closest('.assigned-repository-caret')
-        .find('.assigned-repository-title')
-        .clone();
+        .find('.assigned-repository-title');
 
-      FULL_VIEW_MODAL.find('.repository-name').html(repositoryNameObject);
+
+      renderFullViewRepositoryName(repositoryNameObject.text());
       FULL_VIEW_MODAL.modal('show');
       $.getJSON($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
@@ -454,17 +459,31 @@ var MyModuleRepositories = (function() {
 
   function updateFullViewRowsCount(value) {
     FULL_VIEW_MODAL.data('rows-count', value);
-    FULL_VIEW_MODAL.find('.assigned-repository-title').attr('data-rows-count', `[${value}]`);
+    FULL_VIEW_MODAL.find('.repository-name').attr('data-rows-count', value);
+  }
+
+  function renderFullViewRepositoryName(name, snapshotDate) {
+    var title;
+    var repositoryName = name || FULL_VIEW_MODAL.find('.repository-name').data('repository-name');
+
+    if (snapshotDate) {
+      title = I18n.t('my_modules.repository.full_view.modal_snapshot_header', {
+        repository_name: repositoryName,
+        snaphot_date: snapshotDate
+      });
+    } else {
+      title = I18n.t('my_modules.repository.full_view.modal_live_header', {
+        repository_name: repositoryName
+      });
+    }
+    FULL_VIEW_MODAL.find('.repository-name').data('repository-name', repositoryName);
+    FULL_VIEW_MODAL.find('.repository-name').html(title);
   }
 
   function initRepoistoryAssignView() {
     $('.repositories-dropdown-menu').on('click', '.repository', function(e) {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
-      var repositoryNameObject = $(this).find('.name').clone().addClass('assigned-repository-title');
-
-      FULL_VIEW_MODAL.find('.repository-name').html(repositoryNameObject);
-      FULL_VIEW_MODAL.data('rows-count', $(this).data('rows-count'));
       FULL_VIEW_MODAL.modal('show');
       $.get($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
@@ -546,9 +565,10 @@ var MyModuleRepositories = (function() {
         UPDATE_REPOSITORY_MODAL.modal('hide');
         HelperModule.flashAlertMsg(data.flash, 'success');
         SELECTED_ROWS = {};
+        $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
+          .attr('data-assigned-items-count', data.rows_count)
         FULL_VIEW_TABLE.ajax.reload(null, false);
         reloadRepositoriesList();
-        updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
       error: function(data) {

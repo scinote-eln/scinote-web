@@ -63,10 +63,11 @@ var dropdownSelector = (function() {
     var modalContainerBottom = 0;
     var maxHeight = 0;
 
-    if (modalContainer.length) {
-      windowHeight = modalContainer.height() + modalContainer[0].getBoundingClientRect().top;
-      containerPositionLeft -= modalContainer[0].getBoundingClientRect().left;
-      modalContainerBottom = windowHeight - modalContainer[0].getBoundingClientRect().bottom;
+    if (modalContainer.length && windowHeight - modalContainer.height() > 100) {
+      let modalClientRect = modalContainer[0].getBoundingClientRect();
+      windowHeight = modalContainer.height() + modalClientRect.top;
+      containerPositionLeft -= modalClientRect.left;
+      modalContainerBottom = windowHeight + modalClientRect.bottom;
       maxHeight += modalContainerBottom;
     }
     bottomSpace = windowHeight - containerPosition - containerHeight;
