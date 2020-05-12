@@ -6,7 +6,7 @@
   </h4>
 </div>
 <div class="list-group repository-versions-list">
-  <div class="list-group-item live-version-item" data-id="<%= @repository.id %>">
+  <div class="list-group-item live-version-item" data-id="<%= @repository.id %>" data-selected="<%= @repository_snapshots.select{ |s| s.selected == true }.blank? %>">
     <a id="selectLiveVersionButton" class="version-button" href="#" data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository) %>">
       <h2 class="list-group-item-heading">
         <%= t('my_modules.repository.snapshots.full_view.live') %>
@@ -33,5 +33,11 @@
       </div>
       <%= render partial: 'my_modules/repositories/full_view_version', collection: @repository_snapshots, as: :repository_snapshot %>
     </div>
+  </div>
+
+  <div class="list-group-item text-center">
+    <a id="setDefaultVersionButton" class="btn btn-primary default-version-button hidden" data-select-path="<%= select_my_module_repository_snapshots_path(@my_module, @repository) %>">
+      <%= t('my_modules.repository.snapshots.full_view.set_default_button') %>
+    </a>
   </div>
 </div>

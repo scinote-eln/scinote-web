@@ -8,8 +8,19 @@ class RepositorySnapshot < RepositoryBase
 
   validates :name, presence: true, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :status, presence: true
+  validate :only_one_selected_for_my_module
 
   def default_columns_count
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
+  end
+
+  private
+
+  def only_one_selected_for_my_module
+    return unless selected
+
+    if my_module.repository_snapshots.where(original_repository: original_repository, selected: true).any?
+      errors.add(:selected, I18n.t('activerecord.errors.models.repository_snapshot.attributes.selected.already_taken'))
+    end
   end
 end

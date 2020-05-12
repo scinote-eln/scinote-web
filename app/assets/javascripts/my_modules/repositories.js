@@ -88,12 +88,12 @@ var MyModuleRepositories = (function() {
   function renderSimpleTable(tableContainer) {
     if (SIMPLE_TABLE) SIMPLE_TABLE.destroy();
     SIMPLE_TABLE = $(tableContainer).DataTable({
-      dom: "Rt<'pagination-row'<'pagination-actions'p>>",
+      dom: "Rt<'pagination-row'<'version-label'><'pagination-actions'p>>",
       processing: true,
       serverSide: true,
       responsive: true,
       pageLength: 5,
-      order: [[3, 'asc']],
+      order: [[1, 'asc']],
       sScrollY: '100%',
       sScrollX: '100%',
       sScrollXInner: '100%',
@@ -103,14 +103,16 @@ var MyModuleRepositories = (function() {
         data: function(d) {
           d.assigned = 'assigned';
           d.view_mode = true;
-          d.skip_custom_columns = true;
+          d.simple_view = true;
         },
         global: false,
         type: 'POST'
       },
-      columns: tableColumns(tableContainer),
+      columns: [
+        { data: '1' }
+      ],
       columnDefs: [{
-        targets: 3,
+        targets: 1,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
@@ -119,6 +121,7 @@ var MyModuleRepositories = (function() {
       drawCallback: function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
+        repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
       }
     });
@@ -202,6 +205,12 @@ var MyModuleRepositories = (function() {
     let currentId = FULL_VIEW_MODAL.find('.table').data('id');
     versionsSidebar.find('.list-group-item').removeClass('active');
     versionsSidebar.find(`[data-id="${currentId}"]`).addClass('active');
+
+    if (!versionsSidebar.find(`[data-id="${currentId}"]`).data('selected')) {
+      $('#setDefaultVersionButton').removeClass('hidden');
+    } else {
+      $('#setDefaultVersionButton').addClass('hidden');
+    }
   }
 
   function reloadTable(tableUrl) {
@@ -259,8 +268,9 @@ var MyModuleRepositories = (function() {
   function initSimpleTable() {
     $('#assigned-items-container').on('show.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
-      var repositoryTemplate = $($('#my-module-repository-simple-template').html());
+      var repositoryTemplate = $($('#myModuleRepositorySimpleTemplate').html());
       repositoryTemplate.attr('data-source', $(this).data('repository-url'));
+      repositoryTemplate.attr('data-version-label', $(this).data('footer-label'));
       repositoryContainer.html(repositoryTemplate);
       renderSimpleTable(repositoryTemplate);
     });
@@ -342,6 +352,32 @@ var MyModuleRepositories = (function() {
     FULL_VIEW_MODAL.on('click', '#collapseVersionsSidebar', function(e) {
       FULL_VIEW_MODAL.find('.modal-content').removeClass('show-sidebar');
       FULL_VIEW_TABLE.columns.adjust();
+      e.stopPropagation();
+    });
+
+    FULL_VIEW_MODAL.on('click', '#setDefaultVersionButton', function(e) {
+      let data;
+      animateSpinner(null, true);
+
+      if (FULL_VIEW_MODAL.find('.table').data('type') === 'live') {
+        data = { repository_snapshot_id: -1 };
+      } else {
+        data = { repository_snapshot_id: FULL_VIEW_MODAL.find('.table').data('id') };
+      }
+
+      $.ajax({
+        url: $(this).data('select-path'),
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        success: function() {
+          let versionsList = FULL_VIEW_MODAL.find('.repository-versions-list');
+          versionsList.find('.list-group-item').data('selected', false);
+          versionsList.find('.list-group-item.active').data('selected', true);
+          $('#setDefaultVersionButton').addClass('hidden');
+          animateSpinner(null, false);
+        }
+      });
       e.stopPropagation();
     });
   }

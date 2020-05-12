@@ -6,9 +6,9 @@ class AddRepositorySnapshots < ActiveRecord::Migration[6.0]
       t.string :type
       t.bigint :parent_id, null: true
       t.integer :status, null: true
+      t.boolean :selected, null: true
+      t.references :my_module
     end
-
-    add_reference :repositories, :my_module
 
     execute "UPDATE \"repositories\" SET \"type\" = 'Repository'"
     execute "UPDATE \"activities\" SET \"subject_type\" = 'RepositoryBase' WHERE \"subject_type\" = 'Repository'"
@@ -31,8 +31,12 @@ class AddRepositorySnapshots < ActiveRecord::Migration[6.0]
 
     execute "UPDATE \"activities\" SET \"subject_type\" = 'Repository' WHERE \"subject_type\" = 'RepositoryBase'"
 
-    remove_column :repositories, :parent_id, :bigint, null: true
-    remove_reference :repositories, :my_module
-    remove_column :repositories, :type, :string
+    change_table :repositories, bulk: true do |t|
+      t.remove :type
+      t.remove :parent_id
+      t.remove :status
+      t.remove :selected
+      t.remove_references :my_module
+    end
   end
 end

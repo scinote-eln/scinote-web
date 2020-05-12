@@ -17,19 +17,22 @@ class MyModuleRepositoriesController < ApplicationController
 
     @datatable_params = {
       view_mode: params[:view_mode],
-      skip_custom_columns: params[:skip_custom_columns],
       my_module: @my_module
     }
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
-    @repository_rows = datatable_service.repository_rows
-                                        .preload(:repository_columns,
-                                                 :created_by,
-                                                 repository_cells: @repository.cell_preload_includes)
-                                        .page(page)
-                                        .per(per_page)
+    if params[:simple_view]
+      repository_rows = datatable_service.repository_rows
+      rows_view = 'repository_rows/simple_view_index.json'
+    else
+      repository_rows = datatable_service.repository_rows.preload(:repository_columns,
+                                                                  :created_by,
+                                                                  repository_cells: @repository.cell_preload_includes)
+      rows_view = 'repository_rows/index.json'
+    end
+    @repository_rows = repository_rows.page(page).per(per_page)
 
-    render 'repository_rows/index.json'
+    render rows_view
   end
 
   def update

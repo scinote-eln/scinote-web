@@ -54,7 +54,6 @@ class MyModule < ApplicationRecord
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :repository_snapshots,
-           class_name: 'RepositorySnapshot',
            dependent: :destroy,
            inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
@@ -201,7 +200,19 @@ class MyModule < ApplicationRecord
   end
 
   def assigned_repositories
-    Repository.where(id: repository_rows.select('DISTINCT(repository_id)'))
+    team = experiment.project.team
+    selected_snapshots = repository_snapshots.joins(:repository_rows)
+                                             .where(selected: true)
+                                             .group(:parent_id, :id)
+    live_repositories = team.repositories
+                            .joins(repository_rows: :my_module_repository_rows)
+                            .where(my_module_repository_rows: { my_module_id: id })
+                            .where.not(id: selected_snapshots.select(:parent_id))
+                            .group(:id)
+
+    selector = 'repositories.*, COUNT(repository_rows.id) AS assigned_rows_count'
+
+    live_repositories.select(selector) + selected_snapshots.select(selector)
   end
 
   def unassigned_users

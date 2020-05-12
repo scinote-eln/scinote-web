@@ -403,6 +403,10 @@ Rails.application.routes.draw do
             post :index_dt
             get :status
           end
+
+          collection do
+            post :select
+          end
         end
 
         get :full_view_versions_sidebar, controller: :my_module_repository_snapshots

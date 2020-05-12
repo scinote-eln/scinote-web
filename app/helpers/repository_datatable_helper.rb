@@ -34,18 +34,27 @@ module RepositoryDatatableHelper
 
       row['0'] = record[:row_assigned] if options[:my_module]
 
-      unless options[:skip_custom_columns]
-        # Add custom columns
-        record.repository_cells.each do |cell|
-          row[columns_mappings[cell.repository_column.id]] =
-            display_cell_value(cell, team)
-        end
+      # Add custom columns
+      record.repository_cells.each do |cell|
+        row[columns_mappings[cell.repository_column.id]] =
+          display_cell_value(cell, team)
       end
+
       row
     end
   end
 
-  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, options = {})
+  def prepare_simple_view_row_columns(repository_rows)
+    repository_rows.map do |record|
+      {
+        'DT_RowId': record.id,
+        '1': escape_input(record.name),
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_row_path(record.id)
+      }
+    end
+  end
+
+  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team)
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
@@ -56,12 +65,11 @@ module RepositoryDatatableHelper
         'recordInfoUrl': Rails.application.routes.url_helpers.repository_row_path(record.id)
       }
 
-      unless options[:skip_custom_columns]
-        # Add custom columns
-        record.repository_cells.each do |cell|
-          row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
-        end
+      # Add custom columns
+      record.repository_cells.each do |cell|
+        row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
       end
+
       row
     end
   end
