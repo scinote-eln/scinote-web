@@ -3,10 +3,10 @@
     <div class="expand-all-steps" style="display: <%= 'none' if @protocol.steps.empty? %>">
       <a class="btn btn-light" data-action="collapse-steps">
         <span class="fas fa-caret-up"></span>
-        <span class="hidden-xs"><%= t("protocols.steps.collapse_label") %></a></span>
+        <span><%= t("protocols.steps.collapse_label") %></a></span>
       <a class="btn btn-light" data-action="expand-steps">
         <span class="fas fa-caret-down"></span>
-        <span class="hidden-xs"><%= t("protocols.steps.expand_label") %></a></span>
+        <span><%= t("protocols.steps.expand_label") %></a></span>
     </div>
   </div>
 <% end %>
