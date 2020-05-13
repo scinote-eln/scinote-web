@@ -51,14 +51,8 @@ class RepositoryAssetValue < ApplicationRecord
 
     asset_snapshot.save!
 
-    asset.blob.open do |tmp_file|
-      blob_snapshot = ActiveStorage::Blob.create_after_upload!(
-        io: tmp_file,
-        filename: asset.blob.filename,
-        metadata: asset.blob.metadata
-      )
-      asset_snapshot.file.attach(blob_snapshot)
-    end
+    # ActiveStorage::Blob is immutable, so we can just attach it to the new snapshot
+    asset_snapshot.file.attach(asset.blob)
 
     value_snapshot.assign_attributes(
       repository_cell: cell_snapshot,

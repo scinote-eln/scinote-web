@@ -32,7 +32,7 @@ class AssetsController < ApplicationController
                  can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
                elsif @assoc.class == Result
                  can_manage_module?(@my_module)
-               elsif @assoc.class == RepositoryCell
+               elsif @assoc.class == RepositoryCell && !@repository.is_a?(RepositorySnapshot)
                  can_manage_repository_rows?(@repository)
                end
     if response_json['type'] == 'previewable'
