@@ -266,7 +266,7 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
-    @assigned_repositories = @my_module.assigned_repositories
+    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
     current_team_switch(@protocol.team)
   end
 

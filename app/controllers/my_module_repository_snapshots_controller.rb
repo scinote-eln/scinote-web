@@ -2,8 +2,8 @@
 
 class MyModuleRepositorySnapshotsController < ApplicationController
   before_action :load_my_module
-  before_action :load_repository
-  before_action :load_repository_snapshot, except: %i(create full_view_versions_sidebar select)
+  before_action :load_repository, only: :create
+  before_action :load_repository_snapshot, except: %i(create full_view_sidebar select)
   before_action :check_view_permissions, except: %i(create destroy select)
   before_action :check_manage_permissions, only: %i(create destroy select)
 
@@ -71,9 +71,15 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     }
   end
 
-  def full_view_versions_sidebar
-    @repository_snapshots = @my_module.repository_snapshots.where(original_repository: @repository)
-    render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_versions_sidebar') }
+  def full_view_sidebar
+    @repository = Repository.find_by(id: params[:repository_id])
+
+    if @repository.present?
+      return render_403 unless can_read_repository?(@repository)
+    end
+
+    @repository_snapshots = @my_module.repository_snapshots.where(parent_id: params[:repository_id])
+    render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_sidebar') }
   end
 
   def select

@@ -84,7 +84,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_list_html
-    @assigned_repositories = @my_module.assigned_repositories
+    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
     render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_list') }
   end
 

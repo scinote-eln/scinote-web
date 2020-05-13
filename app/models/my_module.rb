@@ -201,18 +201,28 @@ class MyModule < ApplicationRecord
 
   def assigned_repositories
     team = experiment.project.team
-    selected_snapshots = repository_snapshots.joins(:repository_rows)
-                                             .where(selected: true)
-                                             .group(:parent_id, :id)
-    live_repositories = team.repositories
-                            .joins(repository_rows: :my_module_repository_rows)
-                            .where(my_module_repository_rows: { my_module_id: id })
-                            .where.not(id: selected_snapshots.select(:parent_id))
-                            .group(:id)
+    team.repositories
+        .joins(repository_rows: :my_module_repository_rows)
+        .where(my_module_repository_rows: { my_module_id: id })
+        .group(:id)
+  end
 
-    selector = 'repositories.*, COUNT(repository_rows.id) AS assigned_rows_count'
+  def live_and_snapshot_repositories_list
+    snapshots = repository_snapshots.left_outer_joins(:original_repository)
 
-    live_repositories.select(selector) + selected_snapshots.select(selector)
+    selected_snapshots = snapshots.where(selected: true)
+    selected_snapshots = selected_snapshots.or(snapshots.where(original_repositories_repositories: { id: nil }))
+    selected_snapshots = selected_snapshots.select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                           .select('COUNT(repository_rows.id) AS assigned_rows_count')
+                                           .joins(:repository_rows)
+                                           .group(:parent_id, :id)
+                                           .order(:parent_id, updated_at: :desc)
+
+    live_repositories = assigned_repositories
+                        .select('repositories.*, COUNT(repository_rows.id) AS assigned_rows_count')
+                        .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
+
+    (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
   def unassigned_users

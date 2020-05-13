@@ -254,7 +254,7 @@ var MyModuleRepositories = (function() {
   function checkSnapshotStatus(snapshotItem) {
     $.getJSON(snapshotItem.data('status-url'), (statusData) => {
       if (statusData.status === 'ready') {
-        $.getJSON(snapshotItem.data('item-url'), (itemData) => {
+        $.getJSON(snapshotItem.data('version-item-url'), (itemData) => {
           snapshotItem.replaceWith(itemData.html);
         });
       } else {

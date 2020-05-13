@@ -58,16 +58,14 @@ module MyModulesHelper
 
   def assigned_repository_full_view_table_path(my_module, repository)
     if repository.is_a?(RepositorySnapshot)
-      return full_view_table_my_module_repository_snapshot_path(my_module, repository.original_repository, repository)
+      return full_view_table_my_module_repository_snapshot_path(my_module, repository)
     end
 
     full_view_table_my_module_repository_path(my_module, repository)
   end
 
   def assigned_repository_simple_view_index_path(my_module, repository)
-    if repository.is_a?(RepositorySnapshot)
-      return index_dt_my_module_repository_snapshot_path(my_module, repository.original_repository, repository)
-    end
+    return index_dt_my_module_repository_snapshot_path(my_module, repository) if repository.is_a?(RepositorySnapshot)
 
     index_dt_my_module_repository_path(my_module, repository)
   end
