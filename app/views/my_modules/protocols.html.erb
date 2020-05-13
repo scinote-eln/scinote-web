@@ -11,12 +11,15 @@
       <span id="taskDetailsLabel" class="task-section-title">
         <h2>
           <%= t('my_modules.details.title') %>
-          <span class="fas block-icon fa-info-circle"></span>
         </h2>
       </span>
-      <div id="taskDetailsContent" class="hidden">
-        <%= render partial: "module_header_details_popover.html.erb" %>
-      </div>
+      <span class="dropdown task-details-dropdown-container">
+        <span id="taskDetailsButton" class="fas block-icon fa-info-circle task-details-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
+        <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
+          <%= render partial: "module_header_details_popover.html.erb" %>
+        </div>
+      </span>
+
       <div class="actions-block">
         <%= render partial: "my_modules/state_buttons.html.erb" %>
       </div>

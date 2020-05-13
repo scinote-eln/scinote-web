@@ -454,6 +454,24 @@
   }
 }
 
+.task-details-dropdown-container {
+  .task-details-button {
+    @include font-h2;
+    cursor: pointer;
+    margin: 0 3px;
+  }
+
+  .dropdown-menu {
+    min-width: 500px;
+    padding: 1em 2em;
+
+    .row-v-margin {
+      margin-bottom: .5em;
+      margin-top: .5em
+    }
+  }
+}
+
 @media (max-width: 700px) {
   .my-module-protocol-status {
     .status-info-dropdown {
