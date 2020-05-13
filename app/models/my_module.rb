@@ -211,12 +211,12 @@ class MyModule < ApplicationRecord
     snapshots = repository_snapshots.left_outer_joins(:original_repository)
 
     selected_snapshots = snapshots.where(selected: true)
-    selected_snapshots = selected_snapshots.or(snapshots.where(original_repositories_repositories: { id: nil }))
-    selected_snapshots = selected_snapshots.select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
-                                           .select('COUNT(repository_rows.id) AS assigned_rows_count')
-                                           .joins(:repository_rows)
-                                           .group(:parent_id, :id)
-                                           .order(:parent_id, updated_at: :desc)
+                                  .or(snapshots.where(original_repositories_repositories: { id: nil }))
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .select('COUNT(repository_rows.id) AS assigned_rows_count')
+                                  .joins(:repository_rows)
+                                  .group(:parent_id, :id)
+                                  .order(:parent_id, updated_at: :desc)
 
     live_repositories = assigned_repositories
                         .select('repositories.*, COUNT(repository_rows.id) AS assigned_rows_count')
