@@ -13,8 +13,7 @@ class Repository < RepositoryBase
   has_many :repository_snapshots,
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,
-           inverse_of: :original_repository,
-           dependent: :nullify
+           inverse_of: :original_repository
 
   validates :name,
             presence: true,

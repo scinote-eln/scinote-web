@@ -1103,6 +1103,7 @@ CREATE TABLE public.repositories (
     type character varying,
     parent_id bigint,
     status integer,
+    selected boolean,
     my_module_id bigint
 );
 

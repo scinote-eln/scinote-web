@@ -7,33 +7,30 @@
        data-parent="#assigned-items-container"
     >
       <i class="fas fa-caret-right"></i>
-      <span class="assigned-repository-title" data-rows-count="[<%= @my_module.repository_rows_count(repository) %>]">
+      <span class="assigned-repository-title" data-rows-count="[<%= repository.assigned_rows_count %>]">
         <%= repository.name %>
       </span>
       <div class="action-buttons">
-        <i class="fas fa-expand full-screen" data-table-url="<%= full_view_table_my_module_repository_path(@my_module, repository) %>">
+        <i class="fas fa-expand full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>">
         </i>
         <i class="fas fa-trash unassign-repository"></i>
       </div>
     </a>
     <div class="collapse assigned-repository-container"
          id="assigned-repository-items-container-<%= repository.id %>"
-         data-repository-url="<%= index_dt_my_module_repository_path(@my_module, repository) %>"
+         data-repository-url="<%= assigned_repository_simple_view_index_path(@my_module, repository) %>"
+         data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
     >
     </div>
   </div>
 <% end %>
 
-<template id="my-module-repository-simple-template">
-  <table class="table hidden" data-default-table-columns="<%= default_table_columns %>">
+<template id="myModuleRepositorySimpleTemplate">
+  <table class="table hidden">
     <thead>
       <tr>
         <th class="never"></th>
-        <th class="never"></th>
-        <th class="never"></th>
         <th class="row-name"><%= t("repositories.table.row_name") %></th>
-        <th class="never"></th>
-        <th class="never"></th>
       </tr>
     </thead>
     <tbody></tbody>

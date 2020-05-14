@@ -2,10 +2,10 @@
 
 class MyModuleRepositorySnapshotsController < ApplicationController
   before_action :load_my_module
-  before_action :load_repository
-  before_action :load_repository_snapshot, except: %i(create full_view_versions_sidebar)
-  before_action :check_view_permissions, except: %i(create destroy)
-  before_action :check_manage_permissions, only: %i(create destroy)
+  before_action :load_repository, only: :create
+  before_action :load_repository_snapshot, except: %i(create full_view_sidebar select)
+  before_action :check_view_permissions, except: %i(create destroy select)
+  before_action :check_manage_permissions, only: %i(create destroy select)
 
   def index_dt
     @draw = params[:draw].to_i
@@ -13,20 +13,21 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     page = (params[:start].to_i / per_page) + 1
     datatable_service = RepositorySnapshotDatatableService.new(@repository_snapshot, params, current_user, @my_module)
 
-    @datatable_params = {
-      view_mode: params[:view_mode],
-      skip_custom_columns: params[:skip_custom_columns]
-    }
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
-    @repository_rows = datatable_service.repository_rows
-                                        .preload(:repository_columns,
-                                                 :created_by,
-                                                 repository_cells: @repository_snapshot.cell_preload_includes)
-                                        .page(page)
-                                        .per(per_page)
+    if params[:simple_view]
+      repository_rows = datatable_service.repository_rows
+      rows_view = 'repository_rows/simple_view_index.json'
+    else
+      repository_rows = datatable_service.repository_rows
+                                         .preload(:repository_columns,
+                                                  :created_by,
+                                                  repository_cells: @repository_snapshot.cell_preload_includes)
+      rows_view = 'repository_rows/snapshot_index.json'
+    end
+    @repository_rows = repository_rows.page(page).per(per_page)
 
-    render 'repository_rows/snapshot_index.json'
+    render rows_view
   end
 
   def create
@@ -70,9 +71,29 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     }
   end
 
-  def full_view_versions_sidebar
-    @repository_snapshots = @my_module.repository_snapshots.where(original_repository: @repository)
-    render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_versions_sidebar') }
+  def full_view_sidebar
+    @repository = Repository.find_by(id: params[:repository_id])
+
+    if @repository.present?
+      return render_403 unless can_read_repository?(@repository)
+    end
+
+    @repository_snapshots = @my_module.repository_snapshots.where(parent_id: params[:repository_id])
+    render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_sidebar') }
+  end
+
+  def select
+    if params[:repository_snapshot_id].to_i == -1
+      @my_module.repository_snapshots.where(original_repository: @repository).update(selected: nil)
+    else
+      repository_snapshot = @my_module.repository_snapshots.find_by(id: params[:repository_snapshot_id])
+      return render_404 unless repository_snapshot
+
+      @my_module.repository_snapshots.where(original_repository: @repository).update(selected: nil)
+      repository_snapshot.update!(selected: true)
+    end
+
+    render json: {}
   end
 
   private
@@ -98,6 +119,6 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    render_403 unless can_manage_module?(@my_module)
   end
 end

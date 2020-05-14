@@ -394,19 +394,24 @@ Rails.application.routes.draw do
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
         end
+      end
 
-        resources :snapshots, controller: :my_module_repository_snapshots,
-          only: %i(create destroy show) do
-
-          member do
-            get :full_view_table
-            post :index_dt
-            get :status
-          end
+      resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
+        member do
+          get :full_view_table
+          post :index_dt
+          get :status
         end
 
-        get :full_view_versions_sidebar, controller: :my_module_repository_snapshots
+        collection do
+          get ':repository_id/full_view_sidebar',
+              to: 'my_module_repository_snapshots#full_view_sidebar',
+              as: :full_view_sidebar
+          post ':repository_id', to: 'my_module_repository_snapshots#create', as: ''
+        end
       end
+
+      post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
       # resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]

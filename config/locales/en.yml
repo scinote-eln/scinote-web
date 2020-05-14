@@ -100,6 +100,10 @@ en:
           attributes:
             file:
               too_big: "is too big"
+        repository_snapshot:
+          attributes:
+            selected:
+              already_taken: "Task already has selected snapshot"
         repository_list_item:
           attributes:
             base:
@@ -788,13 +792,18 @@ en:
       head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
       snapshots:
+        simple_view:
+          live_bottom_label: 'Live version'
+          snapshot_bottom_label: 'Snapshot version %{date_time}'
         full_view:
           header: 'Versions'
           live: 'Live version'
           live_description: 'Regularly updated from the inventory'
+          no_live_version: 'Only snapshots are available'
           no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
           versions_sidebar_button: 'View versions'
           create_button: 'Create snapshot'
+          set_default_button: 'Set as default view'
           created_by: 'by %{full_name}'
           provisioning: 'Provisioning'
       flash:
