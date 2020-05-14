@@ -2,7 +2,7 @@
   <div class="edit-button-container hidden">
     <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_path(@my_module, format: :json) %>">
         <i class="fas fa-cog"></i>
-        <span><%= t("my_modules.module_header.manage_tags") %></span>
+        <span class="hidden-xs"><%= t("my_modules.module_header.manage_tags") %></span>
     </a>
   </div>
   <%= select_tag "activity",

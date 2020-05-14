@@ -7,7 +7,7 @@
       <li class="list-group-item" style="background-color: <%= tag.color %>" data-color="<%= tag.color %>" data-tag-id="<%= tag.id %>" data-name="<%= tag.name %>">
 
         <div class="row tag-show">
-          <div class="col-xs-8">
+          <div class="col-xs-6 col-lg-8">
             <h4><%= tag.name %></h4>
           </div>
             <div class="pull-right">
@@ -62,7 +62,7 @@
                                 {},
                                 { class: 'selectpicker' }) %>
           <%= f.button class: 'btn btn-primary' do %>
-            <span class="hidden-xs"><%= t("experiments.canvas.modal_manage_tags.create") %></span>
+            <span><%= t("experiments.canvas.modal_manage_tags.create") %></span>
           <% end %>
         </div>
       </div>

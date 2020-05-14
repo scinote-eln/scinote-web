@@ -104,8 +104,8 @@
         }
       }
 
-      [data-action="new-step"] {
-        margin-left: 5px;
+      .dropdown {
+        margin-right: 5px;
       }
     }
   }
@@ -268,7 +268,7 @@
       flex-basis: 100px;
       flex-grow: 1;
       flex-shrink: 1;
-      max-width: calc(100% - 65px);
+      max-width: 100%;
       position: relative;
       z-index: 110;
 
