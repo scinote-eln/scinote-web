@@ -31,12 +31,12 @@ class RepositoryStatusValue < ApplicationRecord
 
   def snapshot!(cell_snapshot)
     value_snapshot = dup
-    list_item = cell_snapshot.repository_column
+    status_item = cell_snapshot.repository_column
                              .repository_status_items
                              .find { |item| item.data == repository_status_item.data }
     value_snapshot.assign_attributes(
       repository_cell: cell_snapshot,
-      repository_status_item: list_item,
+      repository_status_item: status_item,
       created_at: created_at,
       updated_at: updated_at
     )
@@ -46,7 +46,7 @@ class RepositoryStatusValue < ApplicationRecord
   def data
     return nil unless repository_status_item
 
-    "#{repository_status_item.icon} #{repository_status_item.status}"
+    repository_status_item.data
   end
 
   def self.new_with_payload(payload, attributes)
