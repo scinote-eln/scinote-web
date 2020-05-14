@@ -4,7 +4,7 @@
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
   const UPDATE_REPOSITORY_MODAL = $('#updateRepositoryRecordModal');
-  const STATUS_POLLING_INTERVAL = 3000;
+  const STATUS_POLLING_INTERVAL = 10000;
   var SIMPLE_TABLE;
   var FULL_VIEW_TABLE;
   var FULL_VIEW_TABLE_SCROLLBAR;
