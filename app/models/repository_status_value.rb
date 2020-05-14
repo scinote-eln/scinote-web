@@ -32,8 +32,8 @@ class RepositoryStatusValue < ApplicationRecord
   def snapshot!(cell_snapshot)
     value_snapshot = dup
     status_item = cell_snapshot.repository_column
-                             .repository_status_items
-                             .find { |item| item.data == repository_status_item.data }
+                               .repository_status_items
+                               .find { |item| item.data == repository_status_item.data }
     value_snapshot.assign_attributes(
       repository_cell: cell_snapshot,
       repository_status_item: status_item,
