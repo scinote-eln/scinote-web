@@ -117,21 +117,6 @@
           <% end %>
 
           <li data-hook="secondary-navigation-tabs"></li>
-          <% if can_read_team?(@my_module.experiment.project.team) &&
-                Repository.accessible_by_teams(current_team).exists? %>
-            <li id="repositories-nav-tab"
-                class="<%= "active" if module_repository_page? %> dropdown repositories-dropdown"
-                data-url="<%= module_repository_page? ? repositories_dropdown_repository_tab_my_module_path(repository: @repository) : repositories_dropdown_my_module_path %>">
-              <a href="#" id="repositoriesDropdownMenuLink" title="<%=t "nav2.modules.repositories" %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="hidden-sm hidden-md"><%=t "nav2.modules.repositories" %></span>
-                <span class="hidden-xs hidden-lg fas fa-list-alt"></span>
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositoriesDropdownMenuLink">
-                <%= render partial: "repositories_dropdown.html.erb", locals: { enable_counters: false } %>
-              </ul>
-            </li>
-          <% end %>
           <% if can_read_experiment?(@my_module.experiment) then %>
             <li id="archive-nav-tab" class="<%= "active" if is_module_archive? %>">
               <a href="<%= archive_my_module_url(@my_module) %>" title="<%= t'nav2.modules.archive' %>">
@@ -148,7 +133,7 @@
       <h2 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
-                     locals: { 
+                     locals: {
                         initial_value: title_element.name,
                         config: @inline_editable_title_config
                      } %>

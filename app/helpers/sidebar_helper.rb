@@ -30,11 +30,6 @@ module SidebarHelper
       samples_my_module_url(my_module)
     elsif action_name.in?(%w(archive module_archive experiment_archive))
       archive_my_module_url(my_module)
-    elsif action_name == 'repository' && @repository
-      repository_my_module_url(
-        id: my_module.id,
-        repository_id: @repository.id
-      )
     else
       protocols_my_module_url(my_module)
     end
