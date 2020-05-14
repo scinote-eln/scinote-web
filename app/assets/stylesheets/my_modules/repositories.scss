@@ -103,6 +103,7 @@
     border: $border-default;
     border-radius: $border-radius-modal;
     margin-bottom: 10px;
+    overflow: hidden;
 
     .assigned-repository-caret {
       align-items: center;
