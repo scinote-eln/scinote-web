@@ -12,7 +12,7 @@
 
   &::after {
     color: $color-alto;
-    content: attr(data-rows-count);
+    content: '[' attr(data-rows-count) ']';
     display: inline-block;
     line-height: 22px;
     padding-left: 5px;
@@ -211,16 +211,16 @@
           flex-grow: 1;
           max-width: calc(100% - 20px);
 
-          .assigned-repository-title {
+          .repository-name {
             @include my-module-repository-title;
             @include font-h2;
           }
 
           .breadcrumbs {
-            @include font-small;
             align-items: center;
             color: $color-silver-chalice;
             display: flex;
+            font-size: 10px;
             height: 20px;
             width: 90%;
 
@@ -367,6 +367,7 @@
 
 
       .list-group-item-text {
+        @include font-small;
         color: $color-silver-chalice;
       }
 

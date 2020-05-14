@@ -791,6 +791,9 @@ en:
     repository:
       head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
+      full_view:
+        modal_live_header: '%{repository_name}: Live version'
+        modal_snapshot_header: '%{repository_name}: Snapshot of %{snaphot_date}'
       snapshots:
         simple_view:
           live_bottom_label: 'Live version'
@@ -1067,7 +1070,7 @@ en:
       share_inventory: "Share"
       view_only_permission_label: "You have veiw-only permission"
       show_per_page: "Show %{number} per page"
-      filter_inventory: "Filter inventory"
+      filter_inventory: "Filter inventory item"
 
       options_dropdown:
         import_items: 'Import items'
