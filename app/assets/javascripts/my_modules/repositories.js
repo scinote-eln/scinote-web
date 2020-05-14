@@ -15,6 +15,7 @@ var MyModuleRepositories = (function() {
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
       repositoriesContainer.html(result.html);
+      $('.assigned-items-title').attr('data-assigned-items-count', result.assigned_rows_count);
     });
   }
 

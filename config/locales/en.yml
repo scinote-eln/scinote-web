@@ -623,8 +623,8 @@ en:
         export: "Export protocol"
         save_to_repo: "Save to repository"
     buttons:
-      complete: "Complete Task"
-      uncomplete: "Uncomplete Task"
+      complete: "Complete task"
+      uncomplete: "Uncomplete task"
     complete_modal:
       description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
       leave_uncompleted: 'Leave task in progress'
@@ -1969,7 +1969,7 @@ en:
       uncompleted: 'Uncompleted'
       expand_label: "Expand All"
       collapse_label: "Collapse All"
-      new_step: "New Step"
+      new_step: "New step"
       subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
       published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
@@ -1990,8 +1990,8 @@ en:
         edit_title: "Edit step"
         delete_title: "Delete step"
         duplicate_title: "Duplicate step"
-        complete_title: "Complete Step"
-        uncomplete_title: "Uncomplete Step"
+        complete_title: "Complete step"
+        uncomplete_title: "Uncomplete step"
       attachments:
         modified_label: "Modified:"
         sort:
