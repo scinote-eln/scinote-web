@@ -182,7 +182,9 @@ var MyModuleRepositories = (function() {
       stateLoadCallback: function(settings, callback) {
         var loadStateUrl = $(tableContainer).data('load-state-url');
         $.post(loadStateUrl, function(json) {
-          json.state.columns[0].visible = false;
+          if (!options.assign_mode) {
+            json.state.columns[0].visible = false;
+          }
           callback(json.state);
         });
       },
