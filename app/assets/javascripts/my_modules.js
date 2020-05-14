@@ -1,14 +1,6 @@
 /* global I18n dropdownSelector */
 /* eslint-disable no-use-before-define */
 
-$('#taskDetailsLabel').popover({
-  html: true,
-  container: 'body',
-  placement: 'auto bottom',
-  trigger: 'hover',
-  content: $('#taskDetailsContent').html()
-});
-
 function updateStartDate() {
   let updateUrl = $('#startDateContainer').data('update-url');
   let val = $('#calendarStartDate').val();
