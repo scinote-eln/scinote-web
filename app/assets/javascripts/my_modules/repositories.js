@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign, no-use-before-define */
-/* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule initAssignedTasksDropdown */
+/* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
+initAssignedTasksDropdown */
 
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
@@ -162,6 +163,9 @@ var MyModuleRepositories = (function() {
           renderFullViewAssignButtons();
         } else {
           $('.table-container .toolbar').html($('#repositoryToolbarButtonsTemplate').html());
+          if (FULL_VIEW_MODAL.find('.modal-content').hasClass('show-sidebar')) {
+            FULL_VIEW_MODAL.find('#showVersionsSidebar').addClass('active');
+          }
         }
         initAssignedTasksDropdown(tableContainer);
       },
@@ -290,18 +294,23 @@ var MyModuleRepositories = (function() {
 
   function initVersionsSidebarActions() {
     FULL_VIEW_MODAL.on('click', '#showVersionsSidebar', function(e) {
-      $.getJSON(FULL_VIEW_MODAL.find('.table').data('versions-sidebar-url'), (data) => {
-        var snapshotsItemsScrollBar;
-        FULL_VIEW_MODAL.find('.repository-versions-sidebar').html(data.html);
-        snapshotsItemsScrollBar = new PerfectScrollbar(
-          FULL_VIEW_MODAL.find('.repository-snapshots-container')[0]
-        );
-        setSelectedItem();
-        FULL_VIEW_MODAL.find('.modal-content').addClass('show-sidebar');
-        initVersionsStatusCheck();
-        snapshotsItemsScrollBar.update();
-        FULL_VIEW_TABLE.columns.adjust();
-      });
+      $(this).toggleClass('active');
+      if ($(this).hasClass('active')) {
+        $.getJSON(FULL_VIEW_MODAL.find('.table').data('versions-sidebar-url'), (data) => {
+          var snapshotsItemsScrollBar;
+          FULL_VIEW_MODAL.find('.repository-versions-sidebar').html(data.html);
+          snapshotsItemsScrollBar = new PerfectScrollbar(
+            FULL_VIEW_MODAL.find('.repository-snapshots-container')[0]
+          );
+          setSelectedItem();
+          FULL_VIEW_MODAL.find('.modal-content').addClass('show-sidebar');
+          initVersionsStatusCheck();
+          snapshotsItemsScrollBar.update();
+          FULL_VIEW_TABLE.columns.adjust();
+        });
+      } else {
+        FULL_VIEW_MODAL.find('#collapseVersionsSidebar').click();
+      }
       e.stopPropagation();
     });
 
@@ -353,6 +362,7 @@ var MyModuleRepositories = (function() {
 
     FULL_VIEW_MODAL.on('click', '#collapseVersionsSidebar', function(e) {
       FULL_VIEW_MODAL.find('.modal-content').removeClass('show-sidebar');
+      FULL_VIEW_MODAL.find('#showVersionsSidebar').removeClass('active');
       FULL_VIEW_TABLE.columns.adjust();
       e.stopPropagation();
     });
