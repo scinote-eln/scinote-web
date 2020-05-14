@@ -1,6 +1,8 @@
 <% assets = ordered_assets(step) %>
+<div class="col-xs-12">
 <hr>
-<div class="attachments-actions">
+</div>
+<div class="col-xs-12  attachments-actions">
 
   <div class="title">
     <h4>
@@ -38,7 +40,7 @@
   </div>
 </div>
 
-<div class="attachments" id="att-<%= step.id %>">
+<div class="col-xs-12 attachments" id="att-<%= step.id %>">
   <% assets.each_with_index do |asset, i| %>
     <% order_atoz = az_ordered_assets_index(step, asset.id) %>
     <% order_ztoa = assets.length - az_ordered_assets_index(step, asset.id) %>
