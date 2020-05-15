@@ -29,12 +29,9 @@
     <div class="snapshots-container-scrollbody">
       <% if @repository.present? %>
         <div class="create-snapshot-item">
-          <% if @repository_snapshots.blank? %>
-            <p>
-              <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
-            </p>
-          <% end %>
-
+          <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
+            <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
+          </p>
           <button id="createRepositorySnapshotButton" class="btn btn-secondary" data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>">
             <i class="fas fa-camera"></i>
             <%= t('my_modules.repository.snapshots.full_view.create_button') %>
