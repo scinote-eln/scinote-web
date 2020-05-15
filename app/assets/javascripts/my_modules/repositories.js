@@ -176,7 +176,8 @@ var MyModuleRepositories = (function() {
         FilePreviewModal.init();
         renderFullViewRepositoryName(
           tableContainer.attr('data-repository-name'),
-          tableContainer.attr('data-repository-snapshot-created')
+          tableContainer.attr('data-repository-snapshot-created'),
+          options.assign_mode
         );
         updateFullViewRowsCount(tableContainer.attr('data-assigned-items-count'));
         if (FULL_VIEW_TABLE_SCROLLBAR) {
@@ -463,11 +464,15 @@ var MyModuleRepositories = (function() {
     FULL_VIEW_MODAL.find('.repository-name').attr('data-rows-count', value);
   }
 
-  function renderFullViewRepositoryName(name, snapshotDate) {
+  function renderFullViewRepositoryName(name, snapshotDate, assignMode) {
     var title;
     var repositoryName = name || FULL_VIEW_MODAL.find('.repository-name').data('repository-name');
 
-    if (snapshotDate) {
+    if (assignMode) {
+      title = I18n.t('my_modules.repository.full_view.assign_modal_header', {
+        repository_name: repositoryName
+      });
+    } else if (snapshotDate) {
       title = I18n.t('my_modules.repository.full_view.modal_snapshot_header', {
         repository_name: repositoryName,
         snaphot_date: snapshotDate
@@ -567,7 +572,7 @@ var MyModuleRepositories = (function() {
         HelperModule.flashAlertMsg(data.flash, 'success');
         SELECTED_ROWS = {};
         $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
-          .attr('data-assigned-items-count', data.rows_count)
+          .attr('data-assigned-items-count', data.rows_count);
         FULL_VIEW_TABLE.ajax.reload(null, false);
         reloadRepositoriesList();
         renderFullViewAssignButtons();
