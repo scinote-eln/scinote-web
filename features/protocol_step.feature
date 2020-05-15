@@ -43,7 +43,7 @@ Scenario: Successful add new step to a task
 Scenario: Successful add new step to a task
   Given I'm on the Protocols page of a "qPCR" task
   And I click "Protocol" link
-  And I click first "New Step" link
+  And I click first "New step" link
   Then I fill in "PES" in "#step_name" field
   Then I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea" rich text editor field
   And I click "Files" link
