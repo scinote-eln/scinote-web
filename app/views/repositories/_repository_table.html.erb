@@ -3,6 +3,7 @@
     data-current-uri="<%= request.original_url %>"
     data-repository-id="<%= repository.id %>"
     data-source="<%= repository_index_link %>"
+    data-toolbar-url="<%= repository_table_toolbar_path(@repository) %>"
     data-num-columns="<%= 6 + repository.repository_columns.count %>"
     data-create-record="<%= repository_repository_rows_path(repository) %>"
     data-delete-record="<%= repository_delete_records_path(repository) %>"
@@ -19,7 +20,9 @@
     data-columns-changed="<%= I18n.t('repositories.columns_changed') %>"
     data-default-order="<%= default_table_order_as_js_array %>"
     data-default-table-columns="<%= default_table_columns %>"
-    data-editable="<%= can_manage_repository_rows?(repository) %>">
+    data-editable="<%= can_manage_repository_rows?(repository) %>"
+    data-snapshot-provisioning="<%= @snapshot_provisioning %>"
+    data-status-url="<%= repository_status_path(@repository) %>">
     <thead>
       <tr>
         <th id="checkbox">

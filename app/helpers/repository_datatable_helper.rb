@@ -18,11 +18,6 @@ module RepositoryDatatableHelper
 
       unless options[:view_mode]
         row.merge!(
-          'recordEditUrl': Rails.application.routes.url_helpers
-                                .edit_repository_repository_row_path(
-                                  repository,
-                                  record.id
-                                ),
           'recordUpdateUrl': Rails.application.routes.url_helpers
                                   .repository_repository_row_path(
                                     repository,

@@ -116,6 +116,10 @@
         float: right;
       }
     }
+
+    .repository-provisioning-notice {
+      color: $brand-info;
+    }
   }
 
   .dataTables_scroll {
@@ -350,7 +354,7 @@
   }
 }
 
-.toolbarButtonsDatatable {
+#toolbarButtonsDatatable {
   .view-only-label {
     opacity: .6;
   }

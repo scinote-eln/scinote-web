@@ -635,9 +635,11 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_columns',
           as: 'available_columns',
           defaults: { format: 'json' }
+      get :table_toolbar
+      get :status
 
       resources :repository_columns, only: %i(create edit update destroy)
-      resources :repository_rows, only: %i(create edit update) do
+      resources :repository_rows, only: %i(create update) do
         member do
           get :assigned_task_list
         end

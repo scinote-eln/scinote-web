@@ -12,6 +12,19 @@ Canaid::Permissions.register_for(RepositoryBase) do
 end
 
 Canaid::Permissions.register_for(Repository) do
+  # Should be no provisioning snapshots for repository for all the specified permissions
+  %i(manage_repository
+     create_repository_rows
+     manage_repository_rows
+     update_repository_rows
+     delete_repository_rows
+     create_repository_columns)
+    .each do |perm|
+    can perm do |_, repository|
+      repository.repository_snapshots.provisioning.none?
+    end
+  end
+
   # repository: update, delete
   can :manage_repository do |user, repository|
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)

@@ -105,7 +105,7 @@ var RepositoryDatatableRowEditor = (function() {
       TABLE.ajax.reload(() => {
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(data.flash, 'success');
-        $('html, body').animate({scrollLeft: 0}, 300);
+        $('html, body').animate({ scrollLeft: 0 }, 300);
       });
     });
 
