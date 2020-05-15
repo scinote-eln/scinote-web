@@ -42,6 +42,20 @@ class RepositoryListValue < ApplicationRecord
     save!
   end
 
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    list_item = cell_snapshot.repository_column
+                             .repository_list_items
+                             .find { |item| item.data == repository_list_item.data }
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      repository_list_item: list_item,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     value.repository_list_item = value.repository_cell
@@ -59,8 +73,7 @@ class RepositoryListValue < ApplicationRecord
     if list_item.blank?
       list_item = column.repository_list_items.new(data: text,
                                                    created_by: value.created_by,
-                                                   last_modified_by: value.last_modified_by,
-                                                   repository: column.repository)
+                                                   last_modified_by: value.last_modified_by)
 
       return nil unless list_item.save
     end

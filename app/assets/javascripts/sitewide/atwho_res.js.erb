@@ -381,8 +381,15 @@ var SmartAnnotation = (function() {
     function init() {
       $(field)
       .on("reposition.atwho", function(event, flag, query) {
-        if (query.$inputor.offset().left > $(window).width()) {
-          query.$el.find('.atwho-view').css('left', (flag.left + $(window).scrollLeft()) + 'px');
+        let inputFieldLeft = query.$inputor.offset().left;
+        if (inputFieldLeft > $(window).width()) {
+          let leftPosition;
+          if (inputFieldLeft < flag.left + $(window).scrollLeft()) {
+            leftPosition = inputFieldLeft;
+          } else {
+            leftPosition = flag.left + $(window).scrollLeft();
+          }
+          query.$el.find('.atwho-view').css('left', leftPosition + 'px');
         }
         if ($('.repository-show').length) {
           query.$el.find('.atwho-view').css('top', flag.top + 'px');

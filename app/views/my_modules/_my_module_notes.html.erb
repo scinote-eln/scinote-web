@@ -1,0 +1,14 @@
+<div class="task-notes">
+  <div class="task-notes-content">
+    <% if can_manage_module?(@my_module) %>
+      <%= render partial: "description_form" %>
+    <% elsif @my_module.description.present? %>
+      <%= custom_auto_link(@my_module.tinymce_render(:description),
+                           simple_format: false,
+                           tags: %w(img),
+                           team: current_team) %>
+    <% else %>
+      <span class="no-description"><%= t('my_modules.notes.no_description') %></span>
+    <% end %>
+  </div>
+</div>

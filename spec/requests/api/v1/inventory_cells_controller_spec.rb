@@ -10,38 +10,27 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     create(:user_team, user: @user, team: @team, role: 2)
 
     # valid_inventory
-    @valid_inventory = create(:repository, name: Faker::Name.unique.name,
-                              created_by: @user, team: @team)
+    @valid_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @user, team: @team)
 
     # unaccessable_inventory
-    @wrong_inventory = create(:repository, name: Faker::Name.unique.name,
-                              created_by: @user, team: @wrong_team)
+    @wrong_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @user, team: @wrong_team)
+
     create(:repository_row, repository: @wrong_inventory)
 
     @text_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryTextValue)
     @list_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryListValue)
-    list_item =
-      create(:repository_list_item, repository: @valid_inventory,
-             repository_column: @list_column, data: Faker::Name.unique.name)
-    second_list_item =
-      create(:repository_list_item, repository: @valid_inventory,
-             repository_column: @list_column, data: Faker::Name.unique.name)
+    list_item = create(:repository_list_item, repository_column: @list_column, data: Faker::Name.unique.name)
+    second_list_item = create(:repository_list_item, repository_column: @list_column, data: Faker::Name.unique.name)
     @status_column = create(:repository_column, repository: @valid_inventory, data_type: :RepositoryStatusValue)
-    status_item = create(:repository_status_item,
-                         repository: @valid_inventory,
-                         repository_column: @status_column)
-    second_status_item = create(:repository_status_item,
-                                repository: @valid_inventory,
-                                repository_column: @status_column)
+    status_item = create(:repository_status_item, repository_column: @status_column)
+    second_status_item = create(:repository_status_item, repository_column: @status_column)
     @checklist_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryChecklistValue)
-    checklist_items =
-      create_list(:repository_checklist_item, 3, repository: @valid_inventory, repository_column: @checklist_column)
+    checklist_items = create_list(:repository_checklist_item, 3, repository_column: @checklist_column)
     checklist_item =
-      create(:repository_checklist_item, repository: @valid_inventory,
-             repository_column: @checklist_column, data: Faker::Name.unique.name)
+      create(:repository_checklist_item, repository_column: @checklist_column, data: Faker::Name.unique.name)
     @file_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryAssetValue)
     asset = create(:asset)

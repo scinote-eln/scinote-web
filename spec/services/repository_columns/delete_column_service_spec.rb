@@ -27,7 +27,7 @@ describe RepositoryColumns::DeleteColumnService do
     context 'when RepositoryColumn has RepositoryListItems' do
       before do
         3.times do
-          create(:repository_list_item, repository: repository, repository_column: repository_column)
+          create(:repository_list_item, repository_column: repository_column)
         end
       end
 
@@ -39,7 +39,7 @@ describe RepositoryColumns::DeleteColumnService do
     context 'when RepositoryColumn has RepositoryStatusItems' do
       before do
         3.times do
-          create(:repository_status_item, repository: repository, repository_column: repository_column)
+          create(:repository_status_item, repository_column: repository_column)
         end
       end
 

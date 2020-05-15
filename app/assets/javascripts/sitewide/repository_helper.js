@@ -18,3 +18,28 @@
 
   initUnsavedWorkDialog();
 }());
+
+function initAssignedTasksDropdown(table) {
+  function loadTasks(counterContainer) {
+    var tasksContainer = counterContainer.find('.tasks');
+    var tasksUrl = counterContainer.data('task-list-url');
+    var searchQuery = counterContainer.find('.search-tasks').val();
+    $.get(tasksUrl, { query: searchQuery }, function(result) {
+      tasksContainer.html(result.html);
+    });
+  }
+
+  $(table).on('show.bs.dropdown', '.assign-counter-container', function() {
+    var cell = $(this);
+    loadTasks(cell);
+  });
+
+  $(table).on('click', '.assign-counter-container .dropdown-menu', function(e) {
+    e.stopPropagation();
+  });
+
+  $(table).on('change', '.assign-counter-container .search-tasks', function() {
+    var cell = $(this).closest('.assign-counter-container');
+    loadTasks(cell);
+  });
+}

@@ -1,0 +1,50 @@
+<% my_module_editable = can_manage_module?(@my_module) %>
+
+<div class="flex-block date-block">
+  <span class="fas block-icon fa-calendar-alt"></span>
+  <span class="hidden-xs hidden-sm hidden-md"><%= t('my_modules.module_header.start_date') %></span>
+  <div id="startDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
+    <%= render partial: "module_header_start_date.html.erb", locals: { my_module: @my_module } %>
+  </div>
+</div>
+
+<div class="flex-block date-block" >
+  <span class="fas block-icon fa-calendar-alt"></span>
+  <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.module_header.due_date') %></span>
+  <div id="dueDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
+    <%= render partial: "module_header_due_date.html.erb", locals: { my_module: @my_module } %>
+  </div>
+</div>
+
+<div class="flex-block">
+  <div class="flex-block-label">
+    <span class="fas block-icon fa-tachometer-alt"></span>
+    <%= t('my_modules.states.state_label') %>
+  </div>
+  <span class="task-state-label">
+    <%= render partial: "module_state_label.html.erb",
+      locals: { my_module: @my_module } %>
+  </span>
+</div>
+
+<div class="flex-block">
+  <div class="flex-block-label">
+    <span class="fas block-icon fa-users"></span>
+    <%= t('my_modules.details.assigned_users') %>
+  </div>
+  <%= render partial: "user_my_modules/index" %>
+</div>
+
+<div class="module-tags">
+  <div id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
+    <span class="fas block-icon fa-tags"></span>
+    <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.module_header.tags" %></span>
+    <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: my_module_editable } %>
+  </div>
+</div>
+
+<!-- Manage users modal -->
+<%= render partial: "my_modules/modals/manage_users_modal" %>
+
+<!-- Manage tags modal -->
+<%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: @my_module } %>

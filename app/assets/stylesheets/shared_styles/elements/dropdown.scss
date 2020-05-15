@@ -1,0 +1,32 @@
+.sci-dropdown {
+  [data-toggle="dropdown"] {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  &.open {
+    [data-toggle="dropdown"] {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-color: $brand-focus;
+
+      .caret {
+        transform: rotateX(180deg)
+      }
+    }
+
+    .dropdown-menu {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      box-shadow: $flyout-shadow;
+      margin-top: -1px;
+      width: 100%;
+
+      li:hover {
+        background: $color-concrete;
+      }
+    }
+  }
+
+}

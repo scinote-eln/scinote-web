@@ -211,6 +211,7 @@ label {
     .user-time {
       color: $color-emperor;
       margin-left: 15px;
+      white-space: nowrap;
     }
     .controls {
       margin-right: 15px;
@@ -276,6 +277,12 @@ label {
       margin-left: 15px;
     }
 
+    .module-start-date,
+    .module-due-date {
+      margin-left: 5px;
+      white-space: nowrap;
+    }
+
     .module-tags {
       margin-left: 0;
       margin-top: 10px;
@@ -328,6 +335,7 @@ label {
 
     .user-time {
       display: inline-block;
+      white-space: nowrap;
     }
   }
 

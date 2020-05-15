@@ -750,7 +750,7 @@ ul.double-line > li {
 
 .panel-options {
   position: relative;
-  bottom: 6px;
+  bottom: 8px;
 }
 
 .panel-footer {
@@ -920,13 +920,6 @@ ul.content-activities {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 5px;
-
-  .protocol-button {
-
-    .sci-btn-group {
-      float: left;
-    }
-  }
 
   .protocol-status-bar {
     display: flex;
@@ -1897,10 +1890,6 @@ th.custom-field .modal-tooltiptext {
 
 .tooltip-enter {
   background-color: $color-alto;
-}
-
-.my_module-state-buttons {
-  padding-top: 6px;
 }
 
 .parse-records-table {

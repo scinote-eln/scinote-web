@@ -34,7 +34,6 @@ describe RepositoryDatatableService do
   let!(:list_item) do
     create :repository_list_item,
            data: 'bug',
-           repository: repository,
            repository_column: repository_column,
            created_by: user,
            last_modified_by: user

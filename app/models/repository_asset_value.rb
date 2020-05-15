@@ -45,6 +45,24 @@ class RepositoryAssetValue < ApplicationRecord
     asset.save! && save!
   end
 
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    asset_snapshot = asset.dup
+
+    asset_snapshot.save!
+
+    # ActiveStorage::Blob is immutable, so we can just attach it to the new snapshot
+    asset_snapshot.file.attach(asset.blob)
+
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      asset: asset_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     team = value.repository_cell.repository_column.repository.team

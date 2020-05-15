@@ -1,6 +1,8 @@
 // Place all the styles related to the MyModules controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+// scss-lint:disable SelectorDepth SelectorFormat
+// scss-lint:disable NestingDepth QualifyingElement
 
 @import "constants";
 
@@ -55,9 +57,6 @@
 
 // Create wopi file
 .create-wopi-file-btn {
-  border: 0;
-  display: contents;
-
   img {
     margin-right: 5px;
     height: 20px;
@@ -113,6 +112,83 @@
     // Stretch button
     .btn {
       width: 100%;
+    }
+  }
+}
+
+// Mobile view
+@media (max-width: 700px) {
+  .task-section {
+    border-left: 0;
+    padding-left: 0;
+
+    .task-section-header {
+      .actions-block {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-bottom: 5px;
+        width: 100%;
+
+        .dropdown {
+          margin-bottom: 5px;
+          min-width: 100%;
+        }
+      }
+    }
+  }
+
+  .task-details {
+    .module-tags {
+      .dropdown-selector-container {
+        .input-field {
+          padding-right: 36px;
+        }
+      }
+    }
+
+    .datetime-container {
+      .date-text {
+        margin-right: 0;
+      }
+
+      .dropdown-menu {
+        left: -50px !important;
+      }
+    }
+  }
+
+  #steps {
+    .panel-heading {
+      flex-wrap: wrap;
+    }
+
+    .panel-options {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 100%;
+
+      .complete-step-btn {
+        width: 100%;
+      }
+    }
+  }
+
+  .attachments {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+
+    .attachment-placeholder {
+      margin: 4px 0 16px;
+      width: 200px;
+    }
+  }
+
+  #filePreviewModal {
+    .modal-body {
+      width: 100%;
+
+      .file-preview-container {
+        width: 90%;
+      }
     }
   }
 }

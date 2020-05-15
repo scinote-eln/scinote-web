@@ -15,9 +15,7 @@ describe RepositoryZipExport, type: :background_job do
                                data_type: 'RepositoryListValue'
   end
   let!(:repository_list_item) do
-    create :repository_list_item, data: 'item one',
-                                  repository: repository,
-                                  repository_column: sample_group_column
+    create :repository_list_item, data: 'item one', repository_column: sample_group_column
   end
   let!(:custom_column) do
     create :repository_column, repository: repository,

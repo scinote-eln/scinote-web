@@ -8,7 +8,7 @@ describe RepositoryColumns::UpdateListColumnService do
   let(:team) { create :team }
   let(:repository) { create :repository, team: team }
   let(:column) { create :repository_column, :list_type }
-  let(:list_item) { create(:repository_list_item, repository: repository, repository_column: column) }
+  let(:list_item) { create(:repository_list_item, repository_column: column) }
   let(:service_call) do
     RepositoryColumns::UpdateListColumnService.call(column: column,
                                                     user: user,
@@ -32,7 +32,7 @@ describe RepositoryColumns::UpdateListColumnService do
 
   context 'when changing list items' do
     let(:column) { create :repository_column, :list_type }
-    let(:list_item) { create(:repository_list_item, repository: repository, repository_column: column) }
+    let(:list_item) { create(:repository_list_item, repository_column: column) }
 
     context 'when adding list item' do
       let(:params) do

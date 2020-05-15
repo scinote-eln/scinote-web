@@ -108,14 +108,6 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def recent_protocols
-    render json: Protocol.recent_protocols(
-      current_user,
-      current_team,
-      Constants::RECENT_PROTOCOL_LIMIT
-    ).select(:id, :name)
-  end
-
   def linked_children
     respond_to do |format|
       format.json do

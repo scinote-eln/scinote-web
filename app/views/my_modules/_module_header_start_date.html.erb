@@ -1,0 +1,23 @@
+<% my_module_editable = can_manage_module?(my_module) %>
+
+<span class="date-text" data-editable="<%= my_module_editable %>">
+  <span id="startDateLabelContainer" class="view-block">
+    <%= render partial: "start_date_label.html.erb" , locals: { my_module: my_module } %>
+  </span>
+  <% if my_module_editable %>
+    <div class="datetime-picker-container" id="start-date">
+      <span class="fas fa-calendar-alt"></span>
+      <input id="calendarStartDate"
+             type="datetime"
+             data-toggle='date-time-picker'
+             class="form-control calendar-input"
+             readonly
+             placeholder="<%= t('my_modules.module_header.no_start_date_placeholder') %>"
+             data-date-format="<%= datetime_picker_format_full %>"
+             data-date-locale="<%= I18n.locale %>"
+             data-date-use-current="false"
+             value="<%= my_module.started_on ? l(my_module.started_on, format: :full) : '' %>"/>
+    </div>
+    <span class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarStartDate'></span>
+  <% end %>
+</span>

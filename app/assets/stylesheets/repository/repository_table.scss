@@ -41,7 +41,6 @@
 
     .assign-counter-container {
       border-radius: $border-radius-tag;
-      cursor: pointer;
       display: inline-block;
       line-height: 35px;
       position: absolute;
@@ -49,7 +48,16 @@
       width: calc(100% - 40px);
 
       .assign-counter {
-        margin-left: 5px;
+        display: inline-block;
+        height: 100%;
+        padding-left: 5px;
+        width: 100%;
+
+        &:hover,
+        &:visited,
+        &:focus {
+          text-decoration: none;
+        }
 
         &.has-assigned {
           color: $brand-primary;
@@ -58,6 +66,11 @@
 
       &:hover {
         background-color: $color-alto;
+      }
+
+      .dropdown-menu {
+        min-width: 320px;
+        padding: 8px;
       }
     }
 

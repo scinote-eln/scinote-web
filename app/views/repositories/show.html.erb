@@ -184,16 +184,5 @@
 <%= javascript_pack_tag 'emoji_button' %>
 
 <script type="text/javascript" charset="utf-8">
-  <%
-    js_format = I18n.backend.date_format.dup
-    js_format.gsub!(/%-d/, 'D')
-    js_format.gsub!(/%d/, 'DD')
-    js_format.gsub!(/%-m/, 'M')
-    js_format.gsub!(/%m/, 'MM')
-    js_format.gsub!(/%b/, 'MMM')
-    js_format.gsub!(/%B/, 'MMMM')
-    js_format.gsub!('%Y', 'YYYY')
-  %>
-
-  var formatJS = "<%= js_format %>"
+  var formatJS = "<%= datetime_picker_format_date_only %>"
 </script>

@@ -488,6 +488,7 @@
       var $btn = $(this);
       $btn.off();
       animateSpinner(null, true);
+      $('#protocol-container').collapse('show');
 
       $.ajax({
         url: $btn.data('href'),
@@ -617,7 +618,6 @@
             DragNDropSteps.clearFiles();
             FilePreviewModal.init();
             if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
-            if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
           },
           error: function(xhr) {
             if (xhr.responseJSON['assets.file']) {

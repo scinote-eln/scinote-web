@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
-Canaid::Permissions.register_for(Repository) do
+Canaid::Permissions.register_for(RepositoryBase) do
   # repository: read/export
   can :read_repository do |user, repository|
-    user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
+    if repository.is_a?(RepositorySnapshot)
+      user.teams.include?(repository.team)
+    else
+      user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
+    end
   end
+end
 
+Canaid::Permissions.register_for(Repository) do
   # repository: update, delete
   can :manage_repository do |user, repository|
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)
@@ -14,6 +20,16 @@ Canaid::Permissions.register_for(Repository) do
   # repository: share
   can :share_repository do |user, repository|
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)
+  end
+
+  # repository: make a snapshot with assigned rows
+  can :create_repository_snapshot do |user, repository|
+    user.is_normal_user_or_admin_of_team?(repository.team)
+  end
+
+  # repository: delete a snapshot with assigned rows
+  can :delete_repository_snapshot do |user, repository|
+    user.is_normal_user_or_admin_of_team?(repository.team)
   end
 
   # repository: create/import record
