@@ -13,6 +13,8 @@ class RepositorySnapshot < RepositoryBase
   validates :status, presence: true
   validate :only_one_selected_for_my_module, if: ->(obj) { obj.changed.include? :selected }
 
+  scope :selected, -> { where(selected: true) }
+
   def default_columns_count
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
   end

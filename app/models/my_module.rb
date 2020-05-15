@@ -226,6 +226,10 @@ class MyModule < ApplicationRecord
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
+  def selected_snapshot(repository_id)
+    repository_snapshots.where(parent_id: repository_id).selected.first
+  end
+
   def unassigned_users
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +
@@ -400,10 +404,14 @@ class MyModule < ApplicationRecord
   # in JSON form, suitable for display in handsontable.js
   def repository_json_hot(repository_id, order)
     data = []
-    repository_rows
-      .includes(:created_by)
-      .where(repository_id: repository_id)
-      .order(created_at: order).find_each do |row|
+    r = RepositoryBase.find(repository_id)
+    rows = if r.is_a?(RepositorySnapshot)
+             r.repository_rows.includes(:created_by).order(created_at: order)
+           else
+             repository_rows.includes(:created_by).where(repository_id: repository_id).order(created_at: order)
+           end
+
+    rows.find_each do |row|
       row_json = []
       row_json << row.id
       row_json << row.name
