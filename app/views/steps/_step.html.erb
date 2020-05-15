@@ -2,7 +2,7 @@
 <% import = (defined?(import) ? import : false) %>
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading step-heading">
       <div class="left-floats">
         <a class="step-panel-collapse-link"
            href="#step-panel-<%= step.id || step.position %>"
