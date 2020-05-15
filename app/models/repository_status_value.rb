@@ -60,7 +60,9 @@ class RepositoryStatusValue < ApplicationRecord
 
   def self.import_from_text(text, attributes, _options = {})
     icon = text[0]
-    status = text[1..-1].strip
+    status = text[1..-1]&.strip
+    return nil if status.nil? || icon.nil?
+
     value = new(attributes)
     column = attributes.dig(:repository_cell_attributes, :repository_column)
     status_item = column.repository_status_items.find { |item| item.status == status }
