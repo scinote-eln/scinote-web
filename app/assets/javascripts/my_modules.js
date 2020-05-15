@@ -1,6 +1,39 @@
 /* global I18n dropdownSelector */
 /* eslint-disable no-use-before-define */
 
+function initTaskCollapseState() {
+  let taskView = '.my-modules-protocols-index';
+  let taskSection = '.task-section-caret';
+  let taskId = $(taskView).data('task-id');
+
+  function collapseStateSave() {
+    $(taskView).on('click', taskSection, function() {
+      let collapsed = $(this).attr('aria-expanded');
+      let taskSectionType = $(this).attr('aria-controls');
+
+      if (collapsed === 'true') {
+        localStorage.setItem('task_section_collapsed/' + taskId + '/' + taskSectionType, collapsed);
+      } else {
+        localStorage.removeItem('task_section_collapsed/' + taskId + '/' + taskSectionType);
+      }
+    });
+  }
+
+  function collapseStateLoad() {
+    $(taskSection).each(function() {
+      let taskSectionType = $(this).attr('aria-controls');
+      var collapsed = localStorage.getItem('task_section_collapsed/' + taskId + '/' + taskSectionType);
+
+      if (JSON.parse(collapsed)) {
+        $('#' + taskSectionType).collapse('hide');
+      }
+    });
+  }
+
+  collapseStateSave();
+  collapseStateLoad();
+}
+
 function updateStartDate() {
   let updateUrl = $('#startDateContainer').data('update-url');
   let val = $('#calendarStartDate').val();
@@ -345,6 +378,7 @@ function initAssignedUsersSelector() {
   initUsersEditLink();
 }
 
+initTaskCollapseState();
 applyTaskCompletedCallBack();
 initTagsSelector();
 bindEditTagsAjax();

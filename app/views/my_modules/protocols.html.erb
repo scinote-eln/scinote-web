@@ -4,7 +4,7 @@
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane my-modules-protocols-index">
+<div class="content-pane my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
   <!-- Details -->
   <div class="task-section">
     <div class="task-section-header">
@@ -45,7 +45,7 @@
   <!-- Assigned items -->
   <div class="task-section">
     <div class="task-section-header">
-      <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="false" aria-controls="assigned-items-container">
+      <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
         <i class="fas fa-caret-right"></i>
         <span class="task-section-title ">
           <h2 class="assigned-items-title" data-assigned-items-count="<%= @assigned_repositories.map{|i| i.assigned_rows_count}.sum %>"><%= t('my_modules.assigned_items.title') %></h2>
@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <div class="collapse panel-group" id="assigned-items-container"
+    <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
          data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
       <%= render partial: "my_modules/repositories/repositories_list" %>
     </div>
@@ -73,7 +73,7 @@
   <!-- Protocol -->
   <div class="task-section">
     <div class="task-section-header">
-      <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#protocol-container" aria-expanded="false" aria-controls="protocol-container">
+      <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-container" aria-expanded="true" aria-controls="protocol-container">
         <i class="fas fa-caret-right"></i>
         <div class="task-section-title">
           <h2><%= t('my_modules.protocol.title') %></h2>
@@ -91,7 +91,7 @@
         </a>
       </div>
     </div>
-    <div class="collapse" id="protocol-container">
+    <div class="collapse in" id="protocol-container" aria-expanded="true">
       <%= render partial: "my_module_protocol" %>
     </div>
   </div>
