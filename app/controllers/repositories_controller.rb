@@ -5,7 +5,9 @@ class RepositoriesController < ApplicationController
   include ActionView::Helpers::TagHelper
   include ActionView::Context
   include IconsHelper
+  include TeamsHelper
 
+  before_action :switch_team_with_param, only: :show
   before_action :load_vars,
                 except: %i(index create create_modal parse_sheet)
   before_action :load_parent_vars, except:

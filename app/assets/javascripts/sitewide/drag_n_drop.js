@@ -158,7 +158,6 @@
     function init(location) {
       LOCATION = location;
       global.addEventListener('paste', listener, false);
-      $.initTooltips();
     }
 
     function destroy() {

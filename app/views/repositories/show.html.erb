@@ -44,11 +44,9 @@
         <% end %>
       </div>
 
-      <button class="btn btn-secondary help_tooltips manage-repo-column-index"
+      <button class="btn btn-secondary manage-repo-column-index"
               data-modal-url="<%= repository_columns_index_html_path(@repository) %>"
-              data-action="new"
-              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.manage_columns') %>"
-              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.manage_columns') %>">
+              data-action="new">
         <span class="fas fa-wrench"></span>&nbsp;<%= t('repositories.index.columns') %>
       </button>
 
@@ -113,10 +111,8 @@
   <div class="toolbarButtonsDatatable" style="display:none">
 
     <% if can_create_repository_rows?(@repository) %>
-      <button type="button" class="btn btn-primary editAdd help_tooltips"
-              id="addRepositoryRecord" onclick="onClickAddRecord()"
-              data-tooltiplink="<%= I18n.t('tooltips.link.inventory.new') %>"
-              data-tooltipcontent="<%= I18n.t('tooltips.text.inventory.new') %>">
+      <button type="button" class="btn btn-primary editAdd"
+              id="addRepositoryRecord" onclick="onClickAddRecord()">
         <span class="fas fa-plus"></span>
         <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
       </button>

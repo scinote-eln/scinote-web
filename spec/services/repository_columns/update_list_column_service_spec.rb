@@ -68,7 +68,7 @@ describe RepositoryColumns::UpdateListColumnService do
     context 'when there is more than 500 items' do
       let(:params) do
         {
-          repository_list_items_attributes: Array(1..510).map { |e| { data: "Item #{e}" } }
+          repository_list_items_attributes: Array(1..501).map { |e| { data: "Item #{e}" } }
         }
       end
 

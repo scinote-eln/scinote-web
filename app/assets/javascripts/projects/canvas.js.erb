@@ -244,7 +244,6 @@ function initializeEdit() {
       { color: 'white', shadow: true }
     );
   });
-  $.initTooltips();
 }
 
 function destroyEdit() {
@@ -900,8 +899,6 @@ function bindEditTagsAjax(elements) {
             .find(".edit-tags-link")
             .html(my_module.tags_html);
         });
-        // initialize tooltips again
-        $.initTooltips();
       },
       error: function(data){
         // TODO

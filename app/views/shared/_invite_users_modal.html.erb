@@ -117,18 +117,14 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
           </button>
 
           <!-- Invite buttons -->
-          <button type="button" class="btn btn-primary help_tooltips"
-                  data-tooltiplink="<%= I18n.t('tooltips.link.invite_to_sci') %>"
-                  data-tooltipcontent="<%= I18n.t('tooltips.text.invite_to_sci') %>"
+          <button type="button" class="btn btn-primary"
                   data-role="invite-btn" data-action="invite"
                   disabled="disabled">
             <%= t('invite_users.invite_btn') %>
           </button>
 
           <div class="btn-group" data-role="invite-with-role-div">
-            <button type="button" class="btn btn-primary dropdown-toggle help_tooltips"
-                    data-tooltiplink="<%= I18n.t('tooltips.link.invite_to_sci') %>"
-                    data-tooltipcontent="<%= I18n.t('tooltips.text.invite_to_sci') %>"
+            <button type="button" class="btn btn-primary dropdown-toggle"
                     data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true"
                     aria-expanded="false" data-role="invite-with-role-btn"
                     disabled="disabled">
