@@ -39,26 +39,26 @@ Scenario: Successful add new step to a task
   And I click on "Add" button
   Then I should see "ZOO" step
 
-@javascript
-Scenario: Successful add new step to a task
+#@javascript
+#Scenario: Successful add new step to a task
 
-  Given I'm on the Protocols page of a "qPCR" task
-  And I click "Protocol" link
-  And I click first "New step" link
-  And I'm opening protocol section
-  Then I fill in "PES" in "#step_name" field
-  Then I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea" rich text editor field
-  And I click "Files" link
+  # Given I'm on the Protocols page of a "qPCR" task
+  # And I click "Protocol" link
+  # And I click first "New step" link
+  # And I'm opening protocol section
+  # Then I fill in "PES" in "#step_name" field
+  # Then I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea" rich text editor field
+  # And I click "Files" link
   # Then I attach file "Moon.png" to the drag-n-drop field
   # Then I attach file "File.txt" to the drag-n-drop field
   # Then I attach file "Star.png" to the drag-n-drop field
-  Then I click "Tables" link
-  Then I click "Add table" link
-  Then I fill in "PES" in ".table_name" field
+  # Then I click "Tables" link
+  # Then I click "Add table" link
+  # Then I fill in "PES" in ".table_name" field
   # Then I fill in "Labradorec" to "A1" Table field
   # Then I fill in "Dalmatinec" to "B2" Table field
-  And I click "Add" button
-  Then I should see "PES" on "#steps" element
+  # And I click "Add" button
+  # Then I should see "PES" on "#steps" element
   # And I should see "Moon.png" attachment on "PES" step
   # And I should see "File.txt" attachment on "PES" step
   # And I should see "Star.png" attachment on "PES" step
