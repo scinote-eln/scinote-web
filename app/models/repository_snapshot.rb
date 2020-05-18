@@ -19,6 +19,10 @@ class RepositorySnapshot < RepositoryBase
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
   end
 
+  def assigned_rows(_my_module)
+    repository_rows
+  end
+
   private
 
   def only_one_selected_for_my_module

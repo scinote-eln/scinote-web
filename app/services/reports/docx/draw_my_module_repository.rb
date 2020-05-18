@@ -6,10 +6,11 @@ module Reports::Docx::DrawMyModuleRepository
     return unless my_module
 
     repository_id = subject['id']['repository_id']
-    repository_data = my_module.repository_docx_json(repository_id)
+    repository = ::RepositoryBase.find(repository_id)
+    repository_data = my_module.repository_docx_json(repository)
+
     return false unless repository_data[:rows].any?
 
-    repository = ::Repository.find(repository_id)
     table = prepare_row_columns(repository_data)
 
     @docx.p

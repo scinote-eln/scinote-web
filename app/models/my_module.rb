@@ -402,15 +402,9 @@ class MyModule < ApplicationRecord
 
   # Generate the repository rows belonging to this module
   # in JSON form, suitable for display in handsontable.js
-  def repository_json_hot(repository_id, order)
+  def repository_json_hot(repository, order)
     data = []
-    r = RepositoryBase.find(repository_id)
-    rows = if r.is_a?(RepositorySnapshot)
-             r.repository_rows.includes(:created_by).order(created_at: order)
-           else
-             repository_rows.includes(:created_by).where(repository_id: repository_id).order(created_at: order)
-           end
-
+    rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
     rows.find_each do |row|
       row_json = []
       row_json << row.id
@@ -430,29 +424,7 @@ class MyModule < ApplicationRecord
     { data: data, headers: headers }
   end
 
-  def repository_json(repository_id, order, user)
-    headers = [
-      I18n.t('repositories.table.id'),
-      I18n.t('repositories.table.row_name'),
-      I18n.t('repositories.table.added_on'),
-      I18n.t('repositories.table.added_by')
-    ]
-    repository = Repository.find_by_id(repository_id)
-    return false unless repository
-
-    repository.repository_columns.order(:id).each do |column|
-      headers.push(column.name)
-    end
-
-    params = { assigned: 'assigned', search: {}, order: { values: { column: '1', dir: order } } }
-    records = RepositoryDatatableService.new(repository,
-                                             params,
-                                             user,
-                                             self)
-    { headers: headers, data: records }
-  end
-
-  def repository_docx_json(repository_id)
+  def repository_docx_json(repository)
     headers = [
       I18n.t('repositories.table.id'),
       I18n.t('repositories.table.row_name'),
@@ -460,7 +432,6 @@ class MyModule < ApplicationRecord
       I18n.t('repositories.table.added_by')
     ]
     custom_columns = []
-    repository = Repository.find_by(id: repository_id)
     return false unless repository
 
     repository.repository_columns.order(:id).each do |column|
@@ -468,7 +439,7 @@ class MyModule < ApplicationRecord
       custom_columns.push(column.id)
     end
 
-    records = repository_rows.where(repository_id: repository_id).select(:id, :name, :created_at, :created_by_id)
+    records = repository.assigned_rows(self).select(:id, :name, :created_at, :created_by_id)
     { headers: headers, rows: records, custom_columns: custom_columns }
   end
 

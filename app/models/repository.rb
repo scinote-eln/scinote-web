@@ -212,4 +212,8 @@ class Repository < RepositoryBase
   def sync_name_with_snapshots
     repository_snapshots.update(name: name)
   end
+
+  def assigned_rows(my_module)
+    repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
+  end
 end
