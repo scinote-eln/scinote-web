@@ -308,6 +308,27 @@
         max-height: 100%;
         overflow: auto;
       }
+
+      // Checklists
+      .checklist-dropdown {
+        .dropdown-menu {
+          min-width: 220px;
+
+          .checklist-item {
+            line-height: 18px;
+            padding: 5px 15px;
+          }
+        }
+
+        span {
+          color: $brand-primary;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
     }
 
     .main-actions {
