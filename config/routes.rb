@@ -639,11 +639,16 @@ Rails.application.routes.draw do
       get :status
 
       resources :repository_columns, only: %i(create edit update destroy)
-      resources :repository_rows, only: %i(create update) do
+      resources :repository_rows, only: %i(create show update) do
         member do
           get :assigned_task_list
         end
       end
+
+      collection do
+        post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+      end
+
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
@@ -671,13 +676,6 @@ Rails.application.routes.draw do
         end
       end
     end
-
-    post 'available_rows', to: 'repository_rows#available_rows',
-                           defaults: { format: 'json' }
-
-    get 'repository_rows/:id', to: 'repository_rows#show',
-                               as: :repository_row,
-                               defaults: { format: 'json' }
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
