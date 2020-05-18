@@ -392,7 +392,7 @@ var MyModuleRepositories = (function() {
       animateSpinner(null, true);
 
       if (FULL_VIEW_MODAL.find('.table').data('type') === 'live') {
-        data = { repository_snapshot_id: -1 };
+        data = { repository_id: FULL_VIEW_MODAL.find('.table').data('id') };
       } else {
         data = { repository_snapshot_id: FULL_VIEW_MODAL.find('.table').data('id') };
       }
