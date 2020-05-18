@@ -378,7 +378,7 @@ var MyModuleRepositories = (function() {
       animateSpinner(null, true);
 
       if (FULL_VIEW_MODAL.find('.table').data('type') === 'live') {
-        data = { repository_snapshot_id: -1 };
+        data = { repository_id: FULL_VIEW_MODAL.find('.table').data('id') };
       } else {
         data = { repository_snapshot_id: FULL_VIEW_MODAL.find('.table').data('id') };
       }
@@ -567,7 +567,7 @@ var MyModuleRepositories = (function() {
         HelperModule.flashAlertMsg(data.flash, 'success');
         SELECTED_ROWS = {};
         $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
-          .attr('data-assigned-items-count', data.rows_count)
+          .attr('data-assigned-items-count', data.rows_count);
         FULL_VIEW_TABLE.ajax.reload(null, false);
         reloadRepositoriesList();
         renderFullViewAssignButtons();

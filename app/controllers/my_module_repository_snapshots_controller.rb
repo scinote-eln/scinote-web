@@ -83,13 +83,15 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def select
-    if params[:repository_snapshot_id].to_i == -1
-      @my_module.repository_snapshots.where(original_repository: @repository).update(selected: nil)
+    if params[:repository_id]
+      @my_module.repository_snapshots.where(parent_id: params[:repository_id]).update(selected: nil)
     else
       repository_snapshot = @my_module.repository_snapshots.find_by(id: params[:repository_snapshot_id])
       return render_404 unless repository_snapshot
 
-      @my_module.repository_snapshots.where(original_repository: @repository).update(selected: nil)
+      @my_module.repository_snapshots
+                .where(original_repository: repository_snapshot.original_repository)
+                .update(selected: nil)
       repository_snapshot.update!(selected: true)
     end
 
