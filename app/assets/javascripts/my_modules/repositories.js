@@ -464,7 +464,7 @@ var MyModuleRepositories = (function() {
   function renderFullViewAssignButtons() {
     var toolbar = FULL_VIEW_MODAL.find('.dataTables_wrapper .toolbar');
     toolbar.empty();
-    if (FULL_VIEW_MODAL.data('rows-count') === 0) {
+    if (parseInt(FULL_VIEW_MODAL.data('rows-count'), 10) === 0) {
       toolbar.append($('#my-module-repository-full-view-assign-button').html());
     } else {
       toolbar.append($('#my-module-repository-full-view-update-button').html());
@@ -587,6 +587,7 @@ var MyModuleRepositories = (function() {
           .attr('data-assigned-items-count', data.rows_count);
         FULL_VIEW_TABLE.ajax.reload(null, false);
         reloadRepositoriesList();
+        updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
       error: function(data) {
