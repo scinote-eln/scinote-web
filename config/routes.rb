@@ -435,9 +435,6 @@ Rails.application.routes.draw do
         get 'results' # Results view for single module
         # get 'samples' # Samples view for single module
         # Repository view for single module
-        get 'repository/:repository_id',
-            to: 'my_modules#repository',
-            as: :repository
         post 'repository_index/:repository_id',
              to: 'my_modules#repository_index',
              as: :repository_index
