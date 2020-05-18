@@ -27,7 +27,7 @@
 
   <div class="repository-snapshots-container">
     <div class="snapshots-container-scrollbody">
-      <% if @repository.present? %>
+      <% if @repository.present? && can_manage_module?(@my_module) %>
         <div class="create-snapshot-item">
           <% if @repository_snapshots.blank? %>
             <p>

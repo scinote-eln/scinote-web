@@ -52,15 +52,17 @@
         </span>
       </a>
       <div class="actions-block">
-        <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
-          <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="fas fa-file-signature"></span>
-            <span><%= t('my_modules.assigned_items.assign_from') %></span>
-            <span class="caret pull-right"></span>
-          </a>
-          <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
-          </ul>
-        </div>
+        <% if can_assign_repository_rows_to_module?(@my_module) %>
+          <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
+            <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="fas fa-file-signature"></span>
+              <span><%= t('my_modules.assigned_items.assign_from') %></span>
+              <span class="caret pull-right"></span>
+            </a>
+            <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+            </ul>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
@@ -82,13 +84,15 @@
       <%= render partial: "my_modules/protocols/protocol_status_bar" %>
       <div class="actions-block">
         <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
-        <a href="#"
-           class="btn btn-primary"
-           data-action="new-step"
-           data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
-            <span class="fas fa-plus" aria-hidden="true"></span>
-            <span><%=t "protocols.steps.new_step" %></span>
-        </a>
+        <% if can_manage_protocol_in_module?(@protocol) %>
+          <a href="#"
+             class="btn btn-primary"
+             data-action="new-step"
+             data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
+              <span class="fas fa-plus" aria-hidden="true"></span>
+              <span><%=t "protocols.steps.new_step" %></span>
+          </a>
+        <% end %>
       </div>
     </div>
     <div class="collapse in" id="protocol-container" aria-expanded="true">
