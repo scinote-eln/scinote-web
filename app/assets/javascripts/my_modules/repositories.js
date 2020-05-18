@@ -299,6 +299,16 @@ var MyModuleRepositories = (function() {
     });
   }
 
+  function refreshCreationSpanshotInfoText() {
+    var snapshotsCount = FULL_VIEW_MODAL.find('.repository-snapshot-item').length;
+    var createSnapshotInfo = FULL_VIEW_MODAL.find('.create-snapshot-item .info');
+    if (snapshotsCount) {
+      createSnapshotInfo.addClass('hidden');
+    } else {
+      createSnapshotInfo.removeClass('hidden');
+    }
+  }
+
   function initVersionsSidebarActions() {
     FULL_VIEW_MODAL.on('click', '#showVersionsSidebar', function(e) {
       $(this).toggleClass('active');
@@ -334,6 +344,7 @@ var MyModuleRepositories = (function() {
             checkSnapshotStatus(snapshotItem);
           }, STATUS_POLLING_INTERVAL);
           animateSpinner(null, false);
+          refreshCreationSpanshotInfoText();
         }
       });
       e.stopPropagation();
@@ -352,6 +363,7 @@ var MyModuleRepositories = (function() {
           }
           snapshotItem.remove();
           animateSpinner(null, false);
+          refreshCreationSpanshotInfoText();
         }
       });
       e.stopPropagation();
