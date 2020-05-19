@@ -98,7 +98,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_dropdown_list
-    @repositories = Repository.accessible_by_teams(current_team)
+    @repositories = Repository.accessible_by_teams(current_team).order(:name)
 
     render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_dropdown_list') }
   end
