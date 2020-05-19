@@ -412,6 +412,12 @@ var MyModuleRepositories = (function() {
       });
       e.stopPropagation();
     });
+
+    FULL_VIEW_MODAL.on('hidden.bs.modal', function() {
+      FULL_VIEW_MODAL.find('.repository-versions-sidebar').empty();
+      FULL_VIEW_MODAL.find('.modal-content').removeClass('show-sidebar');
+      FULL_VIEW_MODAL.find('#showVersionsSidebar').removeClass('active');
+    });
   }
 
   function initRepositoryFullView() {
