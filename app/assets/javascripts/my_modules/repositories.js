@@ -417,6 +417,13 @@ var MyModuleRepositories = (function() {
       FULL_VIEW_MODAL.find('.repository-versions-sidebar').empty();
       FULL_VIEW_MODAL.find('.modal-content').removeClass('show-sidebar');
       FULL_VIEW_MODAL.find('#showVersionsSidebar').removeClass('active');
+      FULL_VIEW_TABLE.destroy();
+    });
+
+    FULL_VIEW_MODAL.on('show.bs.modal', function() {
+      FULL_VIEW_MODAL.find('.table-container').empty();
+      FULL_VIEW_MODAL.find('.repository-name').empty();
+      updateFullViewRowsCount('');
     });
   }
 
