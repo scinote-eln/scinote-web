@@ -1072,6 +1072,7 @@ en:
       view_only_permission_label: "You have veiw-only permission"
       show_per_page: "Show %{number} per page"
       filter_inventory: "Filter inventory item"
+      snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
 
       options_dropdown:
         import_items: 'Import items'

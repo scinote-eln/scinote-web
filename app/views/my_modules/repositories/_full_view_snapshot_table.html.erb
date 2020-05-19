@@ -17,7 +17,7 @@
       <th id="row-name"><%= t("repositories.table.row_name") %></th>
       <th id="added-on"><%= t("repositories.table.added_on") %></th>
       <th id="added-by"><%= t("repositories.table.added_by") %></th>
-      <% @repository_snapshot.repository_columns.order(:id).each do |column| %>
+      <% @repository_snapshot.repository_columns.order(:parent_id).each do |column| %>
         <th class="repository-column"
             id="<%= column.id %>"
             data-type="<%= column.data_type %>"

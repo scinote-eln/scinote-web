@@ -4,18 +4,13 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
-  before_action :load_info_modal_vars, only: %i(show assigned_task_list)
-  before_action :load_vars, only: %i(edit update)
-  before_action :load_repository,
-                only: %i(create
-                         delete_records
-                         index
-                         copy_records
-                         available_rows)
+  before_action :load_repository
+  before_action :load_repository_row, only: %i(update show assigned_task_list)
+  before_action :check_read_permissions, except: %i(create update delete_records copy_records)
+  before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: :delete_records
-  before_action :check_manage_permissions,
-                only: %i(edit update copy_records)
+  before_action :check_manage_permissions, only: %i(update copy_records)
 
   def index
     @draw = params[:draw].to_i
@@ -54,6 +49,9 @@ class RepositoryRowsController < ApplicationController
   end
 
   def show
+    @assigned_modules = MyModuleRepositoryRow.eager_load(my_module: [{ experiment: :project }])
+                                             .where(repository_row: @repository_row)
+
     respond_to do |format|
       format.json do
         render json: {
@@ -65,54 +63,26 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
-  def edit
-    json = {
-      repository_row: {
-        name: escape_input(@record.name),
-        repository_cells: {},
-        repository_column_items: fetch_columns_list_items
-      }
-    }
-
-    # Add custom cells ids as key (easier lookup on js side)
-    @record.repository_cells.each do |cell|
-      if cell.value_type == 'RepositoryAssetValue'
-        cell_value = cell.value.asset
-      else
-        cell_value = escape_input(cell.value.data)
-      end
-
-      json[:repository_row][:repository_cells][cell.repository_column_id] = {
-        repository_cell_id: cell.id,
-        cell_column_id: cell.repository_column.id, # needed for mappings
-        value: cell_value,
-        type: cell.value_type,
-        list_items: fetch_list_items(cell)
-      }
-    end
-
-    respond_to do |format|
-      format.html
-      format.json { render json: json }
-    end
-  end
-
   def update
     row_update = RepositoryRows::UpdateRepositoryRowService
-                 .call(repository_row: @record, user: current_user, params: update_params)
+                 .call(repository_row: @repository_row, user: current_user, params: update_params)
 
     if row_update.succeed?
       if row_update.record_updated
-        log_activity(:edit_item_inventory, @record)
-        @record.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
-          record_annotation_notification(@record, repository_cell)
+        log_activity(:edit_item_inventory, @repository_row)
+        @repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
+          record_annotation_notification(@repository_row, repository_cell)
         end
       end
 
-      render json: { id: @record.id, flash: t('repositories.update.success_flash',
-                                              record: escape_input(@record.name),
-                                              repository: escape_input(@repository.name)) },
-             status: :ok
+      render json: {
+        id: @repository_row.id,
+        flash: t(
+          'repositories.update.success_flash',
+          record: escape_input(@repository_row.name),
+          repository: escape_input(@repository.name)
+        )
+      }, status: :ok
     else
       render json: row_update.errors, status: :bad_request
     end
@@ -122,7 +92,7 @@ class RepositoryRowsController < ApplicationController
     deleted_count = 0
     if selected_params
       selected_params.each do |row_id|
-        row = @repository.repository_rows.find_by_id(row_id)
+        row = @repository.repository_rows.find_by(id: row_id)
         next unless row && can_manage_repository_rows?(@repository)
 
         log_activity(:delete_item_inventory, row)
@@ -196,31 +166,32 @@ class RepositoryRowsController < ApplicationController
   include StringUtility
   AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
-  def load_info_modal_vars
-    @repository_row = RepositoryRow.eager_load(:created_by, repository: [:team])
-                                   .find_by_id(params[:id])
-    @assigned_modules = MyModuleRepositoryRow.eager_load(
-      my_module: [{ experiment: :project }]
-    ).where(repository_row: @repository_row)
-    render_404 and return unless @repository_row
-    render_403 unless can_read_repository?(@repository_row.repository)
-  end
-
-  def load_vars
+  def load_repository
     @repository = Repository.accessible_by_teams(current_team)
                             .eager_load(:repository_columns)
-                            .find_by_id(params[:repository_id])
-
-    @record = @repository.repository_rows
-                         .eager_load(:repository_columns)
-                         .find_by_id(params[:id])
-    render_404 unless @repository && @record
+                            .find_by(id: params[:repository_id])
+    render_404 unless @repository
   end
 
-  def load_repository
-    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
-    render_404 unless @repository
+  def load_repository_row
+    @repository_row = @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
+    render_404 unless @repository_row
+  end
+
+  def check_read_permissions
     render_403 unless can_read_repository?(@repository)
+  end
+
+  def check_snapshotting_status
+    return if @repository.repository_snapshots.provisioning.none?
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          flash: t('repositories.index.snapshot_provisioning_in_progress')
+        }, status: :unprocessable_entity
+      end
+    end
   end
 
   def check_create_permissions
