@@ -222,9 +222,9 @@ var MyModuleRepositories = (function() {
     versionsSidebar.find(`[data-id="${currentId}"]`).addClass('active');
 
     if (!versionsSidebar.find(`[data-id="${currentId}"]`).data('selected')) {
-      $('#setDefaultVersionButton').removeClass('hidden');
+      $('#setDefaultVersionButton').parent().removeClass('hidden');
     } else {
-      $('#setDefaultVersionButton').addClass('hidden');
+      $('#setDefaultVersionButton').parent().addClass('hidden');
     }
   }
 
@@ -376,6 +376,13 @@ var MyModuleRepositories = (function() {
       reloadTable($(this).data('table-url'));
       e.stopPropagation();
     });
+    FULL_VIEW_MODAL.on('click', '.repository-snapshot-item', function(e) {
+      var snapshotButton = $(this).find('.select-snapshot-button');
+      if (!snapshotButton.hasClass('disabled')) {
+        snapshotButton.click();
+      }
+      e.stopPropagation();
+    });
 
     FULL_VIEW_MODAL.on('click', '#selectLiveVersionButton', function(e) {
       reloadTable(FULL_VIEW_MODAL.find('#selectLiveVersionButton').data('table-url'));
@@ -408,7 +415,7 @@ var MyModuleRepositories = (function() {
           let versionsList = FULL_VIEW_MODAL.find('.repository-versions-list');
           versionsList.find('.list-group-item').data('selected', false);
           versionsList.find('.list-group-item.active').data('selected', true);
-          $('#setDefaultVersionButton').addClass('hidden');
+          $('#setDefaultVersionButton').parent().addClass('hidden');
           animateSpinner(null, false);
         }
       });
