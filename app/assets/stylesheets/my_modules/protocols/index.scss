@@ -471,12 +471,17 @@
   }
 
   .dropdown-menu {
+    @include font-button;
     min-width: 500px;
     padding: 1em 2em;
 
+    .task-details-value {
+      @include font-h3;
+    }
+
     .row-v-margin {
       margin-bottom: .5em;
-      margin-top: .5em
+      margin-top: .5em;
     }
   }
 }
