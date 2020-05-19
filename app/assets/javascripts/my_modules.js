@@ -27,6 +27,7 @@ function initTaskCollapseState() {
       if (JSON.parse(collapsed)) {
         $('#' + taskSectionType).collapse('hide');
       }
+      $(this).closest('.task-section').removeClass('hidden');
     });
   }
 
