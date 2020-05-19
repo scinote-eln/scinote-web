@@ -273,11 +273,9 @@
       if (totalSize > fileMaxSize) {
         filesValid = false;
         disableSubmitButton();
-        $.each($('.panel-step-attachment-new'), function() {
-          if (!$(this).find('p').hasClass('dnd-total-error')) {
-            $(this)
-              .find('.panel-body')
-              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
+        $.each($('.attachment-placeholder.new'), function() {
+          if (!$(this).find('p').hasClass('dnd-error')) {
+            $(this).append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
           }
         });
       } else {
