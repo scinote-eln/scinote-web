@@ -47,6 +47,7 @@ var DasboardCurrentTasksWidget = (function() {
   function filtersEnabled() {
     return dropdownSelector.getValues(experimentFilter)
            || dropdownSelector.getValues(projectFilter)
+           || $('.current-tasks-widget .task-search-field').val().length > 0
            || dropdownSelector.getValues(viewFilter) !== 'uncompleted';
   }
 

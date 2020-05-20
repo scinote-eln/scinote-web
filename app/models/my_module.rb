@@ -54,7 +54,6 @@ class MyModule < ApplicationRecord
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :repository_snapshots,
-           class_name: 'RepositorySnapshot',
            dependent: :destroy,
            inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
@@ -201,7 +200,29 @@ class MyModule < ApplicationRecord
   end
 
   def assigned_repositories
-    Repository.where(id: repository_rows.select('DISTINCT(repository_id)'))
+    team = experiment.project.team
+    team.repositories
+        .joins(repository_rows: :my_module_repository_rows)
+        .where(my_module_repository_rows: { my_module_id: id })
+        .group(:id)
+  end
+
+  def live_and_snapshot_repositories_list
+    snapshots = repository_snapshots.left_outer_joins(:original_repository)
+
+    selected_snapshots = snapshots.where(selected: true)
+                                  .or(snapshots.where(original_repositories_repositories: { id: nil }))
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .select('COUNT(repository_rows.id) AS assigned_rows_count')
+                                  .joins(:repository_rows)
+                                  .group(:parent_id, :id)
+                                  .order(:parent_id, updated_at: :desc)
+
+    live_repositories = assigned_repositories
+                        .select('repositories.*, COUNT(repository_rows.id) AS assigned_rows_count')
+                        .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
+
+    (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
   def unassigned_users
@@ -521,21 +542,6 @@ class MyModule < ApplicationRecord
   def uncomplete
     self.state = 'uncompleted'
     self.completed_on = nil
-  end
-
-  def self.my_modules_list_partial
-    ungrouped_tasks = joins(experiment: :project)
-                      .select('experiments.name as experiment_name,
-                               projects.name as project_name,
-                               my_modules.name as task_name,
-                               my_modules.id')
-    ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
-      {
-        project_name: group[0],
-        experiment_name: group[1],
-        tasks: tasks.map { |task| { id: task.id, task_name: task.task_name } }
-      }
-    end
   end
 
   def assign_user(user, assigned_by = nil)

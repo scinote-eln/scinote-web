@@ -2,6 +2,7 @@ module BootstrapFormHelper
 
   # Extend Bootstrap form builder
   class BootstrapForm::FormBuilder
+    include BootstrapFormHelper
 
     # Returns Bootstrap date-time picker of the "datetime" type tailored for accessing a specified datetime attribute (identified by +name+) on an object
     # assigned to the template (identified by +object+). Additional options on the input tag can be passed as a

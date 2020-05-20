@@ -18,9 +18,7 @@
     <% if can_manage_module?(@my_module) %>
       <div class="add-result-toolbar">
         <span class="hidden-xs add-result-text"><%= t'my_modules.results.add_label' %></span>
-        <div class="sci-btn-group help_tooltips"
-             data-tooltiplink="<%= I18n.t('tooltips.link.task.results') %>"
-             data-tooltipcontent="<%= I18n.t('tooltips.text.task.results') %>">
+        <div class="sci-btn-group">
           <a class="btn btn-primary"
              id="new-result-text"
              data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"

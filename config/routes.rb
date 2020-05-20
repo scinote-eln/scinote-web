@@ -394,19 +394,24 @@ Rails.application.routes.draw do
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
         end
+      end
 
-        resources :snapshots, controller: :my_module_repository_snapshots,
-          only: %i(create destroy show) do
-
-          member do
-            get :full_view_table
-            post :index_dt
-            get :status
-          end
+      resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
+        member do
+          get :full_view_table
+          post :index_dt
+          get :status
         end
 
-        get :full_view_versions_sidebar, controller: :my_module_repository_snapshots
+        collection do
+          get ':repository_id/full_view_sidebar',
+              to: 'my_module_repository_snapshots#full_view_sidebar',
+              as: :full_view_sidebar
+          post ':repository_id', to: 'my_module_repository_snapshots#create', as: ''
+        end
       end
+
+      post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
       # resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]
@@ -430,9 +435,6 @@ Rails.application.routes.draw do
         get 'results' # Results view for single module
         # get 'samples' # Samples view for single module
         # Repository view for single module
-        get 'repository/:repository_id',
-            to: 'my_modules#repository',
-            as: :repository
         post 'repository_index/:repository_id',
              to: 'my_modules#repository_index',
              as: :repository_index
@@ -586,7 +588,6 @@ Rails.application.routes.draw do
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
-        get 'recent_protocols'
       end
     end
 
@@ -631,9 +632,20 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_columns',
           as: 'available_columns',
           defaults: { format: 'json' }
+      get :table_toolbar
+      get :status
 
       resources :repository_columns, only: %i(create edit update destroy)
-      resources :repository_rows, only: %i(create edit update)
+      resources :repository_rows, only: %i(create show update) do
+        member do
+          get :assigned_task_list
+        end
+      end
+
+      collection do
+        post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+      end
+
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
@@ -661,13 +673,6 @@ Rails.application.routes.draw do
         end
       end
     end
-
-    post 'available_rows', to: 'repository_rows#available_rows',
-                           defaults: { format: 'json' }
-
-    get 'repository_rows/:id', to: 'repository_rows#show',
-                               as: :repository_row,
-                               defaults: { format: 'json' }
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search

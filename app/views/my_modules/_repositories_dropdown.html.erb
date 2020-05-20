@@ -1,8 +1,6 @@
 <% Repository.accessible_by_teams(current_team).order(created_at: :asc).each do |repository| %>
   <li>
-    <a class="dropdown-item <%= "active-item" if @repository == repository %> help_tooltips"
-       data-tooltiplink="<%= I18n.t('tooltips.link.protocol.inventories') %>"
-       data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.inventories') %>"
+    <a class="dropdown-item <%= "active-item" if @repository == repository %>"
        href="<%= repository_my_module_url(id: @my_module, repository_id: repository) %>"
        title="<%= repository.name %>">
       <% if enable_counters %>
@@ -22,8 +20,7 @@
 
 <% Repository.used_on_task_but_unshared(@my_module, current_team).each do |repository| %>
   <li>
-    <a class="muted dropdown-item help_tooltips"
-       data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.unshared_inventory') + repository.team.name %>"
+    <a class="muted dropdown-item"
        title="<%= repository.name %>"
        href="<%= unshared_inventory_my_module_path(inventory_id: repository.id)%>">
 

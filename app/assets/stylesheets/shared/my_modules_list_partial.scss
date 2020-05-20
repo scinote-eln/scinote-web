@@ -56,4 +56,14 @@
       }
     }
   }
+
+  .archived {
+    @include font-small;
+    background: $brand-warning;
+    border-radius: $border-radius-tag;
+    color: $color-white;
+    line-height: 14px;
+    margin-right: 3px;
+    padding: 2px 3px;
+  }
 }

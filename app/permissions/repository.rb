@@ -1,8 +1,19 @@
 # frozen_string_literal: true
 
+Canaid::Permissions.register_for(RepositoryBase) do
+  # repository: read/export
+  can :read_repository do |user, repository|
+    if repository.is_a?(RepositorySnapshot)
+      user.teams.include?(repository.team)
+    else
+      user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
+    end
+  end
+end
+
 Canaid::Permissions.register_for(Repository) do
+  # Should be no provisioning snapshots for repository for all the specified permissions
   %i(manage_repository
-     share_repository
      create_repository_rows
      manage_repository_rows
      update_repository_rows
@@ -10,13 +21,8 @@ Canaid::Permissions.register_for(Repository) do
      create_repository_columns)
     .each do |perm|
     can perm do |_, repository|
-      !repository.is_a? RepositorySnapshot
+      repository.repository_snapshots.provisioning.none?
     end
-  end
-
-  # repository: read/export
-  can :read_repository do |user, repository|
-    user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
   end
 
   # repository: update, delete

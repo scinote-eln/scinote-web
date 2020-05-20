@@ -17,38 +17,33 @@ class MyModuleRepositoriesController < ApplicationController
 
     @datatable_params = {
       view_mode: params[:view_mode],
-      skip_custom_columns: params[:skip_custom_columns],
       my_module: @my_module
     }
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
-    @repository_rows = datatable_service.repository_rows
-                                        .preload(:repository_columns,
-                                                 :created_by,
-                                                 repository_cells: @repository.cell_preload_includes)
-                                        .page(page)
-                                        .per(per_page)
+    if params[:simple_view]
+      repository_rows = datatable_service.repository_rows
+      rows_view = 'repository_rows/simple_view_index.json'
+    else
+      repository_rows = datatable_service.repository_rows.preload(:repository_columns,
+                                                                  :created_by,
+                                                                  repository_cells: @repository.cell_preload_includes)
+      rows_view = 'repository_rows/index.json'
+    end
+    @repository_rows = repository_rows.page(page).per(per_page)
 
-    render 'repository_rows/index.json'
+    render rows_view
   end
 
   def update
-    if params[:rows_to_assign]
-      assign_service = RepositoryRows::MyModuleAssigningService.call(my_module: @my_module,
-                                                                     repository: @repository,
-                                                                     user: current_user,
-                                                                     params: params)
-    end
-    if params[:rows_to_unassign]
-      unassign_service = RepositoryRows::MyModuleUnassigningService.call(my_module: @my_module,
-                                                                         repository: @repository,
-                                                                         user: current_user,
-                                                                         params: params)
-    end
-
-    if (params[:rows_to_assign].nil? || assign_service.succeed?) &&
-       (params[:rows_to_unassign].nil? || unassign_service.succeed?)
-      flash = update_flash_message
+    service = RepositoryRows::MyModuleAssignUnassignService.call(my_module: @my_module,
+                                                                 repository: @repository,
+                                                                 user: current_user,
+                                                                 params: params)
+    if service.succeed? &&
+       (service.assigned_rows_count.positive? ||
+         service.unassigned_rows_count.positive?)
+      flash = update_flash_message(service)
       status = :ok
     else
       flash = t('my_modules.repository.flash.update_error')
@@ -89,8 +84,11 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_list_html
-    @assigned_repositories = @my_module.assigned_repositories
-    render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_list') }
+    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
+    render json: {
+      html: render_to_string(partial: 'my_modules/repositories/repositories_list'),
+      assigned_rows_count: @assigned_repositories.map{|i| i.assigned_rows_count}.sum
+    }
   end
 
   def full_view_table
@@ -129,9 +127,9 @@ class MyModuleRepositoriesController < ApplicationController
     render_403 unless can_assign_repository_rows_to_module?(@my_module)
   end
 
-  def update_flash_message
-    assigned_count = params[:rows_to_assign]&.count
-    unassigned_count = params[:rows_to_unassign]&.count
+  def update_flash_message(service)
+    assigned_count = service.assigned_rows_count
+    unassigned_count = service.unassigned_rows_count
 
     if params[:downstream] == 'true'
       if assigned_count && unassigned_count

@@ -64,8 +64,6 @@ class Constants
   ATWHO_SEARCH_LIMIT = 5
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
-  # Number of protocols in recent protocol dropdown
-  RECENT_PROTOCOL_LIMIT = 14
 
   #=============================================================================
   # File and data memory size

@@ -16,6 +16,7 @@
              data-date-format="<%= datetime_picker_format_full %>"
              data-date-locale="<%= I18n.locale %>"
              data-date-use-current="false"
+             data-date-orientation="left"
              value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
     </div>
     <span class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>

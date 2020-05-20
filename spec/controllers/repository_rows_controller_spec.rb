@@ -36,17 +36,17 @@ describe RepositoryRowsController, type: :controller do
 
   describe '#show' do
     it 'unsuccessful response with non existing id' do
-      get :show, format: :json, params: { id: -1 }
+      get :show, format: :json, params: { repository_id: repository.id, id: -1 }
       expect(response).to have_http_status(:not_found)
     end
 
-    it 'unsuccessful response with unpermitted id' do
-      get :show, format: :json, params: { id: repository_row_two.id }
-      expect(response).to have_http_status(:forbidden)
+    it 'unsuccessful response with id from another repository' do
+      get :show, format: :json, params: { repository_id: repository.id, id: repository_row_two.id }
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'successful response' do
-      get :show, format: :json, params: { id: repository_row.id }
+      get :show, format: :json, params: { repository_id: repository.id, id: repository_row.id }
       expect(response).to have_http_status(:success)
     end
   end

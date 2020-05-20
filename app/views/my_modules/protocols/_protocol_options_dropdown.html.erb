@@ -2,7 +2,7 @@
 <% protocol_editable = can_manage_protocol_in_module?(@protocol) %>
 <% protocol_savable_to_repo = can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) %>
 
-<div class="dropdown">
+<div class="dropdown sci-dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownProtocolOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     <span class="fas fa-wrench"></span>
     <span><%= t('my_modules.protocol.options_dropdown.title') %></span>

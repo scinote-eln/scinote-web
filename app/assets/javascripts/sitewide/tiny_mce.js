@@ -126,7 +126,7 @@ var TinyMCE = (function() {
         }
 
         tinyMCE.init({
-          cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=4.9.10', // This suffix should be changed any time library is updated
           selector: selector,
           convert_urls: false,
           menubar: 'file edit view insert format',

@@ -34,6 +34,17 @@
 
     h2 {
       margin: 10px 0;
+
+      &.assigned-items-title {
+        &::after {
+          @include font-h3;
+          color: $color-alto;
+          content: '[' attr(data-assigned-items-count) ']';
+          display: inline;
+          line-height: 22px;
+          padding-left: 5px;
+        }
+      }
     }
   }
 
@@ -64,8 +75,6 @@
         }
 
         .repositories-dropdown-menu {
-          width: 100%;
-
           .repository {
             @include font-button;
             cursor: pointer;
@@ -104,8 +113,8 @@
         }
       }
 
-      [data-action="new-step"] {
-        margin-left: 5px;
+      .dropdown {
+        margin-right: 5px;
       }
     }
   }
@@ -273,7 +282,7 @@
       flex-basis: 100px;
       flex-grow: 1;
       flex-shrink: 1;
-      max-width: calc(100% - 65px);
+      max-width: 100%;
       position: relative;
       z-index: 110;
 
@@ -462,6 +471,29 @@
 
     .dropdown-footer {
       padding: 16px;
+    }
+  }
+}
+
+.task-details-dropdown-container {
+  .task-details-button {
+    @include font-h2;
+    cursor: pointer;
+    margin: 0 3px;
+  }
+
+  .dropdown-menu {
+    @include font-button;
+    min-width: 500px;
+    padding: 1em 2em;
+
+    .task-details-value {
+      @include font-h3;
+    }
+
+    .row-v-margin {
+      margin-bottom: .5em;
+      margin-top: .5em;
     }
   }
 }

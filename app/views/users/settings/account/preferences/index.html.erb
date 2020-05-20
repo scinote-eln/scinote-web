@@ -127,26 +127,6 @@
               </div>
             </div>
           </div>
-          <hr>
-          <div class="preferences-settings-container">
-            <h4><%= t('users.settings.account.preferences.edit.tips.title') %></h4>
-            <div class="row">
-              <div class="col-sm-2">
-              </div>
-              <div class="col-sm-10">
-                <p><%=t 'users.settings.account.preferences.edit.tips.text1' %></p>
-                <p><%=t 'users.settings.account.preferences.edit.tips.text2' %></p>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <%=t 'users.settings.account.preferences.edit.tips.toggle' %>
-                  </div>
-                  <div class="col-sm-8">
-                    <%= check_box_tag :tooltips_enabled, @user.settings[:tooltips_enabled] %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         <% end %>
         <br>
       </div>

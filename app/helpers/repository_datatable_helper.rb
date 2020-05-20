@@ -12,40 +12,38 @@ module RepositoryDatatableHelper
         '3': escape_input(record.name),
         '4': I18n.l(record.created_at, format: :full),
         '5': escape_input(record.created_by.full_name),
-        'recordInfoUrl': Rails.application.routes.url_helpers
-                              .repository_row_path(record.id)
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
       }
 
       unless options[:view_mode]
-        row.merge!(
-          'recordEditUrl': Rails.application.routes.url_helpers
-                                .edit_repository_repository_row_path(
-                                  repository,
-                                  record.id
-                                ),
-          'recordUpdateUrl': Rails.application.routes.url_helpers
-                                  .repository_repository_row_path(
-                                    repository,
-                                    record.id
-                                  ),
-          'recordEditable': record.editable?
-        )
+        row['recordUpdateUrl'] =
+          Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
+        row['recordEditable'] = record.editable?
       end
 
       row['0'] = record[:row_assigned] if options[:my_module]
 
-      unless options[:skip_custom_columns]
-        # Add custom columns
-        record.repository_cells.each do |cell|
-          row[columns_mappings[cell.repository_column.id]] =
-            display_cell_value(cell, team)
-        end
+      # Add custom columns
+      record.repository_cells.each do |cell|
+        row[columns_mappings[cell.repository_column.id]] =
+          display_cell_value(cell, team)
       end
+
       row
     end
   end
 
-  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, options = {})
+  def prepare_simple_view_row_columns(repository_rows)
+    repository_rows.map do |record|
+      {
+        'DT_RowId': record.id,
+        '1': escape_input(record.name),
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
+      }
+    end
+  end
+
+  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team)
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
@@ -53,31 +51,25 @@ module RepositoryDatatableHelper
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
         '4': escape_input(record.created_by.full_name),
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_row_path(record.id)
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
       }
 
-      unless options[:skip_custom_columns]
-        # Add custom columns
-        record.repository_cells.each do |cell|
-          row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
-        end
+      # Add custom columns
+      record.repository_cells.each do |cell|
+        row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
       end
+
       row
     end
   end
 
   def assigned_row(record)
-    if record.assigned_my_modules_count.positive?
-      tooltip = t('repositories.table.assigned_tooltip',
-                  tasks: record.assigned_my_modules_count,
+    {
+      tasks: record.assigned_my_modules_count,
       experiments: record.assigned_experiments_count,
-      projects: record.assigned_projects_count)
-
-      "<div class='assign-counter-container' title='#{tooltip}'>"\
-      "<span class='assign-counter has-assigned'>#{record.assigned_my_modules_count}</span></div>"
-    else
-      "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>"
-    end
+      projects: record.assigned_projects_count,
+      task_list_url: assigned_task_list_repository_repository_row_path(record.repository, record)
+    }
   end
 
   def can_perform_repository_actions(repository)

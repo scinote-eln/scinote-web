@@ -12,7 +12,7 @@
 
   &::after {
     color: $color-alto;
-    content: attr(data-rows-count);
+    content: '[' attr(data-rows-count) ']';
     display: inline-block;
     line-height: 22px;
     padding-left: 5px;
@@ -103,6 +103,7 @@
     border: $border-default;
     border-radius: $border-radius-modal;
     margin-bottom: 10px;
+    overflow: hidden;
 
     .assigned-repository-caret {
       align-items: center;
@@ -115,6 +116,7 @@
       &.collapsed:hover,
       &.collapsed:active {
         background: $color-concrete;
+        border-radius: 6px;
         text-decoration: none;
       }
 
@@ -136,11 +138,8 @@
         flex-shrink: 0;
         text-align: right;
 
-        .fas {
-          cursor: pointer;
-          line-height: 36px;
-          text-align: center;
-          width: 36px;
+        .full-screen:hover {
+          background: $color-alto;
         }
       }
     }
@@ -211,16 +210,16 @@
           flex-grow: 1;
           max-width: calc(100% - 20px);
 
-          .assigned-repository-title {
+          .repository-name {
             @include my-module-repository-title;
             @include font-h2;
           }
 
           .breadcrumbs {
-            @include font-small;
             align-items: center;
             color: $color-silver-chalice;
             display: flex;
+            font-size: 10px;
             height: 20px;
             width: 90%;
 
@@ -267,6 +266,10 @@
         width: calc(100% - 16px);
 
         .assign-counter {
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+
           &.has-assigned {
             color: $brand-primary;
           }
@@ -274,6 +277,11 @@
 
         &:hover {
           background-color: $color-alto;
+        }
+
+        .dropdown-menu {
+          min-width: 320px;
+          padding: 8px;
         }
       }
     }
@@ -299,6 +307,27 @@
         flex-grow: 1;
         max-height: 100%;
         overflow: auto;
+      }
+
+      // Checklists
+      .checklist-dropdown {
+        .dropdown-menu {
+          min-width: 220px;
+
+          .checklist-item {
+            line-height: 18px;
+            padding: 5px 15px;
+          }
+        }
+
+        span {
+          color: $brand-primary;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
     }
 
@@ -340,7 +369,7 @@
 
     .repository-versions-list {
       display: grid;
-      grid-template-rows: 60px 60px calc(100% - 120px);
+      grid-template-rows: 60px calc(100% - 60px);
       height: calc(100% - 55px);
       margin-bottom: 0;
 
@@ -358,6 +387,7 @@
 
 
       .list-group-item-text {
+        @include font-small;
         color: $color-silver-chalice;
       }
 
@@ -368,6 +398,10 @@
 
       .delete-snapshot-button {
         display: none;
+      }
+
+      .default-version-button {
+        bottom: 5em;
       }
 
       &:hover {
