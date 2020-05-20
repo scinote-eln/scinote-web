@@ -29,6 +29,8 @@ class CreateMyModuleService
       new_pos = @my_module.get_new_position
       @my_module.x = new_pos[:x]
       @my_module.y = new_pos[:y]
+      @my_module.created_by = @user
+      @my_module.last_modified_by = @user
 
       @my_module.save!
       create_my_module_activity
