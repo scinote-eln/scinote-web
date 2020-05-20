@@ -75,7 +75,10 @@ module RepositoryImportParser
           SpreadsheetParser.parse_row(row, @sheet).each_with_index do |value, index|
             if index == @name_index
               new_row =
-                RepositoryRow.new(name: value, repository: @repository, created_by: @user, last_modified_by: @user)
+                RepositoryRow.new(name: try_decimal_to_string(value),
+                                  repository: @repository,
+                                  created_by: @user,
+                                  last_modified_by: @user)
               unless new_row.valid?
                 errors = true
                 break
@@ -128,6 +131,9 @@ module RepositoryImportParser
 
         row.reject { |k| k == :repository_row }.each do |index, value|
           column = @columns[index]
+
+          value = try_decimal_to_string(value) unless column.repository_number_value?
+
           cell_value_attributes = { created_by: @user,
                                     last_modified_by: @user,
                                     repository_cell_attributes: { repository_row: row[:repository_row],
@@ -148,6 +154,14 @@ module RepositoryImportParser
 
       import_mappings.each do |data_type, cell_values|
         data_type.to_s.constantize.import(cell_values, recursive: true, validate: false)
+      end
+    end
+
+    def try_decimal_to_string(value)
+      if value.is_a?(BigDecimal)
+        value.frac.zero? ? value.to_i.to_s : value.to_s
+      else
+        value
       end
     end
   end
