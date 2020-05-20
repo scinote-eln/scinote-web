@@ -131,8 +131,8 @@ module RepositoryImportParser
 
         row.reject { |k| k == :repository_row }.each do |index, value|
           column = @columns[index]
-
           value = try_decimal_to_string(value) unless column.repository_number_value?
+          next if value.nil?
 
           cell_value_attributes = { created_by: @user,
                                     last_modified_by: @user,
