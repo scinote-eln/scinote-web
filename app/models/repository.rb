@@ -191,4 +191,17 @@ class Repository < RepositoryBase
     importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
     importer.run
   end
+
+  def provision_snapshot(my_module, created_by = nil)
+    created_by ||= self.created_by
+    repository_snapshot = dup.becomes(RepositorySnapshot)
+    repository_snapshot.assign_attributes(type: RepositorySnapshot.name,
+                                          original_repository: self,
+                                          my_module: my_module,
+                                          created_by: created_by)
+    repository_snapshot.provisioning!
+    repository_snapshot.reload
+    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
+    repository_snapshot
+  end
 end
