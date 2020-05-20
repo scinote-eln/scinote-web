@@ -226,6 +226,16 @@ class MyModule < ApplicationRecord
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
+  def active_snapshot_or_live(repository_id)
+    r = RepositoryBase.find repository_id
+
+    if r.is_a?(Repository) # Selected snapshot or live
+      selected_snapshot(repository_id) || assigned_repositories&.where(id: repository_id)&.first
+    else # snapshot for deleted Repository
+      repository_snapshots.order(updated_at: :desc).first
+    end
+  end
+
   def selected_snapshot(repository_id)
     repository_snapshots.where(parent_id: repository_id).selected.first
   end

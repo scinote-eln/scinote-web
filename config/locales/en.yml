@@ -379,6 +379,7 @@ en:
         new: "New report"
         edit: "Edit"
         delete: "Delete"
+        deleted: "(Deleted)"
         thead_project_name: "Project name"
         thead_name: "Report name"
         thead_created_by: "Created by"

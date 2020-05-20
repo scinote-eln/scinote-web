@@ -15,6 +15,15 @@ class RepositorySnapshot < RepositoryBase
 
   scope :selected, -> { where(selected: true) }
 
+  scope :with_deleted_parent_by_team, lambda { |team|
+    joins(my_module: { experiment: :project })
+      .where('projects.team_id = ?', team.id)
+      .left_outer_joins(:original_repository)
+      .where(original_repositories_repositories: { id: nil })
+      .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+      .order(:parent_id, updated_at: :desc)
+  }
+
   def default_columns_count
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
   end
