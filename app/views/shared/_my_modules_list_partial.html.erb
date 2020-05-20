@@ -19,14 +19,15 @@
         <% if task.archived %>
           <span class="archived"><%= t('general.archived') %></span>
         <% end %>
-        <% if can_read_experiment?(current_user, task.experiment) %>
-          <%= link_to(task.name, protocols_my_module_path(task.id), {class: "task-link", title: task.name, target: "_blank"}) %>
-        <% else %>
-          <%= task.name %>
-        <% end %>
+        <%= link_to(task.name, protocols_my_module_path(task.id), {class: "task-link", title: task.name, target: "_blank"}) %>
       </div>
       <% end %>
     </div>
-  <% end %>
   </div>
+  <% end %>
+  <% if defined?(private_modules) && private_modules.size.positive? %>
+  <div class="private-tasks-counter">
+    <%= t('my_modules.modules_list_partial.private_tasks_html', nr: private_modules.size ) %>
+  </div>
+  <% end %>
 </div>
