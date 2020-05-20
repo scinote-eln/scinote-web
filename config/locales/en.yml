@@ -803,7 +803,7 @@ en:
           header: 'Versions'
           live: 'Live version'
           live_description: 'Regularly updated from the inventory'
-          no_live_version: 'Only snapshots are available'
+          no_live_version: 'Inventory was deleted'
           no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
           versions_sidebar_button: 'View versions'
           create_button: 'Create snapshot'

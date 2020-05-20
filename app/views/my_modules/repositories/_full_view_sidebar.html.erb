@@ -18,10 +18,12 @@
       </p>
     </div>
   <% else %>
-    <div class="list-group-item">
+    <div class="list-group-item disabled">
       <h2 class="list-group-item-heading">
-        <%= t('my_modules.repository.snapshots.full_view.no_live_version') %>
+        <i class="fas fa-minus-circle"></i>
+        <%= t('my_modules.repository.snapshots.full_view.live') %>
       </h2>
+      <%= t('my_modules.repository.snapshots.full_view.no_live_version') %>
     </div>
   <% end %>
 
