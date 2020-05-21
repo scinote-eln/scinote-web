@@ -37,7 +37,7 @@ module RepositoryDatatableHelper
     repository_rows.map do |record|
       {
         'DT_RowId': record.id,
-        '1': escape_input(record.name),
+        '0': escape_input(record.name),
         'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
       }
     end
