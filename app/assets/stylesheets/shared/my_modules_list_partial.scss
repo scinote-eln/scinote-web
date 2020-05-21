@@ -57,6 +57,13 @@
     }
   }
 
+  .private-tasks-counter {
+    @include font-button;
+    border-top: $border-tertiary;
+    color: $color-silver-chalice;
+    padding-top: .5em;
+  }
+
   .archived {
     @include font-small;
     background: $brand-warning;

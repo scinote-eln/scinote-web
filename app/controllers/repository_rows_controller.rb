@@ -49,8 +49,9 @@ class RepositoryRowsController < ApplicationController
   end
 
   def show
-    @assigned_modules = MyModuleRepositoryRow.eager_load(my_module: [{ experiment: :project }])
-                                             .where(repository_row: @repository_row)
+    @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+    @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+    @private_modules = @assigned_modules - @viewable_modules
 
     respond_to do |format|
       format.json do
@@ -152,11 +153,13 @@ class RepositoryRowsController < ApplicationController
   end
 
   def assigned_task_list
-    my_modules = @repository_row.my_modules.joins(experiment: :project)
-                                .search_by_name(current_user, current_team, params[:query])
+    assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+    private_modules = assigned_modules - assigned_modules.viewable_by_user(current_user, current_user.teams)
+    viewable_modules = assigned_modules.search_by_name(current_user, current_user.teams, params[:query])
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
-                               my_modules: my_modules
+                               my_modules: viewable_modules,
+                               private_modules: private_modules
                              })
     }
   end
