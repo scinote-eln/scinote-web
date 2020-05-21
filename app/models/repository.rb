@@ -15,6 +15,8 @@ class Repository < RepositoryBase
            foreign_key: :parent_id,
            inverse_of: :original_repository
 
+  before_save :sync_name_with_snapshots, if: :name_changed?
+
   validates :name,
             presence: true,
             uniqueness: { scope: :team_id, case_sensitive: false },
@@ -203,5 +205,11 @@ class Repository < RepositoryBase
     repository_snapshot.reload
     RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
     repository_snapshot
+  end
+
+  private
+
+  def sync_name_with_snapshots
+    repository_snapshots.update(name: name)
   end
 end
