@@ -211,8 +211,8 @@
 
     &:hover {
       .date-text[data-editable=true] {
-        border-color: $color-silver;
-        border-radius: 3px;
+        background-color: $color-concrete;
+        border-radius: 4px;
 
         .clear-date {
           display: inline;
@@ -337,22 +337,23 @@
 
   .task-assigned-users {
     align-items: center;
-    border: 1px solid transparent;
+    border-radius: 17px;
     display: flex;
-    height: 36px;
-    line-height: 34px;
-    padding: 2px;
+
+    &.empty {
+      border-radius: 4px;
+      padding: 0 4px;
+    }
 
     &:hover {
-      border-color: $color-alto;
-      border-radius: 3px;
+      background-color: $color-concrete;
       text-decoration: none;
     }
   }
 
   .assign-new-user {
-    background-color: $color-concrete;
-    color: $color-silver-chalice;
+    background-color: $color-alto;
+    color: $color-volcano;
     text-align: center;
 
     .fa-plus {

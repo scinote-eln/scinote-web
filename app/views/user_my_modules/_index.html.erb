@@ -1,6 +1,6 @@
 <% user_my_modules = @my_module.user_my_modules %>
 <% if can_manage_users_in_module?(@my_module) %>
-  <a class="task-assigned-users manage-users-link"
+  <a class="task-assigned-users manage-users-link <%= 'empty' unless user_my_modules.present? %>"
      data-remote="true"
      href="<%= my_module_users_edit_path(@my_module, format: :json) %>"
      data-module-id="<%= @my_module.id %>"
