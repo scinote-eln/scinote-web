@@ -31,15 +31,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def create
-    repository_snapshot = @repository.dup.becomes(RepositorySnapshot)
-    repository_snapshot.assign_attributes(type: RepositorySnapshot.name,
-                                          original_repository: @repository,
-                                          my_module: @my_module,
-                                          created_by: current_user)
-    repository_snapshot.provisioning!
-    repository_snapshot.reload
-
-    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
+    repository_snapshot = @repository.provision_snapshot(@my_module, current_user)
 
     render json: {
       html: render_to_string(partial: 'my_modules/repositories/full_view_version',
