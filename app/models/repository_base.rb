@@ -12,6 +12,7 @@ class RepositoryBase < ApplicationRecord
   has_many :repository_columns, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :repository_rows, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :repository_table_states, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
+  has_many :report_elements, inverse_of: :repository, dependent: :destroy, foreign_key: :repository_id
 
   auto_strip_attributes :name, nullify: false
   validates :team, presence: true

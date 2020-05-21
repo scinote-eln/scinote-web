@@ -7,7 +7,6 @@ class Repository < RepositoryBase
 
   enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 
-  has_many :report_elements, inverse_of: :repository, dependent: :destroy
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
   has_many :teams_shared_with, through: :team_repositories, source: :team
   has_many :repository_snapshots,
@@ -207,13 +206,13 @@ class Repository < RepositoryBase
     repository_snapshot
   end
 
+  def assigned_rows(my_module)
+    repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
+  end
+
   private
 
   def sync_name_with_snapshots
     repository_snapshots.update(name: name)
-  end
-
-  def assigned_rows(my_module)
-    repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
   end
 end

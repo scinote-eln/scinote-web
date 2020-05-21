@@ -6,6 +6,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   before_action :load_repository_snapshot, except: %i(create full_view_sidebar select)
   before_action :check_view_permissions, except: %i(create destroy select)
   before_action :check_manage_permissions, only: %i(create destroy select)
+  before_action :update_report_references, only: :destroy
 
   def index_dt
     @draw = params[:draw].to_i
@@ -98,10 +99,20 @@ class MyModuleRepositorySnapshotsController < ApplicationController
       repository_snapshot.update!(selected: true)
     end
 
+    @my_module.update_report_repository_references(params[:repository_id] || repository_snapshot&.id)
+
     render json: {}
   end
 
   private
+
+  def update_report_references
+    repository_or_snap_id = @repository_snapshot.original_repository&.id || @repository_snapshot.id
+    default_view_candidate =
+      @my_module.active_snapshot_or_live(repository_or_snap_id, exclude_snpashot_ids: [@repository_snapshot.id])
+
+    @my_module.update_report_repository_references(default_view_candidate.id) if default_view_candidate
+  end
 
   def load_my_module
     @my_module = MyModule.find_by(id: params[:my_module_id])

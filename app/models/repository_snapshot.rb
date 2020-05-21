@@ -13,8 +13,6 @@ class RepositorySnapshot < RepositoryBase
   validates :status, presence: true
   validate :only_one_selected_for_my_module, if: ->(obj) { obj.changed.include? :selected }
 
-  scope :selected, -> { where(selected: true) }
-
   scope :with_deleted_parent_by_team, lambda { |team|
     joins(my_module: { experiment: :project })
       .where('projects.team_id = ?', team.id)

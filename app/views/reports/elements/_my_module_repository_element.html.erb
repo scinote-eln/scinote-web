@@ -1,10 +1,21 @@
 <% if my_module.blank? and @my_module.present? then my_module = @my_module end %>
-<% repository ||= my_module.active_snapshot_or_live(element_id) || Repository.find_by(id: element_id) %>
+<% element_id ||= nil %>
+<% repository ||= nil %>
+<% repository_snapshot ||= nil %>
+<% repository = assign_repository_or_snapshot(my_module, element_id, repository, repository_snapshot) %>
 <% if order.blank? and @order.present? then order = @order end %>
 <% timestamp = Time.current + 1.year - 1.days %>
 <% if repository.present? %>
   <% rows_json = my_module.repository_json_hot(repository, order) %>
-  <div class="report-element report-module-repository-element" data-sort-hot="1" data-ts="<%= timestamp.to_i %>" data-type="my_module_repository" data-id='{ "my_module_id": <%= my_module.id %>, "repository_id": <%= repository.id %> }' data-scroll-id="<%= "#{my_module.id}_#{repository.id}" %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-name="<%= repository.name %>" data-icon-class="fas fa-list-alt">
+  <div class="report-element report-module-repository-element"
+       data-sort-hot="1"
+       data-ts="<%= timestamp.to_i %>"
+       data-type="my_module_repository"
+       data-id='{ "my_module_id": <%= my_module.id %>, "repository_id": <%= repository.id %> }'
+       data-scroll-id="<%= "#{my_module.id}_#{repository.id}" %>"
+       data-order="<%= order == :asc ? "asc" : "desc" %>"
+       data-name="<%= repository.name %>"
+       data-icon-class="fas fa-list-alt">
     <div class="report-element-header">
       <div class="row">
         <div class="pull-left repository-icon">
