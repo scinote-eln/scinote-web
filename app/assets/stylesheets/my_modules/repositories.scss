@@ -404,6 +404,14 @@
         bottom: 5em;
       }
 
+      &.disabled {
+        color: $color-alto;
+
+        &:hover {
+          background-color: $color-concrete;
+        }
+      }
+
       &:hover {
         background-color: $color-alto;
 
