@@ -52,7 +52,11 @@ class MyModuleRepositoriesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: { flash: flash, rows_count: @my_module.repository_rows_count(@repository) }, status: status
+        render json: {
+          flash: flash,
+          rows_count: @my_module.repository_rows_count(@repository),
+          repository_id: @repository.repository_snapshots.find_by(selected: true)&.id || @repository.id
+        }, status: status
       end
     end
   end
