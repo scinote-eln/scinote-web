@@ -7,16 +7,18 @@
 </div>
 <div class="list-group repository-versions-list">
   <% if @repository.present? %>
-    <div class="list-group-item live-version-item" data-id="<%= @repository.id %>" data-selected="<%= @repository_snapshots.select{ |s| s.selected == true }.blank? %>">
-      <a id="selectLiveVersionButton" class="version-button" href="#" data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository) %>">
-        <h2 class="list-group-item-heading">
-          <%= t('my_modules.repository.snapshots.full_view.live') %>
-        </h2>
-      </a>
+    <a href="#" id="selectLiveVersionButton" class="list-group-item live-version-item version-button"
+       data-id="<%= @repository.id %>"
+       data-selected="<%= @repository_snapshots.select{ |s| s.selected == true }.blank? %>"
+       data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository) %>"
+    >
+      <h2 class="list-group-item-heading">
+        <%= t('my_modules.repository.snapshots.full_view.live') %>
+      </h2>
       <p class="list-group-item-text">
         <%= t('my_modules.repository.snapshots.full_view.live_description') %>
       </p>
-    </div>
+    </a>
   <% else %>
     <div class="list-group-item disabled">
       <h2 class="list-group-item-heading">
@@ -26,20 +28,19 @@
       <%= t('my_modules.repository.snapshots.full_view.no_live_version') %>
     </div>
   <% end %>
-
+  <% if @repository.present? && can_manage_module?(@my_module) %>
+    <div class="create-snapshot-item">
+      <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
+        <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
+      </p>
+      <button id="createRepositorySnapshotButton" class="btn btn-secondary" data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>">
+        <i class="fas fa-camera"></i>
+        <%= t('my_modules.repository.snapshots.full_view.create_button') %>
+      </button>
+    </div>
+  <% end %>
   <div class="repository-snapshots-container">
     <div class="snapshots-container-scrollbody">
-      <% if @repository.present? && can_manage_module?(@my_module) %>
-        <div class="create-snapshot-item">
-          <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
-            <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
-          </p>
-          <button id="createRepositorySnapshotButton" class="btn btn-secondary" data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>">
-            <i class="fas fa-camera"></i>
-            <%= t('my_modules.repository.snapshots.full_view.create_button') %>
-          </button>
-        </div>
-      <% end %>
       <%= render partial: 'my_modules/repositories/full_view_version',
                  collection: @repository_snapshots,
                  as: :repository_snapshot,
@@ -48,10 +49,10 @@
   </div>
 
   <% if can_manage_module?(@my_module) %>
-    <div class="list-group-item text-center">
-      <a id="setDefaultVersionButton" class="btn btn-primary default-version-button hidden" data-select-path="<%= my_module_select_default_snapshot_path(@my_module) %>">
-        <%= t('my_modules.repository.snapshots.full_view.set_default_button') %>
-      </a>
-    </div>
+  <div class="list-group-item text-center hidden">
+    <a id="setDefaultVersionButton" class="btn btn-primary default-version-button" data-select-path="<%= my_module_select_default_snapshot_path(@my_module) %>">
+      <%= t('my_modules.repository.snapshots.full_view.set_default_button') %>
+    </a>
+  </div>
   <% end %>
 </div>

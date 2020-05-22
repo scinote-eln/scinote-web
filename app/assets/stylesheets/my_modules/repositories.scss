@@ -369,7 +369,8 @@
 
     .repository-versions-list {
       display: grid;
-      grid-template-rows: 60px calc(100% - 60px);
+      grid-template-rows: min-content min-content minmax(0, 100%);
+      grid-auto-rows: min-content;
       height: calc(100% - 55px);
       margin-bottom: 0;
 
@@ -400,10 +401,6 @@
         display: none;
       }
 
-      .default-version-button {
-        bottom: 5em;
-      }
-
       &.disabled {
         color: $color-alto;
 
@@ -412,7 +409,8 @@
         }
       }
 
-      &:hover {
+      &.repository-snapshot-item:hover,
+      &.live-version-item:hover {
         background-color: $color-alto;
 
         .delete-snapshot-button {
@@ -423,12 +421,25 @@
       &.active {
         background-color: $brand-primary;
 
+        &:hover {
+          background-color: $brand-primary;
+        }
+
         .list-group-item-heading,
         .list-group-item-text,
         .delete-snapshot-button {
+          background: transparent;
           color: $color-white;
+
+          &:hover {
+            border-color: $color-white;
+          }
         }
       }
+    }
+
+    .repository-snapshot-item:not(.provisioning){
+      cursor: pointer;
     }
 
     .create-snapshot-item {
