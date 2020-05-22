@@ -68,12 +68,21 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   def full_view_sidebar
     @repository = Repository.find_by(id: params[:repository_id])
 
-    if @repository.present?
+    if @repository
       return render_403 unless can_read_repository?(@repository)
     end
 
-    @repository_snapshots = @my_module.repository_snapshots.where(parent_id: params[:repository_id])
-    render json: { html: render_to_string(partial: 'my_modules/repositories/full_view_sidebar') }
+    @repository_snapshots = @my_module.repository_snapshots
+                                      .where(parent_id: params[:repository_id])
+                                      .order(:updated_at)
+    render json: {
+      html: render_to_string(
+        partial: 'my_modules/repositories/full_view_sidebar',
+        locals: {
+          live_items_present: @repository ? @my_module.repository_rows_count(@repository).positive? : false
+        }
+      )
+    }
   end
 
   def select
