@@ -21,6 +21,7 @@
          id="assigned-repository-items-container-<%= repository.id %>"
          data-repository-url="<%= assigned_repository_simple_view_index_path(@my_module, repository) %>"
          data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
+         data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
     >
     </div>
   </div>
@@ -30,7 +31,6 @@
   <table class="table hidden">
     <thead>
       <tr>
-        <th class="never"></th>
         <th class="row-name"><%= t("repositories.table.row_name") %></th>
       </tr>
     </thead>

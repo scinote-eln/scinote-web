@@ -98,7 +98,7 @@ var MyModuleRepositories = (function() {
       serverSide: true,
       responsive: true,
       pageLength: 5,
-      order: [[1, 'asc']],
+      order: [[0, 'asc']],
       sScrollY: '100%',
       sScrollX: '100%',
       sScrollXInner: '100%',
@@ -106,6 +106,7 @@ var MyModuleRepositories = (function() {
       ajax: {
         url: $(tableContainer).data('source'),
         data: function(d) {
+          d.order[0].column = tableContainer.data('name-column-id');
           d.assigned = 'assigned';
           d.view_mode = true;
           d.simple_view = true;
@@ -113,11 +114,8 @@ var MyModuleRepositories = (function() {
         global: false,
         type: 'POST'
       },
-      columns: [
-        { data: '1' }
-      ],
       columnDefs: [{
-        targets: 1,
+        targets: 0,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
@@ -283,11 +281,12 @@ var MyModuleRepositories = (function() {
   }
 
   function initSimpleTable() {
-    $('#assigned-items-container').on('show.bs.collapse', '.assigned-repository-container', function() {
+    $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
       var repositoryTemplate = $($('#myModuleRepositorySimpleTemplate').html());
       repositoryTemplate.attr('data-source', $(this).data('repository-url'));
       repositoryTemplate.attr('data-version-label', $(this).data('footer-label'));
+      repositoryTemplate.attr('data-name-column-id', $(this).data('name-column-id'));
       repositoryContainer.html(repositoryTemplate);
       renderSimpleTable(repositoryTemplate);
     });

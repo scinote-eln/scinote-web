@@ -96,4 +96,8 @@ module MyModulesHelper
 
     t('my_modules.repository.snapshots.simple_view.live_bottom_label')
   end
+
+  def assigned_repository_simple_view_name_column_id(repository)
+    repository.is_a?(RepositorySnapshot) ? 2 : 3
+  end
 end
