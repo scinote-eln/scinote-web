@@ -28,9 +28,11 @@
       <% end %>
     </div>
     <div class="col-xs-4">
-      <a class="pull-right btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
-        <i class="fas fa-trash"></i>
-      </a>
+      <% if can_delete_snapshot %>
+        <a class="pull-right btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
+          <i class="fas fa-trash"></i>
+        </a>
+      <% end %>
     </div>
   </div>
 </div>
