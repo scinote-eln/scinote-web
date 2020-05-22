@@ -11,11 +11,14 @@ var MyModuleRepositories = (function() {
   var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
-  function reloadRepositoriesList() {
+  function reloadRepositoriesList(repositoryId) {
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
       repositoriesContainer.html(result.html);
       $('.assigned-items-title').attr('data-assigned-items-count', result.assigned_rows_count);
+      // expand recently updated repository
+      $('#assigned-items-container').collapse('show');
+      $('#assigned-repository-items-container-' + repositoryId).collapse('show');
     });
   }
 
@@ -600,7 +603,7 @@ var MyModuleRepositories = (function() {
         $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
           .attr('data-assigned-items-count', data.rows_count);
         FULL_VIEW_TABLE.ajax.reload(null, false);
-        reloadRepositoriesList();
+        reloadRepositoriesList(data.repository_id);
         updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
