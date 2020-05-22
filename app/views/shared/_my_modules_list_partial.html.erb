@@ -30,4 +30,14 @@
     <%= t('my_modules.modules_list_partial.private_tasks_html', nr: private_modules.size ) %>
   </div>
   <% end %>
+  <% unless my_modules.any? || (defined?(private_modules) && private_modules.any?) %>
+  <div class="no-results-placeholder">
+    <span class="fa-stack">
+      <i class="fas fa-search fa-stack-1x"></i>
+      <i class="fas fa-slash fa-stack-1x fa-flip-vertical"></i>
+    </span>
+    <h2 class="title"><%= t('my_modules.modules_list_partial.no_results.title') %></h2>
+    <p><%= t('my_modules.modules_list_partial.no_results.description') %></p>
+  </div>
+  <% end %>
 </div>

@@ -38,7 +38,13 @@ function initAssignedTasksDropdown(table) {
     e.stopPropagation();
   });
 
-  $(table).on('change', '.assign-counter-container .search-tasks', function() {
+  $(table).on('click', '.assign-counter-container .clear-search', function() {
+    var cell = $(this).closest('.assign-counter-container');
+    $(this).prev('.search-tasks').val('');
+    loadTasks(cell);
+  });
+
+  $(table).on('keyup', '.assign-counter-container .search-tasks', function() {
     var cell = $(this).closest('.assign-counter-container');
     loadTasks(cell);
   });
