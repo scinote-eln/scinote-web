@@ -103,7 +103,7 @@ var MyModuleRepositories = (function() {
       ajax: {
         url: $(tableContainer).data('source'),
         data: function(d) {
-          d.order[0].column = 3;
+          d.order[0].column = tableContainer.data('name-column-id');
           d.assigned = 'assigned';
           d.view_mode = true;
           d.simple_view = true;
@@ -122,9 +122,7 @@ var MyModuleRepositories = (function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
-        setTimeout(function() {
-          SIMPLE_TABLE.columns.adjust();
-        }, 500);
+        SIMPLE_TABLE.columns.adjust();
       }
     });
   }
@@ -280,11 +278,12 @@ var MyModuleRepositories = (function() {
   }
 
   function initSimpleTable() {
-    $('#assigned-items-container').on('show.bs.collapse', '.assigned-repository-container', function() {
+    $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
       var repositoryTemplate = $($('#myModuleRepositorySimpleTemplate').html());
       repositoryTemplate.attr('data-source', $(this).data('repository-url'));
       repositoryTemplate.attr('data-version-label', $(this).data('footer-label'));
+      repositoryTemplate.attr('data-name-column-id', $(this).data('name-column-id'));
       repositoryContainer.html(repositoryTemplate);
       renderSimpleTable(repositoryTemplate);
     });
