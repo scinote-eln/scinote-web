@@ -154,8 +154,14 @@ class RepositoryRowsController < ApplicationController
 
   def assigned_task_list
     assigned_modules = @repository_row.my_modules.joins(experiment: :project)
-    private_modules = assigned_modules - assigned_modules.viewable_by_user(current_user, current_user.teams)
-    viewable_modules = assigned_modules.search_by_name(current_user, current_user.teams, params[:query])
+    viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
+    private_modules = assigned_modules - viewable_modules
+
+    viewable_modules = viewable_modules.where_attributes_like(
+      ['my_modules.name', 'experiments.name', 'projects.name'],
+      params[:query],
+      whole_phrase: true
+    )
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
                                my_modules: viewable_modules,
