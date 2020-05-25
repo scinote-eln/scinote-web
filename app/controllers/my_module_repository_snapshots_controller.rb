@@ -36,7 +36,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     render json: {
       html: render_to_string(partial: 'my_modules/repositories/full_view_version',
                              locals: { repository_snapshot: repository_snapshot,
-                                       can_delete_snapshot: can_manage_module?(@my_module) })
+                                       can_delete_snapshot: can_manage_my_module_repository_snapshots?(@my_module) })
     }
   end
 
@@ -50,7 +50,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     render json: {
       html: render_to_string(partial: 'my_modules/repositories/full_view_version',
                              locals: { repository_snapshot: @repository_snapshot,
-                                       can_delete_snapshot: can_manage_module?(@my_module) })
+                                       can_delete_snapshot: can_manage_my_module_repository_snapshots?(@my_module) })
     }
   end
 
@@ -124,6 +124,6 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+    render_403 unless can_manage_my_module_repository_snapshots?(@my_module)
   end
 end

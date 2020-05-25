@@ -32,7 +32,7 @@
       <% end %>
     </div>
   <% end %>
-  <% if @repository.present? && live_items_present && can_manage_module?(@my_module) %>
+  <% if @repository.present? && live_items_present && can_create_my_module_repository_snapshot?(@my_module) %>
     <div class="create-snapshot-item">
       <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
         <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
@@ -48,11 +48,11 @@
       <%= render partial: 'my_modules/repositories/full_view_version',
                  collection: @repository_snapshots,
                  as: :repository_snapshot,
-                 locals: { can_delete_snapshot: can_manage_module?(@my_module) } %>
+                 locals: { can_delete_snapshot: can_manage_my_module_repository_snapshots?(@my_module) } %>
     </div>
   </div>
 
-  <% if can_manage_module?(@my_module) %>
+  <% if can_manage_my_module_repository_snapshots(@my_module) %>
   <div class="list-group-item text-center hidden">
     <a id="setDefaultVersionButton" class="btn btn-primary default-version-button" data-select-path="<%= my_module_select_default_snapshot_path(@my_module) %>">
       <%= t('my_modules.repository.snapshots.full_view.set_default_button') %>
