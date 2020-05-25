@@ -3,6 +3,15 @@
 class RepositorySnapshotDatatableService < RepositoryDatatableService
   private
 
+  def create_columns_mappings
+    index = @repository.default_columns_count
+    @mappings = {}
+    @repository.repository_columns.order(:parent_id).each do |column|
+      @mappings[column.id] = index.to_s
+      index += 1
+    end
+  end
+
   def process_query
     search_value = build_conditions(@params)[:search_value]
     order_obj = build_conditions(@params)[:order_by_column]
