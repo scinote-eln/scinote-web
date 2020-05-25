@@ -1,7 +1,7 @@
 <div class="task-details-popover">
   <div class="row row-v-margin">
     <div class="col-xs-3">
-      <%= t('my_modules.module_header.details_popover.project_label') %>
+      <%= t('my_modules.details.info_popover.project_label') %>
     </div>
     <div class="col-xs-9 task-details-value">
         <%= @my_module.experiment.project.name.truncate(Constants::MAX_NAME_TRUNCATION) %>
@@ -9,7 +9,7 @@
   </div>
   <div class="row row-v-margin">
     <div class="col-xs-3">
-      <%= t('my_modules.module_header.details_popover.experiment_label') %>
+      <%= t('my_modules.details.info_popover.experiment_label') %>
     </div>
     <div class="col-xs-9 task-details-value">
         <%= @my_module.experiment.name.truncate(Constants::MAX_NAME_TRUNCATION) %>
@@ -17,16 +17,16 @@
   </div>
   <div class="row row-v-margin">
     <div class="col-xs-3">
-      <%= t('my_modules.module_header.details_popover.creator_label') %>
+      <%= t('my_modules.details.info_popover.creator_label') %>
     </div>
     <div class="col-xs-9 task-details-value">
-        <%= @my_module.created_by&.full_name&.truncate(Constants::MAX_NAME_TRUNCATION) %>
-      <%= t('my_modules.module_header.details_popover.creator_same_user_label') if current_user == @my_module.created_by %>
+      <%= @my_module.created_by&.full_name&.truncate(Constants::MAX_NAME_TRUNCATION) %>
+      <%= t('my_modules.details.info_popover.creator_same_user_label') if current_user == @my_module.created_by %>
     </div>
   </div>
   <div class="row row-v-margin">
     <div class="col-xs-3">
-      <%= t('my_modules.module_header.details_popover.created_label') %>
+      <%= t('my_modules.details.info_popover.created_label') %>
     </div>
     <div class="col-xs-9 task-details-value">
         <%= l(@my_module.created_at, format: :full_date) %>
@@ -34,15 +34,15 @@
   </div>
   <div class="row row-v-margin">
     <div class="col-xs-3">
-      <%= t('my_modules.module_header.details_popover.modified_label') %>
+      <%= t('my_modules.details.info_popover.modified_label') %>
     </div>
     <div class="col-xs-9 task-details-value">
         <% if @my_module.last_modified_by.present? %>
-          <%= t('my_modules.module_header.details_popover.modified_value',
+          <%= t('my_modules.details.info_popover.modified_value',
                 date: l(@my_module.updated_at, format: :full_date),
                 full_name: @my_module.last_modified_by.full_name.truncate(Constants::MAX_NAME_TRUNCATION)) %>
         <% else %>
-          <%= t('my_modules.module_header.details_popover.modified_value_without_user',
+          <%= t('my_modules.details.info_popover.modified_value_without_user',
                 date: l(@my_module.updated_at, format: :full_date)) %>
         <% end %>
     </div>

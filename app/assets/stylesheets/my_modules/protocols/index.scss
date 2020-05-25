@@ -147,6 +147,11 @@
     }
   }
 
+  .empty-label {
+    color: $color-silver-chalice;
+    font-weight: normal;
+  }
+
   .datetime-container {
     align-items: center;
     display: inline-flex;
@@ -206,8 +211,8 @@
 
     &:hover {
       .date-text[data-editable=true] {
-        border-color: $color-silver;
-        border-radius: 3px;
+        background-color: $color-concrete;
+        border-radius: 4px;
 
         .clear-date {
           display: inline;
@@ -253,7 +258,7 @@
 
       &:not(.view-mode):hover {
         .input-field {
-          border: 1px solid $color-gainsboro;
+          border: 1px solid $color-alto;
         }
       }
     }
@@ -269,7 +274,7 @@
       display: inline-block;
       font-size: 14px;
       line-height: 32px;
-      width: 37px;
+      margin-right: 4px;
     }
 
     .select-container {
@@ -331,16 +336,24 @@
   }
 
   .task-assigned-users {
-    height: 33px;
+    align-items: center;
+    border-radius: 17px;
+    display: flex;
+
+    &.empty {
+      border-radius: 4px;
+      padding: 0 4px;
+    }
 
     &:hover {
+      background-color: $color-concrete;
       text-decoration: none;
     }
   }
 
   .assign-new-user {
-    background-color: $color-concrete;
-    color: $color-silver-chalice;
+    background-color: $color-alto;
+    color: $color-volcano;
     text-align: center;
 
     .fa-plus {

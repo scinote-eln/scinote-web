@@ -14,6 +14,8 @@
   <% elsif my_module.due_date %>
       <%= l(my_module.due_date, format: :full) %>
   <% else %>
-    <em><%= t('experiments.canvas.full_zoom.no_due_date') %></em>
+    <span class="empty-label">
+      <%= t('my_modules.details.no_due_date_placeholder') %>
+    </span>
   <% end %>
 </span>

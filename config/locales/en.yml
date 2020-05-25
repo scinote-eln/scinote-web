@@ -606,7 +606,26 @@ en:
   my_modules:
     details:
       title: "Details"
+      info_popover:
+        project_label: "Project"
+        experiment_label: "Experiment"
+        creator_label: "Creator"
+        creator_same_user_label: "(you)"
+        created_label: "Created"
+        modified_label: "Modified"
+        modified_value: "%{date} by %{full_name}"
+        modified_value_without_user: "%{date}"
+      start_date: "Start date:"
+      no_start_date_placeholder: "+ Add starting date"
+      due_date: "Due date:"
+      no_due_date_placeholder: "+ Add due date"
       assigned_users: "Assigned users:"
+      no_assigned_users: "+ Assign user to task"
+      tags: "Tags:"
+      no_tags: "+ Add tags"
+      manage_tags: "Manage tags"
+      create_new_tag: "create new"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -654,26 +673,6 @@ en:
       no_archived_results: "No archived results!"
       archive_timelabel: "archived on %{date}"
       restored_flash: "Task %{module} restored successfully!"
-    module_header:
-      details_label: "Details"
-      details_popover:
-        project_label: "Project"
-        experiment_label: "Experiment"
-        creator_label: "Creator"
-        creator_same_user_label: "(you)"
-        created_label: "Created"
-        modified_label: "Modified"
-        modified_value: "%{date} by %{full_name}"
-        modified_value_without_user: "%{date}"
-      start_date: "Start date:"
-      no_start_date: "not set"
-      no_start_date_placeholder: "+ Add starting date"
-      due_date: "Due date:"
-      tags: "Tags:"
-      no_tags: "Add new Task Tags (optional)"
-      manage_tags: "Manage tags"
-      create_new_tag: "create new"
-      recent_protocols_from_repository: "Recent protocols from the Repository"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
