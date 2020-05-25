@@ -226,6 +226,34 @@ class MyModule < ApplicationRecord
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
+  def active_snapshot_or_live(rep_or_snap, exclude_snpashot_ids: [])
+    return unless rep_or_snap
+
+    parent_id = rep_or_snap.is_a?(Repository) ? rep_or_snap.id : rep_or_snap.parent_id
+
+    selected_snapshot_for_repo(parent_id, exclude_snpashot_ids: exclude_snpashot_ids) ||
+      assigned_repositories&.where(id: parent_id)&.first ||
+      repository_snapshots
+        .where(parent_id: parent_id)
+        .where.not(id: exclude_snpashot_ids)
+        .order(updated_at: :desc).first
+  end
+
+  def update_report_repository_references(rep_or_snap)
+    ids = if rep_or_snap.is_a?(Repository)
+            RepositorySnapshot.where(parent_id: rep_or_snap.id).pluck(:id)
+          else
+            Repository.where(id: rep_or_snap.parent_id).pluck(:id) +
+              RepositorySnapshot.where(parent_id: rep_or_snap.parent_id).pluck(:id)
+          end
+
+    report_elements.where(repository_id: ids).update(repository_id: rep_or_snap.id)
+  end
+
+  def selected_snapshot_for_repo(repository_id, exclude_snpashot_ids: [])
+    repository_snapshots.where(parent_id: repository_id).where.not(id: exclude_snpashot_ids).where(selected: true).first
+  end
+
   def unassigned_users
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +
@@ -398,14 +426,12 @@ class MyModule < ApplicationRecord
 
   # Generate the repository rows belonging to this module
   # in JSON form, suitable for display in handsontable.js
-  def repository_json_hot(repository_id, order)
+  def repository_json_hot(repository, order)
     data = []
-    repository_rows
-      .includes(:created_by)
-      .where(repository_id: repository_id)
-      .order(created_at: order).find_each do |row|
+    rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
+    rows.find_each do |row|
       row_json = []
-      row_json << row.id
+      row_json << (row.repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
       row_json << row.name
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
@@ -422,29 +448,7 @@ class MyModule < ApplicationRecord
     { data: data, headers: headers }
   end
 
-  def repository_json(repository_id, order, user)
-    headers = [
-      I18n.t('repositories.table.id'),
-      I18n.t('repositories.table.row_name'),
-      I18n.t('repositories.table.added_on'),
-      I18n.t('repositories.table.added_by')
-    ]
-    repository = Repository.find_by_id(repository_id)
-    return false unless repository
-
-    repository.repository_columns.order(:id).each do |column|
-      headers.push(column.name)
-    end
-
-    params = { assigned: 'assigned', search: {}, order: { values: { column: '1', dir: order } } }
-    records = RepositoryDatatableService.new(repository,
-                                             params,
-                                             user,
-                                             self)
-    { headers: headers, data: records }
-  end
-
-  def repository_docx_json(repository_id)
+  def repository_docx_json(repository)
     headers = [
       I18n.t('repositories.table.id'),
       I18n.t('repositories.table.row_name'),
@@ -452,7 +456,6 @@ class MyModule < ApplicationRecord
       I18n.t('repositories.table.added_by')
     ]
     custom_columns = []
-    repository = Repository.find_by(id: repository_id)
     return false unless repository
 
     repository.repository_columns.order(:id).each do |column|
@@ -460,7 +463,7 @@ class MyModule < ApplicationRecord
       custom_columns.push(column.id)
     end
 
-    records = repository_rows.where(repository_id: repository_id).select(:id, :name, :created_at, :created_by_id)
+    records = repository.assigned_rows(self).select(:id, :name, :created_at, :created_by_id)
     { headers: headers, rows: records, custom_columns: custom_columns }
   end
 
