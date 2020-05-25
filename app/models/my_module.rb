@@ -212,6 +212,7 @@ class MyModule < ApplicationRecord
 
     selected_snapshots = snapshots.where(selected: true)
                                   .or(snapshots.where(original_repositories_repositories: { id: nil }))
+                                  .or(snapshots.where.not(parent_id: assigned_repositories.select(:id)))
                                   .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
                                   .select('COUNT(repository_rows.id) AS assigned_rows_count')
                                   .joins(:repository_rows)

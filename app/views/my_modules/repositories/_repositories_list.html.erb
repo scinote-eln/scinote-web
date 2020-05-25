@@ -8,9 +8,13 @@
     >
       <i class="fas fa-caret-right"></i>
       <span class="assigned-repository-title" data-rows-count="<%= repository.assigned_rows_count %>">
-
         <%= repository.name %>
       </span>
+      <% if repository.is_a?(RepositorySnapshot) %>
+        <span class="snapshot-tag">
+          <%= t('my_modules.repository.snapshots.simple_view.snapshot_tag') %>
+        </span>
+      <% end %>
       <div class="action-buttons">
         <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>">
           <i class="fas fa-expand"></i>

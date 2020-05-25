@@ -6,7 +6,7 @@
   </h4>
 </div>
 <div class="list-group repository-versions-list">
-  <% if @repository.present? %>
+  <% if @repository.present? && live_items_present %>
     <a href="#" id="selectLiveVersionButton" class="list-group-item live-version-item version-button"
        data-id="<%= @repository.id %>"
        data-selected="<%= @repository_snapshots.select{ |s| s.selected == true }.blank? %>"
@@ -25,10 +25,14 @@
         <i class="fas fa-minus-circle"></i>
         <%= t('my_modules.repository.snapshots.full_view.live') %>
       </h2>
-      <%= t('my_modules.repository.snapshots.full_view.no_live_version') %>
+      <% if @repository %>
+        <%= t('my_modules.repository.snapshots.full_view.no_assigned_items') %>
+      <% else %>
+        <%= t('my_modules.repository.snapshots.full_view.no_live_version') %>
+      <% end %>
     </div>
   <% end %>
-  <% if @repository.present? && can_manage_module?(@my_module) %>
+  <% if @repository.present? && live_items_present && can_manage_module?(@my_module) %>
     <div class="create-snapshot-item">
       <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
         <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
