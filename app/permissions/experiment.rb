@@ -116,12 +116,12 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   # module: create a snapshot of repository item
-  can :create_repository_snapshot do |user, my_module|
+  can :create_my_module_repository_snapshot do |user, my_module|
     user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 
   # module: make a repository snapshot selected
-  can :manage_repository_snapshots do |user, my_module|
+  can :manage_my_module_repository_snapshots do |user, my_module|
     user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 end
