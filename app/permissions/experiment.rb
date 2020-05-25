@@ -112,6 +112,16 @@ Canaid::Permissions.register_for(MyModule) do
   can :create_comments_in_module do |user, my_module|
     can_create_comments_in_project?(user, my_module.experiment.project)
   end
+
+  # module: create a snapshot of repository item
+  can :create_repository_snapshot do |user, my_module|
+    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+  end
+
+  # module: make a repository snapshot selected
+  can :manage_repository_snapshots do |user, my_module|
+    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+  end
 end
 
 Canaid::Permissions.register_for(Protocol) do
