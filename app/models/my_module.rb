@@ -239,9 +239,7 @@ class MyModule < ApplicationRecord
         .order(updated_at: :desc).first
   end
 
-  def update_report_repository_references(rep_or_snap_id)
-    rep_or_snap = RepositoryBase.find(rep_or_snap_id)
-
+  def update_report_repository_references(rep_or_snap)
     ids = if rep_or_snap.is_a?(Repository)
             RepositorySnapshot.where(parent_id: rep_or_snap.id).pluck(:id)
           else
@@ -433,7 +431,7 @@ class MyModule < ApplicationRecord
     rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
     rows.find_each do |row|
       row_json = []
-      row_json << row.id
+      row_json << (row.repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
       row_json << row.name
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
