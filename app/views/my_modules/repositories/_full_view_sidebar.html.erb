@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <% if can_manage_my_module_repository_snapshots(@my_module) %>
+  <% if can_manage_my_module_repository_snapshots?(@my_module) %>
   <div class="list-group-item text-center hidden">
     <a id="setDefaultVersionButton" class="btn btn-primary default-version-button" data-select-path="<%= my_module_select_default_snapshot_path(@my_module) %>">
       <%= t('my_modules.repository.snapshots.full_view.set_default_button') %>
