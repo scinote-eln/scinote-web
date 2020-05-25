@@ -26,11 +26,18 @@
 
     function toggle() {
       var btn = $('#sidebar-arrow');
+      var sideBarEvent;
       if (btn.is('[data-shown]')) {
         hide();
+        sideBarEvent = 'sideBar::hidden'
       } else {
         show();
+        sideBarEvent = 'sideBar::shown'
       }
+
+      $('.navbar-secondary').one("transitionend",function(event) {
+        $('.navbar-secondary').trigger(sideBarEvent);
+      })
     }
 
     function isShown() {
