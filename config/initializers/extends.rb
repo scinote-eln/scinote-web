@@ -282,7 +282,8 @@ class Extends
     protocol_description_in_task_edited: 137,
     set_task_start_date: 138,
     change_task_start_date: 139,
-    remove_task_start_date: 140
+    remove_task_start_date: 140,
+    rename_experiment: 141
   }
 
   ACTIVITY_GROUPS = {
