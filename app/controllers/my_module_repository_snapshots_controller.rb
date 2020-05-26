@@ -74,7 +74,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
 
     @repository_snapshots = @my_module.repository_snapshots
                                       .where(parent_id: params[:repository_id])
-                                      .order(updated_at: :desc)
+                                      .order(created_at: :desc)
     render json: {
       html: render_to_string(
         partial: 'my_modules/repositories/full_view_sidebar',

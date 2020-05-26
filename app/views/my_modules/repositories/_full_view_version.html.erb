@@ -19,7 +19,7 @@
            data-status="<%= repository_snapshot.status %>"
            data-table-url="<%= full_view_table_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
           <h4 class="list-group-item-heading">
-            <%= l(repository_snapshot.updated_at, format: :full) %>
+            <%= l(repository_snapshot.created_at, format: :full) %>
           </h4>
           <p class="list-group-item-text">
             <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>

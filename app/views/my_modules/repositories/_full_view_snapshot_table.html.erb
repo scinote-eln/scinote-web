@@ -3,7 +3,7 @@
        data-type="snapshot"
        data-source="<%= index_dt_my_module_repository_snapshot_path(@my_module, @repository_snapshot) %>"
        data-repository-name="<%= @repository_snapshot.name %>"
-       data-repository-snapshot-created="<%= l(@repository_snapshot.updated_at, format: :full) %>"
+       data-repository-snapshot-created="<%= l(@repository_snapshot.created_at, format: :full) %>"
        data-assigned-items-count="<%= @repository_snapshot.repository_rows.count %>"
        data-default-order="<%= default_snapshot_table_order_as_js_array %>"
        data-default-table-columns="<%= default_snapshot_table_columns %>"
