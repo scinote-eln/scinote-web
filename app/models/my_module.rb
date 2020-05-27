@@ -53,6 +53,7 @@ class MyModule < ApplicationRecord
   has_many :my_module_repository_rows,
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
+  has_many :repositories, -> { group(:id) }, through: :repository_rows
   has_many :repository_snapshots,
            dependent: :destroy,
            inverse_of: :my_module
@@ -226,32 +227,15 @@ class MyModule < ApplicationRecord
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
-  def active_snapshot_or_live(rep_or_snap, exclude_snpashot_ids: [])
-    return unless rep_or_snap
-
-    parent_id = rep_or_snap.is_a?(Repository) ? rep_or_snap.id : rep_or_snap.parent_id
-
-    selected_snapshot_for_repo(parent_id, exclude_snpashot_ids: exclude_snpashot_ids) ||
-      assigned_repositories&.where(id: parent_id)&.first ||
-      repository_snapshots
-        .where(parent_id: parent_id)
-        .where.not(id: exclude_snpashot_ids)
-        .order(updated_at: :desc).first
-  end
-
-  def update_report_repository_references(rep_or_snap)
-    ids = if rep_or_snap.is_a?(Repository)
-            RepositorySnapshot.where(parent_id: rep_or_snap.id).pluck(:id)
+  def update_report_repository_references(repository)
+    ids = if repository.is_a?(Repository)
+            RepositorySnapshot.where(parent_id: repository.id).pluck(:id)
           else
-            Repository.where(id: rep_or_snap.parent_id).pluck(:id) +
-              RepositorySnapshot.where(parent_id: rep_or_snap.parent_id).pluck(:id)
+            Repository.where(id: repository.parent_id).pluck(:id) +
+              RepositorySnapshot.where(parent_id: repository.parent_id).pluck(:id)
           end
 
-    report_elements.where(repository_id: ids).update(repository_id: rep_or_snap.id)
-  end
-
-  def selected_snapshot_for_repo(repository_id, exclude_snpashot_ids: [])
-    repository_snapshots.where(parent_id: repository_id).where.not(id: exclude_snpashot_ids).where(selected: true).first
+    report_elements.where(repository_id: ids).update(repository: repository)
   end
 
   def unassigned_users
