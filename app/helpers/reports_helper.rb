@@ -122,10 +122,12 @@ module ReportsHelper
     )
   end
 
-  def assign_repository_or_snapshot(my_module, element_id, snapshot, repository)
-    original_repository = Repository.find_by(id: element_id) if element_id
-    repository ||= snapshot
-    repository || my_module.active_snapshot_or_live(original_repository) || original_repository
+  def assigned_repository_or_snapshot(my_module, element_id, snapshot, repository)
+    if element_id
+      repository = Repository.accessible_by_teams(my_module.experiment.project.team).find_by(id: element_id)
+      repository ||= my_module.repository_snapshots.find_by(id: element_id)
+    end
+    repository || snapshot
   end
 
   def step_status_label(step)
