@@ -290,6 +290,12 @@ var MyModuleRepositories = (function() {
       repositoryContainer.html(repositoryTemplate);
       renderSimpleTable(repositoryTemplate);
     });
+
+    $('.navbar-secondary').on('sideBar::shown sideBar::hidden', function() {
+      if (SIMPLE_TABLE) {
+        SIMPLE_TABLE.columns.adjust();
+      }
+    });
   }
 
   function initVersionsStatusCheck() {
