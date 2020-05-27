@@ -698,7 +698,10 @@ class TeamImporter
       orig_protocol_id = protocol.id
       if protocol.name
         protocol_name_unique = false
+        original_name = protocol.name
+        counter = 0
         until protocol_name_unique
+          counter += 1
           protocol_exist = if protocol.protocol_type == :in_repository_public
                              Protocol.where(protocol_type: protocol.protocol_type)
                                      .where(team: team)
@@ -710,7 +713,7 @@ class TeamImporter
                                      .find_by(name: protocol.name)
                            end
           if protocol_exist
-            protocol.name = protocol.name + '(1)'
+            protocol.name = original_name + "(#{counter})"
           else
             protocol_name_unique = true
           end
