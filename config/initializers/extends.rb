@@ -144,7 +144,7 @@ class Extends
   }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
-    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset)
+    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset Repository)
     .freeze
 
   ACTIVITY_TYPES = {
