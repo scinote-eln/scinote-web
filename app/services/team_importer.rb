@@ -696,6 +696,29 @@ class TeamImporter
     protocols_json.each do |protocol_json|
       protocol = Protocol.new(protocol_json['protocol'])
       orig_protocol_id = protocol.id
+      if protocol.name
+        protocol_name_unique = false
+        original_name = protocol.name
+        counter = 0
+        until protocol_name_unique
+          counter += 1
+          protocol_exist = if protocol.protocol_type == :in_repository_public
+                             Protocol.where(protocol_type: protocol.protocol_type)
+                                     .where(team: team)
+                                     .find_by(name: protocol.name)
+                           else
+                             Protocol.where(protocol_type: protocol.protocol_type)
+                                     .where(team: team)
+                                     .where(added_by_id: find_user(protocol.added_by_id))
+                                     .find_by(name: protocol.name)
+                           end
+          if protocol_exist
+            protocol.name = original_name + "(#{counter})"
+          else
+            protocol_name_unique = true
+          end
+        end
+      end
       protocol.id = nil
       protocol.added_by_id = find_user(protocol.added_by_id)
       protocol.team = team || my_module.experiment.project.team
