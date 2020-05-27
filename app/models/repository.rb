@@ -15,7 +15,6 @@ class Repository < RepositoryBase
            inverse_of: :original_repository
 
   before_save :sync_name_with_snapshots, if: :name_changed?
-  before_destroy :refresh_report_references_on_destroy, prepend: true
 
   validates :name,
             presence: true,
@@ -215,16 +214,5 @@ class Repository < RepositoryBase
 
   def sync_name_with_snapshots
     repository_snapshots.update(name: name)
-  end
-
-  def refresh_report_references_on_destroy
-    report_elements.find_each do |report_element|
-      repository_snapshot = report_element.my_module
-                                          .repository_snapshots
-                                          .where(original_repository: self)
-                                          .order(:selected, created_at: :desc)
-                                          .first
-      report_element.update(repository: repository_snapshot) if repository_snapshot
-    end
   end
 end
