@@ -21,9 +21,6 @@ var RepositoryColumns = (function() {
 
   function reloadDataTablePartial() {
     // Append buttons for inventory datatable
-    $('div.toolbarButtonsDatatable').appendTo('.repository-show');
-    $('div.toolbarButtonsDatatable').hide();
-
     $('div.toolbar-filter-buttons').appendTo('.repository-show');
     $('div.toolbar-filter-buttons').hide();
 

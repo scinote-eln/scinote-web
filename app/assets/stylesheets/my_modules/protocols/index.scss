@@ -6,149 +6,222 @@
 @import "constants";
 @import "mixins";
 
-#manage-module-tags-modal {
-
-  .well {
-    border: 0;
-    box-shadow: none;
-  }
+.content-pane.my-modules-protocols-index {
+  padding: 10px;
 }
 
-.module-header {
-  display: inline-block;
-  position: relative;
-  width: 100%;
+.task-section {
+  border-left: 3px solid $color-concrete;
+  margin: 16px 0;
+  padding-left: 16px;
 
-  + .protocol-title {
-    font-size: 22px;
-    font-weight: bold;
-    margin: 10px 0 15px;
-  }
+  .task-section-caret {
+    color: $color-volcano;
+    display: inline-block;
+    text-decoration: none;
 
-  .fas.block-icon {
-    color: $color-silver;
-    font-size: 18px;
-    margin-right: 5px;
-  }
-
-  .header-container {
-    display: flex;
-    flex-wrap: wrap;
-    float: left;
-    margin-bottom: 10px;
-    width: calc(100% - 280px);
-
-    .flex-block {
-      align-items: center;
-      display: flex;
-      flex-grow: 1;
-      margin-right: 10px;
-
-      .flex-block-label {
-        align-items: center;
-        display: flex;
-        margin-right: 3px;
-      }
+    .fas {
+      margin-right: 5px;
     }
 
-    .due-date-container {
-      align-items: center;
-      display: inline-flex;
+    &:not(.collapsed) .fas {
+      @include rotate(90deg);
+    }
+  }
 
-      .date-text {
-        border: 1px solid transparent;
-        font-weight: bold;
-        line-height: 34px;
-        margin-right: 25px;
-        padding: 0 3px;
-        position: relative;
+  .task-section-title {
+    display: inline-block;
 
-        .alert-green {
-          color: $brand-success;
-        }
+    h2 {
+      margin: 10px 0;
 
-        .alert-yellow {
-          color: $brand-warning;
-        }
-
-        .alert-red {
-          color: $brand-danger;
-        }
-
-        .clear-date {
-          color: $color-silver;
-          cursor: pointer;
-          display: none;
-          font-size: 20px;
-          left: 100%;
-          line-height: 34px;
-          margin-left: 5px;
-          position: absolute;
-          top: 0;
+      &.assigned-items-title {
+        &::after {
+          @include font-h3;
+          color: $color-alto;
+          content: '[' attr(data-assigned-items-count) ']';
+          display: inline;
+          line-height: 22px;
+          padding-left: 5px;
         }
       }
+    }
+  }
 
-      .datetime-picker-container {
-        color: $color-emperor;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
+  .task-section-header {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
 
-        #calendar-due-date {
-          opacity: 0;
-        }
+    .actions-block {
+      display: flex;
+      flex-grow: 1;
+      justify-content: flex-end;
 
-        .fa-calendar-alt {
-          display: none;
-        }
+      .caret {
+        margin-left: 25px;
       }
 
-      &:hover {
-        .date-text[data-editable=true] {
-          border-color: $color-silver;
-          border-radius: 3px;
+      .repositories-assign-container {
+        flex-grow: 1;
+        max-width: 200px;
 
-          .clear-date {
-            display: inline;
+        .btn {
+          text-align: left;
+
+          .caret {
+            margin: 8px 0;
+          }
+        }
+
+        .repositories-dropdown-menu {
+          .repository {
+            @include font-button;
+            cursor: pointer;
+            display: flex;
+            padding: 8px 16px;
+
+            .assigned-items,
+            .shared-icon {
+              flex-shrink: 0;
+
+              .fas {
+                padding-right: 5px;
+              }
+            }
+
+            .assigned-items {
+              color: $color-alto;
+            }
+
+            .name {
+              flex-grow: 1;
+            }
           }
         }
       }
+
+      .dropdown-menu {
+        @include font-button;
+
+        a {
+          padding: 8px 20px;
+        }
+
+        .fas {
+          padding-right: 5px;
+        }
+      }
+
+      .dropdown {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+.complete-button-container {
+  display: inline;
+  float: right;
+  width: 260px;
+
+  .my_module-state-buttons {
+    padding-top: 0;
+  }
+}
+
+.task-details {
+  .fas.block-icon {
+    margin-right: 8px;
+  }
+
+  .flex-block {
+    align-items: center;
+    display: flex;
+    line-height: 34px;
+
+    .flex-block-label {
+      align-items: center;
+      display: flex;
+      margin-right: 4px;
     }
   }
 
-  .complete-button-container {
-    float: right;
-    width: 260px;
-
-    .my_module-state-buttons {
-      padding-top: 0;
-    }
+  .empty-label {
+    color: $color-silver-chalice;
+    font-weight: normal;
   }
 
-  .module-description {
-    float: left;
-    width: 100%;
+  .datetime-container {
+    align-items: center;
+    display: inline-flex;
 
-    .no-description {
-      font-size: 16px;
-    }
-
-    .title {
-      font-size: 22px;
+    .date-text {
+      border: 1px solid transparent;
       font-weight: bold;
-      padding: 20px 0 5px;
+      line-height: 32px;
+      margin-right: 25px;
+      padding: 0 4px;
+      position: relative;
+
+      .alert-green {
+        color: $brand-success;
+      }
+
+      .alert-yellow {
+        color: $brand-warning;
+      }
+
+      .alert-red {
+        color: $brand-danger;
+      }
+
+      .clear-date {
+        color: $color-silver;
+        cursor: pointer;
+        display: none;
+        font-size: 20px;
+        left: 100%;
+        line-height: 34px;
+        margin-left: 5px;
+        position: absolute;
+        top: 0;
+      }
     }
 
-    .my-module-description-content {
-      margin-left: 10px;
+    .datetime-picker-container {
+      color: $color-emperor;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      #calendarDueDate {
+        opacity: 0;
+      }
+
+      #calendarStartDate {
+        opacity: 0;
+      }
+
+      .fa-calendar-alt {
+        display: none;
+      }
+    }
+
+    &:hover {
+      .date-text[data-editable=true] {
+        background-color: $color-concrete;
+        border-radius: 4px;
+
+        .clear-date {
+          display: inline;
+        }
+      }
     }
   }
 
   .module-tags {
-    float: left;
-    width: 100%;
-
     #module-tags {
       align-items: center;
       display: flex;
@@ -185,7 +258,7 @@
 
       &:not(.view-mode):hover {
         .input-field {
-          border: 1px solid $color-gainsboro;
+          border: 1px solid $color-alto;
         }
       }
     }
@@ -201,7 +274,7 @@
       display: inline-block;
       font-size: 14px;
       line-height: 32px;
-      width: 37px;
+      margin-right: 4px;
     }
 
     .select-container {
@@ -209,7 +282,7 @@
       flex-basis: 100px;
       flex-grow: 1;
       flex-shrink: 1;
-      max-width: calc(100% - 65px);
+      max-width: 100%;
       position: relative;
       z-index: 110;
 
@@ -250,55 +323,194 @@
             float: left;
             line-height: 36px;
           }
-
         }
       }
     }
   }
+
+  #manage-module-tags-modal {
+    .well {
+      border: 0;
+      box-shadow: none;
+    }
+  }
+
+  .task-assigned-users {
+    align-items: center;
+    border-radius: 17px;
+    display: flex;
+
+    &.empty {
+      border-radius: 4px;
+      padding: 0 4px;
+    }
+
+    &:hover {
+      background-color: $color-concrete;
+      text-decoration: none;
+    }
+  }
+
+  .assign-new-user {
+    background-color: $color-alto;
+    color: $color-volcano;
+    text-align: center;
+
+    .fa-plus {
+      font-size: 16px;
+    }
+  }
 }
 
-.my-module-recent-protocols {
-  flex-grow: 1;
-  height: 36px;
-  margin-bottom: 5px;
+.task-notes {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+
+  .no-description {
+    font-size: 16px;
+  }
+
+  .task-notes-content {
+    margin-left: 10px;
+  }
+}
+
+.my-module-protocol-status {
   position: relative;
 
-  .btn-group {
-    align-items: center;
-    display: flex;
-    float: right;
-    height: 33px;
+  .status-label {
+    @include font-h3;
+    color: $color-alto;
+    float: left;
+    margin: 0 3px;
+
+    &.linked {
+      color: $brand-primary;
+    }
   }
 
-  .title {
-    font-size: 14px;
+  .status-info {
+    @include font-h2;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:active {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    &.protocol-newer {
+      color: $brand-focus;
+    }
+
+    &.parent-newer {
+      color: $brand-warning;
+    }
   }
 
-  .dropdown-button {
+  .status-info-dropdown {
+    left: -125px;
+    max-width: 100vw;
+    width: 650px;
+
+    .dropdown-body {
+      border-bottom: $border-tertiary;
+      padding: 10px 32px;
+
+      .info-line {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 9px 0;
+
+        .description {
+          @include font-button;
+          flex-grow: 1;
+          min-width: 120px;
+        }
+
+        .value {
+          @include font-h3;
+          flex-shrink: 0;
+        }
+
+        &.new-parent-version {
+          .value {
+            color: $brand-warning;
+
+            &::before {
+              @include font-awesome;
+              content: "\f2f1";
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+
+      .notification-line {
+        @include font-button;
+        color: $color-silver-chalice;
+        display: flex;
+        margin: 8px 0;
+
+        .fas {
+          line-height: 21px;
+          margin-right: 3px;
+        }
+
+        &.new-parent-version {
+          color: $brand-warning;
+        }
+
+        &.new-protocol-version {
+          color: $brand-focus;
+        }
+      }
+    }
+
+    .dropdown-footer {
+      padding: 16px;
+    }
+  }
+}
+
+.task-details-dropdown-container {
+  .task-details-button {
+    @include font-h2;
     cursor: pointer;
-    padding: 10px 5px;
+    margin: 0 3px;
   }
 
   .dropdown-menu {
-    left: auto;
-    padding: 0;
-    right: 0;
-    width: 402px;
+    @include font-button;
+    min-width: 500px;
+    padding: 1em 2em;
 
-    .protocol {
-      cursor: pointer;
-      display: inline-block;
-      float: left;
-      padding: 5px 10px;
-      transition: $md-transaction;
-      width: 200px;
+    .task-details-value {
+      @include font-h3;
+    }
 
-      &:hover {
-        background: $color-gainsboro;
-      }
+    .row-v-margin {
+      margin-bottom: .5em;
+      margin-top: .5em;
+    }
+  }
+}
 
-      .fas {
-        margin-right: 5px;
+@media (max-width: 700px) {
+  .my-module-protocol-status {
+    .status-info-dropdown {
+      left: -75px;
+      width: 300px;
+
+      .dropdown-footer {
+        .btn {
+          float: left !important;
+          margin: 5px 0;
+          width: auto;
+        }
       }
     }
   }

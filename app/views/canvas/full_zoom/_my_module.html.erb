@@ -9,7 +9,7 @@
   data-module-x="<%= my_module.x %>"
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>"
-  data-module-users-tab-url="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
+  data-module-users-tab-url="<%=  index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
   data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
 
   <% if can_manage_module?(my_module) %>
@@ -31,11 +31,7 @@
   <div class="panel-body">
     <% if !my_module.completed? && can_manage_module?(my_module) %>
       <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
-                  class: "due-date-link due-date-refresh help_tooltips",
-                  data: {
-                    tooltiplink: I18n.t('tooltips.link.task.due_date'),
-                    tooltipcontent: I18n.t('tooltips.text.task.due_date')
-                  } do %>
+                  class: "due-date-link due-date-refresh" do %>
         <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
       <% end %>
     <% else %>
@@ -47,7 +43,7 @@
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
       <% if can_read_experiment?(my_module.experiment) %>
         <li role="presentation">
-          <a class="btn btn-link task-card-view-users" href="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
+          <a class="btn btn-link task-card-view-users" href="<%= index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
             <span class="fas fa-users" aria-hidden="true"></span>
             <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.users.count.positive? %>"
                   data-linked-id="<%= my_module.id %>">

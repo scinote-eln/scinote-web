@@ -7,3 +7,7 @@ Then(/^I should see "([^"]*)" attachment on "([^"]*)" step$/) do |file, step_nam
   wait_for_ajax
   expect(find('.step', text: step_name)).to have_content(file)
 end
+
+Then(/^I'm opening protocol section$/) do
+  find(:css, '.task-section-caret[aria-controls="protocol-container"]').click
+end

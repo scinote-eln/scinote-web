@@ -56,4 +56,40 @@
       }
     }
   }
+
+  .private-tasks-counter {
+    @include font-button;
+    border-top: $border-tertiary;
+    color: $color-silver-chalice;
+    padding-top: .5em;
+  }
+
+  .no-results-placeholder {
+    color: $color-silver-chalice;
+    padding: 2em 0 4em;
+    text-align: center;
+
+    .fa-stack {
+      @include font-h1;
+
+      .fas {
+        line-height: inherit;
+        width: 100%;
+      }
+    }
+
+    .title {
+      margin: .5em 0 0;
+    }
+  }
+
+  .archived {
+    @include font-small;
+    background: $brand-warning;
+    border-radius: $border-radius-tag;
+    color: $color-white;
+    line-height: 14px;
+    margin-right: 3px;
+    padding: 2px 3px;
+  }
 }

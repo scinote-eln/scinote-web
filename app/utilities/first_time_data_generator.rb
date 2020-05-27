@@ -75,8 +75,7 @@ module FirstTimeDataGenerator
         data: name,
         created_by: user,
         last_modified_by: user,
-        repository_column: repository_column_sample_types,
-        repository: repository
+        repository_column: repository_column_sample_types
       )
 
       # Check if it already exists
@@ -96,8 +95,7 @@ module FirstTimeDataGenerator
         data: name,
         created_by: user,
         last_modified_by: user,
-        repository_column: repository_column_sample_groups,
-        repository: repository
+        repository_column: repository_column_sample_groups
       )
 
       # Check if it already exists

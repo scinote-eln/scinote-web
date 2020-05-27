@@ -1,0 +1,38 @@
+<div class="list-group-item repository-snapshot-item <%= repository_snapshot.status %>"
+     data-id="<%= repository_snapshot.id %>"
+     data-selected="<%= repository_snapshot.selected %>"
+     data-status-url="<%= status_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>"
+     data-version-item-url="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
+  <div class="row">
+    <div class="col-xs-8">
+      <% if repository_snapshot.status == 'provisioning' %>
+        <p class="list-group-item-heading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <%= t('my_modules.repository.snapshots.full_view.provisioning') %>
+        </p>
+        <p class="list-group-item-text">
+          <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>
+        </p>
+      <% else %>
+        <a class="version-button select-snapshot-button <%= 'disabled' if repository_snapshot.status == 'provisioning' %>"
+           href="#"
+           data-status="<%= repository_snapshot.status %>"
+           data-table-url="<%= full_view_table_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
+          <h4 class="list-group-item-heading">
+            <%= l(repository_snapshot.created_at, format: :full) %>
+          </h4>
+          <p class="list-group-item-text">
+            <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>
+          </p>
+        </a>
+      <% end %>
+    </div>
+    <div class="col-xs-4">
+      <% if can_delete_snapshot %>
+      <a class="pull-right btn btn-light icon-btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
+        <i class="fas fa-trash"></i>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</div>

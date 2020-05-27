@@ -3,7 +3,7 @@
 <div class="ga-breadcrumb">
   <span class="fas fa-clipboard-check"></span>
   <% if subject %>
-    <%= route_to_other_team(reports_path(subject),
+    <%= route_to_other_team(reports_path(subject, team: subject.team.id),
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                             title: subject.name) %>

@@ -85,6 +85,6 @@ en:
         Project: "Project"
         Experiment: "Experiment"
         MyModule: "Task"
-        Repository: "Inventory"
+        RepositoryBase: "Inventory"
         Protocol: "Protocol"
         Report: "Report"

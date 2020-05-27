@@ -44,15 +44,20 @@
     display: inline-block;
   }
 
-  .panel-heading {
+  .step-heading {
+    align-items: center;
     border: 0;
-    height: 46px;
+    display: flex;
+    min-height: 46px;
     padding-bottom: 0;
     padding-top: 0;
 
     .panel-options {
       bottom: 0;
+      flex-grow: 1;
+      flex-shrink: 0;
       line-height: 46px;
+      text-align: right;
     }
 
     span.step-number {
@@ -65,7 +70,9 @@
     .left-floats {
       align-items: center;
       display: flex;
-      height: 100%;
+      max-width: 100%;
+      min-height: inherit;
+      overflow: hidden;
       padding-right: 15px;
 
       .step-name-link {
@@ -299,9 +306,11 @@
 .attachments-actions {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
 
   .title {
     flex-grow: 1;
+    flex-shrink: 0;
   }
 
   .attachments-order {
@@ -326,4 +335,8 @@
 
 .comments-title {
   color: $color-emperor;
+}
+
+.expand-all-steps {
+  margin: 0 0 15px 15px;
 }

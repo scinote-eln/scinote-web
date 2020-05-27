@@ -61,7 +61,9 @@ Canaid::Permissions.register_for(MyModule) do
      assign_repository_rows_to_module
      assign_sample_to_module
      complete_module
-     create_comments_in_module)
+     create_comments_in_module
+     create_my_module_repository_snapshot
+     manage_my_module_repository_snapshots)
     .each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
@@ -111,6 +113,16 @@ Canaid::Permissions.register_for(MyModule) do
   # step: create comment
   can :create_comments_in_module do |user, my_module|
     can_create_comments_in_project?(user, my_module.experiment.project)
+  end
+
+  # module: create a snapshot of repository item
+  can :create_my_module_repository_snapshot do |user, my_module|
+    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+  end
+
+  # module: make a repository snapshot selected
+  can :manage_my_module_repository_snapshots do |user, my_module|
+    user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 end
 

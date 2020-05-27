@@ -15,14 +15,12 @@ RSpec.describe RepositoryChecklistItem, type: :model do
 
   describe 'Database table' do
     it { should have_db_column :data }
-    it { should have_db_column :repository_id }
     it { should have_db_column :created_by_id }
     it { should have_db_column :last_modified_by_id }
     it { should have_db_column :repository_column_id }
   end
 
   describe 'Relations' do
-    it { should belong_to :repository }
     it { should belong_to :repository_column }
     it { should belong_to(:created_by).class_name('User') }
     it { should belong_to(:last_modified_by).class_name('User') }

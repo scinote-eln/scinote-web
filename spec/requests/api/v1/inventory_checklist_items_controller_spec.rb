@@ -24,10 +24,8 @@ RSpec.describe 'Api::V1::InventoryChecklistItemsController', type: :request do
       name: Faker::Name.unique.name,
       repository: @wrong_inventory,
       data_type: :RepositoryChecklistValue)
-    create_list(:repository_checklist_item, 10, repository: @valid_inventory,
-                repository_column: @checklist_column)
-    create(:repository_checklist_item, repository: @wrong_inventory,
-           repository_column: @wrong_checklist_column)
+    create_list(:repository_checklist_item, 10, repository_column: @checklist_column)
+    create(:repository_checklist_item, repository_column: @wrong_checklist_column)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }

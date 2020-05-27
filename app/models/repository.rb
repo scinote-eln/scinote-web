@@ -1,36 +1,26 @@
 # frozen_string_literal: true
 
-class Repository < ApplicationRecord
+class Repository < RepositoryBase
   include SearchableModel
   include SearchableByNameModel
   include RepositoryImportParser
-  include Discard::Model
 
   enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 
-  attribute :discarded_by_id, :integer
-
-  belongs_to :team
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
-  has_many :repository_columns, dependent: :destroy
-  has_many :repository_rows, dependent: :destroy
-  has_many :repository_table_states,
-           inverse_of: :repository, dependent: :destroy
-  has_many :report_elements, inverse_of: :repository, dependent: :destroy
-  has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
-  has_many :repository_checklist_items, inverse_of: :repository, dependent: :destroy
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
   has_many :teams_shared_with, through: :team_repositories, source: :team
+  has_many :repository_snapshots,
+           class_name: 'RepositorySnapshot',
+           foreign_key: :parent_id,
+           inverse_of: :original_repository
 
-  auto_strip_attributes :name, nullify: false
+  before_save :sync_name_with_snapshots, if: :name_changed?
+
   validates :name,
             presence: true,
             uniqueness: { scope: :team_id, case_sensitive: false },
             length: { maximum: Constants::NAME_MAX_LENGTH }
-  validates :team, presence: true
-  validates :created_by, presence: true
 
-  default_scope -> { kept }
   scope :accessible_by_teams, lambda { |teams|
     left_outer_joins(:team_repositories)
       .where('repositories.team_id IN (?) '\
@@ -97,6 +87,10 @@ class Repository < ApplicationRecord
     end
   end
 
+  def default_columns_count
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE['length']
+  end
+
   def i_shared?(team)
     shared_with_anybody? && self.team == team
   end
@@ -137,10 +131,6 @@ class Repository < ApplicationRecord
 
   def self.name_like(query)
     where('repositories.name ILIKE ?', "%#{query}%")
-  end
-
-  def available_columns_ids
-    repository_columns.pluck(:id)
   end
 
   def importable_repository_fields
@@ -203,11 +193,26 @@ class Repository < ApplicationRecord
     importer.run
   end
 
-  def destroy_discarded(discarded_by_id = nil)
-    self.discarded_by_id = discarded_by_id
-    destroy
+  def provision_snapshot(my_module, created_by = nil)
+    created_by ||= self.created_by
+    repository_snapshot = dup.becomes(RepositorySnapshot)
+    repository_snapshot.assign_attributes(type: RepositorySnapshot.name,
+                                          original_repository: self,
+                                          my_module: my_module,
+                                          created_by: created_by)
+    repository_snapshot.provisioning!
+    repository_snapshot.reload
+    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
+    repository_snapshot
   end
-  handle_asynchronously :destroy_discarded,
-                        queue: :clear_discarded_repository,
-                        priority: 20
+
+  def assigned_rows(my_module)
+    repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
+  end
+
+  private
+
+  def sync_name_with_snapshots
+    repository_snapshots.update(name: name)
+  end
 end

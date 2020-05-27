@@ -1,0 +1,34 @@
+<table class="table"
+       data-id="<%= @repository_snapshot.id %>"
+       data-type="snapshot"
+       data-source="<%= index_dt_my_module_repository_snapshot_path(@my_module, @repository_snapshot) %>"
+       data-repository-name="<%= @repository_snapshot.name %>"
+       data-repository-snapshot-created="<%= l(@repository_snapshot.created_at, format: :full) %>"
+       data-assigned-items-count="<%= @repository_snapshot.repository_rows.count %>"
+       data-default-order="<%= default_snapshot_table_order_as_js_array %>"
+       data-default-table-columns="<%= default_snapshot_table_columns %>"
+       data-load-state-url="<%= repository_load_table_state_path(@repository_snapshot) %>"
+       data-versions-sidebar-url="<%= full_view_sidebar_my_module_repository_snapshots_path(@my_module, @repository_snapshot.parent_id) %>"
+>
+  <thead>
+    <tr>
+      <th class="never"></th>
+      <th id="row-id"><%= t("repositories.table.id") %></th>
+      <th id="row-name"><%= t("repositories.table.row_name") %></th>
+      <th id="added-on"><%= t("repositories.table.added_on") %></th>
+      <th id="added-by"><%= t("repositories.table.added_by") %></th>
+      <% @repository_snapshot.repository_columns.order(:parent_id).each do |column| %>
+        <th class="repository-column"
+            id="<%= column.id %>"
+            data-type="<%= column.data_type %>"
+            <% column.metadata.each do |k, v| %>
+              <%= "data-metadata-#{k}=#{v}" %>
+            <% end %>
+        >
+          <%= display_tooltip(column.name) %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>

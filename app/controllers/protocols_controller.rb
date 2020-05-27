@@ -23,6 +23,7 @@ class ProtocolsController < ApplicationController
     linked_children
     linked_children_datatable
   )
+  before_action :switch_team_with_param, only: :index
   before_action :check_view_all_permissions, only: %i(
     index
     datatable
@@ -105,14 +106,6 @@ class ProtocolsController < ApplicationController
         }
       end
     end
-  end
-
-  def recent_protocols
-    render json: Protocol.recent_protocols(
-      current_user,
-      current_team,
-      Constants::RECENT_PROTOCOL_LIMIT
-    ).select(:id, :name)
   end
 
   def linked_children

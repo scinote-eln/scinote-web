@@ -35,7 +35,8 @@ var RepositoryChecklistColumnType = (function() {
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
-          dropdownOptions
+          dropdownOptions,
+          GLOBAL_CONSTANTS.REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
         );
         $('.changing-existing-list-items-warning').removeClass('hidden');
         initChecklistDropdown();
@@ -45,7 +46,8 @@ var RepositoryChecklistColumnType = (function() {
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
-          dropdownOptions
+          dropdownOptions,
+          GLOBAL_CONSTANTS.REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
         );
         initChecklistDropdown();
         initUpdatePlaceholder(this);
@@ -55,7 +57,8 @@ var RepositoryChecklistColumnType = (function() {
           previewContainer,
           itemsTextarea,
           delimiterDropdown,
-          dropdownOptions
+          dropdownOptions,
+          GLOBAL_CONSTANTS.REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
         );
         initChecklistDropdown();
       })
@@ -71,7 +74,7 @@ var RepositoryChecklistColumnType = (function() {
     checkValidation: () => {
       var $manageModal = $(manageModal);
       var count = $manageModal.find('.items-count').attr('data-count');
-      return count < GLOBAL_CONSTANTS.REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN;
+      return count <= GLOBAL_CONSTANTS.REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN;
     },
     loadParams: () => {
       var repositoryColumnParams = {};

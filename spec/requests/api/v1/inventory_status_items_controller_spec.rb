@@ -12,12 +12,12 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
     @wrong_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @user, team: @team2)
     @status_column = create(:repository_column, name: Faker::Name.unique.name, repository: @inventory,
                             data_type: :RepositoryStatusValue)
-    create_list(:repository_status_item, 10, repository: @inventory, repository_column: @status_column)
+    create_list(:repository_status_item, 10, repository_column: @status_column)
     @list_column = create(:repository_column, name: Faker::Name.unique.name,
                           repository: @inventory, data_type: :RepositoryListValue)
     @wrong_column = create(:repository_column, name: Faker::Name.unique.name, repository: @wrong_inventory,
                            data_type: :RepositoryStatusValue)
-    @wrong_status_item = create(:repository_status_item, repository: @wrong_inventory, repository_column: @wrong_column)
+    @wrong_status_item = create(:repository_status_item, repository_column: @wrong_column)
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
   end

@@ -76,19 +76,6 @@
     );
   }
 
-// Initialize tooltips settings form
-  function tooltipSettings() {
-    var toggleInput = $('[name="tooltips_enabled"]');
-    toggleInput
-      .checkboxpicker({ onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle' });
-
-    if (toggleInput.attr('value') === 'true') {
-      toggleInput.prop('checked', true);
-    } else {
-      toggleInput.prop('checked', false);
-    }
-  }
-
   // triggers submit action when the user clicks
   function initTogglableSettingsForm() {
     $('#togglable-settings-panel')
@@ -148,6 +135,5 @@
   initTimeZoneSelector();
   initDateFormatSelector();
   notificationsSettings();
-  tooltipSettings();
   initTogglableSettingsForm();
 })();

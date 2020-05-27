@@ -115,7 +115,6 @@
       toggleButtons(true);
 
       setTimeout(function() {
-        $.initTooltips();
         initStepsComments();
         FilePreviewModal.init();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
@@ -489,6 +488,7 @@
       var $btn = $(this);
       $btn.off();
       animateSpinner(null, true);
+      $('#protocol-container').collapse('show');
 
       $.ajax({
         url: $btn.data('href'),
@@ -617,9 +617,7 @@
             animateSpinner(null, false);
             DragNDropSteps.clearFiles();
             FilePreviewModal.init();
-            $.initTooltips();
             if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
-            if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
           },
           error: function(xhr) {
             if (xhr.responseJSON['assets.file']) {

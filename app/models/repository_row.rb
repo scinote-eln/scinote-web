@@ -4,7 +4,7 @@ class RepositoryRow < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
-  belongs_to :repository, optional: true
+  belongs_to :repository, class_name: 'RepositoryBase'
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User'
   has_many :repository_cells, -> { order(:id) }, dependent: :destroy
@@ -23,11 +23,6 @@ class RepositoryRow < ApplicationRecord
     where(repository: Repository.viewable_by_user(user, teams))
   end
 
-  def self.assigned_on_my_module(ids, my_module)
-    where(id: ids).joins(:my_module_repository_rows)
-                  .where('my_module_repository_rows.my_module' => my_module)
-  end
-
   def self.name_like(query)
     where('repository_rows.name ILIKE ?', "%#{query}%")
   end
@@ -40,5 +35,18 @@ class RepositoryRow < ApplicationRecord
 
   def editable?
     true
+  end
+
+  def snapshot!(repository_snapshot)
+    row_snapshot = dup
+    row_snapshot.assign_attributes(
+      repository: repository_snapshot,
+      parent_id: id,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    row_snapshot.save!
+
+    repository_cells.each { |cell| cell.snapshot!(row_snapshot) }
   end
 end

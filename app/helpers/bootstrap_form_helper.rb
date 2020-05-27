@@ -2,6 +2,7 @@ module BootstrapFormHelper
 
   # Extend Bootstrap form builder
   class BootstrapForm::FormBuilder
+    include BootstrapFormHelper
 
     # Returns Bootstrap date-time picker of the "datetime" type tailored for accessing a specified datetime attribute (identified by +name+) on an object
     # assigned to the template (identified by +object+). Additional options on the input tag can be passed as a
@@ -22,18 +23,9 @@ module BootstrapFormHelper
     def datetime_picker(name, options = {})
       id = "#{@object_name}_#{name.to_s}"
       input_name = "#{@object_name}[#{name.to_s}]"
-      date_format = I18n.backend.date_format.dup
-      value = options[:value] ? options[:value].strftime(date_format + ' %H:%M') : ''
+      value = options[:value] ? options[:value].strftime("#{I18n.backend.date_format} %H:%M") : ''
       js_locale = I18n.locale.to_s
-      js_format = date_format
-      js_format.gsub!(/%-d/, 'D')
-      js_format.gsub!(/%d/, 'DD')
-      js_format.gsub!(/%-m/, 'M')
-      js_format.gsub!(/%m/, 'MM')
-      js_format.gsub!(/%b/, 'MMM')
-      js_format.gsub!(/%B/, 'MMMM')
-      js_format.gsub!('%Y', 'YYYY')
-      js_format << ' HH:mm' if options[:time] == true
+      js_format = options[:time] ? datetime_picker_format_full : datetime_picker_format_date_only
 
       label = options[:label] || name.to_s.humanize
 
@@ -265,5 +257,25 @@ module BootstrapFormHelper
       options.merge!(cols: 120, rows: 10)
       text_area(name, options)
     end
+  end
+
+  # Returns date only format string for Bootstrap DateTimePicker
+  def datetime_picker_format_date_only
+    js_format = I18n.backend.date_format.dup
+    js_format.gsub!(/%-d/, 'D')
+    js_format.gsub!(/%d/, 'DD')
+    js_format.gsub!(/%-m/, 'M')
+    js_format.gsub!(/%m/, 'MM')
+    js_format.gsub!(/%b/, 'MMM')
+    js_format.gsub!(/%B/, 'MMMM')
+    js_format.gsub!('%Y', 'YYYY')
+    js_format
+  end
+
+  # Returns date and time format string for Bootstrap DateTimePicker
+  def datetime_picker_format_full
+    js_format = datetime_picker_format_date_only
+    js_format << ' HH:mm'
+    js_format
   end
 end

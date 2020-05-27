@@ -24,10 +24,8 @@ RSpec.describe 'Api::V1::InventoryListItemsController', type: :request do
       name: Faker::Name.unique.name,
       repository: @wrong_inventory,
       data_type: :RepositoryListValue)
-    create_list(:repository_list_item, 10, repository: @valid_inventory,
-                repository_column: @list_column)
-    create(:repository_list_item, repository: @wrong_inventory,
-           repository_column: @wrong_list_column)
+    create_list(:repository_list_item, 10, repository_column: @list_column)
+    create(:repository_list_item, repository_column: @wrong_list_column)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
