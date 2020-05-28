@@ -582,7 +582,7 @@ class MyModulesController < ApplicationController
   def load_projects_tree
     # Switch to correct team
     current_team_switch(@project.team) unless @project.nil?
-    @projects_tree = current_user.projects_tree(current_team, nil)
+    @projects_tree = current_user.projects_tree(current_team, 'atoz')
   end
 
   def check_manage_permissions
