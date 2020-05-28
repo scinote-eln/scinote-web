@@ -1,5 +1,5 @@
 <div class="modal" id="create-repo-modal" tabindex="-1" role="dialog" aria-labelledby="create-repo-modal-label">
-  <%= bootstrap_form_for [@team, @repository], remote: :true do |f| %>
+  <%= bootstrap_form_for [current_team, @repository], remote: :true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">

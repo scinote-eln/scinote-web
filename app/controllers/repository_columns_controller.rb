@@ -88,7 +88,7 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def available_columns
-    render json: { columns: @repository.available_columns_ids }, status: :ok
+    render json: { columns: @repository.repository_columns.pluck(:id) }, status: :ok
   end
 
   private

@@ -244,7 +244,6 @@ function initializeEdit() {
       { color: 'white', shadow: true }
     );
   });
-  $.initTooltips();
 }
 
 function destroyEdit() {
@@ -750,7 +749,7 @@ function bindEditDueDateAjax() {
     editDueDateModalBody.find("form")
     .on("ajax:success", function(ev2, data2, status2) {
       // Update module's due date
-      dueDateLink.html(data2.due_date_label);
+      dueDateLink.html(data2.card_due_date_label);
 
       // Update module's classes if needed
       moduleEl
@@ -900,8 +899,6 @@ function bindEditTagsAjax(elements) {
             .find(".edit-tags-link")
             .html(my_module.tags_html);
         });
-        // initialize tooltips again
-        $.initTooltips();
       },
       error: function(data){
         // TODO

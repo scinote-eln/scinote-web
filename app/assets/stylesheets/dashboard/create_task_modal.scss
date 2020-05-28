@@ -1,0 +1,92 @@
+// scss-lint:disable SelectorDepth QualifyingElement NestingDepth
+
+#create-task-modal {
+  .modal-dialog {
+    width: 360px;
+
+    .description {
+      margin-bottom: 20px;
+    }
+
+    .select-block {
+      display: inline-block;
+      padding-bottom: 16px;
+      position: relative;
+      width: 100%;
+
+      label {
+        @include font-small;
+        display: inline-block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        user-select: none;
+      }
+
+      &::after {
+        display: block;
+        color: $brand-danger;
+        content: attr(data-error);
+      }
+    }
+
+    .dropdown-selector-container {
+      .create-new {
+        padding: 0 5px;
+      }
+    }
+
+    .new-projects-visibility {
+      position: relative;
+    }
+
+    .down-arrow {
+      background-color: $color-white;
+      box-shadow: -4px 4px 0 $color-black;
+      display: inline-block;
+      height: 38px;
+      margin: 0 11px 20px 14px;
+      opacity: .2;
+      width: 38px;
+    }
+
+    .down-arrow::before {
+      border-bottom: 6px solid transparent;
+      border-left: 8px solid $color-black;
+      border-top: 6px solid transparent;
+      content: "";
+      height: 0;
+      left: 46px;
+      position: absolute;
+      top: 36px;
+      width: 0;
+    }
+
+    .project-visibility-container {
+      display: inline-block;
+      width: 260px;
+    }
+
+    .project-visibility-title {
+      @include font-small;
+      display: inline-block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .sci-toggles-group {
+      .sci-toggle-item {
+        width: 130px;
+      }
+
+      .sci-toggle-item-label {
+        margin-left: -130px;
+        margin-bottom: 0;
+        width: 130px;
+      }
+    }
+
+    .modal-footer {
+      text-align: center;
+    }
+  }
+}

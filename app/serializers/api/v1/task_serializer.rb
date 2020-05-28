@@ -4,7 +4,7 @@ module Api
   module V1
     class TaskSerializer < ActiveModel::Serializer
       type :tasks
-      attributes :id, :name, :due_date, :description, :state, :archived
+      attributes :id, :name, :started_on, :due_date, :description, :state, :archived
       has_many :output_tasks, key: :outputs,
                             serializer: TaskSerializer,
                             class_name: 'MyModule'

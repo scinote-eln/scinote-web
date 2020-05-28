@@ -311,8 +311,10 @@
 
   .dropdown-menu {
     border-radius: 0;
+    height: auto;
     margin-top: 0;
     max-height: calc(100vh - 50px);
+    overflow: auto;
     padding-bottom: 0;
     padding-top: 0;
     width: 100%;
@@ -365,23 +367,6 @@
 .custom-nav-dropdown {
   border: 1px solid $color-alto;
   padding: 10px 0 10px 30px;
-}
-
-// Alert
-.alert {
-  &.alert-hidden {
-    display: none;
-  }
-
-  a#hide-alert {
-    margin-left: 15px;
-  }
-
-  &.alert-floating {
-    position: fixed;
-    top: 50px;
-    z-index: 1000;
-  }
 }
 
 #content-wrapper {
@@ -457,34 +442,6 @@
     a {
       font-size: $font-size-small;
       font-weight: $headings-font-weight;
-    }
-  }
-}
-
-.academy-link.flag {
-  background: $brand-academy;
-  border: 16px solid $brand-academy;
-  border-bottom: 10px solid $color-white;
-  display: inline-block;
-  height: 0;
-  margin: 0 6px 8px;
-  padding: 12px 0 0;
-  position: relative;
-  width: 0;
-
-  .icon-container {
-    align-items: center;
-    display: flex;
-    height: 28px;
-    justify-content: center;
-    left: -16px;
-    position: absolute;
-    top: -16px;
-    width: 32px;
-
-    .fas {
-      color: $color-white;
-      font-size: 16px;
     }
   }
 }

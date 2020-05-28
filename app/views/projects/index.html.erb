@@ -1,9 +1,11 @@
 
 <% provide(:head_title, t("projects.index.head_title")) %>
- 
+
 <% if current_team %>
   <%= render partial: "shared/sidebar", locals: { page: 'project' } %>
   <%= render partial: "shared/secondary_navigation" %>
+
+  <span style="display: none;" data-hook="projects-index-html"></span>
 
   <% if can_create_projects?(current_team) %>
     <!-- New project modal -->
@@ -20,11 +22,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary help_tooltips",
-                           data: {
-                             tooltiplink: I18n.t('tooltips.link.new_project'),
-                             tooltipcontent: I18n.t('tooltips.text.new_project')
-                           } %>
+              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary" %>
             </div>
           </div>
         </div>

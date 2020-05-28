@@ -62,6 +62,7 @@
         align-items: center;
         display: inline-flex;
         height: 32px;
+        margin: 0;
 
         .read-only-name {
           display: inline-block;
@@ -85,7 +86,12 @@
     }
 
     .repo-datatables-buttons {
+      display: flex;
       flex-shrink: 0;
+
+      .manage-repo-column-index {
+        margin-left: 4px;
+      }
     }
   }
 
@@ -109,6 +115,10 @@
       .toolbar-filter-buttons {
         float: right;
       }
+    }
+
+    .repository-provisioning-notice {
+      color: $brand-info;
     }
   }
 
@@ -181,29 +191,6 @@
   }
 }
 
-.repositories-dropdown-menu {
-  border: 1px solid $color-gainsboro;
-  border-top: 0;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-  height: auto;
-  max-height: 400px;
-  overflow-x: hidden;
-  text-transform: initial;
-  width: 300px;
-
-  li:not(:first-child) {
-    border-top: 1px solid $color-gainsboro;
-  }
-
-  .fas-custom {
-    float: right;
-  }
-
-  a.muted {
-    opacity: .7;
-  }
-}
-
 .repository-share-status {
   display: contents !important;
 
@@ -238,10 +225,12 @@
   }
 
   .image-icon {
+    height: 18px;
     width: 18px;
   }
 
   .file-preview-link {
+    display: inline-block;
     min-width: 140px;
     padding-left: 5px;
   }
@@ -249,6 +238,32 @@
 
 .file-editing {
   width: 200px;
+
+  input[type=file] {
+    display: none;
+  }
+
+  label {
+    cursor: pointer;
+    flex-grow: 1;
+    font-weight: normal;
+    height: 100%;
+    margin-bottom: 0;
+    margin-right: 5px;
+    overflow: hidden;
+    padding-left: 34px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 2;
+
+    &:empty::before {
+      content: attr(data-placeholder);
+      margin-left: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 
   .file-upload-button {
     align-items: center;
@@ -266,33 +281,26 @@
         display: none;
       }
 
-      label {
-        color: $color-silver-chalice;
-        cursor: pointer;
-        display: inline-block;
-        margin-bottom: 0;
-        white-space: nowrap;
-      }
-
       &:hover {
         .fa-trash {
           display: none;
         }
       }
+
+      label {
+        color: $color-silver-chalice;
+        padding-left: 0;
+      }
     }
 
     .icon {
       display: inline-block;
+      left: 0;
+      line-height: 32px;
+      position: absolute;
       text-align: center;
+      top: 0;
       width: 34px;
-    }
-
-    .label-asset {
-      display: inline-block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: calc(100% - 44px);
     }
 
     .fa-trash {
@@ -344,21 +352,9 @@
       }
     }
   }
-
-
-
-  input[type=file] {
-    display: none;
-  }
-
-  label {
-    display: none;
-    font-weight: normal;
-    margin-left: 10px;
-  }
 }
 
-.toolbarButtonsDatatable {
+#toolbarButtonsDatatable {
   .view-only-label {
     opacity: .6;
   }
@@ -366,6 +362,7 @@
 
 .sidebar-button {
   color: $brand-primary !important;
+  margin-left: 30px;
 
   span {
     display: inline-block !important;

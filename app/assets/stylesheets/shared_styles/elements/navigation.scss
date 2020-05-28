@@ -1,0 +1,38 @@
+.sci-secondary-navbar {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+
+  .navbar-link {
+    @include font-small;
+    align-items: center;
+    color: $color-silver-chalice;
+    cursor: pointer;
+    display: flex;
+    height: 100%;
+    padding: 0 16px;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &:hover {
+      color: $color-volcano;
+    }
+
+    &.active {
+      color: $color-volcano;
+      font-weight: bold;
+
+      &::before {
+        background: $brand-primary;
+        bottom: 0;
+        content: "";
+        height: 4px;
+        left: 0;
+        position: absolute;
+        width: 100%;
+      }
+    }
+  }
+}

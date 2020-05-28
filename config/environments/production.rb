@@ -41,7 +41,9 @@ Rails.application.configure do
     enable_starttls_auto: true,
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password,
-    openssl_verify_mode: Rails.application.secrets.mailer_openssl_verify_mode
+    openssl_verify_mode: Rails.application.secrets.mailer_openssl_verify_mode,
+    ca_path: Rails.application.secrets.mailer_openssl_ca_path,
+    ca_file: Rails.application.secrets.mailer_openssl_ca_file
   }
 
   #config.action_mailer.perform_deliveries = false

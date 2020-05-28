@@ -158,7 +158,6 @@
     function init(location) {
       LOCATION = location;
       global.addEventListener('paste', listener, false);
-      $.initTooltips();
     }
 
     function destroy() {
@@ -178,7 +177,6 @@
     var totalSize = 0;
     var fileMaxSizeMb;
     var fileMaxSize;
-    var uploadedFilesCounter = 0;
 
     // return the status of files if they are ready to submit
     function filesStatus() {
@@ -187,14 +185,6 @@
 
     function clearFiles() {
       droppedFiles = [];
-    }
-
-    function incrementUploadedFilesCounter() {
-      uploadedFilesCounter += 1;
-    }
-
-    function getUploadedFilesCounter() {
-      return uploadedFilesCounter;
     }
 
     function dragNdropAssetsOff() {
@@ -210,14 +200,14 @@
         const form = $(ev.target).closest('form').get(0);
         const url = $(form).find('#drag-n-drop-assets').data('directUploadUrl');
         const regex = /step\[assets_attributes\]\[[0-9]*\]\[id\]/;
-        const numberOfFiles = droppedFiles.length;
+        const lastIndex = droppedFiles.length - 1;
         let prevEls = $('input').filter(function() {
           return this.name.match(regex);
         });
 
         let fd = new FormData(form);
+        let index = 0;
 
-        uploadedFilesCounter = 0;
         fd.delete('step[file][]');
 
         if (droppedFiles.length === 0) {
@@ -225,22 +215,25 @@
           return;
         }
 
-        for (let i = 0; i < droppedFiles.length; i += 1) {
-          let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
-          let index = i + prevEls.length;
+        const uploadFile = (file) => {
+          let upload = new ActiveStorage.DirectUpload(file, url);
 
           upload.create(function(error, blob) {
             if (error) {
               reject(error);
             } else {
-              fd.append('step[assets_attributes][' + index + '][signed_blob_id]', blob.signed_id);
-              incrementUploadedFilesCounter();
-              if (getUploadedFilesCounter() === numberOfFiles) {
+              fd.append('step[assets_attributes][' + (index + prevEls.length) + '][signed_blob_id]', blob.signed_id);
+              if (index === lastIndex) {
                 resolve(fd);
+                return;
               }
+              index += 1;
+              uploadFile(droppedFiles[index]);
             }
           });
-        }
+        };
+
+        uploadFile(droppedFiles[index]);
 
         filesValid = true;
         totalSize = 0;
@@ -280,11 +273,9 @@
       if (totalSize > fileMaxSize) {
         filesValid = false;
         disableSubmitButton();
-        $.each($('.panel-step-attachment-new'), function() {
-          if (!$(this).find('p').hasClass('dnd-total-error')) {
-            $(this)
-              .find('.panel-body')
-              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
+        $.each($('.attachment-placeholder.new'), function() {
+          if (!$(this).find('p').hasClass('dnd-error')) {
+            $(this).append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
           }
         });
       } else {
@@ -352,6 +343,7 @@
       fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
       for (let i = 0; i < files.length; i += 1) {
+        files[i].uuid = Math.random().toString(36);
         droppedFiles.push(files[i]);
       }
       listItems();
@@ -463,33 +455,38 @@
     function appendFilesToForm(ev, fd) {
       const form = $(ev.target.form);
       const url = form.find('#drag-n-drop-assets').data('directUploadUrl');
-      const numberOfFiles = droppedFiles.length;
+      const lastIndex = droppedFiles.length - 1;
 
-      let resultNames = [];
+      let index = 0;
 
-      $.each($('input[rel="results[name]"]'), function() {
-        resultNames.push($(this).val());
-      });
+      const uploadFile = (file) => {
+        const upload = new ActiveStorage.DirectUpload(file, url);
 
-      resultNames.reverse();
-      var counter = 0;
-      for (let i = 0; i < numberOfFiles; i += 1) {
-        let upload = new ActiveStorage.DirectUpload(droppedFiles[i], url);
-
-        upload.create(function(error, blob) {
+        upload.create((error, blob) => {
           if (error) {
-            // Handle the error
+            $.each($('.panel-result-attachment-new'), function() {
+              if (!$(this).find('p').hasClass('dnd-total-error')) {
+                $(this)
+                  .find('.panel-body')
+                  .append("<p class='dnd-total-error'>" + I18n.t('general.file.upload_failure') + '</p>');
+              }
+            });
+            animateSpinner(null, false);
           } else {
-            fd.append('results_names[' + i + ']', resultNames[i]);
-            fd.append('results_files[' + i + '][signed_blob_id]', blob.signed_id);
-            counter += 1;
-            if (counter === numberOfFiles) {
+            fd.append('results_names[' + index + ']', $('input[name="results[name][' + index + ']"]').val());
+            fd.append('results_files[' + index + '][signed_blob_id]', blob.signed_id);
+            if (index === lastIndex) {
               submitResultForm($(ev.target).attr('data-href'), fd);
               destroyAll();
+              return;
             }
+            index += 1;
+            uploadFile(droppedFiles[index]);
           }
         });
-      }
+      };
+
+      uploadFile(droppedFiles[index]);
     }
 
     /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -521,7 +518,7 @@
                       <span class="fas fa-paperclip"></span>
                       ${I18n.t('assets.drag_n_drop.file_label')}
                       <div class="pull-right">
-                        <a data-item-id="' + ${i} + '" href="#">
+                        <a data-item-id="${asset.uuid}" href="#">
                           <span class="fas fa-times"></span>
                         </a>
                       </div>
@@ -530,7 +527,7 @@
                       <div class="form-group">
                         <label class="control-label">Name</label>
                         <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
-                               rel="results[name]" name="results[name][' + ${i} + ']">
+                               rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">
                         <label class="control-label">${I18n.t('assets.drag_n_drop.file_label')}:</label>
@@ -555,16 +552,19 @@
       }
     }
 
-    function removeItemHandler(id, callback) {
-      $('[data-item-id="' + id + '"]').off('click').on('click', function(e) {
+    function removeItemHandler(uuid) {
+      $('[data-item-id="' + uuid + '"]').off('click').on('click', function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         e.stopPropagation();
         let $el = $(this);
-        let index = $el.data('item-id');
+        let index = droppedFiles.findIndex((file) => {
+          return file.uuid === $el.data('item-id');
+        });
         totalSize -= parseInt(droppedFiles[index].size, 10);
         droppedFiles.splice(index, 1);
-        callback();
+        validateTotalSize();
+        $el.closest('.panel-result-attachment-new').remove();
       });
     }
 
@@ -582,7 +582,7 @@
             .after(uploadedAssetPreview(droppedFiles[i], i))
             .promise()
             .done(function() {
-              removeItemHandler(i, listItems);
+              removeItemHandler(droppedFiles[i].uuid);
             });
         }
         validateTotalSize();
@@ -593,8 +593,10 @@
     function init(files) {
       fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
       fileMaxSize = fileMaxSizeMb * 1024 * 1024;
+
       for (let i = 0; i < files.length; i += 1) {
-        droppedFiles.push(files[i]);
+        files[i].uuid = Math.random().toString(36);
+        droppedFiles.unshift(files[i]);
       }
       listItems();
     }

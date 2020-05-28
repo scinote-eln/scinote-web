@@ -1,5 +1,5 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation Asset
+  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS
 */
 /* eslint-disable no-unused-vars */
 
@@ -7,6 +7,7 @@ var RepositoryDatatableRowEditor = (function() {
   const NAME_COLUMN_ID = 'row-name';
   const TABLE_ROW = '<tr></tr>';
   const TABLE_CELL = '<td></td>';
+  const EDIT_FORM_CLASS_NAME = GLOBAL_CONSTANTS.REPOSITORY_ROW_EDITOR_FORM_CLASS_NAME;
 
   var TABLE;
 
@@ -20,7 +21,7 @@ var RepositoryDatatableRowEditor = (function() {
   }
 
   function validateAndSubmit($table) {
-    let $form = $table.find('.repository-row-edit-form');
+    let $form = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
     let $row = $form.closest('tr');
     let valid = true;
     let directUrl = $table.data('direct-upload-url');
@@ -40,7 +41,7 @@ var RepositoryDatatableRowEditor = (function() {
 
     animateSpinner($table, true);
     // DirectUpload here
-    let uploadPromise = Asset.uploadFiles($files, directUrl);
+    let uploadPromise = AssetColumnHelper.uploadFiles($files, directUrl);
 
     // Submission here
     uploadPromise
@@ -62,10 +63,15 @@ var RepositoryDatatableRowEditor = (function() {
     fileInputs.on('change', function() {
       let $input = $(this);
       let $fileBtn = $input.next('.file-upload-button');
-      let $label = $fileBtn.find('.label-asset');
+      let $label = $fileBtn.find('label');
 
-      $label.text($input[0].files[0].name);
-      $fileBtn.removeClass('new-file');
+      if ($input[0].files[0]) {
+        $label.text($input[0].files[0].name);
+        $fileBtn.removeClass('new-file');
+      } else {
+        $label.text('');
+        $fileBtn.addClass('new-file');
+      }
       $fileBtn.removeClass('error');
     });
 
@@ -73,7 +79,7 @@ var RepositoryDatatableRowEditor = (function() {
     deleteButtons.on('click', function() {
       let $fileBtn = $(this).parent();
       let $input = $fileBtn.prev('input[type=file]');
-      let $label = $fileBtn.find('.label-asset');
+      let $label = $fileBtn.find('label');
 
       $fileBtn.addClass('new-file');
       $label.text('');
@@ -95,15 +101,15 @@ var RepositoryDatatableRowEditor = (function() {
     TABLE = table;
     let $table = $(TABLE.table().node());
 
-    $table.on('ajax:success', '.repository-row-edit-form', function(ev, data) {
+    $table.on('ajax:success', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
       TABLE.ajax.reload(() => {
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(data.flash, 'success');
-        $('html, body').animate({scrollLeft: 0}, 300);
+        $('html, body').animate({ scrollLeft: 0 }, 300);
       });
     });
 
-    $table.on('ajax:error', '.repository-row-edit-form', function(ev, data) {
+    $table.on('ajax:error', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });
@@ -118,7 +124,7 @@ var RepositoryDatatableRowEditor = (function() {
     let rowForm = $(`
       <td>
         <form id="${formId}"
-              class="repository-row-edit-form"
+              class="${EDIT_FORM_CLASS_NAME}"
               action="${actionUrl}"
               method="post"
               data-remote="true">
@@ -167,7 +173,7 @@ var RepositoryDatatableRowEditor = (function() {
     let requestUrl = $(TABLE.table().node()).data('current-uri');
     let rowForm = $(`
       <form id="${formId}"
-            class="repository-row-edit-form"
+            class="${EDIT_FORM_CLASS_NAME}"
             action="${row.data().recordUpdateUrl}"
             method="patch"
             data-remote="true"
@@ -204,6 +210,7 @@ var RepositoryDatatableRowEditor = (function() {
   }
 
   return Object.freeze({
+    EDIT_FORM_CLASS_NAME: EDIT_FORM_CLASS_NAME,
     initFormSubmitAction: initFormSubmitAction,
     validateAndSubmit: validateAndSubmit,
     switchRowToEditMode: switchRowToEditMode,

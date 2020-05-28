@@ -49,4 +49,36 @@ describe RepositoryDateValue, type: :model do
         .to be_an_instance_of RepositoryDateValue
     end
   end
+
+  describe 'self.import_from_text' do
+    let(:user) { create :user }
+    let(:test_date) { Date.parse('2020-01-22') }
+    let(:date_string) { '01/22/2020' }
+    let(:attributes) { {} }
+
+    it 'correctly handles all available date formats' do
+      Constants::SUPPORTED_DATE_FORMATS.each do |date_format|
+        user.settings[:date_format] = date_format.gsub(/%-/, '%')
+        user.save
+        test_string = test_date.strftime(date_format)
+        result = RepositoryDateValue
+                 .import_from_text(test_string,
+                                   attributes,
+                                   user.as_json(root: true, only: :settings).deep_symbolize_keys)
+        expect(result).to respond_to(:data)
+        expect(result.data).to eq(test_date)
+      end
+    end
+
+    it 'takes default date format when there is no user settings' do
+      user.settings[:date_format] = nil
+      user.save
+      result = RepositoryDateValue
+               .import_from_text(date_string,
+                                 attributes,
+                                 user.as_json(root: true, only: :settings).deep_symbolize_keys)
+      expect(result).to respond_to(:data)
+      expect(result.data).to eq(test_date)
+    end
+  end
 end

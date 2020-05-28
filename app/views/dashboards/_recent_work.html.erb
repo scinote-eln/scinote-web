@@ -1,0 +1,40 @@
+<div class="recent-work-widget basic-widget">
+  <div class="widget-header">
+    <div class="widget-title">
+      <%= t('dashboard.recent_work.title') %>
+    </div>
+    <div class="sci-secondary-navbar recent-work-navbar">
+      <span class="navbar-link active" data-mode="all"><%= t('dashboard.recent_work.modes.all') %></span>
+      <span class="navbar-link" data-mode="projects"><%= t('dashboard.recent_work.modes.projects') %></span>
+      <span class="navbar-link" data-mode="repositories"><%= t('dashboard.recent_work.modes.repositories') %></span>
+      <span class="navbar-link" data-mode="protocols"><%= t('dashboard.recent_work.modes.protocols') %></span>
+      <span class="navbar-link" data-mode="reports"><%= t('dashboard.recent_work.modes.reports') %></span>
+    </div>
+  </div>
+  <div class="widget-body">
+    <div class="recent-work-container perfect-scrollbar" data-url="<%= dashboard_recent_works_path %>"></div>
+  </div>
+</div>
+
+<template id="recent-work-item-template">
+  <a href="" class="recent-work-item">
+    <div class="object-name"></div>
+    <div class="object-type"></div>
+    <div class="object-changed"></div>
+  </a>
+</template>
+
+<template id="recent-work-no-results-template">
+  <div class="widget-placeholder">
+    <% if current_user.is_guest_of_team?(current_team) %>
+      <p class="widget-placeholder-title"><%= t('dashboard.recent_work.no_results_guest.title') %></p>
+      <p class="widget-placeholder-description"><%= t('dashboard.recent_work.no_results_guest.description') %></p>
+    <% else %>
+      <p class="widget-placeholder-title"><%= t('dashboard.recent_work.no_results.title') %></p>
+      <p class="widget-placeholder-description"><%= t('dashboard.recent_work.no_results.description') %></p>
+      <div class="no-results-arrow">
+        <i class="fas fa-angle-double-left"></i>
+      </div>
+    <% end %>
+   </div>
+</template>

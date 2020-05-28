@@ -26,15 +26,15 @@ module RepositoryColumns
 
     def column_attributes
       @params[:repository_status_items_attributes]&.map do |m|
-        m.merge!(repository_id: @repository.id, created_by_id: @user.id, last_modified_by_id: @user.id)
+        m.merge!(created_by_id: @user.id, last_modified_by_id: @user.id)
       end
 
       @params[:repository_list_items_attributes]&.map do |m|
-        m.merge!(repository_id: @repository.id, created_by_id: @user.id, last_modified_by_id: @user.id)
+        m.merge!(created_by_id: @user.id, last_modified_by_id: @user.id)
       end
 
       @params[:repository_checklist_items_attributes]&.map do |m|
-        m.merge!(repository_id: @repository.id, created_by_id: @user.id, last_modified_by_id: @user.id)
+        m.merge!(created_by_id: @user.id, last_modified_by_id: @user.id)
       end
 
       @params.merge(repository_id: @repository.id, created_by_id: @user.id, data_type: @column_type)

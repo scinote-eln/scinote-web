@@ -453,8 +453,8 @@
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        $('#slide-panel .tree').html('<ul>' + data.html + '</ul>');
-        setupSidebarTree();
+        $('#slide-panel .tree').html(data.html);
+        Sidebar.loadLastState();
       }
     });
   }

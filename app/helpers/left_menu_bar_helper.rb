@@ -1,4 +1,9 @@
 module LeftMenuBarHelper
+
+  def dashboard_are_selected?
+    controller_name == 'dashboards'
+  end
+
   def projects_are_selected?
     controller_name.in? %w(projects experiments my_modules)
   end

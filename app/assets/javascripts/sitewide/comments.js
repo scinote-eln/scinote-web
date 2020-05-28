@@ -19,16 +19,16 @@ var Comments = (function() {
   function newCommentValidation(textarea, submitBtn) {
     textarea.off().on('focus', function() {
       $(this).addClass('border');
-      if (this.value.length > 0) {
+      if (this.value.trim().length > 0) {
         submitBtn.addClass('show');
       }
     }).on('blur', function() {
-      if (this.value.length === 0) {
+      if (this.value.trim().length === 0) {
         $(this).removeClass('border');
         submitBtn.removeClass('show');
       }
     }).on('keyup', function() {
-      if (this.value.length > 0) {
+      if (this.value.trim().length > 0) {
         submitBtn.addClass('show');
       } else {
         submitBtn.removeClass('show');

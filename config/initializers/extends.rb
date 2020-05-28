@@ -57,7 +57,11 @@ class Extends
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES
-  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue)
+  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue RepositoryNumberValue
+                                   RepositoryDateValue RepositoryDateTimeValue RepositoryTimeValue
+                                   RepositoryStatusValue RepositoryChecklistValue)
+
+  REPOSITORY_IMPORT_COLUMN_PRELOADS = %i(repository_list_items repository_status_items repository_checklist_items)
 
   # Extra attributes used for search in repositories, 'filed_name' => include_hash
   REPOSITORY_EXTRA_SEARCH_ATTR = {'repository_text_values.data' => :repository_text_value,
@@ -90,7 +94,14 @@ class Extends
 
   API_REPOSITORY_DATA_TYPE_MAPPINGS = { 'RepositoryTextValue' => 'text',
                                         'RepositoryDateValue' => 'date',
+                                        'RepositoryNumberValue' => 'number',
+                                        'RepositoryTimeValue' => 'time',
+                                        'RepositoryDateTimeValue' => 'date_time',
+                                        'RepositoryDateRangeValue' => 'date_range',
+                                        'RepositoryTimeRangeValue' => 'time_range',
+                                        'RepositoryDateTimeRangeValue' => 'date_time_range',
                                         'RepositoryListValue' => 'list',
+                                        'RepositoryChecklistValue' => 'checklist',
                                         'RepositoryAssetValue' => 'file',
                                         'RepositoryStatusValue' => 'status' }
 
@@ -113,27 +124,27 @@ class Extends
                                'MyModule' => :description }
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team Repository Project Experiment MyModule Result Protocol Report RepositoryRow
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
-    Repository RepositoryRow Project Experiment MyModule Result Protocol Step Report
+    RepositoryBase RepositoryRow Project Experiment MyModule Result Protocol Step Report
   ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {
-    Repository: [:repository_rows],
-    RepositoryRow: nil,
-    Report: nil,
-    Project: nil,
-    Experiment: [:my_modules],
-    MyModule: [:results,:protocols],
-    Result: nil,
-    Protocol: [:steps],
-    Step: nil
+    repository: [:repository_rows],
+    repository_row: nil,
+    report: nil,
+    project: nil,
+    experiment: [:my_modules],
+    my_module: [:results, :protocols],
+    result: nil,
+    protocol: [:steps],
+    step: nil
   }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
-    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset)
+    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset Repository)
     .freeze
 
   ACTIVITY_TYPES = {
@@ -268,7 +279,10 @@ class Extends
     share_inventory_with_all: 134,
     unshare_inventory_with_all: 135,
     update_share_with_all_permission_level: 136,
-    protocol_description_in_task_edited: 137
+    protocol_description_in_task_edited: 137,
+    set_task_start_date: 138,
+    change_task_start_date: 139,
+    remove_task_start_date: 140
   }
 
   ACTIVITY_GROUPS = {

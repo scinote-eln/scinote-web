@@ -19,6 +19,7 @@ class RepositoryAssetValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'active_storage_blobs.filename'
   SORTABLE_VALUE_INCLUDE = { repository_asset_value: { asset: { file_attachment: :blob } } }.freeze
+  PRELOAD_INCLUDE = { repository_asset_value: { asset: { file_attachment: :blob } } }.freeze
 
   def formatted
     asset.file_name
@@ -42,6 +43,24 @@ class RepositoryAssetValue < ApplicationRecord
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!
+  end
+
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    asset_snapshot = asset.dup
+
+    asset_snapshot.save!
+
+    # ActiveStorage::Blob is immutable, so we can just attach it to the new snapshot
+    asset_snapshot.file.attach(asset.blob)
+
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      asset: asset_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
   end
 
   def self.new_with_payload(payload, attributes)

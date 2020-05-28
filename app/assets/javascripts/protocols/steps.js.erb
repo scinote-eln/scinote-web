@@ -41,7 +41,7 @@
             task_button.attr('data-action', 'uncomplete-task');
             task_button.find('.btn')
               .removeClass('btn-toggle').addClass('btn-default');
-            $('.task-due-date').html(data.module_header_due_date_label);
+            $('.task-due-date').html(data.module_header_due_date);
             $('.task-state-label').html(data.module_state_label);
             task_button
               .find('button')
@@ -115,7 +115,6 @@
       toggleButtons(true);
 
       setTimeout(function() {
-        $.initTooltips();
         initStepsComments();
         FilePreviewModal.init();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
@@ -489,6 +488,7 @@
       var $btn = $(this);
       $btn.off();
       animateSpinner(null, true);
+      $('#protocol-container').collapse('show');
 
       $.ajax({
         url: $btn.data('href'),
@@ -617,9 +617,7 @@
             animateSpinner(null, false);
             DragNDropSteps.clearFiles();
             FilePreviewModal.init();
-            $.initTooltips();
             if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
-            if (typeof updateRecentProtocolsStatus === 'function') updateRecentProtocolsStatus();
           },
           error: function(xhr) {
             if (xhr.responseJSON['assets.file']) {
@@ -634,6 +632,12 @@
           }
         });
         newStepHandler();
+      }).catch(() => {
+        $('#new-step-assets-tab').addClass('has-error');
+        $('#new-step-assets-group')
+          .addClass('has-error')
+          .prepend('<span class="help-block">' +  I18n.t('general.file.upload_failure') + '</span>');
+        animateSpinner(null, false);
       });
     }
   }

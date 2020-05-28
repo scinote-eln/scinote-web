@@ -1,13 +1,19 @@
 # frozen_string_literal: true
 
 class RepositoryColumn < ApplicationRecord
-  belongs_to :repository
+  belongs_to :repository, class_name: 'RepositoryBase'
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_cells, dependent: :destroy
   has_many :repository_rows, through: :repository_cells
-  has_many :repository_list_items, dependent: :destroy, index_errors: true
-  has_many :repository_status_items, dependent: :destroy, index_errors: true
-  has_many :repository_checklist_items, dependent: :destroy, index_errors: true
+  has_many :repository_list_items, -> { order('data ASC') }, dependent: :destroy,
+                                                             index_errors: true,
+                                                             inverse_of: :repository_column
+  has_many :repository_status_items, -> { order('status ASC') }, dependent: :destroy,
+                                                                 index_errors: true,
+                                                                 inverse_of: :repository_column
+  has_many :repository_checklist_items, -> { order('data ASC') }, dependent: :destroy,
+                                                                  index_errors: true,
+                                                                  inverse_of: :repository_column
 
   accepts_nested_attributes_for :repository_status_items, allow_destroy: true
   accepts_nested_attributes_for :repository_list_items, allow_destroy: true
@@ -68,5 +74,45 @@ class RepositoryColumn < ApplicationRecord
 
   def importable?
     Extends::REPOSITORY_IMPORTABLE_TYPES.include?(data_type.to_sym)
+  end
+
+  def deep_dup
+    new_column = super
+
+    extra_method_name = "#{data_type.underscore}_deep_dup"
+    __send__(extra_method_name, new_column) if respond_to?(extra_method_name, true)
+
+    new_column
+  end
+
+  def snapshot!(repository_snapshot)
+    column_snapshot = deep_dup
+    column_snapshot.assign_attributes(
+      repository: repository_snapshot,
+      parent_id: id,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    column_snapshot.save!
+  end
+
+  private
+
+  def repository_list_value_deep_dup(new_column)
+    repository_list_items.each do |item|
+      new_column.repository_list_items << item.deep_dup
+    end
+  end
+
+  def repository_checklist_value_deep_dup(new_column)
+    repository_checklist_items.each do |item|
+      new_column.repository_checklist_items << item.deep_dup
+    end
+  end
+
+  def repository_status_value_deep_dup(new_column)
+    repository_status_items.each do |item|
+      new_column.repository_status_items << item.deep_dup
+    end
   end
 end

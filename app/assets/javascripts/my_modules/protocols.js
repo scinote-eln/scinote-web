@@ -10,15 +10,19 @@ var selectedRow = null;
 
 
 function initEditMyModuleDescription() {
-  $('#my_module_description_view').on('click', function() {
+  var viewObject = $('#my_module_description_view');
+  viewObject.on('click', function() {
     TinyMCE.init('#my_module_description_textarea');
   });
+  TinyMCE.initIfHasDraft(viewObject);
 }
 
 function initEditProtocolDescription() {
-  $('#protocol_description_view').on('click', function() {
+  var viewObject = $('#protocol_description_view');
+  viewObject.on('click', function() {
     TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
   });
+  TinyMCE.initIfHasDraft(viewObject);
 }
 
 // Initialize edit description modal window
@@ -64,11 +68,9 @@ function initCopyToRepository() {
   var modal = $('#copy-to-repository-modal');
   var modalBody = modal.find('.modal-body');
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
-
   link
     .on('ajax:success', function(e, data) {
       modalBody.html(data.html);
-
       modalBody.find("[data-role='copy-to-repository']")
         .on('ajax:success', function(e2, data2) {
           if (data2.refresh !== null) {
@@ -176,8 +178,8 @@ function initLoadFromRepository() {
 
       modal.modal('show');
 
-      // Init Datatable on public tab
-      initLoadFromRepositoryTable(modalBody.find('#public-tab'));
+      // Init Datatable on recent tab
+      initLoadFromRepositoryTable(modalBody.find('#recent-tab'));
 
       modalBody.find("a[data-toggle='tab']")
         .on('hide.bs.tab', function(el) {
@@ -210,9 +212,7 @@ function initLoadFromRepository() {
 
 function initLoadFromRepositoryTable(content) {
   var tableEl = content.find("[data-role='datatable']");
-
   var datatable = tableEl.DataTable({
-    order: [[1, 'asc']],
     dom: "RBfl<'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
     sScrollX: '100%',
     sScrollXInner: '100%',
@@ -220,6 +220,7 @@ function initLoadFromRepositoryTable(content) {
     processing: true,
     serverSide: true,
     responsive: true,
+    order: tableEl.data('default-order') || [[1, 'asc']],
     ajax: {
       url: tableEl.data('source'),
       type: 'POST'
@@ -381,8 +382,9 @@ function refreshProtocolStatusBar() {
     type: 'GET',
     dataType: 'json',
     success: function(data) {
-      $("[data-role='protocol-status-bar']").html(data.html);
+      $('.my-module-protocol-status').replaceWith(data.html);
       initLinkUpdate();
+      initCopyToRepository();
     }
   });
 }
@@ -429,43 +431,16 @@ function initImport() {
   });
 }
 
-function initRecentProtocols() {
-  var recentProtocolContainer = $('.my-module-recent-protocols');
-  var dropDownList = recentProtocolContainer.find('.dropdown-menu');
-  recentProtocolContainer.find('.dropdown-button').click(function() {
-    dropDownList.find('.protocol').remove();
-    $.get('/protocols/recent_protocols', result => {
-      $.each(result, (i, protocol) => {
-        $('<div class="protocol"><i class="fas fa-file-alt"></i>'
-          + truncateLongString(protocol.name, GLOBAL_CONSTANTS.NAME_TRUNCATION_LENGTH)
-          + '</div>').appendTo(dropDownList)
-          .click(() => {
-            $.post(recentProtocolContainer.data('updateUrl'), { source_id: protocol.id })
-              .success(() => {
-                location.reload();
-              })
-              .error(ev => {
-                HelperModule.flashAlertMsg(ev.responseJSON.message, 'warning');
-              });
-          });
-      });
+
+
+function initProtocolSectionOpenEvent() {
+  $('#protocol-container').on('shown.bs.collapse', function() {
+    $(this).find("[data-role='hot-table']").each(function() {
+      var $container = $(this).find("[data-role='step-hot-table']");
+      var hot = $container.handsontable('getInstance');
+      hot.render();
     });
   });
-
-  $('.protocol-description-content').on('ajax:success', () => {
-    updateRecentProtocolsStatus();
-  });
-}
-
-function updateRecentProtocolsStatus() {
-  var recentProtocolContainer = $('.my-module-recent-protocols');
-  var steps = $('.step');
-  var protocolDescription = $('#protocol_description_view').html();
-  if (steps.length === 0 && protocolDescription.length === 0) {
-    recentProtocolContainer.css('display', '');
-  } else {
-    recentProtocolContainer.css('display', 'none');
-  }
 }
 
 /**
@@ -480,7 +455,7 @@ function init() {
   initLoadFromRepository();
   refreshProtocolStatusBar();
   initImport();
-  initRecentProtocols();
+  initProtocolSectionOpenEvent();
 }
 
 init();

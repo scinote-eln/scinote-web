@@ -43,9 +43,6 @@ module Users
           read_from_params(:system_message_notification_email) do |val|
             @user.system_message_email_notification = val
           end
-          read_from_params(:tooltips_enabled) do |val|
-            @user.settings[:tooltips_enabled] = val
-          end
           if @user.save
             respond_to do |format|
               format.json do

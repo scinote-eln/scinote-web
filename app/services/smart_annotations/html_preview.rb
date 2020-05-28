@@ -48,7 +48,7 @@ module SmartAnnotations
           repository_name = fetch_repository_name(object)
           return "<span class='sa-type'>" \
                  "#{trim_repository_name(repository_name)}</span> " \
-                 "<a href='#{ROUTES.repository_row_path(object)}' " \
+                 "<a href='#{ROUTES.repository_repository_row_path(object.repository, object)}' " \
                  "class='record-info-link'>#{object.name}</a>"
         end
         "<span class='sa-type'>Inv</span> " \

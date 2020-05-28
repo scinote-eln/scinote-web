@@ -1,0 +1,82 @@
+<div class="current-tasks-widget basic-widget">
+  <div class="widget-header">
+    <div class="widget-title"><%= t("dashboard.current_tasks.title") %></div>
+    <div class="actions-container">
+      <div class="filter-container dropdown">
+        <div class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></div>
+        <div class="dropdown-menu curent-tasks-filters" role="menu">
+          <div class="header">
+            <div class="title"><%= t("dashboard.current_tasks.filter.title") %></div>
+            <div class="btn btn-light clear-button"><i class="fas fa-times-circle"></i><%= t("dashboard.current_tasks.filter.clear") %></div>
+          </div>
+          <div class="select-block">
+            <label><%= t("dashboard.current_tasks.filter.sort") %></label>
+            <select class="sort-filter">
+              <option value="date_asc" ><%= t("dashboard.current_tasks.filter.date_asc") %></option>
+              <option value="atoz" ><%= t("dashboard.current_tasks.filter.atoz") %></option>
+              <option value="ztoa" ><%= t("dashboard.current_tasks.filter.ztoa") %></option>
+            </select>
+          </div>
+          <div class="select-block">
+            <label><%= t("dashboard.current_tasks.filter.display") %></label>
+            <select class="view-filter">
+              <option value="uncompleted" ><%= t("dashboard.current_tasks.filter.uncompleted_tasks") %></option>
+              <option value="completed" ><%= t("dashboard.current_tasks.filter.completed_tasks") %></option>
+            </select>
+          </div>
+          <div class="select-block">
+            <label><%= t("dashboard.current_tasks.filter.project") %></label>
+            <select class="project-filter"
+                    data-ajax-url="<%= project_filter_dashboard_current_tasks_path %>"
+                    data-placeholder="<%= t("dashboard.current_tasks.filter.select_project") %>"></select>
+          </div>
+          <div class="select-block">
+            <label><%= t("dashboard.current_tasks.filter.experiment") %></label>
+            <select class="experiment-filter"
+                    data-ajax-url="<%= experiment_filter_dashboard_current_tasks_path %>"
+                    data-disable-on-load="true"
+                    data-disable-placeholder="<%= t("dashboard.current_tasks.filter.select_experiment") %>"
+                    data-placeholder="<%= t("dashboard.current_tasks.filter.select_experiment") %>"></select>
+          </div>
+          <div class="footer">
+            <div class="btn btn-primary apply-filters"><%= t("dashboard.current_tasks.filter.apply") %></div>
+          </div>
+        </div>
+      </div>
+      <div class="search-container">
+        <div class="sci-input-container left-icon ">
+          <input type="text" class="sci-input-field task-search-field" placeholder="<%= t("dashboard.current_tasks.search") %>"></input>
+          <i class="fas fa-search"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="sci-secondary-navbar current-tasks-navbar">
+      <span class="navbar-link active" data-mode="assigned"><%= t("dashboard.current_tasks.navbar.assigned") %></span>
+      <span class="navbar-link" data-mode="team"><%= t("dashboard.current_tasks.navbar.all") %></span>
+    </div>
+  </div>
+
+  <div class="widget-body">
+    <div class="current-tasks-list perfect-scrollbar"
+         data-tasks-list-url="<%= dashboard_current_tasks_path %>">
+    </div>
+  </div>
+</div>
+
+<template id="dashboard-current-task-no-tasks">
+  <div class="widget-placeholder">
+    <p class="widget-placeholder-title team"><%= I18n.t('dashboard.current_tasks.no_tasks.team_tasks.title') %></p>
+    <p class="widget-placeholder-title assigned"><%= I18n.t('dashboard.current_tasks.no_tasks.assigned_tasks.title') %></p>
+    <% unless current_user.is_guest_of_team?(current_team) %>
+      <p class="widget-placeholder-description"><%= I18n.t('dashboard.current_tasks.no_tasks.assigned_tasks.description') %></p>
+      <i class="fas fa-angle-double-down"></i>
+    <% end %>
+  </div>
+</template>
+
+<template id="dashboard-current-task-no-search-results">
+  <div class="widget-placeholder">
+    <p class="widget-placeholder-title"><%= I18n.t('dashboard.current_tasks.no_tasks.search_result.title') %></p>
+  </div>
+</template>

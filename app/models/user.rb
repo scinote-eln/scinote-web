@@ -19,15 +19,6 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
-  # has_attached_file :avatar,
-  #                   styles: {
-  #                     medium: Constants::MEDIUM_PIC_FORMAT,
-  #                     thumb: Constants::THUMB_PIC_FORMAT,
-  #                     icon: Constants::ICON_PIC_FORMAT,
-  #                     icon_small: Constants::ICON_SMALL_PIC_FORMAT
-  #                   },
-  #                   default_url: Constants::DEFAULT_AVATAR_URL
-
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
             presence: true,
@@ -39,10 +30,6 @@ class User < ApplicationRecord
             presence: true,
             length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  # validates_attachment :avatar,
-  #   :content_type => { :content_type => ["image/jpeg", "image/png"] },
-  #   size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
-  #           message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications_settings
@@ -56,8 +43,7 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
-    },
-    tooltips_enabled: true
+    }
   )
 
   store_accessor :variables, :export_vars
@@ -274,6 +260,16 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify
+  has_many :created_repository_text_values,
+           class_name: 'RepositoryTextValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_text_values,
+           class_name: 'RepositoryTextValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
@@ -355,20 +351,6 @@ class User < ApplicationRecord
       )
       .references(:user_identities)
       .take
-  end
-
-  def self.create_from_omniauth!(auth)
-    full_name = "#{auth.info.first_name} #{auth.info.last_name}"
-    user = User.new(full_name: full_name,
-                    initials: generate_initials(full_name),
-                    email: email,
-                    password: generate_user_password)
-    User.transaction do
-      user.save!
-      user.user_identities.create!(provider: auth.provider, uid: auth.uid)
-      user.update!(confirmed_at: user.created_at)
-    end
-    user
   end
 
   # Search all active users for username & email. Can

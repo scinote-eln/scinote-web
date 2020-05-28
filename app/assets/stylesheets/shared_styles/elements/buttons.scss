@@ -6,6 +6,7 @@
   border-radius: $border-radius-default;
   cursor: pointer;
   display: inline-block;
+  height: 36px;
   line-height: 20px;
   outline: 0;
   padding: 7px 16px;
@@ -24,7 +25,9 @@
     text-decoration: none;
   }
 
-  &:active {
+  &:active,
+  &.active {
+    box-shadow: none;
     text-decoration: none;
   }
 
@@ -43,7 +46,8 @@
       color: $color-white;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $brand-primary-press;
       color: $color-white;
     }
@@ -57,46 +61,48 @@
   &.btn-secondary {
     background: $color-white;
     border: $border-default;
-    color: $color-black;
+    color: $color-volcano;
 
     &:hover {
       background: $color-concrete;
       border: $border-secondary;
-      color: $color-black;
+      color: $color-volcano;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $color-alto;
       border: $border-secondary;
-      color: $color-black;
+      color: $color-volcano;
     }
 
     &:focus {
       box-shadow: 0 0 0 1px $brand-focus;
-      color: $color-black;
+      color: $color-volcano;
     }
   }
 
   &.btn-light {
     background: transparent;
     border: $border-transparent;
-    color: $color-black;
+    color: $color-volcano;
 
     &:hover {
       background: $color-concrete;
       border: $border-transparent;
-      color: $color-black;
+      color: $color-volcano;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $color-alto;
       border: $border-transparent;
-      color: $color-black;
+      color: $color-volcano;
     }
 
     &:focus {
       box-shadow: 0 0 0 1px $brand-focus;
-      color: $color-black;
+      color: $color-volcano;
     }
   }
 
@@ -110,7 +116,8 @@
       color: $color-white;
     }
 
-    &:active {
+    &:active,
+    &.active {
       background: $brand-danger-press;
       color: $color-white;
     }

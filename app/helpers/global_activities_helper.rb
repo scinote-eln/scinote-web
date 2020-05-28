@@ -42,17 +42,17 @@ module GlobalActivitiesHelper
       # Not link for now
       return current_value
     when Team
-      path = projects_path
+      path = projects_path(team: obj.id)
     when Repository
-      path = repository_path(obj)
+      path = repository_path(obj, team: obj.team.id)
     when RepositoryRow
       return current_value unless obj.repository
 
-      path = repository_path(obj.repository)
+      path = repository_path(obj.repository, team: obj.repository.team.id)
     when RepositoryColumn
       return current_value unless obj.repository
 
-      path = repository_path(obj.repository)
+      path = repository_path(obj.repository, team: obj.repository.team.id)
     when Project
       path = obj.archived? ? projects_path : project_path(obj)
     when Experiment
@@ -65,19 +65,15 @@ module GlobalActivitiesHelper
       path = if obj.archived?
                module_archive_experiment_path(obj.experiment)
              else
-               path = if %w(assign_repository_record unassign_repository_record).include? activity.type_of
-                        repository_my_module_path(obj, activity.values['message_items']['repository']['id'])
-                      else
-                        protocols_my_module_path(obj)
-                      end
+               protocols_my_module_path(obj)
              end
     when Protocol
       if obj.in_repository_public?
-        path = protocols_path(type: :public)
+        path = protocols_path(type: :public, team: obj.team.id)
       elsif obj.in_repository_private?
-        path = protocols_path(type: :private)
+        path = protocols_path(type: :private, team: obj.team.id)
       elsif obj.in_repository_archived?
-        path = protocols_path(type: :archive)
+        path = protocols_path(type: :archive, team: obj.team.id)
       elsif obj.my_module.navigable?
         path = protocols_my_module_path(obj.my_module)
       else
@@ -90,7 +86,7 @@ module GlobalActivitiesHelper
     when Step
       return current_value
     when Report
-      path = reports_path
+      path = reports_path(team: obj.team.id)
     else
       return current_value
     end

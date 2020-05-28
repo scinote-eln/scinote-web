@@ -143,23 +143,15 @@ class MyModulesController < ApplicationController
   end
 
   def update
-    update_params = my_module_params
-    if update_params[:due_date].present?
-      update_params[:due_date] = Time.strptime(
-        update_params[:due_date].delete('-'),
-        I18n.backend.date_format.dup.delete('-')
-      )
-    end
-    @my_module.assign_attributes(update_params)
+    @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
     description_changed = @my_module.description_changed?
+    start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
 
     if @my_module.archived_changed?(from: false, to: true)
-
       saved = @my_module.archive(current_user)
     elsif @my_module.archived_changed?(from: true, to: false)
-
       saved = @my_module.restore(current_user)
       if saved
         restored = true
@@ -167,28 +159,14 @@ class MyModulesController < ApplicationController
       end
     else
       saved = @my_module.save
-
       if saved
         if description_changed
           log_activity(:change_module_description)
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
         end
 
-        if due_date_changes
-          # rubocop:disable Metrics/BlockNesting    # temporary solution
-          type_of = if due_date_changes[0].nil?     # set due_date
-                      message_items = { my_module_duedate: @my_module.due_date }
-                      :set_task_due_date
-                    elsif due_date_changes[1].nil?  # remove due_date
-                      message_items = { my_module_duedate: due_date_changes[0] }
-                      :remove_task_due_date
-                    else                            # change due_date
-                      message_items = { my_module_duedate: @my_module.due_date }
-                      :change_task_due_date
-                    end
-          # rubocop:enable Metrics/BlockNesting
-          log_activity(type_of, @my_module, message_items)
-        end
+        log_start_date_change_activity(start_date_changes) if start_date_changes.present?
+        log_due_date_change_activity(due_date_changes) if due_date_changes.present?
       end
     end
     respond_to do |format|
@@ -201,7 +179,7 @@ class MyModulesController < ApplicationController
           redirect_to module_archive_experiment_path(@my_module.experiment)
         end
       elsif saved
-        format.json {
+        format.json do
           alerts = []
           alerts << 'alert-green' if @my_module.completed?
           unless @my_module.completed?
@@ -210,26 +188,34 @@ class MyModulesController < ApplicationController
           end
           render json: {
             status: :ok,
-            due_date_label: render_to_string(
-              partial: "my_modules/due_date_label.html.erb",
+            start_date_label: render_to_string(
+              partial: 'my_modules/start_date_label.html.erb',
               locals: { my_module: @my_module }
             ),
-            module_header_due_date_label: render_to_string(
-              partial: "my_modules/module_header_due_date_label.html.erb",
+            due_date_label: render_to_string(
+              partial: 'my_modules/due_date_label.html.erb',
+              locals: { my_module: @my_module }
+            ),
+            card_due_date_label: render_to_string(
+              partial: 'my_modules/card_due_date_label.html.erb',
+              locals: { my_module: @my_module }
+            ),
+            module_header_due_date: render_to_string(
+              partial: 'my_modules/module_header_due_date.html.erb',
               locals: { my_module: @my_module }
             ),
             description_label: render_to_string(
-              partial: "my_modules/description_label.html.erb",
+              partial: 'my_modules/description_label.html.erb',
               locals: { my_module: @my_module }
             ),
             alerts: alerts
           }
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: @my_module.errors,
             status: :unprocessable_entity
-        }
+        end
       end
     end
   end
@@ -280,11 +266,7 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
-    @recent_protcols_positive = Protocol.recent_protocols(
-      current_user,
-      current_team,
-      Constants::RECENT_PROTOCOL_LIMIT
-    ).any?
+    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
     current_team_switch(@protocol.team)
   end
 
@@ -391,7 +373,7 @@ class MyModulesController < ApplicationController
     @repository_rows = datatable_service.repository_rows
                                         .preload(:repository_columns,
                                                  :created_by,
-                                                 repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES)
+                                                 repository_cells: @repository.cell_preload_includes)
                                         .page(page)
                                         .per(per_page)
 
@@ -414,123 +396,45 @@ class MyModulesController < ApplicationController
 
   # Submit actions
   def assign_repository_records
-    if params[:selected_rows].present? && params[:repository_id].present?
-      records_names = []
-      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
-      downstream_my_modules = []
-      dowmstream_records = {}
-      RepositoryRow
-        .where(id: params[:selected_rows],
-               repository_id: params[:repository_id])
-        .find_each do |record|
-        unless @my_module.repository_rows.include?(record)
-          record.last_modified_by = current_user
-          record.save
+    service = RepositoryRows::MyModuleAssigningService.call(my_module: @my_module,
+                                                            repository: @repository,
+                                                            user: current_user,
+                                                            params: params)
 
-          MyModuleRepositoryRow.create!(
-            my_module: @my_module,
-            repository_row: record,
-            assigned_by: current_user
-          )
-          records_names << record.name
-        end
+    if service.succeed? && service.assigned_rows_names.any?
+      names = service.assigned_rows_names.map { |name| escape_input(name) }
+      message = params[:downstream].blank? ? 'assigned_records_flash' : 'assigned_records_downstream_flash'
+      flash =   I18n.t("repositories.#{message}", records: names.join(', '))
+      status = :ok
+    else
+      flash = t('repositories.no_records_assigned_flash')
+      status = :bad_request
+    end
 
-        next unless downstream
-        @my_module.downstream_modules.each do |my_module|
-          next if my_module.repository_rows.include?(record)
-          dowmstream_records[my_module.id] = [] unless dowmstream_records[my_module.id]
-          MyModuleRepositoryRow.create!(
-            my_module: my_module,
-            repository_row: record,
-            assigned_by: current_user
-          )
-          dowmstream_records[my_module.id] << record.name
-          downstream_my_modules.push(my_module)
-        end
-      end
-
-      if records_names.any?
-        records_names.uniq!
-        log_activity(:assign_repository_record,
-                     @my_module,
-                     repository: @repository.id,
-                     record_names: records_names.join(', '))
-        downstream_my_modules.uniq.each do |my_module|
-          log_activity(:assign_repository_record,
-                       my_module,
-                       repository: @repository.id,
-                       record_names: dowmstream_records[my_module.id].join(', '))
-        end
-        records_names.map! { |n| escape_input(n) }
-        flash = I18n.t('repositories.assigned_records_flash',
-                       records: records_names.join(', '))
-        flash = I18n.t('repositories.assigned_records_downstream_flash',
-                       records: records_names.join(', ')) if downstream
-        respond_to do |format|
-          format.json { render json: { flash: flash }, status: :ok }
-        end
-      else
-        respond_to do |format|
-          format.json do
-            render json: {
-              flash: t('repositories.no_records_assigned_flash')
-            }, status: :bad_request
-          end
-        end
+    respond_to do |format|
+      format.json do
+        render json: { flash: flash }, status: status
       end
     end
   end
 
   def unassign_repository_records
-    if params[:selected_rows].present? && params[:repository_id].present?
-      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
+    service = RepositoryRows::MyModuleUnassigningService.call(my_module: @my_module,
+                                                              repository: @repository,
+                                                              user: current_user,
+                                                              params: params)
+    if service.succeed? && service.unassigned_rows_names.any?
+      flash = I18n.t('repositories.unassigned_records_flash',
+                     records: service.unassigned_rows_names.map { |name| escape_input(name) }.join(', '))
+      status = :ok
+    else
+      flash = t('repositories.no_records_unassigned_flash')
+      status = :bad_request
+    end
 
-      records = RepositoryRow.assigned_on_my_module(params[:selected_rows],
-                                                    @my_module)
-
-      @my_module.repository_rows.destroy(records & @my_module.repository_rows)
-
-      if downstream
-        @my_module.downstream_modules.each do |my_module|
-          assigned_records = RepositoryRow.assigned_on_my_module(
-            params[:selected_rows],
-            my_module
-          )
-          my_module.repository_rows.destroy(
-            assigned_records & my_module.repository_rows
-          )
-          assigned_records.update_all(last_modified_by_id: current_user.id)
-          next unless assigned_records.any?
-
-          log_activity(:unassign_repository_record,
-                       my_module,
-                       repository: @repository.id,
-                       record_names: assigned_records.map(&:name).join(', '))
-        end
-      end
-
-      # update last last_modified_by
-      records.update_all(last_modified_by_id: current_user.id)
-
-      if records.any?
-        log_activity(:unassign_repository_record,
-                     @my_module,
-                     repository: @repository.id,
-                     record_names: records.map(&:name).join(', '))
-
-        flash = I18n.t('repositories.unassigned_records_flash',
-                       records: records.map { |r| escape_input(r.name) }.join(', '))
-        respond_to do |format|
-          format.json { render json: { flash: flash }, status: :ok }
-        end
-      else
-        respond_to do |format|
-          format.json do
-            render json: {
-              flash: t('repositories.no_records_unassigned_flash')
-            }, status: :bad_request
-          end
-        end
+    respond_to do |format|
+      format.json do
+        render json: { flash: flash }, status: status
       end
     end
   end
@@ -577,8 +481,8 @@ class MyModulesController < ApplicationController
             render json: {
               new_btn: render_to_string(partial: new_btn_partial),
               completed: completed,
-              module_header_due_date_label: render_to_string(
-                partial: 'my_modules/module_header_due_date_label.html.erb',
+              module_header_due_date: render_to_string(
+                partial: 'my_modules/module_header_due_date.html.erb',
                 locals: { my_module: @my_module }
               ),
               module_state_label: render_to_string(
@@ -605,8 +509,8 @@ class MyModulesController < ApplicationController
         format.json do
             render json: {
               task_button_title: t('my_modules.buttons.uncomplete'),
-              module_header_due_date_label: render_to_string(
-                partial: 'my_modules/module_header_due_date_label.html.erb',
+              module_header_due_date: render_to_string(
+                partial: 'my_modules/module_header_due_date.html.erb',
                 locals: { my_module: @my_module }
               ),
               module_state_label: render_to_string(
@@ -670,7 +574,7 @@ class MyModulesController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.find_by_id(params[:repository_id])
+    @repository = Repository.find_by(id: params[:repository_id])
     render_404 unless @repository
     render_403 unless can_read_repository?(@repository)
   end
@@ -723,8 +627,46 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_params
-    params.require(:my_module).permit(:name, :description, :due_date,
-                                      :archived)
+    update_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
+
+    if update_params[:started_on].present?
+      update_params[:started_on] =
+        Time.zone.strptime(update_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    end
+    if update_params[:due_date].present?
+      update_params[:due_date] =
+        Time.zone.strptime(update_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    end
+
+    update_params
+  end
+
+  def log_start_date_change_activity(start_date_changes)
+    type_of = if start_date_changes[0].nil?     # set started_on
+                message_items = { my_module_started_on: @my_module.started_on }
+                :set_task_start_date
+              elsif start_date_changes[1].nil?  # remove started_on
+                message_items = { my_module_started_on: start_date_changes[0] }
+                :remove_task_start_date
+              else                              # change started_on
+                message_items = { my_module_started_on: @my_module.started_on }
+                :change_task_start_date
+              end
+    log_activity(type_of, @my_module, message_items)
+  end
+
+  def log_due_date_change_activity(due_date_changes)
+    type_of = if due_date_changes[0].nil?     # set due_date
+                message_items = { my_module_duedate: @my_module.due_date }
+                :set_task_due_date
+              elsif due_date_changes[1].nil?  # remove due_date
+                message_items = { my_module_duedate: due_date_changes[0] }
+                :remove_task_due_date
+              else                            # change due_date
+                message_items = { my_module_duedate: @my_module.due_date }
+                :change_task_due_date
+              end
+    log_activity(type_of, @my_module, message_items)
   end
 
   def log_activity(type_of, my_module = nil, message_items = {})
@@ -745,5 +687,4 @@ class MyModulesController < ApplicationController
       :page, :starting_timestamp, :from_date, :to_date, types: [], users: [], subjects: {}
     )
   end
-
 end

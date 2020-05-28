@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 /* eslint no-use-before-define: "off" */
 /* eslint no-restricted-syntax: ["off", "BinaryExpression[operator='in']"] */
-/* global tinymce I18n */
+/* global tinymce I18n GLOBAL_CONSTANTS */
 (function() {
   'use strict';
 
@@ -71,6 +71,15 @@
 
         $('.mce-image-loader')
           .change(e => {
+            var submitButton = $(e.target).closest('.mce-window').find('.mce-foot .mce-primary');
+            var sizeLimit = e.target.files[0].size > (GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024);
+            submitButton.attr('disabled', sizeLimit);
+            if (sizeLimit) {
+              $('.mce-window .image-selection-container').addClass('error')
+                .attr('data-error', I18n.t('general.file.size_exceeded', { file_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
+            } else {
+              $('.mce-window .image-selection-container').removeClass('error');
+            }
             $(e.target).next().find('input[type=text]')[0].value = e.target.value.split(/(\\|\/)/g).pop();
           })
           .parent().find('label')

@@ -56,18 +56,14 @@ class Constants
   COMMENTS_SEARCH_LIMIT = 10
   # Activity limited query/display elements for pages
   ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 20
-
+  # Infinite Scroll load limit (elements per page)
+  INFINITE_SCROLL_LIMIT = 20
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
-
   # Maximum nr. of search results for atwho (smart annotations)
   ATWHO_SEARCH_LIMIT = 5
-
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
-
-  # Number of protocols in recent protocol dropdown
-  RECENT_PROTOCOL_LIMIT = 14
 
   #=============================================================================
   # File and data memory size
@@ -208,7 +204,6 @@ class Constants
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
-  ACADEMY_TR_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20TR&utm_medium=SciNote%20software%20TR'.freeze
 
   #=============================================================================
   # Protocol importers
@@ -966,6 +961,26 @@ class Constants
     }
   end
   REPOSITORY_TABLE_DEFAULT_STATE.freeze
+
+  # Repository default table state
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE = {
+    'time' => 0,
+    'start' => 0,
+    'length' => 5,
+    'order' => [[1, 'asc']], # Default sorting by 'ID' column
+    'search' => { 'search' => '',
+                  'smart' => true,
+                  'regex' => false,
+                  'caseInsensitive' => true },
+    'columns' => [],
+    'assigned' => 'assigned',
+    'ColReorder' => [*0..4]
+  }
+
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'] = REPOSITORY_TABLE_DEFAULT_STATE['columns'][0..4]
+
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE.freeze
+
   # For default custom column template, any searchable default
   # column can be reused
   REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
@@ -974,6 +989,7 @@ class Constants
 
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
 
+  REPOSITORY_DEFAULT_PAGE_SIZE = 10
   REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
   REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN = 50
   REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS = 2
@@ -995,6 +1011,8 @@ class Constants
   }.freeze
 
   IMPORT_REPOSITORY_ITEMS_LIMIT = 2000
+
+  DEFAULT_TEAM_REPOSITORIES_LIMIT = 6
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP

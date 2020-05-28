@@ -21,9 +21,6 @@ var RepositoryColumns = (function() {
 
   function reloadDataTablePartial() {
     // Append buttons for inventory datatable
-    $('div.toolbarButtonsDatatable').appendTo('.repository-show');
-    $('div.toolbarButtonsDatatable').hide();
-
     $('div.toolbar-filter-buttons').appendTo('.repository-show');
     $('div.toolbar-filter-buttons').hide();
 
@@ -37,7 +34,9 @@ var RepositoryColumns = (function() {
       RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
       RepositoryDatatable.redrawTableOnSidebarToggle();
       // show manage columns index modal
-      $(manageModal).find('.back-to-column-modal').trigger('click');
+      setTimeout(function() {
+        $(manageModal).find('.back-to-column-modal').trigger('click');
+      }, 500);
     });
   }
 
@@ -170,35 +169,38 @@ var RepositoryColumns = (function() {
         $manageModal.find('.modal-content').html(data.html)
           .find('#repository-column-name')
           .focus();
-        columnType = $('#repository-column-data-type').val();
-        dropdownSelector.init('#repository-column-data-type', {
-          noEmptyOption: true,
-          singleSelect: true,
-          closeOnSelect: true,
-          optionClass: 'custom-option',
-          selectAppearance: 'simple',
-          disableSearch: true
-        });
 
-        dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
-        RepositoryListColumnType.initListDropdown();
-        RepositoryListColumnType.initListPlaceholder();
+        if (button.data('action') !== 'destroy') {
+          columnType = $('#repository-column-data-type').val();
+          dropdownSelector.init('#repository-column-data-type', {
+            noEmptyOption: true,
+            singleSelect: true,
+            closeOnSelect: true,
+            optionClass: 'custom-option',
+            selectAppearance: 'simple',
+            disableSearch: true
+          });
 
-        dropdownSelector.init('.checklist-column-type .delimiter', delimiterDropdownConfig);
-        RepositoryChecklistColumnType.initChecklistDropdown();
-        RepositoryChecklistColumnType.initChecklistPlaceholder();
+          dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
+          RepositoryListColumnType.initListDropdown();
+          RepositoryListColumnType.initListPlaceholder();
 
-        $manageModal
-          .trigger('columnModal::partialLoadedFor' + columnType);
+          dropdownSelector.init('.checklist-column-type .delimiter', delimiterDropdownConfig);
+          RepositoryChecklistColumnType.initChecklistDropdown();
+          RepositoryChecklistColumnType.initChecklistPlaceholder();
 
-        RepositoryStatusColumnType.updateLoadedEmojies();
+          $manageModal
+            .trigger('columnModal::partialLoadedFor' + columnType);
 
-        if (button.data('action') === 'new') {
-          $('[data-column-type="RepositoryTextValue"]').show();
-          $('#new-repo-column-submit').show();
-        } else {
-          $('#update-repo-column-submit').show();
-          $('[data-column-type="' + columnType + '"]').show();
+          RepositoryStatusColumnType.updateLoadedEmojies();
+
+          if (button.data('action') === 'new') {
+            $('[data-column-type="RepositoryTextValue"]').show();
+            $('#new-repo-column-submit').show();
+          } else {
+            $('#update-repo-column-submit').show();
+            $('[data-column-type="' + columnType + '"]').show();
+          }
         }
       }).fail(function() {
         HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');

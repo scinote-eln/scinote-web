@@ -19,15 +19,19 @@ en:
       new:
         head_title: "Forgot password"
         title: "Forgot your password?"
-        submit: "Send me reset password instructions"
+        submit: "Reset password"
     registrations:
       password_changed: "Password successfully updated."
     sessions:
       new:
         head_title: "Log in"
         title: "Log in"
-        email_placeholder: "username@email.com"
-        password_placeholder: "pass****"
+        or: "OR"
+        email_field: "E-mail"
+        email_placeholder: "john.doe@email.com"
+        password_field: "Password"
+        password_placeholder: "Enter password"
+        remember_me: "Remember me"
         submit: "Log in"
       create:
         team_name: "%{user}'s projects"
@@ -56,6 +60,7 @@ en:
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
+        no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
 
   doorkeeper:
@@ -95,7 +100,18 @@ en:
           attributes:
             file:
               too_big: "is too big"
-
+        repository_snapshot:
+          attributes:
+            selected:
+              already_taken: "Task already has selected snapshot"
+        repository_list_item:
+          attributes:
+            base:
+              per_column_limit: "Too many items in the column"
+        repository_checklist_item:
+          attributes:
+            base:
+              per_column_limit: "Too many items in the column"
 
   helpers:
     label:
@@ -123,12 +139,12 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
-      about: "About SciNote"
     activities:
       none: "No activities!"
     label:
       scinote: "SciNote"
-      projects: "Home"
+      dashboard: "Overview"
+      projects: "Projects"
       protocols: "Protocols"
       calendar: "Calendar"
       activities: "Activities"
@@ -145,6 +161,7 @@ en:
     addon_versions: "Addon versions"
 
   left_menu_bar:
+    dashboard: "Overview"
     projects: "Projects"
     repositories: "Inventories"
     templates: "Protocols"
@@ -154,8 +171,10 @@ en:
     academy: "Academy"
     support: "Support"
     support_links:
-      support: "Support Center"
+      support: "Knowledge center"
       tutorials: "Video tutorials"
+      core_version: "SciNote Core ver. %{version} |"
+      about: "about"
 
   sidebar:
     title: "Navigation"
@@ -250,7 +269,7 @@ en:
 
   projects:
     index:
-      head_title: "Home"
+      head_title: "Projects"
       archive: "Archive"
       archived: "Archived"
       active: "Active"
@@ -360,6 +379,7 @@ en:
         new: "New report"
         edit: "Edit"
         delete: "Delete"
+        deleted: "(Deleted)"
         thead_project_name: "Project name"
         thead_name: "Report name"
         thead_created_by: "Created by"
@@ -490,6 +510,8 @@ en:
           title: "Report for project %{project}"
         module:
           user_time: "Task created on %{timestamp}."
+          started_on: "Start date: %{started_on}"
+          no_start_date: "No start date"
           due_date: "Due date: %{due_date}"
           no_due_date: "No due date"
           no_description: "No description"
@@ -583,9 +605,46 @@ en:
       can_add_user_to_project: "Can not add user to the project."
 
   my_modules:
+    details:
+      title: "Details"
+      info_popover:
+        project_label: "Project"
+        experiment_label: "Experiment"
+        creator_label: "Creator"
+        creator_same_user_label: "(you)"
+        created_label: "Created"
+        modified_label: "Modified"
+        modified_value: "%{date} by %{full_name}"
+        modified_value_without_user: "%{date}"
+      start_date: "Start date:"
+      no_start_date_placeholder: "+ Add starting date"
+      due_date: "Due date:"
+      no_due_date_placeholder: "+ Add due date"
+      assigned_users: "Assigned users:"
+      no_assigned_users: "+ Assign user to task"
+      tags: "Tags:"
+      no_tags: "+ Add tags"
+      manage_tags: "Manage tags"
+      create_new_tag: "create new"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
+    notes:
+      title: "Notes"
+      no_description: "No task description"
+      empty_description_edit_label: "Click here to start writing notes"
+    assigned_items:
+      title: "Assigned items"
+      assign_from: "Assign from"
+    protocol:
+      title: "Protocol"
+      options_dropdown:
+        title: "Protocol options"
+        load_from_repo: "Load from repository"
+        import: "Import protocol"
+        export: "Export protocol"
+        save_to_repo: "Save to repository"
     buttons:
-      complete: "Complete Task"
-      uncomplete: "Uncomplete Task"
+      complete: "Complete task"
+      uncomplete: "Uncomplete task"
     complete_modal:
       description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
       leave_uncompleted: 'Leave task in progress'
@@ -615,63 +674,33 @@ en:
       no_archived_results: "No archived results!"
       archive_timelabel: "archived on %{date}"
       restored_flash: "Task %{module} restored successfully!"
-    module_header:
-      start_date: "Start date:"
-      due_date: "Due date:"
-      tags: "Tags:"
-      no_tags: "Add new Task Tags (optional)"
-      manage_tags: "Manage tags"
-      create_new_tag: "create new"
-      no_description: "No task description"
-      description_label: "Description"
-      empty_description_edit_label: "Click here to enter Task Description (optional)"
-      recent_protocols_from_repository: "Recent protocols from the Repository"
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
-        private_parent: "(private)"
-        unlinked: "(unlinked)"
-        public_desc: "This protocol is public; everyone from team can see it."
-        private_desc: "This protocol is private; it is only visible to you."
-        added_by: "Added by"
-        added_by_tooltip: "Added at %{ts}"
-        private_protocol_desc: "The parent protocol is private. Only its author can manage it."
+        private_parent: "private"
+        unlinked: "unlinked"
         no_description: "No protocol description"
         empty_description_edit_label: "Click here to enter Protocol Description (optional)"
         keywords: "Keywords"
         no_keywords: "no keywords"
+        protocol_created: "Protocol created:"
+        template_updated: "Template updated on:"
+        protocol_updated: "Protocol updated on:"
+        messages:
+          template_updated_html: "There is a new version of this protocol avaliable in the protocol repository.<br>Would you like to update it?"
+          protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
+          unlinked: "This protocol is not linked to the repository."
         btns:
-          unlink: "Unlink protocol"
+          unlink: "Unlink template"
           unlink_title: "Unlink this protocol from the parent in the repository"
           revert: "Revert protocol"
           revert_title: "Revert the protocol to the repository version. This will discard any local changes."
-          update_parent: "Update repository version"
-          update_parent_title: "Update the repository protocol with this version"
+          save_to_repository: "Save to repository"
+          save_to_repository_title: "Copy this protocol to repository"
           update_self: "Update from repository"
           update_self_title: "Update this protocol with the version stored in the repository"
-        btns_unlinked:
-          title: "Unlinked"
-          text: "This protocol is not stored in the protocol repository."
-        btns_linked_no_diff:
-          title: "Linked"
-          text: "This protocol is linked with the version stored in the protocol repository."
-        btns_newer_than_parent:
-          title: "Newer version in task"
-          text: "This <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{self_ts}'>version</a> of protocol is newer than the <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{parent_ts}'>version</a> stored in protocol repository."
-        btns_parent_newer:
-          title: "Newer version in repository"
-          text: "There is a newer <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{parent_ts}'>version</a> of <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{self_ts}'>this protocol</a> in the repository."
-        btns_parent_and_self_newer:
-          title: "Newer version in repository and task"
-          text: "There is a newer <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{parent_ts}'>version</a> of this protocol in the repository. This <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{self_ts}'>version</a> of protocol is newer than the version stored in protocol repository."
-      buttons:
-        load_protocol: "Load Protocol"
-        load_protocol_from_repository: "from repository"
-        load_protocol_from_file: "from computer"
-        export: "Export Protocol"
-        copy_to_repository: "Copy To Protocol Repository"
       confirm_link_update_modal:
-        unlink_title: "Unlink protocol"
+        unlink_title: "Unlink template"
         unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
         unlink_btn_text: "Unlink"
         revert_title: "Revert protocol"
@@ -701,6 +730,7 @@ en:
         text2: "This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         tab_public: "Team protocols"
         tab_private: "My protocols"
+        tab_recent: "Recent protocols"
         tab_archive: "Archived protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
@@ -714,17 +744,17 @@ en:
         import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         load: "Load"
       copy_to_repository_modal:
-        title: "Copy to protocol repository"
+        title: "Save to protocol repository"
         name_label: "Repository protocol name"
         name_placeholder: "My protocol"
-        type_label: "Copy to"
+        type_label: "Save to"
         type_public: "Team protocols"
         type_private: "My protocols"
         type_text: "You can make a copy of a protocol and save it to Team protocols or My protocols. Team protocols are visible to all team members, My protocols are for personal usage only."
         link_label: "Link task to this protocol repository"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to repository."
-        confirm: "Copy"
+        confirm: "Save"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
       load_from_file_error_locked: "Failed to load the protocol from file. One or more files are currently being edited."
@@ -761,13 +791,53 @@ en:
     repository:
       head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
+      full_view:
+        modal_live_header: '%{repository_name}: Live version'
+        modal_snapshot_header: '%{repository_name}: Snapshot of %{snaphot_date}'
+        assign_modal_header: 'Assign from %{repository_name} inventory'
+      snapshots:
+        simple_view:
+          live_bottom_label: 'Live version'
+          snapshot_bottom_label: 'Snapshot version %{date_time}'
+          snapshot_tag: 'Snapshot'
+        full_view:
+          header: 'Versions'
+          live: 'Live version'
+          live_description: 'Regularly updated from the inventory'
+          no_live_version: 'Inventory was deleted'
+          no_assigned_items: 'No items assigned'
+          no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
+          versions_sidebar_button: 'View versions'
+          create_button: 'Create snapshot'
+          set_default_button: 'Set as default view'
+          created_by: 'by %{full_name}'
+          provisioning: 'Provisioning'
+      flash:
+        assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
+        assign_to_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task and downstream tasks."
+        unassign_from_task_html: "Successfully unassigned <strong>%{unassigned_items}</strong> item(s) from the task."
+        unassign_from_task_and_downstream_html: "Successfully unassigned <strong>%{unassigned_items}</strong> item(s) from the task and downstream tasks."
+        assign_and_unassign_from_task_html: "Successfully assigned <strong>%{assigned_items}</strong> and unassigned <strong>%{unassigned_items}</strong> item(s) from the task."
+        assign_and_unassign_from_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> and unassigned <strong>%{unassigned_items}</strong> item(s) from the task and downstream tasks."
+        update_error: "There was an error in updating your item(s)."
     modals:
+      update_repository_record:
+        title: "Update %{repository_name} items to %{my_module_name} task"
+        message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"
+        task: 'Update task'
+        task_and_downstream: 'Update task & downstream'
+        newly_assigned_items: "Items newly assigned"
+        items_will_be_removed: "Items that will be removed"
       assign_repository_record:
         title: 'Assign %{repository_name} items to task %{my_module_name}'
         message: Do you want to assign %{size} items only to this task, or assign them to this task & downstream tasks in the workflow as well?
-        task_and_downstream: 'Task & Downstream'
-        unassign_title: "Unassign %{repository_name} items from task %{my_module_name}"
-        unassign_message: "Do you want to unassign %{size} items only from this task, or unassign them from this task & downstream tasks in the workflow as well?"
+        task: 'Assign to task'
+        task_and_downstream: 'Assign to task & downstream'
+    modules_list_partial:
+      private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
+      no_results:
+        title: 'No results found'
+        description: 'Try another search request'
     unshared_inventory:
       title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
       body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
@@ -1008,7 +1078,8 @@ en:
       share_inventory: "Share"
       view_only_permission_label: "You have veiw-only permission"
       show_per_page: "Show %{number} per page"
-      filter_inventory: "Filter inventory"
+      filter_inventory: "Filter inventory item"
+      snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
 
       options_dropdown:
         import_items: 'Import items'
@@ -1051,6 +1122,7 @@ en:
     table:
       id: 'ID'
       assigned: "Assigned"
+      assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
       row_name: "Name"
       added_on: "Added on"
@@ -1061,10 +1133,12 @@ en:
         select_file_btn: "Select File (Max %{max_size} MB)..."
       text:
         errors:
-          :too_long: "Text is too long (maximum is %{max_length} characters)"
+          too_long: "Text is too long (maximum is %{max_length} characters)"
         enter_text: "Enter text"
       number:
         enter_number: "Enter number"
+        errors:
+          wrong_format: "Not correct number format"
       list:
         select_item: "Select..."
       status:
@@ -1130,11 +1204,13 @@ en:
       title: 'Import items'
       notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data.'
       upload: 'Upload'
+      limit_description_html: 'When importing items, try to limit the amount to <b>500</b>.<br>Otherwise it may impede to process.'
     js:
       permission_error: "You don't have permission to edit this item."
       not_found_error: "This inventory item does not exist."
       column_added: "New column was sucessfully created."
       empty_column_name: "Please enter column name."
+      leaving_warning: "You have made some changes, are you sure you want to leave this page?"
     create:
       success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
     update:
@@ -1144,11 +1220,6 @@ en:
       contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."
       no_records_selected_flash: "There were no selected items."
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
-    assigned_records_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task"
-    assigned_records_downstream_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task and downstream tasks"
-    unassigned_records_flash: "Successfully unassigned item(s) <strong>%{records}</strong> from task"
-    no_records_assigned_flash: "No items were assigned to task"
-    no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
     multiple_share_service:
@@ -1158,6 +1229,10 @@ en:
       not_allowed: "You are not allowed to share this repository!"
       invalid_arguments: "Can't find %{key}"
       nothing_to_delete: "Can't find sharing relation for destroy"
+    my_module_update_row_service:
+      invalid_arguments: "Can't find %{key}"
+    my_module_assigned_snapshot_service:
+      invalid_arguments: "Can't find %{key}"
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -1214,7 +1289,7 @@ en:
       datetime_type:
         range_label: 'Range'
       checklist_type:
-        multiple_options: 'options'
+        multiple_options: 'selected'
         all_options: 'All options'
         checklist_items: 'Checklist items'
         items_placeholders:
@@ -1252,6 +1327,7 @@ en:
       added_by: "Added by"
       custom_field: "%{cf}: "
       title: "This item is assigned to %{nr} tasks."
+      private_tasks: "%{nr} task(s) are private and will not be displayed."
       no_tasks: "This item in not assigned to any task."
   samples:
     columns: "Columns"
@@ -1521,7 +1597,12 @@ en:
         head_title: "Sign up"
         team_name_label: "Team name"
         team_name_placeholder: "e.g. John's lab"
-        team_name_help: "This is the name of your lab or your group. You can invite other members to your team if needed."
+        email_label: "E-mail"
+        full_name_label: "Full name"
+        password_label: "Password"
+        minimum_password_length: "(%{password_length} characters minimum)"
+        password_confirmation_label: "Password confirmation"
+        captcha_description: "Let us know you’re human. Enter the captcha below."
       new_with_provider:
         head_title: "Complete the Sign up"
     statistics:
@@ -1552,11 +1633,6 @@ en:
             date_format_label: "Date format"
             date_format_sublabel: "Date format setting affects all date display throughout application."
             date_format_title: "Date format"
-            tips:
-              title: "Help Tips"
-              text1: "When you place your mouse cursor on a certain element in SciNote and hold it for a bit, a short and helpful description will appear."
-              text2: "If you feel confident in SciNote already, you can turn off these Help Tips."
-              toggle: "Show Help Tips"
           update_flash: "Preferences successfully updated."
         addons:
           head_title: "Settings | Add-ons"
@@ -1898,7 +1974,7 @@ en:
       uncompleted: 'Uncompleted'
       expand_label: "Expand All"
       collapse_label: "Collapse All"
-      new_step: "New Step"
+      new_step: "New step"
       subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
       published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
@@ -1919,8 +1995,8 @@ en:
         edit_title: "Edit step"
         delete_title: "Delete step"
         duplicate_title: "Duplicate step"
-        complete_title: "Complete Step"
-        uncomplete_title: "Uncomplete Step"
+        complete_title: "Complete step"
+        uncomplete_title: "Uncomplete step"
       attachments:
         modified_label: "Modified:"
         sort:
@@ -2101,6 +2177,9 @@ en:
   dropdown_selector:
     nothing_found: "Nothing found..."
 
+  create_task_service:
+    default_task_name: "New Task"
+
   zip_export:
     modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
@@ -2140,6 +2219,7 @@ en:
     more_comments: "More comments"
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
+    archived: "Archived"
     sort:
       new_html: "Newest first &#8595;"
       old_html: "Oldest first &#8593;"
@@ -2159,7 +2239,7 @@ en:
       size_exceeded: "File size must be less than %{file_size} MB."
       blank: "You didn't select any file"
       uploading: "If you leave this page, the file(s) that is/are currently uploading will not be saved! Are you sure you want to continue?"
-      upload_failure: "Upload connection error. Try again or contact the administrator."
+      upload_failure: "File upload error. Try again or contact the administrator."
       file_name_too_long: 'is too long (maximum is %{limit} characters, with extension)'
     text:
       not_blank: "can't be blank"
@@ -2275,57 +2355,6 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
-  tooltips:
-    text:
-      invite_to_sci: "Invite other scientists to SciNote and gain additional free storage space for your team. How?"
-      new_project: "Project is the topmost layer when you are organizing your data in SciNote. It allows you to assign members and keep all project-related data within one project card."
-      experiment:
-        copy: "Copy this experiment as a template to another project. Only tasks and protocol steps will be copied!"
-        dates: "You can see the date when this experiment was created and when it was last modified."
-        move: "Move your experiment with all its tasks to another project. Make sure that members of both projects are the same even if a few other members were added."
-      task:
-        due_date: "Set due dates to your tasks and stay organized."
-        new: "Your experiment can be defined by a series of tasks. Start by adding the tasks and, if needed, connect them into a workflow."
-        color_tag: "Create personalised colorful tags to mark your tasks."
-        due_date_specific: "Set a due date to a specific task."
-        results: "You have three options to save your lab results: as classic text, created table or uploaded file from computer."
-      protocol:
-        step_edit: "You can edit the name and description of a protocol step, add checklists, tables or files."
-        step_add_files: "Drag and drop your files here. SciNote supports all types of files and images."
-        linking: "By linking the protocol in your task and the protocol in a repository you can see if any of the versions has been modified and decide to update either of them at any point."
-        complete: "You can complete the task if you are done working on it."
-        inventories: "You can assign inventory items to your task."
-        num_linked: "This number represents how many tasks are linked to the selected protocol."
-        unshared_inventory: "This Inventory has been unshared with your Team by "
-      inventory:
-        new: "Inventories in SciNote enable you to manage all your resources, from samples, reagents, lab equipment, plasmids, etc."
-        visibility: "You can make inventory columns visible or hidden."
-        manage_columns: "Add custom columns to your inventory table and choose whether the rows will contain text, number, file, date, time or be defined as a checklist, dropdown or status list."
-
-    link:
-      invite_to_sci: "https://support.scinote.net/hc/en-us/articles/115003902929"
-      new_project: "https://support.scinote.net/hc/en-us/articles/115003373852"
-      experiment:
-        copy: "https://support.scinote.net/hc/en-us/articles/115001434365"
-        dates: "https://support.scinote.net/hc/en-us/articles/115001799832"
-        move: "https://support.scinote.net/hc/en-us/articles/115001434385"
-      task:
-        due_date: "https://support.scinote.net/hc/en-us/articles/360000527572"
-        new: "https://support.scinote.net/hc/en-us/articles/360000537411"
-        color_tag: "https://support.scinote.net/hc/en-us/articles/360007237912"
-        due_date_specific: "https://support.scinote.net/hc/en-us/articles/360000527572"
-        results: "https://support.scinote.net/hc/en-us/articles/360007238592"
-      protocol:
-        step_edit: "https://support.scinote.net/hc/en-us/articles/115001788051"
-        step_add_files: "https://support.scinote.net/hc/en-us/articles/360007237252"
-        linking: "https://support.scinote.net/hc/en-us/articles/115003680385"
-        complete: "https://support.scinote.net/hc/en-us/articles/115001799812"
-        inventories: "https://support.scinote.net/hc/en-us/articles/360004694971"
-        num_linked: "https://support.scinote.net/hc/en-us/articles/115001788711"
-      inventory:
-        new: "https://support.scinote.net/hc/en-us/articles/360004627792"
-        visibility: "https://support.scinote.net/hc/en-us/articles/360004627472"
-        manage_columns: "https://support.scinote.net/hc/en-us/articles/360004695831"
   marvinjs:
     new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"

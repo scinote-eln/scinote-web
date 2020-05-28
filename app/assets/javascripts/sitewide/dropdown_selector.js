@@ -41,6 +41,7 @@
     selectAppearance: string, // 'tag' or 'simple'. Default 'tag'
     closeOnSelect: boolean, // Close dropdown after select
     disableSearch: boolean, // Disable search
+    emptyOptionAjax: boolean, // Add empty option for ajax request
   }
 
 
@@ -61,17 +62,18 @@ var dropdownSelector = (function() {
     var modalContainer = container.closest('.modal-dialog');
     var modalContainerBottom = 0;
     var maxHeight = 0;
+    const bottomTreshold = 280;
 
-    if (modalContainer.length) {
-      windowHeight = modalContainer.height() + modalContainer[0].getBoundingClientRect().top;
-      containerPositionLeft -= modalContainer[0].getBoundingClientRect().left;
-      modalContainerBottom = modalContainer[0].getBoundingClientRect().bottom;
+    if (modalContainer.length && windowHeight - modalContainer.height() > bottomTreshold) {
+      let modalClientRect = modalContainer[0].getBoundingClientRect();
+      windowHeight = modalContainer.height() + modalClientRect.top;
+      containerPositionLeft -= modalClientRect.left;
+      modalContainerBottom = windowHeight + modalClientRect.bottom;
       maxHeight += modalContainerBottom;
     }
-
     bottomSpace = windowHeight - containerPosition - containerHeight;
 
-    if ((modalContainerBottom + bottomSpace) < 280) {
+    if ((modalContainerBottom + bottomSpace) < bottomTreshold) {
       container.addClass('inverse');
       container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
         .css('margin-bottom', `${(containerPosition * -1)}px`)
@@ -188,7 +190,7 @@ var dropdownSelector = (function() {
     if (config.inputTagMode) {
       return '';
     }
-    return '<i class="fas fa-caret-down"></i>';
+    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon"></i>';
   }
 
   // Set new data
@@ -289,7 +291,7 @@ var dropdownSelector = (function() {
         ${prepareCustomDropdownIcon(config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
-      
+
     `).appendTo(dropdownContainer);
 
     // If we setup Select All we draw it and add correspond logic
@@ -379,7 +381,7 @@ var dropdownSelector = (function() {
         }
       } else {
         // on Close we blur search field
-        dropdownContainer.find('.search-field').blur();
+        dropdownContainer.find('.search-field').blur().val('');
 
         // onClose event
         if (config.onClose) {
@@ -426,6 +428,9 @@ var dropdownSelector = (function() {
     // Enable simple mode for dropdown selector
     if (config.selectAppearance === 'simple') {
       dropdownContainer.addClass('simple-mode');
+      if (dropdownContainer.find('.tag-label').length) {
+        dropdownContainer.find('.search-field').attr('placeholder', dropdownContainer.find('.tag-label').text().trim());
+      }
     }
 
     // Disable search
@@ -502,7 +507,7 @@ var dropdownSelector = (function() {
     container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .delimiter').remove();
     if (!data) return;
 
-    if (data.length > 0) {
+    if (data.length > 0 && !(data.length === 1 && data[0].value === '')) {
       // If we use select-by-group option we need first draw groups
       if (selector.data('select-by-group')) {
         $.each(data, function(gi, group) {
@@ -675,8 +680,15 @@ var dropdownSelector = (function() {
     }
 
     // If we have alteast one tag, we need to remove placeholder from search field
-    searchFieldValue.attr('placeholder',
-      selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
+    if (selector.data('config').selectAppearance === 'simple') {
+      let selectedLabel = container.find('.tag-label');
+      container.find('.search-field').prop('placeholder',
+        selectedLabel.length && selectedLabel.text().trim() !== '' ? selectedLabel.text().trim() : selector.data('placeholder'));
+    } else {
+      searchFieldValue.attr('placeholder',
+        selectedOptions.length > 0 ? '' : (selector.data('placeholder') || ''));
+    }
+
     searchFieldValue.attr('data-options-selected', selectedOptions.length);
 
     // Add stretch class for visual improvments
@@ -730,7 +742,16 @@ var dropdownSelector = (function() {
       ajaxParams = customParams ? customParams(defaultParams) : defaultParams;
 
       $.get(selector.data('ajax-url'), ajaxParams, (data) => {
-        loadData(selector, container, data);
+        var optionsAjax = data.constructor === Array ? data : [];
+        if (selector.data('config').emptyOptionAjax) {
+          optionsAjax = [{
+            label: selector.data('placeholder') || '',
+            value: '',
+            group: null,
+            params: {}
+          }].concat(optionsAjax);
+        }
+        loadData(selector, container, optionsAjax);
         PerfectSb().update_all();
       });
     // For local options we convert options element from select to correct array
@@ -817,7 +838,21 @@ var dropdownSelector = (function() {
     setData: function(selector, data) {
       if ($(selector).length === 0) return false;
 
-      setData($(selector), []);
+      setData($(selector), data);
+
+      return this;
+    },
+
+    // Select value
+    selectValue: function(selector, value) {
+      var $selector;
+      var option;
+
+      if ($(selector).length === 0) return false;
+
+      $selector = $(selector);
+      option = $selector.find(`option[value="${value}"]`)[0];
+      setData($selector, [convertOptionToJson(option)]);
 
       return this;
     },

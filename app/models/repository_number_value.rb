@@ -12,6 +12,7 @@ class RepositoryNumberValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'repository_number_values.data'
   SORTABLE_VALUE_INCLUDE = :repository_number_value
+  PRELOAD_INCLUDE = :repository_number_value
 
   def formatted
     data.to_s
@@ -27,10 +28,26 @@ class RepositoryNumberValue < ApplicationRecord
     save!
   end
 
+  def snapshot!(cell_snapshot)
+    value_snapshot = dup
+    value_snapshot.assign_attributes(
+      repository_cell: cell_snapshot,
+      created_at: created_at,
+      updated_at: updated_at
+    )
+    value_snapshot.save!
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     value.data = BigDecimal(payload)
     value
+  end
+
+  def self.import_from_text(text, attributes, _options = {})
+    new(attributes.merge(data: BigDecimal(text)))
+  rescue ArgumentError
+    nil
   end
 
   alias export_formatted formatted

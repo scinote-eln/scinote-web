@@ -18,7 +18,7 @@ class RepositoryDatatableService
   def create_columns_mappings
     # Make mappings of custom columns, so we have same id for every
     # column
-    index = 6
+    index = @repository.default_columns_count
     @mappings = {}
     @repository.repository_columns.order(:id).each do |column|
       @mappings[column.id] = index.to_s
@@ -42,16 +42,15 @@ class RepositoryDatatableService
           'LEFT OUTER JOIN "my_module_repository_rows" '\
           'ON "my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
           'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s
-        )
+        ).select('CASE WHEN my_module_repository_rows.id IS NOT NULL '\
+                 'THEN true ELSE false END as row_assigned').group('my_module_repository_rows.id')
       end
-      repository_rows = repository_rows.select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
-    else
-      repository_rows = repository_rows
-                        .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
-                        .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
-                        .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
-                        .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     end
+    repository_rows = repository_rows
+                      .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
+                      .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
+                      .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
+                      .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
 
     @repository_rows = sort_rows(order_obj, repository_rows)
@@ -135,8 +134,8 @@ class RepositoryDatatableService
 
       sorting_data_type = sorting_column.data_type.constantize
 
-      if sorting_column.repository_checklist_value?
-        cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
+      cells = if sorting_column.repository_checklist_value?
+                RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
                               .where('repository_cells.repository_column_id': sorting_column.id)
                               .select("repository_cells.repository_row_id,
                                               STRING_AGG(
@@ -144,12 +143,12 @@ class RepositoryDatatableService
                                                 ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
                               .group('repository_cells.repository_row_id')
 
-      else
-        cells = RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
+              else
+                RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
                               .where('repository_cells.repository_column_id': sorting_column.id)
                               .select("repository_cells.repository_row_id,
                                       #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
-      end
+              end
 
       records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
              .group('values.value')

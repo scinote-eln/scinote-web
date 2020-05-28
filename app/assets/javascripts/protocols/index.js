@@ -28,7 +28,7 @@ function initProtocolsTable() {
 
   protocolsDatatable = protocolsTableEl.DataTable({
     order: [[1, "asc"]],
-    dom: "RBfl<'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
+    dom: "RB<'main-actions'lf>t<'pagination-row'ip>",
     stateSave: true,
     sScrollX: '100%',
     sScrollXInner: '100%',
@@ -100,7 +100,6 @@ function initProtocolsTable() {
     fnDrawCallback: function(settings, json) {
       animateSpinner(this, false);
       initRowSelection();
-      $.initTooltips();
     },
     preDrawCallback: function(settings) {
       animateSpinner(this);
@@ -300,6 +299,7 @@ function initCreateNewModal() {
   var link = $("[data-action='create-new']");
   var modal = $("#create-new-modal");
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
+  var newProtocol = parseInt(sessionStorage.getItem('scinote-dashboard-new-protocol'), 10);
 
   link.on("click", function() {
     $.ajax({
@@ -328,6 +328,11 @@ function initCreateNewModal() {
       }
     });
   });
+
+  if (Math.floor(Date.now() / 1000) - newProtocol < 15) {
+    link.click();
+    sessionStorage.removeItem('scinote-dashboard-new-protocol');
+  }
 
   submitBtn.on("click", function() {
     // Submit the form inside modal

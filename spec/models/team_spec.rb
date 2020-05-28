@@ -44,7 +44,6 @@ describe Team, type: :model do
   end
 
   describe 'Validations' do
-    it { should validate_presence_of :space_taken }
     it do
       should validate_length_of(:name)
         .is_at_least(Constants::NAME_MIN_LENGTH)

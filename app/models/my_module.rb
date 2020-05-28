@@ -40,21 +40,12 @@ class MyModule < ApplicationRecord
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
-  has_many :inputs,
-           class_name: 'Connection',
-           foreign_key: 'input_id',
-           inverse_of: :to,
-           dependent: :destroy
-  has_many :outputs,
-           class_name: 'Connection',
-           foreign_key: 'output_id',
-           inverse_of: :from,
-           dependent: :destroy
-  has_many :my_modules, through: :outputs, source: :to
-  has_many :my_module_antecessors,
-           through: :inputs,
-           source: :from,
-           class_name: 'MyModule'
+
+  has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
+  has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy
+  has_many :my_modules, through: :outputs, source: :to, class_name: 'MyModule'
+  has_many :my_module_antecessors, through: :inputs, source: :from, class_name: 'MyModule'
+
   has_many :sample_my_modules,
            inverse_of: :my_module,
            dependent: :destroy
@@ -62,6 +53,9 @@ class MyModule < ApplicationRecord
   has_many :my_module_repository_rows,
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
+  has_many :repository_snapshots,
+           dependent: :destroy,
+           inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
@@ -80,6 +74,16 @@ class MyModule < ApplicationRecord
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
+  scope :with_step_statistics, (lambda do
+    left_outer_joins(protocols: :steps)
+    .group(:id)
+    .select('my_modules.*')
+    .select('COUNT(steps.id) AS steps_total')
+    .select('COUNT(steps.id) FILTER (where steps.completed = true) AS steps_completed')
+    .select('CASE COUNT(steps.id) WHEN 0 THEN 0 ELSE'\
+            '((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) '\
+            'END AS steps_completed_percentage')
+  end)
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
@@ -195,6 +199,61 @@ class MyModule < ApplicationRecord
                              .count
   end
 
+  def assigned_repositories
+    team = experiment.project.team
+    team.repositories
+        .joins(repository_rows: :my_module_repository_rows)
+        .where(my_module_repository_rows: { my_module_id: id })
+        .group(:id)
+  end
+
+  def live_and_snapshot_repositories_list
+    snapshots = repository_snapshots.left_outer_joins(:original_repository)
+
+    selected_snapshots = snapshots.where(selected: true)
+                                  .or(snapshots.where(original_repositories_repositories: { id: nil }))
+                                  .or(snapshots.where.not(parent_id: assigned_repositories.select(:id)))
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .select('COUNT(repository_rows.id) AS assigned_rows_count')
+                                  .joins(:repository_rows)
+                                  .group(:parent_id, :id)
+                                  .order(:parent_id, updated_at: :desc)
+
+    live_repositories = assigned_repositories
+                        .select('repositories.*, COUNT(repository_rows.id) AS assigned_rows_count')
+                        .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
+
+    (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
+  end
+
+  def active_snapshot_or_live(rep_or_snap, exclude_snpashot_ids: [])
+    return unless rep_or_snap
+
+    parent_id = rep_or_snap.is_a?(Repository) ? rep_or_snap.id : rep_or_snap.parent_id
+
+    selected_snapshot_for_repo(parent_id, exclude_snpashot_ids: exclude_snpashot_ids) ||
+      assigned_repositories&.where(id: parent_id)&.first ||
+      repository_snapshots
+        .where(parent_id: parent_id)
+        .where.not(id: exclude_snpashot_ids)
+        .order(updated_at: :desc).first
+  end
+
+  def update_report_repository_references(rep_or_snap)
+    ids = if rep_or_snap.is_a?(Repository)
+            RepositorySnapshot.where(parent_id: rep_or_snap.id).pluck(:id)
+          else
+            Repository.where(id: rep_or_snap.parent_id).pluck(:id) +
+              RepositorySnapshot.where(parent_id: rep_or_snap.parent_id).pluck(:id)
+          end
+
+    report_elements.where(repository_id: ids).update(repository_id: rep_or_snap.id)
+  end
+
+  def selected_snapshot_for_repo(repository_id, exclude_snpashot_ids: [])
+    repository_snapshots.where(parent_id: repository_id).where.not(id: exclude_snpashot_ids).where(selected: true).first
+  end
+
   def unassigned_users
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +
@@ -261,14 +320,14 @@ class MyModule < ApplicationRecord
   end
 
   def is_overdue?(datetime = DateTime.current)
-    due_date.present? && datetime.utc > due_date.end_of_day.utc
+    due_date.present? && datetime.utc > due_date.utc
   end
 
   def overdue_for_days(datetime = DateTime.current)
-    if due_date.blank? || due_date.end_of_day.utc > datetime.utc
+    if due_date.blank? || due_date.utc > datetime.utc
       0
     else
-      ((datetime.utc.to_i - due_date.end_of_day.utc.to_i) / 1.day.to_f).ceil
+      ((datetime.utc.to_i - due_date.utc.to_i) / 1.day.to_f).ceil
     end
   end
 
@@ -278,8 +337,8 @@ class MyModule < ApplicationRecord
 
   def is_due_in?(datetime, diff)
     due_date.present? &&
-      datetime.utc < due_date.end_of_day.utc &&
-      datetime.utc > (due_date.end_of_day.utc - diff)
+      datetime.utc < due_date.utc &&
+      datetime.utc > (due_date.utc - diff)
   end
 
   def space_taken
@@ -367,14 +426,12 @@ class MyModule < ApplicationRecord
 
   # Generate the repository rows belonging to this module
   # in JSON form, suitable for display in handsontable.js
-  def repository_json_hot(repository_id, order)
+  def repository_json_hot(repository, order)
     data = []
-    repository_rows
-      .includes(:created_by)
-      .where(repository_id: repository_id)
-      .order(created_at: order).find_each do |row|
+    rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
+    rows.find_each do |row|
       row_json = []
-      row_json << row.id
+      row_json << (row.repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
       row_json << row.name
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
@@ -391,29 +448,7 @@ class MyModule < ApplicationRecord
     { data: data, headers: headers }
   end
 
-  def repository_json(repository_id, order, user)
-    headers = [
-      I18n.t('repositories.table.id'),
-      I18n.t('repositories.table.row_name'),
-      I18n.t('repositories.table.added_on'),
-      I18n.t('repositories.table.added_by')
-    ]
-    repository = Repository.find_by_id(repository_id)
-    return false unless repository
-
-    repository.repository_columns.order(:id).each do |column|
-      headers.push(column.name)
-    end
-
-    params = { assigned: 'assigned', search: {}, order: { values: { column: '1', dir: order } } }
-    records = RepositoryDatatableService.new(repository,
-                                             params,
-                                             user,
-                                             self)
-    { headers: headers, data: records }
-  end
-
-  def repository_docx_json(repository_id)
+  def repository_docx_json(repository)
     headers = [
       I18n.t('repositories.table.id'),
       I18n.t('repositories.table.row_name'),
@@ -421,7 +456,6 @@ class MyModule < ApplicationRecord
       I18n.t('repositories.table.added_by')
     ]
     custom_columns = []
-    repository = Repository.find_by(id: repository_id)
     return false unless repository
 
     repository.repository_columns.order(:id).each do |column|
@@ -429,7 +463,7 @@ class MyModule < ApplicationRecord
       custom_columns.push(column.id)
     end
 
-    records = repository_rows.where(repository_id: repository_id).select(:id, :name, :created_at, :created_by_id)
+    records = repository.assigned_rows(self).select(:id, :name, :created_at, :created_by_id)
     { headers: headers, rows: records, custom_columns: custom_columns }
   end
 
@@ -512,6 +546,21 @@ class MyModule < ApplicationRecord
   def uncomplete
     self.state = 'uncompleted'
     self.completed_on = nil
+  end
+
+  def assign_user(user, assigned_by = nil)
+    user_my_modules.create(
+      assigned_by: assigned_by || user,
+      user: user
+    )
+    Activities::CreateActivityService
+      .call(activity_type: :assign_user_to_module,
+            owner: assigned_by || user,
+            team: experiment.project.team,
+            project: experiment.project,
+            subject: self,
+            message_items: { my_module: id,
+                             user_target: user.id })
   end
 
   private

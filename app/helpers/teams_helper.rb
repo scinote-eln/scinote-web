@@ -20,4 +20,8 @@ module TeamsHelper
   def team_created_by(team)
     User.find_by_id(team.created_by_id)
   end
+
+  def switch_team_with_param
+    current_team_switch(Team.find_by(id: params[:team])) if params[:team]
+  end
 end

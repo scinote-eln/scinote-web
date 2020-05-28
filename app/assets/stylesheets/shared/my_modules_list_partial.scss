@@ -1,0 +1,95 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.my-modules-list-partial {
+  width: 100%;
+
+  .task-group:not(:first-child) {
+    border-top: $border-tertiary;
+  }
+
+  .header {
+    @include font-small;
+    align-items: center;
+    color: $color-silver-chalice;
+    display: flex;
+    height: 20px;
+    margin-top: 5px;
+    width: 100%;
+
+    .project,
+    .experiment {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .slash {
+      flex-basis: 20px;
+      text-align: center;
+    }
+  }
+
+  .tasks {
+    @include font-button;
+    margin-bottom: 5px;
+
+    .task {
+      align-items: center;
+      display: flex;
+      line-height: 25px;
+
+      .task-icon {
+        flex-shrink: 0;
+        margin-right: 9px;
+
+        path {
+          fill: $brand-primary;
+        }
+      }
+
+      .task-link {
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .private-tasks-counter {
+    @include font-button;
+    border-top: $border-tertiary;
+    color: $color-silver-chalice;
+    padding-top: .5em;
+  }
+
+  .no-results-placeholder {
+    color: $color-silver-chalice;
+    padding: 2em 0 4em;
+    text-align: center;
+
+    .fa-stack {
+      @include font-h1;
+
+      .fas {
+        line-height: inherit;
+        width: 100%;
+      }
+    }
+
+    .title {
+      margin: .5em 0 0;
+    }
+  }
+
+  .archived {
+    @include font-small;
+    background: $brand-warning;
+    border-radius: $border-radius-tag;
+    color: $color-white;
+    line-height: 14px;
+    margin-right: 3px;
+    padding: 2px 3px;
+  }
+}

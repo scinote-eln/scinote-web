@@ -1,28 +1,79 @@
 /* global I18n dropdownSelector */
 /* eslint-disable no-use-before-define */
 
-// Bind ajax for editing due dates
-function initDueDatePicker() {
-  function updateDueDate(val) {
-    var updateUrl = $('.due-date-container').data('update-url');
-    $.ajax({
-      url: updateUrl,
-      type: 'PATCH',
-      dataType: 'json',
-      data: { my_module: { due_date: val } },
-      success: function(result) {
-        $('.due-date-container').html($(result.module_header_due_date_label));
-        initDueDatePicker();
+function initTaskCollapseState() {
+  let taskView = '.my-modules-protocols-index';
+  let taskSection = '.task-section-caret';
+  let taskId = $(taskView).data('task-id');
+
+  function collapseStateSave() {
+    $(taskView).on('click', taskSection, function() {
+      let collapsed = $(this).attr('aria-expanded');
+      let taskSectionType = $(this).attr('aria-controls');
+
+      if (collapsed === 'true') {
+        localStorage.setItem('task_section_collapsed/' + taskId + '/' + taskSectionType, collapsed);
+      } else {
+        localStorage.removeItem('task_section_collapsed/' + taskId + '/' + taskSectionType);
       }
     });
   }
 
-  $('#calendar-due-date').on('dp.change', function() {
-    updateDueDate($('#calendar-due-date').val());
-  });
+  function collapseStateLoad() {
+    $(taskSection).each(function() {
+      let taskSectionType = $(this).attr('aria-controls');
+      var collapsed = localStorage.getItem('task_section_collapsed/' + taskId + '/' + taskSectionType);
 
-  $('.flex-block.date-block .clear-date').off('click').on('click', function() {
-    updateDueDate(null);
+      if (JSON.parse(collapsed)) {
+        $('#' + taskSectionType).collapse('hide');
+      }
+      $(this).closest('.task-section').removeClass('hidden');
+    });
+  }
+
+  collapseStateSave();
+  collapseStateLoad();
+}
+
+function updateStartDate() {
+  let updateUrl = $('#startDateContainer').data('update-url');
+  let val = $('#calendarStartDate').val();
+  $.ajax({
+    url: updateUrl,
+    type: 'PATCH',
+    dataType: 'json',
+    data: { my_module: { started_on: val } },
+    success: function(result) {
+      $('#startDateLabelContainer').html(result.start_date_label);
+    }
+  });
+}
+
+// Bind ajax for editing due dates
+function initStartDatePicker() {
+  $('#calendarStartDate').on('dp.change', function() {
+    updateStartDate();
+  });
+}
+
+function updateDueDate() {
+  let updateUrl = $('#dueDateContainer').data('update-url');
+  let val = $('#calendarDueDate').val();
+  $.ajax({
+    url: updateUrl,
+    type: 'PATCH',
+    dataType: 'json',
+    data: { my_module: { due_date: val } },
+    success: function(result) {
+      $('#dueDateLabelContainer').html(result.due_date_label);
+    }
+  });
+}
+
+// Bind ajax for editing due dates
+function initDueDatePicker() {
+  $('#calendarDueDate').on('dp.change', function() {
+    updateDueDate();
   });
 }
 
@@ -100,7 +151,17 @@ function bindEditTagsAjax() {
       });
     manageTagsModalBody.find('.edit-tag-form')
       .on('ajax:success', function(e, data) {
+        var newTag;
         initTagsModalBody(data);
+        dropdownSelector.removeValue('#module-tags-selector', this.dataset.tagId, '', true);
+        newTag = $('#manage-module-tags-modal .list-group-item[data-tag-id=' + this.dataset.tagId + ']');
+        dropdownSelector.addValue('#module-tags-selector', {
+          value: newTag.data('tag-id'),
+          label: newTag.data('name'),
+          params: {
+            color: newTag.data('color')
+          }
+        }, true);
       })
       .on('ajax:error', function(e, data) {
         $(this).renderFormErrors('tag', data.responseJSON);
@@ -184,7 +245,7 @@ function applyTaskCompletedCallBack() {
             button.find('.btn')
               .removeClass('btn-default').addClass('btn-primary');
           }
-          $('.due-date-container').html(data.module_header_due_date_label);
+          $('#dueDateContainer').html(data.module_header_due_date);
           initDueDatePicker();
           $('.task-state-label').html(data.module_state_label);
           button.find('button').replaceWith(data.new_btn);
@@ -214,7 +275,7 @@ function initTagsSelector() {
       }
       return `<span class="my-module-tags-color"></span>
               ${data.label + ' '}
-              <span class="my-module-tags-create-new"> (${I18n.t('my_modules.module_header.create_new_tag')})</span>`;
+              <span class="my-module-tags-create-new"> (${I18n.t('my_modules.details.create_new_tag')})</span>`;
     },
     onOpen: function() {
       $('.select-container .edit-button-container').removeClass('hidden');
@@ -263,7 +324,65 @@ function initTagsSelector() {
   }).getContainer(myModuleTagsSelector).addClass('my-module-tags-container');
 }
 
+function initAssignedUsersSelector() {
+  var manageUsersModal = $('#manage-module-users-modal');
+  var manageUsersModalBody = manageUsersModal.find('.modal-body');
+
+  // Initialize users editing modal remote loading
+  function initUsersEditLink() {
+    $('.task-details').on('ajax:success', '.manage-users-link', function(e, data) {
+      manageUsersModal.modal('show');
+      manageUsersModal.find('#manage-module-users-modal-module').text(data.my_module.name);
+      initUsersModalBody(data);
+    });
+  }
+
+  // Initialize ajax listeners and elements style on modal body.
+  // This function must be called when modal body is changed.
+  function initUsersModalBody(data) {
+    manageUsersModalBody.html(data.html);
+    manageUsersModalBody.find('.selectpicker').selectpicker();
+  }
+
+  // Initialize reloading manage user modal content after posting new user
+  manageUsersModalBody.on('ajax:success', '.add-user-form', function(e, data) {
+    initUsersModalBody(data);
+  });
+
+  // Initialize remove user from my_module links
+  manageUsersModalBody.on('ajax:success', '.remove-user-link', function(e, data) {
+    initUsersModalBody(data);
+  });
+
+  // Reload users HTML element when modal is closed
+  manageUsersModal.on('hide.bs.modal', function() {
+    var usersEl = $('.task-assigned-users');
+    // Load HTML to refresh users
+    $.ajax({
+      url: usersEl.attr('data-module-users-url'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        $('.task-assigned-users').replaceWith(data.html);
+      },
+      error: function() {
+        // TODO
+      }
+    });
+  });
+
+  // Remove users modal content when modal window is closed.
+  manageUsersModal.on('hidden.bs.modal', function() {
+    manageUsersModalBody.html('');
+  });
+
+  initUsersEditLink();
+}
+
+initTaskCollapseState();
 applyTaskCompletedCallBack();
 initTagsSelector();
 bindEditTagsAjax();
+initStartDatePicker();
 initDueDatePicker();
+initAssignedUsersSelector();

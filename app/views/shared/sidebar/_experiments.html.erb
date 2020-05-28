@@ -1,15 +1,17 @@
 <% if project.active_experiments.present? %>
-  <ul>
+  <ul class="tree-child hidden" data-branch-id="pro<%= project.id %>">
     <% project.active_experiments.each do |experiment| %>
       <% cache [action_name, current_user, experiment] do %>
-        <li data-parent="candidate">
-          <span class="tree-link line-wrap first-indent" title="<%= experiment.name %>">
-            <i class="no-arrow"></i>
+        <li data-parent="candidate" class="branch">
+          <span class="tree-link first-indent" title="<%= experiment.name %>">
+            <% if experiment.active_my_modules.any? %>
+              <i class="fas fa-caret-right tree-toggle"></i>
+            <% end %>
             <%= link_to experiment.name,
                         experiment_action_to_link_to(experiment),
                         class: 'overview_exp_label line-wrap',
                         data: { type: 'experiment', id: experiment.id }
-                        %>
+            %>
           </span>
           <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
         </li>

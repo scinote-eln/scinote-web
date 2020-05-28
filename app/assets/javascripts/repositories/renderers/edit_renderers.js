@@ -1,6 +1,6 @@
 /*
 global ListColumnHelper ChecklistColumnHelper StatusColumnHelper SmartAnnotation I18n
-GLOBAL_CONSTANTS DateTimeHelper
+DateTimeHelper AssetColumnHelper
 */
 
 $.fn.dataTable.render.editRowName = function(formId, cell) {
@@ -22,26 +22,7 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
 
 $.fn.dataTable.render.editRepositoryAssetValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
-  let empty = $cell.is(':empty');
-  let fileName = $cell.find('a.file-preview-link').text();
-
-  $cell.html(`
-    <div class="file-editing">
-      <div class="file-hidden-field-container hidden"></div>
-      <input class=""
-             id="repository_file_${columnId}"
-             form="${formId}"
-             type="file"
-             data-col-id="${columnId}"
-             data-is-empty="${empty}"
-             value=""
-             data-type="RepositoryAssetValue">
-      <div class="file-upload-button ${empty ? 'new-file' : ''}">
-        <label for="repository_file_${columnId}">${I18n.t('repositories.table.assets.select_file_btn', { max_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB })}</label>
-        <span class="icon"><i class="fas fa-paperclip"></i></span><span class="label-asset">${fileName}</span>
-        <span class="delete-action fas fa-trash"> </span>
-      </div>
-    </div>`);
+  AssetColumnHelper.renderCell($cell, formId, columnId);
 };
 
 $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell) {
@@ -145,7 +126,8 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
       <input class="sci-input-field"
              form="${formId}"
              type="text"
-             oninput="this.value = this.value.replace(/[^0-9.]/g, '');
+             oninput="regexp = ${decimals} === 0 ? /[^0-9]/g : /[^0-9.]/g
+                      this.value = this.value.replace(regexp, '');
                       this.value = this.value.match(/^\\d*(\\.\\d{0,${decimals}})?/)[0];"
              name="repository_cells[${columnId}]"
              placeholder="${I18n.t('repositories.table.number.enter_number')}"

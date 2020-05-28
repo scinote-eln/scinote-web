@@ -12,10 +12,6 @@ body,
   min-width: 320px;
 }
 
-#content-wrapper .container #notifications {
-  margin-left: -15px;
-}
-
 // Word wrapping everywhere, except for table header of "datatables.js"
 body,
 table.dataTable td {
@@ -521,8 +517,19 @@ a[data-toggle="tooltip"] {
 
 .protocols-datatable {
   .dataTables_wrapper {
-    margin-top: 15px;
     clear: both;
+
+    .main-actions,
+    .pagination-row {
+      display: flex;
+    }
+
+    .dataTables_filter,
+    .dataTables_info,
+    .dataTables_paginate,
+    .dataTables_length {
+      flex-grow: 1;
+    }
   }
 
   table {
@@ -743,7 +750,7 @@ ul.double-line > li {
 
 .panel-options {
   position: relative;
-  bottom: 6px;
+  bottom: 8px;
 }
 
 .panel-footer {
@@ -913,13 +920,6 @@ ul.content-activities {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 5px;
-
-  .protocol-button {
-
-    .sci-btn-group {
-      float: left;
-    }
-  }
 
   .protocol-status-bar {
     display: flex;
@@ -1491,6 +1491,7 @@ ul.content-activities {
   }
 
   img {
+    background: url(asset-path("custom/checkerboard-pattern.png"));
     height: auto;
     max-width: 100%;
 
@@ -1891,10 +1892,6 @@ th.custom-field .modal-tooltiptext {
   background-color: $color-alto;
 }
 
-.my_module-state-buttons {
-  padding-top: 6px;
-}
-
 .parse-records-table {
   max-height: 200px;
 }
@@ -1908,18 +1905,6 @@ a.disabled {
 a.disabled-with-click-events {
   opacity: .5;
   cursor: not-allowed;
-}
-
-#alert-flash {
-  button {
-    margin-right: 400px;
-  }
-
-  @media(max-width:768px) {
-    button {
-      display: none;
-    }
-  }
 }
 
 .linkedin-signin-button {

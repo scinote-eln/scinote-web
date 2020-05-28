@@ -41,7 +41,6 @@
                    class: 'form-control',
                    value: (params[:team] ? params[:team][:name] : '') %>
     <% end %>
-    <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
   </div>
   <% end %>
   <%= recaptcha_input_tag %>

@@ -4,6 +4,7 @@
     <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="max-file-size" content="<%= Rails.configuration.x.file_max_size_mb %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
 
@@ -36,7 +37,6 @@
     data-atwho-repositories-url="<%= atwho_repositories_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
-    data-tooltips-enabled="<%= current_user.settings[:tooltips_enabled] %>"
     <% end %>
   >
 
@@ -56,10 +56,8 @@
       <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: nil} %>
     <% end %>
 
-    <% unless user_signed_in? %>
-      <%= render partial: 'shared/flash_alerts',
+    <%= render partial: 'shared/flash_alerts',
                  locals: { flash: flash, notice: notice, alert: alert } %>
-    <% end %>
 
     <%= render "shared/left_menu_bar" if user_signed_in? %>
 

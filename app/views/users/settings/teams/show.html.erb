@@ -15,7 +15,7 @@
     <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
 
     <!-- TITLE -->
-    <div id="team-name" class="settings-team-name" data-current-team="<%= current_team == @team %>">
+    <h2 id="team-name" class="settings-team-name" data-current-team="<%= current_team == @team %>">
       <% if can_update_team?(@team) %>
         <%= render partial: "shared/inline_editing",
                    locals: {
@@ -29,7 +29,7 @@
       <% else %>
         <span class="view-mode"><%= @team.name %></span>
       <% end %>
-    </div>
+    </h2>
     <!-- End of TITLE -->
 
     <!-- HEADER -->
@@ -50,7 +50,7 @@
       <div class="space-usage grid-block">
         <span class="fas fa-hdd"></span>
         <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
-        <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.space_taken)}" %></b>
+        <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.storage_used)}" %></b>
       </div>
     </div>
 
@@ -78,6 +78,18 @@
 
     <!-- USERS TABLE -->
     <div class="users-datatable">
+      <% if can_invite_team_users?(@team) %>
+        <div id="add-new-team-members-button" class="hidden">
+          <a href="#" class="btn btn-primary" data-trigger="invite-users" data-turbolinks="false" data-modal-id="team-invite-users-modal">
+            <span class="fas fa-plus"></span>
+            <%= I18n.t('users.settings.teams.edit.add_user') %>
+          </a>
+        </div>
+        <%= render(partial: 'shared/invite_users_modal.html.erb',
+                   locals: { modal_id: 'team-invite-users-modal',
+                             type: 'invite_to_team',
+                             team: @team } ) %>
+      <% end %>
       <table id="users-table" class="table" data-source="<%= team_users_datatable_path(@team, format: :json) %>">
         <thead>
           <tr>
@@ -100,15 +112,6 @@
 </div>
 
 <%= render partial: 'users/settings/teams/description_modal.html.erb' %>
-<%= render(
-      partial: 'shared/invite_users_modal.html.erb',
-      locals: {
-        modal_id: 'team-invite-users-modal',
-        type: 'invite_to_team',
-        team: @team
-      }
-    )
-%>
 <%= render partial: 'users/settings/teams/destroy_modal.html.erb', locals: { team: @team } %>
 <%= render partial: 'users/settings/user_teams/destroy_user_team_modal.html.erb' %>
 <%= stylesheet_link_tag 'datatables' %>

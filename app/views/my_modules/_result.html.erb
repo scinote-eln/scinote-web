@@ -14,13 +14,13 @@
     <div class="panel-heading">
       <div class="panel-options pull-right">
         <% if result.editable? && can_manage_module?(result.my_module) %>
-          <a class="btn btn-link edit-result-button <%= edit_result_button_class(result) %>" id="<%= result.id %>_edit" href="<%= edit_result_link(result) %>" data-remote="true" title="<%= t'my_modules.results.options.edit_title' %>">
+          <a class="btn btn-light icon-btn edit-result-button <%= edit_result_button_class(result) %>" id="<%= result.id %>_edit" href="<%= edit_result_link(result) %>" data-remote="true" title="<%= t'my_modules.results.options.edit_title' %>">
             <span class="fas fa-pencil-alt"></span>
           </a>
         <% end %>
         <% if can_manage_result?(result) %>
           <a href="#"
-             class="btn btn-link form-submit-link"
+             class="btn btn-light icon-btn form-submit-link"
              data-form-id="result-archive-form-<%= result.id %>"
              data-confirm-text="<%= t('my_modules.results.archive_confirm') %>"
              title="<%= t'my_modules.results.options.archive_title' %>"
