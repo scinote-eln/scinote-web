@@ -685,6 +685,7 @@ Rails.application.routes.draw do
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
+    get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
