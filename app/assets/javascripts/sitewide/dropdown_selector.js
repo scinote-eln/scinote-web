@@ -632,11 +632,10 @@ var dropdownSelector = (function() {
                     title="${$('<span>' + label + '</span>').text()}"
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
-                    ${label}
                   </div>
                   <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
-
+      tag.find('.tag-label').text(label);
       // Now we need add delete action to tag
       tag.find('.fa-times').click(function(e) {
         var tagLabel = $(this).prev();
