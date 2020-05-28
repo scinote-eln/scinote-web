@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class ChecklistColumnsController < BaseColumnsController
+  class ChecklistColumnsController < RepositoryColumnsController
     before_action :load_column, only: %i(update items)
     before_action :check_create_permissions, only: :create
     before_action :check_manage_permissions, only: :update

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class NumberColumnsController < BaseColumnsController
+  class NumberColumnsController < RepositoryColumnsController
     include InputSanitizeHelper
     before_action :load_column, only: :update
     before_action :check_create_permissions, only: :create

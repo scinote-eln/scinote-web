@@ -1,7 +1,7 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <button class="btn icon-btn btn-light manage-repo-column-index back-to-column-modal"
-          data-modal-url="<%= repository_columns_index_html_path(@repository) %>"
+          data-modal-url="<%= repository_repository_columns_path(@repository) %>"
           data-action="new">
     <span class="fas fa-arrow-left"></span>
   </button>
@@ -23,7 +23,7 @@
 </div>
 <div class="modal-footer delete-footer">
   <button class="btn btn-secondary manage-repo-column-index back-to-column-modal"
-          data-modal-url="<%= repository_columns_index_html_path(@repository) %>"
+          data-modal-url="<%= repository_repository_columns_path(@repository) %>"
           data-action="new">
     <%= t("general.cancel")%>
   </button>

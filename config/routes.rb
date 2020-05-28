@@ -617,20 +617,9 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
-      get 'repository_columns/:id/edit_html',
-          to: 'repository_columns#edit_html',
-          as: 'columns_edit_html'
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
-      get 'index_html',
-          to: 'repository_columns#index_html',
-          as: 'columns_index_html',
-          defaults: { format: 'json' }
-      get 'create_html',
-          to: 'repository_columns#create_html',
-          as: 'columns_create_html',
-          defaults: { format: 'json' }
       get 'available_columns',
           to: 'repository_columns#available_columns',
           as: 'available_columns',
@@ -638,7 +627,7 @@ Rails.application.routes.draw do
       get :table_toolbar
       get :status
 
-      resources :repository_columns, only: :destroy
+      resources :repository_columns, only: %i(index new edit destroy)
       resources :repository_rows, only: %i(create show update) do
         member do
           get :assigned_task_list

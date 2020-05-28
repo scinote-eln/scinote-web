@@ -2,18 +2,13 @@ class RepositoryColumnsController < ApplicationController
   include InputSanitizeHelper
   include RepositoryColumnsHelper
 
-  ACTIONS = %i(
-    create index_html create_html available_asset_type_columns available_columns
-  ).freeze
-  before_action :load_vars,
-                except: ACTIONS
-  before_action :load_vars_nested,
-                only: ACTIONS
-  before_action :check_manage_permissions,
-                except: ACTIONS
+  before_action :load_repository
+  before_action :load_column, only: %i(edit destroy_html destroy)
+  before_action :check_create_permissions, only: :new
+  before_action :check_manage_permissions, only: %i(edit destroy_html destroy)
   before_action :load_asset_type_columns, only: :available_asset_type_columns
 
-  def index_html
+  def index
     render json: {
       id: @repository.id,
       html: render_to_string(
@@ -22,7 +17,7 @@ class RepositoryColumnsController < ApplicationController
     }
   end
 
-  def create_html
+  def new
     @repository_column = RepositoryColumn.new
     respond_to do |format|
       format.json do
@@ -35,8 +30,12 @@ class RepositoryColumnsController < ApplicationController
     end
   end
 
-  def edit_html
-    render json: { html: render_to_string(partial: 'repository_columns/manage_column_modal_content.html.erb') }
+  def edit
+    render json: {
+      html: render_to_string(
+        partial: 'repository_columns/manage_column_modal_content.html.erb'
+      )
+    }
   end
 
   def destroy_html
@@ -96,21 +95,23 @@ class RepositoryColumnsController < ApplicationController
   include StringUtility
   AvailableRepositoryColumn = Struct.new(:id, :name)
 
-  def load_vars
-    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
+  def load_repository
+    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id])
     render_404 unless @repository
-    @repository_column = @repository.repository_columns.find_by_id(params[:id])
-    render_404 unless @repository_column
   end
 
-  def load_vars_nested
-    @repository = Repository.accessible_by_teams(current_team).find_by_id(params[:repository_id])
-    render_404 unless @repository
+  def load_column
+    @repository_column = @repository.repository_columns.find_by(id: params[:id])
+    render_404 unless @repository_column
   end
 
   def load_asset_type_columns
     render_403 unless can_read_repository?(@repository)
     @asset_columns = load_asset_columns(search_params[:q])
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_repository_columns?(@repository)
   end
 
   def check_manage_permissions

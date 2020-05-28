@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class StatusColumnsController < BaseColumnsController
+  class StatusColumnsController < RepositoryColumnsController
     include InputSanitizeHelper
     before_action :load_column, only: %i(update items)
     before_action :check_create_permissions, only: :create
