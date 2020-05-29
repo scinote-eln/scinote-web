@@ -201,10 +201,10 @@ class MyModule < ApplicationRecord
 
   def assigned_repositories
     team = experiment.project.team
-    team.repositories
-        .joins(repository_rows: :my_module_repository_rows)
-        .where(my_module_repository_rows: { my_module_id: id })
-        .group(:id)
+    Repository.accessible_by_teams(team)
+              .joins(repository_rows: :my_module_repository_rows)
+              .where(my_module_repository_rows: { my_module_id: id })
+              .group(:id)
   end
 
   def live_and_snapshot_repositories_list
