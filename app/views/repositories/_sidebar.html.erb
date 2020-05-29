@@ -16,11 +16,11 @@
         <% repositories.each do |repository| %>
           <li class="branch <%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
             <span class="tree-link no-indent" title="<%= repository.name %>">
+              <%= inventory_shared_status_icon(repository, current_team) %>
               <%= link_to repository_path(repository),
                           class: current_page?(repository_path(repository)) ? 'disabled line-wrap' : 'line-wrap',
                           data: { 'no-turbolink' => 'true', type: 'repository', id: repository.id } do %>
                 <%= repository.name  %>
-                <%= inventory_shared_status_icon(repository, current_team) %>
               <% end %>
             </span>
           </li>
