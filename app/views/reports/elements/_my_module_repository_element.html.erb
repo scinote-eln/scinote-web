@@ -5,7 +5,7 @@
 <% repository = assigned_repository_or_snapshot(my_module, element_id, repository, repository_snapshot) %>
 <% order ||= @order %>
 <% timestamp = Time.current + 1.year - 1.days %>
-<% rows_json = my_module.repository_json_hot(repository, order) %>
+<% rows_json = repository.present? ? my_module.repository_json_hot(repository, order) : {} %>
 <div class="report-element report-module-repository-element"
      data-sort-hot="1"
      data-ts="<%= timestamp.to_i %>"
@@ -37,7 +37,7 @@
     </div>
   </div>
   <div class="report-element-body">
-    <% if rows_json[:data].count > 0 %>
+    <% if rows_json.present? && rows_json[:data].count > 0 %>
       <input type="hidden" class="hot-table-contents hot-samples" value='<%= rows_json.to_json.force_encoding(Encoding::UTF_8) %>' />
       <div class="hot-table-container"></div>
       <table class="report-common-table-format"></table>
