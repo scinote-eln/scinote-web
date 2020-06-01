@@ -16,23 +16,3 @@
     </a>
   </li>
 <% end %>
-
-
-<% Repository.used_on_task_but_unshared(@my_module, current_team).each do |repository| %>
-  <li>
-    <a class="muted dropdown-item"
-       title="<%= repository.name %>"
-       href="<%= unshared_inventory_my_module_path(inventory_id: repository.id)%>">
-
-      <% if enable_counters %>
-        <% cache [repository, @my_module] do %>
-          <%= truncate(repository.name) %>
-          <span class="assigned-items-counter"><%= "(#{@my_module.repository_rows_count(repository)})" %></span>
-        <% end %>
-      <% else %>
-        <%= truncate(repository.name) %>
-        <span class="assigned-items-counter"><i class="fas fa-spinner fa-spin"></i></span>
-      <% end %>
-    </a>
-  </li>
-<% end %>

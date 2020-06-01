@@ -7,24 +7,14 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars,
-                only: %i(show update destroy description due_date protocols
-                         results samples activities activities_tab
-                         assign_samples unassign_samples delete_samples
-                         toggle_task_state samples_index archive
-                         complete_my_module repository repository_index
-                         assign_repository_records unassign_repository_records
-                         unassign_repository_records_modal
-                         assign_repository_records_modal
-                         repositories_dropdown update_description update_protocol_description unshared_inventory)
-  before_action :load_vars_nested, only: %i(new create)
+  before_action :load_vars
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
                                            unassign_repository_records_modal
                                            assign_repository_records_modal
                                            repository_index)
   before_action :load_projects_tree, only: %i(protocols results activities
-                                              samples repository archive unshared_inventory)
+                                              samples repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions,
                 only: %i(description due_date update_description update_protocol_description)
@@ -523,11 +513,6 @@ class MyModulesController < ApplicationController
         format.json { render json: {}, status: :unprocessable_entity }
       end
     end
-  end
-
-  def unshared_inventory
-    @inventory = Repository.used_on_task_but_unshared(@my_module, current_team).find(params[:inventory_id])
-    @inventory_admin = @inventory.created_by
   end
 
   private
