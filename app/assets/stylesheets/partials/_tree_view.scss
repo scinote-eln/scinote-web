@@ -121,9 +121,15 @@
 #repo-tree {
   height: calc(100% - 50px);
 
+  .line-wrap {
+    padding-right: 3em;
+  }
+
   .fas-custom {
-    float: right;
-    margin-right: 15px;
+    flex-shrink: 0;
+    margin-right: 1em;
+    position: absolute;
+    right: 0;
     top: 17px;
   }
 
