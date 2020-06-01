@@ -5,7 +5,7 @@
   <%= render partial: "sidebar", locals: { repositories: @repositories } %>
   <div class="content-pane flexible">
     <div class="content-header">
-      <h1>Inventories</h1>
+      <h1><%= t('libraries.index.head_title') %></h1>
     </div>
     <div class="content-body">
     </div>
@@ -21,10 +21,10 @@
                 <span class="sci-checkbox-label"></span>
               </div>
             </th>
-            <th>Name</th>
-            <th>No. of items</th>
-            <th>Shared</th>
-            <th>Ownership</th>
+            <th><%= t('libraries.index.table.name') %></th>
+            <th><%= t('libraries.index.table.number_of_items') %></th>
+            <th><%= t('libraries.index.table.shared') %></th>
+            <th><%= t('libraries.index.table.shared') %></th>
             <th>Added on</th>
             <th>Added by</th>
           </tr>

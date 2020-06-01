@@ -10,6 +10,20 @@ describe RepositoriesController, type: :controller do
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:action) { post :create, params: params, format: :json }
 
+  describe 'index' do
+    let(:repository) { create :repository, team: team }
+    let(:action) { get :index, format: :json }
+
+    it 'correct JSON format' do
+      repository
+      action
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response[0].keys).to contain_exactly(
+        'DT_RepositoryId', '1', '2', '3', '4', '5', '6', 'repositoryUrl'
+      )
+    end
+  end
+
   describe 'POST create' do
     let(:params) { { repository: { name: 'My Repository' } } }
 
