@@ -145,6 +145,7 @@ class MyModulesController < ApplicationController
   def update
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
+    name_changed = @my_module.name_changed?
     description_changed = @my_module.description_changed?
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
@@ -165,6 +166,7 @@ class MyModulesController < ApplicationController
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
         end
 
+        log_activity(:rename_task) if name_changed
         log_start_date_change_activity(start_date_changes) if start_date_changes.present?
         log_due_date_change_activity(due_date_changes) if due_date_changes.present?
       end
