@@ -317,7 +317,7 @@ class ProjectsController < ApplicationController
       @current_team = current_team if current_team
       @current_team ||= current_user.teams.first
       @current_sort ||= 'new'
-      @projects_tree = current_user.projects_tree(@current_team, @current_sort)
+      @projects_tree = current_user.projects_tree(@current_team, 'atoz')
     else
       @projects_tree = []
     end
