@@ -196,6 +196,7 @@ class Repository < RepositoryBase
                                           original_repository: self,
                                           my_module: my_module,
                                           created_by: created_by,
+                                          team: my_module.experiment.project.team,
                                           permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:not_shared])
     repository_snapshot.provisioning!
     repository_snapshot.reload
