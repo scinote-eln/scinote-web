@@ -1,0 +1,25 @@
+.content-pane {
+  background-color: $color-white;
+  margin: 20px 0;
+  padding: 25px 20px;
+
+  &.flexible {
+    margin: 0;
+    padding: 0 .5em;
+  }
+
+  .content-header {
+    align-items: center;
+    border-bottom: $border-default;
+    display: flex;
+    height: 5em;
+
+    h1 {
+      margin: 0;
+    }
+  }
+
+  .content-body {
+
+  }
+}

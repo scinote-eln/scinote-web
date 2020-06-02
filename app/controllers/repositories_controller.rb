@@ -6,6 +6,7 @@ class RepositoriesController < ApplicationController
   include ActionView::Context
   include IconsHelper
   include TeamsHelper
+  include RepositoriesDatatableHelper
 
   before_action :switch_team_with_param, only: :show
   before_action :load_repository, except: %i(index create create_modal)
@@ -21,8 +22,12 @@ class RepositoriesController < ApplicationController
   layout 'fluid'
 
   def index
-    redirect_to repository_path(@repositories.first) and return unless @repositories.length.zero? && current_team
-    render 'repositories/index'
+    respond_to do |format|
+      format.html do; end
+      format.json do
+        render json: prepare_repositories_datatable(@repositories, current_team, params)
+      end
+    end
   end
 
   def show

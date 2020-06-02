@@ -3,27 +3,46 @@
 
 <% if current_team %>
   <%= render partial: "sidebar", locals: { repositories: @repositories } %>
-  <%
-    # show only if no repositories present. If the team will have them we will
-    # handle this in left side navigation bar
-  %>
-  <div class="content-pane">
-    <div class="jumbotron text-center" style="margin-top:12%">
-      <strong><%=t 'libraries.index.no_libraries.text' %></strong>
+  <div class="content-pane flexible">
+    <div class="content-header">
+      <h1><%= t('libraries.index.head_title') %></h1>
+    </div>
+    <div class="content-body">
+    </div>
+    <template id="activeRepositoriesListTable">
+      <table id="repositoriesList" class="table"
+             data-source="<%= team_repositories_path(current_team, format: :json) %>"
+      >
+        <thead>
+          <tr>
+            <th>
+              <div class="sci-checkbox-container">
+                <input value="1" type="checkbox" class="sci-checkbox">
+                <span class="sci-checkbox-label"></span>
+              </div>
+            </th>
+            <th><%= t('libraries.index.table.name') %></th>
+            <th><%= t('libraries.index.table.number_of_items') %></th>
+            <th><%= t('libraries.index.table.shared') %></th>
+            <th><%= t('libraries.index.table.shared') %></th>
+            <th>Added on</th>
+            <th>Added by</th>
+          </tr>
+        </thead>
+      </table>
+    </template>
+    <template id="activeRepositoriesListButtons">
       <% if can_create_repositories?(current_team) %>
-        <h2><strong><%=t 'libraries.index.no_libraries.title' %><strong></h2>
-        <br />
         <a class="btn btn-primary btn-lg create-new-repository"
-           data-remote="true"
-           href="<%= create_modal_team_repositories_path(current_team) %>">
+               data-remote="true"
+               href="<%= create_modal_team_repositories_path(current_team) %>">
           <span class="fas fa-plus"></span>
           <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
         </a>
-      <% else %>
-        <p class="no-permission-title"><strong><%=t 'libraries.index.no_libraries.no_permission_title' %></strong></p>
       <% end %>
-    </div>
+    </template>
   </div>
 <% end %>
 
 <%= javascript_include_tag "repositories/index" %>
+<%= stylesheet_link_tag 'datatables' %>

@@ -6,9 +6,16 @@
   .main-actions {
     display: flex;
     flex-wrap: wrap;
+    padding: 1em 0;
 
     .toolbar {
       flex-grow: 1;
+    }
+  }
+
+  .dataTables_scrollHead {
+    .dataTable {
+      margin-top: 0 !important;
     }
   }
 
