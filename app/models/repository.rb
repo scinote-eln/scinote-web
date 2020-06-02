@@ -15,6 +15,7 @@ class Repository < RepositoryBase
            inverse_of: :original_repository
 
   before_save :sync_name_with_snapshots, if: :name_changed?
+  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
   before_destroy :refresh_report_references_on_destroy, prepend: true
 
   validates :name,
@@ -33,12 +34,6 @@ class Repository < RepositoryBase
              Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
              Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write])
       .distinct
-  }
-
-  scope :used_on_task_but_unshared, lambda { |task, team|
-    where(id: task.repository_rows
-      .select(:repository_id))
-      .where.not(id: accessible_by_teams(team.id).select(:id)).distinct
   }
 
   def self.within_global_limits?
@@ -210,6 +205,17 @@ class Repository < RepositoryBase
 
   def assigned_rows(my_module)
     repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
+  end
+
+  def unassign_unshared_items
+    return if shared_read? || shared_write?
+
+    MyModuleRepositoryRow.joins(my_module: { experiment: { project: :team } })
+                         .joins(repository_row: :repository)
+                         .where(repository_rows: { repository: self })
+                         .where.not(my_module: { experiment: { projects: { team: team } } })
+                         .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
+                         .destroy_all
   end
 
   private
