@@ -637,8 +637,6 @@ var dropdownSelector = (function() {
                   <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
-      console.log(selector.data('config').labelHTML);
-
       if (selector.data('config').labelHTML) {
         tag.find('.tag-label').html(label);
       } else {

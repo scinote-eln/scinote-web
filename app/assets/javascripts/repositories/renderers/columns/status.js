@@ -4,15 +4,16 @@
 var StatusColumnHelper = (function() {
   function statusSelect(select, url, value) {
     var selectedOption = '';
-    if (value && value.value) {
-      selectedOption = `<option value="${value.value}">${value.label}</option>`;
-    }
+    var selectObject = $(`<select id="${select}" 
+                                  data-placeholder = "${I18n.t('repositories.table.status.set_status')}"
+                                  data-ajax-url = "${url}" ></select>`);
 
-    return $(`<select
-              id="${select}"
-              data-placeholder = "${I18n.t('repositories.table.status.set_status')}"
-              data-ajax-url = "${url}"
-            >${selectedOption}</select>`);
+    if (value && value.value) {
+      selectedOption = $(`<option value="${value.value}"></option>`);
+      selectedOption.text(value.label);
+      selectedOption.appendTo(selectObject);
+    }
+    return selectObject;
   }
 
   function statusHiddenField(formId, columnId, value) {
@@ -46,7 +47,9 @@ var StatusColumnHelper = (function() {
       },
       tagClass: 'emoji-status',
       tagLabel: (data) => {
-        return twemoji.parse(data.label);
+        var render = $('<div>').html(twemoji.parse(data.label));
+        render.find(':not(img)').remove();
+        return render.html();
       }
     });
   }

@@ -4,19 +4,21 @@
 var ChecklistColumnHelper = (function() {
   function checklistSelect(select, url, values) {
     var selectedOptions = '';
+    var selectObject = $(`<select id="${select}"
+                                  data-placeholder = "${I18n.t('repositories.table.checklist.set_checklist')}"
+                                  data-ajax-url = "${url}"
+                                  data-combine-tags="true"
+                                  data-select-multiple-all-selected="${I18n.t('libraries.manange_modal_column.checklist_type.all_options')}"
+                                  data-select-multiple-name="${I18n.t('libraries.manange_modal_column.checklist_type.multiple_options')}">${selectedOptions}</select>`);
     if (values) {
       $.each(values, function(i, option) {
-        selectedOptions += `<option value="${option.value}">${option.label}</option>`;
+        var item = $(`<option value="${option.value}"></option>`);
+        item.text(option.label);
+        item.appendTo(selectObject);
       });
     }
-    return $(`<select 
-              id="${select}"
-              data-placeholder = "${I18n.t('repositories.table.checklist.set_checklist')}"
-              data-ajax-url = "${url}"
-              data-combine-tags="true"
-              data-select-multiple-all-selected="${I18n.t('libraries.manange_modal_column.checklist_type.all_options')}"
-              data-select-multiple-name="${I18n.t('libraries.manange_modal_column.checklist_type.multiple_options')}"
-            >${selectedOptions}</select>`);
+
+    return selectObject;
   }
 
   function checklistHiddenField(formId, columnId, values) {
