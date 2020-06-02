@@ -163,7 +163,8 @@ var RepositoryColumns = (function() {
         optionLabel: delimiterOptionsRender,
         tagClass: 'delimiter-icon-dropdown',
         tagLabel: delimiterOptionsRender,
-        disableSearch: true
+        disableSearch: true,
+        labelHTML: true
       };
       $.get(modalUrl, (data) => {
         $manageModal.find('.modal-content').html(data.html)
