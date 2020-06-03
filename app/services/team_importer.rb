@@ -121,6 +121,11 @@ class TeamImporter
         repository_json['repository_rows'].each do |repository_row_json|
           create_repository_cells(repository_row_json['repository_cells'], team)
         end
+        repository_json['repository_snapshots'].each do |repository_snapshot_json|
+          repository_snapshot_json['repository_rows'].each do |repository_snapshot_row_json|
+            create_repository_cells(repository_snapshot_row_json['repository_cells'], team)
+          end
+        end
       end
 
       create_activities(team_json['activities'], team)
@@ -415,10 +420,16 @@ class TeamImporter
     end
   end
 
-  def create_repositories(repositories_json, team)
+  def create_repositories(repositories_json, team, snapshots = false)
     puts 'Creating repositories...'
     repositories_json.each do |repository_json|
-      repository = Repository.new(repository_json['repository'])
+      if snapshots
+        repository = RepositorySnapshot.new(repository_json['repository'])
+        repository.my_module_id = @my_module_mappings[repository.my_module_id]
+        repository.parent_id = @repository_mappings[repository.parent_id]
+      else
+        repository = Repository.new(repository_json['repository'])
+      end
       orig_repository_id = repository.id
       repository.id = nil
       repository.team = team
@@ -443,7 +454,6 @@ class TeamImporter
             created_by_id = find_user(repository_column.created_by_id)
             repository_list_item = RepositoryListItem.new(data: list_item['data'])
             repository_list_item.repository_column = repository_column
-            repository_list_item.repository = repository
             repository_list_item.created_by_id = created_by_id
             repository_list_item.last_modified_by_id = created_by_id
             repository_list_item.save!
@@ -455,7 +465,6 @@ class TeamImporter
             created_by_id = find_user(repository_column.created_by_id)
             repository_checklist_item = RepositoryChecklistItem.new(data: checklist_item['data'])
             repository_checklist_item.repository_column = repository_column
-            repository_checklist_item.repository = repository
             repository_checklist_item.created_by_id = created_by_id
             repository_checklist_item.last_modified_by_id = created_by_id
             repository_checklist_item.save!
@@ -470,7 +479,6 @@ class TeamImporter
               icon: status_item['icon']
             )
             repository_status_item.repository_column = repository_column
-            repository_status_item.repository = repository
             repository_status_item.created_by_id = created_by_id
             repository_status_item.last_modified_by_id = created_by_id
             repository_status_item.save!
@@ -480,6 +488,8 @@ class TeamImporter
         end
       end
       create_repository_rows(repository_json['repository_rows'], repository)
+
+      create_repositories(repository_json['repository_snapshots'], team, true) unless snapshots
     end
   end
 
@@ -986,6 +996,10 @@ class TeamImporter
       repository_value = RepositoryAssetValue.new(asset: asset)
     when 'RepositoryChecklistValue'
       repository_value = RepositoryChecklistValue.new(cell_json)
+      value_json['repository_value_checklist'].each do |item|
+        item_id = find_checklist_item_id(item['repository_checklist_item_id']).to_i
+        repository_value.repository_checklist_items << RepositoryChecklistItem.find(item_id)
+      end
     when 'RepositoryStatusValue'
       list_item_id = find_status_item_id(cell_json['repository_status_item_id'])
       repository_value = RepositoryStatusValue.new(
@@ -1002,13 +1016,5 @@ class TeamImporter
     repository_value.repository_cell = repository_cell
     repository_cell.value = repository_value
     repository_value.save!
-
-    if repository_cell.value_type == 'RepositoryChecklistValue'
-      value_json['repository_value_checklist'].each do |item|
-        item_id = find_checklist_item_id(item['repository_checklist_item_id']).to_i
-        RepositoryChecklistItemsValue.create!(repository_checklist_value: repository_value,
-                                                  repository_checklist_item_id: item_id)
-      end
-    end
   end
 end
