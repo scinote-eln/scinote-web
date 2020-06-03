@@ -115,7 +115,7 @@ module ModelExporters
     end
 
     def repository(repository)
-      {
+      repositories = {
         repository: repository,
         repository_columns: repository.repository_columns.map do |c|
           repository_column(c)
@@ -124,6 +124,10 @@ module ModelExporters
           repository_row(r)
         end
       }
+      unless repository.is_a?(RepositorySnapshot)
+        repositories[:repository_snapshots] = repository.repository_snapshots.map { |r| repository(r) }
+      end
+      repositories
     end
 
     def repository_row(repository_row)
