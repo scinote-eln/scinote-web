@@ -322,11 +322,6 @@ Rails.application.routes.draw do
         # Renders sample datatable for single project (ajax action)
         # post 'samples_index'
         get 'experiment_archive' # Experiment archive for single project
-        # post :delete_samples,
-        #      constraints: CommitParamRouting.new(
-        #        ProjectsController::DELETE_SAMPLES
-        #      ),
-        #      action: :delete_samples
       end
 
       # This route is defined outside of member block
@@ -356,11 +351,6 @@ Rails.application.routes.draw do
         get 'fetch_workflow_img' # Get udated workflow img
         # Renders sample datatable for single project (ajax action)
       #   post 'samples_index'
-      #   post :delete_samples,
-      #        constraints: CommitParamRouting.new(
-      #          ExperimentsController::DELETE_SAMPLES
-      #        ),
-      #        action: :delete_samples
       end
     end
 
@@ -433,49 +423,9 @@ Rails.application.routes.draw do
               as: 'update_protocol_description'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
-        # get 'samples' # Samples view for single module
-        # Repository view for single module
-        post 'repository_index/:repository_id',
-             to: 'my_modules#repository_index',
-             as: :repository_index
-        post 'assign_repository_records_modal/:repository_id',
-            to: 'my_modules#assign_repository_records_modal',
-            as: :assign_repository_records_modal
-        post 'assign_repository_records/:repository_id',
-             to: 'my_modules#assign_repository_records',
-             as: :assign_repository_records
-        post 'unassign_repository_records_modal/:repository_id',
-            to: 'my_modules#unassign_repository_records_modal',
-            as: :unassign_repository_records_modal
-        post 'unassign_repository_records/:repository_id',
-            to: 'my_modules#unassign_repository_records',
-            as: :unassign_repository_records
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
-        get 'repositories_dropdown',
-            to: 'my_modules#repositories_dropdown',
-            as: :repositories_dropdown
-        get 'repositories_dropdown/:repository_id',
-            to: 'my_modules#repositories_dropdown',
-            as: :repositories_dropdown_repository_tab
-        # Renders sample datatable for single module (ajax action)
-        # post 'samples_index'
-        # post :assign_samples,
-        #      constraints: CommitParamRouting.new(
-        #        MyModulesController::ASSIGN_SAMPLES
-        #      ),
-        #      action: :assign_samples
-        # post :assign_samples,
-        #      constraints: CommitParamRouting.new(
-        #        MyModulesController::UNASSIGN_SAMPLES
-        #      ),
-        #      action: :unassign_samples
-        # post :assign_samples,
-        #      constraints: CommitParamRouting.new(
-        #        MyModulesController::DELETE_SAMPLES
-        #      ),
-        #      action: :delete_samples
       end
 
       # Those routes are defined outside of member block

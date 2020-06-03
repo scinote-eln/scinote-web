@@ -581,10 +581,6 @@ var RepositoryDatatable = (function(global) {
         $('div.toolbar-filter-buttons').prependTo('div.filter-container');
         $('div.toolbar-filter-buttons').show();
 
-        // Append buttons for task inventory
-        $('div.toolbarButtons').appendTo('div.toolbar');
-        $('div.toolbarButtons').show();
-
         RepositoryDatatableRowEditor.initFormSubmitAction(TABLE);
         initItemEditIcon();
         initSaveButton();

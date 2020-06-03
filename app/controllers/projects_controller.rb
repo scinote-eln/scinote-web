@@ -20,9 +20,6 @@ class ProjectsController < ApplicationController
   # except parameter could be used but it is not working.
   layout 'fluid'
 
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
-
   def index
     respond_to do |format|
       format.json do
