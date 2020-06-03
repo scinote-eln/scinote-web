@@ -15,6 +15,8 @@ module RepositoriesDatatableHelper
         '4': escape_input(repository.team.name),
         '5': I18n.l(repository.created_at, format: :full),
         '6': escape_input(repository.created_by.full_name),
+        '7': 'Archived on',
+        '8': 'Archived by',
         'repositoryUrl': repository_path(repository)
       )
     end

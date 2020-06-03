@@ -17,6 +17,37 @@
     h1 {
       margin: 0;
     }
+
+    .view-switch {
+      margin-left: auto;
+
+      .caret {
+          margin: 8px 0 8px 8px;
+        }
+      &.open {
+        .caret {
+          transform: rotateX(180deg)
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: 250px;
+
+        li {
+          cursor: pointer;
+          padding: 1em;
+
+          .button-icon {
+            margin-right: .5em;
+          }
+
+          &:hover {
+            background: $color-concrete;
+          }
+        }
+      }
+    }
   }
 
   .content-body {

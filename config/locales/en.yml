@@ -1312,6 +1312,7 @@ en:
         error_flash: "Something went wrong! Please try again later."
     index:
       head_title: "Inventories"
+      head_title_archived: "Archived Inventories"
       table:
         name: "Name"
         number_of_items: "No. of items"
@@ -1319,6 +1320,17 @@ en:
         ownership: "Ownership"
         added_on: "Added on"
         added_by: "Added by"
+        archived_on: "Archived on"
+        archived_by: "Archived by"
+      switch_view:
+        active: Show active inventories
+        archived: Show archived inventories
+      buttons:
+        edit: "Edit"
+        duplicate: "Duplicate"
+        archive: "Archive"
+        restore: "Restore"
+        delete: "Delete"
       no_libraries:
         create_new_button: "New Inventory"
     show:
