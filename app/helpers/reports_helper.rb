@@ -125,6 +125,11 @@ module ReportsHelper
   def assigned_repository_or_snapshot(my_module, element_id, snapshot, repository)
     if element_id
       repository = Repository.accessible_by_teams(my_module.experiment.project.team).find_by(id: element_id)
+      # Check for default set snapshots when repository still exists
+      if repository
+        selected_snapshot = repository.repository_snapshots.where(my_module: my_module).find_by(selected: true)
+        repository = selected_snapshot if selected_snapshot
+      end
       repository ||= RepositorySnapshot.joins(my_module: { experiment: :project })
                                        .where(my_module: { experiments: { project: my_module.experiment.project } })
                                        .find_by(id: element_id)
