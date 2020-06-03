@@ -137,6 +137,26 @@ module ReportsHelper
     repository || snapshot
   end
 
+  def assigned_repositories_in_project_list(project)
+    live_repositories = Repository.accessible_by_teams(project.team)
+                                  .joins(repository_rows:
+                                           { my_module_repository_rows: { my_module: { experiment: :project } } })
+                                  .where(repository_rows:
+                                           { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
+                                  .select(:id, :name)
+
+    snapshots = RepositorySnapshot.joins(my_module: { experiment: :project })
+                                  .where('experiments.project_id = ?', project.id)
+                                  .left_outer_joins(:original_repository)
+                                  .where(original_repositories_repositories: { id: nil })
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .order(:parent_id, updated_at: :desc)
+                                  .select(:id, :name)
+
+    snapshots.each { |snapshot| snapshot.name = "#{snapshot.name} #{t('projects.reports.index.deleted')}" }
+    (live_repositories + snapshots).sort_by { |r| r.name.downcase }
+  end
+
   def step_status_label(step)
     if step.completed
       style = 'success'
