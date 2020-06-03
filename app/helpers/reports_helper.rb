@@ -151,7 +151,6 @@ module ReportsHelper
                                   .where(original_repositories_repositories: { id: nil })
                                   .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
                                   .order(:parent_id, updated_at: :desc)
-                                  .select(:id, :name)
 
     snapshots.each { |snapshot| snapshot.name = "#{snapshot.name} #{t('projects.reports.index.deleted')}" }
     (live_repositories + snapshots).sort_by { |r| r.name.downcase }
