@@ -48,15 +48,26 @@
     });
   }
 
+  function reloadSidebar() {
+    var slidePanel = $('#slide-panel');
+    var archived;
+    if ($('.repositories-index').hasClass('archived')) archived = true;
+    $.get(slidePanel.data('sidebar-url'), { archived: archived }, function(data) {
+      slidePanel.html(data.html);
+    });
+  }
+
   function initRepositoryViewSwitcher() {
     var viewSwitch = $('.view-switch');
     viewSwitch.on('click', '.view-switch-archived', function() {
       $('.repositories-index').toggleClass('archived active');
       initRepositoriesDataTable('#repositoriesList', true);
+      reloadSidebar();
     });
     viewSwitch.on('click', '.view-switch-active', function() {
       $('.repositories-index').toggleClass('archived active');
       initRepositoriesDataTable('#repositoriesList');
+      reloadSidebar();
     });
   }
 

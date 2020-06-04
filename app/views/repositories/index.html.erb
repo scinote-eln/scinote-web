@@ -3,7 +3,7 @@
 
 <% if current_team %>
   <%= render partial: "sidebar", locals: { repositories: @repositories } %>
-  <div class="content-pane flexible <%= params[:archived] ? 'archived' : 'active'  %> repositories-index">
+  <div class="content-pane flexible active repositories-index">
     <div class="content-header">
       <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
       <h1 data-view-mode="archived"><%= t('libraries.index.head_title_archived') %></h1>

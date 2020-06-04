@@ -9,10 +9,10 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
 
   before_action :switch_team_with_param, only: :show
-  before_action :load_repository, except: %i(index create create_modal)
-  before_action :load_repositories, only: %i(index show)
-  before_action :check_view_all_permissions, only: :index
-  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records)
+  before_action :load_repository, except: %i(index create create_modal sidebar)
+  before_action :load_repositories, only: %i(index show sidebar)
+  before_action :check_view_all_permissions, only: %i(index sidebar)
+  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar)
   before_action :check_manage_permissions, only: %i(destroy destroy_modal rename_modal update)
   before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only: %i(create_modal create)
@@ -28,6 +28,15 @@ class RepositoriesController < ApplicationController
         render json: prepare_repositories_datatable(@repositories, current_team, params)
       end
     end
+  end
+
+  def sidebar
+    render json: {
+      html: render_to_string(partial: 'repositories/sidebar_list.html.erb', locals: {
+                               repositories: @repositories,
+                               archived: params[:archived]
+                             })
+    }
   end
 
   def show
