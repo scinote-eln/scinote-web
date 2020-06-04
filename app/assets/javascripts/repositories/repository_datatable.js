@@ -644,9 +644,10 @@ var RepositoryDatatable = (function(global) {
       },
       error: function(ev) {
         if (ev.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-          );
+          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
+        } else {
+          animateSpinner(null, false);
+          HelperModule.flashAlertMsg(ev.responseJSON.flash, 'danger');
         }
       }
     });
@@ -672,9 +673,10 @@ var RepositoryDatatable = (function(global) {
         },
         error: function(ev) {
           if (ev.status === 403) {
-            HelperModule.flashAlertMsg(
-              I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-            );
+            HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
+          } else {
+            animateSpinner(null, false);
+            HelperModule.flashAlertMsg(ev.responseJSON.flash, 'danger');
           }
         }
       });
