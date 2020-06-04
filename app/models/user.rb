@@ -197,6 +197,9 @@ class User < ApplicationRecord
            class_name: 'Protocol',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by
+  has_many :archived_repositories,
+           class_name: 'RepositoryBase',
+           foreign_key: 'archived_by_id'
   has_many :assigned_my_module_repository_rows,
            class_name: 'MyModuleRepositoryRow',
            foreign_key: 'assigned_by_id'

@@ -1104,7 +1104,10 @@ CREATE TABLE public.repositories (
     parent_id bigint,
     status integer,
     selected boolean,
-    my_module_id bigint
+    my_module_id bigint,
+    archived boolean DEFAULT false NOT NULL,
+    archived_on timestamp without time zone,
+    archived_by_id bigint
 );
 
 
@@ -4765,6 +4768,13 @@ CREATE INDEX index_reports_on_user_id ON public.reports USING btree (user_id);
 
 
 --
+-- Name: index_repositories_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_archived_by_id ON public.repositories USING btree (archived_by_id);
+
+
+--
 -- Name: index_repositories_on_discarded_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5827,6 +5837,14 @@ ALTER TABLE ONLY public.my_modules
 
 ALTER TABLE ONLY public.steps
     ADD CONSTRAINT fk_rails_0f28e70afa FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repositories fk_rails_111f913cb7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_111f913cb7 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7194,6 +7212,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200113143828'),
 ('20200204100934'),
 ('20200326114643'),
-('20200331183640');
+('20200331183640'),
+('20200603125407');
 
 
