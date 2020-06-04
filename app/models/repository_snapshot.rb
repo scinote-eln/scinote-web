@@ -19,7 +19,9 @@ class RepositorySnapshot < RepositoryBase
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
   end
 
-  def assigned_rows(_my_module)
+  def assigned_rows(my_module)
+    return RepositoryRow.none if my_module != self.my_module
+
     repository_rows
   end
 
