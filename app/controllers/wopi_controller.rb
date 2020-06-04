@@ -48,6 +48,8 @@ class WopiController < ActionController::Base
     put_file
   end
 
+  private
+
   def check_file_info
     asset_owner_id = @asset.id.to_s
     asset_owner_id = @asset.created_by_id.to_s if @asset.created_by_id
@@ -69,7 +71,7 @@ class WopiController < ActionController::Base
       UserCanWrite: @can_write,
       UserCanNotWriteRelative: true,
       CloseUrl: @close_url,
-      DownloadUrl: url_for(controller: 'assets', action: 'file_url', id: @asset.id, host: ENV['WOPI_USER_HOST']),
+      DownloadUrl: url_for(controller: 'assets', action: 'download', id: @asset.id, host: ENV['WOPI_USER_HOST']),
       HostEditUrl: url_for(controller: 'assets', action: 'edit', id: @asset.id, host: ENV['WOPI_USER_HOST']),
       HostViewUrl: url_for(controller: 'assets', action: 'view', id: @asset.id, host: ENV['WOPI_USER_HOST']),
       BreadcrumbBrandName: @breadcrumb_brand_name,
@@ -259,8 +261,6 @@ class WopiController < ActionController::Base
       end
     end
   end
-
-  private
 
   def authenticate_user_from_token!
     wopi_token = params[:access_token]

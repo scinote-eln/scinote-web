@@ -2,11 +2,12 @@
 
 module RepositoryDatatable
   class RepositoryStatusValueSerializer < RepositoryBaseValueSerializer
+    include InputSanitizeHelper
     def value
       {
         id: object.repository_status_item.id,
         icon: object.repository_status_item.icon,
-        status: object.repository_status_item.status
+        status: escape_input(object.repository_status_item.status)
       }
     end
   end

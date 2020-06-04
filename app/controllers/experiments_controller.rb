@@ -91,14 +91,18 @@ class ExperimentsController < ApplicationController
                                 end
 
     old_text = @experiment.description
-    @experiment.update(experiment_params)
+    @experiment.assign_attributes(experiment_params)
     @experiment.last_modified_by = current_user
+    name_changed = @experiment.name_changed?
+    description_changed = @experiment.description_changed?
 
     if @experiment.save
       experiment_annotation_notification(old_text) if old_text
 
       activity_type = if experiment_params[:archived] == 'false'
                         :restore_experiment
+                      elsif name_changed && !description_changed
+                        :rename_experiment
                       else
                         :edit_experiment
                       end
@@ -286,7 +290,7 @@ class ExperimentsController < ApplicationController
   def load_projects_tree
     # Switch to correct team
     current_team_switch(@experiment.project.team) unless @experiment.project.nil?
-    @projects_tree = current_user.projects_tree(current_team, nil)
+    @projects_tree = current_user.projects_tree(current_team, 'atoz')
   end
 
   def check_view_permissions

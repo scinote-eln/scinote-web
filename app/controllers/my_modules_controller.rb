@@ -7,24 +7,14 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars,
-                only: %i(show update destroy description due_date protocols
-                         results samples activities activities_tab
-                         assign_samples unassign_samples delete_samples
-                         toggle_task_state samples_index archive
-                         complete_my_module repository repository_index
-                         assign_repository_records unassign_repository_records
-                         unassign_repository_records_modal
-                         assign_repository_records_modal
-                         repositories_dropdown update_description update_protocol_description unshared_inventory)
-  before_action :load_vars_nested, only: %i(new create)
+  before_action :load_vars
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
                                            unassign_repository_records_modal
                                            assign_repository_records_modal
                                            repository_index)
   before_action :load_projects_tree, only: %i(protocols results activities
-                                              samples repository archive unshared_inventory)
+                                              samples repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions,
                 only: %i(description due_date update_description update_protocol_description)
@@ -145,6 +135,7 @@ class MyModulesController < ApplicationController
   def update
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
+    name_changed = @my_module.name_changed?
     description_changed = @my_module.description_changed?
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
@@ -165,6 +156,7 @@ class MyModulesController < ApplicationController
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
         end
 
+        log_activity(:rename_task) if name_changed
         log_start_date_change_activity(start_date_changes) if start_date_changes.present?
         log_due_date_change_activity(due_date_changes) if due_date_changes.present?
       end
@@ -525,11 +517,6 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def unshared_inventory
-    @inventory = Repository.used_on_task_but_unshared(@my_module, current_team).find(params[:inventory_id])
-    @inventory_admin = @inventory.created_by
-  end
-
   private
 
   def task_completion_activity
@@ -582,7 +569,7 @@ class MyModulesController < ApplicationController
   def load_projects_tree
     # Switch to correct team
     current_team_switch(@project.team) unless @project.nil?
-    @projects_tree = current_user.projects_tree(current_team, nil)
+    @projects_tree = current_user.projects_tree(current_team, 'atoz')
   end
 
   def check_manage_permissions

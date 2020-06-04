@@ -2,7 +2,9 @@
   border: $border-default;
   border-radius: $border-radius-default;
   display: flex;
+  margin: 0 15px;
   padding: 16px;
+  width: calc(100% - 30px);
 
   .left-block {
     align-items: center;

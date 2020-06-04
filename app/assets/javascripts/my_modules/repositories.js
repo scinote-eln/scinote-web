@@ -221,7 +221,7 @@ var MyModuleRepositories = (function() {
     versionsSidebar.find('.list-group-item').removeClass('active');
     versionsSidebar.find(`[data-id="${currentId}"]`).addClass('active');
 
-    if (!versionsSidebar.find(`[data-id="${currentId}"]`).data('selected')) {
+    if (versionsSidebar.find(`[data-id="${currentId}"]`).attr('data-selected') == 'false') {
       $('#setDefaultVersionButton').parent().removeClass('hidden');
     } else {
       $('#setDefaultVersionButton').parent().addClass('hidden');
@@ -419,8 +419,8 @@ var MyModuleRepositories = (function() {
         data: data,
         success: function() {
           let versionsList = FULL_VIEW_MODAL.find('.repository-versions-list');
-          versionsList.find('.list-group-item').data('selected', false);
-          versionsList.find('.list-group-item.active').data('selected', true);
+          versionsList.find('.list-group-item').attr('data-selected', false);
+          versionsList.find('.list-group-item.active').attr('data-selected', true);
           $('#setDefaultVersionButton').parent().addClass('hidden');
           animateSpinner(null, false);
         }

@@ -392,6 +392,26 @@
       background-color: $color-concrete;
       border: 0;
       border-radius: 0;
+      margin: .5em 0;
+      position: relative;
+
+      &[data-selected="true"] {
+        &::after {
+          background-color: $brand-primary;
+          content: '';
+          height: 100%;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: .5em;
+        }
+
+        &.active {
+          &::after {
+            background-color: $color-black;
+          }
+        }
+      }
 
 
       .list-group-item-text {
