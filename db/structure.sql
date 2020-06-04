@@ -1516,7 +1516,10 @@ CREATE TABLE public.repository_rows (
     name character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    parent_id bigint
+    parent_id bigint,
+    archived boolean DEFAULT false NOT NULL,
+    archived_on timestamp without time zone,
+    archived_by_id integer
 );
 
 
@@ -7213,6 +7216,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200204100934'),
 ('20200326114643'),
 ('20200331183640'),
-('20200603125407');
+('20200603125407'),
+('20200604112350');
 
 

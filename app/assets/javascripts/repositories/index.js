@@ -5,10 +5,10 @@
   var REPOSITORIES_TABLE;
 
   function initRepositoriesDataTable(tableContainer, archived = false) {
-    var tableTemplate = archived ? $('#archivedRepositoriesListTable') : $('#activeRepositoriesListTable');
-    if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
-    $('.content-body').html(tableTemplate.html());
-    $.get($(tableContainer).data('source'), function(data) {
+    var tableTemplate = archived ? $('#archivedRepositoriesListTable').html() : $('#activeRepositoriesListTable').html();
+    $.get($(tableTemplate).data('source'), function(data) {
+      if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
+      $('.content-body').html(tableTemplate);
       REPOSITORIES_TABLE = $(tableContainer).DataTable({
         aaData: data,
         dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",

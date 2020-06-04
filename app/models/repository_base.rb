@@ -9,7 +9,7 @@ class RepositoryBase < ApplicationRecord
 
   belongs_to :team
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
-  belongs_to :archived_by, foreign_key: :archived_by_id, class_name: 'User', inverse_of: :repository, optional: true
+  belongs_to :archived_by, foreign_key: :archived_by_id, class_name: 'User', inverse_of: :archived_repositories, optional: true
   has_many :repository_columns, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :repository_rows, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :repository_table_states, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy

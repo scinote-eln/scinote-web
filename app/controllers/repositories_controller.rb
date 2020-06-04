@@ -351,6 +351,11 @@ class RepositoriesController < ApplicationController
 
   def load_repositories
     @repositories = Repository.accessible_by_teams(current_team).order('repositories.created_at ASC')
+    @repositories = if params[:archived]
+                      @repositories.archived
+                    else
+                      @repositories.active
+                    end
   end
 
   def set_inline_name_editing

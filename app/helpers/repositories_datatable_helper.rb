@@ -5,7 +5,7 @@ module RepositoriesDatatableHelper
 
   def prepare_repositories_datatable(repositories, team, _config)
     result = []
-    repositories = repositories.includes(:repository_rows, :team, :created_by)
+    repositories = repositories.includes(:repository_rows, :team, :created_by, :archived_by)
     repositories.each do |repository|
       result.push(
         'DT_RepositoryId': repository.id,
@@ -15,8 +15,8 @@ module RepositoriesDatatableHelper
         '4': escape_input(repository.team.name),
         '5': I18n.l(repository.created_at, format: :full),
         '6': escape_input(repository.created_by.full_name),
-        '7': 'Archived on',
-        '8': 'Archived by',
+        '7': (I18n.l(repository.archived_on, format: :full) if repository.archived_on),
+        '8': escape_input(repository.archived_by&.full_name),
         'repositoryUrl': repository_path(repository)
       )
     end
