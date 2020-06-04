@@ -7,6 +7,7 @@ class RepositoryRow < ApplicationRecord
   belongs_to :repository, class_name: 'RepositoryBase'
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User'
+  belongs_to :archived_by, foreign_key: :archived_by_id, class_name: 'User', inverse_of: :repository_row, optional: true
   has_many :repository_cells, -> { order(:id) }, dependent: :destroy
   has_many :repository_columns, through: :repository_cells
   has_many :my_module_repository_rows,
@@ -18,6 +19,13 @@ class RepositoryRow < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :created_by, presence: true
+  with_options if: :archived do
+    validates :archived_by, presence: true
+    validates :archived_on, presence: true
+  end
+
+  scope :active, -> { where(archived: false) }
+  scope :archived, -> { where(archived: true) }
 
   def self.viewable_by_user(user, teams)
     where(repository: Repository.viewable_by_user(user, teams))

@@ -200,6 +200,9 @@ class User < ApplicationRecord
   has_many :archived_repositories,
            class_name: 'RepositoryBase',
            foreign_key: 'archived_by_id'
+  has_many :archived_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'archived_by_id'
   has_many :assigned_my_module_repository_rows,
            class_name: 'MyModuleRepositoryRow',
            foreign_key: 'assigned_by_id'
