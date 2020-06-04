@@ -220,7 +220,7 @@ class MyModule < ApplicationRecord
                                   .order(:parent_id, updated_at: :desc)
 
     live_repositories = assigned_repositories
-                        .select('repositories.*, COUNT(repository_rows.id) AS assigned_rows_count')
+                        .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
                         .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
 
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
