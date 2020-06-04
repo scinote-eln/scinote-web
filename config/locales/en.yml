@@ -2246,6 +2246,7 @@ en:
       other: "tasks"
     public: "public"
     private: "private"
+    view: "View"
     search: "Search"
     file:
       choose: "Choose File"

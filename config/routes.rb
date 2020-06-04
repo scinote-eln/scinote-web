@@ -596,6 +596,9 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
+      member do
+        get :load_table
+      end
       # Save repository table state
       post 'state_save',
            to: 'user_repositories#save_table_state',
@@ -638,6 +641,7 @@ Rails.application.routes.draw do
           get :assigned_task_list
         end
       end
+
       collection do
         get :sidebar
         post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
