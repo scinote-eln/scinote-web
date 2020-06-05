@@ -26,9 +26,6 @@ var RepositoryDatatable = (function(global) {
 
   // var selectedRecord;
 
-  // Tells whether to filter only assigned repository records
-  var viewAssigned;
-
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
   $.fn.dataTable.Api.register('isColumnSearchable()', function(colSelector) {
@@ -65,8 +62,6 @@ var RepositoryDatatable = (function(global) {
         $('#copyRepositoryRecords').prop('disabled', true);
         $('#editRepositoryRecord').prop('disabled', true);
         $('#deleteRepositoryRecordsButton').prop('disabled', true);
-        $('#assignRepositoryRecords').prop('disabled', true);
-        $('#unassignRepositoryRecords').prop('disabled', true);
         $('#editDeleteCopy').hide();
       } else {
         if (rowsSelected.length === 1) {
@@ -77,8 +72,6 @@ var RepositoryDatatable = (function(global) {
         $('#exportRepositoriesButton').removeClass('disabled');
         $('#deleteRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
-        $('#assignRepositoryRecords').prop('disabled', false);
-        $('#unassignRepositoryRecords').prop('disabled', false);
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
           $('#editRepositoryRecord').prop('disabled', true);
@@ -96,8 +89,6 @@ var RepositoryDatatable = (function(global) {
       $('#addRepositoryRecord').prop('disabled', true);
       $('#editRepositoryRecord').prop('disabled', true);
       $('#deleteRepositoryRecordsButton').prop('disabled', true);
-      $('#assignRepositoryRecords').prop('disabled', true);
-      $('#unassignRepositoryRecords').prop('disabled', true);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
       $('th').addClass('disable-click');
       $('.repository-row-selector').prop('disabled', true);
@@ -264,10 +255,6 @@ var RepositoryDatatable = (function(global) {
   }
 
   function resetTableView() {
-    if ($('#assigned').text().length === 0) {
-      TABLE.column(1).visible(false);
-    }
-
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
       $('#toolbarButtonsDatatable').remove();
       $(data.html).appendTo('div.toolbar');
@@ -419,7 +406,6 @@ var RepositoryDatatable = (function(global) {
   }
 
   function dataTableInit() {
-    viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
       dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       stateSave: true,
@@ -435,9 +421,6 @@ var RepositoryDatatable = (function(global) {
       destroy: true,
       ajax: {
         url: $(TABLE_ID).data('source'),
-        data: function(d) {
-          d.assigned = viewAssigned;
-        },
         global: false,
         type: 'POST'
       },
@@ -617,10 +600,6 @@ var RepositoryDatatable = (function(global) {
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
 
-    $('#assignRepositories, #unassignRepositories').click(function() {
-      animateLoading();
-    });
-
     initRowSelection();
     bindExportActions();
     $(window).resize(() => {
@@ -636,47 +615,6 @@ var RepositoryDatatable = (function(global) {
     checkAvailableColumns();
     RepositoryDatatableRowEditor.addNewRow(TABLE);
     changeToEditMode();
-  };
-
-  global.onClickToggleAssignedRecords = function() {
-    $('.repository-assign-group > .btn').click(function() {
-      $('.btn-group > .btn').removeClass('active');
-      $(this).addClass('active');
-    });
-
-    $('#assigned-repo-records').on('click', function() {
-      viewAssigned = 'assigned';
-      return new Promise(function(resolve) {
-        resolve(TABLE.ajax.reload());
-      });
-    });
-    $('#all-repo-records').on('click', function() {
-      viewAssigned = 'all';
-      return new Promise(function(resolve) {
-        resolve(TABLE.ajax.reload());
-      });
-    });
-  };
-
-  global.hideAssignUnasignModal = function(id) {
-    $(id).modal('hide').promise().done(
-      function() {
-        $(id).remove();
-      }
-    );
-  };
-
-  global.openUnassignRecordsModal = function() {
-    $.post(
-      $('#unassignRepositoryRecords').data('unassign-url'),
-      { selected_rows: rowsSelected }
-    ).done(
-      function(data) {
-        $(data.html).appendTo('body').promise().done(function() {
-          $('#unassignRepositoryRecordModal').modal('show');
-        });
-      }
-    );
   };
 
   global.onClickDeleteRecord = function() {
