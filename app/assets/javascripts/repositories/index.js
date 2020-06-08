@@ -4,10 +4,11 @@
 
   var REPOSITORIES_TABLE;
 
-  function initRepositoriesDataTable(tableContainer) {
-    if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
-    $('.content-body').html($('#activeRepositoriesListTable').html());
-    $.get($(tableContainer).data('source'), function(data) {
+  function initRepositoriesDataTable(tableContainer, archived = false) {
+    var tableTemplate = archived ? $('#archivedRepositoriesListTable').html() : $('#activeRepositoriesListTable').html();
+    $.get($(tableTemplate).data('source'), function(data) {
+      if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
+      $('.content-body').html(tableTemplate);
       REPOSITORIES_TABLE = $(tableContainer).DataTable({
         aaData: data,
         dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
@@ -39,7 +40,7 @@
           var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
           DataTableHelpers.initLengthApearance(dataTableWrapper);
           DataTableHelpers.initSearchField(dataTableWrapper);
-          $('.content-body .toolbar').html($('#activeRepositoriesListButtons').html());
+          $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
           $('.create-new-repository').initializeModal('#create-repo-modal');
         }
@@ -47,5 +48,29 @@
     });
   }
 
+  function reloadSidebar() {
+    var slidePanel = $('#slide-panel');
+    var archived;
+    if ($('.repositories-index').hasClass('archived')) archived = true;
+    $.get(slidePanel.data('sidebar-url'), { archived: archived }, function(data) {
+      slidePanel.html(data.html);
+    });
+  }
+
+  function initRepositoryViewSwitcher() {
+    var viewSwitch = $('.view-switch');
+    viewSwitch.on('click', '.view-switch-archived', function() {
+      $('.repositories-index').toggleClass('archived active');
+      initRepositoriesDataTable('#repositoriesList', true);
+      reloadSidebar();
+    });
+    viewSwitch.on('click', '.view-switch-active', function() {
+      $('.repositories-index').toggleClass('archived active');
+      initRepositoriesDataTable('#repositoriesList');
+      reloadSidebar();
+    });
+  }
+
   initRepositoriesDataTable('#repositoriesList');
+  initRepositoryViewSwitcher();
 }());

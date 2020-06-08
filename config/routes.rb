@@ -643,6 +643,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get :sidebar
         post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
       end
 

@@ -19,7 +19,7 @@ describe RepositoriesController, type: :controller do
       action
       parsed_response = JSON.parse(response.body)
       expect(parsed_response[0].keys).to contain_exactly(
-        'DT_RepositoryId', '1', '2', '3', '4', '5', '6', 'repositoryUrl'
+        'DT_RepositoryId', '1', '2', '3', '4', '5', '6', '7', '8', 'repositoryUrl'
       )
     end
   end
