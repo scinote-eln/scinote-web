@@ -1519,7 +1519,7 @@ CREATE TABLE public.repository_rows (
     parent_id bigint,
     archived boolean DEFAULT false NOT NULL,
     archived_on timestamp without time zone,
-    archived_by_id integer
+    archived_by_id bigint
 );
 
 
@@ -5002,6 +5002,13 @@ CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.rep
 
 
 --
+-- Name: index_repository_rows_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows USING btree (archived_by_id);
+
+
+--
 -- Name: index_repository_rows_on_id_text; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6163,6 +6170,14 @@ ALTER TABLE ONLY public.projects
 
 
 --
+-- Name: repository_rows fk_rails_6b4114fff4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_rows
+    ADD CONSTRAINT fk_rails_6b4114fff4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: sample_my_modules fk_rails_6c0db0045d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7217,6 +7232,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200326114643'),
 ('20200331183640'),
 ('20200603125407'),
-('20200604112350');
+('20200604210943');
+
 
 
