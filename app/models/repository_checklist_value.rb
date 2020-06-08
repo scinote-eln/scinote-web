@@ -22,7 +22,7 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def export_formatted
-    repository_checklist_items.pluck(:data).map { |d| d.tr("\n", ' ') }.join("\n")
+    formatted(separator: repository_cell.repository_column.delimiter_char)
   end
 
   def data
@@ -77,7 +77,7 @@ class RepositoryChecklistValue < ApplicationRecord
   def self.import_from_text(text, attributes, _options = {})
     value = new(attributes)
     column = attributes.dig(:repository_cell_attributes, :repository_column)
-    text.split("\n").each do |item_text|
+    RepositoryImportParser::Util.split_by_delimiter(text: text, delimiter: column.delimiter_char).each do |item_text|
       checklist_item = column.repository_checklist_items.find { |item| item.data == item_text }
 
       if checklist_item.blank?
