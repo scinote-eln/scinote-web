@@ -1,0 +1,9 @@
+<div class="dropdown view-switch">
+  <a href="#" class="btn btn-light view-switch-button" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span><%= t('general.view') %></span>
+    <span class="caret pull-right"></span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="viewSwitchButton">
+    <%= yield %>
+  </ul>
+</div>
