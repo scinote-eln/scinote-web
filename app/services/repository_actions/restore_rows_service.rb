@@ -11,7 +11,7 @@ module RepositoryActions
           log_activity(:restore_inventory_item, row)
         end
       rescue ActiveRecord::RecordNotSaved
-        @errors[:restoring_error] = 'Cannot restore all items'
+        @errors[:restoring_error] = I18n.t('repositories.restore_records.unsuccess_flash', @repository.name)
         raise ActiveRecord::Rollback
       end
 

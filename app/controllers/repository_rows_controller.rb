@@ -21,6 +21,7 @@ class RepositoryRowsController < ApplicationController
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
     @repository_rows = datatable_service.repository_rows
+                                        .active
                                         .preload(:repository_columns,
                                                  :created_by,
                                                  repository_cells: @repository.cell_preload_includes)
@@ -177,9 +178,9 @@ class RepositoryRowsController < ApplicationController
                                                          team: current_team)
 
     if service.succeed?
-      render json: {}, status: :ok
+      render json: { flash: t('repositories.archive_records.success_flash', repository: @repository.name) }, status: :ok
     else
-      render json: { status: service.errors }, status: :unprocessable_entity
+      render json: { error: service.error_message }, status: :unprocessable_entity
     end
   end
 
@@ -190,9 +191,9 @@ class RepositoryRowsController < ApplicationController
                                                          team: current_team)
 
     if service.succeed?
-      render json: {}, status: :ok
+      render json: { flash: t('repositories.restore_records.success_flash', repository: @repository.name) }, status: :ok
     else
-      render json: { status: service.errors }, status: :unprocessable_entity
+      render json: { error: service.error_message }, status: :unprocessable_entity
     end
   end
 

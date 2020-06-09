@@ -22,21 +22,23 @@
         </button>
       <% end %>
 
-      <% if can_delete_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light"
-          id="deleteRepositoryRecordsButton" onclick="onClickDelete()" disabled>
-          <span class="fas fa-trash"></span>
-          <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
-          <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden delete_repository_records_submit" %>
-        </button>
-      <% end %>
 
       <% if can_create_repository_rows?(@repository) %>
         <button type="button" class="btn btn-light copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
           <span class="fas fa-copy"></span>
           <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
         </button>
-      <%end%>
+      <% end %>
+
+      <% if can_delete_repository_rows?(@repository) %>
+        <button type="button" class="btn btn-light"
+          id="archiveRepositoryRecordsButton" onclick="onClickArchiveRepositoryRecords()" disabled>
+          <span class="fas fa-archive"></span>
+          <span class="hidden-xs-custom"><%= t'repositories.archive_record' %></span>
+          <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden delete_repository_records_submit" %>
+        </button>
+      <% end %>
+
     </span>
 
     <span id="saveCancel" data-toggle="buttons" style="display:none">

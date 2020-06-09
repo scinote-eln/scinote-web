@@ -1172,6 +1172,7 @@ en:
     edit_record: "Edit"
     copy_record: "Duplicate"
     delete_record: "Delete"
+    archive_record: "Archive"
     save_record: "Save"
     cancel_save: "Cancel"
     assign_records_to_module: "Assign"
@@ -1222,6 +1223,13 @@ en:
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
+    archive_records:
+      success_flash: "Successfully archived items in inventory <strong>%{repository}</strong>"
+      unsuccess_flash: "Unsuccessfully archived items in inventory <strong>%{repository}</strong>"
+      invalid_rows_flash: "Please provide valid rows"
+    restore_records:
+      success_flash: "Successfully restored items in inventory <strong>%{repository}</strong>"
+      unsuccess_flash: "Unsuccessfully restored items in inventory <strong>%{repository}</strong>"
     multiple_share_service:
       unable_to_share: "Unable to share %{repository} inventory with %{team} team."
       unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."

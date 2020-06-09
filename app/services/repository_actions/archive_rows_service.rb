@@ -11,7 +11,7 @@ module RepositoryActions
           log_activity(:archive_inventory_item, row)
         end
       rescue ActiveRecord::RecordNotSaved
-        @errors[:archiving_error] = 'Cannot archive all items'
+        @errors[:archiving_error] = I18n.t('repositories.archive_records.unsuccess_flash', @repository.name)
         raise ActiveRecord::Rollback
       end
 

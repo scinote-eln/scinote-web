@@ -4,7 +4,7 @@ module RepositoryActions
   class ArchiveRowsBaseService
     extend Service
 
-    attr_reader :errors, :column
+    attr_reader :errors
 
     def initialize(user:, team:, repository:, repository_rows:)
       @user = user
@@ -20,6 +20,10 @@ module RepositoryActions
 
     def succeed?
       @errors.none?
+    end
+
+    def error_message
+      @errors.values.join(', ')
     end
 
     private
@@ -38,7 +42,7 @@ module RepositoryActions
           end.compact
       end
 
-      @errors[:repository_rows] = 'Please provide valid rows' if @repository_rows.blank?
+      @errors[:repository_rows] = I18n.t('repositories.archive_records.invalid_rows_flash') if @repository_rows.blank?
 
       succeed?
     end
