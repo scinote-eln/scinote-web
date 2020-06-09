@@ -1,13 +1,15 @@
-/* global DataTableHelpers */
+/* global DataTableHelpers DataTableCheckboxes */
 (function() {
   'use strict';
 
   var REPOSITORIES_TABLE;
+  var CHECKBOX_SELECTOR;
 
   function initRepositoriesDataTable(tableContainer, archived = false) {
     var tableTemplate = archived ? $('#archivedRepositoriesListTable').html() : $('#activeRepositoriesListTable').html();
     $.get($(tableTemplate).data('source'), function(data) {
       if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
+      CHECKBOX_SELECTOR = null;
       $('.content-body').html(tableTemplate);
       REPOSITORIES_TABLE = $(tableContainer).DataTable({
         aaData: data,
@@ -35,14 +37,23 @@
             return `<a href="${row.repositoryUrl}">${value}</a>`;
           }
         }],
-
-        fnInitComplete: function() {
-          var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
+        fnInitComplete: function(e) {
+          var dataTableWrapper = $(e.nTableWrapper);
+          CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
+            checkboxSelector: '.repository-row-selector',
+            selectAllSelector: '.select-all-checkbox'
+          });
           DataTableHelpers.initLengthApearance(dataTableWrapper);
           DataTableHelpers.initSearchField(dataTableWrapper);
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
           $('.create-new-repository').initializeModal('#create-repo-modal');
+        },
+        drawCallback: function() {
+          if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
+        },
+        rowCallback: function(row) {
+          if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);
         }
       });
     });
