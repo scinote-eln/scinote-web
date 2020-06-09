@@ -617,6 +617,12 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
+      post 'archive_records',
+           to: 'repository_rows#archive_records',
+           defaults: { format: 'json' }
+      post 'restore_records',
+           to: 'repository_rows#restore_records',
+           defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'

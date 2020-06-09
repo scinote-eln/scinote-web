@@ -9,7 +9,7 @@ class RepositoryRowsController < ApplicationController
   before_action :check_read_permissions, except: %i(create update delete_records copy_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
-  before_action :check_delete_permissions, only: :delete_records
+  before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
   before_action :check_manage_permissions, only: %i(update copy_records)
 
   def index
@@ -168,6 +168,32 @@ class RepositoryRowsController < ApplicationController
                                private_modules: private_modules
                              })
     }
+  end
+
+  def archive_records
+    service = RepositoryActions::ArchiveRowsService.call(repository: @repository,
+                                                         repository_rows: copy_records_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: {}, status: :ok
+    else
+      render json: { status: service.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_records
+    service = RepositoryActions::RestoreRowsService.call(repository: @repository,
+                                                         repository_rows: copy_records_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: {}, status: :ok
+    else
+      render json: { status: service.errors }, status: :unprocessable_entity
+    end
   end
 
   private
