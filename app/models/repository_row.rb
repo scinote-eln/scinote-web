@@ -3,6 +3,7 @@
 class RepositoryRow < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
+  include ArchivableModel
 
   belongs_to :repository, class_name: 'RepositoryBase'
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
@@ -11,6 +12,11 @@ class RepositoryRow < ApplicationRecord
              foreign_key: :archived_by_id,
              class_name: 'User',
              inverse_of: :archived_repository_rows,
+             optional: true
+  belongs_to :restored_by,
+             foreign_key: :archived_by_id,
+             class_name: 'User',
+             inverse_of: :restored_repository_rows,
              optional: true
   has_many :repository_cells, -> { order(:id) }, dependent: :destroy
   has_many :repository_columns, through: :repository_cells
@@ -23,10 +29,10 @@ class RepositoryRow < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :created_by, presence: true
-  with_options if: :archived do
-    validates :archived_by, presence: true
-    validates :archived_on, presence: true
-  end
+  # with_options if: :archived do
+  #   validates :archived_by, presence: true
+  #   validates :archived_on, presence: true
+  # end
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }

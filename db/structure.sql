@@ -1107,7 +1107,9 @@ CREATE TABLE public.repositories (
     my_module_id bigint,
     archived boolean DEFAULT false NOT NULL,
     archived_on timestamp without time zone,
-    archived_by_id bigint
+    restored_on timestamp without time zone,
+    archived_by_id bigint,
+    restored_by_id bigint
 );
 
 
@@ -1519,7 +1521,9 @@ CREATE TABLE public.repository_rows (
     parent_id bigint,
     archived boolean DEFAULT false NOT NULL,
     archived_on timestamp without time zone,
-    archived_by_id bigint
+    restored_on timestamp without time zone,
+    archived_by_id bigint,
+    restored_by_id bigint
 );
 
 
@@ -4799,6 +4803,13 @@ CREATE INDEX index_repositories_on_permission_level ON public.repositories USING
 
 
 --
+-- Name: index_repositories_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_restored_by_id ON public.repositories USING btree (restored_by_id);
+
+
+--
 -- Name: index_repositories_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5027,6 +5038,13 @@ CREATE INDEX index_repository_rows_on_name ON public.repository_rows USING gin (
 --
 
 CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows USING btree (repository_id);
+
+
+--
+-- Name: index_repository_rows_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_restored_by_id ON public.repository_rows USING btree (restored_by_id);
 
 
 --
@@ -6450,6 +6468,14 @@ ALTER TABLE ONLY public.tables
 
 
 --
+-- Name: repositories fk_rails_94481f7751; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_94481f7751 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: steps fk_rails_954ff833e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6935,6 +6961,14 @@ ALTER TABLE ONLY public.checklists
 
 ALTER TABLE ONLY public.repository_text_values
     ADD CONSTRAINT fk_rails_e4c61d807b FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_rows fk_rails_e7c4398649; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_rows
+    ADD CONSTRAINT fk_rails_e7c4398649 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
 
 
 --
