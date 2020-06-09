@@ -30,13 +30,13 @@ module ArchivableModel
 
   # Same as archive but raises exception if archive fails.
   def archive!
-    archive || raise(RecordNotSaved)
+    archive || raise(ActiveRecord::RecordNotSaved)
   end
 
   # Same as archive but raises exception if archive fails.
   # Sets the archived_by value to the current user.
   def archive!(current_user)
-    archive(current_user) || raise(RecordNotSaved)
+    archive(current_user) || raise(ActiveRecord::RecordNotSaved)
   end
 
   # Helper for restoring project from archive.
@@ -55,14 +55,14 @@ module ArchivableModel
 
   # Same as restore but raises exception if restore fails.
   def restore!
-    restore || raise(RecordNotSaved)
+    restore || raise(ActiveRecord::RecordNotSaved)
   end
 
 
   # Same as restore but raises exception if restore fails.
   # Sets the restored_by value to the current user.
   def restore!(current_user)
-    restore(current_user) || raise(RecordNotSaved)
+    restore(current_user) || raise(ActiveRecord::RecordNotSaved)
   end
 
   protected

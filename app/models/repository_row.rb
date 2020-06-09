@@ -29,10 +29,6 @@ class RepositoryRow < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :created_by, presence: true
-  # with_options if: :archived do
-  #   validates :archived_by, presence: true
-  #   validates :archived_on, presence: true
-  # end
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }

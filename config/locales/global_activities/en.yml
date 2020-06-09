@@ -120,6 +120,8 @@ en:
       create_item_inventory_html: "%{user} created inventory item %{repository_row}."
       edit_item_inventory_html: "%{user} edited inventory item %{repository_row}."
       delete_item_inventory_html: "%{user} deleted inventory item %{repository_row}."
+      archive_inventory_item_html: "%{user} archived inventory item %{repository_row}."
+      restore_inventory_item_html: "%{user} restored inventory item %{repository_row}."
       create_column_inventory_html: "%{user} created column %{repository_column} in inventory %{repository}."
       edit_column_inventory_html: "%{user} edited column %{repository_column} in inventory %{repository}."
       copy_inventory_html: "%{user} copied inventory %{repository_new} from inventory %{repository_original} as template"

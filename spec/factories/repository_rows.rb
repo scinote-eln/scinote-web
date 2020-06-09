@@ -6,5 +6,11 @@ FactoryBot.define do
     created_by { create :user }
     repository
     last_modified_by { created_by }
+
+    trait :archived do
+      archived { true }
+      archived_on { Time.zone.now }
+      archived_by { created_by }
+    end
   end
 end
