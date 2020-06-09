@@ -8,7 +8,7 @@ module RepositoriesDatatableHelper
     repositories = repositories.includes(:repository_rows, :team, :created_by, :archived_by)
     repositories.each do |repository|
       result.push(
-        'DT_RepositoryId': repository.id,
+        'DT_RowId': repository.id,
         '1': escape_input(repository.name),
         '2': repository.repository_rows.size,
         '3': repository.shared_with?(team),
