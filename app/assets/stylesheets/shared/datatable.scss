@@ -66,4 +66,15 @@
       }
     }
   }
+
+  tr.archived {
+    td.item-name::after {
+      background-color: $color-concrete;
+      color: $color-silver-chalice;
+      content: "Archived";
+      margin-left: 20px;
+      padding: .3em;
+      white-space: nowrap;
+    }
+  }
 }
