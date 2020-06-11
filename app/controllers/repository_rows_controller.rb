@@ -129,7 +129,7 @@ class RepositoryRowsController < ApplicationController
 
   def copy_records
     duplicate_service = RepositoryActions::DuplicateRows.new(
-      current_user, @repository, copy_records_params
+      current_user, @repository, selected_rows_in_repo_params
     )
     duplicate_service.call
     render json: {
@@ -173,7 +173,7 @@ class RepositoryRowsController < ApplicationController
 
   def archive_records
     service = RepositoryActions::ArchiveRowsService.call(repository: @repository,
-                                                         repository_rows: copy_records_params,
+                                                         repository_rows: selected_rows_in_repo_params,
                                                          user: current_user,
                                                          team: current_team)
 
@@ -186,7 +186,7 @@ class RepositoryRowsController < ApplicationController
 
   def restore_records
     service = RepositoryActions::RestoreRowsService.call(repository: @repository,
-                                                         repository_rows: copy_records_params,
+                                                         repository_rows: selected_rows_in_repo_params,
                                                          user: current_user,
                                                          team: current_team)
 
@@ -250,7 +250,8 @@ class RepositoryRowsController < ApplicationController
     params.permit(selected_rows: []).to_h[:selected_rows]
   end
 
-  def copy_records_params
+  # Selected rows in scope of current @repository
+  def selected_rows_in_repo_params
     process_ids = params[:selected_rows].map(&:to_i).uniq
     @repository.repository_rows.where(id: process_ids).pluck(:id)
   end
