@@ -9,7 +9,7 @@ class RepositoryRowsController < ApplicationController
   before_action :check_read_permissions, except: %i(create update delete_records copy_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
-  before_action :check_delete_permissions, only: :delete_records
+  before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
   before_action :check_manage_permissions, only: %i(update copy_records)
 
   def index
@@ -21,6 +21,7 @@ class RepositoryRowsController < ApplicationController
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
     @repository_rows = datatable_service.repository_rows
+                                        .active
                                         .preload(:repository_columns,
                                                  :created_by,
                                                  repository_cells: @repository.cell_preload_includes)
@@ -128,7 +129,7 @@ class RepositoryRowsController < ApplicationController
 
   def copy_records
     duplicate_service = RepositoryActions::DuplicateRows.new(
-      current_user, @repository, copy_records_params
+      current_user, @repository, selected_rows_in_repo_params
     )
     duplicate_service.call
     render json: {
@@ -168,6 +169,32 @@ class RepositoryRowsController < ApplicationController
                                private_modules: private_modules
                              })
     }
+  end
+
+  def archive_records
+    service = RepositoryActions::ArchiveRowsService.call(repository: @repository,
+                                                         repository_rows: selected_rows_in_repo_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: { flash: t('repositories.archive_records.success_flash', repository: @repository.name) }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_records
+    service = RepositoryActions::RestoreRowsService.call(repository: @repository,
+                                                         repository_rows: selected_rows_in_repo_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: { flash: t('repositories.restore_records.success_flash', repository: @repository.name) }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
   end
 
   private
@@ -223,7 +250,8 @@ class RepositoryRowsController < ApplicationController
     params.permit(selected_rows: []).to_h[:selected_rows]
   end
 
-  def copy_records_params
+  # Selected rows in scope of current @repository
+  def selected_rows_in_repo_params
     process_ids = params[:selected_rows].map(&:to_i).uniq
     @repository.repository_rows.where(id: process_ids).pluck(:id)
   end

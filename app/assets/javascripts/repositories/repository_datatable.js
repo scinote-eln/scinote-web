@@ -64,7 +64,7 @@ var RepositoryDatatable = (function(global) {
         $('#exportRepositoriesButton').addClass('disabled');
         $('#copyRepositoryRecords').prop('disabled', true);
         $('#editRepositoryRecord').prop('disabled', true);
-        $('#deleteRepositoryRecordsButton').prop('disabled', true);
+        $('#archiveRepositoryRecordsButton').prop('disabled', true);
         $('#assignRepositoryRecords').prop('disabled', true);
         $('#unassignRepositoryRecords').prop('disabled', true);
         $('#editDeleteCopy').hide();
@@ -75,14 +75,14 @@ var RepositoryDatatable = (function(global) {
           $('#editRepositoryRecord').prop('disabled', true);
         }
         $('#exportRepositoriesButton').removeClass('disabled');
-        $('#deleteRepositoryRecordsButton').prop('disabled', false);
+        $('#archiveRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
         $('#assignRepositoryRecords').prop('disabled', false);
         $('#unassignRepositoryRecords').prop('disabled', false);
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
           $('#editRepositoryRecord').prop('disabled', true);
-          $('#deleteRepositoryRecordsButton').prop('disabled', true);
+          $('#archiveRepositoryRecordsButton').prop('disabled', true);
         }
         $('#editDeleteCopy').show();
       }
@@ -95,7 +95,7 @@ var RepositoryDatatable = (function(global) {
       $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').prop('disabled', true);
       $('#editRepositoryRecord').prop('disabled', true);
-      $('#deleteRepositoryRecordsButton').prop('disabled', true);
+      $('#archiveRepositoryRecordsButton').prop('disabled', true);
       $('#assignRepositoryRecords').prop('disabled', true);
       $('#unassignRepositoryRecords').prop('disabled', true);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
@@ -722,6 +722,60 @@ var RepositoryDatatable = (function(global) {
           HelperModule.flashAlertMsg(
             I18n.t('repositories.js.permission_error'), ev.responseJSON.style
           );
+        }
+      }
+    });
+  };
+
+  global.onClickArchiveRepositoryRecords = function() {
+    animateSpinner();
+    $.ajax({
+      url: $('table' + TABLE_ID).data('archive-records'),
+      type: 'POST',
+      dataType: 'json',
+      data: { selected_rows: rowsSelected },
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        rowsSelected = [];
+        resetTableView();
+      },
+      error: function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+          );
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(
+            ev.responseJSON.error, 'danger'
+          );
+          animateSpinner(null, false);
+        }
+      }
+    });
+  };
+
+  global.onClickRestoreRepositoryRecords = function() {
+    animateSpinner();
+    $.ajax({
+      url: $('table' + TABLE_ID).data('restore-records'),
+      type: 'POST',
+      dataType: 'json',
+      data: { selected_rows: rowsSelected },
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        rowsSelected = [];
+        resetTableView();
+      },
+      error: function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+          );
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(
+            ev.responseJSON.error, 'danger'
+          );
+          animateSpinner(null, false);
         }
       }
     });
