@@ -551,6 +551,8 @@ var RepositoryDatatable = (function(global) {
           dataType: 'json',
           type: 'POST',
           success: function(json) {
+            json.state.columns[6].visible = false; // Here must be switcher depend on active/archive view
+            json.state.columns[7].visible = false;
             callback(json.state);
           }
         });

@@ -85,7 +85,7 @@ class RepositoryDatatableService
       repository_rows = results
     end
 
-    repository_rows.left_outer_joins(:created_by)
+    repository_rows.left_outer_joins(:created_by, :archived_by)
                    .select('repository_rows.*')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
@@ -105,7 +105,9 @@ class RepositoryDatatableService
       'repository_rows.id',
       'repository_rows.name',
       'repository_rows.created_at',
-      'users.full_name'
+      'users.full_name',
+      'repository_rows.archived_on',
+      'archived_bies_repository_rows.full_name',
     ]
     @repository.repository_columns.count.times do
       array << 'repository_cell.value'

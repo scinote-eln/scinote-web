@@ -200,6 +200,8 @@ var MyModuleRepositories = (function() {
           if (!options.assign_mode) {
             json.state.columns[0].visible = false;
           }
+          json.state.columns[6].visible = false;
+          json.state.columns[7].visible = false;
           json.state.search.search = null;
           callback(json.state);
         });

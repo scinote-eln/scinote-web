@@ -279,7 +279,7 @@ var RepositoryColumns = (function() {
     // Clear the list
     $columnsList.find('li[data-position]').remove();
     _.each(TABLE.columns().header(), function(el, index) {
-      if (index > 1) {
+      if (!el.dataset.unmanageable) {
         let colId = $(el).attr('id');
         let colIndex = $(el).attr('data-column-index');
         let visible = TABLE.column(colIndex).visible();

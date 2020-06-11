@@ -1127,6 +1127,8 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
+      archived_on: "Archived on"
+      archived_by: "Archived by"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
       assets:
