@@ -135,10 +135,8 @@ var MyModuleRepositories = (function() {
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
       },
-      rowCallback: function(row, data) {
-        if (data.archived) {
-          $(row).addClass('archived');
-        }
+      createdRow: function(row, data) {
+        $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       }
     });
   }
@@ -217,17 +215,15 @@ var MyModuleRepositories = (function() {
           callback(json.state);
         });
       },
-
-      rowCallback: function(row, data) {
-        if (data.archived) {
-          $(row).addClass('archived');
-        }
-
+      rowCallback: function(row) {
         var checkbox = $(row).find('.repository-row-selector');
         if (SELECTED_ROWS[row.id]) {
           $(row).addClass('selected');
           checkbox.attr('checked', !checkbox.attr('checked'));
         }
+      },
+      createdRow: function(row, data) {
+        $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       }
     });
   }

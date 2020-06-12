@@ -67,11 +67,11 @@
     }
   }
 
-  tr.archived {
+  tr:not([data-state='']) {
     td.item-name::after {
       background-color: $color-concrete;
       color: $color-silver-chalice;
-      content: "Archived";
+      content: attr(data-state);
       margin-left: 20px;
       padding: .3em;
       white-space: nowrap;
