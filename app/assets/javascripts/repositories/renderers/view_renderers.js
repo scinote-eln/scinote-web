@@ -26,7 +26,8 @@ $.fn.dataTable.render.defaultRepositoryAssetValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTextValue = function(data) {
-  return data.value;
+  var text = $(`<span class="text-value" data-edit-value="${data.value.edit}">${data.value.view}</span>`);
+  return text.prop('outerHTML');
 };
 
 $.fn.dataTable.render.defaultRepositoryTextValue = function() {
