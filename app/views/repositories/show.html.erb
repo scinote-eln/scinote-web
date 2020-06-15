@@ -10,7 +10,7 @@
 <div id="alert-container"></div>
 
 <div class="content-pane repository-show" data-table-url="<%= load_table_repository_path(@repository) %>">
-  <div id="repository-toolbar">
+  <div id="repository-toolbar" class="content-header">
     <div class="repository-title-name">
       <h2 class="name-container">
         <% if @inline_editable_title_config.present? %>
@@ -99,6 +99,16 @@
           </ul>
         <% end %>
       </div>
+      <%= render layout: "shared/view_switch" do %>
+        <li class="view-switch-archived" data-view-mode="active">
+          <i class="fas fa-archive button-icon"></i>
+          Show archived items
+        </li>
+        <li class="view-switch-active" data-view-mode="archived">
+          <i class="fas fa-rocket button-icon"></i>
+          Show active items
+        </li>
+      <% end %>
     </div>
 
     <div class="toolbar-delimiter"></div>

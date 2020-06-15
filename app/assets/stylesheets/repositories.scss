@@ -8,12 +8,12 @@
 }
 
 .repository-show {
-  height: calc(100vh - 66px);
+  height: calc(100vh - var(--navbar-height));
   left: var(--repository-sidebar-margin);
   margin: 0;
-  padding: 0 32px;
+  padding: 0 2em;
   position: absolute;
-  top: 51px;
+  top: var(--navbar-height);
   transition: .4s $timing-function-sharp;
   width: calc(100vw - var(--repository-sidebar-margin));
 
@@ -21,10 +21,10 @@
   #repository-toolbar {
     align-items: center;
     background-color: $color-white;
+    border: 0;
     display: flex;
-    height: 75px;
     left: var(--repository-sidebar-margin);
-    padding: 35px 32px 20px;
+    padding: 0 2em;
     position: fixed;
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
@@ -34,7 +34,7 @@
       border-bottom: $border-tertiary;
       bottom: 0;
       position: absolute;
-      width: calc(100% - 64px);
+      width: calc(100% - 4em);
     }
 
     .repository-share-icon {
@@ -92,6 +92,10 @@
       .manage-repo-column-index {
         margin-left: 4px;
       }
+
+      .view-switch {
+        margin-left: 4px;
+      }
     }
   }
 
@@ -100,11 +104,11 @@
     background-color: $color-white;
     display: flex;
     flex-grow: 1;
-    height: 68px;
+    height: 5em;
     left: var(--repository-sidebar-margin);
-    padding: 0 32px;
+    padding: 0 2em;
     position: fixed;
-    top: 126px;
+    top: calc(5em + var(--navbar-height));
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
     z-index: 90;
@@ -123,13 +127,13 @@
   }
 
   .dataTables_scroll {
-    padding-bottom: 68px;
-    padding-top: 123px;
+    padding-bottom: 5em;
+    padding-top: 10em;
 
     .dataTables_scrollHead {
       position: -webkit-sticky !important;
       position: sticky !important;
-      top: 194px;
+      top: calc(10em + var(--navbar-height));
       z-index: 90;
 
       .table.dataTable {
@@ -154,9 +158,9 @@
     background-color: $color-white;
     bottom: 0;
     display: flex;
-    height: 68px;
+    height: 5em;
     left: var(--repository-sidebar-margin);
-    padding: 0 142px 0 32px;
+    padding: 0 10em 0 2em;
     position: fixed;
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
