@@ -63,6 +63,7 @@ var inlineEditing = (function() {
     } else {
       params = { [fieldToUpdate]: inputField(container).val() };
     }
+
     $.ajax({
       url: container.data('path-to-update'),
       type: 'PUT',
@@ -80,7 +81,7 @@ var inlineEditing = (function() {
         }
 
         container.find('.view-mode')
-          .html(viewData)
+          .text(viewData)
           .removeClass('hidden');
         container
           .attr('data-original-name', inputField(container).val())
