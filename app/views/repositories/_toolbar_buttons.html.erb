@@ -7,7 +7,7 @@
   <% end %>
 
   <% if can_create_repository_rows?(@repository) %>
-    <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
+    <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()" data-view-mode="active">
       <span class="fas fa-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
@@ -16,7 +16,7 @@
   <% if can_manage_repository_rows?(@repository) %>
     <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
       <%if can_update_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
+        <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled data-view-mode="active">
           <span class="fas fa-pencil-alt"></span>
           <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
         </button>
@@ -24,7 +24,7 @@
 
 
       <% if can_create_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
+        <button type="button" class="btn btn-light copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled data-view-mode="active">
           <span class="fas fa-copy"></span>
           <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
         </button>
@@ -32,7 +32,7 @@
 
       <% if can_delete_repository_rows?(@repository) %>
         <button type="button" class="btn btn-light"
-          id="archiveRepositoryRecordsButton" onclick="onClickArchiveRepositoryRecords()" disabled>
+          id="archiveRepositoryRecordsButton" onclick="onClickArchiveRepositoryRecords()" disabled data-view-mode="active">
           <span class="fas fa-archive"></span>
           <span class="hidden-xs-custom"><%= t'repositories.archive_record' %></span>
           <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden delete_repository_records_submit" %>
@@ -42,11 +42,11 @@
     </span>
 
     <span id="saveCancel" data-toggle="buttons" style="display:none">
-      <button type="button" class="btn btn-success" id="saveRecord">
+      <button type="button" class="btn btn-success" id="saveRecord" data-view-mode="active">
         <span class="fas fa-save"></span>
         <%= t("repositories.save_record") %>
       </button>
-      <button type="button" class="btn btn-light" id="cancelSave">
+      <button type="button" class="btn btn-light" id="cancelSave" data-view-mode="active">
         <span class="fas fa-times-circle"></span>
         <%= t("repositories.cancel_save") %>
       </button>

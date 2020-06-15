@@ -17,6 +17,18 @@
   transition: .4s $timing-function-sharp;
   width: calc(100vw - var(--repository-sidebar-margin));
 
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+  }
+
 
   #repository-toolbar {
     align-items: center;
@@ -47,10 +59,10 @@
     }
 
     .repository-title-name {
+      @include font-h2;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      font-size: 18px;
       line-height: 32px;
       margin-right: 20px;
       overflow: hidden;
@@ -77,6 +89,14 @@
           width: 100%;
         }
       }
+    }
+
+    .repository-archived-title-name {
+      @include font-h2;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .repository-subtitle {

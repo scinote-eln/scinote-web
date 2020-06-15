@@ -147,6 +147,16 @@
     });
   }
 
+  function initRepositoryViewSwitcher() {
+    var viewSwitch = $('.view-switch');
+    viewSwitch.on('click', '.view-switch-archived', function() {
+      $('.repository-show').toggleClass('archived active');
+    });
+    viewSwitch.on('click', '.view-switch-active', function() {
+      $('.repository-show').toggleClass('archived active');
+    });
+  }
+
   $('#shareRepoBtn').on('ajax:success', function() {
     initShareModal();
   });
@@ -154,4 +164,5 @@
   $('.create-new-repository').initializeModal('#create-repo-modal');
   initImportRecordsModal();
   initTable();
+  initRepositoryViewSwitcher();
 }(window));

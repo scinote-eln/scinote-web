@@ -467,7 +467,7 @@ var RepositoryDatatable = (function(global) {
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           } else if (EDITABLE) {
-            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>';
+            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt" data-view-mode="active"></i>';
           } else {
             icon = '';
           }

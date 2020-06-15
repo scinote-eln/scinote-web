@@ -9,9 +9,9 @@
 <%= render partial: "sidebar", locals: { repositories: @repositories } %>
 <div id="alert-container"></div>
 
-<div class="content-pane repository-show" data-table-url="<%= load_table_repository_path(@repository) %>">
+<div class="content-pane repository-show active" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
-    <div class="repository-title-name">
+    <div class="repository-title-name" data-view-mode="active">
       <h2 class="name-container">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
@@ -33,8 +33,11 @@
         <div class="repository-subtitle"><%= t('repositories.subtitle', team_name: team_name) %></div>
       <% end %>
     </div>
+    <div class="repository-archived-title-name" data-view-mode="archived">
+      Archived <%= @repository.name %>
+    </div>
     <div class="repo-datatables-buttons">
-      <div class="share-repository-button">
+      <div class="share-repository-button" data-view-mode="active">
         <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
           <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
                       class: 'btn btn-secondary share-repo-option', remote: true, id: 'shareRepoBtn' do %>
@@ -66,21 +69,21 @@
         <% if can_perform_repository_actions(@repository) %>
           <ul class="dropdown-menu pull-right">
             <% if can_create_repository_rows?(@repository) %>
-              <li>
+              <li data-view-mode="active">
                 <a href="#" id="importRecordsButton" data-turbolinks="false">
                   <%= t('repositories.index.options_dropdown.import_items') %>
                 </a>
-              <li>
+              </li>
             <% end %>
             <% if can_read_repository?(@repository) %>
-              <li>
+              <li >
                 <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
                   <%= t("repositories.index.options_dropdown.export_items") %>
                 </a>
               </li>
             <% end %>
             <% if can_create_repositories?(current_team) && !@repository.shared_with?(current_team) %>
-              <li>
+              <li data-view-mode="active">
                 <%= link_to t('repositories.index.options_dropdown.copy'),
                             team_repository_copy_modal_path(current_team, repository_id: @repository),
                             class: "copy-repo-option",
@@ -88,8 +91,8 @@
               </li>
             <% end %>
             <% if can_manage_repository?(@repository) %>
-              <li data-hook="destroy-repository-option" role="separator" class="divider"></li>
-              <li data-hook="destroy-repository-option">
+              <li  data-view-mode="active" data-hook="destroy-repository-option" role="separator" class="divider"></li>
+              <li  data-view-mode="active" data-hook="destroy-repository-option">
                 <%= link_to t('repositories.index.options_dropdown.delete'),
                             team_repository_destroy_modal_path(current_team, repository_id: @repository),
                             class: "delete-repo-option",
