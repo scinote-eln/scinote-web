@@ -132,14 +132,25 @@ class Experiment < ApplicationRecord
     positions,
     current_user
   )
-    cloned_modules = []
     begin
       with_lock do
-        # First, add new modules
+        # Start with archiving to release positions for new tasks
+        archive_modules(to_archive, current_user) if to_archive.any?
+
+        # Update only existing tasks positions to release positions for new tasks
+        existing_positions = positions
+                             .slice(*positions.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        update_module_positions(existing_positions) if existing_positions.any?
+
+        # Move only existing tasks to release positions for new tasks
+        existing_to_move = to_move
+                            .slice(*to_move.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        move_modules(existing_to_move, current_user) if existing_to_move.any?
+
+        # add new modules
         new_ids, cloned_pairs, originals = add_modules(
           to_add, to_clone, current_user
         )
-        cloned_modules = cloned_pairs.collect { |mn, _| mn }
 
         # Rename modules
         rename_modules(to_rename, current_user)
@@ -160,9 +171,6 @@ class Experiment < ApplicationRecord
                   message_items: { my_module_original: mo.id,
                                    my_module_new: mn.id })
         end
-
-        # Then, archive modules that need to be archived
-        archive_modules(to_archive, current_user) if to_archive.any?
 
         # Update connections, positions & module group variables
         # with actual IDs retrieved from the new modules creation
@@ -325,9 +333,9 @@ class Experiment < ApplicationRecord
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by_id(id)
       experiment = project.experiments.find_by_id(experiment_id)
-      experiment_org = my_module.experiment
       next unless my_module.present? && experiment.present?
 
+      experiment_original = my_module.experiment
       my_module.experiment = experiment
 
       # Calculate new module position
@@ -349,7 +357,7 @@ class Experiment < ApplicationRecord
                                              message_items: {
                                                my_module: my_module.id,
                                                experiment_original:
-                                                 experiment_org.id,
+                                                 experiment_original.id,
                                                experiment_new: experiment.id
                                              })
     end
