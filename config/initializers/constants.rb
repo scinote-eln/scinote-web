@@ -940,7 +940,7 @@ class Constants
   REPOSITORY_TABLE_DEFAULT_STATE = {
     'time' => 0,
     'start' => 0,
-    'length' => 6,
+    'length' => 8,
     'order' => [[2, 'asc']], # Default sorting by 'ID' column
     'search' => { 'search' => '',
                   'smart' => true,
@@ -948,11 +948,11 @@ class Constants
                   'caseInsensitive' => true },
     'columns' => [],
     'assigned' => 'assigned',
-    'ColReorder' => [*0..5]
+    'ColReorder' => [*0..7]
   }
-  6.times do |i|
+  8.times do |i|
     REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
-      'visible' => true,
+      'visible' => (i < 6),
       'searchable' => (i >= 1), # Checkboxes column is not searchable
       'search' => { 'search' => '',
                     'smart' => true,

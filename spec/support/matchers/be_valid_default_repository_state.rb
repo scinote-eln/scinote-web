@@ -7,15 +7,15 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
 
     state = subject.state
 
-    cols_length = 6 + nr_of_cols
-    cols_array = [*0..(5 + nr_of_cols)]
+    cols_length = 8 + nr_of_cols
+    cols_array = [*0..(7 + nr_of_cols)]
 
     expect(state).to be_an_instance_of Hash
     expect(state).to include(
       'time',
       'columns',
       'start' => 0,
-      'length' => cols_length, # 6 default columns + parameter
+      'length' => cols_length, # 8 default columns + parameter
       'order' => [[2, 'asc']],
       'search' => {
         'search' => '',
@@ -28,10 +28,10 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
     )
 
     expect(state['columns']).to be_an_instance_of Array
-    expect(state['columns'].length).to eq(6 + nr_of_cols)
+    expect(state['columns'].length).to eq(cols_length)
     state['columns'].each_with_index do |val, i|
       expect(val).to include(
-        'visible' => true,
+        'visible' => !([6, 7].include? i),
         'searchable' => (i != 0),
         'search' => {
           'search' => '', 'smart' => true, 'regex' => false, 'caseInsensitive' => true

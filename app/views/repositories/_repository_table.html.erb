@@ -4,7 +4,7 @@
     data-repository-id="<%= repository.id %>"
     data-source="<%= repository_index_link %>"
     data-toolbar-url="<%= repository_table_toolbar_path(@repository) %>"
-    data-num-columns="<%= 6 + repository.repository_columns.count %>"
+    data-num-columns="<%= repository.default_columns_count + repository.repository_columns.count %>"
     data-create-record="<%= repository_repository_rows_path(repository) %>"
     data-delete-record="<%= repository_delete_records_path(repository) %>"
     data-copy-records="<%= repository_copy_records_path(repository) %>"
@@ -27,15 +27,17 @@
     data-status-url="<%= repository_status_path(@repository) %>">
     <thead>
       <tr>
-        <th id="checkbox">
+        <th id="checkbox" data-unmanageable="true">
             <input name="select_all" value="1" type="checkbox" class="sci-checkbox">
             <span class="sci-checkbox-label"></span>
         </th>
-        <th id="assigned"><%= t("repositories.table.assigned") %></th>
+        <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
-        <th id="added-on"><%= t("repositories.table.added_on") %></th>
-        <th id="added-by"><%= t("repositories.table.added_by") %></th>
+        <th id="added-on" ><%= t("repositories.table.added_on") %></th>
+        <th id="added-by" ><%= t("repositories.table.added_by") %></th>
+        <th id="archived-on" data-unmanageable="true"><%= t("repositories.table.archived_on") %></th>
+        <th id="archived-by" data-unmanageable="true"><%= t("repositories.table.archived_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
           <th
             class="repository-column"

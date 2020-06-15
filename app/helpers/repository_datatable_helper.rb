@@ -12,6 +12,8 @@ module RepositoryDatatableHelper
         '3': escape_input(record.name),
         '4': I18n.l(record.created_at, format: :full),
         '5': escape_input(record.created_by.full_name),
+        '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+        '7': escape_input(record.archived_by&.full_name),
         'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
       }
 
