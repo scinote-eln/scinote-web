@@ -5,10 +5,12 @@ class RepositorySnapshot < RepositoryBase
   after_save :refresh_report_references, if: :saved_change_to_selected
   before_destroy :refresh_report_references_for_destroy, prepend: true
 
-  belongs_to :original_repository, foreign_key: :parent_id,
-                                   class_name: 'Repository',
-                                   inverse_of: :repository_snapshots,
-                                   optional: true
+  belongs_to :original_repository, -> { unscope(where: :archived) },
+             foreign_key: :parent_id,
+             class_name: 'Repository',
+             inverse_of: :repository_snapshots,
+             optional: true
+
   belongs_to :my_module, optional: true
 
   validates :name, presence: true, length: { maximum: Constants::NAME_MAX_LENGTH }
