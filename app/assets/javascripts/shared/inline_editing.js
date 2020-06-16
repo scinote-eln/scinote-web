@@ -77,11 +77,11 @@ var inlineEditing = (function() {
           viewData = result[container.data('response-field')];
         } else {
           // By default we just copy value from input string
-          viewData = inputField(container).val();
+          viewData = $('<div>').text(inputField(container).val()).html();
         }
 
         container.find('.view-mode')
-          .text(viewData)
+          .html(viewData)
           .removeClass('hidden');
         container
           .attr('data-original-name', inputField(container).val())
