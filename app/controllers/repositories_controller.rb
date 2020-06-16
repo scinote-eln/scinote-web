@@ -345,7 +345,7 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: repository_id)
+    @repository = Repository.accessible_by_teams(current_team).with_archived.find_by(id: repository_id)
     render_404 unless @repository
   end
 
@@ -354,7 +354,7 @@ class RepositoriesController < ApplicationController
     @repositories = if params[:archived]
                       @repositories.archived
                     else
-                      @repositories.active
+                      @repositories
                     end
   end
 
