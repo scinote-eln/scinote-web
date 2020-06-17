@@ -1060,7 +1060,6 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
-    subtitle: "Owned by %{team_name}"
     repository: "Inventory: %{name}"
     icon_title:
       i_shared: "Shared inventory (owned by your Team)"
@@ -1119,6 +1118,17 @@ en:
         all_teams: "All teams (current & new)"
         all_teams_tooltip: "This will disable individual team settings"
         success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
+    show:
+      archived_inventory: "Archived %{repository_name}"
+      subtitle: "Owned by %{team_name}"
+      your_team: "your Team"
+      show_active_items: "Show active items"
+      show_archived_items: "Show archived items"
+      archived_view_label:
+        active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
+        archived_on: "Inventory archived on"
+        archived_by: "by"
+
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -1175,6 +1185,7 @@ en:
     copy_record: "Duplicate"
     delete_record: "Delete"
     archive_record: "Archive"
+    restore_record: "Restore"
     save_record: "Save"
     cancel_save: "Cancel"
     assign_records_to_module: "Assign"

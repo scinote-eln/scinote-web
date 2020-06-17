@@ -4,6 +4,7 @@ class Repository < RepositoryBase
   include SearchableModel
   include SearchableByNameModel
   include RepositoryImportParser
+  include ArchivableModel
 
   enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 

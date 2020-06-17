@@ -1,7 +1,7 @@
 //= require repositories/import/records_importer.js
 
 /*
-  global animateSpinner repositoryRecordsImporter
+  global animateSpinner repositoryRecordsImporter I18n
   RepositoryDatatable PerfectScrollbar HelperModule
 */
 
@@ -151,11 +151,20 @@
     var viewSwitch = $('.view-switch');
     viewSwitch.on('click', '.view-switch-archived', function() {
       $('.repository-show').toggleClass('archived active');
+      RepositoryDatatable.reload();
     });
     viewSwitch.on('click', '.view-switch-active', function() {
       $('.repository-show').toggleClass('archived active');
+      RepositoryDatatable.reload();
     });
   }
+
+  $('.repository-title-name .inline-editing-container').on('inlineEditing::updated', function(e, value, viewValue) {
+    $('.repository-archived-title-name')
+      .text(I18n.t('repositories.show.archived_inventory', { repository_name: viewValue }));
+    $('#toolbarButtonsDatatable .archived-label')
+      .text(I18n.t('repositories.show.archived_view_label.active', { repository_name: viewValue }));
+  });
 
   $('#shareRepoBtn').on('ajax:success', function() {
     initShareModal();

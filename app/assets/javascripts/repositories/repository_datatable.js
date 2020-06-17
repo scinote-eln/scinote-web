@@ -65,8 +65,8 @@ var RepositoryDatatable = (function(global) {
         $('#copyRepositoryRecords').prop('disabled', true);
         $('#editRepositoryRecord').prop('disabled', true);
         $('#archiveRepositoryRecordsButton').prop('disabled', true);
-        $('#assignRepositoryRecords').prop('disabled', true);
-        $('#unassignRepositoryRecords').prop('disabled', true);
+        $('#restoreRepositoryRecords').prop('disabled', true);
+        $('#deleteRepositoryRecords').prop('disabled', true);
         $('#editDeleteCopy').hide();
       } else {
         if (rowsSelected.length === 1) {
@@ -77,8 +77,8 @@ var RepositoryDatatable = (function(global) {
         $('#exportRepositoriesButton').removeClass('disabled');
         $('#archiveRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
-        $('#assignRepositoryRecords').prop('disabled', false);
-        $('#unassignRepositoryRecords').prop('disabled', false);
+        $('#restoreRepositoryRecords').prop('disabled', false);
+        $('#deleteRepositoryRecords').prop('disabled', false);
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
           $('#editRepositoryRecord').prop('disabled', true);
@@ -437,6 +437,7 @@ var RepositoryDatatable = (function(global) {
         url: $(TABLE_ID).data('source'),
         data: function(d) {
           d.assigned = viewAssigned;
+          d.archived = $('.repository-show').hasClass('archived');
         },
         global: false,
         type: 'POST'
@@ -538,6 +539,7 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
+        checkArchivedColumnsState();
       },
       preDrawCallback: function() {
         animateSpinner(this);
@@ -551,8 +553,9 @@ var RepositoryDatatable = (function(global) {
           dataType: 'json',
           type: 'POST',
           success: function(json) {
-            json.state.columns[6].visible = false; // Here must be switcher depend on active/archive view
-            json.state.columns[7].visible = false;
+            var archived = $('.repository-show').hasClass('archived');
+            if (json.state.columns[6]) json.state.columns[6].visible = archived;
+            if (json.state.columns[7]) json.state.columns[7].visible = archived;
             callback(json.state);
           }
         });
@@ -638,53 +641,6 @@ var RepositoryDatatable = (function(global) {
     return TABLE;
   }
 
-  global.onClickAddRecord = function() {
-    checkAvailableColumns();
-    RepositoryDatatableRowEditor.addNewRow(TABLE);
-    changeToEditMode();
-  };
-
-  global.onClickToggleAssignedRecords = function() {
-    $('.repository-assign-group > .btn').click(function() {
-      $('.btn-group > .btn').removeClass('active');
-      $(this).addClass('active');
-    });
-
-    $('#assigned-repo-records').on('click', function() {
-      viewAssigned = 'assigned';
-      return new Promise(function(resolve) {
-        resolve(TABLE.ajax.reload());
-      });
-    });
-    $('#all-repo-records').on('click', function() {
-      viewAssigned = 'all';
-      return new Promise(function(resolve) {
-        resolve(TABLE.ajax.reload());
-      });
-    });
-  };
-
-  global.hideAssignUnasignModal = function(id) {
-    $(id).modal('hide').promise().done(
-      function() {
-        $(id).remove();
-      }
-    );
-  };
-
-  global.openUnassignRecordsModal = function() {
-    $.post(
-      $('#unassignRepositoryRecords').data('unassign-url'),
-      { selected_rows: rowsSelected }
-    ).done(
-      function(data) {
-        $(data.html).appendTo('body').promise().done(function() {
-          $('#unassignRepositoryRecordModal').modal('show');
-        });
-      }
-    );
-  };
-
   global.onClickDeleteRecord = function() {
     animateSpinner();
     $.ajax({
@@ -705,105 +661,105 @@ var RepositoryDatatable = (function(global) {
         }
       }
     });
-  }
+  };
 
-  global.onClickCopyRepositoryRecords = function() {
-    animateSpinner();
-    $.ajax({
-      url: $('table' + TABLE_ID).data('copy-records'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_rows: rowsSelected },
-      success: function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        rowsSelected = [];
-        resetTableView();
-      },
-      error: function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-          );
+  $('.repository-show')
+    .on('click', '#addRepositoryRecord', function() {
+      checkAvailableColumns();
+      RepositoryDatatableRowEditor.addNewRow(TABLE);
+      changeToEditMode();
+    })
+    .on('click', '#copyRepositoryRecords', function() {
+      animateSpinner();
+      $.ajax({
+        url: $('table' + TABLE_ID).data('copy-records'),
+        type: 'POST',
+        dataType: 'json',
+        data: { selected_rows: rowsSelected },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.flash, 'success');
+          rowsSelected = [];
+          resetTableView();
+        },
+        error: function(ev) {
+          if (ev.status === 403) {
+            HelperModule.flashAlertMsg(
+              I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+            );
+          }
         }
-      }
-    });
-  };
-
-  global.onClickArchiveRepositoryRecords = function() {
-    animateSpinner();
-    $.ajax({
-      url: $('table' + TABLE_ID).data('archive-records'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_rows: rowsSelected },
-      success: function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        rowsSelected = [];
-        resetTableView();
-      },
-      error: function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-          );
-        } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(
-            ev.responseJSON.error, 'danger'
-          );
-          animateSpinner(null, false);
+      });
+    })
+    .on('click', '#archiveRepositoryRecordsButton', function() {
+      animateSpinner();
+      $.ajax({
+        url: $('table' + TABLE_ID).data('archive-records'),
+        type: 'POST',
+        dataType: 'json',
+        data: { selected_rows: rowsSelected },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.flash, 'success');
+          rowsSelected = [];
+          resetTableView();
+        },
+        error: function(ev) {
+          if (ev.status === 403) {
+            HelperModule.flashAlertMsg(
+              I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+            );
+          } else if (ev.status === 422) {
+            HelperModule.flashAlertMsg(
+              ev.responseJSON.error, 'danger'
+            );
+            animateSpinner(null, false);
+          }
         }
-      }
-    });
-  };
-
-  global.onClickRestoreRepositoryRecords = function() {
-    animateSpinner();
-    $.ajax({
-      url: $('table' + TABLE_ID).data('restore-records'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_rows: rowsSelected },
-      success: function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        rowsSelected = [];
-        resetTableView();
-      },
-      error: function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-          );
-        } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(
-            ev.responseJSON.error, 'danger'
-          );
-          animateSpinner(null, false);
+      });
+    })
+    .on('click', '#restoreRepositoryRecords', function() {
+      animateSpinner();
+      $.ajax({
+        url: $('table' + TABLE_ID).data('restore-records'),
+        type: 'POST',
+        dataType: 'json',
+        data: { selected_rows: rowsSelected },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.flash, 'success');
+          rowsSelected = [];
+          resetTableView();
+        },
+        error: function(ev) {
+          if (ev.status === 403) {
+            HelperModule.flashAlertMsg(
+              I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+            );
+          } else if (ev.status === 422) {
+            HelperModule.flashAlertMsg(
+              ev.responseJSON.error, 'danger'
+            );
+            animateSpinner(null, false);
+          }
         }
+      });
+    })
+    .on('click', '#editRepositoryRecord', function() {
+      checkAvailableColumns();
+
+      if (rowsSelected.length !== 1) {
+        return;
       }
+
+      let row = TABLE.row('#' + rowsSelected[0]);
+
+      $(TABLE_ID).find('.repository-row-edit-icon').remove();
+
+      RepositoryDatatableRowEditor.switchRowToEditMode(row);
+      changeToEditMode();
+      adjustTableHeader();
+    })
+    .on('click', '#deleteRepositoryRecords', function() {
+      $('#deleteRepositoryRecord').modal('show');
     });
-  };
-
-  // Edit record
-  global.onClickEdit = function() {
-    checkAvailableColumns();
-
-    if (rowsSelected.length !== 1) {
-      return;
-    }
-
-    let row = TABLE.row('#' + rowsSelected[0]);
-
-    $(TABLE_ID).find('.repository-row-edit-icon').remove();
-
-    RepositoryDatatableRowEditor.switchRowToEditMode(row);
-    changeToEditMode();
-    adjustTableHeader();
-  };
-
-  // Delete record
-  global.onClickDelete = function() {
-    $('#deleteRepositoryRecord').modal('show');
-  };
 
   // Handle enter key
   $(document).off('keypress').keypress(function(event) {
@@ -869,9 +825,19 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function checkArchivedColumnsState() {
+    var archived = $('.repository-show').hasClass('archived');
+    TABLE.column(6).visible(archived);
+    TABLE.column(7).visible(archived);
+  }
+
   return Object.freeze({
     init: init,
     destroy: destroy,
+    reload: function() {
+      TABLE.ajax.reload();
+      clearRowSelection();
+    },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

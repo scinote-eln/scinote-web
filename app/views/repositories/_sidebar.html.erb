@@ -1,6 +1,6 @@
  <%= content_for :sidebar do %>
   <div id="slide-panel" class="visible" data-sidebar-url="<%= sidebar_repositories_path %>">
-    <%= render partial: "sidebar_list", locals: { repositories: repositories, archived: false} %>
+    <%= render partial: "sidebar_list", locals: { repositories: repositories, archived: archived} %>
   </div>
 <% end %>
 

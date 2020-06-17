@@ -1,4 +1,5 @@
 <div id="toolbarButtonsDatatable">
+<% if @repository.active? %>
   <% if @repository.repository_snapshots.provisioning.any? %>
     <div class='repository-provisioning-notice'>
       <i class="fas fa-info-circle"></i>
@@ -7,7 +8,7 @@
   <% end %>
 
   <% if can_create_repository_rows?(@repository) %>
-    <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()" data-view-mode="active">
+    <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" data-view-mode="active">
       <span class="fas fa-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
@@ -16,7 +17,7 @@
   <% if can_manage_repository_rows?(@repository) %>
     <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
       <%if can_update_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled data-view-mode="active">
+        <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" disabled data-view-mode="active">
           <span class="fas fa-pencil-alt"></span>
           <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
         </button>
@@ -24,7 +25,7 @@
 
 
       <% if can_create_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled data-view-mode="active">
+        <button type="button" class="btn btn-light copyRow" id="copyRepositoryRecords" disabled data-view-mode="active">
           <span class="fas fa-copy"></span>
           <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
         </button>
@@ -32,13 +33,21 @@
 
       <% if can_delete_repository_rows?(@repository) %>
         <button type="button" class="btn btn-light"
-          id="archiveRepositoryRecordsButton" onclick="onClickArchiveRepositoryRecords()" disabled data-view-mode="active">
+          id="archiveRepositoryRecordsButton"  disabled data-view-mode="active">
           <span class="fas fa-archive"></span>
           <span class="hidden-xs-custom"><%= t'repositories.archive_record' %></span>
-          <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden delete_repository_records_submit" %>
         </button>
       <% end %>
-
+        <button type="button" class="btn btn-light" id="restoreRepositoryRecords" disabled  data-view-mode="archived">
+          <span class="fas fa-undo"></span>
+          <span class="hidden-xs"><%= t("repositories.restore_record") %></span>
+        </button>
+      <% if can_delete_repository_rows?(@repository) %>
+        <button type="button" class="btn btn-light" id="deleteRepositoryRecords" disabled  data-view-mode="archived">
+          <span class="fas fa-trash"></span>
+          <span class="hidden-xs"><%= t("repositories.delete_record") %></span>
+        </button>
+      <% end %>
     </span>
 
     <span id="saveCancel" data-toggle="buttons" style="display:none">
@@ -54,4 +63,21 @@
   <% elsif @repository.shared_with?(current_team) %>
     <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
   <% end %>
+<% end %>
+  <div class="archived-label" data-view-mode="archived">
+    <% if @repository.active? %>
+      <%= t('repositories.show.archived_view_label.active', repository_name: @repository.name) %>
+    <% else %>
+      <table>
+        <tr>
+          <td><%= t('repositories.show.archived_view_label.archived_on') %></td>
+          <td><%= I18n.l(@repository.archived_on, format: :full) %></td>
+        </tr>
+        <tr>
+          <td><%= t('repositories.show.archived_view_label.archived_by') %></td>
+          <td><%= @repository.archived_by.full_name %></td>
+        </tr>
+      </table>
+    <% end %>
+  </div>
 </div>

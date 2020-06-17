@@ -209,42 +209,45 @@
   }
 
   // Actions
+  .dataTable {
+    tbody {
+      tr:hover {
+        background-color: $color-concrete;
 
-  tbody {
-    tr:hover {
-      background-color: $color-concrete;
-
-      .assigned-column {
-        .repository-row-edit-icon {
-          display: inline-block;
+        .assigned-column {
+          .repository-row-edit-icon {
+            display: inline-block;
+          }
         }
       }
-    }
 
-    .editing {
-      border: 1px solid;
+      .editing {
+        border: 1px solid;
+      }
     }
   }
 
   &.editing {
-    tbody {
-      tr.blocked {
-        opacity: .4;
-        pointer-events: none;
-      }
+    .dataTable {
+      tbody {
+        tr.blocked {
+          opacity: .4;
+          pointer-events: none;
+        }
 
-      tr:hover {
-        .assigned-column {
-          .repository-row-edit-icon {
-            display: none;
-          }
+        tr:hover {
+          .assigned-column {
+            .repository-row-edit-icon {
+              display: none;
+            }
 
-          .assign-counter-container {
-            background-color: transparent;
-          }
+            .assign-counter-container {
+              background-color: transparent;
+            }
 
-          .circle-icon {
-            margin-left: 30px;
+            .circle-icon {
+              margin-left: 30px;
+            }
           }
         }
       }

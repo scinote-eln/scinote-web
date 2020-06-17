@@ -94,6 +94,8 @@ var inlineEditing = (function() {
           .attr('value', inputField(container).val());
         appendAfterLabel(container);
 
+        container.trigger('inlineEditing::updated', [inputField(container).val(), viewData])
+
         if (SIDEBAR_ITEM_TYPES.includes(paramsGroup)) {
           updateSideBarNav(paramsGroup, itemId, viewData);
         }

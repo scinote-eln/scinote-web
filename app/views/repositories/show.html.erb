@@ -6,35 +6,37 @@
 <%= stylesheet_link_tag 'datatables' %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "sidebar", locals: { repositories: @repositories } %>
+<%= render partial: "sidebar", locals: { repositories: @repositories, archived: @repository.archived? } %>
 <div id="alert-container"></div>
 
-<div class="content-pane repository-show active" data-table-url="<%= load_table_repository_path(@repository) %>">
+<div class="content-pane repository-show <%=  @repository.active? ? "active" : "archived" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
-    <div class="repository-title-name" data-view-mode="active">
-      <h2 class="name-container">
-        <% if @inline_editable_title_config.present? %>
-          <%= render partial: "shared/inline_editing",
-                     locals: {
-                        initial_value: @repository.name,
-                        config: @inline_editable_title_config
-                     } %>
-        <% else %>
-          <div class="read-only-name">
-            <%= @repository.name %>
-          </div>
-          <span class="repository-share-icon">
-            <%= inventory_shared_status_icon(@repository, current_team) %>
-          </span>
+    <% if @repository.active? %>
+      <div class="repository-title-name" data-view-mode="active">
+        <h2 class="name-container">
+          <% if @inline_editable_title_config.present? %>
+            <%= render partial: "shared/inline_editing",
+                       locals: {
+                          initial_value: @repository.name,
+                          config: @inline_editable_title_config
+                       } %>
+          <% else %>
+            <div class="read-only-name">
+              <%= @repository.name %>
+            </div>
+            <span class="repository-share-icon">
+              <%= inventory_shared_status_icon(@repository, current_team) %>
+            </span>
+          <% end %>
+        </h2>
+        <% if @repository.shared_with_anybody? %>
+          <% team_name = @repository.team == current_team ? t('repositories.show.your_team') : @repository.team.name %>
+          <div class="repository-subtitle"><%= t('repositories.show.subtitle', team_name: team_name) %></div>
         <% end %>
-      </h2>
-      <% if @repository.shared_with_anybody? %>
-        <% team_name = @repository.team == current_team ? 'your Team' : @repository.team.name %>
-        <div class="repository-subtitle"><%= t('repositories.subtitle', team_name: team_name) %></div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
     <div class="repository-archived-title-name" data-view-mode="archived">
-      Archived <%= @repository.name %>
+      <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
     </div>
     <div class="repo-datatables-buttons">
       <div class="share-repository-button" data-view-mode="active">
@@ -102,16 +104,16 @@
           </ul>
         <% end %>
       </div>
-      <%= render layout: "shared/view_switch" do %>
-        <li class="view-switch-archived" data-view-mode="active">
-          <i class="fas fa-archive button-icon"></i>
-          Show archived items
-        </li>
-        <li class="view-switch-active" data-view-mode="archived">
-          <i class="fas fa-rocket button-icon"></i>
-          Show active items
-        </li>
-      <% end %>
+        <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
+          <li class="view-switch-archived" data-view-mode="active">
+            <i class="fas fa-archive button-icon"></i>
+            <%= t('repositories.show.show_archived_items') %>
+          </li>
+          <li class="view-switch-active" data-view-mode="archived">
+            <i class="fas fa-rocket button-icon"></i>
+            <%= t('repositories.show.show_active_items') %>
+          </li>
+        <% end %>
     </div>
 
     <div class="toolbar-delimiter"></div>
