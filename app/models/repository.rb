@@ -83,6 +83,12 @@ class Repository < RepositoryBase
     end
   end
 
+  def self.assigned_in_project(project)
+    accessible_by_teams(project.team)
+      .joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
+      .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
+  end
+
   def default_columns_count
     Constants::REPOSITORY_TABLE_DEFAULT_STATE['length']
   end

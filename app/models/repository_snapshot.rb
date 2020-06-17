@@ -15,6 +15,15 @@ class RepositorySnapshot < RepositoryBase
   validates :status, presence: true
   validate :only_one_selected_for_my_module, if: ->(obj) { obj.changed.include? :selected }
 
+  def self.assigned_in_project(project)
+    joins(my_module: { experiment: :project })
+      .where('experiments.project_id = ?', project.id)
+      .left_outer_joins(:original_repository)
+      .where(original_repositories_repositories: { id: nil })
+      .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+      .order(:parent_id, updated_at: :desc)
+  end
+
   def default_columns_count
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
   end
