@@ -14,7 +14,7 @@ gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
 gem 'rails', '~> 6.0.0'
 gem 'recaptcha', require: 'recaptcha/rails'
-gem 'sanitize', '~> 5.0'
+gem 'sanitize', '~> 5.2'
 gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.16.0' # Token authentication for Devise
 gem 'webpacker', '~> 4.0.0'

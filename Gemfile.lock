@@ -361,7 +361,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
-    nokogumbo (2.0.1)
+    nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
     oauth2 (1.4.1)
       faraday (>= 0.8, < 0.16.0)
@@ -507,7 +507,7 @@ GEM
     rufus-scheduler (3.6.0)
       fugit (~> 1.1, >= 1.1.6)
     safe_yaml (1.0.5)
-    sanitize (5.1.0)
+    sanitize (5.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
@@ -675,7 +675,7 @@ DEPENDENCIES
   ruby-graphviz (~> 1.2)
   rubyzip
   rufus-scheduler (~> 3.5)
-  sanitize (~> 5.0)
+  sanitize (~> 5.2)
   sassc-rails
   scenic (~> 1.4)
   sdoc (~> 1.0)
