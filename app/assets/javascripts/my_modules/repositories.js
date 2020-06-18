@@ -69,11 +69,18 @@ var MyModuleRepositories = (function() {
         }
       }, {
         targets: 3,
+        className: 'item-name',
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "' class='record-info-link'>" + data + '</a>';
         }
       });
+    } else {
+      columnDefs.push({
+        targets: 3,
+        className: 'item-name'
+      });
     }
+
 
     columnDefs.push(
       {
@@ -116,6 +123,7 @@ var MyModuleRepositories = (function() {
       },
       columnDefs: [{
         targets: 0,
+        className: 'item-name',
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
@@ -126,6 +134,9 @@ var MyModuleRepositories = (function() {
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
+      },
+      createdRow: function(row, data) {
+        $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       }
     });
   }
@@ -206,13 +217,15 @@ var MyModuleRepositories = (function() {
           callback(json.state);
         });
       },
-
       rowCallback: function(row) {
         var checkbox = $(row).find('.repository-row-selector');
         if (SELECTED_ROWS[row.id]) {
           $(row).addClass('selected');
           checkbox.attr('checked', !checkbox.attr('checked'));
         }
+      },
+      createdRow: function(row, data) {
+        $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       }
     });
   }
