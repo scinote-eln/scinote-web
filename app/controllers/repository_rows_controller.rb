@@ -139,7 +139,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def available_rows
-    if @repository.repository_rows.empty?
+    if @repository.repository_rows.active.empty?
       no_items_string =
         "#{t('projects.reports.new.save_PDF_to_inventory_modal.no_items')} " \
         "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),
@@ -204,6 +204,7 @@ class RepositoryRowsController < ApplicationController
 
   def load_repository
     @repository = Repository.accessible_by_teams(current_team)
+                            .with_archived
                             .eager_load(:repository_columns)
                             .find_by(id: params[:repository_id])
     render_404 unless @repository
@@ -258,6 +259,7 @@ class RepositoryRowsController < ApplicationController
 
   def load_available_rows(query)
     @repository.repository_rows
+               .active
                .includes(:repository_cells)
                .name_like(search_params[:q])
                .limit(Constants::SEARCH_LIMIT)

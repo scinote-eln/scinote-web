@@ -46,6 +46,23 @@ describe Repository, type: :model do
     end
   end
 
+  describe 'Scopes' do
+    describe 'default_scope' do
+      before do
+        create :repository
+        create :repository, :archived
+      end
+
+      it 'returns only active rows' do
+        expect(Repository.count).to be_eql 1
+      end
+
+      it 'returns all rows' do
+        expect(Repository.with_archived.count).to be_eql 2
+      end
+    end
+  end
+
   describe '.copy' do
     let(:created_by) { create :user }
     let(:repository) { create :repository }
@@ -60,6 +77,44 @@ describe Repository, type: :model do
     it 'adds activity in DB' do
       expect { repository.copy(created_by, 'name for copied repo') }
         .to(change { Activity.count })
+    end
+  end
+
+  describe '.within_global_limits?' do
+    context 'when have an archived repository' do
+      before do
+        Rails.configuration.x.global_repositories_limit = 2
+        create :repository
+        create :repository, :archived
+      end
+
+      after do
+        Rails.configuration.x.global_repositories_limit = 0
+      end
+
+      it 'includes archived repositories in condition and returns false' do
+        expect(described_class.within_global_limits?).to be_falsey
+      end
+    end
+  end
+
+  describe '.within_team_limits?' do
+    context 'when have an archived repository' do
+      before do
+        Rails.configuration.x.team_repositories_limit = 2
+        create :repository, team: team
+        create :repository, :archived, team: team
+      end
+
+      after do
+        Rails.configuration.x.team_repositories_limit = 0
+      end
+
+      let(:team) { create :team }
+
+      it 'includes archived repositories in condition and returns false' do
+        expect(described_class.within_team_limits?(team)).to be_falsey
+      end
     end
   end
 end

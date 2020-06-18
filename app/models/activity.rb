@@ -48,7 +48,8 @@ class Activity < ApplicationRecord
   }
 
   scope :repositories_joins, lambda {
-    joins("LEFT JOIN repositories ON subject_type = 'RepositoryBase' AND subject_id = repositories.id")
+    joins("LEFT JOIN repositories ON subject_type = 'RepositoryBase' AND subject_id = repositories.id " \
+            "AND repositories.archived != TRUE")
   }
 
   scope :reports_joins, lambda {

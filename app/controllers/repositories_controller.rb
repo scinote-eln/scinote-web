@@ -345,17 +345,13 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: repository_id)
+    @repository = Repository.accessible_by_teams(current_team).with_archived.find_by(id: repository_id)
     render_404 unless @repository
   end
 
   def load_repositories
     @repositories = Repository.accessible_by_teams(current_team).order('repositories.created_at ASC')
-    @repositories = if params[:archived]
-                      @repositories.archived
-                    else
-                      @repositories.active
-                    end
+    @repositories = @repositories.archived if params[:archived]
   end
 
   def set_inline_name_editing
