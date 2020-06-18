@@ -6,35 +6,40 @@
 <%= stylesheet_link_tag 'datatables' %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "sidebar", locals: { repositories: @repositories } %>
+<%= render partial: "sidebar", locals: { repositories: @repositories, archived: @repository.archived? } %>
 <div id="alert-container"></div>
 
-<div class="content-pane repository-show" data-table-url="<%= load_table_repository_path(@repository) %>">
-  <div id="repository-toolbar">
-    <div class="repository-title-name">
-      <h2 class="name-container">
-        <% if @inline_editable_title_config.present? %>
-          <%= render partial: "shared/inline_editing",
-                     locals: {
-                        initial_value: @repository.name,
-                        config: @inline_editable_title_config
-                     } %>
-        <% else %>
-          <div class="read-only-name">
-            <%= @repository.name %>
-          </div>
-          <span class="repository-share-icon">
-            <%= inventory_shared_status_icon(@repository, current_team) %>
-          </span>
+<div class="content-pane repository-show <%=  @repository.active? ? "active" : "archived" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
+  <div id="repository-toolbar" class="content-header">
+    <% if @repository.active? %>
+      <div class="repository-title-name" data-view-mode="active">
+        <h2 class="name-container">
+          <% if @inline_editable_title_config.present? %>
+            <%= render partial: "shared/inline_editing",
+                       locals: {
+                          initial_value: @repository.name,
+                          config: @inline_editable_title_config
+                       } %>
+          <% else %>
+            <div class="read-only-name">
+              <%= @repository.name %>
+            </div>
+            <span class="repository-share-icon">
+              <%= inventory_shared_status_icon(@repository, current_team) %>
+            </span>
+          <% end %>
+        </h2>
+        <% if @repository.shared_with_anybody? %>
+          <% team_name = @repository.team == current_team ? t('repositories.show.your_team') : @repository.team.name %>
+          <div class="repository-subtitle"><%= t('repositories.show.subtitle', team_name: team_name) %></div>
         <% end %>
-      </h2>
-      <% if @repository.shared_with_anybody? %>
-        <% team_name = @repository.team == current_team ? 'your Team' : @repository.team.name %>
-        <div class="repository-subtitle"><%= t('repositories.subtitle', team_name: team_name) %></div>
-      <% end %>
+      </div>
+    <% end %>
+    <div class="repository-archived-title-name" data-view-mode="archived">
+      <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
     </div>
     <div class="repo-datatables-buttons">
-      <div class="share-repository-button">
+      <div class="share-repository-button" data-view-mode="active">
         <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
           <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
                       class: 'btn btn-secondary share-repo-option', remote: true, id: 'shareRepoBtn' do %>
@@ -66,21 +71,21 @@
         <% if can_perform_repository_actions(@repository) %>
           <ul class="dropdown-menu pull-right">
             <% if can_create_repository_rows?(@repository) %>
-              <li>
+              <li data-view-mode="active">
                 <a href="#" id="importRecordsButton" data-turbolinks="false">
                   <%= t('repositories.index.options_dropdown.import_items') %>
                 </a>
-              <li>
+              </li>
             <% end %>
             <% if can_read_repository?(@repository) %>
-              <li>
+              <li >
                 <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
                   <%= t("repositories.index.options_dropdown.export_items") %>
                 </a>
               </li>
             <% end %>
             <% if can_create_repositories?(current_team) && !@repository.shared_with?(current_team) %>
-              <li>
+              <li data-view-mode="active">
                 <%= link_to t('repositories.index.options_dropdown.copy'),
                             team_repository_copy_modal_path(current_team, repository_id: @repository),
                             class: "copy-repo-option",
@@ -88,8 +93,8 @@
               </li>
             <% end %>
             <% if can_manage_repository?(@repository) %>
-              <li data-hook="destroy-repository-option" role="separator" class="divider"></li>
-              <li data-hook="destroy-repository-option">
+              <li  data-view-mode="active" data-hook="destroy-repository-option" role="separator" class="divider"></li>
+              <li  data-view-mode="active" data-hook="destroy-repository-option">
                 <%= link_to t('repositories.index.options_dropdown.delete'),
                             team_repository_destroy_modal_path(current_team, repository_id: @repository),
                             class: "delete-repo-option",
@@ -99,6 +104,16 @@
           </ul>
         <% end %>
       </div>
+        <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
+          <li class="view-switch-archived" data-view-mode="active">
+            <i class="fas fa-archive button-icon"></i>
+            <%= t('repositories.show.show_archived_items') %>
+          </li>
+          <li class="view-switch-active" data-view-mode="archived">
+            <i class="fas fa-rocket button-icon"></i>
+            <%= t('repositories.show.show_active_items') %>
+          </li>
+        <% end %>
     </div>
 
     <div class="toolbar-delimiter"></div>

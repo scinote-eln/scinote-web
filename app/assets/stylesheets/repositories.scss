@@ -8,23 +8,35 @@
 }
 
 .repository-show {
-  height: calc(100vh - 66px);
+  height: calc(100vh - var(--navbar-height));
   left: var(--repository-sidebar-margin);
   margin: 0;
-  padding: 0 32px;
+  padding: 0 2em;
   position: absolute;
-  top: 51px;
+  top: var(--navbar-height);
   transition: .4s $timing-function-sharp;
   width: calc(100vw - var(--repository-sidebar-margin));
+
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+  }
 
 
   #repository-toolbar {
     align-items: center;
     background-color: $color-white;
+    border: 0;
     display: flex;
-    height: 75px;
     left: var(--repository-sidebar-margin);
-    padding: 35px 32px 20px;
+    padding: 0 2em;
     position: fixed;
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
@@ -34,7 +46,7 @@
       border-bottom: $border-tertiary;
       bottom: 0;
       position: absolute;
-      width: calc(100% - 64px);
+      width: calc(100% - 4em);
     }
 
     .repository-share-icon {
@@ -47,10 +59,10 @@
     }
 
     .repository-title-name {
+      @include font-h2;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      font-size: 18px;
       line-height: 32px;
       margin-right: 20px;
       overflow: hidden;
@@ -79,6 +91,14 @@
       }
     }
 
+    .repository-archived-title-name {
+      @include font-h2;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .repository-subtitle {
       color: $color-silver-chalice;
       font-size: 12px;
@@ -92,6 +112,10 @@
       .manage-repo-column-index {
         margin-left: 4px;
       }
+
+      .view-switch {
+        margin-left: 4px;
+      }
     }
   }
 
@@ -100,17 +124,19 @@
     background-color: $color-white;
     display: flex;
     flex-grow: 1;
-    height: 68px;
+    flex-wrap: nowrap;
+    height: 5em;
     left: var(--repository-sidebar-margin);
-    padding: 0 32px;
+    overflow: hidden;
+    padding: 0 2em;
     position: fixed;
-    top: 126px;
+    top: calc(5em + var(--navbar-height));
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
     z-index: 90;
 
     .filter-container {
-      flex-grow: 1;
+      flex-shrink: 0;
 
       .toolbar-filter-buttons {
         float: right;
@@ -120,16 +146,44 @@
     .repository-provisioning-notice {
       color: $brand-info;
     }
+
+    #editDeleteCopy {
+      flex-shrink: 0;
+    }
+
+    .archived-label {
+      color: $color-silver-chalice;
+      display: inline-block;
+      margin: 0 auto;
+      max-width: 400px;
+      padding: 0 1em;
+
+      table {
+        tr {
+          td {
+            padding: 0 .5em;
+
+            &:nth-child(1) {
+              text-align: right;
+            }
+
+            &:nth-child(2) {
+              color: $color-black;
+            }
+          }
+        }
+      }
+    }
   }
 
   .dataTables_scroll {
-    padding-bottom: 68px;
-    padding-top: 123px;
+    padding-bottom: 5em;
+    padding-top: 10em;
 
     .dataTables_scrollHead {
       position: -webkit-sticky !important;
       position: sticky !important;
-      top: 194px;
+      top: calc(10em + var(--navbar-height));
       z-index: 90;
 
       .table.dataTable {
@@ -154,9 +208,9 @@
     background-color: $color-white;
     bottom: 0;
     display: flex;
-    height: 68px;
+    height: 5em;
     left: var(--repository-sidebar-margin);
-    padding: 0 142px 0 32px;
+    padding: 0 10em 0 2em;
     position: fixed;
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
@@ -355,6 +409,9 @@
 }
 
 #toolbarButtonsDatatable {
+  align-items: center;
+  display: flex;
+
   .view-only-label {
     opacity: .6;
   }
