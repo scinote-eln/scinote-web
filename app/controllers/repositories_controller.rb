@@ -428,7 +428,7 @@ class RepositoriesController < ApplicationController
 
   def selected_repos_params
     process_ids = params[:selected_repos].map(&:to_i).uniq
-    Repository.where(id: process_ids, team_id: current_team).pluck(:id)
+    Repository.where(id: process_ids, team_id: current_team).with_archived.pluck(:id)
   end
 
   def repository_response(message)

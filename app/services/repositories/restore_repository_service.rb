@@ -26,7 +26,7 @@ module Repositories
     private
 
     def scoped_repositories(ids)
-      Repository.where(id: ids, team_id: @team).archived
+      Repository.where(id: ids, team_id: @team).with_archived
     end
   end
 end
