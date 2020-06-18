@@ -284,7 +284,9 @@ class Extends
     change_task_start_date: 139,
     remove_task_start_date: 140,
     archive_inventory_item: 142,
-    restore_inventory_item: 143
+    restore_inventory_item: 143,
+    archive_inventory: 144,
+    restore_inventory: 145
   }
 
   ACTIVITY_GROUPS = {
@@ -295,7 +297,7 @@ class Extends
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
     reports: [48, 50, 49],
-    inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107, 113, 114, *133..136, 142, 143],
+    inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107, 113, 114, *133..136, 142, 143, 144, 145],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131],
     team: [92, 94, 93, 97, 104]

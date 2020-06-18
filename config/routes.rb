@@ -164,6 +164,10 @@ Rails.application.routes.draw do
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do
         collection do
+          post 'archive', to: 'repositories#archive',
+              defaults: { format: 'json' }
+          post 'restore', to: 'repositories#restore',
+              defaults: { format: 'json' }
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end

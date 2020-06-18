@@ -8,6 +8,16 @@ class Repository < RepositoryBase
 
   enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 
+  belongs_to :archived_by,
+             foreign_key: :archived_by_id,
+             class_name: 'User',
+             inverse_of: :archived_repositories,
+             optional: true
+  belongs_to :restored_by,
+             foreign_key: :restored_by_id,
+             class_name: 'User',
+             inverse_of: :restored_repositories,
+             optional: true
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
   has_many :teams_shared_with, through: :team_repositories, source: :team
   has_many :repository_snapshots,

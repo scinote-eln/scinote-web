@@ -1236,6 +1236,13 @@ en:
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
+    archive_inventories:
+      success_flash: "Inventories were successfully archived!"
+      unsuccess_flash: "Inventories were unsuccessfully archived!"
+      invalid_inventories_flash: "Please provide valid inventories"
+    restore_inventories:
+      success_flash: "Inventories were successfully restored!"
+      unsuccess_flash: "Inventories were unsuccessfully restored!"
     archive_records:
       success_flash: "Successfully archived items in inventory <strong>%{repository}</strong>"
       unsuccess_flash: "Unsuccessfully archived items in inventory <strong>%{repository}</strong>"

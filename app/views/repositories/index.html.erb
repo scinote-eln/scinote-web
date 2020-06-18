@@ -93,11 +93,19 @@
     <span class="fas fa-copy"></span>
     <%= t('libraries.index.buttons.duplicate') %>
   </a>
-  <a class="btn btn-light" data-view-mode="active" href="#">
+  <a id="archiveRepoBtn"
+     class="btn btn-light"
+     data-view-mode="active"
+     onclick="onClickArchiveRepositories()"
+     data-archive-repositories="<%= archive_team_repositories_path(current_team) %>">
     <span class="fas fa-archive"></span>
     <%= t('libraries.index.buttons.archive') %>
   </a>
-  <a class="btn btn-light" data-view-mode="archived" href="#">
+  <a id="restoreRepoBtn"
+     class="btn btn-light"
+     data-view-mode="archived"
+     onclick="onClickRestoreRepositories()"
+     data-restore-repositories="<%= restore_team_repositories_path(current_team) %>">
     <span class="fas fa-undo"></span>
     <%= t('libraries.index.buttons.restore') %>
   </a>

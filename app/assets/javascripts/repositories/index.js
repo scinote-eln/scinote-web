@@ -1,5 +1,5 @@
-/* global DataTableHelpers DataTableCheckboxes */
-(function() {
+/* global HelperModule DataTableHelpers DataTableCheckboxes */
+(function(global) {
   'use strict';
 
   var REPOSITORIES_TABLE;
@@ -82,6 +82,34 @@
     });
   }
 
+  global.onClickArchiveRepositories = function() {
+    $.ajax({
+      url: $('#archiveRepoBtn').data('archive-repositories'),
+      type: 'POST',
+      dataType: 'json',
+      data: { selected_repos: CHECKBOX_SELECTOR.selectedRows },
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        initRepositoriesDataTable('#repositoriesList');
+        reloadSidebar();
+      }
+    });
+  };
+
+  global.onClickRestoreRepositories = function() {
+    $.ajax({
+      url: $('#restoreRepoBtn').data('restore-repositories'),
+      type: 'POST',
+      dataType: 'json',
+      data: { selected_repos: CHECKBOX_SELECTOR.selectedRows },
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        initRepositoriesDataTable('#repositoriesList', true);
+        reloadSidebar();
+      }
+    });
+  };
+
   initRepositoriesDataTable('#repositoriesList');
   initRepositoryViewSwitcher();
-}());
+}(window));
