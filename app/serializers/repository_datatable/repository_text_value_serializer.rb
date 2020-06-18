@@ -8,9 +8,10 @@ module RepositoryDatatable
 
     def value
       @user = scope[:user]
-      custom_auto_link(object.data,
-                       simple_format: true,
-                       team: scope[:team])
+      {
+        view: custom_auto_link(object.data, simple_format: true, team: scope[:team]),
+        edit: sanitize_input(object.data)
+      }
     end
   end
 end

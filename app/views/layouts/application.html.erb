@@ -8,7 +8,7 @@
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
 
-    <% if ENV['MARVINJS_API_KEY'] %>
+    <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
       <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>
       <script src="https://marvinjs.chemicalize.com/v1/client.js"></script>
     <% end %>
