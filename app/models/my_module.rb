@@ -463,7 +463,8 @@ class MyModule < ApplicationRecord
       custom_columns.push(column.id)
     end
 
-    records = repository.assigned_rows(self).select(:id, :name, :created_at, :created_by_id)
+    records = repository.assigned_rows(self)
+                        .select(:id, :name, :created_at, :created_by_id, :repository_id, :parent_id, :archived)
     { headers: headers, rows: records, custom_columns: custom_columns }
   end
 
