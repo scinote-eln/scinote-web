@@ -9,11 +9,12 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
 
   before_action :switch_team_with_param, only: :show
-  before_action :load_repository, except: %i(index create create_modal sidebar)
+  before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
   before_action :load_repositories, only: %i(index show sidebar)
   before_action :check_view_all_permissions, only: %i(index sidebar)
-  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar)
+  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
   before_action :check_manage_permissions, only: %i(destroy destroy_modal rename_modal update)
+  before_action :check_archive_permissions, only: %i(archive restore)
   before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only: %i(create_modal create)
   before_action :check_copy_permissions, only: %i(copy_modal copy)
@@ -123,6 +124,28 @@ class RepositoriesController < ApplicationController
           )
         }
       end
+    end
+  end
+
+  def archive
+    service = Repositories::ArchiveRepositoryService.call(repositories: selected_repos_params,
+                                                          user: current_user,
+                                                          team: current_team)
+    if service.succeed?
+      render json: { flash: t('repositories.archive_inventories.success_flash') }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
+  end
+
+  def restore
+    service = Repositories::RestoreRepositoryService.call(repositories: selected_repos_params,
+                                                          user: current_user,
+                                                          team: current_team)
+    if service.succeed?
+      render json: { flash: t('repositories.restore_inventories.success_flash') }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
     end
   end
 
@@ -387,6 +410,10 @@ class RepositoriesController < ApplicationController
     render_403 unless can_manage_repository?(@repository)
   end
 
+  def check_archive_permissions
+    render_403 unless can_archive_repositories?(current_team)
+  end
+
   def check_share_permissions
     render_403 if !can_share_repository?(@repository) || current_user.teams.count <= 1
   end
@@ -397,6 +424,11 @@ class RepositoriesController < ApplicationController
 
   def import_params
     params.permit(:id, :file, :file_id, mappings: {}).to_h
+  end
+
+  def selected_repos_params
+    process_ids = params[:selected_repos].map(&:to_i).uniq
+    Repository.where(id: process_ids, team_id: current_team).with_archived.pluck(:id)
   end
 
   def repository_response(message)

@@ -110,6 +110,8 @@ en:
       remove_task_tag_html: "%{user} removed tag <strong>%{tag}</strong> from task %{my_module}."
       create_inventory_html: "%{user} created inventory %{repository}."
       rename_inventory_html: "%{user} renamed inventory %{repository}."
+      archive_inventory_html: "%{user} archived inventory %{repository}."
+      restore_inventory_html: "%{user} restored inventory %{repository}."
       delete_inventory_html: "%{user} deleted inventory %{repository}."
       share_inventory_html: "%{user} shared inventory %{repository} with team %{team} with %{permission_level} permission."
       unshare_inventory_html: "%{user} stopped sharing inventory %{repository} with team %{team}."

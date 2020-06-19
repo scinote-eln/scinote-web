@@ -6,9 +6,9 @@ module RepositoryActions
       return self unless valid?
 
       ActiveRecord::Base.transaction do
-        @repository_rows.each do |row|
+        @repository_rows.find_each(batch_size: 100) do |row|
           row.archive!(@user)
-          log_activity(:archive_inventory_item, row)
+          log_activity(:archive_inventory_item, row) if @log_activities
         end
       rescue ActiveRecord::RecordNotSaved
         @errors[:archiving_error] = I18n.t('repositories.archive_records.unsuccess_flash', @repository.name)

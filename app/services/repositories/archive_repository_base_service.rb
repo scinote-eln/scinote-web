@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
-module RepositoryActions
-  class ArchiveRowsBaseService
+module Repositories
+  class ArchiveRepositoryBaseService
     extend Service
 
     attr_reader :errors
 
-    def initialize(user:, team:, repository:, repository_rows:, log_activities: true)
+    def initialize(user:, team:, repositories:)
       @user = user
       @team = team
-      @repository = repository
-      @repository_rows = scoped_repository_rows(repository_rows)
-      @log_activities = log_activities
+      @repositories = scoped_repositories(repositories)
       @errors = {}
     end
 
@@ -29,33 +27,33 @@ module RepositoryActions
 
     private
 
-    def scoped_repository_rows(_ids)
+    def scoped_repositories(_ids)
       raise NotImplementedError
     end
 
     def valid?
-      unless @user && @repository
+      unless @user
         @errors[:invalid_arguments] =
-          { 'user': @user,
-            'repository': @repository }
+          { 'user': @user }
           .map do |key, value|
             "Can't find #{key.capitalize}" if value.nil?
           end.compact
       end
-
-      @errors[:repository_rows] = I18n.t('repositories.archive_records.invalid_rows_flash') if @repository_rows.blank?
+      if @repositories.blank?
+        @errors[:repositories] = I18n.t('repositories.archive_inventories.invalid_inventories_flash')
+      end
 
       succeed?
     end
 
-    def log_activity(type, row)
+    def log_activity(type, repository)
       Activities::CreateActivityService
         .call(activity_type: type,
               owner: @user,
-              subject: row.repository,
+              subject: repository,
               team: @team,
               message_items: {
-                repository_row: row.id
+                repository: repository.id
               })
     end
   end

@@ -1,5 +1,5 @@
-/* global DataTableHelpers DataTableCheckboxes */
-(function() {
+/* global I18n animateSpinner HelperModule DataTableHelpers DataTableCheckboxes */
+(function(global) {
   'use strict';
 
   var REPOSITORIES_TABLE;
@@ -82,6 +82,58 @@
     });
   }
 
+  global.onClickArchiveRepositories = function() {
+    $.ajax({
+      url: $('#archiveRepoBtn').data('archive-repositories'),
+      type: 'POST',
+      dataType: 'json',
+      data: { selected_repos: CHECKBOX_SELECTOR.selectedRows },
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        initRepositoriesDataTable('#repositoriesList');
+        reloadSidebar();
+      },
+      error: function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+          );
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(
+            ev.responseJSON.error, 'danger'
+          );
+          animateSpinner(null, false);
+        }
+      }
+    });
+  };
+
+  global.onClickRestoreRepositories = function() {
+    $.ajax({
+      url: $('#restoreRepoBtn').data('restore-repositories'),
+      type: 'POST',
+      dataType: 'json',
+      data: { selected_repos: CHECKBOX_SELECTOR.selectedRows },
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        initRepositoriesDataTable('#repositoriesList', true);
+        reloadSidebar();
+      },
+      error: function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+          );
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(
+            ev.responseJSON.error, 'danger'
+          );
+          animateSpinner(null, false);
+        }
+      }
+    });
+  };
+
   initRepositoriesDataTable('#repositoriesList');
   initRepositoryViewSwitcher();
-}());
+}(window));
