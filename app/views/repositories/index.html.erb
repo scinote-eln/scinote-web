@@ -2,8 +2,8 @@
 <% provide(:container_class, "no-second-nav-container") %>
 
 <% if current_team %>
-  <%= render partial: "sidebar", locals: { repositories: @repositories, archived: false } %>
-  <div class="content-pane flexible active repositories-index">
+  <%= render partial: "sidebar", locals: { repositories: @repositories, archived: params[:archived] } %>
+  <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index">
     <div class="content-header">
       <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
       <h1 data-view-mode="archived"><%= t('libraries.index.head_title_archived') %></h1>
@@ -77,7 +77,7 @@
 <!-- Repositories action buttons -->
 <template id="repositoriesListButtons">
 <% if can_create_repositories?(current_team) %>
-  <a class="btn btn-primary btn-lg create-new-repository"
+  <a id="createRepoBtn" class="btn btn-primary"
     data-remote="true"
     data-view-mode="active"
     href="<%= create_modal_team_repositories_path(current_team) %>">
@@ -85,31 +85,31 @@
     <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
   </a>
 <% end %>
-  <a class="btn btn-light" data-view-mode="active" href="#">
+  <a id="renameRepoBtn" class="btn btn-light disabled" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-pencil-alt"></span>
     <%= t('libraries.index.buttons.edit') %>
   </a>
-  <a class="btn btn-light" data-view-mode="active" href="#">
+  <a id="copyRepoBtn" class="btn btn-light disabled" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-copy"></span>
     <%= t('libraries.index.buttons.duplicate') %>
   </a>
   <a id="archiveRepoBtn"
-     class="btn btn-light"
+     class="btn btn-light disabled"
      data-view-mode="active"
-     onclick="onClickArchiveRepositories()"
+     data-action-mode="multiple"
      data-archive-repositories="<%= archive_team_repositories_path(current_team) %>">
     <span class="fas fa-archive"></span>
     <%= t('libraries.index.buttons.archive') %>
   </a>
   <a id="restoreRepoBtn"
-     class="btn btn-light"
+     class="btn btn-light disabled"
      data-view-mode="archived"
-     onclick="onClickRestoreRepositories()"
+     data-action-mode="multiple"
      data-restore-repositories="<%= restore_team_repositories_path(current_team) %>">
     <span class="fas fa-undo"></span>
     <%= t('libraries.index.buttons.restore') %>
   </a>
-  <a class="btn btn-light" data-view-mode="archived" href="#">
+  <a id="deleteRepoBtn" class="btn btn-light disabled" data-view-mode="archived" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-trash"></span>
     <%= t('libraries.index.buttons.delete') %>
   </a>

@@ -157,7 +157,7 @@ class RepositoriesController < ApplicationController
 
     @repository.discard
     @repository.destroy_discarded(current_user.id)
-    redirect_to team_repositories_path
+    redirect_to team_repositories_path(archived: true)
   end
 
   def rename_modal
@@ -181,7 +181,7 @@ class RepositoriesController < ApplicationController
           log_activity(:rename_inventory) # Acton only for renaming
 
           render json: {
-            url: team_repositories_path(repository: @repository)
+            url: team_repositories_path
           }, status: :ok
         else
           render json: @repository.errors, status: :unprocessable_entity
@@ -232,7 +232,7 @@ class RepositoriesController < ApplicationController
               new: copied_repository.name
             )
             render json: {
-              url: team_repositories_path(repository: copied_repository)
+              url: repository_path(copied_repository)
             }, status: :ok
           end
         end
