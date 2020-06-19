@@ -12,7 +12,9 @@ module Repositories
           RepositoryActions::RestoreRowsService.call(repository: repository,
                                                      repository_rows: repository.repository_rows.pluck(:id),
                                                      user: @user,
-                                                     team: @team)
+                                                     team: @team,
+                                                     log_activities: false)
+
           log_activity(:restore_inventory, repository)
         end
       rescue ActiveRecord::RecordNotSaved

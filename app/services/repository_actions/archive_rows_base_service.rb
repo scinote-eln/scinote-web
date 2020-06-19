@@ -6,11 +6,12 @@ module RepositoryActions
 
     attr_reader :errors
 
-    def initialize(user:, team:, repository:, repository_rows:)
+    def initialize(user:, team:, repository:, repository_rows:, log_activities: true)
       @user = user
       @team = team
       @repository = repository
       @repository_rows = scoped_repository_rows(repository_rows)
+      @log_activities = log_activities
       @errors = {}
     end
 
@@ -51,7 +52,7 @@ module RepositoryActions
       Activities::CreateActivityService
         .call(activity_type: type,
               owner: @user,
-              subject: row,
+              subject: row.repository,
               team: @team,
               message_items: {
                 repository_row: row.id

@@ -1,4 +1,4 @@
-/* global HelperModule DataTableHelpers DataTableCheckboxes */
+/* global I18n animateSpinner HelperModule DataTableHelpers DataTableCheckboxes */
 (function(global) {
   'use strict';
 
@@ -92,6 +92,18 @@
         HelperModule.flashAlertMsg(data.flash, 'success');
         initRepositoriesDataTable('#repositoriesList');
         reloadSidebar();
+      },
+      error: function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+          );
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(
+            ev.responseJSON.error, 'danger'
+          );
+          animateSpinner(null, false);
+        }
       }
     });
   };
@@ -106,6 +118,18 @@
         HelperModule.flashAlertMsg(data.flash, 'success');
         initRepositoriesDataTable('#repositoriesList', true);
         reloadSidebar();
+      },
+      error: function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(
+            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+          );
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(
+            ev.responseJSON.error, 'danger'
+          );
+          animateSpinner(null, false);
+        }
       }
     });
   };
