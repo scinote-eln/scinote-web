@@ -361,6 +361,12 @@ var RepositoryDatatable = (function(global) {
             case 'added-on':
               val = -6;
               break;
+            case 'archived-by':
+              val = -7;
+              break;
+            case 'archived-on':
+              val = -8;
+              break;
             default:
               val = th.attr('id');
           }
