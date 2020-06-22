@@ -109,6 +109,8 @@ class DataTableCheckboxes {
     }
     $(row).toggleClass('selected');
     this.checkSelectAllStatus();
+
+    if (this.config.onChanged) this.config.onChanged();
   }
 
   #initSelectAllCheckbox = () => {

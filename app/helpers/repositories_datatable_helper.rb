@@ -17,7 +17,12 @@ module RepositoriesDatatableHelper
         '6': escape_input(repository.created_by.full_name),
         '7': (I18n.l(repository.archived_on, format: :full) if repository.archived_on),
         '8': escape_input(repository.archived_by&.full_name),
-        'repositoryUrl': repository_path(repository)
+        'repositoryUrl': repository_path(repository),
+        'DT_RowAttr': {
+          'data-delete-modal-url': team_repository_destroy_modal_path(team, repository_id: repository),
+          'data-copy-modal-url': team_repository_copy_modal_path(team, repository_id: repository),
+          'data-rename-modal-url': team_repository_rename_modal_path(team, repository_id: repository)
+        }
       )
     end
     result

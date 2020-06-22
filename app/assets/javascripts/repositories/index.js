@@ -1,9 +1,34 @@
 /* global I18n animateSpinner HelperModule DataTableHelpers DataTableCheckboxes */
-(function(global) {
+(function() {
   'use strict';
 
   var REPOSITORIES_TABLE;
   var CHECKBOX_SELECTOR;
+
+  function updateActionButtons() {
+    var rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
+    var row;
+    $('#renameRepoBtn').attr('href', '#');
+    $('#deleteRepoBtn').attr('href', '#');
+    $('#copyRepoBtn').attr('href', '#');
+    switch (rowsCount) {
+      case 0:
+        $('.main-actions [data-action-mode="single"]').addClass('disabled');
+        $('.main-actions [data-action-mode="multiple"]').addClass('disabled');
+        break;
+      case 1:
+        row = $('#repositoriesList').find('tr#' + CHECKBOX_SELECTOR.selectedRows[0]);
+        $('.main-actions [data-action-mode="single"]').removeClass('disabled');
+        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled');
+        $('#renameRepoBtn').attr('href', row.data('rename-modal-url'));
+        $('#deleteRepoBtn').attr('href', row.data('delete-modal-url'));
+        $('#copyRepoBtn').attr('href', row.data('copy-modal-url'));
+        break;
+      default:
+        $('.main-actions [data-action-mode="single"]').addClass('disabled');
+        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled');
+    }
+  }
 
   function initRepositoriesDataTable(tableContainer, archived = false) {
     var tableTemplate = archived ? $('#archivedRepositoriesListTable').html() : $('#activeRepositoriesListTable').html();
@@ -41,13 +66,19 @@
           var dataTableWrapper = $(e.nTableWrapper);
           CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
             checkboxSelector: '.repository-row-selector',
-            selectAllSelector: '.select-all-checkbox'
+            selectAllSelector: '.select-all-checkbox',
+            onChanged: function() {
+              updateActionButtons();
+            }
           });
           DataTableHelpers.initLengthApearance(dataTableWrapper);
           DataTableHelpers.initSearchField(dataTableWrapper);
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
-          $('.create-new-repository').initializeModal('#create-repo-modal');
+          $('#createRepoBtn').initializeModal('#create-repo-modal');
+          $('#deleteRepoBtn').initializeModal('#delete-repo-modal');
+          $('#renameRepoBtn').initializeModal('#rename-repo-modal');
+          $('#copyRepoBtn').initializeModal('#copy-repo-modal');
         },
         drawCallback: function() {
           if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
@@ -82,58 +113,40 @@
     });
   }
 
-  global.onClickArchiveRepositories = function() {
-    $.ajax({
-      url: $('#archiveRepoBtn').data('archive-repositories'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_repos: CHECKBOX_SELECTOR.selectedRows },
-      success: function(data) {
+  $('.repositories-index')
+    .on('click', '#archiveRepoBtn', function() {
+      $.post($('#archiveRepoBtn').data('archive-repositories'), {
+        selected_repos: CHECKBOX_SELECTOR.selectedRows
+      }, function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         initRepositoriesDataTable('#repositoriesList');
         reloadSidebar();
-      },
-      error: function(ev) {
+      }).fail(function(ev) {
         if (ev.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-          );
+          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
         } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(
-            ev.responseJSON.error, 'danger'
-          );
-          animateSpinner(null, false);
+          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
         }
-      }
-    });
-  };
-
-  global.onClickRestoreRepositories = function() {
-    $.ajax({
-      url: $('#restoreRepoBtn').data('restore-repositories'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_repos: CHECKBOX_SELECTOR.selectedRows },
-      success: function(data) {
+        animateSpinner(null, false);
+      });
+    })
+    .on('click', '#restoreRepoBtn', function() {
+      $.post($('#restoreRepoBtn').data('restore-repositories'), {
+        selected_repos: CHECKBOX_SELECTOR.selectedRows
+      }, function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         initRepositoriesDataTable('#repositoriesList', true);
         reloadSidebar();
-      },
-      error: function(ev) {
+      }).fail(function(ev) {
         if (ev.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-          );
+          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
         } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(
-            ev.responseJSON.error, 'danger'
-          );
-          animateSpinner(null, false);
+          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
         }
-      }
+        animateSpinner(null, false);
+      });
     });
-  };
 
-  initRepositoriesDataTable('#repositoriesList');
+  initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
   initRepositoryViewSwitcher();
-}(window));
+}());
