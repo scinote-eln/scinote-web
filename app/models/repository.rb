@@ -32,6 +32,9 @@ class Repository < RepositoryBase
             uniqueness: { scope: :team_id, case_sensitive: false },
             length: { maximum: Constants::NAME_MAX_LENGTH }
 
+  scope :active, -> { where(archived: false) }
+  scope :archived, -> { where(archived: true) }
+
   scope :accessible_by_teams, lambda { |teams|
     left_outer_joins(:team_repositories)
       .where('repositories.team_id IN (?) '\
@@ -45,9 +48,6 @@ class Repository < RepositoryBase
       .distinct
   }
 
-  default_scope { where.not(archived: true) }
-  scope :with_archived, -> { unscope(where: :archived) }
-  scope :archived, -> { with_archived.where(archived: true) }
   scope :used_on_task_but_unshared, lambda { |task, team|
     where(id: task.repository_rows
       .select(:repository_id))
@@ -57,13 +57,13 @@ class Repository < RepositoryBase
   def self.within_global_limits?
     return true unless Rails.configuration.x.global_repositories_limit.positive?
 
-    with_archived.count < Rails.configuration.x.global_repositories_limit
+    count < Rails.configuration.x.global_repositories_limit
   end
 
   def self.within_team_limits?(team)
     return true unless Rails.configuration.x.team_repositories_limit.positive?
 
-    team.repositories.with_archived.count < Rails.configuration.x.team_repositories_limit
+    team.repositories.count < Rails.configuration.x.team_repositories_limit
   end
 
   def self.search(

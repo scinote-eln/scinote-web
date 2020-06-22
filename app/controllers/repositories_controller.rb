@@ -368,13 +368,17 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_team).with_archived.find_by(id: repository_id)
+    @repository = Repository.accessible_by_teams(current_team).find_by(id: repository_id)
     render_404 unless @repository
   end
 
   def load_repositories
     @repositories = Repository.accessible_by_teams(current_team).order('repositories.created_at ASC')
-    @repositories = @repositories.archived if params[:archived] || @repository&.archived?
+    @repositories = if params[:archived] || @repository&.archived?
+                      @repositories.archived
+                    else
+                      @repositories.active
+                    end
   end
 
   def set_inline_name_editing
@@ -428,7 +432,7 @@ class RepositoriesController < ApplicationController
 
   def selected_repos_params
     process_ids = params[:selected_repos].map(&:to_i).uniq
-    Repository.where(id: process_ids, team_id: current_team).with_archived.pluck(:id)
+    Repository.where(id: process_ids, team_id: current_team).pluck(:id)
   end
 
   def repository_response(message)

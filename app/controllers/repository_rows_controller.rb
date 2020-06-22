@@ -204,7 +204,6 @@ class RepositoryRowsController < ApplicationController
 
   def load_repository
     @repository = Repository.accessible_by_teams(current_team)
-                            .with_archived
                             .eager_load(:repository_columns)
                             .find_by(id: params[:repository_id])
     render_404 unless @repository
