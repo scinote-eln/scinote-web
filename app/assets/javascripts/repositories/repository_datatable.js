@@ -827,8 +827,11 @@ var RepositoryDatatable = (function(global) {
 
   function checkArchivedColumnsState() {
     var archived = $('.repository-show').hasClass('archived');
-    TABLE.column(6).visible(archived);
-    TABLE.column(7).visible(archived);
+    $.each(TABLE.context[0].aoColumns, function(i, column) {
+      if (['archived-on', 'archived-by'].includes(column.nTh.id)) {
+        TABLE.column(column.idx).visible(archived);
+      }
+    });
   }
 
   return Object.freeze({

@@ -150,11 +150,13 @@
   function initRepositoryViewSwitcher() {
     var viewSwitch = $('.view-switch');
     viewSwitch.on('click', '.view-switch-archived', function() {
-      $('.repository-show').toggleClass('archived active');
+      $('.repository-show').removeClass('active').addClass('archived')
+      $('#manage-repository-column').removeClass('active').addClass('archived');
       RepositoryDatatable.reload();
     });
     viewSwitch.on('click', '.view-switch-active', function() {
-      $('.repository-show').toggleClass('archived active');
+      $('.repository-show').removeClass('archived').addClass('active');
+      $('#manage-repository-column').removeClass('archived').addClass('active');;
       RepositoryDatatable.reload();
     });
   }
