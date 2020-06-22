@@ -60,8 +60,6 @@ module Activities
             getter_method = 'name'
           end
 
-          const = const.with_archived  if const == Repository
-
           obj = const.find id
           @activity.message_items[k] = { type: const.to_s, value: obj.public_send(getter_method).to_s, id: id }
           @activity.message_items[k][:value_for] = getter_method
