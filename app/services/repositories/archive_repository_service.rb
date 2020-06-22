@@ -9,11 +9,11 @@ module Repositories
         @repositories.each do |repository|
           repository.archive!(@user)
 
-          RepositoryActions::ArchiveRowsService.call(repository: repository,
-                                                     repository_rows: repository.repository_rows.pluck(:id),
-                                                     user: @user,
-                                                     team: @team,
-                                                     log_activities: false)
+          # rubocop:disable Rails/SkipsModelValidations
+          repository.repository_rows.active.update_all(archived_on: repository.archived_on,
+                                                       archived_by_id: repository.archived_by_id,
+                                                       archived: true)
+          # rubocop:enable Rails/SkipsModelValidations
 
           log_activity(:archive_inventory, repository)
         end
