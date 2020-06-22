@@ -69,7 +69,7 @@
           <%= form.check_box :module_activity, label: t("projects.reports.elements.modals.module_contents_inner.activity") %>
         </li>
         <% # List all repositories, no matter whether rows are assigned or not %>
-        <% Repository.accessible_by_teams(@project.team).with_archived.order(created_at: :asc).select(:id, :name).find_each do |repository| %>
+        <% Repository.accessible_by_teams(@project.team).order(created_at: :asc).select(:id, :name).find_each do |repository| %>
           <li>
             <%= form.check_box "module_repository_#{repository.id}", label: repository.name.capitalize, data: { id: repository.id } %>
           </li>

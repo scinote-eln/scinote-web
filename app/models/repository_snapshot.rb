@@ -5,7 +5,7 @@ class RepositorySnapshot < RepositoryBase
   after_save :refresh_report_references, if: :saved_change_to_selected
   before_destroy :refresh_report_references_for_destroy, prepend: true
 
-  belongs_to :original_repository, -> { unscope(where: :archived) },
+  belongs_to :original_repository,
              foreign_key: :parent_id,
              class_name: 'Repository',
              inverse_of: :repository_snapshots,

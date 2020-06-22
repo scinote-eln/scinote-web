@@ -47,18 +47,22 @@ describe Repository, type: :model do
   end
 
   describe 'Scopes' do
-    describe 'default_scope' do
+    describe '#active and #archived' do
       before do
         create :repository
         create :repository, :archived
       end
 
       it 'returns only active rows' do
-        expect(Repository.count).to be_eql 1
+        expect(Repository.active.count).to be_eql 1
+      end
+
+      it 'returns only archived rows' do
+        expect(Repository.archived.count).to be_eql 1
       end
 
       it 'returns all rows' do
-        expect(Repository.with_archived.count).to be_eql 2
+        expect(Repository.count).to be_eql 2
       end
     end
   end

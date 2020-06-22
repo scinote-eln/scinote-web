@@ -115,7 +115,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.with_archived.find_by(id: params[:id])
+    @repository = Repository.find_by(id: params[:id])
     render_404 unless @repository
   end
 
