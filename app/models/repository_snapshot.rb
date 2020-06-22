@@ -13,7 +13,7 @@ class RepositorySnapshot < RepositoryBase
 
   validates :name, presence: true, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :status, presence: true
-  validate :only_one_selected_for_my_module, if: ->(obj) { obj.changed.include? :selected }
+  validate :only_one_selected_for_my_module, if: ->(obj) { obj.changed.include? 'selected' }
 
   def default_columns_count
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
