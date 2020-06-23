@@ -46,6 +46,21 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 403)
     end
+
+    context 'when have some archived inventories' do
+      before do
+        create(:repository, :archived, name: Faker::Name.unique.name, created_by: @user, team: @teams.first)
+      end
+
+      it 'will ignore them' do
+        hash_body = nil
+
+        get api_v1_team_inventories_path(team_id: @teams.first.id), headers: @valid_headers
+
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body['data'].count).to be_eql 2
+      end
+    end
   end
 
   describe 'GET inventory, #show' do
