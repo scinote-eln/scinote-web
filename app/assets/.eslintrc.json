@@ -3,7 +3,11 @@
     "browser": true,
     "jquery": true
   },
-  "extends": ["airbnb-base/legacy"],
+  "plugins": ["no-jquery"],
+  "extends": [
+    "airbnb-base/legacy",
+    "plugin:no-jquery/deprecated-1.12"
+  ],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",

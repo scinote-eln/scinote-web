@@ -5,8 +5,13 @@
     "es6": true,
     "node": true
   },
-  "plugins": ["flowtype", "react", "prettier"],
-  "extends": ["airbnb", "prettier", "prettier/react"],
+  "plugins": ["flowtype", "react", "prettier", "no-jquery"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/react",
+    "plugin:no-jquery/deprecated-1.12"
+  ],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
