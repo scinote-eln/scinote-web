@@ -92,14 +92,27 @@
                             remote: true %>
               </li>
             <% end %>
-            <% if can_manage_repository?(@repository) %>
-              <li  data-view-mode="active" data-hook="destroy-repository-option" role="separator" class="divider"></li>
-              <li  data-view-mode="active" data-hook="destroy-repository-option">
+            <% if can_manage_repository?(@repository)%>
+              <li data-view-mode="active" data-hook="destroy-repository-option" role="separator" class="divider"></li>
+              <li  data-view-mode="active" data-hook="archive-repository-option">
+                <%= link_to t('repositories.index.options_dropdown.archive'),
+                            team_repository_archive_path(current_team, @repository),
+                            class: "archive-repository-option",
+                            remote: true %>
+              </li>
+              <li data-view-mode="archived" data-hook="restore-repository-option">
+                <%= link_to t('repositories.index.options_dropdown.restore'),
+                            team_repository_restore_path(current_team, @repository),
+                            class: "archive-repository-option",
+                            remote: true %>
+              </li>
+              <li data-view-mode="archived" data-hook="destroy-repository-option">
                 <%= link_to t('repositories.index.options_dropdown.delete'),
                             team_repository_destroy_modal_path(current_team, repository_id: @repository),
                             class: "delete-repo-option",
                             remote: true %>
               </li>
+
             <% end %>
           </ul>
         <% end %>

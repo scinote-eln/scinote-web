@@ -173,7 +173,21 @@
   });
 
   $('.create-new-repository').initializeModal('#create-repo-modal');
+
+  function initArchivingActionsInDropdown(){
+    $('.archive-repository-option').on('click', function(event){
+      event.preventDefault();
+      var link = event.target.getAttribute("href");
+      $.ajax({
+        type: 'GET',
+        url: link,
+        success: pageReload
+      });
+    });
+  }
+
   initImportRecordsModal();
   initTable();
   initRepositoryViewSwitcher();
+  initArchivingActionsInDropdown();
 }(window));

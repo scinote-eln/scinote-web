@@ -128,7 +128,7 @@ class RepositoriesController < ApplicationController
   end
 
   def archive
-    service = Repositories::ArchiveRepositoryService.call(repositories: selected_repos_params,
+    service = Repositories::ArchiveRepositoryService.call(repositories: selected_repositories,
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
@@ -139,7 +139,7 @@ class RepositoriesController < ApplicationController
   end
 
   def restore
-    service = Repositories::RestoreRepositoryService.call(repositories: selected_repos_params,
+    service = Repositories::RestoreRepositoryService.call(repositories: selected_repositories,
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
@@ -430,9 +430,15 @@ class RepositoriesController < ApplicationController
     params.permit(:id, :file, :file_id, mappings: {}).to_h
   end
 
-  def selected_repos_params
-    process_ids = params[:selected_repos].map(&:to_i).uniq
-    Repository.where(id: process_ids, team_id: current_team).pluck(:id)
+  def selected_repositories
+    if params[:repository_id].present?
+      repository_ids = params[:repository_id]
+    elsif params[:selected_repos].any?
+      repository_ids = params[:selected_repos].map(&:to_i).uniq
+    else
+      render status: :not_found
+    end
+    current_team.repositories.where(id: repository_ids)
   end
 
   def repository_response(message)

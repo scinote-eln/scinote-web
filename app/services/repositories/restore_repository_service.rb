@@ -24,11 +24,5 @@ module Repositories
 
       self
     end
-
-    private
-
-    def scoped_repositories(ids)
-      Repository.where(id: ids, team_id: @team)
-    end
   end
 end

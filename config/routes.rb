@@ -180,6 +180,8 @@ Rails.application.routes.draw do
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
         get :share_modal
+        get :archive, to: 'repositories#archive'
+        get :restore, to: 'repositories#restore'
 
         resources :team_repositories, only: %i(destroy) do
           collection do
