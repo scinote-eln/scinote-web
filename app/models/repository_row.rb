@@ -51,6 +51,26 @@ class RepositoryRow < ApplicationRecord
     true
   end
 
+  def row_archived?
+    self[:archived]
+  end
+
+  def archived
+    row_archived? || repository&.archived?
+  end
+
+  def archived?
+    row_archived? ? super : repository.archived?
+  end
+
+  def archived_by
+    row_archived? ? super : repository.archived_by
+  end
+
+  def archived_on
+    row_archived? ? super : repository.archived_on
+  end
+
   def snapshot!(repository_snapshot)
     row_snapshot = dup
     row_snapshot.assign_attributes(
