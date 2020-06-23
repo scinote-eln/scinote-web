@@ -228,4 +228,24 @@
       }
     }
   }
+
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+
+    .repo-columns-list {
+      .col-list-el:hover.editable.has-permissions {
+        .column-type {
+          display: inline-block;
+        }
+      }
+    }
+  }
 }

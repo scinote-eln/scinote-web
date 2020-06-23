@@ -266,6 +266,12 @@ var RepositoryColumns = (function() {
       case 'added-by':
         colType = 'RepositoryListValue';
         break;
+      case 'archived-on':
+        colType = 'RepositoryDateTimeValue';
+        break;
+      case 'archived-by':
+        colType = 'RepositoryListValue';
+        break;
       default:
         colType = $(el).attr('data-type');
     }
@@ -296,7 +302,7 @@ var RepositoryColumns = (function() {
         } else {
           thederName = el.innerText;
         }
-        if (thederName === 'Name') {
+        if (['row-name', 'archived-by', 'archived-on'].includes(el.id)) {
           visClass = '';
           visText = '';
         }
@@ -307,7 +313,7 @@ var RepositoryColumns = (function() {
           </span>
           <span class="text">${generateColumnNameTooltip(thederName)}</span>
           <span class="column-type pull-right">${getColumnTypeText(el, colId)}</span>
-          <span class="sci-btn-group manage-controls pull-right">
+          <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
             <button class="btn icon-btn btn-light edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
