@@ -12,5 +12,11 @@ FactoryBot.define do
       archived_on { Time.zone.now }
       archived_by { created_by }
     end
+
+    trait :restored do
+      archived { false }
+      restored_on { Time.zone.now }
+      restored_by { created_by }
+    end
   end
 end

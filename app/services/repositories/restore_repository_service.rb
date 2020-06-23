@@ -9,11 +9,11 @@ module Repositories
         @repositories.each do |repository|
           repository.restore!(@user)
 
-          RepositoryActions::RestoreRowsService.call(repository: repository,
-                                                     repository_rows: repository.repository_rows.pluck(:id),
-                                                     user: @user,
-                                                     team: @team,
-                                                     log_activities: false)
+          # rubocop:disable Rails/SkipsModelValidations
+          repository.repository_rows.archived.update_all(restored_on: repository.restored_on,
+                                                         restored_by_id: repository.restored_by_id,
+                                                         archived: false)
+          # rubocop:enable Rails/SkipsModelValidations
 
           log_activity(:restore_inventory, repository)
         end

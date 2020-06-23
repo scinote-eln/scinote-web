@@ -14,7 +14,7 @@ class RepositoryRow < ApplicationRecord
              inverse_of: :archived_repository_rows,
              optional: true
   belongs_to :restored_by,
-             foreign_key: :archived_by_id,
+             foreign_key: :restored_by_id,
              class_name: 'User',
              inverse_of: :restored_repository_rows,
              optional: true
