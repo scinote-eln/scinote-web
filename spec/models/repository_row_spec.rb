@@ -43,6 +43,56 @@ describe RepositoryRow, type: :model do
     end
   end
 
+  describe 'Scopes' do
+    describe '.archived' do
+      before do
+        create :repository_row, repository: repository
+        create :repository_row, repository: repository
+        create :repository_row, :archived, repository: repository
+      end
+
+      context 'when repository is active' do
+        let(:repository) { create :repository }
+
+        it 'includes only archived rows within active repository' do
+          expect(repository.repository_rows.archived.count).to be_eql(1)
+        end
+      end
+
+      context 'when repository is archived' do
+        let(:repository) { create :repository, :archived }
+
+        it 'includes all rows within archived repository' do
+          expect(repository.repository_rows.archived.count).to be_eql(3)
+        end
+      end
+    end
+
+    describe '.active' do
+      before do
+        create :repository_row, repository: repository
+        create :repository_row, repository: repository
+        create :repository_row, :archived, repository: repository
+      end
+
+      context 'when repository is active' do
+        let(:repository) { create :repository }
+
+        it 'includes only active rows from active repository scope' do
+          expect(repository.repository_rows.active.count).to be_eql(2)
+        end
+      end
+
+      context 'when repository is archived' do
+        let(:repository) { create :repository, :archived }
+
+        it 'includes 0 rows from archived repository' do
+          expect(repository.repository_rows.active.count).to be_eql(0)
+        end
+      end
+    end
+  end
+
   describe '.archived' do
     context 'when archived' do
       let(:repository_row) { build :repository_row, :archived }
