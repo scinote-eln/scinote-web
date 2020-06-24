@@ -14,7 +14,7 @@ class RepositoryRow < ApplicationRecord
              inverse_of: :archived_repository_rows,
              optional: true
   belongs_to :restored_by,
-             foreign_key: :archived_by_id,
+             foreign_key: :restored_by_id,
              class_name: 'User',
              inverse_of: :restored_repository_rows,
              optional: true
@@ -49,6 +49,26 @@ class RepositoryRow < ApplicationRecord
 
   def editable?
     true
+  end
+
+  def row_archived?
+    self[:archived]
+  end
+
+  def archived
+    row_archived? || repository&.archived?
+  end
+
+  def archived?
+    row_archived? ? super : repository.archived?
+  end
+
+  def archived_by
+    row_archived? ? super : repository.archived_by
+  end
+
+  def archived_on
+    row_archived? ? super : repository.archived_on
   end
 
   def snapshot!(repository_snapshot)

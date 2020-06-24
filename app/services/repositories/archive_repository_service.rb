@@ -9,12 +9,6 @@ module Repositories
         @repositories.each do |repository|
           repository.archive!(@user)
 
-          RepositoryActions::ArchiveRowsService.call(repository: repository,
-                                                     repository_rows: repository.repository_rows.pluck(:id),
-                                                     user: @user,
-                                                     team: @team,
-                                                     log_activities: false)
-
           log_activity(:archive_inventory, repository)
         end
       rescue ActiveRecord::RecordNotSaved
