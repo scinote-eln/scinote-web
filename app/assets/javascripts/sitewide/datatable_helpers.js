@@ -126,3 +126,4 @@ DataTableCheckboxes.prototype.initSelectAllCheckbox = function() {
     });
   });
 };
+
