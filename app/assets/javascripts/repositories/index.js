@@ -96,6 +96,7 @@
     if ($('.repositories-index').hasClass('archived')) archived = true;
     $.get(slidePanel.data('sidebar-url'), { archived: archived }, function(data) {
       slidePanel.html(data.html);
+      $('.create-new-repository').initializeModal('#create-repo-modal');
     });
   }
 
@@ -147,6 +148,7 @@
       });
     });
 
+  $('.create-new-repository').initializeModal('#create-repo-modal');
   initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
   initRepositoryViewSwitcher();
 }());
