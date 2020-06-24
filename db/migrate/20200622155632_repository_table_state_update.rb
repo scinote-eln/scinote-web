@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class RepositoryTableStateUpdate < ActiveRecord::Migration[6.0]
+  class TempStateModel < ApplicationRecord
+    self.table_name = 'repository_table_states'
+  end
+
   def up
-    RepositoryTableState.all.each do |table_state|
+    TempStateModel.find_each do |table_state|
       state = table_state.state
       order_state = state['order'][0][0]
       state['order'][0][0] = order_state + 2 if order_state > 5
