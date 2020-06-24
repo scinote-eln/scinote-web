@@ -84,6 +84,7 @@ module RepositoryRows
       return [] unless params[:rows_to_assign]
 
       unassigned_rows = @repository.repository_rows
+                                   .active
                                    .joins("LEFT OUTER JOIN my_module_repository_rows "\
                                           "ON repository_rows.id = my_module_repository_rows.repository_row_id "\
                                           "AND my_module_repository_rows.my_module_id = #{my_module.id.to_i}")
