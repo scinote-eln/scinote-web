@@ -116,7 +116,7 @@
   $('.repositories-index')
     .on('click', '#archiveRepoBtn', function() {
       $.post($('#archiveRepoBtn').data('archive-repositories'), {
-        selected_repos: CHECKBOX_SELECTOR.selectedRows
+        repository_ids: CHECKBOX_SELECTOR.selectedRows
       }, function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         initRepositoriesDataTable('#repositoriesList');
@@ -132,7 +132,7 @@
     })
     .on('click', '#restoreRepoBtn', function() {
       $.post($('#restoreRepoBtn').data('restore-repositories'), {
-        selected_repos: CHECKBOX_SELECTOR.selectedRows
+        repository_ids: CHECKBOX_SELECTOR.selectedRows
       }, function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         initRepositoriesDataTable('#repositoriesList', true);

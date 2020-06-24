@@ -92,27 +92,28 @@
                             remote: true %>
               </li>
             <% end %>
-            <% if can_manage_repository?(@repository)%>
-              <li data-view-mode="active" data-hook="destroy-repository-option" role="separator" class="divider"></li>
-              <li  data-view-mode="active" data-hook="archive-repository-option">
+            <% if can_archive_repository?(@repository) %>
+              <li data-view-mode="active" role="separator" class="divider"></li>
+              <li  data-view-mode="active">
                 <%= link_to t('repositories.index.options_dropdown.archive'),
-                            team_repository_archive_path(current_team, @repository),
+                            archive_team_repositories_path(current_team),
                             class: "archive-repository-option",
-                            remote: true %>
+                            data: { repository_id: @repository.id } %>
               </li>
-              <li data-view-mode="archived" data-hook="restore-repository-option">
+              <li data-view-mode="archived">
                 <%= link_to t('repositories.index.options_dropdown.restore'),
-                            team_repository_restore_path(current_team, @repository),
+                            restore_team_repositories_path(current_team),
                             class: "archive-repository-option",
-                            remote: true %>
+                            data: { repository_id: @repository.id } %>
               </li>
+            <% end %>
+            <% if can_manage_repository?(@repository) %>
               <li data-view-mode="archived" data-hook="destroy-repository-option">
                 <%= link_to t('repositories.index.options_dropdown.delete'),
                             team_repository_destroy_modal_path(current_team, repository_id: @repository),
                             class: "delete-repo-option",
                             remote: true %>
               </li>
-
             <% end %>
           </ul>
         <% end %>

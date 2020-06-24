@@ -1,7 +1,7 @@
 //= require repositories/import/records_importer.js
 
 /*
-  global animateSpinner repositoryRecordsImporter I18n
+  global pageReload animateSpinner repositoryRecordsImporter I18n
   RepositoryDatatable PerfectScrollbar HelperModule
 */
 
@@ -150,13 +150,13 @@
   function initRepositoryViewSwitcher() {
     var viewSwitch = $('.view-switch');
     viewSwitch.on('click', '.view-switch-archived', function() {
-      $('.repository-show').removeClass('active').addClass('archived')
+      $('.repository-show').removeClass('active').addClass('archived');
       $('#manage-repository-column').removeClass('active').addClass('archived');
       RepositoryDatatable.reload();
     });
     viewSwitch.on('click', '.view-switch-active', function() {
       $('.repository-show').removeClass('archived').addClass('active');
-      $('#manage-repository-column').removeClass('archived').addClass('active');;
+      $('#manage-repository-column').removeClass('archived').addClass('active');
       RepositoryDatatable.reload();
     });
   }
@@ -174,14 +174,25 @@
 
   $('.create-new-repository').initializeModal('#create-repo-modal');
 
-  function initArchivingActionsInDropdown(){
-    $('.archive-repository-option').on('click', function(event){
+  function initArchivingActionsInDropdown() {
+    $('.archive-repository-option').on('click', function(event) {
       event.preventDefault();
-      var link = event.target.getAttribute("href");
+      animateSpinner(null, true);
+
       $.ajax({
-        type: 'GET',
-        url: link,
-        success: pageReload
+        type: 'POST',
+        url: $(this).attr('href'),
+        dataType: 'json',
+        data: { repository_ids: [$(this).data('repositoryId')] },
+        success: pageReload,
+        error: function(ev) {
+          if (ev.status === 403) {
+            HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
+          } else if (ev.status === 422) {
+            HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
+          }
+          animateSpinner(null, false);
+        }
       });
     });
   }
