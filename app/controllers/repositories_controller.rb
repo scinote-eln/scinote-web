@@ -11,6 +11,8 @@ class RepositoriesController < ApplicationController
   before_action :switch_team_with_param, only: :show
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
   before_action :load_repositories, only: %i(index show sidebar)
+  before_action :load_repositories_for_archiving, only: :archive
+  before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
   before_action :check_manage_permissions, only: %i(destroy destroy_modal rename_modal update)
@@ -128,7 +130,7 @@ class RepositoriesController < ApplicationController
   end
 
   def archive
-    service = Repositories::ArchiveRepositoryService.call(repositories: selected_repos_params,
+    service = Repositories::ArchiveRepositoryService.call(repositories: @repositories,
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
@@ -139,7 +141,7 @@ class RepositoriesController < ApplicationController
   end
 
   def restore
-    service = Repositories::RestoreRepositoryService.call(repositories: selected_repos_params,
+    service = Repositories::RestoreRepositoryService.call(repositories: @repositories,
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
@@ -381,6 +383,14 @@ class RepositoriesController < ApplicationController
                     end
   end
 
+  def load_repositories_for_archiving
+    @repositories = current_team.repositories.active.where(id: params[:repository_ids])
+  end
+
+  def load_repositories_for_restoring
+    @repositories = current_team.repositories.archived.where(id: params[:repository_ids])
+  end
+
   def set_inline_name_editing
     return unless can_manage_repository?(@repository)
 
@@ -415,7 +425,9 @@ class RepositoriesController < ApplicationController
   end
 
   def check_archive_permissions
-    render_403 unless can_archive_repositories?(current_team)
+    @repositories.each do |repository|
+      return render_403 unless can_archive_repository?(repository)
+    end
   end
 
   def check_share_permissions
@@ -428,11 +440,6 @@ class RepositoriesController < ApplicationController
 
   def import_params
     params.permit(:id, :file, :file_id, mappings: {}).to_h
-  end
-
-  def selected_repos_params
-    process_ids = params[:selected_repos].map(&:to_i).uniq
-    Repository.where(id: process_ids, team_id: current_team).pluck(:id)
   end
 
   def repository_response(message)

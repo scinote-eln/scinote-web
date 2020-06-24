@@ -9,7 +9,7 @@ module Repositories
     def initialize(user:, team:, repositories:)
       @user = user
       @team = team
-      @repositories = scoped_repositories(repositories)
+      @repositories = repositories
       @errors = {}
     end
 
@@ -26,10 +26,6 @@ module Repositories
     end
 
     private
-
-    def scoped_repositories(_ids)
-      raise NotImplementedError
-    end
 
     def valid?
       unless @user

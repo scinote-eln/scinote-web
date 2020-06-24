@@ -30,6 +30,11 @@ Canaid::Permissions.register_for(Repository) do
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)
   end
 
+  # repository: archive, restore
+  can :archive_repository do |user, repository|
+    !repository.shared_with?(user.current_team) && user.is_admin_of_team?(repository.team)
+  end
+
   # repository: share
   can :share_repository do |user, repository|
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)

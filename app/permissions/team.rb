@@ -53,11 +53,6 @@ Canaid::Permissions.register_for(Team) do
     within_limits && user.is_admin_of_team?(team)
   end
 
-  # repository: archive, restore
-  can :archive_repositories do |user, team|
-    user.is_admin_of_team?(team)
-  end
-
   # this permission is scattered around the application
   # if you want to make changes here keep in mind to check/change the
   # SQL view that lists reports in index page:

@@ -1086,6 +1086,8 @@ en:
         rename: "Rename inventory"
         copy: "Copy inventory"
         delete: "Delete inventory"
+        archive: 'Archive inventory'
+        restore: 'Restore inventory'
       modal_delete:
         title_html: "Delete inventory <em>%{name}</em>"
         message_html: "Are you sure you want to delete inventory <em>%{name}</em>? This action is irreversible."
