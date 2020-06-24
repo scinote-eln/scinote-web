@@ -64,7 +64,7 @@ class DataTableCheckboxes {
   }
 
   checkSelectAllStatus = () => {
-    var checkboxes = this.tableWrapper.find(this.config.checkboxSelector);
+    var checkboxes = this.tableWrapper.find(this.config.checkboxSelector + ':not(:disabled)');
     var selectedCheckboxes = this.tableWrapper.find(this.config.checkboxSelector + ':checked');
     var selectAllCheckbox = this.tableWrapper.find(this.config.selectAllSelector);
     selectAllCheckbox.prop('indeterminate', false);
@@ -92,6 +92,7 @@ class DataTableCheckboxes {
   #initCheckboxes = () => {
     this.tableWrapper.on('click', '.table tbody tr', (e) => {
       var checkbox = $(e.currentTarget).find(this.config.checkboxSelector);
+      if (checkbox.attr('disabled')) return;
       checkbox.prop('checked', !checkbox.prop('checked'));
       this.#selectRow(e.currentTarget);
     }).on('click', this.config.checkboxSelector, (e) => {
@@ -111,7 +112,7 @@ class DataTableCheckboxes {
     this.checkSelectAllStatus();
 
     if (this.config.onChanged) this.config.onChanged();
-  }
+  };
 
   #initSelectAllCheckbox = () => {
     this.tableWrapper.on('click', this.config.selectAllSelector, (e) => {
@@ -119,7 +120,7 @@ class DataTableCheckboxes {
       var rows = this.tableWrapper.find('tbody tr');
       $.each(rows, (i, row) => {
         var checkbox = $(row).find(this.config.checkboxSelector);
-        if (checkbox.prop('checked') === selectAllCheckbox.prop('checked')) return;
+        if (checkbox.prop('checked') === selectAllCheckbox.prop('checked') || checkbox.attr('disabled')) return;
 
         checkbox.prop('checked', !checkbox.prop('checked'));
         this.#selectRow(row);

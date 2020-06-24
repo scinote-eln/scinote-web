@@ -58,6 +58,7 @@
           }
         }, {
           targets: 1,
+          className: 'item-name',
           render: function(value, type, row) {
             return `<a href="${row.repositoryUrl}">${value}</a>`;
           }
@@ -84,6 +85,13 @@
           if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
         },
         rowCallback: function(row) {
+          let $row = $(row);
+          let checkbox = $row.find('.repository-row-selector');
+
+          if ($row.attr('data-shared') === 'true') {
+            checkbox.attr('disabled', 'disabled');
+          }
+
           if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);
         }
       });

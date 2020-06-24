@@ -1352,6 +1352,9 @@ en:
         added_by: "Added by"
         archived_on: "Archived on"
         archived_by: "Archived by"
+      shared_for_viewing: "For viewing"
+      shared_for_editing: "For editing"
+      not_shared: "No"
       switch_view:
         active: Show active inventories
         archived: Show archived inventories
