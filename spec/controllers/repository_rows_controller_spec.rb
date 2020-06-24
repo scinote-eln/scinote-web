@@ -84,7 +84,8 @@ describe RepositoryRowsController, type: :controller do
                    search: { value: '' },
                    length: '10',
                    start: '1',
-                   repository_id: repository.id }
+                   repository_id: repository.id,
+                   archived: false }
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 10
@@ -97,7 +98,8 @@ describe RepositoryRowsController, type: :controller do
                    search: { value: '' },
                    length: '10',
                    start: '11',
-                   repository_id: repository.id }
+                   repository_id: repository.id,
+                   archived: false }
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 10
@@ -110,7 +112,8 @@ describe RepositoryRowsController, type: :controller do
                    search: { value: '' },
                    length: '25',
                    start: '1',
-                   repository_id: repository.id }
+                   repository_id: repository.id,
+                   archived: false }
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 25

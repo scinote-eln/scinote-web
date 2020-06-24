@@ -30,14 +30,8 @@ class RepositoryRow < ApplicationRecord
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :created_by, presence: true
 
-  scope :active, lambda {
-                   joins(:repository)
-                     .where('repositories.archived = FALSE AND repository_rows.archived = FALSE')
-                 }
-  scope :archived, lambda {
-                     joins(:repository)
-                       .where('repositories.archived = TRUE OR repository_rows.archived = TRUE')
-                   }
+  scope :active, -> { where(archived: false) }
+  scope :archived, -> { where(archived: true) }
 
   def self.viewable_by_user(user, teams)
     where(repository: Repository.viewable_by_user(user, teams))
