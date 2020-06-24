@@ -9,12 +9,6 @@ module Repositories
         @repositories.each do |repository|
           repository.archive!(@user)
 
-          # rubocop:disable Rails/SkipsModelValidations
-          repository.repository_rows.active.update_all(archived_on: repository.archived_on,
-                                                       archived_by_id: repository.archived_by_id,
-                                                       archived: true)
-          # rubocop:enable Rails/SkipsModelValidations
-
           log_activity(:archive_inventory, repository)
         end
       rescue ActiveRecord::RecordNotSaved

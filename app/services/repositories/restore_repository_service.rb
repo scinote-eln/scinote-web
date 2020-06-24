@@ -9,12 +9,6 @@ module Repositories
         @repositories.each do |repository|
           repository.restore!(@user)
 
-          # rubocop:disable Rails/SkipsModelValidations
-          repository.repository_rows.archived.update_all(restored_on: repository.restored_on,
-                                                         restored_by_id: repository.restored_by_id,
-                                                         archived: false)
-          # rubocop:enable Rails/SkipsModelValidations
-
           log_activity(:restore_inventory, repository)
         end
       rescue ActiveRecord::RecordNotSaved
