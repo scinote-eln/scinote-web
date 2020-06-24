@@ -434,7 +434,6 @@ var RepositoryDatatable = (function(global) {
       ajax: {
         url: $(TABLE_ID).data('source'),
         data: function(d) {
-          d.assigned = viewAssigned;
           d.archived = $('.repository-show').hasClass('archived');
         },
         global: false,
