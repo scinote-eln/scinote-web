@@ -61,7 +61,9 @@ var RepositoryDatatable = (function(global) {
         $('#exportRepositoriesButton').addClass('disabled');
         $('#copyRepositoryRecords').prop('disabled', true);
         $('#editRepositoryRecord').prop('disabled', true);
-        $('#deleteRepositoryRecordsButton').prop('disabled', true);
+        $('#archiveRepositoryRecordsButton').prop('disabled', true);
+        $('#restoreRepositoryRecords').prop('disabled', true);
+        $('#deleteRepositoryRecords').prop('disabled', true);
         $('#editDeleteCopy').hide();
       } else {
         if (rowsSelected.length === 1) {
@@ -70,12 +72,14 @@ var RepositoryDatatable = (function(global) {
           $('#editRepositoryRecord').prop('disabled', true);
         }
         $('#exportRepositoriesButton').removeClass('disabled');
-        $('#deleteRepositoryRecordsButton').prop('disabled', false);
+        $('#archiveRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
+        $('#restoreRepositoryRecords').prop('disabled', false);
+        $('#deleteRepositoryRecords').prop('disabled', false);
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
           $('#editRepositoryRecord').prop('disabled', true);
-          $('#deleteRepositoryRecordsButton').prop('disabled', true);
+          $('#archiveRepositoryRecordsButton').prop('disabled', true);
         }
         $('#editDeleteCopy').show();
       }
@@ -88,7 +92,9 @@ var RepositoryDatatable = (function(global) {
       $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').prop('disabled', true);
       $('#editRepositoryRecord').prop('disabled', true);
-      $('#deleteRepositoryRecordsButton').prop('disabled', true);
+      $('#archiveRepositoryRecordsButton').prop('disabled', true);
+      $('#assignRepositoryRecords').prop('disabled', true);
+      $('#unassignRepositoryRecords').prop('disabled', true);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
       $('th').addClass('disable-click');
       $('.repository-row-selector').prop('disabled', true);
@@ -348,6 +354,12 @@ var RepositoryDatatable = (function(global) {
             case 'added-on':
               val = -6;
               break;
+            case 'archived-by':
+              val = -7;
+              break;
+            case 'archived-on':
+              val = -8;
+              break;
             default:
               val = th.attr('id');
           }
@@ -421,6 +433,10 @@ var RepositoryDatatable = (function(global) {
       destroy: true,
       ajax: {
         url: $(TABLE_ID).data('source'),
+        data: function(d) {
+          d.assigned = viewAssigned;
+          d.archived = $('.repository-show').hasClass('archived');
+        },
         global: false,
         type: 'POST'
       },
@@ -450,7 +466,7 @@ var RepositoryDatatable = (function(global) {
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           } else if (EDITABLE) {
-            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt"></i>';
+            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt" data-view-mode="active"></i>';
           } else {
             icon = '';
           }
@@ -521,6 +537,7 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
+        checkArchivedColumnsState();
       },
       preDrawCallback: function() {
         animateSpinner(this);
@@ -534,6 +551,9 @@ var RepositoryDatatable = (function(global) {
           dataType: 'json',
           type: 'POST',
           success: function(json) {
+            var archived = $('.repository-show').hasClass('archived');
+            if (json.state.columns[6]) json.state.columns[6].visible = archived;
+            if (json.state.columns[7]) json.state.columns[7].visible = archived;
             callback(json.state);
           }
         });
@@ -611,12 +631,6 @@ var RepositoryDatatable = (function(global) {
     return TABLE;
   }
 
-  global.onClickAddRecord = function() {
-    checkAvailableColumns();
-    RepositoryDatatableRowEditor.addNewRow(TABLE);
-    changeToEditMode();
-  };
-
   global.onClickDeleteRecord = function() {
     animateSpinner();
     $.ajax({
@@ -637,51 +651,105 @@ var RepositoryDatatable = (function(global) {
         }
       }
     });
-  }
+  };
 
-  global.onClickCopyRepositoryRecords = function() {
-    animateSpinner();
-    $.ajax({
-      url: $('table' + TABLE_ID).data('copy-records'),
-      type: 'POST',
-      dataType: 'json',
-      data: { selected_rows: rowsSelected },
-      success: function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        rowsSelected = [];
-        resetTableView();
-      },
-      error: function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(
-            I18n.t('repositories.js.permission_error'), ev.responseJSON.style
-          );
+  $('.repository-show')
+    .on('click', '#addRepositoryRecord', function() {
+      checkAvailableColumns();
+      RepositoryDatatableRowEditor.addNewRow(TABLE);
+      changeToEditMode();
+    })
+    .on('click', '#copyRepositoryRecords', function() {
+      animateSpinner();
+      $.ajax({
+        url: $('table' + TABLE_ID).data('copy-records'),
+        type: 'POST',
+        dataType: 'json',
+        data: { selected_rows: rowsSelected },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.flash, 'success');
+          rowsSelected = [];
+          resetTableView();
+        },
+        error: function(ev) {
+          if (ev.status === 403) {
+            HelperModule.flashAlertMsg(
+              I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+            );
+          }
         }
+      });
+    })
+    .on('click', '#archiveRepositoryRecordsButton', function() {
+      animateSpinner();
+      $.ajax({
+        url: $('table' + TABLE_ID).data('archive-records'),
+        type: 'POST',
+        dataType: 'json',
+        data: { selected_rows: rowsSelected },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.flash, 'success');
+          rowsSelected = [];
+          resetTableView();
+        },
+        error: function(ev) {
+          if (ev.status === 403) {
+            HelperModule.flashAlertMsg(
+              I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+            );
+          } else if (ev.status === 422) {
+            HelperModule.flashAlertMsg(
+              ev.responseJSON.error, 'danger'
+            );
+            animateSpinner(null, false);
+          }
+        }
+      });
+    })
+    .on('click', '#restoreRepositoryRecords', function() {
+      animateSpinner();
+      $.ajax({
+        url: $('table' + TABLE_ID).data('restore-records'),
+        type: 'POST',
+        dataType: 'json',
+        data: { selected_rows: rowsSelected },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.flash, 'success');
+          rowsSelected = [];
+          resetTableView();
+        },
+        error: function(ev) {
+          if (ev.status === 403) {
+            HelperModule.flashAlertMsg(
+              I18n.t('repositories.js.permission_error'), ev.responseJSON.style
+            );
+          } else if (ev.status === 422) {
+            HelperModule.flashAlertMsg(
+              ev.responseJSON.error, 'danger'
+            );
+            animateSpinner(null, false);
+          }
+        }
+      });
+    })
+    .on('click', '#editRepositoryRecord', function() {
+      checkAvailableColumns();
+
+      if (rowsSelected.length !== 1) {
+        return;
       }
+
+      let row = TABLE.row('#' + rowsSelected[0]);
+
+      $(TABLE_ID).find('.repository-row-edit-icon').remove();
+
+      RepositoryDatatableRowEditor.switchRowToEditMode(row);
+      changeToEditMode();
+      adjustTableHeader();
+    })
+    .on('click', '#deleteRepositoryRecords', function() {
+      $('#deleteRepositoryRecord').modal('show');
     });
-  };
-
-  // Edit record
-  global.onClickEdit = function() {
-    checkAvailableColumns();
-
-    if (rowsSelected.length !== 1) {
-      return;
-    }
-
-    let row = TABLE.row('#' + rowsSelected[0]);
-
-    $(TABLE_ID).find('.repository-row-edit-icon').remove();
-
-    RepositoryDatatableRowEditor.switchRowToEditMode(row);
-    changeToEditMode();
-    adjustTableHeader();
-  };
-
-  // Delete record
-  global.onClickDelete = function() {
-    $('#deleteRepositoryRecord').modal('show');
-  };
 
   // Handle enter key
   $(document).off('keypress').keypress(function(event) {
@@ -747,9 +815,22 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function checkArchivedColumnsState() {
+    var archived = $('.repository-show').hasClass('archived');
+    $.each(TABLE.context[0].aoColumns, function(i, column) {
+      if (['archived-on', 'archived-by'].includes(column.nTh.id)) {
+        TABLE.column(column.idx).visible(archived);
+      }
+    });
+  }
+
   return Object.freeze({
     init: init,
     destroy: destroy,
+    reload: function() {
+      TABLE.ajax.reload();
+      clearRowSelection();
+    },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

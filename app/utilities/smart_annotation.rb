@@ -100,6 +100,7 @@ class SmartAnnotation
 
   def repository_rows(repository)
     res = RepositoryRow
+          .active
           .where(repository: repository)
           .where_attributes_like('name', @query, at_search: true)
           .limit(Constants::ATWHO_SEARCH_LIMIT)

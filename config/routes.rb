@@ -164,6 +164,10 @@ Rails.application.routes.draw do
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do
         collection do
+          post 'archive', to: 'repositories#archive',
+              defaults: { format: 'json' }
+          post 'restore', to: 'repositories#restore',
+              defaults: { format: 'json' }
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end
@@ -564,6 +568,12 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
+      post 'archive_records',
+           to: 'repository_rows#archive_records',
+           defaults: { format: 'json' }
+      post 'restore_records',
+           to: 'repository_rows#restore_records',
+           defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
@@ -590,6 +600,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get :sidebar
         post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
       end
 

@@ -1,32 +1,6 @@
  <%= content_for :sidebar do %>
-  <div id="slide-panel" class="visible">
-    <div id="repo-tree" class="tree">
-      <ul class="sidebar-root">
-        <% if can_create_repositories?(current_team) %>
-          <li class="branch">
-            <span class="tree-link no-indent">
-              <a class="btn btn-secondary create-new-repository" data-remote="true"
-                 href="<%= create_modal_team_repositories_path(current_team) %>">
-                <i class="fas fa-plus"></i>
-                <%= t('libraries.index.no_libraries.create_new_button') %>
-              </a>
-            </span>
-          </li>
-        <% end %>
-        <% repositories.each do |repository| %>
-          <li class="branch <%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
-            <span class="tree-link no-indent" title="<%= repository.name %>">
-              <%= inventory_shared_status_icon(repository, current_team) %>
-              <%= link_to repository_path(repository),
-                          class: current_page?(repository_path(repository)) ? 'disabled line-wrap' : 'line-wrap',
-                          data: { 'no-turbolink' => 'true', type: 'repository', id: repository.id } do %>
-                <%= repository.name  %>
-              <% end %>
-            </span>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+  <div id="slide-panel" class="visible" data-sidebar-url="<%= sidebar_repositories_path %>">
+    <%= render partial: "sidebar_list", locals: { repositories: repositories, archived: archived} %>
   </div>
 <% end %>
 

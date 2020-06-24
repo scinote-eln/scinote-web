@@ -4,9 +4,20 @@ class Repository < RepositoryBase
   include SearchableModel
   include SearchableByNameModel
   include RepositoryImportParser
+  include ArchivableModel
 
   enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 
+  belongs_to :archived_by,
+             foreign_key: :archived_by_id,
+             class_name: 'User',
+             inverse_of: :archived_repositories,
+             optional: true
+  belongs_to :restored_by,
+             foreign_key: :restored_by_id,
+             class_name: 'User',
+             inverse_of: :restored_repositories,
+             optional: true
   has_many :team_repositories, inverse_of: :repository, dependent: :destroy
   has_many :teams_shared_with, through: :team_repositories, source: :team
   has_many :repository_snapshots,
@@ -22,6 +33,9 @@ class Repository < RepositoryBase
             presence: true,
             uniqueness: { scope: :team_id, case_sensitive: false },
             length: { maximum: Constants::NAME_MAX_LENGTH }
+
+  scope :active, -> { where(archived: false) }
+  scope :archived, -> { where(archived: true) }
 
   scope :accessible_by_teams, lambda { |teams|
     left_outer_joins(:team_repositories)
