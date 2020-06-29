@@ -65,17 +65,18 @@ var TinyMCE = (function() {
 
   function initImageToolBar(editor) {
     var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
-    editorIframe.contents().find('head').append('<style type="text/css">'
-      + 'img::-moz-selection{background:0 0}'
-      + 'img::selection{background:0 0}'
-      + '.mce-content-body img[data-mce-selected]{outline:2px solid #37a0d9}'
-      + '.mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}'
-      + '.mce-content-body div.mce-resizehandle:hover{background:transparent}'
-      + '.mce-content-body div#mceResizeHandlenw{border-left: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
-      + '.mce-content-body div#mceResizeHandlene{border-right: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
-      + '.mce-content-body div#mceResizeHandlesw{border-left: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
-      + '.mce-content-body div#mceResizeHandlese{border-right: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
-      + '</style>');
+    var primaryColor = '#104da9';
+    editorIframe.contents().find('head').append(`<style type="text/css">
+        img::-moz-selection{background:0 0}
+        img::selection{background:0 0}
+        .mce-content-body img[data-mce-selected]{outline:2px solid ${primaryColor}}
+        .mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}
+        .mce-content-body div.mce-resizehandle:hover{background:transparent}
+        .mce-content-body div#mceResizeHandlenw{border-left: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlene{border-right: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlesw{border-left: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlese{border-right: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+      </style>`);
   }
 
   function makeItDirty(editor) {
@@ -117,7 +118,7 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-        plugins = 'custom_image_toolbar autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
+        plugins = 'custom_image_toolbar table autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
         if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
         if (textAreaObject.data('objectType') === 'step'
@@ -129,8 +130,8 @@ var TinyMCE = (function() {
           cache_suffix: '?v=4.9.10', // This suffix should be changed any time library is updated
           selector: selector,
           convert_urls: false,
-          menubar: 'file edit view insert format',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          menubar: 'file edit view insert format table',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
