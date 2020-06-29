@@ -63,6 +63,7 @@ var inlineEditing = (function() {
     } else {
       params = { [fieldToUpdate]: inputField(container).val() };
     }
+
     $.ajax({
       url: container.data('path-to-update'),
       type: 'PUT',
@@ -76,7 +77,7 @@ var inlineEditing = (function() {
           viewData = result[container.data('response-field')];
         } else {
           // By default we just copy value from input string
-          viewData = inputField(container).val();
+          viewData = $('<div>').text(inputField(container).val()).html();
         }
 
         container.find('.view-mode')
