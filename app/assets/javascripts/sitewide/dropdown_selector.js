@@ -65,7 +65,7 @@ var dropdownSelector = (function() {
     var maxHeight = 0;
     const bottomTreshold = 280;
 
-    if (modalContainer.length && windowHeight - modalContainer.height() > bottomTreshold) {
+    if (modalContainer.length && windowHeight !== modalContainer.height()) {
       let modalClientRect = modalContainer[0].getBoundingClientRect();
       windowHeight = modalContainer.height() + modalClientRect.top;
       containerPositionLeft -= modalClientRect.left;
