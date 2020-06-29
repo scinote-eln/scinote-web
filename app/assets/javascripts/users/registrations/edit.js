@@ -79,4 +79,8 @@
     }
     $fileInput[0].value = '';
   });
+
+  $('#twoFactorAuthentication').click(function() {
+    $('#twoFactorAuthenticationModal').modal('show');
+  });
 }());

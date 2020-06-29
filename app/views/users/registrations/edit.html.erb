@@ -142,7 +142,7 @@
                 </div>
               </div>
             <% end %>
-
+            <button class="btn btn-primary" id="twoFactorAuthentication"><%= t("users.registrations.edit.2fa_button") %></button>
           </div>
           <div class="col-md-7 col-md-offset-1">
             <div class="row user-statistics">
@@ -176,6 +176,7 @@
   </div>
 </div>
 
+<%= render partial: '2fa_modal' %>
 <%= render partial: 'users/shared/user_avatars_modal' %>
 
 <%= javascript_pack_tag 'custom/croppie' %>
