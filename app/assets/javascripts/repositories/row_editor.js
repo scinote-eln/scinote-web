@@ -111,6 +111,7 @@ var RepositoryDatatableRowEditor = (function() {
 
     $table.on('ajax:error', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
       animateSpinner(null, false);
+      $(TABLE.nodes()).find('.spinner').remove();
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });
   }
