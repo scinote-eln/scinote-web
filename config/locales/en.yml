@@ -1593,6 +1593,7 @@ en:
         password_title: "Change password"
         new_password_label: "New password"
         new_password_2_label: "New password confirmation"
+        2fa_button: "Enable two-factor authentication"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
