@@ -146,6 +146,7 @@
       .snapshot-tag {
         background-color: $color-concrete;
         color: $color-silver-chalice;
+        flex-shrink: 0;
         padding: .3em;
       }
     }
@@ -220,6 +221,8 @@
           .repository-name {
             @include my-module-repository-title;
             @include font-h2;
+            display: inline-block;
+            width: 100%;
           }
 
           .breadcrumbs {
