@@ -2647,7 +2647,9 @@ CREATE TABLE public.users (
     current_team_id bigint,
     authentication_token character varying(30),
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
-    variables jsonb DEFAULT '{}'::jsonb NOT NULL
+    variables jsonb DEFAULT '{}'::jsonb NOT NULL,
+    two_factor_auth_enabled boolean DEFAULT false NOT NULL,
+    otp_secret character varying
 );
 
 
@@ -7194,6 +7196,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200113143828'),
 ('20200204100934'),
 ('20200326114643'),
-('20200331183640');
+('20200331183640'),
+('20200622140843');
 
 

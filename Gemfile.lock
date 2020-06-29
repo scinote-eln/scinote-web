@@ -469,6 +469,8 @@ GEM
     roo (2.8.2)
       nokogiri (~> 1)
       rubyzip (>= 1.2.1, < 2.0.0)
+    rotp (6.0.0)
+      addressable (~> 2.7)
     rspec-core (3.8.2)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.4)
@@ -668,6 +670,7 @@ DEPENDENCIES
   recaptcha
   rgl
   roo (~> 2.8.2)
+  rotp
   rspec-rails (>= 4.0.0.beta2)
   rubocop (>= 0.75.0)
   rubocop-performance

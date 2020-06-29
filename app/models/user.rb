@@ -286,6 +286,8 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
+  before_save :ensure_2fa_token, if: ->(user) { user.changed.include?('two_factor_auth_enabled') }
+  before_create :assign_2fa_token
   before_destroy :destroy_notifications
 
   def name
@@ -657,5 +659,13 @@ class User < ApplicationRecord
 
   def clear_view_cache
     Rails.cache.delete_matched(%r{^views\/users\/#{id}-})
+  end
+
+  def assign_2fa_token
+    self.otp_secret = ROTP::Base32.random
+  end
+
+  def ensure_2fa_token
+    assign_2fa_token unless otp_secret
   end
 end
