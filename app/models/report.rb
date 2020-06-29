@@ -131,12 +131,10 @@ class Report < ApplicationRecord
                                 result_children)
         end
 
-        module_children += gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
-
         repositories = project.assigned_repositories_and_snapshots
 
+        module_children += gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
         module_children += gen_element_content(my_module, repositories, 'my_module_repository', true, 'asc')
-
         modules += gen_element_content(my_module, nil, 'my_module', true, nil, module_children)
       end
 

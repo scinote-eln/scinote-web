@@ -138,8 +138,8 @@ module ReportsHelper
   end
 
   def assigned_repositories_in_project_list(project)
-    live_repositories = Repository.assigned_in_project(project)
-    snapshots = RepositorySnapshot.assigned_in_project(project)
+    live_repositories = Repository.assigned_to_project(project)
+    snapshots = RepositorySnapshot.assigned_to_project(project)
 
     snapshots.each { |snapshot| snapshot.name = "#{snapshot.name} #{t('projects.reports.index.deleted')}" }
     (live_repositories + snapshots).sort_by { |r| r.name.downcase }
