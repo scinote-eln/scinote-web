@@ -2648,7 +2648,7 @@ CREATE TABLE public.users (
     authentication_token character varying(30),
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     variables jsonb DEFAULT '{}'::jsonb NOT NULL,
-    twofa_enabled boolean DEFAULT false NOT NULL,
+    two_factor_auth_enabled boolean DEFAULT false NOT NULL,
     otp_secret character varying
 );
 

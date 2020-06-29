@@ -349,13 +349,13 @@ describe User, type: :model do
           it 'sets token before save' do
             user.update_column(:otp_secret, nil)
 
-            expect { user.update(twofa_enabled: true) }.to(change { user.otp_secret })
+            expect { user.update(two_factor_auth_enabled: true) }.to(change { user.otp_secret })
           end
         end
 
         context 'when user does have otp_secret' do
           it 'does not set new token before save' do
-            expect { user.update(twofa_enabled: true) }.not_to(change { user.otp_secret })
+            expect { user.update(two_factor_auth_enabled: true) }.not_to(change { user.otp_secret })
           end
         end
       end

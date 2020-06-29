@@ -3,7 +3,7 @@
 class Add2faToUsers < ActiveRecord::Migration[6.0]
   def change
     change_table :users, bulk: true do |t|
-      t.boolean :twofa_enabled, default: false, null: false
+      t.boolean :two_factor_auth_enabled, default: false, null: false
       t.string :otp_secret
     end
   end
