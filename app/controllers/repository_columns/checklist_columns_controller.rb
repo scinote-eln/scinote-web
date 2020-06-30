@@ -2,9 +2,6 @@
 
 module RepositoryColumns
   class ChecklistColumnsController < RepositoryColumnsController
-    before_action :load_column, only: %i(update items)
-    before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: :update
     helper_method :delimiters
 
     def create
@@ -47,7 +44,7 @@ module RepositoryColumns
     private
 
     def search_params
-      params.permit(:query, :column_id)
+      params.permit(:query, :repository_id, :id)
     end
 
     def repository_column_params

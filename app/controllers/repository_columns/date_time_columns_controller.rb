@@ -3,15 +3,12 @@
 module RepositoryColumns
   class DateTimeColumnsController < RepositoryColumnsController
     include InputSanitizeHelper
-    before_action :load_column, only: :update
-    before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: :update
 
     def create
       service = RepositoryColumns::CreateColumnService
                 .call(user: current_user, repository: @repository, team: current_team,
-                        column_type: column_type_param,
-                        params: repository_column_params)
+                      column_type: column_type_param,
+                      params: repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :created, creating: true
@@ -23,9 +20,9 @@ module RepositoryColumns
     def update
       service = RepositoryColumns::UpdateColumnService
                 .call(user: current_user,
-                        team: current_team,
-                        column: @repository_column,
-                        params: repository_column_params)
+                      team: current_team,
+                      column: @repository_column,
+                      params: repository_column_params)
 
       if service.succeed?
         render json: service.column, status: :ok, editing: true

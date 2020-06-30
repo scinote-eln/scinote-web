@@ -3,9 +3,6 @@
 module RepositoryColumns
   class NumberColumnsController < RepositoryColumnsController
     include InputSanitizeHelper
-    before_action :load_column, only: :update
-    before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: :update
 
     def create
       service = RepositoryColumns::CreateColumnService

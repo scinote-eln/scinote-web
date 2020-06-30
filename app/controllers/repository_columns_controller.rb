@@ -3,9 +3,9 @@ class RepositoryColumnsController < ApplicationController
   include RepositoryColumnsHelper
 
   before_action :load_repository
-  before_action :load_column, only: %i(edit destroy_html destroy)
-  before_action :check_create_permissions, only: :new
-  before_action :check_manage_permissions, only: %i(edit destroy_html destroy)
+  before_action :load_column, only: %i(edit update destroy_html destroy items)
+  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_manage_permissions, only: %i(edit update destroy_html destroy)
   before_action :load_asset_type_columns, only: :available_asset_type_columns
 
   def index
@@ -30,12 +30,20 @@ class RepositoryColumnsController < ApplicationController
     end
   end
 
+  def create
+    raise NotImplementedError
+  end
+
   def edit
     render json: {
       html: render_to_string(
         partial: 'repository_columns/manage_column_modal_content.html.erb'
       )
     }
+  end
+
+  def update
+    raise NotImplementedError
   end
 
   def destroy_html
@@ -73,6 +81,8 @@ class RepositoryColumnsController < ApplicationController
       end
     end
   end
+
+  def items; end
 
   def available_asset_type_columns
     if @asset_columns.empty?
