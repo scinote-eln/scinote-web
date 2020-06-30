@@ -102,6 +102,10 @@ class AssetsController < ApplicationController
     render plain: @asset.file.blob.service_url
   end
 
+  def download
+    redirect_to rails_blob_path(@asset.file, disposition: 'attachment')
+  end
+
   def edit
     action = @asset.file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
     @action_url = append_wd_params(@asset.get_action_url(current_user, action, false))

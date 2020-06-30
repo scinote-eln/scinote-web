@@ -4,11 +4,19 @@
 .dataTables_wrapper {
 
   .main-actions {
+    align-items: center;
     display: flex;
     flex-wrap: wrap;
+    padding: 1em 0;
 
     .toolbar {
       flex-grow: 1;
+    }
+  }
+
+  .dataTables_scrollHead {
+    .dataTable {
+      margin-top: 0 !important;
     }
   }
 
@@ -57,6 +65,25 @@
       .pagination-info {
         display: none;
       }
+    }
+  }
+
+  tr[data-state]:not([data-state='']) {
+    td.item-name::after {
+      background-color: $color-concrete;
+      color: $color-silver-chalice;
+      content: attr(data-state);
+      margin-left: 20px;
+      padding: .3em;
+      white-space: nowrap;
+    }
+  }
+
+  tr[data-shared=true] {
+    td.item-name::before {
+      @include font-awesome;
+      content: "\f0c0";
+      margin-right: .5em;
     }
   }
 }

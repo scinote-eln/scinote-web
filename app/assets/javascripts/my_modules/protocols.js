@@ -64,26 +64,26 @@ function initEditDescription() {
 }
 
 function initCopyToRepository() {
-  var link = $("[data-action='copy-to-repository']");
-  var modal = $('#copy-to-repository-modal');
-  var modalBody = modal.find('.modal-body');
-  var submitBtn = modal.find(".modal-footer [data-action='submit']");
-  link
-    .on('ajax:success', function(e, data) {
-      modalBody.html(data.html);
-      modalBody.find("[data-role='copy-to-repository']")
+  var link = "[data-action='copy-to-repository']";
+  var modal = '#copy-to-repository-modal';
+  var modalBody = '.modal-body';
+  var submitBtn = ".modal-footer [data-action='submit']";
+  $('.my-modules-protocols-index')
+    .on('ajax:success', link, function(e, data) {
+      $(modal).find(modalBody).html(data.html);
+      $(modal).find(modalBody).find("[data-role='copy-to-repository']")
         .on('ajax:success', function(e2, data2) {
           if (data2.refresh !== null) {
             // Reload page
             location.reload();
           } else {
             // Simply hide the modal
-            modal.modal('hide');
+            $(modal).modal('hide');
           }
         })
         .on('ajax:error', function(e2, data2) {
           // Display errors in form
-          submitBtn[0].disabled = false;
+          $(modal).find(submitBtn)[0].disabled = false;
           if (data2.status === 422) {
             $(this).renderFormErrors('protocol', data2.responseJSON);
           } else {
@@ -92,18 +92,18 @@ function initCopyToRepository() {
           }
         });
 
-      modal.modal('show');
-      submitBtn[0].disabled = false;
+      $(modal).modal('show');
+      $(modal).find(submitBtn)[0].disabled = false;
     })
     .on('ajax:error', function() {});
 
-  submitBtn.on('click', function() {
+  $(modal).on('click', submitBtn, function() {
     // Submit the embedded form
-    submitBtn[0].disabled = true;
-    modalBody.find('form').submit();
+    $(modal).find(submitBtn)[0].disabled = true;
+    $(modal).find('form').submit();
   });
 
-  modalBody.on('click', "[data-role='link-check']", function() {
+  $(modal).find(modalBody).on('click', "[data-role='link-check']", function() {
     var text = $(this).closest('.modal-body').find("[data-role='link-text']");
     if ($(this).prop('checked')) {
       text.show();
@@ -112,11 +112,11 @@ function initCopyToRepository() {
     }
   });
 
-  modal.on('hidden.bs.modal', function() {
-    modalBody.find("[data-role='copy-to-repository']")
+  $(modal).on('hidden.bs.modal', function() {
+    $(modal).find(modalBody).find("[data-role='copy-to-repository']")
       .off('ajax:success ajax:error');
 
-    modalBody.html('');
+    $(modal).find(modalBody).html('');
   });
 }
 
@@ -384,7 +384,6 @@ function refreshProtocolStatusBar() {
     success: function(data) {
       $('.my-module-protocol-status').replaceWith(data.html);
       initLinkUpdate();
-      initCopyToRepository();
     }
   });
 }

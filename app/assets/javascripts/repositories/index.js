@@ -1,172 +1,162 @@
-//= require repositories/import/records_importer.js
-
-/*
-  global animateSpinner repositoryRecordsImporter getParam
-  RepositoryDatatable PerfectScrollbar HelperModule
-*/
-
-(function(global) {
+/* global I18n animateSpinner HelperModule DataTableHelpers DataTableCheckboxes */
+(function() {
   'use strict';
 
-  global.pageReload = function() {
-    animateSpinner();
-    location.reload();
-  };
+  var REPOSITORIES_TABLE;
+  var CHECKBOX_SELECTOR;
 
-  function handleErrorSubmit(XHR) {
-    var formGroup = $('#form-records-file').find('.form-group');
-    formGroup.addClass('has-error');
-    formGroup.find('.help-block').remove();
-    formGroup.append(
-      '<span class="help-block">' + XHR.responseJSON.message + '</span>'
-    );
-  }
-
-  function handleSuccessfulSubmit(data) {
-    $('#modal-import-records').modal('hide');
-    $(data.html).appendTo('body').promise().done(function() {
-      $('#parse-records-modal')
-        .modal('show')
-        .on('hidden.bs.modal', function() {
-          animateSpinner();
-          location.reload();
-        });
-      repositoryRecordsImporter();
-    });
-  }
-
-  function initParseRecordsModal() {
-    var form = $('#form-records-file');
-    var submitBtn = form.find('input[type="submit"]');
-    submitBtn.on('click', function(event) {
-      var data = new FormData();
-      event.preventDefault();
-      event.stopPropagation();
-      data.append('file', document.getElementById('file').files[0]);
-      data.append('team_id', document.getElementById('team_id').value);
-      $.ajax({
-        type: 'POST',
-        url: form.attr('action'),
-        data: data,
-        success: handleSuccessfulSubmit,
-        error: handleErrorSubmit,
-        processData: false,
-        contentType: false
-      });
-    });
-  }
-
-  function initImportRecordsModal() {
-    $('#importRecordsButton').off().on('click', function() {
-      $('#modal-import-records').modal('show');
-      initParseRecordsModal();
-    });
-  }
-
-  function loadRepositoryTab() {
-    var param = getParam('repository');
-    $('#repository-tabs a').on('click', function(e) {
-      var pane = $(this);
-      e.preventDefault();
-      $.ajax({
-        url: $(this).attr('data-url'),
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          var tabBody = $(pane.context.hash).find('.tab-content-body');
-          tabBody.html(data.html);
-          pane.tab('show').promise().done(function(el) {
-            initImportRecordsModal();
-            RepositoryDatatable.destroy();
-            RepositoryDatatable.init(el.attr('data-repo-table'));
-          });
-        },
-        error: function() {
-          // TODO
-        }
-      });
-    });
-
-    // on page load
-    if (param) {
-      // load selected tab
-      $('a[href="#custom_repo_' + param + '"]').click();
-    } else {
-      // load first tab content
-      $('#repository-tabs a:first').click();
+  function updateActionButtons() {
+    var rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
+    var row;
+    $('#renameRepoBtn').attr('href', '#');
+    $('#deleteRepoBtn').attr('href', '#');
+    $('#copyRepoBtn').attr('href', '#');
+    switch (rowsCount) {
+      case 0:
+        $('.main-actions [data-action-mode="single"]').addClass('disabled');
+        $('.main-actions [data-action-mode="multiple"]').addClass('disabled');
+        break;
+      case 1:
+        row = $('#repositoriesList').find('tr#' + CHECKBOX_SELECTOR.selectedRows[0]);
+        $('.main-actions [data-action-mode="single"]').removeClass('disabled');
+        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled');
+        $('#renameRepoBtn').attr('href', row.data('rename-modal-url'));
+        $('#deleteRepoBtn').attr('href', row.data('delete-modal-url'));
+        $('#copyRepoBtn').attr('href', row.data('copy-modal-url'));
+        break;
+      default:
+        $('.main-actions [data-action-mode="single"]').addClass('disabled');
+        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled');
     }
-
-    // clean tab content
-    $('a[data-toggle="tab"]').on('hide.bs.tab', function() {
-      $('.tab-content-body').html('');
-    });
   }
 
-  function initShareModal() {
-    var form = $('.share-repo-modal').find('form');
-    var sharedCBs = form.find("input[name='share_team_ids[]']");
-    var permissionCBs = form.find("input[name='write_permissions[]']");
-    var permissionChanges = form.find("input[name='permission_changes']");
-    var submitBtn = form.find('input[type="submit"]');
-    var selectAllCheckbox = form.find('.all-teams .sci-checkbox');
-
-    form.find('.teams-list').find('input.sci-checkbox, .permission-selector')
-      .toggleClass('hidden', selectAllCheckbox.is(':checked'));
-    form.find('.all-teams .sci-toggle-checkbox')
-      .toggleClass('hidden', !selectAllCheckbox.is(':checked'))
-      .attr('disabled', !selectAllCheckbox.is(':checked'));
-
-    selectAllCheckbox.change(function() {
-      form.find('.teams-list').find('input.sci-checkbox, .permission-selector')
-        .toggleClass('hidden', this.checked);
-      form.find('.all-teams .sci-toggle-checkbox').toggleClass('hidden', !this.checked)
-        .attr('disabled', !this.checked);
-    });
-
-    sharedCBs.change(function() {
-      var selectedTeams = form.find('.teams-list .sci-checkbox:checked').length;
-      form.find('#select_all_teams').prop('indeterminate', selectedTeams > 0);
-      $('#editable_' + this.value).toggleClass('hidden', !this.checked)
-        .attr('disabled', !this.checked);
-    });
-
-    if (form.find('.teams-list').length) new PerfectScrollbar(form.find('.teams-list')[0]);
-
-    permissionCBs.change(function() {
-      var changes = JSON.parse(permissionChanges.val());
-      changes[this.value] = 'true';
-      permissionChanges.val(JSON.stringify(changes));
-    });
-
-    submitBtn.on('click', function(event) {
-      event.preventDefault();
-      $.ajax({
-        type: 'POST',
-        url: form.attr('action'),
-        data: form.serialize(),
-        success: function(data) {
-          if (data.warnings) {
-            alert(data.warnings);
+  function initRepositoriesDataTable(tableContainer, archived = false) {
+    var tableTemplate = archived ? $('#archivedRepositoriesListTable').html() : $('#activeRepositoriesListTable').html();
+    $.get($(tableTemplate).data('source'), function(data) {
+      if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
+      CHECKBOX_SELECTOR = null;
+      $('.content-body').html(tableTemplate);
+      REPOSITORIES_TABLE = $(tableContainer).DataTable({
+        aaData: data,
+        dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
+        processing: true,
+        pageLength: 25,
+        sScrollX: '100%',
+        sScrollXInner: '100%',
+        order: [[1, 'asc']],
+        destroy: true,
+        columnDefs: [{
+          targets: 0,
+          visible: true,
+          searchable: false,
+          orderable: false,
+          render: function() {
+            return `<div class="sci-checkbox-container">
+                      <input class='repository-row-selector sci-checkbox' type='checkbox'>
+                      <span class='sci-checkbox-label'></span>
+                    </div>`;
           }
-          $(`#slide-panel li.active .repository-share-status,
-             #repository-toolbar .repository-share-status
-          `).toggleClass('hidden', !data.status);
-          HelperModule.flashAlertMsg(form.data('success-message'), 'success');
-          $('.share-repo-modal').modal('hide');
+        }, {
+          targets: 1,
+          className: 'item-name',
+          render: function(value, type, row) {
+            return `<a href="${row.repositoryUrl}">${value}</a>`;
+          }
+        }],
+        fnInitComplete: function(e) {
+          var dataTableWrapper = $(e.nTableWrapper);
+          CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
+            checkboxSelector: '.repository-row-selector',
+            selectAllSelector: '.select-all-checkbox',
+            onChanged: function() {
+              updateActionButtons();
+            }
+          });
+          DataTableHelpers.initLengthApearance(dataTableWrapper);
+          DataTableHelpers.initSearchField(dataTableWrapper);
+          $('.content-body .toolbar').html($('#repositoriesListButtons').html());
+          dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
+          $('#createRepoBtn').initializeModal('#create-repo-modal');
+          $('#deleteRepoBtn').initializeModal('#delete-repo-modal');
+          $('#renameRepoBtn').initializeModal('#rename-repo-modal');
+          $('#copyRepoBtn').initializeModal('#copy-repo-modal');
         },
-        error: function(data) {
-          alert(data.responseJSON.errors);
-          $('.share-repo-modal').modal('hide');
+        drawCallback: function() {
+          if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
+        },
+        rowCallback: function(row) {
+          let $row = $(row);
+          let checkbox = $row.find('.repository-row-selector');
+
+          if ($row.attr('data-shared') === 'true') {
+            checkbox.attr('disabled', 'disabled');
+          }
+
+          if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);
         }
       });
     });
   }
 
-  $('#shareRepoBtn').on('ajax:success', function() {
-    initShareModal();
-  });
+  function reloadSidebar() {
+    var slidePanel = $('#slide-panel');
+    var archived;
+    if ($('.repositories-index').hasClass('archived')) archived = true;
+    $.get(slidePanel.data('sidebar-url'), { archived: archived }, function(data) {
+      slidePanel.html(data.html);
+      $('.create-new-repository').initializeModal('#create-repo-modal');
+    });
+  }
+
+  function initRepositoryViewSwitcher() {
+    var viewSwitch = $('.view-switch');
+    viewSwitch.on('click', '.view-switch-archived', function() {
+      $('.repositories-index').toggleClass('archived active');
+      initRepositoriesDataTable('#repositoriesList', true);
+      reloadSidebar();
+    });
+    viewSwitch.on('click', '.view-switch-active', function() {
+      $('.repositories-index').toggleClass('archived active');
+      initRepositoriesDataTable('#repositoriesList');
+      reloadSidebar();
+    });
+  }
+
+  $('.repositories-index')
+    .on('click', '#archiveRepoBtn', function() {
+      $.post($('#archiveRepoBtn').data('archive-repositories'), {
+        repository_ids: CHECKBOX_SELECTOR.selectedRows
+      }, function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        initRepositoriesDataTable('#repositoriesList');
+        reloadSidebar();
+      }).fail(function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
+        }
+        animateSpinner(null, false);
+      });
+    })
+    .on('click', '#restoreRepoBtn', function() {
+      $.post($('#restoreRepoBtn').data('restore-repositories'), {
+        repository_ids: CHECKBOX_SELECTOR.selectedRows
+      }, function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        initRepositoriesDataTable('#repositoriesList', true);
+        reloadSidebar();
+      }).fail(function(ev) {
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
+        } else if (ev.status === 422) {
+          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
+        }
+        animateSpinner(null, false);
+      });
+    });
 
   $('.create-new-repository').initializeModal('#create-repo-modal');
-  loadRepositoryTab();
-  initImportRecordsModal();
-}(window));
+  initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
+  initRepositoryViewSwitcher();
+}());

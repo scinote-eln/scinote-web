@@ -7,8 +7,8 @@ module Reports::Docx::RepositoryHelper
     result = [repository_data[:headers]]
     repository_data[:rows].each do |record|
       row = []
-      row.push(record.id)
-      row.push(escape_input(record.name))
+      row.push(record.repository.is_a?(RepositorySnapshot) ? record.parent_id : record.id)
+      row.push(escape_input(record.archived ? "#{record.name} [#{I18n.t('general.archived')}]" : record.name))
       row.push(I18n.l(record.created_at, format: :full))
       row.push(escape_input(record.created_by.full_name))
 

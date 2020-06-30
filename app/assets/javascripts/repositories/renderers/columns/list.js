@@ -4,14 +4,16 @@
 var ListColumnHelper = (function() {
   function listSelect(select, url, value) {
     var selectedOption = '';
+    var selectObject = $(`<select id="${select}" 
+                                  data-placeholder = "${I18n.t('repositories.table.list.select_item')}"
+                                  data-ajax-url = "${url}" >${selectedOption}</select>`);
+
     if (value && value.value) {
-      selectedOption = `<option value="${value.value}">${value.label}</option>`;
+      selectedOption = $(`<option value="${value.value}"></option>`);
+      selectedOption.text(value.label);
+      selectedOption.appendTo(selectObject);
     }
-    return $(`<select
-              id="${select}"
-              data-placeholder = "${I18n.t('repositories.table.list.select_item')}"
-              data-ajax-url = "${url}"
-            >${selectedOption}</select>`);
+    return selectObject;
   }
 
   function listHiddenField(formId, columnId, value) {

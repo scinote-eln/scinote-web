@@ -1,6 +1,6 @@
 <div class="list-group-item repository-snapshot-item <%= repository_snapshot.status %>"
      data-id="<%= repository_snapshot.id %>"
-     data-selected="<%= repository_snapshot.selected %>"
+     data-selected="<%= repository_snapshot.selected ? 'true' : 'false' %>"
      data-status-url="<%= status_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>"
      data-version-item-url="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
   <div class="row">

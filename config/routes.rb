@@ -164,6 +164,10 @@ Rails.application.routes.draw do
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do
         collection do
+          post 'archive', to: 'repositories#archive',
+              defaults: { format: 'json' }
+          post 'restore', to: 'repositories#restore',
+              defaults: { format: 'json' }
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end
@@ -322,11 +326,6 @@ Rails.application.routes.draw do
         # Renders sample datatable for single project (ajax action)
         # post 'samples_index'
         get 'experiment_archive' # Experiment archive for single project
-        # post :delete_samples,
-        #      constraints: CommitParamRouting.new(
-        #        ProjectsController::DELETE_SAMPLES
-        #      ),
-        #      action: :delete_samples
       end
 
       # This route is defined outside of member block
@@ -356,11 +355,6 @@ Rails.application.routes.draw do
         get 'fetch_workflow_img' # Get udated workflow img
         # Renders sample datatable for single project (ajax action)
       #   post 'samples_index'
-      #   post :delete_samples,
-      #        constraints: CommitParamRouting.new(
-      #          ExperimentsController::DELETE_SAMPLES
-      #        ),
-      #        action: :delete_samples
       end
     end
 
@@ -433,52 +427,9 @@ Rails.application.routes.draw do
               as: 'update_protocol_description'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
-        # get 'samples' # Samples view for single module
-        # Repository view for single module
-        post 'repository_index/:repository_id',
-             to: 'my_modules#repository_index',
-             as: :repository_index
-        post 'assign_repository_records_modal/:repository_id',
-            to: 'my_modules#assign_repository_records_modal',
-            as: :assign_repository_records_modal
-        post 'assign_repository_records/:repository_id',
-             to: 'my_modules#assign_repository_records',
-             as: :assign_repository_records
-        post 'unassign_repository_records_modal/:repository_id',
-            to: 'my_modules#unassign_repository_records_modal',
-            as: :unassign_repository_records_modal
-        post 'unassign_repository_records/:repository_id',
-            to: 'my_modules#unassign_repository_records',
-            as: :unassign_repository_records
-        get 'unshared_inventory/:inventory_id',
-            to: 'my_modules#unshared_inventory',
-            as: :unshared_inventory
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
-        get 'repositories_dropdown',
-            to: 'my_modules#repositories_dropdown',
-            as: :repositories_dropdown
-        get 'repositories_dropdown/:repository_id',
-            to: 'my_modules#repositories_dropdown',
-            as: :repositories_dropdown_repository_tab
-        # Renders sample datatable for single module (ajax action)
-        # post 'samples_index'
-        # post :assign_samples,
-        #      constraints: CommitParamRouting.new(
-        #        MyModulesController::ASSIGN_SAMPLES
-        #      ),
-        #      action: :assign_samples
-        # post :assign_samples,
-        #      constraints: CommitParamRouting.new(
-        #        MyModulesController::UNASSIGN_SAMPLES
-        #      ),
-        #      action: :unassign_samples
-        # post :assign_samples,
-        #      constraints: CommitParamRouting.new(
-        #        MyModulesController::DELETE_SAMPLES
-        #      ),
-        #      action: :delete_samples
       end
 
       # Those routes are defined outside of member block
@@ -617,6 +568,12 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
+      post 'archive_records',
+           to: 'repository_rows#archive_records',
+           defaults: { format: 'json' }
+      post 'restore_records',
+           to: 'repository_rows#restore_records',
+           defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
@@ -635,6 +592,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get :sidebar
         post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
       end
 
@@ -677,6 +635,7 @@ Rails.application.routes.draw do
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
+    get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'

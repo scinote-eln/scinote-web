@@ -96,6 +96,10 @@ class RepositoryColumn < ApplicationRecord
     column_snapshot.save!
   end
 
+  def delimiter_char
+    Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[metadata['delimiter']&.to_sym] || "\n"
+  end
+
   private
 
   def repository_list_value_deep_dup(new_column)

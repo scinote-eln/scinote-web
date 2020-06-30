@@ -19,7 +19,7 @@ class Experiment < ApplicationRecord
 
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
   has_many :active_my_modules,
-           -> { where(archived: false).order(:workflow_order) },
+           -> { where(archived: false).order(:name) },
            class_name: 'MyModule'
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy

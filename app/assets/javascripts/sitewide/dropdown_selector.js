@@ -42,6 +42,7 @@
     closeOnSelect: boolean, // Close dropdown after select
     disableSearch: boolean, // Disable search
     emptyOptionAjax: boolean, // Add empty option for ajax request
+    labelHTML: bolean, // render as HTMLelement or text
   }
 
 
@@ -64,7 +65,7 @@ var dropdownSelector = (function() {
     var maxHeight = 0;
     const bottomTreshold = 280;
 
-    if (modalContainer.length && windowHeight - modalContainer.height() > bottomTreshold) {
+    if (modalContainer.length && windowHeight !== modalContainer.height()) {
       let modalClientRect = modalContainer[0].getBoundingClientRect();
       windowHeight = modalContainer.height() + modalClientRect.top;
       containerPositionLeft -= modalClientRect.left;
@@ -632,10 +633,15 @@ var dropdownSelector = (function() {
                     title="${$('<span>' + label + '</span>').text()}"
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
-                    ${label}
                   </div>
                   <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
+
+      if (selector.data('config').labelHTML) {
+        tag.find('.tag-label').html(label);
+      } else {
+        tag.find('.tag-label').text(label);
+      }
 
       // Now we need add delete action to tag
       tag.find('.fa-times').click(function(e) {

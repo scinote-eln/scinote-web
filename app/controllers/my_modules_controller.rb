@@ -7,48 +7,16 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars,
-                only: %i(show update destroy description due_date protocols
-                         results samples activities activities_tab
-                         assign_samples unassign_samples delete_samples
-                         toggle_task_state samples_index archive
-                         complete_my_module repository repository_index
-                         assign_repository_records unassign_repository_records
-                         unassign_repository_records_modal
-                         assign_repository_records_modal
-                         repositories_dropdown update_description update_protocol_description unshared_inventory)
-  before_action :load_vars_nested, only: %i(new create)
-  before_action :load_repository, only: %i(assign_repository_records
-                                           unassign_repository_records
-                                           unassign_repository_records_modal
-                                           assign_repository_records_modal
-                                           repository_index)
-  before_action :load_projects_tree, only: %i(protocols results activities
-                                              samples repository archive unshared_inventory)
-  before_action :check_manage_permissions_archive, only: %i(update destroy)
-  before_action :check_manage_permissions,
-                only: %i(description due_date update_description update_protocol_description)
-  before_action :check_view_permissions, only:
-    %i(show activities activities_tab protocols results samples samples_index
-       archive repositories_dropdown)
+  before_action :load_vars
+  before_action :load_projects_tree, only: %i(protocols results activities archive)
+  before_action :check_manage_permissions_archive, only: %i(update)
+  before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
+  before_action :check_view_permissions, except: %i(update update_description update_protocol_description
+                                                    toggle_task_state)
   before_action :check_complete_module_permission, only: :complete_my_module
-  before_action :check_assign_repository_records_permissions,
-                only: %i(unassign_repository_records_modal
-                         assign_repository_records_modal
-                         assign_repository_records
-                         unassign_repository_records
-                         assign_samples
-                         unassign_samples)
-  before_action :set_inline_name_editing, only: %i(protocols results activities repository archive)
+  before_action :set_inline_name_editing, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
-
-  # Define submit actions constants (used in routing)
-  ASSIGN_SAMPLES = 'Assign'.freeze
-  UNASSIGN_SAMPLES = 'Unassign'.freeze
-
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
 
   def show
     respond_to do |format|
@@ -145,6 +113,7 @@ class MyModulesController < ApplicationController
   def update
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
+    name_changed = @my_module.name_changed?
     description_changed = @my_module.description_changed?
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
@@ -165,6 +134,7 @@ class MyModulesController < ApplicationController
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
         end
 
+        log_activity(:rename_task) if name_changed
         log_start_date_change_activity(start_date_changes) if start_date_changes.present?
         log_due_date_change_activity(due_date_changes) if due_date_changes.present?
       end
@@ -277,188 +247,12 @@ class MyModulesController < ApplicationController
                                 .team)
   end
 
-  def samples
-    @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
-    @team = @my_module.experiment.project.team
-  end
-
-  def repository
-    @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_read_repository?(@repository)
-  end
-
   def archive
     @archived_results = @my_module.archived_results
     current_team_switch(@my_module
                                 .experiment
                                 .project
                                 .team)
-  end
-
-  # Submit actions
-  def assign_samples
-    if params[:sample_ids].present?
-      samples = []
-
-      params[:sample_ids].each do |id|
-        sample = Sample.find_by_id(id)
-        sample.last_modified_by = current_user
-        sample.save
-
-        if sample
-          samples << sample
-        end
-      end
-
-      task_names = []
-      new_samples = []
-      @my_module.downstream_modules.each do |my_module|
-        new_samples = samples.select { |el| my_module.samples.exclude?(el) }
-        my_module.samples.push(*new_samples)
-        task_names << my_module.name
-      end
-    end
-    redirect_to samples_my_module_path(@my_module)
-  end
-
-  def unassign_samples
-    if params[:sample_ids].present?
-      samples = []
-
-      params[:sample_ids].each do |id|
-        sample = Sample.find_by_id(id)
-        sample.last_modified_by = current_user
-        sample.save
-
-        if sample && @my_module.samples.include?(sample)
-          samples << sample
-        end
-      end
-
-      task_names = []
-      @my_module.downstream_modules.each do |my_module|
-        task_names << my_module.name
-        my_module.samples.destroy(samples & my_module.samples)
-      end
-    end
-    redirect_to samples_my_module_path(@my_module)
-  end
-
-  # AJAX actions
-  def samples_index
-    @team = @my_module.experiment.project.team
-
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           nil,
-                                           @my_module,
-                                           nil,
-                                           current_user)
-      end
-    end
-  end
-
-  # AJAX actions
-  def repository_index
-    @draw = params[:draw].to_i
-    per_page = params[:length] == '-1' ? 100 : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module)
-
-    @all_rows_count = datatable_service.all_count
-    @columns_mappings = datatable_service.mappings
-    @repository_rows = datatable_service.repository_rows
-                                        .preload(:repository_columns,
-                                                 :created_by,
-                                                 repository_cells: @repository.cell_preload_includes)
-                                        .page(page)
-                                        .per(per_page)
-
-    render 'repository_rows/index.json'
-  end
-
-  def repositories_dropdown
-    load_repository if params[:repository_id].present?
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repositories_dropdown.html.erb',
-            locals: { enable_counters: true }
-          )
-        }
-      end
-    end
-  end
-
-  # Submit actions
-  def assign_repository_records
-    service = RepositoryRows::MyModuleAssigningService.call(my_module: @my_module,
-                                                            repository: @repository,
-                                                            user: current_user,
-                                                            params: params)
-
-    if service.succeed? && service.assigned_rows_names.any?
-      names = service.assigned_rows_names.map { |name| escape_input(name) }
-      message = params[:downstream].blank? ? 'assigned_records_flash' : 'assigned_records_downstream_flash'
-      flash =   I18n.t("repositories.#{message}", records: names.join(', '))
-      status = :ok
-    else
-      flash = t('repositories.no_records_assigned_flash')
-      status = :bad_request
-    end
-
-    respond_to do |format|
-      format.json do
-        render json: { flash: flash }, status: status
-      end
-    end
-  end
-
-  def unassign_repository_records
-    service = RepositoryRows::MyModuleUnassigningService.call(my_module: @my_module,
-                                                              repository: @repository,
-                                                              user: current_user,
-                                                              params: params)
-    if service.succeed? && service.unassigned_rows_names.any?
-      flash = I18n.t('repositories.unassigned_records_flash',
-                     records: service.unassigned_rows_names.map { |name| escape_input(name) }.join(', '))
-      status = :ok
-    else
-      flash = t('repositories.no_records_unassigned_flash')
-      status = :bad_request
-    end
-
-    respond_to do |format|
-      format.json do
-        render json: { flash: flash }, status: status
-      end
-    end
-  end
-
-  def unassign_repository_records_modal
-    selected_rows = params[:selected_rows]
-    modal = render_to_string(
-      partial: 'my_modules/modals/unassign_repository_records_modal.html.erb',
-      locals: { my_module: @my_module,
-                repository: @repository,
-                selected_rows: selected_rows }
-    )
-    render json: { html: modal }, status: :ok
-  end
-
-  def assign_repository_records_modal
-    selected_rows = params[:selected_rows]
-    modal = render_to_string(
-      partial: 'my_modules/modals/assign_repository_records_modal.html.erb',
-      locals: { my_module: @my_module,
-                repository: @repository,
-                selected_rows: selected_rows }
-    )
-    render json: { html: modal }, status: :ok
   end
 
   # Complete/uncomplete task
@@ -525,11 +319,6 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def unshared_inventory
-    @inventory = Repository.used_on_task_but_unshared(@my_module, current_team).find(params[:inventory_id])
-    @inventory_admin = @inventory.created_by
-  end
-
   private
 
   def task_completion_activity
@@ -573,16 +362,10 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def load_repository
-    @repository = Repository.find_by(id: params[:repository_id])
-    render_404 unless @repository
-    render_403 unless can_read_repository?(@repository)
-  end
-
   def load_projects_tree
     # Switch to correct team
     current_team_switch(@project.team) unless @project.nil?
-    @projects_tree = current_user.projects_tree(current_team, nil)
+    @projects_tree = current_user.projects_tree(current_team, 'atoz')
   end
 
   def check_manage_permissions
@@ -599,16 +382,6 @@ class MyModulesController < ApplicationController
 
   def check_view_permissions
     render_403 unless can_read_experiment?(@my_module.experiment)
-  end
-
-  def check_assign_repository_records_permissions
-    render_403 unless module_page? &&
-                      can_assign_repository_rows_to_module?(@my_module)
-  end
-
-  def check_assign_samples_permissions
-    render_403 unless module_page? &&
-                      can_assign_sample_to_module?(@my_module)
   end
 
   def check_complete_module_permission

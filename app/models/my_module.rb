@@ -201,10 +201,10 @@ class MyModule < ApplicationRecord
 
   def assigned_repositories
     team = experiment.project.team
-    team.repositories
-        .joins(repository_rows: :my_module_repository_rows)
-        .where(my_module_repository_rows: { my_module_id: id })
-        .group(:id)
+    Repository.accessible_by_teams(team)
+              .joins(repository_rows: :my_module_repository_rows)
+              .where(my_module_repository_rows: { my_module_id: id })
+              .group(:id)
   end
 
   def live_and_snapshot_repositories_list
@@ -220,38 +220,21 @@ class MyModule < ApplicationRecord
                                   .order(:parent_id, updated_at: :desc)
 
     live_repositories = assigned_repositories
-                        .select('repositories.*, COUNT(repository_rows.id) AS assigned_rows_count')
+                        .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
                         .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
 
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
-  def active_snapshot_or_live(rep_or_snap, exclude_snpashot_ids: [])
-    return unless rep_or_snap
-
-    parent_id = rep_or_snap.is_a?(Repository) ? rep_or_snap.id : rep_or_snap.parent_id
-
-    selected_snapshot_for_repo(parent_id, exclude_snpashot_ids: exclude_snpashot_ids) ||
-      assigned_repositories&.where(id: parent_id)&.first ||
-      repository_snapshots
-        .where(parent_id: parent_id)
-        .where.not(id: exclude_snpashot_ids)
-        .order(updated_at: :desc).first
-  end
-
-  def update_report_repository_references(rep_or_snap)
-    ids = if rep_or_snap.is_a?(Repository)
-            RepositorySnapshot.where(parent_id: rep_or_snap.id).pluck(:id)
+  def update_report_repository_references(repository)
+    ids = if repository.is_a?(Repository)
+            RepositorySnapshot.where(parent_id: repository.id).pluck(:id)
           else
-            Repository.where(id: rep_or_snap.parent_id).pluck(:id) +
-              RepositorySnapshot.where(parent_id: rep_or_snap.parent_id).pluck(:id)
+            Repository.where(id: repository.parent_id).pluck(:id) +
+              RepositorySnapshot.where(parent_id: repository.parent_id).pluck(:id)
           end
 
-    report_elements.where(repository_id: ids).update(repository_id: rep_or_snap.id)
-  end
-
-  def selected_snapshot_for_repo(repository_id, exclude_snpashot_ids: [])
-    repository_snapshots.where(parent_id: repository_id).where.not(id: exclude_snpashot_ids).where(selected: true).first
+    report_elements.where(repository_id: ids).update(repository: repository)
   end
 
   def unassigned_users
@@ -432,7 +415,7 @@ class MyModule < ApplicationRecord
     rows.find_each do |row|
       row_json = []
       row_json << (row.repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
-      row_json << row.name
+      row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
       data << row_json
@@ -463,7 +446,8 @@ class MyModule < ApplicationRecord
       custom_columns.push(column.id)
     end
 
-    records = repository.assigned_rows(self).select(:id, :name, :created_at, :created_by_id)
+    records = repository.assigned_rows(self)
+                        .select(:id, :name, :created_at, :created_by_id, :repository_id, :parent_id, :archived)
     { headers: headers, rows: records, custom_columns: custom_columns }
   end
 

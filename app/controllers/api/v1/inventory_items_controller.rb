@@ -13,6 +13,7 @@ module Api
       def index
         items =
           @inventory.repository_rows
+                    .active
                     .preload(repository_cells: :repository_column)
                     .preload(repository_cells: @inventory.cell_preload_includes)
                     .page(params.dig(:page, :number))

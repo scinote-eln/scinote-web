@@ -1060,7 +1060,6 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
-    subtitle: "Owned by %{team_name}"
     repository: "Inventory: %{name}"
     icon_title:
       i_shared: "Shared inventory (owned by your Team)"
@@ -1087,6 +1086,8 @@ en:
         rename: "Rename inventory"
         copy: "Copy inventory"
         delete: "Delete inventory"
+        archive: 'Archive inventory'
+        restore: 'Restore inventory'
       modal_delete:
         title_html: "Delete inventory <em>%{name}</em>"
         message_html: "Are you sure you want to delete inventory <em>%{name}</em>? This action is irreversible."
@@ -1119,6 +1120,17 @@ en:
         all_teams: "All teams (current & new)"
         all_teams_tooltip: "This will disable individual team settings"
         success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
+    show:
+      archived_inventory: "Archived %{repository_name}"
+      subtitle: "Owned by %{team_name}"
+      your_team: "your Team"
+      show_active_items: "Show active items"
+      show_archived_items: "Show archived items"
+      archived_view_label:
+        active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
+        archived_on: "Inventory archived on"
+        archived_by: "by"
+
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -1127,6 +1139,8 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
+      archived_on: "Archived on"
+      archived_by: "Archived by"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
       assets:
@@ -1172,6 +1186,8 @@ en:
     edit_record: "Edit"
     copy_record: "Duplicate"
     delete_record: "Delete"
+    archive_record: "Archive"
+    restore_record: "Restore"
     save_record: "Save"
     cancel_save: "Cancel"
     assign_records_to_module: "Assign"
@@ -1222,6 +1238,20 @@ en:
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
     default_column: 'Name'
     copy_records_report: "%{number} item(s) successfully copied."
+    archive_inventories:
+      success_flash: "Inventories were successfully archived!"
+      unsuccess_flash: "Inventories were unsuccessfully archived!"
+      invalid_inventories_flash: "Please provide valid inventories"
+    restore_inventories:
+      success_flash: "Inventories were successfully restored!"
+      unsuccess_flash: "Inventories were unsuccessfully restored!"
+    archive_records:
+      success_flash: "Successfully archived items in inventory <strong>%{repository}</strong>"
+      unsuccess_flash: "Unsuccessfully archived items in inventory <strong>%{repository}</strong>"
+      invalid_rows_flash: "Please provide valid rows"
+    restore_records:
+      success_flash: "Successfully restored items in inventory <strong>%{repository}</strong>"
+      unsuccess_flash: "Unsuccessfully restored items in inventory <strong>%{repository}</strong>"
     multiple_share_service:
       unable_to_share: "Unable to share %{repository} inventory with %{team} team."
       unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."
@@ -1312,10 +1342,29 @@ en:
         error_flash: "Something went wrong! Please try again later."
     index:
       head_title: "Inventories"
+      head_title_archived: "Archived Inventories"
+      table:
+        name: "Name"
+        number_of_items: "No. of items"
+        shared: "Shared"
+        ownership: "Ownership"
+        added_on: "Added on"
+        added_by: "Added by"
+        archived_on: "Archived on"
+        archived_by: "Archived by"
+      shared_for_viewing: "For viewing"
+      shared_for_editing: "For editing"
+      not_shared: "No"
+      switch_view:
+        active: Show active inventories
+        archived: Show archived inventories
+      buttons:
+        edit: "Edit"
+        duplicate: "Duplicate"
+        archive: "Archive"
+        restore: "Restore"
+        delete: "Delete"
       no_libraries:
-        no_permission_title: "You don't have permission to create new inventory. Please contact your team administrator."
-        text: "You don't have any inventories."
-        title: "Please create your first Inventory"
         create_new_button: "New Inventory"
     show:
       head_title: "Inventories | %{library}"
@@ -1497,7 +1546,7 @@ en:
       subject: "You've received a What's new notification"
       intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
     index:
-      whats_new: "What's New"
+      whats_new: "What’s New"
       more_notifications: "Show more notifications"
       no_notifications: "No more notifications"
       settings: "Settings"
@@ -2230,6 +2279,7 @@ en:
       other: "tasks"
     public: "public"
     private: "private"
+    view: "View"
     search: "Search"
     file:
       choose: "Choose File"

@@ -122,10 +122,38 @@ module ReportsHelper
     )
   end
 
-  def assign_repository_or_snapshot(my_module, element_id, snapshot, repository)
-    original_repository = Repository.find_by(id: element_id) if element_id
-    repository ||= snapshot
-    repository || my_module.active_snapshot_or_live(original_repository) || original_repository
+  def assigned_repository_or_snapshot(my_module, element_id, snapshot, repository)
+    if element_id
+      repository = Repository.accessible_by_teams(my_module.experiment.project.team).find_by(id: element_id)
+      # Check for default set snapshots when repository still exists
+      if repository
+        selected_snapshot = repository.repository_snapshots.where(my_module: my_module).find_by(selected: true)
+        repository = selected_snapshot if selected_snapshot
+      end
+      repository ||= RepositorySnapshot.joins(my_module: { experiment: :project })
+                                       .where(my_module: { experiments: { project: my_module.experiment.project } })
+                                       .find_by(id: element_id)
+    end
+    repository || snapshot
+  end
+
+  def assigned_repositories_in_project_list(project)
+    live_repositories = Repository.accessible_by_teams(project.team)
+                                  .joins(repository_rows:
+                                           { my_module_repository_rows: { my_module: { experiment: :project } } })
+                                  .where(repository_rows:
+                                           { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
+                                  .select(:id, :name)
+
+    snapshots = RepositorySnapshot.joins(my_module: { experiment: :project })
+                                  .where('experiments.project_id = ?', project.id)
+                                  .left_outer_joins(:original_repository)
+                                  .where(original_repositories_repositories: { id: nil })
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .order(:parent_id, updated_at: :desc)
+
+    snapshots.each { |snapshot| snapshot.name = "#{snapshot.name} #{t('projects.reports.index.deleted')}" }
+    (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
   def step_status_label(step)

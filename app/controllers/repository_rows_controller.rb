@@ -9,7 +9,7 @@ class RepositoryRowsController < ApplicationController
   before_action :check_read_permissions, except: %i(create update delete_records copy_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
-  before_action :check_delete_permissions, only: :delete_records
+  before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
   before_action :check_manage_permissions, only: %i(update copy_records)
 
   def index
@@ -26,6 +26,8 @@ class RepositoryRowsController < ApplicationController
                                                  repository_cells: @repository.cell_preload_includes)
                                         .page(page)
                                         .per(per_page)
+
+    @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
   end
 
   def create
@@ -128,7 +130,7 @@ class RepositoryRowsController < ApplicationController
 
   def copy_records
     duplicate_service = RepositoryActions::DuplicateRows.new(
-      current_user, @repository, copy_records_params
+      current_user, @repository, selected_rows_in_repo_params
     )
     duplicate_service.call
     render json: {
@@ -138,7 +140,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def available_rows
-    if @repository.repository_rows.empty?
+    if @repository.repository_rows.active.empty?
       no_items_string =
         "#{t('projects.reports.new.save_PDF_to_inventory_modal.no_items')} " \
         "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),
@@ -154,20 +156,45 @@ class RepositoryRowsController < ApplicationController
 
   def assigned_task_list
     assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+                                      .where_attributes_like(
+                                        ['my_modules.name', 'experiments.name', 'projects.name'],
+                                        params[:query],
+                                        whole_phrase: true
+                                      )
     viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
     private_modules = assigned_modules - viewable_modules
-
-    viewable_modules = viewable_modules.where_attributes_like(
-      ['my_modules.name', 'experiments.name', 'projects.name'],
-      params[:query],
-      whole_phrase: true
-    )
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
                                my_modules: viewable_modules,
                                private_modules: private_modules
                              })
     }
+  end
+
+  def archive_records
+    service = RepositoryActions::ArchiveRowsService.call(repository: @repository,
+                                                         repository_rows: selected_rows_in_repo_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: { flash: t('repositories.archive_records.success_flash', repository: @repository.name) }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_records
+    service = RepositoryActions::RestoreRowsService.call(repository: @repository,
+                                                         repository_rows: selected_rows_in_repo_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: { flash: t('repositories.restore_records.success_flash', repository: @repository.name) }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
   end
 
   private
@@ -223,13 +250,15 @@ class RepositoryRowsController < ApplicationController
     params.permit(selected_rows: []).to_h[:selected_rows]
   end
 
-  def copy_records_params
+  # Selected rows in scope of current @repository
+  def selected_rows_in_repo_params
     process_ids = params[:selected_rows].map(&:to_i).uniq
     @repository.repository_rows.where(id: process_ids).pluck(:id)
   end
 
   def load_available_rows(query)
     @repository.repository_rows
+               .active
                .includes(:repository_cells)
                .name_like(search_params[:q])
                .limit(Constants::SEARCH_LIMIT)

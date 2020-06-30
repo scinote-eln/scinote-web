@@ -1,0 +1,56 @@
+.content-pane {
+  background-color: $color-white;
+  margin: 20px 0;
+  padding: 25px 20px;
+
+  &.flexible {
+    margin: 0;
+    padding: 0 .5em;
+  }
+
+  .content-header {
+    align-items: center;
+    border-bottom: $border-default;
+    display: flex;
+    height: 5em;
+
+    h1 {
+      margin: 0;
+    }
+
+    .view-switch {
+      margin-left: auto;
+
+      .caret {
+          margin: 8px 0 8px 8px;
+        }
+      &.open {
+        .caret {
+          transform: rotateX(180deg)
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: 250px;
+
+        li {
+          cursor: pointer;
+          padding: 1em;
+
+          .button-icon {
+            margin-right: .5em;
+          }
+
+          &:hover {
+            background: $color-concrete;
+          }
+        }
+      }
+    }
+  }
+
+  .content-body {
+
+  }
+}

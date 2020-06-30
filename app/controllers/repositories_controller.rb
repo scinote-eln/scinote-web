@@ -6,13 +6,17 @@ class RepositoriesController < ApplicationController
   include ActionView::Context
   include IconsHelper
   include TeamsHelper
+  include RepositoriesDatatableHelper
 
   before_action :switch_team_with_param, only: :show
-  before_action :load_repository, except: %i(index create create_modal)
-  before_action :load_repositories, only: %i(index show)
-  before_action :check_view_all_permissions, only: :index
-  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records)
+  before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
+  before_action :load_repositories, only: %i(index show sidebar)
+  before_action :load_repositories_for_archiving, only: :archive
+  before_action :load_repositories_for_restoring, only: :restore
+  before_action :check_view_all_permissions, only: %i(index sidebar)
+  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
   before_action :check_manage_permissions, only: %i(destroy destroy_modal rename_modal update)
+  before_action :check_archive_permissions, only: %i(archive restore)
   before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only: %i(create_modal create)
   before_action :check_copy_permissions, only: %i(copy_modal copy)
@@ -21,8 +25,21 @@ class RepositoriesController < ApplicationController
   layout 'fluid'
 
   def index
-    redirect_to repository_path(@repositories.first) and return unless @repositories.length.zero? && current_team
-    render 'repositories/index'
+    respond_to do |format|
+      format.html do; end
+      format.json do
+        render json: prepare_repositories_datatable(@repositories, current_team, params)
+      end
+    end
+  end
+
+  def sidebar
+    render json: {
+      html: render_to_string(partial: 'repositories/sidebar_list.html.erb', locals: {
+                               repositories: @repositories,
+                               archived: params[:archived]
+                             })
+    }
   end
 
   def show
@@ -112,6 +129,28 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def archive
+    service = Repositories::ArchiveRepositoryService.call(repositories: @repositories,
+                                                          user: current_user,
+                                                          team: current_team)
+    if service.succeed?
+      render json: { flash: t('repositories.archive_inventories.success_flash') }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
+  end
+
+  def restore
+    service = Repositories::RestoreRepositoryService.call(repositories: @repositories,
+                                                          user: current_user,
+                                                          team: current_team)
+    if service.succeed?
+      render json: { flash: t('repositories.restore_inventories.success_flash') }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
@@ -120,7 +159,7 @@ class RepositoriesController < ApplicationController
 
     @repository.discard
     @repository.destroy_discarded(current_user.id)
-    redirect_to team_repositories_path
+    redirect_to team_repositories_path(archived: true)
   end
 
   def rename_modal
@@ -144,7 +183,7 @@ class RepositoriesController < ApplicationController
           log_activity(:rename_inventory) # Acton only for renaming
 
           render json: {
-            url: team_repositories_path(repository: @repository)
+            url: team_repositories_path
           }, status: :ok
         else
           render json: @repository.errors, status: :unprocessable_entity
@@ -195,7 +234,7 @@ class RepositoriesController < ApplicationController
               new: copied_repository.name
             )
             render json: {
-              url: team_repositories_path(repository: copied_repository)
+              url: repository_path(copied_repository)
             }, status: :ok
           end
         end
@@ -337,6 +376,19 @@ class RepositoriesController < ApplicationController
 
   def load_repositories
     @repositories = Repository.accessible_by_teams(current_team).order('repositories.created_at ASC')
+    @repositories = if params[:archived] || @repository&.archived?
+                      @repositories.archived
+                    else
+                      @repositories.active
+                    end
+  end
+
+  def load_repositories_for_archiving
+    @repositories = current_team.repositories.active.where(id: params[:repository_ids])
+  end
+
+  def load_repositories_for_restoring
+    @repositories = current_team.repositories.archived.where(id: params[:repository_ids])
   end
 
   def set_inline_name_editing
@@ -370,6 +422,12 @@ class RepositoriesController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_repository?(@repository)
+  end
+
+  def check_archive_permissions
+    @repositories.each do |repository|
+      return render_403 unless can_archive_repository?(repository)
+    end
   end
 
   def check_share_permissions

@@ -163,7 +163,8 @@ var RepositoryColumns = (function() {
         optionLabel: delimiterOptionsRender,
         tagClass: 'delimiter-icon-dropdown',
         tagLabel: delimiterOptionsRender,
-        disableSearch: true
+        disableSearch: true,
+        labelHTML: true
       };
       $.get(modalUrl, (data) => {
         $manageModal.find('.modal-content').html(data.html)
@@ -266,6 +267,12 @@ var RepositoryColumns = (function() {
       case 'added-by':
         colType = 'RepositoryListValue';
         break;
+      case 'archived-on':
+        colType = 'RepositoryDateTimeValue';
+        break;
+      case 'archived-by':
+        colType = 'RepositoryListValue';
+        break;
       default:
         colType = $(el).attr('data-type');
     }
@@ -279,7 +286,7 @@ var RepositoryColumns = (function() {
     // Clear the list
     $columnsList.find('li[data-position]').remove();
     _.each(TABLE.columns().header(), function(el, index) {
-      if (index > 1) {
+      if (!el.dataset.unmanageable) {
         let colId = $(el).attr('id');
         let colIndex = $(el).attr('data-column-index');
         let visible = TABLE.column(colIndex).visible();
@@ -296,7 +303,7 @@ var RepositoryColumns = (function() {
         } else {
           thederName = el.innerText;
         }
-        if (thederName === 'Name') {
+        if (['row-name', 'archived-by', 'archived-on'].includes(el.id)) {
           visClass = '';
           visText = '';
         }
@@ -307,7 +314,7 @@ var RepositoryColumns = (function() {
           </span>
           <span class="text">${generateColumnNameTooltip(thederName)}</span>
           <span class="column-type pull-right">${getColumnTypeText(el, colId)}</span>
-          <span class="sci-btn-group manage-controls pull-right">
+          <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
             <button class="btn icon-btn btn-light edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
