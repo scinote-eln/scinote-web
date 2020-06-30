@@ -1,7 +1,7 @@
 class UserMyModulesController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: %i(index index_old)
-  before_action :check_manage_permissions, only: %i(create index_edit destroy)
+  before_action :check_view_permissions, only: %i(index index_old index_edit)
+  before_action :check_manage_permissions, only: %i(create destroy)
 
   def index_old
     @user_my_modules = @my_module.user_my_modules
