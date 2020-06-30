@@ -695,8 +695,8 @@ Rails.application.routes.draw do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
-      post 'users/complete_sign_up_provider' =>
-           'users/registrations#create_with_provider'
+      post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
+      post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'
     end
 
     namespace :api, defaults: { format: 'json' } do

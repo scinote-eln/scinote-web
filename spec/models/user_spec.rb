@@ -369,4 +369,25 @@ describe User, type: :model do
       end
     end
   end
+
+  describe 'valid_otp?' do
+    let(:user) { create :user }
+    before do
+      allow_any_instance_of(ROTP::TOTP).to receive(:verify).and_return(nil)
+    end
+
+    context 'when user has set otp_secret' do
+      it 'returns nil' do
+        expect(user.valid_otp?('someString')).to be_nil
+      end
+    end
+
+    context 'when user does not have otp_secret' do
+      it 'raises an error' do
+        user.update_column(:otp_secret, nil)
+
+        expect { user.valid_otp?('someString') }.to raise_error(StandardError, 'Missing otp_secret')
+      end
+    end
+  end
 end

@@ -5,6 +5,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # before_filter :configure_sign_in_params, only: [:create]
   after_action :after_sign_in, only: :create
+  prepend_before_action :redirect_2fa, only: :create
 
   rescue_from ActionController::InvalidAuthenticityToken do
     redirect_to new_user_session_path
@@ -24,21 +25,7 @@ class Users::SessionsController < Devise::SessionsController
   def create
     super
 
-    # Schedule templates creation for user
-    TemplatesService.new.schedule_creation_for_user(current_user)
-
-    # Schedule demo project creation for user
-    current_user.created_teams.each do |team|
-      FirstTimeDataGenerator.delay(
-        queue: :new_demo_project,
-        priority: 10
-      ).seed_demo_data_with_id(current_user.id, team.id)
-    end
-  rescue StandardError => e
-    Rails.logger.fatal(
-      "User ID #{current_user.id}: Error creating inital projects on sign_in: "\
-      "#{e.message}"
-    )
+    generate_demo_project
   end
 
   # DELETE /resource/sign_out
@@ -75,6 +62,27 @@ class Users::SessionsController < Devise::SessionsController
     flash[:system_notification_modal] = true
   end
 
+  def authenticate_with_two_factor
+    user = User.find_by(id: session[:otp_user_id])
+
+    unless user
+      flash[:alert] = t('devise.sessions.2fa.no_user_error')
+      redirect_to root_path && return
+    end
+
+    if user.valid_otp?(params[:otp])
+      session.delete(:otp_user_id)
+
+      sign_in(user)
+      generate_demo_project
+      flash[:notice] = t('devise.sessions.signed_in')
+      redirect_to root_path
+    else
+      flash.now[:alert] = t('devise.sessions.2fa.error_message')
+      render :two_factor_auth
+    end
+  end
+
   protected
 
   # If you have extra params to permit, append them to the sanitizer.
@@ -83,6 +91,32 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   private
+
+  def redirect_2fa
+    user = User.find_by(email: params[:user][:email])
+
+    return unless user&.valid_password?(params[:user][:password])
+
+    if user&.two_factor_auth_enabled?
+      session[:otp_user_id] = user.id
+      render :two_factor_auth
+    end
+  end
+
+  def generate_demo_project
+    # Schedule templates creation for user
+    TemplatesService.new.schedule_creation_for_user(current_user)
+
+    # Schedule demo project creation for user
+    current_user.created_teams.each do |team|
+      FirstTimeDataGenerator.delay(
+        queue: :new_demo_project,
+        priority: 10
+      ).seed_demo_data_with_id(current_user.id, team.id)
+    end
+  rescue StandardError => e
+    Rails.logger.fatal("User ID #{current_user.id}: Error creating inital projects on sign_in: #{e.message}")
+  end
 
   def session_layout
     if @simple_sign_in
