@@ -628,18 +628,18 @@ class User < ApplicationRecord
     totp.verify(otp, drift_behind: 10)
   end
 
-  def ensure_2fa_token
+  def ensure_2fa_token!
     return if otp_secret
 
-    assign_2fa_token
+    self.otp_secret = ROTP::Base32.random
     save!
   end
 
-  def enable_2fa
+  def enable_2fa!
     update!(two_factor_auth_enabled: true)
   end
 
-  def disable_2fa
+  def disable_2fa!
     update!(two_factor_auth_enabled: false, otp_secret: nil)
   end
 
@@ -680,9 +680,4 @@ class User < ApplicationRecord
   def clear_view_cache
     Rails.cache.delete_matched(%r{^views\/users\/#{id}-})
   end
-
-  def assign_2fa_token
-    self.otp_secret = ROTP::Base32.random
-  end
-
 end

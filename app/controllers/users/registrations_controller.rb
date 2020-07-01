@@ -184,7 +184,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def two_factor_enable
     if current_user.valid_otp?(params[:submit_code])
-      current_user.enable_2fa
+      current_user.enable_2fa!
       redirect_to edit_user_registration_path
     else
       render json: { error: t('users.registrations.edit.2fa_errors.wrong_submit_code') }, status: :unprocessable_entity
@@ -193,7 +193,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def two_factor_disable
     if current_user.valid_password?(params[:password])
-      current_user.disable_2fa
+      current_user.disable_2fa!
       redirect_to edit_user_registration_path
     else
       render json: { error: t('users.registrations.edit.2fa_errors.wrong_password') }, status: :forbidden
@@ -201,7 +201,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def two_factor_qr_code
-    current_user.ensure_2fa_token
+    current_user.ensure_2fa_token!
     qr_code_url = ROTP::TOTP.new(current_user.otp_secret, issuer: 'SciNote').provisioning_uri(current_user.email)
     qr_code = RQRCode::QRCode.new(qr_code_url)
     render json: { qr_code: qr_code.as_svg }
