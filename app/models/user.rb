@@ -623,6 +623,13 @@ class User < ApplicationRecord
     avatar.blob&.filename&.sanitized
   end
 
+  def valid_otp?(otp)
+    raise StandardError, 'Missing otp_secret' unless otp_secret
+
+    totp = ROTP::TOTP.new(otp_secret, issuer: 'sciNote')
+    totp.verify(otp, drift_behind: 10)
+  end
+
   protected
 
   def confirmation_required?

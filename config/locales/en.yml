@@ -33,6 +33,12 @@ en:
         password_placeholder: "Enter password"
         remember_me: "Remember me"
         submit: "Log in"
+      2fa:
+        title: "Two factor check"
+        field: "One time password"
+        placeholder: "Enter code"
+        error_message: "One Time Password is not correct."
+        no_user_error: "Cannot find user!"
       create:
         team_name: "%{user}'s projects"
       auth_token_create:
