@@ -142,7 +142,11 @@
                 </div>
               </div>
             <% end %>
-            <button class="btn btn-primary" id="twoFactorAuthentication"><%= t("users.registrations.edit.2fa_button") %></button>
+            <% if current_user.two_factor_auth_enabled? %>
+              <button class="btn btn-danger" id="twoFactorAuthenticationDisable"><%= t("users.registrations.edit.2fa_button_disable") %></button>
+            <% else %>
+              <button class="btn btn-primary" id="twoFactorAuthenticationEnable" data-qr-code-url="<%= users_2fa_qr_code_path %>"><%= t("users.registrations.edit.2fa_button") %></button>
+            <% end %>
           </div>
           <div class="col-md-7 col-md-offset-1">
             <div class="row user-statistics">

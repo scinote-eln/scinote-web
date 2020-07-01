@@ -80,7 +80,22 @@
     $fileInput[0].value = '';
   });
 
-  $('#twoFactorAuthentication').click(function() {
+  $('#twoFactorAuthenticationDisable').click(function() {
     $('#twoFactorAuthenticationModal').modal('show');
+  });
+
+  $('#twoFactorAuthenticationEnable').click(function() {
+    $.get(this.dataset.qrCodeUrl, function(result) {
+      $('#twoFactorAuthenticationModal .qr-code').html(result.qr_code);
+      $('#twoFactorAuthenticationModal').modal('show');
+    });
+  });
+
+  $('#twoFactorAuthenticationModal .2fa-enable-form').on('ajax:error', function(e, data) {
+    $(this).find('.submit-code-field').addClass('error').attr('data-error-text', data.responseJSON.error);
+  });
+
+  $('#twoFactorAuthenticationModal .2fa-disable-form').on('ajax:error', function(e, data) {
+    $(this).find('.password-field').addClass('error').attr('data-error-text', data.responseJSON.error);
   });
 }());

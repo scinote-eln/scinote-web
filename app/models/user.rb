@@ -286,8 +286,6 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
-  before_save :ensure_2fa_token, if: ->(user) { user.changed.include?('two_factor_auth_enabled') }
-  before_create :assign_2fa_token
   before_destroy :destroy_notifications
 
   def name
@@ -630,6 +628,13 @@ class User < ApplicationRecord
     totp.verify(otp, drift_behind: 10)
   end
 
+  def ensure_2fa_token
+    return if otp_secret
+
+    assign_2fa_token
+    save!
+  end
+
   protected
 
   def confirmation_required?
@@ -672,7 +677,4 @@ class User < ApplicationRecord
     self.otp_secret = ROTP::Base32.random
   end
 
-  def ensure_2fa_token
-    assign_2fa_token unless otp_secret
-  end
 end

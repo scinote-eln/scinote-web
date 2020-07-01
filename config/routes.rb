@@ -697,6 +697,10 @@ Rails.application.routes.draw do
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'
+
+      post 'users/2fa_enable' => 'users/registrations#two_factor_enable'
+      post 'users/2fa_disable' => 'users/registrations#two_factor_disable'
+      get 'users/2fa_qr_code' => 'users/registrations#two_factor_qr_code'
     end
 
     namespace :api, defaults: { format: 'json' } do
