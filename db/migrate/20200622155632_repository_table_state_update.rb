@@ -18,7 +18,7 @@ class RepositoryTableStateUpdate < ActiveRecord::Migration[6.0]
 
       state['order'][0][0] = order_state.to_i + 2 if order_state.to_i > 5
 
-      if state['columns'].class == Hash
+      if state['columns'].is_a? Hash
         columns_array = []
         state['columns'].each { |k, v| columns_array[k.to_i] = v }
         state['columns'] = columns_array
@@ -36,7 +36,8 @@ class RepositoryTableStateUpdate < ActiveRecord::Migration[6.0]
       end
       table_state.update(state: state)
     rescue StandardError
-      next
+      # Corrupted state will be cleared and default state will be generated on load
+      table_state.update(state: {})
     end
   end
 end
