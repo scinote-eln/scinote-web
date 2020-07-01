@@ -183,9 +183,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def two_factor_enable
-    totp = ROTP::TOTP.new(current_user.otp_secret, issuer: 'SciNote')
-    if totp.verify(params[:submit_code], drift_behind: 10)
-      current_user.update!(two_factor_auth_enabled: true)
+    if current_user.valid_otp?(params[:submit_code])
+      current_user.enable_2fa
       redirect_to edit_user_registration_path
     else
       render json: { error: t('users.registrations.edit.2fa_errors.wrong_submit_code') }, status: :unprocessable_entity
@@ -194,7 +193,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def two_factor_disable
     if current_user.valid_password?(params[:password])
-      current_user.update!(two_factor_auth_enabled: false, otp_secret: nil)
+      current_user.disable_2fa
       redirect_to edit_user_registration_path
     else
       render json: { error: t('users.registrations.edit.2fa_errors.wrong_password') }, status: :forbidden

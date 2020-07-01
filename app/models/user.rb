@@ -635,6 +635,14 @@ class User < ApplicationRecord
     save!
   end
 
+  def enable_2fa
+    update!(two_factor_auth_enabled: true)
+  end
+
+  def disable_2fa
+    update!(two_factor_auth_enabled: false, otp_secret: nil)
+  end
+
   protected
 
   def confirmation_required?

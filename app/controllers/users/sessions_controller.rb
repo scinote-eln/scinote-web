@@ -4,7 +4,7 @@ class Users::SessionsController < Devise::SessionsController
   layout :session_layout
 
   # before_filter :configure_sign_in_params, only: [:create]
-  after_action :after_sign_in, only: :create
+  after_action :after_sign_in, only: %i(create authenticate_with_two_factor)
   prepend_before_action :redirect_2fa, only: :create
 
   rescue_from ActionController::InvalidAuthenticityToken do
