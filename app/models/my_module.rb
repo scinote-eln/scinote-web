@@ -7,6 +7,7 @@ class MyModule < ApplicationRecord
   enum state: Extends::TASKS_STATES
 
   before_create :create_blank_protocol
+  before_save -> { self.completed_on = completed? ? DateTime.now : nil }, if: :state_changed?
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -506,10 +507,6 @@ class MyModule < ApplicationRecord
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  def completed?
-    state == 'completed'
-  end
-
   # Check if my_module is ready to become completed
   def check_completness_status
     if protocol && protocol.steps.count > 0
@@ -520,16 +517,6 @@ class MyModule < ApplicationRecord
       return true if completed
     end
     false
-  end
-
-  def complete
-    self.state = 'completed'
-    self.completed_on = DateTime.now
-  end
-
-  def uncomplete
-    self.state = 'uncompleted'
-    self.completed_on = nil
   end
 
   def assign_user(user, assigned_by = nil)

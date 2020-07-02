@@ -5,6 +5,7 @@ module Api
     class BaseController < ApiController
       class TypeError < StandardError; end
       class IDMismatchError < StandardError; end
+      class IncludeNotSupportedError < StandardError; end
       class PermissionError < StandardError
         attr_reader :klass
         attr_reader :mode
@@ -43,6 +44,18 @@ module Api
                      :bad_request)
       end
 
+      rescue_from NotImplementedError do
+        render_error(I18n.t('api.core.errors.not_implemented.title'),
+                     I18n.t('api.core.errors.not_implemented.detail'),
+                     :bad_request)
+      end
+
+      rescue_from IncludeNotSupportedError do
+        render_error(I18n.t('api.core.errors.include_not_supported.title'),
+                     I18n.t('api.core.errors.include_not_supported.detail'),
+                     :bad_request)
+      end
+
       rescue_from ActionController::ParameterMissing do |e|
         render_error(
           I18n.t('api.core.errors.parameter.title'), e.message, :bad_request
@@ -74,6 +87,28 @@ module Api
         )
       end
 
+      before_action :check_include_param, only: %i(index show)
+
+      def index
+        raise NotImplementedError
+      end
+
+      def show
+        raise NotImplementedError
+      end
+
+      def create
+        raise NotImplementedError
+      end
+
+      def update
+        raise NotImplementedError
+      end
+
+      def destroy
+        raise NotImplementedError
+      end
+
       private
 
       def render_error(title, message, status)
@@ -88,6 +123,26 @@ module Api
             }
           ]
         }, status: status
+      end
+
+      def check_include_param
+        return if params[:include].blank?
+
+        include_params
+      end
+
+      # redefine it in the specific controller if includes are used there
+      def permitted_includes
+        []
+      end
+
+      def include_params
+        return nil if params[:include].blank?
+
+        provided_includes = params[:include].split(',')
+        raise IncludeNotSupportedError if (provided_includes - permitted_includes).any?
+
+        provided_includes
       end
 
       def load_team(key = :team_id)
@@ -129,6 +184,21 @@ module Api
 
       def load_step(key = :step_id)
         @step = @protocol.steps.find(params.require(key))
+        raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
+      end
+
+      def load_table(key = :table_id)
+        @table = @step.tables.find(params.require(key))
+        raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
+      end
+
+      def load_checklist(key = :checklist_id)
+        @checklist = @step.checklists.find(params.require(key))
+        raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
+      end
+
+      def load_checklist_item(key = :checklist_item_id)
+        @checklist_item = @checklist.checklist_items.find(params.require(key))
         raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
       end
     end

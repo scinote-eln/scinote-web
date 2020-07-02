@@ -481,10 +481,10 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
             ), params: @valid_text_hash_body.to_json, headers: @valid_headers)
       end
 
-      it 'returns status 500' do
+      it 'returns status 400' do
         action
 
-        expect(response).to have_http_status 500
+        expect(response).to have_http_status 400
       end
     end
   end

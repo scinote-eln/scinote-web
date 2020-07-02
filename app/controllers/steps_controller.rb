@@ -4,17 +4,16 @@ class StepsController < ApplicationController
   include StepsActions
   include MarvinJsActions
 
-  before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state)
-  before_action :load_vars_nested, only: [:new, :create]
-  before_action :convert_table_contents_to_utf8, only: [:create, :update]
+  before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state
+                                     move_up move_down)
+  before_action :load_vars_nested, only:  %i(new create)
+  before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_view_permissions, only: %i(show update_view_state)
-  before_action :check_manage_permissions, only: %i(new create edit update
-                                                    destroy)
-  before_action :check_complete_and_checkbox_permissions, only:
-    %i(toggle_step_state checklistitem_state)
+  before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down)
+  before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
-  before_action :update_checklist_item_positions, only: [:create, :update]
+  before_action :update_checklist_item_positions, only: %i(create update)
 
   def new
     @step = Step.new
@@ -244,7 +243,7 @@ class StepsController < ApplicationController
       end
 
       # Destroy the step
-      @step.destroy(current_user)
+      @step.destroy
 
       # Release space taken by the step
       team.release_space(previous_size)
@@ -371,95 +370,58 @@ class StepsController < ApplicationController
   end
 
   def move_up
-    step = Step.find_by_id(params[:id])
-
     respond_to do |format|
-      if step
-        protocol = step.protocol
-        if can_manage_protocol_in_module?(protocol) ||
-           can_manage_protocol_in_repository?(protocol)
-          if step.position > 0
-            step_down = step.protocol.steps.where(position: step.position - 1).first
-            step.position -= 1
-            step.save
+      if @step.position.positive?
+        step_down = @step.protocol.steps.find_by(position: @step.position - 1)
+        @step.position -= 1
+        @step.save
 
-            if step_down
-              step_down.position += 1
-              step_down.save
+        if step_down
+          step_down.position += 1
+          step_down.save
 
-              # Update protocol timestamp
-              update_protocol_ts(step)
+          # Update protocol timestamp
+          update_protocol_ts(@step)
 
-              format.json {
-                render json: { move_direction: "up", step_up_position: step.position, step_down_position: step_down.position },
-                status: :ok
-              }
-            else
-              format.json {
-              render json: {}, status: :forbidden
-            }
-            end
-          else
-            format.json {
-              render json: {}, status: :forbidden
-            }
+          format.json do
+            render json: { move_direction: 'up',
+                           step_up_position: @step.position,
+                           step_down_position: step_down.position },
+            status: :ok
           end
         else
-          format.json {
-              render json: {}, status: :forbidden
-            }
+          format.json { render json: {}, status: :forbidden }
         end
       else
-        format.json {
-          render json: {}, status: :not_found
-        }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end
 
   def move_down
-    step = Step.find_by_id(params[:id])
-
     respond_to do |format|
-      if step
-        protocol = step.protocol
-        if can_manage_protocol_in_module?(protocol) ||
-           can_manage_protocol_in_repository?(protocol)
-          if step.position < step.protocol.steps.count - 1
-            step_up = step.protocol.steps.where(position: step.position + 1).first
-            step.position += 1
-            step.save
+      if @step.position < @step.protocol.steps.count - 1
+        step_up = @step.protocol.steps.find_by(position: @step.position + 1)
+        @step.position += 1
+        @step.save
 
-            if step_up
-              step_up.position -= 1
-              step_up.save
+        if step_up
+          step_up.position -= 1
+          step_up.save
 
-              # Update protocol timestamp
-              update_protocol_ts(step)
+          # Update protocol timestamp
+          update_protocol_ts(@step)
 
-              format.json {
-                render json: { move_direction: "down", step_up_position: step_up.position, step_down_position: step.position },
-                status: :ok
-              }
-            else
-              format.json {
-                render json: {}, status: :forbidden
-              }
-            end
-          else
-            format.json {
-              render json: {}, status: :forbidden
-            }
+          format.json do
+            render json: { move_direction: 'down',
+                           step_up_position: step_up.position,
+                           step_down_position: @step.position }
           end
         else
-          format.json {
-            render json: {}, status: :forbidden
-          }
+          format.json { render json: {}, status: :forbidden }
         end
       else
-        format.json {
-          render json: {}, status: :not_found
-        }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end
@@ -545,31 +507,20 @@ class StepsController < ApplicationController
   end
 
   def load_vars
-    @step = Step.find_by_id(params[:id])
-    @protocol = @step&.protocol
-    if params[:checklistitem_id]
-      @chk_item = ChecklistItem.find_by_id(params[:checklistitem_id])
-    end
+    @step = Step.find_by(id: params[:id])
+    return render_404 unless @step
 
-    unless @protocol
-      render_404
-    end
-
-    if @protocol.in_module?
-      @my_module = @protocol.my_module
-    end
+    @protocol = @step.protocol
+    @chk_item = ChecklistItem.find_by(id: params[:checklistitem_id]) if params[:checklistitem_id]
+    @my_module = @protocol.my_module if @protocol.in_module?
   end
 
   def load_vars_nested
-    @protocol = Protocol.find_by_id(params[:protocol_id])
+    @protocol = Protocol.find_by(id: params[:protocol_id])
 
-    unless @protocol
-      render_404
-    end
+    return render_404 unless @protocol
 
-    if @protocol.in_module?
-      @my_module = @protocol.my_module
-    end
+    @my_module = @protocol.my_module if @protocol.in_module?
   end
 
   def convert_table_contents_to_utf8
@@ -589,13 +540,11 @@ class StepsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_protocol_in_module?(@protocol) ||
-                      can_read_protocol_in_repository?(@protocol)
+    render_403 unless can_read_protocol_in_module?(@protocol) || can_read_protocol_in_repository?(@protocol)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_protocol_in_module?(@protocol) ||
-                      can_manage_protocol_in_repository?(@protocol)
+    render_403 unless can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
   end
 
   def check_complete_and_checkbox_permissions
