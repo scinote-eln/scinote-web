@@ -50,6 +50,12 @@ class Repository < RepositoryBase
       .distinct
   }
 
+  scope :assigned_to_project, lambda { |project|
+    accessible_by_teams(project.team)
+      .joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
+      .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
+  }
+
   def self.within_global_limits?
     return true unless Rails.configuration.x.global_repositories_limit.positive?
 
