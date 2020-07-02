@@ -41,6 +41,9 @@
         dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
         processing: true,
         pageLength: 25,
+        colReorder: {
+          enable: false
+        },
         sScrollX: '100%',
         sScrollXInner: '100%',
         order: [[1, 'asc']],
