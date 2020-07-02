@@ -1078,6 +1078,10 @@ en:
       view_only_permission_label: "You have veiw-only permission"
       show_per_page: "Show %{number} per page"
       filter_inventory: "Filter inventory item"
+      no_inventories:  "No inventories here"
+      no_inventories_matched: "No inventories matched your search request"
+      no_archived_inventories:  "No archived inventories here"
+      no_archived_inventories_matched: "No archived inventories matched your search request"
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
 
       options_dropdown:
@@ -1130,6 +1134,10 @@ en:
         active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
         archived_on: "Inventory archived on"
         archived_by: "by"
+      no_items: "No items here"
+      no_items_matched: "No items matched your search request"
+      no_archived_items: "No archived items here"
+      no_archived_items_matched: "No archived items matched your search request"
 
     table:
       id: 'ID'
@@ -2304,7 +2312,6 @@ en:
     no_name: "(no name)"
     error: "An error has occurred, please try again later."
     filter: "Filter:"
-    filter_dots: "Filter..."
     no_teams:
       title: "Your dashboard is empty!"
       text: "It seems you're not a member of any team."

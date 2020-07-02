@@ -494,8 +494,9 @@ var RepositoryDatatable = (function(global) {
           return data;
         }
       }],
-      oLanguage: {
-        sSearch: I18n.t('general.filter_dots')
+      language: {
+        emptyTable: I18n.t('repositories.show.no_items'),
+        zeroRecords: I18n.t('repositories.show.no_items_matched')
       },
       rowCallback: function(row, data) {
         $(row).attr('data-editable', data.recordEditable);
@@ -539,6 +540,9 @@ var RepositoryDatatable = (function(global) {
         checkArchivedColumnsState();
       },
       preDrawCallback: function() {
+        var archived = $('.repository-show').hasClass('archived');
+        TABLE.context[0].oLanguage.sEmptyTable = archived ? I18n.t('repositories.show.no_archived_items') : I18n.t('repositories.show.no_items');
+        TABLE.context[0].oLanguage.sZeroRecords = archived ? I18n.t('repositories.show.no_archived_items_matched') : I18n.t('repositories.show.no_items_matched');
         animateSpinner(this);
         $('.record-info-link').off('click');
       },
@@ -553,6 +557,7 @@ var RepositoryDatatable = (function(global) {
             var archived = $('.repository-show').hasClass('archived');
             if (json.state.columns[6]) json.state.columns[6].visible = archived;
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
+            delete json.state.search
             callback(json.state);
           }
         });

@@ -45,6 +45,10 @@
         sScrollXInner: '100%',
         order: [[1, 'asc']],
         destroy: true,
+        language: {
+          emptyTable: archived ? I18n.t('repositories.index.no_archived_inventories') : I18n.t('repositories.index.no_inventories'),
+          zeroRecords: archived ? I18n.t('repositories.index.no_archived_inventories_matched') : I18n.t('repositories.index.no_inventories_matched')
+        },
         columnDefs: [{
           targets: 0,
           visible: true,
