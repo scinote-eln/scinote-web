@@ -131,7 +131,6 @@ end
 group :test do
   gem 'capybara'
   gem 'capybara-email'
-  gem 'chromedriver-helper'
   gem 'cucumber-rails', '~> 1.8', require: false
   gem 'database_cleaner'
   gem 'json_matchers'
