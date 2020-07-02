@@ -1,13 +1,25 @@
 .repositories-index {
   &.active {
     [data-view-mode="archived"] {
-      display: none
+      display: none;
     }
   }
 
   &.archived {
     [data-view-mode="active"] {
-      display: none
+      display: none;
+    }
+  }
+
+  &[data-readonly="true"] {
+    .main-actions {
+      .toolbar {
+        display: none;
+      }
+
+      .filter-container {
+        margin-left: auto;
+      }
     }
   }
 }
