@@ -13,9 +13,15 @@ module RepositoriesDatatableHelper
         '2': repository.repository_rows.size,
         '3': repository.shared_with?(team),
         '4': escape_input(repository.team.name),
-        '5': I18n.l(repository.created_at, format: :full),
+        '5': {
+          display: I18n.l(repository.created_at, format: :full),
+          sort: repository.created_at.to_i
+        },
         '6': escape_input(repository.created_by.full_name),
-        '7': (I18n.l(repository.archived_on, format: :full) if repository.archived_on),
+        '7': {
+          display: (I18n.l(repository.archived_on, format: :full) if repository.archived_on),
+          sort: repository.archived_on&.to_i
+        },
         '8': escape_input(repository.archived_by&.full_name),
         'repositoryUrl': repository_path(repository),
         'DT_RowAttr': {
