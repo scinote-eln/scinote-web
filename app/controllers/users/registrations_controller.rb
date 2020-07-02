@@ -201,7 +201,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def two_factor_qr_code
-    current_user.ensure_2fa_token!
+    current_user.assign_2fa_token!
     qr_code_url = ROTP::TOTP.new(current_user.otp_secret, issuer: 'SciNote').provisioning_uri(current_user.email)
     qr_code = RQRCode::QRCode.new(qr_code_url)
     render json: { qr_code: qr_code.as_svg }

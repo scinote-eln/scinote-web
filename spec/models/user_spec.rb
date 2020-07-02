@@ -335,7 +335,7 @@ describe User, type: :model do
   describe 'valid_otp?' do
     let(:user) { create :user }
     before do
-      user.ensure_2fa_token!
+      user.assign_2fa_token!
       allow_any_instance_of(ROTP::TOTP).to receive(:verify).and_return(nil)
     end
 

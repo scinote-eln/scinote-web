@@ -628,9 +628,7 @@ class User < ApplicationRecord
     totp.verify(otp, drift_behind: 10)
   end
 
-  def ensure_2fa_token!
-    return if otp_secret
-
+  def assign_2fa_token!
     self.otp_secret = ROTP::Base32.random
     save!
   end
