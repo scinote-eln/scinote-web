@@ -56,3 +56,12 @@ Then(/^I fill in Email "([^"]*)" and Password "([^"]*)"$/) do |email, password|
   fill_in 'user_email', with: email
   fill_in 'user_password', with: password
 end
+
+Given("I am on the home page of Biosistemika Process team") do
+  visit '/projects'
+end
+
+Given("I am on task page of Biosistemika Process team") do
+  visit '/modules/1/protocols'
+end
+

@@ -16,6 +16,6 @@ And "marija@myorg.com" is signed in with "mypassword1234"
   @javascript
   Scenario: User left a team
    Given team settings page
-   And I click button with icon and label "Leave team"
-    And I click "Leave" button
+   And I click "Leave team" button
+   And I click element with css ".btn-danger"
    Then I should see "Successfuly left team BioSistemika Process."

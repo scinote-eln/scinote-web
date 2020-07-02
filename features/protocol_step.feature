@@ -7,6 +7,7 @@ Feature: Protocol step
    want to add/ edit/ delete file to a step
 
 Background:
+Given default screen size2
 Given the "BioSistemika Process" team exists
 Given the following users are registered
    | name        | email              | password       | password_confirmation |
@@ -15,76 +16,58 @@ And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
 Given Demo project exists for the "BioSistemika Process" team
 And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
-@wip
+@javascript
 Scenario: Unsuccessful add new step to a task
-  Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on "New Step" button
-  And I click on "Add" button
-  Then I should see "can't be blank" error message under "Step name" field
-  And I click to "Cancel" button
-
-@wip
-Scenario: Successful add new step to a task
-  Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on "New Step" button
-  And I fill in "LJ ZOO" in "#step_name" field
-  And I click on "Add" button
-  Then I should see "LJ ZOO" step
-
-@wip
-Scenario: Successful add new step to a task
-  Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on "New Step" button
-  And I fill in "ZOO" in "#step_name" field
-  And I click on "Add" button
-  Then I should see "ZOO" step
+  Given I am on task page of Biosistemika Process team
+  And I click "New step" button
+  And I click element with css "input.btn:nth-child(2)"
+  Then I should see "can't be blank"
 
 @javascript
 Scenario: Successful add new step to a task1
-  Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on "New Step" button
+  Given I am on task page of Biosistemika Process team
+  And I click "New step" button
   And I fill in "PES" in "#step_name" field
-  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea" field
-  And I click on "Files" button
+  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
+  And I click element with css "#new-step-assets-tab"
   And I attach file "Moon.png" to the drag-n-drop field
-  And I click on "Add" button
-  Then I should see "Moon.png" attachment on "PES" step
+  And I click element with css "input.btn:nth-child(2)"
+  Then I should see "Moon.png"
 
-  @javascript
+@javascript
 Scenario: Successful add new step to a task2
-  Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on "New Step" button
+  Given I am on task page of Biosistemika Process team
+  And I click "New step" button
   And I fill in "NOS" in "#step_name" field
-  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea" field
-  And I click on "Files" button
+  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
+  And I click element with css "#new-step-assets-tab"
   And I attach file "File.txt" to the drag-n-drop field
-  And I click on "Add" button
-  Then I should see "File.txt" attachment on "NOS" step
+  And I click element with css "input.btn:nth-child(2)"
+  Then I should see "File.txt"
 
-  @javascript
+@javascript
 Scenario: Successful add new step to a task3
-  Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on "New Step" button
+  Given I am on task page of Biosistemika Process team
+  And I click "New step" button
   And I fill in "KIT" in "#step_name" field
-  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea" field
-  And I click on "Files" button
+  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I attach file "Star.png" to the drag-n-drop field
-  And I click on "Add" button
-  Then I should see "Star.png" attachment on "KIT" step
+  And I click element with css "input.btn:nth-child(2)"
+  Then I should see "Star.png"
 
   @javascript
 Scenario: Successful add new step to a task4
-  Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on "New Step" button
+  Given I am on task page of Biosistemika Process team
+  And I click "New step" button
   And I fill in "BOS" in "#step_name" field
-  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea" field
-  And I click on "Tables" button
-  And I click on "Add table" button
+  And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
+  And I click element with css "#new-step-tables-tab"
+  And I click element with css "#add-table"
   And I fill in "Bos" in ".table_name" field
-  And I fill in "Labradorec" to "A1" Table field
-  And I fill in "Dalmatinec" to "B2" Table field
-  And I click on "Add" button
-  Then I should see "BOS" on "#steps" element
+  #And I fill in "Labradorec" to "A1" Table field - special calls needed
+  #And I fill in "Dalmatinec" to "B2" Table field
+  And I click element with css "input.btn:nth-child(2)"
+  Then I should see "BOS"
     
 @wip
 Scenario: Successful reorder Steps
@@ -118,7 +101,7 @@ Scenario: Successful edit Step
   And I fill in "Buldog" in "Checklist name 2" field
   And I fill in "Lesi" in "Checklist name 3" field
   And I fill in "Hrt" in "Checklist name 4" field
-  And I click on "Add" button
+  And I click element with css "input.btn:nth-child(2)"
   Then I should see "PES" edited step
 
 @wip
@@ -128,7 +111,7 @@ Scenario: Successful edit Step with reordering checklist items
   And I click on "Checklist" button
   And I move "Hrt" Checklist item to "1" position
   And I move "Buldog" Checklist item to "3" position
-  And I click on "Add" button
+  And I click element with css "input.btn:nth-child(2)"
   Then I should see "PES" edited step
 
 @wip
@@ -204,7 +187,7 @@ Scenario: Successful edit completed Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
   And I click on "Edit step" icon of "PES"
   And I change "Vse to pa zaradi botra petelina!" with "Bezimo, da se nam se kaj ne zgodi!"
-  And I click on "Add" button
+  And I click element with css "input.btn:nth-child(2)"
   Then I should see "PES" edited step
 
 @wip

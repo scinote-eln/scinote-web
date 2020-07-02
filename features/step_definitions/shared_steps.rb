@@ -23,7 +23,7 @@ Then('I click {string} icon') do |icon_class|
   sci_click_on_icon(icon_class: icon_class)
 end
 
-Then('I click {string} button at position {int}') do |button, position|
+Given('I click {string} button at position {int}') do |button, position|
   sci_click_on_button(text: button, position: position)
 end
 
@@ -80,11 +80,11 @@ Then(/^I click "(.+)" link within dropdown menu$/) do |link|
   end
 end
 
-# Then(/^I click on "(.+)" within dropdown menu$/) do |link1|
-#   within('.inner') do
-#     find('.text', text: link1).click
-#   end
-# end
+Then(/^I click on "(.+)" within dropdown menu$/) do |link1|
+  within('.inner') do
+    find('.text', text: link1).click
+  end
+end
 
 Then(/^I should see "(.+)"$/) do |text|
   wait_for_ajax
@@ -262,6 +262,10 @@ end
 
 Then('I hover over comment') do # Maybe "I hover css element {".content-placholder"}" So its reusable?
   find('.content-placeholder').hover
+end
+
+Then('I hover over element with css {string}') do |string|
+  find(string.to_s).hover
 end
 
 # Then('I click on {string} sign') do |string1|

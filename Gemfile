@@ -19,6 +19,7 @@ gem 'sassc-rails'
 gem 'simple_token_authentication', '~> 1.16.0' # Token authentication for Devise
 gem 'webpacker', '~> 4.0.0'
 gem 'yomu'
+gem "sprockets", "<4"
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
@@ -131,7 +132,6 @@ end
 group :test do
   gem 'capybara'
   gem 'capybara-email'
-  gem 'chromedriver-helper'
   gem 'cucumber-rails', '~> 1.8', require: false
   gem 'database_cleaner'
   gem 'json_matchers'

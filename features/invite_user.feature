@@ -15,13 +15,13 @@ Background:
 Scenario: Successful Add team member1
 Given "nonadmin@myorg.com" is signed in with "asdf1243"
   And Settings page of BioSistemika Process team of a Karli Novak user 
-  And I click on "Add team members" button
+  And I click "Add team members" button
   And I fill in "lojze@myorg.com" to Invite users to team BioSistemika Process input field
   And confirm with ENTER key to ".bootstrap-tagsinput>input"
-  And I click on "Invite Users" button
+  And I click "Invite Users" button
   And I click on "As Normal Users" in Invite dropdown
   Then I should see "lojze@myorg.com  -  User successfully invited to SciNote and team BioSistemika Process as Normal user." massage of "Invitation results:" modal window
-  And I click on "Close" button
+  And I click "Close" button
   And I should see "pending"
   And I should see "lojze@myorg.com"
 
@@ -29,13 +29,13 @@ Given "nonadmin@myorg.com" is signed in with "asdf1243"
 Scenario: Successful Add team member2
 Given "nonadmin@myorg.com" is signed in with "asdf1243"
   And Settings page of BioSistemika Process team of a Karli Novak user 
-  And I click on "Add team members" button
+  And I click "Add team members" button
   And I fill in "marija@myorg.com" to Invite users to team BioSistemika Process input field
   And confirm with ENTER key to ".bootstrap-tagsinput>input"
-  And I click on "Invite Users" button
+  And I click "Invite Users" button
   And I click on "As Normal Users" in Invite dropdown
   Then I should see "marija@myorg.com  -  User was already a member of SciNote - successfully invited to team BioSistemika Process as Normal user." massage of "Invitation results:" modal window
-  And I click on "Close" button
+  And I click "Close" button
   And I should see "active"
   And I should see "marija@myorg.com"
 
@@ -43,14 +43,14 @@ Given "nonadmin@myorg.com" is signed in with "asdf1243"
 Scenario: Checking Add team members
   Given "nonadmin@myorg.com" is signed in with "asdf1243"
   And Settings page of BioSistemika Process team of a Karli Novak user 
-  And I click on "Add team members" button
+  And I click "Add team members" button
   And I fill in "marija@myorg.com" to Invite users to team BioSistemika Process input field
   And confirm with ENTER key to ".bootstrap-tagsinput>input"
   And I fill in "lojze@myorg.com" to Invite users to team BioSistemika Process input field
   And confirm with ENTER key to ".bootstrap-tagsinput>input"
-  And I click on "Invite Users" button
+  And I click "Invite Users" button
   And I click on "As Normal Users" in Invite dropdown
-  And I click on "Close" button
+  And I click "Close" button
   Then I should see "active"
   Then I should see "pending"
   Then I should see "marija@myorg.com"
@@ -60,13 +60,13 @@ Scenario: Checking Add team members
 Scenario: Unsuccessful Add team member
 Given "nonadmin@myorg.com" is signed in with "asdf1243"
   And Settings page of BioSistemika Process team of a Karli Novak user 
-  And I click on "Add team members" button
+  And I click "Add team members" button
   And I fill in "anicamyorg.com" to Invite users to team BioSistemika Process input field
   And confirm with ENTER key to ".bootstrap-tagsinput>input"
-  And I click on "Invite Users" button
+  And I click "Invite Users" button
   And I click on "As Normal Users" in Invite dropdown
   Then I should see "anicamyorg.com  -  Invalid email." massage of "Invitation results:" modal window
-  And I click on "Close" button
+  And I click "Close" button
 
 @javascript
 Scenario: Successful Sign up

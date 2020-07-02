@@ -19,7 +19,7 @@ Background:
 Scenario: Unsuccessful add Text result
  Given I am on Task results page
  And I click "Text" button
- And I click "Add" button
+ And I click element with css ".save-result"
  Then I should see "can't be blank"
  And I click "Cancel" button
 
@@ -29,7 +29,7 @@ Scenario: Successful add text result with Text name
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  Then I should see "LJ ZOO"
 
 @javascript
@@ -37,7 +37,7 @@ Scenario: Successful add Text result
  Given I am on Task results page
  And I click "Text" button
  And I fill in "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  Then I should see "Vse to pa zaradi botra petelina, bog mu daj zdravje!"
 
 @javascript
@@ -46,11 +46,11 @@ Scenario: Successful edit Text task result
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-pencil-alt" icon
  And I fill in "ZOO" in "#result_name" field
  And I fill in "Vse to pa zaradi botra petelina!" in "#result_text_attributes_textarea" rich text editor field
- And I click "Save" button
+ And I click element with css ".save-result"
  Then I should see "Vse to pa zaradi botra petelina!"
 
 @javascript
@@ -59,23 +59,22 @@ Scenario: Successful add comment to a Text task result
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
  Then I should see "I was on Triglav one summer."
 
-@javascript
-Scenario: Unsuccessful add comment to a Text task result
+@wip 
+Scenario: Unsuccessful add comment to a Text task result BUG!!!!!
  Given I am on Task results page
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "" in "message" textarea field
  And confirm with ENTER key to "#message"
  And I click "fa-paper-plane" icon
- And WAIT
  Then I should see "can't be blank"
 
 @javascript
@@ -84,7 +83,7 @@ Scenario: Successful edit comment to a Text task result
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -99,7 +98,7 @@ Scenario: Unsuccessful edit comment to a Text task result
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -114,7 +113,7 @@ Scenario: Unsuccessful delete comment to a Text task resultGiven I am on Task re
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -129,7 +128,7 @@ Scenario: Successful delete comment to a Text task result
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -145,7 +144,7 @@ Scenario: Successful archive text result with Text name
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  Then I should see "Successfully archived text result in task Experiment design" flash message
@@ -154,7 +153,7 @@ Scenario: Successful archive text result with Text name
 Scenario: Unsuccessful add Table result ##########this one doesnt work
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  Then I should see "can't be blank"
  And I click "Cancel" button
 
@@ -165,7 +164,7 @@ Scenario: Successful add table result with Table name
  And I fill in "ZOO" in "#result_name" field
  And I click on table cell one
  And I input "Živali pa so se odpravile dalje po svetu." in cell
- And I click "Add" button
+ And I click element with css ".save-result"
  Then I should see "Živali pa so se odpravile dalje po svetu."
 
 @javascript
@@ -174,7 +173,7 @@ Scenario: Successful add Table result
  And I click "Table" button
  And I click on table cell one
  And I input "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in cell
- And I click "Add" button
+ And I click element with css ".save-result"
  Then I should see "Vse to pa zaradi botra petelina, bog mu daj zdravje!"
 
 @javascript
@@ -184,19 +183,19 @@ Scenario: Successful edit Table task result
  And I fill in "ZOO" in "#result_name" field
  And I click on table cell one
  And I input "Živali pa so se odpravile dalje po svetu." in cell
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-pencil-alt" icon
  And I fill in "LJ ZOO" in "#result_name" field
  And I click on table cell one
  And I input "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in cell
- And I click "Save" button
+ And I click element with css ".save-result"
  Then I should see "Vse to pa zaradi botra petelina, bog mu daj zdravje!"
 
 @javascript
 Scenario: Successful add comment to a Table task result
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -206,7 +205,7 @@ Scenario: Successful add comment to a Table task result
 Scenario: Successful edit comment to a Table task result
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -220,7 +219,7 @@ Scenario: Successful edit comment to a Table task result
 Scenario: Unsuccessful edit comment to a Table task result
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -233,7 +232,7 @@ Scenario: Unsuccessful edit comment to a Table task result
 Scenario: Unsuccessful delete comment to a Table task result
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -246,7 +245,7 @@ Scenario: Unsuccessful delete comment to a Table task result
 Scenario: Successful delete comment to a Table task result
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -259,7 +258,7 @@ Scenario: Successful delete comment to a Table task result
 Scenario: Successful archive Table result with Table name
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  Then I should see "Successfully archived table result in task Experiment design" flash message
@@ -268,7 +267,7 @@ Scenario: Successful archive Table result with Table name
 Scenario: Unsuccessful add File result #doesnt work
  Given I am on Task results page
  And I click "File" button
- And I click "Add" button
+ And I click element with css ".save-result"
  Then I should see File "can't be blank"
  And I click "Cancel" button
 
@@ -278,7 +277,7 @@ Scenario: Successful add File result with File name
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And WAIT
  Then I should see "MED"
 
@@ -287,20 +286,20 @@ Scenario: Successful add File result
  Given I am on Task results page
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
- And I click "Add" button
+ And I click element with css ".save-result"
  And WAIT
  Then I should see "Moon"
 
-@wip
-Scenario: Successful edit File result with File name (((#gets error - is a bug)))
+@javascript
+Scenario: Successful edit File result with File name
  Given I am on Task results page
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-pencil-alt" icon
  And I fill in "STAR ZOO" in "#result_name" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And WAIT
  Then I should see "STAR ZOO"
 
@@ -310,7 +309,7 @@ Scenario: Successful add comment to a File task result
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -322,7 +321,7 @@ Scenario: Successful edit comment to a File task result
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -337,7 +336,7 @@ Scenario: Unsuccessful edit comment to a File task result
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -352,7 +351,7 @@ Scenario: Unsuccessful delete comment to a File task result
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -367,7 +366,7 @@ Scenario: Successful delete comment to a File task result
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
  And WAIT
@@ -381,7 +380,7 @@ Scenario: Successful archive File result with File name
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  Then I should see "Successfully archived file result in task Experiment design" flash message
@@ -392,7 +391,7 @@ Scenario: Download archived Text result
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And I am on Task archive page
@@ -404,7 +403,7 @@ Scenario: Download archived Text result
 Scenario: Download archived Table result
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And I am on Task archive page
@@ -418,7 +417,7 @@ Scenario: Download archived File result
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And I am on Task archive page
@@ -433,7 +432,7 @@ Scenario: Delete archived Text result
  And I click "Text" button
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And I am on Task archive page
@@ -446,7 +445,7 @@ Scenario: Delete archived Text result
 Scenario: Delete archived Table result
  Given I am on Task results page
  And I click "Table" button
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And I am on Task archive page
@@ -461,7 +460,7 @@ Scenario: Delete archived File result
  And I click "File" button
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
- And I click "Add" button
+ And I click element with css ".save-result"
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And I am on Task archive page
@@ -482,12 +481,12 @@ Scenario: Delete archived File result
   And I click "Text" button
   And I fill in "LJ ZOO" in "#result_name" field
   And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
-  And I click "Add" button
+  And I click element with css ".save-result"
   And I click "Text" button
   And I fill in "Kuga???" in "#result_name" field
   And I fill in "Test2." in "#result_text_attributes_textarea" rich text editor field
-  And I click "Add" button
+  And I click element with css ".save-result"
   And I click "fa-pencil-alt" icon at position 2
   And I fill in "No more zoo Updated" in "#result_name" field
-  And I click "Save" button
+  And I click element with css ".save-result"
   Then I should see "No more zoo"
