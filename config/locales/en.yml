@@ -1600,6 +1600,15 @@ en:
         new_password_label: "New password"
         new_password_2_label: "New password confirmation"
         2fa_button: "Enable two-factor authentication"
+        2fa_button_disable: "Disable two-factor authentication"
+        2fa_modal:
+          title: 'Two-factor authentication'
+          password_label: 'Password'
+          submit_code_label: 'Submit code'
+          submit_button: 'Submit'
+        2fa_errors:
+          wrong_submit_code: 'Not correct code'
+          wrong_password: 'Not correct password'
       new:
         head_title: "Sign up"
         team_name_label: "Team name"

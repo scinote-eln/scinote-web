@@ -332,47 +332,10 @@ describe User, type: :model do
     it { is_expected.to have_many(:system_notifications) }
   end
 
-  describe 'Callbacks' do
-    describe 'after_create' do
-      it 'sets token' do
-        user = create :user
-
-        expect(user.otp_secret).to be_kind_of String
-      end
-    end
-
-    describe 'before_save' do
-      let(:user) { create :user }
-
-      context 'when changing twofa_enabled' do
-        context 'when user does not have otp_secret' do
-          it 'sets token before save' do
-            user.update_column(:otp_secret, nil)
-
-            expect { user.update(two_factor_auth_enabled: true) }.to(change { user.otp_secret })
-          end
-        end
-
-        context 'when user does have otp_secret' do
-          it 'does not set new token before save' do
-            expect { user.update(two_factor_auth_enabled: true) }.not_to(change { user.otp_secret })
-          end
-        end
-      end
-
-      context 'when changing not twofa_enabled and user does have otp_secret' do
-        it 'does not set token before save' do
-          user.update_column(:otp_secret, nil)
-
-          expect { user.update(name: 'SomeNewName') }.not_to(change { user.otp_secret })
-        end
-      end
-    end
-  end
-
   describe 'valid_otp?' do
     let(:user) { create :user }
     before do
+      user.assign_2fa_token!
       allow_any_instance_of(ROTP::TOTP).to receive(:verify).and_return(nil)
     end
 
