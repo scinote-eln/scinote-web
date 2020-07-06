@@ -794,7 +794,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function redrawTableOnSidebarToggle() {
-    $('#sidebar-arrow').on('click', function() {
+    $('#sidebar-wrapper').on('click', '#sidebar-arrow', function() {
       var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
       var windowWidth = $(window).width();
       if (!$(this).is('[data-shown]')) {
