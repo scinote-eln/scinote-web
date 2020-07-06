@@ -12,7 +12,7 @@ Background:
   And "nonadmin@myorg.com" is signed in with "mypassword1234"
   Given I had project "Mangart" for team "BioSistemika Process"
   And user "Karli Novak" owner of project "Mangart"
-  And I'm on the home page of "BioSistemika Process" team
+  And I'm on the projects page of "BioSistemika Process" team
 
 @javascript
 Scenario: Unsuccessful archived project

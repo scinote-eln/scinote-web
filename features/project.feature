@@ -17,7 +17,7 @@ And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
   @javascript
   Scenario: Successful change a team view
-    Given I'm on the home page of "BioSistemika Path" team
+    Given I'm on the projects page of "BioSistemika Path" team
     And I click on team switcher
     And I click to "BioSistemika Process" in team dropdown menu
     Then I should see "You are working on BioSistemika Process now!" flash message

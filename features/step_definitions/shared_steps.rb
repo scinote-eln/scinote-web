@@ -11,10 +11,6 @@ Given(/^the following users are registered:$/) do |table|
   end
 end
 
-# When(/^I click "(.+)" button$/) do |button|
-#   click_button(button)
-# end
-
 Then('I click {string} button') do |button|
   sci_click_on_button(text: button)
 end
@@ -31,18 +27,19 @@ Then('I click {string} icon at position {int}') do |icon_class, position|
   sci_click_on_icon(icon_class: icon_class, position: position)
 end
 
-#
-# Then('I click {string} icon with delay') do |icon_class|
-#   sci_click_on_icon(icon_class: icon_class, wait: 1)
-# end
+Then('I click {string} icon at position {int} within {string}') do |icon_class, position, container|
+  sci_click_on_icon(icon_class: icon_class, position: position, container: container)
+end
 
-# Then('I click on {string} button') do |button|
-#   find('.btn', text: button).click
-# end
+Then('I click {string} link') do |link|
+  click_link link
+end
 
-# Given('I click on {string} class button') do |button6|
-#   find('.btn', class: button6, match: :first).click
-# end
+Then('I click {string} link within {string}') do |link, container|
+  within container do
+    click_link link
+  end
+end
 
 Then('I click element with css {string}') do |selector|
   find(selector).click
@@ -60,19 +57,10 @@ Then(/^I should be redirected to the homepage$/) do
   current_path.should =~ %r{^/$}
 end
 
-Given(/^I click "(.+)" link$/) do |link|
-  click_link link
-end
-
 Given(/^I click first "(.+)" link$/) do |link_text|
   first(:link, link_text).click
 end
 
-Given(/^I click "(.+)" link within "(.+)"$/) do |link, element|
-  within(element) do
-    click_link link
-  end
-end
 
 Then(/^I click "(.+)" link within dropdown menu$/) do |link|
   within('.dropdown-menu') do
@@ -110,10 +98,10 @@ Given(/^Demo project exists for the "([^"]*)" team$/) do |team_name|
   seed_demo_data(user, team)
 end
 
-Given(/^I'm on the home page of "([^"]*)" team$/) do |team_name|
+Given(/^I'm on the projects page of "([^"]*)" team$/) do |team_name|
   team = Team.find_by(name: team_name)
   @current_user.update(current_team_id: team.id)
-  visit root_path
+  visit projects_path
 end
 
 Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_name, role|
@@ -136,10 +124,6 @@ Then(/^I should see "([^"]*)" error message$/) do |message|
   expect(page).to have_content(message)
 end
 
-# Then(/^I click on "([^"]*)"$/) do |button|
-#   click_on button
-# end
-
 Then(/^I click on image within "([^"]*)" element$/) do |container|
   sleep 0.5
   within(container) do
@@ -153,14 +137,7 @@ Then(/^I should see "([^"]*)" flash message$/) do |message|
   expect(find('.alert')).to have_content(message)
 end
 
-# Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
-#   wait_for_ajax
-#   within(container_id) do
-#     find('[data-action="edit"]').click
-#   end
-# end
-
-Then(/^I fill in "([^"]*)" in "([^"]*)" input fields$/) do |text, input_id|
+Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, input_id|
   page.find("#{input_id} input[type=\"text\"]").set(text)
 end
 
@@ -186,14 +163,6 @@ Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id
   container = page.find(container_id)
   expect(container).to have_xpath("//input[@value='#{text}']")
 end
-
-# Given('I click {string} icon') do |id|
-#   find(:css, id).click
-# end
-
-# Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
-#   find(selector).click
-# end
 
 Then(/^I attach file "([^"]*)" to the drag-n-drop field$/) do |file_name|
   find('#drag-n-drop-assets', visible: false).send_keys(Rails.root.join('features', 'assets', file_name))
@@ -231,10 +200,6 @@ Then('I wait for {int} sec') do |sec|
   sleep sec
 end
 
-# Then('I click button with icon and label {string}') do |label|
-#   find('.btn', text: label).click
-# end
-
 Given('default screen size') do
   page.driver.browser.manage.window.resize_to(1920, 1080) if defined?(page.driver.browser.manage)
 end
@@ -260,7 +225,7 @@ Then('confirm with ENTER key to {string}') do |element| # More clear name of act
   page.find(element.to_s).native.send_keys(:enter)
 end
 
-Then('I hover over comment') do # Maybe "I hover css element {".content-placholder"}" So its reusable?
+Then('I hover over comment') do
   find('.content-placeholder').hover
 end
 
@@ -268,12 +233,12 @@ Then('I hover over element with css {string}') do |string|
   find(string.to_s).hover
 end
 
-# Then('I click on {string} sign') do |string1|
-#   find(string1.to_s).click
-# end
-
 Then('WAIT') do
   wait_for_ajax
+end
+
+Then('I fill bootsrap tags input with {string}') do |value|
+  find('.bootstrap-tagsinput > input[type="text"]').set(value)
 end
 
 

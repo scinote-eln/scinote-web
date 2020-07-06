@@ -27,13 +27,15 @@ def sci_click_on_button(text:, position: 1)
   btn.click
 end
 
-def sci_click_on_icon(icon_class:, position: 1)
+def sci_click_on_icon(icon_class:, position: 1, container: nil)
   raise 'Position cannot be lower than 1' if position < 1
 
+  scope = container ? find(container) : page
+
   if position == 1
-    icon = first(".fas.#{icon_class}")
+    icon = scope.first(".fas.#{icon_class}")
   else
-    icon = all(".fas.#{icon_class}")[position-1]
+    icon = scope.all(".fas.#{icon_class}")[position-1]
   end
 
   icon.click

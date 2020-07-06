@@ -31,7 +31,6 @@ module Api
 
         update_file_result if result_file_params.present? && @result.is_asset
         update_text_result if result_text_params.present? && @result.is_text
-
         if (@result.changed? && @result.save!) || @asset_result_updated
           render jsonapi: @result,
                  serializer: ResultSerializer,

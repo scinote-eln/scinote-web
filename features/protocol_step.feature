@@ -7,7 +7,7 @@ Feature: Protocol step
    want to add/ edit/ delete file to a step
 
 Background:
-Given default screen size2
+Given default screen size
 Given the "BioSistemika Process" team exists
 Given the following users are registered
    | name        | email              | password       | password_confirmation |
@@ -16,7 +16,7 @@ And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
 Given Demo project exists for the "BioSistemika Process" team
 And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
-@javascript
+@javascript @wip
 Scenario: Unsuccessful add new step to a task
   Given I am on task page of Biosistemika Process team
   And I click "New step" button
@@ -31,7 +31,7 @@ Scenario: Successful add new step to a task1
   And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I click element with css "#new-step-assets-tab"
   And I attach file "Moon.png" to the drag-n-drop field
-  And I click element with css "input.btn:nth-child(2)"
+  And I click "Add" button
   Then I should see "Moon.png"
 
 @javascript
@@ -42,7 +42,7 @@ Scenario: Successful add new step to a task2
   And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I click element with css "#new-step-assets-tab"
   And I attach file "File.txt" to the drag-n-drop field
-  And I click element with css "input.btn:nth-child(2)"
+  And I click "Add" button
   Then I should see "File.txt"
 
 @javascript
@@ -52,7 +52,7 @@ Scenario: Successful add new step to a task3
   And I fill in "KIT" in "#step_name" field
   And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I attach file "Star.png" to the drag-n-drop field
-  And I click element with css "input.btn:nth-child(2)"
+  And I click "Add" button
   Then I should see "Star.png"
 
   @javascript
@@ -64,9 +64,7 @@ Scenario: Successful add new step to a task4
   And I click element with css "#new-step-tables-tab"
   And I click element with css "#add-table"
   And I fill in "Bos" in ".table_name" field
-  #And I fill in "Labradorec" to "A1" Table field - special calls needed
-  #And I fill in "Dalmatinec" to "B2" Table field
-  And I click element with css "input.btn:nth-child(2)"
+  And I click "Add" button
   Then I should see "BOS"
 
 @wip
