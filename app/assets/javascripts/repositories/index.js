@@ -100,9 +100,9 @@
 
   function reloadSidebar() {
     var slidePanel = $('#slide-panel');
-    var archived;
-    if ($('.repositories-index').hasClass('archived')) archived = true;
-    $.get(slidePanel.data('sidebar-url'), { archived: archived }, function(data) {
+    $.get(slidePanel.data('sidebar-url'), {
+      archived: $('.repositories-index').hasClass('archived')
+    }, function(data) {
       slidePanel.html(data.html);
       $('.create-new-repository').initializeModal('#create-repo-modal');
     });
@@ -111,12 +111,12 @@
   function initRepositoryViewSwitcher() {
     var viewSwitch = $('.view-switch');
     viewSwitch.on('click', '.view-switch-archived', function() {
-      $('.repositories-index').toggleClass('archived active');
+      $('.repositories-index').removeClass('active').addClass('archived');
       initRepositoriesDataTable('#repositoriesList', true);
       reloadSidebar();
     });
     viewSwitch.on('click', '.view-switch-active', function() {
-      $('.repositories-index').toggleClass('archived active');
+      $('.repositories-index').removeClass('archived').addClass('active');
       initRepositoriesDataTable('#repositoriesList');
       reloadSidebar();
     });
