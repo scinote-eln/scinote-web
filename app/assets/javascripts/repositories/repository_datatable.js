@@ -793,26 +793,31 @@ var RepositoryDatatable = (function(global) {
     TABLE_ID = '';
   }
 
-  function redrawTableOnSidebarToggle() {
-    $('#sidebar-wrapper').on('click', '#sidebar-arrow', function() {
-      var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
-      var windowWidth = $(window).width();
-      if (!$(this).is('[data-shown]')) {
-        if (windowWidth > orgignalWidth + 363) {
-          $('.repository-show .dataTables_scrollHead')
-            .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
-        }
-        document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
-      } else {
-        if (windowWidth > orgignalWidth + 83) {
-          $('.repository-show .dataTables_scrollHead')
-            .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
-        }
-        document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+  function redrawTable() {
+    var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
+    var windowWidth = $(window).width();
+    if (!$('#sidebar-arrow').is('[data-shown]')) {
+      if (windowWidth > orgignalWidth + 363) {
+        $('.repository-show .dataTables_scrollHead')
+          .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
       }
-      setTimeout(function() {
-        adjustTableHeader();
-      }, 500);
+      document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
+    } else {
+      if (windowWidth > orgignalWidth + 83) {
+        $('.repository-show .dataTables_scrollHead')
+          .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
+      }
+      document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+    }
+    setTimeout(function() {
+      adjustTableHeader();
+    }, 500);
+  }
+
+  function redrawTableOnSidebarToggle() {
+    redrawTable();
+    $('#sidebar-wrapper').on('click', '#sidebar-arrow', function() {
+      redrawTable();
     });
   }
 
