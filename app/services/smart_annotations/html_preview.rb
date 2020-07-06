@@ -47,7 +47,7 @@ module SmartAnnotations
         if object
           repository_name = fetch_repository_name(object)
           link = if object.archived?
-                   "#{repository_name} #{I18n.t('atwho.res.archived')}"
+                   "#{object.name} #{I18n.t('atwho.res.archived')}"
                  else
                    "<a href='#{ROUTES.repository_repository_row_path(object.repository, object)}' " \
                    "class='record-info-link'>#{object.name}</a>"
