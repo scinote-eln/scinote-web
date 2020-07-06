@@ -31,6 +31,25 @@ Then('I click {string} icon at position {int}') do |icon_class, position|
   sci_click_on_icon(icon_class: icon_class, position: position)
 end
 
+Then('I click {string} icon at position {int} within {string}') do |icon_class, position, container|
+  sci_click_on_icon(icon_class: icon_class, position: position, container: container)
+end
+
+# Then('I click {string} icon within {string}') do |icon_class, container|
+#   sci_click_on_icon(icon_class: icon_class, container: container)
+# end
+
+Then('I click {string} link') do |link|
+  click_link link
+end
+
+Then('I click {string} link within {string}') do |link, container|
+  within container do
+    click_link link
+  end
+end
+
+
 #
 # Then('I click {string} icon with delay') do |icon_class|
 #   sci_click_on_icon(icon_class: icon_class, wait: 1)
@@ -60,19 +79,10 @@ Then(/^I should be redirected to the homepage$/) do
   current_path.should =~ %r{^/$}
 end
 
-Given(/^I click "(.+)" link$/) do |link|
-  click_link link
-end
-
 Given(/^I click first "(.+)" link$/) do |link_text|
   first(:link, link_text).click
 end
 
-Given(/^I click "(.+)" link within "(.+)"$/) do |link, element|
-  within(element) do
-    click_link link
-  end
-end
 
 Then(/^I click "(.+)" link within dropdown menu$/) do |link|
   within('.dropdown-menu') do
@@ -160,7 +170,7 @@ end
 #   end
 # end
 
-Then(/^I fill in "([^"]*)" in "([^"]*)" input fields$/) do |text, input_id|
+Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, input_id|
   page.find("#{input_id} input[type=\"text\"]").set(text)
 end
 
@@ -274,6 +284,10 @@ end
 
 Then('WAIT') do
   wait_for_ajax
+end
+
+Then('I fill bootsrap tags input with {string}') do |value|
+  find('.bootstrap-tagsinput > input[type="text"]').set(value)
 end
 
 

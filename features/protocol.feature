@@ -26,13 +26,13 @@ Given default screen size2
    And I fill in "Star" in "#tag_name" field
    And I click element with css ".btn-colorselector"
    And I select "#15369E" color
-   And I make screenshot
    And I click element with css ".save-tag-link"
    Then I should see "Star"
    And I click "Close" button
    Then I should see "Star"
 
-@javascript
+# Make this test shorter and more isolated
+@javascript @wip
  Scenario: Successful change a tag to a task
    Given task page of Experiment design
    And I click element with css ".search-field"
@@ -48,12 +48,10 @@ Given default screen size2
    And I click element with css ".btn-colorselector"
    And I select "#DC143C" color
    And I click element with css ".save-tag-link"
-   And I should see "Sky"
-   And I click element with css "li.list-group-item:nth-child(1) > div:nth-child(1) > div:nth-child(2) > a:nth-child(2)"
    And WAIT
+   And I click "fa-times" icon at position 2 within "#manage-module-tags-modal .modal-body"
    And I click "Close" button
    And task page of Experiment design
-   And I make screenshot
    Then I should see "Sun"
    Then I should not see "Sky"
 
@@ -86,26 +84,6 @@ Given default screen size2
    And task page of Experiment design
    Then I should not see "Dry lab"
 
-# @javascript (cannot be used for now)
-#  Scenario: Successful add a start date
-#    Given task page of Experiment design
-#    And I make screenshot
-#    And I click element with css "#calendarStartDate"
-#    And I click element with css "#my_module_due_date"
-#    And I click "Save" button
-#    And WAIT
-#    Then I should not see "Due date: not set"
-
-# @javascript (cannot be used for now)
-#  Scenario: Successful remove a due date
-#    Given task page of Experiment design
-#    And I click on "#calendarDueDate" sign
-#    And I click on "#my_module_due_date_clear" sign
-#    And I click "Save" button
-#    And WAIT
-#    Then I should see "not set"
-#    And I make screenshot
-
 @javascript
  Scenario: Successful add description
    Given task page of Experiment design
@@ -125,19 +103,18 @@ Given default screen size2
    And I click element with css "#my_module_description_view"
    And confirm with ENTER key to "#my_module_description_textarea_ifr"
    And I fill in "I will go to Krn one day." in "#my_module_description_textarea" rich text editor field
-   And I make screenshot
    And I click element with css ".tinymce-save-button"
    Then I should see "I will go to Krn one day."
-  
+
 @javascript
  Scenario: Successful Complete task
    Given task page of Experiment design
-   And I click "Complete task" button
-   Then I should see "Uncomplete task"
+   And I click "Complete Task" button
+   Then I should see "Uncomplete Task"
 
 @javascript
  Scenario: Successful Uncomplete task
    Given task page of Experiment design
-   And I click "Complete task" button
-   And I click "Uncomplete task" button
-   Then I should see "Complete task"
+   And I click "Complete Task" button
+   And I click "Uncomplete Task" button
+   Then I should see "Complete Task"

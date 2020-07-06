@@ -686,7 +686,6 @@ DEPENDENCIES
   simplecov
   sneaky-save!
   spinjs-rails
-  sprockets (< 4)
   timecop
   tinymce-rails (~> 4.9.3)
   turbolinks (~> 5.1.1)

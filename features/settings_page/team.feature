@@ -21,10 +21,10 @@ Feature: Team settings
     Given I'm on "BioSistemika Process" team settings page
     Then I click on team title
     And I change "BioSistemika Process" with "BioSistemika Process Company" in "team-name" input field
-    Then I click on ".save-button" element
+    Then I click element with css ".save-button"
     And I should see "BioSistemika Process Company" on "#team-name" element
 
-  @javascript
+  @javascript @wip
   Scenario: Successfully changes team description
     Given I'm on "BioSistemika Process" team settings page
     Then I click on ".team-description" element

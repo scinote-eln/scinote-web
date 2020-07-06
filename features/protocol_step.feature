@@ -7,7 +7,7 @@ Feature: Protocol step
    want to add/ edit/ delete file to a step
 
 Background:
-Given default screen size2
+Given default screen size
 Given the "BioSistemika Process" team exists
 Given the following users are registered
    | name        | email              | password       | password_confirmation |
@@ -16,7 +16,7 @@ And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
 Given Demo project exists for the "BioSistemika Process" team
 And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
-@javascript
+@javascript @wip
 Scenario: Unsuccessful add new step to a task
   Given I am on task page of Biosistemika Process team
   And I click "New step" button
@@ -26,49 +26,47 @@ Scenario: Unsuccessful add new step to a task
 @javascript
 Scenario: Successful add new step to a task1
   Given I am on task page of Biosistemika Process team
-  And I click "New step" button
+  And I click "New Step" button
   And I fill in "PES" in "#step_name" field
   And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I click element with css "#new-step-assets-tab"
   And I attach file "Moon.png" to the drag-n-drop field
-  And I click element with css "input.btn:nth-child(2)"
+  And I click "Add" button
   Then I should see "Moon.png"
 
 @javascript
 Scenario: Successful add new step to a task2
   Given I am on task page of Biosistemika Process team
-  And I click "New step" button
+  And I click "New Step" button
   And I fill in "NOS" in "#step_name" field
   And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I click element with css "#new-step-assets-tab"
   And I attach file "File.txt" to the drag-n-drop field
-  And I click element with css "input.btn:nth-child(2)"
+  And I click "Add" button
   Then I should see "File.txt"
 
 @javascript
 Scenario: Successful add new step to a task3
   Given I am on task page of Biosistemika Process team
-  And I click "New step" button
+  And I click "New Step" button
   And I fill in "KIT" in "#step_name" field
   And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I attach file "Star.png" to the drag-n-drop field
-  And I click element with css "input.btn:nth-child(2)"
+  And I click "Add" button
   Then I should see "Star.png"
 
   @javascript
 Scenario: Successful add new step to a task4
   Given I am on task page of Biosistemika Process team
-  And I click "New step" button
+  And I click "New Step" button
   And I fill in "BOS" in "#step_name" field
   And I fill in "zivali pa so se odpravile dalje po svetu." in "#step_description_textarea_ifr" field
   And I click element with css "#new-step-tables-tab"
   And I click element with css "#add-table"
   And I fill in "Bos" in ".table_name" field
-  #And I fill in "Labradorec" to "A1" Table field - special calls needed
-  #And I fill in "Dalmatinec" to "B2" Table field
-  And I click element with css "input.btn:nth-child(2)"
-  Then I should see "BOS"
-    
+    And I click "Add" button
+    Then I should see "BOS"
+
 @wip
 Scenario: Successful reorder Steps
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
@@ -82,7 +80,7 @@ Scenario: Successful reorder Steps
 Scenario: Successful edit Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
   And I click on "Edit step" icon of "PES"
-  And I change "zivali pa so se odpravile dalje po svetu." with "Vse to pa zaradi botra petelina!" 
+  And I change "zivali pa so se odpravile dalje po svetu." with "Vse to pa zaradi botra petelina!"
   And I click on "Files" button
   And I click on "Browse to add" button
   And "Open" window is opened
@@ -124,7 +122,7 @@ Scenario: Successful check checklist item
 @wip
 Scenario: Successful add comment to a Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on Comments of "ZOO" 
+  And I click on Comments of "ZOO"
   And I add "I was on Triglav one summer." in comment field
   And And I click on "paper plane" sign
   Then I should see "I was on Triglav one summer." in Comments list of "ZOO" Step
@@ -132,7 +130,7 @@ Scenario: Successful add comment to a Step
 @wip
 Scenario: Unsuccessful add comment to a Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
-  And I click on Comments of "ZOO" 
+  And I click on Comments of "ZOO"
   And confirm with ENTER key
   And And I click on "paper plane" sign
   Then I should see "Massage can't be blank" error message under "Comments list" field
@@ -166,8 +164,8 @@ Scenario: Successful delete comment to a Step
   Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
   And place mouse on "I was on Triglav one summer and I do not have plans to go once more."
   And I click on "trashcan" button
-  And I click on "OK" button 
-  Then "I was on Triglav one summer and I do not have plans to go once more." comment is removed from Comments list of "ZOO" 
+  And I click on "OK" button
+  Then "I was on Triglav one summer and I do not have plans to go once more." comment is removed from Comments list of "ZOO"
 
 @wip
 Scenario: Successful delete Step
