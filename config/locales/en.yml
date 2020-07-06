@@ -1089,17 +1089,17 @@ en:
         archive: 'Archive inventory'
         restore: 'Restore inventory'
       modal_delete:
-        title_html: "Delete inventory <em>%{name}</em>"
+        title_html: "Delete inventory: %{name}"
         message_html: "Are you sure you want to delete inventory <em>%{name}</em>? This action is irreversible."
         alert_heading: "Deleting inventory has following consequences:"
         alert_line_1: "all data inside the inventory will be lost;"
         alert_line_2: "all references to inventory items will be rendered as invalid."
         delete: "Delete"
       modal_rename:
-        title_html: "Rename inventory <em>%{name}</em>"
-        name: "New inventory name"
+        title_html: "Edit inventory: %{name}"
+        name: "Inventory name"
         name_placeholder: "My inventory"
-        rename: "Rename"
+        rename: "Save"
       modal_copy:
         title_html: "Copy inventory <em>%{name}</em>"
         name: "New inventory name"
