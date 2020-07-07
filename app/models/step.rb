@@ -14,9 +14,10 @@ class Step < ApplicationRecord
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
 
+  before_validation :set_completed_on, if: :completed_changed?
+  before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
   before_destroy :adjust_positions_on_destroy
-  before_save :set_last_modified_by
 
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
@@ -133,6 +134,12 @@ class Step < ApplicationRecord
   def cascade_before_destroy
     assets.each(&:destroy)
     tables.each(&:destroy)
+  end
+
+  def set_completed_on
+    return if completed? && completed_on.present?
+
+    self.completed_on = completed? ? DateTime.now : nil
   end
 
   def set_last_modified_by

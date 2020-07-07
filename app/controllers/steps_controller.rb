@@ -319,11 +319,6 @@ class StepsController < ApplicationController
       changed = @step.completed != completed
       @step.completed = completed
 
-      # Update completed_on
-      if changed
-        @step.completed_on = completed ? Time.current : nil
-      end
-
       if @step.save
         if @protocol.in_module?
           ready_to_complete = @protocol.my_module.check_completness_status

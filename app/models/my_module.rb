@@ -7,7 +7,7 @@ class MyModule < ApplicationRecord
   enum state: Extends::TASKS_STATES
 
   before_create :create_blank_protocol
-  before_save -> { self.completed_on = completed? ? DateTime.now : nil }, if: :state_changed?
+  before_validation :set_completed_on, if: :state_changed?
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -18,6 +18,7 @@ class MyModule < ApplicationRecord
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: proc { |mm| !mm.my_module_group_id.nil? }
   validate :coordinates_uniqueness_check, if: :active?
+  validates :completed_on, presence: true, if: proc { |mm| mm.completed? }
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -535,6 +536,12 @@ class MyModule < ApplicationRecord
   end
 
   private
+
+  def set_completed_on
+    return if completed? && completed_on.present?
+
+    self.completed_on = completed? ? DateTime.now : nil
+  end
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
