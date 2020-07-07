@@ -5,3 +5,52 @@
   display: block;
   margin-bottom: 20px;
 }
+
+.two-factor-modal {
+  .two-factor-apps {
+    align-items: center;
+    display: flex;
+    margin: 2em 0;
+
+    .app {
+      align-items: center;
+      display: flex;
+      margin: 2em 0;
+
+      .app-information {
+        margin-left: 1.5em;
+
+        .app-name {
+          @include font-h3;
+        }
+      }
+
+      .store {
+        margin-right: 1em;
+      }
+    }
+
+    .apps-list {
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .install-mobile {
+      margin-left: -150px;
+    }
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
+
+  .tab-footer {
+    text-align: center;
+  }
+
+  .qr-code {
+    display: flex;
+    justify-content: center;
+    padding: 4em;
+  }
+}
