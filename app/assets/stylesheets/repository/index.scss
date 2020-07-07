@@ -11,6 +11,12 @@
     }
   }
 
+  .toolbar {
+    .hidden {
+      display: none;
+    }
+  }
+
   &[data-readonly="true"] {
     .main-actions {
       .toolbar {
