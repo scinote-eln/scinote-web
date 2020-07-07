@@ -59,17 +59,11 @@ class TeamZipExport < ZipExport
       inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
-      # Find all assigned inventories through all tasks in the project
-      task_ids = p.project_my_modules
-      repo_rows = RepositoryRow.joins(:my_modules)
-                               .where(my_modules: { id: task_ids })
-                               .distinct
+      repositories = p.assigned_repositories_and_snapshots
 
       # Iterate through every inventory repo and save it to CSV
-      repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_idx|
-        curr_repo_rows = repo_rows.select { |x| x.repository_id == repo.id }
-        obj_filenames[:my_module_repository][repo.id] =
-          save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
+      repositories.each_with_index do |repo, repo_idx|
+        obj_filenames[:my_module_repository][repo.id] = save_inventories_to_csv(inventories, repo, repo_idx)
       end
 
       # Include all experiments
@@ -233,7 +227,7 @@ class TeamZipExport < ZipExport
   end
 
   # Helper method for saving inventories to CSV
-  def save_inventories_to_csv(path, repo, repo_rows, idx)
+  def save_inventories_to_csv(path, repo, idx)
     repo_name = "#{to_filesystem_name(repo.name)} (#{idx})"
 
     # Attachment folder
@@ -263,14 +257,13 @@ class TeamZipExport < ZipExport
     end
 
     # Generate CSV
-    csv_data = RepositoryZipExport.to_csv(repo_rows, col_ids, @user, @team,
-                                          handle_name_func)
+    csv_data = RepositoryZipExport.to_csv(repo.repository_rows, col_ids, @user, @team, handle_name_func)
     File.open(csv_file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
       asset.file.open do |file|
-        FileUtils.cp(file.path, asset_path)  
+        FileUtils.cp(file.path, asset_path)
       end
     end
 

@@ -1,4 +1,6 @@
 class MyModuleTagsController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars, except: :canvas_index
   before_action :check_view_permissions, only: :index
   before_action :check_manage_permissions, only: %i(create index_edit destroy)
@@ -112,18 +114,20 @@ class MyModuleTagsController < ApplicationController
 
   def search_tags
     assigned_tags = @my_module.my_module_tags.pluck(:tag_id)
-    tags = @my_module.experiment.project.tags\
-                     .where.not(id: assigned_tags)
-                     .search(
-                       current_user,
-                       false,
-                       params[:query]
-                     ).select(:id, :name, :color).limit(6)
-    tags = tags.map { |i| { value: i.id, label: i.name, params: { color: i.color } } }
+    all_tags = @my_module.experiment.project.tags
+    tags = all_tags.where.not(id: assigned_tags)
+                   .search(current_user, false, params[:query])
+                   .select(:id, :name, :color)
+                   .limit(6)
 
-    if !(tags.map { |i| i[:label] }.include? params[:query]) && !params[:query].empty?
-      tags = [{ value: 0, label: params[:query], params: { color: nil } }] + tags
+    tags = tags.map do |tag|
+      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
     end
+
+    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
+      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
+    end
+
     render json: tags
   end
 

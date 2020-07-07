@@ -220,7 +220,7 @@ class MyModule < ApplicationRecord
                                   .order(:parent_id, updated_at: :desc)
 
     live_repositories = assigned_repositories
-                        .select('repositories.*, COUNT(repository_rows.id) AS assigned_rows_count')
+                        .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
                         .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
 
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
@@ -415,7 +415,7 @@ class MyModule < ApplicationRecord
     rows.find_each do |row|
       row_json = []
       row_json << (row.repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
-      row_json << row.name
+      row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
       data << row_json
@@ -446,7 +446,8 @@ class MyModule < ApplicationRecord
       custom_columns.push(column.id)
     end
 
-    records = repository.assigned_rows(self).select(:id, :name, :created_at, :created_by_id)
+    records = repository.assigned_rows(self)
+                        .select(:id, :name, :created_at, :created_by_id, :repository_id, :parent_id, :archived)
     { headers: headers, rows: records, custom_columns: custom_columns }
   end
 

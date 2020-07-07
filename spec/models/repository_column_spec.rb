@@ -49,4 +49,23 @@ describe RepositoryColumn, type: :model do
       it { is_expected.to validate_presence_of :data_type }
     end
   end
+
+  describe '.delimiter_char' do
+    context 'when is set' do
+      before do
+        repository_column.metadata['delimiter'] = 'space'
+        repository_column.save
+      end
+
+      it 'returns appropriate delimiter char' do
+        expect(repository_column.delimiter_char).to eq(' ')
+      end
+    end
+
+    context 'when is not set' do
+      it 'returns default new line char if not set' do
+        expect(repository_column.delimiter_char).to eq("\n")
+      end
+    end
+  end
 end

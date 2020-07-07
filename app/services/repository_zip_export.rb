@@ -34,6 +34,10 @@ module RepositoryZipExport
                       I18n.t('repositories.table.added_by')
                     when -6
                       I18n.t('repositories.table.added_on')
+                    when -7
+                      I18n.t('repositories.table.archived_by')
+                    when -8
+                      I18n.t('repositories.table.archived_on')
                     else
                       column = RepositoryColumn.find_by_id(c_id)
                       column ? column.name : nil
@@ -56,6 +60,10 @@ module RepositoryZipExport
                        row.created_by.full_name
                      when -6
                        I18n.l(row.created_at, format: :full)
+                     when -7
+                       row.archived_by.full_name
+                     when -8
+                       I18n.l(row.archived_on, format: :full)
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)

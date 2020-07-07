@@ -51,7 +51,7 @@ class AtWhoController < ApplicationController
   end
 
   def repositories
-    repositories = Repository.accessible_by_teams(@team)
+    repositories = Repository.active.accessible_by_teams(@team)
     respond_to do |format|
       format.json do
         render json: {

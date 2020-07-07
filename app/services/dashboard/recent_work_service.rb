@@ -32,6 +32,7 @@ module Dashboard
                       .projects_joins(:from_experiments)
                       .repositories_joins
                       .reports_joins
+                      .where('repositories.archived IS NOT TRUE')
                       .where('projects.archived IS NOT TRUE')
                       .where('experiments.archived IS NOT TRUE')
                       .where('my_modules.archived IS NOT TRUE')

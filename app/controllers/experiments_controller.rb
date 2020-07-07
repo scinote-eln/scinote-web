@@ -24,9 +24,6 @@ class ExperimentsController < ApplicationController
 
   layout 'fluid'.freeze
 
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
-
   def new
     @experiment = Experiment.new
     respond_to do |format|

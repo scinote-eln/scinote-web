@@ -14,13 +14,6 @@ module ArchivableModel
 
   # Helper for archiving project. Timestamp of archiving is handler by
   # before_save callback.
-  def archive
-    self.archived = true
-    save
-  end
-
-  # Helper for archiving project. Timestamp of archiving is handler by
-  # before_save callback.
   # Sets the archived_by value to the current user.
   def archive (current_user)
     self.archived = true
@@ -29,20 +22,9 @@ module ArchivableModel
   end
 
   # Same as archive but raises exception if archive fails.
-  def archive!
-    archive || raise(RecordNotSaved)
-  end
-
-  # Same as archive but raises exception if archive fails.
   # Sets the archived_by value to the current user.
   def archive!(current_user)
-    archive(current_user) || raise(RecordNotSaved)
-  end
-
-  # Helper for restoring project from archive.
-  def restore
-    self.archived = false
-    save
+    archive(current_user) || raise(ActiveRecord::RecordNotSaved)
   end
 
   # Helper for restoring project from archive.
@@ -54,15 +36,9 @@ module ArchivableModel
   end
 
   # Same as restore but raises exception if restore fails.
-  def restore!
-    restore || raise(RecordNotSaved)
-  end
-
-
-  # Same as restore but raises exception if restore fails.
   # Sets the restored_by value to the current user.
   def restore!(current_user)
-    restore(current_user) || raise(RecordNotSaved)
+    restore(current_user) || raise(ActiveRecord::RecordNotSaved)
   end
 
   protected

@@ -102,7 +102,16 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_dropdown_list
-    @repositories = Repository.accessible_by_teams(current_team).order(:name)
+    @repositories = Repository.accessible_by_teams(current_team).joins("
+                                LEFT OUTER JOIN repository_rows ON
+                                  repository_rows.repository_id = repositories.id
+                                LEFT OUTER JOIN my_module_repository_rows ON
+                                  my_module_repository_rows.repository_row_id = repository_rows.id
+                                  AND my_module_repository_rows.my_module_id = #{@my_module.id}
+                              ").select('COUNT(my_module_repository_rows.id) as rows_count, repositories.*')
+                              .group(:id)
+                              .having('COUNT(my_module_repository_rows.id) > 0 OR repositories.archived = FALSE')
+                              .order(:name)
 
     render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_dropdown_list') }
   end

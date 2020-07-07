@@ -1104,7 +1104,12 @@ CREATE TABLE public.repositories (
     parent_id bigint,
     status integer,
     selected boolean,
-    my_module_id bigint
+    my_module_id bigint,
+    archived boolean DEFAULT false NOT NULL,
+    archived_on timestamp without time zone,
+    restored_on timestamp without time zone,
+    archived_by_id bigint,
+    restored_by_id bigint
 );
 
 
@@ -1513,7 +1518,12 @@ CREATE TABLE public.repository_rows (
     name character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    parent_id bigint
+    parent_id bigint,
+    archived boolean DEFAULT false NOT NULL,
+    archived_on timestamp without time zone,
+    restored_on timestamp without time zone,
+    archived_by_id bigint,
+    restored_by_id bigint
 );
 
 
@@ -4767,6 +4777,13 @@ CREATE INDEX index_reports_on_user_id ON public.reports USING btree (user_id);
 
 
 --
+-- Name: index_repositories_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_archived_by_id ON public.repositories USING btree (archived_by_id);
+
+
+--
 -- Name: index_repositories_on_discarded_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4785,6 +4802,13 @@ CREATE INDEX index_repositories_on_my_module_id ON public.repositories USING btr
 --
 
 CREATE INDEX index_repositories_on_permission_level ON public.repositories USING btree (permission_level);
+
+
+--
+-- Name: index_repositories_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_restored_by_id ON public.repositories USING btree (restored_by_id);
 
 
 --
@@ -4991,6 +5015,13 @@ CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.rep
 
 
 --
+-- Name: index_repository_rows_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows USING btree (archived_by_id);
+
+
+--
 -- Name: index_repository_rows_on_id_text; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5009,6 +5040,13 @@ CREATE INDEX index_repository_rows_on_name ON public.repository_rows USING gin (
 --
 
 CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows USING btree (repository_id);
+
+
+--
+-- Name: index_repository_rows_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_restored_by_id ON public.repository_rows USING btree (restored_by_id);
 
 
 --
@@ -5832,6 +5870,14 @@ ALTER TABLE ONLY public.steps
 
 
 --
+-- Name: repositories fk_rails_111f913cb7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_111f913cb7 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: tables fk_rails_147b6eced4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6144,6 +6190,14 @@ ALTER TABLE ONLY public.projects
 
 
 --
+-- Name: repository_rows fk_rails_6b4114fff4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_rows
+    ADD CONSTRAINT fk_rails_6b4114fff4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: sample_my_modules fk_rails_6c0db0045d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6413,6 +6467,14 @@ ALTER TABLE ONLY public.result_tables
 
 ALTER TABLE ONLY public.tables
     ADD CONSTRAINT fk_rails_943e1b03e5 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repositories fk_rails_94481f7751; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_94481f7751 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6904,6 +6966,14 @@ ALTER TABLE ONLY public.repository_text_values
 
 
 --
+-- Name: repository_rows fk_rails_e7c4398649; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_rows
+    ADD CONSTRAINT fk_rails_e7c4398649 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: samples fk_rails_ea3d01785c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7197,6 +7267,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200204100934'),
 ('20200326114643'),
 ('20200331183640'),
-('20200622140843');
+('20200603125407'),
+('20200604210943'),
+('20200622140843'),
+('20200622155632');
 
 

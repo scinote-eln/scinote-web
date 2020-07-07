@@ -38,12 +38,17 @@ class RepositoryDatatableService
         repository_rows = repository_rows.joins(:my_module_repository_rows)
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
       else
-        repository_rows = repository_rows.joins(
-          'LEFT OUTER JOIN "my_module_repository_rows" '\
-          'ON "my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
-          'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s
-        ).select('CASE WHEN my_module_repository_rows.id IS NOT NULL '\
-                 'THEN true ELSE false END as row_assigned').group('my_module_repository_rows.id')
+        repository_rows = repository_rows
+                          .joins(:repository)
+                          .joins('LEFT OUTER JOIN "my_module_repository_rows" '\
+                                 'ON "my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
+                                 'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s)
+                          .select('CASE WHEN my_module_repository_rows.id IS NOT NULL '\
+                                   'THEN true ELSE false END as row_assigned')
+                          .where('my_module_repository_rows.id IS NOT NULL
+                                  OR (repository_rows.archived = FALSE
+                                  AND repositories.archived = FALSE)')
+                          .group('my_module_repository_rows.id')
       end
     end
     repository_rows = repository_rows
@@ -85,7 +90,7 @@ class RepositoryDatatableService
       repository_rows = results
     end
 
-    repository_rows.left_outer_joins(:created_by)
+    repository_rows.left_outer_joins(:created_by, :archived_by)
                    .select('repository_rows.*')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
@@ -105,7 +110,9 @@ class RepositoryDatatableService
       'repository_rows.id',
       'repository_rows.name',
       'repository_rows.created_at',
-      'users.full_name'
+      'users.full_name',
+      'repository_rows.archived_on',
+      'archived_bies_repository_rows.full_name',
     ]
     @repository.repository_columns.count.times do
       array << 'repository_cell.value'

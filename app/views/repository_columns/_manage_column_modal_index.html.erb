@@ -14,6 +14,7 @@
 <div class="modal-footer">
   <% if can_create_repository_columns?(@repository)%>
     <button id="new-repo-column-modal"
+            data-view-mode="active"
             class="btn btn-secondary manage-repo-column"
             data-modal-url="<%= repository_columns_create_html_path(@repository) %>"
             data-action="new">

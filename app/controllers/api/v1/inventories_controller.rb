@@ -11,6 +11,7 @@ module Api
 
       def index
         inventories = @team.repositories
+                           .active
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
         render jsonapi: inventories, each_serializer: InventorySerializer

@@ -283,18 +283,22 @@ class Extends
     set_task_start_date: 138,
     change_task_start_date: 139,
     remove_task_start_date: 140,
-    rename_experiment: 141
+    rename_experiment: 141,
+    archive_inventory_item: 142,
+    restore_inventory_item: 143,
+    archive_inventory: 144,
+    restore_inventory: 145
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128],
-    task: [8, 58, 9, 59, 10, 11, 12, 13, 14, 35, 36, 37, 53, 54, *60..64, *66..69, 106, 126, 120, 132],
+    task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, *66..69, 106, 126, 120, 132],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137],
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
     reports: [48, 50, 49],
-    inventories: [70, 71, 105, 72, 73, 74, 102, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
+    inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131],
     team: [92, 94, 93, 97, 104]
