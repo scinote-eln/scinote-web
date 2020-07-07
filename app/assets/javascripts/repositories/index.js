@@ -156,6 +156,13 @@
       });
     });
 
+
+  $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
+    if (REPOSITORIES_TABLE) {
+      REPOSITORIES_TABLE.columns.adjust();
+    }
+  });
+
   $('.create-new-repository').initializeModal('#create-repo-modal');
   initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
   initRepositoryViewSwitcher();
