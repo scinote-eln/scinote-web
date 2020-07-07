@@ -1629,7 +1629,7 @@ en:
         head_title: "My profile"
         title: "My profile"
         avatar_label: "Profile photo"
-        avatar_btn: "Edit photo"
+        avatar_btn: "Edit"
         avatar_modal:
           title: 'Change your profile photo'
           upload_button: 'Upload a photo'
@@ -1648,16 +1648,38 @@ en:
         password_title: "Change password"
         new_password_label: "New password"
         new_password_2_label: "New password confirmation"
-        2fa_button: "Enable two-factor authentication"
-        2fa_button_disable: "Disable two-factor authentication"
+        2fa_title: "Two-factor authentication"
+        2fa_description: "Two-factor authentication (2FA) is a way of verifying a user’s identity by using a combination of two different verification methods. It adds an extra layer of security to your account and protects from potential remote attacs or other threats."
+        2fa_enabled: "Enabled"
+        2fa_button: "Enable authentication"
+        2fa_button_disable: "Disable authentication"
         2fa_modal:
-          title: 'Two-factor authentication'
-          password_label: 'Password'
-          submit_code_label: 'Submit code'
-          submit_button: 'Submit'
+          step_1:
+            title: "1. Install an Authenticator App on your mobile device"
+            description: "Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Bellow you can see the most commonly used ones."
+            google_auth: "Google authenticator"
+            microsoft_auth: "Microsoft authenticator"
+            2fa_auth: "2FA authenticator"
+            android: "Android"
+            ios: "iOS"
+            start: "Start"
+          step_2:
+            title: "2. Scan the QR code with your app"
+            description: "Open your authenticator app and use it to scan this code to add 2FA."
+            next: "Next"
+          step_3:
+            title: "3. Enter the code given by your authenticator app"
+            description: "Enter the generated code into the fields bellow to finalize the setup of the two-factor authorisation."
+            enter_code: "Enter authenticator code"
+            verify: "Verify"
+          disable:
+            title: "Disable two-factor authentication"
+            description: "Enter your password bellow to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
+            password_label: "Enter password"
+            disable_2fa: "Disable 2FA"
         2fa_errors:
-          wrong_submit_code: 'Not correct code'
-          wrong_password: 'Not correct password'
+          wrong_submit_code: "Not correct code"
+          wrong_password: "Not correct password"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"

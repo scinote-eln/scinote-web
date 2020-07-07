@@ -102,5 +102,5 @@
 
   $('#twoFactorAuthenticationModal').on('click', '.btn-next-step', function() {
     $('#twoFactorAuthenticationModal').find(`[href="${$(this).data('step')}"]`).tab('show');
-  })
+  });
 }());

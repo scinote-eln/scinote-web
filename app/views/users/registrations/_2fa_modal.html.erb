@@ -4,18 +4,18 @@
       <% if current_user.two_factor_auth_enabled? %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-          <h2 class="modal-title">Disable two-factor authentication</h2>
+          <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.disable.title") %></h2>
         </div>
         <%= form_with(url: users_2fa_disable_path, method: "post", class: "2fa-disable-form") do %>
           <div class="modal-body">
-            <p>Enter your password bellow to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks.</p>
+            <p><%= t("users.registrations.edit.2fa_modal.disable.description") %></p>
             <div class="sci-input-container password-field">
-              <%= label_tag :password, t("users.registrations.edit.2fa_modal.password_label") %>
+              <%= label_tag :password, t("users.registrations.edit.2fa_modal.disable.password_label") %>
               <%= password_field_tag :password, '', class: "sci-input-field" %>
             </div>
           </div>
           <div class="modal-footer">
-            <%= button_tag 'Disable 2FA', type: 'submit', class: "btn btn-danger" %>
+            <%= button_tag t("users.registrations.edit.2fa_modal.disable.disable_2fa"), type: 'submit', class: "btn btn-danger" %>
           </div>
         <% end %>
       <% else %>
