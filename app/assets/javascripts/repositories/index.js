@@ -47,7 +47,7 @@
         destroy: true,
         columnDefs: [{
           targets: 0,
-          visible: true,
+          visible: !$('.repositories-index').data('readonly'),
           searchable: false,
           orderable: false,
           render: function() {
