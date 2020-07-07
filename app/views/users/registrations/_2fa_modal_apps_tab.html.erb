@@ -1,0 +1,71 @@
+<div role="tabpanel" class="tab-pane active" id="2fa-step-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+    <h2 class="modal-title">1. Install an Authenticator App on your mobile device</h2>
+  </div>
+  <div class="modal-body">
+    <p>Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Bellow you can see the most commonly used ones.</p>
+    <div class="two-factor-apps">
+      <div class="apps-list">
+        <div class="app">
+          <div class="app-logo">
+            <%= image_tag('2fa/google_authenticator.png', class: 'logo-image') %>
+          </div>
+          <div class="app-information">
+            <p class="app-name">Google authenticator</p>
+            <div class="app-store">
+              <a href="" class="store">
+                <i class="fab fa-android"></i>
+                Android
+              </a>
+              <a href="" class="store">
+                <i class="fab fa-apple"></i>
+                iOS
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="app">
+          <div class="app-logo">
+            <%= image_tag('2fa/ms_authenticator.png', class: 'logo-image') %>
+          </div>
+          <div class="app-information">
+            <p class="app-name">Microsoft authenticator</p>
+            <div class="app-store">
+              <a href="" class="store">
+                <i class="fab fa-android"></i>
+                Android
+              </a>
+              <a href="" class="store">
+                <i class="fab fa-apple"></i>
+                iOS
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="app">
+          <div class="app-logo">
+            <%= image_tag('2fa/2fa_authenticator.png', class: 'logo-image') %>
+          </div>
+          <div class="app-information">
+            <p class="app-name">2FA authenticator</p>
+            <div class="app-store">
+              <a href="" class="store">
+                <i class="fab fa-android"></i>
+                Android
+              </a>
+              <a href="" class="store">
+                <i class="fab fa-apple"></i>
+                iOS
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= image_tag('2fa/install_mobile.png', class: 'install-mobile') %>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="btn btn-primary btn-next-step" data-step="#2fa-step-2">Start</div>
+  </div>
+</div>
