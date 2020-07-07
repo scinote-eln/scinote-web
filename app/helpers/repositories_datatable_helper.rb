@@ -10,7 +10,7 @@ module RepositoriesDatatableHelper
       result.push(
         'DT_RowId': repository.id,
         '1': escape_input(repository.name),
-        '2': repository.repository_rows.size,
+        '2': repository.active? ? repository.repository_rows.active.size : repository.repository_rows.size,
         '3': shared_label(repository, team),
         '4': escape_input(repository.team.name),
         '5': I18n.l(repository.created_at, format: :full),
