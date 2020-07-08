@@ -247,51 +247,17 @@ module Reports::Docx::PrivateMethods
       br
     end
 
-
     generate_html_styles
   end
 
   def generate_html_styles
     @docx.style do
-      id 'h1'
-      name 'h1'
-      bold true
-      size 64
-    end
-
-    @docx.style do
-      id 'h2'
-      name 'h2'
-      bold true
-      size 48
-    end
-
-    @docx.style do
-      id 'h3'
-      name 'h3'
-      bold true
+      id 'Heading1'
+      name 'heading 1'
+      font 'Arial'
       size 36
-    end
-
-    @docx.style do
-      id 'h4'
-      name 'h4'
+      bottom 120
       bold true
-      size 32
-    end
-
-    @docx.style do
-      id 'h5'
-      name 'h5'
-      bold true
-      size 26
-    end
-
-    @docx.style do
-      id 'h6'
-      name 'h6'
-      bold true
-      size 24
     end
 
     @link_style = {
