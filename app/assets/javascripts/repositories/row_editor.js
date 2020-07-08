@@ -106,7 +106,7 @@ var RepositoryDatatableRowEditor = (function() {
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(data.flash, 'success');
         $('html, body').animate({ scrollLeft: 0 }, 300);
-      });
+      }, false);
     });
 
     $table.on('ajax:error', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
