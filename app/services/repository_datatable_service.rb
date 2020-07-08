@@ -40,15 +40,14 @@ class RepositoryDatatableService
       else
         repository_rows = repository_rows
                           .joins(:repository)
-                          .joins('LEFT OUTER JOIN "my_module_repository_rows" '\
-                                 'ON "my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
-                                 'AND "my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s)
-                          .select('CASE WHEN my_module_repository_rows.id IS NOT NULL '\
-                                   'THEN true ELSE false END as row_assigned')
-                          .where('my_module_repository_rows.id IS NOT NULL
-                                  OR (repository_rows.archived = FALSE
-                                  AND repositories.archived = FALSE)')
-                          .group('my_module_repository_rows.id')
+                          .joins('LEFT OUTER JOIN "my_module_repository_rows" "current_my_module_repository_rows"'\
+                                 'ON "current_my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
+                                 'AND "current_my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s)
+                          .where('current_my_module_repository_rows.id IS NOT NULL '\
+                                 'OR (repository_rows.archived = FALSE AND repositories.archived = FALSE)')
+                          .select('CASE WHEN current_my_module_repository_rows.id IS NOT NULL '\
+                                  'THEN true ELSE false END as row_assigned')
+                          .group('current_my_module_repository_rows.id')
       end
     end
     repository_rows = repository_rows
