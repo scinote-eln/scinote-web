@@ -31,8 +31,8 @@
   }
 
   function initRepositoriesDataTable(tableContainer, archived = false) {
-    var tableTemplate = archived ? $('#archivedRepositoriesListTable').html() : $('#activeRepositoriesListTable').html();
-    $.get($(tableTemplate).data('source'), function(data) {
+    var tableTemplate = $('#RepositoriesListTable').html();
+    $.get($(tableTemplate).data('source'), {archived: archived}, function(data) {
       if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
       CHECKBOX_SELECTOR = null;
       $('.content-body').html(tableTemplate);
@@ -65,6 +65,22 @@
           render: function(value, type, row) {
             return `<a href="${row.repositoryUrl}">${value}</a>`;
           }
+        }, {
+          targets: 5,
+          render: {
+            _: 'display',
+            sort: 'sort'
+          }
+        }, {
+          targets: 7,
+          visible: archived,
+          render: {
+            _: 'display',
+            sort: 'sort'
+          }
+        }, {
+          targets: 8,
+          visible: archived
         }],
         fnInitComplete: function(e) {
           var dataTableWrapper = $(e.nTableWrapper);
