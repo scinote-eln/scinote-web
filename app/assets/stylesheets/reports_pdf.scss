@@ -21,3 +21,33 @@ tr {
 thead {
   display: table-row-group;
 }
+
+.print-header-body {
+  .print-header {
+    line-height: 50px;
+
+    .logo-img {
+      display: inline-block;
+      margin: 0 0 0 30px;
+
+      img {
+        width: 100px;
+      }
+    }
+
+    .page-numbers {
+      display: inline-block;
+      float: right;
+      margin: 0 30px 0 0;
+    }
+  }
+}
+
+.print-footer-body {
+  .print-footer {
+    line-height: 50px;
+
+    margin-right: 30px;
+    text-align: right;
+  }
+}

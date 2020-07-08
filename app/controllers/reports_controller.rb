@@ -148,7 +148,9 @@ class ReportsController < ApplicationController
     content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
     respond_to do |format|
       format.pdf do
-        render pdf: 'report', header: { right: '[page] of [topage]' },
+        render pdf: 'report', header: { html: { template: 'reports/header.pdf.erb' }},
+                              footer: { html: { template: 'reports/footer.pdf.erb',
+                                                locals: { current_time: I18n.l(Time.zone.now, format: :full) }}},
                               locals: { content: content },
                               template: 'reports/report.pdf.erb',
                               disable_javascript: true

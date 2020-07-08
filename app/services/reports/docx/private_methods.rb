@@ -235,6 +235,19 @@ module Reports::Docx::PrivateMethods
 
     @docx.page_numbers true, align: :right
 
+    path = Rails.root.join('app', 'assets', 'images', 'logo.png')
+
+    @docx.img path.to_s do
+      height 20
+      width 100
+      align :left
+    end
+    @docx.p do
+      text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
+      br
+    end
+
+
     generate_html_styles
   end
 
