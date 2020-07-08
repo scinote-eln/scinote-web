@@ -13,7 +13,7 @@
   <div id="repository-toolbar" class="content-header">
     <% if @repository.active? %>
       <div class="repository-title-name" data-view-mode="active">
-        <h2 class="name-container">
+        <h1 class="name-container">
           <% if @inline_editable_title_config.present? %>
             <%= render partial: "shared/inline_editing",
                        locals: {
@@ -28,7 +28,7 @@
               <%= inventory_shared_status_icon(@repository, current_team) %>
             </span>
           <% end %>
-        </h2>
+        </h1>
         <% if @repository.shared_with_anybody? %>
           <% team_name = @repository.team == current_team ? t('repositories.show.your_team') : @repository.team.name %>
           <div class="repository-subtitle"><%= t('repositories.show.subtitle', team_name: team_name) %></div>
@@ -36,7 +36,11 @@
       </div>
     <% end %>
     <div class="repository-archived-title-name" data-view-mode="archived">
-      <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
+      <% if @repository.active? %>
+        <%= t('repositories.show.inventory_archived_items', repository_name: @repository.name) %>
+      <% else %>
+        <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
+      <% end %>
     </div>
     <div class="repo-datatables-buttons">
       <div class="share-repository-button" data-view-mode="active">
