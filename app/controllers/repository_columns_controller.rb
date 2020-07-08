@@ -82,7 +82,9 @@ class RepositoryColumnsController < ApplicationController
     end
   end
 
-  def items; end
+  def items
+    raise NotImplementedError
+  end
 
   def available_asset_type_columns
     if @asset_columns.empty?
