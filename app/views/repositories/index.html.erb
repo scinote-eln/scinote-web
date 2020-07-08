@@ -89,10 +89,12 @@
     <span class="fas fa-pencil-alt"></span>
     <%= t('libraries.index.buttons.edit') %>
   </a>
-  <a id="copyRepoBtn" class="btn btn-light disabled" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
-    <span class="fas fa-copy"></span>
-    <%= t('libraries.index.buttons.duplicate') %>
-  </a>
+  <% if can_create_repositories?(current_team) %>
+    <a id="copyRepoBtn" class="btn btn-light disabled" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
+      <span class="fas fa-copy"></span>
+      <%= t('libraries.index.buttons.duplicate') %>
+    </a>
+  <% end %>
   <a id="archiveRepoBtn"
      class="btn btn-light disabled"
      data-view-mode="active"

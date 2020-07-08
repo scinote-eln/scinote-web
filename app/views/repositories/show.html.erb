@@ -36,7 +36,11 @@
       </div>
     <% end %>
     <div class="repository-archived-title-name" data-view-mode="archived">
-      <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
+      <% if @repository.archived? %>
+        <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
+      <% else %>
+        <%= t('repositories.show.archived_inventory_items', repository_name: @repository.name) %>
+      <% end %>
     </div>
     <div class="repo-datatables-buttons">
       <div class="share-repository-button" data-view-mode="active">
@@ -100,14 +104,16 @@
                             class: "archive-repository-option",
                             data: { repository_id: @repository.id } %>
               </li>
-              <li data-view-mode="archived">
-                <%= link_to t('repositories.index.options_dropdown.restore'),
-                            restore_team_repositories_path(current_team),
-                            class: "archive-repository-option",
-                            data: { repository_id: @repository.id } %>
-              </li>
+              <% if @repository.archived? %>
+                <li data-view-mode="archived">
+                  <%= link_to t('repositories.index.options_dropdown.restore'),
+                              restore_team_repositories_path(current_team),
+                              class: "archive-repository-option",
+                              data: { repository_id: @repository.id } %>
+                </li>
+              <% end %>
             <% end %>
-            <% if can_manage_repository?(@repository) %>
+            <% if can_manage_repository?(@repository) && @repository.archived? %>
               <li data-view-mode="archived" data-hook="destroy-repository-option">
                 <%= link_to t('repositories.index.options_dropdown.delete'),
                             team_repository_destroy_modal_path(current_team, repository_id: @repository),
