@@ -18,7 +18,7 @@ Given default screen size2
 
  @javascript
  Scenario: Successful add new tag to a task
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click element with css ".search-field"
    And I click element with css ".edit-tags-link"
    And I click on "New" tag button
@@ -34,7 +34,7 @@ Given default screen size2
 # Make this test shorter and more isolated
 @javascript @wip
  Scenario: Successful change a tag to a task
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click element with css ".search-field"
    And I click element with css ".edit-tags-link"
    And I click on "New" tag button
@@ -51,13 +51,13 @@ Given default screen size2
    And WAIT
    And I click "fa-times" icon at position 2 within "#manage-module-tags-modal .modal-body"
    And I click "Close" button
-   And task page of Experiment design
+   And I'm on the Protocols page of a "Experiment design" task
    Then I should see "Sun"
    Then I should not see "Sky"
 
 @javascript
  Scenario: Successful add a tag to a task
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click element with css ".search-field"
    And I click element with css ".edit-tags-link"
    And I click element with css ".bootstrap-select"
@@ -70,23 +70,23 @@ Given default screen size2
    And I click on "Bacteria" within dropdown menu
    And I click "Add" button
    And I click "Close" button
-   And task page of Experiment design
+   And I'm on the Protocols page of a "Experiment design" task
    Then I should see "Plant"
    Then I should see "Bacteria"
 
 @javascript
  Scenario: Successful delete a tag
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click element with css ".search-field"
    And I click element with css ".edit-tags-link"
    And I click element with css ".delete-tag-link"
    And I click "Close" button
-   And task page of Experiment design
+   And I'm on the Protocols page of a "Experiment design" task
    Then I should not see "Dry lab"
 
 @javascript
  Scenario: Successful add description
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click element with css "#my_module_description_view"
    And confirm with ENTER key to "#my_module_description_textarea_ifr"
    And I fill in "I was on Triglav one summer" in "#my_module_description_textarea" rich text editor field
@@ -95,7 +95,7 @@ Given default screen size2
 
 @javascript
  Scenario: Successful change description
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click element with css "#my_module_description_view"
    And confirm with ENTER key to "#my_module_description_textarea_ifr"
    And I fill in "I was on Triglav one summer" in "#my_module_description_textarea" rich text editor field
@@ -108,13 +108,13 @@ Given default screen size2
 
 @javascript
  Scenario: Successful Complete task
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click "Complete task" button
    Then I should see "Uncomplete task"
 
 @javascript
  Scenario: Successful Uncomplete task
-   Given task page of Experiment design
+   Given I'm on the Protocols page of a "Experiment design" task
    And I click "Complete task" button
    And I click "Uncomplete task" button
    Then I should see "Complete task"
