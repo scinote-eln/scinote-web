@@ -317,7 +317,7 @@ var MarvinJsEditorApi = (function() {
 $(document).on('turbolinks:load', function() {
   MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {
-    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
+    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof(ChemicalizeMarvinJs) !== 'undefined') {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
         marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;
