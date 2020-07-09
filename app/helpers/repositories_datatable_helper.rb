@@ -41,9 +41,9 @@ module RepositoriesDatatableHelper
     return I18n.t('libraries.index.not_shared') unless repository.shared_with?(team)
 
     if repository.shared_with_read?(team)
-      I18n.t('libraries.index.shared_for_editing')
-    else
       I18n.t('libraries.index.shared_for_viewing')
+    else
+      I18n.t('libraries.index.shared_for_editing')
     end
   end
 end

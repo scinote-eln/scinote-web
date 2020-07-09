@@ -1121,6 +1121,7 @@ en:
         all_teams_tooltip: "This will disable individual team settings"
         success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
     show:
+      archived_inventory_items: "%{repository_name} archived items"
       archived_inventory: "Archived %{repository_name}"
       subtitle: "Owned by %{team_name}"
       your_team: "your Team"
