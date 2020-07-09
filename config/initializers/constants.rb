@@ -942,10 +942,6 @@ class Constants
     'start' => 0,
     'length' => 8,
     'order' => [[2, 'asc']], # Default sorting by 'ID' column
-    'search' => { 'search' => '',
-                  'smart' => true,
-                  'regex' => false,
-                  'caseInsensitive' => true },
     'columns' => [],
     'assigned' => 'assigned',
     'ColReorder' => [*0..7]
@@ -968,10 +964,6 @@ class Constants
     'start' => 0,
     'length' => 5,
     'order' => [[1, 'asc']], # Default sorting by 'ID' column
-    'search' => { 'search' => '',
-                  'smart' => true,
-                  'regex' => false,
-                  'caseInsensitive' => true },
     'columns' => [],
     'assigned' => 'assigned',
     'ColReorder' => [*0..4]

@@ -9,7 +9,7 @@ RSpec::Matchers.define :be_valid_repository_table_state do
 
     expect(state).to be_an_instance_of Hash
     expect(state).to include(
-      'time', 'order', 'start', 'length', 'search', 'columns', 'ColReorder'
+      'time', 'order', 'start', 'length', 'columns', 'ColReorder'
     )
 
     expect(state['time']).to be_an_instance_of Integer
@@ -54,15 +54,6 @@ RSpec::Matchers.define :be_valid_repository_table_state do
 
     # Check that the ordering column exists in columns
     expect(col_indexes).to include(state['order'][0][0])
-
-    expect(state['search']).to be_an_instance_of Hash
-    expect(state['search']).to include(
-      'regex', 'smart', 'search', 'caseInsensitive'
-    )
-    expect(state['search']['regex']).to eq(true).or eq(false)
-    expect(state['search']['smart']).to eq(true).or eq(false)
-    expect(state['search']['caseInsensitive']).to eq(true).or eq(false)
-    expect(state['search']['search']).to be_an_instance_of String
 
     expect(state['ColReorder']).to be_an_instance_of Array
     expect(state['ColReorder'].length).to eq cols_length

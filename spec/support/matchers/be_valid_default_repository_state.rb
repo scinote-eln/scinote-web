@@ -17,12 +17,6 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
       'start' => 0,
       'length' => cols_length, # 8 default columns + parameter
       'order' => [[2, 'asc']],
-      'search' => {
-        'search' => '',
-        'smart' => true,
-        'regex' => false,
-        'caseInsensitive' => true
-      },
       'assigned' => 'assigned',
       'ColReorder' => cols_array
     )
