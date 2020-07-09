@@ -36,7 +36,7 @@ Feature: Home page
     Then I should see "is too short (minimum is 2 characters)"
     And I click "Cancel" button
 
-  @javascript
+  @javascript @wip
   Scenario: Unsuccessful create new project2
     Given I am on the home page of Biosistemika Process team
     And I click "New Project" button
