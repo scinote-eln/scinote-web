@@ -53,7 +53,7 @@ Scenario: Unsuccessful delete comment to a project
   And I click to Cancel on confirm dialog
   Then I should see "I was on Triglav one summer." in Comments list of "Mangart" project card
 
-@javascript
+@javascript @wip
 Scenario: Successful delete comment to a project
   And user "Karli Novak" has comment "I was on Triglav one summer." on project "Mangart"
   And I click "comment" icon on "Mangart" project card
