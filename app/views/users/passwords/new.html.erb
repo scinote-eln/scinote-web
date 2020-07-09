@@ -14,12 +14,12 @@
         <% end %>
 
         <div class="form-group sci-input-container">
-          <%= f.label :email %><br /actions>
+          <%= f.label :email %><br />
           <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field" %>
         </div>
 
         <div class="form-group">
-          <%= f.submit t("devise.passwords.new.submit"), class: "btn btn-primary" %>
+          <%= f.button t("devise.passwords.new.submit"), class: "btn btn-primary" %>
         </div>
       <% end %>
 
