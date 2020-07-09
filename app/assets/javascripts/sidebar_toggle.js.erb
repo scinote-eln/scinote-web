@@ -35,8 +35,8 @@
         sideBarEvent = 'sideBar::shown'
       }
 
-      $('.navbar-secondary').one("transitionend",function(event) {
-        $('.navbar-secondary').trigger(sideBarEvent);
+      $('#wrapper').one("transitionend", function() {
+        $('#wrapper').trigger(sideBarEvent);
       })
     }
 
@@ -63,6 +63,6 @@
   })();
 
   if (SideBarToggle.isToggledStorage()) {
-    SideBarToggle.hide();;
+    SideBarToggle.hide();
   }
 })(window);

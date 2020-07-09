@@ -3,8 +3,8 @@
 class Users::SessionsController < Devise::SessionsController
   layout :session_layout
 
-  # before_filter :configure_sign_in_params, only: [:create]
   after_action :after_sign_in, only: :create
+  before_action :remove_authenticate_mesasge_if_root_path, only: :new
 
   rescue_from ActionController::InvalidAuthenticityToken do
     redirect_to new_user_session_path
@@ -75,14 +75,13 @@ class Users::SessionsController < Devise::SessionsController
     flash[:system_notification_modal] = true
   end
 
-  protected
-
-  # If you have extra params to permit, append them to the sanitizer.
-  def configure_sign_in_params
-    devise_parameter_sanitizer.for(:sign_in) << :attribute
-  end
-
   private
+
+  def remove_authenticate_mesasge_if_root_path
+    if session[:user_return_to] == root_path && flash[:alert] == I18n.t('devise.failure.unauthenticated')
+      flash[:alert] = nil
+    end
+  end
 
   def session_layout
     if @simple_sign_in

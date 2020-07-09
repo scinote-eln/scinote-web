@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class StatusColumnsController < BaseColumnsController
+  class StatusColumnsController < RepositoryColumnsController
     include InputSanitizeHelper
-    before_action :load_column, only: %i(update destroy items)
-    before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: %i(update destroy)
 
     def create
       service = RepositoryColumns::CreateColumnService
@@ -34,17 +31,6 @@ module RepositoryColumns
       end
     end
 
-    def destroy
-      service = RepositoryColumns::DeleteColumnService
-                .call(user: current_user, team: current_team, column: @repository_column)
-
-      if service.succeed?
-        render json: {}, status: :ok
-      else
-        render json: service.errors, status: :unprocessable_entity
-      end
-    end
-
     def items
       column_status_items = @repository_column.repository_status_items
                                               .where('status ILIKE ?',
@@ -58,7 +44,7 @@ module RepositoryColumns
     private
 
     def search_params
-      params.permit(:query, :column_id)
+      params.permit(:query, :repository_id, :id)
     end
 
     def repository_column_params

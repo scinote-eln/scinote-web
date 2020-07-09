@@ -163,7 +163,7 @@
 
   $('.repository-title-name .inline-editing-container').on('inlineEditing::updated', function(e, value, viewValue) {
     $('.repository-archived-title-name')
-      .text(I18n.t('repositories.show.archived_inventory', { repository_name: viewValue }));
+      .text(I18n.t('repositories.show.archived_inventory_items', { repository_name: viewValue }));
     $('#toolbarButtonsDatatable .archived-label')
       .text(I18n.t('repositories.show.archived_view_label.active', { repository_name: viewValue }));
   });

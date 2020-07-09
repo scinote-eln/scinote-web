@@ -24,35 +24,10 @@
   </div>
 <% end %>
 
-<!-- Active table template -->
-<template id="activeRepositoriesListTable">
+<!-- table template -->
+<template id="RepositoriesListTable">
   <table id="repositoriesList" class="table"
          data-source="<%= team_repositories_path(current_team, format: :json) %>">
-    <thead>
-      <tr>
-        <th>
-          <div class="sci-checkbox-container">
-            <input value="1" type="checkbox" class="sci-checkbox select-all-checkbox">
-            <span class="sci-checkbox-label"></span>
-          </div>
-        </th>
-        <th><%= t('libraries.index.table.name') %></th>
-        <th><%= t('libraries.index.table.number_of_items') %></th>
-        <th><%= t('libraries.index.table.shared') %></th>
-        <th><%= t('libraries.index.table.ownership') %></th>
-        <th><%= t('libraries.index.table.added_on') %></th>
-        <th><%= t('libraries.index.table.added_by') %></th>
-      </tr>
-    </thead>
-  </table>
-</template>
-
-
-<!-- Archived table template -->
-<template id="archivedRepositoriesListTable">
-  <table id="repositoriesList" class="table"
-    data-source="<%= team_repositories_path(current_team, archived: true, format: :json) %>"
-  >
     <thead>
       <tr>
         <th>
@@ -89,10 +64,12 @@
     <span class="fas fa-pencil-alt"></span>
     <%= t('libraries.index.buttons.edit') %>
   </a>
-  <a id="copyRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
-    <span class="fas fa-copy"></span>
-    <%= t('libraries.index.buttons.duplicate') %>
-  </a>
+  <% if can_create_repositories?(current_team) %>
+    <a id="copyRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
+      <span class="fas fa-copy"></span>
+      <%= t('libraries.index.buttons.duplicate') %>
+    </a>
+  <% end %>
   <a id="archiveRepoBtn"
      class="btn btn-light disabled hidden"
      data-view-mode="active"

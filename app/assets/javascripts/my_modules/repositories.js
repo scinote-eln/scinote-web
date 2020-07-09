@@ -306,7 +306,7 @@ var MyModuleRepositories = (function() {
       renderSimpleTable(repositoryTemplate);
     });
 
-    $('.navbar-secondary').on('sideBar::shown sideBar::hidden', function() {
+    $('#wrapper').on('sideBar::shown sideBar::hidden', function() {
       if (SIMPLE_TABLE) {
         SIMPLE_TABLE.columns.adjust();
       }

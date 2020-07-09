@@ -92,7 +92,7 @@
     }
 
     .repository-archived-title-name {
-      @include font-h2;
+      @include font-h1;
       flex-grow: 1;
       overflow: hidden;
       text-overflow: ellipsis;
