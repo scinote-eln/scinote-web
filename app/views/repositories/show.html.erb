@@ -36,11 +36,7 @@
       </div>
     <% end %>
     <div class="repository-archived-title-name" data-view-mode="archived">
-      <% if @repository.active? %>
-        <%= t('repositories.show.inventory_archived_items', repository_name: @repository.name) %>
-      <% else %>
-        <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
-      <% end %>
+      <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
     </div>
     <div class="repo-datatables-buttons">
       <div class="share-repository-button" data-view-mode="active">
