@@ -799,25 +799,28 @@ var RepositoryDatatable = (function(global) {
   }
 
   function redrawTableOnSidebarToggle() {
-    $('#sidebar-arrow').on('click', function() {
+    $('#wrapper').on('sideBar::hide sideBar::hidden', function() {
       var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
       var windowWidth = $(window).width();
-      if (!$(this).is('[data-shown]')) {
-        if (windowWidth > orgignalWidth + 363) {
-          $('.repository-show .dataTables_scrollHead')
-            .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
-        }
-        document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
-      } else {
-        if (windowWidth > orgignalWidth + 83) {
-          $('.repository-show .dataTables_scrollHead')
-            .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
-        }
-        document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+      if (windowWidth > orgignalWidth + 363) {
+        $('.repository-show .dataTables_scrollHead')
+          .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
       }
-      setTimeout(function() {
-        adjustTableHeader();
-      }, 500);
+      document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
+    });
+
+    $('#wrapper').on('sideBar::show', function() {
+      var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
+      var windowWidth = $(window).width();
+      if (windowWidth > orgignalWidth + 83) {
+        $('.repository-show .dataTables_scrollHead')
+          .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
+      }
+      document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+    });
+
+    $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
+      adjustTableHeader();
     });
   }
 

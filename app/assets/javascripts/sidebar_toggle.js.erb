@@ -11,6 +11,10 @@
       );
       $('#sidebar-arrow').attr('data-shown', '');
       sessionStorage.setItem(STORAGE_TOGGLE_KEY, "un-toggled");
+      $('#wrapper').trigger('sideBar::show');
+      $('#wrapper').one("transitionend", function() {
+        $('#wrapper').trigger('sideBar::shown');
+      })
     }
 
     function hide() {
@@ -22,22 +26,19 @@
       });
       $('#sidebar-arrow').removeAttr('data-shown');
       sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
+      $('#wrapper').trigger('sideBar::hide');
+      $('#wrapper').one("transitionend", function() {
+        $('#wrapper').trigger('sideBar::hidden');
+      })
     }
 
     function toggle() {
       var btn = $('#sidebar-arrow');
-      var sideBarEvent;
       if (btn.is('[data-shown]')) {
         hide();
-        sideBarEvent = 'sideBar::hidden'
       } else {
         show();
-        sideBarEvent = 'sideBar::shown'
       }
-
-      $('#wrapper').one("transitionend", function() {
-        $('#wrapper').trigger(sideBarEvent);
-      })
     }
 
     function isShown() {
