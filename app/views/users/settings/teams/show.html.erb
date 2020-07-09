@@ -15,7 +15,7 @@
     <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
 
     <!-- TITLE -->
-    <h2 id="team-name" class="settings-team-name" data-current-team="<%= current_team == @team %>">
+    <h1 id="team-name" class="settings-team-name" data-current-team="<%= current_team == @team %>">
       <% if can_update_team?(@team) %>
         <%= render partial: "shared/inline_editing",
                    locals: {
@@ -29,7 +29,7 @@
       <% else %>
         <span class="view-mode"><%= @team.name %></span>
       <% end %>
-    </h2>
+    </h1>
     <!-- End of TITLE -->
 
     <!-- HEADER -->

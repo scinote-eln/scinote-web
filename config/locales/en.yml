@@ -1123,6 +1123,7 @@ en:
     show:
       archived_inventory_items: "%{repository_name} archived items"
       archived_inventory: "Archived %{repository_name}"
+      inventory_archived_items: "%{repository_name} archived items"
       subtitle: "Owned by %{team_name}"
       your_team: "your Team"
       show_active_items: "Show active items"
@@ -1676,6 +1677,7 @@ en:
       account:
         preferences:
           head_title: "Settings | My preferences"
+          title: "Preferences"
           edit:
             time_zone_label: "Time zone"
             time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
