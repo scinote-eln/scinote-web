@@ -212,7 +212,7 @@ class Project < ApplicationRecord
 
   def assigned_repositories_and_snapshots
     live_repositories = Repository.assigned_to_project(self)
-    snapshots = RepositorySnapshot.assigned_to_project(self)
+    snapshots = RepositorySnapshot.of_unassigned_from_project(self)
     (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
