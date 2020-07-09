@@ -13,20 +13,20 @@
     $('#copyRepoBtn').attr('href', '#');
     switch (rowsCount) {
       case 0:
-        $('.main-actions [data-action-mode="single"]').addClass('disabled');
-        $('.main-actions [data-action-mode="multiple"]').addClass('disabled');
+        $('.main-actions [data-action-mode="single"]').addClass('disabled hidden');
+        $('.main-actions [data-action-mode="multiple"]').addClass('disabled hidden');
         break;
       case 1:
         row = $('#repositoriesList').find('tr#' + CHECKBOX_SELECTOR.selectedRows[0]);
-        $('.main-actions [data-action-mode="single"]').removeClass('disabled');
-        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled');
+        $('.main-actions [data-action-mode="single"]').removeClass('disabled hidden');
+        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled hidden');
         $('#renameRepoBtn').attr('href', row.data('rename-modal-url'));
         $('#deleteRepoBtn').attr('href', row.data('delete-modal-url'));
         $('#copyRepoBtn').attr('href', row.data('copy-modal-url'));
         break;
       default:
-        $('.main-actions [data-action-mode="single"]').addClass('disabled');
-        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled');
+        $('.main-actions [data-action-mode="single"]').removeClass('hidden').addClass('disabled');
+        $('.main-actions [data-action-mode="multiple"]').removeClass('disabled hidden');
     }
   }
 

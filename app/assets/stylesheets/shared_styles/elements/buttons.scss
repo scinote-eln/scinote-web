@@ -137,13 +137,16 @@
     }
   }
 
+  &.disabled,
   &:disabled {
-    border: $border-tertiary;
     color: $color-silver-chalice;
+    cursor: auto;
     opacity: .5;
 
-    &.btn-primary {
+    &.btn-primary,
+    &.btn-danger {
       background: $color-alto;
+      border: $border-tertiary;
 
       &:hover {
         border: $border-tertiary;
@@ -156,15 +159,7 @@
       background: $color-white;
 
       &:hover {
-        background: $color-white;
-        border: $border-tertiary;
         color: $color-silver-chalice;
-      }
-    }
-
-    &.btn-danger {
-      &:hover {
-        background: $color-alto;
       }
     }
   }
