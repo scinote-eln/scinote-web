@@ -108,7 +108,7 @@ class MyModuleRepositoriesController < ApplicationController
                                 LEFT OUTER JOIN my_module_repository_rows ON
                                   my_module_repository_rows.repository_row_id = repository_rows.id
                                   AND my_module_repository_rows.my_module_id = #{@my_module.id}
-                              ").select('COUNT(my_module_repository_rows.id) as rows_count, repositories.*')
+                              ").select('COUNT(DISTINCT my_module_repository_rows.id) as rows_count, repositories.*')
                               .group(:id)
                               .having('COUNT(my_module_repository_rows.id) > 0 OR repositories.archived = FALSE')
                               .order(:name)
