@@ -219,6 +219,8 @@ class Constants
       ios: 'https://apps.apple.com/us/app/2fa-authenticator-2fas/id1217793794'
     },
   }
+  TWO_FACTOR_RECOVERY_CODE_COUNT = 6
+  TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
 
   #=============================================================================
   # Protocol importers

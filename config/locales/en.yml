@@ -1672,6 +1672,11 @@ en:
             description: "Enter the generated code into the fields bellow to finalize the setup of the two-factor authorisation."
             enter_code: "Enter authenticator code"
             verify: "Verify"
+          step_4:
+            title: "4. Save your bypass codes"
+            verified: "2FA Verified"
+            description: "Your 2FA is now verified. Save these one-time codes bellow to access your account in case you lose your device. This way you will be able to reset the authorization."
+            download_codes: "Download codes"
           disable:
             title: "Disable two-factor authentication"
             description: "Enter your password bellow to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
