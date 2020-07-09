@@ -76,7 +76,7 @@ var MyModuleRepositories = (function() {
       });
     } else {
       columnDefs.push({
-        targets: 3,
+        targets: 2,
         className: 'item-name'
       });
     }
