@@ -577,14 +577,6 @@ Rails.application.routes.draw do
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
-      get 'index_html',
-          to: 'repository_columns#index_html',
-          as: 'columns_index_html',
-          defaults: { format: 'json' }
-      get 'create_html',
-          to: 'repository_columns#create_html',
-          as: 'columns_create_html',
-          defaults: { format: 'json' }
       get 'available_columns',
           to: 'repository_columns#available_columns',
           as: 'available_columns',
@@ -592,7 +584,7 @@ Rails.application.routes.draw do
       get :table_toolbar
       get :status
 
-      resources :repository_columns, only: %i(create edit update destroy)
+      resources :repository_columns, only: %i(index new edit destroy)
       resources :repository_rows, only: %i(create show update) do
         member do
           get :assigned_task_list
@@ -609,22 +601,22 @@ Rails.application.routes.draw do
         post 'import_records'
       end
       namespace :repository_columns do
-        resources :text_columns, only: %i(create update destroy)
-        resources :number_columns, only: %i(create update destroy)
-        resources :asset_columns, only: %i(create update destroy)
-        resources :date_columns, only: %i(create update destroy)
-        resources :date_time_columns, only: %i(create update destroy)
-        resources :list_columns, only: %i(create update destroy) do
+        resources :text_columns, only: %i(create update)
+        resources :number_columns, only: %i(create update)
+        resources :asset_columns, only: %i(create update)
+        resources :date_columns, only: %i(create update)
+        resources :date_time_columns, only: %i(create update)
+        resources :list_columns, only: %i(create update) do
           member do
             get 'items'
           end
         end
-        resources :checklist_columns, only: %i(create update destroy) do
+        resources :checklist_columns, only: %i(create update) do
           member do
             get 'items'
           end
         end
-        resources :status_columns, only: %i(create update destroy) do
+        resources :status_columns, only: %i(create update) do
           member do
             get 'items'
           end
