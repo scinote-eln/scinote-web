@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-Given("I'm on the Protocols page of a {string} task") do |task_name|
-  visit_task_page(task_name)
-end
-
 Then(/^I should see "([^"]*)" attachment on "([^"]*)" step$/) do |file, step_name|
   wait_for_ajax
   expect(find('.step', text: step_name)).to have_content(file)

@@ -1,21 +1,22 @@
 # Tasks
 
-def visit_task_page(task_name) # /modules/:id/
+Given("I'm on the Protocols page of a {string} task") do |task_name|
   m = MyModule.find_by(name: task_name)
   visit protocols_my_module_path(m)
 end
 
-def visit_task_results_page(task_name) # /modules/:id/results
+Given("I'm on the Protocols result page of a {string} task") do |task_name|
   m = MyModule.find_by(name: task_name)
   visit results_my_module_path(m)
 end
 
-def visit_task_archived_results_page(task_name) # /modules/:id/archive
+Given("I'm on the Protocols result archived page of a {string} task") do |task_name|
   m = MyModule.find_by(name: task_name)
   visit archive_my_module_path(m)
 end
 
 
+# Change methods to steps
 # Settings
 def visit_profile_page
   visit edit_user_registration_path
