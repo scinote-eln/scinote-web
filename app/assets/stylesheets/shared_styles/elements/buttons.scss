@@ -140,9 +140,8 @@
   &.disabled,
   &:disabled {
     color: $color-silver-chalice;
-    cursor: not-allowed;
+    cursor: auto;
     opacity: .5;
-    pointer-events: auto !important;
 
     &.btn-primary,
     &.btn-danger {
