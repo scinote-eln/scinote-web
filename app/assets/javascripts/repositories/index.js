@@ -1,4 +1,5 @@
-/* global I18n animateSpinner HelperModule DataTableHelpers DataTableCheckboxes */
+/* global I18n animateSpinner HelperModule
+          DataTableHelpers DataTableCheckboxes notTurbolinksPreview */
 (function() {
   'use strict';
 
@@ -32,7 +33,7 @@
 
   function initRepositoriesDataTable(tableContainer, archived = false) {
     var tableTemplate = $('#RepositoriesListTable').html();
-    $.get($(tableTemplate).data('source'), {archived: archived}, function(data) {
+    $.get($(tableTemplate).data('source'), { archived: archived }, function(data) {
       if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
       CHECKBOX_SELECTOR = null;
       $('.content-body').html(tableTemplate);
@@ -187,6 +188,8 @@
   });
 
   $('.create-new-repository').initializeModal('#create-repo-modal');
-  initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
+  if (notTurbolinksPreview()) {
+    initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
+  }
   initRepositoryViewSwitcher();
 }());
