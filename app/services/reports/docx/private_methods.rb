@@ -235,50 +235,29 @@ module Reports::Docx::PrivateMethods
 
     @docx.page_numbers true, align: :right
 
+    path = Rails.root.join('app', 'assets', 'images', 'logo.png')
+
+    @docx.img path.to_s do
+      height 20
+      width 100
+      align :left
+    end
+    @docx.p do
+      text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
+      br
+    end
+
     generate_html_styles
   end
 
   def generate_html_styles
     @docx.style do
-      id 'h1'
-      name 'h1'
-      bold true
-      size 64
-    end
-
-    @docx.style do
-      id 'h2'
-      name 'h2'
-      bold true
-      size 48
-    end
-
-    @docx.style do
-      id 'h3'
-      name 'h3'
-      bold true
+      id 'Heading1'
+      name 'heading 1'
+      font 'Arial'
       size 36
-    end
-
-    @docx.style do
-      id 'h4'
-      name 'h4'
+      bottom 120
       bold true
-      size 32
-    end
-
-    @docx.style do
-      id 'h5'
-      name 'h5'
-      bold true
-      size 26
-    end
-
-    @docx.style do
-      id 'h6'
-      name 'h6'
-      bold true
-      size 24
     end
 
     @link_style = {

@@ -274,3 +274,8 @@ var HelperModule = (function(){
     tinymce.remove();
   });
 })();
+
+// Check that loaded page, not turbolinks preview
+function notTurbolinksPreview() {
+  return !document.documentElement.hasAttribute("data-turbolinks-preview");
+}

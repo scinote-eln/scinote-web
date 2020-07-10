@@ -9,7 +9,7 @@
       <div class="col-xs-12 col-sm-12">
         <div class="row">
           <div class="col-md-4">
-            <h2 style="margin-top: 10px;"><%=t "users.registrations.edit.title" %></h2>
+            <h1 style="margin-top: 10px;"><%=t "users.registrations.edit.title" %></h1>
 
             <% if not resource.errors.empty? %>
               <div class="alert alert-danger">
@@ -94,7 +94,7 @@
                   </div>
                   <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("general.save"), class: "btn btn-success" %>
+                    <%= f.button t("general.save"), class: "btn btn-success" %>
                   </div>
                 </div>
               </div>
@@ -137,7 +137,7 @@
 
                   <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("general.save"), class: "btn btn-success" %>
+                    <%= f.button t("general.save"), class: "btn btn-success" %>
                   </div>
                 </div>
               </div>

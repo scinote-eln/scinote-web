@@ -76,7 +76,7 @@ var MyModuleRepositories = (function() {
       });
     } else {
       columnDefs.push({
-        targets: 3,
+        targets: 2,
         className: 'item-name'
       });
     }
@@ -213,7 +213,7 @@ var MyModuleRepositories = (function() {
           }
           json.state.columns[6].visible = false;
           json.state.columns[7].visible = false;
-          json.state.search.search = null;
+          if (json.state.search) delete json.state.search;
           callback(json.state);
         });
       },
@@ -306,7 +306,7 @@ var MyModuleRepositories = (function() {
       renderSimpleTable(repositoryTemplate);
     });
 
-    $('.navbar-secondary').on('sideBar::shown sideBar::hidden', function() {
+    $('#wrapper').on('sideBar::shown sideBar::hidden', function() {
       if (SIMPLE_TABLE) {
         SIMPLE_TABLE.columns.adjust();
       }

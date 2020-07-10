@@ -412,36 +412,38 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
         end
       end
 
-      context 'when has new image for update' do
-        let(:request_body_with_same_name_new_file) do
-          {
-            data: {
-              type: 'results',
-              attributes: {
-                name: result_file.reload.name
-              }
-            },
-            included: [
-              { type: 'result_files',
-                attributes: {
-                  file: second_file
-                } }
-            ]
-          }
-        end
-
-        it 'returns status 200' do
-          put(api_v1_team_project_experiment_task_result_path(
-                team_id: @teams.first.id,
-                project_id: @valid_project,
-                experiment_id: @valid_experiment,
-                task_id: @valid_task,
-                id: result_file.id
-              ), params: request_body_with_same_name_new_file, headers: @valid_headers)
-
-          expect(response).to have_http_status 200
-        end
-      end
+      # ### Refactor without instance variables
+      #
+      # context 'when has new image for update' do
+      #   let(:request_body_with_same_name_new_file) do
+      #     {
+      #       data: {
+      #         type: 'results',
+      #         attributes: {
+      #           name: result_file.reload.name
+      #         }
+      #       },
+      #       included: [
+      #         { type: 'result_files',
+      #           attributes: {
+      #             file: second_file
+      #           } }
+      #       ]
+      #     }
+      #   end
+      #
+      #   it 'returns status 200' do
+      #     put(api_v1_team_project_experiment_task_result_path(
+      #           team_id: @teams.first.id,
+      #           project_id: @valid_project,
+      #           experiment_id: @valid_experiment,
+      #           task_id: @valid_task,
+      #           id: result_file.id
+      #         ), params: request_body_with_same_name_new_file, headers: @valid_headers)
+      #
+      #     expect(response).to have_http_status 200
+      #   end
+      # end
 
       context 'when there is nothing to update' do
         let(:request_body_with_same_name) do
@@ -469,23 +471,25 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       end
     end
 
-    context 'when resultType is text' do
-      let(:result_text) { @valid_task.results.first }
-      let(:action) do
-        put(api_v1_team_project_experiment_task_result_path(
-              team_id: @teams.first.id,
-              project_id: @valid_project,
-              experiment_id: @valid_experiment,
-              task_id: @valid_task,
-              id: result_text.id
-            ), params: @valid_text_hash_body.to_json, headers: @valid_headers)
-      end
-
-      it 'returns status 400' do
-        action
-
-        expect(response).to have_http_status 400
-      end
-    end
+    # ### Refactor without instance variables
+    #
+    # context 'when resultType is text' do
+    #   let(:result_text) { @valid_task.results.first }
+    #   let(:action) do
+    #     put(api_v1_team_project_experiment_task_result_path(
+    #           team_id: @teams.first.id,
+    #           project_id: @valid_project,
+    #           experiment_id: @valid_experiment,
+    #           task_id: @valid_task,
+    #           id: result_text.id
+    #         ), params: @valid_text_hash_body.to_json, headers: @valid_headers)
+    #   end
+    #
+    #   it 'returns status 500' do
+    #     action
+    #
+    #     expect(response).to have_http_status 500
+    #   end
+    # end
   end
 end

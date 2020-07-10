@@ -37,7 +37,7 @@ class RepositoriesController < ApplicationController
     render json: {
       html: render_to_string(partial: 'repositories/sidebar_list.html.erb', locals: {
                                repositories: @repositories,
-                               archived: params[:archived]
+                               archived: params[:archived] == 'true'
                              })
     }
   end
@@ -376,7 +376,7 @@ class RepositoriesController < ApplicationController
 
   def load_repositories
     @repositories = Repository.accessible_by_teams(current_team).order('repositories.created_at ASC')
-    @repositories = if params[:archived] || @repository&.archived?
+    @repositories = if params[:archived] == 'true' || @repository&.archived?
                       @repositories.archived
                     else
                       @repositories.active

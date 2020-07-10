@@ -4,18 +4,20 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="create-repo-modal-label">
+          <h3 class="modal-title" id="create-repo-modal-label">
             <%= t("repositories.index.modal_create.title") %>
-          </h4>
+          </h3>
         </div>
         <div class="modal-body">
-          <%= f.text_field :name,
-                           autofocus: true,
-                           label: t("repositories.index.modal_create.name_label"),
-                           placeholder: t("repositories.index.modal_create.name_placeholder") %>
+          <div class="form-group sci-input-container">
+            <%= f.text_field :name,
+                             autofocus: true,
+                             label: t("repositories.index.modal_create.name_label"),
+                             class: "sci-input-field",
+                             placeholder: t("repositories.index.modal_create.name_placeholder") %>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
           <%= f.submit t("repositories.index.modal_create.submit"), class: "btn btn-success" %>
         </div>
       </div>

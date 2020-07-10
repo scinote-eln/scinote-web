@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryColumns
-  class ListColumnsController < BaseColumnsController
-    before_action :load_column, only: %i(update destroy items)
-    before_action :check_create_permissions, only: :create
-    before_action :check_manage_permissions, only: %i(update destroy)
+  class ListColumnsController < RepositoryColumnsController
     helper_method :delimiters
 
     def create
@@ -34,17 +31,6 @@ module RepositoryColumns
       end
     end
 
-    def destroy
-      service = RepositoryColumns::DeleteColumnService
-                .call(user: current_user, team: current_team, column: @repository_column)
-
-      if service.succeed?
-        render json: {}, status: :ok
-      else
-        render json: service.errors, status: :unprocessable_entity
-      end
-    end
-
     def items
       column_list_items = @repository_column.repository_list_items
                                             .where('data ILIKE ?',
@@ -58,7 +44,7 @@ module RepositoryColumns
     private
 
     def search_params
-      params.permit(:query, :column_id)
+      params.permit(:query, :repository_id, :id)
     end
 
     def repository_column_params

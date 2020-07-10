@@ -17,6 +17,9 @@
         <%= link_to repository_path(repository),
             class: current_page?(repository_path(repository)) ? 'disabled line-wrap' : 'line-wrap',
             data: { 'no-turbolink' => 'true', type: 'repository', id: repository.id } do %>
+          <% if repository.archived? %>
+            <i class="fas fa-archive"></i>&nbsp;
+          <% end %>
           <%= repository.name  %>
           <%= inventory_shared_status_icon(repository, current_team) %>
         <% end %>

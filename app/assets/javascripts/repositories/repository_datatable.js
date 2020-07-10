@@ -494,8 +494,9 @@ var RepositoryDatatable = (function(global) {
           return data;
         }
       }],
-      oLanguage: {
-        sSearch: I18n.t('general.filter_dots')
+      language: {
+        emptyTable: I18n.t('repositories.show.no_items'),
+        zeroRecords: I18n.t('repositories.show.no_items_matched')
       },
       rowCallback: function(row, data) {
         $(row).attr('data-editable', data.recordEditable);
@@ -539,6 +540,9 @@ var RepositoryDatatable = (function(global) {
         checkArchivedColumnsState();
       },
       preDrawCallback: function() {
+        var archived = $('.repository-show').hasClass('archived');
+        TABLE.context[0].oLanguage.sEmptyTable = archived ? I18n.t('repositories.show.no_archived_items') : I18n.t('repositories.show.no_items');
+        TABLE.context[0].oLanguage.sZeroRecords = archived ? I18n.t('repositories.show.no_archived_items_matched') : I18n.t('repositories.show.no_items_matched');
         animateSpinner(this);
         $('.record-info-link').off('click');
       },
@@ -553,6 +557,7 @@ var RepositoryDatatable = (function(global) {
             var archived = $('.repository-show').hasClass('archived');
             if (json.state.columns[6]) json.state.columns[6].visible = archived;
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
+            delete json.state.search
             callback(json.state);
           }
         });
@@ -794,25 +799,28 @@ var RepositoryDatatable = (function(global) {
   }
 
   function redrawTableOnSidebarToggle() {
-    $('#sidebar-arrow').on('click', function() {
+    $('#wrapper').on('sideBar::hide sideBar::hidden', function() {
       var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
       var windowWidth = $(window).width();
-      if (!$(this).is('[data-shown]')) {
-        if (windowWidth > orgignalWidth + 363) {
-          $('.repository-show .dataTables_scrollHead')
-            .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
-        }
-        document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
-      } else {
-        if (windowWidth > orgignalWidth + 83) {
-          $('.repository-show .dataTables_scrollHead')
-            .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
-        }
-        document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+      if (windowWidth > orgignalWidth + 363) {
+        $('.repository-show .dataTables_scrollHead')
+          .find('.table.dataTable').css('width', (orgignalWidth + 280) + 'px');
       }
-      setTimeout(function() {
-        adjustTableHeader();
-      }, 500);
+      document.documentElement.style.setProperty('--repository-sidebar-margin', '83px');
+    });
+
+    $('#wrapper').on('sideBar::show', function() {
+      var orgignalWidth = $('.repository-show .dataTables_scrollHead .table.dataTable').width();
+      var windowWidth = $(window).width();
+      if (windowWidth > orgignalWidth + 83) {
+        $('.repository-show .dataTables_scrollHead')
+          .find('.table.dataTable').css('width', (orgignalWidth - 280) + 'px');
+      }
+      document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
+    });
+
+    $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
+      adjustTableHeader();
     });
   }
 

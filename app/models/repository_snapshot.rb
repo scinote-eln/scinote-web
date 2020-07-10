@@ -17,11 +17,11 @@ class RepositorySnapshot < RepositoryBase
   validates :status, presence: true
   validate :only_one_selected_for_my_module, if: ->(obj) { obj.changed.include? 'selected' }
 
-  scope :assigned_to_project, lambda { |project|
+  scope :of_unassigned_from_project, lambda { |project|
     joins(my_module: { experiment: :project })
-      .where('experiments.project_id = ?', project.id)
+      .where(my_modules: { experiments: { project: project } })
       .left_outer_joins(:original_repository)
-      .where(original_repositories_repositories: { id: nil })
+      .where.not(original_repository: Repository.assigned_to_project(project))
       .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
       .order(:parent_id, updated_at: :desc)
   }

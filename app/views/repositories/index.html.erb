@@ -3,11 +3,12 @@
 
 <% if current_team %>
   <%= render partial: "sidebar", locals: { repositories: @repositories, archived: params[:archived] } %>
-  <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index">
+  <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index"
+       data-readonly="<%= !current_user.is_admin_of_team?(current_team) %>">
     <div class="content-header">
       <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
-      <h1 data-view-mode="archived"><%= t('libraries.index.head_title_archived') %></h1>
-      <%= render layout: "shared/view_switch", locals: {disabled: false} do %>
+      <h1 data-view-mode="archived"><i class="fas fa-archive"></i>&nbsp;<%= t('libraries.index.head_title_archived') %></h1>
+      <%= render layout: "shared/view_switch", locals: { disabled: false } do %>
         <li class="view-switch-archived" data-view-mode="active">
           <i class="fas fa-archive button-icon"></i>
           <%= t('libraries.index.switch_view.archived') %>
@@ -23,36 +24,10 @@
   </div>
 <% end %>
 
-<!-- Active table template -->
-<template id="activeRepositoriesListTable">
+<!-- table template -->
+<template id="RepositoriesListTable">
   <table id="repositoriesList" class="table"
-    data-source="<%= team_repositories_path(current_team, format: :json) %>"
-  >
-    <thead>
-      <tr>
-        <th>
-          <div class="sci-checkbox-container">
-            <input value="1" type="checkbox" class="sci-checkbox select-all-checkbox">
-            <span class="sci-checkbox-label"></span>
-          </div>
-        </th>
-        <th><%= t('libraries.index.table.name') %></th>
-        <th><%= t('libraries.index.table.number_of_items') %></th>
-        <th><%= t('libraries.index.table.shared') %></th>
-        <th><%= t('libraries.index.table.ownership') %></th>
-        <th><%= t('libraries.index.table.added_on') %></th>
-        <th><%= t('libraries.index.table.added_by') %></th>
-      </tr>
-    </thead>
-  </table>
-</template>
-
-
-<!-- Archived table template -->
-<template id="archivedRepositoriesListTable">
-  <table id="repositoriesList" class="table"
-    data-source="<%= team_repositories_path(current_team, archived: true, format: :json) %>"
-  >
+         data-source="<%= team_repositories_path(current_team, format: :json) %>">
     <thead>
       <tr>
         <th>
@@ -85,16 +60,18 @@
     <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
   </a>
 <% end %>
-  <a id="renameRepoBtn" class="btn btn-light disabled" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
+  <a id="renameRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-pencil-alt"></span>
     <%= t('libraries.index.buttons.edit') %>
   </a>
-  <a id="copyRepoBtn" class="btn btn-light disabled" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
-    <span class="fas fa-copy"></span>
-    <%= t('libraries.index.buttons.duplicate') %>
-  </a>
+  <% if can_create_repositories?(current_team) %>
+    <a id="copyRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
+      <span class="fas fa-copy"></span>
+      <%= t('libraries.index.buttons.duplicate') %>
+    </a>
+  <% end %>
   <a id="archiveRepoBtn"
-     class="btn btn-light disabled"
+     class="btn btn-light disabled hidden"
      data-view-mode="active"
      data-action-mode="multiple"
      data-archive-repositories="<%= archive_team_repositories_path(current_team) %>">
@@ -102,14 +79,14 @@
     <%= t('libraries.index.buttons.archive') %>
   </a>
   <a id="restoreRepoBtn"
-     class="btn btn-light disabled"
+     class="btn btn-light disabled hidden"
      data-view-mode="archived"
      data-action-mode="multiple"
      data-restore-repositories="<%= restore_team_repositories_path(current_team) %>">
     <span class="fas fa-undo"></span>
     <%= t('libraries.index.buttons.restore') %>
   </a>
-  <a id="deleteRepoBtn" class="btn btn-light disabled" data-view-mode="archived" href="#" data-action-mode="single" data-remote="true">
+  <a id="deleteRepoBtn" class="btn btn-light disabled hidden" data-view-mode="archived" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-trash"></span>
     <%= t('libraries.index.buttons.delete') %>
   </a>
