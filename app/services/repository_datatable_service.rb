@@ -61,11 +61,10 @@ class RepositoryDatatableService
   end
 
   def fetch_rows(search_value)
-    repository_rows = if @repository.archived?
-                        @repository.repository_rows
-                      else
-                        @repository.repository_rows.where(archived: @params[:archived] || false)
-                      end
+    repository_rows = @repository.repository_rows
+    if @params[:archived] && !@repository.archived?
+      repository_rows = repository_rows.where(archived: @params[:archived])
+    end
 
     @all_count =
       if @my_module && @params[:assigned] == 'assigned'
