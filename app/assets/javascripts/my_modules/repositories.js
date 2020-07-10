@@ -213,6 +213,7 @@ var MyModuleRepositories = (function() {
           }
           json.state.columns[6].visible = false;
           json.state.columns[7].visible = false;
+          if (json.state.search) delete json.state.search;
           callback(json.state);
         });
       },
