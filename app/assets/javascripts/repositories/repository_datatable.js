@@ -557,7 +557,7 @@ var RepositoryDatatable = (function(global) {
             var archived = $('.repository-show').hasClass('archived');
             if (json.state.columns[6]) json.state.columns[6].visible = archived;
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
-            delete json.state.search
+            if (json.state.search) delete json.state.search;
             callback(json.state);
           }
         });
