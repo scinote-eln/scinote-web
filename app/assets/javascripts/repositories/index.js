@@ -32,7 +32,7 @@
 
   function initRepositoriesDataTable(tableContainer, archived = false) {
     var tableTemplate = $('#RepositoriesListTable').html();
-    $.get($(tableTemplate).data('source'), {archived: archived}, function(data) {
+    $.get($(tableTemplate).data('source'), { archived: archived }, function(data) {
       if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
       CHECKBOX_SELECTOR = null;
       $('.content-body').html(tableTemplate);
