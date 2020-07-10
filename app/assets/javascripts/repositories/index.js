@@ -1,4 +1,5 @@
-/* global I18n animateSpinner HelperModule DataTableHelpers DataTableCheckboxes */
+/* global I18n animateSpinner HelperModule
+          DataTableHelpers DataTableCheckboxes notTurbolinksPreview */
 (function() {
   'use strict';
 
@@ -187,6 +188,8 @@
   });
 
   $('.create-new-repository').initializeModal('#create-repo-modal');
-  initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
+  if (notTurbolinksPreview()) {
+    initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
+  }
   initRepositoryViewSwitcher();
 }());
