@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TeamRepository < ApplicationRecord
-  enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
+  enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS.except(:not_shared)
 
   belongs_to :team
   belongs_to :repository
