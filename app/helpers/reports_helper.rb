@@ -115,11 +115,15 @@ module ReportsHelper
                         media: 'all')
   end
 
-  def font_awesome_cdn_link_tag
-    stylesheet_link_tag(
-      'https://maxcdn.bootstrapcdn.com/font-awesome' \
-      '/4.6.3/css/font-awesome.min.css'
-    )
+  def font_awesome_report_pack_tag
+    if running_in_development?
+      options = { media: 'all' }
+      wds = Webpacker.dev_server
+      options[:host] = "#{wds.host}:#{wds.port}"
+      stylesheet_pack_tag('fontawesome', options)
+    else
+      wicked_pdf_stylesheet_pack_tag 'fontawesome'
+    end
   end
 
   def assigned_repository_or_snapshot(my_module, element_id, snapshot, repository)
