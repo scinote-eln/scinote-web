@@ -3,18 +3,19 @@
 <div class="sign-in-container">
   <div class="sign-in-form-wrapper">
     <div class="center-block center-block-narrow">
-      <h1 class="log-in-title"><%=t "devise.sessions.2fa.title" %></h1>
+      <h1 class="log-in-title"><%= t "devise.sessions.2fa.title" %></h1>
       <%= form_with url: users_authenticate_with_two_factor_url, local: true  do %>
-        <div class="input-group sci-input-container">
+        <p><%= t "devise.sessions.2fa.description" %></p>
+        <p class="input-group sci-input-container">
           <%= label :otp, t("devise.sessions.2fa.field") %>
-          <%= text_field_tag(:otp, '', { class: "form-control sci-input-field", placeholder: t("devise.sessions.2fa.placeholder") })%>
-        </div>
+          <%= text_field_tag(:otp, '', { class: "form-control sci-input-field" })%>
+        </p>
 
-        <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
-          <%= button_tag t("devise.sessions.new.submit"), type: :submit, class: "btn btn-primary log-in-button" %>
-        </div>
+        <p class="actions">
+          <%= button_tag t("devise.sessions.2fa.enter"), type: :submit, class: "btn btn-primary" %>
+        </p>
 
-        <%= link_to 'I have a bypass code', users_two_factor_recovery_path %>
+        <%= link_to t("devise.sessions.2fa.bypass_code_link"), users_two_factor_recovery_path %>
     <% end %>
     </div>
   </div>

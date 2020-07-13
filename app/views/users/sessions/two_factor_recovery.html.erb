@@ -3,15 +3,16 @@
 <div class="sign-in-container">
   <div class="sign-in-form-wrapper">
     <div class="center-block center-block-narrow">
-      <h1 class="log-in-title">2FA Bypass</h1>
+      <h1 class="log-in-title"><%= t "devise.sessions.2fa_recovery.title" %></h1>
       <%= form_with url: users_authenticate_with_recovery_code_path, local: true  do %>
-        <div class="input-group sci-input-container">
-          <%= label :recovery_code, 'Bypass code' %>
+        <p><%= t "devise.sessions.2fa_recovery.description" %></p>
+        <p class="input-group sci-input-container">
+          <%= label :recovery_code, t("devise.sessions.2fa_recovery.bypass_code") %>
           <%= text_field_tag(:recovery_code, '', { class: "form-control sci-input-field" })%>
-        </div>
+        </p>
 
-        <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
-          <%= button_tag 'Enter', type: :submit, class: "btn btn-primary" %>
+        <div class="actions">
+          <%= button_tag t("devise.sessions.2fa_recovery.enter"), type: :submit, class: "btn btn-primary" %>
         </div>
     <% end %>
     </div>

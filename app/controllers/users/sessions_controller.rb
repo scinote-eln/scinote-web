@@ -102,10 +102,12 @@ class Users::SessionsController < Devise::SessionsController
       sign_in(user)
       generate_demo_project
       flash[:notice] = t('devise.sessions.signed_in')
+      redirect_to root_path
     else
-      flash.now[:alert] = t('Not correct recovery code')
+      flash[:alert] = t("devise.sessions.2fa_recovery.not_correct_code")
+      redirect_to new_user_session_path
     end
-    redirect_to root_path
+
   end
 
   protected

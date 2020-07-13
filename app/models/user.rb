@@ -676,7 +676,7 @@ class User < ApplicationRecord
 
     otp_recovery_codes.each do |recovery_code|
       if Devise::Encryptor.compare(self.class, recovery_code, code)
-        update(otp_recovery_codes: otp_recovery_codes.reject { |i| i == recovery_code })
+        update!(otp_recovery_codes: otp_recovery_codes.reject { |i| i == recovery_code })
         return true
       end
     end

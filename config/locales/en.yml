@@ -34,11 +34,19 @@ en:
         remember_me: "Remember me"
         submit: "Log in"
       2fa:
-        title: "Two factor check"
-        field: "One time password"
-        placeholder: "Enter code"
-        error_message: "One Time Password is not correct."
+        title: "Two-factor authentication"
+        description: "Enter the one-time code found in your authenticator app to log in to SciNote."
+        field: "Authenticator code"
+        error_message: "One time code is not correct."
         no_user_error: "Cannot find user!"
+        enter: "Enter"
+        bypass_code_link: "I have a bypass code"
+      2fa_recovery:
+        title: "2FA Bypass"
+        description: "Enter one of the bypass codes provided when you creted 2FA authentication. The code will no longer be valid after use."
+        bypass_code: "Bypass code"
+        enter: "Enter"
+        not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
       auth_token_create:
