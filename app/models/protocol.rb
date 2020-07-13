@@ -525,7 +525,7 @@ class Protocol < ApplicationRecord
 
   def update_parent(current_user)
     # First, destroy parent's step contents
-    parent.destroy_contents(current_user)
+    parent.destroy_contents
     parent.reload
 
     # Now, clone step contents
@@ -543,7 +543,7 @@ class Protocol < ApplicationRecord
 
   def update_from_parent(current_user)
     # First, destroy step contents
-    destroy_contents(current_user)
+    destroy_contents
 
     # Now, clone parent's step contents
     Protocol.clone_contents(parent, self, current_user, false)
@@ -559,7 +559,7 @@ class Protocol < ApplicationRecord
 
   def load_from_repository(source, current_user)
     # First, destroy step contents
-    destroy_contents(current_user)
+    destroy_contents
 
     # Now, clone source's step contents
     Protocol.clone_contents(source, self, current_user, false)
@@ -656,12 +656,10 @@ class Protocol < ApplicationRecord
     cloned
   end
 
-  def destroy_contents(current_user)
+  def destroy_contents
     # Calculate total space taken by the protocol
     st = space_taken
-    steps.pluck(:id).each do |id|
-      raise ActiveRecord::RecordNotDestroyed unless Step.find(id).destroy(current_user)
-    end
+    steps.destroy_all
 
     # Release space taken by the step
     team.release_space(st)

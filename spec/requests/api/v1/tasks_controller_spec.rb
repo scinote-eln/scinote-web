@@ -236,4 +236,108 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       end
     end
   end
+
+  describe 'PATCH task, #update' do
+    before :all do
+      @valid_headers['Content-Type'] = 'application/json'
+    end
+
+    let(:task) { @valid_experiment.my_modules.take }
+
+    let(:action) do
+      patch(
+        api_v1_team_project_experiment_task_path(
+          team_id: @valid_project.team.id,
+          project_id: @valid_project.id,
+          experiment_id: @valid_experiment.id,
+          id: task.id
+        ),
+        params: request_body.to_json,
+        headers: @valid_headers
+      )
+    end
+
+    context 'when has valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'tasks',
+            attributes: {
+              name: 'New task name',
+              description: 'New description about task'
+            }
+          }
+        }
+      end
+
+      it 'returns status 200' do
+        action
+
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns well formated response' do
+        action
+
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'tasks',
+              attributes: hash_including(name: 'New task name', description: 'New description about task')
+            )
+          )
+        )
+      end
+    end
+
+    context 'task completion, when has valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'tasks',
+            attributes: {
+              state: 'completed'
+            }
+          }
+        }
+      end
+
+      it 'returns status 200' do
+        action
+
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns well formated response' do
+        action
+
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'tasks',
+              attributes: hash_including(state: 'completed')
+            )
+          )
+        )
+      end
+    end
+
+    context 'when has missing param' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'tasks',
+            attributes: {
+            }
+          }
+        }
+      end
+
+      it 'renders 400' do
+        action
+
+        expect(response).to have_http_status(400)
+      end
+    end
+  end
 end

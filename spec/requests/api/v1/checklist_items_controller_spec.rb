@@ -2,61 +2,52 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::StepsController', type: :request do
+RSpec.describe 'Api::V1::ChecklistsController', type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)
     @project = create(:project, team: @team)
     @experiment = create(:experiment, :with_tasks, project: @project)
     @task = @experiment.my_modules.first
+    @protocol = create(:protocol, my_module: @task)
+    @step = create(:step, protocol: @protocol)
+    @checklist = create(:checklist, step: @step)
     create(:user_team, user: @user, team: @team)
     create(:user_project, :normal_user, user: @user, project: @project)
 
-    @valid_headers =
-      { 'Authorization': 'Bearer ' + generate_token(@user.id) }
+    @valid_headers = {
+      'Authorization': 'Bearer ' + generate_token(@user.id),
+      'Content-Type': 'application/json'
+    }
   end
 
-  let(:protocol) { create :protocol, my_module: @task }
-  let(:steps) { create_list(:step, 3, protocol: protocol) }
-  let(:step) { steps.first }
-
-  describe 'GET steps, #index' do
+  describe 'GET checklist_items, #index' do
     context 'when has valid params' do
       it 'renders 200' do
-        get api_v1_team_project_experiment_task_protocol_steps_path(
+        get api_v1_team_project_experiment_task_protocol_step_checklist_items_path(
           team_id: @team.id,
           project_id: @project.id,
           experiment_id: @experiment.id,
           task_id: @task.id,
-          protocol_id: protocol.id
+          protocol_id: @protocol.id,
+          step_id: @step.id,
+          checklist_id: @checklist.id
         ), headers: @valid_headers
 
         expect(response).to have_http_status(200)
       end
     end
 
-    context 'when has valid params, with rendered RTE field' do
-      it 'renders 200' do
-        get api_v1_team_project_experiment_task_protocol_steps_path(
-          team_id: @team.id,
-          project_id: @project.id,
-          experiment_id: @experiment.id,
-          task_id: @task.id,
-          protocol_id: protocol.id
-        ), params: { render_rte: true }, headers: @valid_headers
-
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when protocol is not found' do
+    context 'when checklist is not found' do
       it 'renders 404' do
-        get api_v1_team_project_experiment_task_protocol_steps_path(
+        get api_v1_team_project_experiment_task_protocol_step_checklist_items_path(
           team_id: @team.id,
           project_id: @project.id,
           experiment_id: @experiment.id,
           task_id: @task.id,
-          protocol_id: -1
+          protocol_id: @protocol.id,
+          step_id: @step.id,
+          checklist_id: -1
         ), headers: @valid_headers
 
         expect(response).to have_http_status(404)
@@ -64,16 +55,20 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
     end
   end
 
-  describe 'GET step, #show' do
+  describe 'GET checklist_item, #show' do
+    let(:checklist_item) { create(:checklist_item, checklist: @checklist) }
+
     context 'when has valid params' do
       it 'renders 200' do
-        get api_v1_team_project_experiment_task_protocol_step_path(
+        get api_v1_team_project_experiment_task_protocol_step_checklist_item_path(
           team_id: @team.id,
           project_id: @project.id,
           experiment_id: @experiment.id,
           task_id: @task.id,
-          protocol_id: protocol.id,
-          id: steps.first.id
+          protocol_id: @protocol.id,
+          step_id: @step.id,
+          checklist_id: @checklist.id,
+          id: checklist_item.id
         ), headers: @valid_headers
 
         expect(response).to have_http_status(200)
@@ -89,8 +84,10 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
           project_id: @project.id,
           experiment_id: @experiment.id,
           task_id: @task.id,
-          protocol_id: protocol.id,
-          id: steps.first.id
+          protocol_id: @protocol.id,
+          step_id: @step.id,
+          checklist_id: @checklist.id,
+          id: checklist_item.id
         ), headers: @valid_headers
 
         expect(response).to have_http_status(403)
@@ -98,38 +95,33 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
     end
   end
 
-  describe 'POST step, #create' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-    end
-
+  describe 'POST checklist_item, #create' do
     let(:action) do
-      post(api_v1_team_project_experiment_task_protocol_steps_path(
-             team_id: @team.id,
-             project_id: @project.id,
-             experiment_id: @experiment.id,
-             task_id: @task.id,
-             protocol_id: protocol.id
-           ),
-           params: request_body.to_json,
-           headers: @valid_headers)
+      post(api_v1_team_project_experiment_task_protocol_step_checklist_items_path(
+        team_id: @team.id,
+        project_id: @project.id,
+        experiment_id: @experiment.id,
+        task_id: @task.id,
+        protocol_id: @protocol.id,
+        step_id: @step.id,
+        checklist_id: @checklist.id
+      ), params: request_body.to_json, headers: @valid_headers)
     end
 
     context 'when has valid params' do
       let(:request_body) do
         {
           data: {
-            type: 'steps',
+            type: 'checklist_items',
             attributes: {
-              name: 'Step name',
-              description: 'Description about step'
+              text: 'New checklist_item'
             }
           }
         }
       end
 
-      it 'creates new step' do
-        expect { action }.to change { Step.count }.by(1)
+      it 'creates new checklist_item' do
+        expect { action }.to change { ChecklistItem.count }.by(1)
       end
 
       it 'returns status 201' do
@@ -144,8 +136,8 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'steps',
-              attributes: hash_including(name: 'Step name')
+              type: 'checklist_items',
+              attributes: hash_including(text: 'New checklist_item')
             )
           )
         )
@@ -156,7 +148,7 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'steps',
+            type: 'checklist_items',
             attributes: {
             }
           }
@@ -171,34 +163,28 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
     end
   end
 
-  describe 'PATCH step, #update' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-    end
-
+  describe 'PATCH checklist_item, #update' do
+    let(:checklist_item) { create(:checklist_item, checklist: @checklist) }
     let(:action) do
-      patch(
-        api_v1_team_project_experiment_task_protocol_step_path(
-          team_id: @team.id,
-          project_id: @project.id,
-          experiment_id: @experiment.id,
-          task_id: @task.id,
-          protocol_id: protocol.id,
-          id: step.id
-        ),
-        params: request_body.to_json,
-        headers: @valid_headers
-      )
+      patch(api_v1_team_project_experiment_task_protocol_step_checklist_item_path(
+        team_id: @team.id,
+        project_id: @project.id,
+        experiment_id: @experiment.id,
+        task_id: @task.id,
+        protocol_id: @protocol.id,
+        step_id: @step.id,
+        checklist_id: @checklist.id,
+        id: checklist_item.id
+      ), params: request_body.to_json, headers: @valid_headers)
     end
 
     context 'when has valid params' do
       let(:request_body) do
         {
           data: {
-            type: 'steps',
+            type: 'checklist_items',
             attributes: {
-              name: 'New step name',
-              description: 'New description about step'
+              text: 'New checklist_item name'
             }
           }
         }
@@ -216,8 +202,10 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'steps',
-              attributes: hash_including(name: 'New step name', description: 'New description about step')
+              type: 'checklist_items',
+              attributes: hash_including(
+                text: 'New checklist_item name'
+              )
             )
           )
         )
@@ -228,7 +216,7 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'steps',
+            type: 'checklist_items',
             attributes: {
             }
           }
@@ -243,29 +231,25 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
     end
   end
 
-  describe 'DELETE step, #destroy' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-    end
-
+  describe 'DELETE checklist_item, #destroy' do
+    let(:checklist_item) { create(:checklist_item, checklist: @checklist) }
     let(:action) do
-      delete(
-        api_v1_team_project_experiment_task_protocol_step_path(
-          team_id: @team.id,
-          project_id: @project.id,
-          experiment_id: @experiment.id,
-          task_id: @task.id,
-          protocol_id: protocol.id,
-          id: step.id
-        ),
-        headers: @valid_headers
-      )
+      delete(api_v1_team_project_experiment_task_protocol_step_checklist_item_path(
+        team_id: @team.id,
+        project_id: @project.id,
+        experiment_id: @experiment.id,
+        task_id: @task.id,
+        protocol_id: @protocol.id,
+        step_id: @step.id,
+        checklist_id: @checklist.id,
+        id: checklist_item.id
+      ), headers: @valid_headers)
     end
 
-    it 'deletes step' do
+    it 'deletes checklist_item' do
       action
       expect(response).to have_http_status(200)
-      expect(Step.where(id: step.id)).to_not exist
+      expect(ChecklistItem.where(id: checklist_item.id)).to_not exist
     end
   end
 end

@@ -29,7 +29,7 @@ module ProtocolsImporter
   def import_into_existing(protocol, protocol_json, user, team)
     # Firstly, destroy existing protocol's contents
     protocol.tiny_mce_assets.destroy_all
-    protocol.destroy_contents(user)
+    protocol.destroy_contents
     protocol.reload
 
     # Alright, now populate the protocol

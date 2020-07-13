@@ -12,10 +12,9 @@ module Api
       def index
         @connections = @connections.page(params.dig(:page, :number))
                                    .per(params.dig(:page, :size))
-        incl = params[:include] == 'tasks' ? %i(input_task output_task) : nil
         render jsonapi: @connections,
                each_serializer: ConnectionSerializer,
-               include: incl
+               include: include_params
       end
 
       def show
@@ -39,6 +38,10 @@ module Api
 
       def load_connection
         @connection = @connections.find(params.require(:id))
+      end
+
+      def permitted_includes
+        %w(tasks)
       end
     end
   end
