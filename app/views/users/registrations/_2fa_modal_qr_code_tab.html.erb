@@ -1,0 +1,13 @@
+<div role="tabpanel" class="tab-pane" id="2fa-step-2">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+    <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.step_2.title") %></h2>
+  </div>
+  <div class="modal-body">
+    <p><%= t("users.registrations.edit.2fa_modal.step_2.description") %></p>
+    <div class="qr-code"></div>
+  </div>
+  <div class="modal-footer">
+    <div class="btn btn-primary btn-next-step" data-step="#2fa-step-3"><%= t("users.registrations.edit.2fa_modal.step_2.next") %></div>
+  </div>
+</div>

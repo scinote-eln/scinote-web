@@ -87,6 +87,7 @@
   $('#twoFactorAuthenticationEnable').click(function() {
     $.get(this.dataset.qrCodeUrl, function(result) {
       $('#twoFactorAuthenticationModal .qr-code').html(result.qr_code);
+      $('#twoFactorAuthenticationModal').find('[href="#2fa-step-1"]').tab('show');
       $('#twoFactorAuthenticationModal').modal('show');
     });
   });
@@ -97,5 +98,9 @@
 
   $('#twoFactorAuthenticationModal .2fa-disable-form').on('ajax:error', function(e, data) {
     $(this).find('.password-field').addClass('error').attr('data-error-text', data.responseJSON.error);
+  });
+
+  $('#twoFactorAuthenticationModal').on('click', '.btn-next-step', function() {
+    $('#twoFactorAuthenticationModal').find(`[href="${$(this).data('step')}"]`).tab('show');
   });
 }());

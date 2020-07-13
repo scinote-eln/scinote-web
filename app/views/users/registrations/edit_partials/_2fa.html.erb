@@ -1,0 +1,19 @@
+<div class="two-factor-container">
+  <div class="title">
+    <b><%= t("users.registrations.edit.2fa_title") %></b>
+    <% if current_user.two_factor_auth_enabled? %>
+      <span class="enabled">
+        <i class="fas fa-shield-alt"></i>
+        <%= t("users.registrations.edit.2fa_enabled") %>
+      </span>
+    <% end %>
+  </div>
+  <div class="description">
+    <%= t("users.registrations.edit.2fa_description") %>
+  </div>
+  <% if current_user.two_factor_auth_enabled? %>
+    <button class="btn btn-secondary" id="twoFactorAuthenticationDisable"><%= t("users.registrations.edit.2fa_button_disable") %></button>
+  <% else %>
+    <button class="btn btn-primary" id="twoFactorAuthenticationEnable" data-qr-code-url="<%= users_2fa_qr_code_path %>"><%= t("users.registrations.edit.2fa_button") %></button>
+  <% end %>
+</div>

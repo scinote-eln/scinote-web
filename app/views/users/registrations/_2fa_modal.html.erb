@@ -1,38 +1,35 @@
-<div class="modal" id="twoFactorAuthenticationModal" tabindex="-1" role="dialog">
+<div class="modal two-factor-modal" id="twoFactorAuthenticationModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-        <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.title") %></h2>
-      </div>
       <% if current_user.two_factor_auth_enabled? %>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+          <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.disable.title") %></h2>
+        </div>
         <%= form_with(url: users_2fa_disable_path, method: "post", class: "2fa-disable-form") do %>
           <div class="modal-body">
+            <p><%= t("users.registrations.edit.2fa_modal.disable.description") %></p>
             <div class="sci-input-container password-field">
-              <%= label_tag :password, t("users.registrations.edit.2fa_modal.password_label") %>
+              <%= label_tag :password, t("users.registrations.edit.2fa_modal.disable.password_label") %>
               <%= password_field_tag :password, '', class: "sci-input-field" %>
             </div>
           </div>
           <div class="modal-footer">
-            <%= button_tag t("users.registrations.edit.2fa_modal.submit_button"), type: 'submit', class: "btn btn-danger" %>
+            <%= button_tag t("users.registrations.edit.2fa_modal.disable.disable_2fa"), type: 'submit', class: "btn btn-danger" %>
           </div>
         <% end %>
       <% else %>
-        <%= form_with(url: users_2fa_enable_path, method: "post", class: "2fa-enable-form") do %>
-          <div class="modal-body">
-            <div class="qr-code"></div>
-            <div class="sci-input-container submit-code-field">
-              <%= label_tag :submit_code, t("users.registrations.edit.2fa_modal.submit_code_label") %>
-              <%= text_field_tag :submit_code, '', class: "sci-input-field" %>
-            </div>
+          <ul class="nav nav-tabs hidden">
+            <li role="presentation"><a href="#2fa-step-1" data-toggle="tab" data-no-turbolink="true"></a></li>
+            <li role="presentation"><a href="#2fa-step-2" data-toggle="tab" data-no-turbolink="true"></a></li>
+            <li role="presentation"><a href="#2fa-step-3" data-toggle="tab" data-no-turbolink="true"></a></li>
+          </ul>
+          <div class="tab-content">
+            <%= render partial: '2fa_modal_apps_tab' %>
+            <%= render partial: '2fa_modal_qr_code_tab' %>
+            <%= render partial: '2fa_modal_verify_code_tab' %>
           </div>
-          <div class="modal-footer">
-            <%= button_tag t("users.registrations.edit.2fa_modal.submit_button"), type: 'submit', class: "btn btn-primary" %>
-          </div>
-        <% end %>
       <% end %>
-
-      </div>
     </div>
   </div>
 </div>
