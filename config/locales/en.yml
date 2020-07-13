@@ -1090,7 +1090,7 @@ en:
         import_items: 'Import items'
         export_items: 'Export items'
         rename: "Rename inventory"
-        copy: "Copy inventory"
+        copy: "Duplicate inventory"
         delete: "Delete inventory"
         archive: 'Archive inventory'
         restore: 'Restore inventory'
@@ -1687,7 +1687,7 @@ en:
       account:
         preferences:
           head_title: "Settings | My preferences"
-          title: "Preferences"
+          title: "My preferences"
           edit:
             time_zone_label: "Time zone"
             time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
