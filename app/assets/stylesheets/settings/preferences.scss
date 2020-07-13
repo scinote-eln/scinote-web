@@ -5,6 +5,16 @@
 @import "mixins";
 
 .user-account-preferences {
+  .content-pane {
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .preferences-title {
+    border-bottom: $border-tertiary;
+    padding-bottom: 15px;
+  }
+
   .time-zone-container {
     margin-bottom: 10px;
     max-width: 450px;
