@@ -13,6 +13,8 @@
         <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
           <%= button_tag t("devise.sessions.new.submit"), type: :submit, class: "btn btn-primary log-in-button" %>
         </div>
+
+        <%= link_to 'I have a bypass code', users_two_factor_recovery_path %>
     <% end %>
     </div>
   </div>

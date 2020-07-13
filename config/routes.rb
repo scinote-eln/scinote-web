@@ -656,7 +656,9 @@ Rails.application.routes.draw do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
+      get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
+      post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'
 
       post 'users/2fa_enable' => 'users/registrations#two_factor_enable'

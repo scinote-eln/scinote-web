@@ -1,0 +1,19 @@
+<% provide(:head_title, '2FA Bypass') %>
+<% content_for(:body_class, 'sign-in-layout') %>
+<div class="sign-in-container">
+  <div class="sign-in-form-wrapper">
+    <div class="center-block center-block-narrow">
+      <h1 class="log-in-title">2FA Bypass</h1>
+      <%= form_with url: users_authenticate_with_recovery_code_path, local: true  do %>
+        <div class="input-group sci-input-container">
+          <%= label :recovery_code, 'Bypass code' %>
+          <%= text_field_tag(:recovery_code, '', { class: "form-control sci-input-field" })%>
+        </div>
+
+        <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
+          <%= button_tag 'Enter', type: :submit, class: "btn btn-primary" %>
+        </div>
+    <% end %>
+    </div>
+  </div>
+</div>
