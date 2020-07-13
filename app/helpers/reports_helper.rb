@@ -117,10 +117,8 @@ module ReportsHelper
 
   def font_awesome_report_pack_tag
     if running_in_development?
-      options = { media: 'all' }
       wds = Webpacker.dev_server
-      options[:host] = "#{wds.host}:#{wds.port}"
-      stylesheet_pack_tag('fontawesome', options)
+      stylesheet_pack_tag('fontawesome', media: 'all', host: "#{wds.host}:#{wds.port}")
     else
       wicked_pdf_stylesheet_pack_tag 'fontawesome'
     end
