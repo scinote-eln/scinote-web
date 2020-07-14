@@ -1,0 +1,5 @@
+en:
+  my_module_statuses:
+    update_status:
+      error:
+        no_permission: 'You dont have permission to change the status'

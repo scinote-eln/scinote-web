@@ -22,6 +22,14 @@ class MyModuleStatus < ApplicationRecord
   validate :next_in_same_flow, if: -> { next_status.present? }
   validate :previous_in_same_flow, if: -> { previous_status.present? }
 
+  def initial_status?
+    my_module_status_flow.initial_status == self
+  end
+
+  def final_status?
+    my_module_status_flow.final_status == self
+  end
+  
   private
 
   def next_in_same_flow
