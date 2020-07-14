@@ -2657,7 +2657,10 @@ CREATE TABLE public.users (
     current_team_id bigint,
     authentication_token character varying(30),
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
-    variables jsonb DEFAULT '{}'::jsonb NOT NULL
+    variables jsonb DEFAULT '{}'::jsonb NOT NULL,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    locked_at timestamp without time zone,
+    unlock_token character varying
 );
 
 
@@ -5776,6 +5779,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
+-- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
+
+
+--
 -- Name: index_view_states_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7267,6 +7277,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200331183640'),
 ('20200603125407'),
 ('20200604210943'),
-('20200622155632');
+('20200622155632'),
+('20200714082503');
 
 
