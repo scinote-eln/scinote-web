@@ -6,7 +6,7 @@
 
 <div class="content-pane my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
   <!-- Details -->
-  <div class="task-section">
+  <div class="task-section task-information">
     <div class="task-section-header">
       <span id="taskDetailsLabel" class="task-section-title">
         <h2>
@@ -20,12 +20,13 @@
         </div>
       </span>
 
-      <div class="actions-block">
-        <%= render partial: "my_modules/state_buttons.html.erb" %>
-      </div>
+
     </div>
     <div class="task-details">
       <%= render partial: "my_module_details" %>
+    </div>
+    <div class="task-flows">
+      <%= render partial: "my_modules/state_buttons.html.erb" %>
     </div>
   </div>
   <!-- Notes -->

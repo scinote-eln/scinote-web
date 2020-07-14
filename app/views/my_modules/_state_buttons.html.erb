@@ -1,5 +1,33 @@
-<div class="pull-right my_module-state-buttons">
-  <% if can_complete_module?(@my_module) %>
+
+<div>
+  <div class="status-label">Status</div>
+  <div class="dropdown sci-dropdown status-flow-dropdown">
+    <button class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownTaskFlow"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="true"
+            style="background-color: #4cae4c;">
+      <span>In progress</span>
+      <span class="caret pull-right"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownTaskFlow">
+      <li>
+        <span><%= t('my_modules.protocol.options_dropdown.load_from_repo') %></span>
+      </li>
+      <li>
+        <span><%= t('my_modules.protocol.options_dropdown.import') %></span>
+      </li>
+      <li>
+        <span><%= t('my_modules.protocol.options_dropdown.export') %></span>
+      </li>
+      <li>
+        <span><%= t('my_modules.protocol.options_dropdown.save_to_repo') %></span>
+      </li>
+    </ul>
+  </div>
+  <% if false && can_complete_module?(@my_module) %>
     <div class="btn-group">
       <% if !@my_module.completed? %>
         <div data-action="complete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
