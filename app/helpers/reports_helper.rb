@@ -115,13 +115,12 @@ module ReportsHelper
                         media: 'all')
   end
 
-  def font_awesome_report_pack_tag
-    if running_in_development?
-      wds = Webpacker.dev_server
-      stylesheet_pack_tag('fontawesome', media: 'all', host: "#{wds.host}:#{wds.port}")
-    else
-      wicked_pdf_stylesheet_pack_tag 'fontawesome'
-    end
+  def font_awesome_cdn_link_tag
+    stylesheet_link_tag(
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/regular.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css'
+    )
   end
 
   def assigned_repository_or_snapshot(my_module, element_id, snapshot, repository)
