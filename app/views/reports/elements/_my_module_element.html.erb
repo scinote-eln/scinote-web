@@ -48,6 +48,7 @@
         <% if my_module.description.present? %>
           <%= custom_auto_link(my_module.prepare_for_report(:description, for_export_all),
                                team: current_team,
+                               simple_format: false,
                                base64_encoded_imgs: for_export_all) %>
         <% else %>
            <em><%=t "projects.reports.elements.module.no_description" %></em>

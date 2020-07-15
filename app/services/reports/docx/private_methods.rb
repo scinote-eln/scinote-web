@@ -1,53 +1,22 @@
 # frozen_string_literal: true
 
 module Reports::Docx::PrivateMethods
-  private
+private
 
   # RTE fields support
   def html_to_word_converter(text)
-    link_style = @link_style
-    scinote_url = @scinote_url
     html = Nokogiri::HTML(text)
     raw_elements = recursive_children(html.css('body').children, [])
 
-    elements = []
-    temp_p = []
-
     # Combined raw text blocks in paragraphs
-    raw_elements.each do |elem|
-      if elem[:type] == 'image' || elem[:type] == 'newline'
-        unless temp_p.empty?
-          elements.push(type: 'p', children: temp_p)
-          temp_p = []
-        end
-        elements.push(elem)
-      elsif %w(br text a).include? elem[:type]
-        temp_p.push(elem)
-      end
-    end
-    elements.push(type: 'p', children: temp_p)
+    elements = combine_docx_elements(raw_elements)
+
     # Draw elements
     elements.each do |elem|
       if elem[:type] == 'p'
-        @docx.p do
-          elem[:children].each do |text_el|
-            if text_el[:type] == 'text'
-              style = text_el[:style] || {}
-              text text_el[:value], style
-              text ' ' if text_el[:value] != ''
-            elsif text_el[:type] == 'br'
-              br
-            elsif text_el[:type] == 'a'
-              if text_el[:link]
-                link_url = Reports::Docx.link_prepare(scinote_url, text_el[:link])
-                link text_el[:value], link_url, link_style
-              else
-                text text_el[:value], link_style
-              end
-              text ' ' if text_el[:value] != ''
-            end
-          end
-        end
+        Reports::Docx.render_p_element(@docx, elem, scinote_url: @scinote_url, link_style: @link_style)
+      elsif elem[:type] == 'table'
+        tiny_mce_table(elem[:data])
       elsif elem[:type] == 'newline'
         style = elem[:style] || {}
         @docx.p elem[:value] do
@@ -58,19 +27,31 @@ module Reports::Docx::PrivateMethods
           style style[:style] if style[:style]
         end
       elsif elem[:type] == 'image'
-        style = elem[:style]
-        @docx.img elem[:data] do
-          data elem[:blob].download
-          width style[:width]
-          height style[:height]
-          align style[:align] || :left
-        end
+        Reports::Docx.render_img_element(@docx, elem)
       end
     end
   end
 
+  def combine_docx_elements(raw_elements)
+    elements = []
+    temp_p = []
+    raw_elements.each do |elem|
+      if %w(image newline table).include? elem[:type]
+        unless temp_p.empty?
+          elements.push(type: 'p', children: temp_p)
+          temp_p = []
+        end
+        elements.push(elem)
+      elsif %w(br text a).include? elem[:type]
+        temp_p.push(elem)
+      end
+    end
+    elements.push(type: 'p', children: temp_p)
+    elements
+  end
+
   # Convert HTML structure to plain text structure
-  def recursive_children(children, elements)
+  def recursive_children(children, elements, options = {})
     children.each do |elem|
       if elem.class == Nokogiri::XML::Text
         next if elem.text.strip == ' ' # Invisible symbol
@@ -100,6 +81,9 @@ module Reports::Docx::PrivateMethods
 
         image_path = image_path(image.image)
         dimension = FastImage.size(image_path)
+
+        next unless dimension
+
         style = image_styling(elem, dimension)
 
         elements.push(
@@ -112,7 +96,16 @@ module Reports::Docx::PrivateMethods
       end
 
       if elem.name == 'a'
-        elements.push(link_prepare(elem))
+        elements.push(link_element(elem))
+        next
+      end
+
+      if elem.name == 'table'
+        elem = tiny_mce_table(elem, nested_table: true) if options[:nested_tables]
+        elements.push(
+          type: 'table',
+          data: elem
+        )
         next
       end
 
@@ -121,7 +114,7 @@ module Reports::Docx::PrivateMethods
     elements
   end
 
-  def link_prepare(elem)
+  def link_element(elem)
     text = elem.text
     link = elem.attributes['href'].value if elem.attributes['href']
     if elem.attributes['class']&.value == 'record-info-link'
@@ -197,7 +190,8 @@ module Reports::Docx::PrivateMethods
     {
       width: x,
       height: y,
-      align: align
+      align: align,
+      max_width: max_width
     }
   end
 
@@ -290,6 +284,47 @@ module Reports::Docx::PrivateMethods
       gray: 'a0a0a0',
       green: '2dbe61'
     }
+  end
+
+  def tiny_mce_table(table_data, options = {})
+    docx_table = []
+    scinote_url = @scinote_url
+    link_style = @link_style
+    table_data.css('tbody').first.children.each do |row|
+      docx_row = []
+      next unless row.name == 'tr'
+
+      row.children.each do |cell|
+        next unless cell.name == 'td'
+
+        # Parse cell content
+        formated_cell = recursive_children(cell.children, [], nested_tables: true)
+        # Combine text elements to single paragraph
+        formated_cell = combine_docx_elements(formated_cell)
+
+
+        docx_cell = Caracal::Core::Models::TableCellModel.new do |c|
+          formated_cell.each do |cell_content|
+            if cell_content[:type] == 'p'
+              Reports::Docx.render_p_element(c, cell_content,
+                scinote_url: scinote_url, link_style: link_style, skip_br: true)
+            elsif cell_content[:type] == 'table'
+              c.table formated_cell_content[:data]
+            elsif cell_content[:type] == 'image'
+              Reports::Docx.render_img_element(c, cell_content, table: { columns: row.children.length / 3 })
+            end
+          end
+        end
+        docx_row.push(docx_cell)
+      end
+      docx_table.push(docx_row)
+    end
+
+    if options[:nested_table]
+      docx_table
+    else
+      @docx.table docx_table
+    end
   end
 
   def image_path(attachment)
