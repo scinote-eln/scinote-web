@@ -22,9 +22,9 @@ var DataTableHelpers = (function() {
       });
     },
 
-    initSearchField: function(dataTableWraper) {
+    initSearchField: function(dataTableWraper, searchText) {
       var tableFilterInput = $(dataTableWraper).find('.dataTables_filter input');
-      tableFilterInput.attr('placeholder', I18n.t('repositories.index.filter_inventory'))
+      tableFilterInput.attr('placeholder', searchText)
         .addClass('sci-input-field')
         .css('margin', 0);
       $('.dataTables_filter').append(`
@@ -126,4 +126,3 @@ DataTableCheckboxes.prototype.initSelectAllCheckbox = function() {
     });
   });
 };
-

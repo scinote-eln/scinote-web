@@ -70,6 +70,7 @@
 
   tr[data-state]:not([data-state='']) {
     td.item-name::after {
+      @include font-small;
       background-color: $color-concrete;
       color: $color-silver-chalice;
       content: attr(data-state);

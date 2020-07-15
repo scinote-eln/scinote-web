@@ -170,7 +170,7 @@ var MyModuleRepositories = (function() {
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
         DataTableHelpers.initLengthApearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper);
+        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
         if (options.assign_mode) {
           renderFullViewAssignButtons();

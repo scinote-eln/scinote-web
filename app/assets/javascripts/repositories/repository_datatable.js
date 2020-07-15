@@ -594,7 +594,7 @@ var RepositoryDatatable = (function(global) {
         initCancelButton();
 
         DataTableHelpers.initLengthApearance($(TABLE_ID).closest('.dataTables_wrapper'));
-        DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'));
+        DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'), I18n.t('repositories.show.filter_inventory_items'));
 
         if ($('.repository-show').length) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
