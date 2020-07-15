@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::PrivateMethods
-private
+  private
 
   # RTE fields support
   def html_to_word_converter(text)
@@ -302,12 +302,11 @@ private
         # Combine text elements to single paragraph
         formated_cell = combine_docx_elements(formated_cell)
 
-
         docx_cell = Caracal::Core::Models::TableCellModel.new do |c|
           formated_cell.each do |cell_content|
             if cell_content[:type] == 'p'
               Reports::Docx.render_p_element(c, cell_content,
-                scinote_url: scinote_url, link_style: link_style, skip_br: true)
+                                             scinote_url: scinote_url, link_style: link_style, skip_br: true)
             elsif cell_content[:type] == 'table'
               c.table formated_cell_content[:data]
             elsif cell_content[:type] == 'image'
