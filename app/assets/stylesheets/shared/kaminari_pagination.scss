@@ -1,0 +1,71 @@
+.kaminari-pagination {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  .page a,
+  .page.current,
+  .page.gap {
+    align-items: center;
+    border: $border-transparent;
+    border-radius: $border-radius-default;
+    color: inherit;
+    display: inline-flex;
+    height: 3em;
+    justify-content: center;
+    margin: 0 .25em;
+    outline: 0;
+    text-decoration: none;
+    width: 3em;
+
+    &.current {
+      border: $border-primary;
+    }
+  }
+
+  .prev a {
+    &::before {
+      @include font-awesome;
+      content: $font-fas-angle-left;
+    }
+  }
+
+  .first a {
+    &::before {
+      @include font-awesome;
+      content: $font-fas-angle-double-left;
+    }
+  }
+
+  .next a {
+    &::after {
+      @include font-awesome;
+      content: $font-fas-angle-right;
+    }
+  }
+
+  .last a {
+    &::after {
+      @include font-awesome;
+      content: $font-fas-angle-double-right;
+    }
+  }
+
+  .first,
+  .prev,
+  .next,
+  .last {
+    a {
+      color: inherit;
+      line-height: 3em;
+      margin: 0 .25em;
+      padding: .5em;
+      text-decoration: none;
+
+      &:before,
+      &:after {
+        margin: 0 .25em;
+      }
+    }
+  }
+}

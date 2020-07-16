@@ -26,27 +26,13 @@ class ResultAssetsController < ApplicationController
 
   def create
     obj = create_multiple_results
-    respond_to do |format|
-      if obj.fetch(:status)
-        format.html do
-          flash[:success] = t('result_assets.create.success_flash',
-                              module: @my_module.name)
-          redirect_to results_my_module_path(@my_module)
-        end
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'my_modules/results.html.erb',
-                       locals: { results: obj.fetch(:results) }
-            )
-          }, status: :ok
-        end
-      else
-        flash[:error] = t('result_assets.error_flash')
-        format.json do
-          render json: {}, status: :bad_request
-        end
-      end
+    if obj.fetch(:status)
+      flash[:success] = t('result_assets.create.success_flash',
+                          module: @my_module.name)
+      redirect_to results_my_module_path(@my_module)
+    else
+      flash[:error] = t('result_assets.error_flash')
+      render json: {}, status: :bad_request
     end
   end
 
