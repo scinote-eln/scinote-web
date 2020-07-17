@@ -316,10 +316,10 @@ path, ._jsPlumb_endpoint {
 
 .module-large .tags-container,
 .module-medium .tags-container {
-  padding-top: 2px;
+  padding-top: 4px;
 
   div {
-    font-size: 22pt;
+    font-size: 20px;
     width: 4px;
     height: 0px;
     display: inline-block;
@@ -335,9 +335,9 @@ path, ._jsPlumb_endpoint {
   }
 
   & span.badge {
-    margin-left: -8px;
-    margin-top: -10px;
+    margin-left: -12px;
     margin-right: 4px;
+    margin-top: -7px;
   }
 }
 
