@@ -96,6 +96,12 @@ en:
           attributes:
             position:
              not_unique: "X and Y position has already been taken by another task in the experiment."
+        my_module_status:
+          attributes:
+            next_status:
+              different_flow: "Should belong to the same flow"
+            previous_status:
+              different_flow: "Should belong to the same flow"
         asset:
           attributes:
             file:

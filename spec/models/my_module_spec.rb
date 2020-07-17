@@ -36,6 +36,7 @@ describe MyModule, type: :model do
     it { should have_db_column :state }
     it { should have_db_column :completed_on }
     it { should have_db_column :started_on }
+    it { should have_db_column :my_module_status_flow_id }
   end
 
   describe 'Relations' do
