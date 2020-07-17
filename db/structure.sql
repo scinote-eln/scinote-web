@@ -5782,7 +5782,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 -- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
+CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
 
 
 --
@@ -7279,5 +7279,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200604210943'),
 ('20200622155632'),
 ('20200714082503');
-
-
