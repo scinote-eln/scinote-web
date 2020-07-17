@@ -35,7 +35,7 @@ module MyModulesHelper
 
   def ordered_result_of(my_module, page)
     page ||= 1
-    my_module.results.where(archived: false).page(page).per(10).order(created_at: :desc)
+    my_module.results.where(archived: false).page(page).per(Constants::RESULTS_SEARCH_LIMIT).order(created_at: :desc)
   end
 
   def get_task_alert_color(my_module)
