@@ -58,6 +58,10 @@
       }
     }
 
+    .dropdown-menu {
+      @include font-button;
+    }
+
     .repository-title-name {
       @include font-h2;
       display: flex;
