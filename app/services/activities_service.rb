@@ -14,9 +14,9 @@ class ActivitiesService
 
     if filters[:subjects].present?
       subjects_with_children = load_subjects_children(filters[:subjects])
-      if subjects_with_children[:project]
-        query = query.where('project_id IN (?)', subjects_with_children[:project])
-        subjects_with_children.except!(:project)
+      if subjects_with_children['Project']
+        query = query.where('project_id IN (?)', subjects_with_children['Project'])
+        subjects_with_children.except!('Project')
       end
       where_condition = subjects_with_children.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR ')
       where_arguments = subjects_with_children.flatten
@@ -50,10 +50,11 @@ class ActivitiesService
 
   def self.load_subjects_children(subjects = {})
     Extends::ACTIVITY_SUBJECT_CHILDREN.each do |subject_name, children|
+      subject_name = subject_name.to_s.camelize
       next unless children && subjects[subject_name]
 
       children.each do |child|
-        parent_model = subject_name.to_s.camelize.constantize
+        parent_model = subject_name.constantize
         child_model = parent_model.reflect_on_association(child).class_name.to_sym
         next if subjects[child_model]
 
