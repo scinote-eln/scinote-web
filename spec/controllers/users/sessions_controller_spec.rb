@@ -84,7 +84,7 @@ RSpec.describe Users::SessionsController, type: :controller do
         allow_any_instance_of(User).to receive(:valid_otp?).and_return(nil)
         action
 
-        expect(flash[:alert]).to eq('One Time Password is not correct.')
+        expect(flash[:alert]).to eq(I18n.t('devise.sessions.2fa.error_message'))
       end
 
       it 'does not set current user' do

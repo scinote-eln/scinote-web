@@ -96,6 +96,17 @@
     justify-content: center;
     padding: 4em;
   }
+
+  .verified-label {
+    color: $brand-success;
+    margin-top: 0;
+  }
+
+  .recovery-codes {
+    @include font-h3;
+    line-height: 2em;
+    text-align: center;
+  }
 }
 
 @media (max-width: 700px) {

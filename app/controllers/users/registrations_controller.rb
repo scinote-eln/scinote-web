@@ -184,8 +184,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def two_factor_enable
     if current_user.valid_otp?(params[:submit_code])
-      current_user.enable_2fa!
-      redirect_to edit_user_registration_path
+      recovery_codes = current_user.enable_2fa!
+      render json: { recovery_codes: recovery_codes }
     else
       render json: { error: t('users.registrations.edit.2fa_errors.wrong_submit_code') }, status: :unprocessable_entity
     end

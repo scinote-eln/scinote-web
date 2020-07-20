@@ -2659,7 +2659,8 @@ CREATE TABLE public.users (
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     variables jsonb DEFAULT '{}'::jsonb NOT NULL,
     two_factor_auth_enabled boolean DEFAULT false NOT NULL,
-    otp_secret character varying
+    otp_secret character varying,
+    otp_recovery_codes jsonb
 );
 
 
@@ -7270,6 +7271,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200603125407'),
 ('20200604210943'),
 ('20200622140843'),
-('20200622155632');
+('20200622155632'),
+('20200709142830');
 
 

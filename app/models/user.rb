@@ -654,11 +654,33 @@ class User < ApplicationRecord
   end
 
   def enable_2fa!
-    update!(two_factor_auth_enabled: true)
+    recovery_codes = []
+    Constants::TWO_FACTOR_RECOVERY_CODE_COUNT.times do
+      recovery_codes.push(SecureRandom.hex(Constants::TWO_FACTOR_RECOVERY_CODE_LENGTH / 2))
+    end
+
+    update!(
+      two_factor_auth_enabled: true,
+      otp_recovery_codes: recovery_codes.map { |c| Devise::Encryptor.digest(self.class, c) }
+    )
+
+    recovery_codes
   end
 
   def disable_2fa!
-    update!(two_factor_auth_enabled: false, otp_secret: nil)
+    update!(two_factor_auth_enabled: false, otp_secret: nil, otp_recovery_codes: nil)
+  end
+
+  def recover_2fa!(code)
+    return unless otp_recovery_codes
+
+    otp_recovery_codes.each do |recovery_code|
+      if Devise::Encryptor.compare(self.class, recovery_code, code)
+        update!(otp_recovery_codes: otp_recovery_codes.reject { |i| i == recovery_code })
+        return true
+      end
+    end
+    false
   end
 
   protected

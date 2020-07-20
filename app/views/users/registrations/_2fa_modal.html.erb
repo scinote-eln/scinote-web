@@ -1,4 +1,4 @@
-<div class="modal two-factor-modal" id="twoFactorAuthenticationModal" tabindex="-1" role="dialog">
+<div class="modal two-factor-modal" id="twoFactorAuthenticationModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <% if current_user.two_factor_auth_enabled? %>
@@ -23,11 +23,13 @@
             <li role="presentation"><a href="#2fa-step-1" data-toggle="tab" data-no-turbolink="true"></a></li>
             <li role="presentation"><a href="#2fa-step-2" data-toggle="tab" data-no-turbolink="true"></a></li>
             <li role="presentation"><a href="#2fa-step-3" data-toggle="tab" data-no-turbolink="true"></a></li>
+            <li role="presentation"><a href="#2fa-step-4" data-toggle="tab" data-no-turbolink="true"></a></li>
           </ul>
           <div class="tab-content">
             <%= render partial: '2fa_modal_apps_tab' %>
             <%= render partial: '2fa_modal_qr_code_tab' %>
             <%= render partial: '2fa_modal_verify_code_tab' %>
+            <%= render partial: '2fa_modal_recovery_codes_tab' %>
           </div>
       <% end %>
     </div>

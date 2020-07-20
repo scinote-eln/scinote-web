@@ -28,6 +28,12 @@ class Users::SessionsController < Devise::SessionsController
     generate_demo_project
   end
 
+  def two_factor_recovery
+    unless session[:otp_user_id]
+      redirect_to new_user_session_path
+    end
+  end
+
   # DELETE /resource/sign_out
   # def destroy
   #   super
@@ -81,6 +87,27 @@ class Users::SessionsController < Devise::SessionsController
       flash.now[:alert] = t('devise.sessions.2fa.error_message')
       render :two_factor_auth
     end
+  end
+
+  def authenticate_with_recovery_code
+    user = User.find_by(id: session[:otp_user_id])
+
+    unless user
+      flash[:alert] = t('devise.sessions.2fa.no_user_error')
+      redirect_to root_path && return
+    end
+
+    session.delete(:otp_user_id)
+    if user.recover_2fa!(params[:recovery_code])
+      sign_in(user)
+      generate_demo_project
+      flash[:notice] = t('devise.sessions.signed_in')
+      redirect_to root_path
+    else
+      flash[:alert] = t("devise.sessions.2fa_recovery.not_correct_code")
+      redirect_to new_user_session_path
+    end
+
   end
 
   protected
