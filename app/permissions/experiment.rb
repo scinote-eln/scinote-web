@@ -25,7 +25,14 @@ Canaid::Permissions.register_for(Experiment) do
   # module: create, copy, reposition, create/update/delete connection,
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project)
+    user.is_user_or_higher_of_project?(experiment.project) &&
+      MyModule.joins(:experiment).where(experiment: experiment).all? do |my_module|
+        if my_module.my_module_status
+          my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
+        else
+          true
+        end
+      end
   end
 
   # experiment: archive
@@ -56,6 +63,7 @@ end
 Canaid::Permissions.register_for(MyModule) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
+  # Also checking status implications
   %i(manage_module
      manage_users_in_module
      assign_repository_rows_to_module
@@ -68,7 +76,12 @@ Canaid::Permissions.register_for(MyModule) do
     can perm do |_, my_module|
       my_module.active? &&
         my_module.experiment.active? &&
-        my_module.experiment.project.active?
+        my_module.experiment.project.active? &&
+        (if my_module.my_module_status
+           my_module.my_module_status&.my_module_status_implications&.all? { |implication| implication.call(my_module) }
+         else
+           true
+         end)
     end
   end
 

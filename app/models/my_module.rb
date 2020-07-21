@@ -533,9 +533,9 @@ class MyModule < ApplicationRecord
   end
 
   def assign_default_status_flow
-    return unless MyModuleFlow.global.any?
+    return unless MyModuleStatusFlow.global.any?
 
-    self.my_module_status = MyModuleFlow.global.first.initial_status
+    self.my_module_status = MyModuleStatusFlow.global.first.initial_status
   end
 
   def check_status_conditions

@@ -5,6 +5,7 @@ module MyModuleStatusImplications
   class ReadOnly < MyModuleStatusImplication
     def call(my_module)
       my_module.errors.add(:status_implication, 'Is read only')
+      false
     end
   end
 end
