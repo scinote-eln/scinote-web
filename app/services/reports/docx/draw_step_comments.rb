@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStepComments
-  def draw_step_comments(subject)
-    step = Step.find_by_id(subject['id']['step_id'])
+  def draw_step_comments(_subject, step)
     return unless step
 
     comments = step.step_comments

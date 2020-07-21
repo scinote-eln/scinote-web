@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStepTable
-  def draw_step_table(subject)
-    table = Table.find_by_id(subject['id']['table_id'])
+  def draw_step_table(subject, step)
+    table = step.tables.find_by(id: subject['id']['table_id'])
     return unless table
 
     color = @color
