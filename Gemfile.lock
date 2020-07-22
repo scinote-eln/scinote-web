@@ -186,6 +186,7 @@ GEM
       activesupport
     childprocess (1.0.1)
       rake (< 13.0)
+    chunky_png (1.3.11)
     coderay (1.1.2)
     coffee-rails (5.0.0)
       coffee-script (>= 2.2.0)
@@ -469,6 +470,12 @@ GEM
     roo (2.8.2)
       nokogiri (~> 1)
       rubyzip (>= 1.2.1, < 2.0.0)
+    rotp (6.0.0)
+      addressable (~> 2.7)
+    rqrcode (1.1.2)
+      chunky_png (~> 1.0)
+      rqrcode_core (~> 0.1)
+    rqrcode_core (0.1.2)
     rspec-core (3.8.2)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.4)
@@ -668,6 +675,8 @@ DEPENDENCIES
   recaptcha
   rgl
   roo (~> 2.8.2)
+  rotp
+  rqrcode
   rspec-rails (>= 4.0.0.beta2)
   rubocop (>= 0.75.0)
   rubocop-performance

@@ -58,7 +58,7 @@ Scenario: Successfully changes user email
   And I change "nonadmin@myorg.com" with "user@myorg.com" email
   And I fill in "mypassword1234" in "#edit-email-current-password" field of ".settings-page-email" form
   Then I click "Save" button
-  And I should see "user@myorg.com" in ".settings-page-email" input field
+  And I should see "user@myorg.com"
 
 @javascript
 Scenario: Unsuccessful Password Change, password is too short

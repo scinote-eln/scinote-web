@@ -1,0 +1,12 @@
+<span class="settings-page-full-name user-settings-block">
+  <label><%= t("users.registrations.edit.name_label") %></label>
+  <%= render partial: "shared/inline_editing",
+             locals: {
+               initial_value: @user.full_name,
+               config: {
+                 params_group: 'user',
+                 field_to_udpate: 'full_name',
+                 path_to_update: registration_path(resource_name, format: :json)
+               }
+             } %>
+</span>

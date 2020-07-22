@@ -205,6 +205,23 @@ class Constants
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
 
+  TWO_FACTOR_URL = {
+    google: {
+      android: 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2',
+      ios: 'https://apps.apple.com/us/app/google-authenticator/id388497605'
+    },
+    microsoft: {
+      android: 'https://play.google.com/store/apps/details?id=com.azure.authenticator',
+      ios: 'https://apps.apple.com/us/app/microsoft-authenticator/id983156458'
+    },
+    two_fa: {
+      android: 'https://play.google.com/store/apps/details?id=com.twofasapp',
+      ios: 'https://apps.apple.com/us/app/2fa-authenticator-2fas/id1217793794'
+    },
+  }
+  TWO_FACTOR_RECOVERY_CODE_COUNT = 6
+  TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
+
   #=============================================================================
   # Protocol importers
   #=============================================================================

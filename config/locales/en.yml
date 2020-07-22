@@ -33,6 +33,20 @@ en:
         password_placeholder: "Enter password"
         remember_me: "Remember me"
         submit: "Log in"
+      2fa:
+        title: "Two-factor authentication"
+        description: "Enter the one-time code found in your authenticator app to log in to SciNote."
+        field: "Authenticator code"
+        error_message: "One time code is not correct."
+        no_user_error: "Cannot find user!"
+        enter: "Enter"
+        bypass_code_link: "I have a bypass code"
+      2fa_recovery:
+        title: "2FA Bypass"
+        description: "Enter one of the bypass codes provided when you creted 2FA authentication. The code will no longer be valid after use."
+        bypass_code: "Bypass code"
+        enter: "Enter"
+        not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
       auth_token_create:
@@ -1636,7 +1650,7 @@ en:
         head_title: "My profile"
         title: "My profile"
         avatar_label: "Profile photo"
-        avatar_btn: "Edit photo"
+        avatar_btn: "Edit"
         avatar_modal:
           title: 'Change your profile photo'
           upload_button: 'Upload a photo'
@@ -1655,6 +1669,43 @@ en:
         password_title: "Change password"
         new_password_label: "New password"
         new_password_2_label: "New password confirmation"
+        2fa_title: "Two-factor authentication"
+        2fa_description: "Two-factor authentication (2FA) is a way of verifying a user’s identity by using a combination of two different verification methods. It adds an extra layer of security to your account and protects from potential remote attacs or other threats."
+        2fa_enabled: "Enabled"
+        2fa_button: "Enable authentication"
+        2fa_button_disable: "Disable authentication"
+        2fa_modal:
+          step_1:
+            title: "1. Install an Authenticator App on your mobile device"
+            description: "Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Bellow you can see the most commonly used ones."
+            google_auth: "Google authenticator"
+            microsoft_auth: "Microsoft authenticator"
+            2fa_auth: "2FA authenticator"
+            android: "Android"
+            ios: "iOS"
+            start: "Start"
+          step_2:
+            title: "2. Scan the QR code with your app"
+            description: "Open your authenticator app and use it to scan this code to add 2FA."
+            next: "Next"
+          step_3:
+            title: "3. Enter the code given by your authenticator app"
+            description: "Enter the generated code into the fields bellow to finalize the setup of the two-factor authorisation."
+            enter_code: "Enter authenticator code"
+            verify: "Verify"
+          step_4:
+            title: "4. Save your bypass codes"
+            verified: "2FA Verified"
+            description: "Your 2FA is now verified. Save these one-time codes bellow to access your account in case you lose your device. This way you will be able to reset the authorization."
+            download_codes: "Download codes"
+          disable:
+            title: "Disable two-factor authentication"
+            description: "Enter your password bellow to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
+            password_label: "Enter password"
+            disable_2fa: "Disable 2FA"
+        2fa_errors:
+          wrong_submit_code: "Not correct code"
+          wrong_password: "Not correct password"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
