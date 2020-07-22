@@ -105,16 +105,3 @@ Given default screen size2
    And I fill in "I will go to Krn one day." in "#my_module_description_textarea" rich text editor field
    And I click element with css ".tinymce-save-button"
    Then I should see "I will go to Krn one day."
-
-@javascript
- Scenario: Successful Complete task
-   Given I'm on the Protocols page of a "Experiment design" task
-   And I click "Complete task" button
-   Then I should see "Uncomplete task"
-
-@javascript
- Scenario: Successful Uncomplete task
-   Given I'm on the Protocols page of a "Experiment design" task
-   And I click "Complete task" button
-   And I click "Uncomplete task" button
-   Then I should see "Complete task"

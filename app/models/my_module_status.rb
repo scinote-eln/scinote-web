@@ -29,7 +29,7 @@ class MyModuleStatus < ApplicationRecord
   def final_status?
     my_module_status_flow.final_status == self
   end
-  
+
   private
 
   def next_in_same_flow
