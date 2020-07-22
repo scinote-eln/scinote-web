@@ -23,3 +23,70 @@
     }
   }
 }
+
+
+#statusFlowModal {
+  .status-flow {
+    padding: 2em;
+
+    .status-container {
+      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr min-content 1fr;
+      justify-content: space-around;
+      position: relative;
+
+      .current-status {
+        @include font-small;
+        justify-self: end;
+
+        .fas {
+          margin: 0 .5em;
+        }
+      }
+
+      .status-block {
+        border-radius: $border-radius-tag;
+        color: $color-white;
+        font-weight: bold;
+        line-height: 1em;
+        padding: .5em;
+        white-space: nowrap;
+      }
+
+      .status-comment {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding-left: .5em;
+      }
+    }
+
+    .connector {
+      background: $color-black;
+      height: 2em;
+      margin: 0 auto;
+      position: relative;
+      width: 2px;
+
+      &:before,
+      &:after {
+        border-left: .2em solid transparent;
+        border-right: .2em solid transparent;
+        content: '';
+        display: block;
+        margin-left: -.1em;
+        position: absolute;
+      }
+
+      &:before {
+        border-top: .2em solid $color-black;
+        top: 0;
+      }
+
+      &:after {
+        border-bottom: .2em solid $color-black;
+        bottom: 0;
+      }
+    }
+  }
+}
