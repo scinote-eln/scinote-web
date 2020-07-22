@@ -16,6 +16,7 @@
       <% if protocol.description.present? %>
         <%= custom_auto_link(protocol.prepare_for_report(:description, for_export_all),
                              team: current_team,
+                             simple_format: false,
                              base64_encoded_imgs: for_export_all) %>
       <% else %>
         <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
