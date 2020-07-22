@@ -68,15 +68,6 @@ class Users::SessionsController < Devise::SessionsController
     flash[:system_notification_modal] = true
   end
 
-  protected
-
-  def remove_authenticate_mesasge_if_root_path
-    if session[:user_return_to] == root_path && flash[:alert] == I18n.t('devise.failure.unauthenticated')
-      flash[:alert] = nil
-    end
-  end
-
-  private
 
   def authenticate_with_two_factor
     user = User.find_by(id: session[:otp_user_id])
@@ -118,6 +109,14 @@ class Users::SessionsController < Devise::SessionsController
       redirect_to new_user_session_path
     end
 
+  end
+
+  private
+
+  def remove_authenticate_mesasge_if_root_path
+    if session[:user_return_to] == root_path && flash[:alert] == I18n.t('devise.failure.unauthenticated')
+      flash[:alert] = nil
+    end
   end
 
   def redirect_2fa
