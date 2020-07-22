@@ -2658,9 +2658,15 @@ CREATE TABLE public.users (
     authentication_token character varying(30),
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     variables jsonb DEFAULT '{}'::jsonb NOT NULL,
+<<<<<<< HEAD
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone,
     unlock_token character varying
+=======
+    two_factor_auth_enabled boolean DEFAULT false NOT NULL,
+    otp_secret character varying,
+    otp_recovery_codes jsonb
+>>>>>>> features/2fa
 );
 
 
@@ -7277,5 +7283,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200331183640'),
 ('20200603125407'),
 ('20200604210943'),
+('20200622140843'),
 ('20200622155632'),
+('20200709142830'),
 ('20200714082503');
+
