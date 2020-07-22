@@ -1,5 +1,5 @@
  <div class="status-flow">
-  <% status_flow.each_with_index do |status, i| %>
+  <% my_module_statuses.each_with_index do |status, i| %>
 
     <% unless i.zero? %>
       <div class="connector"></div>
@@ -7,8 +7,8 @@
 
     <div class="status-container">
       <div class="current-status">
-        <% if status[:current_status] %>
-          Current status<i class="fas fa-long-arrow-alt-right"></i>
+        <% if status.id == @my_module.my_module_status_id %>
+          <%= t('my_modules.modals.status_flow_modal.current_status') %><i class="fas fa-long-arrow-alt-right"></i>
         <% end %>
       </div>
       <div class="status-block" style="background: <%= status[:color] %>">

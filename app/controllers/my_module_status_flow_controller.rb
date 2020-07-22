@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
 class MyModuleStatusFlowController < ApplicationController
-  def show
-    my_module_status_flow = [
-      { name: 'Not started', color: '#406d86', current_status: false, status_comment: nil },
-      { name: 'In progress', color: '#0065ff', current_status: true, status_comment: nil },
-      { name: 'Completed', color: '#00b900', current_status: false, status_comment: nil },
-      { name: 'In review', color: '#ff4500', current_status: false, status_comment: 'Requiers signature' },
-      { name: 'Done', color: '#0ecdc0', current_status: false, status_comment: nil }
-    ]
+  before_action :load_my_module
+  before_action :check_view_permissions
 
-    render json: { html: render_to_string(partial: 'my_modules/modals/status_flow_modal_body.html.erb', locals: { status_flow: my_module_status_flow }) }
+  def show
+    my_module_statuses = @my_module.my_module_status_flow.my_module_statuses
+    render json: { html: render_to_string(partial: 'my_modules/modals/status_flow_modal_body.html.erb',
+                                          locals: { my_module_statuses: my_module_statuses }) }
+  end
+
+  private
+
+  def load_my_module
+    @my_module = MyModule.find_by(id: params[:my_module_id])
+    render_404 unless @my_module
+  end
+
+  def check_view_permissions
+    render_403 unless can_read_experiment?(@my_module.experiment)
   end
 end
