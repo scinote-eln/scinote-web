@@ -71,7 +71,7 @@
     "inputmask": "^5.0.0",
     "intl": "^1.2.5",
     "js-yaml": "^3.12.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.21",
     "node-gyp": "^3.8.0",
