@@ -314,4 +314,6 @@ class Extends
     shared_read: 'view-only',
     shared_write: 'edit'
   }.freeze
+
+  DASHBOARD_BLACKLIST_ACTIVITY_TYPES = %i(export_protocol_in_repository copy_protocol_in_repository).freeze
 end

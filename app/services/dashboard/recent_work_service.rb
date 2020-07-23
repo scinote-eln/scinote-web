@@ -18,6 +18,7 @@ module Dashboard
                            .where('((project_id IS NULL AND team_id = ?) OR project_id IN (?))',
                                   @team.id,
                                   visible_projects.pluck(:id))
+                           .where.not(type_of: Extends::DASHBOARD_BLACKLIST_ACTIVITY_TYPES)
                            .select('MAX(created_at) AS last_change',
                                    :subject_id,
                                    :subject_type)
