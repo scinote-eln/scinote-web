@@ -57,7 +57,7 @@ var globalActivities = (function() {
         Project: convertToInt(dropdownSelector.getValues(projectFilter) || []),
         Experiment: convertToInt(dropdownSelector.getValues(experimentFilter) || []),
         MyModule: convertToInt(dropdownSelector.getValues(taskFilter) || []),
-        Repository: convertToInt(dropdownSelector.getValues(inventoryFilter) || []),
+        RepositoryBase: convertToInt(dropdownSelector.getValues(inventoryFilter) || []),
         RepositoryRow: convertToInt(dropdownSelector.getValues(inventoryItemFilter) || []),
         Protocol: convertToInt(dropdownSelector.getValues(protocolFilter) || []),
         Report: convertToInt(dropdownSelector.getValues(reportFilter) || [])
