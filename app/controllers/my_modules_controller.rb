@@ -245,6 +245,8 @@ class MyModulesController < ApplicationController
                                 .experiment
                                 .project
                                 .team)
+    @results = @my_module.results.where(archived: false).page(params[:page])
+                         .per(Constants::RESULTS_PER_PAGE_LIMIT).order(created_at: :desc)
   end
 
   def archive

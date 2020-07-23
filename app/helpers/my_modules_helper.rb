@@ -33,10 +33,6 @@ module MyModulesHelper
     my_module.samples.count
   end
 
-  def ordered_result_of(my_module)
-    my_module.results.where(archived: false).order(created_at: :desc)
-  end
-
   def get_task_alert_color(my_module)
     alert = ''
     if !my_module.completed?
