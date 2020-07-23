@@ -19,6 +19,6 @@ class MyModuleStatusFlow < ApplicationRecord
   end
 
   def final_status
-    my_module_statuses.find_by(next_status: nil)
+    my_module_statuses.left_outer_joins(:next_status).find_by('next_statuses_my_module_statuses.id': nil)
   end
 end

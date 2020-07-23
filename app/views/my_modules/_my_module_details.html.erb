@@ -22,17 +22,6 @@
 
 <div class="flex-block">
   <div class="flex-block-label">
-    <span class="fas block-icon fa-tachometer-alt"></span>
-    <%= t('my_modules.states.state_label') %>
-  </div>
-  <span class="task-state-label">
-    <%= render partial: "module_state_label.html.erb",
-      locals: { my_module: @my_module } %>
-  </span>
-</div>
-
-<div class="flex-block">
-  <div class="flex-block-label">
     <span class="fas block-icon fa-users"></span>
     <span class="hidden-xs hidden-sm"><%= t('my_modules.details.assigned_users') %></span>
   </div>

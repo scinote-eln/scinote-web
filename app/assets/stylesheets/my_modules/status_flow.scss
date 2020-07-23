@@ -1,0 +1,25 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
+@import "constants";
+@import "mixins";
+
+.content-pane.my-modules-protocols-index {
+  .status-flow-dropdown {
+    .dropdown-toggle {
+      color: $color-white;
+      text-align: left;
+      width: 15em;
+
+      .caret {
+        margin: 8px 0;
+      }
+    }
+
+    .dropdown-menu > li {
+      line-height: 35px;
+    }
+  }
+}

@@ -6,7 +6,7 @@
 
 <div class="content-pane my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
   <!-- Details -->
-  <div class="task-section">
+  <div class="task-section task-information">
     <div class="task-section-header">
       <span id="taskDetailsLabel" class="task-section-title">
         <h2>
@@ -20,12 +20,13 @@
         </div>
       </span>
 
-      <div class="actions-block">
-        <%= render partial: "my_modules/state_buttons.html.erb" %>
-      </div>
+
     </div>
     <div class="task-details">
-      <%= render partial: "my_module_details" %>
+      <%= render partial: 'my_module_details' %>
+    </div>
+    <div class="task-flows">
+      <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow && can_change_my_module_flow_status?(@my_module) %>
     </div>
   </div>
   <!-- Notes -->
@@ -117,9 +118,6 @@
 
 <!-- Import protocol elements -->
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
-
-<!-- Complete task modal -->
-<%= render partial: 'my_modules/complete_task_modal.html.erb' %>
 
 <!-- Create new office file modal -->
 <%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>

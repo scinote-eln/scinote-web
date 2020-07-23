@@ -13,7 +13,7 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, except: %i(update update_description update_protocol_description
                                                     toggle_task_state)
-  before_action :check_complete_module_permission, only: :complete_my_module
+  before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
@@ -249,108 +249,23 @@ class MyModulesController < ApplicationController
 
   def archive
     @archived_results = @my_module.archived_results
-    current_team_switch(@my_module
-                                .experiment
-                                .project
-                                .team)
+    current_team_switch(@my_module.experiment.project.team)
   end
 
-  # Complete/uncomplete task
-  def toggle_task_state
-    respond_to do |format|
-      if can_complete_module?(@my_module)
-        @my_module.completed? ? @my_module.uncomplete : @my_module.complete
-        completed = @my_module.completed?
-        if @my_module.save
-          task_completion_activity
+  def update_state
+    new_status = @my_module.my_module_status_flow.my_module_statuses.find_by(id: update_status_params[:status_id])
+    return render_404 unless new_status
 
-          # Render new button HTML
-          if completed
-            new_btn_partial = 'my_modules/state_button_uncomplete.html.erb'
-          else
-            new_btn_partial = 'my_modules/state_button_complete.html.erb'
-          end
+    @my_module.update(my_module_status: new_status)
 
-          format.json do
-            render json: {
-              new_btn: render_to_string(partial: new_btn_partial),
-              completed: completed,
-              module_header_due_date: render_to_string(
-                partial: 'my_modules/module_header_due_date.html.erb',
-                locals: { my_module: @my_module }
-              ),
-              module_state_label: render_to_string(
-                partial: 'my_modules/module_state_label.html.erb',
-                locals: { my_module: @my_module }
-              )
-            }
-          end
-        else
-          format.json { render json: {}, status: :unprocessable_entity }
-        end
-      else
-        format.json { render json: {}, status: :unauthorized }
-      end
-    end
-  end
+    render json: { content: render_to_string(
+      partial: 'my_modules/status_flow/task_flow_button.html.erb',
+      locals: { my_module: @my_module })
+    }, status: :ok
 
-  def complete_my_module
-    respond_to do |format|
-      if @my_module.uncompleted? && @my_module.check_completness_status
-        @my_module.complete
-        @my_module.save
-        task_completion_activity
-        format.json do
-            render json: {
-              task_button_title: t('my_modules.buttons.uncomplete'),
-              module_header_due_date: render_to_string(
-                partial: 'my_modules/module_header_due_date.html.erb',
-                locals: { my_module: @my_module }
-              ),
-              module_state_label: render_to_string(
-                partial: 'my_modules/module_state_label.html.erb',
-                locals: { my_module: @my_module }
-              )
-            }, status: :ok
-          end
-      else
-        format.json { render json: {}, status: :unprocessable_entity }
-      end
-    end
   end
 
   private
-
-  def task_completion_activity
-    completed = @my_module.completed?
-    log_activity(completed ? :complete_task : :uncomplete_task)
-    start_work_on_next_task_notification
-  end
-
-  def start_work_on_next_task_notification
-    if @my_module.completed?
-      title = t('notifications.start_work_on_next_task',
-                user: current_user.full_name,
-                module: @my_module.name)
-      message = t('notifications.start_work_on_next_task_message',
-                  project: link_to(@project.name, project_url(@project)),
-                  experiment: link_to(@experiment.name,
-                                      canvas_experiment_url(@experiment)),
-                  my_module: link_to(@my_module.name,
-                                     protocols_my_module_url(@my_module)))
-      notification = Notification.create(
-        type_of: :recent_changes,
-        title: sanitize_input(title, %w(strong a)),
-        message: sanitize_input(message, %w(strong a)),
-        generator_user_id: current_user.id
-      )
-      # create notification for all users on the next modules in the workflow
-      @my_module.my_modules.map(&:users).flatten.uniq.each do |target_user|
-        next if target_user == current_user || !target_user.recent_notification
-        UserNotification.create(notification: notification, user: target_user)
-      end
-    end
-  end
 
   def load_vars
     @my_module = MyModule.find_by_id(params[:id])
@@ -384,8 +299,9 @@ class MyModulesController < ApplicationController
     render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
-  def check_complete_module_permission
-    render_403 unless can_complete_module?(@my_module)
+  def check_update_state_permissions
+    return render_403 unless can_change_my_module_flow_status?(@my_module)
+    render_404 unless @my_module.my_module_status
   end
 
   def set_inline_name_editing
@@ -412,6 +328,10 @@ class MyModulesController < ApplicationController
     end
 
     update_params
+  end
+
+  def update_status_params
+    params.require(:my_module).permit(:status_id)
   end
 
   def log_start_date_change_activity(start_date_changes)

@@ -499,6 +499,26 @@
   }
 }
 
+.task-information {
+  column-gap: 1em;
+  display: grid;
+  grid-template-columns: auto max-content;
+
+  .task-section-header {
+    grid-column: 1 / span 1;
+  }
+
+  .task-details {
+    grid-column: 1 / span 1;
+    grid-row: 2 / span 1;
+  }
+
+  .task-flows {
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 2;
+  }
+}
+
 @media (max-width: 700px) {
   .my-module-protocol-status {
     .status-info-dropdown {
@@ -512,6 +532,20 @@
           width: auto;
         }
       }
+    }
+  }
+
+  .task-information {
+    grid-template-columns: auto;
+    row-gap: .5em;
+
+    .task-details {
+      grid-row: 3 / span 1;
+    }
+
+    .task-flows {
+      grid-column: unset;
+      grid-row: 2 / span 1;
     }
   }
 }
