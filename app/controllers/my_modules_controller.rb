@@ -6,7 +6,6 @@ class MyModulesController < ApplicationController
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
-  include MyModulesHelper
 
   before_action :load_vars
   before_action :load_projects_tree, only: %i(protocols results activities archive)
@@ -246,7 +245,8 @@ class MyModulesController < ApplicationController
                                 .experiment
                                 .project
                                 .team)
-    @results = ordered_result_of(@my_module, params[:page])
+    @results = @my_module.results.where(archived: false).page(params[:page])
+                         .per(Constants::RESULTS_PER_PAGE_LIMIT).order(created_at: :desc)
   end
 
   def archive

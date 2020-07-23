@@ -65,7 +65,7 @@ class Constants
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
   # Results limited query/display elements for pages
-  RESULTS_SEARCH_LIMIT = 10
+  RESULTS_PER_PAGE_LIMIT = 10
 
   #=============================================================================
   # File and data memory size
