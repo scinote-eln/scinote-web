@@ -27,8 +27,7 @@ $.fn.dataTable.render.editRepositoryAssetValue = function(formId, columnId, cell
 
 $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
-  let text = $cell.find('.text-value').data('edit-value');
-
+  let text = $cell.find('.text-value').data('edit-value') || '';
   $cell.html(`
     <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
