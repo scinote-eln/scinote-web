@@ -128,8 +128,10 @@ describe MyModulesController, type: :controller do
     let(:my_module_id) { my_module.id }
     let(:status_id) { 'some-state-id' }
     let(:params) do
-      { id: my_module_id,
-        status_id: status_id}
+      {
+        id: my_module_id,
+        my_module: { status_id: status_id }
+      }
     end
     let(:my_module_status_flow) { create :my_module_status_flow, :in_team, team: team}
     let(:status1) {create :my_module_status, my_module_status_flow: my_module_status_flow}

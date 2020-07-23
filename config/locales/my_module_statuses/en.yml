@@ -1,5 +1,10 @@
 en:
   my_module_statuses:
+    dropdown:
+      status_label: Status
+      move_label: Move to ->
+      return_label: Return to ->
+      view_flow_label: View task flow
     update_status:
       error:
-        no_permission: 'You dont have permission to change the status'
+        no_permission: You dont have permission to change the status

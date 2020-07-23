@@ -235,8 +235,8 @@ function applyTaskStatusChangeCallBack() {
     $.ajax({
       url: list.data('link-url'),
       type: 'PATCH',
-      contentType: 'application/json',
-      data: JSON.stringify({ status_id: item.data('state-id') }),
+      dataType: 'json',
+      data: { my_module: { status_id: item.data('state-id') } },
       success: function(data) {
         container.html(data.content);
         animateSpinner(null, false);

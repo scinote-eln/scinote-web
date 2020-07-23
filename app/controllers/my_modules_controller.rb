@@ -331,7 +331,7 @@ class MyModulesController < ApplicationController
   end
 
   def update_status_params
-    params.permit(:status_id)
+    params.require(:my_module).permit(:status_id)
   end
 
   def log_start_date_change_activity(start_date_changes)
