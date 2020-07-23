@@ -9,6 +9,7 @@ class Reports::Docx
   include InputSanitizeHelper
   include TeamsHelper
   include GlobalActivitiesHelper
+  include Canaid::Helpers::PermissionsHelper
 
   Dir[File.join(File.dirname(__FILE__), 'docx') + '**/*.rb'].each do |file|
     include_module = File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join

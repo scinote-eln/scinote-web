@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawMyModuleProtocol
-  def draw_my_module_protocol(subject)
-    my_module = MyModule.find_by_id(subject['id']['my_module_id'])
+  def draw_my_module_protocol(_subject, my_module)
     return unless my_module
 
     protocol = my_module.protocol
-    return false unless protocol.description.present?
+    return false if protocol.description.blank?
 
     @docx.p I18n.t 'projects.reports.elements.module.protocol.user_time',
                    timestamp: I18n.l(protocol.created_at, format: :full)
