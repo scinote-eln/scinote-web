@@ -138,13 +138,11 @@ class Experiment < ApplicationRecord
         archive_modules(to_archive, current_user) if to_archive.any?
 
         # Update only existing tasks positions to release positions for new tasks
-        existing_positions = positions
-                             .slice(*positions.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        existing_positions = positions.slice(*positions.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
         update_module_positions(existing_positions) if existing_positions.any?
 
         # Move only existing tasks to release positions for new tasks
-        existing_to_move = to_move
-                            .slice(*to_move.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        existing_to_move = to_move.slice(*to_move.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
         move_modules(existing_to_move, current_user) if existing_to_move.any?
 
         # add new modules

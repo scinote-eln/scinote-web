@@ -9,7 +9,7 @@ class MyModulesController < ApplicationController
 
   before_action :load_vars
   before_action :load_projects_tree, only: %i(protocols results activities archive)
-  before_action :check_manage_permissions_archive, only: %i(update)
+  before_action :check_archive_and_restore_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, except: %i(update update_description update_protocol_description
                                                     toggle_task_state)
@@ -374,11 +374,11 @@ class MyModulesController < ApplicationController
     render_403 && return unless can_manage_module?(@my_module)
   end
 
-  def check_manage_permissions_archive
+  def check_archive_and_restore_permissions
     render_403 && return unless if my_module_params[:archived] == 'false'
                                   can_restore_module?(@my_module)
                                 else
-                                  can_manage_module?(@my_module)
+                                  can_archive_module?(@my_module)
                                 end
   end
 

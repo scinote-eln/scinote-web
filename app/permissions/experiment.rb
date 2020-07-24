@@ -72,9 +72,14 @@ Canaid::Permissions.register_for(MyModule) do
     end
   end
 
-  # module: update, archive, move
+  # module: update
   # result: create, update
   can :manage_module do |user, my_module|
+    can_manage_experiment?(user, my_module.experiment)
+  end
+
+  # module: archive
+  can :archive_module do |user, my_module|
     can_manage_experiment?(user, my_module.experiment)
   end
 
@@ -84,6 +89,11 @@ Canaid::Permissions.register_for(MyModule) do
   can :restore_module do |user, my_module|
     user.is_user_or_higher_of_project?(my_module.experiment.project) &&
       my_module.archived?
+  end
+
+  # module: move
+  can :move_module do |user, my_module|
+    can_manage_experiment?(user, my_module.experiment)
   end
 
   # module: assign/reassign/unassign users
