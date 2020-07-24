@@ -103,7 +103,22 @@ module Api
       def create_file_result
         Result.transaction do
           @result = @task.results.create!(result_params.merge(user_id: current_user.id))
-          asset = Asset.create!(result_file_params)
+
+          if !result_file_params[:file]
+            filedata = Base64.decode64(result_file_params[:file_data])
+            content_type = result_file_params[:content_type]
+            filename = result_file_params[:file_name]
+
+            blob = ActiveStorage::Blob.create_after_upload!(
+              io: StringIO.new(filedata),
+              filename: filename,
+              content_type: content_type
+            )
+            asset = Asset.create!(file: blob)
+          else # multipart form
+            asset = Asset.create!(result_file_params)
+          end
+
           ResultAsset.create!(asset: asset, result: @result)
         end
       end
@@ -139,8 +154,11 @@ module Api
         prms = params[:included]&.select { |el| el[:type] == 'result_files' }&.first
         return nil unless prms
 
-        prms.require(:attributes).require(:file)
-        prms.dig(:attributes).permit(:file)
+        return prms.dig(:attributes).permit(:file) if prms.require(:attributes)[:file]
+
+        prms.require(:attributes).require(:file_data)
+        prms.require(:attributes).require(:file_name)
+        prms.dig(:attributes).permit(:file_data, :file_name)
       end
 
       def tiny_mce_asset_params
