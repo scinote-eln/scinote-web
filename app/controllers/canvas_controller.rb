@@ -33,10 +33,7 @@ class CanvasController < ApplicationController
     to_archive = []
     if update_params[:remove].present?
       to_archive = update_params[:remove].split(',')
-      if to_archive.all? do |id|
-           is_int?(id) &&
-           can_archive_module?(MyModule.find_by(id: id))
-         end
+      if to_archive.all? { |id| can_archive_module?(MyModule.find_by(id: id)) }
         to_archive.collect!(&:to_i)
       else
         return render_403
@@ -117,10 +114,10 @@ class CanvasController < ApplicationController
         # Okay, JSON parsed!
         unless to_move.is_a?(Hash) &&
                to_move.keys.all? do |id|
-                 id.is_a?(String) && can_move_module?(MyModule.find_by(id: id))
+                 !is_int?(id) || can_move_module?(MyModule.find_by(id: id))
                end &&
                to_move.values.all? do |exp_id|
-                 exp_id.is_a?(String) && can_manage_experiment?(Experiment.find_by(id: exp_id))
+                 can_manage_experiment?(Experiment.find_by(id: exp_id))
                end
           return render_403
         end
