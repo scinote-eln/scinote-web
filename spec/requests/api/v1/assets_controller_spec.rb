@@ -165,13 +165,7 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
           'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
           'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg=='
         end
-        let(:attributes) do
-          {
-            file_data: filedata_base64,
-            file_name: 'file.png',
-            content_type: 'image/png'
-          }
-        end
+        let(:attributes) { { file_data: filedata_base64, file_name: 'file.png', file_type: 'image/png' } }
         let(:request_body) { super().to_json }
 
         it 'creates new asset' do
@@ -193,15 +187,7 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
     end
 
     context 'when has missing param' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'attachments',
-            attributes: {
-            }
-          }
-        }
-      end
+      let(:request_body) { { data: { type: 'attachments', attributes: {} } } }
 
       it 'renders 400' do
         action

@@ -28,7 +28,7 @@ module Api
           blob = ActiveStorage::Blob.create_after_upload!(
             io: StringIO.new(Base64.decode64(asset_params[:file_data])),
             filename: asset_params[:file_name],
-            content_type: asset_params[:content_type]
+            content_type: asset_params[:file_type]
           )
           asset = @step.assets.new(file: blob)
         end
@@ -48,7 +48,7 @@ module Api
 
         return params.require(:data).require(:attributes).permit(:file) if @form_multipart_upload
 
-        attr_list = %i(file_data content_type file_name)
+        attr_list = %i(file_data file_type file_name)
         params.require(:data).require(:attributes).require(attr_list)
         params.require(:data).require(:attributes).permit(attr_list)
       end
@@ -59,7 +59,7 @@ module Api
       end
 
       def check_upload_type
-        @form_multipart_upload = true if params.dig(:data, :attributes)[:file]
+        @form_multipart_upload = true if params.dig(:data, :attributes, :file)
       end
     end
   end
