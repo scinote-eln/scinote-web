@@ -89,6 +89,7 @@
       $('#twoFactorAuthenticationModal .qr-code').html(result.qr_code);
       $('#twoFactorAuthenticationModal').find('[href="#2fa-step-1"]').tab('show');
       $('#twoFactorAuthenticationModal').modal('show');
+      $('#twoFactorAuthenticationModal').find('.submit-code-field').removeClass('error').find('#submit_code').val('');
     });
   });
 

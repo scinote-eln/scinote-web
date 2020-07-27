@@ -2329,6 +2329,7 @@ en:
     save: "Save"
     close: "Close"
     create: 'Create'
+    change: "Change"
     no_comments: "No comments!"
     more_comments: "More comments"
     comment_placeholder: "Your Message"
