@@ -9,7 +9,7 @@ class Step < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
-  validates :position, presence: true
+  validates :position, presence: true, uniqueness: { scope: :protocol }
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
@@ -17,11 +17,11 @@ class Step < ApplicationRecord
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
-  before_destroy :adjust_positions_on_destroy
+  after_destroy :adjust_positions_after_destroy
 
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
-  belongs_to :protocol, inverse_of: :steps
+  belongs_to :protocol, inverse_of: :steps, touch: true
   has_many :checklists, inverse_of: :step, dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :step_assets, inverse_of: :step, dependent: :destroy
@@ -90,6 +90,36 @@ class Step < ApplicationRecord
     protocol.present? ? protocol.my_module : nil
   end
 
+  def move_up!
+    return unless position.positive?
+
+    step_above = protocol.steps.find_by(position: position - 1)
+
+    return unless step_above
+
+    transaction do
+      step_above.position = position
+      update!(position: -1)
+      step_above.save!
+      update!(position: step_above.position - 1)
+    end
+  end
+
+  def move_down!
+    return unless position < protocol.steps.count - 1
+
+    step_below = protocol.steps.find_by(position: position + 1)
+
+    return unless step_below
+
+    transaction do
+      step_below.position = position
+      update!(position: -1)
+      step_below.save!
+      update!(position: step_below.position + 1)
+    end
+  end
+
   def position_plus_one
     position + 1
   end
@@ -125,9 +155,9 @@ class Step < ApplicationRecord
 
   private
 
-  def adjust_positions_on_destroy
+  def adjust_positions_after_destroy
     protocol.steps.where('position > ?', position).find_each do |step|
-      step.update(position: step.position - 1)
+      step.update!(position: step.position - 1)
     end
   end
 

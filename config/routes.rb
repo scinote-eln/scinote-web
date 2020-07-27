@@ -448,8 +448,8 @@ Rails.application.routes.draw do
       member do
         post 'checklistitem_state'
         post 'toggle_step_state'
-        get 'move_down'
-        get 'move_up'
+        put 'move_down'
+        put 'move_up'
         post 'update_view_state'
       end
     end
