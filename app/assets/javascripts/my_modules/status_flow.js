@@ -1,6 +1,10 @@
 /* global animateSpinner */
 
 (function() {
+  $('.task-flows').on('click', '#viewTaskFlow', function() {
+    $('#statusFlowModal').modal('show');
+  });
+
   $('#statusFlowModal').on('show.bs.modal', function() {
     var $modalBody = $(this).find('.modal-body');
     animateSpinner($modalBody);
