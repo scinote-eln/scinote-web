@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :tiny_mce_asset do
     association :team, factory: :team
-    image do
-      fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test.jpg'), 'image/jpg')
+    after(:create) do |tiny_mce_asset|
+      tiny_mce_asset.image.attach(io: File.open(Rails.root.join('spec/fixtures/files/test.jpg')), filename: 'test.jpg')
     end
   end
 end

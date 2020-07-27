@@ -19,6 +19,14 @@ module Api
       def input_tasks
         object.my_module_antecessors
       end
+
+      def description
+        if instance_options[:rte_rendering]
+          custom_auto_link(object.tinymce_render(:description), simple_format: false, tags: %w(img))
+        else
+          object.description
+        end
+      end
     end
   end
 end

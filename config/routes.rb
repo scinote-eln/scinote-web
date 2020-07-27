@@ -704,7 +704,7 @@ Rails.application.routes.draw do
               resources :experiments, only: %i(index show) do
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
-                resources :tasks, only: %i(index show create) do
+                resources :tasks, only: %i(index show create update) do
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',
                             as: :items
@@ -715,8 +715,12 @@ Rails.application.routes.draw do
                             path: 'tags',
                             as: :tags
                   resources :protocols, only: %i(index) do
-                    resources :steps, only: %i(index show create) do
+                    resources :steps do
                       resources :assets, only: %i(index show create), path: 'attachments'
+                      resources :checklists, path: 'checklists' do
+                        resources :checklist_items, as: :items, path: 'items'
+                      end
+                      resources :tables, path: 'tables'
                     end
                   end
                   resources :results, only: %i(index create show update)

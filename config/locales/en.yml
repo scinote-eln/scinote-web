@@ -2403,6 +2403,12 @@ en:
         record_not_found:
           title: "Not found"
           detail: "%{model} record with id %{id} not found in the specified scope"
+        not_implemented:
+          title: "Not implemented"
+          detail: "This endpoint is not implemented yet"
+        include_not_supported:
+          title: "Not supported"
+          detail: "Include param is not supported by this endpoint"
         id_mismatch:
           title: "Object ID mismatch"
           detail: "Object ID mismatch in URL and request body"

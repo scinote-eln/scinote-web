@@ -14,6 +14,11 @@ class Step < ApplicationRecord
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
 
+  before_validation :set_completed_on, if: :completed_changed?
+  before_save :set_last_modified_by
+  before_destroy :cascade_before_destroy
+  before_destroy :adjust_positions_on_destroy
+
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
   belongs_to :protocol, inverse_of: :steps
@@ -36,9 +41,6 @@ class Step < ApplicationRecord
                                   attributes['contents'].blank?
                                 },
                                 allow_destroy: true
-
-  after_destroy :cascade_after_destroy
-  before_save :set_last_modified_by
 
   def self.search(user,
                   include_archived,
@@ -74,17 +76,6 @@ class Step < ApplicationRecord
     unless %w(new old atoz ztoa).include?(view_state.state.dig('assets', 'sort'))
       view_state.errors.add(:state, :wrong_state)
     end
-  end
-
-  def destroy(current_user)
-    @current_user = current_user
-
-    # Store IDs of assets & tables so they
-    # can be destroyed in after_destroy
-    @a_ids = self.assets.collect { |a| a.id }
-    @t_ids = self.tables.collect { |t| t.id }
-
-    super()
   end
 
   def self.viewable_by_user(user, teams)
@@ -132,13 +123,23 @@ class Step < ApplicationRecord
     end
   end
 
-  protected
+  private
 
-  def cascade_after_destroy
-    # Assets already deleted by here
-    @a_ids = nil
-    Table.destroy(@t_ids)
-    @t_ids = nil
+  def adjust_positions_on_destroy
+    protocol.steps.where('position > ?', position).find_each do |step|
+      step.update(position: step.position - 1)
+    end
+  end
+
+  def cascade_before_destroy
+    assets.each(&:destroy)
+    tables.each(&:destroy)
+  end
+
+  def set_completed_on
+    return if completed? && completed_on.present?
+
+    self.completed_on = completed? ? DateTime.now : nil
   end
 
   def set_last_modified_by

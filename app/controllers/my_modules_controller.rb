@@ -13,7 +13,7 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, except: %i(update update_description update_protocol_description
                                                     toggle_task_state)
-  before_action :check_complete_module_permission, only: :complete_my_module
+  before_action :check_complete_module_permission, only: %i(complete_my_module toggle_task_state)
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
@@ -260,38 +260,29 @@ class MyModulesController < ApplicationController
   # Complete/uncomplete task
   def toggle_task_state
     respond_to do |format|
-      if can_complete_module?(@my_module)
-        @my_module.completed? ? @my_module.uncomplete : @my_module.complete
-        completed = @my_module.completed?
-        if @my_module.save
-          task_completion_activity
+      @my_module.completed? ? @my_module.uncompleted! : @my_module.completed!
+      task_completion_activity
 
-          # Render new button HTML
-          if completed
-            new_btn_partial = 'my_modules/state_button_uncomplete.html.erb'
-          else
-            new_btn_partial = 'my_modules/state_button_complete.html.erb'
-          end
+      # Render new button HTML
+      new_btn_partial = if @my_module.completed?
+                          'my_modules/state_button_uncomplete.html.erb'
+                        else
+                          'my_modules/state_button_complete.html.erb'
+                        end
 
-          format.json do
-            render json: {
-              new_btn: render_to_string(partial: new_btn_partial),
-              completed: completed,
-              module_header_due_date: render_to_string(
-                partial: 'my_modules/module_header_due_date.html.erb',
-                locals: { my_module: @my_module }
-              ),
-              module_state_label: render_to_string(
-                partial: 'my_modules/module_state_label.html.erb',
-                locals: { my_module: @my_module }
-              )
-            }
-          end
-        else
-          format.json { render json: {}, status: :unprocessable_entity }
-        end
-      else
-        format.json { render json: {}, status: :unauthorized }
+      format.json do
+        render json: {
+          new_btn: render_to_string(partial: new_btn_partial),
+          completed: @my_module.completed?,
+          module_header_due_date: render_to_string(
+            partial: 'my_modules/module_header_due_date.html.erb',
+            locals: { my_module: @my_module }
+          ),
+          module_state_label: render_to_string(
+            partial: 'my_modules/module_state_label.html.erb',
+            locals: { my_module: @my_module }
+          )
+        }
       end
     end
   end
@@ -299,22 +290,21 @@ class MyModulesController < ApplicationController
   def complete_my_module
     respond_to do |format|
       if @my_module.uncompleted? && @my_module.check_completness_status
-        @my_module.complete
-        @my_module.save
+        @my_module.completed!
         task_completion_activity
         format.json do
-            render json: {
-              task_button_title: t('my_modules.buttons.uncomplete'),
-              module_header_due_date: render_to_string(
-                partial: 'my_modules/module_header_due_date.html.erb',
-                locals: { my_module: @my_module }
-              ),
-              module_state_label: render_to_string(
-                partial: 'my_modules/module_state_label.html.erb',
-                locals: { my_module: @my_module }
-              )
-            }, status: :ok
-          end
+          render json: {
+            task_button_title: t('my_modules.buttons.uncomplete'),
+            module_header_due_date: render_to_string(
+              partial: 'my_modules/module_header_due_date.html.erb',
+              locals: { my_module: @my_module }
+            ),
+            module_state_label: render_to_string(
+              partial: 'my_modules/module_state_label.html.erb',
+              locals: { my_module: @my_module }
+            )
+          }, status: :ok
+        end
       else
         format.json { render json: {}, status: :unprocessable_entity }
       end
