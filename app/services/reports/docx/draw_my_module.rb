@@ -46,12 +46,10 @@ module Reports::Docx::DrawMyModule
       text I18n.t('projects.reports.elements.module.status')
       text ' '
       text "[#{status.name}]", color: status.color.delete('#')
-      text ' '
-      text I18n.l(my_module.completed_on, format: :full)
     end
 
     @docx.p do
-      text I18n.t 'projects.reports.elements.module.tags_header'
+      text I18n.t('projects.reports.elements.module.tags_header')
       if tags.any?
         my_module.tags.each do |tag|
           text ' '
@@ -59,7 +57,7 @@ module Reports::Docx::DrawMyModule
         end
       else
         text ' '
-        text I18n.t 'projects.reports.elements.module.no_tags'
+        text I18n.t('projects.reports.elements.module.no_tags')
       end
     end
 
@@ -67,7 +65,7 @@ module Reports::Docx::DrawMyModule
       html = custom_auto_link(my_module.description, team: @report_team)
       html_to_word_converter(html)
     else
-      @docx.p I18n.t 'projects.reports.elements.module.no_description'
+      @docx.p I18n.t('projects.reports.elements.module.no_description')
     end
 
     @docx.p
