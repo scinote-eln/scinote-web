@@ -29,7 +29,8 @@ class ResultAssetsController < ApplicationController
     if obj.fetch(:status)
       flash[:success] = t('result_assets.create.success_flash',
                           module: @my_module.name)
-      redirect_to results_my_module_path(@my_module)
+        p params.as_json
+      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
     else
       flash[:error] = t('result_assets.error_flash')
       render json: {}, status: :bad_request

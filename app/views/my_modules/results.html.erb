@@ -6,47 +6,51 @@
 
 <div class="content-pane">
   <div id="results-toolbar">
-    <div class="pull-right sci-btn-group">
-      <button class="btn btn-secondary" id="results-collapse-btn">
-        <span class="fas fa-caret-square-up"></span>
-        <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></button></span>
-      <button class="btn btn-secondary" id="results-expand-btn">
-        <span class="fas fa-caret-square-down"></span>
-        <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></button></span>
-    </div>
-
     <% if can_manage_module?(@my_module) %>
-      <div class="add-result-toolbar">
-        <span class="hidden-xs add-result-text"><%= t'my_modules.results.add_label' %></span>
-        <div class="sci-btn-group">
-          <a class="btn btn-primary"
-             id="new-result-text"
-             data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
-             href="#">
-            <span class="fas fa-font"></span>
-            <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
-          </a>
-          <a class="btn btn-primary"
-             id="new-result-table"
-             data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>"
-             href="#">
-            <span class="fas fa-table"></span>
-            <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
-          </a>
-          <a class="btn btn-primary"
-             id="new-result-asset"
-             data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
-             href="#">
-            <span class="fas fa-paperclip"></span>
-            <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
-          </a>
-          <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
+      <div class="add-result-dropdown dropdown sci-dropdown">
+        <a href="#" id="add-result-button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="fas fa-plus"></span>
+          <span><%= t("my_modules.results.add_label") %></span>
+          <span class="caret pull-right"></span>
+        </a>
+        <ul class="dropdown-menu add-result-dropdown" aria-labelledby="add-result-button">
+          <li id="new-result-text" data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id, page: params[:page], order: params[:order]) %>">
+            <i class="fas fa-font"></i><%= t("my_modules.results.new_text_result") %>
+          </li>
+          <li id="new-result-table" data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id, page: params[:page], order: params[:order]) %>">
+            <i class="fas fa-table"></i><%= t("my_modules.results.new_table_result") %>
+          </li>
+          <li id="new-result-asset" data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id, page: params[:page], order: params[:order]) %>">
+            <i class="fas fa-paperclip"></i><%= t("my_modules.results.new_asset_result") %>
+          </li>
+          <%= render partial: '/assets/marvinjs/create_marvin_sketch_li',
                        locals: {  element_id: @my_module.id, element_type: 'Result',  sketch_container: "#results[data-module-id=#{@my_module.id}]" } %>
-          <%= render partial: "assets/wopi/create_wopi_file_button",
+          <%= render partial: "assets/wopi/create_wopi_file_li",
                      locals: {  element_id: @my_module.id, element_type: 'Result' } %>
-        </div>
+        </ul>
       </div>
     <% end %>
+    <div class="sci-btn-group">
+      <button class="btn btn-light" id="results-collapse-btn">
+        <span class="fas fa-caret-up"></span>
+        <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></span>
+      </button>
+      <button class="btn btn-light" id="results-expand-btn">
+        <span class="fas fa-caret-down"></span>
+        <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></span>
+      </button>
+    </div>
+    <div class="sort-result-dropdown dropdown">
+        <button id="sort-result-button" class="btn btn-light icon-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <i class="fas fa-sort-amount-up"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sort-result-button">
+          <li><%= link_to t('general.sort_new.atoz'), results_my_module_path(@my_module, page: params[:page], order: 'atoz'), class: (@results_order == 'atoz' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.ztoa'), results_my_module_path(@my_module, page: params[:page], order: 'ztoa'), class: (@results_order == 'ztoa' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.old'), results_my_module_path(@my_module, page: params[:page], order: 'old'), class: (@results_order == 'old' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.new'), results_my_module_path(@my_module, page: params[:page], order: 'new'), class: (@results_order == 'new' ? 'selected' : '') %></li>
+        </ul>
+      </div>
   </div>
 
   <div style="height: 15px;"></div>

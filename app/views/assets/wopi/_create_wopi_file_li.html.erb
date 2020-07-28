@@ -1,0 +1,12 @@
+<% if wopi_enabled? %>
+  <li>
+    <%= link_to create_wopi_file_path,
+                class: 'create-wopi-file-btn',
+                target: '_blank',
+                title: 'Create_new_file',
+                data: { 'id': element_id, 'type': element_type, } do %>
+      <%= image_tag 'office/office.svg' %>
+      <%=t 'assets.create_wopi_file.li_text' %>
+    <% end %>
+  </li>
+<% end %>

@@ -44,7 +44,7 @@ class ResultTablesController < ApplicationController
     if @result.save && @table.save
       log_activity(:add_result)
       flash[:success] = t('result_tables.create.success_flash', module: @my_module.name)
-      redirect_to results_my_module_path(@my_module)
+      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
     else
       render json: @result.errors, status: :bad_request
     end
