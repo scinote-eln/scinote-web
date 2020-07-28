@@ -9,13 +9,14 @@ class Step < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
-  validates :position, presence: true, uniqueness: { scope: :protocol }
+  validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
+  around_save :adjust_positions_on_save, if: :position_changed?
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy
 
@@ -90,36 +91,6 @@ class Step < ApplicationRecord
     protocol.present? ? protocol.my_module : nil
   end
 
-  def move_up!
-    return unless position.positive?
-
-    step_above = protocol.steps.find_by(position: position - 1)
-
-    return unless step_above
-
-    transaction do
-      step_above.position = position
-      update!(position: -1)
-      step_above.save!
-      update!(position: step_above.position - 1)
-    end
-  end
-
-  def move_down!
-    return unless position < protocol.steps.count - 1
-
-    step_below = protocol.steps.find_by(position: position + 1)
-
-    return unless step_below
-
-    transaction do
-      step_below.position = position
-      update!(position: -1)
-      step_below.save!
-      update!(position: step_below.position + 1)
-    end
-  end
-
   def position_plus_one
     position + 1
   end
@@ -154,6 +125,17 @@ class Step < ApplicationRecord
   end
 
   private
+
+  def adjust_positions_on_save
+    step_to_swap = protocol.steps.find_by(position: position)
+
+    return yield unless step_to_swap
+
+    position_to_swap = position_was
+    step_to_swap.position = -1
+    yield
+    step_to_swap.update!(position: position_to_swap)
+  end
 
   def adjust_positions_after_destroy
     protocol.steps.where('position > ?', position).find_each do |step|

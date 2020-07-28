@@ -163,10 +163,12 @@
   // Set callback for click on move step
   function applyMoveStepCallBack() {
     $('#steps').on('ajax:success', "[data-action='move-step']", function(e, data) {
-      var $step = $(this).closest('.step');
-      var stepUpPosition = data.step_up_position;
-      var stepDownPosition = data.step_down_position;
-      var $stepDown, $stepUp;
+      if ($.isEmptyObject(data)) return;
+
+      let $step = $(this).closest('.step');
+      let stepUpPosition = data.step_up_position;
+      let stepDownPosition = data.step_down_position;
+      let $stepDown, $stepUp;
 
       switch ($(this).data('direction')) {
         case 'up':
