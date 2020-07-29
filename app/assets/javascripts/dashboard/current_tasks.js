@@ -84,7 +84,7 @@ var DasboardCurrentTasksWidget = (function() {
     $('.curent-tasks-filters .clear-button').click((e) => {
       e.stopPropagation();
       e.preventDefault();
-      dropdownSelector.selectValue(sortFilter, 'date_asc');
+      dropdownSelector.selectValue(sortFilter, 'due_date');
       dropdownSelector.selectValue(viewFilter, 'uncompleted');
       dropdownSelector.clearData(projectFilter);
       dropdownSelector.clearData(experimentFilter);

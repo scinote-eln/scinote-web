@@ -12,7 +12,8 @@
           <div class="select-block">
             <label><%= t("dashboard.current_tasks.filter.sort") %></label>
             <select class="sort-filter">
-              <option value="date_asc" ><%= t("dashboard.current_tasks.filter.date_asc") %></option>
+              <option value="start_date" ><%= t("dashboard.current_tasks.filter.start_date") %></option>
+              <option value="due_date" selected><%= t("dashboard.current_tasks.filter.due_date") %></option>
               <option value="atoz" ><%= t("dashboard.current_tasks.filter.atoz") %></option>
               <option value="ztoa" ><%= t("dashboard.current_tasks.filter.ztoa") %></option>
             </select>

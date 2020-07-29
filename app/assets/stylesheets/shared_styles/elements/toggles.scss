@@ -23,6 +23,7 @@ input[type="checkbox"].sci-toggle-checkbox {
     border-radius: 8px;
     display: inline-block;
     flex-shrink: 0;
+    font-weight: normal;
     height: 16px;
     left: 0;
     position: absolute;
@@ -85,6 +86,7 @@ input[type="checkbox"].sci-toggle-checkbox {
       border-left-color: transparent;
       color: $color-black;
       display: inline-block;
+      font-weight: normal;
       height: 36px;
       line-height: 34px;
       margin-left: -48px;
