@@ -3,7 +3,7 @@
 
 var DasboardCurrentTasksWidget = (function() {
   var sortFilter = '.curent-tasks-filters .sort-filter';
-  var viewFilter = '.curent-tasks-filters .view-filter';
+  var statusFilter = '.curent-tasks-filters .view-filter';
   var projectFilter = '.curent-tasks-filters .project-filter';
   var experimentFilter = '.curent-tasks-filters .experiment-filter';
 
@@ -36,7 +36,7 @@ var DasboardCurrentTasksWidget = (function() {
         params.project_id = dropdownSelector.getValues(projectFilter);
         params.experiment_id = dropdownSelector.getValues(experimentFilter);
         params.sort = dropdownSelector.getValues(sortFilter);
-        params.view = dropdownSelector.getValues(viewFilter);
+        params.statuses = dropdownSelector.getValues(statusFilter);
         params.query = $('.current-tasks-widget .task-search-field').val();
         params.mode = $('.current-tasks-navbar .active').data('mode');
         return params;
@@ -48,7 +48,7 @@ var DasboardCurrentTasksWidget = (function() {
     return dropdownSelector.getValues(experimentFilter)
            || dropdownSelector.getValues(projectFilter)
            || $('.current-tasks-widget .task-search-field').val().length > 0
-           || dropdownSelector.getValues(viewFilter) !== 'uncompleted';
+           || dropdownSelector.getValues(statusFilter) !== 'uncompleted';
   }
 
   function loadCurrentTasksList(newList) {
@@ -57,7 +57,7 @@ var DasboardCurrentTasksWidget = (function() {
       project_id: dropdownSelector.getValues(projectFilter),
       experiment_id: dropdownSelector.getValues(experimentFilter),
       sort: dropdownSelector.getValues(sortFilter),
-      view: dropdownSelector.getValues(viewFilter),
+      statuses: dropdownSelector.getValues(statusFilter),
       query: $('.current-tasks-widget .task-search-field').val(),
       mode: $('.current-tasks-navbar .active').data('mode')
     };
@@ -85,7 +85,6 @@ var DasboardCurrentTasksWidget = (function() {
       e.stopPropagation();
       e.preventDefault();
       dropdownSelector.selectValue(sortFilter, 'date_asc');
-      dropdownSelector.selectValue(viewFilter, 'uncompleted');
       dropdownSelector.clearData(projectFilter);
       dropdownSelector.clearData(experimentFilter);
     });
@@ -98,12 +97,9 @@ var DasboardCurrentTasksWidget = (function() {
       disableSearch: true
     });
 
-    dropdownSelector.init(viewFilter, {
-      noEmptyOption: true,
-      singleSelect: true,
-      closeOnSelect: true,
+    dropdownSelector.init(statusFilter, {
       selectAppearance: 'simple',
-      disableSearch: true
+      optionClass: 'checkbox-icon'
     });
 
     dropdownSelector.init(projectFilter, {
@@ -143,7 +139,7 @@ var DasboardCurrentTasksWidget = (function() {
       e.stopPropagation();
       e.preventDefault();
       dropdownSelector.closeDropdown(sortFilter);
-      dropdownSelector.closeDropdown(viewFilter);
+      dropdownSelector.closeDropdown(statusFilter);
       dropdownSelector.closeDropdown(projectFilter);
       dropdownSelector.closeDropdown(experimentFilter);
     });
