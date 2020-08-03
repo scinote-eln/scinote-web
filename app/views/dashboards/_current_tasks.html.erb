@@ -19,9 +19,18 @@
           </div>
           <div class="select-block">
             <label><%= t("dashboard.current_tasks.filter.display") %></label>
-            <select class="view-filter">
-              <option value="uncompleted" ><%= t("dashboard.current_tasks.filter.uncompleted_tasks") %></option>
-              <option value="completed" ><%= t("dashboard.current_tasks.filter.completed_tasks") %></option>
+            <select class="view-filter"
+                    data-combine-tags="true"
+                    data-placeholder="<%= t("dashboard.current_tasks.filter.statuses.placeholder") %>"
+                    data-select-multiple-all-selected="<%= t("dashboard.current_tasks.filter.statuses.all_selected") %>"
+                    data-select-multiple-name="<%= t("dashboard.current_tasks.filter.statuses.selected") %>"
+                    multiple
+            >
+              <% MyModuleStatusFlow.find_each do |status_flow| %>
+                <% status_flow.my_module_statuses.each do |status| %>
+                  <option value="<%= status.id %>" selected><%= status.name %></option>
+                <% end %>
+              <% end %>
             </select>
           </div>
           <div class="select-block">
