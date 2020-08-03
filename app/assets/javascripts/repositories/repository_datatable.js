@@ -1,6 +1,6 @@
 /*
-  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner Promise DataTableHelpers
-  HelperModule animateLoading RepositoryDatatableRowEditor
+  globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
+  HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
   initAssignedTasksDropdown
 */
 
@@ -334,35 +334,7 @@ var RepositoryDatatable = (function(global) {
         // Append visible column information
         $('table' + TABLE_ID + ' thead tr th').each(function() {
           var th = $(this);
-          var val;
-          switch ($(th).attr('id')) {
-            case 'checkbox':
-              val = -1;
-              break;
-            case 'assigned':
-              val = -2;
-              break;
-            case 'row-id':
-              val = -3;
-              break;
-            case 'row-name':
-              val = -4;
-              break;
-            case 'added-by':
-              val = -5;
-              break;
-            case 'added-on':
-              val = -6;
-              break;
-            case 'archived-by':
-              val = -7;
-              break;
-            case 'archived-on':
-              val = -8;
-              break;
-            default:
-              val = th.attr('id');
-          }
+          var val = prepareRepositoryHeaderForExport(th);
 
           if (val) {
             appendInput(form, val, 'header_ids[]');

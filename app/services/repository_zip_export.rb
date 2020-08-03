@@ -5,16 +5,25 @@ require 'csv'
 module RepositoryZipExport
   def self.generate_zip(params, repository, current_user)
     # Fetch rows in the same order as in the currently viewed datatable
-    ordered_row_ids = params[:row_ids]
-    id_row_map = RepositoryRow.where(id: ordered_row_ids,
-                                     repository: repository)
-                              .index_by(&:id)
-    ordered_rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
+    if params[:my_module_id]
+      rows = if repository.is_a?(RepositorySnapshot)
+                       repository.repository_rows
+                     else
+                       repository.repository_rows.joins(:my_module_repository_rows)
+                                 .where(my_module_repository_rows: { my_module_id: params[:my_module_id] })
+                     end
+    else
+      ordered_row_ids = params[:row_ids]
+      id_row_map = RepositoryRow.where(id: ordered_row_ids,
+                                       repository: repository)
+                                .index_by(&:id)
+      rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
+    end
 
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      to_csv(ordered_rows, params[:header_ids], current_user, repository.team),
+      to_csv(rows, params[:header_ids], current_user, repository.team),
       :repositories
     )
   end
