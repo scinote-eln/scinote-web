@@ -147,6 +147,10 @@ describe MyModulesController, type: :controller do
         expect(my_module.reload.my_module_status.id).to be_eql(status_id)
         expect(response).to have_http_status 200
       end
+
+      it 'creates activity' do
+        expect { action }.to(change { Activity.all.count }.by(1))
+      end
     end
 
     context 'when status not found' do
