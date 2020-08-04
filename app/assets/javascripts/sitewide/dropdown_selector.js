@@ -179,9 +179,20 @@ var dropdownSelector = (function() {
   }
 
   // Add selected option to value
-  function addSelectedOption(selector, container) {
-    setData(selector, [convertOptionToJson($(selector).find('option:selected')[0])], true);
+  function addSelectedOptions(selector, container) {
+    var selectedOptions = [];
+    $.each($(selector).find('option:selected'), function(i, option) {
+      selectedOptions.push(convertOptionToJson(option));
+      if (selector.data('config').singleSelect) return false;
+      return true;
+    });
+
+    if (!selectedOptions.length) return false;
+
+    setData(selector, selectedOptions, true);
+    return true;
   }
+  //
 
   // Prepare custom dropdown icon
   function prepareCustomDropdownIcon(config) {
@@ -422,8 +433,8 @@ var dropdownSelector = (function() {
     }
 
     // Select default value
-    if (config.noEmptyOption && config.singleSelect) {
-      addSelectedOption(selectElement, dropdownContainer);
+    if (!selectElement.data('ajax-url')) {
+      addSelectedOptions(selectElement, dropdownContainer);
     }
 
     // Enable simple mode for dropdown selector

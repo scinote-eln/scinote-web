@@ -742,6 +742,44 @@ ul.double-line > li {
   }
 }
 
+#canvas-container {
+  .panel-heading {
+    padding: 10px 15px 4px;
+  }
+
+  .panel-body {
+    padding: 6px 15px;
+
+    .status-label {
+      background-color: var(--state-color);
+      color: $color-white;
+      margin: 3px 0;
+      padding: 2px 8px;
+      white-space: nowrap;
+      width: fit-content;
+    }
+  }
+
+  .panel-footer {
+    .nav > li > a {
+      padding: 6px 15px;
+    }
+
+    .btn {
+      height: 30px;
+    }
+
+    .badge-indicator {
+      background: transparent;
+      color: $color-silver-chalice;
+      font-size: 12px;
+      margin-left: 0;
+      padding: 0;
+      top: 0;
+    }
+  }
+}
+
 .panel-options {
   position: relative;
   bottom: 8px;

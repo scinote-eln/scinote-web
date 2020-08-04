@@ -110,6 +110,12 @@ en:
           attributes:
             position:
              not_unique: "X and Y position has already been taken by another task in the experiment."
+        my_module_status:
+          attributes:
+            next_status:
+              different_flow: "Should belong to the same flow"
+            previous_status:
+              different_flow: "Should belong to the same flow"
         asset:
           attributes:
             file:
@@ -527,6 +533,7 @@ en:
         module:
           user_time: "Task created on %{timestamp}."
           started_on: "Start date: %{started_on}"
+          status: "Status:"
           no_start_date: "No start date"
           due_date: "Due date: %{due_date}"
           no_due_date: "No due date"
@@ -658,12 +665,6 @@ en:
         import: "Import protocol"
         export: "Export protocol"
         save_to_repo: "Save to repository"
-    buttons:
-      complete: "Complete task"
-      uncomplete: "Uncomplete task"
-    complete_modal:
-      description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
-      leave_uncompleted: 'Leave task in progress'
     description:
       title: "Edit task %{module} description"
       label: "Description"
@@ -838,6 +839,10 @@ en:
         assign_and_unassign_from_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> and unassigned <strong>%{unassigned_items}</strong> item(s) from the task and downstream tasks."
         update_error: "There was an error in updating your item(s)."
     modals:
+      status_flow_modal:
+        title: "Task status flow: %{status_flow}"
+        current_status: "Current status"
+        done: "Done"
       update_repository_record:
         title: "Update %{repository_name} items to %{my_module_name} task"
         message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"
@@ -2238,8 +2243,6 @@ en:
     assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
     unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
-    start_work_on_next_task: "<i>%{user}</i> has completed the task <strong>%{module}</strong>. You can now start working on the next task in the workflow."
-    start_work_on_next_task_message: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
 
   assets:
     head_title:

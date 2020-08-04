@@ -6,7 +6,7 @@
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">
-        <%=t "projects.reports.elements.module.user_time", timestamp: l(timestamp, format: :full) %>
+        <%= t("projects.reports.elements.module.user_time", timestamp: l(timestamp, format: :full)) %>
       </div>
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
@@ -24,6 +24,7 @@
           <% end %>
         </h4>
       </div>
+
       <div class="pull-right module-start-date">
         <% if my_module.started_on.present? %>
           <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
@@ -55,9 +56,28 @@
         <% end %>
       </div>
     </div>
+    <p class="module-start-date">
+      <% if my_module.started_on.present? %>
+        <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
+      <% else %>
+        <em><%= t("projects.reports.elements.module.no_start_date") %></em>
+      <% end %>
+    </p>
+    <p class="module-due-date">
+      <% if my_module.due_date.present? %>
+        <%= t("projects.reports.elements.module.due_date", due_date: l(my_module.due_date, format: :full)) %>
+      <% else %>
+        <em><%= t("projects.reports.elements.module.no_due_date") %></em>
+      <% end %>
+    </p>
+    <p class="module-status">
+      <% status = my_module.my_module_status %>
+      <%= t("projects.reports.elements.module.status") %>
+      <span class="status-block" style="background: <%= status.color %>"><%= status.name %></span>
+    </p>
     <div class="row module-tags">
       <div class="pull-left">
-        <%=t "projects.reports.elements.module.tags_header" %>
+        <%= t("projects.reports.elements.module.tags_header") %>
       </div>
       <% if my_module.tags.any? %>
         <% my_module.tags.each do |tag| %>
@@ -67,9 +87,20 @@
         <% end %>
       <% else %>
         <div class="pull-left module-no-tag">
-          <em><%=t "projects.reports.elements.module.no_tags" %></em>
+          <em><%= t("projects.reports.elements.module.no_tags") %></em>
         </div>
       <% end %>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <% if my_module.description.present? %>
+          <%= custom_auto_link(my_module.prepare_for_report(:description, for_export_all),
+                               team: current_team,
+                               base64_encoded_imgs: for_export_all) %>
+        <% else %>
+           <em><%= t("projects.reports.elements.module.no_description") %></em>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="report-element-children">
