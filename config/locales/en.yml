@@ -823,6 +823,10 @@ en:
         assign_and_unassign_from_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> and unassigned <strong>%{unassigned_items}</strong> item(s) from the task and downstream tasks."
         update_error: "There was an error in updating your item(s)."
     modals:
+      status_flow_modal:
+        title: "Task status flow: %{status_flow}"
+        current_status: "Current status"
+        done: "Done"
       update_repository_record:
         title: "Update %{repository_name} items to %{my_module_name} task"
         message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"

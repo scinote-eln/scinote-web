@@ -119,10 +119,16 @@
 <!-- Import protocol elements -->
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
 
+<!-- Status flow modal -->
+<% if @my_module.my_module_status_flow %>
+  <%= render partial: 'my_modules/modals/status_flow_modal.html.erb' %>
+<% end %>
+
 <!-- Create new office file modal -->
 <%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
 
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag("my_modules/protocols") %>
+<%= javascript_include_tag("my_modules/status_flow") %>
 <%= javascript_pack_tag 'emoji_button' %>
 <%= javascript_include_tag("my_modules/repositories") %>

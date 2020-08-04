@@ -30,6 +30,23 @@ class MyModuleStatus < ApplicationRecord
     my_module_status_flow.final_status == self
   end
 
+  def self.sort_by_position(order = :asc)
+    ordered_statuses, statuses = all.to_a.partition { |i| i.previous_status_id.nil? }
+
+    return [] if ordered_statuses.empty?
+
+    until statuses.empty?
+      next_element, statuses = statuses.partition { |i| ordered_statuses.last.id == i.previous_status_id }
+      if next_element.empty?
+        break
+      else
+        ordered_statuses.concat(next_element)
+      end
+    end
+    ordered_statuses = ordered_statuses.reverse if order == :desc
+    ordered_statuses
+  end
+
   private
 
   def next_in_same_flow

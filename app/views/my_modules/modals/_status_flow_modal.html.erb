@@ -1,0 +1,14 @@
+<div class="modal" id="statusFlowModal" tabindex="-1" role="dialog" aria-labelledby="manage-module-users-modal-label" data-status-flow-url="<%= my_module_status_flow_path(@my_module) %>">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h2 class="modal-title"><%= t('my_modules.modals.status_flow_modal.title', status_flow: @my_module.my_module_status_flow.name) %></h2>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('my_modules.modals.status_flow_modal.done') %></button>
+      </div>
+    </div>
+  </div>
+</div>

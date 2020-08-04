@@ -341,6 +341,9 @@ Rails.application.routes.draw do
           get :index_old
         end
       end
+
+      resource :status_flow, controller: :my_module_status_flow, only: :show
+
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
