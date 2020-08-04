@@ -220,7 +220,7 @@ Feature: Home page
     And I click "Create" button
     And I hover over element with css ".panel-heading"
     And I click button with id "dropdownMenu1"
-    And I click "Archive" link within dropdown menu
+    And I click on "Archive" within dropdown menu
     And I click to Cancel on confirm dialog
     Then I should see "Mangart"
 
@@ -232,7 +232,7 @@ Feature: Home page
     And I click "Create" button
     And I hover over element with css ".panel-heading"
     And I click button with id "dropdownMenu1"
-    And I click "Archive" link within dropdown menu
+    And I click on "Archive" within dropdown menu
     And I click to OK on confirm dialog
     Then I should not see "Mangart"
 
@@ -244,12 +244,12 @@ Feature: Home page
     And I click "Create" button
     And I hover over element with css ".panel-heading"
     And I click button with id "dropdownMenu1"
-    And I click "Archive" link within dropdown menu
+    And I click on "Archive" within dropdown menu
     And I click to OK on confirm dialog
     And I click "Archived" link
     And I hover over element with css ".panel-title"
     And I click button with id "dropdownMenu1"
-    And I click "Restore" link within dropdown menu
+    And I click on "Restore" within dropdown menu
     And I am on the home page of Biosistemika Process team
     Then I should see "Mangart"
 

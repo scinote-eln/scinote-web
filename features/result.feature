@@ -18,7 +18,8 @@ Background:
 @javascript
 Scenario: Unsuccessful add Text result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I click "Add" button
  Then I should see "can't be blank"
  And I click "Cancel" button
@@ -26,7 +27,8 @@ Scenario: Unsuccessful add Text result
 @javascript
 Scenario: Successful add text result with Text name
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -35,7 +37,8 @@ Scenario: Successful add text result with Text name
 @javascript
 Scenario: Successful add Text result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
  Then I should see "Vse to pa zaradi botra petelina, bog mu daj zdravje!"
@@ -43,7 +46,8 @@ Scenario: Successful add Text result
 @javascript
 Scenario: Successful edit Text task result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -56,7 +60,8 @@ Scenario: Successful edit Text task result
 @javascript
 Scenario: Successful add comment to a Text task result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -68,7 +73,8 @@ Scenario: Successful add comment to a Text task result
 @wip
 Scenario: Unsuccessful add comment to a Text task result BUG!!!!!
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -80,7 +86,8 @@ Scenario: Unsuccessful add comment to a Text task result BUG!!!!!
 @javascript
 Scenario: Successful edit comment to a Text task result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -95,7 +102,8 @@ Scenario: Successful edit comment to a Text task result
 @javascript
 Scenario: Unsuccessful edit comment to a Text task result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -110,7 +118,8 @@ Scenario: Unsuccessful edit comment to a Text task result
 @javascript
 Scenario: Unsuccessful delete comment to a Text task resultGiven I am on Task results page
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -125,7 +134,8 @@ Scenario: Unsuccessful delete comment to a Text task resultGiven I am on Task re
 @javascript
 Scenario: Successful delete comment to a Text task result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -141,7 +151,8 @@ Scenario: Successful delete comment to a Text task result
 @javascript
 Scenario: Successful archive text result with Text name
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -152,7 +163,8 @@ Scenario: Successful archive text result with Text name
 @wip
 Scenario: Unsuccessful add Table result ##########this one doesnt work
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  Then I should see "can't be blank"
  And I click "Cancel" button
@@ -160,7 +172,8 @@ Scenario: Unsuccessful add Table result ##########this one doesnt work
 @javascript
 Scenario: Successful add table result with Table name
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I fill in "ZOO" in "#result_name" field
  And I click on table cell one
  And I input "Živali pa so se odpravile dalje po svetu." in cell
@@ -170,7 +183,8 @@ Scenario: Successful add table result with Table name
 @javascript
 Scenario: Successful add Table result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click on table cell one
  And I input "Vse to pa zaradi botra petelina, bog mu daj zdravje!" in cell
  And I click "Add" button
@@ -179,7 +193,8 @@ Scenario: Successful add Table result
 @javascript
 Scenario: Successful edit Table task result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I fill in "ZOO" in "#result_name" field
  And I click on table cell one
  And I input "Živali pa so se odpravile dalje po svetu." in cell
@@ -194,7 +209,8 @@ Scenario: Successful edit Table task result
 @javascript
 Scenario: Successful add comment to a Table task result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
@@ -204,7 +220,8 @@ Scenario: Successful add comment to a Table task result
 @javascript
 Scenario: Successful edit comment to a Table task result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
@@ -218,7 +235,8 @@ Scenario: Successful edit comment to a Table task result
 @javascript
 Scenario: Unsuccessful edit comment to a Table task result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
@@ -231,7 +249,8 @@ Scenario: Unsuccessful edit comment to a Table task result
 @javascript
 Scenario: Unsuccessful delete comment to a Table task result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
@@ -244,7 +263,8 @@ Scenario: Unsuccessful delete comment to a Table task result
 @javascript
 Scenario: Successful delete comment to a Table task result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  And I fill in "I was on Triglav one summer." in "message" textarea field
  And I click "fa-paper-plane" icon
@@ -257,7 +277,8 @@ Scenario: Successful delete comment to a Table task result
 @javascript
 Scenario: Successful archive Table result with Table name
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
@@ -266,7 +287,8 @@ Scenario: Successful archive Table result with Table name
 @wip
 Scenario: Unsuccessful add File result #doesnt work
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I click "Add" button
  Then I should see File "can't be blank"
  And I click "Cancel" button
@@ -274,7 +296,8 @@ Scenario: Unsuccessful add File result #doesnt work
 @javascript
 Scenario: Successful add File result with File name
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -284,7 +307,8 @@ Scenario: Successful add File result with File name
 @javascript
 Scenario: Successful add File result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I click "Add" button
  And WAIT
@@ -293,7 +317,8 @@ Scenario: Successful add File result
 @wip
 Scenario: Successful edit File result with File name
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -305,7 +330,8 @@ Scenario: Successful edit File result with File name
 @javascript
 Scenario: Successful add comment to a File task result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -317,7 +343,8 @@ Scenario: Successful add comment to a File task result
 @javascript
 Scenario: Successful edit comment to a File task result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -332,7 +359,8 @@ Scenario: Successful edit comment to a File task result
 @javascript
 Scenario: Unsuccessful edit comment to a File task result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -347,7 +375,8 @@ Scenario: Unsuccessful edit comment to a File task result
 @javascript
 Scenario: Unsuccessful delete comment to a File task result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -362,7 +391,8 @@ Scenario: Unsuccessful delete comment to a File task result
 @javascript
 Scenario: Successful delete comment to a File task result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -376,7 +406,8 @@ Scenario: Successful delete comment to a File task result
 @javascript
 Scenario: Successful archive File result with File name
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -387,7 +418,8 @@ Scenario: Successful archive File result with File name
 @javascript
 Scenario: Download archived Text result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -396,26 +428,31 @@ Scenario: Download archived Text result
  And WAIT
  And I am on Task archive page
  And I click button with id "dropdownMenu1"
- Then I click "Download" link within dropdown menu
+ Then I click on "Download" within dropdown menu
+ And I delete downloaded file "LJ ZOO.txt"
  #no notification can be found
 
 @javascript
 Scenario: Download archived Table result
  Given I am on Task results page
- And I click "Table" button
- And I click element with css ".save-result"
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
+ And I fill in "Test table" in "#result_name" field
+ And I click "Add" button
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And WAIT
  And I am on Task archive page
  And I click button with id "dropdownMenu1"
- Then I click "Download" link within dropdown menu
+ Then I click on "Download" within dropdown menu
+ And I delete downloaded file "Test table.txt"
  #no notification can be found
 
 @javascript
 Scenario: Download archived File result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -424,14 +461,16 @@ Scenario: Download archived File result
  And WAIT
  And I am on Task archive page
  And I click button with id "dropdownMenu1"
- And I click "View" link within dropdown menu
+ And I click on "View" within dropdown menu
  Then I click element with css ".file-download-link"
+ And I delete downloaded file "Moon.png"
  #no notification can be found
 
 @javascript
 Scenario: Delete archived Text result
  Given I am on Task results page
- And I click "Text" button
+ And I click "Add new result" button
+ And I click on "Text" within dropdown menu
  And I fill in "LJ ZOO" in "#result_name" field
  And I fill in "Živali pa so se odpravile dalje po svetu." in "#result_text_attributes_textarea" rich text editor field
  And I click "Add" button
@@ -440,28 +479,30 @@ Scenario: Delete archived Text result
  And WAIT
  And I am on Task archive page
  And I click button with id "dropdownMenu1"
- And I click "Delete" link within dropdown menu
+ And I click on "Delete" within dropdown menu
  And I click to OK on confirm dialog
  Then I should see "Sucessfully removed result LJ ZOO from task Experiment design." flash message
 
 @javascript
 Scenario: Delete archived Table result
  Given I am on Task results page
- And I click "Table" button
+ And I click "Add new result" button
+ And I click on "Table" within dropdown menu
  And I click "Add" button
  And I click "fa-briefcase" icon
  And I click to OK on confirm dialog
  And WAIT
  And I am on Task archive page
  And I click button with id "dropdownMenu1"
- Then I click "Delete" link within dropdown menu
+ Then I click on "Delete" within dropdown menu
  And I click to OK on confirm dialog
  Then I should see "Sucessfully removed result from task Experiment design." flash message
 
 @javascript
 Scenario: Delete archived File result
  Given I am on Task results page
- And I click "File" button
+ And I click "Add new result" button
+ And I click on "File" within dropdown menu
  And I attach file "Moon.png" to the drag-n-drop field
  And I fill in "MED" in "div.form-group:nth-child(1) > input:nth-child(2)" field
  And I click "Add" button
@@ -470,6 +511,6 @@ Scenario: Delete archived File result
  And WAIT
  And I am on Task archive page
  And I click button with id "dropdownMenu1"
- And I click "Delete" link within dropdown menu
+ And I click on "Delete" within dropdown menu
  And I click to OK on confirm dialog
  Then I should see "Sucessfully removed result MED from task Experiment design." flash message

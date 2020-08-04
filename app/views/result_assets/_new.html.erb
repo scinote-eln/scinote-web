@@ -26,7 +26,7 @@
                    class: 'btn btn-primary save-result',
                    onclick: 'DragNDropResults.processResult(event);',
                    disabled: true,
-                   data: { href: my_module_result_assets_path(format: :json) } %>
+                   data: { href: my_module_result_assets_path(page: params[:page], order: params[:order], format: :json) } %>
     </div>
   <% end %>
 </div>

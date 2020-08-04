@@ -46,7 +46,7 @@ class ResultTextsController < ApplicationController
       result_annotation_notification
       log_activity(:add_result)
       flash[:success] = t('result_texts.create.success_flash', module: @my_module.name)
-      redirect_to results_my_module_path(@my_module)
+      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
     else
       render json: @result.errors, status: :bad_request
     end

@@ -1,5 +1,5 @@
 <div class="well">
-  <%= bootstrap_form_for(@result, url: my_module_result_texts_path(format: :json),
+  <%= bootstrap_form_for(@result, url: my_module_result_texts_path(format: :json, page: params[:page], order: params[:order]),
                                   data: { 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH },
                                   remote: true) do |f| %>
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
