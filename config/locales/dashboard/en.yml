@@ -13,11 +13,7 @@ en:
         date_asc: "Due Date"
         atoz: "From A to Z"
         ztoa: "From Z to A"
-        display: "Display statuses"
-        statuses:
-          placeholder: "Select statuses"
-          all_selected: "All selected"
-          selected: "selected"
+        display: "Display"
         uncompleted_tasks: "Tasks in progress"
         completed_tasks: "Tasks completed"
         project: "Project"
