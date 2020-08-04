@@ -519,6 +519,7 @@ en:
         module:
           user_time: "Task created on %{timestamp}."
           started_on: "Start date: %{started_on}"
+          status: "Status:"
           no_start_date: "No start date"
           due_date: "Due date: %{due_date}"
           no_due_date: "No due date"
