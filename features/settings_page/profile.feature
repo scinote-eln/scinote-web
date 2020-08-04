@@ -54,7 +54,7 @@ Scenario: Successfully changes user initials
 @javascript
 Scenario: Successfully changes user email
   Given I'm on the profile page
-  Then I click "Edit" link within "#user-email-field"
+  Then I click "Change" link within "#user-email-field"
   And I change "nonadmin@myorg.com" with "user@myorg.com" email
   And I fill in "mypassword1234" in "#edit-email-current-password" field of ".settings-page-email" form
   Then I click "Save" button
@@ -63,7 +63,7 @@ Scenario: Successfully changes user email
 @javascript
 Scenario: Unsuccessful Password Change, password is too short
   Given I'm on the profile page
-  Then I click "Edit" link within "#user-password-field"
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypass" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypass" in "#user_password_confirmation" field of ".settings-page-change-password" form
@@ -73,7 +73,7 @@ Scenario: Unsuccessful Password Change, password is too short
 @javascript
 Scenario: Unsuccessful Password Change, passwords does not match
   Given I'm on the profile page
-  Then I click "Edit" link within "#user-password-field"
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypassword56788" in "#user_password_confirmation" field of ".settings-page-change-password" form
@@ -83,7 +83,7 @@ Scenario: Unsuccessful Password Change, passwords does not match
 @javascript
 Scenario: Unsuccessful Password Change, current password is invalid
   Given I'm on the profile page
-  Then I click "Edit" link within "#user-password-field"
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword123" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password_confirmation" field of ".settings-page-change-password" form
@@ -93,7 +93,7 @@ Scenario: Unsuccessful Password Change, current password is invalid
 @javascript
 Scenario: Successful Password Change
   Given I'm on the profile page
-  Then I click "Edit" link within "#user-password-field"
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password_confirmation" field of ".settings-page-change-password" form
