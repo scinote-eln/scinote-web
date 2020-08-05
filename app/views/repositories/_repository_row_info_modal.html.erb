@@ -39,58 +39,56 @@
           <% end %>
         </p>
 
-        <% if @repository_row.repository.is_a?(Repository) %>
-          <% if @assigned_modules.size.positive? %>
-            <div>
-              <%= t('repository_row.modal_info.title', nr: @assigned_modules.size) %>
-              <%= t('repository_row.modal_info.private_tasks', nr: @private_modules.size) if @private_modules.size.positive? %>
-            </div>
-            <% if @viewable_modules.size.positive? %>
-            <div class="linked-children-datatable">
-              <table id="repository_row-info-table" class="table dataTable no-footer" role="grid">
-                <tbody>
-                  <% @viewable_modules.each do |my_module|  %>
-                    <tr role="row">
-                      <td class="sorting_1">
-                        <ol class='breadcrumb'>
-                          <li>
-                            <span class='fas fa-users'></span>&nbsp;
-                            <%= render partial: 'search/results/partials/team_text.html.erb',
-                                       locals: { team: my_module.experiment.project.team } %>
-                          </li>
-                          <li>
-                            <%= image_tag 'icon_small/project.svg' %>
-                            <%= render partial: 'search/results/partials/project_text.html.erb',
-                                      locals: { project: my_module.experiment.project } %>
-                          </li>
-                          <li>
-                            <%= image_tag 'icon_small/experiment.svg' %>
-                            <%= render partial: 'search/results/partials/experiment_text.html.erb',
-                                      locals: { experiment: my_module.experiment } %>
-                          </li>
-                          <li>
-                            <%= image_tag 'icon_small/task.svg' %>
-                            <%= render partial: 'search/results/partials/my_module_text.html.erb',
-                                      locals: { my_module: my_module,
-                                                link_to_page: :repositories,
-                                                repository: @repository_row.repository } %>
-                          </li>
-                        </ol>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-                <thead>
-                  <tr>
-                    <th></th>
+        <% if @assigned_modules.size.positive? %>
+          <div>
+            <%= t('repository_row.modal_info.title', nr: @assigned_modules.size) %>
+            <%= t('repository_row.modal_info.private_tasks', nr: @private_modules.size) if @private_modules.size.positive? %>
+          </div>
+          <% if @viewable_modules.size.positive? %>
+          <div class="linked-children-datatable">
+            <table id="repository_row-info-table" class="table dataTable no-footer" role="grid">
+              <tbody>
+                <% @viewable_modules.each do |my_module|  %>
+                  <tr role="row">
+                    <td class="sorting_1">
+                      <ol class='breadcrumb'>
+                        <li>
+                          <span class='fas fa-users'></span>&nbsp;
+                          <%= render partial: 'search/results/partials/team_text.html.erb',
+                                     locals: { team: my_module.experiment.project.team } %>
+                        </li>
+                        <li>
+                          <%= image_tag 'icon_small/project.svg' %>
+                          <%= render partial: 'search/results/partials/project_text.html.erb',
+                                    locals: { project: my_module.experiment.project } %>
+                        </li>
+                        <li>
+                          <%= image_tag 'icon_small/experiment.svg' %>
+                          <%= render partial: 'search/results/partials/experiment_text.html.erb',
+                                    locals: { experiment: my_module.experiment } %>
+                        </li>
+                        <li>
+                          <%= image_tag 'icon_small/task.svg' %>
+                          <%= render partial: 'search/results/partials/my_module_text.html.erb',
+                                    locals: { my_module: my_module,
+                                              link_to_page: :repositories,
+                                              repository: @repository_row.repository } %>
+                        </li>
+                      </ol>
+                    </td>
                   </tr>
-                </thead>
-              </table>
-            </div>
-            <% end %>
-          <% else %>
-            <em><%= t('repository_row.modal_info.no_tasks') %></em>
+                <% end %>
+              </tbody>
+              <thead>
+                <tr>
+                  <th></th>
+                </tr>
+              </thead>
+            </table>
+          </div>
           <% end %>
+        <% else %>
+          <em><%= t('repository_row.modal_info.no_tasks') %></em>
         <% end %>
       </div>
       <script>FilePreviewModal.init()</script>

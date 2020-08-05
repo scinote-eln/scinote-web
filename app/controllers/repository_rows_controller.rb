@@ -4,9 +4,9 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
-  before_action :load_repository
-  before_action :load_repository_row, only: %i(update show assigned_task_list)
-  before_action :check_read_permissions, except: %i(create update delete_records copy_records)
+  before_action :load_repository, except: :show
+  before_action :load_repository_row, only: %i(update assigned_task_list)
+  before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
@@ -51,7 +51,12 @@ class RepositoryRowsController < ApplicationController
   end
 
   def show
-    @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+    @repository_row = RepositoryRow.find_by(id: params[:id])
+    render_403 unless can_read_repository?(@repository_row.repository)
+
+    row = RepositoryRow.find_by(id: @repository_row.parent_id) if @repository_row.parent_id
+    row ||= @repository_row
+    @assigned_modules = row.my_modules.joins(experiment: :project)
     @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
     @private_modules = @assigned_modules - @viewable_modules
 
