@@ -143,9 +143,8 @@ class Extends
     step: nil
   }
 
-  ACTIVITY_MESSAGE_ITEMS_TYPES =
-    ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset Repository)
-    .freeze
+  ACTIVITY_MESSAGE_ITEMS_TYPES = ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step
+                                                             Asset TinyMceAsset Repository RepositorySnapshot).freeze
 
   ACTIVITY_TYPES = {
     create_project: 0,
@@ -287,7 +286,9 @@ class Extends
     archive_inventory_item: 142,
     restore_inventory_item: 143,
     archive_inventory: 144,
-    restore_inventory: 145
+    restore_inventory: 145,
+    export_inventory_items_assigned_to_task: 146,
+    export_inventory_snapshot_items_assigned_to_task: 147
   }
 
   ACTIVITY_GROUPS = {

@@ -173,6 +173,8 @@ en:
       delete_chemical_structure_on_protocol_html: "%{user} deleted chemical structure %{asset_name} on protocol %{protocol}."
       delete_chemical_structure_on_task_html: "%{user} deleted chemical structure %{asset_name} on task %{my_module}."
       protocol_description_in_task_edited_html: "%{user} edited protocol description on task %{my_module}."
+      export_inventory_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository}: Live version."
+      export_inventory_snapshot_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository_snapshot}: Snapshot of %{created_at}."
 
     activity_name:
       create_project: "Project created"
@@ -311,6 +313,8 @@ en:
       delete_chemical_structure_on_protocol: "Chemical structure on protocol deleted"
       delete_chemical_structure_on_task: "Chemical structure on task deleted"
       protocol_description_in_task_edited: "Protocol description in task edited"
+      export_inventory_items_assigned_to_task: "Task-assigned inventory items exported (live version)"
+      export_inventory_snapshot_items_assigned_to_task: "Task-assigned inventory items exported (snapshot)"
 
     activity_group:
       projects: "Projects"
