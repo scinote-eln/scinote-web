@@ -60,9 +60,8 @@ class CanvasController < ApplicationController
     positions = {}
     if update_params[:positions].present?
       poss = update_params[:positions].split(';')
-      (poss.collect { |pos| pos.split(',') }).each_with_index do |pos, index|
-        unless pos.length == 3 && pos[0].is_a?(String) &&
-               float?(pos[1]) && float?(pos[2])
+      (poss.collect { |pos| pos.split(',') }).each_with_index do |pos, _|
+        unless pos.length == 3 && pos[0].is_a?(String) && float?(pos[1]) && float?(pos[2])
           return render_403
         end
         x = pos[1].to_i

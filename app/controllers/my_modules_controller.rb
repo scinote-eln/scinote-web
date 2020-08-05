@@ -245,6 +245,16 @@ class MyModulesController < ApplicationController
                                 .experiment
                                 .project
                                 .team)
+    @results_order = params[:order] || 'new'
+    @results = @my_module.results.where(archived: false).page(params[:page])
+                         .per(Constants::RESULTS_PER_PAGE_LIMIT)
+
+    @results = case @results_order
+               when 'old' then @results.order(created_at: :asc)
+               when 'atoz' then @results.order(name: :asc)
+               when 'ztoa' then @results.order(name: :desc)
+               else @results.order(created_at: :desc)
+               end
   end
 
   def archive

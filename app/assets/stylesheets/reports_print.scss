@@ -42,20 +42,24 @@ div.print-report {
   .report-project-header-element {
     & > .report-element-body .project-name {
       color: $color-black;
+      white-space: nowrap;
     }
 
     &:hover > .report-element-body .project-name {
       color: $color-black;
+      white-space: nowrap;
     }
   }
 
   .report-module-element:hover {
     & > .report-element-body .module-name {
       color: $color-black;
+      white-space: nowrap;
     }
 
     &:hover > .report-element-body .module-name {
       color: $color-black;
+      white-space: nowrap;
     }
   }
 
@@ -72,10 +76,12 @@ div.print-report {
   .report-step-element {
     & > .report-element-body .step-name {
       color: $color-black;
+      width: 100%;
     }
 
     &:hover > .report-element-body .step-name {
       color: $color-black;
+      width: 100%;
     }
   }
 
@@ -92,30 +98,42 @@ div.print-report {
   .report-step-table-element {
     & > .report-element-header .table-name {
       color: $color-black;
+      white-space: nowrap;
     }
 
     &:hover > .report-element-header .table-name {
       color: $color-black;
+      white-space: nowrap;
     }
   }
 
   .report-step-asset-element {
     & > .report-element-header .file-name {
-      color: $color-black;
+      em {
+        color: $color-black;
+        white-space: nowrap;
+      }
     }
 
     &:hover > .report-element-header .file-name {
-      color: $color-black;
+      em {
+        color: $color-black;
+        white-space: nowrap;
+      }
     }
   }
 
   .report-step-checklist-element {
+    page-break-inside: avoid;
+
     & > .report-element-header .checklist-name {
       color: $color-black;
+      white-space: nowrap;
     }
 
     &:hover > .report-element-header .checklist-name {
       color: $color-black;
+      white-space: nowrap;
     }
   }
 
@@ -123,12 +141,14 @@ div.print-report {
     & > .report-element-header {
       .comments-icon,.comments-name {
         color: $color-black !important;
+        white-space: nowrap;
       }
     }
 
     &:hover > .report-element-header {
       .comments-icon,.comments-name {
         color: $color-black !important;
+        white-space: nowrap;
       }
     }
   }
@@ -151,12 +171,14 @@ div.print-report {
     & > .report-element-header {
       .activity-icon,.activity-name {
         color: $color-black !important;
+        white-space: nowrap;
       }
     }
 
     &:hover > .report-element-header {
       .activity-icon,.activity-name {
         color: $color-black !important;
+        white-space: nowrap;
       }
     }
   }
@@ -165,12 +187,34 @@ div.print-report {
     & > .report-element-header {
       .repository-icon,.repository-name {
         color: $color-black !important;
+        white-space: nowrap;
       }
     }
 
     &:hover > .report-element-header {
       .repository-icon,.repository-name {
         color: $color-black !important;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .report-result-element {
+    & > .report-element-header {
+      .result-icon,
+      .result-name,
+      .file-name{
+        color: $color-black !important;
+        white-space: nowrap;
+      }
+    }
+
+    &:hover > .report-element-header {
+      .result-icon,
+      .result-name,
+      .file-name {
+        color: $color-black !important;
+        white-space: nowrap;
       }
     }
   }

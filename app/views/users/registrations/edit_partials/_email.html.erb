@@ -1,0 +1,38 @@
+<%= form_for(resource,
+             as: resource_name,
+             url: registration_path(resource_name, format: :json),
+             remote: true,
+             html: { method: :put, "data-for" => "email", class: 'settings-page-email', id: 'user-email-field' }) do |f| %>
+  <div data-part="view">
+    <div class="form-group">
+      <%= f.label t("users.registrations.edit.email_label") %>
+      <div class="user-attribute">
+        <%= @user.email %>
+        <a href="#" class="btn btn-default" data-action="edit"><%= t("general.change") %></a>
+      </div>
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div class="alert alert-info" style="margin-top: 15px;" role="alert">
+          <span class="fas fa-info-circle" aria-hidden="true"></span>
+          <%=t "users.registrations.edit.waiting_for_confirm", email: resource.unconfirmed_email %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div data-part="edit" style="display: none;">
+    <div class="well">
+      <h4><%=t "users.registrations.edit.email_title" %></h4>
+      <div class="form-group sci-input-container">
+        <%= f.label :email, t("users.registrations.edit.new_email_label") %>
+        <%= f.email_field :email, class: "form-control sci-input-field", "data-role" => "edit" %>
+      </div>
+      <div class="form-group sci-input-container">
+        <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
+        <%= f.password_field :current_password, autocomplete: "off", class: "form-control sci-input-field", "data-role" => "clear", id: 'edit-email-current-password' %>
+      </div>
+      <div class="align-right">
+        <a href="#" class="btn btn-light" data-action="cancel"><%=t "general.cancel" %></a>
+        <%= f.button t("general.save"), class: "btn btn-success" %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -159,9 +159,7 @@ var MarvinJsEditorApi = (function() {
           newAsset.find('.file-preview-link').css('top', '0px');
         }, 200);
       } else if (config.objectType === 'Result') {
-        newAsset.prependTo($(config.container));
-        Results.expandResult(newAsset);
-        Comments.init();
+        location.reload();
       } else if (config.objectType === 'TinyMceAsset') {
         json = tinymce.util.JSON.parse(result);
         config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));

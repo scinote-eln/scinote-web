@@ -10,7 +10,7 @@
 
   .content-header {
     align-items: center;
-    border-bottom: $border-default;
+    border-bottom: $border-tertiary;
     display: flex;
     height: 5em;
 
@@ -32,11 +32,12 @@
 
       .dropdown-menu {
         @include font-button;
-        min-width: 250px;
+        min-width: auto;
 
         li {
           cursor: pointer;
           padding: 1em;
+          white-space: nowrap;
 
           .button-icon {
             margin-right: .5em;

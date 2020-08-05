@@ -28,9 +28,9 @@ module Dashboard
       tasks = filter_by_state(tasks)
 
       case task_filters[:sort]
-      when 'date_desc'
-        tasks = tasks.order('my_modules.due_date': :desc).order('my_modules.name': :asc)
-      when 'date_asc'
+      when 'start_date'
+        tasks = tasks.order('my_modules.started_on': :asc).order('my_modules.name': :asc)
+      when 'due_date'
         tasks = tasks.order('my_modules.due_date': :asc).order('my_modules.name': :asc)
       when 'atoz'
         tasks = tasks.order('my_modules.name': :asc)

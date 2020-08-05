@@ -29,7 +29,7 @@ module ProtocolsImporter
   def import_into_existing(protocol, protocol_json, user, team)
     # Firstly, destroy existing protocol's contents
     protocol.tiny_mce_assets.destroy_all
-    protocol.destroy_contents(user)
+    protocol.destroy_contents
     protocol.reload
 
     # Alright, now populate the protocol
@@ -146,7 +146,7 @@ module ProtocolsImporter
   def populate_rte(object_json, object, team)
     return populate_rte_legacy(object_json) unless object_json['descriptionAssets']
 
-    description = TinyMceAsset.update_old_tinymce(object_json['description'], nil)
+    description = TinyMceAsset.update_old_tinymce(object_json['description'], nil, true)
     object_json['descriptionAssets'].values.each do |tiny_mce_img_json|
       tiny_mce_img = TinyMceAsset.new(
         object: object,

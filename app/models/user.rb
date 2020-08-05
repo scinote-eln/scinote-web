@@ -13,7 +13,7 @@ class User < ApplicationRecord
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
-         :timeoutable, :omniauthable,
+         :timeoutable, :omniauthable, :lockable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
 
@@ -639,6 +639,48 @@ class User < ApplicationRecord
     return '' unless avatar.attached?
 
     avatar.blob&.filename&.sanitized
+  end
+
+  def valid_otp?(otp)
+    raise StandardError, 'Missing otp_secret' unless otp_secret
+
+    totp = ROTP::TOTP.new(otp_secret, issuer: 'sciNote')
+    totp.verify(otp, drift_behind: 10)
+  end
+
+  def assign_2fa_token!
+    self.otp_secret = ROTP::Base32.random
+    save!
+  end
+
+  def enable_2fa!
+    recovery_codes = []
+    Constants::TWO_FACTOR_RECOVERY_CODE_COUNT.times do
+      recovery_codes.push(SecureRandom.hex(Constants::TWO_FACTOR_RECOVERY_CODE_LENGTH / 2))
+    end
+
+    update!(
+      two_factor_auth_enabled: true,
+      otp_recovery_codes: recovery_codes.map { |c| Devise::Encryptor.digest(self.class, c) }
+    )
+
+    recovery_codes
+  end
+
+  def disable_2fa!
+    update!(two_factor_auth_enabled: false, otp_secret: nil, otp_recovery_codes: nil)
+  end
+
+  def recover_2fa!(code)
+    return unless otp_recovery_codes
+
+    otp_recovery_codes.each do |recovery_code|
+      if Devise::Encryptor.compare(self.class, recovery_code, code)
+        update!(otp_recovery_codes: otp_recovery_codes.reject { |i| i == recovery_code })
+        return true
+      end
+    end
+    false
   end
 
   protected

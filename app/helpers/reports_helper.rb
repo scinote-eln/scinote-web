@@ -117,8 +117,9 @@ module ReportsHelper
 
   def font_awesome_cdn_link_tag
     stylesheet_link_tag(
-      'https://maxcdn.bootstrapcdn.com/font-awesome' \
-      '/4.6.3/css/font-awesome.min.css'
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/regular.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css'
     )
   end
 

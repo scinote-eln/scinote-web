@@ -7,6 +7,7 @@ class MyModule < ApplicationRecord
   enum state: Extends::TASKS_STATES
 
   before_create :create_blank_protocol
+  before_validation :set_completed_on, if: :state_changed?
   before_create :assign_default_status_flow
   before_save :exec_status_consequences, if: :my_module_status_id_changed?
 
@@ -19,6 +20,7 @@ class MyModule < ApplicationRecord
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: proc { |mm| !mm.my_module_group_id.nil? }
   validate :coordinates_uniqueness_check, if: :active?
+  validates :completed_on, presence: true, if: proc { |mm| mm.completed? }
 
   validate :check_status_conditions, if: :my_module_status_id_changed?
   validate :check_status_implications, unless: :my_module_status_id_changed?
@@ -479,10 +481,6 @@ class MyModule < ApplicationRecord
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  def completed?
-    state == 'completed'
-  end
-
   # Check if my_module is ready to become completed
   def check_completness_status
     if protocol && protocol.steps.count > 0
@@ -493,16 +491,6 @@ class MyModule < ApplicationRecord
       return true if completed
     end
     false
-  end
-
-  def complete
-    self.state = 'completed'
-    self.completed_on = DateTime.now
-  end
-
-  def uncomplete
-    self.state = 'uncompleted'
-    self.completed_on = nil
   end
 
   def assign_user(user, assigned_by = nil)
@@ -521,6 +509,12 @@ class MyModule < ApplicationRecord
   end
 
   private
+
+  def set_completed_on
+    return if completed? && completed_on.present?
+
+    self.completed_on = completed? ? DateTime.now : nil
+  end
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)

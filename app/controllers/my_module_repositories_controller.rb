@@ -4,7 +4,8 @@ class MyModuleRepositoriesController < ApplicationController
   include ApplicationHelper
 
   before_action :load_my_module
-  before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html)
+  before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html export_repository)
+  before_action :load_repository_or_snapshot, only: :export_repository
   before_action :check_my_module_view_permissions
   before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html)
   before_action :check_assign_repository_records_permissions, only: :update
@@ -116,6 +117,15 @@ class MyModuleRepositoriesController < ApplicationController
     render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_dropdown_list') }
   end
 
+  def export_repository
+    if params[:header_ids]
+      RepositoryZipExport.generate_zip(params, @repository, current_user)
+      render json: { message: t('zip_export.export_request_success') }, status: :ok
+    else
+      render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_my_module
@@ -125,6 +135,12 @@ class MyModuleRepositoriesController < ApplicationController
 
   def load_repository
     @repository = Repository.find_by(id: params[:id])
+    render_404 unless @repository
+  end
+
+  def load_repository_or_snapshot
+    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:id])
+    @repository ||= RepositorySnapshot.find_by(id: params[:id])
     render_404 unless @repository
   end
 

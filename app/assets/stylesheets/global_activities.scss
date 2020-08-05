@@ -9,19 +9,18 @@
   display: flex;
   flex-direction: column;
   height: calc(100vh - 89px);
-  margin-top: 2em;
   padding: 0 15px;
 
   &.task-activities {
     height: calc(100vh - 136px);
+    padding-top: 20px;
   }
 
   .ga-top {
     .ga-title {
       border-bottom: 1px solid $color-gainsboro;
-      height: 35px;
-      margin: 20px -15px 0;
-      padding: 0 0 10px 15px;
+      margin-top: 14px;
+      padding: 15px 0;
       position: relative;
       width: calc(100% + 30px);
     }

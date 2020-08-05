@@ -22,7 +22,7 @@ describe SystemNotification do
 
     describe '#modal_body' do
       it { is_expected.to validate_presence_of(:modal_body) }
-      it { is_expected.to validate_length_of(:modal_body).is_at_most(50000) }
+      it { is_expected.to validate_length_of(:modal_body).is_at_most(100000) }
     end
 
     describe '#description' do

@@ -7,14 +7,44 @@
 @import "mixins";
 
 #results-toolbar {
-  .add-result-toolbar {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
+  align-items: center;
+  display: flex;
+
+  .add-result-dropdown {
+    margin-right: auto;
+
+    li {
+      cursor: pointer;
+      padding: .5em 1em;
+
+      .fas {
+        padding-right: .5em;
+      }
+
+      .create-wopi-file-btn {
+        padding: 0;
+
+        img {
+          margin-left: -5px;
+        }
+      }
+    }
   }
 
-  .add-result-text {
-    display: inline-block;
-    margin-right: 5px;
+  .sort-result-dropdown {
+    margin-left: .5em;
+
+    .dropdown-menu {
+      a {
+        @include font-button;
+        padding: .5em 1em;
+
+        &.selected::after {
+          @include font-awesome;
+          content: $font-fas-check;
+          float: right;
+        }
+      }
+    }
   }
 }

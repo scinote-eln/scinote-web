@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultAsset
-  def draw_result_asset(subject)
-    result = Result.find_by_id(subject['id']['result_id'])
+  def draw_result_asset(subject, my_module)
+    result = my_module.results.find_by(id: subject['id']['result_id'])
     return unless result
 
     asset = result.asset
@@ -20,7 +20,7 @@ module Reports::Docx::DrawResultAsset
     asset_image_preparing(asset) if asset.image?
 
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, result)
     end
   end
 end

@@ -18,7 +18,7 @@ class Constants
   # Max characters for long text fields
   TEXT_MAX_LENGTH = 10000
   # Max characters for rich text fields (in html format)
-  RICH_TEXT_MAX_LENGTH = 50000
+  RICH_TEXT_MAX_LENGTH = 100000
   # Max characters for color field (given in HEX format)
   COLOR_MAX_LENGTH = 7
   # Max characters for text in dropdown list element
@@ -64,6 +64,8 @@ class Constants
   ATWHO_SEARCH_LIMIT = 5
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
+  # Results limited query/display elements for pages
+  RESULTS_PER_PAGE_LIMIT = 10
 
   #=============================================================================
   # File and data memory size
@@ -205,6 +207,23 @@ class Constants
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
 
+  TWO_FACTOR_URL = {
+    google: {
+      android: 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2',
+      ios: 'https://apps.apple.com/us/app/google-authenticator/id388497605'
+    },
+    microsoft: {
+      android: 'https://play.google.com/store/apps/details?id=com.azure.authenticator',
+      ios: 'https://apps.apple.com/us/app/microsoft-authenticator/id983156458'
+    },
+    two_fa: {
+      android: 'https://play.google.com/store/apps/details?id=com.twofasapp',
+      ios: 'https://apps.apple.com/us/app/2fa-authenticator-2fas/id1217793794'
+    },
+  }
+  TWO_FACTOR_RECOVERY_CODE_COUNT = 6
+  TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
+
   #=============================================================================
   # Protocol importers
   #=============================================================================
@@ -299,7 +318,7 @@ class Constants
 
   WHITELISTED_ATTRIBUTES = [
     'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
-    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border'
   ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {

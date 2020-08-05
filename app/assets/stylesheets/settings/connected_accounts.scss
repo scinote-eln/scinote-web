@@ -1,3 +1,14 @@
+.user-account-connected-accounts {
+  .tab-pane-settings {
+    padding-top: 0;
+  }
+
+  .connected-accounts-title {
+    border-bottom: $border-tertiary;
+    padding-bottom: 15px;
+  }
+}
+
 .connected-account {
   border: $border-default;
   border-radius: $border-radius-default;

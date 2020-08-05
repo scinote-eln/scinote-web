@@ -1,6 +1,6 @@
-/* eslint-disable no-param-reassign, no-use-before-define */
+/* eslint-disable no-param-reassign, no-use-before-define  */
 /* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
-initAssignedTasksDropdown I18n */
+initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport */
 
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
@@ -170,7 +170,7 @@ var MyModuleRepositories = (function() {
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
         DataTableHelpers.initLengthApearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper);
+        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
         if (options.assign_mode) {
           renderFullViewAssignButtons();
@@ -643,6 +643,22 @@ var MyModuleRepositories = (function() {
     });
   }
 
+  function initExportAssignedRows() {
+    FULL_VIEW_MODAL.on('click', '#exportAssignedItems', function() {
+      var headerIds = [];
+      $(FULL_VIEW_TABLE.table().container()).find('.dataTables_scrollHead thead tr th').each(function() {
+        headerIds.push(prepareRepositoryHeaderForExport($(this)));
+      });
+      $.post($(FULL_VIEW_TABLE.table().container()).find('.dataTable').data('export-url'), {
+        header_ids: headerIds
+      }, function(response) {
+        HelperModule.flashAlertMsg(response.message, 'success');
+      }).error((response) => {
+        HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
+      });
+    });
+  }
+
   return {
     init: () => {
       initSimpleTable();
@@ -651,6 +667,7 @@ var MyModuleRepositories = (function() {
       initVersionsSidebarActions();
       initRepoistoryAssignView();
       initSelectAllCheckbox();
+      initExportAssignedRows();
     }
   };
 }());

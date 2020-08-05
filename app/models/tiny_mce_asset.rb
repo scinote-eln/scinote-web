@@ -103,7 +103,7 @@ class TinyMceAsset < ApplicationRecord
     asset.team.save
   end
 
-  def self.update_old_tinymce(description, obj = nil)
+  def self.update_old_tinymce(description, obj = nil, import = false)
     return description unless description
 
     description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|

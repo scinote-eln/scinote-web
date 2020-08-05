@@ -49,3 +49,37 @@ function initAssignedTasksDropdown(table) {
     loadTasks(cell);
   });
 }
+
+function prepareRepositoryHeaderForExport(th) {
+  var val;
+  switch ($(th).attr('id')) {
+    case 'checkbox':
+      val = -1;
+      break;
+    case 'assigned':
+      val = -2;
+      break;
+    case 'row-id':
+      val = -3;
+      break;
+    case 'row-name':
+      val = -4;
+      break;
+    case 'added-by':
+      val = -5;
+      break;
+    case 'added-on':
+      val = -6;
+      break;
+    case 'archived-by':
+      val = -7;
+      break;
+    case 'archived-on':
+      val = -8;
+      break;
+    default:
+      val = th.attr('id');
+  }
+
+  return val;
+}

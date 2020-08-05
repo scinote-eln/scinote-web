@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawMyModuleRepository
-  def draw_my_module_repository(subject)
-    my_module = MyModule.find_by(id: subject['id']['my_module_id'])
+  def draw_my_module_repository(subject, my_module)
     return unless my_module
 
     repository_id = subject['id']['repository_id']
     repository = ::RepositoryBase.find(repository_id)
     repository_data = my_module.repository_docx_json(repository)
 
-    return false unless repository_data[:rows].any?
+    return false unless repository_data[:rows].any? && can_read_repository?(@user, repository)
 
     table = prepare_row_columns(repository_data)
 

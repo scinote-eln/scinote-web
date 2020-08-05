@@ -39,35 +39,16 @@ class ResultTextsController < ApplicationController
     )
     @result.last_modified_by = current_user
 
-    respond_to do |format|
-      if @result.save && @result_text.save
-        # link tiny_mce_assets to the text result
-        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
+    if @result.save && @result_text.save
+      # link tiny_mce_assets to the text result
+      TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
 
-        result_annotation_notification
-        log_activity(:add_result)
-
-        format.html {
-          flash[:success] = t(
-            "result_texts.create.success_flash",
-            module: @my_module.name)
-          redirect_to results_my_module_path(@my_module)
-        }
-        format.json {
-          render json: {
-            html: render_to_string({
-              partial: "my_modules/result.html.erb",
-              locals: {
-                result: @result
-              }
-            })
-          }, status: :ok
-        }
-      else
-        format.json {
-          render json: @result.errors, status: :bad_request
-        }
-      end
+      result_annotation_notification
+      log_activity(:add_result)
+      flash[:success] = t('result_texts.create.success_flash', module: @my_module.name)
+      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
+    else
+      render json: @result.errors, status: :bad_request
     end
   end
 

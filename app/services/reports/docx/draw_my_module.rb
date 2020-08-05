@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawMyModule
-  def draw_my_module(subject)
+  def draw_my_module(subject, experiment)
     color = @color
     link_style = @link_style
     scinote_url = @scinote_url
-    my_module = MyModule.find_by_id(subject['id']['my_module_id'])
+    my_module = experiment.my_modules.find_by(id: subject['id']['my_module_id'])
     tags = my_module.tags
     return unless my_module
 
@@ -70,7 +70,7 @@ module Reports::Docx::DrawMyModule
 
     @docx.p
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, my_module)
     end
   end
 end

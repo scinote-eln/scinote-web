@@ -33,6 +33,20 @@ en:
         password_placeholder: "Enter password"
         remember_me: "Remember me"
         submit: "Log in"
+      2fa:
+        title: "Two-factor authentication"
+        description: "Enter the one-time code found in your authenticator app to log in to SciNote."
+        field: "Authenticator code"
+        error_message: "One time code is not correct."
+        no_user_error: "Cannot find user!"
+        enter: "Enter"
+        bypass_code_link: "I have a bypass code"
+      2fa_recovery:
+        title: "2FA Bypass"
+        description: "Enter one of the bypass codes provided when you creted 2FA authentication. The code will no longer be valid after use."
+        bypass_code: "Bypass code"
+        enter: "Enter"
+        not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
       auth_token_create:
@@ -766,7 +780,7 @@ en:
       load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
-      add_label: "Add new result:"
+      add_label: "Add new result"
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
@@ -811,6 +825,7 @@ en:
           no_assigned_items: 'No items assigned'
           no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
           versions_sidebar_button: 'View versions'
+          export_button: "Export .csv"
           create_button: 'Create snapshot'
           set_default_button: 'Set as default view'
           created_by: 'by %{full_name}'
@@ -1084,7 +1099,7 @@ en:
       share_inventory: "Share"
       view_only_permission_label: "You have veiw-only permission"
       show_per_page: "Show %{number} per page"
-      filter_inventory: "Filter inventory item"
+      filter_inventory: "Filter inventories"
       no_inventories:  "No inventories here"
       no_inventories_matched: "No inventories matched your search request"
       no_archived_inventories:  "No archived inventories here"
@@ -1095,7 +1110,7 @@ en:
         import_items: 'Import items'
         export_items: 'Export items'
         rename: "Rename inventory"
-        copy: "Copy inventory"
+        copy: "Duplicate inventory"
         delete: "Delete inventory"
         archive: 'Archive inventory'
         restore: 'Restore inventory'
@@ -1143,6 +1158,7 @@ en:
         active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
         archived_on: "Inventory archived on"
         archived_by: "by"
+      filter_inventory_items: "Filter inventory items"
       no_items: "No items here"
       no_items_matched: "No items matched your search request"
       no_archived_items: "No archived items here"
@@ -1640,7 +1656,7 @@ en:
         head_title: "My profile"
         title: "My profile"
         avatar_label: "Profile photo"
-        avatar_btn: "Edit photo"
+        avatar_btn: "Edit"
         avatar_modal:
           title: 'Change your profile photo'
           upload_button: 'Upload a photo'
@@ -1659,6 +1675,43 @@ en:
         password_title: "Change password"
         new_password_label: "New password"
         new_password_2_label: "New password confirmation"
+        2fa_title: "Two-factor authentication"
+        2fa_description: "Two-factor authentication (2FA) is a way of verifying a user’s identity by using a combination of two different verification methods. It adds an extra layer of security to your account and protects from potential remote attacs or other threats."
+        2fa_enabled: "Enabled"
+        2fa_button: "Enable authentication"
+        2fa_button_disable: "Disable authentication"
+        2fa_modal:
+          step_1:
+            title: "1. Install an Authenticator App on your mobile device"
+            description: "Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Bellow you can see the most commonly used ones."
+            google_auth: "Google authenticator"
+            microsoft_auth: "Microsoft authenticator"
+            2fa_auth: "2FA authenticator"
+            android: "Android"
+            ios: "iOS"
+            start: "Start"
+          step_2:
+            title: "2. Scan the QR code with your app"
+            description: "Open your authenticator app and use it to scan this code to add 2FA."
+            next: "Next"
+          step_3:
+            title: "3. Enter the code given by your authenticator app"
+            description: "Enter the generated code into the fields bellow to finalize the setup of the two-factor authorisation."
+            enter_code: "Enter authenticator code"
+            verify: "Verify"
+          step_4:
+            title: "4. Save your bypass codes"
+            verified: "2FA Verified"
+            description: "Your 2FA is now verified. Save these one-time codes bellow to access your account in case you lose your device. This way you will be able to reset the authorization."
+            download_codes: "Download codes"
+          disable:
+            title: "Disable two-factor authentication"
+            description: "Enter your password bellow to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
+            password_label: "Enter password"
+            disable_2fa: "Disable 2FA"
+        2fa_errors:
+          wrong_submit_code: "Not correct code"
+          wrong_password: "Not correct password"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
@@ -1692,7 +1745,7 @@ en:
       account:
         preferences:
           head_title: "Settings | My preferences"
-          title: "Preferences"
+          title: "My preferences"
           edit:
             time_zone_label: "Time zone"
             time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
@@ -2213,6 +2266,7 @@ en:
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
     create_wopi_file:
       button_text: 'New Office file'
+      li_text: "Office file"
       modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name & type'
       text_field_placeholder: 'New Document'
@@ -2280,6 +2334,7 @@ en:
     save: "Save"
     close: "Close"
     create: 'Create'
+    change: "Change"
     no_comments: "No comments!"
     more_comments: "More comments"
     comment_placeholder: "Your Message"
@@ -2290,6 +2345,11 @@ en:
       old_html: "Oldest first &#8593;"
       atoz_html: "Name &#8595;"
       ztoa_html: "Name &#8593;"
+    sort_new:
+      new: "Newest"
+      old: "Oldest"
+      atoz: "A-Z"
+      ztoa: "Z-A"
     module:
       one: "task"
       other: "tasks"
@@ -2354,6 +2414,12 @@ en:
         record_not_found:
           title: "Not found"
           detail: "%{model} record with id %{id} not found in the specified scope"
+        not_implemented:
+          title: "Not implemented"
+          detail: "This endpoint is not implemented yet"
+        include_not_supported:
+          title: "Not supported"
+          detail: "Include param is not supported by this endpoint"
         id_mismatch:
           title: "Object ID mismatch"
           detail: "Object ID mismatch in URL and request body"
@@ -2423,6 +2489,15 @@ en:
   marvinjs:
     new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"
+    new_li_button: "Chemical drawing"
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
     checmical_drawing: "Chemical drawings"
+
+  views:
+    pagination:
+      first: "First"
+      last: "Last"
+      previous: "Previous"
+      next: "Next"
+      truncate: "&hellip;"

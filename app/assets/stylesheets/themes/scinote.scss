@@ -469,8 +469,10 @@ a[data-toggle="tooltip"] {
 }
 
 .user-statistics {
+  margin-top: 1em;
+
   .list-inline {
-    margin-left: 15px;
+    margin-left: 0;
   }
 
   .label {
@@ -479,10 +481,8 @@ a[data-toggle="tooltip"] {
 
   li {
     height: 100px;
-    margin: 15px;
-    padding-bottom: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
+    margin-bottom: 1em;
+    margin-right: 2em;
     width: 100px;
   }
 }
@@ -1148,6 +1148,10 @@ ul.content-activities {
     margin-left: 38px;
   }
 
+  .result-panel-collapse-link {
+    text-decoration: none;
+  }
+
   .row {
     padding: 0 20px;
   }
@@ -1356,10 +1360,9 @@ ul.content-activities {
 .avatar-container {
   background-color: lighten($color-concrete, 2%);
   border-radius: 50%;
-  height: 100px;
-  margin-top: 5px;
+  height: 5em;
   position: relative;
-  width: 100px;
+  width: 5em;
 
   .avatar-edit {
     background-color: $color-silver-chalice;
@@ -1394,6 +1397,8 @@ ul.content-activities {
 
     img {
       border-radius: 50%;
+      height: 100%;
+      width: 100%;
     }
   }
 }

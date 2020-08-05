@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultTable
-  def draw_result_table(subject)
-    result = Result.find_by_id(subject['id']['result_id'])
+  def draw_result_table(subject, my_module)
+    result = my_module.results.find_by(id: subject['id']['result_id'])
     return unless result
 
     table = result.table
@@ -20,7 +20,7 @@ module Reports::Docx::DrawResultTable
     end
     @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, result)
     end
   end
 end

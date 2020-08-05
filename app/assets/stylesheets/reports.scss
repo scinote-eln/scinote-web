@@ -68,6 +68,7 @@ label {
 }
 
 .report-common-table-format {
+  page-break-inside: avoid;
   width: 100%;
 
   tr {
@@ -303,6 +304,7 @@ label {
         border-radius: 4px;
         padding: 2px 4px;
         color: $color-white;
+        white-space: nowrap;
       }
     }
   }

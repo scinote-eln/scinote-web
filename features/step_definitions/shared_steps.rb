@@ -61,16 +61,9 @@ Given(/^I click first "(.+)" link$/) do |link_text|
   first(:link, link_text).click
 end
 
-
-Then(/^I click "(.+)" link within dropdown menu$/) do |link|
-  within('.dropdown-menu') do
-    click_link link
-  end
-end
-
-Then(/^I click on "(.+)" within dropdown menu$/) do |link1|
-  within('.inner') do
-    find('.text', text: link1).click
+Then(/^I click on "(.+)" within dropdown menu$/) do |text|
+  within('.dropdown.open .dropdown-menu, .dropdown-menu.open') do
+    find('li', text: text).click
   end
 end
 
@@ -239,6 +232,11 @@ end
 
 Then('I fill bootsrap tags input with {string}') do |value|
   find('.bootstrap-tagsinput > input[type="text"]').set(value)
+end
+
+Then('I delete downloaded file {string}') do |file_name|
+  sleep 3
+  FileUtils.rm_f(Rails.root.join(file_name))
 end
 
 
