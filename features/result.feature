@@ -20,6 +20,7 @@ Scenario: Unsuccessful add Text result
  Given I am on Task results page
  And I click "Add new result" button
  And I click on "Text" within dropdown menu
+ And WAIT
  And I click "Add" button
  Then I should see "can't be blank"
  And I click "Cancel" button
