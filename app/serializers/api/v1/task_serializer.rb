@@ -3,6 +3,10 @@
 module Api
   module V1
     class TaskSerializer < ActiveModel::Serializer
+      include ApplicationHelper
+      include ActionView::Helpers::TextHelper
+      include InputSanitizeHelper
+
       type :tasks
       attributes :id, :name, :started_on, :due_date, :description, :state, :archived
       has_many :output_tasks, key: :outputs,
@@ -22,7 +26,10 @@ module Api
 
       def description
         if instance_options[:rte_rendering]
-          custom_auto_link(object.tinymce_render(:description), simple_format: false, tags: %w(img))
+          custom_auto_link(object.tinymce_render(:description),
+                           simple_format: false,
+                           tags: %w(img),
+                           team: instance_options[:team])
         else
           object.description
         end
