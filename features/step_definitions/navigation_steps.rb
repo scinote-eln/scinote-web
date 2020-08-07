@@ -15,6 +15,14 @@ Given("I'm on the Protocols result archived page of a {string} task") do |task_n
   visit archive_my_module_path(m)
 end
 
+Given("I'm on the Inventory page") do
+  visit repositories_path
+end
+
+Given("I'm on the Inventory page of {string}") do |inventory_name|
+  i = Repository.find_by(name: inventory_name)
+  visit repository_path(i)
+end
 
 # Change methods to steps
 # Settings
