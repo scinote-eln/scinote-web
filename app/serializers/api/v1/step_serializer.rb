@@ -19,7 +19,10 @@ module Api
 
       def description
         if instance_options[:rte_rendering]
-          custom_auto_link(object.tinymce_render(:description), simple_format: false, tags: %w(img))
+          custom_auto_link(object.tinymce_render(:description),
+                           simple_format: false,
+                           tags: %w(img),
+                           team: instance_options[:team])
         else
           object.description
         end

@@ -19,11 +19,11 @@ module Api
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
 
-        render jsonapi: tasks, each_serializer: TaskSerializer, rte_rendering: render_rte?
+        render jsonapi: tasks, each_serializer: TaskSerializer, rte_rendering: render_rte?, team: @team
       end
 
       def show
-        render jsonapi: @task, serializer: TaskSerializer, rte_rendering: render_rte?
+        render jsonapi: @task, serializer: TaskSerializer, rte_rendering: render_rte?, team: @team
       end
 
       def create

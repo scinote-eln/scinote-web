@@ -716,7 +716,7 @@ Rails.application.routes.draw do
                   resources :task_tags, only: %i(index show),
                             path: 'tags',
                             as: :tags
-                  resources :protocols, only: %i(index) do
+                  resources :protocols, only: %i(index show) do
                     resources :steps do
                       resources :assets, only: %i(index show create), path: 'attachments'
                       resources :checklists, path: 'checklists' do
