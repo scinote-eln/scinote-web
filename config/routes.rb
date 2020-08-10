@@ -14,7 +14,8 @@ Rails.application.routes.draw do
                                       sessions: 'users/sessions',
                                       invitations: 'users/invitations',
                                       confirmations: 'users/confirmations',
-                                      omniauth_callbacks: 'users/omniauth_callbacks' }
+                                      omniauth_callbacks: 'users/omniauth_callbacks',
+                                      passwords: 'users/passwords' }
 
     root 'dashboards#show'
 
