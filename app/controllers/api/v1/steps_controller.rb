@@ -59,7 +59,7 @@ module Api
       end
 
       def permitted_includes
-        %w(tables assets checklists checklists.checklist_items comments)
+        %w(tables assets checklists checklists.checklist_items comments user)
       end
 
       def load_step_for_managing
