@@ -287,7 +287,7 @@ module Reports::Docx::PrivateMethods
               Reports::Docx.render_p_element(c, cell_content,
                                              scinote_url: scinote_url, link_style: link_style, skip_br: true)
             elsif cell_content[:type] == 'table'
-              c.table formated_cell_content[:data]
+              c.table formated_cell_content[:data], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
             elsif cell_content[:type] == 'image'
               Reports::Docx.render_img_element(c, cell_content, table: { columns: row.children.length / 3 })
             end
@@ -301,7 +301,7 @@ module Reports::Docx::PrivateMethods
     if options[:nested_table]
       docx_table
     else
-      @docx.table docx_table
+      @docx.table docx_table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
     end
   end
 
