@@ -17,7 +17,7 @@
     <%= link_to t("devise.links.not_receive_confirmation"), new_confirmation_path(resource_name) %><br />
   <% end -%>
 
-  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' && flash[:alert] == t('devise.failure.locked') %>
     <%= link_to t("devise.links.not_receive_unlock"), new_unlock_path(resource_name) %><br />
   <% end -%>
 
