@@ -133,28 +133,33 @@
     }
   }
 
-  .current-tasks-list {
-    display: flex;
-    flex-direction: column;
+  .current-tasks-list-wrapper {
     height: 100%;
     overflow-y: auto;
-    padding: 0 10px;
     position: relative;
+  }
+
+  .current-tasks-list {
+    align-items: center;
+    display: grid;
+    grid-template-columns: auto max-content max-content;
+    padding: 0 1em;
 
     &.disabled {
       pointer-events: none;
     }
 
     .current-task-item {
-      border-bottom: $border-tertiary;
       color: $color-volcano;
-      padding: 6px;
+      display: contents;
       text-decoration: none;
 
       .current-task-breadcrumbs {
         @include font-small;
         color: $color-silver-chalice;
+        grid-column: 1 / span 3;
         line-height: 14px;
+        margin-top: .5em;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -166,131 +171,59 @@
         }
       }
 
-      .item-row {
-        display: flex;
+      .row-border {
+        border-bottom: $border-tertiary;
+        height: 32px;
+        line-height: 24px;
+        padding-bottom: 8px;
+      }
 
-        .task-name {
-          flex-grow: 1;
-          font-size: $font-size-base;
-          font-weight: bold;
-          overflow: hidden;
-          padding-right: 10px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+      .task-name {
+        flex-grow: 1;
+        font-size: $font-size-base;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .task-due-date {
+        flex-basis: 280px;
+        flex-shrink: 0;
+        padding: 0 2em 0 1em;
+
+        .fas {
+          padding: 4px;
         }
 
-        .task-due-date {
-          flex-basis: 280px;
-          flex-shrink: 0;
-          font-size: 14px;
+        &.overdue {
+          color: $brand-danger;
+        }
 
-          .fas {
-            padding: 4px;
-          }
+        &.day-prior {
+          color: $brand-warning;
+        }
 
-          &.overdue {
-            color: $brand-danger;
-          }
+        &.completed {
+          color: $brand-success;
+        }
+      }
 
-          &.day-prior {
-            color: $brand-warning;
-          }
+      .task-status-container {
+        grid-column: 3;
+        text-align: right;
 
-          &.completed {
-            color: $brand-success;
-          }
+        .task-status {
+          @include font-small;
+          border-radius: $border-radius-tag;
+          color: $color-white;
+          font-weight: bold;
+          padding: .25em .5em;
         }
       }
 
       &:hover {
         background: $color-concrete;
-      }
-    }
-  }
-
-  .task-progress-container {
-    height: 20px;
-    max-width: 250px;
-    min-width: 150px;
-    position: relative;
-    width: 100%;
-
-    &::after {
-      @include font-small;
-      @include font-awesome;
-      content: "";
-      line-height: 18px;
-      position: absolute;
-      right: 8px;
-      top: 1px;
-    }
-
-    .task-progress {
-      background: $brand-focus-light;
-      border: $border-tertiary;
-      border-radius: $border-radius-tag;
-      display: flex;
-      height: 20px;
-      position: relative;
-
-      &::after {
-        background: $color-white;
-        content: "";
-        height: 18px;
-        width: 100%;
-      }
-    }
-
-    .task-progress-label {
-      @include font-small;
-      font-weight: bold;
-      height: 20px;
-      left: 0;
-      line-height: 20px;
-      padding-left: 8px;
-      position: absolute;
-      top: 0;
-      width: calc(100% - 30px);
-    }
-
-    &.overdue {
-      .task-progress {
-        background: $brand-danger-light;
-      }
-
-      .task-progress-label {
-        color: $brand-danger;
-      }
-
-      &::after {
-        color: $brand-danger;
-        content: $font-fas-exclamation-triangle;
-      }
-    }
-
-    &.day-prior {
-      .task-progress-label {
-        color: $brand-warning;
-      }
-    }
-
-    &.completed {
-      .task-progress {
-        outline: $border-success;
-      }
-
-      .task-progress,
-      .task-progress::after {
-        background: $brand-success-light;
-      }
-
-      .task-progress-label {
-        color: $brand-success;
-      }
-
-      &::after {
-        color: $brand-success;
-        content: $font-fas-check;
       }
     }
   }
@@ -370,22 +303,33 @@
     }
 
     .current-tasks-list {
+      grid-template-columns: auto;
+
       .current-task-item {
-        .item-row {
-          flex-wrap: wrap;
 
-          .task-due-date {
-            @include font-small;
+        .current-task-breadcrumbs {
+          grid-column: 1;
+        }
 
-            .fas {
-              display: none;
-            }
+        .task-name {
+          border: 0;
+          padding: 0;
+          height: 1.5em;
+        }
+
+        .task-due-date {
+          @include font-small;
+          border: 0;
+          padding-left: 0;
+
+          .fas {
+            display: none;
           }
+        }
 
-          .task-progress-container {
-            flex-basis: 100%;
-            max-width: none;
-          }
+        .task-status-container {
+          grid-column: 1;
+          text-align: left;
         }
       }
     }

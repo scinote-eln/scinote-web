@@ -41,7 +41,9 @@ module Dashboard
       end
 
       page = (params[:page] || 1).to_i
-      tasks = tasks.with_step_statistics.search_by_name(current_user, current_team, task_filters[:query])
+      tasks = tasks.search_by_name(current_user, current_team, task_filters[:query])
+                   .joins(:my_module_status)
+                   .select('my_modules.*', 'my_module_statuses.name as status_name', 'my_module_statuses.color as status_color')
                    .preload(experiment: :project).page(page).per(Constants::INFINITE_SCROLL_LIMIT)
 
       tasks_list = tasks.map do |task|
@@ -50,9 +52,9 @@ module Dashboard
           experiment: escape_input(task.experiment.name),
           project: escape_input(task.experiment.project.name),
           name: escape_input(task.name),
-          due_date: task.due_date.present? ? I18n.l(task.due_date, format: :full_date) : nil,
-          state: task_state(task),
-          steps_precentage: task.steps_completed_percentage }
+          due_date: prepare_due_date(task),
+          status_color: task.status_color,
+          status_name: task.status_name }
       end
 
       render json: { data: tasks_list, next_page: tasks.next_page }
@@ -90,27 +92,24 @@ module Dashboard
 
     private
 
-    def task_state(task)
-      if task.state == 'completed'
-        task_state_class = task.state
-        task_state_text = t('dashboard.current_tasks.progress_bar.completed')
-      else
-        task_state_text = t('dashboard.current_tasks.progress_bar.in_progress')
-        task_state_class = 'day-prior' if task.is_one_day_prior?
-        if task.is_overdue?
-          task_state_text = t('dashboard.current_tasks.progress_bar.overdue')
-          task_state_class = 'overdue'
-        end
-        if task.steps_total.positive?
-          task_state_text += t('dashboard.current_tasks.progress_bar.completed_steps',
-                               steps: task.steps_completed, total_steps: task.steps_total)
-        end
-      end
-      { text: task_state_text, class: task_state_class }
-    end
-
     def filter_by_state(tasks)
       tasks.where(my_modules: { state: task_filters[:view] })
+    end
+
+    def prepare_due_date(task)
+      if task.due_date.present?
+        due_date_formatted = I18n.l(task.due_date, format: :full_date)
+        if task.is_overdue?
+          return { state: 'overdue', text: I18n.t('dashboard.current_tasks.due_date_overdue_html',
+                                                  date: due_date_formatted) }
+        elsif task.is_one_day_prior?
+          return { state: 'day-prior', text: I18n.t('dashboard.current_tasks.due_date_html',
+                                                    date: due_date_formatted) }
+        end
+
+        return { state: '', text: I18n.t('dashboard.current_tasks.due_date_html', date: due_date_formatted) }
+      end
+      { state: nil, text: nil }
     end
 
     def task_filters
