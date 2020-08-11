@@ -52,8 +52,10 @@ class RepositoryRowsController < ApplicationController
 
   def show
     @repository_row = RepositoryRow.find_by(id: params[:id])
-    render_403 if !can_read_repository?(@repository_row.repository) || @repository_row.repository_id != params[:repository_id]
-    
+    if !can_read_repository?(@repository_row.repository) || @repository_row.repository_id != params[:repository_id].to_i
+      return render_403
+    end
+
     @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
     @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
     @private_modules = @assigned_modules - @viewable_modules
