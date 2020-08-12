@@ -65,9 +65,11 @@
 <script>
 (function () {
   var formErrors = {};
-
-  <% resource.errors.each do |err, m| %>
-  formErrors["<%= err %>"] =["<%= m %>"];
+  <% resource.errors.as_json.each do |err, messages| %>
+  formErrors["<%= err %>"]=[]
+    <% messages.each do |message| %>
+      formErrors["<%= err %>"].push('<%= message %>');
+    <% end %>
   <% end %>
 
   $("form").renderFormErrors("user", formErrors, false);
@@ -80,8 +82,11 @@
 (function () {
   var formErrors = {};
 
-  <% @team.errors.each do |err, m| %>
-  formErrors["<%= err %>"] =["<%= m %>"];
+  <% @team.errors.as_json.each do |err, messages| %>
+  formErrors["<%= err %>"]=[]
+    <% messages.each do |message| %>
+      formErrors["<%= err %>"].push('<%= message %>');
+    <% end %>
   <% end %>
 
   $("form").renderFormErrors('team', formErrors, false);
