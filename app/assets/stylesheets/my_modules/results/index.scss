@@ -11,8 +11,6 @@
   display: flex;
 
   .add-result-dropdown {
-    margin-right: auto;
-
     li {
       cursor: pointer;
       padding: .5em 1em;
@@ -29,6 +27,10 @@
         }
       }
     }
+  }
+
+  .collapse-expand-result {
+    margin-left: auto;
   }
 
   .sort-result-dropdown {
