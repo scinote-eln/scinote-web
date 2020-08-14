@@ -531,6 +531,8 @@ class StepsController < ApplicationController
       cl['checklist_items_attributes']&.each do |item|
         # Here item is somehow array of index and parameters [0, paramteters<Object>], should be fixed on FE also
         item_record = ck.checklist_items.find_by(id: item[1][:id])
+
+        next unless item_record
         item_record.update_attribute('position', item[1][:position])
       end
     end
