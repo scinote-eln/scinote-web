@@ -21,4 +21,22 @@ class MyModuleStatusFlow < ApplicationRecord
   def final_status
     my_module_statuses.left_outer_joins(:next_status).find_by('next_statuses_my_module_statuses.id': nil)
   end
+
+  def self.ensure_default
+    return if MyModuleStatusFlow.global.any?
+
+    status_flow = MyModuleStatusFlow.create!(name: Extends::DEFAULT_FLOW_NAME, visibility: :global)
+    prev_id = nil
+    Extends::DEFAULT_FLOW_STATUSES.each do |status|
+      new_status = MyModuleStatus.create!(my_module_status_flow: status_flow,
+                                name: status[:name],
+                                color: status[:color],
+                                previous_status_id: prev_id)
+      prev_id = new_status.id
+
+      status[:conditions]&.each { |condition| condition.constantize.create!(my_module_status: new_status) }
+      status[:implications]&.each { |implication| implication.constantize.create!(my_module_status: new_status) }
+      status[:consequences]&.each { |consequence| consequence.constantize.create!(my_module_status: new_status) }
+    end
+  end
 end

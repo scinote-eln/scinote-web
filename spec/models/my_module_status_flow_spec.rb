@@ -46,4 +46,21 @@ describe MyModuleStatusFlow, type: :model do
       it { expect(my_module_team_workflow).to validate_presence_of :team }
     end
   end
+
+  describe 'self.ensure_default' do
+    context 'when there is no global flow' do
+      it 'adds new global workflow' do
+        expect { described_class.ensure_default }
+          .to change { MyModuleStatusFlow.global.count }.by(1).and(change { MyModuleStatus.count }.by(3))
+      end
+    end
+
+    context 'when there is global flow' do
+      it 'adds new global workflow' do
+        described_class.ensure_default
+
+        expect { described_class.ensure_default }.not_to(change { MyModuleStatusFlow.global.count })
+      end
+    end
+  end
 end
