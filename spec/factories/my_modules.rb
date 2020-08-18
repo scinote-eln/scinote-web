@@ -7,6 +7,7 @@ FactoryBot.define do
     sequence(:x) { |n| n }
     workflow_order { MyModule.where(experiment_id: experiment.id).count + 1 }
     experiment
+    my_module_status
     my_module_group { create :my_module_group, experiment: experiment }
     trait :with_tag do
       tags { create_list :tag, 3, project: experiment.project }

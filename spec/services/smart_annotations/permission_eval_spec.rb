@@ -17,7 +17,9 @@ describe SmartAnnotations::PermissionEval do
                         created_by: user,
                         last_modified_by: user
   end
-  let(:task) { create :my_module, name: 'task', experiment: experiment }
+  let(:my_module_status_flow) { create :my_module_status_flow, :with_statuses }
+  let(:status) { create :my_module_status, my_module_status_flow: my_module_status_flow }
+  let(:task) { create :my_module, name: 'task', experiment: experiment, my_module_status: status }
   let(:repository) { create :repository, team: team, created_by: user }
   let(:repository_item) { create :repository_row, repository: repository }
 

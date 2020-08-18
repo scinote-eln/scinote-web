@@ -17,7 +17,10 @@ describe MyModulesController, type: :controller do
     create :repository_row, created_by: user, repository: repository
   end
   let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
+  let(:my_module_status_flow) { create :my_module_status_flow, :with_statuses, :in_team, team: team }
+  let(:status1) { create :my_module_status, my_module_status_flow: my_module_status_flow }
+  let(:status2) { create :my_module_status, my_module_status_flow: my_module_status_flow }
+  let(:my_module) { create :my_module, experiment: experiment, my_module_status: status1 }
 
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
@@ -25,7 +28,7 @@ describe MyModulesController, type: :controller do
     context 'when restoring task from archive' do
       let(:params) { { id: my_module.id, my_module: { archived: false } } }
       let(:my_module) do
-        create :my_module, archived: true, experiment: experiment
+        create :my_module, archived: true, experiment: experiment, my_module_status: status1
       end
 
       it 'calls create activity for restoring task from archive' do
@@ -83,7 +86,7 @@ describe MyModulesController, type: :controller do
     context 'when deleting due_date' do
       let(:params) { { id: my_module.id, my_module: { due_date: '' } } }
       let(:my_module) do
-        create :my_module, :with_due_date, experiment: experiment
+        create :my_module, :with_due_date, experiment: experiment, my_module_status: status1
       end
 
       it 'calls create activity for removing due date' do
@@ -105,7 +108,7 @@ describe MyModulesController, type: :controller do
         { id: my_module.id, my_module: { due_date: '02/21/2019 23:59' } }
       end
       let(:my_module) do
-        create :my_module, :with_due_date, experiment: experiment
+        create :my_module, :with_due_date, experiment: experiment, my_module_status: status1
       end
 
       it 'calls create activity for changing due date' do
@@ -133,9 +136,6 @@ describe MyModulesController, type: :controller do
         my_module: { status_id: status_id }
       }
     end
-    let(:my_module_status_flow) { create :my_module_status_flow, :in_team, team: team}
-    let(:status1) {create :my_module_status, my_module_status_flow: my_module_status_flow}
-    let(:status2) {create :my_module_status, my_module_status_flow: my_module_status_flow}
 
     context 'when states updated' do
       let(:status_id) { status2.id }

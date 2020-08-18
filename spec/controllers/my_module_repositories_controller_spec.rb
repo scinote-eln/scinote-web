@@ -20,7 +20,9 @@ describe MyModuleRepositoriesController, type: :controller do
     create :repository_row, created_by: user, repository: repository
   end
   let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
+  let(:my_module_status_flow) { create :my_module_status_flow, :with_statuses }
+  let(:status) { create :my_module_status, my_module_status_flow: my_module_status_flow }
+  let(:my_module) { create :my_module, experiment: experiment, my_module_status: status }
 
   describe 'PUT update (assign repository records)' do
     let(:params) do
@@ -55,7 +57,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_assign: [repository_row.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, my_module_status: status
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
       end
       expect { put :update, params: params_downstream, format: :json }
@@ -104,7 +106,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_unassign: [repository_row.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, my_module_status: status
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row,
                                    my_module: child_module,
@@ -162,7 +164,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_unassign: [repository_row_2.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, my_module_status: status
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row_2,
                                    my_module: child_module,

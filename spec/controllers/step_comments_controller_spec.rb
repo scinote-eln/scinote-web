@@ -13,7 +13,9 @@ describe StepCommentsController, type: :controller do
     create :user_project, :normal_user, user: user, project: project
   end
   let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
+  let(:my_module_status_flow) { create :my_module_status_flow, :with_statuses }
+  let(:status) { create :my_module_status, my_module_status_flow: my_module_status_flow }
+  let(:my_module) { create :my_module, experiment: experiment, my_module_status: status }
   let(:protocol) do
     create :protocol, my_module: my_module, team: team, added_by: user
   end
