@@ -133,6 +133,14 @@ body {
   font-size: $font-size-small;
 }
 
+.modal-body {
+  font-size: $font-size-base;
+
+  label {
+    @include font-small;
+  }
+}
+
 .jumbotron {
   background-color: inherit;
 }
