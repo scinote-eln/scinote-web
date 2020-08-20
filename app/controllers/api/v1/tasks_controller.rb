@@ -59,7 +59,7 @@ module Api
       def task_params
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
 
-        params.require(:data).require(:attributes).permit(%i(name x y description state))
+        params.require(:data).require(:attributes).permit(%i(name x y description state my_module_status_id))
       end
 
       def load_task_for_managing

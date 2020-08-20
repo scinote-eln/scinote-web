@@ -707,6 +707,10 @@ Rails.application.routes.draw do
                       path: 'identities',
                       as: :identities
           end
+
+          resources :workflows, only: %i(index show) do
+            resources :workflow_statuses, path: :statuses, only: %i(index)
+          end
         end
       end
     end
