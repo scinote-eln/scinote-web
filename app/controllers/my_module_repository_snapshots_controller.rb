@@ -101,6 +101,28 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     render json: {}
   end
 
+  def export_repository_snapshot
+    if params[:header_ids]
+      RepositoryZipExport.generate_zip(params, @repository_snapshot, current_user)
+
+      Activities::CreateActivityService.call(
+        activity_type: :export_inventory_snapshot_items_assigned_to_task,
+        owner: current_user,
+        subject: @repository_snapshot,
+        team: current_team,
+        message_items: {
+          my_module: @my_module.id,
+          repository_snapshot: @repository_snapshot.id,
+          created_at: @repository_snapshot.created_at
+        }
+      )
+
+      render json: { message: t('zip_export.export_request_success') }, status: :ok
+    else
+      render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_my_module

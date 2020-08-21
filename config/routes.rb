@@ -396,6 +396,7 @@ Rails.application.routes.draw do
         member do
           get :full_view_table
           post :index_dt
+          post :export_repository_snapshot
           get :status
         end
 
