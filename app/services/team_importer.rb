@@ -661,9 +661,12 @@ class TeamImporter
 
       # Find matching status from default flow
       default_flow = MyModuleStatusFlow.global.first
-      status = default_flow.my_module_statuses.find_by(name: my_module_json['my_module']['my_module_status_name'])
-      status ||= default_flow.initial_status
-      my_module.my_module_status = status
+
+      if default_flow.present?
+        status = default_flow.my_module_statuses.find_by(name: my_module_json['my_module']['my_module_status_name'])
+        status ||= default_flow.initial_status
+        my_module.my_module_status = status
+      end
 
       my_module.save!
       @my_module_mappings[orig_my_module_id] = my_module.id

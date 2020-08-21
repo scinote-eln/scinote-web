@@ -527,7 +527,7 @@ class MyModule < ApplicationRecord
   end
 
   def assign_default_status_flow
-    return unless my_module_status.blank? || MyModuleStatusFlow.global.any?
+    return if my_module_status.present? || MyModuleStatusFlow.global.blank?
 
     self.my_module_status = MyModuleStatusFlow.global.first.initial_status
   end
