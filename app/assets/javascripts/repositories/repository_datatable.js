@@ -398,6 +398,7 @@ var RepositoryDatatable = (function(global) {
       sScrollX: '100%',
       sScrollXInner: '100%',
       order: $(TABLE_ID).data('default-order'),
+      stateDuration: 0,
       colReorder: {
         fixedColumnsLeft: 2,
         realtime: false
