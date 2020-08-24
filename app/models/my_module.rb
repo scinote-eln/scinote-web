@@ -83,16 +83,6 @@ class MyModule < ApplicationRecord
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
-  scope :with_step_statistics, (lambda do
-    left_outer_joins(protocols: :steps)
-    .group(:id)
-    .select('my_modules.*')
-    .select('COUNT(steps.id) AS steps_total')
-    .select('COUNT(steps.id) FILTER (where steps.completed = true) AS steps_completed')
-    .select('CASE COUNT(steps.id) WHEN 0 THEN 0 ELSE'\
-            '((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) '\
-            'END AS steps_completed_percentage')
-  end)
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
