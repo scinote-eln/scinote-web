@@ -7,11 +7,12 @@ module RepositoryZipExport
     # Fetch rows in the same order as in the currently viewed datatable
     if params[:my_module_id]
       rows = if repository.is_a?(RepositorySnapshot)
-                       repository.repository_rows
-                     else
-                       repository.repository_rows.joins(:my_module_repository_rows)
-                                 .where(my_module_repository_rows: { my_module_id: params[:my_module_id] })
-                     end
+               repository.repository_rows
+             else
+               repository.repository_rows
+                         .joins(:my_module_repository_rows)
+                         .where(my_module_repository_rows: { my_module_id: params[:my_module_id] })
+             end
     else
       ordered_row_ids = params[:row_ids]
       id_row_map = RepositoryRow.where(id: ordered_row_ids,

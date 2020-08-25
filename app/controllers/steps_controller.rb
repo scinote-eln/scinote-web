@@ -13,8 +13,6 @@ class StepsController < ApplicationController
   before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
-  before_action :update_checklist_item_positions, only: %i(create update)
-
   def new
     @step = Step.new
 
@@ -165,6 +163,9 @@ class StepsController < ApplicationController
         table.last_modified_by = current_user unless table.new_record?
         table.team = current_team
       end
+
+      update_checklist_items_without_callback(step_params_all)
+
       if @step.save
 
         TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
@@ -423,18 +424,6 @@ class StepsController < ApplicationController
 
   private
 
-  def update_checklist_item_positions
-    if params["step"].present? && params["step"]["checklists_attributes"].present?
-      params["step"]["checklists_attributes"].values.each do |cla|
-        if cla["checklist_items_attributes"].present?
-          cla["checklist_items_attributes"].each do |idx, item|
-            item["position"] = idx
-          end
-        end
-      end
-    end
-  end
-
   # This function is used for partial update of step references and
   # it's useful when you want to execute destroy action on attribute
   # collection separately from normal update action, for example if
@@ -531,6 +520,22 @@ class StepsController < ApplicationController
   def update_protocol_ts(step)
     if step.present? && step.protocol.present?
       step.protocol.update(updated_at: Time.now)
+    end
+  end
+
+  def update_checklist_items_without_callback(params)
+    params.dig('checklists_attributes')&.values&.each do |cl|
+      ck = @step.checklists.find_by(id: cl[:id])
+      next if ck.nil? # ck is new checklist, skip update positions
+
+      cl['checklist_items_attributes']&.each do |item|
+        # Here item is somehow array of index and parameters [0, paramteters<Object>], should be fixed on FE also
+        item_record = ck.checklist_items.find_by(id: item[1][:id])
+
+        next unless item_record
+
+        item_record.update_attribute('position', item[1][:position])
+      end
     end
   end
 

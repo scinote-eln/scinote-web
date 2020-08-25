@@ -19,12 +19,17 @@ module Reports::Docx::PrivateMethods
         tiny_mce_table(elem[:data])
       elsif elem[:type] == 'newline'
         style = elem[:style] || {}
-        @docx.p elem[:value] do
-          align style[:align]
-          color style[:color]
-          bold style[:bold]
-          italic style[:italic]
-          style style[:style] if style[:style]
+        # print heading if its heading
+        # Mixing heading with other style setting causes problems for Word
+        if %w(h1 h2 h3 h4 h5).include?(style[:style])
+          @docx.public_send(style[:style], elem[:value])
+        else
+          @docx.p elem[:value] do
+            align style[:align]
+            color style[:color]
+            bold style[:bold]
+            italic style[:italic]
+          end
         end
       elsif elem[:type] == 'image'
         Reports::Docx.render_img_element(@docx, elem)
@@ -287,7 +292,7 @@ module Reports::Docx::PrivateMethods
               Reports::Docx.render_p_element(c, cell_content,
                                              scinote_url: scinote_url, link_style: link_style, skip_br: true)
             elsif cell_content[:type] == 'table'
-              c.table formated_cell_content[:data]
+              c.table formated_cell_content[:data], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
             elsif cell_content[:type] == 'image'
               Reports::Docx.render_img_element(c, cell_content, table: { columns: row.children.length / 3 })
             end
@@ -301,7 +306,7 @@ module Reports::Docx::PrivateMethods
     if options[:nested_table]
       docx_table
     else
-      @docx.table docx_table
+      @docx.table docx_table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
     end
   end
 

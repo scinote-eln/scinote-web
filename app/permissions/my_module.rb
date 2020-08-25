@@ -5,7 +5,6 @@ Canaid::Permissions.register_for(MyModule) do
      manage_users_in_module
      assign_repository_rows_to_module
      assign_sample_to_module
-     change_my_module_flow_status
      create_comments_in_module
      create_my_module_repository_snapshot
      manage_my_module_repository_snapshots)
@@ -17,9 +16,14 @@ Canaid::Permissions.register_for(MyModule) do
     end
   end
 
-  # module: update, archive, move
+  # module: update
   # result: create, update
   can :manage_module do |user, my_module|
+    can_manage_experiment?(user, my_module.experiment)
+  end
+
+  # module: archive
+  can :archive_module do |user, my_module|
     can_manage_experiment?(user, my_module.experiment)
   end
 
@@ -29,6 +33,11 @@ Canaid::Permissions.register_for(MyModule) do
   can :restore_module do |user, my_module|
     user.is_user_or_higher_of_project?(my_module.experiment.project) &&
       my_module.archived?
+  end
+
+  # module: move
+  can :move_module do |user, my_module|
+    can_manage_experiment?(user, my_module.experiment)
   end
 
   # module: assign/reassign/unassign users

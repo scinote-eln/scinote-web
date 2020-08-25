@@ -8,8 +8,9 @@ module Api
       include InputSanitizeHelper
 
       type :steps
-      attributes :id, :name, :description, :position, :completed
+      attributes :id, :name, :description, :created_at, :position, :completed
       attribute :completed_on, if: -> { object.completed? }
+      belongs_to :user, serializer: UserSerializer
       belongs_to :protocol, serializer: ProtocolSerializer
       has_many :assets, serializer: AssetSerializer
       has_many :checklists, serializer: ChecklistSerializer
@@ -18,7 +19,10 @@ module Api
 
       def description
         if instance_options[:rte_rendering]
-          custom_auto_link(object.tinymce_render(:description), simple_format: false, tags: %w(img))
+          custom_auto_link(object.tinymce_render(:description),
+                           simple_format: false,
+                           tags: %w(img),
+                           team: instance_options[:team])
         else
           object.description
         end

@@ -16,13 +16,15 @@ module Api
 
         render jsonapi: steps, each_serializer: StepSerializer,
                                include: include_params,
-                               rte_rendering: render_rte?
+                               rte_rendering: render_rte?,
+                               team: @team
       end
 
       def show
         render jsonapi: @step, serializer: StepSerializer,
                                include: include_params,
-                               rte_rendering: render_rte?
+                               rte_rendering: render_rte?,
+                               team: @team
       end
 
       def create
@@ -59,7 +61,7 @@ module Api
       end
 
       def permitted_includes
-        %w(tables assets checklists checklists.checklist_items comments)
+        %w(tables assets checklists checklists.checklist_items comments user)
       end
 
       def load_step_for_managing

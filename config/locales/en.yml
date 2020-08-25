@@ -825,7 +825,7 @@ en:
           no_assigned_items: 'No items assigned'
           no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
           versions_sidebar_button: 'View versions'
-          export_button: "Export .csv"
+          export_button: "Export items"
           create_button: 'Create snapshot'
           set_default_button: 'Set as default view'
           created_by: 'by %{full_name}'

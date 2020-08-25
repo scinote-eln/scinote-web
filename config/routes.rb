@@ -14,7 +14,8 @@ Rails.application.routes.draw do
                                       sessions: 'users/sessions',
                                       invitations: 'users/invitations',
                                       confirmations: 'users/confirmations',
-                                      omniauth_callbacks: 'users/omniauth_callbacks' }
+                                      omniauth_callbacks: 'users/omniauth_callbacks',
+                                      passwords: 'users/passwords' }
 
     root 'dashboards#show'
 
@@ -365,6 +366,7 @@ Rails.application.routes.draw do
         member do
           get :full_view_table
           post :index_dt
+          post :export_repository_snapshot
           get :status
         end
 
@@ -684,7 +686,7 @@ Rails.application.routes.draw do
                   resources :task_tags, only: %i(index show),
                             path: 'tags',
                             as: :tags
-                  resources :protocols, only: %i(index) do
+                  resources :protocols, only: %i(index show) do
                     resources :steps do
                       resources :assets, only: %i(index show create), path: 'attachments'
                       resources :checklists, path: 'checklists' do
