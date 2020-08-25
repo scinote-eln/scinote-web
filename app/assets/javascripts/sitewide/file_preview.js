@@ -429,7 +429,7 @@ var FilePreviewModal = (function() {
         }
       }).done(function() {
         closeEditor();
-        
+
       });
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
@@ -457,16 +457,21 @@ var FilePreviewModal = (function() {
         link.attr('data-status', 'asset-present');
         if (data.type === 'previewable') {
           animateSpinner('.file-preview-container', false);
-          modal.find('.file-preview-container')
-            .append($('<img>')
-              .css('opacity', 0)
-              .attr('src', data['large-preview-url'])
-              .attr('alt', name)
-              .on('error', ActiveStoragePreviews.reCheckPreview)
-              .on('load', ActiveStoragePreviews.showPreview)
-              .click(function(ev) {
-                ev.stopPropagation();
-              }));
+          if (data['wopi-preview-url']) {
+            modal.find('.file-preview-container')
+              .html(`<iframe class="wopi-file-preview" src="${data['wopi-preview-url']}"></iframe>`);
+          } else {
+            modal.find('.file-preview-container')
+              .append($('<img>')
+                .css('opacity', 0)
+                .attr('src', data['large-preview-url'])
+                .attr('alt', name)
+                .on('error', ActiveStoragePreviews.reCheckPreview)
+                .on('load', ActiveStoragePreviews.showPreview)
+                .click(function(ev) {
+                  ev.stopPropagation();
+                }));
+          }
           if (!readOnly && data.editable) {
             modal.find('.file-edit-link').css('display', '');
             modal.find('.file-edit-link').off().click(function(ev) {

@@ -55,7 +55,7 @@ module WopiUtil
       wopi_app.save!
       app.xpath('action').each do |action|
         name = action.xpath('@name').first.value
-        next unless %w(view edit editnew wopitest).include?(name)
+        next unless %w(view edit editnew embedview wopitest).include?(name)
 
         wopi_action = WopiAction.new
         wopi_action.action = name
