@@ -280,8 +280,15 @@ label {
 
     .module-start-date,
     .module-due-date {
-      margin-left: 5px;
       white-space: nowrap;
+    }
+
+    .module-status {
+      .status-block {
+        border-radius: $border-radius-tag;
+        color: $color-white;
+        padding: 2px 4px;
+      }
     }
 
     .module-tags {
@@ -388,6 +395,16 @@ label {
 .report-step-element {
   &:hover > .report-element-body .step-name {
     color: $brand-primary;
+  }
+
+  .step-label-default {
+    @include font-h3;
+    color: $color-alto;
+  }
+
+  .step-label-success {
+    @include font-h3;
+    color: $brand-success;
   }
 }
 

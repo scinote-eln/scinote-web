@@ -1,4 +1,4 @@
-/* global I18n dropdownSelector */
+/* global I18n dropdownSelector HelperModule animateSpinner */
 /* eslint-disable no-use-before-define */
 
 function initTaskCollapseState() {
@@ -226,34 +226,33 @@ function bindEditTagsAjax() {
     });
 }
 
-// Sets callback for completing/uncompleting task
-function applyTaskCompletedCallBack() {
-  $("[data-action='complete-task'], [data-action='uncomplete-task']")
-    .on('click', function() {
-      var button = $(this);
-      $.ajax({
-        url: button.data('link-url'),
-        type: 'POST',
-        dataType: 'json',
-        success: function(data) {
-          if (data.completed === true) {
-            button.attr('data-action', 'uncomplete-task');
-            button.find('.btn')
-              .removeClass('btn-primary').addClass('btn-default');
-          } else {
-            button.attr('data-action', 'complete-task');
-            button.find('.btn')
-              .removeClass('btn-default').addClass('btn-primary');
-          }
-          $('#dueDateContainer').html(data.module_header_due_date);
-          initDueDatePicker();
-          $('.task-state-label').html(data.module_state_label);
-          button.find('button').replaceWith(data.new_btn);
-        },
-        error: function() {
+function applyTaskStatusChangeCallBack() {
+  $('.task-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
+    var list = $('#dropdownTaskFlowList');
+    var item = $(this);
+    var container = list.closest('.task-flows');
+    animateSpinner();
+    $.ajax({
+      url: list.data('link-url'),
+      type: 'PATCH',
+      dataType: 'json',
+      data: { my_module: { status_id: item.data('state-id') } },
+      success: function(data) {
+        container.html(data.content);
+        animateSpinner(null, false);
+      },
+      error: function(e) {
+        animateSpinner(null, false);
+        if (e.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('my_module_statuses.update_status.error.no_permission'), 'danger');
+        } else if (e.status === 422) {
+          HelperModule.flashAlertMsg(e.errors, 'danger');
+        } else {
+          HelperModule.flashAlertMsg('error', 'danger');
         }
-      });
+      }
     });
+  });
 }
 
 function initTagsSelector() {
@@ -380,7 +379,7 @@ function initAssignedUsersSelector() {
 }
 
 initTaskCollapseState();
-applyTaskCompletedCallBack();
+applyTaskStatusChangeCallBack();
 initTagsSelector();
 bindEditTagsAjax();
 initStartDatePicker();
