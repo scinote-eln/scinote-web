@@ -154,6 +154,7 @@ var MyModuleRepositories = (function() {
       pageLength: 25,
       sScrollX: '100%',
       sScrollXInner: '100%',
+      stateDuration: 0,
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
