@@ -12,9 +12,7 @@ describe ResultTextsController, type: :controller do
     create :project, team: team, user_projects: [user_project]
   end
   let(:experiment) { create :experiment, project: project }
-  let(:my_module_status_flow) { create :my_module_status_flow, :with_statuses }
-  let(:status) { create :my_module_status, my_module_status_flow: my_module_status_flow }
-  let(:task) { create :my_module, name: 'test task', experiment: experiment, my_module_status: status }
+  let(:task) { create :my_module, name: 'test task', experiment: experiment }
   let(:result) do
     create :result, name: 'test result', my_module: task, user: user
   end

@@ -16,8 +16,6 @@ describe CanvasController do
   end
   let(:experiment) { create :experiment, project: project }
   let(:experiment2) { create :experiment, project: project }
-  let(:my_module_status_flow) { create :my_module_status_flow, :with_statuses }
-  let(:status) { create :my_module_status, my_module_status_flow: my_module_status_flow }
 
   # Idea of this "end to end" test is to put a lot "work" on method `@experiment.udpate_canvas` and controller actipn
   # update also. We've implemented some unit tests on `.update_canvas` itself, but behaviour is tightly coupled with
@@ -36,14 +34,14 @@ describe CanvasController do
 
     # Setup environment for "big change" request
     # Tasks in DB
-    let!(:task1) { create :my_module, x: 0, y: 1, experiment: experiment, my_module_status: status }
-    let!(:task2) { create :my_module, x: 0, y: 2, experiment: experiment, my_module_status: status }
-    let!(:task3) { create :my_module, x: 0, y: 3, experiment: experiment, my_module_status: status }
-    let!(:task4) { create :my_module, x: 0, y: 4, experiment: experiment, my_module_status: status }
-    let!(:task5) { create :my_module, x: 0, y: 5, experiment: experiment, my_module_status: status }
-    let!(:task6) { create :my_module, x: 0, y: 6, experiment: experiment, my_module_status: status }
-    let!(:task7) { create :my_module, x: 0, y: 7, experiment: experiment, my_module_status: status }
-    let!(:task8) { create :my_module, x: 0, y: 8, experiment: experiment, my_module_status: status }
+    let!(:task1) { create :my_module, x: 0, y: 1, experiment: experiment }
+    let!(:task2) { create :my_module, x: 0, y: 2, experiment: experiment }
+    let!(:task3) { create :my_module, x: 0, y: 3, experiment: experiment }
+    let!(:task4) { create :my_module, x: 0, y: 4, experiment: experiment }
+    let!(:task5) { create :my_module, x: 0, y: 5, experiment: experiment }
+    let!(:task6) { create :my_module, x: 0, y: 6, experiment: experiment }
+    let!(:task7) { create :my_module, x: 0, y: 7, experiment: experiment }
+    let!(:task8) { create :my_module, x: 0, y: 8, experiment: experiment }
 
     let!(:step_on_task5) { create :step, name: 'task5_step', protocol: task5.protocol }
     let!(:step_on_task6) { create :step, name: 'task6_step', protocol: task6.protocol }

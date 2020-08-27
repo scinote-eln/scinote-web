@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :my_module_status_implication do
+  factory :read_only_implication, class: 'MyModuleStatusImplications::ReadOnly' do
     my_module_status
   end
 end

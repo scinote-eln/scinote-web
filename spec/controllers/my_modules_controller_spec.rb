@@ -17,10 +17,7 @@ describe MyModulesController, type: :controller do
     create :repository_row, created_by: user, repository: repository
   end
   let(:experiment) { create :experiment, project: project }
-  let(:my_module_status_flow) { create :my_module_status_flow, :with_statuses, :in_team, team: team }
-  let(:status1) { create :my_module_status, my_module_status_flow: my_module_status_flow }
-  let(:status2) { create :my_module_status, my_module_status_flow: my_module_status_flow }
-  let(:my_module) { create :my_module, experiment: experiment, my_module_status: status1 }
+  let(:my_module) { create :my_module, experiment: experiment }
 
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
@@ -28,7 +25,7 @@ describe MyModulesController, type: :controller do
     context 'when restoring task from archive' do
       let(:params) { { id: my_module.id, my_module: { archived: false } } }
       let(:my_module) do
-        create :my_module, archived: true, experiment: experiment, my_module_status: status1
+        create :my_module, archived: true, experiment: experiment
       end
 
       it 'calls create activity for restoring task from archive' do
@@ -86,7 +83,7 @@ describe MyModulesController, type: :controller do
     context 'when deleting due_date' do
       let(:params) { { id: my_module.id, my_module: { due_date: '' } } }
       let(:my_module) do
-        create :my_module, :with_due_date, experiment: experiment, my_module_status: status1
+        create :my_module, :with_due_date, experiment: experiment
       end
 
       it 'calls create activity for removing due date' do
@@ -108,7 +105,7 @@ describe MyModulesController, type: :controller do
         { id: my_module.id, my_module: { due_date: '02/21/2019 23:59' } }
       end
       let(:my_module) do
-        create :my_module, :with_due_date, experiment: experiment, my_module_status: status1
+        create :my_module, :with_due_date, experiment: experiment
       end
 
       it 'calls create activity for changing due date' do
@@ -137,27 +134,23 @@ describe MyModulesController, type: :controller do
       }
     end
 
-    context 'when states updated' do
-      let(:status_id) { status2.id }
+    before(:all) do
+      MyModuleStatusFlow.ensure_default
+    end
 
-      before do
-        my_module.update(my_module_status: status1)
-      end
+    context 'when states updated' do
+      let(:status_id) { my_module.my_module_status.next_status.id }
 
       it 'changes status' do
         action
 
-        expect(my_module.reload.my_module_status.name).to be_eql(status2.name)
+        expect(my_module.reload.my_module_status.id).to be_eql(status_id)
         expect(response).to have_http_status 200
       end
     end
 
     context 'when status not found' do
       let(:status_id) { -1 }
-
-      before do
-        my_module.update(my_module_status: status1)
-      end
 
       it 'renders 404' do
         action
