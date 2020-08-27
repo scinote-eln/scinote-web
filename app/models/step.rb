@@ -16,12 +16,13 @@ class Step < ApplicationRecord
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
+  around_save :adjust_positions_on_save, if: :position_changed?
   before_destroy :cascade_before_destroy
-  before_destroy :adjust_positions_on_destroy
+  after_destroy :adjust_positions_after_destroy
 
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
-  belongs_to :protocol, inverse_of: :steps
+  belongs_to :protocol, inverse_of: :steps, touch: true
   has_many :checklists, inverse_of: :step, dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :step_assets, inverse_of: :step, dependent: :destroy
@@ -125,9 +126,20 @@ class Step < ApplicationRecord
 
   private
 
-  def adjust_positions_on_destroy
+  def adjust_positions_on_save
+    step_to_swap = protocol.steps.find_by(position: position)
+
+    return yield unless step_to_swap
+
+    position_to_swap = position_was
+    step_to_swap.position = -1
+    yield
+    step_to_swap.update!(position: position_to_swap)
+  end
+
+  def adjust_positions_after_destroy
     protocol.steps.where('position > ?', position).find_each do |step|
-      step.update(position: step.position - 1)
+      step.update!(position: step.position - 1)
     end
   end
 
