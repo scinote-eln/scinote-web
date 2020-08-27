@@ -434,7 +434,7 @@ var dropdownSelector = (function() {
 
     // Select default value
     if (!selectElement.data('ajax-url')) {
-      addSelectedOption(selectElement, dropdownContainer);
+      addSelectedOptions(selectElement, dropdownContainer);
     }
 
     // Enable simple mode for dropdown selector
