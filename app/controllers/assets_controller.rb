@@ -60,6 +60,7 @@ class AssetsController < ApplicationController
 
     if wopi_enabled? && wopi_file?(@asset)
       edit_supported, title = wopi_file_edit_button_status
+      response_json['wopi-preview-url'] = @asset.get_action_url(current_user, 'embedview')
       response_json['wopi-controls'] = render_to_string(
         partial: 'assets/wopi/file_wopi_controls.html.erb',
         locals: {
