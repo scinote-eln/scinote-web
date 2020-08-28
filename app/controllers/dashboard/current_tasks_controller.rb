@@ -25,7 +25,7 @@ module Dashboard
         tasks = tasks.left_outer_joins(:user_my_modules).where(user_my_modules: { user_id: current_user.id })
       end
 
-      tasks = filter_by_state(tasks)
+       tasks = tasks.where(my_module_status_id: task_filters[:statuses])
 
       case task_filters[:sort]
       when 'start_date'
@@ -92,10 +92,6 @@ module Dashboard
 
     private
 
-    def filter_by_state(tasks)
-      tasks.where(my_modules: { state: task_filters[:view] })
-    end
-
     def prepare_due_date(task)
       if task.due_date.present?
         due_date_formatted = I18n.l(task.due_date, format: :full_date)
@@ -113,7 +109,7 @@ module Dashboard
     end
 
     def task_filters
-      params.permit(:project_id, :experiment_id, :mode, :view, :sort, :query, :page)
+      params.permit(:project_id, :experiment_id, :mode, :sort, :query, :page, statuses: [])
     end
 
     def load_project
