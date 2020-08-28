@@ -97,6 +97,24 @@ class AssetsController < ApplicationController
     return edit_supported, title
   end
 
+  def toggle_view_mode
+    # view_mode: card / inline
+    # @asset.update!(view_mode: toggle_view_mode_params[:view_mode])
+
+    html = if @asset.inline_card && wopi_enabled? && wopi_file?(@asset)
+             url = @asset.get_action_url(current_user, 'embedview')
+             "<iframe src=\"#{url}\" title=\"DocumentPreview\"></iframe>"
+           else
+             render_to_string(partial: 'shared/asset_placeholder.html.erb', locals: { asset: @asset, edit_page: false })
+           end
+
+    respond_to do |format|
+      format.json do
+        render json: { html: html }, status: :ok
+      end
+    end
+  end
+
   def file_url
     return render_404 unless @asset.file.attached?
 
@@ -298,6 +316,10 @@ class AssetsController < ApplicationController
 
   def asset_params
     params.permit(:file)
+  end
+
+  def toggle_view_mode_params
+    params.require(:asset).permit(:view_mode)
   end
 
   def asset_data_type(asset)

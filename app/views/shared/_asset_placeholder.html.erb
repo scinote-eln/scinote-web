@@ -1,5 +1,5 @@
 <div class="attachment-placeholder pull-left">
-
+  <a href="#" class="dataPreviewAction" data-asset-id="<%= asset.id %>" data-preview-type="inline">InLine</a>
   <div class="attachment-thumbnail <%= asset.previewable? ? '' : 'no-shadow' %> <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
     <% if asset.previewable? %>
       <%= image_tag asset.medium_preview,

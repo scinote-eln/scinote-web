@@ -67,4 +67,44 @@ describe AssetsController, type: :controller do
         .to(change { Activity.count })
     end
   end
+
+  describe 'GET asset_card' do
+    let(:action) { get :toggle_view_mode, params: params, format: :json }
+    let!(:params) do
+      { id: asset.id }
+    end
+
+    it do
+      action
+
+      expect(response).to have_http_status 200
+    end
+
+    context 'when small card' do
+      it do
+        action
+
+        expect(response).to have_http_status 200
+        # wtf, not working here?, render_to_string is returning nil
+        # expect(JSON.parse(response.body)['html']).to be_eql 'hellow world'
+      end
+    end
+
+    context 'when iframe' do
+      before do
+        allow_any_instance_of(Asset).to receive(:small_card).and_return(false)
+        allow_any_instance_of(Asset).to receive(:get_action_url).and_return('fakeurl.com')
+        allow(controller).to receive(:wopi_enabled?).and_return(true)
+        allow(controller).to receive(:wopi_file?).and_return(true)
+      end
+
+      it do
+        action
+
+        expect(response).to have_http_status 200
+        expect(JSON.parse(response.body)['html'])
+          .to be_eql '<iframe src="fakeurl.com" title="DocumentPreview"></iframe>'
+      end
+    end
+  end
 end

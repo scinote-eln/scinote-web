@@ -403,6 +403,14 @@ class Asset < ApplicationRecord
     return convert_variant_to_base64(medium_preview) if style == :medium
   end
 
+  def small_card
+    false
+  end
+
+  def inline_card
+    !small_card
+  end
+
   private
 
   def tempdir
