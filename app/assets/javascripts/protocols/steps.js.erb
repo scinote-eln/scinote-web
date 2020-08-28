@@ -380,6 +380,27 @@
     });
   }
 
+  function initPreviewToggle(){
+    $('.attachment-placeholder').on('click', '.dataPreviewAction', function (e) {
+      var view_mode = $(this).data('preview-type');
+      var asset_id = $(this).data('asset-id');
+      e.preventDefault();
+
+      $.ajax({
+        url: `/files/${asset_id}/toggle_view_mode`,
+        type: "PATCH",
+        dataType: "json",
+        data: { asset: { view_mode: view_mode }},
+        success: function (data) {
+          console.log(data);
+        },
+        error: function (data) {
+          console.log(data);
+        }
+      });
+    });
+  }
+
   function initCallBacks() {
     if (typeof(applyCreateWopiFileCallback) === 'function') applyCreateWopiFileCallback();
     applyCheckboxCallBack();
@@ -389,6 +410,7 @@
     applyCollapseLinkCallBack();
     initDeleteStep();
     TinyMCE.highlight();
+    initPreviewToggle();
   }
 
   /*
