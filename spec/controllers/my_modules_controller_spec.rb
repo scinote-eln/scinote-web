@@ -133,31 +133,24 @@ describe MyModulesController, type: :controller do
         my_module: { status_id: status_id }
       }
     end
-    let(:my_module_status_flow) { create :my_module_status_flow, :in_team, team: team}
-    let(:status1) {create :my_module_status, my_module_status_flow: my_module_status_flow}
-    let(:status2) {create :my_module_status, my_module_status_flow: my_module_status_flow}
+
+    before(:all) do
+      MyModuleStatusFlow.ensure_default
+    end
 
     context 'when states updated' do
-      let(:status_id) { status2.id }
-
-      before do
-        my_module.update(my_module_status: status1)
-      end
+      let(:status_id) { my_module.my_module_status.next_status.id }
 
       it 'changes status' do
         action
 
-        expect(my_module.reload.my_module_status.name).to be_eql(status2.name)
+        expect(my_module.reload.my_module_status.id).to be_eql(status_id)
         expect(response).to have_http_status 200
       end
     end
 
     context 'when status not found' do
       let(:status_id) { -1 }
-
-      before do
-        my_module.update(my_module_status: status1)
-      end
 
       it 'renders 404' do
         action
