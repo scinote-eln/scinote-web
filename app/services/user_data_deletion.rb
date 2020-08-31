@@ -1,7 +1,6 @@
 class UserDataDeletion
   def self.delete_team_data(team)
     ActiveRecord::Base.logger = Logger.new(STDOUT)
-    Step.skip_callback(:destroy, :after, :cascade_after_destroy)
     team.transaction do
       # Destroy tiny_mce_assets
       if team.tiny_mce_assets.present?
@@ -86,7 +85,6 @@ class UserDataDeletion
       team.destroy!
       # raise ActiveRecord::Rollback
     end
-    Step.set_callback(:destroy, :after, :cascade_after_destroy)
   end
 
   def self.destroy_protocol(protocol)
