@@ -9,14 +9,11 @@
        data-current-project="<%= current_project&.id %>"
        data-current-experiment="<%= current_experiment&.id %>"
        data-current-task="<%= current_task&.id %>">
-    <div class="tree">
-      <ul>
-        <% cache [action_name, current_user, current_team] do %>
-          <%= render partial: 'shared/sidebar/projects' %>
-        <% end %>
-      </ul>
+    <div class="tree perfect-scrollbar" data-scroll="<%= params[:scroll] %>">
+      <% cache [action_name, current_user, current_team] do %>
+        <%= render partial: 'shared/sidebar/projects', locals: {
+      }  %>
+      <% end %>
     </div>
   </div>
 <% end %>
-
-<%= javascript_include_tag("sidebar") %>

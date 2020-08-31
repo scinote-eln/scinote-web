@@ -39,9 +39,7 @@ module ModelExporters
     private
 
     def team(team)
-      if team.tiny_mce_assets.present?
-        @tiny_mce_assets_to_copy.push(team.tiny_mce_assets)
-      end
+      @tiny_mce_assets_to_copy.push(team.tiny_mce_assets) if team.tiny_mce_assets.present?
       {
         team: team,
         default_admin_id: team.user_teams.where(role: 2).first.user.id,
@@ -52,7 +50,7 @@ module ModelExporters
           .where('user_notifications.user_id': team.users)
           .map { |n| notification(n) },
         repositories: team.repositories.map { |r| repository(r) },
-        tiny_mce_assets: team.tiny_mce_assets,
+        tiny_mce_assets: team.tiny_mce_assets.map { |tma| tiny_mce_asset_data(tma) },
         protocols: team.protocols.where(my_module: nil).map do |pr|
           protocol(pr)
         end,
@@ -79,6 +77,7 @@ module ModelExporters
       user_json['sign_in_count'] = user.sign_in_count
       user_json['last_sign_in_at'] = user.last_sign_in_at
       user_json['last_sign_in_ip'] = user.last_sign_in_ip
+      user_json['avatar'] = user.avatar.blob if user.avatar.attached?
       copy_files([user], :avatar, File.join(@dir_to_export, 'avatars'))
       {
         user: user_json,
@@ -115,7 +114,7 @@ module ModelExporters
     end
 
     def repository(repository)
-      {
+      result = {
         repository: repository,
         repository_columns: repository.repository_columns.map do |c|
           repository_column(c)
@@ -124,6 +123,10 @@ module ModelExporters
           repository_row(r)
         end
       }
+      unless repository.is_a?(RepositorySnapshot)
+        result[:repository_snapshots] = repository.repository_snapshots.map { |r| repository(r) }
+      end
+      result
     end
 
     def repository_row(repository_row)
@@ -140,14 +143,24 @@ module ModelExporters
       {
         repository_cell: cell,
         repository_value: cell.value,
-        repository_value_asset: get_cell_value_asset(cell)
+        repository_value_asset: get_cell_value_asset(cell),
+        repository_value_checklist: get_cell_value_checklist(cell)
       }
     end
 
     def repository_column(column)
       {
         repository_column: column,
-        repository_list_items: column.repository_list_items
+        repository_list_items: column.repository_list_items,
+        repository_checklist_items: column.repository_checklist_items,
+        repository_status_items: column.repository_status_items
+      }
+    end
+
+    def tiny_mce_asset_data(asset)
+      {
+        tiny_mce_asset: asset,
+        tiny_mce_asset_blob: asset.image.blob
       }
     end
 
@@ -155,7 +168,16 @@ module ModelExporters
       return unless cell.value_type == 'RepositoryAssetValue'
 
       @assets_to_copy.push(cell.value.asset)
-      cell.value.asset
+      {
+        asset: cell.value.asset,
+        asset_blob: cell.value.asset.blob
+      }
+    end
+
+    def get_cell_value_checklist(cell)
+      return unless cell.value_type == 'RepositoryChecklistValue'
+
+      cell.value.repository_checklist_items_values
     end
   end
 end

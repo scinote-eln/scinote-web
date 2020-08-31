@@ -87,20 +87,22 @@ class ExperimentsController < ApplicationController
                                 end
 
     old_text = @experiment.description
-    @experiment.update_attributes(experiment_params)
+    @experiment.assign_attributes(experiment_params)
     @experiment.last_modified_by = current_user
+    name_changed = @experiment.name_changed?
+    description_changed = @experiment.description_changed?
 
     if @experiment.save
-      experiment_annotation_notification(old_text)
+      experiment_annotation_notification(old_text) if old_text
 
       activity_type = if experiment_params[:archived] == 'false'
                         :restore_experiment
+                      elsif name_changed && !description_changed
+                        :rename_experiment
                       else
                         :edit_experiment
                       end
       log_activity(activity_type)
-
-      @experiment.touch(:workflowimg_updated_at)
 
       respond_to do |format|
         format.json do
@@ -212,14 +214,13 @@ class ExperimentsController < ApplicationController
   end
 
   def updated_img
-    if @experiment.workflowimg.present? && !@experiment.workflowimg.exists?
-      @experiment.workflowimg = nil
-      @experiment.save
+    if @experiment.workflowimg.attached? && !@experiment.workflowimg_exists?
+      @experiment.workflowimg.purge
       @experiment.generate_workflow_img
     end
     respond_to do |format|
       format.json do
-        if @experiment.workflowimg.present?
+        if @experiment.workflowimg.attached?
           render json: {}, status: 200
         else
           render json: {}, status: 404
@@ -263,7 +264,7 @@ class ExperimentsController < ApplicationController
   def load_projects_tree
     # Switch to correct team
     current_team_switch(@experiment.project.team) unless @experiment.project.nil?
-    @projects_tree = current_user.projects_tree(current_team, nil)
+    @projects_tree = current_user.projects_tree(current_team, 'atoz')
   end
 
   def check_view_permissions
@@ -291,6 +292,7 @@ class ExperimentsController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'experiment',
+      item_id: @experiment.id,
       field_to_udpate: 'name',
       path_to_update: experiment_path(@experiment)
     }

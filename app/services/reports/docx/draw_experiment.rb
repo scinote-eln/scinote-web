@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module DrawExperiment
+module Reports::Docx::DrawExperiment
   def draw_experiment(subject)
     color = @color
     link_style = @link_style
     scinote_url = @scinote_url
-    experiment = Experiment.find_by_id(subject['id']['experiment_id'])
-    return unless experiment
+    experiment = Experiment.find_by(id: subject['id']['experiment_id'])
+    return unless experiment && can_read_experiment?(@user, experiment)
 
     @docx.h2 experiment.name, size: Constants::REPORT_DOCX_EXPERIMENT_TITLE_SIZE
     @docx.p do
@@ -25,7 +25,7 @@ module DrawExperiment
     html_to_word_converter(html)
     @docx.p
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, experiment)
     end
   end
 end

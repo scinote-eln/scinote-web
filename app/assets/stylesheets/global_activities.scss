@@ -6,56 +6,193 @@
 
 .global-activities-container {
   background: $color-white;
+  display: flex;
+  flex-direction: column;
   height: calc(100vh - 89px);
-  margin-top: 2em;
   padding: 0 15px;
 
-  &.task_activities {
-    height: calc(100vh - 126px);
+  &.task-activities {
+    height: calc(100vh - 136px);
+    padding-top: 20px;
   }
 
-  > .row {
+  .ga-top {
+    .ga-title {
+      border-bottom: 1px solid $color-gainsboro;
+      margin-top: 14px;
+      padding: 15px 0;
+      position: relative;
+      width: calc(100% + 30px);
+    }
+
+    .ga-actions {
+      align-items: center;
+      border-bottom: 1px solid $color-gainsboro;
+      display: flex;
+      height: 42px;
+
+      .ga-search-container {
+        display: none;
+        flex-grow: 1;
+        max-width: 500px;
+        position: relative;
+
+        &::placeholder {
+          color: $color-silver-chalice;
+        }
+
+        .search-field {
+          border: 1px solid $color-gainsboro;
+          border-radius: 4px;
+          color: $color-emperor;
+          display: block;
+          font-size: 14px;
+          height: 30px;
+          line-height: 28px;
+          outline: 0;
+          padding: 0 0 0 30px;
+          width: 100%;
+        }
+
+        .fa-search {
+          color: $color-silver-chalice;
+          font-size: 18px;
+          left: 0;
+          line-height: 30px;
+          position: absolute;
+          text-align: center;
+          top: 0;
+          width: 30px;
+        }
+      }
+    }
+
+    .ga-tags-container {
+      border-bottom: 1px solid $color-gainsboro;
+      display: flex;
+      min-height: 38px;
+      padding: 2px 0;
+
+      .clear-container {
+        flex-shrink: 0;
+        margin-left: 4px;
+      }
+
+      .ga-tags {
+        align-items: center;
+        display: flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+
+        &::after {
+          content: "";
+          flex-grow: 1000000000;
+        }
+
+        .ds-tags {
+          @include font-small;
+          align-items: center;
+          background: $color-concrete;
+          border-radius: $border-radius-tag;
+          box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
+          display: flex;
+          flex-shrink: 0;
+          line-height: 13px;
+          margin: 2px 3px;
+          max-height: 24px;
+          max-width: 250px;
+          overflow: hidden;
+          padding: 5px 8px;
+          transition: .3s;
+          user-select: none;
+
+          &.closing {
+            margin: 2px 0;
+            max-width: 0;
+            padding: 5px 0;
+          }
+
+          &.stretch {
+            flex-grow: 1;
+            flex-shrink: 1;
+          }
+
+          .tag-label {
+            display: inline-block;
+            margin-right: 5px;
+            margin-top: 1px;
+            max-width: 500px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: auto;
+          }
+
+          .fas {
+            cursor: pointer;
+            flex-grow: 1;
+            font-size: 12px;
+            opacity: .7;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+
+  .ga-bottom {
+    display: flex;
+    flex-grow: 1;
     height: 100%;
-    position: relative;
   }
 
   .ga-main {
-    border-right: 1px solid $gray-lighter;
-    float: right;
-    height: calc(100% - 160px);
+    border-right: 1px solid $color-gainsboro;
+    flex-grow: 5;
+    height: 100%;
     overflow: hidden;
-    padding-top: 10px;
     position: relative;
 
-    &.task_activities {
-      height: calc(100% - 70px);
+    .activities-container {
+      height: 100%;
+      padding-top: 10px;
+      position: absolute;
+      width: 100%;
     }
 
     .ga-activities-list {
-      grid-area: activities;
 
       .activities-day {
+        display: flex;
         margin-bottom: 10px;
 
         .date-container {
-          max-width: 105px;
-          padding-right: 0;
+          flex-shrink: 0;
+          padding-right: 20px;
+
+          .activities-group-expand-button {
+            user-select: none;
+
+            &:hover,
+            &:visited,
+            &:focus {
+              text-decoration: none;
+            }
+
+            .fas {
+              margin-right: 3px;
+            }
+          }
         }
 
         .date-activities {
-          min-width: calc(100% - 105px);
+          flex-grow: 1;
         }
       }
     }
 
     .activities-counter-label {
-      margin-left: 10px;
-    }
-
-    .activities-group {
-      list-style: none;
-      margin-bottom: 0;
-      padding-left: 0;
+      margin-left: 5px;
     }
 
     .activities-group-expand-button {
@@ -68,39 +205,71 @@
     }
 
     .activity-card {
-      border-radius: 5px;
-      margin-right: 20px;
-      padding: 10px;
-      padding-left: 40px;
+      cursor: default;
+      margin-right: 15px;
+      padding: 5px 0 5px 40px;
 
       &:hover {
         background-color: $brand-primary-light;
+        border-radius: 5px;
       }
 
-      .activity-timestamp {
-        color: $color-silver-chalice;
-      }
+      .activity-text {
+        p {
+          margin: 0;
+        }
 
-      .navigational-breadcrumbs {
-        color: $color-silver-chalice;
-        display: flex;
-        flex-wrap: wrap;
+        .atwho-user-container {
 
-        .ga-breadcrumb {
-          margin-left: 15px;
+          &:not(:first-child) {
+            .global-avatar-container {
+              height: 20px;
+              line-height: 20px;
+              margin-left: 0;
+              position: relative;
+              top: 1px;
+              width: 20px;
+            }
+          }
+
+          &:nth-child(1) {
+            height: 20px;
+            margin-left: -35px;
+
+            .global-avatar-container {
+              margin: 0 5px 0 0;
+              position: relative;
+              top: 10px;
+            }
+          }
         }
       }
 
-      p {
-        margin-bottom: 0;
-      }
+      .activity-info {
+        color: $color-silver-chalice;
+        display: flex;
+        min-height: 20px;
 
-      .atwho-user-container:nth-child(1) {
-        height: 20px;
-        margin-left: -35px;
+        .activity-timestamp {
+          color: inherit;
+          flex-shrink: 0;
+        }
 
-        .global-avatar-container {
-          margin: 0 5px 0 0;
+        .navigational-breadcrumbs {
+          color: inherit;
+          display: flex;
+          flex-wrap: wrap;
+
+          .ga-breadcrumb {
+            align-items: center;
+            display: flex;
+            margin-left: 15px;
+
+            .fas,
+            img {
+              margin-right: 3px;
+            }
+          }
         }
       }
     }
@@ -112,22 +281,27 @@
 }
 
 .ga-side {
-  float: right;
-  height: calc(100% - 160px);
+  flex-basis: 450px;
+  flex-shrink: 0;
+  height: 100%;
+  margin-right: -15px;
   overflow: hidden;
   position: relative;
 
-  &.task_activities {
-    height: calc(100% - 70px);
+  .filters-container {
+    height: 100%;
+    margin-bottom: 60px;
+    padding: 15px 20px;
+    position: absolute;
   }
 
   .filter-block {
-    padding: 10px 0;
+    display: inline-block;
     width: 100%;
 
     .title {
+      @include font-small;
       float: left;
-      font-size: 16px;
       line-height: 20px;
       margin-bottom: 5px;
       width: calc(100% - 50px);
@@ -139,19 +313,39 @@
 
     .clear {
       cursor: pointer;
+      display: none;
       float: right;
+      font-weight: normal;
       line-height: 12px;
-      margin-bottom: 5px;
+      margin-bottom: 0;
+      margin-top: 8px;
+      padding-bottom: 8px;
       padding-top: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .select-container {
+      display: inline-block;
+      margin-bottom: 5px;
+      min-height: 36px;
       width: 100%;
+
+      select {
+        display: none;
+      }
+    }
+
+    &.report-block {
+      margin-bottom: 60px;
     }
   }
 
   .date-selector {
     display: inline-block;
+    margin-bottom: 5px;
     position: relative;
     width: 100%;
 
@@ -184,10 +378,6 @@
       }
     }
 
-    .title {
-      margin-top: 0;
-    }
-
     .from,
     .to {
       float: left;
@@ -206,166 +396,37 @@
   }
 }
 
-.ga-top {
-  border-bottom: 1px solid $gray-lighter;
-  height: 160px;
-
-  &.task_activities {
-    height: 70px;
+@media (max-width: 1200px) {
+  .ga-side {
+    flex-basis: 350px;
   }
+}
 
-  .ga-title {
-    border-bottom: 1px solid $color-gainsboro;
-    height: 35px;
-    left: -15px;
-    margin-bottom: 5px;
-    padding-bottom: 10px;
-    padding-left: 20px;
-    position: relative;
-    width: calc(100% + 30px);
-  }
-
-  .ga-top-actions {
-    float: left;
-    line-height: 20px;
-    margin: 5px 0;
-    position: relative;
-    width: 200px;
-
-    a {
-      color: $color-emperor;
-      margin: 0 5px;
-    }
-
-    span {
-      display: inline-block;
-      text-align: center;
-      width: 95px;
-    }
-  }
-
-  .ga-search-container {
-    float: left;
-    margin: 5px;
-    max-width: 700px;
-    position: relative;
-    width: calc(100% - 220px);
-  }
-
-  .ga-tags-container {
-    display: inline-block;
-    margin-top: 5px;
-    width: 100%;
-
-    .clear-container {
-      float: right;
-      position: relative;
-      text-align: right;
-      width: 100px;
-
-      span {
-        cursor: pointer;
-        display: inline-block;
-        line-height: 18px;
-        margin-top: 5px;
-
-        i {
-          float: left;
-          font-size: 18px;
-          margin-right: 10px;
-          position: relative;
-        }
-      }
-    }
-
-    .ga-tags {
-      float: left;
-      height: 64px;
-      margin: 0;
-      overflow: hidden;
-      padding-left: 0;
-      position: relative;
-      width: calc(100% - 100px);
-
-      li {
-        background: $color-concrete;
-        border: 1px solid $color-alto;
-        border-radius: 4px;
-        cursor: default;
-        float: left;
-        list-style: none;
-        margin-right: 5px;
-        margin-top: 5px;
-        padding: 0 5px;
-
-        .select2-selection__choice__remove {
-          color: $color-dove-gray;
-          cursor: pointer;
-          display: inline-block;
-          float: right;
-          font-weight: bold;
-          margin: 0;
-          margin-left: 5px;
+@media (max-height: 800px) {
+  .ga-side {
+    .date-selector {
+      .hot-buttons {
+        .hot-button {
+          margin: 5px 0;
         }
       }
     }
   }
 }
 
-@media (max-width: 1199px) {
-  .global-activities-container {
-    height: auto;
-
-    > .row {
-      height: auto;
-    }
-  }
-
+@media (max-width: 900px) {
   .ga-main {
-    width: 100%;
-  }
+    .activities-day {
+      flex-direction: column;
 
-  .ga-top {
+      .date-activities {
+        margin: 5px 10px 0 0;
+        padding-left: 10px;
 
-    .ga-tags {
-      height: auto;
-      min-height: 60px;
-    }
-  }
-
-  .ga-side {
-    border-bottom: 1px solid $gray-lighter;
-    height: auto;
-
-    .filter-block {
-
-      &.small-left {
-        float: left;
-        width: calc(60% - 10px);
-
-        .title {
-          width: 120px;
+        .activities-counter-label {
+          border-bottom: 1px solid $color-gainsboro;
+          padding-bottom: 5px;
         }
-
-        .select-container {
-          float: left;
-          width: calc(100% - 200px);
-
-          .select2 {
-            margin: 4px 0;
-          }
-        }
-
-        .clear {
-          line-height: 20px;
-          padding: 0;
-          width: 70px;
-        }
-      }
-
-      &.small-right {
-        float: right;
-        width: 40%;
       }
     }
   }
@@ -376,12 +437,27 @@
 .datetime-picker-container {
   position: relative;
 
-  input {
+  .fa-calendar-alt {
+    color: $color-silver-chalice;
+    font-size: 18px;
+    line-height: 34px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    width: 34px;
+    }
+
+  .calendar-input {
     background-color: transparent !important;
     box-shadow: none;
     color: inherit;
+    cursor: pointer;
     font-size: 13px;
     padding-left: 5px;
+    padding-right: 34px;
+    position: relative;
+    z-index: 3;
 
     &::placeholder {
       color: $color-silver-chalice;

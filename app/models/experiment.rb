@@ -3,15 +3,13 @@ class Experiment < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
-  belongs_to :project, inverse_of: :experiments, touch: true, optional: true
+  belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
-             class_name: 'User',
-             optional: true
+             class_name: 'User'
   belongs_to :last_modified_by,
              foreign_key: :last_modified_by_id,
-             class_name: 'User',
-             optional: true
+             class_name: 'User'
   belongs_to :archived_by,
              foreign_key: :archived_by_id, class_name: 'User', optional: true
   belongs_to :restored_by,
@@ -21,17 +19,14 @@ class Experiment < ApplicationRecord
 
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
   has_many :active_my_modules,
-           -> { where(archived: false).order(:workflow_order) },
+           -> { where(archived: false).order(:name) },
            class_name: 'MyModule'
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
   # Associations for old activity type
   has_many :activities, inverse_of: :experiment
 
-  has_attached_file :workflowimg
-  validates_attachment :workflowimg,
-                       content_type: { content_type: ['image/png'] },
-                       if: :workflowimg_check
+  has_one_attached :workflowimg
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -129,14 +124,23 @@ class Experiment < ApplicationRecord
     positions,
     current_user
   )
-    cloned_modules = []
     begin
       with_lock do
-        # First, add new modules
+        # Start with archiving to release positions for new tasks
+        archive_modules(to_archive, current_user) if to_archive.any?
+
+        # Update only existing tasks positions to release positions for new tasks
+        existing_positions = positions.slice(*positions.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        update_module_positions(existing_positions) if existing_positions.any?
+
+        # Move only existing tasks to release positions for new tasks
+        existing_to_move = to_move.slice(*to_move.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        move_modules(existing_to_move, current_user) if existing_to_move.any?
+
+        # add new modules
         new_ids, cloned_pairs, originals = add_modules(
           to_add, to_clone, current_user
         )
-        cloned_modules = cloned_pairs.collect { |mn, _| mn }
 
         # Rename modules
         rename_modules(to_rename, current_user)
@@ -157,9 +161,6 @@ class Experiment < ApplicationRecord
                   message_items: { my_module_original: mo.id,
                                    my_module_new: mn.id })
         end
-
-        # Then, archive modules that need to be archived
-        archive_modules(to_archive, current_user) if to_archive.any?
 
         # Update connections, positions & module group variables
         # with actual IDs retrieved from the new modules creation
@@ -212,11 +213,12 @@ class Experiment < ApplicationRecord
   end
 
   def generate_workflow_img
-    if workflowimg.present?
-      self.workflowimg = nil
-      save
-    end
+    workflowimg.purge if workflowimg.attached?
     Experiments::GenerateWorkflowImageService.delay.call(experiment_id: id)
+  end
+
+  def workflowimg_exists?
+    workflowimg.service.exist?(workflowimg.blob.key)
   end
 
   # Get projects where user is either owner or user in the same team
@@ -289,6 +291,8 @@ class Experiment < ApplicationRecord
       my_module.last_modified_by = current_user
       my_module.save!
 
+      my_module.assign_user(current_user)
+
       ids_map[m[:id]] = my_module.id.to_s
     end
     my_modules.reload
@@ -319,9 +323,9 @@ class Experiment < ApplicationRecord
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by_id(id)
       experiment = project.experiments.find_by_id(experiment_id)
-      experiment_org = my_module.experiment
       next unless my_module.present? && experiment.present?
 
+      experiment_original = my_module.experiment
       my_module.experiment = experiment
 
       # Calculate new module position
@@ -343,7 +347,7 @@ class Experiment < ApplicationRecord
                                              message_items: {
                                                my_module: my_module.id,
                                                experiment_original:
-                                                 experiment_org.id,
+                                                 experiment_original.id,
                                                experiment_new: experiment.id
                                              })
     end
@@ -541,12 +545,6 @@ class Experiment < ApplicationRecord
 
     my_module_groups.reload
     true
-  end
-
-  def workflowimg_check
-    workflowimg_content_type
-  rescue
-    false
   end
 
   def log_activity(type_of, current_user, my_module)

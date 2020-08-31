@@ -1,0 +1,12 @@
+<% selected_decimals = column.metadata['decimals'] || '0' %>
+
+<div class="form-group">
+  <label class="control-label col-sm-3" for="repository-column-data-type">
+    <%= t('libraries.manange_modal_column.number_type.decimals_label') %>
+  </label>
+  <div class="col-sm-3">
+    <%= number_field_tag('decimals', selected_decimals, between: 0...Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS,
+                         class: 'form-control',
+                         oninput: "this.value = numberMinMaxValidator(this.value, 0, #{Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS})" ) %>
+  </div>
+</div>

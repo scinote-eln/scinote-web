@@ -2,18 +2,16 @@ class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include StepsActions
+  include MarvinJsActions
 
-  before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state)
-  before_action :load_vars_nested, only: [:new, :create]
-  before_action :convert_table_contents_to_utf8, only: [:create, :update]
+  before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state
+                                     move_up move_down)
+  before_action :load_vars_nested, only:  %i(new create)
+  before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_view_permissions, only: %i(show update_view_state)
-  before_action :check_manage_permissions, only: %i(new create edit update
-                                                    destroy)
-  before_action :check_complete_and_checkbox_permissions, only:
-    %i(toggle_step_state checklistitem_state)
-
-  before_action :update_checklist_item_positions, only: [:create, :update]
+  before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down)
+  before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
   def new
     @step = Step.new
@@ -28,50 +26,64 @@ class StepsController < ApplicationController
   end
 
   def create
-    @step = Step.new(step_params)
-    # gerate a tag that replaces img tag in database
-    @step.completed = false
-    @step.position = @protocol.number_of_steps
-    @step.protocol = @protocol
-    @step.user = current_user
-    @step.last_modified_by = current_user
-    @step.assets.each do |asset|
-      asset.created_by = current_user
-      asset.team = current_team
-    end
-    @step.tables.each do |table|
-      table.created_by = current_user
-      table.team = current_team
-    end
-    # Update default checked state
-    @step.checklists.each do |checklist|
-      checklist.checklist_items.each do |checklist_item|
-        checklist_item.checked = false
+    @step = Step.new
+    @step.transaction do
+      new_step_params = step_params
+
+      # Attach newly uploaded files, and than remove their blob ids from the parameters
+      new_step_params[:assets_attributes]&.each do |key, value|
+        next unless value[:signed_blob_id]
+
+        asset = Asset.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+        asset.file.attach(value[:signed_blob_id])
+        @step.assets << asset
+        new_step_params[:assets_attributes].delete(key)
+      end
+
+      @step.assign_attributes(new_step_params)
+      # gerate a tag that replaces img tag in database
+      @step.completed = false
+      @step.position = @protocol.number_of_steps
+      @step.protocol = @protocol
+      @step.user = current_user
+      @step.last_modified_by = current_user
+      @step.tables.each do |table|
+        table.created_by = current_user
+        table.team = current_team
+      end
+      # Update default checked state
+      @step.checklists.each do |checklist|
+        checklist.checklist_items.each do |checklist_item|
+          checklist_item.checked = false
+        end
+      end
+
+
+      # link tiny_mce_assets to the step
+      TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
+
+      @step.save!
+
+      # Post process all assets
+      @step.assets.each do |asset|
+        asset.post_process_file(@protocol.team)
+      end
+
+      # link tiny_mce_assets to the step
+      TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
+
+      create_annotation_notifications(@step)
+
+      # Generate activity
+      if @protocol.in_module?
+        log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
+      else
+        log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
       end
     end
 
     respond_to do |format|
-      if @step.save
-        # Post process all assets
-        @step.assets.each do |asset|
-          asset.post_process_file(@protocol.team)
-        end
-
-        # link tiny_mce_assets to the step
-        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
-
-        create_annotation_notifications(@step)
-
-        # Generate activity
-        if @protocol.in_module?
-          log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
-        else
-          log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
-        end
-
-        # Update protocol timestamp
-        update_protocol_ts(@step)
-
+      if @step.errors.empty?
         format.json do
           render json: {
             html: render_to_string(
@@ -128,23 +140,32 @@ class StepsController < ApplicationController
       # NOTE - step_params_all variable is updated
       destroy_attributes(step_params_all)
 
+      # Attach newly uploaded files, and than remove their blob ids from the parameters
+      new_assets = []
+      step_params_all[:assets_attributes]&.each do |key, value|
+        next unless value[:signed_blob_id]
+
+        new_asset = @step.assets.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+        new_asset.file
+                 .attach(value[:signed_blob_id])
+        new_assets.push(new_asset.id)
+        step_params_all[:assets_attributes].delete(key)
+      end
+
       @step.assign_attributes(step_params_all)
       @step.last_modified_by = current_user
-
-      @step.assets.each do |asset|
-        asset.created_by = current_user if asset.new_record?
-        asset.last_modified_by = current_user unless asset.new_record?
-        asset.team = current_team
-      end
 
       @step.tables.each do |table|
         table.created_by = current_user if table.new_record?
         table.last_modified_by = current_user unless table.new_record?
         table.team = current_team
       end
+
+      update_checklist_items_without_callback(step_params_all)
+
       if @step.save
 
-        TinyMceAsset.update_images(@step, params[:tiny_mce_images])
+        TinyMceAsset.update_images(@step, params[:tiny_mce_images], current_user)
         @step.reload
 
         # generates notification on step upadate
@@ -160,7 +181,7 @@ class StepsController < ApplicationController
 
         # Post process step assets
         @step.assets.each do |asset|
-          asset.post_process_file(team)
+          asset.post_process_file(team) if new_assets.include? asset.id
         end
 
         # Generate activity
@@ -169,9 +190,6 @@ class StepsController < ApplicationController
         else
           log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
         end
-
-        # Update protocol timestamp
-        update_protocol_ts(@step)
 
         format.json {
           render json: {
@@ -202,11 +220,6 @@ class StepsController < ApplicationController
 
   def destroy
     if @step.can_destroy?
-      # Update position on other steps of this module
-      @protocol.steps.where('position > ?', @step.position).each do |step|
-        step.position = step.position - 1
-        step.save
-      end
 
       # Calculate space taken by this step
       team = @protocol.team
@@ -220,14 +233,11 @@ class StepsController < ApplicationController
       end
 
       # Destroy the step
-      @step.destroy(current_user)
+      @step.destroy
 
       # Release space taken by the step
       team.release_space(previous_size)
       team.save
-
-      # Update protocol timestamp
-      update_protocol_ts(@step)
 
       flash[:success] = t(
         'protocols.steps.destroy.success_flash',
@@ -296,11 +306,6 @@ class StepsController < ApplicationController
       changed = @step.completed != completed
       @step.completed = completed
 
-      # Update completed_on
-      if changed
-        @step.completed_on = completed ? Time.current : nil
-      end
-
       if @step.save
         if @protocol.in_module?
           ready_to_complete = @protocol.my_module.check_completness_status
@@ -347,112 +352,40 @@ class StepsController < ApplicationController
   end
 
   def move_up
-    step = Step.find_by_id(params[:id])
-
     respond_to do |format|
-      if step
-        protocol = step.protocol
-        if can_manage_protocol_in_module?(protocol) ||
-           can_manage_protocol_in_repository?(protocol)
-          if step.position > 0
-            step_down = step.protocol.steps.where(position: step.position - 1).first
-            step.position -= 1
-            step.save
+      format.json do
+        if @step.protocol.steps.minimum(:position) != @step.position
+          @step.update!(position: @step.position - 1)
 
-            if step_down
-              step_down.position += 1
-              step_down.save
-
-              # Update protocol timestamp
-              update_protocol_ts(step)
-
-              format.json {
-                render json: { move_direction: "up", step_up_position: step.position, step_down_position: step_down.position },
-                status: :ok
-              }
-            else
-              format.json {
-              render json: {}, status: :forbidden
-            }
-            end
-          else
-            format.json {
-              render json: {}, status: :forbidden
-            }
-          end
+          render json: {
+            step_up_position: @step.position,
+            step_down_position: @step.position + 1
+          }
         else
-          format.json {
-              render json: {}, status: :forbidden
-            }
+          render json: {}
         end
-      else
-        format.json {
-          render json: {}, status: :not_found
-        }
       end
     end
   end
 
   def move_down
-    step = Step.find_by_id(params[:id])
-
     respond_to do |format|
-      if step
-        protocol = step.protocol
-        if can_manage_protocol_in_module?(protocol) ||
-           can_manage_protocol_in_repository?(protocol)
-          if step.position < step.protocol.steps.count - 1
-            step_up = step.protocol.steps.where(position: step.position + 1).first
-            step.position += 1
-            step.save
+      format.json do
+        if @step.protocol.steps.maximum(:position) != @step.position
+          @step.update!(position: @step.position + 1)
 
-            if step_up
-              step_up.position -= 1
-              step_up.save
-
-              # Update protocol timestamp
-              update_protocol_ts(step)
-
-              format.json {
-                render json: { move_direction: "down", step_up_position: step_up.position, step_down_position: step.position },
-                status: :ok
-              }
-            else
-              format.json {
-                render json: {}, status: :forbidden
-              }
-            end
-          else
-            format.json {
-              render json: {}, status: :forbidden
-            }
-          end
-        else
-          format.json {
-            render json: {}, status: :forbidden
+          render json: {
+            step_up_position: @step.position - 1,
+            step_down_position: @step.position
           }
+        else
+          render json: {}
         end
-      else
-        format.json {
-          render json: {}, status: :not_found
-        }
       end
     end
   end
 
   private
-
-  def update_checklist_item_positions
-    if params["step"].present? && params["step"]["checklists_attributes"].present?
-      params["step"]["checklists_attributes"].values.each do |cla|
-        if cla["checklist_items_attributes"].present?
-          cla["checklist_items_attributes"].each do |idx, item|
-            item["position"] = idx
-          end
-        end
-      end
-    end
-  end
 
   # This function is used for partial update of step references and
   # it's useful when you want to execute destroy action on attribute
@@ -463,7 +396,7 @@ class StepsController < ApplicationController
     update_params = {}
     delete_step_tables(params)
     extract_destroy_params(params, update_params)
-    @step.update_attributes(update_params) unless update_params.empty?
+    @step.update(update_params) unless update_params.empty?
   end
 
   # Delete the step table
@@ -479,14 +412,12 @@ class StepsController < ApplicationController
 
   # Checks if hash contains destroy parameter '_destroy' and returns
   # boolean value.
-  def has_destroy_params(params)
-    for key, values in params do
-      if values.respond_to?(:each)
-        for pos, attrs in params[key] do
-          if attrs[:_destroy] == '1'
-            return true
-          end
-        end
+  def has_destroy_params?(params)
+    params.each do |key, values|
+      next unless values.respond_to?(:each)
+
+      params[key].each do |_, attrs|
+        return true if attrs[:_destroy] == '1'
       end
     end
 
@@ -497,57 +428,46 @@ class StepsController < ApplicationController
   # values that contains destroy parameters from original variable and
   # puts them into update_params variable.
   def extract_destroy_params(params, update_params)
-    for key, values in params do
-      if values.respond_to?(:each)
-        update_params[key] = {} unless update_params[key]
-        attr_params = update_params[key]
+    params.each do |key, values|
+      next unless values.respond_to?(:each)
 
-        for pos, attrs in params[key] do
-          if attrs[:_destroy] == '1'
-            if attrs[:id].present?
-              asset = Asset.find_by_id(attrs[:id])
-              if asset.try(&:locked?)
-                asset.errors.add(:base, 'This file is locked.')
-              else
-                attr_params[pos] = { id: attrs[:id], _destroy: '1' }
-              end
+      update_params[key] = {} unless update_params[key]
+      attr_params = update_params[key]
+
+      params[key].each do |pos, attrs|
+        if attrs[:_destroy] == '1'
+          if attrs[:id].present?
+            asset = Asset.find_by_id(attrs[:id])
+            if asset.try(&:locked?)
+              asset.errors.add(:base, 'This file is locked.')
+            else
+              attr_params[pos] = { id: attrs[:id], _destroy: '1' }
             end
-            params[key].delete(pos)
-          elsif has_destroy_params(params[key][pos])
-            attr_params[pos] = { id: attrs[:id] }
-            extract_destroy_params(params[key][pos], attr_params[pos])
           end
+          params[key].delete(pos)
+        elsif has_destroy_params?(params[key][pos])
+          attr_params[pos] = { id: attrs[:id] }
+          extract_destroy_params(params[key][pos], attr_params[pos])
         end
       end
     end
   end
 
   def load_vars
-    @step = Step.find_by_id(params[:id])
-    @protocol = @step&.protocol
-    if params[:checklistitem_id]
-      @chk_item = ChecklistItem.find_by_id(params[:checklistitem_id])
-    end
+    @step = Step.find_by(id: params[:id])
+    return render_404 unless @step
 
-    unless @protocol
-      render_404
-    end
-
-    if @protocol.in_module?
-      @my_module = @protocol.my_module
-    end
+    @protocol = @step.protocol
+    @chk_item = ChecklistItem.find_by(id: params[:checklistitem_id]) if params[:checklistitem_id]
+    @my_module = @protocol.my_module if @protocol.in_module?
   end
 
   def load_vars_nested
-    @protocol = Protocol.find_by_id(params[:protocol_id])
+    @protocol = Protocol.find_by(id: params[:protocol_id])
 
-    unless @protocol
-      render_404
-    end
+    return render_404 unless @protocol
 
-    if @protocol.in_module?
-      @my_module = @protocol.my_module
-    end
+    @my_module = @protocol.my_module if @protocol.in_module?
   end
 
   def convert_table_contents_to_utf8
@@ -560,20 +480,27 @@ class StepsController < ApplicationController
     end
   end
 
-  def update_protocol_ts(step)
-    if step.present? && step.protocol.present?
-      step.protocol.update(updated_at: Time.now)
+  def update_checklist_items_without_callback(params)
+    params.dig('checklists_attributes')&.values&.each do |cl|
+      ck = @step.checklists.find_by(id: cl[:id])
+      next if ck.nil? # ck is new checklist, skip update positions
+
+      cl['checklist_items_attributes']&.each do |item|
+        # Here item is somehow array of index and parameters [0, paramteters<Object>], should be fixed on FE also
+        item_record = ck.checklist_items.find_by(id: item[1][:id])
+
+        next unless item_record
+        item_record.update_attribute('position', item[1][:position])
+      end
     end
   end
 
   def check_view_permissions
-    render_403 unless can_read_protocol_in_module?(@protocol) ||
-                      can_read_protocol_in_repository?(@protocol)
+    render_403 unless can_read_protocol_in_module?(@protocol) || can_read_protocol_in_repository?(@protocol)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_protocol_in_module?(@protocol) ||
-                      can_manage_protocol_in_repository?(@protocol)
+    render_403 unless can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
   end
 
   def check_complete_and_checkbox_permissions
@@ -597,15 +524,19 @@ class StepsController < ApplicationController
       ],
       assets_attributes: [
         :id,
-        :file,
-        :_destroy
+        :_destroy,
+        :signed_blob_id
       ],
       tables_attributes: [
         :id,
         :name,
         :contents,
         :_destroy
-      ]
+      ],
+      marvin_js_assets_attributes: %i(
+        id
+        _destroy
+      )
     )
   end
 

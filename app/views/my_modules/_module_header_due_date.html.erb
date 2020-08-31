@@ -1,0 +1,24 @@
+<% my_module_editable = can_manage_module?(my_module) %>
+
+<span class="date-text" data-editable="<%= my_module_editable %>">
+  <span id="dueDateLabelContainer" class="view-block">
+    <%= render partial: "due_date_label.html.erb" , locals: { my_module: my_module } %>
+  </span>
+  <% if my_module_editable %>
+    <div class="datetime-picker-container" id="due-date">
+      <span class="fas fa-calendar-alt"></span>
+      <input id="calendarDueDate"
+             type="datetime"
+             data-toggle='date-time-picker'
+             class="form-control calendar-input"
+             readonly
+             placeholder="<%= t('my_modules.details.no_due_date_placeholder') %>"
+             data-date-format="<%= datetime_picker_format_full %>"
+             data-date-locale="<%= I18n.locale %>"
+             data-date-use-current="false"
+             data-date-orientation="left"
+             value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
+    </div>
+    <span class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>
+  <% end %>
+</span>

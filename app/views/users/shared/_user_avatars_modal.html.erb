@@ -1,0 +1,39 @@
+<div class="modal modal-user-avatar" tabindex="-1" role="dialog"
+  data-update-url="<%= registration_path(resource_name) %>"
+>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"  aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <%= t('users.registrations.edit.avatar_modal.title') %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="upload-block">
+              <div class="current-avatar">
+                <%= image_tag avatar_path(current_user, :medium) %>
+                <%= file_field_tag :raw_avatar, style: "display:none" %>
+                <%= hidden_field_tag :new_avatar, "" %>
+              </div>
+              <div class="avatar-preview-container" style="display:none"></div>
+              <div class="btn btn-default upload-photo"><%= t('users.registrations.edit.avatar_modal.upload_button') %></div>
+          </div>
+          <div class="option-text">
+            <%= t('users.registrations.edit.avatar_modal.option_text_html') %>
+          </div>
+          <div class="avatar-collection perfect-scrollbar">
+            <% Dir["public/images/avatars/*.png"].each do |avatar| %>
+              <% avatar_name = avatar.split('/')[-1] %>
+              <div class="avatar" data-avatar="<%= avatar_name %>">
+                <%= image_tag "/images/avatars/#{avatar_name}" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" disabled class="btn btn-primary save-button"><%= t('general.save') %></button>
+        </div>
+      </div>
+    </div>
+  </div>

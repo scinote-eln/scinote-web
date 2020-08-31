@@ -1,0 +1,393 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.dashboard-container .current-tasks-widget {
+  grid-column: 1 / span 9;
+  grid-row: 1 / span 6;
+
+  .title {
+    flex-shrink: 0;
+  }
+
+  .actions-container {
+    display: flex;
+    flex-grow: 1;
+    padding-left: 10px;
+  }
+
+  .search-container {
+    flex-basis: 36px;
+
+    .fa-search {
+      animation-timing-function: $timing-function-sharp;
+      color: $color-alto;
+      transition: .3s;
+      width: 26px;
+    }
+
+    .task-search-field {
+      background: transparent;
+      border: $border-default;
+      padding-left: 36px;
+      position: relative;
+      width: 200px;
+      z-index: 2;
+
+      &:placeholder-shown {
+        border: $border-transparent;
+        cursor: pointer;
+        width: 36px;
+
+        + .fa-search {
+          color: $color-volcano;
+        }
+      }
+
+      &:hover {
+        border: $border-default;
+      }
+
+      &:focus {
+        border: $border-focus;
+        cursor: auto;
+        width: 200px;
+
+        + .fa-search {
+          color: $color-alto;
+        }
+      }
+
+
+    }
+  }
+
+  .filter-container {
+    height: 36px;
+    margin-right: 4px;
+    width: 36px;
+
+    .curent-tasks-filters {
+      padding: 0;
+      width: 230px;
+
+      .header {
+        align-items: center;
+        border-bottom: $border-default;
+        display: flex;
+        height: 44px;
+        margin-bottom: 16px;
+        padding: 0  5px 0 16px;
+
+        .title {
+          @include font-h2;
+          flex-grow: 1;
+          user-select: none;
+
+        }
+      }
+
+      .select-block {
+        display: inline-block;
+        padding: 0 16px 16px;
+        position: relative;
+        width: 100%;
+
+        label {
+          @include font-small;
+          display: inline-block;
+          font-weight: bold;
+          margin-bottom: 5px;
+          user-select: none;
+        }
+      }
+
+      .footer {
+        align-items: center;
+        border-top: $border-default;
+        display: flex;
+        height: 68px;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+      }
+    }
+  }
+
+  .widget-placeholder {
+    .fas {
+      font-size: 32px;
+      margin-left: 100px;
+      margin-top: 50px;
+    }
+
+    &.team {
+      .assigned {
+        display: none;
+      }
+    }
+
+    &.assigned {
+      .team {
+        display: none;
+      }
+    }
+  }
+
+  .current-tasks-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    padding: 0 10px;
+    position: relative;
+
+    &.disabled {
+      pointer-events: none;
+    }
+
+    .current-task-item {
+      border-bottom: $border-tertiary;
+      color: $color-volcano;
+      padding: 6px;
+      text-decoration: none;
+
+      .current-task-breadcrumbs {
+        @include font-small;
+        color: $color-silver-chalice;
+        line-height: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .slash {
+          display: inline-block;
+          text-align: center;
+          width: 16px;
+        }
+      }
+
+      .item-row {
+        display: flex;
+
+        .task-name {
+          flex-grow: 1;
+          font-size: $font-size-base;
+          font-weight: bold;
+          overflow: hidden;
+          padding-right: 10px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .task-due-date {
+          flex-basis: 280px;
+          flex-shrink: 0;
+          font-size: 14px;
+
+          .fas {
+            padding: 4px;
+          }
+
+          &.overdue {
+            color: $brand-danger;
+          }
+
+          &.day-prior {
+            color: $brand-warning;
+          }
+
+          &.completed {
+            color: $brand-success;
+          }
+        }
+      }
+
+      &:hover {
+        background: $color-concrete;
+      }
+    }
+  }
+
+  .task-progress-container {
+    height: 20px;
+    max-width: 250px;
+    min-width: 150px;
+    position: relative;
+    width: 100%;
+
+    &::after {
+      @include font-small;
+      @include font-awesome;
+      content: "";
+      line-height: 18px;
+      position: absolute;
+      right: 8px;
+      top: 1px;
+    }
+
+    .task-progress {
+      background: $brand-focus-light;
+      border: $border-tertiary;
+      border-radius: $border-radius-tag;
+      display: flex;
+      height: 20px;
+      position: relative;
+
+      &::after {
+        background: $color-white;
+        content: "";
+        height: 18px;
+        width: 100%;
+      }
+    }
+
+    .task-progress-label {
+      @include font-small;
+      font-weight: bold;
+      height: 20px;
+      left: 0;
+      line-height: 20px;
+      padding-left: 8px;
+      position: absolute;
+      top: 0;
+      width: calc(100% - 30px);
+    }
+
+    &.overdue {
+      .task-progress {
+        background: $brand-danger-light;
+      }
+
+      .task-progress-label {
+        color: $brand-danger;
+      }
+
+      &::after {
+        color: $brand-danger;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+
+    &.day-prior {
+      .task-progress-label {
+        color: $brand-warning;
+      }
+    }
+
+    &.completed {
+      .task-progress {
+        outline: $border-success;
+      }
+
+      .task-progress,
+      .task-progress::after {
+        background: $brand-success-light;
+      }
+
+      .task-progress-label {
+        color: $brand-success;
+      }
+
+      &::after {
+        color: $brand-success;
+        content: $font-fas-check;
+      }
+    }
+  }
+}
+
+@media (max-width: 1500px) {
+  .dashboard-container .current-tasks-widget {
+    .task-progress-container {
+      max-width: 200px;
+    }
+  }
+}
+
+@media (max-width: 1250px) {
+  .dashboard-container .current-tasks-widget {
+    grid-column: 1 / span 8;
+
+    .task-progress-container {
+      max-width: 150px;
+    }
+
+    .current-tasks-list {
+      .current-task-item {
+        .item-row {
+          .task-due-date {
+            flex-basis: 230px;
+          }
+        }
+      }
+    }
+
+  }
+}
+
+@media (max-width: 1000px) {
+  .dashboard-container .current-tasks-widget {
+    grid-column: 1 / span 12;
+    grid-row: 1 / span 4;
+
+    .no-tasks .fas {
+      margin-left: 500px;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-container .current-tasks-widget {
+    --widget-header-size: 72px;
+    grid-row: 1;
+    min-height: 450px;
+
+    .widget-title {
+      flex-basis: 100%;
+      line-height: 36px;
+    }
+
+    .actions-container {
+      flex-grow: 0;
+      padding: 0;
+    }
+
+    .current-tasks-navbar {
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+
+    .search-container {
+      margin-right: 5px;
+
+      .task-search-field {
+        width: 150px;
+
+        &:focus {
+          width: 150px;
+        }
+      }
+    }
+
+    .current-tasks-list {
+      .current-task-item {
+        .item-row {
+          flex-wrap: wrap;
+
+          .task-due-date {
+            @include font-small;
+
+            .fas {
+              display: none;
+            }
+          }
+
+          .task-progress-container {
+            flex-basis: 100%;
+            max-width: none;
+          }
+        }
+      }
+    }
+  }
+}

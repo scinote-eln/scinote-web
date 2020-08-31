@@ -244,7 +244,6 @@ function initializeEdit() {
       { color: 'white', shadow: true }
     );
   });
-  $.initTooltips();
 }
 
 function destroyEdit() {
@@ -496,6 +495,10 @@ function animateReposition(el, left, top) {
 function bindModeChange() {
   var buttons = $('#diagram-buttons').find("a[type='button']");
 
+  $('.change-canvas-view').off().on('click', '.sci-toggle-item', function() {
+    $(this).next().click();
+  })
+
   buttons.on('click', function() {
     var action = $(this).data("action");
 
@@ -700,7 +703,7 @@ function bindFullZoomAjaxTabs() {
     } else if (targetContents === "users") {
       initUsersEditLink(parentNode);
     } else if (targetContents === "comments") {
-      
+
     }
 
     $this.parents("ul").parent().find(".active").removeClass("active");
@@ -746,7 +749,7 @@ function bindEditDueDateAjax() {
     editDueDateModalBody.find("form")
     .on("ajax:success", function(ev2, data2, status2) {
       // Update module's due date
-      dueDateLink.html(data2.due_date_label);
+      dueDateLink.html(data2.card_due_date_label);
 
       // Update module's classes if needed
       moduleEl
@@ -849,7 +852,7 @@ function bindEditTagsAjax(elements) {
       });
     manageTagsModalBody.find(".edit-tag-form")
       .on("ajax:success", function (e, data) {
-        initTagsModalBody(data);
+        if (data.my_module) initTagsModalBody(data);
       })
       .on("ajax:error", function (e, data) {
         $(this).renderFormErrors("tag", data.responseJSON);
@@ -896,8 +899,6 @@ function bindEditTagsAjax(elements) {
             .find(".edit-tags-link")
             .html(my_module.tags_html);
         });
-        // initialize tooltips again
-        $.initTooltips();
       },
       error: function(data){
         // TODO
@@ -2286,7 +2287,7 @@ function updateFormWithModulesData(modules, connections, gridDistX, gridDistY) {
     positionsVal += id + "," + x + "," + y + ";";
     moduleGroupNames[id] = module.attr("data-module-group-name");
   });
-  positionsDiv.attr("value", positionsDiv.val() + positionsVal);
+  positionsDiv.attr("value", positionsVal + positionsDiv.val());
 
   if (moduleNamesDiv.val())
     moduleNamesDiv.attr("value", JSON.stringify($.extend(JSON.parse(moduleNamesDiv.val()),
@@ -2373,6 +2374,7 @@ function addDraggablesToInstance(elements, gridDistX, gridDistY) {
       draggedModule.removeClass("collided");
       elLeft(draggedModule, leftInitial);
       elTop(draggedModule, topInitial);
+      instance.revalidate(draggedModule);
       instance.repaintEverything();
     }
 

@@ -20,9 +20,12 @@ class TeamImporter
     @result_text_mappings = {}
     @repository_row_mappings = {}
     @repository_list_item_mappings = {}
+    @repository_checklist_item_mappings = {}
+    @repository_status_item_mappings = {}
     @result_mappings = {}
     @checklist_mappings = {}
     @table_mappings = {}
+    @report_mappings = {}
 
     @project_counter = 0
     @repository_counter = 0
@@ -88,6 +91,7 @@ class TeamImporter
           user_notification.notification_id =
             @notification_mappings[user_notification.notification_id]
           next if user_notification.notification_id.blank?
+
           user_notification.save!
         end
 
@@ -114,6 +118,11 @@ class TeamImporter
       team_json['repositories'].each do |repository_json|
         repository_json['repository_rows'].each do |repository_row_json|
           create_repository_cells(repository_row_json['repository_cells'], team)
+        end
+        repository_json['repository_snapshots'].each do |repository_snapshot_json|
+          repository_snapshot_json['repository_rows'].each do |repository_snapshot_row_json|
+            create_repository_cells(repository_snapshot_row_json['repository_cells'], team)
+          end
         end
       end
 
@@ -157,7 +166,7 @@ class TeamImporter
     @is_template = true
 
     # Parse the experiment file and save it to DB
-    project = Project.find_by_id(project_id)
+    project = Project.find_by(id: project_id)
     experiment_json = JSON.parse(File.read("#{@import_dir}/experiment.json"))
 
     # Handle situation when experiment with same name already exists
@@ -206,7 +215,7 @@ class TeamImporter
     team.repositories.each do |rep|
       rep.repository_rows.find_each do |row|
         row.repository_cells.each do |cell|
-          cell.value.save! if update_annotation(cell.value.data)
+          cell.value.save! if update_annotation(cell.value.formatted)
         end
       end
     end
@@ -234,6 +243,7 @@ class TeamImporter
             comment.save! if update_annotation(comment.message)
           end
           next unless res.result_text
+
           res.save! if update_annotation(res.result_text.text)
         end
       end
@@ -243,6 +253,7 @@ class TeamImporter
   # Returns true if text was updated
   def update_annotation(text)
     return false if text.nil?
+
     updated = false
     %w(prj exp tsk rep_item).each do |name|
       text.scan(/~#{name}~\w+\]/).each do |text_match|
@@ -260,6 +271,7 @@ class TeamImporter
             @repository_row_mappings[orig_id]
           end
         next unless new_id
+
         new_id_encoded = new_id.base62_encode
         text.sub!("~#{name}~#{orig_id_encoded}]", "~#{name}~#{new_id_encoded}]")
         updated = true
@@ -269,6 +281,7 @@ class TeamImporter
       orig_id_encoded = user_match.match(/\[@[\w+-@?! ]+~(\w+)\]/)[1]
       orig_id = orig_id_encoded.base62_decode
       next unless @user_mappings[orig_id]
+
       new_id_encoded = @user_mappings[orig_id].base62_encode
       text.sub!("~#{orig_id_encoded}]", "~#{new_id_encoded}]")
       updated = true
@@ -298,12 +311,14 @@ class TeamImporter
       if activity.subject_id.present?
         if activity.subject_type == 'Team'
           activity.subject_id = team.id
+        elsif activity.subject_type == 'RepositoryBase'
+          activity.subject_id = @repository_mappings[activity.subject_id]
         else
           mappings = instance_variable_get("@#{activity.subject_type.underscore}_mappings")
           activity.subject_id = mappings[activity.subject_id]
         end
       end
-      unless activity.values['message_items'].blank?
+      if activity.values&.dig(:message_items).present?
         activity.values['message_items'].each_value do |item|
           next unless item['type']
 
@@ -320,35 +335,35 @@ class TeamImporter
 
   def create_tiny_mce_assets(tmce_assets_json, team)
     tmce_assets_json.each do |tiny_mce_asset_json|
-      tiny_mce_asset = TinyMceAsset.new(tiny_mce_asset_json)
+      tiny_mce_asset = TinyMceAsset.new(tiny_mce_asset_json['tiny_mce_asset'])
+      tiny_mce_asset_blob = tiny_mce_asset_json['tiny_mce_asset_blob']
       # Try to find and load file
-      File.open(
-        File.join(@import_dir, 'tiny_mce_assets', tiny_mce_asset.id.to_s,
-                  tiny_mce_asset.image_file_name)
-      ) do |tiny_mce_file|
-        orig_tmce_id = tiny_mce_asset.id
-        tiny_mce_asset.id = nil
-        if tiny_mce_asset.object_id.present?
-          mappings = instance_variable_get("@#{tiny_mce_asset.object_type.underscore}_mappings")
-          tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
-        end
-        tiny_mce_asset.team = team
-        tiny_mce_asset.image = tiny_mce_file
-        tiny_mce_asset.save!
-        @mce_asset_counter += 1
-        if tiny_mce_asset.object_id.present?
-          object = tiny_mce_asset.object
-          object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
-          encoded_id = Base62.encode(tiny_mce_asset.id)
-          object.public_send(object_field).sub!("data-mce-token=\"#{Base62.encode(orig_tmce_id)}\"",
-                                                "data-mce-token=\"#{encoded_id}\"")
-          # Check for old fields
-          new_asset_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{encoded_id}\"/>"
-          object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
-                                                new_asset_format)
-          object.save!
-        end
+      tiny_mce_file = File.open(File.join(@import_dir,
+                                          'tiny_mce_assets',
+                                          tiny_mce_asset.id.to_s,
+                                          tiny_mce_asset_blob['filename']))
+      orig_tmce_id = tiny_mce_asset.id
+      tiny_mce_asset.id = nil
+      if tiny_mce_asset.object_id.present?
+        mappings = instance_variable_get("@#{tiny_mce_asset.object_type.underscore}_mappings")
+        tiny_mce_asset.object_id = mappings[tiny_mce_asset.object_id]
       end
+      tiny_mce_asset.team = team
+      tiny_mce_asset.save!
+      tiny_mce_asset.image.attach(io: tiny_mce_file, filename: File.basename(tiny_mce_file))
+      @mce_asset_counter += 1
+      next if tiny_mce_asset.object_id.blank?
+
+      object = tiny_mce_asset.object
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]
+      encoded_id = Base62.encode(tiny_mce_asset.id)
+      object.public_send(object_field).sub!("data-mce-token=\"#{Base62.encode(orig_tmce_id)}\"",
+                                            "data-mce-token=\"#{encoded_id}\"")
+      # Check for old fields
+      new_asset_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{encoded_id}\"/>"
+      object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
+                                            new_asset_format)
+      object.save!
     end
   end
 
@@ -361,14 +376,15 @@ class TeamImporter
       user.password = user_json['user']['encrypted_password']
       user.current_team_id = team.id
       user.invited_by_id = @user_mappings[user.invited_by_id]
-      if user.avatar.present?
-        avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s,
-                                user.avatar_file_name)
+      user.save!
+      if user_json['user']['avatar']
+        avatar_filename = user_json['user']['avatar']['filename']
+        avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s, avatar_filename)
         if File.exist?(avatar_path)
-          File.open(avatar_path) { |f| user.avatar = f }
+          avatar = File.open(avatar_path)
+          user.avatar.attach(io: avatar, filename: avatar_filename)
         end
       end
-      user.save!
       @user_counter += 1
       user.update_attribute('encrypted_password',
                             user_json['user']['encrypted_password'])
@@ -387,6 +403,7 @@ class TeamImporter
     notifications_json.each do |notification_json|
       notification = Notification.new(notification_json)
       next if notification.type_of.blank?
+
       orig_notification_id = notification.id
       notification.id = nil
       notification.generator_user_id = find_user(notification.generator_user_id)
@@ -396,10 +413,16 @@ class TeamImporter
     end
   end
 
-  def create_repositories(repositories_json, team)
+  def create_repositories(repositories_json, team, snapshots = false)
     puts 'Creating repositories...'
     repositories_json.each do |repository_json|
-      repository = Repository.new(repository_json['repository'])
+      if snapshots
+        repository = RepositorySnapshot.new(repository_json['repository'])
+        repository.my_module_id = @my_module_mappings[repository.my_module_id]
+        repository.parent_id = @repository_mappings[repository.parent_id]
+      else
+        repository = Repository.new(repository_json['repository'])
+      end
       orig_repository_id = repository.id
       repository.id = nil
       repository.team = team
@@ -408,7 +431,6 @@ class TeamImporter
       @repository_mappings[orig_repository_id] = repository.id
       @repository_counter += 1
       repository_json['repository_columns'].each do |repository_column_json|
-
         repository_column = RepositoryColumn.new(
           repository_column_json['repository_column']
         )
@@ -419,20 +441,48 @@ class TeamImporter
           find_user(repository_column.created_by_id)
         repository_column.save!
         @repository_column_mappings[orig_rep_col_id] = repository_column.id
-        next unless repository_column.data_type == 'RepositoryListValue'
-        repository_column_json['repository_list_items'].each do |list_item|
-          created_by_id = find_user(repository_column.created_by_id)
-          repository_list_item = RepositoryListItem.new(data: list_item['data'])
-          repository_list_item.repository_column = repository_column
-          repository_list_item.repository = repository
-          repository_list_item.created_by_id = created_by_id
-          repository_list_item.last_modified_by_id = created_by_id
-          repository_list_item.save!
-          @repository_list_item_mappings[list_item['id']] =
-            repository_list_item.id
+        case repository_column.data_type
+        when 'RepositoryListValue'
+          repository_column_json['repository_list_items'].each do |list_item|
+            created_by_id = find_user(repository_column.created_by_id)
+            repository_list_item = RepositoryListItem.new(data: list_item['data'])
+            repository_list_item.repository_column = repository_column
+            repository_list_item.created_by_id = created_by_id
+            repository_list_item.last_modified_by_id = created_by_id
+            repository_list_item.save!
+            @repository_list_item_mappings[list_item['id']] =
+              repository_list_item.id
+          end
+        when 'RepositoryChecklistValue'
+          repository_column_json['repository_checklist_items'].each do |checklist_item|
+            created_by_id = find_user(repository_column.created_by_id)
+            repository_checklist_item = RepositoryChecklistItem.new(data: checklist_item['data'])
+            repository_checklist_item.repository_column = repository_column
+            repository_checklist_item.created_by_id = created_by_id
+            repository_checklist_item.last_modified_by_id = created_by_id
+            repository_checklist_item.save!
+            @repository_checklist_item_mappings[checklist_item['id']] =
+              repository_checklist_item.id
+          end
+        when 'RepositoryStatusValue'
+          repository_column_json['repository_status_items'].each do |status_item|
+            created_by_id = find_user(repository_column.created_by_id)
+            repository_status_item = RepositoryStatusItem.new(
+              status: status_item['status'],
+              icon: status_item['icon']
+            )
+            repository_status_item.repository_column = repository_column
+            repository_status_item.created_by_id = created_by_id
+            repository_status_item.last_modified_by_id = created_by_id
+            repository_status_item.save!
+            @repository_status_item_mappings[status_item['id']] =
+              repository_status_item.id
+          end
         end
       end
       create_repository_rows(repository_json['repository_rows'], repository)
+
+      create_repositories(repository_json['repository_snapshots'], team, true) unless snapshots
     end
   end
 
@@ -634,15 +684,36 @@ class TeamImporter
     protocols_json.each do |protocol_json|
       protocol = Protocol.new(protocol_json['protocol'])
       orig_protocol_id = protocol.id
+      if protocol.name
+        protocol_name_unique = false
+        original_name = protocol.name
+        counter = 0
+        until protocol_name_unique
+          counter += 1
+          protocol_exist = if protocol.protocol_type == :in_repository_public
+                             Protocol.where(protocol_type: protocol.protocol_type)
+                                     .where(team: team)
+                                     .find_by(name: protocol.name)
+                           else
+                             Protocol.where(protocol_type: protocol.protocol_type)
+                                     .where(team: team)
+                                     .where(added_by_id: find_user(protocol.added_by_id))
+                                     .find_by(name: protocol.name)
+                           end
+          if protocol_exist
+            protocol.name = original_name + "(#{counter})"
+          else
+            protocol_name_unique = true
+          end
+        end
+      end
       protocol.id = nil
       protocol.added_by_id = find_user(protocol.added_by_id)
       protocol.team = team || my_module.experiment.project.team
       protocol.archived_by_id = find_user(protocol.archived_by_id)
       protocol.restored_by_id = find_user(protocol.restored_by_id)
       protocol.my_module = my_module unless protocol.my_module_id.nil?
-      unless protocol.parent_id.nil?
-        protocol.parent_id = @protocol_mappings[protocol.parent_id]
-      end
+      protocol.parent_id = @protocol_mappings[protocol.parent_id] unless protocol.parent_id.nil?
       protocol.save!
       @protocol_counter += 1
       @protocol_mappings[orig_protocol_id] = protocol.id
@@ -770,23 +841,23 @@ class TeamImporter
 
   # returns asset object
   def create_asset(asset_json, team, user_id = nil)
-    asset = Asset.new(asset_json)
-    File.open(
-      "#{@import_dir}/assets/#{asset.id}/#{asset.file_file_name}"
-    ) do |file|
-      orig_asset_id = asset.id
-      asset.id = nil
-      asset.created_by_id = user_id || find_user(asset.created_by_id)
-      asset.last_modified_by_id =
-        user_id || find_user(asset.last_modified_by_id)
-      asset.team = team
-      asset.file = file
-      asset.in_template = true if @is_template
-      asset.save!
-      asset.post_process_file(team)
-      @asset_mappings[orig_asset_id] = asset.id
-      @asset_counter += 1
-    end
+    asset = Asset.new(asset_json['asset'])
+    asset_blob = asset_json['asset_blob']
+    ### Fix for support templates
+    asset_file_name = asset_blob['filename']
+    file = File.open("#{@import_dir}/assets/#{asset.id}/#{asset_file_name}")
+    orig_asset_id = asset.id
+    asset.id = nil
+    asset.created_by_id = user_id || find_user(asset.created_by_id)
+    asset.last_modified_by_id =
+      user_id || find_user(asset.last_modified_by_id)
+    asset.team = team
+    asset.in_template = true if @is_template
+    asset.save!
+    asset.file.attach(io: file, filename: File.basename(file))
+    asset.post_process_file(team)
+    @asset_mappings[orig_asset_id] = asset.id
+    @asset_counter += 1
     asset
   end
 
@@ -820,12 +891,14 @@ class TeamImporter
       report_el_parent_mappings = {}
       report_element_mappings = {}
       report = Report.new(report_json['report'])
+      orig_report_id = report.id
       report.id = nil
       report.project_id = @project_mappings[report.project_id]
       report.user_id = find_user(report.user_id)
       report.last_modified_by_id = find_user(report.last_modified_by_id)
       report.team_id = team.id
       report.save!
+      @report_mappings[orig_report_id] = report.id
       @report_counter += 1
       report_json['report_elements'].each do |report_element_json|
         report_element = ReportElement.new(report_element_json)
@@ -842,22 +915,14 @@ class TeamImporter
           report_element.my_module_id =
             @my_module_mappings[report_element.my_module_id]
         end
-        if report_element.step_id
-          report_element.step_id = @step_mappings[report_element.step_id]
-        end
-        if report_element.result_id
-          report_element.result_id = @result_mappings[report_element.result_id]
-        end
+        report_element.step_id = @step_mappings[report_element.step_id] if report_element.step_id
+        report_element.result_id = @result_mappings[report_element.result_id] if report_element.result_id
         if report_element.checklist_id
           report_element.checklist_id =
             @checklist_mappings[report_element.checklist_id]
         end
-        if report_element.asset_id
-          report_element.asset_id = @asset_mappings[report_element.asset_id]
-        end
-        if report_element.table_id
-          report_element.table_id = @table_mappings[report_element.table_id]
-        end
+        report_element.asset_id = @asset_mappings[report_element.asset_id] if report_element.asset_id
+        report_element.table_id = @table_mappings[report_element.table_id] if report_element.table_id
         if report_element.experiment_id
           report_element.experiment_id =
             @experiment_mappings[report_element.experiment_id]
@@ -871,7 +936,7 @@ class TeamImporter
         report_el_parent_mappings[report_element.id] = orig_parent_id
       end
       report_el_parent_mappings.each do |k, v|
-        re = ReportElement.find_by_id(k)
+        re = ReportElement.find_by(id: k)
         re.parent_id = report_element_mappings[v]
         re.save!
       end
@@ -880,11 +945,20 @@ class TeamImporter
 
   def find_user(user_id)
     return nil if user_id.nil?
-    @user_mappings[user_id] ? @user_mappings[user_id] : @admin_id
+
+    @user_mappings[user_id] || @admin_id
   end
 
   def find_list_item_id(list_item_id)
     @repository_list_item_mappings[list_item_id]
+  end
+
+  def find_checklist_item_id(checklist_item_id)
+    @repository_checklist_item_mappings[checklist_item_id]
+  end
+
+  def find_status_item_id(status_item_id)
+    @repository_status_item_mappings[status_item_id]
   end
 
   def create_cell_value(repository_cell, value_json, team)
@@ -895,17 +969,30 @@ class TeamImporter
       repository_value = RepositoryListValue.new(
         repository_list_item_id: list_item_id.to_i
       )
-    when 'RepositoryTextValue'
-      repository_value = RepositoryTextValue.new(cell_json)
     when 'RepositoryAssetValue'
       asset = create_asset(value_json['repository_value_asset'], team)
       repository_value = RepositoryAssetValue.new(asset: asset)
+    when 'RepositoryChecklistValue'
+      repository_value = RepositoryChecklistValue.new(cell_json)
+      value_json['repository_value_checklist'].each do |item|
+        item_id = find_checklist_item_id(item['repository_checklist_item_id']).to_i
+        repository_value.repository_checklist_items << RepositoryChecklistItem.find(item_id)
+      end
+    when 'RepositoryStatusValue'
+      list_item_id = find_status_item_id(cell_json['repository_status_item_id'])
+      repository_value = RepositoryStatusValue.new(
+        repository_status_item_id: list_item_id.to_i
+      )
+    else
+      value_type = repository_cell.repository_column.data_type
+      repository_value = value_type.constantize.new(cell_json)
     end
     repository_value.id = nil
     repository_value.created_by_id = find_user(cell_json['created_by_id'])
     repository_value.last_modified_by_id =
       find_user(cell_json['last_modified_by_id'])
     repository_value.repository_cell = repository_cell
+    repository_cell.value = repository_value
     repository_value.save!
   end
 end

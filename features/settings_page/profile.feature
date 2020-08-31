@@ -4,8 +4,9 @@ Feature: Settings
   So that I have a my prefered settings
 
 Background:
- Given the "BioSistemika Process" team exists
- Given the following users are registered
+  Given default screen size
+  Given the "BioSistemika Process" team exists
+  Given the following users are registered
   | email                   | password           | password_confirmation | full_name   | initials  |
   | nonadmin@myorg.com      | mypassword1234     | mypassword1234        | Karli Novak | KN        |
  And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "normal_user"
@@ -19,66 +20,50 @@ Background:
    Then I should see "My profile"
 
 @javascript
-Scenario: Unsuccessful avatar image upload, file is too big
-  Given I'm on the profile page
-  Then I click on image within ".avatar-container" element
-  And I attach a "Moon.png" file to "user_raw_avatar" field
-  And I trigger click '#user-avatar-field .btn-success'
-  And I should see "Your avatar file cannot be larger than 0.2 MB. (Please try again with a smaller file.)" error message
-
-@javascript
-Scenario: Unsuccessful avatar image upload, file is invalid
-  Given I'm on the profile page
-  Then I click on image within ".avatar-container" element
-  And I attach a "File.txt" file to "user_raw_avatar" field
-  And I click on "Upload"
-  And I should see "Avatar content type is invalid" error message
-
-@javascript
 Scenario: Successful upload avatar image
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
-  And I attach a "Star.png" file to "user_raw_avatar" field
-  Then I click "Upload" button
+  And I attach a "Star.png" file to "#raw_avatar" field
+  Then I click "Save" button
   And I should see "Your account has been updated successfully" flash message
 
 @javascript
 Scenario: Successfully changes user full name
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-full-name" input field
+  Then I click element with css ".settings-page-full-name"
   And I fill in "Karli Novak Novakovic" in ".settings-page-full-name" input field
-  Then I click "Save" button
-  And I should see "Karli Novak Novakovic" in ".settings-page-full-name" input field
+  Then I click element with css ".save-button"
+  And I should see "Karli Novak Novakovic" on ".settings-page-full-name" element
 
 @javascript
 Scenario: Unsuccessfully changes user initials, text is too long
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-initials" input field
+  Then I click element with css ".settings-page-initials"
   And I fill in "KNOCK" in ".settings-page-initials" input field
-  Then I click "Save" button
+  Then I click element with css ".save-button"
   And I should see "is too long (maximum is 4 characters)" error message
 
 @javascript
 Scenario: Successfully changes user initials
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-initials" input field
+  Then I click element with css ".settings-page-initials"
   And I fill in "KN" in ".settings-page-initials" input field
-  Then I click "Save" button
-  And I should see "KN" in ".settings-page-initials" input field
+  Then I click element with css ".save-button"
+  And I should see "KN" on ".settings-page-initials" element
 
 @javascript
 Scenario: Successfully changes user email
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-email" input field
+  Then I click "Change" link within "#user-email-field"
   And I change "nonadmin@myorg.com" with "user@myorg.com" email
   And I fill in "mypassword1234" in "#edit-email-current-password" field of ".settings-page-email" form
   Then I click "Save" button
-  And I should see "user@myorg.com" in ".settings-page-email" input field
+  And I should see "user@myorg.com"
 
 @javascript
 Scenario: Unsuccessful Password Change, password is too short
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-change-password" input field
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypass" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypass" in "#user_password_confirmation" field of ".settings-page-change-password" form
@@ -88,7 +73,7 @@ Scenario: Unsuccessful Password Change, password is too short
 @javascript
 Scenario: Unsuccessful Password Change, passwords does not match
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-change-password" input field
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypassword56788" in "#user_password_confirmation" field of ".settings-page-change-password" form
@@ -98,7 +83,7 @@ Scenario: Unsuccessful Password Change, passwords does not match
 @javascript
 Scenario: Unsuccessful Password Change, current password is invalid
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-change-password" input field
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword123" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password_confirmation" field of ".settings-page-change-password" form
@@ -108,7 +93,7 @@ Scenario: Unsuccessful Password Change, current password is invalid
 @javascript
 Scenario: Successful Password Change
   Given I'm on the profile page
-  Then I click on Edit on ".settings-page-change-password" input field
+  Then I click "Change" link within "#user-password-field"
   And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
   And I fill in "mypassword5678" in "#user_password_confirmation" field of ".settings-page-change-password" form

@@ -358,7 +358,7 @@ var SmartAnnotation = (function() {
             }
             _a = decodeURI("%C3%80");
             _y = decodeURI("%C3%BF");
-            regexp = new RegExp(flag + "([A-Za-z" + _a + "-" + _y + "0-9_\\s\+\-\]*)$|" + flag + "([^\\x00-\\xff]*)$", 'gi');
+            regexp = new RegExp(flag + "([A-Za-z" + _a + "-" + _y + "0-9_/:\\s\+\-\]*)$|" + flag + "([^\\x00-\\xff]*)$", 'gi');
             match = regexp.exec(subtext);
             if (match) {
               return match[2] || match[1];
@@ -377,6 +377,21 @@ var SmartAnnotation = (function() {
 
     function init() {
       $(field)
+      .on("reposition.atwho", function(event, flag, query) {
+        let inputFieldLeft = query.$inputor.offset().left;
+        if (inputFieldLeft > $(window).width()) {
+          let leftPosition;
+          if (inputFieldLeft < flag.left + $(window).scrollLeft()) {
+            leftPosition = inputFieldLeft;
+          } else {
+            leftPosition = flag.left + $(window).scrollLeft();
+          }
+          query.$el.find('.atwho-view').css('left', leftPosition + 'px');
+        }
+        if ($('.repository-show').length) {
+          query.$el.find('.atwho-view').css('top', flag.top + 'px');
+        }
+      })
       .atwho({
         at: '@',
         callbacks: {

@@ -4,6 +4,7 @@ class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
   include TeamBySubjectModel
+  include TinyMceImages
 
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
@@ -11,13 +12,13 @@ class Team < ApplicationRecord
 
   after_create :generate_template_project
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
+  scope :ordered, -> { order('LOWER(name)') }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
-  validates :space_taken, presence: true
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -36,6 +37,9 @@ class Team < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :activities, inverse_of: :team, dependent: :destroy
+  has_many :assets, inverse_of: :team, dependent: :destroy
+  has_many :team_repositories, inverse_of: :team, dependent: :destroy
+  has_many :shared_repositories, through: :team_repositories, source: :repository
 
   attr_accessor :without_templates
   attr_accessor :without_intro_demo
@@ -63,6 +67,20 @@ class Team < ApplicationRecord
     a_query = "%#{query}%"
     users.where.not(confirmed_at: nil)
          .where('full_name ILIKE ? OR email ILIKE ?', a_query, a_query)
+  end
+
+  def storage_used
+    by_assets = Asset.joins(:file_blob)
+                     .where(assets: { team_id: id })
+                     .select('active_storage_blobs.byte_size')
+
+    by_tiny_mce_assets = TinyMceAsset.joins(:image_blob)
+                                     .where(tiny_mce_assets: { team_id: id })
+                                     .select('active_storage_blobs.byte_size')
+
+    ActiveStorage::Blob
+      .from("((#{by_assets.to_sql}) UNION ALL (#{by_tiny_mce_assets.to_sql})) AS active_storage_blobs")
+      .sum(:byte_size)
   end
 
   # (re)calculate the space taken by this team
@@ -129,18 +147,20 @@ class Team < ApplicationRecord
       query = query.where(id: users_team)
     end
     query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
-    query.select(:id, :name).map { |i| { id: i[:id], name: ApplicationController.helpers.escape_input(i[:name]) } }
+    query.select(:id, :name).map { |i| { value: i[:id], label: ApplicationController.helpers.escape_input(i[:name]) } }
   end
 
-  def self.find_by_object(obj)
-    case obj.class.name
-    when 'Protocol'
-      obj.team_id
-    when 'MyModule', 'Step'
-      obj.protocol.team_id
-    when 'ResultText'
-      obj.result.my_module.protocol.team_id
-    end
+  def self.search_by_object(obj)
+    find(
+      case obj.class.name
+      when 'Protocol'
+        obj.team_id
+      when 'MyModule', 'Step'
+        obj.protocol.team_id
+      when 'ResultText'
+        obj.result.my_module.protocol.team_id
+      end
+    )
   end
 
   private

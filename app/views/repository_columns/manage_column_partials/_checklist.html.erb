@@ -1,0 +1,53 @@
+<%
+  delimiters = defined_delimiters_options
+  selected_delimiter = column.new_record? ? 'auto' : column.metadata['delimiter'] || 'return'
+  selected_delimiter_char = Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[selected_delimiter.to_sym]
+%>
+
+<%= hidden_field_tag 'dropdown-options', '[]', class: 'dropdown-options' %>
+<div class="form-group">
+  <label class="control-label col-sm-3" for="repository-column-data-type">
+    <%= t('libraries.manange_modal_column.list_type.delimiter_label') %>
+  </label>
+  <div class="col-sm-9">
+    <select name="delimiter" id="delimiter" class="form-control delimiter" <%= "data-disable-on-load=true" if !column.new_record? %>>
+      <% delimiters.each do |delimiter| %>
+        <option value="<%= delimiter[1] %>"
+          <%= "selected" if delimiter[1].to_s == selected_delimiter  %>
+          data-params='{"icon": "<%= Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_ICON_MAP[delimiter[1].to_sym] %>"}'
+        ><%= delimiter[0] %></option>
+      <% end %>
+    </select>
+  </div>
+</div>
+<div class="form-group">
+  <div class="control-label col-sm-3">
+    <label for="repository-column-data-type"><%= t('libraries.manange_modal_column.checklist_type.checklist_items') %></label>
+    <div class="limit-counter-container">
+      <span class="items-count" data-count="0">0</span>
+      <span class="items-limit">
+        <%= t('libraries.manange_modal_column.too_many_items_label', limit: Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN) %>
+      </span>
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <%= text_area_tag 'items-textarea', column.repository_checklist_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea' %>
+    <% unless column.new_record? %>
+      <div class="bg-danger hidden changing-existing-list-items-warning">
+        <%= t('libraries.manange_modal_column.change_multi_select_items_warning') %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="dropdown-preview">
+  <span class="field-name">Preview</span>
+  <div class="preview-block">
+    <div class="preview-label"><%= column.name %></div>
+    <select class="form-control preview-select"
+      data-combine-tags="true"
+      data-select-multiple-all-selected="<%= t('libraries.manange_modal_column.checklist_type.all_options') %>"
+      data-select-multiple-name="<%= t('libraries.manange_modal_column.checklist_type.multiple_options') %>"
+    >
+    </select>
+  </div>
+</div>

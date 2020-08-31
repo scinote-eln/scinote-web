@@ -33,7 +33,7 @@ class AtWhoController < ApplicationController
   def rep_items
     repository = Repository.find_by_id(params[:repository_id])
     items =
-      if repository && can_read_team?(repository.team)
+      if repository && can_read_repository?(repository)
         SmartAnnotation.new(current_user, current_team, @query)
                        .repository_rows(repository)
       else
@@ -50,8 +50,7 @@ class AtWhoController < ApplicationController
   end
 
   def repositories
-    repositories =
-      @team.repositories.limit(Rails.configuration.x.repositories_limit)
+    repositories = Repository.active.accessible_by_teams(@team)
     respond_to do |format|
       format.json do
         render json: {

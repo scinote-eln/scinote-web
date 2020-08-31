@@ -1,10 +1,12 @@
 class MyModuleTagsController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars, except: :canvas_index
   before_action :check_view_permissions, only: :index
   before_action :check_manage_permissions, only: %i(create index_edit destroy)
 
   def index_edit
-    @my_module_tags = @my_module.my_module_tags
+    @my_module_tags = @my_module.my_module_tags.order(:id)
     @unassigned_tags = @my_module.unassigned_tags
     @new_mmt = MyModuleTag.new(my_module: @my_module)
     @new_tag = Tag.new(project: @my_module.experiment.project)
@@ -112,14 +114,20 @@ class MyModuleTagsController < ApplicationController
 
   def search_tags
     assigned_tags = @my_module.my_module_tags.pluck(:tag_id)
-    tags = @my_module.experiment.project.tags\
-                     .where.not(id: assigned_tags)
-                     .search(
-                       current_user,
-                       false,
-                       params[:query]
-                     ).select(:id, :name, :color).limit(6)
-    tags = [{ id: 0, name: params[:query], color: nil }] if tags.count.zero?
+    all_tags = @my_module.experiment.project.tags
+    tags = all_tags.where.not(id: assigned_tags)
+                   .search(current_user, false, params[:query])
+                   .select(:id, :name, :color)
+                   .limit(6)
+
+    tags = tags.map do |tag|
+      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
+    end
+
+    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
+      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
+    end
+
     render json: tags
   end
 

@@ -68,27 +68,6 @@
       $(this).renderFormErrors('user', data.responseJSON);
     });
 
-  $('#user_raw_avatar').change(function() {
-    var reader = new FileReader();
-    var inputField = this;
-    var croppieContainer;
-
-    reader.readAsDataURL(inputField.files[0]);
-    reader.onload = function() {
-      $('#user_avatar').val(reader.result);
-      $('.new-avatar-preview-container').css('display', '').children().remove();
-      $('<img class="new-avatar-cropping-preview" src="' + reader.result + '"></img>').appendTo('.new-avatar-preview-container');
-      croppieContainer = $('.new-avatar-cropping-preview');
-      croppieContainer.croppie({ viewport: { type: 'circle' } });
-      $('.new-avatar-preview-container').off('update.croppie').on('update.croppie', function() {
-        croppieContainer.croppie('result', { type: 'base64', format: 'jpeg', circle: false })
-          .then(function(html) {
-            $('#user_avatar').val(html);
-          });
-      });
-    };
-  });
-
   $('#user-avatar-field :submit').click(function(ev) {
     var $form = $(ev.target.form);
     var $fileInput = $form.find('input[type=file]');
@@ -98,5 +77,39 @@
       // Local file uploading
       animateSpinner();
     }
+    $fileInput[0].value = '';
+  });
+
+  $('#twoFactorAuthenticationDisable').click(function() {
+    $('#twoFactorAuthenticationModal').modal('show');
+  });
+
+  $('#twoFactorAuthenticationEnable').click(function() {
+    $.get(this.dataset.qrCodeUrl, function(result) {
+      $('#twoFactorAuthenticationModal .qr-code').html(result.qr_code);
+      $('#twoFactorAuthenticationModal').find('[href="#2fa-step-1"]').tab('show');
+      $('#twoFactorAuthenticationModal').modal('show');
+      $('#twoFactorAuthenticationModal').find('.submit-code-field').removeClass('error').find('#submit_code').val('');
+    });
+  });
+
+  $('#twoFactorAuthenticationModal .2fa-enable-form').on('ajax:error', function(e, data) {
+    $(this).find('.submit-code-field').addClass('error').attr('data-error-text', data.responseJSON.error);
+  }).on('ajax:success', function(e, data) {
+    var blob = new Blob([data.recovery_codes.join('\r\n')], { type: 'text/plain;charset=utf-8' });
+    $('#twoFactorAuthenticationModal').find('.recovery-codes').html(data.recovery_codes.join('<br>'));
+    $('#twoFactorAuthenticationModal').find('[href="#2fa-step-4"]').tab('show');
+    $('.download-recovery-codes').attr('href', window.URL.createObjectURL(blob));
+    $('#twoFactorAuthenticationModal').one('hide.bs.modal', function() {
+      location.reload();
+    });
+  });
+
+  $('#twoFactorAuthenticationModal .2fa-disable-form').on('ajax:error', function(e, data) {
+    $(this).find('.password-field').addClass('error').attr('data-error-text', data.responseJSON.error);
+  });
+
+  $('#twoFactorAuthenticationModal').on('click', '.btn-next-step', function() {
+    $('#twoFactorAuthenticationModal').find(`[href="${$(this).data('step')}"]`).tab('show');
   });
 }());

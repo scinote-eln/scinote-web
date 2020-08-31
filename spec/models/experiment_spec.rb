@@ -27,19 +27,15 @@ describe Experiment, type: :model do
     it { should have_db_column :restored_on }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
-    it { should have_db_column :workflowimg_file_name }
-    it { should have_db_column :workflowimg_content_type }
-    it { should have_db_column :workflowimg_file_size }
-    it { should have_db_column :workflowimg_updated_at }
     it { should have_db_column :uuid }
   end
 
   describe 'Relations' do
-    it { should belong_to :project }
+    it { should belong_to(:project) }
     it { should belong_to(:created_by).class_name('User') }
     it { should belong_to(:last_modified_by).class_name('User') }
-    it { should belong_to(:archived_by).class_name('User') }
-    it { should belong_to(:restored_by).class_name('User') }
+    it { should belong_to(:archived_by).class_name('User').optional }
+    it { should belong_to(:restored_by).class_name('User').optional }
     it { should have_many :my_modules }
     it { should have_many :my_module_groups }
     it { should have_many :report_elements }
@@ -96,23 +92,72 @@ describe Experiment, type: :model do
     let(:user) { experiment.created_by }
 
     context 'when creating tasks' do
-      let(:to_add) do
-        [{ id: 'n0', name: 'new task name', x: 50, y: 50 }]
-      end
-      let(:function_call) do
-        experiment.update_canvas([], to_add, [], [], [], [], [], [], user)
-      end
+      let(:to_add) { [{ id: 'n0', name: 'new task name', x: 50, y: 50 }] }
+      let(:function_call) { experiment.update_canvas([], to_add, [], {}, [], [], [], {}, user) }
 
       it 'calls create activity for creating tasks' do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type: :create_module)))
-
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :assign_user_to_module)))
         function_call
       end
 
       it 'adds activity in DB' do
         expect { function_call }.to(change { Activity.all.count })
+      end
+
+      context 'when moving existing one and creating new one on the same position' do
+        let(:first_task) { experiment.my_modules.first }
+        let(:to_add) { [{ id: 'n0', name: 'new task name', x: 0, y: 0 }] }
+        let(:function_call) { experiment.update_canvas([], to_add, [], {}, [], [], [], positions, user) }
+        let(:positions) do
+          Hash[first_task.id.to_s,
+               { x: first_task.x + 1, y: first_task.y + 1 }, 'n0', { x: first_task.x, y: first_task.y }]
+        end
+
+        before do
+          first_task.update(x: 0, y: 0)
+        end
+
+        it 'returns true' do
+          expect(function_call).to be_truthy
+        end
+      end
+
+      context 'when creating new one on position of "toBeArchived" task' do
+        let(:first_task) { experiment.my_modules.first }
+        let(:to_add) { [{ id: 'n0', name: 'new task name', x: 0, y: 0 }] }
+        let(:positions) { Hash['n0', { x: first_task.x, y: first_task.y }] }
+        let(:to_archive) { [first_task.id] }
+        let(:function_call) { experiment.update_canvas(to_archive, to_add, [], {}, [], [], [], positions, user) }
+
+        before do
+          first_task.update(x: 0, y: 0)
+        end
+
+        it 'returns true' do
+          expect(function_call).to be_truthy
+        end
+      end
+
+      context 'when creating new one on position of "toBeMoved" task' do
+        let(:first_task) { experiment.my_modules.first }
+        let(:to_add) { [{ id: 'n0', name: 'new task name', x: 0, y: 0 }] }
+        let(:positions) { Hash['n0', { x: first_task.x, y: first_task.y }] }
+        let(:to_move) { Hash[first_task.id, second_experiment.id] }
+        let(:second_experiment) { create :experiment, project: experiment.project }
+        let(:function_call) { experiment.update_canvas([], to_add, [], to_move, [], [], [], positions, user) }
+
+        before do
+          first_task.update(x: 0, y: 0)
+        end
+
+        it 'returns true' do
+          expect(function_call).to be_truthy
+        end
       end
     end
 
@@ -124,7 +169,7 @@ describe Experiment, type: :model do
             { id: 'n' + i.to_s,
               name: t.name + '_new',
               x: 50,
-              y: 50 }
+              y: 50 + i }
           end
       end
       let(:to_clone) do
@@ -133,7 +178,7 @@ describe Experiment, type: :model do
           .map.with_index { |t, i| { 'n' + i.to_s => t.id } }.reduce({}, :merge)
       end
       let(:function_call) do
-        experiment.update_canvas([], to_add, [], [], [], to_clone, [], [], user)
+        experiment.update_canvas([], to_add, [], {}, [], to_clone, [], {}, user)
       end
 
       it 'calls create activity for cloning tasks' do
@@ -141,12 +186,15 @@ describe Experiment, type: :model do
           .to(receive(:call)
                 .with(hash_including(activity_type:
                                        :clone_module))).exactly(3).times
-
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :assign_user_to_module))).exactly(3).times
         function_call
       end
 
       it 'creats 3 new activities in DB' do
-        expect { function_call }.to change { Activity.all.count }.by(3)
+        expect { function_call }.to change { Activity.all.count }.by(6)
       end
     end
 
@@ -158,7 +206,7 @@ describe Experiment, type: :model do
       end
 
       let(:function_call) do
-        experiment.update_canvas([], [], to_rename, [], [], [], [], [], user)
+        experiment.update_canvas([], [], to_rename, {}, [], [], [], {}, user)
       end
 
       it 'calls create activity for renaming my_moudles' do
@@ -179,7 +227,7 @@ describe Experiment, type: :model do
       let(:to_archive) { experiment.my_modules.pluck(:id) }
 
       let(:function_call) do
-        experiment.update_canvas(to_archive, [], [], [], [], [], [], [], user)
+        experiment.update_canvas(to_archive, [], [], {}, [], [], [], {}, user)
       end
 
       it 'calls create activity for archiving tasks' do
@@ -204,7 +252,7 @@ describe Experiment, type: :model do
           .map { |t| { t.id => new_experiment.id } }.reduce({}, :merge)
       end
       let(:function_call) do
-        experiment.update_canvas([], [], [], to_move, [], [], [], [], user)
+        experiment.update_canvas([], [], [], to_move, [], [], [], {}, user)
       end
 
       it 'calls create activity for moving tasks to another experiment' do
@@ -218,6 +266,22 @@ describe Experiment, type: :model do
 
       it 'creats 3 new activities in DB' do
         expect { function_call }.to change { Activity.all.count }.by(3)
+      end
+    end
+
+    context 'when moving new task (not saved to DB yet)' do
+      let(:first_task) { experiment.my_modules.first }
+      let(:second_experiment) { create :experiment, project: experiment.project }
+      let(:to_add) { [{ id: 'n0', name: 'new task name', x: 0, y: 0 }] }
+      let(:to_move) { Hash['n0', second_experiment.id] }
+      let(:function_call) { experiment.update_canvas([], to_add, [], to_move, [], [], [], {}, user) }
+
+      it 'returns true' do
+        expect(function_call).to be_truthy
+      end
+
+      it 'assigns task to new experiment' do
+        expect { function_call }.to change { second_experiment.my_modules.count }.by(1)
       end
     end
   end

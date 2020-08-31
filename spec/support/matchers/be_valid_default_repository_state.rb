@@ -7,40 +7,32 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
 
     state = subject.state
 
-    cols_length = 6 + nr_of_cols
-    cols_str_array = [*0..(5 + nr_of_cols)].collect(&:to_s)
+    cols_length = 8 + nr_of_cols
+    cols_array = [*0..(7 + nr_of_cols)]
 
     expect(state).to be_an_instance_of Hash
     expect(state).to include(
       'time',
       'columns',
-      'start' => '0',
-      'length' => cols_length.to_s, # 6 default columns + parameter
-      'order' => { '0'=> ['2', 'asc'] },
-      'search' => {
-        'search' => '',
-        'smart' => 'true',
-        'regex' => 'false',
-        'caseInsensitive' => 'true'
-      },
-      'ColReorder' => cols_str_array
+      'start' => 0,
+      'length' => cols_length, # 8 default columns + parameter
+      'order' => [[2, 'asc']],
+      'assigned' => 'assigned',
+      'ColReorder' => cols_array
     )
 
-    expect(state['columns']).to be_an_instance_of Hash
-    expect(state['columns'].length).to eq (6 + nr_of_cols)
-    expect(state['columns'].keys.sort).to eq cols_str_array
-    state['columns'].each do |key, val|
+    expect(state['columns']).to be_an_instance_of Array
+    expect(state['columns'].length).to eq(cols_length)
+    state['columns'].each_with_index do |val, i|
       expect(val).to include(
-        'visible' => 'true',
-        'searchable' => (key == '0' ? 'false' : 'true'),
+        'visible' => !([6, 7].include? i),
+        'searchable' => (i != 0),
         'search' => {
-          'search' => '', 'smart' => 'true', 'regex' => 'false', 'caseInsensitive' => 'true'
+          'search' => '', 'smart' => true, 'regex' => false, 'caseInsensitive' => true
         }
       )
     end
 
-    expect(state['time']).to be_an_instance_of String
-    expect { Integer(state['time']) }.to_not raise_error
     expect { Time.at(state['time'].to_i) }.to_not raise_error
   end
 

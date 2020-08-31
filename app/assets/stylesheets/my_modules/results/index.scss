@@ -1,0 +1,52 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
+@import "constants";
+@import "mixins";
+
+#results-toolbar {
+  align-items: center;
+  display: flex;
+
+  .add-result-dropdown {
+    li {
+      cursor: pointer;
+      padding: .5em 1em;
+
+      .fas {
+        padding-right: .5em;
+      }
+
+      .create-wopi-file-btn {
+        padding: 0;
+
+        img {
+          margin-left: -5px;
+        }
+      }
+    }
+  }
+
+  .collapse-expand-result {
+    margin-left: auto;
+  }
+
+  .sort-result-dropdown {
+    margin-left: .5em;
+
+    .dropdown-menu {
+      a {
+        @include font-button;
+        padding: .5em 1em;
+
+        &.selected::after {
+          @include font-awesome;
+          content: $font-fas-check;
+          float: right;
+        }
+      }
+    }
+  }
+}

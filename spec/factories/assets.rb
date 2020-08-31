@@ -2,11 +2,8 @@
 
 FactoryBot.define do
   factory :asset do
-    file_file_name 'sample_file.txt'
-    file_content_type 'text/plain'
-    file_file_size 69
-    version 1
-    estimated_size 232
-    file_processing false
+    after(:create) do |asset|
+      asset.file.attach(io: File.open(Rails.root.join('spec/fixtures/files/test.jpg')), filename: 'test.jpg')
+    end
   end
 end

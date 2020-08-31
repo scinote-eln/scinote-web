@@ -9,7 +9,7 @@ module Api
     def self.fetch_rsa_key(k_id, app_id)
       cache_key = "api_azure_ad_rsa_key_#{k_id}"
       Rails.cache.fetch(cache_key, expires_in: KEYS_CACHING_PERIOD) do
-        conf_url = Api.configuration.azure_ad_apps[app_id][:conf_url]
+        conf_url = Rails.configuration.x.azure_ad_apps[app_id][:conf_url]
         keys_url = JSON.parse(Net::HTTP.get(URI(conf_url)))['jwks_uri']
         data = JSON.parse(Net::HTTP.get(URI.parse(keys_url)))
         verif_key = data['keys'].find { |key| key['kid'] == k_id }
@@ -35,14 +35,14 @@ module Api
 
       # Now search for matching app variables in configuration
       app_id = unverified_token[0]['aud']
-      app_config = Api.configuration.azure_ad_apps[app_id]
+      app_config = Rails.configuration.x.azure_ad_apps[app_id]
       unless app_config
         raise JWT::VerificationError,
               'Azure AD: No application configured with such ID'
       end
 
       # Decode token payload and verify it's signature.
-      payload, = JWT.decode(
+      payload, header = JWT.decode(
         token,
         OpenSSL::PKey::RSA.new(fetch_rsa_key(k_id, app_id)),
         true,
@@ -54,7 +54,7 @@ module Api
         iss: app_config[:iss],
         nbf_leeway: LEEWAY
       )
-      HashWithIndifferentAccess.new(payload)
+      [HashWithIndifferentAccess.new(payload), HashWithIndifferentAccess.new(header)]
     end
   end
 end

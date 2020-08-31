@@ -4,8 +4,14 @@
     <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="max-file-size" content="<%= Rails.configuration.x.file_max_size_mb %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+
+    <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
+      <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>
+      <script src="https://marvinjs.chemicalize.com/v1/client.js"></script>
+    <% end %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
@@ -20,7 +26,6 @@
 
     <%= javascript_pack_tag 'tui_image_editor' %>
     <%= stylesheet_pack_tag 'tui_image_editor_styles' %>
-
   </head>
   <body
     class="<%= yield :body_class %>"
@@ -32,8 +37,6 @@
     data-atwho-repositories-url="<%= atwho_repositories_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
-    data-file-max-size-mb="<%= Rails.configuration.x.file_max_size_mb %>"
-    data-tooltips-enabled="<%= current_user.settings[:tooltips_enabled] %>"
     <% end %>
   >
 
@@ -44,6 +47,7 @@
     <%= render "shared/about_modal" %>
     <%= render "shared/file_preview_modal.html.erb" %>
     <%= render "shared/file_edit_modal.html.erb" %>
+    <%= render "shared/marvinjs_modal.html.erb" %>
     <%= render "shared/navigation" %>
 
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
@@ -52,10 +56,8 @@
       <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: nil} %>
     <% end %>
 
-    <% unless user_signed_in? %>
-      <%= render partial: 'shared/flash_alerts',
+    <%= render partial: 'shared/flash_alerts',
                  locals: { flash: flash, notice: notice, alert: alert } %>
-    <% end %>
 
     <%= render "shared/left_menu_bar" if user_signed_in? %>
 

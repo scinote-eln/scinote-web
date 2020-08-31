@@ -66,4 +66,125 @@
 .mce-toolbar {
   background: $color-white !important;
 }
+
+
+
+.restore-draft-notification {
+  align-items: center;
+  background: $state-info-bg !important;
+  display: flex;
+  height: 30px !important;
+  padding: 0 10px !important;
+
+  .notification-text {
+    flex-grow: 1;
+  }
+
+  .restore-draft-btn {
+    border: 1px solid $color-silver-chalice;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 3px 10px 3px 10px;
+  }
+
+  .fas {
+    color: $color-silver-chalice;
+    cursor: pointer;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 501;
+    margin-left: 10px;
+  }
+}
+
+.mce-stack-layout {
+  .tinymce-active-object-handler {
+    border-top: 1px solid rgb(226, 228, 231);
+    height: 33px;
+    width: 100%;
+
+    .tool-button {
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-block;
+      line-height: 27px;
+      margin: 2px;
+      text-align: center;
+      width: 30px;
+
+      &:hover {
+        border: 1px solid rgb(226, 228, 231);
+      }
+    }
+  }
+}
+
+.mce-i-download::before {
+  content: "\F019";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 16px;
+  position: absolute;
+}
+
+.mce-i-pencil::before {
+  content: "\F303";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 16px;
+  position: absolute;
+}
+
+.mce-floatpanel[aria-label="Inline toolbar"] {
+  border: 0;
+  box-shadow: 0;
+  height: 0 !important;
+  opacity: 1;
+  z-index: 10 !important;
+
+
+  &::before,
+  &::after {
+    display: none;
+  }
+
+  .mce-container-body.mce-abs-layout {
+    background: $brand-primary;
+    position: relative;
+    top: -10px;
+
+    .mce-container,
+    .mce-widget {
+      background: transparent !important;
+    }
+
+    .mce-btn:hover {
+      border-color: transparent;
+    }
+
+    .mce-ico {
+      color: $color-white;
+    }
+  }
+}
+
+.mce-window {
+
+  .mce-abs-layout {
+    overflow: visible !important;
+  }
+
+  .mce-error {
+    padding-top: 15px;
+  }
+
+  .mce-primary[disabled=disabled] {
+    pointer-events: none;
+
+    button {
+      background: $color-alto;
+      color: $color-volcano;
+    }
+  }
+}
+
 // scss-lint:enable ImportantRule

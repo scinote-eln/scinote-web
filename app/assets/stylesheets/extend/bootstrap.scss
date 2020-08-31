@@ -112,3 +112,36 @@
     width: 100%;
   }
 }
+
+.btn {
+  .fas {
+    margin-right: 5px;
+  }
+}
+
+.modal-content {
+  .modal-header {
+    padding: 10px 15px;
+
+    .modal-title {
+      line-height: 25px;
+    }
+
+    .close {
+      line-height: 25px;
+      margin: 0;
+
+      &:active {
+        border: 0;
+        outline: 0;
+      }
+    }
+  }
+}
+
+
+.bootstrap-datetimepicker-widget {
+  .dow {
+    @include font-button;
+  }
+}

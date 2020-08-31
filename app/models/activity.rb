@@ -21,6 +21,40 @@ class Activity < ApplicationRecord
   validates :subject_type, inclusion: { in: Extends::ACTIVITY_SUBJECT_TYPES,
                                         allow_blank: true }
 
+  scope :results_joins, lambda {
+    joins("LEFT JOIN results ON subject_type = 'Result' AND subject_id = results.id")
+  }
+
+  scope :protocols_joins, lambda {
+    joins("LEFT JOIN protocols ON subject_type = 'Protocol' AND subject_id = protocols.id")
+  }
+
+  scope :my_modules_joins, lambda { |*params|
+    joins_query = "LEFT JOIN my_modules ON (subject_type = 'MyModule' AND subject_id = my_modules.id)"
+    joins_query += ' OR protocols.my_module_id = my_modules.id' if params.include? :from_protocols
+    joins_query += ' OR results.my_module_id = my_modules.id' if params.include? :from_results
+    joins(joins_query)
+  }
+  scope :experiments_joins, lambda { |*params|
+    joins_query = "LEFT JOIN experiments ON (subject_type = 'Experiment' AND subject_id = experiments.id)"
+    joins_query += ' OR experiments.id = my_modules.experiment_id' if params.include? :from_my_modules
+    joins(joins_query)
+  }
+
+  scope :projects_joins, lambda { |*params|
+    joins_query = "LEFT JOIN projects ON (subject_type = 'Project' AND subject_id = projects.id)"
+    joins_query += ' OR projects.id = experiments.project_id' if params.include? :from_experiments
+    joins(joins_query)
+  }
+
+  scope :repositories_joins, lambda {
+    joins("LEFT JOIN repositories ON subject_type = 'RepositoryBase' AND subject_id = repositories.id")
+  }
+
+  scope :reports_joins, lambda {
+    joins("LEFT JOIN reports ON subject_type = 'Report' AND subject_id = reports.id")
+  }
+
   store_accessor :values, :message_items, :breadcrumbs
 
   default_values(
@@ -67,9 +101,8 @@ class Activity < ApplicationRecord
       subject_labels = []
       filters[:subjects].each do |object, values|
         values.each do |value|
-          label = I18n.t('global_activities.subject_name.' + object.downcase.to_s)\
-                + ': ' + object.to_s.constantize.find_by_id(value).name
-          subject_labels.push("{\"id\": \"#{object}_#{value}\", \"label\": \"#{label}\"}")
+          label = object.to_s.constantize.find_by_id(value).name
+          subject_labels.push({ value: value, label: label, object: object.downcase, group: '' }.as_json)
         end
       end
       result.push(subject_labels.to_query('subject_labels'))

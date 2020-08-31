@@ -1,30 +1,40 @@
-FROM ruby:2.5.5-stretch
+FROM ruby:2.6.4-buster
 MAINTAINER BioSistemika <info@biosistemika.com>
 
-RUN echo deb "http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list
+ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
 
 # additional dependecies
-# libSSL-1.0 is required by wkhtmltopdf binary
 # libreoffice for file preview generation
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-  apt-get update -qq && \
+RUN apt-get update -qq && \
   apt-get install -y \
-  libjemalloc1 \
-  libssl1.0-dev \
+  libjemalloc2 \
+  libssl-dev \
   nodejs \
+  npm \
   groff-base \
   awscli \
   postgresql-client \
   netcat \
   default-jre-headless \
   poppler-utils \
+  librsvg2-2 \
+  libvips42 \
   sudo graphviz --no-install-recommends \
+  libreoffice \
+  fonts-droid-fallback \
+  fonts-noto-mono \
+  fonts-wqy-microhei \
+  fonts-wqy-zenhei \
   libfile-mimeinfo-perl && \
-  apt-get install -y --no-install-recommends -t stretch-backports libreoffice && \
+  wget -q -O /tmp/wkhtmltox_amd64.deb $WKHTMLTOPDF_PACKAGE_URL && \
+  apt-get install -y /tmp/wkhtmltox_amd64.deb && \
+  rm /tmp/wkhtmltox_amd64.deb && \
   npm install -g yarn && \
+  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 
 ENV RAILS_ENV production
+ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
 
 # install gems
 COPY Gemfile* /usr/src/bundle/

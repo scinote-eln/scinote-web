@@ -31,11 +31,11 @@ describe Activity, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :project }
-    it { should belong_to :experiment }
-    it { should belong_to :my_module }
+    it { should belong_to(:project).optional }
+    it { should belong_to(:experiment).optional }
+    it { should belong_to(:my_module).optional }
     it { should belong_to :owner }
-    it { should belong_to :subject }
+    it { should belong_to(:subject).optional }
   end
 
   describe 'Validations' do
@@ -65,7 +65,7 @@ describe Activity, type: :model do
     it 'adds user to message items' do
       activity.save
 
-      expect(activity.message_items).to include(user: be_an(Hash))
+      expect(activity.message_items).to include('user' => be_an(Hash))
     end
   end
 
@@ -73,14 +73,14 @@ describe Activity, type: :model do
     context 'when do not have subject' do
       it 'does not add breadcrumbs to activity' do
         expect { old_activity.generate_breadcrumbs }
-          .not_to(change { activity.values[:breadcrumbs] })
+          .not_to(change { activity.values['breadcrumbs'] })
       end
     end
 
     context 'when have subject' do
       it 'adds breadcrumbs to activity' do
         expect { activity.generate_breadcrumbs }
-          .to(change { activity.values[:breadcrumbs] })
+          .to(change { activity.values['breadcrumbs'] })
       end
 
       context 'when subject is a my_module' do

@@ -60,20 +60,24 @@ class ApplicationController < ActionController::Base
       format.json do
         render json: { style: style }, status: :forbidden
       end
+      format.any do
+        render plain: 'FORBIDDEN', status: :forbidden
+      end
     end
-    true
   end
 
   def render_404
     respond_to do |format|
-      format.html {
-        render :file => 'public/404.html', :status => :not_found, :layout => false
-      }
-      format.json {
+      format.html do
+        render file: 'public/404.html', status: :not_found, layout: false
+      end
+      format.json do
         render json: {}, status: :not_found
-      }
+      end
+      format.any do
+        render plain: 'NOT FOUND', status: :not_found
+      end
     end
-    return true
   end
 
   private

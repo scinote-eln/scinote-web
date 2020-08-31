@@ -7,7 +7,7 @@ module Api
       before_action only: :show do
         load_project(:id)
       end
-      before_action :load_project_relative, only: :activities
+      before_action :load_project, only: :activities
 
       def index
         projects = @team.projects
@@ -28,15 +28,6 @@ module Api
                              .per(params.dig(:page, :size))
         render jsonapi: activities,
                each_serializer: ActivitySerializer
-      end
-
-      private
-
-      def load_project_relative
-        @project = @team.projects.find(params.require(:project_id))
-        unless can_read_project?(@project)
-          raise PermissionError.new(Project, :read)
-        end
       end
     end
   end

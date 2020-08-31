@@ -33,10 +33,7 @@ class CanvasController < ApplicationController
     to_archive = []
     if update_params[:remove].present?
       to_archive = update_params[:remove].split(',')
-      if to_archive.all? do |id|
-           is_int?(id) &&
-           can_manage_module?(MyModule.find_by_id(id))
-         end
+      if to_archive.all? { |id| can_archive_module?(MyModule.find_by(id: id)) }
         to_archive.collect!(&:to_i)
       else
         return render_403
@@ -60,22 +57,13 @@ class CanvasController < ApplicationController
     positions = {}
     if update_params[:positions].present?
       poss = update_params[:positions].split(';')
-      center = ''
-      (poss.collect { |pos| pos.split(',') }).each_with_index do |pos, index|
-        unless pos.length == 3 && pos[0].is_a?(String) &&
-               float?(pos[1]) && float?(pos[2])
+      (poss.collect { |pos| pos.split(',') }).each_with_index do |pos, _|
+        unless pos.length == 3 && pos[0].is_a?(String) && float?(pos[1]) && float?(pos[2])
           return render_403
         end
-        if index.zero?
-          center = pos
-          x = 0
-          y = 0
-        else
-          x = pos[1].to_i - center[1].to_i
-          y = pos[2].to_i - center[2].to_i
-        end
-        # Multiple modules cannot have same position
-        return render_403 if positions.any? { |_, v| v[:x] == x && v[:y] == y }
+        x = pos[1].to_i
+        y = pos[2].to_i
+
         positions[pos[0]] = { x: x, y: y }
       end
     end
@@ -126,16 +114,14 @@ class CanvasController < ApplicationController
         # Okay, JSON parsed!
         unless to_move.is_a?(Hash) &&
                to_move.keys.all? do |id|
-                 id.is_a?(String) &&
-                 (!is_int?(id) || can_manage_module?(MyModule.find_by_id(id)))
+                 !is_int?(id) || can_move_module?(MyModule.find_by(id: id))
                end &&
                to_move.values.all? do |exp_id|
-                 exp_id.is_a?(String) &&
-                 can_manage_experiment?(Experiment.find_by_id(exp_id))
+                 can_manage_experiment?(Experiment.find_by(id: exp_id))
                end
           return render_403
         end
-      rescue
+      rescue StandardError
         return render_403
       end
     end

@@ -13,14 +13,14 @@ class TeamZipExport < ZipExport
       File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")
     ).first
     zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
-    zip_file = File.new(
-      File.join(zip_dir,
-                "projects_export_#{Time.now.strftime('%F_%H-%M-%S_UTC')}.zip"),
-      'w+'
-    )
+
+    zip_name = "projects_export_#{Time.now.strftime('%F_%H-%M-%S_UTC')}.zip"
+    full_zip_name = File.join(zip_dir, zip_name)
+    zip_file = File.new(full_zip_name, 'w+')
+
     fill_content(zip_input_dir, data, type, options)
     zip!(zip_input_dir, zip_file)
-    self.zip_file = File.open(zip_file)
+    self.zip_file.attach(io: File.open(zip_file), filename: zip_name)
     generate_notification(user) if save
   ensure
     FileUtils.rm_rf([zip_input_dir, zip_file], secure: true)
@@ -59,17 +59,11 @@ class TeamZipExport < ZipExport
       inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
-      # Find all assigned inventories through all tasks in the project
-      task_ids = p.project_my_modules
-      repo_rows = RepositoryRow.joins(:my_modules)
-                               .where(my_modules: { id: task_ids })
-                               .distinct
+      repositories = p.assigned_repositories_and_snapshots
 
       # Iterate through every inventory repo and save it to CSV
-      repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_idx|
-        curr_repo_rows = repo_rows.select { |x| x.repository_id == repo.id }
-        obj_filenames[:my_module_repository][repo.id] =
-          save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
+      repositories.each_with_index do |repo, repo_idx|
+        obj_filenames[:my_module_repository][repo.id] = save_inventories_to_csv(inventories, repo, repo_idx)
       end
 
       # Include all experiments
@@ -147,7 +141,7 @@ class TeamZipExport < ZipExport
                               .routes
                               .url_helpers
                               .zip_exports_download_export_all_path(self)}'>" \
-                "#{zip_file_file_name}</a>"
+                "#{zip_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
   end
@@ -197,13 +191,11 @@ class TeamZipExport < ZipExport
 
       if type == :step
         name = "#{directory}/" \
-               "#{append_file_suffix(asset.file_file_name,
-                                     "_#{i}_Step#{element.step.position_plus_one}")}"
+               "#{append_file_suffix(asset.file_name, "_#{i}_Step#{element.step.position_plus_one}")}"
       elsif type == :result
-        name = "#{directory}/#{append_file_suffix(asset.file_file_name,
-                                                  "_#{i}")}"
+        name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{i}")}"
       end
-      asset.file.copy_to_local_file(:original, name) if asset.file.exists?
+      File.open(name, 'wb') { |f| f.write(asset.file.download) } if asset.file.attached?
       asset_indexes[asset.id] = name
     end
 
@@ -235,7 +227,7 @@ class TeamZipExport < ZipExport
   end
 
   # Helper method for saving inventories to CSV
-  def save_inventories_to_csv(path, repo, repo_rows, idx)
+  def save_inventories_to_csv(path, repo, idx)
     repo_name = "#{to_filesystem_name(repo.name)} (#{idx})"
 
     # Attachment folder
@@ -254,8 +246,7 @@ class TeamZipExport < ZipExport
     assets = {}
     asset_counter = 0
     handle_name_func = lambda do |asset|
-      file_name = append_file_suffix(asset.file_file_name,
-                                     "_#{asset_counter}").to_s
+      file_name = append_file_suffix(asset.file_name, "_#{asset_counter}").to_s
 
       # Save pair for downloading it later
       assets[asset] = "#{attach_path}/#{file_name}"
@@ -266,13 +257,14 @@ class TeamZipExport < ZipExport
     end
 
     # Generate CSV
-    csv_data = RepositoryZipExport.to_csv(repo_rows, col_ids, @user, @team,
-                                          handle_name_func)
+    csv_data = RepositoryZipExport.to_csv(repo.repository_rows, col_ids, @user, @team, handle_name_func)
     File.open(csv_file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
-      asset.file.copy_to_local_file(:original, asset_path)
+      asset.file.open do |file|
+        FileUtils.cp(file.path, asset_path)
+      end
     end
 
     csv_file_path

@@ -3,14 +3,16 @@
 
     <!-- header -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+      <% if user_signed_in? %>
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      <% end %>
       <%= link_to(root_path, class: 'navbar-brand', title: t('nav.label.scinote')) do %>
-        <%= image_tag('/images/scinote_icon.jpg', id: 'logo') %>
+        <%= image_tag('/images/scinote_icon.svg', id: 'logo') %>
       <% end %>
     </div>
 
@@ -53,8 +55,8 @@
         <% if current_user.teams.length > 0 %>
           <li id="team-switch">
             <div class="btn-group">
-              <button type="button" class="btn btn-default" data-toggle="dropdown">
-                <%= truncate_team_name(current_team.name) %>
+              <button type="button" class="btn btn-default selected-team" data-toggle="dropdown">
+                <%= current_team.name %>
               </button>
               <button type="button"
                       class="btn btn-default dropdown-toggle"
@@ -65,7 +67,6 @@
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <% if current_user.teams.length > 1 || can_create_teams? %>
               <ul class="dropdown-menu">
                 <%= form_for(current_user,
                              url: user_current_team_path,
@@ -73,7 +74,7 @@
                   <%= hidden_field(:user, :current_team_id) %>
                   <div class="dropdown-header"><%= t('nav.team_switch_title') %></div>
                   <div class="team-container">
-                    <% current_user.teams.each do |team| %>
+                    <% current_user.teams.ordered.each do |team| %>
                       <li class="team-name-item">
                         <a href="#"
                           data-id="<%= team.id %>"
@@ -89,7 +90,7 @@
                     <% end %>
                   </div>
                 <% end %>
-                <% if current_user.teams.length > 1 && can_create_teams? %>
+                <% if can_create_teams? %>
                   <li class="new-team">
                     <%= link_to new_team_path do %>
                       <span class="fas fa-plus"></span>
@@ -98,7 +99,6 @@
                   </li>
                 <% end %>
               </ul>
-              <% end %>
             </div>
           </li>
         <% end %>
@@ -176,32 +176,13 @@
             </span>
           </a>
           <ul class="dropdown-menu" data-hook="navigation-user-menu">
-            <li>
+            <li data-hook="navigation-user-menu-logout">
               <%= link_to t('nav.user.logout'),
                           destroy_user_session_path,
                           method: :delete %>
             </li>
-            <li role="separator" class="divider">
-            <li>
-              <%= link_to '#', data: { trigger: 'about-modal' } do %>
-                <%= t('nav.user.about') %>
-              <% end %>
-            </li>
           </ul>
         </li>
-
-        <li>
-          <%= link_to Constants::ACADEMY_TR_LINK,  
-            class: "academy-link flag", 
-            title: I18n.t('nav.academy_tooltip'),
-            target: :_blank do 
-          %>
-            <div class="icon-container">
-              <span class="fas fa-graduation-cap"></span>
-            </div>
-          <% end %>
-        </li>
-
       </ul>
     </div>
     <% end %>

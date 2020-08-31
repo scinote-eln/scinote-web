@@ -1,4 +1,4 @@
-/* global initInlineEditing PerfectScrollbar */
+/* global inlineEditing PerfectScrollbar */
 /* eslint-disable no-restricted-globals, no-alert */
 var Comments = (function() {
   function changeCounter(comment, value) {
@@ -19,16 +19,16 @@ var Comments = (function() {
   function newCommentValidation(textarea, submitBtn) {
     textarea.off().on('focus', function() {
       $(this).addClass('border');
-      if (this.value.length > 0) {
+      if (this.value.trim().length > 0) {
         submitBtn.addClass('show');
       }
     }).on('blur', function() {
-      if (this.value.length === 0) {
+      if (this.value.trim().length === 0) {
         $(this).removeClass('border');
         submitBtn.removeClass('show');
       }
     }).on('keyup', function() {
-      if (this.value.length > 0) {
+      if (this.value.trim().length > 0) {
         submitBtn.addClass('show');
       } else {
         submitBtn.removeClass('show');
@@ -75,7 +75,7 @@ var Comments = (function() {
         }, (result) => {
           $el.parent().find('.comments-list').append(result.html);
           changeCounter($el, 1);
-          initInlineEditing('comment');
+          inlineEditing.init();
           initDeleteComment();
           scrollBottom($el.parent().find('.content-comments'));
           errorField.html('');
@@ -98,7 +98,7 @@ var Comments = (function() {
         var moreBtn = $(this);
         if (result.moreUrl) {
           moreBtn.closest('.comments-container').find('.comments-list').prepend(result.html);
-          initInlineEditing('comment');
+          inlineEditing.init();
           initDeleteComment();
           if (result.resultsNumber < result.perPage) {
             moreBtn.remove();
@@ -131,7 +131,6 @@ var Comments = (function() {
     init: (mode) => {
       if ($('.comments-container').length > 0) {
         initCreateComment();
-        initInlineEditing('comment');
         initDeleteComment();
         initMoreButton();
         checkContainerSize(mode);

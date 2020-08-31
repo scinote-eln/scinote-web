@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReportsHelper
   include StringUtility
 
@@ -85,20 +87,21 @@ module ReportsHelper
     # ReportExtends is located in config/initializers/extends/report_extends.rb
     ReportElement.type_ofs.keys.each do |type|
       next unless element.public_send("#{type}?")
+
       element.element_references.each do |el_ref|
         locals[el_ref.class.name.underscore.to_sym] = el_ref
       end
-      if type.in? ReportExtends::SORTED_ELEMENTS
-        locals[:order] = element.sort_order
-      end
+      locals[:order] = element.sort_order if type.in? ReportExtends::SORTED_ELEMENTS
     end
 
     (render partial: view, locals: locals).html_safe
   end
 
   # "Hack" to omit file preview URL because of WKHTML issues
-  def report_image_asset_url(asset, _type = :asset, klass = nil)
-    image_tag(asset.generate_base64(:medium), class: klass)
+  def report_image_asset_url(asset)
+    image_tag(asset.medium_preview
+                   .processed
+                   .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
   end
 
   # "Hack" to load Glyphicons css directly from the CDN
@@ -106,6 +109,7 @@ module ReportsHelper
   def bootstrap_cdn_link_tag
     specs = Gem.loaded_specs['bootstrap-sass']
     return '' unless specs.present?
+
     stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/" \
                         "#{specs.version.version}/css/bootstrap.min.css",
                         media: 'all')
@@ -113,9 +117,33 @@ module ReportsHelper
 
   def font_awesome_cdn_link_tag
     stylesheet_link_tag(
-      'https://maxcdn.bootstrapcdn.com/font-awesome' \
-      '/4.6.3/css/font-awesome.min.css'
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/regular.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css'
     )
+  end
+
+  def assigned_repository_or_snapshot(my_module, element_id, snapshot, repository)
+    if element_id
+      repository = Repository.accessible_by_teams(my_module.experiment.project.team).find_by(id: element_id)
+      # Check for default set snapshots when repository still exists
+      if repository
+        selected_snapshot = repository.repository_snapshots.where(my_module: my_module).find_by(selected: true)
+        repository = selected_snapshot if selected_snapshot
+      end
+      repository ||= RepositorySnapshot.joins(my_module: { experiment: :project })
+                                       .where(my_module: { experiments: { project: my_module.experiment.project } })
+                                       .find_by(id: element_id)
+    end
+    repository || snapshot
+  end
+
+  def assigned_repositories_in_project_list(project)
+    live_repositories = Repository.assigned_to_project(project)
+    snapshots = RepositorySnapshot.of_unassigned_from_project(project)
+
+    snapshots.each { |snapshot| snapshot.name = "#{snapshot.name} #{t('projects.reports.index.deleted')}" }
+    (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
   def step_status_label(step)
@@ -147,7 +175,7 @@ module ReportsHelper
 
   def obj_name_to_filename(obj, filename_suffix = '')
     obj_name = if obj.class == Asset
-                 obj_name, extension = obj.file_file_name.split('.')
+                 obj_name, extension = obj.file_name.split('.')
                  extension&.prepend('.')
                  obj_name
                elsif obj.class.in? [Table, Result, Repository]

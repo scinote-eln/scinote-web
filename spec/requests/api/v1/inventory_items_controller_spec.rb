@@ -21,8 +21,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
     list_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryListValue)
     list_item =
-      create(:repository_list_item, repository: @valid_inventory,
-             repository_column: list_column, data: Faker::Name.unique.name)
+      create(:repository_list_item, repository_column: list_column, data: Faker::Name.unique.name)
     file_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryAssetValue)
     asset = create(:asset)
@@ -51,7 +50,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                            attributes: {
                              name: Faker::Name.unique.name
                            } },
-                         included:  [
+                         included: [
                            { type: 'inventory_cells',
                              attributes: {
                                column_id: text_column.id,
@@ -150,6 +149,25 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
+    end
+
+    context 'when have some archived rows' do
+      before do
+        create(:repository_row, :archived,
+               name: Faker::Name.unique.name, created_by: @user, repository: @teams.first.repositories.first)
+      end
+
+      it 'will ignore them' do
+        hash_body = nil
+
+        get api_v1_team_inventory_items_path(
+          team_id: @teams.first.id,
+          inventory_id: @teams.first.repositories.first.id
+        ), params: { page: { size: 200 } }, headers: @valid_headers
+
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body['data'].count).to be_eql 100
+      end
     end
   end
 

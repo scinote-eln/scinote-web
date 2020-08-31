@@ -1,9 +1,6 @@
 class TeamsController < ApplicationController
-  before_action :load_vars, only: %i(export_projects
-                                     export_projects_modal)
-
-  before_action :check_export_projects_permissions,
-                only: %i(export_projects_modal export_projects)
+before_action :load_vars, only: %i(export_projects export_projects_modal)
+before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
 
   def export_projects
     if current_user.has_available_exports?

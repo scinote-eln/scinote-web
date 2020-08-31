@@ -8,7 +8,6 @@ class ProjectsController < ApplicationController
                                      experiment_archive)
   before_action :load_projects_tree, only: %i(sidebar show archive
                                               experiment_archive)
-  before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   experiment_archive)
   before_action :check_create_permissions, only: %i(new create)
@@ -64,20 +63,25 @@ class ProjectsController < ApplicationController
   end
 
   def sidebar
+    current_task ||= current_task || nil
+    current_experiment ||= current_experiment || current_task&.experiment || nil
+    current_project ||= current_experiment&.project || current_task&.experiment&.project || nil
+
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
             partial: 'shared/sidebar/projects.html.erb',
+            locals: {
+              current_project: current_project,
+              current_experiment: current_experiment,
+              current_task: current_task
+            },
             formats: :html
           )
         }
       end
     end
-  end
-
-  def archive
-    index
   end
 
   def new
@@ -231,7 +235,7 @@ class ProjectsController < ApplicationController
     end
     # This is the "info" view
     current_team_switch(@project.team)
-    @current_sort = @project.experiments_order
+    @current_sort = @project.experiments_order || :new
   end
 
   def notifications
@@ -275,18 +279,9 @@ class ProjectsController < ApplicationController
       @current_team = current_team if current_team
       @current_team ||= current_user.teams.first
       @current_sort ||= 'new'
-      @projects_tree = current_user.projects_tree(@current_team, @current_sort)
+      @projects_tree = current_user.projects_tree(@current_team, 'atoz')
     else
       @projects_tree = []
-    end
-  end
-
-  def load_archive_vars
-    if current_user.teams.any?
-      @archived_projects_by_teams =
-        current_user.projects_by_teams(@current_team.id, @current_sort, true)
-    else
-      @archived_projects_by_teams = []
     end
   end
 
@@ -307,6 +302,7 @@ class ProjectsController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'project',
+      item_id: @project.id,
       field_to_udpate: 'name',
       path_to_update: project_path(@project)
     }

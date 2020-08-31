@@ -15,7 +15,7 @@
   <% if can_read_experiment?(my_module.experiment) %>
     <% case link_to_page %>
       <% when :repositories %>
-        <%= route_to_other_team repository_my_module_path(my_module, repository),
+        <%= route_to_other_team protocols_my_module_path(my_module),
                                 my_module.experiment.project.team,
                                 text %>
       <% when :protocols %>

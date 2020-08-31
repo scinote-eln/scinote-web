@@ -36,9 +36,10 @@ end
 Given("I click on Reset Password link in the reset password email for user {string}") do |email|
   visit new_user_password_path
   fill_in 'user_email', with: email
-  click_button 'Send me reset password instruction'
+  click_button 'Reset password'
+
   Delayed::Worker.new.work_off
-  sleep 10
+  sleep 1
   open_email(email)
   current_email.click_link 'Change my password'
 end
@@ -55,3 +56,12 @@ Then(/^I fill in Email "([^"]*)" and Password "([^"]*)"$/) do |email, password|
   fill_in 'user_email', with: email
   fill_in 'user_password', with: password
 end
+
+Given("I am on the home page of Biosistemika Process team") do
+  visit '/projects'
+end
+
+Given("I am on task page of Biosistemika Process team") do
+  visit '/modules/1/protocols'
+end
+

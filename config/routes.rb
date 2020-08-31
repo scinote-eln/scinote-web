@@ -2,29 +2,22 @@ Rails.application.routes.draw do
   use_doorkeeper do
     skip_controllers :applications, :authorized_applications, :token_info
   end
-  require 'subdomain'
+
+  # Addons
 
   def draw(routes_name)
     instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
   end
 
   constraints UserSubdomain do
-    devise_for :users,
-               controllers: { registrations: 'users/registrations',
-                              sessions: 'users/sessions',
-                              invitations: 'users/invitations',
-                              confirmations: 'users/confirmations',
-                              omniauth_callbacks: 'users/omniauth_callbacks' }
+    devise_for :users, controllers: { registrations: 'users/registrations',
+                                      sessions: 'users/sessions',
+                                      invitations: 'users/invitations',
+                                      confirmations: 'users/confirmations',
+                                      omniauth_callbacks: 'users/omniauth_callbacks',
+                                      passwords: 'users/passwords' }
 
-    devise_scope :user do
-      authenticated :user do
-        root 'projects#index'
-      end
-
-      unauthenticated do
-        root 'users/sessions#new'
-      end
-    end
+    root 'dashboards#show'
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
@@ -60,6 +53,12 @@ Rails.application.routes.draw do
     get 'users/settings/account/addons',
         to: 'users/settings/account/addons#index',
         as: 'addons'
+    get 'users/settings/account/connected_accounts',
+        to: 'users/settings/account/connected_accounts#index',
+        as: 'connected_accounts'
+    delete 'users/settings/account/connected_accounts',
+           to: 'users/settings/account/connected_accounts#destroy',
+           as: 'unlink_connected_account'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
@@ -156,6 +155,10 @@ Rails.application.routes.draw do
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do
         collection do
+          post 'archive', to: 'repositories#archive',
+              defaults: { format: 'json' }
+          post 'restore', to: 'repositories#restore',
+              defaults: { format: 'json' }
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end
@@ -167,6 +170,13 @@ Rails.application.routes.draw do
             defaults: { format: 'json' }
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
+        get :share_modal
+
+        resources :team_repositories, only: %i(destroy) do
+          collection do
+            post 'update'
+          end
+        end
       end
       member do
         post 'parse_sheet', defaults: { format: 'json' }
@@ -194,7 +204,6 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
     post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
     get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
     get 'projects/dt_state_load', to: 'projects#dt_state_load',
@@ -213,6 +222,25 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
+
+    resource :dashboard, only: :show do
+      resource :current_tasks, module: 'dashboard', only: :show do
+        get :project_filter
+        get :experiment_filter
+      end
+
+      namespace :quick_start, module: :dashboard, controller: :quick_start do
+        get :project_filter
+        get :experiment_filter
+        post :create_task
+      end
+
+      resource :calendar, module: 'dashboard', only: [:show] do
+        get :day
+      end
+
+      resource :recent_works, module: 'dashboard', only: [:show]
+    end
 
     resources :projects, except: [:new, :destroy] do
       resources :user_projects, path: '/users',
@@ -314,11 +342,46 @@ Rails.application.routes.draw do
           post :destroy_by_tag_id
         end
       end
-      resources :user_my_modules, path: '/users',
-                only: [:index, :create, :destroy]
+      resources :user_my_modules, path: '/users', only: %i(index create destroy) do
+        collection do
+          get :index_old
+        end
+      end
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
+
+      get :repositories_dropdown_list, controller: :my_module_repositories
+      get :repositories_list_html, controller: :my_module_repositories
+
+      resources :repositories, controller: :my_module_repositories, only: :update do
+        member do
+          get :full_view_table
+          post :index_dt
+          post :export_repository
+          get :assign_repository_records_modal, as: :assign_modal
+          get :update_repository_records_modal, as: :update_modal
+        end
+      end
+
+      resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
+        member do
+          get :full_view_table
+          post :index_dt
+          post :export_repository_snapshot
+          get :status
+        end
+
+        collection do
+          get ':repository_id/full_view_sidebar',
+              to: 'my_module_repository_snapshots#full_view_sidebar',
+              as: :full_view_sidebar
+          post ':repository_id', to: 'my_module_repository_snapshots#create', as: ''
+        end
+      end
+
+      post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
+
       resources :result_texts, only: [:new, :create]
       resources :result_assets, only: [:new, :create]
       resources :result_tables, only: [:new, :create]
@@ -338,34 +401,9 @@ Rails.application.routes.draw do
               as: 'update_protocol_description'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
-        # Repository view for single module
-        get 'repository/:repository_id',
-            to: 'my_modules#repository',
-            as: :repository
-        post 'repository_index/:repository_id',
-             to: 'my_modules#repository_index',
-             as: :repository_index
-        post 'assign_repository_records_modal/:repository_id',
-            to: 'my_modules#assign_repository_records_modal',
-            as: :assign_repository_records_modal
-        post 'assign_repository_records/:repository_id',
-             to: 'my_modules#assign_repository_records',
-             as: :assign_repository_records
-        post 'unassign_repository_records_modal/:repository_id',
-            to: 'my_modules#unassign_repository_records_modal',
-            as: :unassign_repository_records_modal
-        post 'unassign_repository_records/:repository_id',
-             to: 'my_modules#unassign_repository_records',
-             as: :unassign_repository_records
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
-        get 'repositories_dropdown',
-            to: 'my_modules#repositories_dropdown',
-            as: :repositories_dropdown
-        get 'repositories_dropdown/:repository_id',
-            to: 'my_modules#repositories_dropdown',
-            as: :repositories_dropdown_repository_tab
       end
 
       # Those routes are defined outside of member block
@@ -381,8 +419,8 @@ Rails.application.routes.draw do
       member do
         post 'checklistitem_state'
         post 'toggle_step_state'
-        get 'move_down'
-        get 'move_up'
+        put 'move_down'
+        put 'move_up'
         post 'update_view_state'
       end
     end
@@ -399,7 +437,16 @@ Rails.application.routes.draw do
     end
 
     # tinyMCE image uploader endpoint
-    post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
+    resources :tiny_mce_assets, only: [:create] do
+      member do
+        get :download
+        get :marvinjs, to: 'tiny_mce_assets#marvinjs_show'
+        put :marvinjs, to: 'tiny_mce_assets#marvinjs_update'
+      end
+      collection do
+        post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
+      end
+    end
 
     resources :results, only: [:update, :destroy] do
       resources :result_comments,
@@ -411,8 +458,6 @@ Rails.application.routes.draw do
     get 'result_texts/:id/download' => 'result_texts#download',
       as: :result_text_download
     resources :result_assets, only: [:edit, :update, :destroy]
-    get 'result_assets/:id/download' => 'result_assets#download',
-      as: :result_asset_download
     resources :result_tables, only: [:edit, :update, :destroy]
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
@@ -425,7 +470,8 @@ Rails.application.routes.draw do
              to: 'protocols#linked_children_datatable'
         get 'preview', to: 'protocols#preview'
         patch 'description', to: 'protocols#update_description'
-        patch 'metadata', to: 'protocols#update_metadata'
+        put 'name', to: 'protocols#update_name'
+        put 'authors', to: 'protocols#update_authors'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
         get 'unlink_modal', to: 'protocols#unlink_modal'
@@ -464,7 +510,6 @@ Rails.application.routes.draw do
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
-        get 'recent_protocols'
       end
     end
 
@@ -473,6 +518,9 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
+      member do
+        get :load_table
+      end
       # Save repository table state
       post 'state_save',
            to: 'user_repositories#save_table_state',
@@ -491,49 +539,74 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
+      post 'archive_records',
+           to: 'repository_rows#archive_records',
+           defaults: { format: 'json' }
+      post 'restore_records',
+           to: 'repository_rows#restore_records',
+           defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
-      get 'create_html',
-          to: 'repository_columns#create_html',
-          as: 'columns_create_html',
-          defaults: { format: 'json' }
       get 'available_columns',
           to: 'repository_columns#available_columns',
           as: 'available_columns',
           defaults: { format: 'json' }
+      get :table_toolbar
+      get :status
 
-      resources :repository_columns, only: %i(index create edit update destroy)
-      resources :repository_rows, only: %i(create edit update)
+      resources :repository_columns, only: %i(index new edit destroy)
+      resources :repository_rows, only: %i(create show update) do
+        member do
+          get :assigned_task_list
+        end
+      end
+
+      collection do
+        get :sidebar
+        post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+      end
+
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
+      namespace :repository_columns do
+        resources :text_columns, only: %i(create update)
+        resources :number_columns, only: %i(create update)
+        resources :asset_columns, only: %i(create update)
+        resources :date_columns, only: %i(create update)
+        resources :date_time_columns, only: %i(create update)
+        resources :list_columns, only: %i(create update) do
+          member do
+            get 'items'
+          end
+        end
+        resources :checklist_columns, only: %i(create update) do
+          member do
+            get 'items'
+          end
+        end
+        resources :status_columns, only: %i(create update) do
+          member do
+            get 'items'
+          end
+        end
+      end
     end
-
-    post 'available_rows', to: 'repository_rows#available_rows',
-                           defaults: { format: 'json' }
-
-    post 'repository_list_items', to: 'repository_list_items#search',
-                                  defaults: { format: 'json' }
-
-    get 'repository_rows/:id', to: 'repository_rows#show',
-                               as: :repository_row,
-                               defaults: { format: 'json' }
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior
-    get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
-    get 'files/:id/download', to: 'assets#download', as: 'download_asset'
-    get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
+    get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
+    get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
@@ -544,17 +617,22 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
-      post 'users/complete_sign_up_provider' =>
-           'users/registrations#create_with_provider'
+      get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
+      post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
+      post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
+      post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'
+
+      post 'users/2fa_enable' => 'users/registrations#two_factor_enable'
+      post 'users/2fa_disable' => 'users/registrations#two_factor_disable'
+      get 'users/2fa_qr_code' => 'users/registrations#two_factor_qr_code'
     end
 
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Api.configuration.core_api_v1_enabled
+      if Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
@@ -567,6 +645,14 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
+                resources :inventory_checklist_items,
+                          only: %i(index create show update destroy),
+                          path: 'checklist_items',
+                          as: :checklist_items
+                resources :inventory_status_items,
+                          only: %i(index create show update destroy),
+                          path: 'status_items',
+                          as: :status_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),
@@ -589,7 +675,7 @@ Rails.application.routes.draw do
               resources :experiments, only: %i(index show) do
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
-                resources :tasks, only: %i(index show) do
+                resources :tasks, only: %i(index show create update) do
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',
                             as: :items
@@ -599,8 +685,16 @@ Rails.application.routes.draw do
                   resources :task_tags, only: %i(index show),
                             path: 'tags',
                             as: :tags
-                  resources :protocols, only: %i(index)
-                  resources :results, only: %i(index create show)
+                  resources :protocols, only: %i(index show) do
+                    resources :steps do
+                      resources :assets, only: %i(index show create), path: 'attachments'
+                      resources :checklists, path: 'checklists' do
+                        resources :checklist_items, as: :items, path: 'items'
+                      end
+                      resources :tables, path: 'tables'
+                    end
+                  end
+                  resources :results, only: %i(index create show update)
                   get 'activities', to: 'tasks#activities'
                 end
               end
@@ -619,9 +713,24 @@ Rails.application.routes.draw do
 
   resources :global_activities, only: [:index] do
     collection do
-      get :search_subjects
+      get :project_filter
+      get :experiment_filter
+      get :my_module_filter
+      get :inventory_filter
+      get :inventory_item_filter
+      get :report_filter
+      get :protocol_filter
       get :team_filter
       get :user_filter
+    end
+  end
+
+  resources :marvin_js_assets, only: %i(create update destroy show) do
+    collection do
+      get :team_sketches
+    end
+    member do
+      post :start_editing
     end
   end
 

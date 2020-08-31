@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 module ProtocolImporters
-  module ProtocolsIO
+  module ProtocolsIo
     module V3
       class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
-        require 'protocol_importers/protocols_io/v3/errors'
-
         def normalize_protocol(client_data)
           # client_data is HttpParty ApiReponse object
           protocol_hash = client_data.parsed_response.with_indifferent_access[:protocol]
@@ -67,13 +65,27 @@ module ProtocolImporters
 
           { protocol: normalized_data }
         rescue StandardError => e
-          raise ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
+          raise ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
         end
 
         def normalize_list(client_data)
           # client_data is HttpParty ApiReponse object
           protocols_hash = client_data.parsed_response.with_indifferent_access[:items]
           pagination = client_data.parsed_response.with_indifferent_access[:pagination]
+
+          if client_data.parsed_response[:local_sorting]
+            protocols_hash =
+              case client_data.parsed_response[:local_sorting]
+              when 'alpha_asc'
+                protocols_hash.sort_by { |p| p[:title] }
+              when 'alpha_desc'
+                protocols_hash.sort_by { |p| p[:title] }.reverse
+              when 'oldest'
+                protocols_hash.sort_by { |p| p[:created_on] }
+              else
+                protocols_hash.sort_by { |p| p[:created_on] }.reverse
+              end
+          end
 
           normalized_data = {}
           normalized_data[:protocols] = protocols_hash.map do |e|
@@ -108,7 +120,7 @@ module ProtocolImporters
 
           normalized_data
         rescue StandardError => e
-          raise ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
+          raise ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
         end
       end
     end

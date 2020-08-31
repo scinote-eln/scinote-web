@@ -1,0 +1,17 @@
+@import "constants";
+
+.fas-custom {
+  background-repeat: no-repeat;
+  background-size: 18px;
+  display: inline-block;
+  fill: $color-silver-chalice;
+  height: 18px;
+  position: relative;
+  top: 5px;
+  width: 18px;
+
+  path {
+    cursor: auto;
+    fill: inherit;
+  }
+}

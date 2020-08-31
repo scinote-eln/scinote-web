@@ -27,10 +27,6 @@ describe User, type: :model do
     it { should have_db_column :last_sign_in_ip }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
-    it { should have_db_column :avatar_file_name }
-    it { should have_db_column :avatar_content_type }
-    it { should have_db_column :avatar_file_size }
-    it { should have_db_column :avatar_updated_at }
     it { should have_db_column :confirmation_token }
     it { should have_db_column :confirmed_at }
     it { should have_db_column :confirmation_sent_at }
@@ -324,5 +320,27 @@ describe User, type: :model do
 
   describe 'Associations' do
     it { is_expected.to have_many(:system_notifications) }
+  end
+
+  describe 'valid_otp?' do
+    let(:user) { create :user }
+    before do
+      user.assign_2fa_token!
+      allow_any_instance_of(ROTP::TOTP).to receive(:verify).and_return(nil)
+    end
+
+    context 'when user has set otp_secret' do
+      it 'returns nil' do
+        expect(user.valid_otp?('someString')).to be_nil
+      end
+    end
+
+    context 'when user does not have otp_secret' do
+      it 'raises an error' do
+        user.update_column(:otp_secret, nil)
+
+        expect { user.valid_otp?('someString') }.to raise_error(StandardError, 'Missing otp_secret')
+      end
+    end
   end
 end

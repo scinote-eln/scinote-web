@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 /* eslint no-use-before-define: "off" */
 /* eslint no-restricted-syntax: ["off", "BinaryExpression[operator='in']"] */
-/* global tinymce I18n */
+/* global tinymce I18n GLOBAL_CONSTANTS */
 (function() {
   'use strict';
 
@@ -71,6 +71,15 @@
 
         $('.mce-image-loader')
           .change(e => {
+            var submitButton = $(e.target).closest('.mce-window').find('.mce-foot .mce-primary');
+            var sizeLimit = e.target.files[0].size > (GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024);
+            submitButton.attr('disabled', sizeLimit);
+            if (sizeLimit) {
+              $('.mce-window .image-selection-container').addClass('error')
+                .attr('data-error', I18n.t('general.file.size_exceeded', { file_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
+            } else {
+              $('.mce-window .image-selection-container').removeClass('error');
+            }
             $(e.target).next().find('input[type=text]')[0].value = e.target.value.split(/(\\|\/)/g).pop();
           })
           .parent().find('label')
@@ -88,7 +97,7 @@
         form = createElement('form', {
           action: editor.getParam(
             'customimageuploader_form_url',
-            '/tinymce_assets'
+            '/tiny_mce_assets'
           ),
           target: iframe._id,
           method: 'POST',
@@ -158,6 +167,7 @@
           if (ctrl.tagName.toLowerCase() === 'input' && ctrl.type !== 'hidden') {
             if (ctrl.type === 'file') {
               ctrl.name = 'file';
+              ctrl.accept = 'image/*';
 
               tinymce.DOM.setStyles(ctrl, {
                 border: 0,
@@ -207,7 +217,7 @@
         }
         if (target.document || target.contentDocument) {
           doc = target.contentDocument || target.contentWindow.document;
-          handleResponse(doc.getElementsByTagName('body')[0].innerHTML);
+          handleResponse((doc.getElementsByTagName('pre')[0] || doc.getElementsByTagName('body')[0]).innerHTML);
         } else {
           handleError(I18n.t('tiny_mce.server_not_respond'));
         }
@@ -215,12 +225,12 @@
 
       function handleResponse(ret) {
         var json;
-        var errorJson;
+        var errorsJson;
         try {
           json = tinymce.util.JSON.parse(ret);
 
-          if (json.error) {
-            handleError(json.error.message);
+          if (json.errors) {
+            handleError(json.errors.join('<br>'));
           } else {
             editor.execCommand('mceInsertContent', false, buildHTML(json));
             editor.windowManager.close();
@@ -228,8 +238,8 @@
           }
         } catch (e) {
           // hack that gets the server error message
-          errorJson = JSON.parse($(ret).text());
-          handleError(errorJson.error[0]);
+          errorsJson = JSON.parse($(ret).text());
+          handleError(errorsJson.join('<br>'));
         }
       }
 
@@ -310,6 +320,10 @@
         if (imageContainer === undefined) {
           createImageHiddenField();
         }
+
+        // Small fix for ResultText when you cancel after change MarvinJS
+        if (imageContainer === undefined) return [];
+
         imageContainer.value = JSON.stringify(images);
         return JSON.stringify(images);
       }

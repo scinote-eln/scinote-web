@@ -1,0 +1,43 @@
+.repositories-index {
+  &.active {
+    [data-view-mode="archived"] {
+      display: none;
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none;
+    }
+  }
+
+  &[data-readonly="true"] {
+    .main-actions {
+      .toolbar {
+        display: none;
+      }
+
+      .filter-container {
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+#rename-repo-modal {
+  .modal-footer {
+    text-align: center;
+  }
+}
+
+#create-repo-modal {
+  .modal-footer {
+    text-align: center;
+  }
+}
+
+#new_repository {
+  .modal-footer {
+    text-align: center;
+  }
+}

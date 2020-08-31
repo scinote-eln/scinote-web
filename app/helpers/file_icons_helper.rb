@@ -1,11 +1,12 @@
 module FileIconsHelper
   def wopi_file?(asset)
-    file_ext = asset.file_file_name.split('.').last
-    %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
+    file_ext = asset.file_name.split('.').last
+    %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm
+       ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
   end
 
   def file_fa_icon_class(asset)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
 
     if Extends::FILE_FA_ICON_MAPPINGS[file_ext] # Check for custom mappings or possible overrides
       return Extends::FILE_FA_ICON_MAPPINGS[file_ext]
@@ -28,7 +29,7 @@ module FileIconsHelper
 
   # For showing next to file
   def file_extension_icon(asset)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       image_link = 'office/Word-docx_20x20x32.png'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -38,12 +39,10 @@ module FileIconsHelper
     end
 
     # Now check for custom mappings or possible overrides
-    if Extends::FILE_ICON_MAPPINGS[file_ext]
-      image_link = Extends::FILE_ICON_MAPPINGS[file_ext]
-    end
+    image_link = Extends::FILE_ICON_MAPPINGS[file_ext] if Extends::FILE_ICON_MAPPINGS[file_ext]
 
     if image_link
-      image_tag image_link
+      ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
     else
       ''
     end
@@ -51,7 +50,7 @@ module FileIconsHelper
 
   # For showing in view/edit buttons (WOPI)
   def file_application_icon(asset)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       image_link = 'office/Word-color_16x16x32.png'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -69,7 +68,7 @@ module FileIconsHelper
 
   # Shows correct WOPI application text (Word Online/Excel ..)
   def wopi_button_text(asset, action)
-    file_ext = asset.file_file_name.split('.').last
+    file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       app = 'Word Online'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -96,4 +95,12 @@ module FileIconsHelper
       'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     end
   end
+
+  def file_extension_icon_html(asset)
+    html = file_extension_icon(asset)
+    html = "<i class='fas #{file_fa_icon_class(asset)}'></i>" if html.blank?
+    html
+  end
+
+  module_function :file_extension_icon_html, :file_extension_icon, :file_fa_icon_class
 end

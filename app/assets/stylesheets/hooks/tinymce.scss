@@ -5,18 +5,18 @@
   display: none !important;
 
   + .image-selection-container {
-    height: 28px;
+    height: 36px;
     left: 140px;
     position: absolute;
     top: 0;
     width: 338px;
 
     .select_button {
-      background-color: $brand-success;
-      border-color: $brand-success;
+      background-color: $brand-primary;
+      border-color: $brand-primary;
       color: $color-white;
       cursor: pointer;
-      line-height: 20px;
+      line-height: 18px;
       padding: 6px 12px;
       position: relative;
       text-align: center;
@@ -25,7 +25,7 @@
     }
 
     input[type=text] {
-      border: 1px solid $color-gainsboro;
+      border: 1px solid $color-concrete;
       border-radius: 4px;
       height: 30px;
       left: -5px;
@@ -33,7 +33,28 @@
       position: relative;
       width: calc(100% - 100px);
     }
+
+    &.error {
+      &::after {
+        color: $brand-danger;
+        content: attr(data-error);
+        left: 0;
+        position: absolute;
+        top: 40px;
+      }
+    }
   }
+}
+
+.mce-primary {
+  background-color: $brand-primary !important;
+  border-color: $brand-primary !important;
+  border-radius: $border-radius-default !important;
+  color: $color-white !important;
+}
+
+.mce-primary .mce-txt:hover {
+  color: $color-white !important;
 }
 
 .ql-editor {
@@ -44,21 +65,36 @@
   z-index: 5;
 }
 
-.mce-widget.mce-btn[aria-label="Restore last draft"] {
-  background: $brand-primary;
-  border-radius: 4px;
-  transition: $md-transaction;
+.mce-widget.mce-btn {
+  border-color: transparent !important;
 
-  i {
-    color: $color-white;
-    transition: $md-transaction;
-  }
-
-  &.mce-disabled {
-    background: transparent;
-
+  &:not(.mce-active):hover,
+  &:not(.mce-active):active {
+    span,
     i {
-      color: inherit;
+      color: $brand-primary;
     }
   }
+
+  &.mce-active,
+  &.mce-active:hover,
+  &.mce-active:active,
+  &.mce-active:focus {
+    background-color: $brand-primary;
+
+    span,
+    i {
+      color: $color-white;
+    }
+  }
+}
+
+// Caret symbol has unneeded border-left
+.mce-splitbtn:hover .mce-open {
+  border-left: $color-white !important;
+}
+
+// Selected item list should be $brand-primary
+.mce-menu-item.mce-active.mce-menu-item-normal {
+  background-color: $brand-primary !important;
 }

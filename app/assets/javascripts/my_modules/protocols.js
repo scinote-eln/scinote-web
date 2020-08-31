@@ -1,5 +1,5 @@
-/* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString globalConstants */
-/* global HelperModule */
+/* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString */
+/* global HelperModule GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
 //= require my_modules
@@ -10,15 +10,19 @@ var selectedRow = null;
 
 
 function initEditMyModuleDescription() {
-  $('#my_module_description_view').on('click', function() {
+  var viewObject = $('#my_module_description_view');
+  viewObject.on('click', function() {
     TinyMCE.init('#my_module_description_textarea');
   });
+  TinyMCE.initIfHasDraft(viewObject);
 }
 
 function initEditProtocolDescription() {
-  $('#protocol_description_view').on('click', function() {
+  var viewObject = $('#protocol_description_view');
+  viewObject.on('click', function() {
     TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
   });
+  TinyMCE.initIfHasDraft(viewObject);
 }
 
 // Initialize edit description modal window
@@ -60,28 +64,26 @@ function initEditDescription() {
 }
 
 function initCopyToRepository() {
-  var link = $("[data-action='copy-to-repository']");
-  var modal = $('#copy-to-repository-modal');
-  var modalBody = modal.find('.modal-body');
-  var submitBtn = modal.find(".modal-footer [data-action='submit']");
-
-  link
-    .on('ajax:success', function(e, data) {
-      modalBody.html(data.html);
-
-      modalBody.find("[data-role='copy-to-repository']")
+  var link = "[data-action='copy-to-repository']";
+  var modal = '#copy-to-repository-modal';
+  var modalBody = '.modal-body';
+  var submitBtn = ".modal-footer [data-action='submit']";
+  $('.my-modules-protocols-index')
+    .on('ajax:success', link, function(e, data) {
+      $(modal).find(modalBody).html(data.html);
+      $(modal).find(modalBody).find("[data-role='copy-to-repository']")
         .on('ajax:success', function(e2, data2) {
           if (data2.refresh !== null) {
             // Reload page
             location.reload();
           } else {
             // Simply hide the modal
-            modal.modal('hide');
+            $(modal).modal('hide');
           }
         })
         .on('ajax:error', function(e2, data2) {
           // Display errors in form
-          submitBtn[0].disabled = false;
+          $(modal).find(submitBtn)[0].disabled = false;
           if (data2.status === 422) {
             $(this).renderFormErrors('protocol', data2.responseJSON);
           } else {
@@ -90,18 +92,18 @@ function initCopyToRepository() {
           }
         });
 
-      modal.modal('show');
-      submitBtn[0].disabled = false;
+      $(modal).modal('show');
+      $(modal).find(submitBtn)[0].disabled = false;
     })
     .on('ajax:error', function() {});
 
-  submitBtn.on('click', function() {
+  $(modal).on('click', submitBtn, function() {
     // Submit the embedded form
-    submitBtn[0].disabled = true;
-    modalBody.find('form').submit();
+    $(modal).find(submitBtn)[0].disabled = true;
+    $(modal).find('form').submit();
   });
 
-  modalBody.on('click', "[data-role='link-check']", function() {
+  $(modal).find(modalBody).on('click', "[data-role='link-check']", function() {
     var text = $(this).closest('.modal-body').find("[data-role='link-text']");
     if ($(this).prop('checked')) {
       text.show();
@@ -110,11 +112,11 @@ function initCopyToRepository() {
     }
   });
 
-  modal.on('hidden.bs.modal', function() {
-    modalBody.find("[data-role='copy-to-repository']")
+  $(modal).on('hidden.bs.modal', function() {
+    $(modal).find(modalBody).find("[data-role='copy-to-repository']")
       .off('ajax:success ajax:error');
 
-    modalBody.html('');
+    $(modal).find(modalBody).html('');
   });
 }
 
@@ -176,8 +178,8 @@ function initLoadFromRepository() {
 
       modal.modal('show');
 
-      // Init Datatable on public tab
-      initLoadFromRepositoryTable(modalBody.find('#public-tab'));
+      // Init Datatable on recent tab
+      initLoadFromRepositoryTable(modalBody.find('#recent-tab'));
 
       modalBody.find("a[data-toggle='tab']")
         .on('hide.bs.tab', function(el) {
@@ -210,14 +212,15 @@ function initLoadFromRepository() {
 
 function initLoadFromRepositoryTable(content) {
   var tableEl = content.find("[data-role='datatable']");
-
   var datatable = tableEl.DataTable({
-    order: [[1, 'asc']],
-    dom: 'RBfltpi',
+    dom: "RBfl<'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
+    sScrollX: '100%',
+    sScrollXInner: '100%',
     buttons: [],
     processing: true,
     serverSide: true,
     responsive: true,
+    order: tableEl.data('default-order') || [[1, 'asc']],
     ajax: {
       url: tableEl.data('source'),
       type: 'POST'
@@ -379,7 +382,7 @@ function refreshProtocolStatusBar() {
     type: 'GET',
     dataType: 'json',
     success: function(data) {
-      $("[data-role='protocol-status-bar']").html(data.html);
+      $('.my-module-protocol-status').replaceWith(data.html);
       initLinkUpdate();
     }
   });
@@ -414,7 +417,7 @@ function initImport() {
         } else {
           if (data.status === 'size_too_large') {
             alert(I18n.t('my_modules.protocols.load_from_file_size_error',
-              { size: $(document.body).data('file-max-size-mb') }));
+              { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
           } else {
             alert(I18n.t('my_modules.protocols.load_from_file_error'));
           }
@@ -427,43 +430,16 @@ function initImport() {
   });
 }
 
-function initRecentProtocols() {
-  var recentProtocolContainer = $('.my-module-recent-protocols');
-  var dropDownList = recentProtocolContainer.find('.dropdown-menu');
-  recentProtocolContainer.find('.dropdown-button').click(function() {
-    dropDownList.find('.protocol').remove();
-    $.get('/protocols/recent_protocols', result => {
-      $.each(result, (i, protocol) => {
-        $('<div class="protocol"><i class="fas fa-file-alt"></i>'
-          + truncateLongString(protocol.name, globalConstants.name_truncation_length)
-          + '</div>').appendTo(dropDownList)
-          .click(() => {
-            $.post(recentProtocolContainer.data('updateUrl'), { source_id: protocol.id })
-              .success(() => {
-                location.reload();
-              })
-              .error(ev => {
-                HelperModule.flashAlertMsg(ev.responseJSON.message, 'warning');
-              });
-          });
-      });
+
+
+function initProtocolSectionOpenEvent() {
+  $('#protocol-container').on('shown.bs.collapse', function() {
+    $(this).find("[data-role='hot-table']").each(function() {
+      var $container = $(this).find("[data-role='step-hot-table']");
+      var hot = $container.handsontable('getInstance');
+      hot.render();
     });
   });
-
-  $('.protocol-description-content').on('ajax:success', () => {
-    updateRecentProtocolsStatus();
-  });
-}
-
-function updateRecentProtocolsStatus() {
-  var recentProtocolContainer = $('.my-module-recent-protocols');
-  var steps = $('.step');
-  var protocolDescription = $('#protocol_description_view').html();
-  if (steps.length === 0 && protocolDescription.length === 0) {
-    recentProtocolContainer.css('display', '');
-  } else {
-    recentProtocolContainer.css('display', 'none');
-  }
 }
 
 /**
@@ -478,7 +454,7 @@ function init() {
   initLoadFromRepository();
   refreshProtocolStatusBar();
   initImport();
-  initRecentProtocols();
+  initProtocolSectionOpenEvent();
 }
 
 init();

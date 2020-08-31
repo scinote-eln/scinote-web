@@ -43,26 +43,8 @@ module FirstTimeDataGenerator
     )
 
     # check if samples repo already exist, then create custom repository samples
-    repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME)
-    repository =
-      if repository.blank?
-        if team.repositories.count < Rails.configuration.x.repositories_limit
-          Repository.create(
-            name: REPO_SAMPLES_NAME,
-            team: team,
-            created_by: user
-          )
-        else
-          # User first repo just as a placeholder, this call will fail anyhow
-          Repository.create(
-            name: team.repositories.first.name,
-            team: team,
-            created_by: user
-          )
-        end
-      else
-        repository.first
-      end
+    repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME).take
+    repository ||= Repository.create(name: REPO_SAMPLES_NAME, team: team, created_by: user)
 
     # create list value column for sample types
     repo_columns = []
@@ -93,8 +75,7 @@ module FirstTimeDataGenerator
         data: name,
         created_by: user,
         last_modified_by: user,
-        repository_column: repository_column_sample_types,
-        repository: repository
+        repository_column: repository_column_sample_types
       )
 
       # Check if it already exists
@@ -114,8 +95,7 @@ module FirstTimeDataGenerator
         data: name,
         created_by: user,
         last_modified_by: user,
-        repository_column: repository_column_sample_groups,
-        repository: repository
+        repository_column: repository_column_sample_groups
       )
 
       # Check if it already exists
@@ -497,9 +477,6 @@ module FirstTimeDataGenerator
                           module_step_names,
                           module_step_descriptions)
 
-    # Delete repository items, if we went over the limit
-    repository_rows_to_assign.map(&:destroy) unless repository.id
-
     # Add table to existig step
     step = my_modules[1].protocol.steps.where('position = 0').take
     Table.create(
@@ -555,8 +532,10 @@ module FirstTimeDataGenerator
       user: user,
       created_at: generate_random_time(my_modules[1].created_at, 4.days)
     )
-    temp_text = 'There are many biological replicates we harvested ' \
-                'for each type of sample.'
+    temp_text = 'There are many biological replicates we harvested for each type of sample.'
+    repository_rows_to_assign.each do |s|
+      temp_text << "* #{s.name}\n\n"
+    end
     temp_result.result_text = ResultText.new(
       text: temp_text
     )
@@ -1004,10 +983,10 @@ module FirstTimeDataGenerator
       created_by: user,
       team: team,
       contents: tab_content['module6']['distribution'] % {
-        sample0: 'Sample 0',
-        sample1: 'Sample 1',
-        sample2: 'Sample 2',
-        sample3: 'Sample 3'
+        sample0: repository_rows_to_assign[0].name,
+        sample1: repository_rows_to_assign[1].name,
+        sample2: repository_rows_to_assign[2].name,
+        sample3: repository_rows_to_assign[3].name
       }
     )
     temp_result.save

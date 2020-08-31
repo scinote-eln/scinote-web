@@ -453,8 +453,8 @@
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        $('#slide-panel .tree').html('<ul>' + data.html + '</ul>');
-        setupSidebarTree();
+        $('#slide-panel .tree').html(data.html);
+        Sidebar.loadLastState();
       }
     });
   }
@@ -510,16 +510,20 @@
   }
 
   function initProjectsViewModeSwitch() {
-    $('input[name=projects-view-mode-selector]').off().on('change', function() {
-      if ($(this).val() === projectsViewMode) {
-        return;
-      }
-      projectsViewMode = $(this).val();
-      if (projectsChanged) {
-        refreshCurrentView();
-      }
-      projectsChanged = false;
-    });
+    $('input[name=projects-view-mode-selector]').off()
+      .on('change', function() {
+        if ($(this).val() === projectsViewMode) {
+          return;
+        }
+        projectsViewMode = $(this).val();
+        if (projectsChanged) {
+          refreshCurrentView();
+        }
+        projectsChanged = false;
+      })
+      .on('click', function() {
+        $(this).next().click();
+      });
   }
 
   function initSorting() {
@@ -529,6 +533,7 @@
       if (projectsViewSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('disabled');
         projectsViewSort = $(this).data('sort');
+        $('#sortMenu').html(I18n.t('general.sort.' + projectsViewSort + '_html'));
         loadCardsView();
         $(this).addClass('disabled');
         $('#sortMenu').dropdown('toggle');
@@ -625,7 +630,7 @@
   function dataTableInit() {
     var TABLE_ID = '#projects-overview-table';
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
+      dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>><'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
       stateSave: true,
       stateDuration: 0,
       processing: true,

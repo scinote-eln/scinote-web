@@ -1,22 +1,22 @@
 <div class="well">
-  <%= bootstrap_form_for(@result, url: result_asset_path(format: :json), multipart: true, data: { type: :json }) do |f| %>
+  <%= bootstrap_form_for(@result, url: result_asset_path(format: :json), remote: true) do |f| %>
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :asset do |ff| %>
       <span><strong><%=t "result_assets.edit.uploaded_asset" %></strong></span>
       <p style="margin: 10px;">
         <%= file_extension_icon(ff.object) %>
-        <%= ff.object.file_file_name %>
+        <%= ff.object.file_name %>
       </p>
-      <%= ff.file_field :file %>
+      <%= ff.file_field :file, direct_upload: true %>
     <% end %>
     <hr>
     <div class="align-right">
-      <button type="button" class="btn btn-default cancel-edit">
+      <button type="button" class="btn btn-secondary cancel-edit">
         <%= t("general.cancel")%>
       </button>
-      <%= f.submit t("general.save"),
-                   class: 'btn btn-success save-result',
-                  onclick: "Results.processResult(event, Results.ResultTypeEnum.FILE, true);" %>
+      <%= f.button t("general.save"),
+                   class: 'btn btn-primary save-result',
+                   onclick: "Results.processResult(event, Results.ResultTypeEnum.FILE);" %>
     </div>
   <% end %>
 </div>

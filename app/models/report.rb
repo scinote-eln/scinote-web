@@ -11,8 +11,8 @@ class Report < ApplicationRecord
   validates :project, presence: true
   validates :user, presence: true
 
-  belongs_to :project, inverse_of: :reports, optional: true
-  belongs_to :user, inverse_of: :reports, optional: true
+  belongs_to :project, inverse_of: :reports
+  belongs_to :user, inverse_of: :reports
   belongs_to :team, inverse_of: :reports
   belongs_to :last_modified_by,
              foreign_key: 'last_modified_by_id',
@@ -131,17 +131,11 @@ class Report < ApplicationRecord
                                 result_children)
         end
 
-        module_children +=
-          gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
-        module_children +=
-          gen_element_content(my_module,
-                              my_module.repository_rows.select(:repository_id)
-                                       .distinct.map(&:repository),
-                              'my_module_repository', true, 'asc')
+        repositories = project.assigned_repositories_and_snapshots
 
-        modules +=
-          gen_element_content(my_module, nil, 'my_module', true, nil,
-                              module_children)
+        module_children += gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
+        module_children += gen_element_content(my_module, repositories, 'my_module_repository', true, 'asc')
+        modules += gen_element_content(my_module, nil, 'my_module', true, nil, module_children)
       end
 
       report_contents +=

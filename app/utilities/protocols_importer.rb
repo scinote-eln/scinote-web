@@ -29,7 +29,7 @@ module ProtocolsImporter
   def import_into_existing(protocol, protocol_json, user, team)
     # Firstly, destroy existing protocol's contents
     protocol.tiny_mce_assets.destroy_all
-    protocol.destroy_contents(user)
+    protocol.destroy_contents
     protocol.reload
 
     # Alright, now populate the protocol
@@ -111,9 +111,10 @@ module ProtocolsImporter
         )
 
         # Decode the file bytes
-        asset.file = StringIO.new(Base64.decode64(asset_json['bytes']))
-        asset.file_file_name = asset_json['fileName']
-        asset.file_content_type = asset_json['fileType']
+        asset.file.attach(io: StringIO.new(Base64.decode64(asset_json['bytes'])),
+                          filename: asset_json['fileName'],
+                          content_type: asset_json['fileType'],
+                          metadata: JSON.parse(asset_json['fileMetadata'] || '{}'))
         asset.save!
         asset_ids << asset.id
 
@@ -152,12 +153,15 @@ module ProtocolsImporter
         team_id: team.id,
         saved: true
       )
-      # Decode the file bytes
-      tiny_mce_img.image = StringIO.new(
-        Base64.decode64(tiny_mce_img_json['bytes'])
-      )
-      tiny_mce_img.image_content_type = tiny_mce_img_json['fileType']
       tiny_mce_img.save!
+
+      # Decode the file bytes
+      file = StringIO.new(Base64.decode64(tiny_mce_img_json['bytes']))
+      to_blob = ActiveStorage::Blob.create_after_upload!(io: file,
+                                filename: tiny_mce_img_json['fileName'],
+                                content_type: tiny_mce_img_json['fileType'],
+                                metadata: JSON.parse(tiny_mce_img_json['fileMetadata'] || '{}'))
+      tiny_mce_img.image.attach(to_blob)
       if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
                            "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
       else

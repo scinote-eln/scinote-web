@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n globalConstants */
+/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -16,11 +16,100 @@ var TinyMCE = (function() {
     });
   }
 
+  // Get LocalStorage auto save path
+  function getAutoSavePrefix(editor) {
+    var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
+
+    prefix = prefix.replace(/\{path\}/g, document.location.pathname);
+    prefix = prefix.replace(/\{query\}/g, document.location.search);
+    prefix = prefix.replace(/\{hash\}/g, document.location.hash);
+    prefix = prefix.replace(/\{id\}/g, editor.id);
+
+    return prefix;
+  }
+
+  // Handles autosave notification if draft is available in the local storage
+  function restoreDraftNotification(selector, editor) {
+    var prefix = getAutoSavePrefix(editor);
+    var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
+    var lastUpdated = $(selector).data('last-updated');
+    var notificationBar;
+    var restoreBtn = $('<button class="btn restore-draft-btn">Restore Draft</button>');
+    var cancelBtn = $('<span class="fas fa-times"></span>');
+
+    // Check whether we have draft stored
+    if (editor.plugins.autosave.hasDraft()) {
+      notificationBar = $('<div class="restore-draft-notification"></div>');
+
+      if (lastDraftTime < lastUpdated) {
+        notificationBar.html(`<span class="notification-text">${I18n.t('tiny_mce.older_version_available')}</span>`);
+      } else {
+        notificationBar.html(`<span class="notification-text">${I18n.t('tiny_mce.newer_version_available')}</span>`);
+      }
+
+      // Add notification bar
+      $(notificationBar).append(restoreBtn).append(cancelBtn);
+      $(editor.contentAreaContainer).before(notificationBar);
+
+      $(restoreBtn).click(function() {
+        editor.plugins.autosave.restoreDraft();
+        makeItDirty(editor);
+        notificationBar.remove();
+      });
+
+      $(cancelBtn).click(function() {
+        notificationBar.remove();
+      });
+    }
+  }
+
+  function initImageToolBar(editor) {
+    var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
+    var primaryColor = '#104da9';
+    editorIframe.contents().find('head').append(`<style type="text/css">
+        img::-moz-selection{background:0 0}
+        img::selection{background:0 0}
+        .mce-content-body img[data-mce-selected]{outline:2px solid ${primaryColor}}
+        .mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}
+        .mce-content-body div.mce-resizehandle:hover{background:transparent}
+        .mce-content-body div#mceResizeHandlenw{border-left: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlene{border-right: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlesw{border-left: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlese{border-right: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+      </style>`);
+  }
+
+  function makeItDirty(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    editorForm.find('.tinymce-status-badge').addClass('hidden');
+    $(editor.getContainer()).find('.tinymce-save-button').removeClass('hidden');
+  }
+
+  function draftLocation() {
+    return 'tinymce-drafts-' + document.location.pathname;
+  }
+
+  function removeDraft(editor, textAreaObject) {
+    var location = draftLocation();
+    var storedDrafts = JSON.parse(sessionStorage.getItem(location) || '[]');
+    var draftId = storedDrafts.indexOf(textAreaObject.data('tinymce-object'));
+    if (draftId > -1) {
+      storedDrafts.splice(draftId, 1);
+    }
+
+    if (storedDrafts.length) {
+      sessionStorage.setItem(location, JSON.stringify(storedDrafts));
+    } else {
+      sessionStorage.removeItem(location);
+    }
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
       var tinyMceContainer;
       var tinyMceInitSize;
+      var plugins;
       var textAreaObject = $(selector);
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
@@ -29,18 +118,21 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
+        plugins = 'custom_image_toolbar table autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
+        if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
-        if (textAreaObject.data('objectType') === 'step') {
+        if (textAreaObject.data('objectType') === 'step'
+          || textAreaObject.data('objectType') === 'result_text') {
           document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
         }
 
-
         tinyMCE.init({
-          cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=4.9.10', // This suffix should be changed any time library is updated
           selector: selector,
-          menubar: 'file edit view insert format',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample',
-          plugins: 'autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor placeholder colorpicker textpattern',
+          convert_urls: false,
+          menubar: 'file edit view insert format table',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
             { text: 'R', value: 'r' },
@@ -60,7 +152,8 @@ var TinyMCE = (function() {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
-          autosave_interval: '15s',
+          autosave_restore_when_empty: false,
+          autosave_interval: '1s',
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
           object_resizing: true,
@@ -117,6 +210,7 @@ var TinyMCE = (function() {
             var editorForm = $(editor.getContainer()).closest('form');
             var menuBar = editorForm.find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
             var editorToolbar = editorForm.find('.mce-top-part');
+
             var editorToolbaroffset;
 
             $('.tinymce-placeholder').css('height', $(editor.editorContainer).height() + 'px');
@@ -138,12 +232,15 @@ var TinyMCE = (function() {
               editorToolbaroffset = 0;
             }
 
-            if (globalConstants.is_safari) {
+            if (GLOBAL_CONSTANTS.IS_SAFARI) {
               editorToolbar.css('position', '-webkit-sticky');
             } else {
               editorToolbar.css('position', 'sticky');
             }
-            editorToolbar.css('top', editorToolbaroffset + 'px');
+            editorToolbar.css('top', editorToolbaroffset + 'px').css('z-index', '100');
+
+            // Init image toolbar
+            initImageToolBar(editor);
 
             // Update scroll position after exit
             function updateScrollPosition() {
@@ -171,10 +268,11 @@ var TinyMCE = (function() {
               .on('ajax:success', function(ev, data) {
                 editor.save();
                 editor.setProgressState(0);
-                editor.plugins.autosave.removeDraft();
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+                editor.plugins.autosave.removeDraft();
+                removeDraft(editor, textAreaObject);
                 if (onSaveCallback) { onSaveCallback(); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
@@ -200,7 +298,9 @@ var TinyMCE = (function() {
               .removeClass('hidden');
 
             // Set cursor to the end of the content
-            editor.focus();
+            if (editor.settings.id !== 'step_description_textarea') {
+              editor.focus();
+            }
             editor.selection.select(editor.getBody(), true);
             editor.selection.collapse(false);
 
@@ -226,16 +326,38 @@ var TinyMCE = (function() {
             });
 
             editor.on('Dirty', function() {
-              var editorForm = $(editor.getContainer()).closest('form');
-              editorForm.find('.tinymce-status-badge').addClass('hidden');
-              $(editor.getContainer())
-                .find('.tinymce-save-button').removeClass('hidden');
+              makeItDirty(editor);
+            });
+
+            editor.on('StoreDraft', function() {
+              var location = draftLocation();
+              var storedDrafts = JSON.parse(sessionStorage.getItem(location) || '[]');
+              var draftName = textAreaObject.data('tinymce-object');
+              if (storedDrafts.includes(draftName) || !draftName) return;
+              storedDrafts.push(draftName);
+              sessionStorage.setItem(location, JSON.stringify(storedDrafts));
             });
 
             editor.on('remove', function() {
               var menuBar = $(editor.getContainer()).find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
+            });
+
+            editor.on('blur', function(e) {
+              if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
+              setTimeout(() => {
+                if (editor.isNotDirty === false) {
+                  $(editor.container).find('.tinymce-save-button').click();
+                } else {
+                  $(editor.container).find('.tinymce-cancel-button').click();
+                }
+              }, 0);
+              return true;
+            });
+
+            editor.on('init', function(e) {
+              restoreDraftNotification(selector, editor);
             });
           },
           codesample_content_css: $(selector).data('highlightjs-path')
@@ -257,7 +379,32 @@ var TinyMCE = (function() {
     getContent: function() {
       return tinyMCE.editors[0].getContent();
     },
-    highlight: initHighlightjs
+    updateImages(editor) {
+      var images;
+      var iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
+      images = $.map($('img', iframe), e => {
+        return e.dataset.mceToken;
+      });
+      $('#' + editor.id).next()[0].value = JSON.stringify(images);
+      return JSON.stringify(images);
+    },
+    makeItDirty: function(editor) {
+      makeItDirty(editor);
+    },
+    highlight: initHighlightjs,
+    initIfHasDraft: function(viewObject) {
+      var storedDrafts = sessionStorage.getItem(draftLocation());
+      var draftName = viewObject.data('tinymce-init');
+      if (storedDrafts && JSON.parse(storedDrafts)[0] === draftName) {
+        let top = viewObject.offset().top;
+        setTimeout(() => {
+          viewObject.click();
+        }, 0);
+        setTimeout(() => {
+          window.scrollTo(0, top - 150);
+        }, 2000);
+      }
+    }
   });
 }());
 

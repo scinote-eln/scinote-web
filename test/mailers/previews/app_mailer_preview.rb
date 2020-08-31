@@ -11,6 +11,10 @@ class AppMailerPreview < ActionMailer::Preview
     AppMailer.invitation_instructions(fake_user, 'faketoken', {})
   end
 
+  def unlock_instructions
+    AppMailer.unlock_instructions(fake_user, 'faketoken', {})
+  end
+
   def assignment_notification
     AppMailer.notification(
       fake_user,

@@ -1,0 +1,128 @@
+@import "constants";
+@import "mixins";
+
+.user-settings {
+  .settings-row {
+    margin-top: 2em;
+
+    .user-attribute {
+      align-items: center;
+      display: flex;
+
+      .btn {
+        margin-left: auto;
+      }
+    }
+  }
+
+  .user-settings-block {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+
+  .two-factor-container {
+    border: $border-default;
+    column-gap: 1em;
+    display: grid;
+    grid-template-columns:  auto fit-content;
+    margin: 1em 0;
+    padding: 1em;
+    row-gap: .5em;
+
+
+    .title {
+      @include font-main;
+      flex-basis: 100%;
+      grid-column: 1 / span 2;
+
+      .enabled {
+        @include font-button;
+        color: $brand-success;
+      }
+    }
+
+    .btn {
+      align-self: end;
+    }
+  }
+}
+
+
+.two-factor-modal {
+  .two-factor-apps {
+    align-items: center;
+    display: flex;
+    margin: 2em 0;
+
+    .app {
+      align-items: center;
+      display: flex;
+      margin: 2em 0;
+
+      .app-information {
+        margin-left: 1.5em;
+
+        .app-name {
+          @include font-h3;
+        }
+      }
+
+      .store {
+        margin-right: 1em;
+      }
+    }
+
+    .apps-list {
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .install-mobile {
+      margin-left: -150px;
+    }
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
+
+  .tab-footer {
+    text-align: center;
+  }
+
+  .qr-code {
+    display: flex;
+    justify-content: center;
+    padding: 4em;
+  }
+
+  .verified-label {
+    color: $brand-success;
+    margin-top: 0;
+  }
+
+  .recovery-codes {
+    @include font-h3;
+    line-height: 2em;
+    text-align: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .user-settings {
+    .two-factor-container {
+      grid-template-columns:  auto;
+
+      .title {
+        grid-column: 1;
+      }
+    }
+  }
+
+  .two-factor-modal {
+    .install-mobile {
+      display: none;
+    }
+  }
+}

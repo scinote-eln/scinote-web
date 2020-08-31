@@ -2,7 +2,6 @@
 
 module ReportActions
   class SavePdfToInventoryItem
-
     def initialize(user, team, params)
       @user   = user
       @team   = team
@@ -14,7 +13,7 @@ module ReportActions
       file_path  = generate_pdf(@params[:html])
       asset      = create_new_asset(file_path)
       cell       = fetch_repository_cell
-      cell.destroy if cell
+      cell&.destroy
       @new_cell_value = create_new_cell_value(asset)
       @new_cell_value.save
       log_activity
@@ -22,6 +21,7 @@ module ReportActions
 
     def error_messages
       return I18n.t('general.error') unless @new_cell_value
+
       @new_cell_value.errors.full_messages.join
     end
 
@@ -33,9 +33,9 @@ module ReportActions
       @repository        = load_repository
       @repository_column = load_repository_column
       @repository_item   = load_repository_item
-      unless can_create_repository_rows?(@user, @repository.team)
+      unless can_create_repository_rows?(@user, @repository)
         raise ReportActions::RepositoryPermissionError,
-                I18n.t('projects.reports.new.no_permissions')
+              I18n.t('projects.reports.new.no_permissions')
       end
     end
 
@@ -56,10 +56,8 @@ module ReportActions
     end
 
     def create_new_asset(file_path)
-      asset = Asset.new(
-        file: file_path, created_by: @user, last_modified_by: @user, team: @team
-      )
-      asset.post_process_file(@team) if asset.save
+      asset = Asset.create(created_by: @user, last_modified_by: @user, team: @team)
+      asset.file.attach(io: file_path, filename: File.basename(file_path))
       asset
     end
 
@@ -82,15 +80,15 @@ module ReportActions
     end
 
     def load_repository
-      Repository.find_by_id(@params[:repository_id])
+      Repository.find_by(id: @params[:repository_id])
     end
 
     def load_repository_column
-      RepositoryColumn.find_by_id(@params[:respository_column_id])
+      RepositoryColumn.find_by(id: @params[:respository_column_id])
     end
 
     def load_repository_item
-      RepositoryRow.find_by_id(@params[:repository_item_id])
+      RepositoryRow.find_by(id: @params[:repository_item_id])
     end
 
     def action_view_context
@@ -105,7 +103,8 @@ module ReportActions
     end
 
     def prepare_pdf_content(content)
-      return content unless content.blank?
+      return content if content.present?
+
       I18n.t('projects.reports.new.no_content_for_PDF_html')
     end
 

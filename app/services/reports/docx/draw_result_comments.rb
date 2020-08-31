@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-module DrawResultComments
-  def draw_result_comments(subject)
-    result = Result.find_by_id(subject['id']['result_id'])
+module Reports::Docx::DrawResultComments
+  def draw_result_comments(subject, result)
     return unless result
 
     comments = result.result_comments.order(created_at: subject['sort_order'])

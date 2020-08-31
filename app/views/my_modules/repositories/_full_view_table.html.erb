@@ -1,0 +1,43 @@
+<table class="table"
+       data-id="<%= @repository.id %>"
+       data-type="live"
+       data-source="<%= index_dt_my_module_repository_path(@my_module, @repository) %>"
+       data-default-order="<%= default_table_order_as_js_array %>"
+       data-default-table-columns="<%= default_table_columns %>"
+       data-repository-name="<%= @repository.name %>"
+       data-assigned-items-count="<%= @my_module.repository_rows_count(@repository) %>"
+       data-load-state-url="<%= repository_load_table_state_path(@repository) %>"
+       data-export-url="<%= export_repository_my_module_repository_path(@my_module ,@repository) %>"
+       data-versions-sidebar-url="<%= full_view_sidebar_my_module_repository_snapshots_path(@my_module, @repository) %>"
+>
+  <thead>
+    <tr>
+      <th id="checkbox">
+        <div class="sci-checkbox-container">
+          <input value="1" type="checkbox" class="sci-checkbox select-all">
+          <span class="sci-checkbox-label"></span>
+        </div>
+      </th>
+      <th id="assigned"><%= t("repositories.table.assigned") %></th>
+      <th id="row-id"><%= t("repositories.table.id") %></th>
+      <th id="row-name"><%= t("repositories.table.row_name") %></th>
+      <th id="added-on"><%= t("repositories.table.added_on") %></th>
+      <th id="added-by"><%= t("repositories.table.added_by") %></th>
+      <th id="archived-on"><%= t("repositories.table.archived_on") %></th>
+      <th id="archived-by"><%= t("repositories.table.archived_by") %></th>
+      <% @repository.repository_columns.order(:id).each do |column| %>
+        <th
+          class="repository-column"
+          id="<%= column.id %>"
+          data-type="<%= column.data_type %>"
+          <% column.metadata.each do |k, v| %>
+            <%= "data-metadata-#{k}=#{v}" %>
+          <% end %>
+        >
+          <%= display_tooltip(column.name) %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>

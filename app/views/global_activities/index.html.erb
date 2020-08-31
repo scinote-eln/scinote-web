@@ -1,33 +1,34 @@
 <% provide :head_title, t('nav.label.activities') %>
 
-<div class="global-activities-container container-flex">
-  <div class="row">
-    <div class="ga-top col-md-12">
-      <%= render partial: "top_pane" %>
-    </div>
-
-    <div class="ga-side col-lg-3 col-md-12 col-xl-2 perfect-scrollbar">
-      <%= render partial: "side_filters" %>
-    </div>
-
-    <div class="ga-main col-lg-9 col-md-12 col-xl-10 perfect-scrollbar">
-      <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
-        <p><%= t('activities.index.no_activities_message') %></p>
+<div class="global-activities-container">
+  <div class="ga-top">
+    <%= render partial: "top_pane" %>
+  </div>
+  <div class="ga-bottom">
+    <div class="ga-main">
+      <div class="activities-container perfect-scrollbar">
+        <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
+          <p><%= t('activities.index.no_activities_message') %></p>
+        </div>
+        <div class="ga-activities-list"
+             data-activities-url="<%= global_activities_path %>"
+             data-starting-timestamp="<%= @starting_timestamp %>">
+          <%= render partial: "activity_list.html.erb" %>
+        </div>
+        <div class="text-center">
+          <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
+             data-next-page="<%= @next_page %>">
+            <%= t'activities.index.more_activities' %>
+          </a>
+        </div>
+        <div id="ga-more-activities-placeholder" class="hidden"></div>
       </div>
-      <div class="ga-activities-list"
-           data-activities-url="<%= global_activities_path %>"
-           data-starting-timestamp="<%= @starting_timestamp %>">
-        <%= render partial: "activity_list.html.erb" %>
-      </div>
-      <div class="text-center">
-        <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
-           data-next-page="<%= @next_page %>">
-          <%= t'activities.index.more_activities' %>
-        </a>
-      </div>
-      <div id="ga-more-activities-placeholder" class="hidden"></div>
     </div>
-
+    <div class="ga-side">
+      <div class="filters-container perfect-scrollbar">
+        <%= render partial: "side_filters" %>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -35,4 +36,3 @@
   var gaUrlQueryParams= <%= raw @filters.to_json %>
 </script>
 <%= javascript_include_tag 'global_activities/index.js' %>
-<%= javascript_include_tag 'global_activities/side_pane.js' %>

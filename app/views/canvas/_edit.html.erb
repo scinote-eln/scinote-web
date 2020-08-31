@@ -8,11 +8,9 @@
   data-can-edit-connections="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
   data-unsaved-work-text="<%=t "experiments.canvas.edit.unsaved_work" %>"
 >
-  <%= bootstrap_form_tag url: canvas_experiment_url, method: "post" do |f| %>
+  <%= bootstrap_form_tag url: canvas_experiment_url, method: "post", html: {class: "canvas-header"} do |f| %>
     <% if can_manage_experiment?(@experiment) %>
-      <%=link_to "", type: "button", class: "btn btn-primary help_tooltips", id: "canvas-new-module",
-                     data: { tooltiplink: I18n.t('tooltips.link.task.new'),
-                     tooltipcontent: I18n.t('tooltips.text.task.new') } do %>
+      <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
         <span class="hbtn-default">
           <span class="fas fa-credit-card"></span>
           <%= t("experiments.canvas.edit.new_module") %>
@@ -24,12 +22,12 @@
         </span>
       <% end %>
     <% end %>
-    <div class="btn-group pull-right" role="group">
-      <%= link_to canvas_experiment_path(@experiment), type: "button", class: "btn btn-default cancel-edit-canvas" do %>
+    <div class="sci-btn-group pull-right" role="group">
+      <%= link_to canvas_experiment_path(@experiment), type: "button", class: "btn btn-secondary cancel-edit-canvas" do %>
         <span class="hidden-xs"><%= t("experiments.canvas.edit.cancel") %></span>
         <span class="fas fa-times visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
       <% end %>
-      <%= f.submit class: "btn btn-success", id: "canvas-save" do %>
+      <%= f.submit class: "btn btn-primary", id: "canvas-save" do %>
         <span class="visibile-xs"><%= t("experiments.canvas.edit.save_short") %></span>
         <span class="hidden-xs"><%= t("experiments.canvas.edit.save") %></span>
       <% end %>

@@ -6,7 +6,8 @@ class UserDataDeletion
       # Destroy tiny_mce_assets
       if team.tiny_mce_assets.present?
         team.tiny_mce_assets.each do |tiny_mce_asset|
-          paperclip_file_destroy(tiny_mce_asset) if tiny_mce_asset.image.exists?
+          tiny_mce_asset.image.purge
+          tiny_mce_asset.destroy!
         end
       end
       team.repositories.each do |repository|
@@ -15,8 +16,8 @@ class UserDataDeletion
           repository_row
             .repository_cells
             .where(value_type: 'RepositoryAssetValue').each do |repository_cell|
-            next unless repository_cell.value.asset.file.exists?
-            paperclip_file_destroy(repository_cell.value.asset)
+            repository_cell.value.asset.file.purge
+            repository_cell.value.asset.destroy!
           end
         end
         repository.destroy
@@ -30,8 +31,10 @@ class UserDataDeletion
             my_module.results.each do |result|
               result.result_table.delete if result.result_table.present?
               result.table.delete if result.table.present?
-              next unless result.asset && result.asset.file.exists?
-              paperclip_file_destroy(result.asset)
+              next unless result.asset
+
+              result.asset.file.purge
+              result.asset.destroy!
             end
             my_module.activities.destroy_all
             my_module.inputs.destroy_all
@@ -42,16 +45,16 @@ class UserDataDeletion
             my_module.my_module_repository_rows.destroy_all
             my_module.user_my_modules.destroy_all
             my_module.report_elements.destroy_all
-            my_module.protocols.each { |p| p.update_attributes(parent_id: nil) }
+            my_module.protocols.each { |p| p.update(parent_id: nil) }
             my_module.protocols.each do |protocol|
               destroy_protocol(protocol)
             end
             my_module.delete
           end
+
           # Destroy workflow image
-          if experiment.workflowimg.exists?
-            experiment.workflowimg.clear(:original)
-          end
+          experiment.workflowimg.purge
+
           experiment.activities.destroy_all
           experiment.report_elements.destroy_all
           experiment.my_module_groups.delete_all
@@ -64,7 +67,7 @@ class UserDataDeletion
 
         project.delete
       end
-      team.protocols.each { |p| p.update_attributes(parent_id: nil) }
+      team.protocols.each { |p| p.update(parent_id: nil) }
       team.protocols.where(my_module: nil).each do |protocol|
         destroy_protocol(protocol)
       end
@@ -85,8 +88,8 @@ class UserDataDeletion
       # Destroy step assets
       if step.assets.present?
         step.assets.each do |asset|
-          next unless asset.file.present?
-          paperclip_file_destroy(asset)
+          asset.file.purge
+          asset.destroy!
         end
       end
       # Destroy step
@@ -122,24 +125,5 @@ class UserDataDeletion
     end
     # Now, simply destroy all user notification relations left
     user.user_notifications.destroy_all
-  end
-
-  # Workaround for Paperclip preserve_files option, to delete files anyway;
-  # if you call #clear with a list of styles to delete,
-  # it'll call #queue_some_for_delete, which doesn't check :preserve_files.
-  def self.paperclip_file_destroy(asset)
-    if asset.class.name == 'TinyMceAsset'
-      all_styles = asset.image.styles.keys.map do |key|
-        asset.image.styles[key].name
-      end << :original
-      asset.image.clear(*all_styles)
-    else
-      all_styles = asset.file.styles.keys.map do |key|
-        asset.file.styles[key].name
-      end << :original
-      asset.file.clear(*all_styles)
-    end
-    asset.save!
-    asset.destroy!
   end
 end

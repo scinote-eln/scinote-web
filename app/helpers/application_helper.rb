@@ -6,7 +6,8 @@ module ApplicationHelper
   include InputSanitizeHelper
 
   def module_page?
-    controller_name == 'my_modules'
+    controller_name == 'my_modules' ||
+      controller_name == 'my_module_repositories'
   end
 
   def experiment_page?
@@ -80,12 +81,12 @@ module ApplicationHelper
     UserNotification.create(notification: notification, user: target_user) if target_user.assignments_notification
   end
 
-  def smart_annotation_parser(text, team = nil)
+  def smart_annotation_parser(text, team = nil, base64_encoded_imgs = false)
     # sometimes happens that the "team" param gets wrong data: "{nil, []}"
     # so we have to check if the "team" param is kind of Team object
     team = nil unless team.is_a? Team
     new_text = smart_annotation_filter_resources(text, team)
-    new_text = smart_annotation_filter_users(new_text, team)
+    new_text = smart_annotation_filter_users(new_text, team, base64_encoded_imgs)
     new_text
   end
 
@@ -102,14 +103,14 @@ module ApplicationHelper
 
   # Check if text have smart annotations of users
   # and outputs a popover with user information
-  def smart_annotation_filter_users(text, team)
+  def smart_annotation_filter_users(text, team, base64_encoded_imgs = false)
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
     new_text = text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       next unless user
 
-      popover_for_user_name(user, team)
+      popover_for_user_name(user, team, false, false, base64_encoded_imgs)
     end
     new_text
   end
@@ -118,11 +119,12 @@ module ApplicationHelper
   def popover_for_user_name(user,
                             team = nil,
                             skip_user_status = false,
-                            skip_avatar = false)
+                            skip_avatar = false,
+                            base64_encoded_imgs = false)
     user_still_in_team = user.teams.include?(team)
 
     user_description = %(<div class='col-xs-4'>
-      <img src='#{user_avatar_absolute_url(user, :thumb)}'
+      <img src='#{user_avatar_absolute_url(user, :thumb, base64_encoded_imgs)}'
        alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
       #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
@@ -148,9 +150,10 @@ module ApplicationHelper
     html = if skip_avatar
              ''
            else
-             raw("<span class=\"global-avatar-container smart-annotation\"><img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
-             "alt='avatar' class='atwho-user-img-popover'" \
-             " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'></span>")
+             raw("<span class=\"global-avatar-container smart-annotation\">" \
+                  "<img src='#{user_avatar_absolute_url(user, :icon_small, base64_encoded_imgs)}'" \
+                  "alt='avatar' class='atwho-user-img-popover'" \
+                  " ref='#{'missing-img' unless user.avatar.attached?}'></span>")
            end
 
     html =
@@ -167,18 +170,17 @@ module ApplicationHelper
   end
 
   # No more dirty hack
-  def user_avatar_absolute_url(user, style)
-    begin
-      return user.avatar_base64(style) unless missing_avatar(user, style)
-    rescue StandardError => e
-      Rails.logger.error e.message
-    end
-    url_for("/images/#{style}/missing.png")
-  end
+  def user_avatar_absolute_url(user, style, base64_encoded_imgs = false)
+    avatar_link = user.avatar_variant(style)
+    if user.avatar.attached?
+      return user.convert_variant_to_base64(avatar_link) if base64_encoded_imgs
 
-  def missing_avatar(user, style)
-    user.avatar(style) == '/images/icon_small/missing.png' ||
-      user.avatar(style) == '/images/thumb/missing.png'
+      avatar_link.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+    else
+      avatar_link
+    end
+  rescue StandardError => e
+    Rails.logger.error e.message
   end
 
   def wopi_enabled?

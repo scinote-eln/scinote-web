@@ -3,7 +3,7 @@
 
 .menu-bar {
   background-color: $color-white;
-  box-shadow: 1px 3px 6px 0 $color-alto;
+  box-shadow: $flyout-shadow;
   height: 100%;
   left: 0;
   padding-bottom: 50px;
@@ -22,9 +22,9 @@
 
     & > a,
     & > span {
+      @include font-small;
       color: $color-silver-chalice;
       display: grid;
-      font-size: $font-size-h6;
       margin-left: auto;
       margin-right: auto;
       padding: 10px 0;
@@ -70,11 +70,27 @@
       bottom: 0;
       left: 99%;
       margin-bottom: 0;
+
+      & > li > a {
+        padding: 8px 20px;
+      }
     }
 
     &.open > a {
       color: $color-emperor;
     }
+
+    .about-scinote {
+      font-size: 12px;
+
+      .core-version {
+        color: $color-silver-chalice;
+      }
+    }
+  }
+
+  #support-link {
+    color: $brand-primary;
   }
 }
 
@@ -86,5 +102,5 @@
 }
 
 .all-teams-navigation-link {
-  color: $color-white !important;
+  color: $brand-primary !important;
 }

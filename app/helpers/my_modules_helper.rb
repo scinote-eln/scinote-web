@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MyModulesHelper
   def ordered_step_of(my_module)
     my_module.protocol.steps.order(:position)
@@ -11,20 +13,20 @@ module MyModulesHelper
     view_state = step.current_view_state(current_user)
     sort = case view_state.state.dig('assets', 'sort')
            when 'old' then { created_at: :asc }
-           when 'atoz' then { file_file_name: :asc }
-           when 'ztoa' then { file_file_name: :desc }
+           when 'atoz' then { 'active_storage_blobs.filename': :asc }
+           when 'ztoa' then { 'active_storage_blobs.filename': :desc }
            else { created_at: :desc }
            end
 
-    step.assets.order(sort)
+    step.assets.joins(file_attachment: :blob).order(sort)
   end
 
-  def az_ordered_assets_index(assets, asset_id)
-    assets.sort_by(&:file_file_name).map(&:id).index(asset_id)
-  end
-
-  def ordered_result_of(my_module)
-    my_module.results.where(archived: false).order(created_at: :desc)
+  def az_ordered_assets_index(step, asset_id)
+    step.assets
+        .joins(file_attachment: :blob)
+        .order(Arel.sql('LOWER(active_storage_blobs.filename)'))
+        .pluck(:id)
+        .index(asset_id) || 0
   end
 
   def get_task_alert_color(my_module)
@@ -39,11 +41,55 @@ module MyModulesHelper
   end
 
   def is_steps_page?
-    action_name == "steps"
+    action_name == 'steps'
   end
 
   def is_results_page?
-    action_name == "results"
+    action_name == 'results'
   end
 
+  def grouped_by_prj_exp(my_modules)
+    ungrouped_tasks = my_modules.joins(experiment: :project)
+                                .select('experiments.name as experiment_name,
+                                         experiments.archived as experiment_archived,
+                                         projects.name as project_name,
+                                         projects.archived as project_archived,
+                                         my_modules.*')
+    ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
+      {
+        project_name: group[0],
+        project_archived: tasks[0]&.project_archived,
+        experiment_name: group[1],
+        experiment_archived: tasks[0]&.experiment_archived,
+        tasks: tasks
+      }
+    end
+  end
+
+  def assigned_repository_full_view_table_path(my_module, repository)
+    if repository.is_a?(RepositorySnapshot)
+      return full_view_table_my_module_repository_snapshot_path(my_module, repository)
+    end
+
+    full_view_table_my_module_repository_path(my_module, repository)
+  end
+
+  def assigned_repository_simple_view_index_path(my_module, repository)
+    return index_dt_my_module_repository_snapshot_path(my_module, repository) if repository.is_a?(RepositorySnapshot)
+
+    index_dt_my_module_repository_path(my_module, repository)
+  end
+
+  def assigned_repository_simple_view_footer_label(repository)
+    if repository.is_a?(RepositorySnapshot)
+      return t('my_modules.repository.snapshots.simple_view.snapshot_bottom_label',
+               date_time: l(repository.created_at, format: :full))
+    end
+
+    t('my_modules.repository.snapshots.simple_view.live_bottom_label')
+  end
+
+  def assigned_repository_simple_view_name_column_id(repository)
+    repository.is_a?(RepositorySnapshot) ? 2 : 3
+  end
 end

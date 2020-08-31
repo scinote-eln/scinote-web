@@ -30,7 +30,7 @@ class UserRepositoriesController < ApplicationController
   private
 
   def load_vars
-    @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_read_team?(@repository.team)
+    @repository = RepositoryBase.find_by(id: params[:repository_id])
+    render_403 if @repository.nil? || !can_read_repository?(@repository)
   end
 end

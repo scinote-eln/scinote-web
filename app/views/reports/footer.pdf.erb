@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <%= wicked_pdf_stylesheet_link_tag "application" %>
+  <%= wicked_pdf_stylesheet_link_tag "reports_pdf" %>
+  <%= bootstrap_cdn_link_tag %>
+  <%= font_awesome_cdn_link_tag %>
+</head>
+<body class="print-footer-body" style="height: 50px">
+  <div class="print-footer">
+    <p>
+      <%= t('projects.reports.new.generate_PDF.generated_on', timestamp: current_time) %>
+    </p>
+  </div>
+</body>
+</html>

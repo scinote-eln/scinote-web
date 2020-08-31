@@ -27,7 +27,8 @@ describe Repository, type: :model do
     it { should have_many :repository_rows }
     it { should have_many :repository_table_states }
     it { should have_many :report_elements }
-    it { should have_many(:repository_list_items).dependent(:destroy) }
+    it { should have_many(:team_repositories).dependent(:destroy) }
+    it { should have_many(:teams_shared_with) }
   end
 
   describe 'Validations' do
@@ -45,6 +46,27 @@ describe Repository, type: :model do
     end
   end
 
+  describe 'Scopes' do
+    describe '#active and #archived' do
+      before do
+        create :repository
+        create :repository, :archived
+      end
+
+      it 'returns only active rows' do
+        expect(Repository.active.count).to be_eql 1
+      end
+
+      it 'returns only archived rows' do
+        expect(Repository.archived.count).to be_eql 1
+      end
+
+      it 'returns all rows' do
+        expect(Repository.count).to be_eql 2
+      end
+    end
+  end
+
   describe '.copy' do
     let(:created_by) { create :user }
     let(:repository) { create :repository }
@@ -59,6 +81,44 @@ describe Repository, type: :model do
     it 'adds activity in DB' do
       expect { repository.copy(created_by, 'name for copied repo') }
         .to(change { Activity.count })
+    end
+  end
+
+  describe '.within_global_limits?' do
+    context 'when have an archived repository' do
+      before do
+        Rails.configuration.x.global_repositories_limit = 2
+        create :repository
+        create :repository, :archived
+      end
+
+      after do
+        Rails.configuration.x.global_repositories_limit = 0
+      end
+
+      it 'includes archived repositories in condition and returns false' do
+        expect(described_class.within_global_limits?).to be_falsey
+      end
+    end
+  end
+
+  describe '.within_team_limits?' do
+    context 'when have an archived repository' do
+      before do
+        Rails.configuration.x.team_repositories_limit = 2
+        create :repository, team: team
+        create :repository, :archived, team: team
+      end
+
+      after do
+        Rails.configuration.x.team_repositories_limit = 0
+      end
+
+      let(:team) { create :team }
+
+      it 'includes archived repositories in condition and returns false' do
+        expect(described_class.within_team_limits?(team)).to be_falsey
+      end
     end
   end
 end

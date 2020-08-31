@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::ResultsController', type: :request do
@@ -47,10 +46,10 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
           attributes: {
             name: Faker::Name.unique.name
           } },
-        included:  [
+        included: [
           { type: 'result_texts',
             attributes: {
-              text: Faker::Lorem.sentence(25)
+              text: Faker::Lorem.sentence(word_count: 25)
             } }
         ] }
 
@@ -267,6 +266,69 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
     end
+
+    context 'when resultType is File' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'results',
+            attributes: {
+              name: 'my result'
+            }
+          },
+          included: [{ type: 'result_files', attributes: attributes }]
+        }
+      end
+
+      let(:action) do
+        post(api_v1_team_project_experiment_task_results_path(
+          team_id: @teams.first.id,
+          project_id: @valid_project,
+          experiment_id: @valid_experiment,
+          task_id: @valid_task
+        ), params: request_body, headers: @valid_headers)
+      end
+
+      context 'when sending base64' do
+        let(:filedata_base64) do
+          'iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
+          'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
+          'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg=='
+        end
+        let(:attributes) do
+          {
+            file_data: filedata_base64,
+            file_name: 'file.png',
+            file_type: 'image/png'
+          }
+        end
+        let(:request_body) { super().to_json }
+
+        it 'creates new asset' do
+          expect { action }.to change { ResultAsset.count }.by(1)
+        end
+
+        it 'returns status 201' do
+          action
+
+          expect(response).to have_http_status 201
+        end
+      end
+
+      context 'when sending multipart form' do
+        let(:attributes) { { file: fixture_file_upload('files/test.jpg', 'image/jpg') } }
+
+        it 'creates new asset' do
+          expect { action }.to change { ResultAsset.count }.by(1)
+        end
+
+        it 'returns status 201' do
+          action
+
+          expect(response).to have_http_status 201
+        end
+      end
+    end
   end
 
   describe 'GET result, #show' do
@@ -329,5 +391,147 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
+
+  describe 'PUT result, #update' do
+    context 'when resultType is file' do
+      let(:result_file) { @valid_task.results.last }
+      let(:file) { fixture_file_upload('files/test.jpg', 'image/jpg') }
+      let(:request_body) do
+        {
+          data: {
+            type: 'results',
+            attributes: {
+              name: 'my result'
+            }
+          },
+          included: [
+            { type: 'result_files',
+              attributes: {
+                file: file
+              } }
+          ]
+        }
+      end
+      let(:action) do
+        put(api_v1_team_project_experiment_task_result_path(
+          team_id: @teams.first.id,
+          project_id: @valid_project,
+          experiment_id: @valid_experiment,
+          task_id: @valid_task,
+          id: result_file.id
+        ), params: request_body, headers: @valid_headers)
+      end
+
+      context 'when has attributes for update' do
+        it 'updates tasks name' do
+          action
+
+          expect(result_file.reload.name).to eq('my result')
+        end
+
+        it 'returns status 200' do
+          action
+
+          expect(response).to have_http_status 200
+        end
+      end
+
+      context 'when has new image for update' do
+        let(:action) do
+          put(api_v1_team_project_experiment_task_result_path(
+            team_id: @teams.first.id,
+            project_id: @valid_project,
+            experiment_id: @valid_experiment,
+            task_id: @valid_task,
+            id: result_file.id
+          ), params: request_body, headers: @valid_headers)
+        end
+
+        let(:request_body) do
+          {
+            data: { type: 'results', attributes: { name: result_file.reload.name } },
+            included: [{ type: 'result_files', attributes: attributes }]
+          }
+        end
+
+        context 'when sending base64' do
+          let(:filedata_base64) do
+            'iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
+          'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
+          'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg=='
+          end
+          let(:attributes) do
+            {
+              file_data: filedata_base64,
+              file_name: 'file.png',
+              file_type: 'image/png'
+            }
+          end
+          let(:request_body) { super().to_json }
+
+          it 'returns status 200' do
+            action
+
+            expect(response).to have_http_status 200
+          end
+        end
+
+        context 'when sending multipart form' do
+          let(:attributes) { { file: fixture_file_upload('files/apple.jpg', 'image/jpg') } }
+
+          it 'returns status 200' do
+            action
+
+            expect(response).to have_http_status 200
+          end
+        end
+      end
+
+      context 'when there is nothing to update' do
+        let(:request_body_with_same_name) do
+          {
+            data: {
+              type: 'results',
+              attributes: {
+                name: result_file.reload.name
+              }
+            }
+          }
+        end
+
+        it 'returns 204' do
+          put(api_v1_team_project_experiment_task_result_path(
+            team_id: @teams.first.id,
+            project_id: @valid_project,
+            experiment_id: @valid_experiment,
+            task_id: @valid_task,
+            id: result_file.id
+          ), params: request_body_with_same_name.to_json, headers: @valid_headers)
+
+          expect(response).to have_http_status 204
+        end
+      end
+    end
+
+    # ### Refactor without instance variables
+    #
+    # context 'when resultType is text' do
+    #   let(:result_text) { @valid_task.results.first }
+    #   let(:action) do
+    #     put(api_v1_team_project_experiment_task_result_path(
+    #           team_id: @teams.first.id,
+    #           project_id: @valid_project,
+    #           experiment_id: @valid_experiment,
+    #           task_id: @valid_task,
+    #           id: result_text.id
+    #         ), params: @valid_text_hash_body.to_json, headers: @valid_headers)
+    #   end
+    #
+    #   it 'returns status 500' do
+    #     action
+    #
+    #     expect(response).to have_http_status 500
+    #   end
+    # end
+  end
 end
-# rubocop:enable Metrics/LineLength

@@ -7,12 +7,12 @@ module GlobalActivitiesHelper
 
   def generate_activity_content(activity, no_links = false)
     parameters = {}
-    activity.values[:message_items].each do |key, value|
+    activity.message_items.each do |key, value|
       parameters[key] =
         if value.is_a? String
           value
-        elsif value[:type] == 'Time' # use saved date for printing
-          l(Time.at(value[:value]), format: :full_date)
+        elsif value['type'] == 'Time' # use saved date for printing
+          l(Time.at(value['value']), format: :full)
         else
           no_links ? generate_name(value) : generate_link(value, activity)
         end
@@ -21,15 +21,15 @@ module GlobalActivitiesHelper
       I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys),
       team: activity.team
     )
-  rescue StandardError => ex
-    Rails.logger.error(ex.message)
-    Rails.logger.error(ex.backtrace.join("\n"))
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
     I18n.t('global_activities.index.content_generation_error', activity_id: activity.id)
   end
 
   def generate_link(message_item, activity)
-    obj = message_item[:type].constantize.find_by_id(message_item[:id])
-    return message_item[:value] unless obj
+    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    return message_item['value'] unless obj
 
     current_value = generate_name(message_item)
     team = activity.team
@@ -42,17 +42,17 @@ module GlobalActivitiesHelper
       # Not link for now
       return current_value
     when Team
-      path = projects_path
+      path = projects_path(team: obj.id)
     when Repository
-      path = repository_path(obj)
+      path = repository_path(obj, team: obj.team.id)
     when RepositoryRow
       return current_value unless obj.repository
 
-      path = repository_path(obj.repository)
+      path = repository_path(obj.repository, team: obj.repository.team.id)
     when RepositoryColumn
       return current_value unless obj.repository
 
-      path = repository_path(obj.repository)
+      path = repository_path(obj.repository, team: obj.repository.team.id)
     when Project
       path = obj.archived? ? projects_path : project_path(obj)
     when Experiment
@@ -65,19 +65,15 @@ module GlobalActivitiesHelper
       path = if obj.archived?
                module_archive_experiment_path(obj.experiment)
              else
-               path = if %w(assign_repository_record unassign_repository_record).include? activity.type_of
-                        repository_my_module_path(obj, activity.values['message_items']['repository']['id'])
-                      else
-                        protocols_my_module_path(obj)
-                      end
+               protocols_my_module_path(obj)
              end
     when Protocol
       if obj.in_repository_public?
-        path = protocols_path(type: :public)
+        path = protocols_path(type: :public, team: obj.team.id)
       elsif obj.in_repository_private?
-        path = protocols_path(type: :private)
+        path = protocols_path(type: :private, team: obj.team.id)
       elsif obj.in_repository_archived?
-        path = protocols_path(type: :archive)
+        path = protocols_path(type: :archive, team: obj.team.id)
       elsif obj.my_module.navigable?
         path = protocols_my_module_path(obj.my_module)
       else
@@ -90,7 +86,7 @@ module GlobalActivitiesHelper
     when Step
       return current_value
     when Report
-      path = reports_path
+      path = reports_path(team: obj.team.id)
     else
       return current_value
     end
@@ -98,10 +94,10 @@ module GlobalActivitiesHelper
   end
 
   def generate_name(message_item)
-    obj = message_item[:type].constantize.find_by_id(message_item[:id])
-    return message_item[:value] unless obj
+    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    return message_item['value'] unless obj
 
-    value = obj.public_send(message_item[:value_for] || 'name')
+    value = obj.public_send(message_item['value_for'] || 'name')
     value = I18n.t('global_activities.index.no_name') if value.blank?
 
     value

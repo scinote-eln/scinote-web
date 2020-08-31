@@ -9,6 +9,7 @@ FactoryBot.define do
       repository_text_value.repository_cell ||= build(:repository_cell,
                                                       :text_value,
                                                       repository_text_value: repository_text_value)
+      repository_text_value.repository_cell.value = repository_text_value
     end
   end
 end

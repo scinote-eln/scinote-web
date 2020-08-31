@@ -1,15 +1,15 @@
 @import "constants";
 @import "mixins";
 
-
 .inline-editing-container {
-  display: flex;
-  flex-grow: 1;
+  line-height: 32px;
   position: relative;
+  width: 100%;
 
   .button-container {
-    height: 44px;
-    line-height: 44px;
+    font-size: 16px;
+    height: 32px;
+    line-height: 32px;
     overflow: hidden;
     position: absolute;
     right: 0;
@@ -20,6 +20,7 @@
       color: $color-silver;
       cursor: pointer;
       display: inline-block;
+      line-height: 32px;
       position: absolute;
       text-align: center;
       width: 36px;
@@ -34,21 +35,22 @@
     bottom: 3px;
     color: $brand-danger;
     display: none;
-    font-size: $font-size-small;
-    left: 5px;
-    line-height: 12px;
+    font-size: 11px;
+    line-height: 11px;
     position: absolute;
 
   }
 
-  &[data-error="true"] {
+  &.error {
 
     .error-block {
       display: block;
     }
 
-    input {
-      padding-bottom: 16px;
+    .input-field {
+      font-size: 16px;
+      line-height: 20px;
+      padding-bottom: 10px;
       padding-top: 0;
     }
   }
@@ -56,6 +58,7 @@
   &:hover input,
   &:hover .view-mode {
     border: 1px solid $color-silver;
+    border-radius: 3px;
 
     &:disabled {
       border: 1px solid $color-gainsboro;
@@ -65,23 +68,38 @@
   .view-mode {
     border: 1px solid transparent;
     cursor: pointer;
-    flex-wrap: nowrap;
     line-height: 26px;
+    margin-left: -5px;
+    min-height: 30px;
     overflow: hidden;
-    padding: 8px 5px;
+    padding: 2px 4px;
     padding-right: 36px;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    width: calc(100% - 36px);
+    width: calc(100% - 32px);
+
+    &:empty:not(:focus):before {
+      color: $color-silver-chalice;
+      content: attr(data-placeholder);
+      font-weight: normal;
+    }
   }
 
   input {
     border: 1px solid $color-silver;
     border-radius: $border-radius-small;
     cursor: pointer;
-    line-height: 20px;
-    padding: 8px 5px;
+    display: block;
+    line-height: 26px;
+    margin-left: -5px;
+    padding: 2px 4px;
     padding-right: 36px;
-    width: calc(100% - 36px);
+    width: calc(100% - 32px);
+
+    &::placeholder {
+      color: $color-silver-chalice;
+      font-weight: normal;
+    }
 
     &:focus {
       outline: 0;
@@ -96,19 +114,7 @@
 
       + .button-container {
         display: none;
-
       }
-    }
-  }
-}
-
-.nav-name.editable {
-  margin: 0;
-
-  .inline-editing-container {
-
-    input {
-      line-height: 26px;
     }
   }
 }

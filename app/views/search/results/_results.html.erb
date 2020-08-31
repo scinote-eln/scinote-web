@@ -5,7 +5,7 @@
     <% elsif result.is_table %>
       <span class="fas fa-table"></span>
     <% else %>
-      <% if result.asset.is_image? %>
+      <% if result.asset.image? %>
         <span class="fas fa-paperclip"></span>
       <% else %>
         <span class="fas fa-paperclip"></span>
@@ -17,7 +17,10 @@
   <% if result.is_text && result.result_text.text.present? && !result.result_text.text.empty? %>
     <blockquote class="search-asset-text-data">
       <p>
-        <%= highlight(sanitize_input(result.result_text.text), search_query.strip.split(/\s+/)) %>
+        <%= highlight custom_auto_link(result.result_text.tinymce_render(:text),
+                             simple_format: false,
+                             tags: %w(img),
+                             team: current_team), search_query.strip.split(/\s+/) %>
       </p>
     </blockquote>
   <% end %>

@@ -181,11 +181,17 @@
   }
 
   function initNewReportModal() {
+    var newReport = parseInt(sessionStorage.getItem('scinote-dashboard-new-report'), 10);
     $('#new-report-btn').on('click', function() {
       $('#new-report-modal').modal('show');
       initSelectPicker();
       initRedirectToNewReportPage();
     });
+
+    if (Math.floor(Date.now() / 1000) - newReport < 15) {
+      $('#new-report-btn').click();
+      sessionStorage.removeItem('scinote-dashboard-new-report');
+    }
   }
 
   initDatatable();

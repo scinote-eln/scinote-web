@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
 @import "constants";
 @import "mixins";
 
@@ -17,9 +20,90 @@
   }
 }
 
+.task-assigned-users .global-avatar-container {
+  margin: 2px;
+
+  img {
+    vertical-align: baseline;
+  }
+}
+
 .new-avatar-preview-container {
   height: 200px;
   margin-bottom: 45px;
   position: relative;
   width: 100%;
+}
+
+.modal-user-avatar {
+  .modal-dialog {
+    width: 350px;
+  }
+
+  .option-text {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .avatar-collection {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    height: 215px;
+    padding: 5px 35px 0;
+    position: relative;
+
+    .avatar {
+      border-radius: 5px;
+      cursor: pointer;
+      height: 100px;
+      margin-bottom: 5px;
+      transition: $md-transaction;
+      width: 80px;
+
+      &:hover {
+        box-shadow: $md-shadow;
+      }
+    }
+
+    img {
+      height: 60px;
+      margin: 20px 10px;
+      user-select: none;
+      width: 60px;
+    }
+  }
+
+  .upload-block {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    .current-avatar {
+      height: 150px;
+      margin: 25px 0 45px;
+      width: 150px;
+
+      img {
+        border-radius: 50%;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .avatar-preview-container {
+      height: 150px;
+      margin: 20px 0 50px;
+      position: relative;
+      width: 250px;
+    }
+
+    .upload-photo {
+      margin-bottom: 10px;
+      width: 150px;
+    }
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
 }

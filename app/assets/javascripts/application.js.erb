@@ -26,20 +26,30 @@
 //= require nested_form_fields
 //= require highlight.pack
 //= require tinymce-jquery
+//= require_tree ./tinymce/plugins
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
 //= require bootstrap-select
-//= require_directory ./sitewide
+//= require_directory ./repository_columns/columns_initializers
 //= require datatables
+//= require clndr.min
 //= require ajax-bootstrap-select.min
 //= require underscore
 //= require i18n.js
 //= require i18n/translations
 //= require users/settings/teams/invite_users_modal
-//= require select2.min
+//= require repository_columns/index
 //= require perfect-scrollbar.min
-//= require select2_customization
 //= require shared/inline_editing
+//= require activestorage
+//= require global_activities/side_pane
+//= require protocols/header
+//= require marvinjslauncher
+//= require_tree ./repositories/renderers
+//= require_directory ./repositories/validators
+//= require_directory ./dashboard
+//= require_directory ./sitewide
+//= require sidebar
 //= require turbolinks
 
 
@@ -185,15 +195,6 @@ var HelperModule = (function(){
 
   var helpers = {};
 
-  helpers.treeLinkTruncation = function() {
-    $('.tree-link a').each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
-    $(".tree-link span").each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
-  }
-
   helpers.hideFlashMsg =  function() {
     var flash = $('.alert');
     if (flash.length > 0) {
@@ -220,31 +221,28 @@ var HelperModule = (function(){
       fasSign = ' fa-check-circle ';
     } else if (type === 'danger') {
       alertType = ' alert-danger ';
-      fasSign = ' fa-exclamation-circle ';
+      fasSign = ' fa-exclamation-triangle ';
     } else if (type === 'info') {
       alertType = ' alert-info ';
-      fasSign = ' fa-exclamation-circle ';
+      fasSign = ' fa-info-circle ';
     } else if (type === 'warning') {
       alertType = ' alert-warning ';
-      fasSign = ' fa-exclamation-circle ';
+      fasSign = ' fa-exclamation-triangle ';
     }
     var htmlSnippet = '<div id="alert-flash" class="alert alert' + alertType +
                       'alert-dismissable alert-floating">' +
-                        '<div>' +
+                        '<span class="fas' + fasSign + '"></span>&nbsp;' +
+                        '<span class="message">' + message + '</span>' +
                         '<button type="button" class="close" ' +
-                        'data-dismiss="alert" aria-label="Close">' +
+                          'data-dismiss="alert" aria-label="Close">' +
                           '<span aria-hidden="true">×</span></button>' +
-                            '<span class="fas' + fasSign + '"></span>&nbsp;' +
-                            '<span>' + message + '</span>' +
-                          '</div>' +
-                        '</div>';
+                      '</div>';
     $('#notifications').html(htmlSnippet);
     helpers.hideFlashMsg();
     helpers.dismissAlert();
   }
 
   $(document).on('turbolinks:load', function() {
-    helpers.treeLinkTruncation();
     helpers.hideFlashMsg();
     helpers.dismissAlert();
   });
@@ -276,3 +274,8 @@ var HelperModule = (function(){
     tinymce.remove();
   });
 })();
+
+// Check that loaded page, not turbolinks preview
+function notTurbolinksPreview() {
+  return !document.documentElement.hasAttribute("data-turbolinks-preview");
+}

@@ -8,40 +8,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def avatar
     user = User.find_by_id(params[:id]) || current_user
-    style = params[:style] || "icon_small"
-    # TODO: Maybe avatar should be an Asset, so it's methods could be used,
-    # e.g. presigned_url in this case
-    redirect_to user.avatar.url(style.to_sym), status: 307
-  end
-
-  # Validates asset and then generates S3 upload posts, because
-  # otherwise untracked files could be uploaded to S3
-  def signature
-    respond_to do |format|
-      format.json {
-
-        # Changed avatar values are only used for pre-generating S3 key
-        # and user object is not persisted with this values.
-        current_user.empty_avatar avatar_params[:file].original_filename,
-                                  avatar_params[:file].size
-
-        validation_asset = Asset.new(avatar_params)
-        if current_user.valid? && validation_asset.valid?
-          render json: {
-            posts: generate_upload_posts
-          }
-        else
-          if validation_asset.errors[:file].any?
-            # Add file content error
-            current_user.errors[:avatar] << validation_asset.errors[:file].first
-          end
-          render json: {
-            status: 'error',
-            errors: current_user.errors
-          }, status: :bad_request
-        end
-      }
-    end
+    style = params[:style] || :icon_small
+    redirect_to user.avatar_url(style)
   end
 
   def update_resource(resource, params)
@@ -50,12 +18,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if params.include? :change_password
       # Special handling if changing password
       params.delete(:change_password)
-      if (
-        resource.valid_password?(params[:current_password]) and
-        params.include? :password and
-        params.include? :password_confirmation and
-        params[:password].blank?
-      ) then
+      if resource.valid_password?(params[:current_password]) &&
+         params.include?(:password) &&
+         params.include?(:password_confirmation) &&
+         params[:password].blank?
         # If new password is blank and we're in process of changing
         # password, add error to the resource and return false
         resource.errors.add(:password, :blank)
@@ -65,16 +31,27 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
     elsif params.include? :change_avatar
       params.delete(:change_avatar)
-      unless params.include? :avatar
+      if !params.include?(:avatar) || (params[:avatar].length > Constants::AVATAR_MAX_SIZE_MB.megabytes * 2)
         resource.errors.add(:avatar, :blank)
         false
       else
+        temp_file = Tempfile.new('avatar', Rails.root.join('tmp'))
+        begin
+          check_extension = params[:avatar].split(';')[0].split('/')[1]
+          temp_file.binmode
+          temp_file.write(Base64.decode64(params[:avatar].split(',')[1]))
+          temp_file.rewind
+          resource.avatar.attach(io: temp_file, filename: "avatar.#{check_extension}")
+        ensure
+          temp_file.close
+          temp_file.unlink
+        end
+        params.delete(:avatar)
         resource.update_without_password(params)
       end
-    elsif params.include? :email or params.include? :password
+    elsif params.include?(:email) || params.include?(:password)
       # For changing email or password, validate current_password
       resource.update_with_password(params)
-
     else
       # For changing some attributes, no current_password validation
       # is required
@@ -95,7 +72,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       yield resource if block_given?
       if resource_updated
         # Set "needs confirmation" flash if neccesary
-        if is_flashing_format?
+        if is_flashing_format? || account_update_params['change_avatar']
           flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
             :update_needs_confirmation : :updated
           set_flash_message :notice, flash_key
@@ -205,6 +182,31 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def two_factor_enable
+    if current_user.valid_otp?(params[:submit_code])
+      recovery_codes = current_user.enable_2fa!
+      render json: { recovery_codes: recovery_codes }
+    else
+      render json: { error: t('users.registrations.edit.2fa_errors.wrong_submit_code') }, status: :unprocessable_entity
+    end
+  end
+
+  def two_factor_disable
+    if current_user.valid_password?(params[:password])
+      current_user.disable_2fa!
+      redirect_to edit_user_registration_path
+    else
+      render json: { error: t('users.registrations.edit.2fa_errors.wrong_password') }, status: :forbidden
+    end
+  end
+
+  def two_factor_qr_code
+    current_user.assign_2fa_token!
+    qr_code_url = ROTP::TOTP.new(current_user.otp_secret, issuer: 'SciNote').provisioning_uri(current_user.email)
+    qr_code = RQRCode::QRCode.new(qr_code_url)
+    render json: { qr_code: qr_code.as_svg(module_size: 4) }
+  end
+
   protected
 
   # Called upon creating User (before .save). Permits parameters and extracts
@@ -235,7 +237,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
       :full_name,
       :initials,
       :avatar,
-      :avatar_file_name,
       :email,
       :password,
       :password_confirmation,
@@ -249,45 +250,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     params.permit(
       :file
     )
-  end
-
-  # Generates posts for uploading files (many sizes of same file)
-  # to S3 server
-  def generate_upload_posts
-    posts = []
-    file_size = current_user.avatar_file_size
-    content_type = current_user.avatar_content_type
-    s3_post = S3_BUCKET.presigned_post(
-      key: current_user.avatar.path[1..-1],
-      success_action_status: '201',
-      acl: 'private',
-      storage_class: "STANDARD",
-      content_length_range: file_size..file_size,
-      content_type: content_type
-    )
-    posts.push({
-      url: s3_post.url,
-      fields: s3_post.fields
-    })
-
-    current_user.avatar.options[:styles].each do |style, option|
-      s3_post = S3_BUCKET.presigned_post(
-        key: current_user.avatar.path(style)[1..-1],
-        success_action_status: '201',
-        acl: 'public-read',
-        storage_class: "REDUCED_REDUNDANCY",
-        content_length_range: 1..Rails.configuration.x.file_max_size_mb.megabytes,
-        content_type: content_type
-      )
-      posts.push({
-        url: s3_post.url,
-        fields: s3_post.fields,
-        style_option: option,
-        mime_type: content_type
-      })
-    end
-
-    posts
   end
 
   private

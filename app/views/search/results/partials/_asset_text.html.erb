@@ -1,13 +1,16 @@
-<% query ||= nil %>
-<% asset_read_allowed = false %>
-<% text = query.present? ? highlight(asset.file_file_name, query.strip.split(/\s+/)) : asset.file_file_name %>
+<% 
+  query ||= nil
+  asset_read_allowed = false
+  file_name = asset.blob.metadata["asset_type"] ? asset.blob.metadata["name"] : asset.file_name
+  text = query.present? ? highlight(file_name, query.strip.split(/\s+/)) : file_name
+%>
 
 <% if asset.step %>
   <% protocol = asset.step.protocol %>
   <% if can_read_protocol_in_module?(protocol) ||
         can_read_protocol_in_repository?(protocol) %>
     <% asset_read_allowed = true %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
+    <a href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>">
       <%= text %>
     </a>
   <% else %>
@@ -16,16 +19,16 @@
 <% elsif asset.result %>
   <% if can_read_experiment?(asset.result.my_module.experiment) %>
     <% asset_read_allowed = true %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
+    <a href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>">
       <%= text %>
     </a>
   <% else %>
     <%= text %>
   <% end %>
 <% elsif asset.repository_asset_value %>
-  <% if can_read_team?(asset.repository_asset_value.repository_cell.repository_row.repository.team) %>
+  <% if can_read_repository?(asset.repository_asset_value.repository_cell.repository_row.repository) %>
     <% asset_read_allowed = true %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
+    <a href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>">
       <%= text %>
     </a>
   <% else %>

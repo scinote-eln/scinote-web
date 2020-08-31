@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ClientApi::UserTeamService do
@@ -7,25 +9,25 @@ describe ClientApi::UserTeamService do
   let(:user_team) { create :user_team, :admin, user: user_one, team: team_one }
 
   it 'should raise ClientApi::CustomUserTeamError if user is not assigned' do
-    expect {
+    expect do
       ClientApi::UserTeamService.new(
         team_id: team_one.id,
         user_team_id: user_team.id
       )
-    }.to raise_error(ClientApi::CustomUserTeamError)
+    end.to raise_error(ClientApi::CustomUserTeamError)
   end
 
   it 'should raise ClientApi::CustomUserTeamError if team is not assigned' do
-    expect {
+    expect do
       ClientApi::UserTeamService.new(user: user_one, user_team_id: user_team.id)
-    }.to raise_error(ClientApi::CustomUserTeamError)
+    end.to raise_error(ClientApi::CustomUserTeamError)
   end
 
   it 'should raise ClientApi::CustomUserTeamError if ' \
      'user_team is not assigned' do
-    expect {
+    expect do
       ClientApi::UserTeamService.new(user: user_one, team_id: team_one.id)
-    }.to raise_error(ClientApi::CustomUserTeamError)
+    end.to raise_error(ClientApi::CustomUserTeamError)
   end
 
   describe '#destroy_user_team_and_assign_new_team_owner!' do
@@ -36,9 +38,9 @@ describe ClientApi::UserTeamService do
         user_team_id: user_team.id,
         user: user_one
       )
-      expect {
+      expect do
         ut_service.destroy_user_team_and_assign_new_team_owner!
-      }.to raise_error(ClientApi::CustomUserTeamError)
+      end.to raise_error(ClientApi::CustomUserTeamError)
     end
 
     it 'should destroy the user_team relation' do
@@ -73,9 +75,9 @@ describe ClientApi::UserTeamService do
         team_id: team_one.id,
         user_team_id: user_team.id
       )
-      expect {
+      expect do
         ut_service.update_role!
-      }.to raise_error(ClientApi::CustomUserTeamError)
+      end.to raise_error(ClientApi::CustomUserTeamError)
     end
 
     it 'should update user role' do
@@ -101,9 +103,9 @@ describe ClientApi::UserTeamService do
         user_team_id: user_team.id,
         role: 1
       )
-      expect {
+      expect do
         ut_service.update_role!
-      }.to raise_error(ClientApi::CustomUserTeamError)
+      end.to raise_error(ClientApi::CustomUserTeamError)
     end
   end
 

@@ -2,76 +2,64 @@ class RepositoryRowsController < ApplicationController
   include InputSanitizeHelper
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
+  include MyModulesHelper
 
-  before_action :load_info_modal_vars, only: :show
-  before_action :load_vars, only: %i(edit update)
-  before_action :load_repository,
-                only: %i(create
-                         delete_records
-                         index
-                         copy_records
-                         available_rows)
+  before_action :load_repository, except: :show
+  before_action :load_repository_row, only: %i(update assigned_task_list)
+  before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
+  before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions,
-                only: %i(edit update delete_records copy_records)
+  before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
+  before_action :check_manage_permissions, only: %i(update copy_records)
 
   def index
     @draw = params[:draw].to_i
     per_page = params[:length] == '-1' ? 100 : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
-    records = RepositoryDatatableService.new(@repository,
-                                             params,
-                                             current_user)
-    @assigned_rows = records.assigned_rows
-    @repository_row_count = records.repository_rows.length
-    @columns_mappings = records.mappings
-    @repository_rows = records.repository_rows
-                              .page(page)
-                              .per(per_page)
-                              .preload(
-                                :repository_columns,
-                                :created_by,
-                                repository_cells: :value
-                              )
+    datatable_service = RepositoryDatatableService.new(@repository, params, current_user)
+
+    @all_rows_count = datatable_service.all_count
+    @columns_mappings = datatable_service.mappings
+    @repository_rows = datatable_service.repository_rows
+                                        .preload(:repository_columns,
+                                                 :created_by,
+                                                 repository_cells: @repository.cell_preload_includes)
+                                        .page(page)
+                                        .per(per_page)
+
+    @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
   end
 
   def create
-    record = RepositoryRow.new(repository: @repository,
-                               created_by: current_user,
-                               last_modified_by: current_user)
-    errors = { default_fields: [],
-               repository_cells: [] }
+    service = RepositoryRows::CreateRepositoryRowService
+              .call(repository: @repository, user: current_user, params: update_params)
 
-    record.transaction do
-      record.name = record_params[:repository_row_name] unless record_params[:repository_row_name].blank?
-      errors[:default_fields] = record.errors.messages unless record.save
-      if cell_params
-        cell_params.each do |key, value|
-          next if create_cell_value(record, key, value, errors).nil?
-        end
+    if service.succeed?
+      repository_row = service.repository_row
+      log_activity(:create_item_inventory, repository_row)
+      repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
+        record_annotation_notification(repository_row, repository_cell)
       end
-      raise ActiveRecord::Rollback if errors[:repository_cells].any?
-    end
 
-    respond_to do |format|
-      format.json do
-        if errors[:default_fields].empty? && errors[:repository_cells].empty?
-          log_activity(:create_item_inventory, record)
-
-          render json: { id: record.id,
-                         flash: t('repositories.create.success_flash',
-                                  record: escape_input(record.name),
-                         repository: escape_input(@repository.name)) },
-                 status: :ok
-        else
-          render json: errors,
-          status: :bad_request
-        end
-      end
+      render json: { id: service.repository_row.id, flash: t('repositories.create.success_flash',
+                                                             record: escape_input(repository_row.name),
+                                                             repository: escape_input(@repository.name)) },
+             status: :ok
+    else
+      render json: service.errors, status: :bad_request
     end
   end
 
   def show
+    @repository_row = RepositoryRow.find_by(id: params[:id])
+    return render_404 unless @repository_row
+    return render_404 unless @repository_row.repository_id == params[:repository_id].to_i
+    return render_403 unless can_read_repository?(@repository_row.repository)
+
+    @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+    @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+    @private_modules = @assigned_modules - @viewable_modules
+
     respond_to do |format|
       format.json do
         render json: {
@@ -83,189 +71,28 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
-  def edit
-    json = {
-      repository_row: {
-        name: escape_input(@record.name),
-        repository_cells: {},
-        repository_column_items: fetch_columns_list_items
-      }
-    }
-
-    # Add custom cells ids as key (easier lookup on js side)
-    @record.repository_cells.each do |cell|
-      if cell.value_type == 'RepositoryAssetValue'
-        cell_value = cell.value.asset
-      else
-        cell_value = escape_input(cell.value.data)
-      end
-
-      json[:repository_row][:repository_cells][cell.repository_column_id] = {
-        repository_cell_id: cell.id,
-        cell_column_id: cell.repository_column.id, # needed for mappings
-        value: cell_value,
-        type: cell.value_type,
-        list_items: fetch_list_items(cell)
-      }
-    end
-
-    respond_to do |format|
-      format.html
-      format.json { render json: json }
-    end
-  end
-
   def update
-    errors = {
-      default_fields: [],
-      repository_cells: []
-    }
+    row_update = RepositoryRows::UpdateRepositoryRowService
+                 .call(repository_row: @repository_row, user: current_user, params: update_params)
 
-    @record.transaction do
-      @record.name = record_params[:repository_row_name].blank? ? nil : record_params[:repository_row_name]
-      errors[:default_fields] = @record.errors.messages unless @record.save
-      if cell_params
-        cell_params.each do |key, value|
-          existing = @record.repository_cells.detect do |c|
-            c.repository_column_id == key.to_i
-          end
-          if existing
-            # Cell exists and new value present, so update value
-            if existing.value_type == 'RepositoryListValue'
-              item = RepositoryListItem.where(
-                repository_column: existing.repository_column
-              ).find(value) unless value == '-1'
-              if item
-                existing.value.update_attribute(
-                  :repository_list_item_id, item.id
-                )
-              else
-                existing.delete
-              end
-            elsif existing.value_type == 'RepositoryAssetValue'
-              existing.value.destroy && next if remove_file_columns_params.include?(key)
-              if existing.value.asset.update(file: value)
-                existing.value.asset.created_by = current_user
-                existing.value.asset.last_modified_by = current_user
-                existing.value.asset.post_process_file(current_team)
-              else
-                errors[:repository_cells] << {
-                  "#{existing.repository_column_id}": { data: existing.value.asset.errors.messages[:file].first }
-                }
-              end
-            else
-              existing.value.destroy && next if value == ''
-              existing.value.data = value
-              if existing.value.save
-                record_annotation_notification(@record, existing)
-              else
-                errors[:repository_cells] << {
-                  "#{existing.repository_column_id}":
-                  existing.value.errors.messages
-                }
-              end
-            end
-          else
-            next if value == ''
-            # Looks like it is a new cell, so we need to create new value, cell
-            # will be created automatically
-            next if create_cell_value(@record, key, value, errors).nil?
-          end
-        end
-      else
-        @record.repository_cells.each { |c| c.value.destroy }
-      end
-      raise ActiveRecord::Rollback if errors[:repository_cells].any?
-    end
-
-    respond_to do |format|
-      format.json do
-        if errors[:default_fields].empty? && errors[:repository_cells].empty?
-          # Row sucessfully updated, so sending response to client
-          log_activity(:edit_item_inventory, @record)
-
-          render json: {
-            id: @record.id,
-            flash: t(
-              'repositories.update.success_flash',
-              record: escape_input(@record.name),
-              repository: escape_input(@repository.name)
-            )
-          },
-          status: :ok
-        else
-          # Errors
-          render json: errors,
-          status: :bad_request
+    if row_update.succeed?
+      if row_update.record_updated
+        log_activity(:edit_item_inventory, @repository_row)
+        @repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
+          record_annotation_notification(@repository_row, repository_cell)
         end
       end
-    end
-  end
 
-  def create_cell_value(record, key, value, errors)
-    column = @repository.repository_columns.detect do |c|
-      c.id == key.to_i
-    end
-
-    save_successful = false
-    if column.data_type == 'RepositoryListValue'
-      return if value == '-1'
-      # check if item exists else revert the transaction
-      list_item = RepositoryListItem.where(repository_column: column)
-                                    .find(value)
-      cell_value = RepositoryListValue.new(
-        repository_list_item_id: list_item.id,
-        created_by: current_user,
-        last_modified_by: current_user,
-        repository_cell_attributes: {
-          repository_row: record,
-          repository_column: column
-        }
-      )
-      save_successful = list_item && cell_value.save
-    elsif column.data_type == 'RepositoryAssetValue'
-      return if value.blank?
-      asset = Asset.new(file: value,
-                        created_by: current_user,
-                        last_modified_by: current_user,
-                        team: current_team)
-      if asset.save
-        asset.post_process_file(current_team)
-      else
-        errors[:repository_cells] << {
-          "#{column.id}": { data: asset.errors.messages[:file].first }
-        }
-      end
-      cell_value = RepositoryAssetValue.new(
-        asset: asset,
-        created_by: current_user,
-        last_modified_by: current_user,
-        repository_cell_attributes: {
-          repository_row: record,
-          repository_column: column
-        }
-      )
-      save_successful = cell_value.save
+      render json: {
+        id: @repository_row.id,
+        flash: t(
+          'repositories.update.success_flash',
+          record: escape_input(@repository_row.name),
+          repository: escape_input(@repository.name)
+        )
+      }, status: :ok
     else
-      cell_value = RepositoryTextValue.new(
-        data: value,
-        created_by: current_user,
-        last_modified_by: current_user,
-        repository_cell_attributes: {
-          repository_row: record,
-          repository_column: column
-        }
-      )
-      if (save_successful = cell_value.save)
-        record_annotation_notification(record,
-                                       cell_value.repository_cell)
-      end
-    end
-
-    unless save_successful
-      errors[:repository_cells] << {
-        "#{column.id}": cell_value.errors.messages
-      }
+      render json: row_update.errors, status: :bad_request
     end
   end
 
@@ -273,12 +100,11 @@ class RepositoryRowsController < ApplicationController
     deleted_count = 0
     if selected_params
       selected_params.each do |row_id|
-        row = @repository.repository_rows.find_by_id(row_id)
-        if row && can_manage_repository_rows?(@repository.team)
-          log_activity(:delete_item_inventory, row)
+        row = @repository.repository_rows.find_by(id: row_id)
+        next unless row && can_manage_repository_rows?(@repository)
 
-          row.destroy && deleted_count += 1
-        end
+        log_activity(:delete_item_inventory, row)
+        row.destroy && deleted_count += 1
       end
       if deleted_count.zero?
         flash = t('repositories.destroy.no_deleted_records_flash',
@@ -309,7 +135,7 @@ class RepositoryRowsController < ApplicationController
 
   def copy_records
     duplicate_service = RepositoryActions::DuplicateRows.new(
-      current_user, @repository, params[:selected_rows]
+      current_user, @repository, selected_rows_in_repo_params
     )
     duplicate_service.call
     render json: {
@@ -319,7 +145,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def available_rows
-    if @repository.repository_rows.empty?
+    if @repository.repository_rows.active.empty?
       no_items_string =
         "#{t('projects.reports.new.save_PDF_to_inventory_modal.no_items')} " \
         "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),
@@ -333,51 +159,92 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def assigned_task_list
+    assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+                                      .where_attributes_like(
+                                        ['my_modules.name', 'experiments.name', 'projects.name'],
+                                        params[:query],
+                                        whole_phrase: true
+                                      )
+    viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
+    private_modules = assigned_modules - viewable_modules
+    render json: {
+      html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
+                               my_modules: viewable_modules,
+                               private_modules: private_modules
+                             })
+    }
+  end
+
+  def archive_records
+    service = RepositoryActions::ArchiveRowsService.call(repository: @repository,
+                                                         repository_rows: selected_rows_in_repo_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: { flash: t('repositories.archive_records.success_flash', repository: @repository.name) }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_records
+    service = RepositoryActions::RestoreRowsService.call(repository: @repository,
+                                                         repository_rows: selected_rows_in_repo_params,
+                                                         user: current_user,
+                                                         team: current_team)
+
+    if service.succeed?
+      render json: { flash: t('repositories.restore_records.success_flash', repository: @repository.name) }, status: :ok
+    else
+      render json: { error: service.error_message }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   include StringUtility
   AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
-  def load_info_modal_vars
-    @repository_row = RepositoryRow.eager_load(:created_by, repository: [:team])
-                                   .find_by_id(params[:id])
-    @assigned_modules = MyModuleRepositoryRow.eager_load(
-      my_module: [{ experiment: :project }]
-    ).where(repository_row: @repository_row)
-    render_404 and return unless @repository_row
-    render_403 unless can_read_team?(@repository_row.repository.team)
-  end
-
-  def load_vars
-    @repository = current_team.repositories
-                              .eager_load(:repository_columns)
-                              .find_by_id(params[:repository_id])
-    @record = @repository.repository_rows
-                         .eager_load(:repository_columns)
-                         .find_by_id(params[:id])
-    render_404 unless @repository && @record
-  end
-
   def load_repository
-    @repository = current_team.repositories.find_by_id(params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team)
+                            .eager_load(:repository_columns)
+                            .find_by(id: params[:repository_id])
     render_404 unless @repository
-    render_403 unless can_read_team?(@repository.team)
+  end
+
+  def load_repository_row
+    @repository_row = @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
+    render_404 unless @repository_row
+  end
+
+  def check_read_permissions
+    render_403 unless can_read_repository?(@repository)
+  end
+
+  def check_snapshotting_status
+    return if @repository.repository_snapshots.provisioning.none?
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          flash: t('repositories.index.snapshot_provisioning_in_progress')
+        }, status: :unprocessable_entity
+      end
+    end
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository_rows?(@repository.team)
+    render_403 unless can_create_repository_rows?(@repository)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_repository_rows?(@repository.team)
+    render_403 unless can_manage_repository_rows?(@repository)
   end
 
-  def record_params
-    params.permit(:repository_row_name).to_h
-  end
-
-  def cell_params
-    params.permit(repository_cells: {}).to_h[:repository_cells]
+  def check_delete_permissions
+    render_403 unless can_delete_repository_rows?(@repository)
   end
 
   def remove_file_columns_params
@@ -388,8 +255,15 @@ class RepositoryRowsController < ApplicationController
     params.permit(selected_rows: []).to_h[:selected_rows]
   end
 
+  # Selected rows in scope of current @repository
+  def selected_rows_in_repo_params
+    process_ids = params[:selected_rows].map(&:to_i).uniq
+    @repository.repository_rows.where(id: process_ids).pluck(:id)
+  end
+
   def load_available_rows(query)
     @repository.repository_rows
+               .active
                .includes(:repository_cells)
                .name_like(search_params[:q])
                .limit(Constants::SEARCH_LIMIT)
@@ -410,9 +284,8 @@ class RepositoryRowsController < ApplicationController
   end
 
   def record_annotation_notification(record, cell, old_text = nil)
-    table_url = params.fetch(:request_url) { :request_url_must_be_present }
     smart_annotation_notification(
-      old_text: (old_text if old_text),
+      old_text: old_text,
       new_text: cell.value.data,
       title: t('notifications.repository_annotation_title',
                user: current_user.full_name,
@@ -420,8 +293,8 @@ class RepositoryRowsController < ApplicationController
                record: record.name,
                repository: record.repository.name),
       message: t('notifications.repository_annotation_message_html',
-                 record: link_to(record.name, table_url),
-                 column: link_to(cell.repository_column.name, table_url))
+                 record: link_to(record.name, repository_url(@repository)),
+                 column: link_to(cell.repository_column.name, repository_url(@repository)))
     )
   end
 
@@ -449,6 +322,10 @@ class RepositoryRowsController < ApplicationController
       }
     end
     collection
+  end
+
+  def update_params
+    params.permit(repository_row: {}, repository_cells: {}).to_h
   end
 
   def log_activity(type_of, repository_row)

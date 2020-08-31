@@ -1,0 +1,87 @@
+// scss-lint:disable SelectorDepth QualifyingElement
+
+:root {
+  --sci-radio-size: 16px;
+}
+
+.sci-radio-container {
+  display: inline-block;
+  height: var(--sci-radio-size);
+  position: relative;
+  width: var(--sci-radio-size);
+}
+
+input[type="radio"].sci-radio {
+  cursor: pointer;
+  flex-shrink: 0;
+  height: var(--sci-radio-size);
+  margin: 0;
+  opacity: 0;
+  position: relative;
+  width: var(--sci-radio-size);
+  z-index: 2;
+
+  + .sci-radio-label {
+    display: inline-block;
+    flex-shrink: 0;
+    height: var(--sci-radio-size);
+    left: 0;
+    position: absolute;
+    width: var(--sci-radio-size);
+
+    &::before {
+      animation-timing-function: $timing-function-sharp;
+      border: $border-default;
+      border-radius: 50%;
+      color: $color-white;
+      content: "";
+      font-size: calc(var(--sci-radio-size) - var(--sci-radio-size) * .375);
+      height: var(--sci-radio-size);
+      left: 0;
+      line-height: calc(var(--sci-radio-size) - 2px);
+      position: absolute;
+      text-align: center;
+      transition: .2s;
+      width: var(--sci-radio-size);
+    }
+
+    &::after {
+      animation-timing-function: $timing-function-sharp;
+      background: $color-white;
+      border-radius: 50%;
+      content: "";
+      display: inline-block;
+      height: calc(var(--sci-radio-size) - 6px);
+      left: 3px;
+      position: absolute;
+      top: 3px;
+      transition: .2s;
+      width: calc(var(--sci-radio-size) - 6px);
+    }
+  }
+
+  &.hidden + .sci-radio-label {
+    display: none;
+  }
+
+  &:checked + .sci-radio-label {
+    &::before {
+      border: 1px solid $brand-primary;
+    }
+
+    &::after {
+      background: $brand-primary;
+    }
+  }
+
+  &:disabled + .sci-radio-label {
+    &::before {
+      background: $color-alto;
+      border: $border-tertiary;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+}

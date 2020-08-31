@@ -5,19 +5,19 @@
     <%= link_to login, new_session_path(resource_name) %><br />
   <% end -%>
 
-  <%- if devise_mapping.registerable? && Rails.configuration.x.enable_user_registration && controller_name != 'registrations' %>
-    <%= link_to t("devise.links.signup"), new_registration_path(resource_name) %><br />
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+    <%= link_to t("devise.links.forgot"), new_password_path(resource_name), class: 'forgot-password-link' %><br />
   <% end -%>
 
-  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-    <%= link_to t("devise.links.forgot"), new_password_path(resource_name) %><br />
+  <%- if devise_mapping.registerable? && Rails.configuration.x.enable_user_registration && controller_name != 'registrations' %>
+    <%= link_to t("devise.links.signup"), new_registration_path(resource_name), class: 'signup-link' %><br />
   <% end -%>
 
   <%- if Rails.configuration.x.enable_email_confirmations && devise_mapping.confirmable? && controller_name != 'confirmations' %>
     <%= link_to t("devise.links.not_receive_confirmation"), new_confirmation_path(resource_name) %><br />
   <% end -%>
 
-  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' && flash[:alert] == t('devise.failure.locked') %>
     <%= link_to t("devise.links.not_receive_unlock"), new_unlock_path(resource_name) %><br />
   <% end -%>
 
@@ -25,16 +25,13 @@
     <div data-hook="omniauth-sign-in-links"></div>
   <% end -%>
 
-  <%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled && @oauth_authorize != true %>
-    <%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? && controller_name != 'registrations' %>
-      <%= link_to omniauth_authorize_path(resource_name, :linkedin), :title => "Sign in with LinkedIn" do %>
-        <%= image_tag('linkedin/Sign-in-Large---Default.png',
-                      class: 'linkedin-signin-button',
-                      alt: "Sign in with LinkedIn",
-                      onmouseover: "src='#{image_path('linkedin/Sign-in-Large---Hover.png')}'",
-                      onmouseout: "src='#{image_path('linkedin/Sign-in-Large---Default.png')}'",
-                      onclick: "src='#{image_path('linkedin/Sign-in-Large---Active.png')}'") %>
-      <% end -%>
+  <%- unless defined?(linkedin_skip) %>
+    <%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled && @oauth_authorize != true %>
+      <%= render partial: "users/shared/linkedin_sign_in_links", locals: { resource_name: resource_name } %>
     <% end -%>
   <% end -%>
+
+  <div class="azure-sign-in-actions">
+    <%= render partial: "users/shared/azure_sign_in_links", locals: { resource_name: resource_name } %>
+  </div>
 </div>

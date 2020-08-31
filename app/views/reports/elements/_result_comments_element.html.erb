@@ -2,6 +2,7 @@
 <% if order.blank? and @order.present? then order = @order end %>
 <% comments = result.result_comments.order(created_at: order) %>
 <% timestamp = Time.current + 1.year %>
+<% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-comments-element report-result-comments-element" data-ts="<%= timestamp.to_i %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-type="result_comments" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-name="<%=t "projects.reports.elements.result_comments.sidebar_name" %>" data-icon-class="fas fa-comment">
   <div class="report-element-header">
     <div class="row">
@@ -19,14 +20,15 @@
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12  comments-container simple">
-        <% if comments.count == 0 %>
-          <em><%=t "projects.reports.elements.result_comments.no_comments" %></em>
-        <% else %>
+        <% if comments.any? %>
           <ul class="no-style content-comments">
             <% comments.each do |comment| %>
-              <%= render partial: 'shared/comments/item.html.erb', locals: { comment: comment, readonly: true, report: true } %>
+              <%= render partial: 'shared/comments/item.html.erb',
+                         locals: { comment: comment, readonly: true, report: true, export_all: for_export_all } %>
             <% end %>
           </ul>
+        <% else %>
+          <em><%=t "projects.reports.elements.result_comments.no_comments" %></em>
         <% end %>
       </div>
     </div>

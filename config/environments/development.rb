@@ -4,19 +4,21 @@ Rails.application.configure do
 
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.bullet_logger = true
+    Bullet.raise         = false # raise an error if n+1 query occurs
+  end
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  if ENV['CUCUMBER'] == 'cucumber'
-      config.cache_classes = true
-  else
-    config.cache_classes = ENV['WORKER'] ? true : false
-  end
+  config.cache_classes = ENV['WORKER'] ? true : false
   # Do not eager load code on boot.
   config.eager_load = ENV['WORKER'] ? true : false
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   Rails.application.routes.default_url_options = {
@@ -28,22 +30,13 @@ Rails.application.configure do
     reply_to: Rails.application.secrets.mailer_reply_to
   }
 
-  if ENV['CUCUMBER'] == 'cucumber'
-    config.action_mailer.delivery_method = :test
-    # Don't care if the mailer can't send.
-    config.action_mailer.default_url_options = {
-      host: Rails.application.secrets.mail_server_url,
-      port: 3001
-    }
-    config.action_mailer.perform_deliveries = true
-  else
-    config.action_mailer.delivery_method = :smtp
-    # Don't care if the mailer can't send.
-    config.action_mailer.default_url_options = {
-      host: Rails.application.secrets.mail_server_url
-    }
-    config.action_mailer.perform_deliveries = false
-  end
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = {
+    host: Rails.application.secrets.mail_server_url
+  }
+  config.action_mailer.perform_deliveries = false
+
 
   config.action_mailer.smtp_settings = {
     address: Rails.application.secrets.mailer_address,
@@ -54,6 +47,10 @@ Rails.application.configure do
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
+
+
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = ENV['ACTIVESTORAGE_SERVICE'] || :local
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false

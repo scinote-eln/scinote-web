@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe RepositoryActions::DuplicateRows do
@@ -30,7 +32,6 @@ describe RepositoryActions::DuplicateRows do
                                        }
         create :repository_list_value,
                repository_list_item: create(:repository_list_item,
-                                            repository: repository,
                                             repository_column: list_column,
                                             data: "list item (#{index})"),
                repository_cell_attributes: {

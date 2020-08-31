@@ -4,6 +4,7 @@ Feature: Team settings
   So that I can manage my team
 
   Background:
+    Given default screen size
     Given the "BioSistemika Process" team exists
     Given the following users are registered
       | email                   | password           | password_confirmation | full_name     | initials  |
@@ -19,18 +20,18 @@ Feature: Team settings
   Scenario: Successfully changes team name
     Given I'm on "BioSistemika Process" team settings page
     Then I click on team title
-    And I change "BioSistemika Process" with "BioSistemika Process Company" in "team-name-modal" input field
-    Then I click "Save" button
+    And I change "BioSistemika Process" with "BioSistemika Process Company" in "team-name" input field
+    Then I click element with css ".save-button"
     And I should see "BioSistemika Process Company" on "#team-name" element
 
-  @javascript
+  @javascript @wip
   Scenario: Successfully changes team description
     Given I'm on "BioSistemika Process" team settings page
-    Then I click on ".description-label" element
-    Then I should not see "I was on Triglav one summer." on ".description-label" element
-    And I fill in "I was on Triglav one summer." in "team_description" textarea field
-    Then I click "Save" button
-    And I should see "I was on Triglav one summer." on ".description-label" element
+    Then I click on ".team-description" element
+    Then I should not see "I was on Triglav one summer." on ".team-description" element
+    Then I fill in "I was on Triglav one summer." in ".team-description textarea" field
+    Then I click on ".save-button" element
+    And I should see "I was on Triglav one summer." on ".team-description" element
 
   @javascript
   Scenario: Successfully changes user role

@@ -33,10 +33,12 @@
                             id: :step_description_textarea,
                             hide_label: false,
                             value: sanitize_input(@step.tinymce_render(:description)),
+                            autocomplete: 'off',
                             data: {
                               object_type: 'step',
                               object_id: @step.id,
-                              highlightjs_path: asset_path('highlightjs-github-theme.css') } ) %>
+                              highlightjs_path: asset_path('highlightjs-github-theme.css'),
+                              last_updated: @step.updated_at.to_i * 1000 }) %>
     </div>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-checklists">
@@ -50,26 +52,27 @@
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-assets">
     <div class="text-center new-asset-box">
-      <span class="help_tooltips"
-            data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_add_files') %>"
-            data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_add_files') %>">
+      <span>
       <%=t 'assets.drag_n_drop.label_html' %>
       <label>
         <span class="btn btn-default new-asset-upload-button">
           <span class="fas fa-file-upload new-asset-upload-icon"></span>
           <%=t 'assets.drag_n_drop.browse_label' %>
         </span>
-        <input type="file"
-               onchange="DragNDropSteps.init(this.files)"
-               id="drag-n-drop-assets"
-               style="display: none" multiple>
+        <span style="display:none;">
+          <%= f.file_field :file,
+                           id: "drag-n-drop-assets",
+                           multiple: true,
+                           direct_upload: true,
+                           onchange: "DragNDropSteps.init(this.files)" %>
+        </span>
       </label>
       </span>
     </div>
     <div id="new-step-assets-group" class="form-group">
       <div class="col-xs-12 attachments edit">
         <%= f.nested_fields_for :assets do |ff| %>
-          <%= render partial: 'steps/attachments/placeholder.html.erb',
+          <%= render partial: 'shared/asset_placeholder.html.erb',
                      locals: { edit_page: true, asset: ff.object, ff: ff } %>
       <% end %>
       </div>
@@ -84,4 +87,4 @@
       <%= t("protocols.steps.new.add_table") %>
     <% end %>
   </div>
-  </div>
+</div>

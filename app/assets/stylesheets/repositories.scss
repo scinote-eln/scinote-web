@@ -1,27 +1,259 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
 @import "constants";
 
-.repositories-dropdown-menu {
-  height: auto;
-  max-height: 400px;
-  overflow-x: hidden;
-  text-transform: initial;
+:root {
+  --repository-sidebar-margin: 363px;
 }
 
-.repository-table {
-  margin-top: 20px;
+.repository-show {
+  height: calc(100vh - var(--navbar-height));
+  left: var(--repository-sidebar-margin);
+  margin: 0;
+  padding: 0 2em;
+  position: absolute;
+  top: var(--navbar-height);
+  transition: .4s $timing-function-sharp;
+  width: calc(100vw - var(--repository-sidebar-margin));
 
-  // Datatables generated name
-  .dataTables_length {
-    display: inline-block;
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
   }
 
-  // hack only for firefox
-  @-moz-document url-prefix() {
-    input.form-control[type="file"] {
-      font-size: 13px;
-      height: auto;
-      padding: 3px 12px;
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
     }
+  }
+
+
+  #repository-toolbar {
+    align-items: center;
+    background-color: $color-white;
+    border: 0;
+    display: flex;
+    left: var(--repository-sidebar-margin);
+    padding: 0 2em;
+    position: fixed;
+    transition: .4s $timing-function-sharp;
+    width: calc(100% - var(--repository-sidebar-margin));
+    z-index: 100;
+
+    .toolbar-delimiter {
+      border-bottom: $border-tertiary;
+      bottom: 0;
+      position: absolute;
+      width: calc(100% - 4em);
+    }
+
+    .repository-share-icon {
+      flex-shrink: 0;
+      margin-top: -2px;
+
+      .fas-custom {
+        margin-left: 5px;
+      }
+    }
+
+    .dropdown-menu {
+      @include font-button;
+    }
+
+    .repository-title-name {
+      @include font-h2;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      line-height: 32px;
+      margin-right: 20px;
+      overflow: hidden;
+      padding-left: 5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .name-container {
+        align-items: center;
+        display: inline-flex;
+        height: 32px;
+        margin: 0;
+
+        .read-only-name {
+          display: inline-block;
+          line-height: 32px;
+          max-width: calc(100% - 30px);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .inline-editing-container {
+          width: 100%;
+        }
+      }
+    }
+
+    .repository-archived-title-name {
+      @include font-h1;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .repository-subtitle {
+      color: $color-silver-chalice;
+      font-size: 12px;
+      line-height: 12px;
+    }
+
+    .repo-datatables-buttons {
+      display: flex;
+      flex-shrink: 0;
+
+      .manage-repo-column-index {
+        margin-left: 4px;
+      }
+
+      .view-switch {
+        margin-left: 4px;
+      }
+    }
+  }
+
+  .main-actions {
+    align-items: center;
+    background-color: $color-white;
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: nowrap;
+    height: 5em;
+    left: var(--repository-sidebar-margin);
+    overflow: hidden;
+    padding: 0 2em;
+    position: fixed;
+    top: calc(5em + var(--navbar-height));
+    transition: .4s $timing-function-sharp;
+    width: calc(100% - var(--repository-sidebar-margin));
+    z-index: 90;
+
+    .filter-container {
+      flex-shrink: 0;
+
+      .toolbar-filter-buttons {
+        float: right;
+      }
+    }
+
+    .repository-provisioning-notice {
+      color: $brand-info;
+    }
+
+    #editDeleteCopy {
+      flex-shrink: 0;
+    }
+
+    .archived-label {
+      color: $color-silver-chalice;
+      display: inline-block;
+      margin: 0 auto;
+      max-width: 400px;
+      padding: 0 1em;
+
+      table {
+        tr {
+          td {
+            padding: 0 .5em;
+
+            &:nth-child(1) {
+              text-align: right;
+            }
+
+            &:nth-child(2) {
+              color: $color-black;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .dataTables_scroll {
+    padding-bottom: 5em;
+    padding-top: 10em;
+
+    .dataTables_scrollHead {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: calc(10em + var(--navbar-height));
+      z-index: 90;
+
+      .table.dataTable {
+        margin-top: 0 !important;
+        transition: .4s $timing-function-sharp;
+
+        th {
+          transition: width .2s;
+        }
+      }
+    }
+
+    .dataTables_scrollBody {
+      thead th#checkbox {
+        opacity: 0;
+      }
+    }
+  }
+
+  .pagination-row {
+    align-items: center;
+    background-color: $color-white;
+    bottom: 0;
+    display: flex;
+    height: 5em;
+    left: var(--repository-sidebar-margin);
+    padding: 0 10em 0 2em;
+    position: fixed;
+    transition: .4s $timing-function-sharp;
+    width: calc(100% - var(--repository-sidebar-margin));
+    z-index: 90;
+
+    .pagination-info,
+    .pagination-actions {
+      flex-grow: 1;
+    }
+
+    .pagination-info {
+      align-items: center;
+      display: flex;
+
+      .dataTables_info {
+        padding-top: 0;
+      }
+
+      .dataTables_length {
+        margin-right: 24px;
+        width: 170px;
+
+        .dropdown-selector-container {
+          width: inherit;
+        }
+
+        label {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.repository-share-status {
+  display: contents !important;
+
+  &.hidden {
+    display: none !important;
   }
 }
 
@@ -39,4 +271,254 @@
 .breadcrumb.breadcrumb-repository {
   background-color: $color-concrete;
   margin-bottom: 15px;
+}
+
+.asset-value-cell {
+  align-items: center;
+  display: flex;
+
+  .fas {
+    font-size: 18px;
+    min-width: 18px;
+  }
+
+  .image-icon {
+    height: 18px;
+    width: 18px;
+  }
+
+  .file-preview-link {
+    display: inline-block;
+    min-width: 140px;
+    padding-left: 5px;
+  }
+}
+
+.file-editing {
+  width: 200px;
+
+  input[type=file] {
+    display: none;
+  }
+
+  label {
+    cursor: pointer;
+    flex-grow: 1;
+    font-weight: normal;
+    height: 100%;
+    margin-bottom: 0;
+    margin-right: 5px;
+    overflow: hidden;
+    padding-left: 34px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 2;
+
+    &:empty::before {
+      content: attr(data-placeholder);
+      margin-left: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .file-upload-button {
+    align-items: center;
+    background-color: $color-white;
+    border: $border-default;
+    border-radius: $border-radius-default;
+    cursor: pointer;
+    display: flex;
+    height: 34px;
+    line-height: 32px;
+    position: relative;
+
+    &.new-file {
+      .icon {
+        display: none;
+      }
+
+      &:hover {
+        .fa-trash {
+          display: none;
+        }
+      }
+
+      label {
+        color: $color-silver-chalice;
+        padding-left: 0;
+      }
+    }
+
+    .icon {
+      display: inline-block;
+      left: 0;
+      line-height: 32px;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      width: 34px;
+    }
+
+    .fa-trash {
+      background-color: $color-white;
+      cursor: pointer;
+      display: none;
+      line-height: 32px;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      top: 0;
+      width: 34px;
+      z-index: 3;
+    }
+
+    &:hover {
+      .fa-trash {
+        display: inline-block;
+      }
+    }
+
+    &.error {
+      border-color: $brand-danger;
+      margin-bottom: 10px;
+
+      &::after {
+        background-color: $color-white;
+        bottom: 0;
+        color: $brand-danger;
+        content: "\f071";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 501;
+        line-height: 32px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        width: 34px;
+      }
+
+      &::before {
+        @include font-small;
+        bottom: -15px;
+        color: $brand-danger;
+        content: attr(data-error-text);
+        left: 0;
+        line-height: 15px;
+        position: absolute;
+        width: 100%;
+      }
+    }
+  }
+}
+
+#toolbarButtonsDatatable {
+  align-items: center;
+  display: flex;
+
+  .view-only-label {
+    opacity: .6;
+  }
+}
+
+.sidebar-button {
+  color: $brand-primary !important;
+  margin-left: 30px;
+
+  span {
+    display: inline-block !important;
+    padding: 0 !important;
+  }
+
+  .fas {
+    margin-right: 5px;
+  }
+}
+
+.share-repo-modal {
+
+  .modal-dialog {
+    width: 350px;
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
+
+  .share-repo-container {
+    padding: 15px 30px;
+
+    // Main structure css
+    .header,
+    .data-list {
+      display: flex;
+      width: 100%;
+    }
+
+    .data-list {
+      flex-direction: column;
+    }
+
+    .all-teams,
+    .teams-list {
+      display: flex;
+      width: 100%;
+    }
+
+    .teams-list {
+      flex-direction: column;
+      max-height: 400px;
+      position: relative;
+
+      .team-container {
+        align-items: center;
+        display: flex;
+        padding: 5px 0;
+
+        .sci-checkbox.hidden {
+          display: inline-block !important;
+        }
+      }
+    }
+
+    .permission-selector {
+      display: flex;
+      flex-basis: 55px;
+      flex-shrink: 0;
+      justify-content: center;
+    }
+
+    .team-selector {
+      align-items: center;
+      display: flex;
+      flex-grow: 1;
+
+      .sci-checkbox-container {
+        margin-right: 5px;
+      }
+    }
+
+    // header
+    .header {
+      align-items: center;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 5px 0 0;
+    }
+
+    .all-teams {
+      align-items: center;
+      border-bottom: 1px solid $color-gainsboro;
+      margin-left: -10px;
+      padding: 5px 10px;
+      user-select: none;
+      width: calc(100% + 20px);
+    }
+  }
+}
+
+#repository_row-info-table {
+  .fas {
+    color: $color-silver-chalice;
+  }
 }

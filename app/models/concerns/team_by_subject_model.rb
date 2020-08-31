@@ -9,6 +9,7 @@ module TeamBySubjectModel
       valid_subjects = Extends::ACTIVITY_SUBJECT_CHILDREN
       # Check all activity subject
       valid_subjects.each do |subject, _children|
+        subject = subject.to_s.camelize.to_sym
         next unless subjects[subject]
 
         parent_array = [subject.to_s.underscore]

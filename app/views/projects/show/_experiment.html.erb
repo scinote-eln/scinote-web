@@ -20,11 +20,7 @@
         <% if can_clone_experiment?(experiment) %>
           <%= link_to clone_modal_experiment_url(experiment),
                       remote: true, type: 'button',
-                      class: 'clone-experiment help_tooltips pull-right',
-                      data: {
-                        tooltiplink: I18n.t('tooltips.link.experiment.copy'),
-                        tooltipcontent: I18n.t('tooltips.text.experiment.copy')
-                      } do %>
+                      class: 'clone-experiment pull-right' do %>
             <span class="fas fa-copy"></span>&nbsp;
             <%= t('experiments.clone.label_title') %>
           <% end %>
@@ -33,7 +29,7 @@
 
       <div class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></div>
 
-      <span class="help_tooltips panel-date" data-tooltiplink="<%= I18n.t('tooltips.link.experiment.dates') %>" data-tooltipcontent="<%= I18n.t('tooltips.text.experiment.dates') %>">
+      <span class="panel-date">
         <span class="fas fa-calendar-alt" aria-hidden="true"></span>
         <%= l(experiment.created_at, format: :full_date) %> - <%= l(experiment.updated_at, format: :full_date) %>
       </span>

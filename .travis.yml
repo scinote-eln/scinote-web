@@ -1,8 +1,10 @@
 env:
-  - DOCKER_COMPOSE_VERSION=1.13.0
+  - DOCKER_COMPOSE_VERSION=1.23.2
 
 sudo: required
 language: ruby
+addons:
+  chrome: stable
 install: true
 services:
   - docker

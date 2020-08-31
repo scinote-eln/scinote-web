@@ -122,10 +122,10 @@ module Users
             Activities::CreateActivityService
               .call(activity_type: :invite_user_to_team,
                     owner: current_user,
-                    subject: current_team,
-                    team: current_team,
+                    subject: @team,
+                    team: @team,
                     message_items: {
-                      team: current_team.id,
+                      team: @team.id,
                       user_invited: user.id,
                       role: user_team.role_str
                     })
@@ -188,10 +188,10 @@ module Users
       @team = Team.find_by_id(params['teamId'])
       @role = params['role']
 
-      return render_403 unless @emails && @team && @role
-      return render_403 if @emails.empty?
-      return render_403 unless can_manage_team_users?(@team)
-      return render_403 unless UserTeam.roles.key?(@role)
+      return render_403 if @team && @role.nil? # if we select team, we must select role
+      return render_403 if @emails.blank? # We must have at least one email
+      return render_403 if @team && !can_manage_team_users?(@team) # if we select team, we must check permission
+      return render_403 if @role && !UserTeam.roles.key?(@role) # if we select role, we must check that this role exist
     end
   end
 end

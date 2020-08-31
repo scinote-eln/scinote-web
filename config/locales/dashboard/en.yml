@@ -1,0 +1,91 @@
+en:
+  dashboard:
+    current_tasks:
+      title: "Current tasks"
+      search: "Search tasks"
+      navbar:
+        assigned: "Assigned to me"
+        all: "All"
+      filter:
+        title: "Filters"
+        clear: "Clear"
+        sort: "Sort by"
+        start_date: "Start date"
+        due_date: "Due date"
+        atoz: "From A to Z"
+        ztoa: "From Z to A"
+        display: "Display"
+        uncompleted_tasks: "Tasks in progress"
+        completed_tasks: "Tasks completed"
+        project: "Project"
+        select_project: "All Projects"
+        experiment: "Experiment"
+        select_experiment: "All Experiments"
+        apply: "Apply"
+      no_tasks:
+        assigned_tasks:
+          title: "There are no tasks assigned to you at the moment."
+          description: "Why not use the Quick start section to create your next task."
+        team_tasks:
+          title: "Your Team has no tasks at the moment."
+        search_result:
+          title: "No results."
+      due_date: "Due date: %{date}"
+      progress_bar:
+        in_progress: "In progress"
+        overdue: "Overdue"
+        completed_steps: ": %{steps} / %{total_steps}"
+        completed: "Completed"
+    calendar:
+      due_on: Due on
+      dow:
+        su: 'Su'
+        mo: 'Mo'
+        tu: 'Tu'
+        we: 'We'
+        th: 'Th'
+        fr: 'Fr'
+        sa: 'Sa'
+    quick_start:
+      title: "Quick start"
+      description: "Quickly start a new task, create a new project or a new report."
+      new_task: "New task"
+      new_protocol: "New protocol"
+      new_report: "New report"
+      placeholder:
+        title: "Cannot create."
+        description: "As a guest in this team you cannot create anything."
+    create_task_modal:
+      title: "Create a new Task"
+      description: "Simply type in the fields bellow to find or create space for your new task to live in"
+      project: "Project"
+      project_visibility_label: "Visible to"
+      project_visibility_members: "Project members"
+      project_visibility_all: "All team members"
+      experiment: "Experiment"
+      project_placeholder: "Enter project name (New or Existing)"
+      experiment_placeholder: "Enter experiment name (New or Existing)"
+      experiment_disabled_placeholder: "Select Project to enable Experiments"
+      filter_create_new: "Create"
+      create_task: "Create Task"
+    recent_work:
+      title: "Recent work"
+      no_results:
+        title: "You have not worked on anything recently."
+        description: "Use the Quick start section to begin creating."
+      no_results_guest:
+        title: "No recent work."
+        description: "As a guest in this team you cannot make or change anything."
+      modes:
+        all: "All"
+        projects: "PROJECTS"
+        repositories: "INVENTORIES"
+        protocols: "PROTOCOLS"
+        reports: "REPORTS"
+      subject_type:
+        Project: "Project"
+        Experiment: "Experiment"
+        MyModule: "Task"
+        RepositoryBase: "Inventory"
+        Protocol: "Protocol"
+        Report: "Report"

@@ -1,4 +1,5 @@
 class SearchController < ApplicationController
+  include IconsHelper
   before_action :load_vars, only: :index
 
   def index
@@ -128,16 +129,16 @@ class SearchController < ApplicationController
 
         current_user.teams.includes(:repositories).each do |team|
           team_results = {}
+          team_results[:team] = team
           team_results[:count] = 0
           team_results[:repositories] = {}
-          team.repositories.each do |repository|
+          Repository.accessible_by_teams(team).each do |repository|
             repository_results = {}
             repository_results[:id] = repository.id
+            repository_results[:repository] = repository
             repository_results[:count] = 0
             search_results.each do |result|
-              if repository.id == result.id
-                repository_results[:count] += result.counter
-              end
+              repository_results[:count] += result.counter if repository.id == result.id
             end
             team_results[:repositories][repository.name] = repository_results
             team_results[:count] += repository_results[:count]
@@ -262,7 +263,9 @@ class SearchController < ApplicationController
 
   def search_repository
     @repository = Repository.find_by_id(params[:repository])
-    render_403 unless can_read_team?(@repository.team)
+    unless current_user.teams.include?(@repository.team) || @repository.private_shared_with?(current_user.teams)
+      render_403
+    end
     @repository_results = []
     if @repository_search_count_total > 0
       @repository_results =

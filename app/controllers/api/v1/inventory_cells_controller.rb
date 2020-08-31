@@ -12,7 +12,7 @@ module Api
 
       def index
         cells = @inventory_item.repository_cells
-                               .includes(Extends::REPOSITORY_SEARCH_INCLUDES)
+                               .preload(@inventory.cell_preload_includes)
                                .page(params.dig(:page, :number))
                                .per(params.dig(:page, :size))
         render jsonapi: cells, each_serializer: InventoryCellSerializer
@@ -60,9 +60,7 @@ module Api
       end
 
       def check_manage_permissions
-        unless can_manage_repository_rows?(@team)
-          raise PermissionError.new(RepositoryRow, :manage)
-        end
+        raise PermissionError.new(RepositoryRow, :manage) unless can_manage_repository_rows?(@inventory)
       end
 
       def inventory_cell_params

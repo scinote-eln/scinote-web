@@ -18,11 +18,13 @@ class Constants
   # Max characters for long text fields
   TEXT_MAX_LENGTH = 10000
   # Max characters for rich text fields (in html format)
-  RICH_TEXT_MAX_LENGTH = 50000
+  RICH_TEXT_MAX_LENGTH = 100000
   # Max characters for color field (given in HEX format)
   COLOR_MAX_LENGTH = 7
   # Max characters for text in dropdown list element
   DROPDOWN_TEXT_MAX_LENGTH = 15
+  # Max characters for text in modal list element
+  MODAL_TEXT_MAX_LENGTH = 55
   # Max characters limit for (on most operating systems, it's ~255 characters,
   # but this is with a bit more safety margin)
   FILENAME_MAX_LENGTH = 100
@@ -54,18 +56,16 @@ class Constants
   COMMENTS_SEARCH_LIMIT = 10
   # Activity limited query/display elements for pages
   ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 20
-
+  # Infinite Scroll load limit (elements per page)
+  INFINITE_SCROLL_LIMIT = 20
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
-
   # Maximum nr. of search results for atwho (smart annotations)
   ATWHO_SEARCH_LIMIT = 5
-
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
-
-  # Number of protocols in recent protocol dropdown
-  RECENT_PROTOCOL_LIMIT = 14
+  # Results limited query/display elements for pages
+  RESULTS_PER_PAGE_LIMIT = 10
 
   #=============================================================================
   # File and data memory size
@@ -91,11 +91,11 @@ class Constants
   #=============================================================================
 
   # Picture size formats
-  LARGE_PIC_FORMAT = '800x600>'.freeze
-  MEDIUM_PIC_FORMAT = '300x300>'.freeze
-  THUMB_PIC_FORMAT = '100x100#'.freeze
-  ICON_PIC_FORMAT = '40x40#'.freeze
-  ICON_SMALL_PIC_FORMAT = '30x30#'.freeze
+  LARGE_PIC_FORMAT = [800, 600].freeze
+  MEDIUM_PIC_FORMAT = [300, 300].freeze
+  THUMB_PIC_FORMAT = [100, 100].freeze
+  ICON_PIC_FORMAT = [40, 40].freeze
+  ICON_SMALL_PIC_FORMAT = [30, 30].freeze
 
   # Hands-on-table number of starting columns and rows
   HANDSONTABLE_INIT_COLS_CNT = 5
@@ -151,7 +151,7 @@ class Constants
     '%d/%m/%Y', '%d.%m.%Y', '%d. %m. %Y', '%d-%b-%Y', '%Y-%m-%d',
     '%d.%b.%Y', '%Y/%b/%d', '%d, %B, %Y', '%B, %d, %Y', '%-d/%-m/%Y',
     '%-d.%-m.%Y', '%-d. %-m. %Y', '%d-%m-%Y', '%Y-%-m-%-d', '%-d-%b-%Y',
-    '%Y-%b-%-d', '%-d, %B, %Y', '%B, %d, %Y'
+    '%Y-%b-%-d', '%-d, %B, %Y', '%B, %-d, %Y'
   ].freeze
 
   #=============================================================================
@@ -182,21 +182,18 @@ class Constants
   ].freeze
 
   # Theme colors
-  BRAND_PRIMARY = '#37a0d9'.freeze # $brand-primary
-  BRAND_DEFAULT = '#8fd13f'.freeze # $brand-default
+  BRAND_PRIMARY = '#104da9'.freeze # $brand-primary
 
   # Grayscale colors
   COLOR_WHITE = '#ffffff'.freeze # $color-white
-  COLOR_ALABASTER = '#fcfcfc'.freeze # $color-alabaster
-  COLOR_CONCRETE = '#f2f2f2'.freeze # $color-concrete
-  COLOR_GAINSBORO = '#e3e3e3'.freeze # $color-gainsboro
-  COLOR_ALTO = '#d2d2d2'.freeze # $color-alto
-  COLOR_SILVER = '#c5c5c5'.freeze # $color-silver
-  COLOR_SILVER_CHALICE = '#a0a0a0'.freeze # $color-silver-chalice
-  COLOR_DOVE_GRAY = '#666666'.freeze # $color-dove-gray
-  COLOR_EMPEROR = '#555555'.freeze # $color-emperor
-  COLOR_BLACK = '#000000'.freeze # $color-black
+  COLOR_CONCRETE = '#f0f0f6'.freeze # $color-concrete
+  COLOR_ALTO = '#d0d0d8'.freeze # $color-alto
+  COLOR_SILVER_CHALICE = '#a0a0a8'.freeze # $color-silver-chalice
+  COLOR_VOLCANO = '#404048'.freeze # $color-volcano
+  COLOR_BLACK = '#231f20'.freeze # $color-black
 
+  # Fonts
+  FONT_FAMILY_BASE = 'Lato,"Open Sans",Arial,Helvetica,sans-serif;'.freeze # $font-family-base
 
   #=============================================================================
   # External URLs
@@ -209,7 +206,23 @@ class Constants
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
-  ACADEMY_TR_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20TR&utm_medium=SciNote%20software%20TR'.freeze
+
+  TWO_FACTOR_URL = {
+    google: {
+      android: 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2',
+      ios: 'https://apps.apple.com/us/app/google-authenticator/id388497605'
+    },
+    microsoft: {
+      android: 'https://play.google.com/store/apps/details?id=com.azure.authenticator',
+      ios: 'https://apps.apple.com/us/app/microsoft-authenticator/id983156458'
+    },
+    two_fa: {
+      android: 'https://play.google.com/store/apps/details?id=com.twofasapp',
+      ios: 'https://apps.apple.com/us/app/2fa-authenticator-2fas/id1217793794'
+    },
+  }
+  TWO_FACTOR_RECOVERY_CODE_COUNT = 6
+  TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
 
   #=============================================================================
   # Protocol importers
@@ -217,7 +230,7 @@ class Constants
 
   PROTOCOLS_ENDPOINTS = {
     protocolsio: {
-      v3: 'ProtocolsIO::V3'
+      v3: 'ProtocolsIo::V3'
     }
   }.freeze
 
@@ -305,7 +318,7 @@ class Constants
 
   WHITELISTED_ATTRIBUTES = [
     'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
-    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border'
   ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {
@@ -944,40 +957,73 @@ class Constants
 
   # Repository default table state
   REPOSITORY_TABLE_DEFAULT_STATE = {
-    time: 0,
-    start: 0,
-    length: 6,
-    order: { 0 => [2, 'asc'] }, # Default sorting by 'ID' column
-    search: { search: '',
-              smart: true,
-              regex: false,
-              caseInsensitive: true },
-    columns: {},
-    assigned: 'assigned',
-    ColReorder: [*0..5]
+    'time' => 0,
+    'start' => 0,
+    'length' => 8,
+    'order' => [[2, 'asc']], # Default sorting by 'ID' column
+    'columns' => [],
+    'assigned' => 'assigned',
+    'ColReorder' => [*0..7]
   }
-  6.times do |i|
-    REPOSITORY_TABLE_DEFAULT_STATE[:columns][i] = {
-      visible: true,
-      searchable: i >= 1, # Checkboxes column is not searchable
-      search: { search: '',
-                smart: true,
-                regex: false,
-                caseInsensitive: true }
+  8.times do |i|
+    REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
+      'visible' => (i < 6),
+      'searchable' => (i >= 1), # Checkboxes column is not searchable
+      'search' => { 'search' => '',
+                    'smart' => true,
+                    'regex' => false,
+                    'caseInsensitive' => true }
     }
   end
   REPOSITORY_TABLE_DEFAULT_STATE.freeze
+
+  # Repository default table state
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE = {
+    'time' => 0,
+    'start' => 0,
+    'length' => 5,
+    'order' => [[1, 'asc']], # Default sorting by 'ID' column
+    'columns' => [],
+    'assigned' => 'assigned',
+    'ColReorder' => [*0..4]
+  }
+
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'] = REPOSITORY_TABLE_DEFAULT_STATE['columns'][0..4]
+
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE.freeze
+
   # For default custom column template, any searchable default
   # column can be reused
   REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
-    REPOSITORY_TABLE_DEFAULT_STATE[:columns][1].deep_dup
-                                               .freeze
+    REPOSITORY_TABLE_DEFAULT_STATE['columns'][1].deep_dup
+                                                .freeze
 
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
 
+  REPOSITORY_DEFAULT_PAGE_SIZE = 10
   REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
+  REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN = 50
+  REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS = 2
+  REPOSITORY_NUMBER_TYPE_MAX_DECIMALS = 10
+
+  REPOSITORY_LIST_ITEMS_DELIMITERS_MAP = {
+    return: "\n",
+    comma: ',',
+    semicolon: ';',
+    space: ' '
+  }.freeze
+
+  REPOSITORY_LIST_ITEMS_DELIMITERS_ICON_MAP = {
+    auto: "＊",
+    return: "↵",
+    comma: ',',
+    semicolon: ';',
+    space: '⎵'
+  }.freeze
 
   IMPORT_REPOSITORY_ITEMS_LIMIT = 2000
+
+  DEFAULT_TEAM_REPOSITORIES_LIMIT = 6
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP

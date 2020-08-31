@@ -29,7 +29,7 @@ class Project < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :team, inverse_of: :projects, touch: true, optional: true
+  belongs_to :team, inverse_of: :projects, touch: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
@@ -202,6 +202,12 @@ class Project < ApplicationRecord
       st += my_module.space_taken
     end
     st
+  end
+
+  def assigned_repositories_and_snapshots
+    live_repositories = Repository.assigned_to_project(self)
+    snapshots = RepositorySnapshot.of_unassigned_from_project(self)
+    (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
   def my_modules_ids

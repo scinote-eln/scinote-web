@@ -26,27 +26,14 @@ class ResultAssetsController < ApplicationController
 
   def create
     obj = create_multiple_results
-    respond_to do |format|
-      if obj.fetch(:status)
-        format.html do
-          flash[:success] = t('result_assets.create.success_flash',
-                              module: @my_module.name)
-          redirect_to results_my_module_path(@my_module)
-        end
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'my_modules/results.html.erb',
-                       locals: { results: obj.fetch(:results) }
-            )
-          }, status: :ok
-        end
-      else
-        flash[:error] = t('result_assets.error_flash')
-        format.json do
-          render json: {}, status: :bad_request
-        end
-      end
+    if obj.fetch(:status)
+      flash[:success] = t('result_assets.create.success_flash',
+                          module: @my_module.name)
+        p params.as_json
+      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
+    else
+      flash[:error] = t('result_assets.error_flash')
+      render json: {}, status: :bad_request
     end
   end
 
@@ -61,63 +48,56 @@ class ResultAssetsController < ApplicationController
   end
 
   def update
-    update_params = result_params
-    previous_size = @result.space_taken
+    success_flash = nil
+    saved = false
 
-    @result.asset.last_modified_by = current_user if update_params.key? :asset_attributes
+    @result.transaction do
+      update_params = result_params.reject { |_, v| v.blank? }
+      previous_size = @result.space_taken
 
-    @result.last_modified_by = current_user
-    @result.assign_attributes(update_params)
-    success_flash = t('result_assets.update.success_flash',
-                      module: @my_module.name)
+      if update_params.dig(:asset_attributes, :signed_blob_id)
+        @result.asset.last_modified_by = current_user
+        @result.asset.update(file: update_params[:asset_attributes][:signed_blob_id])
+        update_params.delete(:asset_attributes)
+      end
 
-    if @result.archived_changed?(from: false, to: true)
-      if @result.asset.locked?
-        respond_to do |format|
-          format.html do
-            flash[:error] = t('result_assets.archive.error_flash')
-            redirect_to results_my_module_path(@my_module)
-            return
-          end
+      @result.last_modified_by = current_user
+      @result.assign_attributes(update_params)
+      success_flash = t('result_assets.update.success_flash', module: @my_module.name)
+
+      if @result.archived_changed?(from: false, to: true)
+        if @result.asset.locked?
+          @result.errors.add(:asset_attributes, t('result_assets.archive.error_flash'))
+          raise ActiveRecord:: Rollback
         end
-      end
 
-      saved = @result.archive(current_user)
-      success_flash = t('result_assets.archive.success_flash',
-                        module: @my_module.name)
-      if saved
-        log_activity(:archive_result)
-      end
-    elsif @result.archived_changed?(from: true, to: false)
-      render_403
-    else
-      if @result.asset.locked?
-        @result.errors.add(:asset_attributes,
-                           t('result_assets.edit.locked_file_error'))
-        respond_to do |format|
-          format.json do
-            render json: {
-              status: 'error',
-              errors: @result.errors
-            }, status: :bad_request
-            return
-          end
+        saved = @result.archive(current_user)
+        success_flash = t('result_assets.archive.success_flash', module: @my_module.name)
+        log_activity(:archive_result) if saved
+      elsif @result.archived_changed?(from: true, to: false)
+        @result.errors.add(:asset_attributes, t('result_assets.archive.error_flash'))
+        raise ActiveRecord:: Rollback
+      else
+        if @result.asset.locked?
+          @result.errors.add(:asset_attributes, t('result_assets.edit.locked_file_error'))
+          raise ActiveRecord:: Rollback
         end
-      end
-      # Asset (file) and/or name has been changed
-      saved = @result.save
+        # Asset (file) and/or name has been changed
+        asset_changed = @result.asset.changed?
+        saved = @result.save
 
-      if saved
-        # Release team's space taken due to
-        # previous asset being removed
-        team = @result.my_module.experiment.project.team
-        team.release_space(previous_size)
-        team.save
+        if saved
+          # Release team's space taken due to
+          # previous asset being removed
+          team = @result.my_module.experiment.project.team
+          team.release_space(previous_size) if asset_changed
+          team.save
 
-        # Post process new file if neccesary
-        @result.asset.post_process_file(team) if @result.asset.present?
+          # Post process new file if neccesary
+          @result.asset.post_process_file(team) if asset_changed && @result.asset.present?
 
-        log_activity(:edit_result)
+          log_activity(:edit_result)
+        end
       end
     end
 
@@ -174,37 +154,29 @@ class ResultAssetsController < ApplicationController
   end
 
   def result_params
-    params.require(:result).permit(
-      :name, :archived,
-      asset_attributes: [
-        :id,
-        :file
-      ]
-    )
+    params.require(:result).permit(:name, :archived, asset_attributes: :signed_blob_id)
   end
 
   def create_multiple_results
-    success = true
+    success = false
     results = []
-    params[:results_files].values.each_with_index do |file, index|
-      asset = Asset.new(file: file,
-                        created_by: current_user,
-                        last_modified_by: current_user,
-                        team: current_team)
-      result = Result.new(user: current_user,
-                          my_module: @my_module,
-                          name: params[:results_names][index.to_s],
-                          asset: asset,
-                          last_modified_by: current_user)
-      if result.save && asset.save
+
+    ActiveRecord::Base.transaction do
+      params[:results_files].each do |index, file|
+        asset = Asset.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+        asset.file.attach(file[:signed_blob_id])
+        result = Result.create!(user: current_user,
+                                my_module: @my_module,
+                                name: params[:results_names][index],
+                                asset: asset,
+                                last_modified_by: current_user)
         results << result
         # Post process file here
         asset.post_process_file(@my_module.experiment.project.team)
-
         log_activity(:add_result, result)
-      else
-        success = false
       end
+
+      success = true
     end
     { status: success, results: results }
   end

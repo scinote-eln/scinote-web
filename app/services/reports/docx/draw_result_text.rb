@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module DrawResultText
-  def draw_result_text(subject)
-    result = Result.find_by_id(subject['id']['result_id'])
+module Reports::Docx::DrawResultText
+  def draw_result_text(subject, my_module)
+    result = my_module.results.find_by(id: subject['id']['result_id'])
     return unless result
 
     result_text = result.result_text
@@ -20,7 +20,7 @@ module DrawResultText
     html_to_word_converter(html)
 
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, result)
     end
   end
 end

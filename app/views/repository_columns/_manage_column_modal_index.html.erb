@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title">
+    <%= t("libraries.manange_modal_column_index.title") %>
+  </h4>
+</div>
+<div class="modal-body">
+  <ul class="list-group repo-columns-list"
+      id="repository-columns-list"
+      data-repository-id="<%= @repository.id %>">
+  </ul>
+</div>
+
+<div class="modal-footer">
+  <% if can_create_repository_columns?(@repository)%>
+    <button id="new-repo-column-modal"
+            data-view-mode="active"
+            class="btn btn-secondary manage-repo-column"
+            data-modal-url="<%= new_repository_repository_column_path(@repository) %>"
+            data-action="new">
+      <span class="fas fa-plus"></span>&nbsp;<%=t 'libraries.manange_modal_column_index.add_column' %>
+    </button>
+  <% end %>
+</div>

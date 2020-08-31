@@ -1,4 +1,5 @@
 //= require protocols/import_export/import
+/* global ProtocolRepositoryHeader */
 
 // Global variables
 var rowsSelected = [];
@@ -12,7 +13,6 @@ var repositoryType;
 function init() {
   updateButtons();
   initProtocolsTable();
-  initRowSelection();
   initKeywordFiltering();
   initProtocolPreviewModal();
   initLinkedChildrenModal();
@@ -28,8 +28,10 @@ function initProtocolsTable() {
 
   protocolsDatatable = protocolsTableEl.DataTable({
     order: [[1, "asc"]],
-    dom: "RBfltpi",
+    dom: "RB<'main-actions'lf>t<'pagination-row'ip>",
     stateSave: true,
+    sScrollX: '100%',
+    sScrollXInner: '100%',
     buttons: [],
     processing: true,
     serverSide: true,
@@ -97,7 +99,7 @@ function initProtocolsTable() {
     },
     fnDrawCallback: function(settings, json) {
       animateSpinner(this, false);
-      $.initTooltips();
+      initRowSelection();
     },
     preDrawCallback: function(settings) {
       animateSpinner(this);
@@ -127,6 +129,8 @@ function initProtocolsTable() {
 }
 
 function initRowSelection() {
+  let protocolsTableScrollHead = protocolsTableEl.closest('.dataTables_scroll').find('.dataTables_scrollHead');
+
   // Handle click on table cells with checkboxes
   protocolsTableEl.on("click", "tbody td, thead th:first-child", function(e) {
     $(this).parent().find("input[type='checkbox']").trigger("click");
@@ -162,11 +166,11 @@ function initRowSelection() {
   });
 
   // Handle click on "Select all" control
-  protocolsTableEl.find("thead input[name='select_all']").on("click", function(e) {
+  protocolsTableScrollHead.find("thead input[name='select_all']").on('click', function(e) {
     if (this.checked) {
-      protocolsTableEl.find("tbody input[type='checkbox']:not(:checked)").trigger("click");
+      protocolsTableEl.find("tbody input[type='checkbox']:not(:checked)").trigger('click');
     } else {
-      protocolsTableEl.find("tbody input[type='checkbox']:checked").trigger("click");
+      protocolsTableEl.find("tbody input[type='checkbox']:checked").trigger('click');
     }
 
     // Prevent click event from propagating to parent
@@ -214,6 +218,7 @@ function initProtocolPreviewModal() {
           modalFooter.html(data.footer);
           initHandsOnTable(modalBody);
           modal.modal("show");
+          ProtocolRepositoryHeader.init();
           initHandsOnTable(modalBody);
           FilePreviewModal.init({ readOnly: true });
         },
@@ -294,6 +299,7 @@ function initCreateNewModal() {
   var link = $("[data-action='create-new']");
   var modal = $("#create-new-modal");
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
+  var newProtocol = parseInt(sessionStorage.getItem('scinote-dashboard-new-protocol'), 10);
 
   link.on("click", function() {
     $.ajax({
@@ -322,6 +328,11 @@ function initCreateNewModal() {
       }
     });
   });
+
+  if (Math.floor(Date.now() / 1000) - newProtocol < 15) {
+    link.click();
+    sessionStorage.removeItem('scinote-dashboard-new-protocol');
+  }
 
   submitBtn.on("click", function() {
     // Submit the form inside modal

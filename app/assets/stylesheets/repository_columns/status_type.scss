@@ -1,0 +1,186 @@
+// scss-lint:disable SelectorFormat
+
+@import "constants";
+
+.status-item-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.status-item-container {
+  align-items: center;
+  display: flex;
+  height: 34px;
+  margin-bottom: 5px;
+  position: relative;
+  transition: .3s;
+
+  .status-item-field {
+    border: 1px solid $input-border;
+    border-left: 0;
+    border-radius: 0 4px 4px 0;
+    flex-grow: 1;
+    font-size: 14px;
+    height: 34px;
+    padding: 6px 12px;
+  }
+
+  .status-item-icon {
+    align-items: center;
+    border: $border-default;
+    border-radius: 4px 0 0 4px;
+    cursor: pointer;
+    display: flex;
+    height: 34px;
+    justify-content: center;
+    min-width: 34px;
+
+    .emoji {
+      height: 24px;
+      width: 24px;
+    }
+
+    &:not([emoji])::after {
+      @include font-awesome;
+      content: $font-fas-exclamation-circle;
+    }
+  }
+
+  .status-item-icon-trash {
+    color: $color-silver-chalice;
+    padding: 0 10px;
+    width: 34px;
+
+    &:hover {
+      color: $color-dove-gray;
+    }
+  }
+
+  &.loading {
+    height: 0;
+
+    * {
+      display: none;
+    }
+  }
+
+  &[data-removed="true"] {
+    display: none;
+  }
+
+  &.error.error-highlight {
+    margin-bottom: 15px;
+
+    .status-item-icon,
+    .status-item-field {
+      border-color: $brand-danger;
+    }
+
+    .status-item-icon {
+      border-right-color: $input-border;
+    }
+
+    &::before {
+      @include font-small;
+      bottom: -14px;
+      color: $brand-danger;
+      content: attr(data-error-text);
+      left: 0;
+      line-height: 15px;
+      position: absolute;
+      white-space: nowrap;
+      width: 100%;
+    }
+  }
+}
+
+.add-status {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: $color-silver-chalice;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  height: 34px;
+  line-height: 32px;
+  margin-right: 32px;
+  transition: .2s;
+
+  .fa-plus {
+    display: inline-block;
+    height: 34px;
+    line-height: 32px;
+    text-align: center;
+    width: 34px;
+  }
+
+  &:hover {
+    border: 1px solid $color-gainsboro;
+  }
+
+  .add-status-label {
+    flex-grow: 1;
+    padding-left: 5px;
+  }
+}
+
+.emoji-picker {
+  z-index: 10000;
+
+
+  .emoji-picker__search-container {
+    align-items: center;
+    display: none;
+
+    .emoji-picker__search {
+      font-size: 14px;
+    }
+
+    .emoji-picker__search-icon {
+      line-height: 100%;
+      top: auto;
+    }
+  }
+
+  .emoji-picker__tab {
+    font-size: 24px;
+  }
+
+  .emoji-picker__tab-body {
+    transition: 0s;
+
+    h2 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+  }
+
+  .emoji-picker__preview {
+    display: none;
+  }
+
+  .emoji-picker__emoji {
+    .emoji {
+      height: 22px;
+      width: 22px;
+    }
+  }
+
+  .emoji-picker__emojis {
+    height: 14rem;
+  }
+
+  .emoji-picker__variant-popup {
+    align-items: center;
+    display: flex;
+
+    .emoji-picker__variant-popup-close-button {
+      flex-grow: 1;
+      height: auto;
+      position: relative;
+      text-align: right;
+      top: auto;
+    }
+  }
+}

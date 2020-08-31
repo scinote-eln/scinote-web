@@ -1,0 +1,150 @@
+// scss-lint:disable NestingDepth
+
+.sci-input-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+
+  label {
+    @include font-small;
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .sci-input-field {
+    @include font-button;
+    animation-timing-function: $timing-function-sharp;
+    border: $border-secondary;
+    border-radius: $border-radius-default !important;
+    box-shadow: none;
+    height: 36px;
+    outline: 0;
+    padding: 0 0 0 10px;
+    transition: .3s;
+    width: 100%;
+
+    &:focus {
+      border: $border-focus;
+    }
+
+    &:disabled {
+      background: transparent;
+    }
+
+    &::placeholder {
+      color: $color-alto;
+    }
+  }
+
+  .fas {
+    line-height: 36px;
+    position: absolute;
+    text-align: center;
+    bottom: 0;
+    width: 25px;
+  }
+
+  &.left-icon {
+    .sci-input-field {
+      padding: 0 0 0 30px;
+    }
+
+    .fas {
+      left: 5px;
+    }
+  }
+
+  &.right-icon {
+    .sci-input-field {
+      padding: 0 30px 0 10px;
+    }
+
+    .fas {
+      right: 5px;
+    }
+  }
+
+  &.success,
+  &.error {
+    &::after {
+      @include font-awesome;
+      top: 0;
+      line-height: 36px;
+      position: absolute;
+      right: 5px;
+      text-align: center;
+      width: 25px;
+    }
+  }
+
+  &.error {
+    padding-bottom: 6px;
+
+    .sci-input-field {
+      border: $border-danger;
+    }
+
+    .fas {
+      bottom: 6px;
+    }
+
+    &::before {
+      @include font-small;
+      bottom: -9px;
+      color: $brand-danger;
+      content: attr(data-error-text);
+      left: 0;
+      line-height: 15px;
+      position: absolute;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    &.success-icon {
+      &::after {
+        color: $brand-success;
+        content: $font-fas-check;
+      }
+    }
+
+    &.error-icon {
+      &::after {
+        color: $brand-danger;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+
+    &.success-icon,
+    &.error-icon {
+      .sci-input-field {
+        padding: 0 30px 0 10px;
+      }
+
+      &.right-icon {
+        .sci-input-field {
+          padding: 0 60px 0 10px;
+        }
+
+        &::after {
+          right: 35px;
+        }
+      }
+    }
+  }
+
+  &.disabled {
+    label {
+      color: $color-alto;
+    }
+
+    .sci-input-field {
+      border: $border-tertiary;
+      color: $color-alto;
+
+      &::placeholder {
+        color: inherit;
+      }
+    }
+  }
+}

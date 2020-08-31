@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module DrawStep
-  def draw_step(subject)
+module Reports::Docx::DrawStep
+  def draw_step(subject, my_module)
     color = @color
-    step = Step.find_by_id(subject['id']['step_id'])
+    step = my_module.protocols.first.steps.find_by(id: subject['id']['step_id'])
     return unless step
 
     step_type_str = step.completed ? 'completed' : 'uncompleted'
@@ -33,7 +33,7 @@ module DrawStep
     end
 
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, step)
     end
     @docx.p
     @docx.p

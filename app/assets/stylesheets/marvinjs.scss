@@ -1,0 +1,196 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+// scss-lint:disable IdSelector
+
+@import "constants";
+@import "mixins";
+
+// MarvinJs modal
+.modal-marvin-js {
+  background: transparent;
+  font-size: $font-size-base;
+  padding: 0 !important;
+
+  .preview-close {
+    background: transparent;
+    border: 0;
+    color: $color-white;
+    display: inline-block;
+    float: right;
+  }
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+
+  .modal-content {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: $color-white;
+    height: 100%;
+    width: auto;
+  }
+
+  .modal-header {
+    background: $color-black;
+    border: 0;
+    display: flex;
+    height: 60px;
+    line-height: 40px;
+    padding: 10px 15px;
+    text-align: center;
+
+    .file-save-link {
+      flex-shrink: 0;
+      margin: 0 20px 0 0;
+    }
+
+    .file-name {
+      align-items: center;
+      display: flex;
+      flex-shrink: 0;
+      float: left;
+      margin-right: auto;
+
+      input {
+        border-radius: 5px;
+        box-shadow: none;
+        color: $color-black;
+        height: 40px;
+        margin-left: 5px;
+        outline: 0;
+        padding: 5px 10px;
+        position: relative;
+        width: 350px;
+      }
+    }
+  }
+
+  .modal-body {
+    height: calc(100% - 60px);
+    padding: 0;
+
+    #marvinjs-editor {
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+
+      #marvinjs-sketch {
+        border-right: 1px solid $color-gainsboro;
+        float: left;
+        min-height: 450px;
+        min-width: 500px;
+        overflow: hidden;
+      }
+    }
+
+    .sketch-container {
+      @include md-card-style;
+      cursor: pointer;
+      margin: 10px;
+      overflow: hidden;
+      padding: 10px;
+      position: relative;
+
+      .sketch-image {
+        height: 100%;
+        width: 100%;
+      }
+
+      .sketch-name {
+        color: $brand-primary;
+        font-family: Lato;
+        font-size: 16px;
+        line-height: 18px;
+        margin: 10px auto;
+        overflow: hidden;
+        text-align: center;
+        width: 160px;
+      }
+
+      .sketch-object {
+        color: $color-emperor;
+        font-size: 12px;
+        opacity: .6;
+        text-align: center;
+      }
+    }
+  }
+
+  .file-save-link {
+    color: $color-white;
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+}
+
+#new-step-sketch {
+
+  .sketch-container {
+    display: grid;
+    float: left;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    width: 100%;
+  }
+}
+
+button.new-marvinjs-upload-button {
+  padding: 1px 16px !important;
+
+  .new-marvinjs-upload-icon {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+li.new-marvinjs-upload-button {
+
+  .new-marvinjs-upload-icon {
+    display: inline-block;
+    height: 24px;
+    margin-left: -9px;
+    width: 24px;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.mce-i-marvinjs::before {
+  background-image: url("/images/icon_small/marvinjs.svg");
+  content: "";
+  display: block;
+  height: 32px;
+  left: -8px;
+  line-height: 16px;
+  position: relative;
+  top: -8px;
+  width: 32px;
+}
+
+.modal-promo-marvin-js {
+  .modal-header {
+    padding-left: 35px;
+  }
+
+  .modal-body {
+    padding: 15px 35px;
+  }
+}

@@ -1,32 +1,32 @@
 <div class="well">
-  <div id="new-result-assets-select" class="text-center new-asset-box">
-    <span class="help_tooltips"
-          data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_add_files') %>"
-          data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_add_files') %>">
-    <%=t 'assets.drag_n_drop.label_html' %>
-    <label>
-      <span class="btn btn-default new-asset-upload-button">
-        <span class="fas fa-file-upload new-asset-upload-icon"></span>
-        <%=t 'assets.drag_n_drop.browse_label' %>
+  <%= form_for(@result, url: my_module_result_assets_path(format: :json), data: { type: :json }) do |f| %>
+    <div id="new-result-assets-select" class="text-center new-asset-box">
+      <span>
+        <%= t('assets.drag_n_drop.label_html') %>
+        <label>
+          <span class="btn btn-default new-asset-upload-button">
+            <span class="fas fa-file-upload new-asset-upload-icon"></span>
+            <%= t('assets.drag_n_drop.browse_label') %>
+          </span>
+          <%= f.file_field :file,
+                           id: 'drag-n-drop-assets',
+                           class: 'drag-n-drop-file-input',
+                           direct_upload: true,
+                           multiple: true,
+                           onchange: "DragNDropResults.init(this.files);" %>
+        </label>
       </span>
-      <input type="file"
-             onchange="DragNDropResults.init(this.files, 'select')"
-             id="drag-n-drop-assets"
-             style="display: none" multiple>
-    </label>
-    </span>
-  </div>
-  <br />
-  <div class="align-right">
-    <button type="button"
-            class="btn btn-default cancel-new"
-            onClick="DragNDropResults.destroyAll()">
-      <%= t("general.cancel")%>
-    </button>
-    <button type="button"
-            class="btn btn-success save-result"
-            disabled="true"
-            data-href="<%= my_module_result_assets_path(format: :json) %>"
-            onClick="DragNDropResults.processResult(this)"><%=t 'result_assets.new.create' %></button>
-  </div>
+    </div>
+    <br />
+    <div class="align-right">
+      <%= f.button t('general.cancel'),
+                   class: 'btn btn-secondary cancel-new',
+                   onclick: 'DragNDropResults.destroyAll();' %>
+      <%= f.button t('result_assets.new.create'),
+                   class: 'btn btn-primary save-result',
+                   onclick: 'DragNDropResults.processResult(event);',
+                   disabled: true,
+                   data: { href: my_module_result_assets_path(page: params[:page], order: params[:order], format: :json) } %>
+    </div>
+  <% end %>
 </div>

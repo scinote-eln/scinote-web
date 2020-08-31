@@ -1,5 +1,7 @@
 <div id="table-form" class="well">
-	<%= bootstrap_form_for(@result, url: result_table_path(format: :json), remote: true) do |f| %>
+	<%= bootstrap_form_for(@result, url: result_table_path(format: :json),
+																	data: { 'name-max-length': Constants::NAME_MAX_LENGTH },
+																	remote: true) do |f| %>
 		<%= f.text_field :name, style: "margin-top: 10px;" %><br />
 		<div class="editable-table">
 			<%= f.fields_for :table do |ff| %>
@@ -10,12 +12,12 @@
 		</div>
     <hr>
 		<div class="align-right">
-			<button type="button" class="btn btn-default cancel-edit">
+			<button type="button" class="btn btn-secondary cancel-edit">
 				<%= t("general.cancel")%>
 			</button>
-			<%= f.submit t("general.save"),
-									 class: 'btn btn-success save-result',
-									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE, true);" %>
+			<%= f.button t("general.save"),
+									 class: 'btn btn-primary save-result',
+									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE);" %>
 		</div>
 	<% end %>
 </div>

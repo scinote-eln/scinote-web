@@ -1,6 +1,6 @@
 Canaid::Permissions.register_for(Team) do
-  # team: leave, read users, read projects,
-  #       read protocols, read/export repositories
+  # team: leave, read users, read projects
+  #       read protocols
   #
   can :read_team do |user, team|
     user.is_member_of_team?(team)
@@ -16,6 +16,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_admin_of_team?(team)
   end
 
+  # team: invite new users to the team
+  can :invite_team_users do
+    true
+  end
+
   # project: create
   can :create_projects do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
@@ -28,23 +33,9 @@ Canaid::Permissions.register_for(Team) do
 
   # repository: create, copy
   can :create_repositories do |user, team|
-    user.is_admin_of_team?(team) &&
-      team.repositories.count < Rails.configuration.x.repositories_limit
-  end
-
-  # repository: create/import record
-  can :create_repository_rows do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
-  end
-
-  # repository: update/delete records
-  can :manage_repository_rows do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
-  end
-
-  # repository: create field
-  can :create_repository_columns do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
+    within_limits = Repository.within_global_limits?
+    within_limits = Repository.within_team_limits?(team) if within_limits
+    within_limits && user.is_admin_of_team?(team)
   end
 
   # this permission is scattered around the application
@@ -85,19 +76,5 @@ Canaid::Permissions.register_for(Protocol) do
   can :clone_protocol_in_repository do |user, protocol|
     can_read_protocol_in_repository?(user, protocol) &&
       can_create_protocols_in_repository?(user, protocol.team)
-  end
-end
-
-Canaid::Permissions.register_for(Repository) do
-  # repository: update, delete
-  can :manage_repository do |user, repository|
-    user.is_admin_of_team?(repository.team)
-  end
-end
-
-Canaid::Permissions.register_for(RepositoryColumn) do
-  # repository: update/delete field
-  can :manage_repository_column do |user, repository_column|
-    can_create_repository_columns?(user, repository_column.repository.team)
   end
 end

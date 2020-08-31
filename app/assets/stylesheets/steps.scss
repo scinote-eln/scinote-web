@@ -42,53 +42,48 @@
 
   .complete-step-btn {
     display: inline-block;
-    line-height: 39px;
-
-    button {
-      display: block;
-      font-size: 12px;
-      margin: auto 0;
-      padding: 3px 10px;
-
-      span {
-        font-size: 15px;
-      }
-    }
   }
 
-  .panel-heading {
-    height: 39px;
+  .step-heading {
+    align-items: center;
+    border: 0;
+    display: flex;
+    min-height: 46px;
     padding-bottom: 0;
     padding-top: 0;
 
     .panel-options {
       bottom: 0;
-      line-height: 39px;
+      flex-grow: 1;
+      flex-shrink: 0;
+      line-height: 46px;
+      text-align: right;
     }
 
     span.step-number {
-      font-size: 24px;
+      font-size: 16px;
       font-weight: bold;
-      margin: 0 10px;
+      margin: 0 5px 0 10px;
       min-width: fit-content;
     }
 
     .left-floats {
       align-items: center;
       display: flex;
-      height: 39px;
+      max-width: 100%;
+      min-height: inherit;
+      overflow: hidden;
       padding-right: 15px;
 
       .step-name-link {
         display: flex;
         flex-shrink: 1;
-        line-height: 39px;
         overflow: hidden;
 
         .name-block {
           display: flex;
           flex-shrink: 1;
-          height: 39px;
+          height: 100%;
           overflow: hidden;
 
           @media (max-width: 1188px) {
@@ -124,6 +119,35 @@
   .pseudo-attachment-container {
     display: flex;
     justify-content: center;
+    overflow: hidden;
+
+    .file-preview-link {
+      position: relative;
+    }
+
+    &.new {
+      order: 0 !important;
+
+      .file-preview-link {
+        transition: .5s;
+      }
+
+      .attachment-placeholder {
+        border: 1px solid $brand-primary;
+
+        &::before {
+          background: $brand-primary;
+          border-radius: 0 5px;
+          bottom: 16px;
+          color: $color-white;
+          content: "NEW";
+          left: 8px;
+          line-height: 20px;
+          position: absolute;
+          width: 50px;
+        }
+      }
+    }
   }
 }
 
@@ -131,7 +155,7 @@
   @include md-card-style;
   color: $color-silver-chalice;
   height: 280px;
-  margin: 8px;
+  margin: 4px 8px 16px;
   text-align: center;
   width: 220px;
 
@@ -139,17 +163,50 @@
     color: inherit;
   }
 
+  &.new {
+    background-color: rgba(95, 95, 95, .1);
+  }
+
   .attachment-thumbnail {
     display: inline-block;
     height: 160px;
-    margin: 16px 10px 5px;
+    margin: 16px 0 5px;
     overflow: hidden;
+    padding: 0 10px;
+    position: relative;
     text-align: center;
+    width: 100%;
 
     img {
       border-radius: 5px;
       max-height: 100%;
       max-width: 100%;
+    }
+
+    &.marvinjs {
+
+      &::before,
+      &::after {
+        content: "";
+        border-radius: 16px 0 0 16px;
+        display: block;
+        height: 32px;
+        right: 0;
+        line-height: 32px;
+        position: absolute;
+        bottom: 10px;
+        width: 36px;
+      }
+
+      &::before {
+        background: $marvinjs-color;
+      }
+
+      &::after {
+        background-image: url("/images/icon_small/marvinjs-white.svg");
+        right: 4px;
+        width: 32px;
+      }
     }
 
     i.fas {
@@ -198,6 +255,7 @@
 
   .remove-icon {
     bottom: 15px;
+    cursor: pointer;
     display: none;
     position: relative;
     right: 10px;
@@ -248,9 +306,11 @@
 .attachments-actions {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
 
   .title {
     flex-grow: 1;
+    flex-shrink: 0;
   }
 
   .attachments-order {
@@ -275,4 +335,8 @@
 
 .comments-title {
   color: $color-emperor;
+}
+
+.expand-all-steps {
+  margin: 0 0 15px 15px;
 }

@@ -1,0 +1,256 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
+@import "constants";
+
+.repository-table {
+  .dataTables_filter {
+    float: right;
+  }
+
+  // hack only for firefox
+  @-moz-document url-prefix() {
+    input.form-control[type="file"] {
+      font-size: 13px;
+      height: auto;
+      padding: 3px 12px;
+    }
+  }
+
+  // Cells
+
+
+  // Assigned
+
+  .assigned-column {
+    padding: 1px 8px;
+    position: relative;
+
+    .fas {
+      line-height: 35px;
+      text-align: center;
+      width: 30px;
+    }
+
+    .repository-row-edit-icon {
+      cursor: pointer;
+      display: none;
+    }
+
+    .assign-counter-container {
+      border-radius: $border-radius-tag;
+      display: inline-block;
+      line-height: 35px;
+      position: absolute;
+      right: 0;
+      width: calc(100% - 40px);
+
+      .assign-counter {
+        display: inline-block;
+        height: 100%;
+        padding-left: 5px;
+        width: 100%;
+
+        &:hover,
+        &:visited,
+        &:focus {
+          text-decoration: none;
+        }
+
+        &.has-assigned {
+          color: $brand-primary;
+        }
+      }
+
+      &:hover {
+        background-color: $color-alto;
+      }
+
+      .dropdown-menu {
+        padding: 8px;
+        width: 320px;
+
+        .search-tasks:placeholder-shown + .fa-times-circle {
+          display: none;
+        }
+
+        .fa-times-circle {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .circle-icon {
+      margin: 9px 30px;
+    }
+  }
+
+  // Added on
+  .added-on {
+    white-space: nowrap;
+  }
+
+  // Checklists
+  .checklist-dropdown {
+    .dropdown-menu {
+      min-width: 220px;
+
+      .checklist-item {
+        line-height: 18px;
+        padding: 5px 15px;
+      }
+    }
+
+    span {
+      color: $brand-primary;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  // Text and Number field
+
+  .text-field.sci-input-container {
+    min-width: 150px;
+  }
+
+  // Status
+  .repository-status-value-container {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .repository-status-value-icon {
+    .emoji {
+      height: 24px;
+      margin-right: 5px;
+      min-width: 24px;
+      width: 24px;
+    }
+  }
+
+  .dropdown-selector-container {
+    width: 150px;
+
+    .emoji-status {
+      .emoji {
+        height: 24px;
+        margin-right: 5px;
+        min-width: 24px;
+        transition: .3s;
+        width: 24px;
+      }
+    }
+
+    &.open {
+      .ds-simple.emoji-status {
+        .emoji {
+          height: 12px;
+          margin-right: 2px;
+          min-width: 12px;
+          width: 12px;
+        }
+      }
+    }
+  }
+
+  // DateTime
+  .datetime-container {
+    display: flex;
+    position: relative;
+
+    .sci-input-container {
+      margin: 0 2px;
+    }
+
+    .separator {
+      line-height: 36px;
+      text-align: center;
+      width: 20px;
+    }
+
+    .start-time,
+    .end-time {
+      display: flex;
+      position: relative;
+    }
+
+    .date-container {
+      width: 160px;
+    }
+
+    .time-container {
+      width: 90px;
+
+      .fa-clock {
+        cursor: pointer;
+      }
+    }
+
+
+    &.dateonly,
+    &.range-type .dateonly {
+      .time-container {
+        display: none;
+      }
+    }
+
+    &.timeonly,
+    &.range-type .timeonly {
+      .date-container {
+        display: none;
+      }
+    }
+  }
+
+  // Actions
+  .dataTable {
+    tbody {
+      tr:hover {
+        background-color: $color-concrete;
+
+        .assigned-column {
+          .repository-row-edit-icon {
+            display: inline-block;
+          }
+        }
+      }
+
+      .editing {
+        border: 1px solid;
+      }
+    }
+  }
+
+  &.editing {
+    .dataTable {
+      tbody {
+        tr.blocked {
+          opacity: .4;
+          pointer-events: none;
+        }
+
+        tr:hover {
+          .assigned-column {
+            .repository-row-edit-icon {
+              display: none;
+            }
+
+            .assign-counter-container {
+              background-color: transparent;
+            }
+
+            .circle-icon {
+              margin-left: 30px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

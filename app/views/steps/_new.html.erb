@@ -3,10 +3,10 @@
     <h4><%= t("protocols.steps.new.add_step_title") %></h4>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
     <div class="align-right">
-      <button type="button" data-action="cancel-new" class="btn btn-default">
+      <button type="button" data-action="cancel-new" class="btn btn-secondary">
         <%= t("general.cancel")%>
       </button>
-      <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-success step-save', onclick: "processStep(event, false);" %>
+      <%= f.button t("protocols.steps.new.add_step"), class: 'btn btn-primary step-save', onclick: "processStep(event, false);" %>
     </div>
   <% end %>
 </div>

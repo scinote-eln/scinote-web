@@ -46,10 +46,14 @@ module SmartAnnotations
       def generate_rep_item_snippet(name, object)
         if object
           repository_name = fetch_repository_name(object)
-          return "<span class='sa-type'>" \
-                 "#{trim_repository_name(repository_name)}</span> " \
-                 "<a href='#{ROUTES.repository_row_path(object)}' " \
-                 "class='record-info-link'>#{object.name}</a>"
+          link = if object.archived?
+                   "#{object.name} #{I18n.t('atwho.res.archived')}"
+                 else
+                   "<a href='#{ROUTES.repository_repository_row_path(object.repository, object)}' " \
+                   "class='record-info-link'>#{object.name}</a>"
+                 end
+
+          return "<span class='sa-type'>#{trim_repository_name(repository_name)}</span> " + link
         end
         "<span class='sa-type'>Inv</span> " \
         "#{name} #{I18n.t('atwho.res.deleted')}"

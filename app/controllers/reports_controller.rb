@@ -18,6 +18,7 @@ class ReportsController < ApplicationController
     step_contents_modal
     result_contents_modal
     project_contents
+    experiment_contents
     module_contents
     step_contents
     result_contents
@@ -30,6 +31,7 @@ class ReportsController < ApplicationController
                 only: %i(new edit available_repositories)
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
+  before_action :switch_team_with_param, only: :index
 
   # Index showing all reports of a single project
   def index; end
@@ -146,7 +148,9 @@ class ReportsController < ApplicationController
     content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
     respond_to do |format|
       format.pdf do
-        render pdf: 'report', header: { right: '[page] of [topage]' },
+        render pdf: 'report', header: { html: { template: 'reports/header.pdf.erb' }},
+                              footer: { html: { template: 'reports/footer.pdf.erb',
+                                                locals: { current_time: I18n.l(Time.zone.now, format: :full) }}},
                               locals: { content: content },
                               template: 'reports/report.pdf.erb',
                               disable_javascript: true
@@ -325,30 +329,28 @@ class ReportsController < ApplicationController
       if elements_empty? elements
         format.json { render json: {}, status: :no_content }
       else
-        format.json {
+        format.json do
           render json: {
             status: :ok,
             elements: elements
           }
-        }
+        end
       end
     end
   end
 
   def experiment_contents
-    experiment = @project.experiments.find_by_id(params[:id])
-    exp_module_ids = experiment.my_modules.pluck(:id)
-    modules = (params[:modules].select { |k, p| exp_module_ids.include?(k.to_i) && p == '1' })
-              .keys
-              .collect(&:to_i)
+    experiment = @project.experiments.find_by(id: params[:id])
+    module_ids = (params[:modules].select { |_, p| p == '1' }).keys.collect(&:to_i)
+    selected_modules = experiment.my_modules.where(id: module_ids)
 
     respond_to do |format|
       if experiment.blank?
         format.json { render json: {}, status: :not_found }
-      elsif modules.blank?
+      elsif selected_modules.blank?
         format.json { render json: {}, status: :no_content }
       else
-        elements = generate_experiment_contents_json(experiment, modules)
+        elements = generate_experiment_contents_json(selected_modules)
       end
 
       if elements_empty? elements
@@ -451,12 +453,12 @@ class ReportsController < ApplicationController
   AvailableRepository = Struct.new(:id, :name)
 
   def load_vars
-    @report = Report.find_by_id(params[:id])
+    @report = current_team.reports.find_by(id: params[:id])
     render_404 unless @report
   end
 
   def load_vars_nested
-    @project = Project.find_by_id(params[:project_id])
+    @project = current_team.projects.find_by(id: params[:project_id])
     render_404 unless @project
     render_403 unless can_read_project?(@project)
   end
@@ -477,13 +479,17 @@ class ReportsController < ApplicationController
   end
 
   def load_available_repositories
-    repositories = current_team.repositories
-                               .name_like(search_params[:q])
-                               .limit(Constants::SEARCH_LIMIT)
-                               .select(:id, :name)
-    @available_repositories = repositories.collect do |repository|
-      AvailableRepository.new(repository.id,
-                              ellipsize(repository.name, 75, 50))
+    @available_repositories = []
+    repositories = Repository.active
+                             .accessible_by_teams(current_team)
+                             .name_like(search_params[:q])
+                             .limit(Constants::SEARCH_LIMIT)
+                             .select(:id, :name, :team_id, :permission_level)
+    repositories.each do |repository|
+      next unless can_manage_repository_rows?(current_user, repository)
+
+      @available_repositories.push(AvailableRepository.new(repository.id,
+                                                           ellipsize(repository.name, 75, 50)))
     end
   end
 

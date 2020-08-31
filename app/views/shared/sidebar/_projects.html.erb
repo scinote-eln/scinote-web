@@ -1,13 +1,17 @@
-<ul>
+<ul class="sidebar-root">
   <% @projects_tree.each do |project| %>
     <% cache [action_name, current_user, project] do %>
-      <li data-parent="candidate" data-project-id="<%= project.id %>">
-        <span class="tree-link line-wrap no-indent">
-          <i class="no-arrow"></i>
+      <li data-parent="candidate"
+          class="branch" >
+        <span class="tree-link no-indent" title="<%= project.name %>">
+          <% if project.active_experiments.any? %>
+            <i class="fas fa-caret-right tree-toggle"></i>
+          <% end %>
             <%= link_to project.name,
                         project_action_to_link_to(project),
                         title: project.name,
-                        data: { project_id: project.id } %>
+                        class: 'line-wrap',
+                        data: { type: 'project', id: project.id } %>
         </span>
         <%= render partial: 'shared/sidebar/experiments', locals: { project: project } %>
       </li>

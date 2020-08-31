@@ -71,7 +71,7 @@ describe ProjectsController, type: :controller do
       it 'returns success response' do
         get :index, params: params, format: :json
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
     end
   end
@@ -85,19 +85,7 @@ describe ProjectsController, type: :controller do
       it 'returns success response' do
         get :index_dt, params: params, format: :json
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
-      end
-    end
-  end
-
-  describe '#archive' do
-    context 'in JSON format' do
-      let(:params) { { team: team.id, sort: 'atoz' } }
-
-      it 'returns success response' do
-        get :archive, params: params, format: :json
-        expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
     end
   end
@@ -113,10 +101,10 @@ describe ProjectsController, type: :controller do
       it 'returns success response, then unprocessable_entity on second run' do
         get :create, params: params, format: :json
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
         get :create, params: params, format: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
 
       it 'calls create activity for creating project' do
@@ -141,7 +129,7 @@ describe ProjectsController, type: :controller do
       it 'returns success response' do
         get :edit, params: params, format: :json
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
     end
   end
@@ -158,7 +146,7 @@ describe ProjectsController, type: :controller do
       it 'returns redirect response' do
         action
         expect(response).to have_http_status(:redirect)
-        expect(response.content_type).to eq 'text/html'
+        expect(response.media_type).to eq 'text/html'
       end
 
       it 'calls create activity service (change_project_visibility)' do
@@ -209,7 +197,7 @@ describe ProjectsController, type: :controller do
       it 'returns success response' do
         get :show, params: params
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'text/html'
+        expect(response.media_type).to eq 'text/html'
       end
     end
   end
@@ -225,7 +213,7 @@ describe ProjectsController, type: :controller do
       it 'returns success response' do
         get :notifications, format: :json, params: params
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'application/json'
+        expect(response.media_type).to eq 'application/json'
       end
     end
   end
@@ -241,7 +229,7 @@ describe ProjectsController, type: :controller do
       it 'returns success response' do
         get :experiment_archive, params: params
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq 'text/html'
+        expect(response.media_type).to eq 'text/html'
       end
     end
   end

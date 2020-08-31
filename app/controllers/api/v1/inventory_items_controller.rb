@@ -11,17 +11,13 @@ module Api
       before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
-        items =
-          @inventory.repository_rows
-                    .includes(repository_cells: :repository_column)
-                    .includes(
-                      repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES
-                    ).page(params.dig(:page, :number))
-                    .per(params.dig(:page, :size))
-        incl = params[:include] == 'inventory_cells' ? :inventory_cells : nil
-        render jsonapi: items,
-               each_serializer: InventoryItemSerializer,
-               include: incl
+        items = @inventory.repository_rows
+                          .active
+                          .preload(repository_cells: :repository_column)
+                          .preload(repository_cells: @inventory.cell_preload_includes)
+                          .page(params.dig(:page, :number))
+                          .per(params.dig(:page, :size))
+        render jsonapi: items, each_serializer: InventoryItemSerializer, include: include_params
       end
 
       def create
@@ -97,9 +93,7 @@ module Api
       private
 
       def check_manage_permissions
-        unless can_manage_repository_rows?(@team)
-          raise PermissionError.new(RepositoryItem, :manage)
-        end
+        raise PermissionError.new(RepositoryItem, :manage) unless can_manage_repository_rows?(@inventory)
       end
 
       def inventory_item_params
@@ -121,6 +115,10 @@ module Api
       # https://github.com/json-api/json-api/pull/1197
       def inventory_cells_params
         params[:included]&.select { |el| el[:type] == 'inventory_cells' }
+      end
+
+      def permitted_includes
+        %w(inventory_cells)
       end
     end
   end

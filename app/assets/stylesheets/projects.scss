@@ -7,28 +7,23 @@
 $color-group-hover: $color-alabaster;
 $color-module-hover: $brand-primary;
 
-#new-project-modal,
-#edit-project-modal,
-#copy-to-repository-modal {
-  .btn-group label.btn-toggle:not(.active) {
-    background-color: $color-white;
-    border-color: $color-silver;
-    color: $color-emperor;
+#sortMenu {
+  border-color: $color-white;
+
+  &:not(:focus) {
+    color: $color-silver-chalice;
+  }
+
+  &:hover {
+    color: inherit;
   }
 }
 
 /* Secondary navigation */
 
 .navbar-nav {
-
-  .btn-group .btn-toggle:not(.active) {
-    background-color: $color-white;
-    border-color: $color-silver;
-    color: $color-emperor;
-  }
-
   .projects-view-mode-switch {
-    margin: 10px;
+    margin: 8px 10px 12px;
   }
 
 }
@@ -36,26 +31,38 @@ $color-module-hover: $brand-primary;
 /* Canvas index page */
 
 #canvas-container:not(.canvas-container-edit-mode) {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 /**********************************
  * jsPlumb CANVAS RELATED STYLING *
  *********************************/
 #diagram-buttons {
-  margin-bottom: 10px;
+  align-items: center;
+  display: flex;
+
+  #edit-canvas-button {
+    margin-right: 5px;
+  }
+
+  .actions-button {
+    margin-right: 15px;
+  }
+
+  .toolbarButtons {
+    align-items: center;
+    display: flex;
+
+    .zoom-text {
+      margin-right: 5px;
+    }
+  }
 }
 
 #update-canvas {
-  #canvas-new-module {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btn-group > .btn:first-child {
-    border-bottom-left-radius: 0;
-  }
-  .btn-group > .btn:last-child {
-    border-bottom-right-radius: 0;
+
+  .canvas-header {
+    margin-bottom: 5px;
   }
 }
 
@@ -483,7 +490,7 @@ li.module-hover {
   height: 400px;
   margin: 0 auto;
   margin-bottom: 35px;
-  margin-top: 45px;
+  margin-top: 15px;
   max-width: 700px;
 
   .panel-title {
@@ -540,9 +547,9 @@ li.module-hover {
   }
 
   .experiment-no-description {
+    @include font-h3;
     color: $color-alto;
     display: block;
-    font-size: $font-size-large;
     font-weight: bold;
     margin-top: 10px;
     text-align: center;

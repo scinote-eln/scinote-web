@@ -14,7 +14,7 @@
 
 @media only screen and (max-width: 768px) {
   .repository-columns-body {
-    .delete-column {
+    .delete-repo-column {
       margin-top: 5px;
     }
   }
@@ -24,15 +24,10 @@
   float: right;
 }
 
-.new-repository-button {
-  float: left;
-  margin-right: 5px;
-}
-
 .custom-alert-info {
   background-color: $state-info-bg;
   border: 1px solid $state-info-border;
-  color: $state-info-text;
+  color: $color-volcano;
   margin: 10px 0;
   opacity: .86;
   padding: 15px;

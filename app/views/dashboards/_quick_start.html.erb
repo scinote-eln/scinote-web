@@ -1,0 +1,27 @@
+<div class="quick-start-widget basic-widget">
+  <div class="widget-header">
+    <div class="widget-title">
+      <%= t("dashboard.quick_start.title") %>
+    </div>
+  </div>
+  <div class="widget-body">
+    <% if current_user.is_guest_of_team?(current_team) %>
+      <div class="widget-placeholder">
+        <p class="widget-placeholder-title"><%= t("dashboard.quick_start.placeholder.title") %></p>
+        <p class="widget-placeholder-description"><%= t("dashboard.quick_start.placeholder.description") %></p>
+      </div>
+    <% else %>
+      <div class="quick-start-description">
+        <%= t("dashboard.quick_start.description") %>
+      </div>
+      <div class="new-task btn btn-secondary btn-block"><i class="fas fa-plus"></i><%= t("dashboard.quick_start.new_task") %></div>
+      <%= link_to protocols_path, {class: "new-protocol btn btn-secondary btn-block"} do %>
+        <i class="fas fa-edit"></i><%= t("dashboard.quick_start.new_protocol") %>
+      <% end %>
+      <%= link_to reports_path, {class: "new-report btn btn-secondary btn-block"} do %>
+        <i class="fas fa-clipboard-check"></i><%= t("dashboard.quick_start.new_report") %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<%= render "create_task_modal" %>

@@ -1,34 +1,29 @@
 # frozen_string_literal: true
 
-class RepositoryDateValue < ApplicationRecord
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User'
-  has_one :repository_cell, as: :value, dependent: :destroy
-  accepts_nested_attributes_for :repository_cell
-
-  validates :repository_cell, presence: true
-  validates :data, presence: true
-
-  SORTABLE_COLUMN_NAME = 'repository_date_values.data'
-  SORTABLE_VALUE_INCLUDE = :repository_date_value
-
-  def formatted
-    data
-  end
+class RepositoryDateValue < RepositoryDateTimeValueBase
+  PRELOAD_INCLUDE = :repository_date_value
 
   def data_changed?(new_data)
-    new_data != data
+    new_time = Time.zone.parse(new_data)
+    new_time.to_date != data.to_date
   end
 
-  def update_data!(new_data, user)
-    self.data = new_data
-    self.last_modified_by = user
-    save!
+  def formatted
+    super(:full_date)
   end
 
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
-    value.data = payload
+    value.data = Time.zone.parse(payload)
     value
   end
+
+  def self.import_from_text(text, attributes, options = {})
+    date_format = (options.dig(:user, :settings, :date_format) || Constants::DEFAULT_DATE_FORMAT).gsub(/%-/, '%')
+    new(attributes.merge(data: DateTime.strptime(text, date_format)))
+  rescue ArgumentError
+    nil
+  end
+
+  alias export_formatted formatted
 end

@@ -8,21 +8,16 @@ class User < ApplicationRecord
   include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
+  include ActiveStorageConcerns
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
-         :timeoutable, :omniauthable,
+         :timeoutable, :omniauthable, :lockable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
-  has_attached_file :avatar,
-                    styles: {
-                      medium: Constants::MEDIUM_PIC_FORMAT,
-                      thumb: Constants::THUMB_PIC_FORMAT,
-                      icon: Constants::ICON_PIC_FORMAT,
-                      icon_small: Constants::ICON_SMALL_PIC_FORMAT
-                    },
-                    default_url: Constants::DEFAULT_AVATAR_URL
+
+  has_one_attached :avatar
 
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
@@ -35,10 +30,6 @@ class User < ApplicationRecord
             presence: true,
             length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  validates_attachment :avatar,
-    :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
-            message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications_settings
@@ -52,8 +43,7 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
-    },
-    tooltips_enabled: true
+    }
   )
 
   store_accessor :variables, :export_vars
@@ -183,9 +173,99 @@ class User < ApplicationRecord
            class_name: 'Protocol',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by
+  has_many :archived_repositories,
+           class_name: 'Repository',
+           foreign_key: 'archived_by_id',
+           inverse_of: :archived_by,
+           dependent: :nullify
+  has_many :restored_repositories,
+           class_name: 'Repository',
+           foreign_key: 'restored_by_id',
+           inverse_of: :restored_by,
+           dependent: :nullify
+  has_many :archived_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'archived_by_id',
+           inverse_of: :archived_by,
+           dependent: :nullify
+  has_many :restored_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'restored_by_id',
+           inverse_of: :restored_by,
+           dependent: :nullify
   has_many :assigned_my_module_repository_rows,
            class_name: 'MyModuleRepositoryRow',
            foreign_key: 'assigned_by_id'
+  has_many :created_repository_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_number_values,
+           class_name: 'RepositoryNumberValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_number_values,
+           class_name: 'RepositoryNumberValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_text_values,
+           class_name: 'RepositoryTextValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_text_values,
+           class_name: 'RepositoryTextValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
@@ -202,11 +282,6 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
-  # If other errors besides parameter "avatar" exist,
-  # they will propagate to "avatar" also, so remove them
-  # and put all other (more specific ones) in it
-  after_validation :filter_paperclip_errors
-
   before_destroy :destroy_notifications
 
   def name
@@ -220,9 +295,31 @@ class User < ApplicationRecord
   def avatar_remote_url=(url_value)
     self.avatar = URI.parse(url_value)
     # Assuming url_value is http://example.com/photos/face.png
-    # avatar_file_name == "face.png"
-    # avatar_content_type == "image/png"
+    # avatar.filename == "face.png"
+    # avatar.content_type == "image/png"
     @avatar_remote_url = url_value
+  end
+
+  def avatar_variant(style)
+    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style.to_s) unless avatar.attached?
+
+    format = case style.to_sym
+             when :medium
+               Constants::MEDIUM_PIC_FORMAT
+             when :thumb
+               Constants::THUMB_PIC_FORMAT
+             when :icon
+               Constants::ICON_PIC_FORMAT
+             when :icon_small
+               Constants::ICON_SMALL_PIC_FORMAT
+             else
+               Constants::ICON_SMALL_PIC_FORMAT
+             end
+    avatar.variant(resize_to_limit: format)
+  end
+
+  def avatar_url(style)
+    Rails.application.routes.url_helpers.url_for(avatar_variant(style))
   end
 
   def date_format
@@ -278,27 +375,6 @@ class User < ApplicationRecord
     result
       .where_attributes_like([:full_name, :email], query)
       .distinct
-  end
-
-  def empty_avatar(name, size)
-    file_ext = name.split(".").last
-    self.avatar_file_name = name
-    self.avatar_content_type = Rack::Mime.mime_type(".#{file_ext}")
-    self.avatar_file_size = size.to_i
-  end
-
-  def filter_paperclip_errors
-    if errors.key? :avatar
-      errors.delete(:avatar)
-      messages = []
-      errors.each do |attribute|
-        errors.full_messages_for(attribute).each do |message|
-          messages << message.split(' ').drop(1).join(' ')
-        end
-      end
-      errors.clear
-      errors.add(:avatar, messages.join(','))
-    end
   end
 
   # Whether user is active (= confirmed) or not
@@ -455,7 +531,7 @@ class User < ApplicationRecord
     includes(:user_identities)
       .where(
         'user_identities.provider=? AND user_identities.uid=?',
-        Api.configuration.azure_ad_apps[token_payload[:aud]][:provider],
+        Rails.configuration.x.azure_ad_apps[token_payload[:aud]][:provider],
         token_payload[:sub]
       )
       .references(:user_identities)
@@ -532,23 +608,55 @@ class User < ApplicationRecord
     User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
-        .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
+        .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
   end
 
-  def avatar_base64(style)
-    unless avatar.present?
-      missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
-      return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
+  def file_name
+    return '' unless avatar.attached?
+
+    avatar.blob&.filename&.sanitized
+  end
+
+  def valid_otp?(otp)
+    raise StandardError, 'Missing otp_secret' unless otp_secret
+
+    totp = ROTP::TOTP.new(otp_secret, issuer: 'sciNote')
+    totp.verify(otp, drift_behind: 10)
+  end
+
+  def assign_2fa_token!
+    self.otp_secret = ROTP::Base32.random
+    save!
+  end
+
+  def enable_2fa!
+    recovery_codes = []
+    Constants::TWO_FACTOR_RECOVERY_CODE_COUNT.times do
+      recovery_codes.push(SecureRandom.hex(Constants::TWO_FACTOR_RECOVERY_CODE_LENGTH / 2))
     end
 
-    avatar_uri = if avatar.options[:storage].to_sym == :s3
-                   URI.parse(avatar.url(style)).open.to_a.join
-                 else
-                   File.open(avatar.path(style)).to_a.join
-                 end
+    update!(
+      two_factor_auth_enabled: true,
+      otp_recovery_codes: recovery_codes.map { |c| Devise::Encryptor.digest(self.class, c) }
+    )
 
-    encoded_data = Base64.strict_encode64(avatar_uri)
-    "data:#{avatar_content_type};base64,#{encoded_data}"
+    recovery_codes
+  end
+
+  def disable_2fa!
+    update!(two_factor_auth_enabled: false, otp_secret: nil, otp_recovery_codes: nil)
+  end
+
+  def recover_2fa!(code)
+    return unless otp_recovery_codes
+
+    otp_recovery_codes.each do |recovery_code|
+      if Devise::Encryptor.compare(self.class, recovery_code, code)
+        update!(otp_recovery_codes: otp_recovery_codes.reject { |i| i == recovery_code })
+        return true
+      end
+    end
+    false
   end
 
   protected

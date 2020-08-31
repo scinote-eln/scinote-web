@@ -14,7 +14,7 @@ module Experiments
       @graph[:size] = '4,4'
       @graph.node[color: Constants::COLOR_ALTO,
                   style: :filled,
-                  fontcolor: Constants::COLOR_EMPEROR,
+                  fontcolor: Constants::COLOR_VOLCANO,
                   shape: 'circle',
                   fontname: 'Arial',
                   fontsize: '16.0']
@@ -76,10 +76,9 @@ module Experiments
     def save_file
       file = Tempfile.open(%w(wimg .png), Rails.root.join('tmp'))
       @graph.output(png: file.path)
-      @exp.workflowimg = file
+      @exp.workflowimg.attach(io: file, filename: File.basename(file.path))
       file.close
-      @exp.save
-      @exp.touch(:workflowimg_updated_at)
+      file.unlink
     end
   end
 end

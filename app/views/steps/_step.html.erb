@@ -2,57 +2,7 @@
 <% import = (defined?(import) ? import : false) %>
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <div class="panel-options pull-right">
-        <% if can_complete_or_checkbox_step?(@protocol) && !(preview) %>
-          <% if step.completed? %>
-            <div data-action="uncomplete-step"
-                 class="complete-step-btn"
-                 data-link-url="<%= toggle_step_state_step_path(step)%>">
-              <button class="btn btn-default">
-                <span class="fas fa-times"></span>
-                <%= t("protocols.steps.options.uncomplete_title") %>
-              </button>
-            </div>
-          <% else %>
-            <div data-action="complete-step"
-                 class="complete-step-btn"
-                 data-link-url="<%= toggle_step_state_step_path(step)%>">
-              <button class="btn btn-toggle">
-                <span class="fas fa-check"></span>
-                <%= t("protocols.steps.options.complete_title") %>
-              </button>
-            </div>
-          <% end %>
-        <% end %>
-
-        <% if (can_manage_protocol_in_module?(@protocol) ||
-                      can_manage_protocol_in_repository?(@protocol)) && !(preview) %>
-          <a data-action="move-step"
-             class="btn btn-link"
-             href="<%= move_up_step_path(step, format: :json) %>"
-             title="<%= t("protocols.steps.options.up_arrow_title") %>"
-             data-remote="true">
-              <span class="fas fa-arrow-up"></span></a>
-          <a data-action="move-step"
-             class="btn btn-link"
-             href="<%= move_down_step_path(step, format: :json) %>"
-             title="<%= t("protocols.steps.options.down_arrow_title") %>"
-             data-remote="true">
-            <span class="fas fa-arrow-down"></span></a>
-          <a data-action="edit-step"
-             class="btn btn-link"
-             title="<%= t("protocols.steps.options.edit_title") %>"
-             href="<%= edit_step_path(step, format: :json) %>"
-             data-remote="true" >
-            <span class="fas fa-pencil-alt"></span>
-          </a>
-          <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
-            data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
-            <span class="fas fa-trash-alt"></span>
-          <% end %>
-        <% end %>
-      </div>
+    <div class="panel-heading step-heading">
       <div class="left-floats">
         <a class="step-panel-collapse-link"
            href="#step-panel-<%= step.id || step.position %>"
@@ -61,7 +11,7 @@
           <span class="fas fa-caret-square-down collapse-step-icon"></span>
         </a>
 
-        <span class="step-number"><%= step.position + 1 %></span>
+        <span class="step-number"><%= step.position + 1 %>.</span>
 
         <a class="step-panel-collapse-link step-name-link"
            href="#step-panel-<%= step.id || step.position %>"
@@ -76,7 +26,55 @@
           <% end %>
         </a>
       </div>
+      <div class="panel-options pull-right">
+        <% if can_complete_or_checkbox_step?(@protocol) && !(preview) %>
+          <% if step.completed? %>
+            <div data-action="uncomplete-step"
+                 class="complete-step-btn"
+                 data-link-url="<%= toggle_step_state_step_path(step)%>">
+              <button class="btn btn-secondary btn-block">
+                <span class="fas fa-times"></span>
+                <%= t("protocols.steps.options.uncomplete_title") %>
+              </button>
+            </div>
+          <% else %>
+            <div data-action="complete-step"
+                 class="complete-step-btn"
+                 data-link-url="<%= toggle_step_state_step_path(step)%>">
+              <button class="btn btn-secondary btn-block">
+                <span class="fas fa-check"></span>
+                <%= t("protocols.steps.options.complete_title") %>
+              </button>
+            </div>
+          <% end %>
+        <% end %>
 
+        <% if (can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)) && !(preview) %>
+          <%= link_to(move_up_step_path(step),
+                      class: 'btn btn-light icon-btn',
+                      title: t('protocols.steps.options.up_arrow_title'),
+                      remote: true,
+                      method: :put,
+                      data: { action: 'move-step', direction: :up }) do %>
+            <span class="fas fa-arrow-up"></span>
+          <% end %>
+          <%= link_to(move_down_step_path(step),
+                      class: 'btn btn-light icon-btn',
+                      title: t('protocols.steps.options.down_arrow_title'),
+                      remote: true,
+                      method: :put,
+                      data: { action: 'move-step', direction: :down }) do %>
+            <span class="fas fa-arrow-down"></span>
+          <% end %>
+          <%= link_to(step_path(step),
+                      title: t('protocols.steps.options.delete_title'),
+                      method: :delete,
+                      class: 'btn btn-light icon-btn',
+                      data: { action: 'delete-step', confirm: t('protocols.steps.destroy.confirm', step: step.name) }) do %>
+            <span class="fas fa-trash-alt"></span>
+          <% end %>
+        <% end %>
+      </div>
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id || step.position %>" role="tabpanel">
       <div class="panel-body">

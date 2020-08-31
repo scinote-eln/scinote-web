@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module DrawProjectHeader
+module Reports::Docx::DrawProjectHeader
   def draw_project_header(subject)
-    project = Project.find_by_id(subject['id']['project_id'])
-    return unless project
+    project = Project.find_by(id: subject['id']['project_id'])
+    return unless project && can_read_project?(@user, project)
 
     @docx.p I18n.t('projects.reports.elements.project_header.user_time',
                    timestamp: I18n.l(project.created_at, format: :full))
