@@ -279,3 +279,10 @@ var HelperModule = (function(){
 function notTurbolinksPreview() {
   return !document.documentElement.hasAttribute("data-turbolinks-preview");
 }
+
+const windowScrollEvents = {};
+$(window).scroll(function() {
+  $.each(windowScrollEvents, function(key, scroll_function){
+    scroll_function();
+  })
+})

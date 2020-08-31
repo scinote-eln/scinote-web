@@ -9,6 +9,12 @@
 @import "constants";
 @import "mixins";
 
+:root {
+  --attachment-card-thumbnail-width: 220px;
+  --attachment-card-thumbnail-height: 280px;
+}
+
+
 #new_step,
 .panel-step-attachment {
   ul {
@@ -114,71 +120,36 @@
 
 .attachments {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-
-  .pseudo-attachment-container {
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
-
-    .file-preview-link {
-      position: relative;
-    }
-
-    &.new {
-      order: 0 !important;
-
-      .file-preview-link {
-        transition: .5s;
-      }
-
-      .attachment-placeholder {
-        border: 1px solid $brand-primary;
-
-        &::before {
-          background: $brand-primary;
-          border-radius: 0 5px;
-          bottom: 16px;
-          color: $color-white;
-          content: "NEW";
-          left: 8px;
-          line-height: 20px;
-          position: absolute;
-          width: 50px;
-        }
-      }
-    }
-  }
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  grid-template-columns: repeat(auto-fill, minmax(var(--attachment-card-thumbnail-width), 1fr));
+  grid-auto-rows: var(--attachment-card-thumbnail-height);
+  margin: 1em 0;
 }
 
-.attachment-placeholder {
+.attachment-container {
   @include md-card-style;
-  color: $color-silver-chalice;
-  height: 280px;
-  margin: 4px 8px 16px;
-  text-align: center;
-  width: 220px;
+  height: var(--attachment-card-thumbnail-height);
+  overflow: hidden;
+  padding: 1em;
+  position: relative;
+  width: var(--attachment-card-thumbnail-width);
 
-  a {
-    color: inherit;
+
+  .file-preview-link {
+    display: block;
+    height: 100%;
+    width: 100%;
   }
 
-  &.new {
-    background-color: rgba(95, 95, 95, .1);
-  }
-
-  .attachment-thumbnail {
-    display: inline-block;
-    height: 160px;
-    margin: 16px 0 5px;
-    overflow: hidden;
-    padding: 0 10px;
-    position: relative;
+  .attachment-preview {
+    border-radius: $border-radius-default;
+    height: 170px;
     text-align: center;
+    position: relative;
     width: 100%;
 
     img {
-      border-radius: 5px;
       max-height: 100%;
       max-width: 100%;
     }
@@ -188,14 +159,13 @@
       &::before,
       &::after {
         content: "";
-        border-radius: 16px 0 0 16px;
+        border-radius: 1em 0 0 1em;
         display: block;
-        height: 32px;
-        right: 0;
-        line-height: 32px;
+        right: -1em;
+        line-height: 2em;
         position: absolute;
-        bottom: 10px;
-        width: 36px;
+        bottom: 1em;
+        width: 2.25em;
       }
 
       &::before {
@@ -204,8 +174,9 @@
 
       &::after {
         background-image: url("/images/icon_small/marvinjs-white.svg");
-        right: 4px;
-        width: 32px;
+        height: 2.25em;
+        right: -.75em;
+        width: 2em;
       }
     }
 
@@ -219,68 +190,63 @@
     box-shadow: none;
   }
 
-  .attachment-label {
+  .attachment-label,
+  .attachment-metadata {
     background: $color-white;
-    color: $brand-primary;
-    font-family: Lato;
-    font-size: 16px;
-    height: 40px;
-    line-height: 18px;
-    margin: 0 auto;
     overflow: hidden;
+    padding-top: 1em;
     position: relative;
+    text-overflow: ellipsis;
     text-align: center;
-    top: 20px;
     transition: $md-transaction;
-    width: 190px;
+    white-space: nowrap;
+  }
+
+   .attachment-label {
+    @include font-main;
+    margin-top: 1.5em;
     z-index: 2;
   }
 
-  .spencer-bonnet-modif {
-    align-items: center;
+  .attachment-metadata {
+    @include font-small;
+    margin-top: -4em;
     color: $color-silver-chalice;
-    display: flex;
-    font-family: Lato;
-    font-size: 12px;
-    height: 40px;
-    justify-content: center;
-    line-height: 15px;
-    margin: 0 auto 5px;
-    position: relative;
-    text-align: center;
-    top: -20px;
-    transition: $md-transaction;
-    width: 149px;
   }
 
   .remove-icon {
-    bottom: 15px;
+    bottom: .5em;
     cursor: pointer;
     display: none;
-    position: relative;
-    right: 10px;
+    position: absolute;
+    right: .5em;
   }
 
   &:hover {
     box-shadow: $md-shadow;
 
+    .file-preview-link {
+      text-decoration: none;
+    }
+
+
     .remove-icon {
       display: inline-block;
     }
 
-    .attachment-label {
-      top: 0;
-    }
+    .attachment-label,
+    .attachment-metadata {
+      margin-top: 0;
 
-    .spencer-bonnet-modif {
-      top: 0;
     }
   }
 
   &.new {
     background-color: rgba(95, 95, 95, .1);
+    order: 0 !important;
 
-    .attachment-label {
+    .attachment-label,
+    .attachment-metadata {
       background-color: transparent;
     }
 
@@ -291,9 +257,25 @@
       position: relative;
     }
 
+    .attachment-preview {
+      border: 1px solid $brand-primary;
+
+      &::before {
+        background: $brand-primary;
+        border-radius: 0 $border-radius-default;
+        bottom: 0;
+        color: $color-white;
+        content: "NEW";
+        left: 0;
+        line-height: 20px;
+        position: absolute;
+        width: 50px;
+      }
+    }
+
     &:hover {
       .attachment-label {
-        top: 20px;
+        margin-top: 1.5em;
       }
     }
   }
@@ -339,4 +321,16 @@
 
 .expand-all-steps {
   margin: 0 0 15px 15px;
+}
+
+.inline-attachment-container {
+  @include md-card-style;
+  grid-column: 1/-1;
+  grid-row: span 2;
+
+  .active-iframe-preview {
+    border: 0;
+    height: 100%;
+    width: 100%;
+  }
 }

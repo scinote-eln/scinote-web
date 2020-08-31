@@ -715,6 +715,12 @@
     );
   }
 
+  function initInlineAttachment() {
+    $(document).on('scroll', 'body', function(){
+      console.log(1)
+    })
+  }
+
     // On init
   initCallBacks();
   initHandsOnTable($(document));
@@ -737,3 +743,59 @@
 
   global.initHandsOnTable = initHandsOnTable;
 })(window);
+
+
+var StepInlineAttachments = (function() {
+  function elementVisible(element) {
+    var elementRect = element.getBoundingClientRect();
+    var elementHeight = $(element).height()
+    return elementRect.top + (elementHeight / 2) >= 0 &&
+           elementRect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (elementHeight / 2)
+  }
+
+  function showElement(element) {
+    setTimeout(() => {
+      var iframeUrl = $(element).find('.iframe-placeholder').data('iframe-url');
+      if (elementVisible(element) && iframeUrl) {
+        $(element).html(`<iframe class="active-iframe-preview" src="${iframeUrl}"></iframe>`);
+        $(element).addClass('active').attr('data-created-at', new Date().getTime());
+      }
+    },500)
+  }
+
+  function hideElement(element) {
+    var iframeUrl = $(element).find('.active-iframe-preview').attr('src');
+    if (!elementVisible(element) && iframeUrl) {
+      $(element).html(`<div class="iframe-placeholder" data-iframe-url="${iframeUrl}"></div>`);
+      $(element).removeClass('active').attr('data-created-at', null)
+      return true
+    }
+    return false
+  }
+
+  function checkForAttachmentsState() {
+    $.each($('.inline-attachment-container'), function(i, element){
+      showElement(element)
+    })
+    if ($('.active-iframe-preview').length > 5){
+      let sortedIframes = $('.inline-attachment-container.active').sort(function(a, b) {
+        return +a.dataset.createdAt - +b.dataset.createdAt;
+      })
+      $.each(sortedIframes, function(i, element){
+        if (hideElement(element)) return false
+      })
+    }
+  }
+
+  return {
+    init: () => {
+      windowScrollEvents['StepInlineAttachments'] = StepInlineAttachments.scrollEvent;
+    },
+    scrollEvent: () => {
+      checkForAttachmentsState()
+    }
+  }
+
+})();
+
+StepInlineAttachments.init();
