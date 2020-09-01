@@ -762,7 +762,10 @@ ul.double-line > li {
       background-color: var(--state-color);
       color: $color-white;
       margin: 3px 0;
+      max-width: 100%;
+      overflow: hidden;
       padding: 2px 8px;
+      text-overflow: ellipsis;
       white-space: nowrap;
       width: fit-content;
     }

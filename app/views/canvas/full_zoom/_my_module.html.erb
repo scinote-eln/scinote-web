@@ -37,8 +37,8 @@
     <% else %>
       <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
     <% end %>
-    <div class="status-label" style="--state-color: #2DBE61">
-      Completed
+    <div class="status-label" style="--state-color: <%= my_module.my_module_status.color %>">
+      <%= my_module.my_module_status.name %>
     </div>
   </div>
 
