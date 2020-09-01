@@ -36,7 +36,7 @@
             <a class="move-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module') %></a>
           </li>
         <% end %>
-        <% if module_group.my_modules.all? { |my_module| can_move_module?(my_module) } %>
+        <% if module_group&.my_modules&.all? { |my_module| can_move_module?(my_module) } %>
           <li>
             <a class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module_group') %></a>
           </li>
@@ -46,7 +46,7 @@
             <a class="delete-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module') %></a>
           </li>
         <% end %>
-        <% if module_group.my_modules.all? { |my_module| can_archive_module?(my_module) } %>
+        <% if module_group&.my_modules&.all? { |my_module| can_archive_module?(my_module) } %>
           <li data-hook="archive-module-group">
             <a class ="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module_group') %></a>
           </li>
