@@ -8,10 +8,9 @@
   word-break: initial;
 
   thead {
-    background-color: $color-concrete;
-
     tr {
       th {
+        background-color: $color-concrete;
         border-bottom: 2px solid $color-white;
         border-left: 2px solid $color-white;
         font-weight: bold;
@@ -31,6 +30,11 @@
 
         &:first-child {
           border-left: 0;
+          border-top-left-radius: 4px;
+        }
+
+        &:last-child {
+          border-top-right-radius: 4px;
         }
       }
 
