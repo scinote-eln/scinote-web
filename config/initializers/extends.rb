@@ -143,8 +143,11 @@ class Extends
     step: nil
   }
 
-  ACTIVITY_MESSAGE_ITEMS_TYPES = ACTIVITY_SUBJECT_TYPES + %w(User Tag RepositoryColumn RepositoryRow Step
-                                                             Asset TinyMceAsset Repository RepositorySnapshot).freeze
+  ACTIVITY_MESSAGE_ITEMS_TYPES =
+    ACTIVITY_SUBJECT_TYPES + %w(
+      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset Repository MyModuleStatus RepositorySnapshot
+    ).freeze
+
 
   ACTIVITY_TYPES = {
     create_project: 0,
@@ -288,13 +291,15 @@ class Extends
     archive_inventory: 144,
     restore_inventory: 145,
     export_inventory_items_assigned_to_task: 146,
-    export_inventory_snapshot_items_assigned_to_task: 147
+    export_inventory_snapshot_items_assigned_to_task: 147,
+    change_status_on_task_flow: 148 # 149, 150, 151 in AdddOn!
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128],
-    task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, *66..69, 106, 126, 120, 132],
+    task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
+           *146..148],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137],
     task_inventory: [55, 56],
     experiment: [*27..31, 57],
