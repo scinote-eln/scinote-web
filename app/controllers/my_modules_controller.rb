@@ -267,6 +267,7 @@ class MyModulesController < ApplicationController
     if @my_module.update(my_module_status_id: update_status_params[:status_id])
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)
+
       render json: { content: render_to_string(
         partial: 'my_modules/status_flow/task_flow_button.html.erb',
         locals: { my_module: @my_module }
