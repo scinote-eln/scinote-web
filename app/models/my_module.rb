@@ -540,11 +540,12 @@ class MyModule < ApplicationRecord
   end
 
   def check_status_order
-    return if my_module_status.blank?
+    return unless my_module_status_id_was
 
-    original_status = MyModuleStatus.find(my_module_status_id_was)
+    original_status = my_module_status_flow.my_module_statuses.find_by(id: my_module_status_id_was)
 
-    unless original_status.next_status == my_module_status || original_status.previous_status == my_module_status
+    unless my_module_status &&
+           (original_status.next_status == my_module_status || original_status.previous_status == my_module_status)
       errors.add(:my_module_status_id,
                  I18n.t('activerecord.errors.models.my_module.attributes.my_module_status_id.not_correct_order'))
     end
