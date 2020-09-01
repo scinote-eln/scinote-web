@@ -108,8 +108,10 @@ en:
               same_team: "Inventory can't be shared to the same team as it belongs to"
         my_module:
           attributes:
+            my_module_status_id:
+              not_correct_order: "Status can be changed only on next or previous status."
             position:
-             not_unique: "X and Y position has already been taken by another task in the experiment."
+              not_unique: "X and Y position has already been taken by another task in the experiment."
         my_module_status:
           attributes:
             next_status:

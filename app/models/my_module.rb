@@ -22,6 +22,7 @@ class MyModule < ApplicationRecord
   validate :coordinates_uniqueness_check, if: :active?
   validates :completed_on, presence: true, if: proc { |mm| mm.completed? }
 
+  validate :check_status_order, if: :my_module_status_id_changed?
   validate :check_status_conditions, if: :my_module_status_id_changed?
   validate :check_status_implications, unless: :my_module_status_id_changed?
 
@@ -535,6 +536,17 @@ class MyModule < ApplicationRecord
 
     my_module_status.my_module_status_implications.each do |implication|
       implication.call(self)
+    end
+  end
+
+  def check_status_order
+    return if my_module_status.blank?
+
+    original_status = MyModuleStatus.find(my_module_status_id_was)
+
+    unless original_status.next_status == my_module_status || original_status.previous_status == my_module_status
+      errors.add(:my_module_status_id,
+                 I18n.t('activerecord.errors.models.my_module.attributes.my_module_status_id.not_correct_order'))
     end
   end
 

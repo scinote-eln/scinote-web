@@ -246,7 +246,7 @@ function applyTaskStatusChangeCallBack() {
         if (e.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('my_module_statuses.update_status.error.no_permission'), 'danger');
         } else if (e.status === 422) {
-          HelperModule.flashAlertMsg(e.errors, 'danger');
+          HelperModule.flashAlertMsg(e.responseJSON.errors, 'danger');
         } else {
           HelperModule.flashAlertMsg('error', 'danger');
         }
