@@ -25,7 +25,7 @@ module Dashboard
         tasks = tasks.left_outer_joins(:user_my_modules).where(user_my_modules: { user_id: current_user.id })
       end
 
-       tasks = tasks.where(my_module_status_id: task_filters[:statuses])
+      tasks = tasks.where(my_module_status_id: task_filters[:statuses])
 
       case task_filters[:sort]
       when 'start_date'
@@ -93,6 +93,10 @@ module Dashboard
     private
 
     def prepare_due_date(task)
+      if task.completed?
+        return { state: '', text: I18n.t('dashboard.current_tasks.completed_on_html',
+                                         date: I18n.l(task.completed_on, format: :full_date)) }
+      end
       if task.due_date.present?
         due_date_formatted = I18n.l(task.due_date, format: :full_date)
         if task.is_overdue?

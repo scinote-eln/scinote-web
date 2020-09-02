@@ -4,11 +4,9 @@ class MyModule < ApplicationRecord
   include SearchableByNameModel
   include TinyMceImages
 
-  enum state: Extends::TASKS_STATES
-
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
-  before_validation :set_completed_on, if: :state_changed?
+  before_validation :set_completed_on, if: :my_module_status_id_changed?
 
   before_save :exec_status_consequences, if: :my_module_status_id_changed?
 
@@ -84,7 +82,7 @@ class MyModule < ApplicationRecord
           Time.current.utc + 1.day)
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
-  scope :uncomplete, -> { where(state: 'uncompleted') }
+  scope :uncomplete, -> { where(completed_on: nil) }
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
@@ -150,6 +148,14 @@ class MyModule < ApplicationRecord
 
   def navigable?
     !experiment.archived? && experiment.navigable?
+  end
+
+  def completed?
+    my_module_status.final_status? && !completed_on.blank?
+  end
+
+  def uncompleted?
+    !completed?
   end
 
   # Removes assigned samples from module and connections with other
@@ -503,9 +509,7 @@ class MyModule < ApplicationRecord
   private
 
   def set_completed_on
-    return if completed? && completed_on.present?
-
-    self.completed_on = completed? ? DateTime.now : nil
+    self.completed_on = my_module_status.final_status? ? DateTime.now : nil
   end
 
   def create_blank_protocol
