@@ -16,6 +16,7 @@ module Api
 
       def index
         tasks = @experiment.my_modules
+                           .includes(:my_module_status, :my_modules, :my_module_antecessors)
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
 
