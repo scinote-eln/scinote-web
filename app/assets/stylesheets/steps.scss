@@ -20,6 +20,16 @@
       }
     }
   }
+
+  .checklist-name-container,
+  .table-name-container {
+    align-items: center;
+    display: flex;
+
+    .remove-container {
+      padding-top: 10px;
+    }
+  }
 }
 
 #steps {
