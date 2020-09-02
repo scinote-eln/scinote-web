@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   use_doorkeeper do
-    #skip_controllers :applications, :authorized_applications, :token_info
+    skip_controllers :applications, :authorized_applications, :token_info
   end
 
   # Addons
@@ -633,7 +633,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Rails.configuration.x.core_api_v1_enabled || true
+      if Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories,
