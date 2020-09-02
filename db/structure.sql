@@ -224,7 +224,8 @@ CREATE TABLE public.assets (
     version integer DEFAULT 1,
     file_processing boolean,
     team_id integer,
-    file_image_quality integer
+    file_image_quality integer,
+    view_mode integer DEFAULT 0 NOT NULL
 );
 
 
@@ -7283,6 +7284,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200622140843'),
 ('20200622155632'),
 ('20200709142830'),
-('20200714082503');
+('20200714082503'),
+('20200902093234');
 
 
