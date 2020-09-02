@@ -506,7 +506,7 @@
 .task-information {
   column-gap: 1em;
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: auto minmax(max-content, 18em);
 
   .task-section-header {
     grid-column: 1 / span 1;

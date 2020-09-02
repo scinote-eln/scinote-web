@@ -11,15 +11,63 @@
     .dropdown-toggle {
       color: $color-white;
       text-align: left;
-      width: 15em;
+      width: 100%;
 
       .caret {
         margin: 8px 0;
       }
     }
 
-    .dropdown-menu > li {
-      line-height: 35px;
+    &.open .dropdown-menu{
+      align-items: center;
+      display: grid;
+      grid-template-columns: max-content min-content minmax(0, auto);
+      padding: .5em 0;
+
+      li {
+        display: contents;
+
+        > * {
+          cursor: pointer;
+          line-height: 2em;
+          padding: .5em 1em;
+        }
+
+        &:hover > *{
+          background: $color-concrete;
+        }
+      }
+
+      .fa-long-arrow-alt-right {
+        color: $color-silver-chalice;
+        padding: .5em 0;
+      }
+
+      .status-container {
+        display: flex;
+      }
+
+      .status-name {
+        border-radius: $border-radius-tag;
+        color: $color-white;
+        display: inline-block;
+        font-weight: bold;
+        line-height: 1em;
+        max-width: 100%;
+        overflow: hidden;
+        padding: .5em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+
+      #viewTaskFlow {
+        cursor: pointer;
+        display: list-item;
+        grid-column: span 3;
+        line-height: 2em;
+        padding: .5em 1em;
+      }
     }
   }
 }
@@ -46,6 +94,7 @@
       }
 
       .status-block {
+        @include font-button;
         border-radius: $border-radius-tag;
         color: $color-white;
         font-weight: bold;
