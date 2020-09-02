@@ -30,11 +30,11 @@
 
         &:first-child {
           border-left: 0;
-          border-top-left-radius: 4px;
+          border-top-left-radius: $border-radius-default;
         }
 
         &:last-child {
-          border-top-right-radius: 4px;
+          border-top-right-radius: $border-radius-default;
         }
       }
 
