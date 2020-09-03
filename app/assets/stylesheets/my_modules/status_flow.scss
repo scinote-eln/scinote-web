@@ -60,6 +60,12 @@
         white-space: nowrap;
       }
 
+      .error-message {
+        @include font-small;
+        color: $color-silver-chalice;
+        grid-column: span 3;
+        padding: .5em 1em;
+      }
 
       #viewTaskFlow {
         cursor: pointer;
