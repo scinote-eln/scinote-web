@@ -7,8 +7,9 @@ class MyModule < ApplicationRecord
   enum state: Extends::TASKS_STATES
 
   before_create :create_blank_protocol
+  before_create :assign_default_status_flow
   before_validation :set_completed_on, if: :state_changed?
-  before_validation :assign_default_status_flow
+
   before_save :exec_status_consequences, if: :my_module_status_id_changed?
 
   auto_strip_attributes :name, :description, nullify: false
@@ -22,6 +23,7 @@ class MyModule < ApplicationRecord
   validate :coordinates_uniqueness_check, if: :active?
   validates :completed_on, presence: true, if: proc { |mm| mm.completed? }
 
+  validate :check_status, if: :my_module_status_id_changed?
   validate :check_status_conditions, if: :my_module_status_id_changed?
   validate :check_status_implications, unless: :my_module_status_id_changed?
 
@@ -535,6 +537,16 @@ class MyModule < ApplicationRecord
 
     my_module_status.my_module_status_implications.each do |implication|
       implication.call(self)
+    end
+  end
+
+  def check_status
+    return unless my_module_status_id_was
+
+    original_status = MyModuleStatus.find_by(id: my_module_status_id_was)
+    unless my_module_status && [original_status.next_status, original_status.previous_status].include?(my_module_status)
+      errors.add(:my_module_status_id,
+                 I18n.t('activerecord.errors.models.my_module.attributes.my_module_status_id.not_correct_order'))
     end
   end
 

@@ -153,23 +153,24 @@ describe MyModulesController, type: :controller do
       end
     end
 
-    context 'when status not found' do
+    context 'when status not exist' do
       let(:status_id) { -1 }
 
-      it 'renders 404' do
+      it 'renders 422' do
+        my_module.my_module_status_flow
         action
 
-        expect(response).to have_http_status 404
+        expect(response).to have_http_status 422
       end
     end
 
-    context 'when my_module does not have assign flow yet' do
-      let(:status_id) { -1 }
+    context 'when status not correct' do
+      let(:status_id) { my_module.my_module_status.next_status.next_status.id }
 
-      it 'renders 404' do
+      it 'renders 422' do
         action
 
-        expect(response).to have_http_status 404
+        expect(response).to have_http_status 422
       end
     end
 
