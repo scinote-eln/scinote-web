@@ -85,7 +85,7 @@ class MyModule < ApplicationRecord
           Time.current.utc + 1.day)
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
-  scope :uncomplete, -> { where(completed_on: nil) }
+  scope :uncomplete, -> { where(state: 'uncompleted') }
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
