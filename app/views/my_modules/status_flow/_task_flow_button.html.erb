@@ -14,14 +14,22 @@
     <% unless status.initial_status? %>
       <% previous_s = status.previous_status %>
       <li data-state-id="<%= previous_s.id %>">
-        <span><%= t 'my_module_statuses.dropdown.return_label' %></span> <span style="<%= "background-color: #{previous_s.color}" %>"><%= previous_s.name %></span>
+        <span><%= t('my_module_statuses.dropdown.return_label') %></span>
+        <i class="fas fa-long-arrow-alt-right"></i>
+        <div class=" status-container">
+          <div class="status-name" style="<%= "background-color: #{previous_s.color}" %>"><%= previous_s.name %></div>
+        </div>
       </li>
     <% end %>
 
     <% unless status.final_status? %>
       <% next_s = status.next_status %>
       <li data-state-id="<%= next_s.id %>">
-        <span><%= t('my_module_statuses.dropdown.move_label') %></span> <span style="<%= "background-color: #{next_s.color}" %>"><%= next_s.name %></span>
+        <span><%= t('my_module_statuses.dropdown.move_label') %></span>
+        <i class="fas fa-long-arrow-alt-right"></i>
+        <div class="status-container">
+          <div class="status-name" style="<%= "background-color: #{next_s.color}" %>"><%= next_s.name %></div>
+        </div>
       </li>
     <% end %>
     <li id="viewTaskFlow">

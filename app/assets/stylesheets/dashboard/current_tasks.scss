@@ -142,7 +142,7 @@
   .current-tasks-list {
     align-items: center;
     display: grid;
-    grid-template-columns: auto max-content max-content;
+    grid-template-columns: 1fr max-content max-content;
     padding: 0 1em;
 
     &.disabled {
@@ -157,9 +157,9 @@
       .current-task-breadcrumbs {
         @include font-small;
         color: $color-silver-chalice;
-        grid-column: 1 / span 3;
-        line-height: 14px;
-        margin-top: .5em;
+        grid-column: span 3;
+        line-height: 1em;
+        padding: .5em .5em .25em;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -179,21 +179,19 @@
       }
 
       .task-name {
-        flex-grow: 1;
         font-size: $font-size-base;
         font-weight: bold;
         overflow: hidden;
+        padding: 0 .5em;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
       .task-due-date {
-        flex-basis: 280px;
-        flex-shrink: 0;
         padding: 0 2em 0 1em;
 
         .fas {
-          padding: 4px;
+          padding: .25em;
         }
 
         &.overdue {
@@ -211,6 +209,7 @@
 
       .task-status-container {
         grid-column: 3;
+        padding: 0 .5em;
         text-align: right;
 
         .task-status {
@@ -222,7 +221,7 @@
         }
       }
 
-      &:hover {
+      &:hover > * {
         background: $color-concrete;
       }
     }
@@ -309,6 +308,7 @@
 
         .current-task-breadcrumbs {
           grid-column: 1;
+          padding-left: 0;
         }
 
         .task-name {
@@ -320,7 +320,9 @@
         .task-due-date {
           @include font-small;
           border: 0;
+          height: 24px;
           padding-left: 0;
+
 
           .fas {
             display: none;
@@ -330,6 +332,7 @@
         .task-status-container {
           grid-column: 1;
           text-align: left;
+          padding-left: 0;
         }
       }
     }

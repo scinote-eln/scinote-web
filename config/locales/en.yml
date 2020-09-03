@@ -840,7 +840,7 @@ en:
         update_error: "There was an error in updating your item(s)."
     modals:
       status_flow_modal:
-        title: "Task status flow: %{status_flow}"
+        title: "Task status flow"
         current_status: "Current status"
         done: "Done"
       update_repository_record:

@@ -761,13 +761,13 @@ ul.double-line > li {
     .status-label {
       background-color: var(--state-color);
       color: $color-white;
+      display: inline-block;
       margin: 3px 0;
       max-width: 100%;
       overflow: hidden;
       padding: 2px 8px;
       text-overflow: ellipsis;
       white-space: nowrap;
-      width: fit-content;
     }
   }
 
