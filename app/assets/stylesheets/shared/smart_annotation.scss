@@ -1,0 +1,43 @@
+.atwho-view {
+  background: $color_white;
+  border-radius: $border-radius-default;
+  box-shadow: $flyout-shadow;
+  display: none;
+  left: 0;
+  margin-top: 18px;
+  max-width: 700px;
+  min-width: 600px;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  z-index: 11110 !important;
+
+  .atwho-header-res {
+    .nav-tabs {
+      margin-bottom: 0;
+    }
+
+    .rep-tab.active {
+      border-bottom: $border-default;
+      display: flex;
+      padding: .25em;
+    }
+  }
+
+  .atwho-view-ul {
+    padding: .25em;
+  }
+}
+
+.sa-type {
+  font-size: 10px;
+  font-weight: 600;
+  padding-left: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  vertical-align: super;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

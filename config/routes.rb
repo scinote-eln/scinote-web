@@ -207,7 +207,7 @@ Rails.application.routes.draw do
         get 'export_projects_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
-        get 'atwho_repositories', to: 'at_who#repositories'
+        get 'atwho_menu', to: 'at_who#menu'
         get 'atwho_rep_items', to: 'at_who#rep_items'
         get 'atwho_projects', to: 'at_who#projects'
         get 'atwho_experiments', to: 'at_who#experiments'

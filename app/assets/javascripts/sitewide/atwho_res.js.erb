@@ -33,13 +33,13 @@ var SmartAnnotation = (function() {
     var FilterTypeEnum = Object.freeze({
       USER:       {tag: "users",
                    dataUrl: $(document.body).attr('data-atwho-users-url')},
-      TASK:       {tag: "tsk",
+      TASK:       {tag: "sa-tasks",
                    dataUrl: $(document.body).attr('data-atwho-task-url')},
-      PROJECT:    {tag: "prj",
+      PROJECT:    {tag: "sa-projects",
                    dataUrl: $(document.body).attr('data-atwho-project-url')},
-      EXPERIMENT: {tag: "exp",
+      EXPERIMENT: {tag: "sa-experiments",
                    dataUrl: $(document.body).attr('data-atwho-experiment-url')},
-      REPOSITORY: {tag: "rep",
+      REPOSITORY: {tag: "sa-repositories",
                    dataUrl: $(document.body).attr('data-atwho-rep-items-url')},
       MENU:       {tag: "menu",
                    dataUrl: $(document.body).attr('data-atwho-menu-items')}
@@ -94,11 +94,7 @@ var SmartAnnotation = (function() {
     }
 
     function _generateInputTag(value, li) {
-      var res = '';
-      res += '[#' + li.attr('data-name');
-      res += '~' + li.attr('data-type');
-      res += '~' + li.attr('data-id') + ']';
-      return res;
+      return `[#${li.attr('data-name')}~${li.attr('data-type')}~${li.attr('data-id')}]`;
     }
 
     // initialise dropdown dismiss button
@@ -110,86 +106,19 @@ var SmartAnnotation = (function() {
       });
     }
 
-    // Initialize or update dropdown header buttons
-    function updateHeaderButtons(query, filterType) {
-      var $currentAtWho = $('.atwho-view[style]');
-      initDismissButton($currentAtWho);
-
-      // Update the selected filter button when changing smart annotation type
-      $currentAtWho.find('[data-filter]')
-                   .removeClass('btn-primary')
-                   .addClass('btn-default');
-      if(filterType.tag === 'rep') {
-        $currentAtWho.find('[data-rep-id="' + filterType.repository_id + '"]')
-                     .removeClass('btn-default')
-                     .addClass('btn-primary');
-      } else {
-        $currentAtWho.find('[data-filter="' + filterType.tag + '"]')
-                     .removeClass('btn-default')
-                     .addClass('btn-primary');
-      }
-
-      // Update the selected filter button when clicking on one of them
-      $currentAtWho.find('[data-filter]').off()
-                                         .on('click', function(e) {
-        if($(this).hasClass('btn-primary')) {
-          return;
-        }
-        var $selectedBtn = $(this);
-        var $prevBtn = $selectedBtn.closest('.atwho-header-res')
-                                   .children('.btn-primary');
-        $selectedBtn.removeClass('btn-default').addClass('btn-primary');
-        $prevBtn.removeClass('btn-primary').addClass('btn-default');
-
-        // Updates query and dropdown elements; focuses input
-        $(field).click().focus();
-      });
-    }
-
     // Generates suggestion dropdown filter
     function generateFilterMenu(active, res_data) {
+      var menu = '';
       var rep_buttons = '';
       $.ajax({
         async: false,
         dataType: 'json',
         url: $(document.body).attr('data-atwho-repositories-url'),
         success: function(data) {
-          $.each(data['repositories'], function(id, name) {
-            if(defaultRepId === undefined){
-              defaultRepId = id;
-            }
-            rep_buttons += '<button data-filter="rep" data-rep-id="' + id +
-              '" class="btn btn-xs btn-primary">' + name + '</button>';
-          });
+          menu = data.html
        }
       });
-      var header = '<div class="atwho-header-res">' +
-       '<button data-filter="prj" class="btn btn-xs btn-primary' +
-       '">Projects</button>' +
-       '<button data-filter="exp" class="btn btn-xs btn-primary' +
-       '">Experiments</button>' +
-       '<button data-filter="tsk" class="btn btn-xs btn-primary' +
-       '">Tasks</button>' +
-       rep_buttons +
-       '<div class="dismiss">' +
-       '<span class="fas fa-times"></span>' +
-       '</div>' +
-       '<div class="help">' +
-       '<div>' +
-       '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
-       '<%= I18n.t("atwho.users.navigate_2") %>' +
-       '</div>' +
-       '<div><strong><%= I18n.t("atwho.users.confirm_1") %></strong> ' +
-       '<%= I18n.t("atwho.users.confirm_2") %>' +
-       '</div>' +
-       '<div>' +
-       '<strong><%= I18n.t("atwho.users.dismiss_1") %></strong> ' +
-       '<%= I18n.t("atwho.users.dismiss_2") %>' +
-       '</div>' +
-       '</div>' +
-       '</div>';
-
-      return header;
+      return menu;
     }
 
     function noResultsTemplate() {
@@ -201,80 +130,7 @@ var SmartAnnotation = (function() {
 
     // Generates resources list items
     function generateTemplate(map) {
-      var res = '';
-      res += '<li class="atwho-li atwho-li-res" data-name="' +
-              truncateLongString(map.name,
-                <%= Constants::NAME_TRUNCATION_LENGTH %>) +
-              '" data-id="' + map.id + '" data-type="' +
-              map.type + '">';
-      switch(map.type) {
-          case 'tsk':
-              res += '<span data-type class="res-type">' + map.type + '</span>';
-              break;
-          case 'prj':
-              res += '<span data-type class="res-type">' + map.type + '</span>';
-              break;
-          case 'exp':
-              res += '<span data-type class="res-type">' + map.type + '</span>';
-              break;
-          case 'rep_item':
-              res += '<span data-type class="res-type">' +
-                     map.repository_tag + '</span>';
-              break;
-      }
-
-      res += '&nbsp;';
-      res += '<span data-val="name" class="res-name">';
-      res += truncateLongString(map.name,
-        <%= Constants::NAME_TRUNCATION_LENGTH %>);
-      res += '</span>';
-      if(map.archived) {
-        res += '<%= I18n.t("atwho.res.archived") %></span>';
-      } else {
-        res += '</span>';
-      }
-      res += '&nbsp;';
-
-      switch (map.type) {
-        case 'tsk':
-
-          res += '<span class="res-description">&lt; ' + map.experimentName +
-                 ' &lt; ' + map.projectName + '</span>';
-          break;
-        case 'exp':
-          res += '<span class="res-description">&lt; ' + map.projectName + '</span>';
-          break;
-        case 'sam':
-          res += '<span class="res-description">' + map.description + '</span>';
-          break;
-      }
-
-      res += '</li>';
-      return res;
-    }
-
-    /**
-     * Hackish wrapper function to make AtWho work when switching between
-     * multiple AtWho instances (e.g. from # to task#).
-     *
-     * Prevents second execution of AtWho update callback, triggered when user
-     * switches to different AtWho instance (e.g. from # to task#), which causes
-     * both of them to be called. In such case, AtWhO modal needs to be
-     * rerendered.
-     */
-    function atWhoSwitchHack(filterTypeTag, remoteFilterCb) {
-      if(atWhoUpdating || (!$(field).length && _.isUndefined(filterTypeTag))) {
-        setTimeout(function() {
-          $(field).click();
-        }, 100);
-        return;
-      }
-
-      atWhoUpdating = true;
-      setTimeout(function() {
-        remoteFilterCb();
-        atWhoUpdating = false;
-      }, 100);
+      return map.name;
     }
 
     function atWhoSettings(at, defaultFilterType) {
@@ -283,61 +139,35 @@ var SmartAnnotation = (function() {
         callbacks: {
           remoteFilter: function(query, callback) {
             var $currentAtWho = $('.atwho-view[style]');
-            var filterTypeTag = $currentAtWho
-                                 .find('.btn-primary')
-                                 .data('filter');
+            var filterType;
+            var params = { query: query };
+            filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')]
+            console.log(filterType)
+            if (!filterType) {
+              callback([{no_results: 1}]);
+              return false
+            }
 
-            atWhoSwitchHack(filterTypeTag, function() {
-              var filterType;
-              if (_.isUndefined(filterTypeTag)) {
-                // Switched smart annotation type (i.e. changed input)
-                filterType = defaultFilterType;
+            if(filterType.tag === 'sa-repositories') {
+              let repositoryTab = $currentAtWho.find('[data-object-type="REPOSITORY"]')
+              let activeRepository = repositoryTab.find('.btn-primary');
+              if (activeRepository.length) {
+                params['repository_id'] =  activeRepository.data('object-id')
+              }
+
+            }
+            $.getJSON(filterType.dataUrl, params, function(data) {
+              // Updates dropdown
+              if (data.res.length < 1) {
+                callback([{no_results: 1}]);
               } else {
-                // Switched filtering type (i.e. different filter button
-                // pressed; works also for specific annotation types, e.g.
-                // task#, and coverts to the correct annotation type on confirm)
-                $.each(FilterTypeEnum, function(k, v) {
-                  if (v.tag == filterTypeTag) {
-                    filterType = FilterTypeEnum[k];
-                    return false;
-                  }
-                });
-              }
-              if (prevAt != at) {
-                // Switching smart annotation type (i.e. chaned input)
-
-                prevAt = at;
-                filterType = defaultFilterType;
-                // Hide current AtWho
-                $currentAtWho.removeAttr("style");
+                callback(data.res);
               }
 
-              var params = { query: query };
-
-              if(filterType.tag === 'rep') {
-                params.repository_id = $currentAtWho
-                                       .find('.btn-primary')
-                                       .data('rep-id');
-                if(params.repository_id === undefined) {
-                  params.repository_id = defaultRepId;
-                }
-                filterType.repository_id = params.repository_id;
+              if (data.repository) {
+                $currentAtWho.find(`.repository-object[data-object-id="${data.repository}"]`)
+                  .addClass('btn-primary').removeClass('btn-light')
               }
-
-              $.getJSON(
-                filterType.dataUrl,
-                params,
-                function(data) {
-                  // Updates dropdown
-                  if (data.res.length < 1) {
-                    callback([{no_results: 1}]);
-                  } else {
-                    callback(data.res);
-                  }
-
-                  updateHeaderButtons(query, filterType);
-                }
-              );
             });
           },
           sorter: function(query, items, _searchKey) {
@@ -380,6 +210,24 @@ var SmartAnnotation = (function() {
 
     function init() {
       $(field)
+      .on("shown.atwho", function() {
+        var $currentAtWho = $('.atwho-view[style]');
+        $currentAtWho.find('.tab-button').off().on('shown.bs.tab',  function() {
+          $(field).click().focus();
+          $(this).closest('.nav-tabs').find('.tab-button').removeClass('active');
+          $(this).addClass('active');
+        })
+        $currentAtWho.find('.repository-object').off().on('click',  function() {
+          $(this).parent().find('.repository-object').removeClass('btn-primary').addClass('btn-light');
+          $(this).addClass('btn-primary').removeClass('btn-light');
+          $(field).click().focus();
+        })
+
+        if ($currentAtWho.find('.tab-pane.active').length == 0) {
+          let filterType =  DEFAULT_SEARCH_FILTER;
+          $currentAtWho.find(`.${filterType.tag}`).click();
+        }
+      })
       .on("reposition.atwho", function(event, flag, query) {
         let inputFieldLeft = query.$inputor.offset().left;
         if (inputFieldLeft > $(window).width()) {

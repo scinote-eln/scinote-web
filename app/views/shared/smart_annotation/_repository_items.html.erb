@@ -1,0 +1,5 @@
+<% repository_rows.each do |row| %>
+  <li data-name="<%= row[:name] %>" data-id="<%= row[:id] %>" data-type="rep_item">
+    [<%= row[:repository_tag] %>] <%= row[:name] %>
+  </li>
+<% end %>

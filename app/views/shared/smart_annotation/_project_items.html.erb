@@ -1,0 +1,3 @@
+<% projects.each do |project| %>
+  <li data-name="<%= project.name %>" data-id="<%= project.id.base62_encode %>" data-type="prj"><%= project.name %></li>
+<% end %>
