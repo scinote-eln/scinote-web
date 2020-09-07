@@ -25,7 +25,13 @@ class MyModule < ApplicationRecord
 
   validate :check_status, if: :my_module_status_id_changed?
   validate :check_status_conditions, if: :my_module_status_id_changed?
-  validate :check_status_implications, unless: :my_module_status_id_changed?
+  validate :check_status_implications, unless: proc { |mm|
+    mm.my_module_status_id_changed? ||
+      mm.x_changed? ||
+      mm.y_changed? ||
+      mm.my_module_group_id_changed? ||
+      mm.workflow_order_changed?
+  }
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
