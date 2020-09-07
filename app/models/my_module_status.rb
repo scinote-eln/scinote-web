@@ -47,6 +47,14 @@ class MyModuleStatus < ApplicationRecord
     ordered_statuses
   end
 
+  def conditions_descriptions
+    descriptions = []
+    my_module_status_conditions.each do |condition|
+      descriptions.push(condition.description)
+    end
+    descriptions
+  end
+
   private
 
   def next_in_same_flow

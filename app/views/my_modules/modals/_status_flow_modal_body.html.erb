@@ -14,7 +14,9 @@
       <div class="status-block" style="background: <%= status[:color] %>">
         <%= status[:name] %>
       </div>
-      <div class="status-comment"><%= status[:status_comment] %></div>
+      <div class="status-comment">
+        <%= status.next_status&.conditions_descriptions&.join(' ') %>
+      </div>
     </div>
   <% end %>
 

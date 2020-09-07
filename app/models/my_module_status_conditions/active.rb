@@ -6,5 +6,9 @@ module MyModuleStatusConditions
     def call(my_module)
       my_module.errors.add(:status_conditions, 'MyModule should be active') unless my_module.active?
     end
+
+    def description
+      'MyModule should be active'
+    end
   end
 end
