@@ -354,16 +354,11 @@ class StepsController < ApplicationController
   def move_up
     respond_to do |format|
       format.json do
-        if @step.protocol.steps.minimum(:position) != @step.position
-          @step.update!(position: @step.position - 1)
+        @step.move_up
 
-          render json: {
-            step_up_position: @step.position,
-            step_down_position: @step.position + 1
-          }
-        else
-          render json: {}
-        end
+        render json: {
+          steps_order: @protocol.steps.order(:position).select(:id, :position)
+        }
       end
     end
   end
@@ -371,16 +366,11 @@ class StepsController < ApplicationController
   def move_down
     respond_to do |format|
       format.json do
-        if @step.protocol.steps.maximum(:position) != @step.position
-          @step.update!(position: @step.position + 1)
+        @step.move_down
 
-          render json: {
-            step_up_position: @step.position - 1,
-            step_down_position: @step.position
-          }
-        else
-          render json: {}
-        end
+        render json: {
+          steps_order: @protocol.steps.order(:position).select(:id, :position)
+        }
       end
     end
   end
