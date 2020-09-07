@@ -1,7 +1,7 @@
 .atwho-view {
   background: $color_white;
   border-radius: $border-radius-default;
-  box-shadow: $flyout-shadow;
+  box-shadow: $modal-shadow;
   display: none;
   left: 0;
   margin-top: 18px;
@@ -25,7 +25,24 @@
   }
 
   .atwho-view-ul {
+    margin: 0;
     padding: .25em;
+  }
+
+  .atwho-footer {
+    @include font-small;
+    border-top: $border-default;
+    color: $color-silver-chalice;
+    margin-left: -.25em;
+    padding: .5em;
+    width: calc(100% + .5em);
+    white-space: pre;
+  }
+
+  .atwho-scroll-container {
+    max-height: 200px;
+    overflow-y: auto;
+    position: relative;
   }
 }
 

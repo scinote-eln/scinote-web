@@ -3,3 +3,7 @@
     [<%= row[:repository_tag] %>] <%= row[:name] %>
   </li>
 <% end %>
+<% if repository_rows.empty? %>
+  <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
+<% end %>
+<%= render partial: 'shared/smart_annotation/footer.html.erb' %>

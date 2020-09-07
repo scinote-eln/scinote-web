@@ -61,7 +61,7 @@ class Constants
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
   # Maximum nr. of search results for atwho (smart annotations)
-  ATWHO_SEARCH_LIMIT = 5
+  ATWHO_SEARCH_LIMIT = 10
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
   # Results limited query/display elements for pages

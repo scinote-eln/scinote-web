@@ -1,3 +1,7 @@
 <% experiments.each do |experiment| %>
 <li data-name="<%= experiment.name %>" data-id="<%= experiment.id.base62_encode %>" data-type="exp"><%= experiment.name %></li>
 <% end %>
+<% if experiments.empty? %>
+  <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
+<% end %>
+<%= render partial: 'shared/smart_annotation/footer.html.erb' %>

@@ -1,3 +1,7 @@
 <% projects.each do |project| %>
   <li data-name="<%= project.name %>" data-id="<%= project.id.base62_encode %>" data-type="prj"><%= project.name %></li>
 <% end %>
+<% if projects.empty? %>
+  <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
+<% end %>
+<%= render partial: 'shared/smart_annotation/footer.html.erb' %>

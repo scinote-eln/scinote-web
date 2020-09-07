@@ -1,4 +1,4 @@
-<div class="my-modules-list-partial">
+<div class="my-modules-list-partial atwho-scroll-container">
   <% grouped_by_prj_exp(my_modules).each do |task_group| %>
   <div class="task-group">
     <div class="header">
@@ -26,3 +26,7 @@
   </div>
   <% end %>
 </div>
+<% if my_modules.empty? %>
+  <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
+<% end %>
+<%= render partial: 'shared/smart_annotation/footer.html.erb' %>
