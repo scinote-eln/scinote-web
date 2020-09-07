@@ -66,6 +66,13 @@
                       data: { action: 'move-step', direction: :down }) do %>
             <span class="fas fa-arrow-down"></span>
           <% end %>
+          <%= link_to(edit_step_path(step),
+                      title: t('protocols.steps.options.edit_title'),
+                      class: 'btn btn-light icon-btn',
+                      remote: true,
+                      data: { action: 'edit-step' }) do %>
+            <span class="fas fa-pencil-alt"></span>
+          <% end %>
           <%= link_to(step_path(step),
                       title: t('protocols.steps.options.delete_title'),
                       method: :delete,
