@@ -504,6 +504,8 @@ class MyModule < ApplicationRecord
   private
 
   def set_completed
+    return if my_module_status.blank?
+
     if my_module_status.final_status?
       self.state = 'completed'
     else
