@@ -45,6 +45,11 @@ function updateStartDate() {
     data: { my_module: { started_on: val } },
     success: function(result) {
       $('#startDateLabelContainer').html(result.start_date_label);
+    },
+    error: function(response) {
+      if (response.status === 403) {
+        HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
     }
   });
 }
@@ -66,6 +71,11 @@ function updateDueDate() {
     data: { my_module: { due_date: val } },
     success: function(result) {
       $('#dueDateLabelContainer').html(result.due_date_label);
+    },
+    error: function(response) {
+      if (response.status === 403) {
+        HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
     }
   });
 }
@@ -239,7 +249,7 @@ function applyTaskStatusChangeCallBack() {
       data: { my_module: { status_id: item.data('state-id') } },
       success: function(data) {
         container.html(data.content);
-        animateSpinner(null, false);
+        location.reload();
       },
       error: function(e) {
         animateSpinner(null, false);
@@ -291,8 +301,11 @@ function initTagsSelector() {
       if (lastTagId > 0) {
         newTag = { my_module_tag: { tag_id: lastTagId } };
         $.post(selectElement.data('update-module-tags-url'), newTag)
-          .fail(function() {
+          .fail(function(r) {
             dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
+            if (r.status === 403) {
+              HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+            }
           });
       } else {
         newTag = {
@@ -313,12 +326,21 @@ function initTagsSelector() {
               color: result.tag.color
             }
           }, true);
+        }).fail(function() {
+          dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
         });
       }
     },
     onUnSelect: (id) => {
-      $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`);
-      dropdownSelector.closeDropdown(myModuleTagsSelector);
+      $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`)
+        .success(function() {
+          dropdownSelector.closeDropdown(myModuleTagsSelector);
+        })
+        .fail(function(r) {
+          if (r.status === 403) {
+            HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+          }
+        });
     }
   }).getContainer(myModuleTagsSelector).addClass('my-module-tags-container');
 }

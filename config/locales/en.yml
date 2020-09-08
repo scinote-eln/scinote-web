@@ -2381,6 +2381,7 @@ en:
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
     no_name: "(no name)"
     error: "An error has occurred, please try again later."
+    no_permissions: "You don't have permission"
     filter: "Filter:"
     no_teams:
       title: "Your dashboard is empty!"

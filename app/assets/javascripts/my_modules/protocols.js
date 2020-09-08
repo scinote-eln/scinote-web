@@ -362,10 +362,12 @@ function loadFromRepository() {
         location.reload();
       },
       error: function(ev) {
-        // Display error message in alert()
-        alert(ev.responseJSON.message);
+        if (ev.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        } else {
+          alert(ev.responseJSON.message);
+        }
 
-        // Hide modal
         modal.modal('hide');
       }
     });

@@ -636,8 +636,12 @@ var MyModuleRepositories = (function() {
         renderFullViewAssignButtons();
       },
       error: function(data) {
+        if (data.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        } else {
+          HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+        }
         UPDATE_REPOSITORY_MODAL.modal('hide');
-        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
         SELECTED_ROWS = {};
         FULL_VIEW_TABLE.ajax.reload(null, false);
       }
